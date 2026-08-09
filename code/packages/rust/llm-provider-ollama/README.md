@@ -65,6 +65,25 @@ let client = OllamaClient::new("mistral:7b")
     .with_endpoint("http://my-ollama-host:11434");
 ```
 
+Production composition can validate the complete client configuration before
+serving any request, without probing the network:
+
+```rust
+use llm_provider_ollama::OllamaClient;
+use std::time::Duration;
+
+let client = OllamaClient::try_new(
+    "mistral:7b",
+    "http://127.0.0.1:11434",
+    Duration::from_secs(120),
+)?;
+# Ok::<(), llm_provider_ollama::OllamaConfigurationError>(())
+```
+
+The fallible constructor requires one exact `http://host:port` authority and
+rejects implicit ports, paths, queries, fragments, user information, port zero,
+and timeouts above five minutes.
+
 ## Capability Profile
 
 | Capability | Native | Notes |

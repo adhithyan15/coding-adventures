@@ -6,5 +6,6 @@ description = "Strict typed TOML configuration for the D18 Chief daemon"
 license = "MIT"
 
 [dependencies]
+coding_adventures_uuid = { path = "../uuid" }
 coding-adventures-toml-parser = { path = "../toml-parser" }
 parser = { path = "../parser" }

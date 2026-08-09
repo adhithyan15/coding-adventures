@@ -16,9 +16,15 @@ const KEYRING: &[&str] = &["keyring"];
 const HOST_DEFAULTS: &[&str] = &["hosts", "defaults"];
 const VAULT: &[&str] = &["vault"];
 const PRIVILEGE: &[&str] = &["privilege"];
+const DATA_PLANE: &[&str] = &["data_plane"];
 const MAX_CONFIG_BYTES: usize = 256 * 1024;
 const MAX_PATH_BYTES: usize = 4096;
 const MAX_TRUSTED_KEYS: usize = 256;
+const MAX_CHANNEL_KEYS: usize = 1024;
+const MAX_OLLAMA_MODELS: usize = 256;
+const MAX_AGENT_ID_BYTES: usize = 4 * 1024;
+const MAX_MODEL_BYTES: usize = 200;
+const MAX_ENDPOINT_BYTES: usize = 512;
 const MAX_PROCESS_TIMEOUT_MILLIS: u64 = 5 * 60 * 1000;
 
 /// Stable payload-blind configuration failure.
@@ -284,6 +290,108 @@ pub struct PrivilegeConfig {
     hardware_key_timeout: Duration,
 }
 
+/// Direction of one exact channel-key file declaration.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ChannelKeyAccess {
+    /// The agent receives from the channel using an X25519 private key.
+    Read,
+    /// The agent publishes to the channel using an Ed25519 seed and channel master key.
+    Write,
+}
+
+/// Validated file-backed key material for one exact pipeline, agent, and channel.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ChannelKeyConfig {
+    pipeline_id: [u8; 16],
+    agent_id: String,
+    channel_id: [u8; 16],
+    access: ChannelKeyAccess,
+    receiver_private_key_path: Option<ConfigPath>,
+    originator_signing_seed_path: Option<ConfigPath>,
+    channel_master_key_path: Option<ConfigPath>,
+}
+
+impl ChannelKeyConfig {
+    /// Return the canonical UUID-v7 pipeline identity.
+    pub fn pipeline_id(&self) -> [u8; 16] {
+        self.pipeline_id
+    }
+
+    /// Return the exact UTF-8 channel-membership agent identity.
+    pub fn agent_id(&self) -> &str {
+        &self.agent_id
+    }
+
+    /// Return the canonical UUID-v7 channel identity.
+    pub fn channel_id(&self) -> [u8; 16] {
+        self.channel_id
+    }
+
+    /// Return whether this declaration provisions a read or write authority.
+    pub fn access(&self) -> ChannelKeyAccess {
+        self.access
+    }
+
+    /// Return the receiver private-key path for a read declaration.
+    pub fn receiver_private_key_path(&self) -> Option<&ConfigPath> {
+        self.receiver_private_key_path.as_ref()
+    }
+
+    /// Return the originator signing-seed path for a write declaration.
+    pub fn originator_signing_seed_path(&self) -> Option<&ConfigPath> {
+        self.originator_signing_seed_path.as_ref()
+    }
+
+    /// Return the channel-master-key path for a write declaration.
+    pub fn channel_master_key_path(&self) -> Option<&ConfigPath> {
+        self.channel_master_key_path.as_ref()
+    }
+}
+
+/// Validated exact Ollama model registration.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct OllamaModelConfig {
+    model: String,
+    endpoint: String,
+    timeout: Duration,
+}
+
+impl OllamaModelConfig {
+    /// Return the exact launch selector and Ollama model tag.
+    pub fn model(&self) -> &str {
+        &self.model
+    }
+
+    /// Return the explicit plain-HTTP Ollama endpoint.
+    pub fn endpoint(&self) -> &str {
+        &self.endpoint
+    }
+
+    /// Return the bounded per-request timeout.
+    pub fn timeout(&self) -> Duration {
+        self.timeout
+    }
+}
+
+/// Optional explicit production authorities for the authenticated host data plane.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct DataPlaneConfig {
+    channel_keys: Vec<ChannelKeyConfig>,
+    ollama_models: Vec<OllamaModelConfig>,
+}
+
+impl DataPlaneConfig {
+    /// Return exact file-backed directional channel-key declarations.
+    pub fn channel_keys(&self) -> &[ChannelKeyConfig] {
+        &self.channel_keys
+    }
+
+    /// Return exact Ollama model registrations.
+    pub fn ollama_models(&self) -> &[OllamaModelConfig] {
+        &self.ollama_models
+    }
+}
+
 impl PrivilegeConfig {
     /// Return the non-zero Tier 1 auto-approval timeout.
     pub fn tier_1_auto_approve_timeout(self) -> Duration {
@@ -309,6 +417,7 @@ pub struct ChiefConfig {
     host_defaults: HostDefaultsConfig,
     vault: VaultConfig,
     privilege: PrivilegeConfig,
+    data_plane: DataPlaneConfig,
 }
 
 impl ChiefConfig {
@@ -335,6 +444,11 @@ impl ChiefConfig {
     /// Return privilege-interaction deadlines.
     pub fn privilege(&self) -> PrivilegeConfig {
         self.privilege
+    }
+
+    /// Return explicit host data-plane authority declarations.
+    pub fn data_plane(&self) -> &DataPlaneConfig {
+        &self.data_plane
     }
 }
 
@@ -377,6 +491,14 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
         positive_secs(document.take(PRIVILEGE, "tier_1_auto_approve_timeout")?)?;
     let biometric_timeout = positive_secs(document.take(PRIVILEGE, "biometric_timeout")?)?;
     let hardware_key_timeout = positive_secs(document.take(PRIVILEGE, "hardware_key_timeout")?)?;
+    let data_plane = if document.has_table(DATA_PLANE) {
+        DataPlaneConfig {
+            channel_keys: parse_channel_keys(document.take(DATA_PLANE, "channel_keys")?)?,
+            ollama_models: parse_ollama_models(document.take(DATA_PLANE, "ollama_models")?)?,
+        }
+    } else {
+        DataPlaneConfig::default()
+    };
     if !document.fields.is_empty() {
         return Err(ConfigError::Unknown);
     }
@@ -407,7 +529,126 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
             biometric_timeout,
             hardware_key_timeout,
         },
+        data_plane,
     })
+}
+
+fn parse_channel_keys(value: RawValue) -> Result<Vec<ChannelKeyConfig>, ConfigError> {
+    let RawValue::Array(values) = value else {
+        return Err(ConfigError::InvalidType);
+    };
+    if values.len() > MAX_CHANNEL_KEYS {
+        return Err(ConfigError::InvalidValue);
+    }
+    let mut identities = BTreeSet::new();
+    let mut declarations = Vec::with_capacity(values.len());
+    for value in values {
+        let RawValue::InlineTable(mut fields) = value else {
+            return Err(ConfigError::InvalidType);
+        };
+        let pipeline_id = parse_uuid_v7(expect_string(take_inline(&mut fields, "pipeline_id")?)?)?;
+        let agent_id = expect_string(take_inline(&mut fields, "agent_id")?)?;
+        if agent_id.is_empty()
+            || agent_id.len() > MAX_AGENT_ID_BYTES
+            || agent_id.trim() != agent_id
+            || agent_id.chars().any(char::is_control)
+        {
+            return Err(ConfigError::InvalidValue);
+        }
+        let channel_id = parse_uuid_v7(expect_string(take_inline(&mut fields, "channel_id")?)?)?;
+        let access = match expect_string(take_inline(&mut fields, "access")?)?.as_str() {
+            "read" => ChannelKeyAccess::Read,
+            "write" => ChannelKeyAccess::Write,
+            _ => return Err(ConfigError::InvalidValue),
+        };
+        let (receiver_private_key_path, originator_signing_seed_path, channel_master_key_path) =
+            match access {
+                ChannelKeyAccess::Read => (
+                    Some(ConfigPath::parse(expect_string(take_inline(
+                        &mut fields,
+                        "private_key_path",
+                    )?)?)?),
+                    None,
+                    None,
+                ),
+                ChannelKeyAccess::Write => (
+                    None,
+                    Some(ConfigPath::parse(expect_string(take_inline(
+                        &mut fields,
+                        "signing_seed_path",
+                    )?)?)?),
+                    Some(ConfigPath::parse(expect_string(take_inline(
+                        &mut fields,
+                        "channel_key_path",
+                    )?)?)?),
+                ),
+            };
+        if !fields.is_empty() {
+            return Err(ConfigError::Unknown);
+        }
+        if !identities.insert((pipeline_id, agent_id.clone(), channel_id)) {
+            return Err(ConfigError::Duplicate);
+        }
+        declarations.push(ChannelKeyConfig {
+            pipeline_id,
+            agent_id,
+            channel_id,
+            access,
+            receiver_private_key_path,
+            originator_signing_seed_path,
+            channel_master_key_path,
+        });
+    }
+    Ok(declarations)
+}
+
+fn parse_ollama_models(value: RawValue) -> Result<Vec<OllamaModelConfig>, ConfigError> {
+    let RawValue::Array(values) = value else {
+        return Err(ConfigError::InvalidType);
+    };
+    if values.len() > MAX_OLLAMA_MODELS {
+        return Err(ConfigError::InvalidValue);
+    }
+    let mut models = BTreeSet::new();
+    let mut declarations = Vec::with_capacity(values.len());
+    for value in values {
+        let RawValue::InlineTable(mut fields) = value else {
+            return Err(ConfigError::InvalidType);
+        };
+        let model = expect_string(take_inline(&mut fields, "model")?)?;
+        let endpoint = expect_string(take_inline(&mut fields, "endpoint")?)?;
+        let timeout = bounded_process_millis(take_inline(&mut fields, "timeout")?)?;
+        if model.trim().is_empty()
+            || model.trim() != model
+            || model.len() > MAX_MODEL_BYTES
+            || model.chars().any(char::is_control)
+            || endpoint.is_empty()
+            || endpoint.len() > MAX_ENDPOINT_BYTES
+            || endpoint.chars().any(char::is_control)
+        {
+            return Err(ConfigError::InvalidValue);
+        }
+        if !fields.is_empty() {
+            return Err(ConfigError::Unknown);
+        }
+        if !models.insert(model.clone()) {
+            return Err(ConfigError::Duplicate);
+        }
+        declarations.push(OllamaModelConfig {
+            model,
+            endpoint,
+            timeout,
+        });
+    }
+    Ok(declarations)
+}
+
+fn parse_uuid_v7(value: String) -> Result<[u8; 16], ConfigError> {
+    let parsed = coding_adventures_uuid::parse(&value).map_err(|_| ConfigError::InvalidValue)?;
+    if parsed.version() != 7 || parsed.variant() != "rfc4122" || parsed.to_string() != value {
+        return Err(ConfigError::InvalidValue);
+    }
+    Ok(parsed.bytes())
 }
 
 fn parse_port(value: RawValue) -> Result<u16, ConfigError> {
@@ -570,17 +811,23 @@ impl RawDocument {
     }
 
     fn validate_tables(&self) -> Result<(), ConfigError> {
-        let allowed = [ORCHESTRATOR, KEYRING, HOST_DEFAULTS, VAULT, PRIVILEGE]
+        let required = [ORCHESTRATOR, KEYRING, HOST_DEFAULTS, VAULT, PRIVILEGE]
             .into_iter()
             .map(strings_to_vec)
             .collect::<BTreeSet<_>>();
-        if self.tables == allowed {
-            Ok(())
-        } else if self.tables.iter().any(|table| !allowed.contains(table)) {
+        let mut allowed = required.clone();
+        allowed.insert(strings_to_vec(DATA_PLANE));
+        if self.tables.iter().any(|table| !allowed.contains(table)) {
             Err(ConfigError::Unknown)
-        } else {
+        } else if required.iter().any(|table| !self.tables.contains(table)) {
             Err(ConfigError::Missing)
+        } else {
+            Ok(())
         }
+    }
+
+    fn has_table(&self, table: &[&str]) -> bool {
+        self.tables.contains(&strings_to_vec(table))
     }
 
     fn take(&mut self, table: &[&str], field: &str) -> Result<RawValue, ConfigError> {
@@ -814,6 +1061,78 @@ hardware_key_timeout = 60
         assert_eq!(
             config.privilege().hardware_key_timeout(),
             Duration::from_secs(60)
+        );
+        assert!(config.data_plane().channel_keys().is_empty());
+        assert!(config.data_plane().ollama_models().is_empty());
+    }
+
+    #[test]
+    fn parses_exact_directional_keys_and_ollama_models() {
+        let source = format!(
+            r#"{VALID}
+
+[data_plane]
+channel_keys = [
+  {{ pipeline_id = "018f0c10-7b4a-7cc0-8000-000000000001", agent_id = "weather", channel_id = "018f0c10-7b4a-7cc0-8000-000000000002", access = "read", private_key_path = "~/.chief-of-staff/keys/weather-receiver.bin" }},
+  {{ pipeline_id = "018f0c10-7b4a-7cc0-8000-000000000001", agent_id = "weather", channel_id = "018f0c10-7b4a-7cc0-8000-000000000003", access = "write", signing_seed_path = "~/.chief-of-staff/keys/weather-signing.bin", channel_key_path = "~/.chief-of-staff/keys/weather-channel.bin" }},
+]
+ollama_models = [
+  {{ model = "qwen2.5:0.5b", endpoint = "http://127.0.0.1:11434", timeout = 120000 }},
+]
+"#
+        );
+        let config = parse_config(&source).unwrap();
+        let keys = config.data_plane().channel_keys();
+        assert_eq!(keys.len(), 2);
+        assert_eq!(keys[0].access(), ChannelKeyAccess::Read);
+        assert!(keys[0].receiver_private_key_path().is_some());
+        assert!(keys[0].originator_signing_seed_path().is_none());
+        assert_eq!(keys[1].access(), ChannelKeyAccess::Write);
+        assert!(keys[1].receiver_private_key_path().is_none());
+        assert!(keys[1].originator_signing_seed_path().is_some());
+        assert!(keys[1].channel_master_key_path().is_some());
+        let models = config.data_plane().ollama_models();
+        assert_eq!(models.len(), 1);
+        assert_eq!(models[0].model(), "qwen2.5:0.5b");
+        assert_eq!(models[0].endpoint(), "http://127.0.0.1:11434");
+        assert_eq!(models[0].timeout(), Duration::from_secs(120));
+    }
+
+    #[test]
+    fn data_plane_declarations_are_canonical_unique_and_closed() {
+        let section = r#"
+
+[data_plane]
+channel_keys = [
+  { pipeline_id = "018f0c10-7b4a-7cc0-8000-000000000001", agent_id = "weather", channel_id = "018f0c10-7b4a-7cc0-8000-000000000002", access = "read", private_key_path = "~/receiver.bin" },
+]
+ollama_models = [
+  { model = "qwen2.5:0.5b", endpoint = "http://127.0.0.1:11434", timeout = 120000 },
+]
+"#;
+        let valid = format!("{VALID}{section}");
+        assert!(parse_config(&valid).is_ok());
+        assert_eq!(
+            parse_config(&valid.replace("018f0c10", "018F0C10")),
+            Err(ConfigError::InvalidValue)
+        );
+        assert_eq!(
+            parse_config(&valid.replace("access = \"read\"", "access = \"both\"")),
+            Err(ConfigError::InvalidValue)
+        );
+        assert_eq!(
+            parse_config(&valid.replace(
+                "private_key_path = \"~/receiver.bin\"",
+                "private_key_path = \"~/receiver.bin\", extra = true"
+            )),
+            Err(ConfigError::Unknown)
+        );
+        assert_eq!(
+            parse_config(&valid.replace(
+                "  { model = \"qwen2.5:0.5b\", endpoint = \"http://127.0.0.1:11434\", timeout = 120000 },",
+                "  { model = \"qwen2.5:0.5b\", endpoint = \"http://127.0.0.1:11434\", timeout = 120000 },\n  { model = \"qwen2.5:0.5b\", endpoint = \"http://localhost:11434\", timeout = 120000 },"
+            )),
+            Err(ConfigError::Duplicate)
         );
     }
 

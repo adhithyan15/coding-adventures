@@ -9,3 +9,5 @@
 - Require explicit daemon port, state root, credential path, and host executable
   composition settings.
 - Bound secure-bootstrap and graceful-stop deadlines to five minutes.
+- Add optional, closed, typed data-plane declarations for exact directional
+  channel-key files and exact Ollama model endpoints.

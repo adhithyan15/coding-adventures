@@ -1,5 +1,7 @@
 # Changelog
 
+- Expose exact model-registry cardinality without exposing provider clients.
+
 ## Unreleased
 
 - Add an exact zeroizing pipeline/agent/channel key registry for safe production

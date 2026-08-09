@@ -540,9 +540,9 @@ binding, immutable claims, active channel topology, directional membership, and
 model settings. It rejects unknown or wrong-direction channel UUIDs and any model
 setting drift before invoking the separately injected channel/LLM service, then
 validates response identity and operation shape before returning it. The
-payload-blind orchestration core receives no request body. Until concrete channel
-key custody and model providers are provisioned, the production daemon uses the
-same authorization boundary with a redacted unavailable service. The reusable
+payload-blind orchestration core receives no request body. Until the provisioned
+authorities are injected into composition, the production daemon uses the same
+authorization boundary with a redacted unavailable service. The reusable
 authority-backed service now executes against the real encrypted durable channel
 endpoints, retains a bounded delivery-to-acknowledgement ledger, provisions sealed
 receiver grants before publication, and resolves only exact model selectors. Key
@@ -553,6 +553,10 @@ The concrete pre-composition key registry owns only zeroizing secret buffers, bi
 each directional key to an exact pipeline, agent, and channel, and releases a new
 short-lived crypto owner only after all three identities match the reloaded durable
 binding. Filesystem and Vault formats remain separate provisioning adapters.
+The file-backed production adapter consumes only the typed declarations above,
+loads raw private material through owner-only no-link exact-length reads, and
+constructs exact Ollama clients without probing the network. A future Vault
+adapter may populate the same registries without changing execution semantics.
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
@@ -2169,7 +2173,26 @@ container = true               # run vault in OS container
 tier_1_auto_approve_timeout = 5  # seconds
 biometric_timeout = 30           # seconds
 hardware_key_timeout = 60        # seconds
+
+[data_plane]
+channel_keys = [
+  { pipeline_id = "018f0c10-7b4a-7cc0-8000-000000000001", agent_id = "weather", channel_id = "018f0c10-7b4a-7cc0-8000-000000000002", access = "read", private_key_path = "~/.chief-of-staff/keys/weather-receiver.bin" },
+  { pipeline_id = "018f0c10-7b4a-7cc0-8000-000000000001", agent_id = "weather", channel_id = "018f0c10-7b4a-7cc0-8000-000000000003", access = "write", signing_seed_path = "~/.chief-of-staff/keys/weather-signing.bin", channel_key_path = "~/.chief-of-staff/keys/weather-channel.bin" },
+]
+ollama_models = [
+  { model = "qwen2.5:0.5b", endpoint = "http://127.0.0.1:11434", timeout = 120000 },
+]
 ```
+
+The optional data-plane table is closed and explicit. Each channel-key entry
+names one canonical UUID-v7 pipeline, exact agent identity, canonical UUID-v7
+channel, and direction. Read entries name one raw 32-byte X25519 private-key
+file; write entries name one raw 32-byte Ed25519 signing seed and one raw
+32-byte current-epoch channel master key. Secret bytes never appear in TOML.
+Each Ollama entry registers its unique model tag as the exact launch selector,
+requires one `http://host:port` authority with no implicit path or port, and
+bounds the request timeout to five minutes. Provisioning validates and
+constructs these immutable authorities without a network reachability probe.
 
 The operator credential path is a fail-closed local trust boundary. Composition
 MUST load an existing canonical 64-byte lowercase-hex credential or claim an absent
