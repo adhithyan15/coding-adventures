@@ -184,7 +184,8 @@ void mosaic_app_destroy(mosaic_handle app);
 The same request/update envelopes are exported from WebAssembly. FFI functions
 must not unwind, leak Rust-owned memory, or expose architecture-dependent structs.
 Protocol and application errors use distinct status codes and include a bounded
-UTF-8 diagnostic retrievable through the returned buffer.
+UTF-8 diagnostic in the returned output buffer. A panic is contained and poisons
+the affected handle so unknown application state cannot continue.
 
 Bindings for Swift, Kotlin/JNI, Dart FFI, C#, C++/Qt, JavaScript, and TypeScript are
 generated from this fixed runtime ABI. They belong to Mosaic, not to applications.
@@ -290,7 +291,8 @@ unblocks multiple downstream targets; never count source generation as completio
 ### P0 — cross-backend execution spine
 
 - [x] Implement `mosaic-app-runtime` contract types and deterministic engine tests.
-- [ ] Implement panic-safe C ABI and WebAssembly exports with buffer-ownership tests.
+- [x] Implement the panic-safe native C ABI with buffer-ownership tests.
+- [ ] Implement WebAssembly exports over the same JSON envelopes.
 - [ ] Generate package-independent bindings for the five native backend families.
 - [ ] Generate standard effect hosts, beginning with storage and lifecycle.
 - [ ] Add `native-complete` capability/degradation analysis to the compiler.
