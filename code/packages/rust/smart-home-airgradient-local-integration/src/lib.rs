@@ -14,7 +14,7 @@ use smart_home_core::{
 };
 use smart_home_data_governance::{
     DataCategory, DataDestination, DataGovernanceDecision, DataGovernanceDenial,
-    DataGovernancePolicy, DataOperation, DataUseRequest,
+    DataGovernancePolicy, DataOperation, DataRetention, DataUseRequest,
 };
 use smart_home_discovery::{
     DiscoveryConfidence, DiscoveryRecord, DiscoverySource, PairingRequirement,
@@ -1481,6 +1481,7 @@ fn authorize_data_use(
         category: operation.category,
         operation: operation.operation,
         destination: operation.destination,
+        retention: DataRetention::NotApplicable,
         now_ms,
     }) {
         DataGovernanceDecision::Allow(_) => Ok(()),
@@ -2440,6 +2441,7 @@ mod tests {
                     DataDestination::LocalDevice,
                     DataPurpose::new("operator-selected monitor country").unwrap(),
                     ConsentReceiptRef::new("consent://airgradient/country-1").unwrap(),
+                    DataRetention::NotApplicable,
                     1_000,
                     20_000,
                 )
@@ -2456,6 +2458,7 @@ mod tests {
                     DataDestination::https_origin(AIRGRADIENT_CLOUD_ORIGIN).unwrap(),
                     DataPurpose::new("operator-selected AirGradient dashboard upload").unwrap(),
                     ConsentReceiptRef::new("consent://airgradient/cloud-1").unwrap(),
+                    DataRetention::NotApplicable,
                     1_000,
                     20_000,
                 )
@@ -2489,6 +2492,7 @@ mod tests {
                         destination,
                         DataPurpose::new(purpose).unwrap(),
                         ConsentReceiptRef::new(consent_ref).unwrap(),
+                        DataRetention::NotApplicable,
                         1_000,
                         20_000,
                     )

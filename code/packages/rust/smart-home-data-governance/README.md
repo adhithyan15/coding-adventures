@@ -9,12 +9,13 @@ destination, declared purpose, consent receipt, and expiry. Integrations ask the
 policy for a decision before transport I/O; model-facing command arguments
 cannot create or widen grants.
 
-The initial categories cover coarse country configuration and environmental
-telemetry. Destinations are the local device, an exact validated HTTPS origin,
-or a credential-free `mqtt://` or `mqtts://` broker URI with an explicit port.
-Telemetry shutdown is always allowed as a privacy-protective operation, but the
-ordinary D23 command authorization layer may still require human approval for
-the device mutation.
+The categories cover coarse country configuration, device identifiers, and
+environmental telemetry. Destinations are the local device, an exact validated
+HTTPS origin, or a credential-free `mqtt://` or `mqtts://` broker URI with an
+explicit port. Identifier inspection requires an exact grant whose retention is
+either ephemeral or a non-zero bounded duration. Telemetry shutdown is always
+allowed as a privacy-protective operation, but the ordinary D23 command
+authorization layer may still require human approval for the device mutation.
 
 Consent references, purpose text, HTTPS origins, and MQTT broker identities stay
 private to the policy and are redacted from `Debug`. Decision records expose

@@ -1,8 +1,8 @@
 [package]
 name = "smart-home-data-governance"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-description = "Bounded host-owned privacy, consent, and telemetry-egress policy for D23 smart-home integrations"
+description = "Bounded host-owned privacy, consent, identifier-use, and telemetry-egress policy for D23 smart-home integrations"
 license = "MIT"
 
 [dependencies]

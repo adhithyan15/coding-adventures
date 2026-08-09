@@ -1060,6 +1060,31 @@ energy-telemetry host using Enphase's documented IQ Gateway API:
   trust roots for gateway certificates. A real loopback test proves both exact
   bearer-authenticated requests and that Vault references never reach the wire.
 
+## Current Enphase Per-Inverter Production Slice
+
+This slice closes the documented, safely governable per-microinverter read path
+without retaining Enphase's native serial numbers:
+
+- The production host adds the documented authenticated
+  `GET /api/v1/production/inverters` request alongside meter inventory and
+  readings. Inverter arrays are bounded, native serials must be decimal and
+  unique, and power fields are finite and non-negative.
+- D23 read authorization and an exact host-owned device-identifier grant both
+  succeed before credentials or network I/O. The grant binds the principal,
+  gateway inverter resource, inspection operation, local destination, declared
+  purpose, consent receipt, validity window, and ephemeral raw-identifier
+  retention.
+- A separate Vault-leased 32-byte key derives domain-separated 128-bit
+  host-scoped pseudonyms. Raw microinverter serials live only in a zeroizing
+  response tree and never enter runtime entity IDs, names, metadata, state,
+  errors, request plans, or debug output.
+- Confirmed inverter sensors expose only pseudonymous identity, device type,
+  last-report time, last reported active power, and maximum reported active
+  power. Aggregate meter behavior remains unchanged.
+- Real loopback coverage proves the exact three bearer-authenticated requests,
+  consent denial before transport, stable key-scoped identity, and the absence
+  of raw inverter serials from requests and installed entities.
+
 ## Current ZoneMinder Inspection Slice
 
 This slice adds a first-party authenticated local ZoneMinder NVR host using the
@@ -1179,9 +1204,9 @@ and then by prerequisite readiness:
 5. Add automatic Enphase IQ Gateway discovery only if Enphase documents a
    stable LAN advertisement; the current production path uses explicit local
    HTTPS endpoint and gateway-serial configuration.
-6. Add Enphase per-inverter production inspection only after device-identifier
-   privacy, purpose, and retention policy are concrete because the native
-   response exposes every microinverter serial number.
+6. Add Enphase pseudonym-key rotation and retained-identity migration only after
+   the runtime can atomically replace entity identifiers without duplicating or
+   orphaning historical inverter state.
 7. Add Enphase live battery, relay, generator, grid, and system-topology state
    only after the normalized energy topology and retention semantics are
    concrete.
