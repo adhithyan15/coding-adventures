@@ -3446,6 +3446,16 @@ def test_gives_mosfet_n_sub_precedence_over_substrate_doping_aliases() -> None:
     assert mosfet.model.model.params.N_SUB == 1.8
 
 
+def test_gives_mosfet_cbs_precedence_over_source_junction_capacitance_alias() -> None:
+    parsed = parse_netlist(
+        ".model nfast NMOS(CBS=6p CJS=8p)\nM1 d g s b nfast\n"
+    )
+
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.CBS, 6.0e-12)
+
+
 @pytest.mark.parametrize("alias", ["LAMBDA", "LAM"])
 def test_rejects_non_finite_mosfet_model_channel_modulation(alias: str) -> None:
     with pytest.raises(NetlistParseError, match="MOSFET LAMBDA must be finite"):
