@@ -4616,9 +4616,14 @@ the Rust, Python, and TypeScript surfaces together.
      and reject non-finite derived currents before lowering.
 
 456. Python and TypeScript Berkeley SPICE BJT base-collector-leakage-emission parity.
-   - Status: implemented in this BJT NC parity slice.
+   - Status: completed in PR 10122.
    - Both parser facades validate positive finite `NC` values and lower them
      into the shared engine base-collector-leakage-emission-coefficient field.
+
+457. Python and TypeScript Berkeley SPICE BJT forward-beta-temperature parity.
+   - Status: implemented in this BJT XTB parity slice.
+   - Both parser facades validate finite `XTB` values and lower them into the
+     shared engine forward-beta-temperature-exponent field.
 
 ## Backlog
 

@@ -1737,6 +1737,22 @@ def test_rejects_invalid_bjt_base_collector_leakage_emission_coefficient(
         parse_netlist(f".model fast NPN(NC={value})")
 
 
+@pytest.mark.parametrize(("value", "expected"), [("-1", -1.0), ("2", 2.0)])
+def test_parse_bjt_forward_beta_temperature_exponent(
+    value: str, expected: float
+) -> None:
+    parsed = parse_netlist(f".model fast NPN(XTB={value})\nQ1 col base emit fast")
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Xtb == expected
+
+
+def test_rejects_non_finite_bjt_forward_beta_temperature_exponent() -> None:
+    with pytest.raises(NetlistParseError, match="BJT XTB must be finite"):
+        parse_netlist(".model fast NPN(XTB=1e999)")
+
+
 def test_parse_jfet_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
