@@ -151,11 +151,13 @@ top bar for six movements before the same one lift and separate upright. Frame
 middle stem and top bar, then a second lift before the right-hand descent. The
 Tamil starter inventory is now fully verified. Persian **ا** adds the first
 right-to-left-script ductus: UT Austin's freehand lesson shows one top-to-bottom
-Naskh stem at 00:08–00:11, with no lift, and the path is checked against the
-vendored isolated Noto Naskh outline. The remaining **216** prose part
+Naskh stem at 00:08–00:11, with no lift. The adjacent **ب** demonstration at
+00:11–00:15 sweeps its shallow bowl right-to-left, then lifts once for the dot
+below. Both paths are checked against their vendored isolated Noto Naskh
+outlines. The remaining **215** prose part
 orders across nine scripts (`arabic` 21, `chinese` 24, `cyrillic` 33,
 `devanagari` 28, `gujarati` 33, `hebrew` 22, `japanese` 34,
-`perso-arabic` 8, `urdu-nastaliq` 13) are explicitly **unverified for
+`perso-arabic` 7, `urdu-nastaliq` 13) are explicitly **unverified for
 pen lifts**. The data validator rejects a lift count without a citation (or a
 citation without a count), and Language Ladder's ductus test proves every verified
 claim has the same cited, font-checked path. That closes `HL-C19`; future entries

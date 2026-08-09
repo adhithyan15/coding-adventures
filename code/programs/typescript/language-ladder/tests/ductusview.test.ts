@@ -76,6 +76,8 @@ const DENTAL_NA = DUCTUS["ந"];
 const dentalNaOutline = tamilOutline("ந");
 const PERSIAN_ALEF = DUCTUS["ا"];
 const persianAlefOutline = naskhOutline("ا");
+const PERSIAN_BEH = DUCTUS["ب"];
+const persianBehOutline = naskhOutline("ب");
 
 /** Walk a node tree, collecting every node the predicate accepts. */
 function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = []): SvgNode[] {
@@ -87,7 +89,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds all eleven authored Tamil letters and Persian ا", () => {
+  it("finds all eleven authored Tamil letters and Persian ا and ب", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -100,12 +102,13 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("ண")?.glyph).toBe("ண");
     expect(ductusFor("ந")?.glyph).toBe("ந");
     expect(ductusFor("ا")?.glyph).toBe("ا");
+    expect(ductusFor("ب")?.glyph).toBe("ب");
   });
 
   it("returns undefined for a letter nobody has authored a stroke order for", () => {
-    // Persian ب still has prose part order but no authored pen path. It must
-    // come back empty rather than borrow ا's or Tamil ம's.
-    expect(ductusFor("ب")).toBeUndefined();
+    // Persian پ still has prose part order but no authored pen path. It must
+    // come back empty rather than borrow ب's or Tamil ம's.
+    expect(ductusFor("پ")).toBeUndefined();
     expect(ductusFor("A")).toBeUndefined();
     expect(ductusFor("")).toBeUndefined();
   });
@@ -583,6 +586,42 @@ describe("Persian ا — the first cited right-to-left-script filmstrip", () => 
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(PERSIAN_ALEF.strokes[0], 1),
+    );
+  });
+});
+
+describe("Persian ب — a right-to-left bowl followed by its dot", () => {
+  const steps = ductusSteps(PERSIAN_BEH);
+  const strip = ductusFilmstrip(PERSIAN_BEH, persianBehOutline);
+
+  it("keeps the bowl in one right-to-left run, then marks the sourced lift", () => {
+    expect(steps).toHaveLength(2);
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep the shallow bowl from right to left",
+      "lift, then place the dot below",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1]);
+    const bowl = PERSIAN_BEH.strokes[0].segments[0].path;
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+  });
+
+  it("reports two movements separated by one pen lift", () => {
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 2 movements");
+  });
+
+  it("draws the Noto Naskh outline and preserves the bowl during the dot", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      persianBehOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(PERSIAN_BEH.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(PERSIAN_BEH.strokes[1], 1),
     );
   });
 });
