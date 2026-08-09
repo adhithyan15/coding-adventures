@@ -2670,6 +2670,9 @@ def _build_mosfet_model(model: ModelCard, instance_params: dict[str, float]) -> 
     if "VT0" in model_params:
         model_params.pop("VTO", None)
         model_params.pop("VTH", None)
+    if "N_SUB" in model_params:
+        model_params.pop("NSUB", None)
+        model_params.pop("N", None)
     params = {**model_params, **instance_params}
     defaults = Level1Params()
     values = {
