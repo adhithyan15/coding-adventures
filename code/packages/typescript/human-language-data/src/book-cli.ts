@@ -5,10 +5,12 @@ import {
   renderBookAnswerKey,
   renderBookChapter,
   renderBookGlossary,
+  renderBookIndex,
   renderReferenceAppendix,
   type BookAnswerKeyTarget,
   type BookGenerationTarget,
   type BookGlossaryTarget,
+  type BookIndexTarget,
   type BookReferenceAppendixTarget,
   type InlineRenderOptions,
 } from "./book.js";
@@ -30,6 +32,11 @@ interface ConfiguredBookGlossaryTarget extends BookGlossaryTarget {
 }
 
 interface ConfiguredBookAnswerKeyTarget extends BookAnswerKeyTarget {
+  /** Named reusable mapping from the config's scriptSets table. */
+  scriptSet?: string;
+}
+
+interface ConfiguredBookIndexTarget extends BookIndexTarget {
   /** Named reusable mapping from the config's scriptSets table. */
   scriptSet?: string;
 }
@@ -73,6 +80,8 @@ interface BookGenerationConfig {
   glossaries?: ConfiguredBookGlossaryTarget[];
   /** Executable lesson activities rendered as review questions and answer keys. */
   answerKeys?: ConfiguredBookAnswerKeyTarget[];
+  /** Canonical meanings, topic lessons, and chapter capabilities rendered as indexes. */
+  indexes?: ConfiguredBookIndexTarget[];
   /** Never rendered. See {@link HandwrittenBookChapter}. */
   handwritten?: HandwrittenBookChapter[];
 }
@@ -285,6 +294,34 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
       throw new Error(`${answerKey.output}: duplicate generated book output`);
     }
     outputs.set(answerKey.output, renderBookAnswerKey(answerKey, lessons));
+  }
+  for (const configuredIndex of config.indexes ?? []) {
+    const { scriptSet, ...plainIndex } = configuredIndex;
+    let index: BookIndexTarget = { ...plainIndex };
+    if (scriptSet !== undefined) {
+      if (
+        index.inlineScripts !== undefined ||
+        index.unicodeScript !== undefined ||
+        index.scriptCommand !== undefined
+      ) {
+        throw new Error(
+          `${index.language} index: scriptSet cannot be combined with inline script options`,
+        );
+      }
+      const inlineScripts = config.scriptSets?.[scriptSet];
+      if (!inlineScripts) {
+        throw new Error(`${index.language} index: unknown scriptSet '${scriptSet}'`);
+      }
+      index = { ...index, inlineScripts };
+    }
+    safeOutput(root, index.output);
+    if (outputs.has(index.output)) {
+      throw new Error(`${index.output}: duplicate generated book output`);
+    }
+    const chapters = [...config.targets, ...(config.handwritten ?? [])].filter(
+      (chapter) => chapter.language === index.language,
+    );
+    outputs.set(index.output, renderBookIndex(index, lessons, chapters));
   }
   manifest.chapters.sort(
     (left, right) => left.language.localeCompare(right.language) || left.chapter - right.chapter,

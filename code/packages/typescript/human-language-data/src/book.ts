@@ -60,6 +60,25 @@ export interface BookAnswerKeyTarget {
   inlineScripts?: InlineRenderOptions[];
 }
 
+/** A generated subject index derived from canonical lessons and chapter capabilities. */
+export interface BookIndexTarget {
+  language: string;
+  output: string;
+  /** Unicode Script property whose runs need the book's dedicated font command. */
+  unicodeScript?: string;
+  /** LaTeX command name, without the leading backslash, used for those runs. */
+  scriptCommand?: string;
+  /** Multiple script/font mappings for entries that compare writing systems inline. */
+  inlineScripts?: InlineRenderOptions[];
+}
+
+/** The stable title/label subset shared by generated and handwritten chapters. */
+export interface BookIndexChapter {
+  chapter: number;
+  title: string;
+  label: string;
+}
+
 export interface InlineRenderOptions {
   unicodeScript: string;
   scriptCommand: string;
@@ -1256,6 +1275,244 @@ export function renderBookAnswerKey(
         ? [`\\footnotesize \\textbf{Also accepted:} ${accepted.join("; ")}`]
         : []),
       "\\end{minipage}\\par\\medskip",
+      "",
+    );
+  }
+  return `${output.join("\n").trimEnd()}\n`;
+}
+
+interface BookIndexEntry {
+  term: string;
+  headword: string;
+  romanization: string;
+  descriptor: string;
+  facets: string[];
+  chapters: number[];
+}
+
+const INDEX_LESSON_TYPES = new Map<string, string>([
+  ["grammar", "grammar topic"],
+  ["writing", "script and writing topic"],
+  ["etymology", "etymology topic"],
+  ["culture", "culture and usage topic"],
+  ["pronunciation", "pronunciation topic"],
+]);
+
+const INDEX_BLOCK_FACETS = new Map<LessonBodyBlock["type"], string>([
+  ["pronunciation", "pronunciation"],
+  ["script", "script"],
+  ["writing", "writing"],
+  ["grammar", "grammar"],
+  ["etymology", "etymology"],
+  ["culture-pragmatics", "usage and culture"],
+]);
+
+const INDEX_FACET_ORDER = [
+  "pronunciation",
+  "script",
+  "writing",
+  "grammar",
+  "etymology",
+  "usage and culture",
+];
+
+function indexSortKey(value: string): string {
+  return glossarySortKey(value)
+    .replace(/[*_`]/g, "")
+    .replace(/[^\p{Letter}\p{Number}]+/gu, " ")
+    .trim();
+}
+
+function compareBookIndexEntries(left: BookIndexEntry, right: BookIndexEntry): number {
+  const leftKey = indexSortKey(left.term);
+  const rightKey = indexSortKey(right.term);
+  if (leftKey < rightKey) return -1;
+  if (leftKey > rightKey) return 1;
+  const leftDetail = indexSortKey(left.headword || left.descriptor);
+  const rightDetail = indexSortKey(right.headword || right.descriptor);
+  if (leftDetail < rightDetail) return -1;
+  if (leftDetail > rightDetail) return 1;
+  return 0;
+}
+
+function indexGroup(term: string): string {
+  const key = indexSortKey(term);
+  const first = key[0] ?? "";
+  if (/^[a-z]$/i.test(first)) return first.toUpperCase();
+  if (/^\d$/.test(first)) return "0--9";
+  return "Other";
+}
+
+/**
+ * Render a compact, English-first subject index from canonical curriculum data.
+ *
+ * The glossary already provides target-language lookup. This complementary view
+ * starts from English meanings, dedicated topic lessons, and chapter titles. It
+ * never mines prose for guessed keywords, and it deliberately excludes practice
+ * drills: retrieval belongs in the review appendix, not in a subject index.
+ */
+export function renderBookIndex(
+  target: BookIndexTarget,
+  allLessons: ParsedLesson[],
+  allChapters: BookIndexChapter[],
+): string {
+  const renderOptions = targetRenderOptions(target, `${target.language} index`);
+  const chapters = allChapters
+    .filter((chapter) => Number.isInteger(chapter.chapter) && chapter.chapter > 0)
+    .sort((left, right) => left.chapter - right.chapter);
+  if (chapters.length === 0) {
+    throw new Error(`${target.language} index: no canonical chapter capabilities`);
+  }
+  const chapterByNumber = new Map<number, BookIndexChapter>();
+  for (const chapter of chapters) {
+    if (chapter.label.trim() === "") {
+      throw new Error(`${target.language} index: chapter ${chapter.chapter} has no label`);
+    }
+    if (chapterByNumber.has(chapter.chapter)) {
+      throw new Error(`${target.language} index: duplicate chapter ${chapter.chapter}`);
+    }
+    chapterByNumber.set(chapter.chapter, chapter);
+  }
+
+  const entries = new Map<string, BookIndexEntry>();
+  let candidates = 0;
+  const addEntry = (entry: Omit<BookIndexEntry, "chapters">, chapter: number): void => {
+    if (!chapterByNumber.has(chapter)) {
+      throw new Error(`${target.language} index: chapter ${chapter} is not in the capability ledger`);
+    }
+    const key = JSON.stringify([
+      entry.term,
+      entry.headword,
+      entry.romanization,
+      entry.descriptor,
+    ]);
+    const existing = entries.get(key);
+    if (existing) {
+      if (!existing.chapters.includes(chapter)) existing.chapters.push(chapter);
+      existing.facets = [...new Set([...existing.facets, ...entry.facets])].sort(
+        (left, right) => INDEX_FACET_ORDER.indexOf(left) - INDEX_FACET_ORDER.indexOf(right),
+      );
+      return;
+    }
+    entries.set(key, { ...entry, chapters: [chapter] });
+  };
+
+  for (const chapter of chapters) {
+    candidates += 1;
+    addEntry(
+      {
+        term: chapter.title.trim(),
+        headword: "",
+        romanization: "",
+        descriptor: "chapter topic",
+        facets: [],
+      },
+      chapter.chapter,
+    );
+  }
+
+  const lessons = allLessons
+    .filter((lesson) => lesson.language === target.language)
+    .sort(
+      (left, right) =>
+        left.realization.chapter - right.realization.chapter ||
+        lessonSequence(left) - lessonSequence(right) ||
+        left.realization.lessonId.localeCompare(right.realization.lessonId),
+    );
+  for (const lesson of lessons) {
+    const chapter = lesson.realization.chapter;
+    const facets = [...new Set(lesson.blocks.flatMap((block) => {
+      const facet = INDEX_BLOCK_FACETS.get(block.type);
+      return facet ? [facet] : [];
+    }))].sort(
+      (left, right) => INDEX_FACET_ORDER.indexOf(left) - INDEX_FACET_ORDER.indexOf(right),
+    );
+    if (CONTENT_TYPES.has(lesson.realization.type)) {
+      const term = lesson.realization.gloss.trim();
+      const headword = lesson.realization.headword.trim();
+      if (term === "" || headword === "") {
+        throw new Error(`${lesson.realization.lessonId}: index entries require a headword and gloss`);
+      }
+      candidates += 1;
+      addEntry(
+        {
+          term,
+          headword,
+          romanization: lesson.realization.romanization.trim(),
+          descriptor: "",
+          facets,
+        },
+        chapter,
+      );
+      continue;
+    }
+    const descriptor = INDEX_LESSON_TYPES.get(lesson.realization.type);
+    if (!descriptor) continue;
+    const term = lessonTitle(lesson).trim();
+    if (term === "") {
+      throw new Error(`${lesson.realization.lessonId}: topic index entry has no title`);
+    }
+    candidates += 1;
+    addEntry(
+      {
+        term,
+        headword: "",
+        romanization: "",
+        descriptor,
+        facets,
+      },
+      chapter,
+    );
+  }
+  if (entries.size === 0) throw new Error(`${target.language} index: no canonical entries`);
+
+  const ordered = [...entries.values()].sort(compareBookIndexEntries);
+  const output = [
+    "% GENERATED FILE. Edit canonical lessons or chapters.json, then run npm run generate:books.",
+    `% canonical-index-candidates: ${candidates}`,
+    `% canonical-index-entries: ${ordered.length}`,
+    "",
+    "\\chapter*{Index}",
+    "\\addcontentsline{toc}{chapter}{Index}",
+    "\\markboth{Index}{Index}",
+    "",
+    "Look up an English meaning, a dedicated language topic, or a chapter topic. Each linked reference opens the chapter where the material is introduced; the focus labels name only explicitly typed lesson sections.",
+    "",
+  ];
+  let currentGroup: string | undefined;
+  for (const entry of ordered) {
+    const group = indexGroup(entry.term);
+    if (group !== currentGroup) {
+      currentGroup = group;
+      output.push(`\\section*{${group}}`, "");
+    }
+    const term = renderInlineMarkdown(entry.term, renderOptions);
+    const headword = entry.headword === ""
+      ? ""
+      : `\\enspace\\emph{${renderInlineMarkdown(entry.headword, renderOptions)}}`;
+    const showRomanization =
+      entry.romanization !== "" &&
+      glossarySortKey(entry.romanization) !== glossarySortKey(entry.headword);
+    const romanization = showRomanization
+      ? `\\enspace(${renderInlineMarkdown(entry.romanization, renderOptions)})`
+      : "";
+    const metadata = [
+      ...(entry.descriptor === "" ? [] : [entry.descriptor]),
+      ...(entry.facets.length === 0 ? [] : [`explicit focus: ${entry.facets.join(", ")}`]),
+    ];
+    const references = entry.chapters
+      .sort((left, right) => left - right)
+      .map((chapterNumber) => {
+        const chapter = chapterByNumber.get(chapterNumber)!;
+        return `\\hyperref[${chapter.label}]{Chapter~${chapterNumber}, p.~\\pageref*{${chapter.label}}}`;
+      })
+      .join("; ");
+    output.push(
+      "\\noindent\\begin{minipage}[t]{\\linewidth}",
+      "\\raggedright",
+      `\\textbf{${term}}${headword}${romanization}\\par`,
+      `\\footnotesize ${metadata.length > 0 ? `${metadata.join("; ")}; ` : ""}${references}`,
+      "\\end{minipage}\\par\\smallskip",
       "",
     );
   }

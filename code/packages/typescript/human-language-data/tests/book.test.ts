@@ -5,10 +5,12 @@ import {
   renderBookAnswerKey,
   renderBookChapter,
   renderBookGlossary,
+  renderBookIndex,
   renderInlineMarkdown,
   renderReferenceAppendix,
 } from "../src/book.js";
 import { parseLesson } from "../src/parse.js";
+import type { ChapterCapability } from "../src/types.js";
 
 function source(id: string, sequence: number, word: string): string {
   return `---
@@ -62,6 +64,22 @@ const target = {
   label: "ch:first",
   output: "test/book/chapters/ch01-first.tex",
 };
+
+function capability(chapter: number, title: string, label: string): ChapterCapability {
+  return {
+    chapter,
+    title,
+    label,
+    canDo: `I can use chapter ${chapter}.`,
+    spineNodes: [],
+    payoff: {
+      lesson: `TEST-C${chapter}-payoff`,
+      kind: "task",
+      summary: `Use chapter ${chapter}.`,
+      assesses: [],
+    },
+  };
+}
 
 describe("canonical LaTeX chapter rendering", () => {
   it("renders typed blocks in sequence and embeds the combined source hash", () => {
@@ -292,6 +310,108 @@ Say hello.`,
     expect(() => renderBookAnswerKey(answerTarget, [first, second])).toThrow(
       /duplicate activity id 'TEST-same'/,
     );
+  });
+
+  it("renders a deduplicated English-first subject index with typed facets and chapter links", () => {
+    const first = parseLesson(
+      source("A", 10, "नमस्ते")
+        .replace("gloss: नमस्ते", "gloss: greeting\nromanization: namaste")
+        .replace(
+          "## Guided Practice",
+          `## Sounds you'll need
+
+Hear the greeting.
+
+## Script: the greeting
+
+Read the greeting.
+
+## Writing: the greeting
+
+Write the greeting.
+
+## Grammar Lens: formality
+
+Notice the form.
+
+## The word, taken apart
+
+Trace the history.
+
+## Why it's said this way
+
+Use it politely.
+
+## Guided Practice`,
+        ),
+      "test",
+      "devanagari",
+    );
+    const repeated = parseLesson(
+      source("B", 20, "नमस्ते")
+        .replace("chapter: 1", "chapter: 2")
+        .replace("gloss: नमस्ते", "gloss: greeting\nromanization: namaste"),
+      "test",
+      "devanagari",
+    );
+    const grammar = parseLesson(
+      source("C", 30, "Agreement").replace("type: word", "type: grammar"),
+      "test",
+    );
+    const practice = parseLesson(
+      source("D", 40, "Drill").replace("type: word", "type: practice"),
+      "test",
+    );
+    const generated = renderBookIndex(
+      {
+        language: "test",
+        output: "test/book/chapters/appendix-index.tex",
+        unicodeScript: "Devanagari",
+        scriptCommand: "dv",
+      },
+      [practice, grammar, repeated, first],
+      [
+        capability(2, "Polite speech", "ch:polite"),
+        capability(1, "Introductions & Greetings", "ch:greetings"),
+      ],
+    );
+
+    expect(generated).toContain("% canonical-index-candidates: 5");
+    expect(generated).toContain("% canonical-index-entries: 4");
+    expect(generated).toContain("\\chapter*{Index}");
+    expect(generated).toContain("\\section*{G}");
+    expect(generated).toContain("\\textbf{greeting}\\enspace\\emph{\\dv{नमस्ते}}\\enspace(namaste)");
+    expect(generated).toContain(
+      "explicit focus: pronunciation, script, writing, grammar, etymology, usage and culture",
+    );
+    expect(generated).toContain(
+      "\\hyperref[ch:greetings]{Chapter~1, p.~\\pageref*{ch:greetings}}; " +
+        "\\hyperref[ch:polite]{Chapter~2, p.~\\pageref*{ch:polite}}",
+    );
+    expect(generated).toContain("grammar topic");
+    expect(generated).toContain("chapter topic");
+    expect(generated).not.toContain("Drill");
+  });
+
+  it("rejects index entries whose chapter is absent from the capability ledger", () => {
+    const lesson = parseLesson(
+      source("A", 10, "hello").replace("chapter: 1", "chapter: 2"),
+      "test",
+    );
+    expect(() =>
+      renderBookIndex(
+        { language: "test", output: "test/book/chapters/appendix-index.tex" },
+        [lesson],
+        [capability(1, "Greetings", "ch:greetings")],
+      ),
+    ).toThrow(/chapter 2 is not in the capability ledger/);
+    expect(() =>
+      renderBookIndex(
+        { language: "test", output: "test/book/chapters/appendix-index.tex" },
+        [lesson],
+        [],
+      ),
+    ).toThrow(/no canonical chapter capabilities/);
   });
 
   it("keeps indented Markdown quote continuations in one LaTeX quote", () => {

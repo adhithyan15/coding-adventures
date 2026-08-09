@@ -243,6 +243,60 @@ Read`,
     );
   });
 
+  it("writes and byte-checks configured canonical subject indexes", () => {
+    const root = fixture();
+    writeFileSync(
+      join(root, "test", "chapters.json"),
+      `${JSON.stringify({
+        version: 1,
+        language: "test",
+        chapters: [{
+          chapter: 1,
+          title: "Greetings",
+          label: "ch:hello",
+          canDo: "I can greet someone.",
+          spineNodes: ["HELLO"],
+          payoff: {
+            lesson: "TEST-C01-hello",
+            kind: "task",
+            summary: "Greet someone.",
+            assesses: [],
+          },
+        }],
+      })}\n`,
+    );
+    const configPath = join(root, "core", "book-generation.json");
+    const config = JSON.parse(readFileSync(configPath, "utf8")) as Record<string, unknown>;
+    writeFileSync(
+      configPath,
+      `${JSON.stringify({
+        ...config,
+        indexes: [{
+          language: "test",
+          output: "test/book/chapters/appendix-index.tex",
+        }],
+      })}\n`,
+    );
+
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    expect(runBookGeneration(["--write"], root)).toBe(0);
+    const index = join(root, "test", "book", "chapters", "appendix-index.tex");
+    const generated = readFileSync(index, "utf8");
+    expect(generated).toContain("\\chapter*{Index}");
+    expect(generated).toContain("\\textbf{hello}");
+    expect(generated).toContain(
+      "\\hyperref[ch:hello]{Chapter~1, p.~\\pageref*{ch:hello}}",
+    );
+    expect(runBookGeneration(["--check"], root)).toBe(0);
+
+    writeFileSync(index, "stale\n");
+    expect(runBookGeneration(["--check"], root)).toBe(1);
+    expect(process.stderr.write).toHaveBeenCalledWith(
+      "test/book/chapters/appendix-index.tex: generated output is missing or stale\n",
+    );
+  });
+
   it("rejects reference sources outside the curriculum root", () => {
     const root = fixture();
     const configPath = join(root, "core", "book-generation.json");
@@ -503,6 +557,29 @@ describe("answer-key coverage", () => {
       expect(existsSync(join(root, relative)), `${id} answer key`).toBe(true);
       expect(readFileSync(join(root, id, "book", "book.tex"), "utf8"), `${id} book input`).toContain(
         "\\input{chapters/appendix-answer-key}",
+      );
+    }
+  });
+});
+
+describe("subject-index coverage", () => {
+  const root = defaultCurriculumRoot();
+
+  it("generates, byte-gates, and includes a nonempty index in every registered book", () => {
+    const registry = JSON.parse(
+      readFileSync(join(root, "core", "languages.json"), "utf8"),
+    ) as { languages: Array<{ id: string }> };
+    const outputs = generatedBookOutputs(root);
+    expect(registry.languages.length).toBeGreaterThan(0);
+    for (const { id } of registry.languages) {
+      const relative = `${id}/book/chapters/appendix-index.tex`;
+      expect(outputs.get(relative), relative).toMatch(/^% GENERATED FILE\./);
+      expect(outputs.get(relative), `${id} canonical index entries`).toMatch(
+        /% canonical-index-entries: [1-9]\d*/,
+      );
+      expect(existsSync(join(root, relative)), `${id} index`).toBe(true);
+      expect(readFileSync(join(root, id, "book", "book.tex"), "utf8"), `${id} book input`).toContain(
+        "\\input{chapters/appendix-index}",
       );
     }
   });
