@@ -289,6 +289,86 @@
       "after": []
     },
     {
+      "id": "ES-PATH-038",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C14-ser-ir-preterite",
+        "ES-C14-hablar-preterite",
+        "ES-C14-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-038-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-039",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C15-comer-vivir-preterite",
+        "ES-C15-preterite-fuertes",
+        "ES-C15-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-039-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-040",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C16-imperfecto",
+        "ES-C16-tres-irregulares",
+        "ES-C16-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-040-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-041",
+      "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+      "lessons": [
+        "ES-C10-ir-a-futuro",
+        "ES-C17-futuro",
+        "ES-C17-condicional",
+        "ES-C17-practice",
+        "ES-C17-future-guessing"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-041-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-042",
+      "spine_node": "SPINE-SAY-WHAT-I-WANT",
+      "lessons": [
+        "ES-C11-stem-changes",
+        "ES-C18-subjuntivo",
+        "ES-C18-inherited-subjunctive-stems",
+        "ES-C18-subjunctive-outliers",
+        "ES-C18-subjunctive-name",
+        "ES-C18-quiero-que",
+        "ES-C18-wanting-clause-trap",
+        "ES-C18-ojala",
+        "ES-C18-practice",
+        "ES-C18-practice-subjects",
+        "ES-C18-practice-mood"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-042-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-017",
       "spine_node": "SPINE-RESPOND-BASIC",
       "lessons": [
@@ -689,21 +769,29 @@
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-WANT": {
-      "segments": [],
+      "segments": [
+        "ES-PATH-042"
+      ],
       "omits": [
         "VERB-WANT"
       ],
       "relocates": {}
     },
     "SPINE-TALK-ABOUT-PAST": {
-      "segments": [],
+      "segments": [
+        "ES-PATH-038",
+        "ES-PATH-039",
+        "ES-PATH-040"
+      ],
       "omits": [
         "VERB-PAST"
       ],
       "relocates": {}
     },
     "SPINE-TALK-ABOUT-FUTURE": {
-      "segments": [],
+      "segments": [
+        "ES-PATH-041"
+      ],
       "omits": [
         "VERB-FUTURE"
       ],
@@ -1259,6 +1347,81 @@
         "ES-C32-perro",
         "ES-C33-verde",
         "ES-C33-amarillo"
+      ]
+    },
+    {
+      "id": "ES-EXT-038-LANGUAGE-SPECIFIC",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the Spanish-specific vocabulary and grammar that support this shared ability.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C14-ser-ir-preterite",
+        "ES-C14-hablar-preterite",
+        "ES-C14-practice"
+      ]
+    },
+    {
+      "id": "ES-EXT-039-LANGUAGE-SPECIFIC",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the Spanish-specific vocabulary and grammar that support this shared ability.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C15-comer-vivir-preterite",
+        "ES-C15-preterite-fuertes",
+        "ES-C15-practice"
+      ]
+    },
+    {
+      "id": "ES-EXT-040-LANGUAGE-SPECIFIC",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the Spanish-specific vocabulary and grammar that support this shared ability.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C16-imperfecto",
+        "ES-C16-tres-irregulares",
+        "ES-C16-practice"
+      ]
+    },
+    {
+      "id": "ES-EXT-041-LANGUAGE-SPECIFIC",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the Spanish-specific vocabulary and grammar that support this shared ability.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C10-ir-a-futuro",
+        "ES-C17-futuro",
+        "ES-C17-condicional",
+        "ES-C17-practice",
+        "ES-C17-future-guessing"
+      ]
+    },
+    {
+      "id": "ES-EXT-042-LANGUAGE-SPECIFIC",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the Spanish-specific vocabulary and grammar that support this shared ability.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C11-stem-changes",
+        "ES-C18-subjuntivo",
+        "ES-C18-inherited-subjunctive-stems",
+        "ES-C18-subjunctive-outliers",
+        "ES-C18-subjunctive-name",
+        "ES-C18-quiero-que",
+        "ES-C18-wanting-clause-trap",
+        "ES-C18-ojala",
+        "ES-C18-practice",
+        "ES-C18-practice-subjects",
+        "ES-C18-practice-mood"
       ]
     },
     {

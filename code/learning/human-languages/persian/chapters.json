@@ -1,8 +1,26 @@
 {
   "version": 1,
   "language": "persian",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapter 1 is deliberately absent — all four of its lessons are still schema v1 with no declared knowledge atoms, so any payoff written for it would be invented rather than derived. That absence is real, measurable debt and must not be papered over with a placeholder.",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Every declared book chapter now has an authored capability. Legacy schema-v1 entries anchor their payoff to real canonical lesson content but intentionally keep assesses empty until typed knowledge atoms exist, preserving measurable debt without inventing atoms. Chapter generation status remains independently controlled by core/book-generation.json.",
   "chapters": [
+    {
+      "chapter": 1,
+      "title": "Greetings and responses",
+      "label": "ch:persian-greetings",
+      "canDo": "I can greet someone in Persian, respond courteously, and close the exchange naturally.",
+      "spineNodes": [
+        "SPINE-MEET-GREET",
+        "SPINE-COURTESY-THANK",
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "FA-C01-na",
+        "kind": "task",
+        "summary": "Complete FA-C01-na, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in Persian, respond courteously, and close the exchange naturally.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
     {
       "chapter": 2,
       "title": "Give your name",

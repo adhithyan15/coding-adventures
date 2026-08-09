@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "hindi",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapters 3, 4 and 5 are deliberately absent — every lesson in them is still schema v1 with no practises.knowledge, so no payoff could name a real atom, and a stub would destroy the very signal the gap report exists to carry. Chapters 34 and 35 are the second verb tranche and are schema v2 throughout, so their payoffs name real atoms. Chapters 1 and 2 have no schema-v2 terminal consolidation lesson either: their HI-C01/HI-C02 practice lessons are schema v1, so the payoff falls back to the chapter's last lesson by sequence, which in both cases is a Devanagari writing lesson. Those are recorded as kind 'task' and described as hand-writing work rather than dressed up as spoken dialogue. Chapters 36 to 39 are the pre-A1 noun tranche: four chapters of four word lessons each, every lesson carrying its noun's grammatical gender as part of the atom, and each payoff reaching back past its own chapter to atoms the ledger showed were never revisited.",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Every declared book chapter now has an authored capability. Legacy schema-v1 entries anchor their payoff to real canonical lesson content but intentionally keep assesses empty until typed knowledge atoms exist, preserving measurable debt without inventing atoms. Chapter generation status remains independently controlled by core/book-generation.json.",
   "chapters": [
     {
       "chapter": 1,
@@ -40,6 +40,57 @@
           "HI-CONCEPT-W05-WRITE-NAMASTE-01",
           "HI-CONCEPT-W05-WRITE-NAMASTE-02"
         ]
+      }
+    },
+    {
+      "chapter": 3,
+      "title": "How Are You?",
+      "label": "ch:responding",
+      "canDo": "I can ask how someone is in Hindi, answer naturally, and return the question.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK",
+        "SPINE-CHECK-WELLBEING",
+        "SPINE-EXCHANGE-NAMES",
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "HI-C03-practice",
+        "kind": "task",
+        "summary": "Complete HI-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Hindi, answer naturally, and return the question.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 4,
+      "title": "Farewells",
+      "label": "ch:farewells",
+      "canDo": "I can end a Hindi conversation politely and choose a farewell that fits the situation.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "HI-C04-practice",
+        "kind": "task",
+        "summary": "Complete HI-C04-practice, the canonical closing checkpoint, and demonstrate the chapter promise: end a Hindi conversation politely and choose a farewell that fits the situation.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 5,
+      "title": "The First Verbs",
+      "label": "ch:first-verbs",
+      "canDo": "I can build short present-tense Hindi sentences with the chapter's first verbs.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "HI-C05-practice",
+        "kind": "task",
+        "summary": "Complete HI-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Hindi sentences with the chapter's first verbs.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
       }
     },
     {

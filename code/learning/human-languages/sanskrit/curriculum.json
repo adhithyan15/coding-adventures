@@ -101,6 +101,22 @@
       "after": []
     },
     {
+      "id": "SA-PATH-017",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "SA-C05-vadami",
+        "SA-C05-aham-samskritam-vadami",
+        "SA-C05-karomi",
+        "SA-C05-vasami",
+        "SA-C05-practice"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-017-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
       "id": "SA-PATH-009",
       "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
       "lessons": [
@@ -328,6 +344,7 @@
     },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
+        "SA-PATH-017",
         "SA-PATH-010",
         "SA-PATH-011",
         "SA-PATH-012"
@@ -648,6 +665,21 @@
         "SA-C12-akshi",
         "SA-C12-karnah",
         "SA-C12-mukham"
+      ]
+    },
+    {
+      "id": "SA-EXT-017-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the Sanskrit-specific vocabulary and grammar that support this shared ability.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C05-vadami",
+        "SA-C05-aham-samskritam-vadami",
+        "SA-C05-karomi",
+        "SA-C05-vasami",
+        "SA-C05-practice"
       ]
     },
     {

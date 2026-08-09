@@ -1,8 +1,271 @@
 {
   "version": 1,
   "language": "french",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Only Chapters 17-27 are authored — they are the French chapters whose lessons have been migrated to schema version 2 and therefore declare real knowledge atoms. Chapters 1-16 are still schema v1: their lessons carry no practises.knowledge, so any payoff written for them would assess invented atoms. Their absence here is real, measurable debt and must not be papered over with placeholders. Chapter 17's payoff sits exactly at the 0.5 representativeness floor and Chapters 17-18 have no terminal practice lesson at all; both facts are recorded per chapter below rather than hidden by padding assesses. Chapters 24 through 27 likewise have no terminal practice-mix, so their payoff is the chapter's last lesson by sequence — which is where the recombination and wrap-up recall actually live, and where each of the two reaches back past its own chapter to re-practise atoms taught earlier in the track (HL09 §7).",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Every declared book chapter now has an authored capability. Legacy schema-v1 entries anchor their payoff to real canonical lesson content but intentionally keep assesses empty until typed knowledge atoms exist, preserving measurable debt without inventing atoms. Chapter generation status remains independently controlled by core/book-generation.json.",
   "chapters": [
+    {
+      "chapter": 1,
+      "title": "Greetings",
+      "label": "ch:greetings",
+      "canDo": "I can greet someone in French, recognize the reply, and choose an appropriate response.",
+      "spineNodes": [
+        "SPINE-MEET-GREET",
+        "SPINE-CHECK-WELLBEING",
+        "SPINE-DEFINITE-REFERENCE",
+        "SPINE-TIME-OF-DAY",
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "FR-C01-practice",
+        "kind": "task",
+        "summary": "Complete FR-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in French, recognize the reply, and choose an appropriate response.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 2,
+      "title": "Introducing Yourself",
+      "label": "ch:introductions",
+      "canDo": "I can introduce myself in French, give my name, and understand the other person's name.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES",
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "FR-C02-practice",
+        "kind": "task",
+        "summary": "Complete FR-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in French, give my name, and understand the other person's name.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 3,
+      "title": "How Are You?",
+      "label": "ch:how-are-you",
+      "canDo": "I can ask how someone is in French, answer naturally, and return the question.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO",
+        "SPINE-CHECK-WELLBEING",
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "FR-C03-practice",
+        "kind": "task",
+        "summary": "Complete FR-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in French, answer naturally, and return the question.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 4,
+      "title": "Farewells",
+      "label": "ch:farewells",
+      "canDo": "I can end a French conversation politely and choose a farewell that fits the situation.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "FR-C04-practice",
+        "kind": "task",
+        "summary": "Complete FR-C04-practice, the canonical closing checkpoint, and demonstrate the chapter promise: end a French conversation politely and choose a farewell that fits the situation.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 5,
+      "title": "The First Verbs",
+      "label": "ch:first-verbs",
+      "canDo": "I can build short present-tense French sentences with the chapter's first verbs.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "FR-C05-practice",
+        "kind": "task",
+        "summary": "Complete FR-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense French sentences with the chapter's first verbs.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 6,
+      "title": "Numbers One to Ten",
+      "label": "ch:numbers-1-10",
+      "canDo": "I can count from one to ten in French and use the numbers in a short exchange.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "FR-C06-nombres-6-10",
+        "kind": "task",
+        "summary": "Complete FR-C06-nombres-6-10, the canonical closing checkpoint, and demonstrate the chapter promise: count from one to ten in French and use the numbers in a short exchange.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 7,
+      "title": "The Days of the Week",
+      "label": "ch:days",
+      "canDo": "I can name the days of the week in French and use them in simple plans.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "FR-C07-jours-2",
+        "kind": "task",
+        "summary": "Complete FR-C07-jours-2, the canonical closing checkpoint, and demonstrate the chapter promise: name the days of the week in French and use them in simple plans.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 8,
+      "title": "Telling the Time",
+      "label": "ch:time",
+      "canDo": "I can ask for and tell the time in French.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "FR-C08-midi-minuit",
+        "kind": "task",
+        "summary": "Complete FR-C08-midi-minuit, the canonical closing checkpoint, and demonstrate the chapter promise: ask for and tell the time in French.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 9,
+      "title": "Months and Seasons",
+      "label": "ch:months-seasons",
+      "canDo": "I can name the months and seasons in French and say when something happens.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "FR-C09-saisons",
+        "kind": "task",
+        "summary": "Complete FR-C09-saisons, the canonical closing checkpoint, and demonstrate the chapter promise: name the months and seasons in French and say when something happens.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 10,
+      "title": "Family",
+      "label": "ch:family",
+      "canDo": "I can identify close family members in French and say who someone is.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "FR-C10-freres-soeurs",
+        "kind": "task",
+        "summary": "Complete FR-C10-freres-soeurs, the canonical closing checkpoint, and demonstrate the chapter promise: identify close family members in French and say who someone is.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 11,
+      "title": "Bread, Water, Wine",
+      "label": "ch:food",
+      "canDo": "I can name and request bread, water, and wine in French.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "FR-C11-eau-vin",
+        "kind": "task",
+        "summary": "Complete FR-C11-eau-vin, the canonical closing checkpoint, and demonstrate the chapter promise: name and request bread, water, and wine in French.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 12,
+      "title": "Numbers Eleven to Twenty",
+      "label": "ch:numbers-11-20",
+      "canDo": "I can count from eleven to twenty in French and recognize how the number forms are built.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "FR-C12-nombres-17-20",
+        "kind": "task",
+        "summary": "Complete FR-C12-nombres-17-20, the canonical closing checkpoint, and demonstrate the chapter promise: count from eleven to twenty in French and recognize how the number forms are built.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 13,
+      "title": "Colours",
+      "label": "ch:colours",
+      "canDo": "I can name basic colours in French and use them to describe something.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "FR-C13-rouge-bleu",
+        "kind": "task",
+        "summary": "Complete FR-C13-rouge-bleu, the canonical closing checkpoint, and demonstrate the chapter promise: name basic colours in French and use them to describe something.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 14,
+      "title": "To Have, and How Old You Are",
+      "label": "ch:avoir-age",
+      "canDo": "I can use the French verb for “to have” to talk about possession and age.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "FR-C14-age",
+        "kind": "task",
+        "summary": "Complete FR-C14-age, the canonical closing checkpoint, and demonstrate the chapter promise: use the French verb for “to have” to talk about possession and age.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 15,
+      "title": "The Compound Past",
+      "label": "ch:passe-compose",
+      "canDo": "I can build the chapter's conversational past tense in French and say what happened.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "FR-C15-passe-simple",
+        "kind": "task",
+        "summary": "Complete FR-C15-passe-simple, the canonical closing checkpoint, and demonstrate the chapter promise: build the chapter's conversational past tense in French and say what happened.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 16,
+      "title": "To Be, and the Past That Takes It",
+      "label": "ch:etre",
+      "canDo": "I can use the French verb for “to be” and form the past of verbs that select it.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "FR-C16-pronominal-past",
+        "kind": "task",
+        "summary": "Complete FR-C16-pronominal-past, the canonical closing checkpoint, and demonstrate the chapter promise: use the French verb for “to be” and form the past of verbs that select it.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
     {
       "chapter": 17,
       "title": "Head and Hand",

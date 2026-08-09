@@ -120,6 +120,22 @@
       "after": []
     },
     {
+      "id": "MR-PATH-019",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "MR-C05-bolne",
+        "MR-C05-mi-marathi-bolto",
+        "MR-C05-rahne",
+        "MR-C05-kaam-karne",
+        "MR-C05-practice"
+      ],
+      "before": [],
+      "inline": [
+        "MR-EXT-019-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
       "id": "MR-PATH-011",
       "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
       "lessons": [
@@ -355,6 +371,7 @@
     },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
+        "MR-PATH-019",
         "MR-PATH-012",
         "MR-PATH-013",
         "MR-PATH-014"
@@ -721,6 +738,21 @@
         "MR-C12-kaan",
         "MR-C12-tond",
         "MR-C12-naak"
+      ]
+    },
+    {
+      "id": "MR-EXT-019-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the Marathi-specific vocabulary and grammar that support this shared ability.",
+      "prerequisites": [],
+      "lessons": [
+        "MR-C05-bolne",
+        "MR-C05-mi-marathi-bolto",
+        "MR-C05-rahne",
+        "MR-C05-kaam-karne",
+        "MR-C05-practice"
       ]
     },
     {

@@ -175,6 +175,19 @@
       "after": []
     },
     {
+      "id": "GE-PATH-035",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "GE-C07-wochentage-1",
+        "GE-C07-wochentage-2"
+      ],
+      "before": [],
+      "inline": [
+        "GE-EXT-035-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
       "id": "GE-PATH-016",
       "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
       "lessons": [
@@ -507,6 +520,7 @@
         "GE-PATH-004",
         "GE-PATH-006",
         "GE-PATH-015",
+        "GE-PATH-035",
         "GE-PATH-017",
         "GE-PATH-019",
         "GE-PATH-025"
@@ -938,6 +952,18 @@
         "GE-C30-ohr",
         "GE-C30-mund",
         "GE-C30-nase"
+      ]
+    },
+    {
+      "id": "GE-EXT-035-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the German-specific vocabulary and grammar that support this shared ability.",
+      "prerequisites": [],
+      "lessons": [
+        "GE-C07-wochentage-1",
+        "GE-C07-wochentage-2"
       ]
     },
     {

@@ -1,8 +1,92 @@
 {
   "version": 1,
   "language": "sanskrit",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Only chapters 6 and 7 are authorable today. Chapters 1-5 are entirely schema-v1 (no introduces/practises knowledge atoms), so no payoff there can name atoms a lesson actually practises; they are deliberately absent rather than stubbed, and that absence is real, measurable debt.",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Every declared book chapter now has an authored capability. Legacy schema-v1 entries anchor their payoff to real canonical lesson content but intentionally keep assesses empty until typed knowledge atoms exist, preserving measurable debt without inventing atoms. Chapter generation status remains independently controlled by core/book-generation.json.",
   "chapters": [
+    {
+      "chapter": 1,
+      "title": "Greetings",
+      "label": "ch:greetings",
+      "canDo": "I can greet someone in Sanskrit, recognize the reply, and choose an appropriate response.",
+      "spineNodes": [
+        "SPINE-MEET-GREET",
+        "SPINE-COURTESY-THANK",
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "SA-C01-practice",
+        "kind": "task",
+        "summary": "Complete SA-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in Sanskrit, recognize the reply, and choose an appropriate response.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 2,
+      "title": "Introducing Yourself",
+      "label": "ch:introductions",
+      "canDo": "I can introduce myself in Sanskrit, give my name, and understand the other person's name.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "SA-C02-tava-nama-kim",
+        "kind": "task",
+        "summary": "Complete SA-C02-tava-nama-kim, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in Sanskrit, give my name, and understand the other person's name.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 3,
+      "title": "How Are You?",
+      "label": "ch:responding",
+      "canDo": "I can ask how someone is in Sanskrit, answer naturally, and return the question.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES",
+        "SPINE-CHECK-WELLBEING",
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "SA-C03-practice",
+        "kind": "task",
+        "summary": "Complete SA-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Sanskrit, answer naturally, and return the question.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 4,
+      "title": "Farewells",
+      "label": "ch:farewells",
+      "canDo": "I can end a Sanskrit conversation politely and choose a farewell that fits the situation.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "SA-C04-practice",
+        "kind": "task",
+        "summary": "Complete SA-C04-practice, the canonical closing checkpoint, and demonstrate the chapter promise: end a Sanskrit conversation politely and choose a farewell that fits the situation.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 5,
+      "title": "The First Verbs",
+      "label": "ch:first-verbs",
+      "canDo": "I can build short present-tense Sanskrit sentences with the chapter's first verbs.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "SA-C05-practice",
+        "kind": "task",
+        "summary": "Complete SA-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Sanskrit sentences with the chapter's first verbs.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
     {
       "chapter": 6,
       "title": "Numbers One to Five",
