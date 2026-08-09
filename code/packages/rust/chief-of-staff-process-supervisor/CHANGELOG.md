@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add a production durable launch-binding provider backed by the pipeline
+  binding store; every launch revalidates registration, channel claims,
+  lifecycle, and directional membership before process creation.
 - Require an injected manifest-blind launch-binding provider, authenticate its
   channel UUID and Level 1 model bindings before readiness, and fail closed when
   bindings are unavailable or incompatible with the verified package runtime.

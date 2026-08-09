@@ -15,6 +15,7 @@ use chief_of_staff_host_control_protocol::{
 use chief_of_staff_host_runtime::{
     verify_agent_package, AgentPackageRuntime, PackageKeyType, PackageKeyring, TrustedPackageKey,
 };
+use chief_of_staff_pipeline_bindings::PipelineBindingStore;
 use chief_of_staff_secure_host_channel::{
     BootstrapOffer, ChildBootstrap, ClientHello, HostId, OrchestratorBootstrap, SessionId,
 };
@@ -32,6 +33,7 @@ use std::sync::mpsc::{self, Receiver, RecvTimeoutError, TryRecvError};
 use std::sync::Arc;
 use std::thread::{self, JoinHandle};
 use std::time::{Duration, Instant};
+use storage_core::StorageBackend;
 
 const MAX_RECORD_BYTES: usize = 1024 * 1024;
 const MAX_FIXED_ARGUMENTS: usize = 128;
@@ -129,6 +131,30 @@ impl HostLaunchBindingProvider for DenyHostLaunchBindings {
         _runtime: AgentPackageRuntime,
     ) -> Result<LaunchBindings, LaunchBindingProviderError> {
         Err(LaunchBindingProviderError)
+    }
+}
+
+/// Storage-backed manifest-blind launch authority for production composition.
+pub struct DurableHostLaunchBindings {
+    backend: Arc<dyn StorageBackend>,
+}
+
+impl DurableHostLaunchBindings {
+    /// Bind launch resolution to the daemon's durable storage backend.
+    pub fn new(backend: Arc<dyn StorageBackend>) -> Self {
+        Self { backend }
+    }
+}
+
+impl HostLaunchBindingProvider for DurableHostLaunchBindings {
+    fn launch_bindings(
+        &self,
+        registration: &HostRegistration,
+        _runtime: AgentPackageRuntime,
+    ) -> Result<LaunchBindings, LaunchBindingProviderError> {
+        PipelineBindingStore::new(self.backend.as_ref())
+            .resolve_launch(registration)
+            .map_err(|_| LaunchBindingProviderError)
     }
 }
 

@@ -23,7 +23,9 @@ exist. The daemon creates or initializes the configured state directory, binds
 only the loopback address accepted by `chief-of-staff-daemon-config`, performs
 one reconciliation before serving, and then reconciles at the configured health
 interval. Channel topology mutation remains denied until the Trust Checker is
-implemented.
+implemented. Host launch bindings come only from the shared durable pipeline
+binding store; absent, stale, destroyed, directionally unauthorized, or
+cross-pipeline records fail before process creation.
 
 SIGINT, SIGTERM, Ctrl+C, Ctrl+Break, console close, logoff, and system shutdown
 request a cooperative listener stop. Dropping the composed process supervisor

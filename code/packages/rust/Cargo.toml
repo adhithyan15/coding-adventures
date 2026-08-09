@@ -766,6 +766,7 @@ members = [
     "chief-of-staff-secure-host-channel",
     "chief-of-staff-host-control-protocol",
     "chief-of-staff-service-registry",
+    "chief-of-staff-pipeline-bindings",
     "chief-of-staff-service-reconciler",
     "chief-of-staff-process-supervisor",
     "chief-of-staff-orchestrator-core",

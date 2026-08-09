@@ -11,7 +11,7 @@ use chief_of_staff_daemon_policy::{DenyChannelWiring, LocalAuthError, LocalBeare
 use chief_of_staff_daemon_runtime::{ChiefDaemonRuntime, DaemonRuntimeError, ReconcileSchedule};
 use chief_of_staff_orchestrator_core::OrchestratorCore;
 use chief_of_staff_process_supervisor::{
-    DenyHostLaunchBindings, HostProgram, ProcessSupervisorConfig, ProcessSupervisorError,
+    DurableHostLaunchBindings, HostProgram, ProcessSupervisorConfig, ProcessSupervisorError,
     SystemMonotonicClock, UuidV7SessionIdSource,
 };
 use chief_of_staff_service_reconciler::{ConfigError as ReconcileConfigError, ReconcileConfig};
@@ -252,11 +252,12 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
             .map_err(ChiefDaemonError::Reconciliation)?;
     let schedule = ReconcileSchedule::new(interval).map_err(ChiefDaemonError::Runtime)?;
     let clock = Arc::new(SystemMonotonicClock::new());
+    let launch_bindings = Arc::new(DurableHostLaunchBindings::new(Arc::clone(&backend)));
     let core = OrchestratorCore::with_process_supervisor(
         backend,
         process_config,
         keyring,
-        Arc::new(DenyHostLaunchBindings),
+        launch_bindings,
         Arc::new(generate_identity_keypair()),
         clock,
         Box::new(UuidV7SessionIdSource),

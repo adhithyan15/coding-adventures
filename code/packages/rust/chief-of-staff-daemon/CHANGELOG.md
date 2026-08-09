@@ -2,8 +2,9 @@
 
 ## Unreleased
 
-- Compose a fail-closed host launch-binding provider until durable pipeline
-  wiring is connected; hosts cannot start with ambient or invented bindings.
+- Compose the storage-backed durable pipeline launch-binding provider. Host
+  starts now require an exact registered package plus current immutable channel
+  claims, active membership, and bounded persisted model settings.
 
 ## 0.1.0 - 2026-08-03
 
