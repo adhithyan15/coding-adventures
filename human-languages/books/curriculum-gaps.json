@@ -28,8 +28,8 @@
     "lessonsOpeningMultipleScripts": 5,
     "lessonsWithoutSequence": 477,
     "forwardReviews": 267,
-    "atomsNeverRevisited": 470,
-    "forwardReferences": 430,
+    "atomsNeverRevisited": 469,
+    "forwardReferences": 427,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 27,
     "chapterGateCleanTracks": 12,
@@ -1777,8 +1777,8 @@
         "status": "mixed",
         "lessonCount": 177,
         "versions": {
-          "1": 23,
-          "2": 154
+          "1": 20,
+          "2": 157
         }
       },
       {
@@ -3303,8 +3303,8 @@
       {
         "language": "spanish",
         "lessonCount": 177,
-        "measurable": 141,
-        "unmeasurable": 36,
+        "measurable": 143,
+        "unmeasurable": 34,
         "lessonViolations": 0,
         "chapterViolations": 4
       },
@@ -4310,7 +4310,7 @@
     "summary": {
       "lessonViolations": 40,
       "chapterViolations": 24,
-      "unmeasurableLessons": 547,
+      "unmeasurableLessons": 545,
       "measurablePercent": 67,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
@@ -12030,19 +12030,6 @@
         "revisits": 0
       },
       {
-        "atom": "ES-SOUND-WRITTEN-ACCENT",
-        "language": "spanish",
-        "introducedBy": "ES-C01-dia",
-        "introducedAt": 4,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "LA-ETYMON-PRACTICE-01",
         "language": "latin",
         "introducedBy": "LA-C01-practice",
@@ -13210,6 +13197,18 @@
         "revisits": 1
       },
       {
+        "atom": "ES-ETYMON-FUI",
+        "language": "spanish",
+        "introducedBy": "ES-C14-ser-ir-preterite",
+        "introducedAt": 90,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-GUSTAR-08",
         "language": "spanish",
         "introducedBy": "ES-C35-gustar",
@@ -13630,6 +13629,18 @@
         "revisits": 2
       },
       {
+        "atom": "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
+        "language": "spanish",
+        "introducedBy": "ES-C14-hablar-preterite",
+        "introducedAt": 91,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-GRAMMAR-BARE-LANGUAGE",
         "language": "spanish",
         "introducedBy": "ES-C06-hablo-espanol",
@@ -13699,7 +13710,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE",
@@ -13870,16 +13881,16 @@
         "revisits": 2
       },
       {
-        "atom": "ES-GRAMMAR-SER-PRESENT-SINGULAR",
+        "atom": "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR",
         "language": "spanish",
-        "introducedBy": "ES-C09-ser",
-        "introducedAt": 68,
+        "introducedBy": "ES-C14-ser-ir-preterite",
+        "introducedAt": 90,
         "missed": [
           "R2",
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 1
       },
       {
         "atom": "ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR",
@@ -13930,6 +13941,18 @@
         "revisits": 0
       },
       {
+        "atom": "ES-HISTORY-AR-PRETERITE-LATIN-PERFECT",
+        "language": "spanish",
+        "introducedBy": "ES-C14-hablar-preterite",
+        "introducedAt": 91,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-HISTORY-LATIN-STRESSED-VOWEL-BREAKING",
         "language": "spanish",
         "introducedBy": "ES-C11-stem-changes",
@@ -13951,7 +13974,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 3
       },
       {
         "atom": "ES-LEX-AMARILLO-03",
@@ -14050,6 +14073,18 @@
         "revisits": 5
       },
       {
+        "atom": "ES-LEX-FUI-SER-IR",
+        "language": "spanish",
+        "introducedBy": "ES-C14-ser-ir-preterite",
+        "introducedAt": 90,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-LEX-HABLO-ESPANOL",
         "language": "spanish",
         "introducedBy": "ES-C06-hablo-espanol",
@@ -14107,7 +14142,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 4
       },
       {
         "atom": "ES-LEX-MANANA",
@@ -14314,18 +14349,6 @@
         "revisits": 0
       },
       {
-        "atom": "ES-LEX-SER",
-        "language": "spanish",
-        "introducedBy": "ES-C09-ser",
-        "introducedAt": 68,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "ES-LEX-TARDE",
         "language": "spanish",
         "introducedBy": "ES-C02-tarde",
@@ -14396,6 +14419,18 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS",
+        "language": "spanish",
+        "introducedBy": "ES-C14-hablar-preterite",
+        "introducedAt": 91,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "ES-ORTHOGRAPHY-OPENING-PUNCTUATION",
@@ -14516,6 +14551,18 @@
           "R3"
         ],
         "revisits": 0
+      },
+      {
+        "atom": "ES-SOUND-WRITTEN-ACCENT",
+        "language": "spanish",
+        "introducedBy": "ES-C01-dia",
+        "introducedAt": 4,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
       },
       {
         "atom": "FA-ETYMON-CHE-TOR",
@@ -18766,6 +18813,17 @@
         "revisits": 5
       },
       {
+        "atom": "ES-GRAMMAR-SER-PRESENT-SINGULAR",
+        "language": "spanish",
+        "introducedBy": "ES-C09-ser",
+        "introducedAt": 68,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "ES-GRAMMAR-USTED-THIRD-PERSON",
         "language": "spanish",
         "introducedBy": "ES-C03-tu-usted-register",
@@ -19006,17 +19064,6 @@
           "R3"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "ES-LEX-ESPANOL",
-        "language": "spanish",
-        "introducedBy": "ES-C06-espanol",
-        "introducedAt": 54,
-        "missed": [
-          "R3",
-          "R4"
-        ],
-        "revisits": 3
       },
       {
         "atom": "ES-LEX-ESTUDIAR",
@@ -19270,6 +19317,17 @@
           "R3"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "ES-LEX-SER",
+        "language": "spanish",
+        "introducedBy": "ES-C09-ser",
+        "introducedAt": 68,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 5
       },
       {
         "atom": "ES-LEX-SI-01",
@@ -27689,16 +27747,6 @@
         "revisits": 2
       },
       {
-        "atom": "ES-GRAMMAR-AR-PRESENT-SINGULAR",
-        "language": "spanish",
-        "introducedBy": "ES-C06-ar-presente",
-        "introducedAt": 51,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 7
-      },
-      {
         "atom": "ES-GRAMMAR-CONOCER-SABER-12",
         "language": "spanish",
         "introducedBy": "ES-C39-conocer",
@@ -27929,6 +27977,16 @@
         "revisits": 2
       },
       {
+        "atom": "ES-LEX-ESPANOL",
+        "language": "spanish",
+        "introducedBy": "ES-C06-espanol",
+        "introducedAt": 54,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 5
+      },
+      {
         "atom": "ES-LEX-ESPERAR-01",
         "language": "spanish",
         "introducedBy": "ES-C40-esperar",
@@ -27966,7 +28024,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 8
+        "revisits": 10
       },
       {
         "atom": "ES-LEX-JUGAR-07",
@@ -35723,14 +35781,6 @@
         "lessonsEarly": 40
       },
       {
-        "lessonId": "ES-C14-practice",
-        "language": "spanish",
-        "position": 92,
-        "word": "pan",
-        "taughtBy": "ES-C26-pan",
-        "lessonsEarly": 39
-      },
-      {
         "lessonId": "GE-W02-umlauts",
         "language": "german",
         "position": 35,
@@ -35880,14 +35930,6 @@
         "position": 13,
         "word": "لا",
         "taughtBy": "AR-C05-la",
-        "lessonsEarly": 31
-      },
-      {
-        "lessonId": "ES-C14-practice",
-        "language": "spanish",
-        "position": 92,
-        "word": "madre",
-        "taughtBy": "ES-C23-padre-madre",
         "lessonsEarly": 31
       },
       {
@@ -37723,14 +37765,6 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "ES-C14-ser-ir-preterite",
-        "language": "spanish",
-        "position": 90,
-        "word": "hablé",
-        "taughtBy": "ES-C14-hablar-preterite",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "ES-C34-entender",
         "language": "spanish",
         "position": 147,
@@ -38998,9 +39032,9 @@
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 330,
-        "atomsNeverRevisited": 66,
-        "forwardReferences": 60
+        "atomsTaught": 336,
+        "atomsNeverRevisited": 65,
+        "forwardReferences": 57
       },
       {
         "language": "tamil",
@@ -39038,16 +39072,16 @@
       "tracksWithUnorderedLessons": 17,
       "forwardPrerequisites": 225,
       "forwardReviews": 267,
-      "atomsTaught": 2577,
-      "atomsNeverRevisited": 470,
+      "atomsTaught": 2583,
+      "atomsNeverRevisited": 469,
       "neverRevisitedPercent": 18,
       "missedByWindow": {
         "R1": 856,
-        "R2": 1769,
-        "R3": 1259,
-        "R4": 202
+        "R2": 1775,
+        "R3": 1261,
+        "R4": 207
       },
-      "forwardReferences": 430
+      "forwardReferences": 427
     }
   },
   "levelGate": {
@@ -39455,7 +39489,7 @@
             "shortfall": 47
           }
         ],
-        "vocabulary": 136
+        "vocabulary": 135
       },
       {
         "language": "tamil",
