@@ -1234,121 +1234,157 @@ broker and custom HTTP routing surface:
   parsed username and password, so host-side Vault leasing cannot prevent the
   device-side disclosure. Command input rejects MQTT userinfo.
 
+## Current Retained Identity Migration Slice
+
+This slice closes the shared runtime prerequisite for safe pseudonym-key
+rotation without starting either vendor-specific rotation workflow:
+
+- `smart-home-runtime` accepts host-only whole-device identity replacements
+  that cover every retained child entity exactly once. It rejects missing
+  children, destination collisions, no-op identities, bridge changes, and
+  capability-shape drift before mutating runtime state.
+- A successful migration atomically rewrites device/entity topology, embedded
+  and current state, scenes, registry and runtime event history,
+  entity-scoped grants, command authorization decisions, optimistic and
+  desired state, live entity subscription filters, and queued deliveries.
+- Replacement devices and entities carry the destination pseudonym metadata;
+  opaque metadata is never heuristically edited. The runtime preserves the
+  source state and history under the supplied destination identities.
+- `smart-home-runtime-store` builds the migrated runtime as a candidate,
+  persists its complete durable snapshot with an expected-revision
+  compare-and-swap, and replaces the caller's live runtime only after storage
+  succeeds. A stale revision leaves both live and durable state unchanged.
+  Supplied automation definitions and execution state must already use the
+  destination identities; exact source-ID references fail before mutation.
+- Enphase and UniFi key rotation remain separate production-integration
+  slices. Each must derive old and new pseudonyms from one bounded sensitive
+  response while two one-shot keys are leased, dispose of native identifiers
+  before returning, and submit the resulting complete migration through this
+  revision-guarded path.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
 and then by prerequisite readiness:
 
-1. Add authenticated AirGradient MQTT only after official firmware removes
+1. Add Enphase pseudonym-key rotation over the completed atomic retained
+   identity migration. One bounded authenticated inverter response must derive
+   old and new identities under two one-shot Vault-leased keys, prove exact
+   source correspondence, dispose of raw serials and both keys before return,
+   migrate or prove absence of automation references, and persist the complete
+   migration with an expected runtime-store revision.
+2. Add UniFi connected-client pseudonym-key rotation over the same completed
+   migration path. One bounded authenticated client response must derive exact
+   old/new correspondence under two one-shot Vault-leased keys, preserve the
+   five-minute presence boundary, dispose of native identifiers and keys, and
+   migrate or prove absence of automation references before revision-guarded
+   persistence.
+
+3. Add authenticated AirGradient MQTT only after official firmware removes
    plaintext credential logging and one-shot Vault-leased credential injection
    can be proven without request-plan or normalized-state exposure.
-2. Add independent AirGradient telemetry, remote-configuration, and OTA
+4. Add independent AirGradient telemetry, remote-configuration, and OTA
    destinations only if firmware exposes separate settings; the current
    `httpDomain` contract intentionally governs all three as one HTTPS origin.
-3. Add authenticated HEOS source browsing and queue insertion only after the
+5. Add authenticated HEOS source browsing and queue insertion only after the
    account/session and Vault-leasing prerequisites are concrete.
-4. Automate Enphase access-token acquisition or renewal only after Enphase
+6. Automate Enphase access-token acquisition or renewal only after Enphase
    account authentication, cloud-session handling, operator consent, and
    Vault-leased credential policy are concrete; the current host accepts a
    pre-generated token.
-5. Add automatic Enphase IQ Gateway discovery only if Enphase documents a
+7. Add automatic Enphase IQ Gateway discovery only if Enphase documents a
    stable LAN advertisement; the current production path uses explicit local
    HTTPS endpoint and gateway-serial configuration.
-6. Add Enphase pseudonym-key rotation and retained-identity migration only after
-   the runtime can atomically replace entity identifiers without duplicating or
-   orphaning historical inverter state.
-7. Add Enphase live battery, relay, generator, grid, and system-topology state
+8. Add Enphase live battery, relay, generator, grid, and system-topology state
    only after the normalized energy topology and retention semantics are
    concrete.
-8. Add Enphase relay, grid-services, or configuration controls only with
+9. Add Enphase relay, grid-services, or configuration controls only with
    operation-specific D23 contracts, explicit safety approval, bounded native
    semantics, and readable postcondition verification.
-9. Add expiration-aware ZoneMinder access-token reuse and refresh only after a
+10. Add expiration-aware ZoneMinder access-token reuse and refresh only after a
    supervised session lifecycle and Vault policy for refresh-token residency are
    concrete; the current isolated inspection drops both tokens after each read.
-10. Add ZoneMinder event push only after a concrete authenticated event host and
+11. Add ZoneMinder event push only after a concrete authenticated event host and
     supervised subscription lifecycle exist.
-11. Add ZoneMinder snapshots, streams, recordings, export, and playback only
+12. Add ZoneMinder snapshots, streams, recordings, export, and playback only
     through the camera-media lease and a concrete media executor.
-12. Add ZoneMinder PTZ, monitor configuration, recording-mode, or administrative
+13. Add ZoneMinder PTZ, monitor configuration, recording-mode, or administrative
     mutations only with operation-specific D23 contracts, least-privilege user
     checks, bounded semantics, and readable postcondition verification.
-13. Add UniFi connected-client native details or pseudonym-key rotation only
-   after field-specific minimization and retention are approved and the runtime
-   can atomically migrate retained entity identifiers without duplicates or
-   orphaned history; current presence intentionally excludes names, native IDs,
-   MACs, IPs, and connection timestamps.
-14. Add UniFi historical device statistics, heartbeat-time correlation, or
+14. Add UniFi connected-client native details only after field-specific
+   minimization and retention are approved; current presence intentionally
+   excludes names, native IDs, MACs, IPs, and connection timestamps.
+15. Add UniFi historical device statistics, heartbeat-time correlation, or
    broader fleet polling only after durable time-series schema, query access,
    clock semantics, and retention/deletion policy are concrete; current live
    statistics are explicit-target, 64-device bounded, one-minute rate-limited,
    and expire after two minutes.
-15. Add remote UniFi Site Manager inspection only after telemetry-egress,
+16. Add remote UniFi Site Manager inspection only after telemetry-egress,
    destination, and operator-consent policy are concrete; keep the current host
    local-only.
-16. Add UniFi Network push or change events only after a concrete authenticated
+17. Add UniFi Network push or change events only after a concrete authenticated
    event host and supervised subscription lifecycle exist.
-17. Add UniFi adoption, guest authorization, port actions, or configuration
+18. Add UniFi adoption, guest authorization, port actions, or configuration
    mutations only with operation-specific D23 contracts, least-privilege API
    keys, bounded semantics, and readable postcondition verification.
-18. Add Synology Surveillance Station OTP and remembered-device authentication
+19. Add Synology Surveillance Station OTP and remembered-device authentication
    only after an interactive challenge lifecycle and Vault-leased device-token
    policy are concrete.
-19. Add Synology Surveillance Station events only after a concrete authenticated
+20. Add Synology Surveillance Station events only after a concrete authenticated
    event host and supervised subscription lifecycle exist.
-20. Add Synology Surveillance Station snapshots, recordings, export, and
+21. Add Synology Surveillance Station snapshots, recordings, export, and
    playback only through the camera-media lease and a concrete executor.
-21. Add Synology Surveillance Station PTZ, external recording, or configuration
+22. Add Synology Surveillance Station PTZ, external recording, or configuration
    mutations only with operation-specific D23 contracts, least-privilege API
    checks, bounded semantics, and readable postcondition verification.
-22. Add Frigate event and review push only after a concrete authenticated event
+23. Add Frigate event and review push only after a concrete authenticated event
    or WebSocket host and supervised subscription lifecycle exist.
-23. Add Frigate snapshots, recordings, export, and playback only through the
+24. Add Frigate snapshots, recordings, export, and playback only through the
    camera-media lease and a concrete executor.
-24. Add Frigate commands or configuration mutations only with operation-specific
+25. Add Frigate commands or configuration mutations only with operation-specific
    D23 contracts, least-privilege role checks, and readable postcondition
    verification.
-25. Add Blue Iris snapshots, alert/clip search, export, and playback only through
+26. Add Blue Iris snapshots, alert/clip search, export, and playback only through
    the camera-media lease and a concrete media executor.
-26. Add broader Blue Iris `camconfig` or administrative mutations only with
+27. Add broader Blue Iris `camconfig` or administrative mutations only with
    operation-specific D23 contracts, least-privilege permissions, and readable
    postcondition verification; do not persist the license value returned at
    login.
-27. Add automatic Blue Iris discovery only if the server exposes a documented,
+28. Add automatic Blue Iris discovery only if the server exposes a documented,
    stable LAN advertisement; the current production path is explicit local
    HTTPS endpoint configuration.
-28. Add Blue Iris focus, iris, digital-I/O, preset-setting, or broader PTZ
+29. Add Blue Iris focus, iris, digital-I/O, preset-setting, or broader PTZ
    controls only when each operation has a specific native capability probe,
    bounded semantics, and readable verification where the device exposes it.
-29. Add Axis event streaming only after the existing WebSocket protocol core has
+30. Add Axis event streaming only after the existing WebSocket protocol core has
    a concrete authenticated host using the completed Digest primitive or a
    short-lived session token, plus subscription supervision.
-30. Add Axis snapshots and media transfer only through the camera-media lease and
+31. Add Axis snapshots and media transfer only through the camera-media lease and
    a concrete media executor.
-31. Enumerate Axis video sources/channels before extending PTZ beyond the current
+32. Enumerate Axis video sources/channels before extending PTZ beyond the current
    capability-probed VAPIX camera 1 boundary.
-32. Add Axis absolute/relative zoom, guard-tour, or advanced preset management
+33. Add Axis absolute/relative zoom, guard-tour, or advanced preset management
    only when each operation has a specific capability probe and readable state.
-33. Add Reolink snapshot, recording search/download, and playback operations only
+34. Add Reolink snapshot, recording search/download, and playback operations only
    through the existing camera-media lease and a concrete media executor.
-34. Add Reolink current-position, zoom, guard-point, or patrol controls only when
+35. Add Reolink current-position, zoom, guard-point, or patrol controls only when
    each operation has a capability-specific probe and the firmware exposes the
    native state needed to avoid invented orientation claims.
-35. Add Reolink push events only after a concrete webhook or event-stream host
+36. Add Reolink push events only after a concrete webhook or event-stream host
    and subscription lifecycle exist.
-36. Add authenticated KLAP/Tapo devices and other broader-device families only
+37. Add authenticated KLAP/Tapo devices and other broader-device families only
    after their authentication and session prerequisites are concrete.
-37. Add ONVIF PullPoint events once a concrete event host and subscription
+38. Add ONVIF PullPoint events once a concrete event host and subscription
    lifecycle exist.
-38. Add RTSP media transfer and recording once concrete media transfer and
+39. Add RTSP media transfer and recording once concrete media transfer and
    recorder host primitives exist.
-39. Add a production Matter commissioning, secure-session, and network host only
+40. Add a production Matter commissioning, secure-session, and network host only
    after certificate, fabric, Interaction Model encoding, subscription, and
    transport prerequisites exist.
-40. Add a Thread border-router host only after an actual host transport exists.
-41. Add a production Zigbee coordinator, join, and security host only after
+41. Add a Thread border-router host only after an actual host transport exists.
+42. Add a production Zigbee coordinator, join, and security host only after
    concrete coordinator transport and security primitives exist.
-42. Add production Z-Wave inclusion and S2 only after concrete host transport
+43. Add production Z-Wave inclusion and S2 only after concrete host transport
    and security primitives exist.
 
 ## End-To-End Definition

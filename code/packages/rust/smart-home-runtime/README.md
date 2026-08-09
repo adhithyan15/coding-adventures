@@ -122,6 +122,10 @@ Included surfaces:
 - read-only supervision observations that combine due action counts with worker
   heartbeat schedules for Chief of Staff status tools
 - replay of device events into the registry-backed state cache
+- host-only, whole-device retained identity migration that validates every
+  child replacement and atomically rewrites topology, current and optimistic
+  state, scenes, retained events, grants, authorization decisions, desired
+  state, event filters, and queued deliveries without changing capability shape
 - bridge health reports that update health without removing identities
 - supervised bridge-worker heartbeat tracking and restart signals
 - read-side worker queries by bridge, integration, status, restart count, and

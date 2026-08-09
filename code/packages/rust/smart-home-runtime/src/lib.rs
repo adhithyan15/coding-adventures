@@ -10,14 +10,13 @@
 use serde::{Deserialize, Serialize};
 use smart_home_core::{
     tier_for_command, AgentId, AuthorizationDecision, AuthorizationDecisionLogSummary,
-    AuthorizationOutcome, Bridge, BridgeId, Capability, CapabilityGrant,
+    AuthorizationOutcome, AuthorizationSubject, Bridge, BridgeId, Capability, CapabilityGrant,
     CapabilityGrantInventorySummary, CapabilityGrantScope, CapabilityGrantStatus, CapabilityId,
     CapabilityMode, CommandId, CommandResult, CommandStatus, CommandType, CorrelationId, Device,
     DeviceCommand, DeviceControlCommandType, DeviceEvent, DeviceEventType, DeviceId, Entity,
-    EntityId, EventId, Health,
-    IntegrationId, Metadata, PrivilegeTier, Scene, SceneId, SceneScope, SmartHomeError,
-    MediaCommandType, SmartHomeTool, StateConfidence, StateDelta, StateSnapshot, StateSource, Value,
-    VaultRef,
+    EntityId, EventId, Health, IntegrationId, MediaCommandType, Metadata, PrivilegeTier, Scene,
+    SceneId, SceneScope, SmartHomeError, SmartHomeTool, StateConfidence, StateDelta, StateSnapshot,
+    StateSource, Value, VaultRef,
 };
 use smart_home_discovery::{
     run_mdns_worker_scan_plan_with_executor, DiscoveryCatalog, DiscoveryError,
@@ -93,6 +92,10 @@ pub enum RuntimeError {
         principal_id: AgentId,
         tool: SmartHomeTool,
         missing_capabilities: Vec<CapabilityId>,
+    },
+    InvalidRetainedIdentityMigration {
+        field: &'static str,
+        message: String,
     },
 }
 
@@ -178,6 +181,10 @@ impl fmt::Display for RuntimeError {
             } => write!(
                 f,
                 "agent {principal_id} is not authorized for tool {tool:?}; missing grants for {missing_capabilities:?}"
+            ),
+            Self::InvalidRetainedIdentityMigration { field, message } => write!(
+                f,
+                "invalid retained identity migration field `{field}`: {message}"
             ),
         }
     }
@@ -385,6 +392,31 @@ impl RuntimeEventBus {
             }
         }
         self.published.push(event);
+    }
+
+    fn migrate_retained_identities(
+        &mut self,
+        device_ids: &BTreeMap<DeviceId, DeviceId>,
+        entity_ids: &BTreeMap<EntityId, EntityId>,
+    ) -> (usize, usize) {
+        let mut rewritten_subscriptions = 0;
+        for filter in self.subscriptions.values_mut() {
+            if let RuntimeEventFilter::Entity(entity_id) = filter {
+                rewritten_subscriptions += replace_entity_id(entity_id, entity_ids) as usize;
+            }
+        }
+
+        let mut rewritten_runtime_records = 0;
+        for event in &mut self.published {
+            rewritten_runtime_records +=
+                migrate_runtime_event(event, device_ids, entity_ids) as usize;
+        }
+        for queue in self.deliveries.values_mut() {
+            for event in queue {
+                migrate_runtime_event(event, device_ids, entity_ids);
+            }
+        }
+        (rewritten_runtime_records, rewritten_subscriptions)
     }
 
     pub fn checkpoint(&self) -> RuntimeEventCheckpoint {
@@ -4268,6 +4300,91 @@ impl RuntimePairingCompletion {
     }
 }
 
+/// One complete replacement for a retained child entity identity.
+///
+/// The replacement carries the destination identity metadata and capability
+/// shape. Runtime-owned state and history are migrated from the source.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct RetainedEntityIdentityReplacement {
+    pub source_entity_id: EntityId,
+    pub replacement: Entity,
+}
+
+impl RetainedEntityIdentityReplacement {
+    pub fn new(source_entity_id: EntityId, replacement: Entity) -> Self {
+        Self {
+            source_entity_id,
+            replacement,
+        }
+    }
+}
+
+/// One whole-device identity replacement, including every retained child.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct RetainedDeviceIdentityReplacement {
+    pub source_device_id: DeviceId,
+    pub replacement: Device,
+    pub entities: Vec<RetainedEntityIdentityReplacement>,
+}
+
+impl RetainedDeviceIdentityReplacement {
+    pub fn new(
+        source_device_id: DeviceId,
+        replacement: Device,
+        entities: Vec<RetainedEntityIdentityReplacement>,
+    ) -> Self {
+        Self {
+            source_device_id,
+            replacement,
+            entities,
+        }
+    }
+}
+
+/// A validated batch of whole-device retained identity replacements.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct RuntimeRetainedIdentityMigration {
+    pub devices: Vec<RetainedDeviceIdentityReplacement>,
+}
+
+impl RuntimeRetainedIdentityMigration {
+    pub fn new(devices: Vec<RetainedDeviceIdentityReplacement>) -> Self {
+        Self { devices }
+    }
+
+    pub fn source_device_ids(&self) -> impl Iterator<Item = &DeviceId> {
+        self.devices.iter().map(|device| &device.source_device_id)
+    }
+
+    pub fn source_entity_ids(&self) -> impl Iterator<Item = &EntityId> {
+        self.devices
+            .iter()
+            .flat_map(|device| device.entities.iter())
+            .map(|entity| &entity.source_entity_id)
+    }
+}
+
+/// Counts returned after one atomic retained identity migration.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct RuntimeRetainedIdentityMigrationReport {
+    pub migrated_devices: usize,
+    pub migrated_entities: usize,
+    pub rewritten_states: usize,
+    pub rewritten_scene_actions: usize,
+    pub rewritten_history_records: usize,
+    pub rewritten_policy_records: usize,
+    pub rewritten_runtime_records: usize,
+    pub rewritten_subscriptions: usize,
+}
+
+#[derive(Debug)]
+struct ValidatedRetainedIdentityMigration {
+    device_ids: BTreeMap<DeviceId, DeviceId>,
+    entity_ids: BTreeMap<EntityId, EntityId>,
+    devices: BTreeMap<DeviceId, Device>,
+    entities: BTreeMap<EntityId, Entity>,
+}
+
 #[derive(Debug, Clone)]
 pub struct SmartHomeRuntime {
     registry: InMemorySmartHomeRegistry,
@@ -4339,6 +4456,252 @@ impl SmartHomeRuntime {
             optimistic_states: self.optimistic_states.values().cloned().collect(),
             desired_states: self.desired_states.values().cloned().collect(),
         }
+    }
+
+    /// Atomically replaces retained device and entity identities.
+    ///
+    /// Every child entity of a migrated device must be supplied. Validation and
+    /// reconstruction happen against a candidate runtime; `self` is replaced
+    /// only after the complete durable graph and live event subscriptions have
+    /// been rewritten successfully.
+    pub fn migrate_retained_identities(
+        &mut self,
+        migration: &RuntimeRetainedIdentityMigration,
+    ) -> Result<RuntimeRetainedIdentityMigrationReport, RuntimeError> {
+        let validated = self.validate_retained_identity_migration(migration)?;
+        let mut snapshot = self.durable_snapshot();
+        let mut report = migrate_durable_snapshot(&mut snapshot, &validated);
+        let mut replacement = Self::restore_durable_snapshot(snapshot)?;
+
+        replacement.discovery = self.discovery.clone();
+        replacement.discovery_scheduler = self.discovery_scheduler.clone();
+        replacement.supervisor = self.supervisor.clone();
+        replacement.event_bus = self.event_bus.clone();
+        let (runtime_records, subscriptions) = replacement
+            .event_bus
+            .migrate_retained_identities(&validated.device_ids, &validated.entity_ids);
+        report.rewritten_runtime_records = runtime_records;
+        report.rewritten_subscriptions = subscriptions;
+
+        *self = replacement;
+        Ok(report)
+    }
+
+    fn validate_retained_identity_migration(
+        &self,
+        migration: &RuntimeRetainedIdentityMigration,
+    ) -> Result<ValidatedRetainedIdentityMigration, RuntimeError> {
+        if migration.devices.is_empty() {
+            return Err(invalid_identity_migration(
+                "devices",
+                "must contain at least one whole-device replacement",
+            ));
+        }
+
+        let mut device_ids = BTreeMap::new();
+        let mut entity_ids = BTreeMap::new();
+        let mut devices = BTreeMap::new();
+        let mut entities = BTreeMap::new();
+        let mut destination_device_ids = BTreeSet::new();
+        let mut destination_entity_ids = BTreeSet::new();
+
+        for device_migration in &migration.devices {
+            let source = self
+                .registry
+                .device(&device_migration.source_device_id)
+                .ok_or_else(|| {
+                    invalid_identity_migration(
+                        "source_device_id",
+                        format!("unknown device {}", device_migration.source_device_id),
+                    )
+                })?;
+            let destination_id = device_migration.replacement.device_id.clone();
+            if destination_id == device_migration.source_device_id {
+                return Err(invalid_identity_migration(
+                    "replacement.device_id",
+                    format!("device {} is a no-op replacement", destination_id),
+                ));
+            }
+            if self.registry.device(&destination_id).is_some() {
+                return Err(invalid_identity_migration(
+                    "replacement.device_id",
+                    format!("destination device {destination_id} already exists"),
+                ));
+            }
+            if !destination_device_ids.insert(destination_id.clone()) {
+                return Err(invalid_identity_migration(
+                    "replacement.device_id",
+                    format!("duplicate destination device {destination_id}"),
+                ));
+            }
+            if source.bridge_id != device_migration.replacement.bridge_id {
+                return Err(invalid_identity_migration(
+                    "replacement.bridge_id",
+                    format!(
+                        "device {} must remain on bridge {}",
+                        source.device_id, source.bridge_id
+                    ),
+                ));
+            }
+
+            let source_entity_ids = self
+                .registry
+                .entities_for_device(&source.device_id)
+                .map(|entity| entity.entity_id.clone())
+                .collect::<BTreeSet<_>>();
+            let supplied_source_ids = device_migration
+                .entities
+                .iter()
+                .map(|entity| entity.source_entity_id.clone())
+                .collect::<BTreeSet<_>>();
+            if source_entity_ids != supplied_source_ids
+                || source_entity_ids.len() != device_migration.entities.len()
+            {
+                return Err(invalid_identity_migration(
+                    "entities",
+                    format!(
+                        "device {} replacement must cover each of its {} child entities exactly once",
+                        source.device_id,
+                        source_entity_ids.len()
+                    ),
+                ));
+            }
+
+            let replacement_entity_ids = device_migration
+                .replacement
+                .entity_ids
+                .iter()
+                .cloned()
+                .collect::<BTreeSet<_>>();
+            let supplied_destination_ids = device_migration
+                .entities
+                .iter()
+                .map(|entity| entity.replacement.entity_id.clone())
+                .collect::<BTreeSet<_>>();
+            if replacement_entity_ids != supplied_destination_ids
+                || replacement_entity_ids.len() != device_migration.replacement.entity_ids.len()
+            {
+                return Err(invalid_identity_migration(
+                    "replacement.entity_ids",
+                    format!(
+                        "destination device {destination_id} must list each replacement entity exactly once"
+                    ),
+                ));
+            }
+
+            if device_ids
+                .insert(source.device_id.clone(), destination_id.clone())
+                .is_some()
+            {
+                return Err(invalid_identity_migration(
+                    "source_device_id",
+                    format!("duplicate source device {}", source.device_id),
+                ));
+            }
+            devices.insert(
+                source.device_id.clone(),
+                device_migration.replacement.clone(),
+            );
+
+            for entity_migration in &device_migration.entities {
+                let source_entity = self
+                    .registry
+                    .entity(&entity_migration.source_entity_id)
+                    .ok_or_else(|| {
+                        invalid_identity_migration(
+                            "source_entity_id",
+                            format!("unknown entity {}", entity_migration.source_entity_id),
+                        )
+                    })?;
+                let replacement_entity = &entity_migration.replacement;
+                if source_entity.device_id != source.device_id {
+                    return Err(invalid_identity_migration(
+                        "source_entity_id",
+                        format!(
+                            "entity {} is not owned by device {}",
+                            source_entity.entity_id, source.device_id
+                        ),
+                    ));
+                }
+                if replacement_entity.device_id != destination_id {
+                    return Err(invalid_identity_migration(
+                        "replacement.device_id",
+                        format!(
+                            "entity {} must belong to destination device {destination_id}",
+                            replacement_entity.entity_id
+                        ),
+                    ));
+                }
+                if replacement_entity.entity_id == source_entity.entity_id {
+                    return Err(invalid_identity_migration(
+                        "replacement.entity_id",
+                        format!("entity {} is a no-op replacement", source_entity.entity_id),
+                    ));
+                }
+                if self
+                    .registry
+                    .entity(&replacement_entity.entity_id)
+                    .is_some()
+                {
+                    return Err(invalid_identity_migration(
+                        "replacement.entity_id",
+                        format!(
+                            "destination entity {} already exists",
+                            replacement_entity.entity_id
+                        ),
+                    ));
+                }
+                if !destination_entity_ids.insert(replacement_entity.entity_id.clone()) {
+                    return Err(invalid_identity_migration(
+                        "replacement.entity_id",
+                        format!(
+                            "duplicate destination entity {}",
+                            replacement_entity.entity_id
+                        ),
+                    ));
+                }
+                if source_entity.kind != replacement_entity.kind
+                    || source_entity.capabilities != replacement_entity.capabilities
+                {
+                    return Err(invalid_identity_migration(
+                        "replacement.capabilities",
+                        format!(
+                            "entity {} must preserve its kind and capability surface",
+                            source_entity.entity_id
+                        ),
+                    ));
+                }
+                if replacement_entity.state.is_some() {
+                    return Err(invalid_identity_migration(
+                        "replacement.state",
+                        format!(
+                            "entity {} replacement state must be empty; retained state is migrated by the runtime",
+                            replacement_entity.entity_id
+                        ),
+                    ));
+                }
+                if entity_ids
+                    .insert(
+                        source_entity.entity_id.clone(),
+                        replacement_entity.entity_id.clone(),
+                    )
+                    .is_some()
+                {
+                    return Err(invalid_identity_migration(
+                        "source_entity_id",
+                        format!("duplicate source entity {}", source_entity.entity_id),
+                    ));
+                }
+                entities.insert(source_entity.entity_id.clone(), replacement_entity.clone());
+            }
+        }
+
+        Ok(ValidatedRetainedIdentityMigration {
+            device_ids,
+            entity_ids,
+            devices,
+            entities,
+        })
     }
 
     pub fn restore_durable_snapshot(
@@ -6220,6 +6583,135 @@ impl Default for SmartHomeRuntime {
     }
 }
 
+fn invalid_identity_migration(field: &'static str, message: impl Into<String>) -> RuntimeError {
+    RuntimeError::InvalidRetainedIdentityMigration {
+        field,
+        message: message.into(),
+    }
+}
+
+fn migrate_durable_snapshot(
+    snapshot: &mut RuntimeDurableSnapshot,
+    migration: &ValidatedRetainedIdentityMigration,
+) -> RuntimeRetainedIdentityMigrationReport {
+    let mut report = RuntimeRetainedIdentityMigrationReport {
+        migrated_devices: migration.devices.len(),
+        migrated_entities: migration.entities.len(),
+        ..RuntimeRetainedIdentityMigrationReport::default()
+    };
+
+    for device in &mut snapshot.devices {
+        if let Some(replacement) = migration.devices.get(&device.device_id) {
+            *device = replacement.clone();
+        }
+    }
+    for entity in &mut snapshot.entities {
+        let Some(mut replacement) = migration.entities.get(&entity.entity_id).cloned() else {
+            continue;
+        };
+        replacement.state = entity.state.clone().map(|mut state| {
+            replace_entity_id(&mut state.entity_id, &migration.entity_ids);
+            report.rewritten_states += 1;
+            state
+        });
+        *entity = replacement;
+    }
+    for state in &mut snapshot.states {
+        report.rewritten_states +=
+            replace_entity_id(&mut state.entity_id, &migration.entity_ids) as usize;
+    }
+    for scene in &mut snapshot.scenes {
+        for action in &mut scene.actions {
+            report.rewritten_scene_actions +=
+                replace_entity_id(&mut action.entity_id, &migration.entity_ids) as usize;
+        }
+    }
+    for event in &mut snapshot.registry_events {
+        report.rewritten_history_records +=
+            migrate_device_event(event, &migration.device_ids, &migration.entity_ids) as usize;
+    }
+    for grant in &mut snapshot.capability_grants {
+        if let CapabilityGrantScope::EntityCapability { entity_id, .. } = &mut grant.scope {
+            report.rewritten_policy_records +=
+                replace_entity_id(entity_id, &migration.entity_ids) as usize;
+        }
+    }
+    for decision in &mut snapshot.authorization_decisions {
+        if let AuthorizationSubject::Command { entity_id, .. } = &mut decision.subject {
+            report.rewritten_policy_records +=
+                replace_entity_id(entity_id, &migration.entity_ids) as usize;
+        }
+    }
+    for event in &mut snapshot.runtime_events {
+        report.rewritten_runtime_records +=
+            migrate_runtime_event(event, &migration.device_ids, &migration.entity_ids) as usize;
+    }
+    for state in &mut snapshot.optimistic_states {
+        report.rewritten_states +=
+            replace_entity_id(&mut state.entity_id, &migration.entity_ids) as usize;
+    }
+    for desired_state in &mut snapshot.desired_states {
+        report.rewritten_states +=
+            replace_entity_id(&mut desired_state.entity_id, &migration.entity_ids) as usize;
+    }
+
+    report
+}
+
+fn replace_device_id(
+    device_id: &mut DeviceId,
+    replacements: &BTreeMap<DeviceId, DeviceId>,
+) -> bool {
+    let Some(replacement) = replacements.get(device_id) else {
+        return false;
+    };
+    *device_id = replacement.clone();
+    true
+}
+
+fn replace_entity_id(
+    entity_id: &mut EntityId,
+    replacements: &BTreeMap<EntityId, EntityId>,
+) -> bool {
+    let Some(replacement) = replacements.get(entity_id) else {
+        return false;
+    };
+    *entity_id = replacement.clone();
+    true
+}
+
+fn migrate_device_event(
+    event: &mut DeviceEvent,
+    device_ids: &BTreeMap<DeviceId, DeviceId>,
+    entity_ids: &BTreeMap<EntityId, EntityId>,
+) -> bool {
+    let mut changed = false;
+    if let Some(device_id) = &mut event.device_id {
+        changed |= replace_device_id(device_id, device_ids);
+    }
+    if let Some(entity_id) = &mut event.entity_id {
+        changed |= replace_entity_id(entity_id, entity_ids);
+    }
+    changed
+}
+
+fn migrate_runtime_event(
+    event: &mut RuntimeEvent,
+    device_ids: &BTreeMap<DeviceId, DeviceId>,
+    entity_ids: &BTreeMap<EntityId, EntityId>,
+) -> bool {
+    match event {
+        RuntimeEvent::Device(event) => migrate_device_event(event, device_ids, entity_ids),
+        RuntimeEvent::StateExpired { entity_id, .. }
+        | RuntimeEvent::DesiredStateDrift { entity_id, .. } => {
+            replace_entity_id(entity_id, entity_ids)
+        }
+        RuntimeEvent::CommandResult(_)
+        | RuntimeEvent::BridgeHealth { .. }
+        | RuntimeEvent::WorkerNeedsRestart { .. } => false,
+    }
+}
+
 pub fn health_name(health: Health) -> &'static str {
     match health {
         Health::Unknown => "unknown",
@@ -6991,6 +7483,233 @@ mod tests {
             correlation_id: CorrelationId::trusted("corr-1"),
             message: None,
         })
+    }
+
+    fn retained_identity_migration(runtime: &SmartHomeRuntime) -> RuntimeRetainedIdentityMigration {
+        let mut replacement_device = runtime
+            .registry()
+            .device(&DeviceId::trusted("device-1"))
+            .unwrap()
+            .clone();
+        replacement_device.device_id = DeviceId::trusted("device-rotated");
+        replacement_device.name = "Kitchen rotated".to_string();
+        replacement_device.entity_ids = vec![EntityId::trusted("entity-rotated")];
+        replacement_device.identifiers =
+            vec![ProtocolIdentifier::new(ProtocolFamily::Hue, "pseudonym", "rotated").unwrap()];
+
+        let mut replacement_entity = runtime
+            .registry()
+            .entity(&EntityId::trusted("entity-1"))
+            .unwrap()
+            .clone();
+        replacement_entity.entity_id = EntityId::trusted("entity-rotated");
+        replacement_entity.device_id = DeviceId::trusted("device-rotated");
+        replacement_entity.name = "Kitchen Light rotated".to_string();
+        replacement_entity.state = None;
+        replacement_entity.metadata = vec![Metadata::new("identity.generation", "rotated")];
+
+        RuntimeRetainedIdentityMigration::new(vec![RetainedDeviceIdentityReplacement::new(
+            DeviceId::trusted("device-1"),
+            replacement_device,
+            vec![RetainedEntityIdentityReplacement::new(
+                EntityId::trusted("entity-1"),
+                replacement_entity,
+            )],
+        )])
+    }
+
+    #[test]
+    fn retained_identity_migration_rewrites_topology_state_history_policy_and_subscriptions() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        let state = StateSnapshot {
+            entity_id: EntityId::trusted("entity-1"),
+            value: Value::Bool(true),
+            source: StateSource::Poll,
+            observed_at_ms: 1_000,
+            received_at_ms: 1_001,
+            expires_at_ms: Some(2_000),
+            confidence: StateConfidence::Confirmed,
+        };
+        runtime
+            .registry_mut()
+            .apply_state_snapshot(state.clone())
+            .unwrap();
+        runtime.optimistic_states.insert(
+            EntityId::trusted("entity-1"),
+            StateSnapshot {
+                confidence: StateConfidence::Optimistic,
+                ..state.clone()
+            },
+        );
+        runtime
+            .upsert_desired_state(DesiredEntityState::new(
+                EntityId::trusted("entity-1"),
+                vec![StateDelta {
+                    capability_id: CapabilityId::trusted("light.on_off"),
+                    value: Value::Bool(true),
+                }],
+            ))
+            .unwrap();
+        runtime
+            .upsert_scene(Scene {
+                scene_id: SceneId::trusted("scene-1"),
+                scope: SceneScope::Room,
+                native_ref: None,
+                actions: vec![smart_home_core::SceneAction {
+                    entity_id: EntityId::trusted("entity-1"),
+                    desired_state: Value::Bool(true),
+                }],
+                metadata: Vec::new(),
+            })
+            .unwrap();
+        let event = match device_runtime_event("event-1", 1_100) {
+            RuntimeEvent::Device(event) => event,
+            _ => unreachable!(),
+        };
+        runtime.registry_mut().record_event(event.clone()).unwrap();
+        let principal = AgentId::trusted("agent:identity-test");
+        let grant = CapabilityGrant::for_entity_capability(
+            CapabilityGrantId::trusted("grant-identity"),
+            principal.clone(),
+            EntityId::trusted("entity-1"),
+            CapabilityId::trusted("light.on_off"),
+            PrivilegeTier::LowRisk,
+            "test",
+            900,
+        );
+        runtime
+            .registry_mut()
+            .upsert_capability_grant(grant.clone());
+        runtime
+            .registry_mut()
+            .record_authorization_decision(AuthorizationDecision::for_command(
+                principal,
+                &command(CommandType::TurnOn, Value::Null),
+                [&grant],
+                1_050,
+            ));
+        let subscription_id = RuntimeSubscriptionId::trusted("entity-stream");
+        runtime
+            .event_bus_mut()
+            .subscribe(
+                subscription_id.clone(),
+                RuntimeEventFilter::Entity(EntityId::trusted("entity-1")),
+            )
+            .unwrap();
+        runtime.event_bus_mut().publish(RuntimeEvent::Device(event));
+        let retained_value = runtime
+            .registry()
+            .state(&EntityId::trusted("entity-1"))
+            .unwrap()
+            .value
+            .clone();
+
+        let report = runtime
+            .migrate_retained_identities(&retained_identity_migration(&runtime))
+            .unwrap();
+
+        assert_eq!(report.migrated_devices, 1);
+        assert_eq!(report.migrated_entities, 1);
+        assert_eq!(report.rewritten_scene_actions, 1);
+        assert_eq!(report.rewritten_history_records, 1);
+        assert_eq!(report.rewritten_policy_records, 2);
+        assert_eq!(report.rewritten_runtime_records, 1);
+        assert_eq!(report.rewritten_subscriptions, 1);
+        assert!(runtime
+            .registry()
+            .device(&DeviceId::trusted("device-1"))
+            .is_none());
+        assert!(runtime
+            .registry()
+            .entity(&EntityId::trusted("entity-1"))
+            .is_none());
+        assert_eq!(
+            runtime
+                .registry()
+                .state(&EntityId::trusted("entity-rotated"))
+                .unwrap()
+                .value,
+            retained_value
+        );
+        assert_eq!(
+            runtime
+                .registry()
+                .scene(&SceneId::trusted("scene-1"))
+                .unwrap()
+                .actions[0]
+                .entity_id,
+            EntityId::trusted("entity-rotated")
+        );
+        let migrated_event = runtime.registry().events().next().unwrap();
+        assert_eq!(
+            migrated_event.device_id,
+            Some(DeviceId::trusted("device-rotated"))
+        );
+        assert_eq!(
+            migrated_event.entity_id,
+            Some(EntityId::trusted("entity-rotated"))
+        );
+        assert!(matches!(
+            &runtime.registry().capability_grants().next().unwrap().scope,
+            CapabilityGrantScope::EntityCapability { entity_id, .. }
+                if entity_id == &EntityId::trusted("entity-rotated")
+        ));
+        assert!(matches!(
+            &runtime.registry().authorization_decisions().next().unwrap().subject,
+            AuthorizationSubject::Command { entity_id, .. }
+                if entity_id == &EntityId::trusted("entity-rotated")
+        ));
+        assert!(runtime
+            .desired_state(&EntityId::trusted("entity-rotated"))
+            .is_some());
+        assert!(runtime
+            .optimistic_states
+            .contains_key(&EntityId::trusted("entity-rotated")));
+        let subscription = runtime
+            .event_bus()
+            .query_subscriptions(&RuntimeSubscriptionQuery::new())
+            .into_iter()
+            .next()
+            .unwrap();
+        assert_eq!(
+            subscription.filter,
+            RuntimeEventFilter::Entity(EntityId::trusted("entity-rotated"))
+        );
+        assert!(matches!(
+            &runtime
+                .event_bus()
+                .peek_deliveries(&subscription_id, RuntimeEventDeliveryOptions::new())
+                .unwrap()
+                .events[0],
+            RuntimeEvent::Device(event)
+                if event.entity_id == Some(EntityId::trusted("entity-rotated"))
+                    && event.device_id == Some(DeviceId::trusted("device-rotated"))
+        ));
+    }
+
+    #[test]
+    fn retained_identity_migration_rejects_collisions_without_mutation() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        runtime
+            .upsert_device(device("device-existing", "bridge-1"))
+            .unwrap();
+        let before = runtime.durable_snapshot();
+        let mut migration = retained_identity_migration(&runtime);
+        migration.devices[0].replacement.device_id = DeviceId::trusted("device-existing");
+        migration.devices[0].replacement.entity_ids = vec![EntityId::trusted("entity-rotated")];
+        migration.devices[0].entities[0].replacement.device_id =
+            DeviceId::trusted("device-existing");
+
+        let error = runtime.migrate_retained_identities(&migration).unwrap_err();
+
+        assert!(matches!(
+            error,
+            RuntimeError::InvalidRetainedIdentityMigration {
+                field: "replacement.device_id",
+                ..
+            }
+        ));
+        assert_eq!(runtime.durable_snapshot(), before);
     }
 
     #[test]

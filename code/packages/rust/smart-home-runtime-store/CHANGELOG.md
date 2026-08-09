@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Add revision-guarded retained identity migration that persists a complete
+  migrated candidate before swapping the caller's live runtime.
+- Reject automation definitions and execution state that still contain an
+  exact source device or entity identity.
+- Prove successful restart recovery and storage-conflict rollback with the
+  local-folder backend.
+
 ## 0.1.0
 
 - Add versioned, compare-and-swap smart-home runtime snapshots.
