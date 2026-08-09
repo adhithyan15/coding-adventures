@@ -9,7 +9,8 @@
 
 use chief_of_staff_channel_crypto::ChannelId;
 use chief_of_staff_host_control_protocol::{
-    ChildControl, ChildEvent, OrchestratorControl, OrchestratorEvent,
+    ChildControl, ChildEvent, CompletionCall, DataPlaneRequest, DataPlaneResponse,
+    OrchestratorControl, OrchestratorEvent,
 };
 use chief_of_staff_host_runtime::{verify_agent_package, AgentPackageRuntime, PackageKeyring};
 use chief_of_staff_secure_host_channel::{
@@ -60,6 +61,8 @@ pub enum ProcessSupervisorError {
     Control,
     /// A different package is already active under this host name.
     ActivePackageMismatch,
+    /// No supervised process exists under the requested host name.
+    HostNotFound,
 }
 
 impl Display for ProcessSupervisorError {
@@ -76,6 +79,7 @@ impl Display for ProcessSupervisorError {
             Self::Framing => "process-supervisor: invalid framed record",
             Self::Control => "process-supervisor: host-control failure",
             Self::ActivePackageMismatch => "process-supervisor: active package identity mismatch",
+            Self::HostNotFound => "process-supervisor: host not found",
         })
     }
 }
@@ -237,6 +241,7 @@ struct OwnedInstance {
     started_at_ns: u64,
     last_heartbeat_ns: Option<u64>,
     channel_id: ChannelId,
+    pending_data_plane_request: Option<DataPlaneRequest>,
 }
 
 impl OwnedInstance {
@@ -251,6 +256,7 @@ impl OwnedInstance {
             let _ = reader.join();
         }
         self.control.take();
+        self.pending_data_plane_request = None;
         self.phase = InstancePhase::Exited {
             exit_code: status.code(),
         };
@@ -301,6 +307,9 @@ impl OwnedInstance {
                         | Ok(ChildEvent::Heartbeat { received_at_ns }) => {
                             self.phase = InstancePhase::Running;
                             self.last_heartbeat_ns = Some(received_at_ns);
+                        }
+                        Ok(ChildEvent::Request(request)) => {
+                            self.pending_data_plane_request = Some(request);
                         }
                         Err(error) => {
                             let _ = self.hard_kill_and_reap();
@@ -496,6 +505,7 @@ impl ProcessHostSupervisor {
                 reader: Some(reader),
                 records,
                 channel_id: ChannelId(control.session_id().as_bytes()),
+                pending_data_plane_request: None,
                 control: Some(control),
                 phase: InstancePhase::Starting,
                 process_id,
@@ -517,6 +527,54 @@ fn package_runtime_label(runtime: AgentPackageRuntime) -> &'static str {
     match runtime {
         AgentPackageRuntime::Deno => "deno",
         AgentPackageRuntime::Skill => "skill",
+    }
+}
+
+impl ProcessHostSupervisor {
+    /// Return the one authenticated request awaiting service for a host.
+    ///
+    /// The request remains pending until [`Self::respond_data_plane`] succeeds,
+    /// so an adapter can retry its own service lookup without losing correlation.
+    pub fn pending_data_plane_request(
+        &mut self,
+        host_name: &HostName,
+    ) -> Result<Option<DataPlaneRequest>, ProcessSupervisorError> {
+        let instance = self
+            .instances
+            .get_mut(host_name.as_str())
+            .ok_or(ProcessSupervisorError::HostNotFound)?;
+        instance.refresh()?;
+        Ok(instance.pending_data_plane_request.clone())
+    }
+
+    /// Send the exact correlated response for a host's pending request.
+    pub fn respond_data_plane(
+        &mut self,
+        host_name: &HostName,
+        response: DataPlaneResponse,
+    ) -> Result<(), ProcessSupervisorError> {
+        let instance = self
+            .instances
+            .get_mut(host_name.as_str())
+            .ok_or(ProcessSupervisorError::HostNotFound)?;
+        instance.refresh()?;
+        let frame = instance
+            .control
+            .as_mut()
+            .ok_or(ProcessSupervisorError::Control)?
+            .respond(response)
+            .map_err(|_| ProcessSupervisorError::Control)?;
+        let result = instance
+            .stdin
+            .as_mut()
+            .ok_or(ProcessSupervisorError::ProcessIo)
+            .and_then(|stdin| write_record(stdin, &frame));
+        if let Err(error) = result {
+            let _ = instance.hard_kill_and_reap();
+            return Err(error);
+        }
+        instance.pending_data_plane_request = None;
+        Ok(())
     }
 }
 
@@ -655,6 +713,58 @@ impl<R: Read, W: Write> ChildProcessControl<R, W> {
         write_record(&mut self.writer, &frame)
     }
 
+    /// Request one bounded page from an authorized channel.
+    pub fn request_receive(
+        &mut self,
+        channel_id: [u8; 16],
+        limit: u16,
+    ) -> Result<DataPlaneResponse, ProcessSupervisorError> {
+        let (_, frame) = self
+            .control
+            .request_receive(channel_id, limit)
+            .map_err(|_| ProcessSupervisorError::Control)?;
+        self.exchange_data_plane(frame)
+    }
+
+    /// Request publication of one bounded plaintext channel payload.
+    pub fn request_publish(
+        &mut self,
+        channel_id: [u8; 16],
+        content_type: String,
+        payload: Vec<u8>,
+    ) -> Result<DataPlaneResponse, ProcessSupervisorError> {
+        let (_, frame) = self
+            .control
+            .request_publish(channel_id, content_type, payload)
+            .map_err(|_| ProcessSupervisorError::Control)?;
+        self.exchange_data_plane(frame)
+    }
+
+    /// Request acknowledgement of one previously delivered message.
+    pub fn request_acknowledge(
+        &mut self,
+        channel_id: [u8; 16],
+        message_id: [u8; 16],
+    ) -> Result<DataPlaneResponse, ProcessSupervisorError> {
+        let (_, frame) = self
+            .control
+            .request_acknowledge(channel_id, message_id)
+            .map_err(|_| ProcessSupervisorError::Control)?;
+        self.exchange_data_plane(frame)
+    }
+
+    /// Request one provider-neutral completion.
+    pub fn request_completion(
+        &mut self,
+        call: CompletionCall,
+    ) -> Result<DataPlaneResponse, ProcessSupervisorError> {
+        let (_, frame) = self
+            .control
+            .request_completion(call)
+            .map_err(|_| ProcessSupervisorError::Control)?;
+        self.exchange_data_plane(frame)
+    }
+
     /// Block for and authenticate the orchestrator's graceful termination request.
     pub fn receive_terminate(&mut self) -> Result<(), ProcessSupervisorError> {
         let frame = read_record(&mut self.reader)?;
@@ -664,12 +774,29 @@ impl<R: Read, W: Write> ChildProcessControl<R, W> {
             .map_err(|_| ProcessSupervisorError::Control)?
         {
             OrchestratorEvent::Terminate => Ok(()),
+            OrchestratorEvent::Response(_) => Err(ProcessSupervisorError::Control),
         }
     }
 
     /// Return this launch's UUID-v7 secure-session identity.
     pub fn session_id(&self) -> SessionId {
         self.control.session_id()
+    }
+
+    fn exchange_data_plane(
+        &mut self,
+        frame: Vec<u8>,
+    ) -> Result<DataPlaneResponse, ProcessSupervisorError> {
+        write_record(&mut self.writer, &frame)?;
+        let response = read_record(&mut self.reader)?;
+        match self
+            .control
+            .receive_orchestrator(&response)
+            .map_err(|_| ProcessSupervisorError::Control)?
+        {
+            OrchestratorEvent::Response(response) => Ok(response),
+            OrchestratorEvent::Terminate => Err(ProcessSupervisorError::Control),
+        }
     }
 }
 
@@ -895,6 +1022,7 @@ mod tests {
                 ProcessSupervisorError::ActivePackageMismatch,
                 "active package identity mismatch",
             ),
+            (ProcessSupervisorError::HostNotFound, "host not found"),
         ];
         for (error, suffix) in cases {
             let standard: &dyn std::error::Error = &error;

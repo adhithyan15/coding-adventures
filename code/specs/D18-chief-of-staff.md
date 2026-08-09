@@ -503,6 +503,12 @@ by the security escort (host process), not the Chief of Staff.
 
 The strict readiness, heartbeat, and termination state machine is specified in
 [`host-control-protocol.md`](host-control-protocol.md).
+That same authenticated session carries a serialized, bounded channel and
+provider-neutral completion data plane after readiness. The protocol permits one
+request in flight with exact monotonic correlation; the orchestrator-side adapter
+authorizes and executes the operation without creating a second child pipe. The
+payload-blind orchestration core receives no request body; the process adapter
+hands it only to the separately injected channel/LLM authority.
 
 ```
 ┌────────────────────────────────────────────────────────────────┐

@@ -2,7 +2,7 @@
 name = "chief-of-staff-host-control-protocol"
 version = "0.1.0"
 edition = "2021"
-description = "Authenticated readiness, heartbeat, and termination protocol for D18 Chief hosts"
+description = "Authenticated lifecycle and bounded data-plane protocol for D18 Chief hosts"
 license = "MIT"
 
 [dependencies]

@@ -1,19 +1,26 @@
 # chief-of-staff-host-control-protocol
 
-`chief-of-staff-host-control-protocol` defines the minimum authenticated
-lifecycle conversation between the D18 orchestrator and one spawned host. A
-child independently verifies its signed package, sends `Ready(package_hash)`,
-then sends heartbeats. The orchestrator alone sends `Terminate`.
+`chief-of-staff-host-control-protocol` defines the authenticated lifecycle and
+bounded data-plane conversation between the D18 orchestrator and one spawned
+host. A child independently verifies its signed package, sends
+`Ready(package_hash)`, then sends heartbeats and serialized channel or
+provider-neutral completion requests. The orchestrator sends exact correlated
+responses or `Terminate`.
 
 The wrapper runs over `chief-of-staff-secure-host-channel`, enforces role and
 lifecycle ordering, and fails closed after malformed, unauthenticated,
 wrong-direction, replayed, or package-mismatched peer input. Heartbeats carry no
 child-selected timestamp: the orchestrator attaches its trusted monotonic receive
-time after authentication.
+time after authentication. The data plane permits one request in flight, uses
+strictly increasing non-zero IDs, and fails closed on skipped, duplicate,
+wrong-operation, or unsolicited responses. Receive, publish, acknowledge, and
+text completion records have explicit aggregate and field bounds below the
+secure channel's one-megabyte frame limit.
 
 The crate owns no clock, file descriptor, process, stream, filesystem, or network
-capability. A concrete process supervisor supplies complete encrypted frames and
-receipt times.
+channel-storage, model-provider, or authorization capability. A concrete process
+supervisor supplies complete encrypted frames and receipt times; later adapters
+execute authenticated requests against injected services.
 
 ## Validation
 

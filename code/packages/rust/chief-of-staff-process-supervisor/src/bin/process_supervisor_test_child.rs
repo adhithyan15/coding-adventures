@@ -1,8 +1,12 @@
+use chief_of_staff_host_control_protocol::{
+    CompletionCall, DataPlaneResponse, PromptMessage, PromptRole,
+};
 use chief_of_staff_host_runtime::{
     verify_agent_package, AgentPackageRuntime, PackageKeyType, PackageKeyring, TrustedPackageKey,
 };
 use chief_of_staff_process_supervisor::ChildProcessControl;
 use chief_of_staff_tool_api::PrivilegeTier;
+use std::collections::BTreeMap;
 use std::env;
 use std::io::{self, Write};
 use std::path::Path;
@@ -16,6 +20,52 @@ const TEST_PUBLIC_KEY: [u8; 32] = [
 
 fn has_marker(name: &str) -> bool {
     Path::new(name).is_file()
+}
+
+fn uuid_v7(last: u8) -> [u8; 16] {
+    let mut bytes = [0u8; 16];
+    bytes[6] = 0x70;
+    bytes[8] = 0x80;
+    bytes[15] = last;
+    bytes
+}
+
+fn exercise_data_plane(
+    control: &mut ChildProcessControl<impl io::Read, impl Write>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let received = control.request_receive(uuid_v7(1), 1)?;
+    if !matches!(received, DataPlaneResponse::Received { messages, .. } if messages.is_empty()) {
+        return Err("unexpected receive response".into());
+    }
+    let published =
+        control.request_publish(uuid_v7(2), "text/plain".to_string(), b"weather".to_vec())?;
+    if !matches!(published, DataPlaneResponse::Published { sequence: 1, .. }) {
+        return Err("unexpected publish response".into());
+    }
+    let acknowledged = control.request_acknowledge(uuid_v7(1), uuid_v7(3))?;
+    if !matches!(
+        acknowledged,
+        DataPlaneResponse::Acknowledged { sequence: 2, .. }
+    ) {
+        return Err("unexpected acknowledge response".into());
+    }
+    let completed = control.request_completion(CompletionCall {
+        model: "test-model".to_string(),
+        system: Some("be concise".to_string()),
+        messages: vec![PromptMessage {
+            role: PromptRole::User,
+            text: "weather".to_string(),
+        }],
+        temperature: 0.0,
+        max_tokens: Some(32),
+        stop_sequences: Vec::new(),
+        seed: Some(0),
+        metadata: BTreeMap::new(),
+    })?;
+    if !matches!(completed, DataPlaneResponse::Failed { .. }) {
+        return Err("unexpected completion response".into());
+    }
+    Ok(())
 }
 
 fn run() -> Result<(), Box<dyn std::error::Error>> {
@@ -61,6 +111,9 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     control.ready(digest)?;
     if !has_marker("NO_HEARTBEAT") {
         control.heartbeat()?;
+    }
+    if has_marker("DATA_PLANE") {
+        exercise_data_plane(&mut control)?;
     }
     control.receive_terminate()?;
     if has_marker("IGNORE_TERMINATE") {
