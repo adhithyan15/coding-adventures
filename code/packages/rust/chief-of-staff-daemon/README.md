@@ -35,6 +35,11 @@ receive fresh UUID-v7 identities plus process-monotonic timestamps. Startup does
 not probe model endpoints. An absent or empty table preserves the fail-closed
 unavailable service for existing control-plane-only deployments.
 
+The exported production data-plane composition boundary is also used by the real
+Level 1 host integration test. That test supplies owner-only key files and a
+loopback Ollama fixture, then proves encrypted receive, completion, encrypted
+publish, and input acknowledgement through the same dispatcher used by `run`.
+
 SIGINT, SIGTERM, Ctrl+C, Ctrl+Break, console close, logoff, and system shutdown
 request a cooperative listener stop. Dropping the composed process supervisor
 reaps every child still owned by this daemon instance.

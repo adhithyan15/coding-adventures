@@ -13,14 +13,22 @@ chief-of-staff-skill-runtime = { path = "../chief-of-staff-skill-runtime" }
 llm-gateway = { path = "../llm-gateway" }
 
 [dev-dependencies]
+chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
+chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }
+chief-of-staff-channel-store = { path = "../chief-of-staff-channel-store" }
+chief-of-staff-daemon = { path = "../chief-of-staff-daemon" }
+chief-of-staff-daemon-config = { path = "../chief-of-staff-daemon-config" }
 chief-of-staff-host-data-plane = { path = "../chief-of-staff-host-data-plane" }
+chief-of-staff-pipeline-bindings = { path = "../chief-of-staff-pipeline-bindings" }
 chief-of-staff-secure-host-channel = { path = "../chief-of-staff-secure-host-channel" }
 chief-of-staff-service-reconciler = { path = "../chief-of-staff-service-reconciler" }
 chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
 chief-of-staff-skill-package = { path = "../chief-of-staff-skill-package" }
 chief-of-staff-tool-api = { path = "../chief-of-staff-tool-api" }
 coding_adventures_ed25519 = { path = "../ed25519" }
+coding_adventures_storage_fs = { path = "../storage-fs" }
 coding_adventures_x3dh = { path = "../x3dh" }
+storage-core = { path = "../storage-core" }
 
 [[bin]]
 name = "chief-of-staff-host"

@@ -16,8 +16,8 @@ use chief_of_staff_daemon_keyring::{load_package_keyring, KeyringLoadError};
 use chief_of_staff_daemon_policy::{DenyChannelWiring, LocalAuthError, LocalBearerAuthorizer};
 use chief_of_staff_daemon_runtime::{ChiefDaemonRuntime, DaemonRuntimeError, ReconcileSchedule};
 use chief_of_staff_host_data_plane::{
-    AuthorityBackedHostDataPlaneService, DurableHostDataPlaneDispatcher, HostDataPlaneService,
-    UnavailableHostDataPlaneService,
+    AuthorityBackedHostDataPlaneService, DurableHostDataPlaneDispatcher, HostDataPlaneDispatcher,
+    HostDataPlaneService, UnavailableHostDataPlaneService,
 };
 use chief_of_staff_orchestrator_core::OrchestratorCore;
 use chief_of_staff_process_supervisor::{
@@ -266,13 +266,8 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
     let schedule = ReconcileSchedule::new(interval).map_err(ChiefDaemonError::Runtime)?;
     let clock: Arc<dyn MonotonicClock> = Arc::new(SystemMonotonicClock::new());
     let launch_bindings = Arc::new(DurableHostLaunchBindings::new(Arc::clone(&backend)));
-    let metadata_source: Arc<dyn MessageMetadataSource> =
-        Arc::new(SystemMessageMetadataSource::new(Arc::clone(&clock)));
-    let service = compose_data_plane_service(&config, home, Arc::clone(&backend), metadata_source)?;
-    let data_plane = Arc::new(DurableHostDataPlaneDispatcher::new(
-        Arc::clone(&backend),
-        service,
-    ));
+    let data_plane =
+        compose_host_data_plane(&config, home, Arc::clone(&backend), Arc::clone(&clock))?;
     let core = OrchestratorCore::with_process_supervisor(
         backend,
         process_config,
@@ -291,6 +286,26 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
         config.orchestrator().port(),
     ));
     run_platform(address, api, schedule)
+}
+
+/// Compose the exact production host data plane from validated daemon authority.
+///
+/// The returned dispatcher reloads durable pipeline authorization for every
+/// request. Non-empty data-plane declarations provision the file-backed channel
+/// keys and explicit Ollama providers used by [`run`]; absent or empty
+/// declarations retain the redacted unavailable service.
+pub fn compose_host_data_plane(
+    config: &ChiefConfig,
+    home: &Path,
+    backend: Arc<dyn StorageBackend>,
+    clock: Arc<dyn MonotonicClock>,
+) -> Result<Arc<dyn HostDataPlaneDispatcher>, ChiefDaemonError> {
+    let metadata_source: Arc<dyn MessageMetadataSource> =
+        Arc::new(SystemMessageMetadataSource::new(clock));
+    let service = compose_data_plane_service(config, home, Arc::clone(&backend), metadata_source)?;
+    Ok(Arc::new(DurableHostDataPlaneDispatcher::new(
+        backend, service,
+    )))
 }
 
 fn compose_data_plane_service(

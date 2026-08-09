@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Expose the exact production host data-plane composition boundary so the real
+  Level 1 child can be exercised against file-provisioned keys, durable encrypted
+  channels, and the configured Ollama adapter in one end-to-end test.
 - Provision non-empty typed data-plane declarations into the production daemon's
   exact channel-key and Ollama authorities, with UUID-v7/process-monotonic publish
   metadata and no startup network probe. Empty declarations remain unavailable.
