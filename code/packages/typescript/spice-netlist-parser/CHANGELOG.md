@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Give canonical MOS Level-1 `VT0` precedence over the `VTO` and `VTH` aliases.
 - Give canonical MOS Level-1 `U0` precedence over the `UO` alias.
 - Give canonical MOS Level-1 `LAMBDA` precedence over the `LAM` alias.
 - Give canonical MOS Level-1 `T_NOM` precedence over the `TNOM` alias.
