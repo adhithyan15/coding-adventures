@@ -16,3 +16,11 @@ after that write succeeds. A stale revision leaves both the live runtime and
 the durable record unchanged. Supplied automation definitions and execution
 state must already use destination identities; exact source-ID references are
 rejected before either runtime or storage mutation.
+
+Pairing completion follows the same persist-before-swap rule. It executes the
+D23 `CompletePairing` authorization and mutation against a cloned runtime,
+persists the complete candidate only at the caller's expected revision, and
+then swaps live state. The API accepts only an opaque `VaultRef` and returns the
+prior bridge reference for explicit post-commit credential cleanup. Coordinating
+the separate sealed-Vault write and crash-recoverable old-record deletion
+remains the credential host's responsibility.

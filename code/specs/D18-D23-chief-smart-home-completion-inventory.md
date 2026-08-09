@@ -1488,6 +1488,32 @@ the completed camera-media policy and pinned native HTTPS executor:
   responsibility. Streams, recordings, playback, NVR channels, logical
   channels, and broader media transfer remain prerequisite-gated.
 
+## Current Revision-Guarded Pairing Completion Slice
+
+This slice closes the durable-runtime half of credential pairing without
+claiming cross-store atomicity:
+
+- `smart-home-runtime-store` accepts an already sealed opaque `VaultRef`, a D23
+  principal, one exact pending pairing completion, and the caller's expected
+  runtime revision.
+- Completion runs against a cloned runtime through the existing
+  `smart_home.complete_pairing` Human Approval authorization path. The complete
+  candidate snapshot is persisted with compare-and-swap before live state is
+  replaced.
+- Authorization denial, invalid pairing state, encoding failure, or a stale
+  storage revision leaves the live pairing session and bridge reference
+  unchanged. Successful restart recovery restores the completed session,
+  bridge reference, authorization decision, health event, and metadata.
+- The API returns the previous opaque bridge `VaultRef` after commit so a
+  credential host can distinguish first installation from replacement without
+  reading credential material.
+- Tests prove authorized replacement and restart recovery, denial without a
+  durable candidate, and stale-revision rollback with both live and durable
+  pairing state still pending.
+- Sealed-Vault write/rollback and old-record deletion are deliberately not
+  presented as atomic with runtime persistence. A recoverable transaction
+  journal remains required before automated credential provisioning can ship.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
@@ -1498,17 +1524,21 @@ authentication prerequisite. Blue Iris documents `/image/{camera}` and secure
 JSON sessions independently, but does not document how a secure session binds
 to that image request; the only documented direct URL credentials require
 disabling secure sessions and are rejected. Frigate snapshot delivery remains
-blocked on a cookie-capable media authentication boundary. The strongest next
-post-merge audit is the explicit sealed-Vault camera credential pairing flow,
-which must prove D23 pairing authorization, versioned envelope creation, opaque
-reference installation, replacement semantics, and failure cleanup before any
-host becomes an implicit credential writer.
+blocked on a cookie-capable media authentication boundary. Revision-guarded
+D23 pairing completion is now available, but the sealed Vault and runtime store
+remain independent commit domains. The strongest next prerequisite is a
+secret-free durable prepare/commit/cleanup journal that can recover a crash or
+rollback failure around new-record creation, runtime CAS, and old-record
+deletion before any host becomes an implicit credential writer.
 
-1. Add automated ONVIF, ZoneMinder, Axis, and Reolink credential provisioning
-   only through explicit D23 pairing flows that write each host's versioned
-   envelope into its dedicated sealed-Vault namespace and install only opaque
-   references. Snapshot delivery itself is complete and must not become an
-   implicit credential writer.
+1. Add a secret-free, recoverable pairing transaction protocol spanning sealed
+   Vault and runtime-store commit domains. It must journal prepare, new opaque
+   reference, previous opaque reference, expected runtime revision, commit, and
+   cleanup status; recover crashes; bind rollback/deletion to exact revisions;
+   and migrate the existing Hue pairing service before enabling automated
+   ONVIF, ZoneMinder, Axis, or Reolink credential provisioning. Snapshot
+   delivery itself is complete and must not become an implicit credential
+   writer.
 2. Add authenticated AirGradient MQTT only after official firmware removes
    plaintext credential logging and one-shot Vault-leased credential injection
    can be proven without request-plan or normalized-state exposure.

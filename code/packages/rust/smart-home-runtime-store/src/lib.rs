@@ -3,9 +3,11 @@
 #![forbid(unsafe_code)]
 
 use serde::{Deserialize, Serialize};
+use smart_home_core::{AgentId, VaultRef};
 use smart_home_runtime::{
-    RuntimeDurableSnapshot, RuntimeError, RuntimeRetainedIdentityMigration,
-    RuntimeRetainedIdentityMigrationReport, SmartHomeRuntime,
+    RuntimeCompletePairingToolOutput, RuntimeCompletePairingToolRequest, RuntimeDurableSnapshot,
+    RuntimeError, RuntimeRetainedIdentityMigration, RuntimeRetainedIdentityMigrationReport,
+    SmartHomeRuntime,
 };
 use std::fmt;
 use storage_core::{Revision, StorageBackend, StorageError, StorageMetadata, StoragePutInput};
@@ -247,6 +249,67 @@ impl<B: StorageBackend> SmartHomeRuntimeStore<B> {
         Ok((report, revision))
     }
 
+    /// Completes one authorized pairing session as a revision-guarded durable
+    /// runtime mutation.
+    ///
+    /// The caller must have already sealed the credential payload and supplies
+    /// only its opaque `VaultRef`. The completion runs against a cloned runtime,
+    /// including D23 Human Approval authorization, then persists that complete
+    /// candidate with compare-and-swap. Live state changes only after the write
+    /// succeeds. The prior bridge reference is returned so a credential host
+    /// can perform explicit replacement cleanup after the durable commit.
+    pub fn complete_pairing(
+        &self,
+        runtime: &mut SmartHomeRuntime,
+        principal_id: AgentId,
+        request: RuntimeCompletePairingToolRequest,
+        automation_definitions: &[DurableAutomationDefinition],
+        automation_state: Option<serde_json::Value>,
+        expected_revision: Revision,
+    ) -> Result<(RuntimeCompletePairingToolOutput, Option<VaultRef>, Revision), RuntimeStoreError>
+    {
+        validate_automation_definitions(automation_definitions)?;
+        if automation_state
+            .as_ref()
+            .is_some_and(|state| !state.is_object())
+        {
+            return Err(RuntimeStoreError::Validation {
+                field: "automation_state",
+                message: "must be a JSON object".to_string(),
+            });
+        }
+
+        let mut candidate = runtime.clone();
+        let completed_at_ms = request.completion.completed_at_ms;
+        let output =
+            candidate.execute_complete_pairing_tool(principal_id, request, completed_at_ms)?;
+        let previous_vault_ref = runtime
+            .registry()
+            .bridge(&output.session.bridge_id)
+            .and_then(|bridge| bridge.auth_ref.clone());
+        let envelope = RuntimeStoreEnvelope {
+            schema_version: SCHEMA_VERSION,
+            saved_at_ms: completed_at_ms,
+            runtime: candidate.durable_snapshot(),
+            automation_definitions: automation_definitions.to_vec(),
+            automation_state,
+        };
+        let body = serde_json::to_vec(&envelope)
+            .map_err(|error| RuntimeStoreError::Encode(error.to_string()))?;
+        self.backend.initialize()?;
+        let input = StoragePutInput::new(
+            self.namespace.clone(),
+            self.key.clone(),
+            CONTENT_TYPE,
+            StorageMetadata::Object(Default::default()),
+            body,
+        )?
+        .with_if_revision(Some(expected_revision));
+        let revision = self.backend.put(input)?.revision;
+        *runtime = candidate;
+        Ok((output, previous_vault_ref, revision))
+    }
+
     pub fn load(&self) -> Result<Option<RestoredSmartHomeRuntime>, RuntimeStoreError> {
         self.backend.initialize()?;
         let Some(record) = self.backend.get(&self.namespace, &self.key)? else {
@@ -338,9 +401,9 @@ fn json_references_any(
         serde_json::Value::Object(fields) => fields.iter().any(|(key, value)| {
             source_ids.contains(key.as_str()) || json_references_any(value, source_ids)
         }),
-        serde_json::Value::Null
-        | serde_json::Value::Bool(_)
-        | serde_json::Value::Number(_) => false,
+        serde_json::Value::Null | serde_json::Value::Bool(_) | serde_json::Value::Number(_) => {
+            false
+        }
     }
 }
 
@@ -348,13 +411,15 @@ fn json_references_any(
 mod tests {
     use super::*;
     use smart_home_core::{
-        AgentId, Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CommandId,
-        CommandResult, CommandStatus, CorrelationId, Device, DeviceEvent, DeviceEventType,
-        DeviceId, Entity, EntityId, EntityKind, EventId, Health, IntegrationId, StateDelta, Value,
+        AgentId, AuthorizationOutcome, Bridge, BridgeId, BridgeTransport, Capability,
+        CapabilityGrant, CapabilityGrantId, CapabilityId, CommandId, CommandResult, CommandStatus,
+        CorrelationId, Device, DeviceEvent, DeviceEventType, DeviceId, Entity, EntityId,
+        EntityKind, EventId, Health, IntegrationId, PrivilegeTier, StateDelta, Value, VaultRef,
     };
     use smart_home_runtime::{
-        DesiredEntityState, DesiredStateQuery, RetainedDeviceIdentityReplacement,
-        RetainedEntityIdentityReplacement, RuntimeCommandResultQuery, RuntimeEvent,
+        DesiredEntityState, DesiredStateQuery, PairingSessionStatus,
+        RetainedDeviceIdentityReplacement, RetainedEntityIdentityReplacement,
+        RuntimeCommandResultQuery, RuntimeCompletePairingToolRequest, RuntimeEvent,
         RuntimePairingSession, RuntimePairingSessionId, RuntimePairingSessionQuery,
         RuntimeRetainedIdentityMigration,
     };
@@ -491,6 +556,20 @@ mod tests {
         )])
     }
 
+    fn grant_pairing(runtime: &mut SmartHomeRuntime, principal: &AgentId) {
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-pair"),
+                principal.clone(),
+                CapabilityId::trusted("smart_home.pair"),
+                PrivilegeTier::HumanApproval,
+                "test",
+                400,
+            )
+            .with_expiry(1_000),
+        );
+    }
+
     #[test]
     fn local_folder_restart_restores_runtime_and_automation_definitions() {
         let root = temp_root("restart");
@@ -556,6 +635,174 @@ mod tests {
                 .len(),
             1
         );
+
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn pairing_completion_persists_before_swapping_live_runtime() {
+        let root = temp_root("pairing-completion");
+        let principal = AgentId::trusted("agent:test");
+        let old_vault_ref = VaultRef::trusted("vault://smart-home/hue/bridge-1/old");
+        let new_vault_ref = VaultRef::trusted("vault://smart-home/hue/bridge-1/new");
+        let mut runtime = runtime_fixture();
+        let mut bridge = runtime
+            .registry()
+            .bridge(&BridgeId::trusted("bridge-1"))
+            .unwrap()
+            .clone();
+        bridge.auth_ref = Some(old_vault_ref.clone());
+        runtime.upsert_bridge(bridge).unwrap();
+        grant_pairing(&mut runtime, &principal);
+        let store = SmartHomeRuntimeStore::new(LocalFolderStorageBackend::new(root.clone()));
+        let initial_revision = store.save(&runtime, &[], 500).unwrap();
+
+        let (output, previous_vault_ref, completed_revision) = store
+            .complete_pairing(
+                &mut runtime,
+                principal.clone(),
+                RuntimeCompletePairingToolRequest::new(
+                    RuntimePairingSessionId::trusted("pairing-1"),
+                    new_vault_ref.clone(),
+                    600,
+                ),
+                &[],
+                None,
+                initial_revision,
+            )
+            .unwrap();
+
+        assert_eq!(output.session.status, PairingSessionStatus::Completed);
+        assert_eq!(previous_vault_ref, Some(old_vault_ref));
+        assert_eq!(
+            runtime
+                .registry()
+                .bridge(&BridgeId::trusted("bridge-1"))
+                .unwrap()
+                .auth_ref,
+            Some(new_vault_ref.clone())
+        );
+        assert!(runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal)
+            .iter()
+            .any(|decision| decision.outcome == AuthorizationOutcome::Allowed));
+
+        let restored = store.load().unwrap().unwrap();
+        assert_eq!(restored.revision, completed_revision);
+        assert_eq!(restored.saved_at_ms, 600);
+        assert_eq!(
+            restored
+                .runtime
+                .pairing_session(&RuntimePairingSessionId::trusted("pairing-1"))
+                .unwrap()
+                .status,
+            PairingSessionStatus::Completed
+        );
+        assert_eq!(
+            restored
+                .runtime
+                .registry()
+                .bridge(&BridgeId::trusted("bridge-1"))
+                .unwrap()
+                .auth_ref,
+            Some(new_vault_ref)
+        );
+        assert!(restored
+            .runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal)
+            .iter()
+            .any(|decision| decision.outcome == AuthorizationOutcome::Allowed));
+        assert!(restored.runtime.registry().events().any(|event| {
+            event.metadata.iter().any(|metadata| {
+                metadata.key == "smart_home.pairing_session" && metadata.value == "pairing-1"
+            })
+        }));
+
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn pairing_completion_storage_conflict_keeps_live_session_pending() {
+        let root = temp_root("pairing-conflict");
+        let principal = AgentId::trusted("agent:test");
+        let mut runtime = runtime_fixture();
+        grant_pairing(&mut runtime, &principal);
+        let store = SmartHomeRuntimeStore::new(LocalFolderStorageBackend::new(root.clone()));
+        let stale_revision = store.save(&runtime, &[], 500).unwrap();
+        let current_revision = store.save(&runtime, &[], 550).unwrap();
+        let before = runtime.durable_snapshot();
+
+        let error = store
+            .complete_pairing(
+                &mut runtime,
+                principal,
+                RuntimeCompletePairingToolRequest::new(
+                    RuntimePairingSessionId::trusted("pairing-1"),
+                    VaultRef::trusted("vault://smart-home/hue/bridge-1/new"),
+                    600,
+                ),
+                &[],
+                None,
+                stale_revision,
+            )
+            .unwrap_err();
+
+        assert!(matches!(error, RuntimeStoreError::Storage(_)));
+        assert_eq!(runtime.durable_snapshot(), before);
+        let restored = store.load().unwrap().unwrap();
+        assert_eq!(restored.revision, current_revision);
+        assert_eq!(
+            restored
+                .runtime
+                .pairing_session(&RuntimePairingSessionId::trusted("pairing-1"))
+                .unwrap()
+                .status,
+            PairingSessionStatus::PendingUserPresence
+        );
+        assert_eq!(
+            restored
+                .runtime
+                .registry()
+                .bridge(&BridgeId::trusted("bridge-1"))
+                .unwrap()
+                .auth_ref,
+            None
+        );
+
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn pairing_completion_denial_writes_no_candidate() {
+        let root = temp_root("pairing-denial");
+        let mut runtime = runtime_fixture();
+        let before = runtime.durable_snapshot();
+        let store = SmartHomeRuntimeStore::new(LocalFolderStorageBackend::new(root.clone()));
+        let initial_revision = store.save(&runtime, &[], 500).unwrap();
+
+        let error = store
+            .complete_pairing(
+                &mut runtime,
+                AgentId::trusted("agent:unauthorized"),
+                RuntimeCompletePairingToolRequest::new(
+                    RuntimePairingSessionId::trusted("pairing-1"),
+                    VaultRef::trusted("vault://smart-home/hue/bridge-1/new"),
+                    600,
+                ),
+                &[],
+                None,
+                initial_revision.clone(),
+            )
+            .unwrap_err();
+
+        assert!(matches!(
+            error,
+            RuntimeStoreError::Runtime(RuntimeError::UnauthorizedTool { .. })
+        ));
+        assert_eq!(runtime.durable_snapshot(), before);
+        assert_eq!(store.load().unwrap().unwrap().revision, initial_revision);
 
         fs::remove_dir_all(root).unwrap();
     }
