@@ -5305,11 +5305,19 @@ impl HtmlParser {
         }
 
         if !in_foreign_content && name == "meta" && self.current_element_is_table_structure() {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-head-content-start-tag-in-table",
+                "head-content start tag `<meta>` in a table context was foster parented",
+            ));
             self.insert_node_before_open_table(Node::element(name, attributes));
             return;
         }
 
         if !in_foreign_content && name == "title" && self.current_element_is_table_structure() {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-head-content-start-tag-in-table",
+                "head-content start tag `<title>` in a table context was foster parented",
+            ));
             if let Some(path) = self.insert_node_before_open_table(Node::element(name, attributes))
             {
                 self.open_elements.push(path);
@@ -33496,6 +33504,36 @@ mod tests {
                 diagnostic.code != "unexpected-hidden-input-start-tag-in-table"
             }));
         }
+    }
+
+    #[test]
+    fn reports_head_content_start_tags_fostered_from_tables() {
+        for (source, name) in [
+            ("<!doctype html><table><title>X</title></table>", "title"),
+            ("<!doctype html><table><meta></table>", "meta"),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic
+                        == &ParserDiagnostic::new(
+                            "unexpected-head-content-start-tag-in-table",
+                            format!(
+                                "head-content start tag `<{name}>` in a table context was foster parented"
+                            ),
+                        )
+                }),
+                "source {source:?}"
+            );
+        }
+
+        let head = parse_html_with_diagnostics(
+            "<!doctype html><head><title>X</title><meta></head><body></body>",
+        )
+        .unwrap();
+        assert!(head.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-head-content-start-tag-in-table"
+        }));
     }
 
     #[test]

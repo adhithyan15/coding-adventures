@@ -6,6 +6,10 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- `title` and `meta` start tags foster-parented out of table structure now
+  report the required in-table parse error, covering 2 previously silent
+  malformed corpus cases without changing DOM recovery or
+  undeclared-diagnostic coverage.
 - Hidden `input` start tags processed in table structure now report the
   required parse error, covering 4 previously silent malformed corpus cases
   without changing DOM recovery or undeclared-diagnostic coverage.
