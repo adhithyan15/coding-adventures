@@ -42,8 +42,12 @@ you just used with **comer**:
 | tú | viv**as** |
 | él / ella / usted | viv**a** |
 
-Regular **-er** and **-ir** match in this singular row: **coma/comas/coma** and
-**viva/vivas/viva**. Plural differences wait.
+Regular **-er** and **-ir** match in this singular row:
+
+- **comer:** **coma · comas · coma**.
+- **vivir:** **viva · vivas · viva**.
+
+Plural differences wait.
 
 ## Grammar Lens: meaning in a known frame
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-IR-PRESENT-SINGULAR, ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR, ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED, ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST, ES-LEX-EN] -->

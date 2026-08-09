@@ -39,11 +39,17 @@ the past as completed or leaves it open as background, progress, or habit.
 ## Grammar Lens: the complete Chapter 16 frame
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-IMPERFECT-SINGULAR, ES-GRAMMAR-ER-IMPERFECT-SINGULAR, ES-GRAMMAR-IR-IMPERFECT-SINGULAR, ES-GRAMMAR-SER-IMPERFECT-SINGULAR, ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR, ES-GRAMMAR-VER-IMPERFECT-SINGULAR] -->
 
-| person | hablar | comer | vivir | ser | ir | ver |
-|---|---|---|---|---|---|---|
-| yo | hablaba | comía | vivía | era | iba | veía |
-| tú | hablabas | comías | vivías | eras | ibas | veías |
-| él / ella / usted | hablaba | comía | vivía | era | iba | veía |
+Regular rows:
+
+- **yo:** **hablaba · comía · vivía**.
+- **tú:** **hablabas · comías · vivías**.
+- **él / ella / usted:** **hablaba · comía · vivía**.
+
+The three special rows:
+
+- **yo:** **era · iba · veía**.
+- **tú:** **eras · ibas · veías**.
+- **él / ella / usted:** **era · iba · veía**.
 
 The first and third forms match in every learned row. **Comer** and **vivir**
 share **-ía, -ías, -ía**. **Ver** keeps **ve-** before that material. Plural

@@ -6439,7 +6439,7 @@
     {
       "language": "spanish",
       "chapter": 7,
-      "sourceHash": "fnv1a64:a68b0d451345acb7",
+      "sourceHash": "fnv1a64:f5a1cd8b7c0023c0",
       "lessonIds": [
         "ES-C07-comer",
         "ES-C07-vivir",
@@ -6452,8 +6452,8 @@
       "drivablePrefix": 0,
       "text": "spanish/narration/ch07.txt",
       "json": "spanish/narration/ch07.json",
-      "textHash": "fnv1a64:b916697c279b6033",
-      "jsonHash": "fnv1a64:f16be189b1f6a8e7"
+      "textHash": "fnv1a64:e0b831a05ee10701",
+      "jsonHash": "fnv1a64:52d9b6603ceb6a44"
     },
     {
       "language": "spanish",
@@ -6488,8 +6488,8 @@
       "drivablePrefix": 5,
       "text": "spanish/narration/ch09.txt",
       "json": "spanish/narration/ch09.json",
-      "textHash": "fnv1a64:ed562b7d8a7c11ef",
-      "jsonHash": "fnv1a64:4083df0087decf80"
+      "textHash": "fnv1a64:cb2e15192c70db4f",
+      "jsonHash": "fnv1a64:1fb2cc637aebc8ba"
     },
     {
       "language": "spanish",
@@ -6540,8 +6540,8 @@
       "drivablePrefix": 2,
       "text": "spanish/narration/ch12.txt",
       "json": "spanish/narration/ch12.json",
-      "textHash": "fnv1a64:8fe8ac6d00d8a860",
-      "jsonHash": "fnv1a64:18fbf230b3e75f0e"
+      "textHash": "fnv1a64:8212e72724ecbef6",
+      "jsonHash": "fnv1a64:4bcc1c1d16ba8ed4"
     },
     {
       "language": "spanish",
@@ -6557,8 +6557,8 @@
       "drivablePrefix": 4,
       "text": "spanish/narration/ch13.txt",
       "json": "spanish/narration/ch13.json",
-      "textHash": "fnv1a64:bbb79f704e4608f6",
-      "jsonHash": "fnv1a64:bcb2c9894ea7a045"
+      "textHash": "fnv1a64:8f659c6a0a63b702",
+      "jsonHash": "fnv1a64:edad761dd20cc4b9"
     },
     {
       "language": "spanish",
@@ -6579,7 +6579,7 @@
     {
       "language": "spanish",
       "chapter": 15,
-      "sourceHash": "fnv1a64:f379777cfd7b2b7c",
+      "sourceHash": "fnv1a64:c1d6a18bc1d0da23",
       "lessonIds": [
         "ES-C15-comer-preterite",
         "ES-C15-comer-vivir-preterite",
@@ -6588,17 +6588,17 @@
         "ES-C15-preterite-fuertes",
         "ES-C15-practice"
       ],
-      "voiceLessons": 5,
-      "drivablePrefix": 5,
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
       "text": "spanish/narration/ch15.txt",
       "json": "spanish/narration/ch15.json",
-      "textHash": "fnv1a64:206fcd007f948180",
-      "jsonHash": "fnv1a64:8489a70a007e7027"
+      "textHash": "fnv1a64:3ef345e47cb536d7",
+      "jsonHash": "fnv1a64:86c6667b3827c8e2"
     },
     {
       "language": "spanish",
       "chapter": 16,
-      "sourceHash": "fnv1a64:f336eef33d8ddb7d",
+      "sourceHash": "fnv1a64:dc4a32eeddd48a27",
       "lessonIds": [
         "ES-C16-imperfecto",
         "ES-C16-comer-imperfecto",
@@ -6609,12 +6609,12 @@
         "ES-C16-ver-imperfecto",
         "ES-C16-practice"
       ],
-      "voiceLessons": 7,
-      "drivablePrefix": 7,
+      "voiceLessons": 8,
+      "drivablePrefix": 8,
       "text": "spanish/narration/ch16.txt",
       "json": "spanish/narration/ch16.json",
-      "textHash": "fnv1a64:5b2de8931d461eac",
-      "jsonHash": "fnv1a64:0cad95d6a56a928b"
+      "textHash": "fnv1a64:02d3f3c72f094c16",
+      "jsonHash": "fnv1a64:36ad25ff8ae93861"
     },
     {
       "language": "spanish",
@@ -6640,7 +6640,7 @@
     {
       "language": "spanish",
       "chapter": 18,
-      "sourceHash": "fnv1a64:b8cc7964a7642317",
+      "sourceHash": "fnv1a64:8968e9f613a3e5e5",
       "lessonIds": [
         "ES-C18-quiero-que",
         "ES-C18-subjuntivo",
@@ -6656,8 +6656,8 @@
       "drivablePrefix": 9,
       "text": "spanish/narration/ch18.txt",
       "json": "spanish/narration/ch18.json",
-      "textHash": "fnv1a64:cc8acaf9215af24e",
-      "jsonHash": "fnv1a64:648458b90b2466a2"
+      "textHash": "fnv1a64:88e7d6466e3a086f",
+      "jsonHash": "fnv1a64:5ad9b49358ef22e4"
     },
     {
       "language": "spanish",

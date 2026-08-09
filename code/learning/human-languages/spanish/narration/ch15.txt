@@ -1,5 +1,5 @@
 Spanish, chapter 15: Completing the Preterite --- Three Families, One Question.
-6 lessons. You can do the first 5 of them in the car; after that you will want to have stopped.
+6 lessons. All 6 can be done entirely by ear.
 
 
 Lesson 1 of 6.
@@ -224,14 +224,19 @@ Give the three learned estar forms. (Estuve, estuviste, estuvo.) Which known str
 Lesson 6 of 6.
 Practice — six singular patterns, no hidden vocabulary.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: the complete Chapter 15 frame until you have stopped, and I will say so again when we reach it.
-
 Warm-up.
 [pause 2 seconds]
 This checkpoint adds nothing. Retrieve only the three singular persons of each learned row. Every word in the short sentences is already known.
 
 Grammar Lens: the complete Chapter 15 frame.
-There is a table here I cannot read to you — 7 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: person, hablar, comer, vivir, tener, hacer, estar. Come back and look at it when you have stopped.
+Regular rows:
+yo: hablé, comí, viví.
+tú: hablaste, comiste, viviste.
+él / ella / usted: habló, comió, vivió.
+Strong rows:
+yo: tuve, hice, estuve.
+tú: tuviste, hiciste, estuviste.
+él / ella / usted: tuvo, hizo, estuvo.
 The -er and -ir rows share -í, -iste, -ió. The three strong rows share -e, -iste, -o, but their stems must be learned: tuv-, hic-/hiz-, estuv-. Plural persons, more strong verbs, and new time or setting vocabulary remain outside this checkpoint.
 
 Grammar Lens: let spelling show the stress.

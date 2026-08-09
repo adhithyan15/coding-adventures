@@ -882,17 +882,20 @@ describe("corpus regression", () => {
       totalLessons: 1680,
       // Chapters 10 and 13 replace wide legacy tables with small singular-only
       // comparisons, so three more lessons move from sight to voice.
-      // All seven Chapter-16 teaching steps are voice-first; only the terminal
-      // six-row comparison preserves the chapter's explicit visual seam.
+      // All seven Chapter-16 teaching steps are voice-first. Generating the book
+      // exposed the terminal Chapter-15 and Chapter-16 recap tables as too wide,
+      // so their same person-by-person comparisons now use speakable bullet rows.
       // All eight Chapter-17 lessons remain voice-first.
-      voice: 1098,
+      voice: 1100,
       // -3 sight / +3 voice: TA-C02-en, -enna and -peyar dropped their "The letters in
       // this word" sections once TA-W08 and TA-W09 gave those glyphs a home in the
       // strand. Verified against the GENERATED manifest, not the source — all three now
       // record reasons ["no-visual-dependency"], so the script teaching genuinely left
       // the lesson rather than a heading being renamed out from under the classifier.
-      // Chapter 18 removes its one remaining sight-only lesson.
-      sight: 524,
+      // Chapter 18 removes its one remaining sight-only lesson. Publishing
+      // Chapters 7-18 from the AST moves the Chapter-15 and Chapter-16 terminal
+      // recaps from sight to voice without changing what either checkpoint asks.
+      sight: 522,
       // +3 pen: the Tamil ch1 writing lessons. Rule 1 in src/modality.ts derives
       // this from the lesson TYPE alone — it says outright that it does not look at
       // the body — so all three record reasons ["writing-type","script-block"], and
@@ -901,7 +904,7 @@ describe("corpus regression", () => {
       // to this table.
       // +2: both new lessons are writing lessons.
       pen: 58,
-      drivableLessons: 1098,
+      drivableLessons: 1100,
       drivablePercent: 65,
       trackCount: 22,
       chapterCount: 513,
@@ -937,13 +940,15 @@ describe("corpus regression", () => {
       // sight checkpoint, raising the useful prefix by four.
       // Chapter 16's reachable voice-first prefix grows by six.
       // Chapter 17's reachable voice-first prefix grows by five.
-      // All nine redesigned Chapter-18 steps are reachable by ear.
-      drivablePrefixTotal: 911,
+      // All nine redesigned Chapter-18 steps are reachable by ear. The terminal
+      // Chapter-15 and Chapter-16 recaps now extend both prefixes by one.
+      drivablePrefixTotal: 913,
       // -2: chapters 21 and 23 each take a writing lesson and stop being ear-only.
       // Spreading the strand cannot happen without landing a pen lesson somewhere.
       // Spanish Chapters 10 and 13 are now fully drivable from their canonical ASTs.
-      // Spanish Chapter 18 also becomes fully drivable.
-      fullyDrivableChapters: 325,
+      // Spanish Chapter 18 also becomes fully drivable. Replacing the two wide
+      // terminal recap tables makes Spanish Chapters 15 and 16 fully drivable too.
+      fullyDrivableChapters: 327,
       // Tamil chapter 2, Spanish chapter 13, and Spanish chapter 18 can now start by ear.
       unstartableChapters: 140,
       overriddenLessons: 0,

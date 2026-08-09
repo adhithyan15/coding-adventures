@@ -5,7 +5,7 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-09, after merging #10183 and publishing HL-C76 in #10190.
+Last prioritized: 2026-08-09, after merging #10190 and completing HL-C77 for publication.
 With all 22 downloadable books now carrying pronunciation, glossary,
 review-question, answer-key, and English-first index back matter, HL-C50 is
 complete. The HL-C63 audit confirmed that all 98 missing handwritten chapters
@@ -59,18 +59,20 @@ introduce twelve atoms, beginning with the asserted `hablas` versus wanted
 irregular row at a time before a mapped checkpoint. Plurals, extra irregulars,
 object pronouns, person nouns, and additional triggers wait; `ojalá` keeps its
 Hispanic-Arabic history without making the source phrase learner vocabulary.
-HL-C77 now follows that migration boundary: Spanish Chapters 7–18 still have
-protected handwritten LaTeX bodies, so their redesigned app lessons and generated
-back matter are newer than the downloadable book's main chapter copy.
+HL-C77 closes that migration boundary: all 41 Spanish book chapters now generate
+from the same canonical lesson ASTs used by Language Ladder, narration, objective
+activities, and back matter. The twelve former handwritten entries are protected
+generated targets with checked hashes, titles, labels, order, and output. HL-C19
+is queued next for the authored stroke-order verification tranche.
 The index audit found **2,075** canonical candidates across the corpus: **1,426**
 word and phrase lessons for English-first lookup, **136** dedicated grammar,
-writing, etymology, culture, and pronunciation lessons, **415** chapter
-capabilities, and **98** additional handwritten chapter declarations. Practice
+writing, etymology, culture, and pronunciation lessons, **427** chapter
+capabilities, and **86** additional handwritten chapter declarations. Practice
 drills stay out of the index; the checked title/label manifest provides durable
 navigation even where the authored capability ledger is still missing.
 Current generated baseline: **22** registered tracks, **1,680** canonical lessons,
 **1,594** mapped lessons, and **22** downloadable LaTeX books spanning **513**
-chapters, **408** of them generated from the canonical lesson AST. Fifty-eight
+chapters, **420** of them generated from the canonical lesson AST. Fifty-eight
 of **135** mapped non-lexical lessons across 18 tracks now carry compiled
 objective activities, leaving **77**
 mapped non-lexical lessons as explicit activity-coverage debt. Chapter 18's
@@ -256,8 +258,8 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C74 | Complete (#10177) | Redesign and migrate Spanish Chapter 16 so the imperfect and its contrast with the preterite grow from the Chapter-15 singular-person and known-word frontier instead of arriving as full paradigms and untaught stories. | Eight schema-v2 lessons now introduce singular `hablaba`/`hablabas`/`hablaba`, `comía`/`comías`/`comía`, and `vivía`/`vivías`/`vivía` in separate bounded steps before newly teaching `ver` and adding singular `era`/`eras`/`era`, `iba`/`ibas`/`iba`, and `veía`/`veías`/`veía`; all twelve atoms fit the chapter budget, all 28 objective activities compile, every plural and undeclared context waits, the history is carefully bounded, and the terminal checkpoint retrieves the full chapter. |
 | HL-C75 | Complete (#10183) | Redesign and migrate Spanish Chapter 17 so future and conditional forms grow from Chapter 16's singular-person and known-word frontier instead of opening full paradigms, ten irregular stems, auxiliary paradigms, and late clock-time vocabulary at once. | Eight schema-v2 lessons introduce singular regular future forms for known `hablar`, `comer`, and `vivir`, then their singular regular conditional forms, before one bounded step adds only the learned `har-`, `tendr-`, and `podr-` stems; all twelve atoms fit the chapter budget, all 28 objective activities compile, every plural and additional irregular waits, examples remain natural combinations of known words such as `Hablaré español`, `Beberé café`, `Viviré en Madrid`, `Haría café`, and `Podría hablar español`, the Latin-to-Romance history is carefully bounded, and the terminal checkpoint retrieves the full chapter. |
 | HL-C76 | Complete (#10190) | Redesign and migrate Spanish Chapter 18 so the present subjunctive grows from one singular trigger-and-form contrast instead of opening full regular paradigms, inherited-stem inventories, outlier inventories, and subordinate-clause traps together. | Nine schema-v2 micro-lessons now distinguish asserted from wanted meaning first, add regular `hablar`, `comer`, and `vivir` singular rows separately, carry only known `querer`, `poder`, and `hacer` irregularities into separate bounded steps, preserve the carefully scoped Arabic route into `ojalá`, and retrieve all twelve atoms in a mapped terminal checkpoint; all plural persons, additional irregulars, object pronouns, person nouns, and additional triggers wait. |
-| HL-C77 | Queued next | Make the redesigned Spanish Chapters 7–18 genuinely book/app single-source instead of leaving the canonical schema-v2 lessons beside protected older handwritten LaTeX chapter bodies. | Audit each migrated chapter against its handwritten body, preserve any accurate deep explanation that is still missing from the canonical lessons, then move Chapters 7–18 from the handwritten manifest to generated targets only when title, label, lesson order, examples, review questions, and answer keys agree; `check:books` must prove byte-current output, the complete Spanish PDF must compile without overfull boxes or missing glyphs, and Language Ladder plus the downloadable book must consume the same canonical lesson AST. |
-| HL-C19 | Queued | Verify every prose `strokeOrder` against an authored ductus, so no letter's step list implies a pen lift nothing has checked. | All 190 prose stroke orders across the nine scripts (`arabic` 21, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 29, `hebrew` 22, `perso-arabic` 9, `tamil` 10, `urdu-nastaliq` 13) either carry a font-checked pen path with `penLifts` + `strokeOrderSource`, or are worded so they claim part order only. Today exactly one letter — Tamil ம — is verified; the audit that found it is written up in [`data/scripts/README.md`](data/scripts/README.md). Follows HL-C09, which authors the paths this check consumes. |
+| HL-C77 | Complete | Make the redesigned Spanish Chapters 7–18 genuinely book/app single-source instead of leaving the canonical schema-v2 lessons beside protected older handwritten LaTeX chapter bodies. | All twelve chapters now generate from 67 schema-v2 lessons with checked hashes, titles, labels, order, examples, review questions, and answers; four presentation-only title commands became plain canonical text, narrow person rows replace two wide terminal tables, a portable text callout replaces the unsupported warning emoji, and the Chapter-18 comparison now wraps cleanly. `check:books` is byte-current, the complete Spanish PDF has no overfull box or missing glyph, and Language Ladder plus all 41 book chapters consume the same lesson AST. |
+| HL-C19 | Queued next | Verify every prose `strokeOrder` against an authored ductus, so no letter's step list implies a pen lift nothing has checked. | All 190 prose stroke orders across the nine scripts (`arabic` 21, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 29, `hebrew` 22, `perso-arabic` 9, `tamil` 10, `urdu-nastaliq` 13) either carry a font-checked pen path with `penLifts` + `strokeOrderSource`, or are worded so they claim part order only. Today exactly one letter — Tamil ம — is verified; the audit that found it is written up in [`data/scripts/README.md`](data/scripts/README.md). Follows HL-C09, which authors the paths this check consumes. |
 | HL-C30 | Closed — no move is both legal and useful | Recover Arabic's drivable prefix by moving the writing lessons that open Chapters 3 and 4 later in their chapters. | Measured and answered: zero. Both chapters are prefix-0 under **every** legal ordering because neither has a `voice` lesson without an in-chapter prerequisite, and all 18 of Arabic's `sight` lessons are tables, not script. Corpus-wide only 2 chapters (`portuguese ch2`, `italian ch2`, +4 lessons) can be improved by reordering at all; 116 of the 123 zero-prefix chapters are table-blocked at the root and belong to HL-C17. See *Findings from HL-C30*. |
 | HL-C24 | Complete (#9979) | Pilot real chapter payoff lessons on the weakest Latin chapters. | Latin chapters 19, 21, 33, and 36 each own a dedicated terminal consolidation lesson built only from already-taught material, and `chapters.json` points their `payoff.lesson` at it. |
 | HL-C25 | Queued | Scale the HL-C24 payoff pattern across the remaining 32 Latin chapters and the other 19 tracks. | Every chapter's payoff is a lesson written to be a payoff, not the chapter's last teaching lesson pressed into service. |

@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 16,
   "title": "The Imperfect --- the Past That Kept Going",
-  "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:f336eef33d8ddb7d",
+  "drivablePrefix": 8,
+  "sourceHash": "fnv1a64:dc4a32eeddd48a27",
   "lessons": [
     {
       "id": "ES-C16-imperfecto",
@@ -1347,22 +1347,13 @@
       "romanization": "(practice)",
       "gloss": "a singular checkpoint for the open past and the completed-past contrast",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d048b72f73d5c9b",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "Grammar Lens: the complete Chapter 16 frame"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: the complete Chapter 16 frame until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:8c2be174a7b3d36f",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -1387,20 +1378,36 @@
           "title": "Grammar Lens: the complete Chapter 16 frame",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 7,
-              "rowCount": 3,
-              "headers": [
-                "person",
-                "hablar",
-                "comer",
-                "vivir",
-                "ser",
-                "ir",
-                "ver"
-              ],
-              "text": "There is a table here I cannot read to you — 7 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: person, hablar, comer, vivir, ser, ir, ver. Come back and look at it when you have stopped."
+              "kind": "speech",
+              "text": "Regular rows:"
+            },
+            {
+              "kind": "speech",
+              "text": "yo: hablaba, comía, vivía."
+            },
+            {
+              "kind": "speech",
+              "text": "tú: hablabas, comías, vivías."
+            },
+            {
+              "kind": "speech",
+              "text": "él / ella / usted: hablaba, comía, vivía."
+            },
+            {
+              "kind": "speech",
+              "text": "The three special rows:"
+            },
+            {
+              "kind": "speech",
+              "text": "yo: era, iba, veía."
+            },
+            {
+              "kind": "speech",
+              "text": "tú: eras, ibas, veías."
+            },
+            {
+              "kind": "speech",
+              "text": "él / ella / usted: era, iba, veía."
             },
             {
               "kind": "speech",

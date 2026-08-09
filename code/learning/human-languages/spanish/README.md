@@ -68,15 +68,14 @@ Requires a LaTeX distribution with `xelatex`/`latexmk` on PATH (MiKTeX or
 TeX Live). The compiled PDF isn't committed — it's regenerated from source,
 same as build artifacts elsewhere in this repo.
 
-Chapters 1–6, 19–33 and 34–39 are generated from the same canonical lesson ASTs
-consumed by Language Ladder. Run `npm run build && npm run generate:books` from
+All 41 chapters are generated from the same canonical lesson ASTs consumed by
+Language Ladder. Run `npm run build && npm run generate:books` from
 `code/packages/typescript/human-language-data` after editing those lessons; CI
-rejects stale generated TeX or source-hash metadata. Chapters 7–18 are still
-handwritten LaTeX during the staged one-source migration. `units/` is legacy
-source material, not a second canonical copy. The complete PDF builds without
-missing glyphs, layout-box warnings, bookmark warnings, duplicate destinations,
-LaTeX warnings, or font fallbacks — 278 pages as of Chapters 38–39. (Length is
-never a cost here, so the page count is expected to rise with every tranche.)
+rejects stale generated TeX or source-hash metadata. `units/` is legacy source
+material, not a second canonical copy. The complete PDF builds without missing
+glyphs, overfull boxes, bookmark warnings, duplicate destinations, LaTeX
+warnings, or font fallbacks. Length is never a cost here, so the page count is
+expected to rise with every tranche.
 
 ## Progress
 
@@ -228,12 +227,11 @@ cd book && latexmk -xelatex book.tex   # or: ./build.sh / .\build.ps1
 Needs a LaTeX distribution with `xelatex`/`latexmk` on PATH. The PDF is not
 committed; it is regenerated from source like any other build artefact.
 
-Chapters 1–6, 19–33 and 34–39 are generated from the same canonical lesson ASTs
-consumed by Language Ladder. Run `npm run build && npm run generate:books` from
+All 41 chapters are generated from the same canonical lesson ASTs consumed by
+Language Ladder. Run `npm run build && npm run generate:books` from
 `code/packages/typescript/human-language-data` after editing those lessons; CI
-rejects stale generated TeX or source-hash metadata. Chapters 7–18 are still
-handwritten LaTeX during the staged one-source migration. `units/` is legacy
-source material, not a second canonical copy.
+rejects stale generated TeX or source-hash metadata. `units/` is legacy source
+material, not a second canonical copy.
 
 The book view strips the lessons' delivery cues (`[PAUSE Ns]`, `[YOU SAY: …]`,
 `[REPEAT xN]`) and prints book headings in their place; the canonical lesson

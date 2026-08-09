@@ -108,7 +108,10 @@ Start from vivo, remove -o, then add the same a endings you just used with comer
 person: yo. present subjunctive: viva.
 person: tú. present subjunctive: vivas.
 person: él / ella / usted. present subjunctive: viva.
-Regular -er and -ir match in this singular row: coma/comas/coma and viva/vivas/viva. Plural differences wait.
+Regular -er and -ir match in this singular row:
+comer: coma, comas, coma.
+vivir: viva, vivas, viva.
+Plural differences wait.
 
 Grammar Lens: meaning in a known frame.
 Vives en Madrid asserts where one friend lives. Quiero que vivas en Madrid makes that living a wanted event. Nothing new is being smuggled into the sentence: en and Madrid have appeared in the earlier location frame.
