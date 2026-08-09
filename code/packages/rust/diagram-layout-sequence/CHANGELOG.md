@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0 - 2026-08-09
+
+- Generate message numbers from configured decimal starts and increments.
+
 ## 0.6.0 - 2026-08-09
 
 - Preserve central-connection endpoint markers through sequence layout.

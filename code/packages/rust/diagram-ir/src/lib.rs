@@ -1,6 +1,6 @@
 //! diagram-ir v0.7.0 — DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.10.0";
+pub const VERSION: &str = "0.11.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -275,6 +275,8 @@ pub enum SequenceEvent {
 pub struct SequenceDiagram {
     pub title: Option<String>,
     pub auto_number: bool,
+    pub auto_number_start: f64,
+    pub auto_number_step: f64,
     pub participants: Vec<SequenceParticipant>,
     pub participant_groups: Vec<SequenceParticipantGroup>,
     pub events: Vec<SequenceEvent>,
@@ -315,7 +317,7 @@ pub enum LayoutedSequenceItem {
         arrowhead: SequenceArrowhead,
         bidirectional: bool,
         central_connection: SequenceCentralConnection,
-        number: Option<usize>,
+        number: Option<f64>,
     },
     Activation {
         participant: String,
@@ -903,8 +905,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn version_is_0_10_0() {
-        assert_eq!(VERSION, "0.10.0");
+    fn version_is_0_11_0() {
+        assert_eq!(VERSION, "0.11.0");
     }
     #[test]
     fn default_direction_is_tb() {

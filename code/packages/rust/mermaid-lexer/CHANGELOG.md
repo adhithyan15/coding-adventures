@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.0
+
+- Tokenize autonumber decimals with Mermaid's two-place precision limit.
+
 ## 0.9.0
 
 - Tokenize sequence central-connection markers.

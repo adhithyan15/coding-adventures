@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.10.0";
+pub const VERSION: &str = "0.11.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1033,6 +1033,8 @@ pub fn parse_sequence_diagram(source: &str) -> Result<SequenceDiagram, ParseErro
     let mut diagram = SequenceDiagram {
         title: None,
         auto_number: false,
+        auto_number_start: 1.0,
+        auto_number_step: 1.0,
         participants: Vec::new(),
         participant_groups: Vec::new(),
         events: Vec::new(),
@@ -1085,9 +1087,13 @@ fn parse_sequence_body(
             }
             "autonumber" => {
                 cursor.advance();
-                diagram.auto_number = cursor.current().value != "off";
-                while !cursor.at_eof() && token_name(cursor.current()) != "NEWLINE" {
+                if cursor.current().value == "off" {
+                    diagram.auto_number = false;
                     cursor.advance();
+                } else {
+                    diagram.auto_number = true;
+                    diagram.auto_number_start = take_sequence_number(cursor)?.unwrap_or(1.0);
+                    diagram.auto_number_step = take_sequence_number(cursor)?.unwrap_or(1.0);
                 }
             }
             "loop" | "rect" | "opt" | "alt" | "par" | "par_over" | "critical" | "break" => {
@@ -1098,6 +1104,24 @@ fn parse_sequence_body(
         cursor.skip_terminators();
     }
     Ok(())
+}
+
+fn take_sequence_number(cursor: &mut TokenCursor) -> Result<Option<f64>, ParseError> {
+    if cursor.at_eof() || token_name(cursor.current()) == "NEWLINE" {
+        return Ok(None);
+    }
+    let token = cursor.advance().clone();
+    let value = token
+        .value
+        .parse::<f64>()
+        .map_err(|_| token_error(&token, "expected an autonumber decimal value"))?;
+    if !value.is_finite() || value < 0.0 {
+        return Err(token_error(
+            &token,
+            "autonumber values must be finite and non-negative",
+        ));
+    }
+    Ok(Some(value))
 }
 
 fn parse_sequence_participant(
@@ -1521,7 +1545,10 @@ fn consume_sequence_word(cursor: &mut TokenCursor, expected: &str) -> Result<(),
 }
 
 fn take_sequence_identifier(cursor: &mut TokenCursor) -> Result<String, ParseError> {
-    if matches!(token_name(cursor.current()), "IDENTIFIER" | "WORD") {
+    if matches!(
+        token_name(cursor.current()),
+        "IDENTIFIER" | "WORD" | "NUMBER"
+    ) {
         Ok(cursor.advance().value.clone())
     } else {
         Err(token_error(
@@ -3048,6 +3075,17 @@ B//-A: reverse stick top
             ]
         );
     }
+
+    #[test]
+    fn sequence_parses_autonumber_start_and_increment() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nautonumber 10.5 2.25\nAlice->>Bob: First\nBob->>Alice: Second\n",
+        )
+        .unwrap();
+        assert!(diagram.auto_number);
+        assert_eq!(diagram.auto_number_start, 10.5);
+        assert_eq!(diagram.auto_number_step, 2.25);
+    }
 }
 #[cfg(test)]
 mod tests {
@@ -3064,7 +3102,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.10.0");
+        assert_eq!(crate::VERSION, "0.11.0");
     }
 
     #[test]

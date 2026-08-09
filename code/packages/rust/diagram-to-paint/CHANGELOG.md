@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Format decimal sequence numbers without redundant trailing zeroes.
 - Added central-connection endpoint circles layered above activation bars.
 - Added normal and reverse filled/stick sequence half-arrow geometry.
 - Added backend-neutral sequence symbols for boundary, control, entity,

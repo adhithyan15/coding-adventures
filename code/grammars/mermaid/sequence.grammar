@@ -13,7 +13,7 @@ message_stmt = identifier [ CENTRAL ] message_arrow [ CENTRAL ] [ PLUS | MINUS ]
 activation_stmt = ( "activate" | "deactivate" ) identifier ;
 note_stmt = "note" ( ( "left" | "right" ) "of" identifier | "over" actor_pair ) COLON text ;
 title_stmt = "title" text ;
-autonumber_stmt = "autonumber" [ "off" | identifier [ identifier ] ] ;
+autonumber_stmt = "autonumber" [ "off" | NUMBER [ NUMBER ] ] ;
 
 control_block = simple_block | alt_block | par_block | critical_block ;
 simple_block = ( "loop" | "rect" | "opt" | "break" ) [ text ] NEWLINE body "end" ;
@@ -23,5 +23,5 @@ critical_block = "critical" [ text ] NEWLINE body { "option" [ text ] NEWLINE bo
 
 actor_pair = identifier [ COMMA identifier ] ;
 message_arrow = SOLID_OPEN_ARROW | DOTTED_OPEN_ARROW | SOLID_FILLED_ARROW | DOTTED_FILLED_ARROW | BIDIRECTIONAL_SOLID | BIDIRECTIONAL_DOTTED | SOLID_CROSS_ARROW | DOTTED_CROSS_ARROW | SOLID_POINT_ARROW | DOTTED_POINT_ARROW | SOLID_FILLED_TOP | SOLID_FILLED_BOTTOM | SOLID_STICK_TOP | SOLID_STICK_BOTTOM | DOTTED_FILLED_TOP | DOTTED_FILLED_BOTTOM | DOTTED_STICK_TOP | DOTTED_STICK_BOTTOM | SOLID_REVERSE_FILLED_TOP | SOLID_REVERSE_FILLED_BOTTOM | SOLID_REVERSE_STICK_TOP | SOLID_REVERSE_STICK_BOTTOM | DOTTED_REVERSE_FILLED_TOP | DOTTED_REVERSE_FILLED_BOTTOM | DOTTED_REVERSE_STICK_TOP | DOTTED_REVERSE_STICK_BOTTOM ;
-identifier = IDENTIFIER | WORD | COLOR ;
+identifier = IDENTIFIER | WORD | COLOR | NUMBER ;
 text = identifier { identifier } ;
