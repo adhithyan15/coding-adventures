@@ -2029,6 +2029,24 @@ Q1 col base emit fast
     );
   });
 
+  it.each([
+    ["0", 0.0],
+    ["13.5", 13.5],
+  ])("parses BJT collector resistance RC=%s", (value, expected) => {
+    const parsed = parseNetlist(`.model fast NPN(RC=${value})\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      collectorResistance: expected,
+    });
+  });
+
+  it.each(["-1", "1e999"])("rejects invalid BJT RC=%s", (value) => {
+    expect(() => parseNetlist(`.model fast NPN(RC=${value})`)).toThrow(
+      "BJT RC must be finite and non-negative",
+    );
+  });
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)

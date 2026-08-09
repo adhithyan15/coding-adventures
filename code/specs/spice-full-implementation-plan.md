@@ -4673,9 +4673,14 @@ the Rust, Python, and TypeScript surfaces together.
      them into the shared engine forward-transit-time-voltage-scale field.
 
 467. Python and TypeScript Berkeley SPICE BJT emitter-resistance parity.
-   - Status: implemented in this BJT RE parity slice.
+   - Status: completed in PR 10138.
    - Both parser facades validate finite, non-negative `RE` values and lower
      them into the shared engine emitter-resistance field.
+
+468. Python and TypeScript Berkeley SPICE BJT collector-resistance parity.
+   - Status: implemented in this BJT RC parity slice.
+   - Both parser facades validate finite, non-negative `RC` values and lower
+     them into the shared engine collector-resistance field.
 
 ## Backlog
 
