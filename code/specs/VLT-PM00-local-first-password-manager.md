@@ -1230,7 +1230,8 @@ changelog, focused build, and downstream validation.
 
 ### Phase 0 — contracts
 
-1. `vault-pm-format`: bootstrap/object/commit canonical structures and vectors.
+1. `vault-pm-format`: bootstrap, object frame, device certificate, commit, and
+   signed announcement canonical structures and vectors.
 2. `vault-pm-storage`: semantic contract, capability report, conformance and
    fault-injection backend.
 3. Extend VLT01/custody seam to accept an injected random root KEK.
