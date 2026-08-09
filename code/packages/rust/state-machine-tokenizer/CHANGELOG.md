@@ -6,6 +6,9 @@ All notable changes to the `state-machine-tokenizer` crate will be documented in
 
 ### Added
 
+- Added a conditional parse-error action for appropriate HTML end tags, so
+  declarative text-mode EOF recovery can distinguish matching tags from
+  mismatched markup that remains literal text.
 - Added processing-instruction token construction, data accumulation, target
   finalization, comment recovery, and continuation-state seeding actions for
   declarative HTML tokenizer definitions.

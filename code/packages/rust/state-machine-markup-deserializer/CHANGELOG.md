@@ -18,6 +18,8 @@ All notable changes to this package will be documented in this file.
   references.
 - Recognized the temporary-buffer conditional state-switch action in
   lexer-profile validation.
+- Recognized the conditional appropriate-end-tag parse-error action in
+  lexer-profile validation.
 
 ## [0.1.0] - 2026-04-20
 

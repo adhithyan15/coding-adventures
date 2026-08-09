@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Script end tags that reach EOF after whitespace, attributes, quoted attribute
+  data, or a trailing solidus now report `eof-in-tag` while preserving their
+  literal-text recovery in normal and escaped script data.
 - Added current HTML processing-instruction tokenizer states, including target
   validation, data accumulation, EOF recovery, and legacy XML-target comment
   recovery.
