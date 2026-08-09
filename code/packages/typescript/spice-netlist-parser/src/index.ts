@@ -2138,7 +2138,8 @@ function mosfetParams(
   model: ModelCard,
   instanceParams: ReadonlyMap<string, number>,
 ): Partial<MosfetLevel1Params> {
-  const modelParams = model.params;
+  const modelParams = new Map(model.params);
+  if (modelParams.has("T_NOM")) modelParams.delete("TNOM");
   const params: Record<string, number> = {};
   for (const [name, value] of [...modelParams, ...instanceParams]) {
     const key = MOSFET_PARAM_ALIASES.get(name) ?? (name as keyof MosfetLevel1Params);

@@ -3613,6 +3613,14 @@ Xright c d load
     expect(element.params.T_NOM).toBe(325);
   });
 
+  it("gives MOSFET T_NOM precedence over TNOM", () => {
+    const parsed = parseNetlist(".model nfast NMOS(T_NOM=325 TNOM=350)\nM1 d g s b nfast\n");
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") throw new Error("unexpected element kind");
+    expect(element.params.T_NOM).toBe(325);
+  });
+
   it.each(["-1", "1e999"])("rejects invalid MOSFET model RD=%s", (drainResistance) => {
     expect(() =>
       parseNetlist(`.model nfast NMOS(RD=${drainResistance})\nM1 d g s b nfast\n`),
