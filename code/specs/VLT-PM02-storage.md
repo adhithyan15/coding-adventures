@@ -157,11 +157,12 @@ unreferenced; the backend does not decide reachability.
 
 ### 5.5 Change hints
 
-`changes` is optional and returns `Ok(None)` when no change-feed capability is
-present. When supported, events carry a monotonically increasing backend-local
-sequence, bucket, object ID, and `Put` or `Delete` kind. Events are hints: they
-may be duplicated or delayed, and consumers still perform periodic full list
-scans. A cursor resumes strictly after its last sequence.
+`changes` is optional and returns `Unsupported` when no change-feed capability
+is present. A supported feed returns `Ok(None)` when no events exist after the
+requested cursor. Otherwise events carry a monotonically increasing
+backend-local sequence, bucket, object ID, and `Put` or `Delete` kind. Events
+are hints: they may be duplicated or delayed, and consumers still perform
+periodic full list scans. A cursor resumes strictly after its last sequence.
 
 ## 6. Capability report
 
@@ -296,4 +297,3 @@ Later packages own:
 - the monorepo build graph recognizes the new package and affected closure;
 - no filesystem, network, process, environment, clock, CSPRNG, or secret-key
   capability is declared or used.
-

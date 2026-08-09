@@ -1,0 +1,54 @@
+{
+  "fixture": "VLT-PM-STORAGE-CONFORMANCE",
+  "version": 1,
+  "encoding": {
+    "fixed_bytes": "lowercase hexadecimal",
+    "body": "lowercase hexadecimal",
+    "ordering": "ascending unsigned bytewise"
+  },
+  "limits": {
+    "object_bytes": 67108864,
+    "list_limit": 10000,
+    "cursor_bytes": 256,
+    "provider_revision_bytes": 256,
+    "change_events": 1000
+  },
+  "values": {
+    "locator": "1111111111111111111111111111111111111111111111111111111111111111",
+    "other_locator": "1212121212121212121212121212121212121212121212121212121212121212",
+    "bucket": "2121212121212121212121212121212121212121212121212121212121212121",
+    "other_bucket": "2222222222222222222222222222222222222222222222222222222222222222",
+    "object": "3131313131313131313131313131313131313131313131313131313131313131",
+    "body": "7661756c742d706d2d73746f726167652d66697874757265",
+    "conflicting_body": "646966666572656e74"
+  },
+  "operations": [
+    { "call": "get", "before_initialize": true, "expect_error": "NotInitialized" },
+    { "call": "initialize", "locator": "locator", "expect": "Ok" },
+    { "call": "initialize", "locator": "locator", "expect": "Ok" },
+    { "call": "initialize", "locator": "other_locator", "expect_error": "Conflict" },
+    { "call": "get", "object": "object", "expect": null },
+    { "call": "stat", "object": "object", "expect": null },
+    { "call": "put_immutable", "object": "object", "body": "body", "expect": "Created" },
+    { "call": "put_immutable", "object": "object", "body": "body", "expect": "AlreadyPresent" },
+    { "call": "put_immutable", "object": "object", "body": "conflicting_body", "expect_error": "Corruption" },
+    { "call": "get", "object": "object", "expect_body": "body" },
+    { "call": "stat", "object": "object", "expect_body_len": 24 },
+    { "call": "list", "limit": 0, "expect_error": "InvalidInput.ListLimit" },
+    { "call": "list", "limit": 10001, "expect_error": "InvalidInput.ListLimit" }
+  ],
+  "pagination_objects": [
+    "0101010101010101010101010101010101010101010101010101010101010101",
+    "2020202020202020202020202020202020202020202020202020202020202020",
+    "4040404040404040404040404040404040404040404040404040404040404040",
+    "8080808080808080808080808080808080808080808080808080808080808080",
+    "f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0"
+  ],
+  "faults": [
+    { "operation": "get", "effect": "Return.Authorization", "one_shot": true },
+    { "operation": "get", "effect": "CorruptGet", "mutates_inner": false },
+    { "operation": "list", "effect": "OmitLastListEntry", "conforming_response": false },
+    { "operation": "list", "effect": "DuplicateFirstListEntry", "conforming_response": false },
+    { "operation": "put_immutable", "effect": "CommitPutThenNetwork", "retry_expect": "AlreadyPresent" }
+  ]
+}
