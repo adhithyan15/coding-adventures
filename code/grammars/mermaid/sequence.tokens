@@ -8,6 +8,7 @@ skip:
 
 NEWLINE                  = /\r?\n/
 HEADER                   = "sequenceDiagram"
+ACC_DESCR_BLOCK          = /accDescr[ \t]*\{[^\}]*\}/
 BIDIRECTIONAL_SOLID      = "<<->>"
 BIDIRECTIONAL_DOTTED     = "<<-->>"
 DOTTED_FILLED_TOP        = /\-\-\|\\/

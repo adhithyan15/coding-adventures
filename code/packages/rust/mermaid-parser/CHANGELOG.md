@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.17.0
+
+- Parse multiline sequence accessibility descriptions.
+
 ## 0.16.0
 
 - Parse single-line sequence accessibility titles and descriptions.
