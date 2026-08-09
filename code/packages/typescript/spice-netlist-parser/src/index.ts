@@ -1949,6 +1949,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("MOSFET CGSO must be finite and non-negative");
   }
+  const gateDrainOverlapCapacitance = params.get("CGDO");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    gateDrainOverlapCapacitance !== undefined &&
+    (!Number.isFinite(gateDrainOverlapCapacitance) || gateDrainOverlapCapacitance < 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET CGDO must be finite and non-negative");
+  }
   for (const [name, canonical] of [
     ["CBS", "CBS"],
     ["CJS", "CBS"],
