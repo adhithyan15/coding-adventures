@@ -4,6 +4,15 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - collision-safe generated QML signal names
+
+MIL emit names that collide with QML reserved words, generated root members,
+inherited `Item` members, component slots, or another lowered emit now receive
+a deterministic `mosaicEmit…` QML name. Existing non-conflicting signal names
+remain unchanged, and the generic Mosaic event envelope preserves the original
+MIL event name. Standalone Notes therefore lowers `onDelete` to
+`mosaicEmitDelete()` instead of the invalid `signal delete()` declaration.
+
 ### Fixed - customization-capable generated Qt shells
 
 Generated Qt project shells now default to the Basic Qt Quick Controls style

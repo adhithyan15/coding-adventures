@@ -318,9 +318,10 @@ unblocks multiple downstream targets; never count source generation as completio
   `QT_QUICK_CONTROLS_STYLE` still wins. The headless macOS launch retains one
   lower-priority Qt font-alias performance diagnostic for Basic's `Sans Serif`
   fallback, which is not present in the generated TaskApp QML.
-  Standalone Qt package compilation also needs collision-safe signal names: Notes'
-  `onDelete` currently lowers to QML's reserved `signal delete()` identifier,
-  although the composed TaskApp's namespaced `onDeleteNote` avoids that collision.
+  Standalone Qt signal allocation is now collision-safe: Notes' `onDelete`
+  lowers to `mosaicEmitDelete()` while its engine envelope remains `onDelete`.
+  The real standalone Notes project passes Qt's QML compiler, resource/AOT
+  generation, AUTOMOC, C++ compiler, linker, and a headless launch.
 
 ### P1 — reusable application vocabulary
 
