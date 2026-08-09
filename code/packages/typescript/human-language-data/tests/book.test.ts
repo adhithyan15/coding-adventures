@@ -3,6 +3,7 @@ import {
   bookBlockTitle,
   bookVoice,
   renderBookChapter,
+  renderBookGlossary,
   renderInlineMarkdown,
   renderReferenceAppendix,
 } from "../src/book.js";
@@ -145,6 +146,60 @@ A [repository note](../data/script.json) and an [external source](https://exampl
     );
     expect(generated).toContain("\\par \\textbf{anchor:} \\textbf{\\dv{दे}}");
     expect(generated).not.toContain("# Test");
+  });
+
+  it("renders a deduplicated, romanization-sorted glossary from content lessons", () => {
+    const devanagari = (id: string, sequence: number, headword: string, romanization: string, gloss: string) =>
+      parseLesson(
+        source(id, sequence, headword).replace(
+          `gloss: ${headword}`,
+          `gloss: ${gloss}\nromanization: ${romanization}`,
+        ),
+        "test",
+        "devanagari",
+      );
+    const two = devanagari("A", 10, "दो", "do", "two");
+    const repeatedTwo = parseLesson(
+      source("B", 20, "दो")
+        .replace("chapter: 1", "chapter: 2")
+        .replace("gloss: दो", "gloss: two\nromanization: do"),
+      "test",
+      "devanagari",
+    );
+    const ten = devanagari("C", 30, "दस", "das", "ten");
+    const practice = parseLesson(
+      source("D", 40, "drill").replace("type: word", "type: practice"),
+      "test",
+    );
+    const generated = renderBookGlossary(
+      {
+        language: "test",
+        output: "test/book/chapters/appendix-glossary.tex",
+        unicodeScript: "Devanagari",
+        scriptCommand: "dv",
+      },
+      [two, repeatedTwo, ten, practice],
+    );
+
+    expect(generated).toContain("% canonical-entries: 2");
+    expect(generated).toContain("\\textbf{\\dv{दस}}\\enspace\\emph{das}");
+    expect(generated).toContain("\\textbf{\\dv{दो}}\\enspace\\emph{do}");
+    expect(generated.indexOf("\\dv{दस}")).toBeLessThan(generated.indexOf("\\dv{दो}"));
+    expect(generated).toContain("Introduced in Chapters 1 and 2.");
+    expect(generated).not.toContain("drill");
+  });
+
+  it("rejects glossary entries without a valid introduction chapter", () => {
+    const lesson = parseLesson(
+      source("A", 10, "hello").replace("chapter: 1\n", "chapter: 0\n"),
+      "test",
+    );
+    expect(() =>
+      renderBookGlossary(
+        { language: "test", output: "test/book/chapters/appendix-glossary.tex" },
+        [lesson],
+      ),
+    ).toThrow(/require a chapter/);
   });
 
   it("keeps indented Markdown quote continuations in one LaTeX quote", () => {

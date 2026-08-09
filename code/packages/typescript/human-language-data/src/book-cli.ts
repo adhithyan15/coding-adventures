@@ -3,8 +3,10 @@ import { dirname, join, normalize, relative as pathRelative, resolve } from "nod
 import { pathToFileURL } from "node:url";
 import {
   renderBookChapter,
+  renderBookGlossary,
   renderReferenceAppendix,
   type BookGenerationTarget,
+  type BookGlossaryTarget,
   type BookReferenceAppendixTarget,
   type InlineRenderOptions,
 } from "./book.js";
@@ -16,6 +18,11 @@ interface ConfiguredBookGenerationTarget extends BookGenerationTarget {
 }
 
 interface ConfiguredReferenceAppendixTarget extends BookReferenceAppendixTarget {
+  /** Named reusable mapping from the config's scriptSets table. */
+  scriptSet?: string;
+}
+
+interface ConfiguredBookGlossaryTarget extends BookGlossaryTarget {
   /** Named reusable mapping from the config's scriptSets table. */
   scriptSet?: string;
 }
@@ -55,6 +62,8 @@ interface BookGenerationConfig {
   targets: ConfiguredBookGenerationTarget[];
   /** Canonical Markdown references rendered into book back matter. */
   referenceAppendices?: ConfiguredReferenceAppendixTarget[];
+  /** Canonical word and phrase lessons rendered into book glossaries. */
+  glossaries?: ConfiguredBookGlossaryTarget[];
   /** Never rendered. See {@link HandwrittenBookChapter}. */
   handwritten?: HandwrittenBookChapter[];
 }
@@ -217,6 +226,31 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
       appendix.output,
       renderReferenceAppendix(appendix, readFileSync(source, "utf8")),
     );
+  }
+  for (const configuredGlossary of config.glossaries ?? []) {
+    const { scriptSet, ...plainGlossary } = configuredGlossary;
+    let glossary: BookGlossaryTarget = { ...plainGlossary };
+    if (scriptSet !== undefined) {
+      if (
+        glossary.inlineScripts !== undefined ||
+        glossary.unicodeScript !== undefined ||
+        glossary.scriptCommand !== undefined
+      ) {
+        throw new Error(
+          `${glossary.language} glossary: scriptSet cannot be combined with inline script options`,
+        );
+      }
+      const inlineScripts = config.scriptSets?.[scriptSet];
+      if (!inlineScripts) {
+        throw new Error(`${glossary.language} glossary: unknown scriptSet '${scriptSet}'`);
+      }
+      glossary = { ...glossary, inlineScripts };
+    }
+    safeOutput(root, glossary.output);
+    if (outputs.has(glossary.output)) {
+      throw new Error(`${glossary.output}: duplicate generated book output`);
+    }
+    outputs.set(glossary.output, renderBookGlossary(glossary, lessons));
   }
   manifest.chapters.sort(
     (left, right) => left.language.localeCompare(right.language) || left.chapter - right.chapter,

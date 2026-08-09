@@ -29,9 +29,13 @@ export {
 export {
   renderInlineMarkdown,
   renderBookChapter,
+  renderBookGlossary,
+  renderReferenceAppendix,
   bookVoice,
   bookBlockTitle,
   type BookGenerationTarget,
+  type BookGlossaryTarget,
+  type BookReferenceAppendixTarget,
   type GeneratedBookChapter,
 } from "./book.js";
 export {

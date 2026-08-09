@@ -170,6 +170,35 @@ describe("canonical book generator filesystem shell", () => {
     );
   });
 
+  it("writes and byte-checks configured canonical glossaries", () => {
+    const root = fixture();
+    const configPath = join(root, "core", "book-generation.json");
+    const config = JSON.parse(readFileSync(configPath, "utf8")) as Record<string, unknown>;
+    writeFileSync(
+      configPath,
+      `${JSON.stringify({
+        ...config,
+        glossaries: [{
+          language: "test",
+          output: "test/book/chapters/appendix-glossary.tex",
+        }],
+      })}\n`,
+    );
+
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    expect(runBookGeneration(["--write"], root)).toBe(0);
+    const glossary = join(root, "test", "book", "chapters", "appendix-glossary.tex");
+    expect(readFileSync(glossary, "utf8")).toContain("\\textbf{hello}");
+    expect(runBookGeneration(["--check"], root)).toBe(0);
+
+    writeFileSync(glossary, "stale\n");
+    expect(runBookGeneration(["--check"], root)).toBe(1);
+    expect(process.stderr.write).toHaveBeenCalledWith(
+      "test/book/chapters/appendix-glossary.tex: generated output is missing or stale\n",
+    );
+  });
+
   it("rejects reference sources outside the curriculum root", () => {
     const root = fixture();
     const configPath = join(root, "core", "book-generation.json");
@@ -388,6 +417,26 @@ describe("pronunciation reference coverage", () => {
     for (const language of ["chinese", "japanese", "persian", "russian", "urdu"]) {
       const relative = `${language}/book/chapters/appendix-pronunciation.tex`;
       expect(outputs.get(relative), relative).toMatch(/^% GENERATED FILE\./);
+    }
+  });
+});
+
+describe("glossary coverage", () => {
+  const root = defaultCurriculumRoot();
+
+  it("generates, byte-gates, and includes a glossary in every registered book", () => {
+    const registry = JSON.parse(
+      readFileSync(join(root, "core", "languages.json"), "utf8"),
+    ) as { languages: Array<{ id: string }> };
+    const outputs = generatedBookOutputs(root);
+    expect(registry.languages.length).toBeGreaterThan(0);
+    for (const { id } of registry.languages) {
+      const relative = `${id}/book/chapters/appendix-glossary.tex`;
+      expect(outputs.get(relative), relative).toMatch(/^% GENERATED FILE\./);
+      expect(existsSync(join(root, relative)), `${id} glossary`).toBe(true);
+      expect(readFileSync(join(root, id, "book", "book.tex"), "utf8"), `${id} book input`).toContain(
+        "\\input{chapters/appendix-glossary}",
+      );
     }
   });
 });

@@ -1,5 +1,5 @@
 import { canonicalChapterHash } from "./hash.js";
-import { hasOwn } from "./constants.js";
+import { CONTENT_TYPES, hasOwn } from "./constants.js";
 import type { LessonBodyBlock, ChapterCapability } from "./types.js";
 import type { ParsedLesson } from "./parse.js";
 
@@ -28,6 +28,18 @@ export interface BookReferenceAppendixTarget {
   /** LaTeX command name, without the leading backslash, used for those runs. */
   scriptCommand?: string;
   /** Multiple script/font mappings for references that compare writing systems inline. */
+  inlineScripts?: InlineRenderOptions[];
+}
+
+/** A generated book glossary derived from canonical word and phrase lessons. */
+export interface BookGlossaryTarget {
+  language: string;
+  output: string;
+  /** Unicode Script property whose runs need the book's dedicated font command. */
+  unicodeScript?: string;
+  /** LaTeX command name, without the leading backslash, used for those runs. */
+  scriptCommand?: string;
+  /** Multiple script/font mappings for entries that compare writing systems inline. */
   inlineScripts?: InlineRenderOptions[];
 }
 
@@ -999,6 +1011,117 @@ export function renderReferenceAppendix(
     );
   }
   flushBody();
+  return `${output.join("\n").trimEnd()}\n`;
+}
+
+interface BookGlossaryEntry {
+  headword: string;
+  romanization: string;
+  gloss: string;
+  chapters: number[];
+}
+
+function glossarySortKey(value: string): string {
+  return value
+    .normalize("NFKD")
+    .replace(/\p{Mark}/gu, "")
+    .toLowerCase();
+}
+
+function compareGlossaryEntries(left: BookGlossaryEntry, right: BookGlossaryEntry): number {
+  const leftKey = glossarySortKey(left.romanization || left.headword);
+  const rightKey = glossarySortKey(right.romanization || right.headword);
+  if (leftKey < rightKey) return -1;
+  if (leftKey > rightKey) return 1;
+  if (left.headword < right.headword) return -1;
+  if (left.headword > right.headword) return 1;
+  if (left.gloss < right.gloss) return -1;
+  if (left.gloss > right.gloss) return 1;
+  return 0;
+}
+
+function chapterList(chapters: number[]): string {
+  const labels = chapters.map(String);
+  if (labels.length === 1) return `Chapter ${labels[0]}`;
+  if (labels.length === 2) return `Chapters ${labels[0]} and ${labels[1]}`;
+  return `Chapters ${labels.slice(0, -1).join(", ")}, and ${labels.at(-1)}`;
+}
+
+/** Render one track's canonical words and phrases as compact, page-safe book back matter. */
+export function renderBookGlossary(
+  target: BookGlossaryTarget,
+  allLessons: ParsedLesson[],
+): string {
+  const renderOptions = targetRenderOptions(target, `${target.language} glossary`);
+  const entries = new Map<string, BookGlossaryEntry>();
+  const lessons = allLessons.filter(
+    (lesson) =>
+      lesson.language === target.language && CONTENT_TYPES.has(lesson.realization.type),
+  );
+
+  for (const lesson of lessons) {
+    const headword = lesson.realization.headword.trim();
+    const romanization = lesson.realization.romanization.trim();
+    const gloss = lesson.realization.gloss.trim();
+    if (headword === "" || gloss === "") {
+      throw new Error(
+        `${lesson.realization.lessonId}: glossary entries require a headword and gloss`,
+      );
+    }
+    if (!Number.isInteger(lesson.realization.chapter) || lesson.realization.chapter < 1) {
+      throw new Error(`${lesson.realization.lessonId}: glossary entries require a chapter`);
+    }
+    const key = JSON.stringify([headword, romanization, gloss]);
+    const existing = entries.get(key);
+    if (existing) {
+      if (!existing.chapters.includes(lesson.realization.chapter)) {
+        existing.chapters.push(lesson.realization.chapter);
+      }
+      continue;
+    }
+    entries.set(key, {
+      headword,
+      romanization,
+      gloss,
+      chapters: [lesson.realization.chapter],
+    });
+  }
+  if (entries.size === 0) {
+    throw new Error(`${target.language} glossary: no canonical word or phrase lessons`);
+  }
+
+  const ordered = [...entries.values()].sort(compareGlossaryEntries);
+  const output = [
+    "% GENERATED FILE. Edit canonical lesson frontmatter, then run npm run generate:books.",
+    `% canonical-entries: ${ordered.length}`,
+    "",
+    "\\chapter*{Glossary}",
+    "\\addcontentsline{toc}{chapter}{Glossary}",
+    "\\markboth{Glossary}{Glossary}",
+    "",
+    "This glossary collects every word and phrase taught in the book. Pronunciation appears when it differs from the written form; chapter numbers show where each entry is introduced.",
+    "",
+  ];
+
+  for (const entry of ordered) {
+    const headword = renderInlineMarkdown(entry.headword, renderOptions);
+    const showRomanization =
+      entry.romanization !== "" &&
+      glossarySortKey(entry.romanization) !== glossarySortKey(entry.headword);
+    const romanization = showRomanization
+      ? `\\enspace\\emph{${renderInlineMarkdown(entry.romanization, renderOptions)}}`
+      : "";
+    const gloss = renderInlineMarkdown(entry.gloss, renderOptions);
+    output.push(
+      "\\noindent\\begin{minipage}[t]{\\linewidth}",
+      "\\raggedright",
+      `\\textbf{${headword}}${romanization}\\par`,
+      `\\small ${gloss}\\par`,
+      `\\footnotesize Introduced in ${chapterList(entry.chapters.sort((a, b) => a - b))}.`,
+      "\\end{minipage}\\par\\medskip",
+      "",
+    );
+  }
   return `${output.join("\n").trimEnd()}\n`;
 }
 
