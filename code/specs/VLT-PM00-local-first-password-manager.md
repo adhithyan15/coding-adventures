@@ -1,0 +1,1331 @@
+# VLT-PM00 — Local-First Password Manager Product
+
+**Status:** Draft 0.1 — product architecture and phased delivery specification
+
+**Depends on:** VLT00, VLT01–VLT15, VLT-CH, `storage-core`, STR01
+
+**Working product name:** Vault Password Manager
+
+**Provisional executable name:** `vault-pm`
+
+## 1. Purpose
+
+This document specifies the first product assembled from the Vault stack: a
+local-first, end-to-end-encrypted password manager that begins as a local-only
+CLI, then gains bring-your-own-cloud sync, a web client, a desktop client,
+browser integration, and mobile/OS credential-provider integrations.
+
+The central product promise is:
+
+> A person can keep the authoritative encrypted vault in storage they already
+> control — a local folder, Google Drive, WebDAV, S3-compatible storage,
+> OneDrive, Dropbox, or a future backend — without being required to buy a
+> second storage subscription or entrust plaintext to a hosted vault service.
+
+The cloud provider is a byte store and synchronization rendezvous. It is not
+the cryptographic authority, account authority, search engine, or plaintext
+database. All sensitive interpretation happens on an unlocked client.
+
+This is a product-composition spec. It does not replace the VLT package specs.
+It defines how those packages are wired, identifies seams that must be closed,
+and sequences the work into independently useful releases.
+
+## 2. Product boundary
+
+### 2.1 What we are building
+
+The eventual product supports:
+
+- logins, secure notes, payment cards, TOTP seeds, API keys, SSH keys,
+  identities, custom records, passkeys, and encrypted attachments;
+- offline reads and writes on every installed client;
+- multi-device synchronization over user-selected storage;
+- local search, history, conflict recovery, import, export, and backup;
+- password generation, clipboard-safe secret retrieval, URL-aware matching,
+  browser autofill, and OS credential-provider integration;
+- device enrollment, item/collection sharing, revocation, and recovery in later
+  phases;
+- no mandatory product account for a personal vault;
+- no mandatory vendor-operated storage or sync server.
+
+### 2.2 What the first release is
+
+The first release is a local-only CLI over a filesystem backend. It must prove:
+
+```text
+init -> unlock -> create -> read -> edit -> search -> history
+     -> attach -> export -> verify -> lock -> reopen
+```
+
+The local backend must go through the same storage contract and immutable
+repository format as every future cloud backend. The application core must not
+import `storage-fs` or inspect filesystem paths.
+
+### 2.3 What this document does not claim
+
+This spec does not claim that the current in-repository cryptographic
+implementations are ready for real credentials. A production release requires
+the security gates in §22, including independent review. Until those gates pass,
+builds must identify themselves as experimental and warn against storing
+irreplaceable real secrets.
+
+The product does not promise that third-party storage is free. Provider quotas,
+API policies, and storage charges remain the provider's. The promise is that the
+password manager does not require a separate hosted-storage subscription.
+
+## 3. Locked design principles
+
+These decisions govern all later work.
+
+### 3.1 Local-first, not cache-first
+
+The unlocked client owns the working state. Every mutation commits locally
+before synchronization begins. Network loss never prevents a read or edit of
+already downloaded data. Cloud storage is a replicated object repository, not
+the live source of truth for an open screen.
+
+### 3.2 Bring your own storage
+
+Storage is selected by configuration and injected behind a repository-owned
+contract. No item, service, view, or CLI command branches on Google Drive,
+WebDAV, S3, or filesystem behavior.
+
+### 3.3 Ciphertext and opaque names only
+
+Backends receive encrypted bytes and opaque identifiers. They must not receive
+item titles, URLs, usernames, record kinds, collection names, tag names, search
+tokens, or plaintext attachment names. Sizes, timestamps, access patterns,
+object counts, and provider account identity can still leak and are explicitly
+part of the threat model.
+
+### 3.4 Immutable repository first
+
+Logical mutations produce new immutable objects and signed commits. They do not
+overwrite shared mutable records. This is the portability mechanism that lets a
+backend with weak coordination semantics remain safe.
+
+Strong conditional writes, leases, transactions, change feeds, and push
+notifications are optional accelerators. Correctness cannot require them.
+
+### 3.5 One domain core, thin hosts
+
+CLI, web, desktop, browser extension, and mobile hosts consume the same domain
+commands, canonical formats, merge rules, and redacted view models. Hosts own
+platform I/O, provider authorization, prompts, clipboard access, biometrics,
+and rendering. They do not reimplement cryptography or conflict resolution.
+
+### 3.6 The storage account is not the vault identity
+
+A Google, Microsoft, Dropbox, WebDAV, or S3 identity only authorizes byte
+storage. Vault identity is a vault-scoped cryptographic identity. Changing a
+storage provider does not change the vault ID, keys, device trust, or record
+IDs.
+
+### 3.7 No silent conflict loss
+
+Concurrent edits to a password, TOTP seed, note body, or attachment reference
+must preserve both versions until a client or an explicitly safe merge rule
+resolves them. Last-writer-wins may choose a display candidate; it must not
+destroy the losing value.
+
+### 3.8 No mandatory central service
+
+Personal local and cloud-synced vaults work without an application account or
+hosted backend. Later optional services may provide device discovery, sharing
+invitations, event delivery, recovery witnesses, or managed storage, but the
+file formats and clients must remain usable without them.
+
+## 4. Delivery milestones
+
+| Phase | Deliverable | Storage | Client surface | Independently useful result |
+|---|---|---|---|---|
+| 0 | Contract and security closure | in-memory fault model | test harness | formats and invariants fixed before product code |
+| 1A | Local one-shot CLI | filesystem | CLI | usable offline single-user vault |
+| 1B | Complete local CLI | filesystem + removable folder | CLI + interactive shell/local agent | practical daily local password manager |
+| 2 | Bring-your-own-cloud | Google Drive first, then WebDAV/S3 | CLI | multi-device E2EE without our server |
+| 3 | Web client | IndexedDB/OPFS + direct cloud adapters | installable PWA | browser access without a plaintext backend |
+| 4 | Desktop client | all native adapters | desktop GUI + local agent | full daily-driver desktop product |
+| 5 | Browser integration | local agent or web session | extension/autofill | phishing-aware credential fill and capture |
+| 6 | Other clients | OneDrive/Dropbox/mobile providers | iOS/Android/OS integrations | platform password/passkey provider |
+| 7 | Sharing and recovery | shared or separate repositories | all clients | multi-user collections, revocation, recovery |
+
+Phases are ordered by architectural risk rather than marketing visibility.
+Phase 2 precedes the web client because the web client needs the portable
+repository and provider semantics, not a browser-only persistence design.
+
+## 5. System architecture
+
+```text
+                         Product hosts
+  +-----------+----------+----------+-------------+-----------+
+  | CLI       | Web/PWA  | Desktop  | WebExtension| Mobile/OS |
+  +-----+-----+-----+----+-----+----+------+------+-----+-----+
+        |           |          |           |            |
+        +-----------+----------+-----------+------------+
+                            |
+                   redacted commands/views
+                            |
+                +-----------v------------+
+                | vault-pm-application    |
+                | workflows + policy      |
+                +-----------+------------+
+                            |
+          +-----------------+------------------+
+          |                                    |
+  +-------v---------+                 +--------v---------+
+  | vault-pm-domain |                 | vault-pm-repository|
+  | records, rules  |                 | commits, merge, GC |
+  +-------+---------+                 +--------+----------+
+          |                                    |
+          | existing VLT packages              | opaque objects
+          |                                    |
+  +-------v------------------------------------v----------+
+  | VaultObjectStore semantic contract                    |
+  +------+-----------+----------+----------+--------------+
+         |           |          |          |
+    filesystem   Google Drive  WebDAV     S3/OneDrive/...
+```
+
+The dependency direction is downward only. A backend may not call record
+codecs. A UI may not call a backend directly except through the host adapter
+that satisfies repository effects.
+
+Every client has a local commit store. In Phase 1 it is the only store. From
+Phase 2 onward, provider stores are remote replicas:
+
+```text
+application mutation -> local immutable commit -> success to user
+                                              \
+                                               -> asynchronous verified copy
+                                                  to configured remote stores
+```
+
+The application never edits a Google Drive/S3/WebDAV object as its live working
+copy. It pulls remote objects into the local repository, verifies and merges
+them, and only then exposes the resulting state. No provider is a privileged
+"primary" in the commit graph.
+
+### 5.1 Command/effect boundary
+
+Native and browser hosts have different I/O models. The shared application
+logic therefore exposes commands that can yield explicit effects:
+
+```rust
+pub enum PasswordManagerCommand {
+    Initialize(InitializeRequest),
+    Open(OpenRequest),
+    CreateItem(CreateItemRequest),
+    UpdateItem(UpdateItemRequest),
+    DeleteItem(DeleteItemRequest),
+    RestoreItem(RestoreItemRequest),
+    Search(SearchRequest),
+    Sync(SyncRequest),
+    Export(ExportRequest),
+}
+
+pub enum PasswordManagerEffect {
+    Storage(StorageOperation),
+    Custody(CustodyOperation),
+    Clock(ClockOperation),
+    Entropy(EntropyOperation),
+    Confirm(ConfirmationPrompt),
+}
+```
+
+A native runtime may satisfy these effects synchronously. A WASM host may
+resolve them asynchronously and feed results back to the state machine. Wire
+and merge semantics are shared even when the host execution model differs.
+
+## 6. Reuse map and required seams
+
+| Product need | Existing package | Reuse | Required closure |
+|---|---|---|---|
+| envelope encryption | `vault-sealed-store` | algorithms, validation, rotation logic | accept injected root KEK; do not require semantic storage names |
+| typed records | `vault-records` | login/note/card/TOTP/API/DB codecs | add identity, SSH, passkey, collection metadata, migration registry |
+| custody | `vault-key-custody` | trait, passphrase custodian, selection policy | real OS keychain/TPM/Secure Enclave providers |
+| multi-recipient wrapping | `vault-recipients` | passphrase and X25519 wraps | signed recipient/device registry and revocation ceremony |
+| authentication | `vault-auth` | password and TOTP factors | WebAuthn/FIDO2-PRF and replay state where enabled |
+| policy | `vault-policy` | local RBAC/decorators | product action/resource vocabulary |
+| audit | `vault-audit` | canonical signed chain | persistent encrypted segments and cross-device chain semantics |
+| sync | `vault-sync` | version vectors, conflict types, OR-set | persistent signed commit DAG and no-loss conflict archive |
+| history | `vault-revisions` | retention and restore semantics | repository-backed encrypted implementation |
+| search | `vault-search` | local trigram/BM25 index | rebuildable index projection and field policy per record type |
+| attachments | `vault-attachments` | chunk AEAD | pack chunks into provider-efficient immutable objects |
+| import/export | `vault-import-export` | portable bundle | actual Bitwarden, KDBX, browser, CSV adapters |
+| CLI parsing | `vault-transport-cli` | bounded parsing/formatting patterns | product-specific commands and secret-output rules |
+| storage | `storage-core`, `storage-fs` | record/CAS model and local persistence | immutable object semantic adapter and cloud conformance profile |
+| extension shell | `browser-extension-toolkit` | cross-browser API and build normalization | vault-specific protocol, content scripts, origin matching |
+| form descriptors | `html-parser` | autofill-related form facts | browser DOM adapter and anti-phishing policy |
+
+VLT07 leases and machine-secret engines are not on the critical path for the
+personal password-manager MVP.
+
+## 7. Threat model
+
+### 7.1 Adversaries in scope
+
+1. **Storage reader.** Obtains every backend object and all provider-visible
+   metadata.
+2. **Malicious storage service.** Reorders, duplicates, corrupts, withholds,
+   deletes, or replays objects and listings.
+3. **Network observer.** Observes or interferes with provider traffic beneath
+   TLS.
+4. **Stolen locked device.** Obtains local ciphertext, configuration, cached
+   provider data, and process-independent files.
+5. **Lost provider credential.** Uses an OAuth token or storage credential to
+   read, delete, or replace encrypted objects.
+6. **Malicious imported data.** Supplies oversized, malformed, ambiguous, or
+   log-injecting bundles and record fields.
+7. **Web supply-chain attacker.** Attempts XSS, compromised dependencies,
+   malicious third-party scripts, service-worker replacement, or DOM injection.
+8. **Curious product operator.** Hosts the static web application or an optional
+   relay and attempts to learn vault contents.
+
+### 7.2 Adversaries out of scope for the first production profile
+
+- kernel-level endpoint compromise while the vault is unlocked;
+- physical side-channel attacks against the user's CPU or security module;
+- coercion and legal compulsion;
+- traffic-analysis resistance beyond optional padding and batching;
+- denial of service by a provider that permanently deletes every replica;
+- post-quantum confidentiality until a migration suite is specified.
+
+### 7.3 Security invariants
+
+1. Storage receives no plaintext and no semantic object names.
+2. Every content object is AEAD-authenticated and hash-addressed over its final
+   encrypted representation.
+3. Every commit is signed by a certified device key.
+4. Every trusted device certificate is authorized by the vault authority key.
+5. A client never accepts an unknown device as trusted merely because the
+   provider returned its bytes.
+6. Rollback against a previously seen client is detected by pinned heads,
+   device counters, and commit ancestry.
+7. A fresh client reports that provider withholding cannot be ruled out until
+   it verifies a recovery fingerprint or another trusted device.
+8. Conflict resolution never discards a losing secret revision.
+9. Provider access tokens and vault unlock keys are separate credentials.
+10. Secret-bearing types have redacted `Debug`/`Display` and zeroizing drop
+    behavior.
+11. Logs, crash reports, analytics, and telemetry contain no item IDs that can
+    be mapped to plaintext by the application operator.
+12. A production build uses an audited cryptographic provider profile.
+
+### 7.4 Availability statement
+
+Cryptography can detect corruption and rollback; it cannot force a provider to
+return or preserve data. The product must recommend at least two replicas for
+important vaults and provide verified export/restore drills.
+
+## 8. Key hierarchy and unlock
+
+### 8.1 Random root, password-wrapped
+
+The master password must not be the vault's long-lived root key. Initialization
+draws a random 256-bit Vault Root Key (`VRK`). A passphrase-derived key wraps the
+VRK. Changing the password replaces only the root-key wrap.
+
+```text
+master passphrase
+      |
+      v
+Argon2id(parameter block + salt) -> passphrase KEK
+      |
+      +---- unwraps VRK (random 256-bit root)
+                         |
+             +-----------+-----------+-----------+
+             |           |           |           |
+             v           v           v           v
+          index key   object key  locator key  audit key
+             |
+       per-item random DEKs
+```
+
+All subkeys are domain-separated through HKDF using the vault ID and an exact
+ASCII purpose label. The format registry owns labels; callers cannot invent
+them dynamically.
+
+Each physical repository object is encrypted with a fresh random object DEK.
+That DEK is wrapped under the appropriate root-derived object-wrap key. Item
+bodies and attachments retain their own VLT01/VLT14 DEKs beneath this repository
+envelope so future recipient sharing can rewrap an item without changing the
+repository format. No nonce/key pair may be reused.
+
+### 8.2 Bootstrap record
+
+The one provider-discoverable bootstrap family contains only what is required
+before unlock:
+
+```text
+BootstrapV1 {
+    vault_id: [u8; 16],
+    generation: u64,
+    previous_bootstrap: Option<ObjectId>,
+    crypto_suite: u16,
+    kdf: BoundedArgon2idParameters,
+    passphrase_root_wrap: AeadEnvelope,
+    authority_public_key: Ed25519PublicKey,
+    recovery_wraps: Vec<OpaqueRecoveryWrap>,
+    signature: Ed25519Signature,
+}
+```
+
+Generation zero is self-signed. Existing clients pin the authority fingerprint
+and the last accepted bootstrap ID. A new client must display/verify the vault
+fingerprint or use a recovery artifact before it can claim rollback resistance.
+
+The authority private key is stored only in an encrypted authority object,
+wrapped under the VRK. It is loaded for bootstrap rotation, device enrollment,
+and device revocation, then wiped. It is never stored beside the public
+bootstrap in plaintext.
+
+Persisted KDF parameters are hard-bounded before allocation. A provider cannot
+force an unbounded Argon2 invocation.
+
+### 8.3 Device identity
+
+Each device has independent Ed25519 signing and X25519 wrapping keys. A
+`DeviceCertificate` binds public keys, a random device ID, creation time, and
+capabilities to the vault authority signature. Device labels are encrypted and
+never provider-visible.
+
+Device private keys are wrapped under the VRK and, when available, additionally
+bound to an OS keystore, TPM, Secure Enclave, or biometric gate. The first CLI
+release uses a passphrase custodian and creates the device identity even though
+only one device exists.
+
+### 8.4 Lock states
+
+```text
+Absent -> Locked -> Unlocked -> Locked
+                  \-> Degraded (opened, but sync/provider unavailable)
+```
+
+- **Absent:** no valid bootstrap.
+- **Locked:** bootstrap and encrypted repository may be present; VRK absent.
+- **Unlocked:** VRK/subkeys available under zeroizing containers.
+- **Degraded:** local unlocked operations are available; remote sync is not.
+
+Lock wipes VRK, derived keys, decrypted records, search index, clipboard-owned
+secret buffers, and provider request buffers containing decrypted metadata.
+
+Phase 2 CLI synchronization requires an unlocked vault. A later desktop client
+may offer locked background ciphertext replication by storing a narrowly scoped
+`SyncLocatorCapability` plus provider credential in the OS credential store.
+That capability reveals opaque repository buckets and permits byte replication;
+it cannot decrypt objects or authorize vault commits. The feature is opt-in and
+separately revocable.
+
+## 9. Domain model
+
+Opaque identifiers are random 128- or 256-bit values rendered in a stable
+base32 form at user boundaries. Titles and paths are not identifiers.
+
+```rust
+pub struct VaultId([u8; 16]);
+pub struct ItemId([u8; 16]);
+pub struct CollectionId([u8; 16]);
+pub struct DeviceId([u8; 16]);
+pub struct ObjectId([u8; 32]);
+pub struct CommitId([u8; 32]);
+
+pub struct ItemDocument {
+    pub id: ItemId,
+    pub schema: ContentType,
+    pub created_at_ms: u64,
+    pub updated_at_ms: u64,
+    pub favorite: bool,
+    pub collection_ids: Vec<CollectionId>,
+    pub tags: OrSet<String>,
+    pub payload: AnyRecord,
+    pub attachments: Vec<AttachmentRef>,
+}
+```
+
+The encrypted catalog maps item IDs to current candidate revisions, conflict
+revisions, tombstones, and attachment roots. Search is a rebuildable projection
+of decrypted records and is never authoritative.
+
+### 9.1 Record merge policy
+
+| Field | Merge rule |
+|---|---|
+| item identity/schema | immutable; mismatch is corruption |
+| tags | OR-set merge |
+| collections | OR-set merge |
+| favorite | LWW register, losing value retained in revision history |
+| username/password/TOTP/card/notes | whole-record conflict; preserve both |
+| attachment list | OR-set of immutable attachment IDs |
+| deletion | tombstone with causal vector; concurrent edit becomes conflict |
+
+The UI may offer field-by-field conflict resolution, but the repository stores
+the user's resolution as a new commit with both conflicting parents.
+
+## 10. Immutable repository format
+
+### 10.1 Why immutable objects
+
+Filesystem rename, SQLite transactions, S3 conditional writes, WebDAV ETags,
+and Google Drive revisions do not expose one identical coordination model.
+Immutable publication plus signed merge commits gives the product one weakest-
+common-denominator model.
+
+### 10.2 Object envelope
+
+Every repository object except the bootstrap is serialized as canonical CBOR,
+encrypted, framed, and then addressed by the SHA-256 hash of the complete framed
+ciphertext:
+
+```text
+ObjectId = SHA256("VPM-OBJECT-ID-v1" || framed_ciphertext)
+
+framed_ciphertext =
+    magic "VPO1" || suite_u16 || wrapped_object_dek || payload_nonce
+                 || ciphertext_len || ciphertext || tag
+```
+
+`wrapped_object_dek` is a complete AEAD envelope, including its own wrap nonce.
+`payload_nonce` is independently random. The diagram is intentionally
+abbreviated and omits length fields; `vault-pm-format` and its golden vectors
+own the exact V1 byte layout and associated-data rules.
+
+The plaintext inside the envelope begins with an internal kind discriminator;
+the backend does not receive the kind in a filename, MIME type, or property.
+Every backend writes `application/octet-stream`.
+
+### 10.3 Commit object
+
+```text
+CommitV1 {
+    vault_id: VaultId,
+    device_id: DeviceId,
+    device_counter: u64,
+    parents: Vec<CommitId>,
+    catalog_root: ObjectId,
+    added_objects: Vec<ObjectId>,
+    tombstone_root: Option<ObjectId>,
+    wall_time_ms: u64,              // advisory, never establishes order
+    format_version: u16,
+    device_certificate: ObjectId,
+    signature: Ed25519Signature,
+}
+```
+
+The signature covers canonical bytes excluding the signature field. The commit
+ID covers the signed representation. Parent links form a Merkle DAG. Device
+counters detect replay/equivocation by a certified device.
+
+### 10.4 Publication protocol
+
+1. Encode and encrypt changed item/catalog/attachment objects.
+2. Publish every content object idempotently.
+3. Read back or stat enough data to verify publication.
+4. Create and sign a commit referencing only published objects.
+5. Publish the commit object.
+6. Publish an immutable announcement containing the commit ID under the
+   device's pseudorandom announcement bucket.
+7. Update the local pinned-head set only after steps 1–6 succeed.
+
+An interrupted publication leaves unreachable immutable objects that GC may
+remove later. It never exposes a commit whose dependencies were intentionally
+unpublished.
+
+### 10.5 Discovery
+
+Unlocked clients derive opaque bucket prefixes from a locator key:
+
+```text
+object_bucket       = HMAC(locator_key, "objects-v1")
+announcement_bucket = HMAC(locator_key, "announcements-v1")
+bootstrap_bucket    = public fixed-format locator
+```
+
+The provider can correlate accesses to one vault but cannot infer the purpose
+of a pseudorandom bucket. Change feeds are hints. A periodic complete listing is
+the correctness path.
+
+### 10.6 Rollback and fork detection
+
+- Existing clients pin accepted bootstrap and commit heads locally.
+- A returned head must descend from, merge, or explicitly supersede pinned
+  heads.
+- Device counters cannot decrease or fork at one counter without an
+  equivocation warning.
+- Missing pinned objects produce `ProviderWithholding`, not `NotFound`.
+- New clients clearly report `fresh-device-unanchored` until a fingerprint,
+  recovery sheet, or trusted device confirms the authority and head set.
+
+A provider can still withhold every post-anchor object from every client. Fully
+global rollback detection requires an external witness/transparency service and
+is deferred.
+
+### 10.7 Packs and checkpoints
+
+The logical contract remains one immutable value per object ID. A backend may
+pack many small objects into a larger immutable blob when individual-object
+overhead is material. Its encrypted pack index maps object IDs to byte ranges;
+pack membership and offsets are never exposed as plaintext provider metadata.
+
+Attachment chunks may use packs in the first cloud phase. General small-object
+compaction is a later optimization. A checkpoint commit may compact the live
+catalog, but it retains enough signed ancestry to validate pinned heads and
+must not silently erase fork or rollback evidence.
+
+## 11. Storage abstraction
+
+### 11.1 Semantic contract
+
+The product owns a language-neutral contract. Rust native, Rust/WASM host
+bindings, and TypeScript adapters implement the same behavior and run the same
+conformance fixtures.
+
+Every client has one local repository, and zero or more remote replicas
+implement this contract. Application services commit to the local repository;
+the sync engine reconciles it with configured replicas. A cloud provider is
+never the only working copy implicitly created by the product.
+
+```rust
+pub trait VaultObjectStore {
+    fn initialize(&self, locator: &VaultLocator) -> Result<(), StoreError>;
+    fn capabilities(&self) -> BackendCapabilities;
+    fn get(&self, bucket: &BucketId, object: &ObjectId)
+        -> Result<Option<ObjectBytes>, StoreError>;
+    fn stat(&self, bucket: &BucketId, object: &ObjectId)
+        -> Result<Option<ObjectStat>, StoreError>;
+    fn put_immutable(
+        &self,
+        bucket: &BucketId,
+        object: &ObjectId,
+        bytes: &ObjectBytes,
+    ) -> Result<PutImmutableOutcome, StoreError>;
+    fn list(
+        &self,
+        bucket: &BucketId,
+        cursor: Option<&ListCursor>,
+        limit: usize,
+    ) -> Result<ObjectPage, StoreError>;
+    fn delete_unreferenced(
+        &self,
+        bucket: &BucketId,
+        object: &ObjectId,
+    ) -> Result<DeleteOutcome, StoreError>;
+    fn changes(&self, cursor: Option<&ChangeCursor>)
+        -> Result<Option<ChangePage>, StoreError>;
+}
+```
+
+`changes` and physical delete are optional capabilities. A backend without them
+returns `Unsupported` and remains conforming.
+
+### 11.2 Baseline required semantics
+
+Every backend must provide:
+
+- idempotent initialization;
+- exact byte retrieval by opaque `(bucket, object)`;
+- immutable put: an existing object ID may only contain identical bytes;
+- stable, paginated enumeration that eventually returns every committed object;
+- body length and provider revision/validator when available;
+- typed errors for authorization, quota, rate limit, network, corruption,
+  conflict, unsupported capability, and provider failure;
+- bounded request/response sizes;
+- no implicit content conversion, compression, document import, or indexing.
+
+If a provider cannot atomically create-if-absent, the adapter publishes under a
+content-derived name, re-reads competing results, and treats any different bytes
+under the same object ID as corruption. Duplicate physical provider files are
+allowed; listing must collapse identical logical object IDs.
+
+### 11.3 Capability report
+
+```rust
+pub struct BackendCapabilities {
+    pub strong_read_after_write: bool,
+    pub strong_list_after_write: bool,
+    pub conditional_create: bool,
+    pub conditional_replace: bool,
+    pub change_feed: bool,
+    pub push_notifications: bool,
+    pub resumable_upload: bool,
+    pub range_read: bool,
+    pub server_checksum: bool,
+    pub physical_delete: bool,
+    pub shareable_container: bool,
+    pub max_object_size: Option<u64>,
+    pub preferred_pack_size: u64,
+}
+```
+
+Capabilities select optimization paths only. The repository never weakens
+verification because `server_checksum` or strong consistency is reported.
+
+### 11.4 Existing `storage-core` bridge
+
+Phase 1 implements `StorageCoreObjectStore`, mapping opaque buckets to
+`namespace` and object IDs to `key`. All puts use `if_absent`. No product code
+uses caller-readable namespace/key values.
+
+`storage-core`'s current conditional-write guarantee is scoped to one backend
+instance. That is sufficient for the filesystem adapter but is not promoted to
+a cloud synchronization invariant.
+
+### 11.5 Decorators
+
+Decorators implement the same contract:
+
+- `CachingObjectStore`: ciphertext cache only;
+- `RetryingObjectStore`: bounded exponential backoff with jitter;
+- `RateLimitedObjectStore`: provider-aware request budget;
+- `ReplicaSetObjectStore`: publish local objects to configured remote replicas;
+- `FaultInjectingObjectStore`: tests stale lists, duplicate delivery, partial
+  publication, timeouts, and corruption;
+- `MetricsObjectStore`: counts/latency only, never object IDs or bodies.
+
+## 12. Backend portfolio
+
+| Backend | Phase | Intended use | Notes |
+|---|---:|---|---|
+| in-memory | 0 | model/property tests | configurable consistency and fault injection |
+| filesystem | 1 | default local vault | same immutable format as cloud |
+| removable/synced folder | 1B | user-managed folder, NAS sync | warn about third-party sync conflict copies |
+| Google Drive | 2A | default BYO cloud | `appDataFolder` personal mode first |
+| WebDAV | 2B | NAS, Nextcloud, Fastmail-class storage | probe ETag/locking behavior, rely on immutable baseline |
+| S3-compatible | 2C | technical/self-hosted users | conditional writes and multipart upload when present |
+| OneDrive | 6 | Microsoft users | delta feed and upload sessions are optimizations |
+| Dropbox | 6 | Dropbox users | cursor-based listing/upload sessions |
+| git | later | auditable/offline users | ciphertext objects only; no plaintext diffs |
+| IPFS/content network | research | replicated immutable objects | availability/privacy tradeoffs require separate spec |
+
+The application ships with filesystem support even when no provider SDK is
+compiled. Cloud backends are optional features/packages, not dependencies of
+the core.
+
+## 13. Google Drive profile
+
+Google Drive is the first cloud adapter because it directly exercises the
+product promise.
+
+### 13.1 Personal hidden mode — default
+
+- Use the Drive API v3 `appDataFolder` space.
+- Request the narrow `drive.appdata` OAuth scope.
+- Store only binary `application/octet-stream` files.
+- Use opaque file names and opaque `appProperties` for logical bucket/object
+  lookup; never place titles, URLs, usernames, or record kinds in metadata.
+- Download with `files.get(..., alt=media)`.
+- Use the Drive `version`, available checksums, file ID, and modified time as
+  provider observations, never as cryptographic truth.
+- Use `changes.getStartPageToken`/`changes.list` to accelerate discovery.
+- Periodically perform a complete `files.list(spaces=appDataFolder)`
+  reconciliation because notifications/change feeds are hints.
+
+`appDataFolder` is per-user application data, hidden from the normal Drive UI,
+and cannot be shared. It is therefore appropriate for one person's same-account
+devices, not cross-account shared vaults.
+
+Application data can still be manually deleted, and uninstalling/revoking an
+application can make it unavailable. Setup therefore recommends either a
+second provider replica or a periodically verified export in user-visible
+storage; hidden application data is synchronization storage, not the user's
+only backup.
+
+All official clients that must see one personal repository need OAuth client
+identities under the same verified application/project arrangement. This must
+be proven with an integration fixture before claiming cross-client support.
+
+### 13.2 Visible folder mode — opt-in
+
+An optional user-selected folder mode uses the narrowest workable Drive scope
+and the Drive Picker. It supports user-visible backup/migration and is the
+starting point for provider-native folder sharing. The UI warns that users can
+rename, move, duplicate, or delete files and that filenames remain opaque by
+design.
+
+Provider folder sharing is transport access, not vault authorization. A person
+who can read the folder still needs a valid recipient wrap and trusted device.
+
+### 13.3 OAuth handling
+
+- Native CLI/desktop uses the installed-app authorization flow with PKCE and a
+  loopback redirect on macOS/Linux/Windows desktop.
+- Manual copy/paste OOB authorization is forbidden.
+- Refresh tokens are stored in the OS credential store through an opaque
+  `CredentialRef`; they are not stored in cloud objects or plaintext config.
+- DPoP/token binding is used when supported by the chosen production library.
+- Browser-only mode uses Google Identity Services' short-lived token model and
+  requests a new token through a user gesture when required. It does not add a
+  product backend solely to retain Google refresh tokens.
+- Revoked/expired provider authorization transitions the vault to local
+  degraded mode; it never locks an already unlocked local repository.
+
+### 13.4 Upload strategy
+
+- Small object/commit files use simple or multipart uploads within provider
+  guidance.
+- Large attachment packs use resumable uploads.
+- Upload retries are idempotent by logical Object ID.
+- `429`, `403 rateLimitExceeded`, and retryable `5xx` responses use bounded
+  exponential backoff with jitter and surface progress.
+- Quota exhaustion reports the provider and required user action without
+  exposing an object name.
+
+### 13.5 Attachment packing
+
+VLT14's authenticated 64 KiB chunks remain the cryptographic unit. The Drive
+adapter must not create one provider file per chunk. A provider-neutral pack
+layer groups encrypted chunks into immutable packs sized by
+`preferred_pack_size` (initial target 8–32 MiB). Pack indexes are encrypted.
+
+### 13.6 Google Drive acceptance criteria
+
+- A new device using the same Google account can discover, unlock, and verify a
+  synthetic vault.
+- No Drive file name/property contains fixture titles, URLs, usernames, types,
+  or attachment names.
+- Offline edits on two devices converge without losing either secret value.
+- Duplicate physical files and stale listings converge to one logical object.
+- Interrupted resumable attachment upload resumes or safely restarts.
+- Token revocation leaves the local copy usable and gives actionable recovery.
+- Full scan and change-feed scan produce the same verified head set.
+- Deleting/replaying/corrupting provider objects produces a typed integrity or
+  withholding error, never silent data replacement.
+
+## 14. Local CLI product
+
+### 14.1 Packages
+
+```text
+code/packages/rust/vault-pm-format       canonical bootstrap/object/commit formats
+code/packages/rust/vault-pm-domain       product record model and merge policy
+code/packages/rust/vault-pm-storage      VaultObjectStore contract + fixtures
+code/packages/rust/vault-pm-repository   immutable DAG, publication, sync, GC
+code/packages/rust/vault-pm-application  use cases and redacted view models
+code/packages/rust/vault-pm-cli          product parser/driver/renderer
+code/programs/rust/vault-pm-cli          executable composition root
+```
+
+The first storage adapter is
+`vault-pm-storage-storage-core` over `storage-fs`. Package names may be
+collapsed if an initial crate would contain no independent contract, but
+dependency direction and test boundaries remain as shown.
+
+### 14.2 Platform paths
+
+Use an OS path resolver; never hard-code `$HOME`:
+
+- config: platform application-config directory;
+- local object repository: platform application-data directory;
+- cache: platform cache directory and safely disposable;
+- runtime socket: user-private runtime directory;
+- provider credential: OS credential store, referenced by ID in config.
+
+Permissions must be owner-only where the platform supports them. The CLI
+refuses to operate on a repository with unexpectedly broad permissions unless
+the user performs an explicit repair/override ceremony.
+
+### 14.3 Configuration
+
+Configuration contains no master password, VRK, decrypted provider token, or
+item metadata.
+
+```toml
+format_version = 1
+default_vault = "personal"
+
+[vaults.personal]
+vault_locator = "<opaque locator>"
+local_store = "local"
+remote_stores = []
+auto_lock_seconds = 300
+clipboard_clear_seconds = 30
+
+[storage.local]
+kind = "filesystem"
+path = "<platform-resolved data path>"
+credential_ref = "none"
+```
+
+Unknown fields are rejected in security-sensitive sections and preserved only
+where the format explicitly defines an extension map.
+
+### 14.4 Command surface
+
+```text
+vault-pm init [--vault NAME] [--storage NAME]
+vault-pm status [--json]
+vault-pm shell
+
+vault-pm item add login|note|card|totp|custom
+vault-pm item show ITEM [--field FIELD] [--copy|--reveal]
+vault-pm item edit ITEM
+vault-pm item list [--collection ID] [--tag TAG]
+vault-pm item delete ITEM
+vault-pm item restore ITEM [--revision REV]
+
+vault-pm search QUERY
+vault-pm history list ITEM
+vault-pm history show ITEM REV [--copy|--reveal]
+vault-pm history restore ITEM REV
+
+vault-pm password generate [policy flags] [--copy|--reveal]
+vault-pm totp code ITEM [--copy|--reveal]
+
+vault-pm attachment add ITEM PATH
+vault-pm attachment list ITEM
+vault-pm attachment export ITEM ATTACHMENT [PATH]
+vault-pm attachment remove ITEM ATTACHMENT
+
+vault-pm import portable|bitwarden|kdbx|csv PATH
+vault-pm export portable PATH
+
+vault-pm storage add filesystem|gdrive|webdav|s3 NAME
+vault-pm storage list
+vault-pm storage check NAME
+vault-pm storage migrate SOURCE TARGET [--mirror]
+
+vault-pm sync status|pull|push|run
+vault-pm audit verify
+vault-pm doctor
+vault-pm gc plan|run
+```
+
+Phase 1A implements `init`, `status`, `shell`, item CRUD/list, search, history,
+password generation, portable export, audit verification, and `doctor`.
+Cloud/storage migration commands activate in Phase 2.
+
+### 14.5 Unlock experience
+
+Phase 1A supports:
+
+1. **One-shot command:** prompt on the controlling TTY, unlock in-process,
+   perform one action, wipe, exit.
+2. **Interactive shell:** prompt once and retain keys only inside the foreground
+   process until timeout, `lock`, terminal loss, or process exit.
+
+Phase 1B adds a local user agent over a permission-checked Unix-domain socket or
+Windows named pipe. The agent is optional; one-shot operation always remains.
+No master password is accepted through argv, an environment variable, command
+history, URL, or config.
+
+### 14.6 Secret output policy
+
+- Normal list/show/JSON output is redacted.
+- `--copy` is preferred and clears an owned clipboard value after the configured
+  timeout when the platform can prove it still owns that value.
+- `--reveal` requires an interactive TTY confirmation.
+- Non-TTY secret output requires an explicit `--unsafe-include-secrets` flag and
+  emits a warning to stderr.
+- Secret-bearing JSON is never enabled merely by `--json`.
+- Prompts and errors never echo attacker-controlled secret text.
+- Inline secret positional arguments are rejected.
+
+### 14.7 Stable exit classes
+
+| Code | Class |
+|---:|---|
+| 0 | success |
+| 2 | invalid command/input |
+| 3 | locked/authentication required |
+| 4 | item/object not found |
+| 5 | conflict requiring resolution |
+| 6 | integrity/tamper/rollback failure |
+| 7 | provider authentication/quota/network failure |
+| 8 | unsupported backend/capability |
+| 10 | internal invariant failure |
+
+Exact error details remain typed internally. Human messages are low-resolution
+and redact item/provider payloads.
+
+### 14.8 Phase 1A acceptance criteria
+
+- All first-release commands use one application service and one object-store
+  adapter.
+- Restart after every mutation preserves data and history.
+- Filesystem inspection reveals neither fixture titles nor fixture secret
+  fields.
+- Swapping/corrupting/truncating objects is detected.
+- A simulated crash at every publication step either exposes the old commit or
+  a valid new commit; never a partial logical state.
+- Search can be deleted and rebuilt from records.
+- Password rotation rewraps the VRK without re-encrypting every item body.
+- Export followed by import into a new vault preserves supported records but
+  creates new encryption/object identities.
+- CLI end-to-end tests run through the real executable with a pseudo-terminal
+  for secret prompts.
+- A backend conformance suite passes for in-memory and filesystem adapters.
+
+## 15. Synchronization and multi-device behavior
+
+### 15.1 Pull
+
+1. Enumerate new announcements using a change cursor when available.
+2. Periodically enumerate the full announcement bucket.
+3. Fetch announced commits and dependencies absent from local ciphertext cache.
+4. Verify object IDs, AEAD, device certificate, signature, counter, and ancestry.
+5. Compute the verified remote head set.
+6. Merge remote heads with local heads.
+7. Surface unresolved item conflicts.
+
+### 15.2 Push
+
+1. Finish a valid local commit.
+2. Upload missing dependencies idempotently.
+3. Upload commit and announcement last.
+4. Re-pull because another device may have published concurrently.
+5. If heads are concurrent, make a merge commit after automatic safe merges and
+   conflict preservation.
+
+### 15.3 No-loss conflict store
+
+Every conflict has stable IDs, both encrypted candidate revisions, causal
+parents, discovery time, and resolution state. Resolving a conflict never
+deletes candidates immediately; retention policy controls later GC.
+
+### 15.4 Device removal
+
+Removing a device creates an authority-signed revocation object. Future commits
+from that device are rejected after the revocation's causal point. If the device
+may have cached the VRK/plaintext, removal cannot make prior knowledge secret.
+A high-assurance removal rotates the VRK and rewraps active material.
+
+## 16. Web client
+
+### 16.1 Shape
+
+The web client is an installable PWA with:
+
+- shared Rust domain/format/merge code compiled to WASM;
+- host-owned async storage effects;
+- IndexedDB or OPFS ciphertext repository for offline use;
+- direct provider APIs from the browser when the provider supports CORS and an
+  appropriate browser authorization flow;
+- no plaintext application backend;
+- a static application host that can be mirrored or self-hosted.
+
+### 16.2 Web security profile
+
+- Dedicated origin; no user-authored HTML execution.
+- Strict CSP with no `unsafe-inline`, no `unsafe-eval`, and no unpinned remote
+  script except an explicitly reviewed provider identity SDK.
+- Trusted Types where supported.
+- No third-party analytics, advertising, tag managers, support widgets, or CDN
+  fonts/scripts on the vault origin.
+- Reproducible asset hashes and a signed release manifest.
+- Service-worker updates require integrity verification and never retain
+  plaintext responses.
+- VRK and decrypted records remain in memory only; persistent browser storage
+  contains ciphertext unless a platform-bound custodian is explicitly enabled.
+- Auto-lock on inactivity, page hiding policy, explicit lock, and browser
+  restart.
+- Cross-tab coordination ensures one writer or forces a normal DAG merge.
+- Paste/drop/import paths use bounded parsers and render text, never imported
+  HTML.
+
+Browser extensions installed by the user can inspect pages and may defeat a web
+vault's secrecy while unlocked. The product must disclose this endpoint risk.
+
+### 16.3 Google Drive from web
+
+The browser uses Google Identity Services' token model. Access tokens are
+short-lived; after expiry the user performs a gesture-driven authorization
+step. The first web release does not introduce a hosted token broker or store a
+Google refresh token on our server.
+
+### 16.4 Phase 3 acceptance criteria
+
+- The PWA can create/open the same canonical synthetic vault as the CLI.
+- Offline edits survive reload and sync later.
+- Web and CLI create concurrent edits that preserve both values.
+- Static hosting access logs cannot contain vault data or provider tokens.
+- CSP/Trusted Types/XSS regression suite blocks seeded injection payloads.
+- Browser storage contains no plaintext after lock and process restart.
+- The web build has no network dependency other than the configured provider
+  and explicitly vendored/approved identity endpoint.
+
+## 17. Desktop client
+
+The first desktop GUI is a thin shell over the same application service and
+native adapters. Tauri is the initial containment option because it can reuse
+the web presentation while exposing OS custody, filesystem, clipboard, and
+native messaging safely. The domain and view-model packages must not depend on
+Tauri.
+
+When Mosaic native emitters meet accessibility, secret-input, clipboard,
+credential-store, updater, and screen-reader gates, the same view-model contract
+may drive native SwiftUI/WinUI/Qt/other hosts without changing repository data.
+
+Desktop-specific responsibilities:
+
+- OS keychain/DPAPI/libsecret and hardware custody;
+- biometric-gated unlock where supported;
+- local agent lifecycle and permission-checked IPC;
+- signed auto-update with rollback protection;
+- secure clipboard ownership/clear;
+- file picker, import/export, removable repositories;
+- background provider synchronization with bounded resource use;
+- crash reporting disabled for secret payloads and opt-in for redacted metrics.
+
+Phase 4 is complete only when macOS, Windows, and Linux packages pass the same
+repository and storage conformance vectors.
+
+## 18. Browser extension and autofill
+
+The extension uses `browser-extension-toolkit` for cross-browser packaging. It
+contains no independent vault database or crypto implementation.
+
+Preferred topology:
+
+```text
+content script <-> extension service worker <-> native messaging/local agent
+                                             or bounded web vault session
+```
+
+Security rules:
+
+- origin matching uses parsed/schemed host rules, public-suffix awareness, and
+  explicit user overrides; display-string suffix tests are forbidden;
+- credentials are returned only for the active tab and exact request nonce;
+- content scripts never receive an entire collection when one credential is
+  requested;
+- fill requires a user gesture by default;
+- HTTP pages, sandboxed frames, look-alike IDNs, cross-origin iframes, and
+  insecure form actions receive warnings or fail closed;
+- capture/update proposals are shown to the user before commit;
+- extension logs and browser sync storage never contain secrets;
+- native messaging authenticates the extension ID and uses framed, bounded,
+  request-correlated messages.
+
+Passkey-provider behavior is a later VLT16/OS integration and not conflated
+with password autofill.
+
+## 19. Storage migration, mirroring, backup, and GC
+
+### 19.1 Migration
+
+`storage migrate A B`:
+
+1. verifies source heads and reachable objects;
+2. initializes the target;
+3. copies immutable objects with bounded parallelism;
+4. reads/stat-verifies target objects;
+5. copies bootstrap generations and announcements last;
+6. opens the target independently and compares verified head/catalog hashes;
+7. switches config only after explicit confirmation;
+8. leaves the source untouched by default.
+
+The same procedure supports local → Drive, Drive → WebDAV, Drive → local, and
+provider → mirrored configuration.
+
+### 19.2 Mirroring
+
+Replicas receive identical ciphertext objects. Read fallback verifies all
+bytes. A local commit succeeds independently of remote availability. For an
+explicit `sync --wait`, the requested remote durability target is configurable
+(`one`, `all`, or quorum), and the UI must show degraded replicas. A replica
+never gains plaintext.
+
+### 19.3 Export and recovery artifacts
+
+- **Portable plaintext export:** explicit high-risk ceremony, encrypted output
+  option preferred, never automatic.
+- **Repository backup:** byte-for-byte encrypted object repository; safe to
+  mirror but tied to current key hierarchy.
+- **Recovery sheet:** vault ID, authority fingerprint, recovery wrap/words, and
+  format version; never provider OAuth credentials.
+
+Every export has a restore test. “Backup completed” is not reported until the
+artifact can be parsed and authenticated.
+
+### 19.4 Garbage collection
+
+GC is mark-and-sweep from all verified heads, retained conflicts, history
+windows, bootstrap generations, and in-progress attachment manifests.
+
+- `gc plan` is read-only and reports counts/sizes, not semantic names.
+- `gc run` requires a grace period and an up-to-date full scan.
+- Backends without physical delete accumulate unreachable encrypted objects.
+- No object is deleted until every non-revoked device is known to have observed
+  the pruning checkpoint, or the user explicitly accepts offline-device loss.
+
+## 20. Privacy, observability, and diagnostics
+
+Allowed default metrics are local and aggregate:
+
+- object/commit counts and encrypted byte totals;
+- sync duration, retries, provider error class, and staleness;
+- conflict count and unresolved age;
+- last verified backup and audit status;
+- backend capability/health summary.
+
+Forbidden telemetry includes titles, URLs, usernames, field values, search
+queries, item IDs, object IDs, provider file IDs, clipboard contents, import
+rows, and decrypted error payloads.
+
+`doctor` performs redacted checks for path permissions, bootstrap chain,
+object reachability, signature validity, pinned-head ancestry, provider
+authorization, quota class, and local cache consistency. A support bundle is
+opt-in, previewable, and structurally unable to include object bodies.
+
+## 21. Format evolution
+
+- Canonical formats carry explicit versions and algorithm identifiers.
+- Readers reject unknown mandatory features and preserve unknown optional
+  encrypted objects.
+- Migrations are pure `old -> new` transforms committed as ordinary signed
+  changes.
+- A writer must not upgrade the only copy without first verifying that another
+  supported client or backup can read the result.
+- Crypto-suite migration supports dual-readable bootstrap generations and
+  resumable object re-encryption.
+- Golden vectors are checked in for every format version and consumed by native
+  and web bindings.
+
+## 22. Verification and release gates
+
+### 22.1 Test layers
+
+1. **Unit:** codecs, bounds, redaction, key separation, validation.
+2. **Property:** commit DAG merge laws, OR-set laws, idempotent publication,
+   retry safety, GC reachability.
+3. **Backend conformance:** identical fixtures for memory, filesystem, Drive,
+   WebDAV, S3, browser storage.
+4. **Fault model:** stale/partial/duplicate lists, delayed read-after-write,
+   corruption, deletion, replay, quota, token expiry, clock skew, crash at every
+   publication step.
+5. **Format:** canonical golden vectors, mutation tests, backward compatibility.
+6. **Crypto:** published known-answer vectors, cross-implementation differential
+   tests, constant-time review, misuse-resistant APIs.
+7. **Parser fuzzing:** bootstrap, object, commit, import, CLI, native messaging.
+8. **End-to-end:** real CLI/PWA/desktop against synthetic vaults and provider
+   sandbox accounts.
+9. **Recovery drills:** restore from each backup form with the primary deleted.
+
+### 22.2 Security gates before real-secret recommendation
+
+- independent cryptographic review of primitives and composition;
+- independent application threat-model and penetration test;
+- fuzzing corpus with no unresolved crashes or parser time/memory bombs;
+- audited production crypto provider selected behind the package interfaces;
+- signed reproducible releases and dependency provenance;
+- documented vulnerability disclosure and emergency release process;
+- provider OAuth verification/policy compliance;
+- restore and rollback drills on every supported backend;
+- explicit resolution of the signed-manifest, signed-entry, and rollback claims
+  inherited from VLT00;
+- no open critical/high security findings.
+
+### 22.3 Release labels
+
+| Label | Permitted data |
+|---|---|
+| experimental | generated fixtures only |
+| developer preview | disposable test credentials |
+| beta | real data only with prominent backup/security caveat after first audit |
+| production | real-secret recommendation after all gates above |
+
+## 23. Implementation sequence
+
+Each slice is one cohesive PR with spec, tests, implementation, README,
+changelog, focused build, and downstream validation.
+
+### Phase 0 — contracts
+
+1. `vault-pm-format`: bootstrap/object/commit canonical structures and vectors.
+2. `vault-pm-storage`: semantic contract, capability report, conformance and
+   fault-injection backend.
+3. Extend VLT01/custody seam to accept an injected random root KEK.
+4. `vault-pm-domain`: product IDs, documents, conflicts, redacted views.
+5. Security review of format/key hierarchy before persistent user data exists.
+
+### Phase 1A — local CLI
+
+6. `StorageCoreObjectStore` + filesystem conformance.
+7. `vault-pm-repository`: publication, verification, local heads, history, GC
+   plan.
+8. `vault-pm-application`: init/open/item/search/history/export/audit workflows.
+9. `vault-pm-cli` + real executable and pseudo-terminal E2E suite.
+10. Crash/fault matrix and local restore drill.
+
+### Phase 1B — daily local use
+
+11. password generator, TOTP display, clipboard, attachments and packing.
+12. local agent/IPC and auto-lock.
+13. Bitwarden/KDBX/browser CSV import adapters.
+14. removable/synced-folder mode and mirror decorator.
+
+### Phase 2 — cloud
+
+15. Google Drive `appDataFolder` adapter and sandbox conformance.
+16. multi-device enrollment, signed commit merge, conflict UI in CLI.
+17. visible Drive folder mode and storage migration.
+18. WebDAV, then S3-compatible adapters.
+
+### Phase 3 onward
+
+19. WASM command/effect bridge + IndexedDB/OPFS adapter.
+20. PWA and direct Google Drive browser authorization.
+21. desktop shell, OS custody, agent, signed updater.
+22. browser extension/native messaging/autofill.
+23. OneDrive/Dropbox and mobile/credential-provider clients.
+24. sharing, revocation, recovery, optional rendezvous services.
+
+## 24. Explicitly deferred decisions
+
+The following are not allowed to block Phase 1A, but each needs a later spec:
+
+- final product name and visual identity;
+- optional hosted relay/business model;
+- organization billing, SSO, SCIM, and enterprise policy;
+- emergency-access timer oracle;
+- passkey provider and WebAuthn authenticator certification;
+- post-quantum suite;
+- metadata-hiding padding/cover traffic;
+- server-side searchable encryption;
+- provider-native cross-account sharing UX;
+- exact desktop presentation technology after shared view models stabilize.
+
+## 25. References
+
+### Internal
+
+- `VLT00-vault-master.md` — vault threat model and full package architecture.
+- `VLT00-vault-roadmap.md` — VLT01–VLT15 layer map.
+- `VLT01-vault-sealed-store.md` — current envelope store.
+- `VLT02-vault-records.md` — typed records.
+- `VLT03-vault-key-custody.md` — custody abstraction.
+- `VLT04-vault-recipients.md` — recipient wrapping.
+- `VLT05-vault-auth.md` and `VLT06-vault-policy.md` — auth/policy.
+- `VLT09-vault-audit-log.md` — audit chain.
+- `VLT10-vault-sync-engine.md` — version vectors and conflict semantics.
+- `VLT11-transports.md` — current CLI transport contract.
+- `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
+  `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
+- `STR01-storage-fs-backend.md` and `storage-core`.
+
+### External primary sources
+
+- Google Drive API, application-specific data:
+  https://developers.google.com/workspace/drive/api/guides/appdata
+- Google Drive file resource and monotonic version/checksum fields:
+  https://developers.google.com/workspace/drive/api/reference/rest/v3/files
+- Google Drive uploads and resumable upload protocol:
+  https://developers.google.com/workspace/drive/api/guides/manage-uploads
+- Google Drive change tracking:
+  https://developers.google.com/workspace/drive/api/guides/manage-changes
+- Google Drive OAuth scopes:
+  https://developers.google.com/workspace/drive/api/guides/api-specific-auth
+- Google OAuth for installed apps and PKCE:
+  https://developers.google.com/identity/protocols/oauth2/native-app
+- Google Identity Services browser token model:
+  https://developers.google.com/identity/oauth2/web/guides/use-token-model
+- RFC 4918 — WebDAV:
+  https://www.rfc-editor.org/rfc/rfc4918
+- Amazon S3 consistency and conditional writes:
+  https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html
+  and https://docs.aws.amazon.com/AmazonS3/latest/userguide/conditional-writes.html
+- Microsoft Graph OneDrive delta protocol:
+  https://learn.microsoft.com/graph/api/driveitem-delta
+
+---
+
+*End of VLT-PM00.*

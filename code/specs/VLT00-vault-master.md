@@ -43,6 +43,8 @@ The vault project's other specs are referenced by their existing IDs:
 - **VLT01** — sealed store (envelope encryption on top of `storage-core`)
 - **storage-sqlite** — one storage backend
 - **hkdf**, **x25519**, **ed25519**, etc. — primitive specs
+- **VLT-PM00** — product-level composition: local CLI first, then
+  bring-your-own-cloud sync, web, desktop, browser, and mobile clients
 
 This document does not duplicate them; it places them in the larger map
 and identifies the new specs that need to be written.
