@@ -4823,9 +4823,15 @@ the Rust, Python, and TypeScript surfaces together.
      the unresolved JFET `B` parameter policy.
 
 492. Python and TypeScript Berkeley SPICE MOS nominal-temperature alias precedence.
-   - Status: implemented in this MOS nominal-temperature precedence slice.
+   - Status: completed in PR 10189.
    - Both parser facades give engine-canonical Level-1 `T_NOM` precedence over
      the `TNOM` alias during lowering, matching validation while preserving
+     instance parameter overrides.
+
+493. Python and TypeScript Berkeley SPICE MOS channel-modulation alias precedence.
+   - Status: implemented in this MOS channel-modulation precedence slice.
+   - Both parser facades give engine-canonical Level-1 `LAMBDA` precedence over
+     the `LAM` alias during lowering, matching validation while preserving
      instance parameter overrides.
 
 ## Backlog

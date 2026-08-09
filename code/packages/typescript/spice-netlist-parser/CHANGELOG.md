@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Give canonical MOS Level-1 `LAMBDA` precedence over the `LAM` alias.
 - Give canonical MOS Level-1 `T_NOM` precedence over the `TNOM` alias.
 - Give canonical BJT and JFET `TNOM` precedence over the `T_NOM` alias.
 - Validate finite JFET `LAMBDA` and `LAM` model-card values.

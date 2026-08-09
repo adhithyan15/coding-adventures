@@ -3494,6 +3494,14 @@ Xright c d load
     },
   );
 
+  it("gives MOSFET LAMBDA precedence over LAM", () => {
+    const parsed = parseNetlist(".model nfast NMOS(LAMBDA=0.02 LAM=0.03)\nM1 d g s b nfast\n");
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") throw new Error("unexpected element kind");
+    expect(element.params.LAMBDA).toBe(0.02);
+  });
+
   it.each(["-0.01", "1e999"])("rejects invalid MOSFET model GAMMA=%s", (bodyEffect) => {
     expect(() =>
       parseNetlist(`.model nfast NMOS(GAMMA=${bodyEffect})\nM1 d g s b nfast\n`),
