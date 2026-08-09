@@ -1373,146 +1373,170 @@ camera-media policy and native HTTPS executor in one concrete production host:
   namespace before installing its opaque reference. RTSP and other streams
   remain blocked on a supervised resource owner and teardown lifecycle.
 
+## Current ZoneMinder HTTPS Snapshot Host Slice
+
+This slice composes installed ZoneMinder monitor identities with the completed
+camera-media policy and pinned native HTTPS executor:
+
+- `smart-home-zoneminder-snapshot-host` performs exact Human Approval preflight
+  before resolving credentials, logging in, registering an endpoint, or
+  reaching media I/O. The target must be the exact camera entity derived from a
+  positive installed ZoneMinder monitor identifier.
+- The configured credential-free `nph-zms` endpoint must share the installed
+  bridge's HTTPS origin and retain a reviewed canonical host plus pinned socket.
+  The host requests only documented `mode=single` delivery at fixed scale 100;
+  it does not open the MJPEG streaming mode.
+- One bounded, versioned sealed-Vault credential envelope is materialized for
+  each approved operation. The existing API 2.0 transport obtains one
+  short-lived access token, then credentials and the login response are
+  disposed before media delivery.
+- The token-bearing snapshot URI exists only in zeroizing process-local broker
+  state. It is removed after success, lease failure, or executor failure and
+  never enters normalized runtime state, errors, audit records, or debug output.
+- Tests cover denial before Vault/login, malformed payload redaction, exact
+  target and endpoint validation, one token per operation, cleanup after failed
+  delivery, repeated sealed-record use, and strict native HTTPS login-to-JPEG
+  composition.
+- Automated credential provisioning remains an explicit pairing-flow
+  responsibility. Token reuse and refresh remain blocked on a supervised
+  session lifecycle and refresh-token Vault policy; streams, recordings,
+  exports, and playback remain blocked on supervised resource ownership.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
 and then by prerequisite readiness:
 
-The strongest next executable slice is bounded ZoneMinder snapshot delivery:
-the production integration already has an authenticated local HTTPS inspection
-transport and installed camera identities, while the completed camera-media
-executor and ONVIF host establish the exact Human Approval, endpoint, and
-credential-lifetime boundaries. The new host must acquire one bounded access
-token per approved operation, retain the token-bearing endpoint only in
-zeroizing process-local state, unregister it after delivery, and avoid extending
-the slice to streams, recordings, export, or playback.
+The strongest next executable production slice is bounded Synology Surveillance
+Station snapshot delivery: the current integration already has authenticated
+API discovery, a privilege-filtered camera list, and isolated SID/SynoToken
+sessions, while the camera-media executor supplies pinned bounded JPEG delivery.
+A fresh post-merge audit must confirm the documented snapshot request, exact
+camera correspondence, process-local session endpoint lifetime, and logout
+cleanup before implementation. OTP, events, recordings, export, and playback
+remain prerequisite-gated.
 
-1. Add bounded ZoneMinder snapshots through the completed camera-media HTTPS
-   executor with exact Human Approval preflight, per-operation access-token
-   acquisition, and process-local endpoint removal after delivery; streams,
-   recordings, export, and playback still require a concrete supervised
-   resource executor.
-2. Add automated ONVIF credential provisioning only through an explicit pairing
+1. Add automated ONVIF credential provisioning only through an explicit pairing
    flow that writes the versioned envelope into the dedicated sealed-Vault
    namespace and installs only its opaque reference. Snapshot delivery itself is
    complete and must not become an implicit credential writer.
-3. Add authenticated AirGradient MQTT only after official firmware removes
+2. Add authenticated AirGradient MQTT only after official firmware removes
    plaintext credential logging and one-shot Vault-leased credential injection
    can be proven without request-plan or normalized-state exposure.
-4. Add independent AirGradient telemetry, remote-configuration, and OTA
+3. Add independent AirGradient telemetry, remote-configuration, and OTA
    destinations only if firmware exposes separate settings; the current
    `httpDomain` contract intentionally governs all three as one HTTPS origin.
-5. Add authenticated HEOS source browsing and queue insertion only after the
+4. Add authenticated HEOS source browsing and queue insertion only after the
    account/session and Vault-leasing prerequisites are concrete.
-6. Automate Enphase access-token acquisition or renewal only after Enphase
+5. Automate Enphase access-token acquisition or renewal only after Enphase
    account authentication, cloud-session handling, operator consent, and
    Vault-leased credential policy are concrete; the current host accepts a
    pre-generated token.
-7. Add automatic Enphase IQ Gateway discovery only if Enphase documents a
+6. Add automatic Enphase IQ Gateway discovery only if Enphase documents a
    stable LAN advertisement; the current production path uses explicit local
    HTTPS endpoint and gateway-serial configuration.
-8. Add Enphase live battery, relay, generator, grid, and system-topology state
+7. Add Enphase live battery, relay, generator, grid, and system-topology state
    only after the normalized energy topology and retention semantics are
    concrete.
-9. Add Enphase relay, grid-services, or configuration controls only with
+8. Add Enphase relay, grid-services, or configuration controls only with
    operation-specific D23 contracts, explicit safety approval, bounded native
    semantics, and readable postcondition verification.
-10. Add expiration-aware ZoneMinder access-token reuse and refresh only after a
+9. Add expiration-aware ZoneMinder access-token reuse and refresh only after a
    supervised session lifecycle and Vault policy for refresh-token residency are
    concrete; the current isolated inspection drops both tokens after each read.
-11. Add ZoneMinder event push only after a concrete authenticated event host and
+10. Add ZoneMinder event push only after a concrete authenticated event host and
     supervised subscription lifecycle exist.
-12. Add ZoneMinder PTZ, monitor configuration, recording-mode, or administrative
+11. Add ZoneMinder PTZ, monitor configuration, recording-mode, or administrative
     mutations only with operation-specific D23 contracts, least-privilege user
     checks, bounded semantics, and readable postcondition verification.
-13. Add UniFi connected-client key rotation across multiple sites or more than
+12. Add UniFi connected-client key rotation across multiple sites or more than
     one 100-client page only after a resumable protocol can prove exact global
     correspondence and all-or-none persistence without extending native-ID or
     one-shot key residency across partial responses.
-14. Add UniFi connected-client native details only after field-specific
+13. Add UniFi connected-client native details only after field-specific
    minimization and retention are approved; current presence intentionally
    excludes names, native IDs, MACs, IPs, and connection timestamps.
-15. Add UniFi historical device statistics, heartbeat-time correlation, or
+14. Add UniFi historical device statistics, heartbeat-time correlation, or
    broader fleet polling only after durable time-series schema, query access,
    clock semantics, and retention/deletion policy are concrete; current live
    statistics are explicit-target, 64-device bounded, one-minute rate-limited,
    and expire after two minutes.
-16. Add remote UniFi Site Manager inspection only after telemetry-egress,
+15. Add remote UniFi Site Manager inspection only after telemetry-egress,
    destination, and operator-consent policy are concrete; keep the current host
    local-only.
-17. Add UniFi Network push or change events only after a concrete authenticated
+16. Add UniFi Network push or change events only after a concrete authenticated
    event host and supervised subscription lifecycle exist.
-18. Add UniFi adoption, guest authorization, port actions, or configuration
+17. Add UniFi adoption, guest authorization, port actions, or configuration
    mutations only with operation-specific D23 contracts, least-privilege API
    keys, bounded semantics, and readable postcondition verification.
-19. Add Synology Surveillance Station OTP and remembered-device authentication
+18. Add Synology Surveillance Station OTP and remembered-device authentication
    only after an interactive challenge lifecycle and Vault-leased device-token
    policy are concrete.
-20. Add Synology Surveillance Station events only after a concrete authenticated
+19. Add Synology Surveillance Station events only after a concrete authenticated
    event host and supervised subscription lifecycle exist.
-21. Add bounded Synology Surveillance Station snapshots through the completed
+20. Add bounded Synology Surveillance Station snapshots through the completed
     camera-media HTTPS executor after process-local endpoint registration and
     credential lifetime are wired; recordings, export, and playback still
     require a concrete supervised resource executor.
-22. Add Synology Surveillance Station PTZ, external recording, or configuration
+21. Add Synology Surveillance Station PTZ, external recording, or configuration
    mutations only with operation-specific D23 contracts, least-privilege API
    checks, bounded semantics, and readable postcondition verification.
-23. Add Frigate event and review push only after a concrete authenticated event
+22. Add Frigate event and review push only after a concrete authenticated event
    or WebSocket host and supervised subscription lifecycle exist.
-24. Add bounded Frigate snapshots through the completed camera-media HTTPS
+23. Add bounded Frigate snapshots through the completed camera-media HTTPS
     executor after process-local endpoint registration and credential lifetime
     are wired; recordings, export, and playback still require a concrete
     supervised resource executor.
-25. Add Frigate commands or configuration mutations only with operation-specific
+24. Add Frigate commands or configuration mutations only with operation-specific
    D23 contracts, least-privilege role checks, and readable postcondition
    verification.
-26. Add bounded Blue Iris snapshots through the completed camera-media HTTPS
+25. Add bounded Blue Iris snapshots through the completed camera-media HTTPS
     executor after process-local endpoint registration and credential lifetime
     are wired; alert/clip search, export, and playback still require a concrete
     supervised resource executor.
-27. Add broader Blue Iris `camconfig` or administrative mutations only with
+26. Add broader Blue Iris `camconfig` or administrative mutations only with
    operation-specific D23 contracts, least-privilege permissions, and readable
    postcondition verification; do not persist the license value returned at
    login.
-28. Add automatic Blue Iris discovery only if the server exposes a documented,
+27. Add automatic Blue Iris discovery only if the server exposes a documented,
    stable LAN advertisement; the current production path is explicit local
    HTTPS endpoint configuration.
-29. Add Blue Iris focus, iris, digital-I/O, preset-setting, or broader PTZ
+28. Add Blue Iris focus, iris, digital-I/O, preset-setting, or broader PTZ
    controls only when each operation has a specific native capability probe,
    bounded semantics, and readable verification where the device exposes it.
-30. Add Axis event streaming only after the existing WebSocket protocol core has
+29. Add Axis event streaming only after the existing WebSocket protocol core has
    a concrete authenticated host using the completed Digest primitive or a
    short-lived session token, plus subscription supervision.
-31. Add bounded Axis snapshots through the completed camera-media HTTPS executor
+30. Add bounded Axis snapshots through the completed camera-media HTTPS executor
     after process-local endpoint registration and credential lifetime are
     wired; broader media transfer still requires a concrete supervised resource
     executor.
-32. Enumerate Axis video sources/channels before extending PTZ beyond the current
+31. Enumerate Axis video sources/channels before extending PTZ beyond the current
    capability-probed VAPIX camera 1 boundary.
-33. Add Axis absolute/relative zoom, guard-tour, or advanced preset management
+32. Add Axis absolute/relative zoom, guard-tour, or advanced preset management
    only when each operation has a specific capability probe and readable state.
-34. Add bounded Reolink snapshots through the completed camera-media HTTPS
+33. Add bounded Reolink snapshots through the completed camera-media HTTPS
     executor after process-local endpoint registration and credential lifetime
     are wired; recording search/download and playback still require a concrete
     supervised resource executor.
-35. Add Reolink current-position, zoom, guard-point, or patrol controls only when
+34. Add Reolink current-position, zoom, guard-point, or patrol controls only when
    each operation has a capability-specific probe and the firmware exposes the
    native state needed to avoid invented orientation claims.
-36. Add Reolink push events only after a concrete webhook or event-stream host
+35. Add Reolink push events only after a concrete webhook or event-stream host
    and subscription lifecycle exist.
-37. Add authenticated KLAP/Tapo devices and other broader-device families only
+36. Add authenticated KLAP/Tapo devices and other broader-device families only
    after their authentication and session prerequisites are concrete.
-38. Add ONVIF PullPoint events once a concrete event host and subscription
+37. Add ONVIF PullPoint events once a concrete event host and subscription
    lifecycle exist.
-39. Add RTSP media transfer and recording once concrete media transfer and
+38. Add RTSP media transfer and recording once concrete media transfer and
    recorder host primitives exist.
-40. Add a production Matter commissioning, secure-session, and network host only
+39. Add a production Matter commissioning, secure-session, and network host only
    after certificate, fabric, Interaction Model encoding, subscription, and
    transport prerequisites exist.
-41. Add a Thread border-router host only after an actual host transport exists.
-42. Add a production Zigbee coordinator, join, and security host only after
+40. Add a Thread border-router host only after an actual host transport exists.
+41. Add a production Zigbee coordinator, join, and security host only after
    concrete coordinator transport and security primitives exist.
-43. Add production Z-Wave inclusion and S2 only after concrete host transport
+42. Add production Z-Wave inclusion and S2 only after concrete host transport
    and security primitives exist.
 
 ## End-To-End Definition

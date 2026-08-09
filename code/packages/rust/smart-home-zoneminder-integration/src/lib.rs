@@ -36,6 +36,8 @@ pub const VERSION_PATH: &str = "/api/host/getVersion.json";
 pub const MONITORS_PATH: &str = "/api/monitors.json";
 pub const DEFAULT_MAX_RESPONSE_BYTES: usize = 2 * 1024 * 1024;
 pub const MAX_MONITORS: usize = 512;
+pub const MAX_USERNAME_BYTES: usize = 1_024;
+pub const MAX_PASSWORD_BYTES: usize = 4_096;
 const MAX_TOKEN_BYTES: usize = 16 * 1024;
 const MAX_VERSION_BYTES: usize = 256;
 
@@ -129,9 +131,13 @@ impl ZoneMinderCredentials {
     ) -> Result<Self, ZoneMinderError> {
         let username = username.into();
         let password = password.into();
-        if username.trim().is_empty() || password.is_empty() {
+        if username.trim().is_empty()
+            || password.is_empty()
+            || username.len() > MAX_USERNAME_BYTES
+            || password.len() > MAX_PASSWORD_BYTES
+        {
             return Err(ZoneMinderError::Validation(
-                "username and password must not be empty".to_string(),
+                "username or password is empty or exceeds its bound".to_string(),
             ));
         }
         if username.contains('\0') || password.contains('\0') {
@@ -210,7 +216,7 @@ impl ZoneMinderConfig {
             _ => {
                 return Err(ZoneMinderError::Validation(
                     "ZoneMinder endpoint is not approved".to_string(),
-                ))
+                ));
             }
         };
         Ok(LocalHttpEndpoint::new(
@@ -234,6 +240,51 @@ impl ZoneMinderConfig {
         } else {
             format!("{prefix}{path}")
         })
+    }
+
+    fn login_plan(&self) -> Result<LocalHttpRequestPlan, ZoneMinderError> {
+        LocalHttpRequestTemplate::new(LocalHttpMethod::Post, self.api_path(LOGIN_PATH)?)?
+            .with_accept("application/json")
+            .with_content_type("application/x-www-form-urlencoded")
+            .with_timeout_ms(duration_ms(self.timeout))
+            .with_idempotent(false)
+            .with_auth(LocalHttpAuth::None)
+            .plan(&self.endpoint()?, Vec::new())
+            .map_err(ZoneMinderError::from)
+    }
+}
+
+pub struct ZoneMinderAccessToken(Zeroizing<String>);
+
+impl ZoneMinderAccessToken {
+    pub fn new(value: impl Into<String>) -> Result<Self, ZoneMinderError> {
+        let value = Zeroizing::new(value.into());
+        let segments = value.split('.').collect::<Vec<_>>();
+        if value.len() > MAX_TOKEN_BYTES
+            || segments.len() != 3
+            || segments.iter().any(|segment| {
+                segment.is_empty()
+                    || !segment
+                        .bytes()
+                        .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'_'))
+            })
+        {
+            return Err(ZoneMinderError::Validation(
+                "access token is not a bounded base64url JWT".to_string(),
+            ));
+        }
+        drop(segments);
+        Ok(Self(value))
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+}
+
+impl fmt::Debug for ZoneMinderAccessToken {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("ZoneMinderAccessToken([REDACTED])")
     }
 }
 
@@ -299,13 +350,43 @@ impl ZoneMinderLanTransport {
         self
     }
 
+    pub fn acquire_access_token(
+        &mut self,
+        config: &ZoneMinderConfig,
+        credentials: &ZoneMinderCredentials,
+    ) -> Result<ZoneMinderAccessToken, ZoneMinderError> {
+        self.login(&config.login_plan()?, credentials)
+    }
+
+    fn login(
+        &mut self,
+        plan: &LocalHttpRequestPlan,
+        credentials: &ZoneMinderCredentials,
+    ) -> Result<ZoneMinderAccessToken, ZoneMinderError> {
+        let username = form_encode(credentials.username.as_str());
+        let password = form_encode(credentials.password.as_str());
+        let login_body = Zeroizing::new(format!(
+            "user={}&pass={}",
+            username.as_str(),
+            password.as_str()
+        ));
+        let login = self.request(plan, login_body.as_bytes(), None)?;
+        if login.status != 200 {
+            return Err(ZoneMinderError::HttpStatus {
+                operation: "login",
+                status: login.status,
+            });
+        }
+        parse_access_token(&login.body)
+    }
+
     fn request(
         &mut self,
         plan: &LocalHttpRequestPlan,
         body: &[u8],
         access_token: Option<&str>,
     ) -> Result<HttpResponse, ZoneMinderError> {
-        let request = Zeroizing::new(encode_http_request(plan, body, access_token)?);
+        let request = encode_http_request(plan, body, access_token)?;
         let url = Url::parse(&plan.url)?;
         let host = url
             .host
@@ -319,7 +400,7 @@ impl ZoneMinderLanTransport {
             "http" if is_loopback_host(host) => {
                 let mut stream = connect_tcp(host, port, timeout)?;
                 write_request(&mut stream, request.as_slice())?;
-                Zeroizing::new(read_bounded(&mut stream, self.maximum_response_bytes)?)
+                read_bounded(&mut stream, self.maximum_response_bytes)?
             }
             "https" => {
                 let mut config = self.tls_config.clone();
@@ -331,7 +412,7 @@ impl ZoneMinderLanTransport {
                     .connect(host, port, &config)
                     .map_err(|error| ZoneMinderError::Tls(error.to_string()))?;
                 write_request(&mut stream, request.as_slice())?;
-                let bytes = Zeroizing::new(read_bounded(&mut stream, self.maximum_response_bytes)?);
+                let bytes = read_bounded(&mut stream, self.maximum_response_bytes)?;
                 stream
                     .close_notify()
                     .map_err(|error| ZoneMinderError::Tls(error.to_string()))?;
@@ -340,7 +421,7 @@ impl ZoneMinderLanTransport {
             _ => {
                 return Err(ZoneMinderError::Validation(
                     "ZoneMinder transport requires HTTPS or loopback HTTP".to_string(),
-                ))
+                ));
             }
         };
         decode_http_response(response.as_slice(), self.maximum_response_bytes)
@@ -353,19 +434,7 @@ impl ZoneMinderTransport for ZoneMinderLanTransport {
         plans: &ZoneMinderRequestPlans,
         credentials: &ZoneMinderCredentials,
     ) -> Result<ZoneMinderSnapshot, ZoneMinderError> {
-        let login_body = Zeroizing::new(format!(
-            "user={}&pass={}",
-            form_encode(credentials.username.as_str()),
-            form_encode(credentials.password.as_str())
-        ));
-        let login = self.request(&plans.login, login_body.as_bytes(), None)?;
-        if login.status != 200 {
-            return Err(ZoneMinderError::HttpStatus {
-                operation: "login",
-                status: login.status,
-            });
-        }
-        let access_token = parse_access_token(&login.body)?;
+        let access_token = self.login(&plans.login, credentials)?;
         let version_response = self.request(&plans.version, &[], Some(access_token.as_str()))?;
         if version_response.status != 200 {
             return Err(ZoneMinderError::HttpStatus {
@@ -417,14 +486,7 @@ impl<T: ZoneMinderTransport> ZoneMinderClient<T> {
                 .plan(&endpoint, Vec::new())
                 .map_err(ZoneMinderError::from)
         };
-        let login =
-            LocalHttpRequestTemplate::new(LocalHttpMethod::Post, config.api_path(LOGIN_PATH)?)?
-                .with_accept("application/json")
-                .with_content_type("application/x-www-form-urlencoded")
-                .with_timeout_ms(timeout_ms)
-                .with_idempotent(false)
-                .with_auth(LocalHttpAuth::None)
-                .plan(&endpoint, Vec::new())?;
+        let login = config.login_plan()?;
         let plans = ZoneMinderRequestPlans {
             login,
             version: get(config.api_path(VERSION_PATH)?)?,
@@ -571,11 +633,18 @@ pub fn install_snapshot(
             device_id: device_id.clone(),
             kind: EntityKind::Camera,
             name: monitor.name.clone(),
-            capabilities: vec![Capability::new(
-                CapabilityId::trusted("camera.health"),
-                CapabilityMode::Observe,
-                ValueKind::Object,
-            )],
+            capabilities: vec![
+                Capability::new(
+                    CapabilityId::trusted("camera.health"),
+                    CapabilityMode::Observe,
+                    ValueKind::Object,
+                ),
+                Capability::new(
+                    CapabilityId::trusted("camera.snapshot"),
+                    CapabilityMode::Command,
+                    ValueKind::Text,
+                ),
+            ],
             state: Some(StateSnapshot {
                 entity_id: camera_entity_id.clone(),
                 value: monitor_value(monitor),
@@ -616,7 +685,7 @@ fn authorize_read(
     }
 }
 
-fn parse_access_token(body: &[u8]) -> Result<Zeroizing<String>, ZoneMinderError> {
+fn parse_access_token(body: &[u8]) -> Result<ZoneMinderAccessToken, ZoneMinderError> {
     let value = SecretJson(serde_json::from_slice(body)?);
     let object = value
         .0
@@ -635,12 +704,7 @@ fn parse_access_token(body: &[u8]) -> Result<Zeroizing<String>, ZoneMinderError>
         ));
     }
     let token = required_text(object.get("access_token"), "access_token", MAX_TOKEN_BYTES)?;
-    if token.bytes().any(|byte| byte <= 0x20 || byte == 0x7f) {
-        return Err(ZoneMinderError::Validation(
-            "login returned an unsafe access token".to_string(),
-        ));
-    }
-    Ok(Zeroizing::new(token))
+    ZoneMinderAccessToken::new(token)
 }
 
 struct SecretJson(JsonValue);
@@ -906,14 +970,16 @@ fn is_loopback_host(host: &str) -> bool {
     matches!(host, "localhost" | "127.0.0.1" | "::1")
 }
 
-fn form_encode(value: &str) -> String {
-    let mut encoded = String::with_capacity(value.len());
+fn form_encode(value: &str) -> Zeroizing<String> {
+    const HEX: &[u8; 16] = b"0123456789ABCDEF";
+    let mut encoded = Zeroizing::new(String::with_capacity(value.len()));
     for byte in value.bytes() {
         if byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'.' | b'_' | b'~') {
             encoded.push(char::from(byte));
         } else {
             encoded.push('%');
-            encoded.push_str(&format!("{byte:02X}"));
+            encoded.push(char::from(HEX[usize::from(byte >> 4)]));
+            encoded.push(char::from(HEX[usize::from(byte & 0x0f)]));
         }
     }
     encoded
@@ -923,7 +989,7 @@ fn encode_http_request(
     plan: &LocalHttpRequestPlan,
     body: &[u8],
     access_token: Option<&str>,
-) -> Result<Vec<u8>, ZoneMinderError> {
+) -> Result<Zeroizing<Vec<u8>>, ZoneMinderError> {
     let url = Url::parse(&plan.url)?;
     let host = url
         .host
@@ -932,11 +998,11 @@ fn encode_http_request(
     let port = url
         .effective_port()
         .ok_or(ZoneMinderError::MissingField("request URL port"))?;
-    let mut target = if url.path.is_empty() {
+    let mut target = Zeroizing::new(if url.path.is_empty() {
         "/".to_string()
     } else {
         url.path.clone()
-    };
+    });
     if let Some(access_token) = access_token {
         if access_token.is_empty()
             || access_token.len() > MAX_TOKEN_BYTES
@@ -962,11 +1028,14 @@ fn encode_http_request(
     } else {
         format!("{host}:{port}")
     };
-    let mut request = format!(
-        "{} {target} HTTP/1.1\r\nHost: {host_header}\r\nConnection: close\r\n",
-        plan.method.as_str()
-    )
-    .into_bytes();
+    let mut request = Zeroizing::new(
+        format!(
+            "{} {} HTTP/1.1\r\nHost: {host_header}\r\nConnection: close\r\n",
+            plan.method.as_str(),
+            target.as_str()
+        )
+        .into_bytes(),
+    );
     for header in &plan.headers {
         if header.name.eq_ignore_ascii_case("Content-Length")
             || header.name.eq_ignore_ascii_case("Cookie")
@@ -1024,12 +1093,15 @@ fn write_request(writer: &mut dyn Write, request: &[u8]) -> Result<(), ZoneMinde
         .map_err(|error| ZoneMinderError::Io(error.to_string()))
 }
 
-fn read_bounded(reader: &mut dyn Read, maximum: usize) -> Result<Vec<u8>, ZoneMinderError> {
-    let mut bytes = Vec::new();
-    let mut buffer = [0u8; 8192];
+fn read_bounded(
+    reader: &mut dyn Read,
+    maximum: usize,
+) -> Result<Zeroizing<Vec<u8>>, ZoneMinderError> {
+    let mut bytes = Zeroizing::new(Vec::new());
+    let mut buffer = Zeroizing::new([0u8; 8192]);
     loop {
         let read = reader
-            .read(&mut buffer)
+            .read(buffer.as_mut_slice())
             .map_err(|error| ZoneMinderError::Io(error.to_string()))?;
         if read == 0 {
             break;
@@ -1037,7 +1109,7 @@ fn read_bounded(reader: &mut dyn Read, maximum: usize) -> Result<Vec<u8>, ZoneMi
         if read > maximum.saturating_sub(bytes.len()) {
             return Err(ZoneMinderError::ResponseTooLarge { limit: maximum });
         }
-        bytes.extend_from_slice(&buffer[..read]);
+        bytes.extend_from_slice(&buffer.as_slice()[..read]);
     }
     Ok(bytes)
 }
@@ -1076,7 +1148,7 @@ fn decode_http_response(bytes: &[u8], maximum: usize) -> Result<HttpResponse, Zo
                 input[..expected].to_vec()
             }
             BodyKind::UntilEof => input.to_vec(),
-            BodyKind::Chunked => decode_chunked(input, maximum)?,
+            BodyKind::Chunked => decode_chunked(input, maximum)?.into_inner(),
         };
         if body.len() > maximum {
             return Err(ZoneMinderError::ResponseTooLarge { limit: maximum });
@@ -1098,9 +1170,9 @@ fn decode_http_response(bytes: &[u8], maximum: usize) -> Result<HttpResponse, Zo
     })
 }
 
-fn decode_chunked(input: &[u8], maximum: usize) -> Result<Vec<u8>, ZoneMinderError> {
+fn decode_chunked(input: &[u8], maximum: usize) -> Result<Zeroizing<Vec<u8>>, ZoneMinderError> {
     let mut cursor = 0usize;
-    let mut output = Vec::new();
+    let mut output = Zeroizing::new(Vec::new());
     loop {
         let offset = input
             .get(cursor..)
@@ -1429,6 +1501,9 @@ mod tests {
         let bad_login =
             br#"{"access_token":"bad token","access_token_expires":3600,"apiversion":"2.0"}"#;
         assert!(parse_access_token(bad_login).is_err());
+        let injected =
+            br#"{"access_token":"bad.jwt&token.value","access_token_expires":3600,"apiversion":"2.0"}"#;
+        assert!(parse_access_token(injected).is_err());
         let response = b"HTTP/1.1 200 OK\r\nContent-Length: 2\r\n\r\n{}";
         assert!(matches!(
             decode_http_response(response, 1),

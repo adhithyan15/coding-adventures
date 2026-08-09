@@ -14,12 +14,18 @@ enter request plans, normalized state, or debug output.
 Camera entities expose confirmed enablement, capture, analysis, recording,
 native status, capture/analysis FPS, and capture bandwidth. The health mapping
 preserves ZoneMinder's native monitor status and marks disabled, stopped, or
-no-signal monitors offline. Plain HTTP is accepted only for loopback protocol
+no-signal monitors offline. They also declare the Human Approval
+`camera.snapshot` capability used by the separate
+`smart-home-zoneminder-snapshot-host`. The bounded LAN transport exposes a
+redacted one-shot access-token result for that host without introducing token
+reuse or refresh residency. Plain HTTP is accepted only for loopback protocol
 tests.
 
-This slice intentionally does not read ZoneMinder configuration or expose event,
-snapshot, recording, export, playback, or mutation endpoints. Those operations
-need concrete event or media hosts and operation-specific D23 contracts.
+This package intentionally does not deliver media, read ZoneMinder
+configuration, or expose event, recording, export, playback, or mutation
+endpoints. Snapshot delivery is owned by the separate host; the other
+operations still need concrete event or media lifecycles and operation-specific
+D23 contracts.
 
 Protocol references:
 
