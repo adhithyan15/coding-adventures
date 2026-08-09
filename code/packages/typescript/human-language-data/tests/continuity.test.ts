@@ -372,11 +372,12 @@ describe("the real corpus", () => {
     // ெ sign — the glyphs Tamil chapter 2 was still explaining inside its own speaking
     // lessons because the writing strand had never covered them.
     // Chapters 7 and 8 each add their configured 12-atom budget. Chapters 9 and 10
-    // each add nine smaller atoms. Chapter 11 adds eleven, then Chapter 12 adds eight
-    // while keeping every new verb inside the already-owned singular frame.
+    // each add nine smaller atoms. Chapter 11 adds eleven, Chapter 12 adds eight,
+    // and Chapter 13 adds nine while keeping every new verb inside the already-owned
+    // singular frame.
     // Every terminal practice lesson revisits its chapter, so measurable teaching
     // grows while the corpus orphan count can still fall.
-    expect(report.summary.atomsTaught).toBe(2568);
+    expect(report.summary.atomsTaught).toBe(2577);
     // +2, and it goes UP, which is worth stating plainly. Three of the five new atoms
     // are TA-W09's and nothing follows TA-W09, so they are orphans by construction:
     // PA-YA-01, E-SIGN-02, READ-PEYAR-03. TA-W08's two are revisited by TA-W09.
@@ -451,8 +452,9 @@ describe("the real corpus", () => {
     // Chapter 11 removes five more by dropping full boot tables, future verbs, and
     // undeclared house/car/friend vocabulary from its singular-only migration.
     // Chapter 12 removes seven more: weather and homework nouns, a window prompt,
-    // plural forms, and the three Chapter-13 verbs no longer appear early.
-    expect(report.summary.forwardReferences).toBe(431);
+    // plural forms, and the three Chapter-13 verbs no longer appear early. Chapter 13
+    // removes one net leak by deferring its own plural tables and undeclared contexts.
+    expect(report.summary.forwardReferences).toBe(430);
 
     // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
     // day as 766 -> 749. The absolute figures drift as main lands lessons; what the
@@ -513,9 +515,10 @@ describe("the real corpus", () => {
     // five-lesson reinforcement still lands before R2's 5-15-lesson span. Chapter
     // 10 adds nine typed atoms whose terminal retrieval is likewise earlier than R2.
     // Chapter 11 makes seven additional far windows measurable before a later lesson
-    // can reach the 5-15 lesson R2 span. Chapter 12 makes eight more: its local payoff
-    // is deliberately too close to count as far-window reinforcement.
-    expect(report.summary.missedByWindow.R2).toBe(1766);
+    // can reach the 5-15 lesson R2 span. Chapter 12 makes eight more. Chapter 13 adds
+    // three net misses: all nine atoms get local retrieval, but that checkpoint remains
+    // deliberately too close to count as far-window reinforcement.
+    expect(report.summary.missedByWindow.R2).toBe(1769);
   });
 
   it("shows what a declared reading order was worth", () => {
@@ -544,9 +547,9 @@ describe("the real corpus", () => {
       lessonCount: 177,
       lessonsWithoutSequence: 0,
       forwardPrerequisites: 0,
-      // Chapters 9 and 10 each add nine atoms, Chapter 11 adds eleven, and Chapter 12
-      // adds eight; every terminal checkpoint revisits its full typed chapter.
-      atomsTaught: 321,
+      // Chapters 9, 10, and 13 each add nine atoms, Chapter 11 adds eleven, and
+      // Chapter 12 adds eight; every terminal checkpoint revisits its full typed chapter.
+      atomsTaught: 330,
       atomsNeverRevisited: 66,
     });
   });

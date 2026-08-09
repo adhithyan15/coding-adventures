@@ -1,68 +1,93 @@
 ---
+schema_version: 2
 id: ES-C13-salir
-chapter: 13
+spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 1020
+chapter: 13
 type: word
 headword: salir
-gloss: to leave / to go out — a -go yo-form, salgo, from a root that means "to leap"
+gloss: to leave or go out — with the singular present forms salgo, sales, and sale
 concept_tag: ES-VERB-SALIR
-prerequisites: [ES-C13-poner]
+prerequisites: [ES-C13-poner, ES-C09-soy-de]
 sounds: [g-hard, l-clear]
 roots: [salire-latin]
-etymology_hook: "salir ← Latin salīre 'to leap, jump' → sally, salient, somersault, salmon (the leaping fish); the -go yo-form salgo joins pongo/tengo — 'going out' as an old 'leaping out'"
-est_minutes: 4
-reviews_of: [ES-C13-poner, ES-C12-yo-go]
+etymology_hook: "salir descends from Latin salīre 'to leap or jump'; English salient and sally preserve the same leaping family"
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-PONER, ES-GRAMMAR-PONER-PRESENT-SINGULAR, ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-HISTORY-YO-GO-CONVERGENCE, ES-LEX-DE]
+introduces:
+  knowledge: [ES-LEX-SALIR, ES-GRAMMAR-SALIR-PRESENT-SINGULAR, ES-ETYMON-SALIRE]
+practises:
+  knowledge: [ES-LEX-PONER, ES-GRAMMAR-PONER-PRESENT-SINGULAR, ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-HISTORY-YO-GO-CONVERGENCE, ES-LEX-DE, ES-LEX-SALIR, ES-GRAMMAR-SALIR-PRESENT-SINGULAR, ES-ETYMON-SALIRE]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C13-poner, ES-C12-practice, ES-C09-soy-de]
 ---
 
-# salir — "to go out," from a verb that meant "to leap"
+# salir — leaving with three singular forms
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PONER, ES-GRAMMAR-PONER-PRESENT-SINGULAR, ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-LEX-DE] -->
 
-[PAUSE 2s] The second *-go* verb: **salir** ("to leave, to go out"). Same story
-as *poner* — regular *-ir* everywhere but the *yo*-form, which grows the **g**:
-**salgo**. But its **origin** is a delight: *salir* comes from a Latin verb for
-**leaping**.
+[PAUSE 2s] You can retrieve **pongo, pones, pone**, and you already use **de**
+with a place name. Keep that frontier while adding **salir**, “to leave” or “to
+go out.”
+
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The **g** in **salgo** is hard. Keep the **l** clear in every form:
+**salgo, sales, sale**.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-SALIR, ES-ETYMON-SALIRE]; assesses=[] -->
 
-**salir** comes from Latin **salīre**, *"to leap, to jump, to spring"* — and over
-time "leaping out" softened into simply "going out." The leap survives across
-English:
+**salir** descends from Latin **salīre**, “to leap” or “to jump.” The older
+image of leaping outward developed into the everyday meaning “to go out.”
+English **salient** first carried the sense “leaping” or “springing,” and a
+**sally** is a sudden movement outward. Those cousins preserve the same motion
+without requiring a long list of uncertain relatives.
 
-- **salient** ("leaping out," so: prominent, sticking out), **sally** ("a sudden
-  rush out"), **somersault** (*sopra* + *saltus*, "a leap over").
-- with prefixes: **assail / assault** ("leap at"), **resilient** ("leap back"),
-  **result** ("leap back out"), **insult** ("leap upon").
-- and the **salmon** — *salīre* gave Latin *salmō*, "the **leaper**," for the fish
-  that leaps upstream.
+## Grammar Lens: one more singular set
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-SALIR-PRESENT-SINGULAR]; assesses=[ES-LEX-SALIR, ES-GRAMMAR-PONER-PRESENT-SINGULAR, ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-HISTORY-YO-GO-CONVERGENCE, ES-ETYMON-SALIRE] -->
 
-So every time you say *salgo* ("I go out"), you are using the old "**leap**" verb
-behind *salient* and *salmon*.
+| person | present of **salir** |
+|---|---|
+| yo | **salgo** |
+| tú | **sales** |
+| él / ella / usted | **sale** |
 
-## Grammar Lens: the -go yo-form
+Say **salgo · sales · sale**. Only the learned **yo** form contains **g**.
+Compare it with **pongo** because both forms are now known, not because one form
+could have predicted the other.
 
-| yo | **salgo** | (-go, like pongo/tengo) |
-| tú | sales | (regular) |
-| él/ella/usted | sale | (regular) |
-| nosotros | salimos | (regular) |
-| ellos/ustedes | salen | (regular) |
+Reuse the known word **de** and the familiar place name Madrid:
 
-**The everyday payoff:** *salir de casa* ("to leave the house"), *salir con*
-alguien ("to go out with someone" — to date), and *la salida* ("the **exit**" —
-the sign you'll read at every station). Note: English *exit* is from a **different**
-Latin verb, *exīre* ("go out"); Spanish chose the *leaping* one.
+- **Salgo de Madrid.** — “I leave Madrid.”
+- **Sales de Madrid.** — “You leave Madrid.”
+- **Sale de Madrid.** — “He, she, or formal you leaves Madrid.”
+
+Plural persons, dating expressions, house vocabulary, and the noun for “exit”
+wait until their own lessons.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SALIR, ES-GRAMMAR-SALIR-PRESENT-SINGULAR, ES-ETYMON-SALIRE, ES-LEX-DE] -->
+<!-- hl-activity: {"id":"ES-C13-salir-singular-forms","kind":"text","assesses":["ES-LEX-SALIR","ES-GRAMMAR-SALIR-PRESENT-SINGULAR"],"prompt":"Give the learned singular present forms of salir: yo, tú, then él/ella/usted.","answer":"salgo, sales, sale","accepted":["salgo sales sale","salgo / sales / sale"],"feedback":{"correct":"Right: salgo, sales, sale.","incorrect":"Keep the g in the yo form: salgo, sales, sale."},"response_seconds":10} -->
+<!-- hl-activity: {"id":"ES-C13-salir-leave-madrid","kind":"text","assesses":["ES-LEX-SALIR","ES-GRAMMAR-SALIR-PRESENT-SINGULAR","ES-LEX-DE"],"prompt":"Say 'I leave Madrid' in Spanish.","answer":"Salgo de Madrid.","accepted":["Salgo de Madrid"],"feedback":{"correct":"Right: Salgo de Madrid.","incorrect":"Use salgo, then the known de plus Madrid."},"response_seconds":8} -->
 
 [PAUSE 1s]
-- [YOU SAY: "salir" then the set — "**salgo**, sales, sale, salimos, salen"]
-- [YOU SAY: "Salgo de casa" ("I leave the house"); "la salida" ("the exit")]
-- [YOU SAY: "salir" then English "salient, salmon, somersault" — the leap-family]
+- [YOU SAY: “salir — salgo, sales, sale”]
+- [YOU SAY: “Salgo de Madrid.”]
+- [YOU SAY: “salīre — salient — salir”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SALIR, ES-GRAMMAR-SALIR-PRESENT-SINGULAR, ES-ETYMON-SALIRE] -->
 
-[PAUSE 3s] What did *salir*'s Latin root *salīre* originally mean? ("To **leap /
-jump**.") Name two English cousins. (salient/sally/somersault/salmon — any two.)
-Give the *yo*-form and the sign it hides. (**salgo**; *la salida* = the **exit**.)
-Next: **venir** — the last *-go* verb, and the trickiest, because it *also* cracks
-its stem.
+[PAUSE 3s] What does *salir* mean? (“To leave” or “to go out.”) Give the three
+learned forms. (*Salgo, sales, sale.*) What did Latin *salīre* mean? (“To leap”
+or “to jump.”) Name one English cousin. (*Salient* or *sally*.) Next: add
+**venir** and compare it only with already-learned **tener**.
