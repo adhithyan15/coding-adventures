@@ -432,8 +432,8 @@ use diagram_ir::{
     Axis, AxisKind, ChartDiagram, ChartKind, ChartOrientation, ChartSeries, Compartment,
     CompartmentKind, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType, GitDiagram,
     GitEvent, PieSlice, RelKind, SankeyFlow, SankeyNode, SeriesKind, StructuralDiagram,
-    StructuralKind, StructuralNode, StructuralNodeKind, StructuralRelationship, TaskStart,
-    TaskStatus, TemporalBody, TemporalDiagram, TemporalKind,
+    StructuralGroup, StructuralKind, StructuralNode, StructuralNodeKind, StructuralRelationship,
+    TaskStart, TaskStatus, TemporalBody, TemporalDiagram, TemporalKind,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -771,6 +771,7 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
                     stereotype: None,
                     node_kind: StructuralNodeKind::Class,
                     compartments,
+                    parent_group: None,
                 });
             }
         } else if let Some(rel) = parse_class_relationship(t) {
@@ -783,6 +784,7 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
                         stereotype: None,
                         node_kind: StructuralNodeKind::Class,
                         compartments: vec![],
+                        parent_group: None,
                     });
                 }
             }
@@ -794,6 +796,7 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
         kind: StructuralKind::Class,
         title,
         nodes,
+        groups: vec![],
         relationships,
     })
 }
@@ -1523,6 +1526,7 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
         kind: StructuralKind::Er,
         title,
         nodes,
+        groups: vec![],
         relationships,
     })
 }
@@ -1598,6 +1602,7 @@ fn upsert_er_node(
         stereotype: Some("entity".to_string()),
         node_kind: StructuralNodeKind::Entity,
         compartments: Vec::new(),
+        parent_group: None,
     });
     index
 }
@@ -1618,6 +1623,8 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     let mut title = None;
     let mut nodes = Vec::new();
     let mut node_indices = HashMap::new();
+    let mut groups = Vec::new();
+    let mut group_stack: Vec<String> = Vec::new();
     let mut relationships = Vec::new();
 
     while !cursor.at_eof() {
@@ -1634,8 +1641,33 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
             }
             "RBRACE" => {
                 cursor.advance();
+                group_stack.pop();
             }
-            "BOUNDARY_MACRO" | "ELEMENT_MACRO" => {
+            "BOUNDARY_MACRO" => {
+                let macro_token = cursor.advance().clone();
+                let args = parse_c4_arguments(&mut cursor)?;
+                let id = args.first().cloned().unwrap_or_default();
+                if id.is_empty() {
+                    return Err(token_error(&macro_token, "C4 boundary requires an alias"));
+                }
+                let label = args
+                    .get(1)
+                    .filter(|value| !value.is_empty())
+                    .cloned()
+                    .unwrap_or_else(|| id.clone());
+                groups.push(StructuralGroup {
+                    id: id.clone(),
+                    label,
+                    stereotype: Some(macro_token.value),
+                    parent_group: group_stack.last().cloned(),
+                });
+                cursor.skip_terminators();
+                cursor.consume_if("LBRACE").ok_or_else(|| {
+                    token_error(cursor.current(), "expected '{' after C4 boundary")
+                })?;
+                group_stack.push(id);
+            }
+            "ELEMENT_MACRO" => {
                 let macro_token = cursor.advance().clone();
                 let args = parse_c4_arguments(&mut cursor)?;
                 let id = args.first().cloned().unwrap_or_default();
@@ -1652,7 +1684,8 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     &mut node_indices,
                     id,
                     label,
-                    macro_token.value.clone(),
+                    macro_token.value,
+                    group_stack.last().cloned(),
                 );
                 let details: Vec<String> = args
                     .iter()
@@ -1665,9 +1698,6 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                         kind: CompartmentKind::Fields,
                         entries: details,
                     });
-                }
-                if token_name(cursor.current()) == "LBRACE" {
-                    cursor.advance();
                 }
             }
             "RELATION_MACRO" => {
@@ -1697,6 +1727,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
         kind: StructuralKind::C4,
         title,
         nodes,
+        groups,
         relationships,
     })
 }
@@ -1754,6 +1785,7 @@ fn upsert_c4_node(
     id: String,
     label: String,
     stereotype: String,
+    parent_group: Option<String>,
 ) -> usize {
     if let Some(index) = indices.get(&id).copied() {
         return index;
@@ -1766,6 +1798,7 @@ fn upsert_c4_node(
         stereotype: Some(stereotype),
         node_kind: StructuralNodeKind::Class,
         compartments: Vec::new(),
+        parent_group,
     });
     index
 }
@@ -2114,10 +2147,30 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         let d = parse_c4_diagram(C4_SRC).unwrap();
         assert_eq!(d.kind, StructuralKind::C4);
         assert_eq!(d.title.as_deref(), Some("Banking System"));
-        assert_eq!(d.nodes.len(), 3);
+        assert_eq!(d.nodes.len(), 2);
+        assert_eq!(d.groups.len(), 1);
+        assert_eq!(d.groups[0].id, "bank");
+        assert_eq!(
+            d.nodes
+                .iter()
+                .find(|node| node.id == "web")
+                .and_then(|node| node.parent_group.as_deref()),
+            Some("bank")
+        );
         assert_eq!(d.relationships.len(), 1);
         assert_eq!(d.relationships[0].from, "customer");
         assert_eq!(d.relationships[0].to, "web");
+    }
+
+    #[test]
+    fn c4_preserves_nested_boundary_membership() {
+        let d = parse_c4_diagram(
+            "C4Deployment\nDeployment_Node(cloud, \"Cloud\") {\nContainer_Boundary(apps, \"Apps\") {\nContainer(api, \"API\", \"Rust\")\n}\n}",
+        )
+        .unwrap();
+        assert_eq!(d.groups.len(), 2);
+        assert_eq!(d.groups[1].parent_group.as_deref(), Some("cloud"));
+        assert_eq!(d.nodes[0].parent_group.as_deref(), Some("apps"));
     }
 
     #[test]

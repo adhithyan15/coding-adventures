@@ -310,6 +310,7 @@ mod apple {
         )
         .expect("Mermaid C4 parse failed");
         let layout = layout_structural_diagram(&diagram);
+        assert_eq!(layout.groups.len(), 1);
 
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
@@ -337,5 +338,9 @@ mod apple {
         assert!(pixels.width > 0);
         assert!(pixels.height > 0);
         assert!(!scene.instructions.is_empty());
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            paint_instructions::PaintInstruction::Rect(rect) if rect.stroke_dash.is_some()
+        )));
     }
 }

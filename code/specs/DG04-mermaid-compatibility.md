@@ -103,6 +103,16 @@ Sharing a domain IR does not require sharing a source AST. For example,
 Sequence Diagram and ZenUML should have different parsers but may lower into
 the same participant/message/lifeline IR.
 
+### Structural Groups
+
+Nested containers such as C4 boundaries are semantic structural groups, not
+ordinary nodes and not backend-specific paint primitives. A structural group
+records its parent group, while member nodes record their immediate group.
+Layout computes nested group bounds from child nodes and groups, then lowers
+the result through existing rectangle, stroke, and glyph PaintInstructions.
+This model is reusable for package boundaries, deployment nodes, clusters, and
+future diagram families with nested visual containment.
+
 ## Grammar Source Of Truth
 
 Shared grammar files live under:
