@@ -77,9 +77,12 @@ remaining script inventory with Persian ا: UT Austin Persian Online's opening
 freehand demonstration shows its isolated Naskh stem descending in one
 unbroken movement, and the path is fitted to the vendored Noto Naskh outline.
 HL-C09L verifies the adjacent Persian ب as a right-to-left Naskh bowl followed
-by one sourced lift and its separate dot. HL-C09M is the next bounded tranche,
-continuing to Persian پ in the same source family while establishing the
-evidenced grouping of its three dots rather than inferring it from the glyph.
+by one sourced lift and its separate dot. HL-C09M's source audit records that
+the intervening Persian-added پ is demonstrated at 00:16–00:21 but absent from
+the starter inventory and therefore outside HL-C09's fixed 228-entry count. It
+continues to the next actual prose entry, ت at 00:22–00:27: the same bowl, one
+lift to the left dot, then another to the right. HL-C09N next seeks the later س
+row in the same full-alphabet demonstration.
 The index audit found **2,075** canonical candidates across the corpus: **1,426**
 word and phrase lessons for English-first lookup, **136** dedicated grammar,
 writing, etymology, culture, and pronunciation lessons, **427** chapter
@@ -239,7 +242,7 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C06 | Complete (#10219) | Add the figure pipeline: SVG generation, `graphicx`, SVG→PDF in CI, and a `--check` hash gate. | A generated figure round-trips from canonical data into a compiled PDF and fails CI on drift, reusing `paint-vm-svg`'s `renderToSvgString`. |
 | HL-C07 | Complete (#9963) | Add the log-scanning warning gate with recorded per-track baselines. | Overfull/underfull boxes, missing glyphs, hyperref warnings, duplicate destinations, and font substitutions are machine-checked by `scan_latex_log_warnings.py` after the `latexmk` loop, against `core/latex-warning-baseline.json`. Baselines ship unseeded — `null` means unmeasured, never zero — so the gate reports today and fails the moment a seeded track regresses. The first CI run on main emits the real counts into the job summary for a human to paste back. |
 | HL-C08 | Complete (#9974) | Render the ductus in Language Ladder. | `penPathD`/`penTip` drive the tested SVG stroke build-up in the app; the currently authored ductus is shared with validation and script practice. |
-| HL-C09 | Queued — 13 of 228 verified | Expand `DUCTUS` to cover the ten scripts with prose stroke-order entries. | Add cited, font-checked ductus and verified pen-lift metadata for the remaining 215 entries measured by HL-C19; each passes the on-ink, join-tolerance, coverage, citation, and source-agreement invariants. |
+| HL-C09 | Queued — 14 of 228 verified | Expand `DUCTUS` to cover the ten scripts with prose stroke-order entries. | Add cited, font-checked ductus and verified pen-lift metadata for the remaining 214 entries measured by HL-C19; each passes the on-ink, join-tolerance, coverage, citation, and source-agreement invariants. |
 | HL-C09A | Complete (#10222) | Verify Tamil அ as the first post-HL-C19 expansion tranche, using the primer already cited for Tamil handwriting. | அ carries a source-aligned two-stroke path with exactly one lift; its five movements, learner prose, source metadata, font-outline geometry, and rendered filmstrip agree. |
 | HL-C09B | Complete (#10223) | Verify Tamil ஆ as the next source-backed expansion tranche from Frame 4 of the same primer. | ஆ carries a font-checked path for the அ body plus its long-vowel right-hand loop; its learner prose states every verified lift, and source, geometry, and filmstrip tests agree. |
 | HL-C09C | Complete (#10226) | Verify Tamil இ as Frame 4's third source-backed vowel tranche. | இ carries a seven-movement, font-checked path whose learner prose states each evidenced lift; the cited order, Noto outline geometry, source metadata, and real filmstrip agree. |
@@ -252,7 +255,8 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C09J | Complete (#10252) | Verify Tamil ந from Frame 12's source-backed dental-nasal row. | ந carries a six-movement, font-checked three-stroke path adapted to the vendored Noto form: its first three movements stay joined, one lift precedes the rising middle stem and top bar, and a second precedes the right-hand descent; source, geometry, prose, and filmstrip agree. |
 | HL-C09K | Complete (#10256) | Source and verify Persian ا as the first path in the smallest remaining script inventory. | UT Austin Persian Online's opening freehand demonstration supplies one top-to-bottom movement with zero lifts; the isolated Noto Naskh outline, learner prose, source timestamp and variation, downward path, and real one-frame filmstrip agree. |
 | HL-C09L | Complete (#10265) | Verify Persian ب from the source-adjacent freehand row. | The cited 00:11–00:15 demonstration supplies a right-to-left Naskh bowl followed by one lift and its separate dot; the isolated Noto outline, two learner movements, prose, source metadata, and real filmstrip agree. |
-| HL-C09M | Queued — next | Verify Persian پ from the next source-adjacent freehand row. | Preserve the right-to-left Naskh bowl and establish the evidenced pen-down grouping for its three dots, then keep the isolated Noto outline, learner prose, source timestamp, and real filmstrip in agreement. |
+| HL-C09M | Complete (#10271) | Correct the queue after checking the intervening Persian پ row, then verify the next starter entry, ت, from the same freehand source. | The audit records پ's 00:16–00:21 demonstration as deferred inventory work without changing HL-C09's denominator; ت uses a right-to-left Naskh bowl plus separately lifted left and right dots from 00:22–00:27, with the isolated Noto outline, three learner movements, prose, metadata, and filmstrip in agreement. |
+| HL-C09N | Queued — next | Locate and verify Persian س in the later row of the same full-alphabet demonstration. | Establish the evidenced grouping of its three teeth and final bowl before authoring anything; then keep the source timestamp, learner prose, pen lifts, isolated Noto outline, and real filmstrip in agreement. |
 | HL-C10 | Complete (#10010, #10013, #10067) | Complete A1 and add the A2-through-C2 spine tranches with all registered realization ledgers. | All seven declared stages carry nodes; every one of the 22 registered tracks has a non-drifting ledger entry for every node. |
 | HL-C11 | Queued — capability and closure coverage complete | Finish representative chapter payoffs across all 22 tracks. | #10128 brought all 513 chapters to an authored `canDo`, spine mapping, known payoff lesson, and closed assessment. Remediate the remaining 27 payoffs below the 0.5 representativeness floor across ten tracks, then enforce the clean tracks instead of leaving their gates report-only. |
 | HL-C12 | Queued — licensing decided, pipeline outstanding | Add the Class C illustration pipeline with provenance sidecars and a size budget. Licensing is settled and recorded in [`_assets/LICENSE.md`](./_assets/LICENSE.md); the remaining work is the pipeline itself. | Every asset carries `license`, `rightsAsserted`, `generator`, `model`, `prompt`, `date`, and `sha256`; CI fails any asset without a provenance sidecar or a recorded licence, and enforces the per-track size budget. |
@@ -2655,7 +2659,7 @@ problem.
   **61 glyph violations plus five multi-system Japanese openings**. The current
   corpus is 91% core-drivable, not the historical 84% recorded before later work.
 - HL-C19 supersedes HL-C09's old estimate. There are **228** prose stroke-order
-  entries across ten scripts: thirteen verified ductus paths and 215 entries still
+  entries across ten scripts: fourteen verified ductus paths and 214 entries still
   needing cited, font-checked pen-lift evidence.
 
 ## Findings from HL-C05
