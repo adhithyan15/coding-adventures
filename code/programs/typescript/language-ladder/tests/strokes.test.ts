@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseFont, boundsOf, type Contour } from "../src/truetype";
-import { SCRIPTS } from "../src/data";
+import { SCRIPTS, verifiedLetterFont } from "../src/data";
 import {
   DUCTUS,
   penPath,
@@ -313,6 +313,19 @@ describe("handwriting ductus", () => {
     expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
   });
 
+  it("Persian و joins its small head loop directly to the leftward tail", () => {
+    const waw = DUCTUS["و"];
+    expect(penLifts(waw)).toBe(0);
+    expect(waw.strokes).toHaveLength(1);
+    expect(waw.strokes[0].segments).toHaveLength(2);
+    const head = waw.strokes[0].segments[0].path;
+    const tail = waw.strokes[0].segments[1].path;
+    expect(Math.max(...head.map((point) => point.y))).toBeGreaterThan(
+      Math.max(...tail.map((point) => point.y)),
+    );
+    expect(tail[0].x).toBeGreaterThan(tail.at(-1)!.x);
+  });
+
   // The PROVENANCE GATE. A stroke's SHAPE is checked against the font above;
   // its ORDER cannot be — so it must trace to a cited source, or it does not
   // ship. This is the counterpart, for hand-authored order, of "facts enter
@@ -345,6 +358,16 @@ describe("handwriting ductus", () => {
         `${ductus.glyph} has a ductus but no verified prose claim`,
       ).toBe(true);
     }
+  });
+
+  it("routes each verified ductus to the owning script font", () => {
+    expect(verifiedLetterFont("ம", DUCTUS["ம"].source.url)).toBe(
+      "_fonts/NotoSansTamil-Static.ttf",
+    );
+    expect(verifiedLetterFont("و", DUCTUS["و"].source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
+    );
+    expect(verifiedLetterFont("و", "https://example.invalid/wrong-source")).toBeUndefined();
   });
 
   it("ம's stroke order traces to the UT Austin primer, and records Tamil's variation", () => {
@@ -471,6 +494,13 @@ describe("handwriting ductus", () => {
     expect(src.url).toContain("laits.utexas.edu/persian_grammar/video");
     expect(src.citation).toMatch(/Persian Online.*ن.*02:37–02:43/i);
     expect(src.variation).toMatch(/isolated.*right-to-left Naskh bowl.*one lift.*dot above.*Noto Naskh/i);
+  });
+
+  it("Persian و traces to the intervening continuous loop-and-tail demonstration", () => {
+    const src = DUCTUS["و"].source;
+    expect(src.url).toContain("laits.utexas.edu/persian_grammar/video");
+    expect(src.citation).toMatch(/Persian Online.*و.*02:43–02:45/i);
+    expect(src.variation).toMatch(/isolated.*continuous Naskh.*small head.*leftward curving tail.*no pen lift.*Noto Naskh/i);
   });
 });
 
