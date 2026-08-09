@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Validate and lower BJT model-card `NE` base-emitter leakage emission
+  coefficient.
 - Validate and lower BJT model-card `ISE` base-emitter leakage saturation
   current with `C2 * IS` fallback semantics.
 - Validate and lower BJT model-card `IKF` / `IK` forward beta roll-off

@@ -1331,6 +1331,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             Var=model.params.get("VAR", model.params.get("VB", 0.0)),
             Ikf=model.params.get("IKF", model.params.get("IK", 0.0)),
             Ise=base_emitter_leakage_current,
+            Ne=model.params.get("NE", 1.0),
         )
     if prefix == "J":
         _require_fields(fields, 5, "JFET")
@@ -2181,6 +2182,12 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             or base_emitter_leakage_current < 0.0
         ):
             raise NetlistParseError("BJT ISE must be finite and non-negative")
+        base_emitter_leakage_emission_coefficient = params.get("NE")
+        if base_emitter_leakage_emission_coefficient is not None and (
+            not math.isfinite(base_emitter_leakage_emission_coefficient)
+            or base_emitter_leakage_emission_coefficient <= 0.0
+        ):
+            raise NetlistParseError("BJT NE must be finite and positive")
     if kind in {"NJF", "PJF"}:
         gate_source_capacitance = params.get("CGS", params.get("CGS0"))
         if gate_source_capacitance is not None and (

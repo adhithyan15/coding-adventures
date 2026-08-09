@@ -1452,6 +1452,15 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("BJT ISE must be finite and non-negative");
   }
+  const bjtBaseEmitterLeakageEmissionCoefficient = params.get("NE");
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtBaseEmitterLeakageEmissionCoefficient !== undefined &&
+    (!Number.isFinite(bjtBaseEmitterLeakageEmissionCoefficient) ||
+      bjtBaseEmitterLeakageEmissionCoefficient <= 0.0)
+  ) {
+    throw new NetlistParseError("BJT NE must be finite and positive");
+  }
   const gateSourceCapacitance = params.get("CGS") ?? params.get("CGS0");
   if (
     (kind === "NJF" || kind === "PJF") &&
@@ -2179,6 +2188,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("VAR") ?? model.params.get("VB") ?? 0.0,
       model.params.get("IKF") ?? model.params.get("IK") ?? 0.0,
       baseEmitterLeakageCurrent,
+      model.params.get("NE") ?? 1.0,
     );
   }
   if (prefix === "J") {
