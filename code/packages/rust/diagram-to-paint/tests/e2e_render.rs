@@ -348,7 +348,7 @@ mod apple {
     #[test]
     fn render_mermaid_sequence_to_png() {
         let diagram = parse_sequence_diagram(
-            "sequenceDiagram\ntitle Native Mermaid sequence\nautonumber\nactor User\nparticipant API as Banking API\nparticipant DB as Ledger\nUser->>+API: Submit transfer\nAPI->>DB: Record transaction\nDB-->>API: Committed\nnote right of API: Metal paints this scene\nAPI-->>-User: Transfer complete",
+            "sequenceDiagram\ntitle Native Mermaid sequence\nautonumber\nactor User\nparticipant API as Banking API\nparticipant DB as Ledger\nalt Transfer accepted\nUser->>+API: Submit transfer\nloop Persist until committed\nAPI->>DB: Record transaction\nDB-->>API: Committed\nend\nnote right of API: Metal paints this scene\nAPI-->>-User: Transfer complete\nelse Transfer rejected\nAPI-->>User: Validation failed\nend",
         )
         .expect("Mermaid sequence parse failed");
         let layout = layout_sequence_diagram(&diagram);
@@ -381,6 +381,11 @@ mod apple {
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
             paint_instructions::PaintInstruction::Path(path) if path.stroke_dash.is_some()
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            paint_instructions::PaintInstruction::Rect(rect)
+                if rect.stroke.as_deref() == Some("#64748b")
         )));
     }
 }

@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.4.0";
+pub const VERSION: &str = "0.5.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -447,8 +447,8 @@ fn token_name(token: &Token) -> &str {
 use diagram_ir::{
     Axis, AxisKind, ChartDiagram, ChartKind, ChartOrientation, ChartSeries, Compartment,
     CompartmentKind, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType, GitDiagram,
-    GitEvent, PieSlice, RelKind, SankeyFlow, SankeyNode, SequenceArrowhead, SequenceDiagram,
-    SequenceEvent, SequenceLineStyle, SequenceNotePlacement, SequenceParticipant,
+    GitEvent, PieSlice, RelKind, SankeyFlow, SankeyNode, SequenceArrowhead, SequenceBlockKind,
+    SequenceDiagram, SequenceEvent, SequenceLineStyle, SequenceNotePlacement, SequenceParticipant,
     SequenceParticipantKind, SeriesKind, StructuralDiagram, StructuralGroup, StructuralKind,
     StructuralNode, StructuralNodeKind, StructuralRelationship, TaskStart, TaskStatus,
     TemporalBody, TemporalDiagram, TemporalKind,
@@ -1037,7 +1037,19 @@ pub fn parse_sequence_diagram(source: &str) -> Result<SequenceDiagram, ParseErro
     };
     let mut participant_indices: HashMap<String, usize> = HashMap::new();
 
-    while !cursor.at_eof() {
+    parse_sequence_body(&mut cursor, &mut diagram, &mut participant_indices, &[])?;
+
+    Ok(diagram)
+}
+
+fn parse_sequence_body(
+    cursor: &mut TokenCursor,
+    diagram: &mut SequenceDiagram,
+    participant_indices: &mut HashMap<String, usize>,
+    terminators: &[&str],
+) -> Result<(), ParseError> {
+    cursor.skip_terminators();
+    while !cursor.at_eof() && !terminators.contains(&cursor.current().value.as_str()) {
         match cursor.current().value.as_str() {
             "participant" | "actor" => {
                 let kind = if cursor.advance().value == "actor" {
@@ -1045,34 +1057,28 @@ pub fn parse_sequence_diagram(source: &str) -> Result<SequenceDiagram, ParseErro
                 } else {
                     SequenceParticipantKind::Participant
                 };
-                let id = take_sequence_identifier(&mut cursor)?;
+                let id = take_sequence_identifier(cursor)?;
                 let label = if cursor.current().value == "as" {
                     cursor.advance();
-                    take_sequence_line_text(&mut cursor)
+                    take_sequence_line_text(cursor)
                 } else {
                     id.clone()
                 };
-                upsert_sequence_participant(
-                    &mut diagram,
-                    &mut participant_indices,
-                    id,
-                    label,
-                    kind,
-                );
+                upsert_sequence_participant(diagram, participant_indices, id, label, kind);
             }
             "activate" | "deactivate" => {
                 let active = cursor.advance().value == "activate";
-                let participant = take_sequence_identifier(&mut cursor)?;
-                ensure_sequence_participant(&mut diagram, &mut participant_indices, &participant);
+                let participant = take_sequence_identifier(cursor)?;
+                ensure_sequence_participant(diagram, participant_indices, &participant);
                 diagram.events.push(SequenceEvent::Activation {
                     participant,
                     active,
                 });
             }
-            "note" => parse_sequence_note(&mut cursor, &mut diagram, &mut participant_indices)?,
+            "note" => parse_sequence_note(cursor, diagram, participant_indices)?,
             "title" => {
                 cursor.advance();
-                diagram.title = Some(take_sequence_line_text(&mut cursor));
+                diagram.title = Some(take_sequence_line_text(cursor));
             }
             "autonumber" => {
                 cursor.advance();
@@ -1081,12 +1087,75 @@ pub fn parse_sequence_diagram(source: &str) -> Result<SequenceDiagram, ParseErro
                     cursor.advance();
                 }
             }
-            _ => parse_sequence_message(&mut cursor, &mut diagram, &mut participant_indices)?,
+            "loop" | "rect" | "opt" | "alt" | "par" | "par_over" | "critical" | "break" => {
+                parse_sequence_control_block(cursor, diagram, participant_indices)?
+            }
+            _ => parse_sequence_message(cursor, diagram, participant_indices)?,
         }
         cursor.skip_terminators();
     }
+    Ok(())
+}
 
-    Ok(diagram)
+fn parse_sequence_control_block(
+    cursor: &mut TokenCursor,
+    diagram: &mut SequenceDiagram,
+    participant_indices: &mut HashMap<String, usize>,
+) -> Result<(), ParseError> {
+    let start = cursor.advance().clone();
+    let (kind, branch_keyword) = match start.value.as_str() {
+        "loop" => (SequenceBlockKind::Loop, None),
+        "rect" => (SequenceBlockKind::Rect, None),
+        "opt" => (SequenceBlockKind::Opt, None),
+        "alt" => (SequenceBlockKind::Alt, Some("else")),
+        "par" => (SequenceBlockKind::Par, Some("and")),
+        "par_over" => (SequenceBlockKind::ParOver, Some("and")),
+        "critical" => (SequenceBlockKind::Critical, Some("option")),
+        "break" => (SequenceBlockKind::Break, None),
+        other => {
+            return Err(token_error(
+                &start,
+                format!("unsupported sequence control block {other:?}"),
+            ))
+        }
+    };
+    let label = take_sequence_line_text(cursor);
+    diagram.events.push(SequenceEvent::BlockStart {
+        kind: kind.clone(),
+        label,
+    });
+    cursor.skip_terminators();
+
+    loop {
+        let terminators = match branch_keyword {
+            Some(branch) => vec![branch, "end"],
+            None => vec!["end"],
+        };
+        parse_sequence_body(cursor, diagram, participant_indices, &terminators)?;
+        if cursor.at_eof() {
+            return Err(token_error(
+                cursor.current(),
+                format!("unterminated {:?} sequence block", kind),
+            ));
+        }
+        if cursor.current().value == "end" {
+            cursor.advance();
+            diagram.events.push(SequenceEvent::BlockEnd { kind });
+            return Ok(());
+        }
+
+        let branch = cursor.advance().clone();
+        if Some(branch.value.as_str()) != branch_keyword {
+            return Err(token_error(
+                &branch,
+                format!("unexpected sequence block branch {:?}", branch.value),
+            ));
+        }
+        diagram.events.push(SequenceEvent::BlockBranch {
+            label: take_sequence_line_text(cursor),
+        });
+        cursor.skip_terminators();
+    }
 }
 
 fn parse_sequence_message(
@@ -2543,6 +2612,40 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
             _ => panic!("expected Sequence"),
         }
     }
+
+    #[test]
+    fn sequence_parses_nested_control_blocks_and_branches() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nalt Authorized\nAlice->>Bob: Submit\nloop Retry\nBob-->>Alice: Pending\nend\nelse Rejected\nBob-->>Alice: Denied\nend\n",
+        )
+        .unwrap();
+        assert!(matches!(
+            &diagram.events[0],
+            SequenceEvent::BlockStart { kind: SequenceBlockKind::Alt, label } if label == "Authorized"
+        ));
+        assert!(matches!(
+            &diagram.events[2],
+            SequenceEvent::BlockStart { kind: SequenceBlockKind::Loop, label } if label == "Retry"
+        ));
+        assert!(matches!(
+            &diagram.events[5],
+            SequenceEvent::BlockBranch { label } if label == "Rejected"
+        ));
+        assert!(matches!(
+            diagram.events.last(),
+            Some(SequenceEvent::BlockEnd {
+                kind: SequenceBlockKind::Alt
+            })
+        ));
+    }
+
+    #[test]
+    fn sequence_rejects_unterminated_control_block() {
+        let error = parse_sequence_diagram("sequenceDiagram\nopt Available\nA->>B: Ping\n")
+            .expect_err("unterminated opt must fail");
+        assert!(!error.message.is_empty());
+        assert!(error.line >= 2);
+    }
 }
 #[cfg(test)]
 mod tests {
@@ -2559,7 +2662,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.4.0");
+        assert_eq!(crate::VERSION, "0.5.0");
     }
 
     #[test]

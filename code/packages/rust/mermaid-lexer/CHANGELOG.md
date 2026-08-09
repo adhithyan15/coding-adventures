@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0
+
+- Added tokens for every Mermaid 11.16.1 sequence control block and branch separator.
+
 ## 0.3.0
 
 - Added a portable Mermaid 11.16.1 sequence token grammar and lexer entrypoint.

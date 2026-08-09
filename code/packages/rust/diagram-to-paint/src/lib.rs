@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.4.0";
+pub const VERSION: &str = "0.5.0";
 
 use std::collections::HashMap;
 
@@ -35,7 +35,8 @@ use diagram_ir::{
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
     LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation, Point, RelKind, SequenceArrowhead,
-    SequenceLineStyle, SequenceParticipantKind, TaskStatus, TextAlign as GeoTextAlign,
+    SequenceBlockKind, SequenceLineStyle, SequenceParticipantKind, TaskStatus,
+    TextAlign as GeoTextAlign,
 };
 use layout_ir::{Color, Content, FontSpec, PositionedNode, TextAlign, TextContent};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
@@ -1086,6 +1087,91 @@ where
         a: 255,
     };
 
+    // Block frames are backgrounds. Paint outer frames before nested frames
+    // regardless of the order in which their closing events were laid out.
+    let mut frames: Vec<&LayoutedSequenceItem> = diagram
+        .items
+        .iter()
+        .filter(|item| matches!(item, LayoutedSequenceItem::BlockFrame { .. }))
+        .collect();
+    frames.sort_by_key(|item| match item {
+        LayoutedSequenceItem::BlockFrame { depth, .. } => *depth,
+        _ => unreachable!(),
+    });
+    for frame in frames {
+        if let LayoutedSequenceItem::BlockFrame {
+            kind,
+            label,
+            x,
+            y,
+            width,
+            height,
+            ..
+        } = frame
+        {
+            let (fill, stroke) = sequence_block_colors(kind);
+            instructions.push(PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(),
+                x: *x,
+                y: *y,
+                width: *width,
+                height: *height,
+                fill: Some(fill.into()),
+                stroke: Some(stroke.into()),
+                stroke_width: Some(1.25),
+                corner_radius: Some(4.0),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }));
+            let frame_label = if label.is_empty() {
+                sequence_block_name(kind).to_string()
+            } else {
+                format!("{}  {label}", sequence_block_name(kind))
+            };
+            text_children.push(text_node(
+                &frame_label,
+                *x + 8.0,
+                *y + 6.0,
+                *width - 16.0,
+                20.0,
+                label_font.clone(),
+                text_color,
+            ));
+        }
+    }
+
+    for item in &diagram.items {
+        if let LayoutedSequenceItem::BlockDivider { label, x, y, width } = item {
+            instructions.push(PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: vec![
+                    PathCommand::MoveTo { x: *x, y: *y },
+                    PathCommand::LineTo {
+                        x: *x + *width,
+                        y: *y,
+                    },
+                ],
+                fill: None,
+                fill_rule: None,
+                stroke: Some("#64748b".into()),
+                stroke_width: Some(1.0),
+                stroke_cap: None,
+                stroke_join: None,
+                stroke_dash: Some(vec![4.0, 3.0]),
+                stroke_dash_offset: None,
+            }));
+            text_children.push(text_node(
+                label,
+                *x + 8.0,
+                *y + 5.0,
+                *width - 16.0,
+                20.0,
+                label_font.clone(),
+                text_color,
+            ));
+        }
+    }
+
     // Lifelines and messages sit behind activation bars, notes, and headers.
     for item in &diagram.items {
         match item {
@@ -1337,6 +1423,29 @@ where
         instructions,
         id: None,
         metadata: None,
+    }
+}
+
+fn sequence_block_name(kind: &SequenceBlockKind) -> &'static str {
+    match kind {
+        SequenceBlockKind::Loop => "loop",
+        SequenceBlockKind::Rect => "rect",
+        SequenceBlockKind::Opt => "opt",
+        SequenceBlockKind::Alt => "alt",
+        SequenceBlockKind::Par => "par",
+        SequenceBlockKind::ParOver => "par_over",
+        SequenceBlockKind::Critical => "critical",
+        SequenceBlockKind::Break => "break",
+    }
+}
+
+fn sequence_block_colors(kind: &SequenceBlockKind) -> (&'static str, &'static str) {
+    match kind {
+        SequenceBlockKind::Rect => ("#fff7ed", "#ea580c"),
+        SequenceBlockKind::Break => ("#fff1f2", "#e11d48"),
+        SequenceBlockKind::Critical => ("#fefce8", "#ca8a04"),
+        SequenceBlockKind::Par | SequenceBlockKind::ParOver => ("#f0fdfa", "#0f766e"),
+        _ => ("#f8fafc", "#64748b"),
     }
 }
 
@@ -2236,7 +2345,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.4.0");
+        assert_eq!(crate::VERSION, "0.5.0");
     }
 
     #[test]

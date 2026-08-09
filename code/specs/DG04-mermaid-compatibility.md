@@ -112,11 +112,14 @@ activation/deactivation, titles, and automatic numbering. It lowers through
 `diagram-layout-sequence` to existing path, rectangle, dashed-stroke, and glyph
 PaintInstructions and is exercised by a Mermaid-to-Metal-to-PNG fixture.
 
-The Mermaid 11.16.1 control blocks (`loop`, `opt`, `alt`, `par`, `critical`,
-`break`, and `rect`), participant creation/destruction and metadata, links, and
-advanced arrow variants remain compatibility work. The family remains partial
-until those forms and the pinned upstream corpus pass; unsupported forms must
-fail grammar validation rather than degrade silently.
+Nested Mermaid 11.16.1 control blocks (`loop`, `opt`, `alt`/`else`, `par`/`and`,
+`par_over`, `critical`/`option`, `break`, and `rect`) lower into ordered semantic
+block events. Sequence layout resolves those events into nested frames and
+branch dividers before existing PaintInstructions render them. Participant
+creation/destruction and metadata, links, and advanced arrow variants remain
+compatibility work. The family remains partial until those forms and the pinned
+upstream corpus pass; unsupported forms must fail grammar validation rather
+than degrade silently.
 
 ### Structural Groups
 

@@ -39,3 +39,15 @@ keywords:
   title
   autonumber
   off
+  loop
+  rect
+  opt
+  alt
+  else
+  par
+  par_over
+  and
+  critical
+  option
+  break
+  end

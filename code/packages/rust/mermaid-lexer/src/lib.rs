@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.3.0";
+pub const VERSION: &str = "0.4.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -111,7 +111,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.3.0");
+        assert_eq!(VERSION, "0.4.0");
     }
 
     #[test]
@@ -292,5 +292,21 @@ mod tests {
         assert!(values.contains(&"+"));
         assert!(values.contains(&"note"));
         assert!(values.contains(&"Ready"));
+    }
+
+    #[test]
+    fn tokenizes_sequence_control_blocks() {
+        let tokens = tokenize_mermaid_sequence(
+            "sequenceDiagram\nalt Ready\nA->>B: Go\nelse Waiting\nloop Retry\nB-->>A: Wait\nend\nend\n",
+        );
+        let values: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_ != TokenType::Eof)
+            .map(|token| token.value.as_str())
+            .collect();
+        assert!(values.contains(&"alt"));
+        assert!(values.contains(&"else"));
+        assert!(values.contains(&"loop"));
+        assert_eq!(values.iter().filter(|value| **value == "end").count(), 2);
     }
 }

@@ -6,6 +6,7 @@
   Apple end-to-end test.
 - Added sequence lowering for participant headers, lifelines, messages,
   arrowheads, notes, activation bars, and shaped labels, plus a Metal PNG test.
+- Added nested sequence frame and branch-divider lowering with visual Metal coverage.
 
 ## 0.1.2 — Fix text coordinate-space mismatch (text now inside nodes)
 
