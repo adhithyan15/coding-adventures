@@ -7,7 +7,7 @@
   "signature": "Curvy and loopy with flat top-bars on many letters, repeated arches, and no continuous head-line.",
   "complete": false,
   "combination": "A consonant carries an inherent 'a' (க = ka). A vowel sign replaces that vowel (க + ா → கா = kā). The puḷḷi ் — a DOT above the letter — removes the vowel entirely (க் = k). Unlike Devanagari, Tamil does NOT fuse the bare consonant into a conjunct: the dot stays visible and both letters keep their full shape. (A handful of Sanskrit-borrowed ligatures are the exception — க்ஷ kṣa and ஸ்ரீ śrī.)",
-  "notes": "Used by Tamil in this curriculum. The inventory below covers the greeting and self-introduction vocabulary of Chapters 1–2 and grows from there; it is deliberately not the full 247-character grid. Stroke orders are the common handwriting convention, not a standard — Tamil is taught with regional and school-to-school variation. IMPORTANT for authors: a `strokeOrder` list names the PARTS of a letter in writing order; it does NOT by itself say where the pen lifts. அ, ஆ, இ, க, ம, வ, ண, ன, ல, and ற have authored, font-checked pen paths (`DUCTUS` in language-ladder's `strokes.ts`). அ, ஆ, இ, ண, and ன each have two pen-down runs with one verified lift; ஆ continues from its upright into the long-vowel loop, இ joins its outer-left climb to the final arch, and ண and ன join their loop-and-arch bodies to the top bar before the separate right upright. க and ற each use three pen-down runs with two verified lifts. ம, வ, and ல are each a single unbroken stroke even though their parts have separate names. The remaining letter here has no verified pen path, so read its steps as part order only, and do not add or assume lifts until a cited ductus exists. Component descriptions name the pieces a learner can see in the vendored Noto Sans Tamil face; several letters share a straight top bar and are best learned as a family (ண/ன, ந, ற).",
+  "notes": "Used by Tamil in this curriculum. The inventory below covers the greeting and self-introduction vocabulary of Chapters 1–2 and grows from there; it is deliberately not the full 247-character grid. Stroke orders are the common handwriting convention, not a standard — Tamil is taught with regional and school-to-school variation. IMPORTANT for authors: a `strokeOrder` list names the PARTS of a letter in writing order; it does NOT by itself say where the pen lifts. All eleven letters in this starter inventory have authored, font-checked pen paths (`DUCTUS` in language-ladder's `strokes.ts`). அ, ஆ, இ, ண, and ன each have two pen-down runs with one verified lift; ஆ continues from its upright into the long-vowel loop, இ joins its outer-left climb to the final arch, and ண and ன join their loop-and-arch bodies to the top bar before the separate right upright. க, ந, and ற each use three pen-down runs with two verified lifts. ம, வ, and ல are each a single unbroken stroke even though their parts have separate names. There are no unverified letters in this starter inventory. Component descriptions name the pieces a learner can see in the vendored Noto Sans Tamil face; several letters share a straight top bar and are best learned as a family (ண/ன, ந, ற).",
   "letters": [
     {
       "glyph": "அ",
@@ -172,9 +172,22 @@
       "role": "consonant",
       "inherentVowel": "a",
       "components": ["a straight top bar", "a vertical on the left", "a second vertical in the middle", "a right stroke that curls below the baseline and sweeps left into a descender"],
-      "strokeOrder": ["top bar", "left vertical", "middle vertical", "right stroke, curl and sweep"],
-      "strokeOrderNote": "conventional",
-      "notes": "The dental n, tongue against the teeth. Contrast ன (alveolar) and ண (retroflex)."
+      "strokeOrder": [
+        "start at the lower-left tail and sweep around the low bowl to its upper junction",
+        "without lifting, climb to the top and carry left along the bar to the first descent",
+        "without lifting, draw the first upright straight down — then lift once",
+        "set the pen at the bottom of the adjacent middle upright and rise to the top",
+        "without lifting again, carry the top bar to the right edge — then lift a second time",
+        "set the pen at the upper right curve, descend around it and sweep left into the below-baseline tail — and only now lift"
+      ],
+      "strokeOrderNote": "three strokes — three joined opening movements, one lift, the joined middle rise and top bar, a second lift, then the right-hand descent and tail; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 12, ந",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 12, ந (Univ. of Texas at Austin), p. 195",
+        "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+        "variation": "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. Frame 12 uses a looped handwritten form; the vendored Noto face straightens that family resemblance into two stems and a curled right descent, so the evidenced order is adapted to the rendered outline without inventing lifts."
+      },
+      "notes": "The dental n, tongue against the teeth. Contrast ன (alveolar) and ண (retroflex). Frame 12 numbers six movements, not six strokes: the first three stay joined, one lift precedes the rising middle stem and top bar, and a second precedes the right-hand descent. The Noto-backed path keeps that order while honestly following the font's straighter typographic form."
     },
     {
       "glyph": "ன",

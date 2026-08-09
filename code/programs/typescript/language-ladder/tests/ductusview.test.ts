@@ -67,6 +67,8 @@ const NNA = DUCTUS["ன"];
 const nnaOutline = tamilOutline("ன");
 const RETROFLEX_NNA = DUCTUS["ண"];
 const retroflexNnaOutline = tamilOutline("ண");
+const DENTAL_NA = DUCTUS["ந"];
+const dentalNaOutline = tamilOutline("ந");
 
 /** Walk a node tree, collecting every node the predicate accepts. */
 function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = []): SvgNode[] {
@@ -78,7 +80,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds all ten authored Tamil letters", () => {
+  it("finds all eleven authored Tamil letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -89,12 +91,13 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("ற")?.glyph).toBe("ற");
     expect(ductusFor("ன")?.glyph).toBe("ன");
     expect(ductusFor("ண")?.glyph).toBe("ண");
+    expect(ductusFor("ந")?.glyph).toBe("ந");
   });
 
   it("returns undefined for a letter nobody has authored a stroke order for", () => {
-    // ந is a real Tamil letter with prose stroke order in the curriculum but no
-    // authored pen path. It must come back empty rather than borrow ம's.
-    expect(ductusFor("ந")).toBeUndefined();
+    // Persian ا has prose stroke order in the curriculum but no authored pen
+    // path yet. It must come back empty rather than borrow Tamil ம's.
+    expect(ductusFor("ا")).toBeUndefined();
     expect(ductusFor("A")).toBeUndefined();
     expect(ductusFor("")).toBeUndefined();
   });
@@ -515,6 +518,34 @@ describe("ண — a real cited two-stroke seven-movement filmstrip", () => {
     expect(done).toHaveLength(1);
     expect(done[0].attrs.d).toBe(penPathD(RETROFLEX_NNA.strokes[0], 1));
     expect(pen.attrs.d).toBe(penPathD(RETROFLEX_NNA.strokes[1], 1));
+  });
+});
+
+describe("ந — a real cited three-stroke six-movement filmstrip", () => {
+  const steps = ductusSteps(DENTAL_NA);
+  const strip = ductusFilmstrip(DENTAL_NA, dentalNaOutline);
+
+  it("marks the two source-backed lift transitions", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, true, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1, 1, 2]);
+  });
+
+  it("reports six movements in three strokes with two lifts", () => {
+    expect(strip.frames).toHaveLength(6);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 6 movements");
+  });
+
+  it("keeps both completed strokes visible during the right-hand descent", () => {
+    const last = strip.frames[5];
+    const done = byTag(last, "path").filter((path) => path.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
+    expect(done).toHaveLength(2);
+    expect(done.map((path) => path.attrs.d)).toEqual([
+      penPathD(DENTAL_NA.strokes[0], 1),
+      penPathD(DENTAL_NA.strokes[1], 1),
+    ]);
+    expect(pen.attrs.d).toBe(penPathD(DENTAL_NA.strokes[2], 1));
   });
 });
 

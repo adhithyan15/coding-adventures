@@ -75,6 +75,15 @@
 - Check all seven movements against the Noto Sans Tamil outline and pin the sole
   lift transition in the real filmstrip and learner prose.
 
+### Added — cited three-stroke ductus for Tamil ந (HL-C09J)
+
+- Add Frame 12's Tamil dental nasal, ந: three joined opening movements, one
+  verified lift before the joined middle rise and top bar, and a second before
+  the right-hand descent and below-baseline tail.
+- Adapt the primer's looped handwritten form to the vendored Noto outline and
+  pin all six movements, both lift transitions, and the source variation in
+  geometry, prose, and filmstrip tests.
+
 ### Added — canonical lesson figures
 
 - Preserve standalone Markdown images as typed lesson blocks instead of flattening

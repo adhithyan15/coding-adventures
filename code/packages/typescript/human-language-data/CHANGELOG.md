@@ -62,6 +62,13 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
   six movements, then one lift precedes the separate right upright, matching
   Language Ladder's font-checked path.
 
+### Added - verified Tamil ந handwriting
+
+- Record Frame 12's cited six-movement order for Tamil ந as three pen-down
+  runs adapted to the vendored Noto form: three opening movements stay joined,
+  one lift precedes the middle rise and top bar, and a second precedes the
+  right-hand descent and tail.
+
 ### Added - generated lesson figures
 
 - Generate deterministic etymology-route SVGs from the canonical lesson `roots`
