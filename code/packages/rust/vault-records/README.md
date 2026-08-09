@@ -84,13 +84,17 @@ Every type that carries secrets (`Login.password`, `Card.cvv`,
 `DatabaseCredential.password`) implements `Zeroize`. Higher layers
 wrap held records in `Zeroizing<T>`.
 
+Diagnostic formatting is closed and value-redacted. `Debug` for each typed
+record emits only its type name and `<redacted>`; `AnyRecord` retains only the
+variant name and the same marker. Opaque content types, opaque payload bytes,
+display metadata, and secret fields are never formatted.
+
 ## Errors are inert
 
-`VaultRecordError`'s `Display` strings come exclusively from
-literals in this crate. The `ContentTypeMismatch` variant
-deliberately suppresses the attacker-controlled `actual` content
-type from its Display output; callers that need it can match on
-the variant.
+`VaultRecordError`'s `Display` and `Debug` strings come exclusively from
+literals in this crate. The `ContentTypeMismatch` variant deliberately
+suppresses the attacker-controlled `actual` content type from both outputs;
+callers that need it can match on the variant.
 
 ## Where it fits
 

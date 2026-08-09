@@ -1244,10 +1244,10 @@ changelog, focused build, and downstream validation.
    including closure of VLT01's existing measured line-coverage gap against its
    declared 95% target (88.2% under Tarpaulin LLVM after the root-KEK seam),
    and fixed wire/GC bounds for accumulated observed-set tombstones and
-   operation IDs before domain state is decoded from persistent objects. The
-   review must also replace or contain VLT02's derived secret-bearing `Debug`
-   implementations, which can currently emit raw record fields if a caller
-   bypasses the VLT-PM03 redacted view API.
+   operation IDs before domain state is decoded from persistent objects.
+   VLT02's record, opaque-payload, and error diagnostics use closed redacted
+   `Debug` implementations, so callers that bypass VLT-PM03 views do not emit
+   raw record fields through ordinary diagnostic formatting.
 
 ### Phase 1A — local CLI
 

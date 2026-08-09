@@ -26,6 +26,9 @@
 //!       `Login`, `SecureNote`, `Card`, `TotpSeed`.
 //!     - **Machine-secret store** (HashiCorp Vault class):
 //!       `ApiKey`, `DatabaseCredential`.
+//! * Keep ordinary diagnostic formatting inert: typed records and
+//!   [`AnyRecord`] retain only their type or variant name plus a fixed
+//!   `<redacted>` marker, and [`VaultRecordError`] suppresses input values.
 //!
 //! Apps register custom types as they need.
 //!
@@ -142,7 +145,6 @@ pub trait VaultRecord: Sized {
 ///
 /// `Display` strings come from this crate's literals — never from
 /// the input bytes — to avoid log-injection from malicious payloads.
-#[derive(Debug)]
 pub enum VaultRecordError {
     /// Underlying canonical-CBOR codec failed.
     Cbor(CborError),
@@ -164,6 +166,19 @@ pub enum VaultRecordError {
         /// Static description of the violation, e.g. `"Login.username missing"`.
         what: &'static str,
     },
+}
+
+impl core::fmt::Debug for VaultRecordError {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        let variant = match self {
+            Self::Cbor(_) => "VaultRecordError::Cbor",
+            Self::NotARecord => "VaultRecordError::NotARecord",
+            Self::BadEnvelope => "VaultRecordError::BadEnvelope",
+            Self::ContentTypeMismatch { .. } => "VaultRecordError::ContentTypeMismatch",
+            Self::SchemaMismatch { .. } => "VaultRecordError::SchemaMismatch",
+        };
+        f.write_str(variant)
+    }
 }
 
 impl core::fmt::Display for VaultRecordError {
@@ -287,7 +302,7 @@ fn split_envelope(v: CborValue) -> Result<(String, CborValue), VaultRecordError>
 
 /// One of the known record types, or an opaque pass-through for
 /// content types this crate doesn't recognise.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq)]
 pub enum AnyRecord {
     /// `vault/login/v1`
     Login(Login),
@@ -311,6 +326,21 @@ pub enum AnyRecord {
         /// The canonical-CBOR-encoded payload bytes.
         payload_bytes: Vec<u8>,
     },
+}
+
+impl core::fmt::Debug for AnyRecord {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        let variant = match self {
+            Self::Login(_) => "AnyRecord::Login(<redacted>)",
+            Self::SecureNote(_) => "AnyRecord::SecureNote(<redacted>)",
+            Self::Card(_) => "AnyRecord::Card(<redacted>)",
+            Self::TotpSeed(_) => "AnyRecord::TotpSeed(<redacted>)",
+            Self::ApiKey(_) => "AnyRecord::ApiKey(<redacted>)",
+            Self::DatabaseCredential(_) => "AnyRecord::DatabaseCredential(<redacted>)",
+            Self::Opaque { .. } => "AnyRecord::Opaque(<redacted>)",
+        };
+        f.write_str(variant)
+    }
 }
 
 /// Known high-level record kind without carrying record values.
@@ -581,7 +611,7 @@ pub fn encode_opaque(
 /// A login (username + password + URLs) in the password-manager use
 /// case. Reference shape: Bitwarden's `Login` / 1Password's
 /// `LoginItem`.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq)]
 pub struct Login {
     /// Display title for the entry.
     pub title: String,
@@ -676,7 +706,7 @@ impl VaultRecord for Login {
 }
 
 /// A free-form encrypted note.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq)]
 pub struct SecureNote {
     /// Display title.
     pub title: String,
@@ -720,7 +750,7 @@ impl VaultRecord for SecureNote {
 }
 
 /// A credit-card / payment-method record.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq)]
 pub struct Card {
     /// Display title (e.g. "Personal Visa").
     pub title: String,
@@ -818,7 +848,7 @@ impl VaultRecord for Card {
 /// A TOTP / HOTP seed (the shared secret an authenticator app stores
 /// for one account). Useful when the vault is also acting as the
 /// user's authenticator.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq)]
 pub struct TotpSeed {
     /// Display label (e.g. "GitHub : ada@example.com").
     pub label: String,
@@ -909,7 +939,7 @@ impl VaultRecord for TotpSeed {
 }
 
 /// An API key — the machine-secret-store equivalent of `Login`.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq)]
 pub struct ApiKey {
     /// Display label.
     pub label: String,
@@ -1007,7 +1037,7 @@ impl VaultRecord for ApiKey {
 /// metadata. Often a *dynamic* credential issued by VLT08; the
 /// record schema is identical whether the credential is static or
 /// dynamic.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq)]
 pub struct DatabaseCredential {
     /// Display label.
     pub label: String,
@@ -1120,6 +1150,30 @@ impl VaultRecord for DatabaseCredential {
         })
     }
 }
+
+macro_rules! impl_redacted_record_debug {
+    ($($record:ident),+ $(,)?) => {
+        $(
+            impl core::fmt::Debug for $record {
+                fn fmt(
+                    &self,
+                    f: &mut core::fmt::Formatter<'_>,
+                ) -> core::fmt::Result {
+                    f.write_str(concat!(stringify!($record), "(<redacted>)"))
+                }
+            }
+        )+
+    };
+}
+
+impl_redacted_record_debug!(
+    Login,
+    SecureNote,
+    Card,
+    TotpSeed,
+    ApiKey,
+    DatabaseCredential
+);
 
 // ─────────────────────────────────────────────────────────────────────
 // 5. Map-walking helpers
@@ -1335,6 +1389,68 @@ mod tests {
         SecureNote {
             title: "WiFi password".into(),
             body: "SSID: HomeNet\nKey: hunter2".into(),
+        }
+    }
+
+    #[test]
+    fn record_debug_is_value_redacted() {
+        let cases = [
+            (format!("{:?}", sample_login()), "Login(<redacted>)"),
+            (format!("{:?}", sample_note()), "SecureNote(<redacted>)"),
+            (format!("{:?}", sample_card()), "Card(<redacted>)"),
+            (format!("{:?}", sample_totp()), "TotpSeed(<redacted>)"),
+            (format!("{:?}", sample_api_key()), "ApiKey(<redacted>)"),
+            (
+                format!("{:?}", sample_db()),
+                "DatabaseCredential(<redacted>)",
+            ),
+        ];
+
+        for (actual, expected) in cases {
+            assert_eq!(actual, expected);
+        }
+        assert_eq!(format!("{:#?}", sample_login()), "Login(<redacted>)");
+    }
+
+    #[test]
+    fn any_record_debug_is_value_redacted() {
+        let cases = [
+            (
+                AnyRecord::Login(sample_login()),
+                "AnyRecord::Login(<redacted>)",
+            ),
+            (
+                AnyRecord::SecureNote(sample_note()),
+                "AnyRecord::SecureNote(<redacted>)",
+            ),
+            (
+                AnyRecord::Card(sample_card()),
+                "AnyRecord::Card(<redacted>)",
+            ),
+            (
+                AnyRecord::TotpSeed(sample_totp()),
+                "AnyRecord::TotpSeed(<redacted>)",
+            ),
+            (
+                AnyRecord::ApiKey(sample_api_key()),
+                "AnyRecord::ApiKey(<redacted>)",
+            ),
+            (
+                AnyRecord::DatabaseCredential(sample_db()),
+                "AnyRecord::DatabaseCredential(<redacted>)",
+            ),
+            (
+                AnyRecord::Opaque {
+                    content_type: "vault/private-token/v1".into(),
+                    payload_bytes: b"raw opaque secret".to_vec(),
+                },
+                "AnyRecord::Opaque(<redacted>)",
+            ),
+        ];
+
+        for (record, expected) in cases {
+            assert_eq!(format!("{record:?}"), expected);
+            assert_eq!(format!("{record:#?}"), expected);
         }
     }
 
@@ -1762,6 +1878,39 @@ mod tests {
             if let VaultRecordError::ContentTypeMismatch { .. } = e {
                 assert!(!s.contains("ATTACKER"));
             }
+        }
+    }
+
+    #[test]
+    fn error_debug_strings_are_static() {
+        let cases = [
+            (
+                VaultRecordError::Cbor(CborError::UnexpectedEof),
+                "VaultRecordError::Cbor",
+            ),
+            (VaultRecordError::NotARecord, "VaultRecordError::NotARecord"),
+            (
+                VaultRecordError::BadEnvelope,
+                "VaultRecordError::BadEnvelope",
+            ),
+            (
+                VaultRecordError::ContentTypeMismatch {
+                    expected: LOGIN_V1,
+                    actual: "ATTACKER-CONTROLLED-CONTENT-TYPE".into(),
+                },
+                "VaultRecordError::ContentTypeMismatch",
+            ),
+            (
+                VaultRecordError::SchemaMismatch {
+                    what: "static schema detail",
+                },
+                "VaultRecordError::SchemaMismatch",
+            ),
+        ];
+
+        for (error, expected) in cases {
+            assert_eq!(format!("{error:?}"), expected);
+            assert_eq!(format!("{error:#?}"), expected);
         }
     }
 }

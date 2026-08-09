@@ -14,6 +14,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   record family, secret-field counts, optional/list shape, lease/expiry flags,
   and opaque content/payload lengths.
 
+### Security
+
+- Replaced derived `Debug` on all secret-bearing record types and `AnyRecord`
+  with closed value-redacted implementations. Opaque content types and payload
+  bytes are also suppressed.
+- Added a closed `VaultRecordError::Debug` implementation so diagnostic and
+  assertion formatting cannot emit attacker-controlled content types.
+
 ## [0.1.0] — 2026-05-04
 
 ### Added
