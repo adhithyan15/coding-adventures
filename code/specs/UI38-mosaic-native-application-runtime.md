@@ -310,12 +310,14 @@ unblocks multiple downstream targets; never count source generation as completio
   collision-safe generated member names, while Flutter still needs boolean
   truthiness lowering and required input values. Qt's plain multiline `Input`
   lowering and fixed-dimension wrapper deduplication are complete, and the complete
-  TaskApp now passes Qt's QML compiler, AUTOMOC, C++ compiler, and linker. Its first
-  headless launch reaches the QML engine but fails because fractional MSL font size
-  `10.5` lowers to `font.pixelSize: 10.5`, while Qt requires that property to be an
-  integer; make fractional font sizing type-correct before the Qt launch gate can
-  pass. Standalone Qt package compilation also needs collision-safe signal names:
-  Notes' `onDelete` currently lowers to QML's reserved `signal delete()` identifier,
+  TaskApp now passes Qt's QML compiler, AUTOMOC, C++ compiler, and linker. Fractional
+  font sizing is type-correct and the app remains running in a headless launch.
+  That launch is not diagnostic-clean yet: styled `HostButton` backgrounds produce
+  repeated warnings and ignored paint because Qt's native macOS Controls style does
+  not support background customization. Choose a customization-capable Controls
+  style or preserve native button paint before the clean-launch gate passes.
+  Standalone Qt package compilation also needs collision-safe signal names: Notes'
+  `onDelete` currently lowers to QML's reserved `signal delete()` identifier,
   although the composed TaskApp's namespaced `onDeleteNote` avoids that collision.
 
 ### P1 — reusable application vocabulary
