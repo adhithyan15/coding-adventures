@@ -134,8 +134,9 @@ The package exposes:
 
 - validated `ProcessSupervisorConfig` and `HostProgram` values;
 - `MonotonicClock` and `SessionIdSource` interfaces plus production adapters;
-- `HostLaunchBindingProvider` plus a fail-closed provider for compositions that
-  have not connected durable pipeline wiring;
+- `HostLaunchBindingProvider`, a production storage-backed provider that
+  revalidates durable pipeline authority before every launch, and a fail-closed
+  provider for compositions without pipeline wiring;
 - owned, movable `ProcessHostSupervisor`, implementing the reconciler
   `HostSupervisor` trait;
 - `ChildProcessControl<R, W>` for lifecycle plus serialized authenticated
@@ -149,7 +150,9 @@ The package exposes:
 The concrete adapter requires direct filesystem/package-read, process
 spawn/kill/reap, pipe I/O, clock, randomness, and thread capabilities. It opens
 no network sockets, reads no ambient environment variables, invokes no shell,
-and persists no state.
+and persists no state itself. The production launch-binding adapter reads the
+repository `StorageBackend`; the dedicated pipeline-binding package owns that
+bounded persistence contract.
 
 ## Required Tests
 

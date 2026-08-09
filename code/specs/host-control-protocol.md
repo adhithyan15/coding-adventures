@@ -49,6 +49,13 @@ verified child must require the exact signed name and direction sets and must
 reject missing, extra, or wrong-direction bindings before readiness. The parent
 never learns the signed manifest from this comparison.
 
+The production provider reads a bounded versioned host-binding record tied to
+the exact durable registration. Wiring creates immutable channel-to-pipeline
+claims and verifies current one-way membership before storing the record.
+Launch resolution repeats registration, claim, active-lifecycle, and directional
+membership checks, so package replacement, channel destruction, topology drift,
+or cross-pipeline reuse fails before process creation.
+
 The timestamp attached to a received child event is not sent by the child. It is a
 caller-supplied monotonic receipt time sampled by the supervising process after the
 encrypted frame is received. This prevents a compromised child from forging a

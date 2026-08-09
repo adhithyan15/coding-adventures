@@ -201,6 +201,13 @@ record from manifest-blind pipeline wiring. It requires the exact signed channel
 name and read/write sets, resolves them to canonical UUID-v7 endpoints, and binds
 the supplied model selector, temperature, and token cap. Missing, extra,
 wrong-direction, or runtime-incompatible bindings fail closed.
+Pipeline wiring persists this authority as a bounded versioned record tied to
+the exact durable host registration and package hash. Every channel UUID receives
+an immutable create-if-absent pipeline claim. Wiring and each later launch both
+reload the authoritative active channel definition and require the pipeline's
+agent identity to be the originator for writes or a receiver for reads. Claims
+survive unwiring and destroyed channel UUIDs are never recycled, preventing
+partial failures or stale records from creating a cross-pipeline path.
 
 ### Level 4 any-language stdio contract
 

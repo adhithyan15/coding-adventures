@@ -1,0 +1,17 @@
+[package]
+name = "chief-of-staff-pipeline-bindings"
+version = "0.1.0"
+edition = "2021"
+description = "Durable authorized pipeline launch bindings for D18 Chief hosts"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
+chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }
+chief-of-staff-host-control-protocol = { path = "../chief-of-staff-host-control-protocol" }
+chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
+coding-adventures-json-value = { path = "../json-value" }
+storage-core = { path = "../storage-core" }
+
+[dev-dependencies]
+storage-local-folder = { path = "../storage-local-folder" }

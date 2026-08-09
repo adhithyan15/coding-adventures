@@ -26,8 +26,10 @@ threaded control plane without copying secret key material.
 The crate implements the dependency-light service reconciler's
 `HostSupervisor` interface. It deliberately leaves durable restart policy,
 scheduling, backoff, and registry updates to the reconciler and runnable
-orchestrator. A fail-closed binding provider is available to compositions that do
-not yet have durable pipeline wiring; such a composition cannot launch a host.
+orchestrator. The production storage-backed provider revalidates exact host
+registration, immutable pipeline channel claims, active topology, and directional
+membership before every spawn. A fail-closed provider remains available to
+compositions that intentionally have no durable pipeline wiring.
 Channel endpoint and LLM service implementations remain injected by
 the concrete host/daemon composition rather than entering this process-authority
 crate.
