@@ -3992,6 +3992,7 @@ fn emit_main_window_cs(
 
 fn build_optional_host_helpers(name: &str, namespace: &str) -> String {
     let host_type = escape_csharp_string(&format!("{namespace}.MosaicHost"));
+    let runtime_type = escape_csharp_string(&format!("{namespace}.MosaicRuntimeHost"));
     format!(
         "private string? TryApplyMosaicHostProps({name} component)\n    \
          {{\n        \
@@ -4108,6 +4109,11 @@ fn build_optional_host_helpers(name: &str, namespace: &str) -> String {
          \n    \
          private static System.Type? FindMosaicHostType()\n    \
          {{\n        \
+             var runtimeType = System.Type.GetType(\"{runtime_type}\");\n        \
+             var available = runtimeType?.GetProperty(\n            \
+                 \"IsAvailable\",\n            \
+                 System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)?.GetValue(null);\n        \
+             if (available is true) {{ return runtimeType; }}\n        \
              return System.Type.GetType(\"{host_type}\");\n    \
          }}\n\
          \n    \
@@ -4115,12 +4121,24 @@ fn build_optional_host_helpers(name: &str, namespace: &str) -> String {
          {{\n        \
              var hostType = FindMosaicHostType();\n        \
              if (hostType is null) {{ return null; }}\n        \
-             return hostType.GetMethod(\n            \
-                 methodName,\n            \
-                 System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static,\n            \
-                 binder: null,\n            \
-                 types: parameterTypes,\n            \
-                 modifiers: null);\n    \
+             foreach (var method in hostType.GetMethods(\n            \
+                 System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static))\n        \
+             {{\n            \
+                 if (method.Name != methodName) {{ continue; }}\n            \
+                 var parameters = method.GetParameters();\n            \
+                 if (parameters.Length != parameterTypes.Length) {{ continue; }}\n            \
+                 var matches = true;\n            \
+                 for (var index = 0; index < parameters.Length; index++)\n            \
+                 {{\n                \
+                     if (!parameters[index].ParameterType.IsAssignableFrom(parameterTypes[index]))\n                \
+                     {{\n                    \
+                         matches = false;\n                    \
+                         break;\n                \
+                     }}\n            \
+                 }}\n            \
+                 if (matches) {{ return method; }}\n        \
+             }}\n        \
+             return null;\n    \
          }}\n\
          \n    \
          private static System.Reflection.MethodInfo? FindMosaicHostIntentMethod(\n        \
@@ -9594,6 +9612,13 @@ mod tests {
         assert!(p.main_window_cs.contains("TryHandleMosaicHostIntent"));
         assert!(p.main_window_cs.contains("UnwrapMosaicHostResultAsync"));
         assert!(p.main_window_cs.contains("HandleHostIntent"));
+        assert!(p
+            .main_window_cs
+            .contains("Mosaic.Generated.MosaicRuntimeHost"));
+        assert!(p.main_window_cs.contains("\"IsAvailable\""));
+        assert!(p
+            .main_window_cs
+            .contains("ParameterType.IsAssignableFrom(parameterTypes[index])"));
         assert!(p.main_window_cs.contains("Mosaic.Generated.MosaicHost"));
         // MainWindow constructor pre-populates the Greeting slot stub.
         assert!(p.main_window_cs.contains("Greeting"));

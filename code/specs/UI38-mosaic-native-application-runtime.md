@@ -296,7 +296,8 @@ unblocks multiple downstream targets; never count source generation as completio
 - [ ] Generate package-independent bindings for the five native backend families.
   - [x] Compose/JVM through the standard JNA binding.
   - [x] SwiftUI through the standard Foundation/C dynamic binding.
-  - [ ] XAML, Qt/QML, and Flutter.
+  - [x] XAML through the standard .NET native binding.
+  - [ ] Qt/QML and Flutter.
 - [ ] Generate standard effect hosts, beginning with storage and lifecycle.
 - [ ] Add `native-complete` capability/degradation analysis to the compiler.
 - [ ] Add launch-and-dispatch conformance fixtures for every native backend.

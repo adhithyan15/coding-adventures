@@ -1122,6 +1122,16 @@ fn emit_project_shell(
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
             if let Some(proj) = r.project {
+                let runtime_binding =
+                    mosaic_app_bindings::xaml_runtime_binding(&xaml_opts.namespace);
+                let readme = format!(
+                    "{}\n## Rust application runtime\n\nThis project includes Mosaic's standard .NET binding. Set \
+                     `MOSAIC_APP_LIBRARY` to the Rust application DLL path, or place \
+                     `mosaic_app.dll` beside the project before building. The generated host \
+                     owns the application handle, event sequence, snapshots, returned buffers, \
+                     and teardown.\n",
+                    proj.readme
+                );
                 let flat: Vec<(String, &str)> = vec![
                     (format!("{component}.csproj"), &proj.csproj),
                     ("App.xaml".to_string(), &proj.app_xaml),
@@ -1130,7 +1140,8 @@ fn emit_project_shell(
                     ("MainWindow.xaml.cs".to_string(), &proj.main_window_cs),
                     ("app.manifest".to_string(), &proj.package_manifest),
                     ("build.ps1".to_string(), &proj.build_script),
-                    ("README.md".to_string(), &proj.readme),
+                    ("README.md".to_string(), &readme),
+                    ("MosaicRuntimeHost.cs".to_string(), &runtime_binding),
                 ];
                 for (rel, body) in flat {
                     let p = backend_dir.join(rel);
@@ -4384,6 +4395,7 @@ version = "1"
                     "app.manifest",
                     "build.ps1",
                     "README.md",
+                    "MosaicRuntimeHost.cs",
                 ],
             ),
         ] {
@@ -4772,6 +4784,19 @@ version = "1"
         assert!(dir.join("Grid.csproj").exists());
         assert!(dir.join("App.xaml").exists());
         assert!(dir.join("MainWindow.xaml").exists());
+        let main_window =
+            fs::read_to_string(dir.join("MainWindow.xaml.cs")).expect("MainWindow.xaml.cs");
+        assert!(main_window.contains("Mosaic.Generated.MosaicRuntimeHost"));
+        assert!(main_window.contains("\"IsAvailable\""));
+        let runtime =
+            fs::read_to_string(dir.join("MosaicRuntimeHost.cs")).expect("MosaicRuntimeHost.cs");
+        assert!(runtime.contains("public static class MosaicRuntimeHost"));
+        assert!(runtime.contains("NativeLibrary.TryLoad"));
+        assert!(runtime.contains("mosaic_app_create"));
+        assert!(runtime.contains("mosaic_app_dispatch"));
+        assert!(runtime.contains("finally { bufferFree(buffer); }"));
+        let readme = fs::read_to_string(dir.join("README.md")).expect("README.md");
+        assert!(readme.contains("MOSAIC_APP_LIBRARY"));
     }
 
     /// §3.1 Reproducible: two emit_project builds against the same

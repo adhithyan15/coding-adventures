@@ -48,6 +48,10 @@ a tiny C dynamic-loader target. Set `MOSAIC_APP_LIBRARY` to the application
 `cdylib` path (or package it as `libmosaic_app.dylib`); the generated host owns
 the Rust handle, buffers, sequence, snapshots, and updates before falling back
 to the legacy reflection hook in permissive builds.
+XAML project shells install a standard .NET host that uses built-in native
+loading and JSON APIs. The generated window prefers that runtime when its DLL is
+available, then retains the app-owned reflection host only as a permissive
+compatibility fallback.
 
 Packages may declare optional `[host_assets]` file copies in
 `mosaic-package.toml`. Matching backend assets are copied from package-relative
