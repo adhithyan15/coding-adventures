@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add D23-authorized, revision-guarded pairing completion that persists a
+  candidate runtime before swapping live state and reports the prior opaque
+  Vault reference for explicit credential replacement cleanup.
 - Add revision-guarded retained identity migration that persists a complete
   migrated candidate before swapping the caller's live runtime.
 - Reject automation definitions and execution state that still contain an
