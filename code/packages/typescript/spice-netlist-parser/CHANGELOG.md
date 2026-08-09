@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Normalize the `NJ` model type alias to canonical `NJF` cards.
 - Normalize the `NJFET` model type alias to canonical `NJF` cards.
 - Normalize the `DIODE` model type alias to canonical `D` cards.
 - Validate finite, non-negative MOS Level-1 model-card `CGBO` values.

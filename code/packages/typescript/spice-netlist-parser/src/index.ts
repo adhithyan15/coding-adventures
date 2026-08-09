@@ -1149,7 +1149,8 @@ function parseModelCard(fields: readonly string[]): ModelCard {
     paramsText = paramsText.slice(1, -1);
   }
   const rawKind = match[1].toUpperCase();
-  const kind = rawKind === "DIODE" ? "D" : rawKind === "NJFET" ? "NJF" : rawKind;
+  const kind =
+    rawKind === "DIODE" ? "D" : rawKind === "NJFET" || rawKind === "NJ" ? "NJF" : rawKind;
   const params = parseModelParams(paramsText);
   const diodeSaturationCurrent = params.get("IS") ?? params.get("JS");
   if (

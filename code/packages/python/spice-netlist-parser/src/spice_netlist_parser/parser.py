@@ -1988,7 +1988,7 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             params_text = params_text[1:-1]
     if kind == "DIODE":
         kind = "D"
-    elif kind == "NJFET":
+    elif kind in {"NJFET", "NJ"}:
         kind = "NJF"
     params = _parse_model_params(params_text)
     if kind == "D":
