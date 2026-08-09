@@ -7,11 +7,12 @@
 //! polyline paths for all relationships.
 
 use diagram_ir::{
-    LayoutedCompartment, LayoutedStructuralDiagram,
+    LayoutedCompartment, LayoutedStructuralDiagram, LayoutedStructuralGroup,
     LayoutedStructuralNode, LayoutedStructuralRelationship, Point, StructuralDiagram, StructuralNode,
 };
+use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H:   f64 = 40.0;
@@ -20,15 +21,18 @@ const COMP_PAD:   f64 = 8.0;
 const COL_GAP:    f64 = 80.0;
 const ROW_GAP:    f64 = 60.0;
 const COLS:       usize = 3;
+const GROUP_PAD:  f64 = 24.0;
+const GROUP_HEADER_H: f64 = 32.0;
 
 /// Lay out a `StructuralDiagram` using a simple grid arrangement.
 pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructuralDiagram {
-    let nodes = layout_nodes(&diagram.nodes);
-    let canvas_w = canvas_width(&nodes);
-    let canvas_h = canvas_height(&nodes);
+    let nodes = layout_nodes(&diagram.nodes, &diagram.groups);
+    let groups = layout_groups(diagram, &nodes);
+    let canvas_w = canvas_width(&nodes, &groups);
+    let canvas_h = canvas_height(&nodes, &groups);
     let rels = layout_relationships(diagram, &nodes);
     LayoutedStructuralDiagram {
-        width: canvas_w, height: canvas_h, nodes, relationships: rels,
+        width: canvas_w, height: canvas_h, groups, nodes, relationships: rels,
     }
 }
 
@@ -51,7 +55,10 @@ fn node_height(node: &StructuralNode) -> f64 {
     h
 }
 
-fn layout_nodes(nodes: &[StructuralNode]) -> Vec<LayoutedStructuralNode> {
+fn layout_nodes(
+    nodes: &[StructuralNode],
+    groups: &[diagram_ir::StructuralGroup],
+) -> Vec<LayoutedStructuralNode> {
     let mut out: Vec<LayoutedStructuralNode> = Vec::with_capacity(nodes.len());
     // Track max height per row so rows don't overlap.
     let mut row_y: Vec<f64> = vec![COMP_PAD];
@@ -66,7 +73,8 @@ fn layout_nodes(nodes: &[StructuralNode]) -> Vec<LayoutedStructuralNode> {
         while row_y.len() <= row { row_y.push(*row_y.last().unwrap_or(&COMP_PAD)); }
 
         let x = COMP_PAD + col as f64 * (MIN_NODE_W + COL_GAP);
-        let y = row_y[row];
+        let y = row_y[row]
+            + group_depth(node.parent_group.as_deref(), groups) as f64 * GROUP_HEADER_H;
 
         // Update the starting y for the next row.
         let next_row_y = y + nh + ROW_GAP;
@@ -99,16 +107,135 @@ fn layout_nodes(nodes: &[StructuralNode]) -> Vec<LayoutedStructuralNode> {
     out
 }
 
-fn canvas_width(nodes: &[LayoutedStructuralNode]) -> f64 {
+fn group_depth(
+    parent_group: Option<&str>,
+    groups: &[diagram_ir::StructuralGroup],
+) -> usize {
+    let mut depth = 0;
+    let mut current = parent_group;
+    let mut visited = HashSet::new();
+    while let Some(group_id) = current {
+        if !visited.insert(group_id) {
+            break;
+        }
+        depth += 1;
+        current = groups
+            .iter()
+            .find(|group| group.id == group_id)
+            .and_then(|group| group.parent_group.as_deref());
+    }
+    depth
+}
+
+fn canvas_width(nodes: &[LayoutedStructuralNode], groups: &[LayoutedStructuralGroup]) -> f64 {
     nodes.iter()
         .map(|n| n.x + n.width + COMP_PAD)
+        .chain(groups.iter().map(|g| g.x + g.width + COMP_PAD))
         .fold(200.0_f64, f64::max)
 }
 
-fn canvas_height(nodes: &[LayoutedStructuralNode]) -> f64 {
+fn canvas_height(nodes: &[LayoutedStructuralNode], groups: &[LayoutedStructuralGroup]) -> f64 {
     nodes.iter()
         .map(|n| n.y + n.height + COMP_PAD)
+        .chain(groups.iter().map(|g| g.y + g.height + COMP_PAD))
         .fold(100.0_f64, f64::max)
+}
+
+fn layout_groups(
+    diagram: &StructuralDiagram,
+    nodes: &[LayoutedStructuralNode],
+) -> Vec<LayoutedStructuralGroup> {
+    let mut cache: HashMap<String, (f64, f64, f64, f64)> = HashMap::new();
+    let mut visiting = HashSet::new();
+
+    for group in &diagram.groups {
+        group_bounds(&group.id, diagram, nodes, &mut cache, &mut visiting);
+    }
+
+    let mut groups: Vec<LayoutedStructuralGroup> = diagram
+        .groups
+        .iter()
+        .filter_map(|group| {
+            let (x, y, max_x, max_y) = cache.get(&group.id).copied()?;
+            Some(LayoutedStructuralGroup {
+                id: group.id.clone(),
+                x,
+                y,
+                width: max_x - x,
+                height: max_y - y,
+                label: group.label.clone(),
+                stereotype: group.stereotype.clone(),
+                parent_group: group.parent_group.clone(),
+            })
+        })
+        .collect();
+    groups.sort_by(|a, b| {
+        (b.width * b.height)
+            .partial_cmp(&(a.width * a.height))
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
+    groups
+}
+
+fn group_bounds(
+    group_id: &str,
+    diagram: &StructuralDiagram,
+    nodes: &[LayoutedStructuralNode],
+    cache: &mut HashMap<String, (f64, f64, f64, f64)>,
+    visiting: &mut HashSet<String>,
+) -> Option<(f64, f64, f64, f64)> {
+    if let Some(bounds) = cache.get(group_id).copied() {
+        return Some(bounds);
+    }
+    if !visiting.insert(group_id.to_string()) {
+        return None;
+    }
+
+    let mut children: Vec<(f64, f64, f64, f64)> = diagram
+        .nodes
+        .iter()
+        .filter(|node| node.parent_group.as_deref() == Some(group_id))
+        .filter_map(|node| {
+            nodes
+                .iter()
+                .find(|layouted| layouted.id == node.id)
+                .map(|layouted| {
+                    (
+                        layouted.x,
+                        layouted.y,
+                        layouted.x + layouted.width,
+                        layouted.y + layouted.height,
+                    )
+                })
+        })
+        .collect();
+
+    for child in diagram
+        .groups
+        .iter()
+        .filter(|group| group.parent_group.as_deref() == Some(group_id))
+    {
+        if let Some(bounds) = group_bounds(&child.id, diagram, nodes, cache, visiting) {
+            children.push(bounds);
+        }
+    }
+    visiting.remove(group_id);
+    if children.is_empty() {
+        return None;
+    }
+
+    let min_x = children.iter().map(|bounds| bounds.0).fold(f64::INFINITY, f64::min);
+    let min_y = children.iter().map(|bounds| bounds.1).fold(f64::INFINITY, f64::min);
+    let max_x = children.iter().map(|bounds| bounds.2).fold(f64::NEG_INFINITY, f64::max);
+    let max_y = children.iter().map(|bounds| bounds.3).fold(f64::NEG_INFINITY, f64::max);
+    let bounds = (
+        (min_x - GROUP_PAD).max(0.0),
+        (min_y - GROUP_HEADER_H).max(0.0),
+        max_x + GROUP_PAD,
+        max_y + GROUP_PAD,
+    );
+    cache.insert(group_id.to_string(), bounds);
+    Some(bounds)
 }
 
 fn find_node<'a>(nodes: &'a [LayoutedStructuralNode], id: &str) -> Option<&'a LayoutedStructuralNode> {
@@ -186,6 +313,7 @@ mod tests {
                         kind: CompartmentKind::Methods,
                         entries: vec!["speak() void".into()],
                     }],
+                    parent_group: None,
                 },
                 StructuralNode {
                     id: "Dog".into(), label: "Dog".into(),
@@ -195,8 +323,10 @@ mod tests {
                         kind: CompartmentKind::Fields,
                         entries: vec!["name: String".into()],
                     }],
+                    parent_group: None,
                 },
             ],
+            groups: vec![],
             relationships: vec![StructuralRelationship {
                 from: "Dog".into(), to: "Animal".into(),
                 kind: RelKind::Inheritance,
@@ -205,7 +335,7 @@ mod tests {
         }
     }
 
-    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.1.0"); }
+    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.2.0"); }
 
     #[test]
     fn two_nodes_laid_out() {
@@ -241,5 +371,25 @@ mod tests {
         let r = layout_structural_diagram(&two_class_diagram());
         let animal = r.nodes.iter().find(|n| n.id == "Animal").unwrap();
         assert_eq!(animal.compartments[0].rows, vec!["speak() void"]);
+    }
+
+    #[test]
+    fn structural_group_bounds_contain_member_nodes() {
+        let mut diagram = two_class_diagram();
+        diagram.nodes[0].parent_group = Some("domain".into());
+        diagram.groups.push(StructuralGroup {
+            id: "domain".into(),
+            label: "Domain".into(),
+            stereotype: Some("System_Boundary".into()),
+            parent_group: None,
+        });
+
+        let layout = layout_structural_diagram(&diagram);
+        let group = layout.groups.iter().find(|group| group.id == "domain").unwrap();
+        let animal = layout.nodes.iter().find(|node| node.id == "Animal").unwrap();
+        assert!(group.x <= animal.x);
+        assert!(group.y <= animal.y);
+        assert!(group.x + group.width >= animal.x + animal.width);
+        assert!(group.y + group.height >= animal.y + animal.height);
     }
 }
