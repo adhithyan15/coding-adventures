@@ -19,6 +19,15 @@
 - Check all six movements against the full Noto Sans Tamil outline and pin the
   real filmstrip's one-lift transition so list numbering cannot invent a second.
 
+### Added — cited two-stroke ductus for Tamil இ (HL-C09C)
+
+- Add Frame 4's third row, Tamil இ: five joined movements build its inner curl
+  and crossing lower loops, then one verified lift precedes the outer-left climb
+  and final arch.
+- Check all seven movements against the full Noto Sans Tamil outline and pin the
+  real filmstrip's sole lift so its numbered parts cannot be mistaken for seven
+  separate strokes.
+
 ### Added — canonical lesson figures
 
 - Preserve standalone Markdown images as typed lesson blocks instead of flattening
