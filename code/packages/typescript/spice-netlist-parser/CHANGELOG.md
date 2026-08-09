@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Validate and lower BJT model-card `ISC` base-collector leakage saturation
+  current with `C4 * IS` fallback semantics.
 - Validate and lower BJT model-card `NE` base-emitter leakage emission
   coefficient.
 - Validate and lower BJT model-card `ISE` base-emitter leakage saturation
