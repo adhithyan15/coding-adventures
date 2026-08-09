@@ -69,22 +69,24 @@ fn task_app_pressed_state_lowers_to_native_swiftui_press_state() {
             output
                 .matches("_MosaicPressState { __mosaicPressActive in")
                 .count(),
-            1,
-            "{theme} has one authored pressed surface:\n{output}"
+            2,
+            "{theme} has two authored pressed surfaces:\n{output}"
         );
-        let press_start = output
-            .find("_MosaicPressState { __mosaicPressActive in")
-            .expect("press wrapper");
-        let press_region = &output[press_start..output.len().min(press_start + 2_500)];
-        assert!(
-            press_region.contains("Button(action: { dispatch(.addTask) })")
-                && press_region.contains("Text(\"Add task\")"),
-            "the primary action must own the {theme} native press wrapper:\n{press_region}"
-        );
-        assert!(
-            press_region.contains("__mosaicPressActive"),
-            "the {theme} pressed background must consume native press state:\n{press_region}"
-        );
+        for action in ["dispatch(.addLabel)", "dispatch(.addTask)"] {
+            let action_start = output.find(action).expect("pressed action");
+            let wrapper_start = output[..action_start]
+                .rfind("_MosaicPressState { __mosaicPressActive in")
+                .expect("nearest press wrapper");
+            assert!(
+                action_start - wrapper_start < 500,
+                "{action} must be owned by a nearby {theme} native press wrapper"
+            );
+            let press_region = &output[wrapper_start..output.len().min(wrapper_start + 1_500)];
+            assert!(
+                press_region.contains("__mosaicPressActive"),
+                "the {theme} pressed background must consume native press state:\n{press_region}"
+            );
+        }
     }
 }
 

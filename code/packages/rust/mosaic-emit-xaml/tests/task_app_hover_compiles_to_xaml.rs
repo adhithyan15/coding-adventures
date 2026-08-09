@@ -1,7 +1,7 @@
 //! Complex-app acceptance gate for native MSL hover activation.
 //!
 //! Task App deliberately authors all interaction styling in Mosaic. Its light
-//! theme exercises nineteen independently named HostButton hover surfaces,
+//! theme exercises thirty-seven authored hover state blocks,
 //! including controls inside repeated project and task DataTemplates. (The
 //! board view's HostDraggable card hover, and the sheet view's Grid/Select/
 //! toolbar hover states from mosaic-pkg-sheet/mosaic-pkg-grid/mosaic-pkg-
@@ -75,13 +75,10 @@ fn task_app_hover_states_lower_to_native_row_local_xaml() {
 
     assert_eq!(
         output.matches("Binding IsPointerOver").count(),
-        22,
+        38,
         "each property-scoped hover state must use native pointer state:\n{output}"
     );
     for target in [
-        "ProjectOff",
-        "ProjectAdd",
-        "ProjectSub",
         "SegListOff",
         "SegListOff2",
         "SegListOff3",

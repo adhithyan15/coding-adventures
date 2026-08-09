@@ -26,6 +26,7 @@ mosstyle base styling:
 | `Icon`      | `<FontIcon Glyph="..."/>` |
 | `If` / `Else` | `<ContentControl>` with bound visibility |
 | `For` | `<ItemsRepeater>` with generated row view-models |
+| `Input` | `<TextBox>` with `AcceptsReturn` and wrapping for `multiline: true` |
 | `HostInput` | `<TextBox>` |
 | `HostButton` | `<Button>` |
 | `HostSurface` | Styled `<Border>` containing a node-bound `<ContentPresenter>` |

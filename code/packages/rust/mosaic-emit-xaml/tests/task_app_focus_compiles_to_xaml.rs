@@ -1,8 +1,9 @@
-//! Complex-app acceptance gate for native MSL focus activation.
+//! Reusable ProjectNav acceptance gate for native MSL focus activation.
 //!
-//! Task App authors its project-composer focus ring in Mosaic. The XAML
-//! backend must connect that shared `state focused` block to WinUI focus
-//! without app-specific code-behind.
+//! Trestle's ProjectNav package authors its project-composer focus ring in
+//! Mosaic. The XAML backend must connect that shared `state focused` block to
+//! WinUI focus without app-specific code-behind. Trestle itself is also
+//! compiled below to pin its package-expanded multiline Notes editor.
 
 use std::fs;
 use std::path::PathBuf;
@@ -30,6 +31,13 @@ fn task_app_src_root() -> PathBuf {
         .expect("derive Task App source root from CARGO_MANIFEST_DIR")
 }
 
+fn project_nav_src_root() -> PathBuf {
+    code_packages_root()
+        .join("mosaic")
+        .join("mosaic-pkg-project-nav")
+        .join("src")
+}
+
 /// Resolve every `pkg::P::C` reference in `layout` in place — the same step
 /// `mosaic-compile`'s CLI runs before handing a layout to any backend
 /// emitter (UI34 §5). Every emitter's entry point assumes this has already
@@ -43,7 +51,66 @@ fn resolve_packages(layout: &mut moslayout_compiler::LayoutDef) {
 }
 
 #[test]
-fn task_app_focused_state_lowers_to_native_xaml_focus() {
+fn project_nav_focused_state_lowers_to_native_xaml_focus() {
+    let root = project_nav_src_root();
+    let mil = fs::read_to_string(root.join("ProjectNav.mil")).expect("read ProjectNav.mil");
+    let mll = fs::read_to_string(root.join("ProjectNav.mll")).expect("read ProjectNav.mll");
+    let msl =
+        fs::read_to_string(root.join("ProjectNav.light.msl")).expect("read ProjectNav.light.msl");
+
+    let interface = mosmodel_compiler::compile(&mil).expect("compile ProjectNav interface");
+    let layout = moslayout_compiler::compile(&mll, Some(&interface.descriptor_json))
+        .expect("compile ProjectNav layout");
+    let style = mosstyle_compiler::compile(&msl, Some(&layout.part_map_json))
+        .expect("compile ProjectNav light style");
+    let result = mosaic_emit_xaml::from_pipeline(
+        &interface.component,
+        &layout.def,
+        &style.def,
+        None,
+        &mosaic_emit_xaml::EmitOptions::default(),
+    )
+    .expect("emit ProjectNav XAML");
+
+    assert_eq!(
+        result
+            .xaml
+            .matches("<local:FocusStateToBoolConverter x:Key=")
+            .count(),
+        1,
+        "ProjectNav must declare one native focus converter:\n{}",
+        result.xaml
+    );
+    assert_eq!(
+        result
+            .xaml
+            .matches("Binding FocusState, ElementName=ProjectInput")
+            .count(),
+        1,
+        "ProjectNav has one property-scoped focused override:\n{}",
+        result.xaml
+    );
+    assert!(
+        result.xaml.contains(
+            "<Setter Target=\"ProjectInput.(Control.BorderBrush).(SolidColorBrush.Color)\" Value=\"#e0942a\"/>"
+        ),
+        "the shared project-input focus ring must target the native TextBox:\n{}",
+        result.xaml
+    );
+    let helper = result
+        .if_helpers
+        .iter()
+        .find(|file| file.filename == "FocusStateToBoolConverter.cs")
+        .expect("Task App focus converter helper");
+    assert!(
+        helper.source.contains("state != FocusState.Unfocused"),
+        "native pointer, keyboard, and programmatic focus must activate the shared state:\n{}",
+        helper.source
+    );
+}
+
+#[test]
+fn task_app_package_graph_lowers_notes_to_native_multiline_xaml() {
     let root = task_app_src_root();
     let mil = fs::read_to_string(root.join("TaskApp.mil")).expect("read TaskApp.mil");
     let mll = fs::read_to_string(root.join("TaskApp.mll")).expect("read TaskApp.mll");
@@ -64,39 +131,14 @@ fn task_app_focused_state_lowers_to_native_xaml_focus() {
     )
     .expect("emit Task App XAML");
 
-    assert_eq!(
-        result
-            .xaml
-            .matches("<local:FocusStateToBoolConverter x:Key=")
-            .count(),
-        1,
-        "Task App must declare one native focus converter:\n{}",
-        result.xaml
-    );
-    assert_eq!(
-        result
-            .xaml
-            .matches("Binding FocusState, ElementName=ProjectInput")
-            .count(),
-        1,
-        "Task App has one property-scoped focused override:\n{}",
-        result.xaml
-    );
+    let body_input = result
+        .xaml
+        .lines()
+        .find(|line| line.contains("AutomationProperties.AutomationId=\"notes-body-input\""))
+        .expect("Trestle Notes body TextBox");
     assert!(
-        result.xaml.contains(
-            "<Setter Target=\"ProjectInput.(Control.BorderBrush).(SolidColorBrush.Color)\" Value=\"#e0942a\"/>"
-        ),
-        "the shared project-input focus ring must target the native TextBox:\n{}",
-        result.xaml
-    );
-    let helper = result
-        .if_helpers
-        .iter()
-        .find(|file| file.filename == "FocusStateToBoolConverter.cs")
-        .expect("Task App focus converter helper");
-    assert!(
-        helper.source.contains("state != FocusState.Unfocused"),
-        "native pointer, keyboard, and programmatic focus must activate the shared state:\n{}",
-        helper.source
+        body_input.contains("AcceptsReturn=\"True\"")
+            && body_input.contains("TextWrapping=\"Wrap\""),
+        "Trestle's Notes body must use an identified multiline TextBox:\n{body_input}"
     );
 }

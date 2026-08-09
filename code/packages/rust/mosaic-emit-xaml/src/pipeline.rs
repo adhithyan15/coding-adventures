@@ -2015,7 +2015,10 @@ fn emit_xaml_node(
         )),
 
         // PR-3: Host* primitives (single-element host-native controls).
-        "HostInput" => emit_host_input(node, indent, part_styles, ctx),
+        // UI25 `Input` remains the multiline text primitive used by the
+        // Notes package. WinUI TextBox already implements its complete
+        // property surface, so it shares HostInput's native lowering.
+        "Input" | "HostInput" => emit_host_input(node, indent, part_styles, ctx),
         "HostButton" => emit_host_button(node, indent, part_styles, ctx),
         "HostSurface" => emit_host_surface(node, indent, part_styles, ctx),
 
@@ -8324,6 +8327,15 @@ mod tests {
         }
     }
 
+    fn legacy_input_node(part: Option<&str>, props: Vec<LayoutProp>) -> LayoutNode {
+        LayoutNode {
+            tag: "Input".to_string(),
+            part_name: part.map(String::from),
+            props,
+            children: Vec::new(),
+        }
+    }
+
     fn host_button_node(part: Option<&str>, props: Vec<LayoutProp>) -> LayoutNode {
         LayoutNode {
             tag: "HostButton".to_string(),
@@ -8462,6 +8474,41 @@ mod tests {
         assert!(
             r.xaml
                 .contains("AcceptsReturn=\"True\" TextWrapping=\"Wrap\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn legacy_multiline_input_uses_native_textbox_contract() {
+        let c = component("Notes", vec![], vec![]);
+        let l = layout_with_root(
+            "Notes",
+            legacy_input_node(
+                Some("notes-body-input"),
+                vec![
+                    LayoutProp {
+                        name: "placeholder".to_string(),
+                        value: LayoutPropValue::String("Write something…".to_string()),
+                    },
+                    LayoutProp {
+                        name: "multiline".to_string(),
+                        value: LayoutPropValue::Keyword("true".to_string()),
+                    },
+                ],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Notes"));
+        assert!(r.xaml.contains("<TextBox"), "got:\n{}", r.xaml);
+        assert!(
+            r.xaml
+                .contains("AcceptsReturn=\"True\" TextWrapping=\"Wrap\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("AutomationProperties.AutomationId=\"notes-body-input\""),
             "got:\n{}",
             r.xaml
         );

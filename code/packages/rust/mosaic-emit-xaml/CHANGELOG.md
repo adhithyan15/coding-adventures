@@ -2,6 +2,13 @@
 
 ## [Unreleased] — VC2-xaml Grid: WinUI value translation + nested-For + per-column widths
 
+### Fixed - Native multiline Input compatibility
+
+The still-supported UI25 `Input` primitive now shares the complete native
+`TextBox` lowering, including `AcceptsReturn`, text wrapping, dispatch, and
+automation identity. Trestle Notes can therefore compile to WinUI without
+losing its multiline body editor.
+
 ### Fixed - Live native disabled state
 
 Slot-backed `disabled` properties now lower to one-way WinUI `IsEnabled`

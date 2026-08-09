@@ -1,8 +1,9 @@
-//! Complex-app acceptance gate for native MSL focus activation.
+//! Reusable ProjectNav acceptance gate for native MSL focus activation.
 //!
-//! Task App authors its project composer focus ring in Mosaic. The SwiftUI
-//! backend must connect that shared `state focused` block to native focus
-//! without app-specific AppKit code.
+//! Trestle's ProjectNav package authors its project composer focus ring in
+//! Mosaic. The SwiftUI backend must connect that shared `state focused` block
+//! to native focus without app-specific AppKit code. Trestle itself is also
+//! compiled below to pin its package-expanded multiline Notes editor.
 
 use std::fs;
 use std::path::PathBuf;
@@ -32,6 +33,13 @@ fn task_app_src_root() -> PathBuf {
         .expect("derive Task App source root from CARGO_MANIFEST_DIR")
 }
 
+fn project_nav_src_root() -> PathBuf {
+    code_packages_root()
+        .join("mosaic")
+        .join("mosaic-pkg-project-nav")
+        .join("src")
+}
+
 /// Resolve every `pkg::P::C` reference in `layout` in place — the same step
 /// `mosaic-compile`'s CLI runs before handing a layout to any backend
 /// emitter (UI34 §5). Every emitter's entry point assumes this has already
@@ -45,32 +53,32 @@ fn resolve_packages(layout: &mut moslayout_compiler::LayoutDef) {
 }
 
 #[test]
-fn task_app_focused_state_lowers_to_native_swiftui_focus() {
-    let root = task_app_src_root();
-    let mil = fs::read_to_string(root.join("TaskApp.mil")).expect("read TaskApp.mil");
-    let mll = fs::read_to_string(root.join("TaskApp.mll")).expect("read TaskApp.mll");
-    let msl = fs::read_to_string(root.join("TaskApp.light.msl")).expect("read TaskApp.light.msl");
+fn project_nav_focused_state_lowers_to_native_swiftui_focus() {
+    let root = project_nav_src_root();
+    let mil = fs::read_to_string(root.join("ProjectNav.mil")).expect("read ProjectNav.mil");
+    let mll = fs::read_to_string(root.join("ProjectNav.mll")).expect("read ProjectNav.mll");
+    let msl =
+        fs::read_to_string(root.join("ProjectNav.light.msl")).expect("read ProjectNav.light.msl");
 
-    let interface = mosmodel_compiler::compile(&mil).expect("compile Task App interface");
-    let mut layout = moslayout_compiler::compile(&mll, Some(&interface.descriptor_json))
-        .expect("compile Task App layout");
-    resolve_packages(&mut layout.def);
+    let interface = mosmodel_compiler::compile(&mil).expect("compile ProjectNav interface");
+    let layout = moslayout_compiler::compile(&mll, Some(&interface.descriptor_json))
+        .expect("compile ProjectNav layout");
     let style = mosstyle_compiler::compile(&msl, Some(&layout.part_map_json))
-        .expect("compile Task App light style");
+        .expect("compile ProjectNav light style");
     let output = mosaic_emit_swiftui::from_pipeline(&interface.component, &layout.def, &style.def)
-        .expect("emit Task App SwiftUI")
+        .expect("emit ProjectNav SwiftUI")
         .output;
 
     assert!(
         output.contains("private struct _MosaicFocusState<Content: View>: View"),
-        "Task App must generate native focus support:\n{output}"
+        "ProjectNav must generate native focus support:\n{output}"
     );
     assert_eq!(
         output
             .matches("_MosaicFocusState { __mosaicFocusActive in")
             .count(),
         1,
-        "Task App has one authored focused surface:\n{output}"
+        "ProjectNav has one authored focused surface:\n{output}"
     );
     assert!(
         output.contains(".focused($isFocused)"),
@@ -88,6 +96,33 @@ fn task_app_focused_state_lowers_to_native_swiftui_focus() {
     assert!(
         focus_region.contains("__mosaicFocusActive"),
         "the authored focus border must consume native focus state:\n{focus_region}"
+    );
+}
+
+#[test]
+fn task_app_package_graph_lowers_notes_to_native_multiline_swiftui() {
+    let root = task_app_src_root();
+    let mil = fs::read_to_string(root.join("TaskApp.mil")).expect("read TaskApp.mil");
+    let mll = fs::read_to_string(root.join("TaskApp.mll")).expect("read TaskApp.mll");
+    let msl = fs::read_to_string(root.join("TaskApp.light.msl")).expect("read TaskApp.light.msl");
+
+    let interface = mosmodel_compiler::compile(&mil).expect("compile Task App interface");
+    let mut layout = moslayout_compiler::compile(&mll, Some(&interface.descriptor_json))
+        .expect("compile Task App layout");
+    resolve_packages(&mut layout.def);
+    let style = mosstyle_compiler::compile(&msl, Some(&layout.part_map_json))
+        .expect("compile Task App light style");
+    let output = mosaic_emit_swiftui::from_pipeline(&interface.component, &layout.def, &style.def)
+        .expect("emit Task App SwiftUI")
+        .output;
+
+    assert!(
+        output.contains("TextEditor(text: Binding(get: { noteBodyValue }"),
+        "Trestle's Notes body must use a native multiline editor:\n{output}"
+    );
+    assert!(
+        output.contains(".accessibilityIdentifier(\"notes-body-input\")"),
+        "the authored Notes body identity must reach SwiftUI:\n{output}"
     );
 }
 
@@ -148,6 +183,59 @@ style FocusField {
     assert!(
         result.status.success(),
         "generated native focus wrapper must typecheck:\n{}",
+        String::from_utf8_lossy(&result.stderr)
+    );
+}
+
+#[cfg(target_os = "macos")]
+#[test]
+fn native_multiline_input_typechecks_with_swiftui() {
+    let interface = mosmodel_compiler::compile(
+        r#"
+component NotesEditor {
+  slot value : text ;
+  emit onBodyChange ( value : text ) ;
+}
+"#,
+    )
+    .expect("compile multiline fixture interface");
+    let layout = moslayout_compiler::compile(
+        r#"
+layout NotesEditor {
+  Input [ body ] (
+    value : slot: value ,
+    placeholder : "Write something…" ,
+    multiline : true ,
+    max-length : 2000 ,
+    onChange : emit: onBodyChange
+  )
+}
+"#,
+        Some(&interface.descriptor_json),
+    )
+    .expect("compile multiline fixture layout");
+    let style = mosstyle_compiler::compile(
+        "style NotesEditor { part body { min-height: 200; } }",
+        Some(&layout.part_map_json),
+    )
+    .expect("compile multiline fixture style");
+    let output = mosaic_emit_swiftui::from_pipeline(&interface.component, &layout.def, &style.def)
+        .expect("emit multiline fixture SwiftUI")
+        .output;
+
+    let source_path =
+        std::env::temp_dir().join(format!("mosaic-multiline-{}.swift", std::process::id()));
+    fs::write(&source_path, output).expect("write generated multiline fixture");
+    let result = Command::new("swiftc")
+        .arg("-typecheck")
+        .arg(&source_path)
+        .output()
+        .expect("run swiftc");
+    let _ = fs::remove_file(&source_path);
+
+    assert!(
+        result.status.success(),
+        "generated native multiline editor must typecheck:\n{}",
         String::from_utf8_lossy(&result.stderr)
     );
 }
