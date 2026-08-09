@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.12.0 - 2026-08-09
+
+- Preserve sequence accessibility text through layout.
+
 ## 0.11.0 - 2026-08-09
 
 - Preserve actor details references on participant layout items.

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.16.0
+
+- Parse single-line sequence accessibility titles and descriptions.
+
 ## 0.15.0
 
 - Parse sequence actor `details` element IDs into semantic IR.

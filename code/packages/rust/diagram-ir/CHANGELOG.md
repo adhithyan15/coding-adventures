@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.16.0
+
+- Added sequence accessibility title and description semantics.
+
 ## 0.15.0
 
 - Added host document details references to sequence participant and layout IR.

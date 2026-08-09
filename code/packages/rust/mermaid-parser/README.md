@@ -43,6 +43,8 @@ metadata for interactive backends. Arbitrary JSON-valued actor properties are
 also preserved in scene metadata. DOM-referenced `details` element IDs survive
 the native pipeline; resolving host document contents remains an embedding-layer
 compatibility gap.
+Single-line `accTitle` and `accDescr` statements lower to PaintScene metadata;
+the multiline accessibility-description form remains a compatibility gap.
 All Mermaid 11.16.1 solid/dotted, normal/reverse filled and stick half-arrow
 forms preserve their line style, half orientation, and endpoint through Paint.
 Central connection markers before and/or after an arrow preserve source,
