@@ -2439,7 +2439,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
         model.params.get("VT0") ??
         model.params.get("VTH") ??
         (polarity === "NJF" ? -2.0 : 2.0),
-      model.params.get("LAMBDA") ?? 0.0,
+      model.params.get("LAMBDA") ?? model.params.get("LAM") ?? 0.0,
       model.params.get("CGS") ?? model.params.get("CGS0") ?? 0.0,
       model.params.get("CGD") ?? model.params.get("CGD0") ?? 0.0,
       model.params.get("KF") ?? 0.0,
