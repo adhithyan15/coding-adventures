@@ -1,70 +1,93 @@
 ---
+schema_version: 2
 id: ES-C15-practice
+spine_node: SPINE-TALK-ABOUT-PAST
+sequence: 1105
 chapter: 15
-sequence: 1100
 type: practice-mix
 headword: (practice)
-gloss: the whole preterite — -ar, -er/-ir, and strong, told apart by where the stress lands
+gloss: a singular checkpoint for regular and strong completed-past patterns
 concept_tag: CH15-PRACTICE
-prerequisites: [ES-C15-comer-vivir-preterite, ES-C15-preterite-fuertes]
+prerequisites: [ES-C15-comer-preterite, ES-C15-comer-vivir-preterite, ES-C15-tener-preterite, ES-C15-hacer-preterite, ES-C15-preterite-fuertes]
 sounds: []
 roots: []
-est_minutes: 4
-reviews_of: [ES-C15-comer-vivir-preterite, ES-C15-preterite-fuertes, ES-C14-practice]
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-GRAMMAR-ER-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS, ES-HISTORY-ER-IR-PRETERITE-LATIN-PERFECT, ES-GRAMMAR-IR-PRETERITE-SINGULAR, ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE, ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN, ES-GRAMMAR-TENER-PRETERITE-SINGULAR, ES-ETYMON-TUVE, ES-GRAMMAR-HACER-PRETERITE-SINGULAR, ES-ETYMON-HICE, ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR, ES-ETYMON-ESTUVE-ANALOGY, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-LEX-TENER, ES-LEX-HACER, ES-LEX-ESTAR, ES-LEX-CAFE, ES-LEX-EN, ES-LEX-BIEN]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ES-GRAMMAR-ER-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS, ES-HISTORY-ER-IR-PRETERITE-LATIN-PERFECT, ES-GRAMMAR-IR-PRETERITE-SINGULAR, ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE, ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN, ES-GRAMMAR-TENER-PRETERITE-SINGULAR, ES-ETYMON-TUVE, ES-GRAMMAR-HACER-PRETERITE-SINGULAR, ES-ETYMON-HICE, ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR, ES-ETYMON-ESTUVE-ANALOGY, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-LEX-TENER, ES-LEX-HACER, ES-LEX-ESTAR, ES-LEX-CAFE, ES-LEX-EN, ES-LEX-BIEN]
+skills: [listening, speaking, reading, writing]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus, fluency]
+register: neutral
+variety: general
+reviews_of: [ES-C15-comer-preterite, ES-C15-comer-vivir-preterite, ES-C15-tener-preterite, ES-C15-hacer-preterite, ES-C15-preterite-fuertes, ES-C14-practice]
 ---
 
-# Practice — three families, one question
+# Practice — six singular patterns, no hidden vocabulary
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-ER-PRETERITE-SINGULAR, ES-GRAMMAR-IR-PRETERITE-SINGULAR, ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN, ES-GRAMMAR-TENER-PRETERITE-SINGULAR, ES-GRAMMAR-HACER-PRETERITE-SINGULAR, ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR] -->
 
-[PAUSE 2s] You now have the **entire** everyday past tense. Three families — and
-one question sorts them: **where does the stress land?**
+[PAUSE 2s] This checkpoint adds nothing. Retrieve only the three singular
+persons of each learned row. Every word in the short sentences is already
+known.
 
-## The whole map
+## Grammar Lens: the complete Chapter 15 frame
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-GRAMMAR-ER-PRETERITE-SINGULAR, ES-GRAMMAR-IR-PRETERITE-SINGULAR, ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE, ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN, ES-GRAMMAR-TENER-PRETERITE-SINGULAR, ES-GRAMMAR-HACER-PRETERITE-SINGULAR, ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR] -->
 
-| | yo | tú | él/ella | nosotros | ellos |
-|---|---|---|---|---|---|
-| -ar *hablar* | habl**é** | habl**aste** | habl**ó** | habl**amos** | habl**aron** |
-| -er *comer* | com**í** | com**iste** | com**ió** | com**imos** | com**ieron** |
-| -ir *vivir* | viv**í** | viv**iste** | viv**ió** | viv**imos** | viv**ieron** |
-| strong *tener* | **tuve** | **tuviste** | **tuvo** | **tuvimos** | **tuvieron** |
-| ser / ir | **fui** | **fuiste** | **fue** | **fuimos** | **fueron** |
+| person | **hablar** | **comer** | **vivir** | **tener** | **hacer** | **estar** |
+|---|---|---|---|---|---|---|
+| yo | hablé | comí | viví | tuve | hice | estuve |
+| tú | hablaste | comiste | viviste | tuviste | hiciste | estuviste |
+| él / ella / usted | habló | comió | vivió | tuvo | hizo | estuvo |
 
-Rows 2 and 3 are the **same**: *-er* and *-ir* merged. Rows 1–3 carry
-accents only on *yo* and *él*, where **the ending is stressed**.
+The **-er** and **-ir** rows share **-í, -iste, -ió**. The three strong rows
+share **-e, -iste, -o**, but their stems must be learned: **tuv-, hic-/hiz-,
+estuv-**. Plural persons, more strong verbs, and new time or setting vocabulary
+remain outside this checkpoint.
 
-## The stress test
+## Grammar Lens: let spelling show the stress
+<!-- hl-knowledge: introduces=[]; assesses=[ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS, ES-GRAMMAR-ER-PRETERITE-SINGULAR, ES-GRAMMAR-IR-PRETERITE-SINGULAR, ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN] -->
 
-Read any preterite and ask: is the loud syllable the **last** one?
+- Regular **comí, comió, viví, vivió** carry written accents for final stress.
+- Strong **tuve, tuvo, hice, hizo, estuve, estuvo** carry no written accents;
+  stress remains in the strong stem.
+- **Comiste** and **viviste** need no accent because their ordinary stress is
+  already next to last.
 
-- **Yes** → regular. Accent on *yo* and *él/ella* (*hablé, hablÓ, comí, comió*).
-- **No, it's the stem** → **strong**. No accent (*TUve, HIce, ESTUvo*).
+## The histories, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[ES-HISTORY-ER-IR-PRETERITE-LATIN-PERFECT, ES-ETYMON-TUVE, ES-ETYMON-HICE, ES-ETYMON-ESTUVE-ANALOGY] -->
 
-## Drill — past or present?
-
-Use context for forms shared by two tenses:
-
-| form | could be | which? |
-|---|---|---|
-| *hablamos* | we speak / we spoke | either — context decides |
-| *vivimos* | we live / we lived | either — context decides |
-| *comemos* / *comimos* | we eat / we ate | **distinct** — the vowel tells you |
-| *fui* | I was / I went | either — *ser* and *ir* share it |
+The regular **-er/-ir** endings continue Latin perfect material reshaped across
+Romance. **Tuve** and **hice** continue older strong-perfect histories, also
+reshaped rather than copied letter for letter. **Estuve** shows especially clear
+analogical remodeling beside the **-uv-** family of **tuve**.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-ER-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS, ES-HISTORY-ER-IR-PRETERITE-LATIN-PERFECT, ES-GRAMMAR-IR-PRETERITE-SINGULAR, ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE, ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN, ES-GRAMMAR-TENER-PRETERITE-SINGULAR, ES-ETYMON-TUVE, ES-GRAMMAR-HACER-PRETERITE-SINGULAR, ES-ETYMON-HICE, ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR, ES-ETYMON-ESTUVE-ANALOGY, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-LEX-TENER, ES-LEX-HACER, ES-LEX-ESTAR, ES-LEX-CAFE, ES-LEX-EN, ES-LEX-BIEN] -->
+<!-- hl-activity: {"id":"ES-C15-practice-regular-yo-forms","kind":"text","assesses":["ES-GRAMMAR-AR-PRETERITE-SINGULAR","ES-GRAMMAR-ER-PRETERITE-SINGULAR","ES-GRAMMAR-IR-PRETERITE-SINGULAR","ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE","ES-LEX-HABLAR","ES-LEX-COMER","ES-LEX-VIVIR"],"prompt":"Give the learned yo past forms of hablar, comer, and vivir, in that order.","answer":"hablé, comí, viví","accepted":["hablé comí viví","hablé / comí / viví"],"feedback":{"correct":"Right: hablé, comí, viví.","incorrect":"Retrieve the three regular yo forms: hablé, comí, viví."},"response_seconds":9} -->
+<!-- hl-activity: {"id":"ES-C15-practice-strong-yo-forms","kind":"text","assesses":["ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN","ES-GRAMMAR-TENER-PRETERITE-SINGULAR","ES-GRAMMAR-HACER-PRETERITE-SINGULAR","ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR","ES-LEX-TENER","ES-LEX-HACER","ES-LEX-ESTAR"],"prompt":"Give the learned yo past forms of tener, hacer, and estar, in that order.","answer":"tuve, hice, estuve","accepted":["tuve hice estuve","tuve / hice / estuve"],"feedback":{"correct":"Right: tuve, hice, estuve.","incorrect":"Retrieve the three strong yo forms: tuve, hice, estuve."},"response_seconds":9} -->
+<!-- hl-activity: {"id":"ES-C15-practice-hice-cafe","kind":"text","assesses":["ES-GRAMMAR-HACER-PRETERITE-SINGULAR","ES-LEX-HACER","ES-LEX-CAFE"],"prompt":"Say 'I made coffee' in Spanish.","answer":"Hice café.","accepted":["Hice café"],"feedback":{"correct":"Right: Hice café.","incorrect":"Use the strong yo form hice, then known café."},"response_seconds":7} -->
+<!-- hl-activity: {"id":"ES-C15-practice-vivi-madrid","kind":"text","assesses":["ES-GRAMMAR-IR-PRETERITE-SINGULAR","ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS","ES-LEX-VIVIR","ES-LEX-EN"],"prompt":"Say 'I lived in Madrid' in Spanish.","answer":"Viví en Madrid.","accepted":["Viví en Madrid"],"feedback":{"correct":"Right: Viví en Madrid.","incorrect":"Use accented viví, then known en Madrid."},"response_seconds":7} -->
+<!-- hl-activity: {"id":"ES-C15-practice-estuve-bien","kind":"text","assesses":["ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR","ES-LEX-ESTAR","ES-LEX-BIEN"],"prompt":"Say 'I was well' as a completed event in Spanish.","answer":"Estuve bien.","accepted":["Estuve bien"],"feedback":{"correct":"Right: Estuve bien.","incorrect":"Use the strong yo form estuve, then known bien."},"response_seconds":7} -->
+<!-- hl-activity: {"id":"ES-C15-practice-accent-contrast","kind":"text","assesses":["ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS","ES-GRAMMAR-ER-PRETERITE-SINGULAR","ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN"],"prompt":"Which pair carries written accents: comí/comió or tuve/tuvo?","answer":"comí and comió","accepted":["comí comió","comí/comió","comí y comió"],"feedback":{"correct":"Right: comí and comió mark final stress; tuve and tuvo do not.","incorrect":"The regular final-stressed pair carries the marks: comí and comió."},"response_seconds":7} -->
+<!-- hl-activity: {"id":"ES-C15-practice-history-match","kind":"text","assesses":["ES-HISTORY-ER-IR-PRETERITE-LATIN-PERFECT","ES-ETYMON-TUVE","ES-ETYMON-HICE","ES-ETYMON-ESTUVE-ANALOGY"],"prompt":"Which learned form is especially described as analogically remodeled beside tuve: comí, hice, or estuve?","answer":"estuve","accepted":[],"feedback":{"correct":"Right: estuve was analogically remodeled beside the -uv- strong family.","incorrect":"Look for the form sharing -uv- with tuve: estuve."},"response_seconds":7} -->
 
 [PAUSE 1s]
-- [YOU SAY: yo-forms across all five rows — "hablé, comí, viví, tuve, fui"]
-- [YOU SAY: "Ayer hablé con mi madre y comí en casa"]
-- [YOU SAY: "Hice la comida" ("I made the food") — stem stress, no accent]
-- [YOU SAY: "Fui al mercado" ("I went to the market")]
-- [YOU SAY: the diagnostic aloud — "last syllable loud → accent; stem loud → none"]
+- [YOU SAY: “hablé, comí, viví”]
+- [YOU SAY: “tuve, hice, estuve”]
+- [YOU SAY: “Hice café. Viví en Madrid. Estuve bien.”]
+- [YOU SAY: “comí and comió have accents; tuve and tuvo do not”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-ER-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS, ES-HISTORY-ER-IR-PRETERITE-LATIN-PERFECT, ES-GRAMMAR-IR-PRETERITE-SINGULAR, ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE, ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN, ES-GRAMMAR-TENER-PRETERITE-SINGULAR, ES-ETYMON-TUVE, ES-GRAMMAR-HACER-PRETERITE-SINGULAR, ES-ETYMON-HICE, ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR, ES-ETYMON-ESTUVE-ANALOGY] -->
 
-[PAUSE 3s] Which two rows are identical? (**-er and -ir**.) Which forms take a
-written accent? (*Yo* and *él/ella* of the **regular** verbs only.) What single
-test separates regular from strong? (**Where the stress lands** — ending vs
-stem.) Which form means both "I was" and "I went"? (***Fui***.) Which *nosotros*
-forms are tense-ambiguous? (*Hablamos*, *vivimos* — but **not** *comimos*.) Next
-chapter: talking about the past that **kept going** — the imperfect.
+[PAUSE 3s] Give the regular **comer** and **vivir** sets. (*Comí, comiste,
+comió; viví, viviste, vivió.*) Give the three strong sets. (*Tuve, tuviste,
+tuvo; hice, hiciste, hizo; estuve, estuviste, estuvo.*) Which rows share
+endings? (**-er/-ir** share one regular set; the strong rows share another.)
+Chapter 16 can add a new past contrast without borrowing any plural form here.

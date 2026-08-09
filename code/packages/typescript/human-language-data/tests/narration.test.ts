@@ -644,10 +644,12 @@ describe("the whole corpus", () => {
         }
       }
     }
-    // 69 four-or-more-column tables at the shipped width. Authored as 71 against a
+    // 66 four-or-more-column tables at the shipped width. Authored as 71 against a
     // 375-chapter corpus; the Spanish gentle-ramp split (HL-C18A) reshaped one of
     // them out of existence, Chapter 9 replaces another wide conjugation table, and
-    // Chapter 10 replaces a four-column possessive table with singular known-noun frames.
-    expect(refusals).toBe(68);
+    // Chapter 10 replaces a four-column possessive table with singular known-noun
+    // frames. Chapter 15 replaces its two wide teaching tables with voice-first
+    // singular comparisons; only the mapped terminal table still needs sight.
+    expect(refusals).toBe(66);
   });
 });

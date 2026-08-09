@@ -6579,18 +6579,21 @@
     {
       "language": "spanish",
       "chapter": 15,
-      "sourceHash": "fnv1a64:6a0d0566d7c228af",
+      "sourceHash": "fnv1a64:f379777cfd7b2b7c",
       "lessonIds": [
+        "ES-C15-comer-preterite",
         "ES-C15-comer-vivir-preterite",
+        "ES-C15-tener-preterite",
+        "ES-C15-hacer-preterite",
         "ES-C15-preterite-fuertes",
         "ES-C15-practice"
       ],
-      "voiceLessons": 1,
-      "drivablePrefix": 1,
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
       "text": "spanish/narration/ch15.txt",
       "json": "spanish/narration/ch15.json",
-      "textHash": "fnv1a64:de3802a0f97ee1d8",
-      "jsonHash": "fnv1a64:1c22ab0a156ae489"
+      "textHash": "fnv1a64:206fcd007f948180",
+      "jsonHash": "fnv1a64:8489a70a007e7027"
     },
     {
       "language": "spanish",

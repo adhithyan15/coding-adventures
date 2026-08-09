@@ -118,11 +118,15 @@ describe("corpus snapshot", () => {
     // Their terminal practices remain correctly atom-free, so only teaching lessons
     // leave the blind spot.
     // Chapter 14 migrates two teaching lessons; its terminal practice correctly
-    // remains atom-free, so two more lessons leave the blind spot.
-    expect(report.summary.unmeasurableLessons).toBe(545);
+    // remains atom-free, so two more lessons leave the blind spot. Chapter 15
+    // replaces two legacy teaching lessons with five measurable steps; its terminal
+    // practice remains atom-free, so the blind spot falls by two more net of the
+    // three added lessons.
+    expect(report.summary.unmeasurableLessons).toBe(543);
     // 65 -> 66: vocabulary wave 4 added 52 schema-v2 lessons. Chapter 10's three
-    // newly measurable teaching lessons now carry the corpus across the next point.
-    expect(report.summary.measurablePercent).toBe(67);
+    // newly measurable teaching lessons carry the corpus across one point, and the
+    // five-step Chapter-15 migration carries it across the next.
+    expect(report.summary.measurablePercent).toBe(68);
   });
 
   it("names the steepest lesson, which is where a burn-down starts", () => {

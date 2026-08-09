@@ -7,17 +7,17 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:a857c8d4885d9247",
+  "sourceHash": "fnv1a64:8bf21d739f6327df",
   "summary": {
-    "totalLessons": 1669,
-    "voice": 1085,
-    "sight": 526,
+    "totalLessons": 1672,
+    "voice": 1089,
+    "sight": 525,
     "pen": 58,
-    "drivableLessons": 1085,
+    "drivableLessons": 1089,
     "drivablePercent": 65,
     "trackCount": 22,
     "chapterCount": 513,
-    "drivablePrefixTotal": 887,
+    "drivablePrefixTotal": 891,
     "fullyDrivableChapters": 324,
     "unstartableChapters": 141,
     "overriddenLessons": 0,
@@ -6754,12 +6754,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 177,
-      "voice": 158,
-      "sight": 12,
+      "lessonCount": 180,
+      "voice": 162,
+      "sight": 11,
       "pen": 7,
-      "drivablePercent": 89,
-      "drivablePrefixTotal": 131,
+      "drivablePercent": 90,
+      "drivablePrefixTotal": 135,
       "modalities": [
         "voice",
         "sight",
@@ -7049,19 +7049,23 @@
         },
         {
           "chapter": 15,
-          "lessonCount": 3,
-          "voice": 1,
-          "sight": 2,
+          "lessonCount": 6,
+          "voice": 5,
+          "sight": 1,
           "pen": 0,
           "modalities": [
             "voice",
             "sight"
           ],
-          "drivablePrefix": 1,
-          "firstNonVoiceLesson": "ES-C15-preterite-fuertes",
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": "ES-C15-practice",
           "drivable": false,
           "drivableLessonIds": [
-            "ES-C15-comer-vivir-preterite"
+            "ES-C15-comer-preterite",
+            "ES-C15-comer-vivir-preterite",
+            "ES-C15-tener-preterite",
+            "ES-C15-hacer-preterite",
+            "ES-C15-preterite-fuertes"
           ]
         },
         {
@@ -34350,7 +34354,7 @@
       "sourceHash": "fnv1a64:6add1b7975e3eb47"
     },
     {
-      "id": "ES-C15-comer-vivir-preterite",
+      "id": "ES-C15-comer-preterite",
       "language": "spanish",
       "chapter": 15,
       "sequence": 1080,
@@ -34365,31 +34369,85 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:29f4924f1b0065d6"
+      "sourceHash": "fnv1a64:5b27dc5ea8a0377a"
+    },
+    {
+      "id": "ES-C15-comer-vivir-preterite",
+      "language": "spanish",
+      "chapter": 15,
+      "sequence": 1085,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5832a19958d850de"
+    },
+    {
+      "id": "ES-C15-tener-preterite",
+      "language": "spanish",
+      "chapter": 15,
+      "sequence": 1090,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:09987fcc88fd8fb2"
+    },
+    {
+      "id": "ES-C15-hacer-preterite",
+      "language": "spanish",
+      "chapter": 15,
+      "sequence": 1095,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6e119e7807cb3623"
     },
     {
       "id": "ES-C15-preterite-fuertes",
       "language": "spanish",
       "chapter": 15,
-      "sequence": 1090,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "sequence": 1100,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:62a3242726961642"
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a2999b34aa033a10"
     },
     {
       "id": "ES-C15-practice",
       "language": "spanish",
       "chapter": 15,
-      "sequence": 1100,
+      "sequence": 1105,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -34401,7 +34459,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:4b3fcf24c86f0c33"
+      "sourceHash": "fnv1a64:315adda575013637"
     },
     {
       "id": "ES-C16-imperfecto",
