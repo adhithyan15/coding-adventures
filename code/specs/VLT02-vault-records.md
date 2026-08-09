@@ -120,9 +120,17 @@ Every type carrying a secret implements `Zeroize` manually:
 `ApiKey.token`, `DatabaseCredential.password`. Higher Vault layers
 hold records inside `Zeroizing<T>` so drops always wipe.
 
+Every first-party record type also implements a closed, value-redacted
+`Debug`. The output contains only the Rust type name and a fixed `<redacted>`
+marker. It never formats display metadata, secret fields, list contents, or
+optional values. `AnyRecord` applies the same rule while retaining only its
+variant name; the opaque variant does not format its attacker-controlled
+content type or canonical payload bytes. These guarantees apply even when a
+caller bypasses the higher-level VLT-PM03 redacted view API.
+
 ## Errors are inert
 
-`VaultRecordError`'s `Display` strings come exclusively from this
+`VaultRecordError`'s `Display` and `Debug` strings come exclusively from this
 crate's literals. Specifically:
 
 - `Cbor` reports the underlying CBOR error variant tag, not bytes.
@@ -133,6 +141,10 @@ crate's literals. Specifically:
   literal — so log lines never contain attacker-controlled bytes.
 - `SchemaMismatch { what }` uses a `&'static str` from a fixed
   per-field table.
+
+`Debug` exposes only the variant name and suppresses the
+attacker-controlled `actual` content type. This keeps diagnostic and assertion
+formatting at the same trust boundary as `Display`.
 
 This matches VLT01's discipline.
 
@@ -150,6 +162,8 @@ This matches VLT01's discipline.
 | Top-level value other than the `{t, d}` map                     | `NotARecord`                                                          | `decode_rejects_top_level_array`, `…_with_extra_field`          |
 | `"t"` is not text                                               | `BadEnvelope`                                                         | `decode_rejects_envelope_with_t_not_text`                       |
 | Attacker-controlled bytes in error messages                     | `Display` strings static literals only; `actual` field hidden         | `error_display_strings_are_static`                              |
+| Plaintext record values leak through diagnostic formatting      | Closed custom `Debug` on records and `AnyRecord`                       | `record_debug_is_value_redacted`, `any_record_debug_is_value_redacted` |
+| Attacker content type leaks through error diagnostic formatting | Closed custom `Debug` on `VaultRecordError`                            | `error_debug_strings_are_static`                                |
 | Forward incompatibility breaks v1 readers                       | Unknown payload fields tolerated                                      | `extra_unknown_fields_in_payload_are_ignored`                   |
 
 ## Non-goals
