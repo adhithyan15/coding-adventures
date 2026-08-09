@@ -19,6 +19,12 @@ An authenticated `Terminate` received while waiting for any operation is a clean
 exit. Data-plane failures are redacted and terminal for this child, leaving durable
 input acknowledgement unchanged when processing did not finish.
 
+The production integration gate launches this executable with durable pipeline
+bindings, provisions its exact channel keys from owner-only files, sends its model
+request through the daemon's configured Ollama adapter, decrypts the published
+weather report as the authorized sink, and verifies that input acknowledgement is
+persisted only after publication.
+
 The executable rejects `--package-runtime deno` until a separately reviewed Deno
 adapter is composed. It uses no ambient environment configuration and inherits the
 supervisor-selected package directory as its only package location.

@@ -559,6 +559,12 @@ declarations above,
 loads raw private material through owner-only no-link exact-length reads, and
 constructs exact Ollama clients without probing the network. A future Vault
 adapter may populate the same registries without changing execution semantics.
+The production Level 1 integration gate joins these boundaries with the real host
+process, durable launch binding, encrypted request and report channels, a loopback
+Ollama wire fixture, and the publish-before-acknowledge invariant. The fixture
+substitutes only the model server's response; package verification, process
+control, authorization, key provisioning, channel crypto, and persistence remain
+the production implementations.
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
