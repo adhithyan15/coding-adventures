@@ -75,7 +75,7 @@ impl HostProfile {
 
         let mut capabilities = BTreeSet::new();
         for capability in &self.capabilities {
-            validate_label("capability", capability)?;
+            validate_capability(capability)?;
             if !capabilities.insert(capability.clone()) {
                 return Err(HostRuntimeError::DuplicateCapability(capability.clone()));
             }
@@ -1164,6 +1164,23 @@ fn validate_label(field: &str, value: &str) -> Result<(), HostRuntimeError> {
     Ok(())
 }
 
+fn validate_capability(value: &str) -> Result<(), HostRuntimeError> {
+    let valid = !value.is_empty()
+        && value.split(':').all(|segment| {
+            !segment.is_empty()
+                && segment.chars().all(|character| {
+                    character.is_ascii_alphanumeric() || character == '_' || character == '-'
+                })
+        });
+    if !valid {
+        return Err(HostRuntimeError::InvalidField {
+            field: "capability".to_string(),
+            message: "expected a colon-delimited non-empty ASCII capability scope".to_string(),
+        });
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1563,6 +1580,31 @@ while (true) {
             ),
             Err(HostRuntimeError::MissingCapability { .. })
         ));
+    }
+
+    #[test]
+    fn profile_accepts_scoped_capabilities_and_rejects_empty_segments() {
+        let scoped = PROFILE.replace("demo_read", "demo:read:account-one");
+        let mut runtime = HostProfileRuntime::from_json(&scoped).unwrap();
+        runtime
+            .register_handler(
+                definition(
+                    "demo.read",
+                    PrivilegeTier::Tier1,
+                    &["demo:read:account-one"],
+                ),
+                |_arguments, _context| Ok(ToolHandlerOutput::new(JsonValue::Null)),
+            )
+            .unwrap();
+        assert!(runtime.activate().is_ok());
+
+        for invalid in ["demo::read", ":demo", "demo:", "demo/read"] {
+            let profile = PROFILE.replace("demo_read", invalid);
+            assert!(matches!(
+                HostProfile::from_json(&profile),
+                Err(HostRuntimeError::InvalidField { field, .. }) if field == "capability"
+            ));
+        }
     }
 
     #[test]

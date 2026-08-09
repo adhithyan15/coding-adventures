@@ -20,8 +20,8 @@ The crate intentionally stops at the contract layer:
 - structured tool events and final results
 - JSON-schema-like argument validation
 - first-phase built-in store/job tool definitions from the D18D catalog,
-  including ContextStore, ArtifactStore, SkillStore, MemoryStore, and Job
-  runtime parity definitions
+  including ContextStore, ArtifactStore, SkillStore, MemoryStore, Job runtime,
+  and the Tier-2 opaque Vault lease contract
 - a deterministic in-memory registry for runtimes and tests
 - explicit policy decisions for permission, tier, and approval gates
 - user-visible approval challenges plus assurance-bearing, challenge-bound

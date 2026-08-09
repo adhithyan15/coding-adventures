@@ -5,6 +5,8 @@ active D18D tool runtimes. Each host names its privilege ceiling, capability
 surface, and exact tool ids. The orchestrator profile requires one owner per
 tool and routes calls only to that host. Activation fails unless every
 allowlisted tool has been registered and every definition fits those bounds.
+Capability entries accept D18D colon-delimited service scopes such as
+`vault:lease` while retaining existing single-segment labels.
 
 This is the first production-shaped replacement for wiring an unrestricted
 `InMemoryToolRuntime` directly inside each Chief job. Profiles can now activate

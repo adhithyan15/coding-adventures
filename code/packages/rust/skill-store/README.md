@@ -79,6 +79,8 @@ asset material without returning raw manifests or asset bodies.
 compact rollup across filtered skill versions, entrypoints, required tools,
 required capabilities, and requirement gaps without returning raw manifests or
 asset bodies.
+Required capability entries accept canonical colon-delimited D18D/D21 scopes,
+including target-qualified values such as `vault:lease:bank-creds`.
 
 `SkillAssetInventorySummary` gives catalog and preload planners a compact
 rollup over one skill version's asset metadata, including content-type classes,

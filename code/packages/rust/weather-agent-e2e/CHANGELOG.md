@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Reuse the canonical Tier-2 `vault.request_lease` catalog definition for the
+  real opaque-lease handler instead of maintaining a private duplicate schema,
+  and align its policy profile to the D18D `vault:lease` capability.
 - Loaded the Weather Agent D18D catalog from a reviewed orchestrator profile
   with isolated fetcher, classifier, and writer hosts through
   `chief-of-staff-host-runtime`.

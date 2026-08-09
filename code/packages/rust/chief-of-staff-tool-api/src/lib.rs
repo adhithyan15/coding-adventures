@@ -567,6 +567,7 @@ pub enum BuiltinToolFamily {
     Skill,
     Memory,
     Job,
+    Vault,
 }
 
 impl BuiltinToolFamily {
@@ -577,6 +578,7 @@ impl BuiltinToolFamily {
             Self::Skill => "skill",
             Self::Memory => "memory",
             Self::Job => "job",
+            Self::Vault => "vault",
         }
     }
 }
@@ -852,6 +854,7 @@ pub fn builtin_tool_catalog() -> Vec<ToolDefinition> {
         job_run_now_definition(),
         job_list_definition(),
         job_status_definition(),
+        vault_request_lease_definition(),
     ]
     .into()
 }
@@ -2057,6 +2060,38 @@ fn job_status_definition() -> ToolDefinition {
         vec!["jobs:read"],
         None,
         vec!["job", "scheduler"],
+    )
+}
+
+fn vault_request_lease_definition() -> ToolDefinition {
+    builtin_definition(
+        "vault.request_lease",
+        "Request vault lease",
+        "Issue a short-lived opaque VaultRef for use by a trusted host tool.",
+        object_schema(
+            vec![
+                SchemaProperty::new("secret_name", JsonSchema::String),
+                SchemaProperty::new("ttl_ms", JsonSchema::Integer),
+            ],
+            vec!["secret_name", "ttl_ms"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("vault_ref", JsonSchema::String),
+                SchemaProperty::new("expires_at_ms", JsonSchema::Integer),
+            ],
+            vec!["vault_ref", "expires_at_ms"],
+            false,
+        )),
+        ToolSideEffects::External,
+        ToolIdempotency::Never,
+        ToolConcurrency::Serialized,
+        ToolStreaming::Events,
+        PrivilegeTier::Tier2,
+        vec!["vault:lease"],
+        Some("vault"),
+        vec!["vault", "lease", "secret"],
     )
 }
 
@@ -5465,7 +5500,7 @@ mod tests {
         let catalog = builtin_tool_catalog();
         let mut registry = InMemoryToolRegistry::new();
 
-        assert_eq!(catalog.len(), 33);
+        assert_eq!(catalog.len(), 34);
         for definition in catalog {
             assert!(
                 definition.validate().ok,
@@ -5516,6 +5551,7 @@ mod tests {
                 "skill.read_asset",
                 "skill.read_manifest",
                 "skill.uninstall",
+                "vault.request_lease",
             ]
         );
     }
@@ -5529,6 +5565,11 @@ mod tests {
             .collect();
         let skill_tools = builtin_tools_for_family(BuiltinToolFamily::Skill);
         let skill_ids: Vec<_> = skill_tools
+            .iter()
+            .map(|definition| definition.tool_id.as_str())
+            .collect();
+        let vault_tools = builtin_tools_for_family(BuiltinToolFamily::Vault);
+        let vault_ids: Vec<_> = vault_tools
             .iter()
             .map(|definition| definition.tool_id.as_str())
             .collect();
@@ -5557,6 +5598,7 @@ mod tests {
                 "skill.uninstall",
             ]
         );
+        assert_eq!(vault_ids, vec!["vault.request_lease"]);
         assert_eq!(
             builtin_tool_definition("job.install")
                 .unwrap()
@@ -5575,7 +5617,66 @@ mod tests {
                 .required_capabilities,
             vec!["skills:install"]
         );
-        assert!(builtin_tool_definition("vault.request_lease").is_none());
+        assert_eq!(
+            builtin_tool_definition("vault.request_lease")
+                .unwrap()
+                .required_capabilities,
+            vec!["vault:lease"]
+        );
+    }
+
+    #[test]
+    fn vault_lease_builtin_has_opaque_tier2_contract() {
+        let definition =
+            builtin_tool_definition("vault.request_lease").expect("vault built-in should exist");
+
+        assert_eq!(definition.side_effects, ToolSideEffects::External);
+        assert_eq!(definition.idempotency, ToolIdempotency::Never);
+        assert_eq!(definition.concurrency, ToolConcurrency::Serialized);
+        assert_eq!(definition.streaming, ToolStreaming::Events);
+        assert_eq!(definition.required_tier, PrivilegeTier::Tier2);
+        assert_eq!(definition.preferred_lock_scope.as_deref(), Some("vault"));
+
+        let arguments = JsonValue::Object(vec![
+            (
+                "secret_name".to_string(),
+                JsonValue::String("weather-api-key".to_string()),
+            ),
+            (
+                "ttl_ms".to_string(),
+                JsonValue::Number(JsonNumber::Integer(30_000)),
+            ),
+        ]);
+        assert!(definition.input_schema.validate_value(&arguments).ok);
+
+        let receipt = JsonValue::Object(vec![
+            (
+                "vault_ref".to_string(),
+                JsonValue::String("vault-lease:opaque".to_string()),
+            ),
+            (
+                "expires_at_ms".to_string(),
+                JsonValue::Number(JsonNumber::Integer(1_800_000_000_000)),
+            ),
+        ]);
+        let output = definition.output_schema.as_ref().unwrap();
+        assert!(output.validate_value(&receipt).ok);
+
+        let exposed_secret = JsonValue::Object(vec![
+            (
+                "vault_ref".to_string(),
+                JsonValue::String("vault-lease:opaque".to_string()),
+            ),
+            (
+                "expires_at_ms".to_string(),
+                JsonValue::Number(JsonNumber::Integer(1_800_000_000_000)),
+            ),
+            (
+                "secret_b64".to_string(),
+                JsonValue::String("must-not-cross-boundary".to_string()),
+            ),
+        ]);
+        assert!(!output.validate_value(&exposed_secret).ok);
     }
 
     #[test]
@@ -5611,20 +5712,22 @@ mod tests {
         let export = builtin_tool_catalog_export(ToolCatalogQuery::new());
 
         assert!(export.ok());
-        assert_eq!(export.summary.total_tools, 33);
-        assert_eq!(export.schema_documents.len(), 33);
+        assert_eq!(export.summary.total_tools, 34);
+        assert_eq!(export.schema_documents.len(), 34);
         assert_eq!(export.summary.by_family.get("context"), Some(&6));
         assert_eq!(export.summary.by_family.get("artifact"), Some(&7));
         assert_eq!(export.summary.by_family.get("skill"), Some(&7));
         assert_eq!(export.summary.by_family.get("memory"), Some(&7));
         assert_eq!(export.summary.by_family.get("job"), Some(&6));
+        assert_eq!(export.summary.by_family.get("vault"), Some(&1));
         assert_eq!(export.summary.tag_count("store"), 27);
         assert_eq!(export.summary.tag_count("scheduler"), 6);
         assert_eq!(export.summary.required_capability_count("memory:read"), 3);
         assert_eq!(export.summary.required_capability_count("skills:read"), 3);
         assert!(export.summary.has_tag("store"));
         assert!(export.summary.has_required_capability("jobs:run"));
-        assert_eq!(export.summary.streaming_tools, 17);
+        assert!(export.summary.has_required_capability("vault:lease"));
+        assert_eq!(export.summary.streaming_tools, 18);
         assert!(export.summary.has_write_or_external_tools());
         assert!(export.summary.has_serialized_tools());
         assert!(export.summary.has_capability_gates());

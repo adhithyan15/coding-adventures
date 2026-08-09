@@ -5,7 +5,7 @@
       "host_id": "vault",
       "max_tier": "tier2",
       "allowed_tools": ["vault.request_lease"],
-      "capabilities": ["vault_lease"]
+      "capabilities": ["vault:lease"]
     },
     {
       "host_id": "weather_fetcher",

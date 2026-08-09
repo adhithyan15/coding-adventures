@@ -334,8 +334,7 @@ impl SkillSourceSummary {
         }
 
         summary.unique_source_kinds = source_kinds.len();
-        summary.source_kinds = source_kinds.into_values()
-            .collect();
+        summary.source_kinds = source_kinds.into_values().collect();
         summary
     }
 
@@ -871,7 +870,7 @@ fn validate_skill_list_options(options: &SkillListOptions) -> Result<(), Storage
     }
     validate_id_list("entrypoints", &options.entrypoints)?;
     validate_id_list("required_tools", &options.required_tools)?;
-    validate_id_list("required_capabilities", &options.required_capabilities)
+    validate_capability_list(&options.required_capabilities)
 }
 
 fn validate_skill_asset_list_options(options: &SkillAssetListOptions) -> Result<(), StorageError> {
@@ -1161,7 +1160,7 @@ fn validate_manifest(manifest: &SkillManifest) -> Result<(), StorageError> {
     validate_name("description", &manifest.description)?;
     validate_id_list("entrypoints", &manifest.entrypoints)?;
     validate_id_list("required_tools", &manifest.required_tools)?;
-    validate_id_list("required_capabilities", &manifest.required_capabilities)?;
+    validate_capability_list(&manifest.required_capabilities)?;
     for asset in &manifest.assets {
         validate_asset_path(asset)?;
     }
@@ -1187,6 +1186,25 @@ fn validate_id(field: &str, value: &str) -> Result<(), StorageError> {
 fn validate_id_list(field: &str, values: &[String]) -> Result<(), StorageError> {
     for value in values {
         validate_id(field, value)?;
+    }
+    Ok(())
+}
+
+fn validate_capability_list(values: &[String]) -> Result<(), StorageError> {
+    for value in values {
+        if value.is_empty()
+            || !value.split(':').all(|segment| {
+                !segment.is_empty()
+                    && segment.chars().all(|character| {
+                        character.is_ascii_alphanumeric() || matches!(character, '-' | '_' | '.')
+                    })
+            })
+        {
+            return Err(validation(
+                "required_capabilities",
+                "must be a colon-delimited ASCII capability scope",
+            ));
+        }
     }
     Ok(())
 }
@@ -1297,6 +1315,32 @@ mod tests {
             .unwrap()
             .unwrap();
         assert_eq!(asset.body, b"# hi".to_vec());
+    }
+
+    #[test]
+    fn manifests_accept_scoped_capabilities_and_reject_empty_segments() {
+        let store = SkillStore::new(InMemoryStorageBackend::new());
+        let mut scoped = manifest(true);
+        scoped.required_capabilities = vec!["vault:lease:bank-creds".to_string()];
+        store.install_skill(scoped, Vec::new()).unwrap();
+        assert_eq!(
+            store
+                .load_manifest("planner", "v1")
+                .unwrap()
+                .unwrap()
+                .required_capabilities,
+            vec!["vault:lease:bank-creds"]
+        );
+
+        for invalid in ["vault::lease", ":vault", "vault:", "vault/lease"] {
+            let mut rejected = manifest(false);
+            rejected.required_capabilities = vec![invalid.to_string()];
+            assert!(matches!(
+                store.install_skill(rejected, Vec::new()),
+                Err(StorageError::Validation { field, .. })
+                    if field == "required_capabilities"
+            ));
+        }
     }
 
     #[test]

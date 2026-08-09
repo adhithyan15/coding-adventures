@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Accept canonical colon-delimited D18D capability scopes in reviewed host
+  profiles so built-in service policy can be registered without aliases.
 - Support a distinct signed, code-free `SKILL.md` package layout alongside the
   canonical deny-all Deno layout.
 - Add no-overwrite package signing and retain authenticated Level 1 source bytes
