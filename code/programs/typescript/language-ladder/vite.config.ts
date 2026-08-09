@@ -46,6 +46,14 @@ export default defineConfig({
               name: "book-ledgers",
               test: /(?:chapters\.json|generated-book-hashes\.json)$/,
             },
+            {
+              // Handwriting grows one cited path at a time. Keep its model,
+              // renderer, and font parser out of the interactive shell so
+              // later source-backed letters do not consume shell headroom.
+              name: "handwriting-tools",
+              test:
+                /language-ladder[\\/]src[\\/](?:strokes|ductusview|truetype)\.ts$/,
+            },
           ],
         },
       },

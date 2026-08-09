@@ -16,7 +16,11 @@ one idea in every language that has it, side by side.
 The production app keeps lesson Markdown lazy. Learn fetches only the small
 track-local batches containing completed and current-frontier lessons; opening
 Lessons or Concepts opts into all 278 batches rather than 1,669 individual
-lesson requests. BUILD checks both the request ceiling and chunk-size budgets.
+lesson requests. The handwriting model, SVG renderer, and font parser share one
+independently cacheable eager chunk, leaving the interactive shell room for later
+source-backed paths without making startup asynchronous. BUILD requires that
+split and checks both the request ceiling and the unchanged 500,000-byte eager
+chunk budget.
 
 ## Learn mode (the curriculum session)
 
