@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.8.0";
+pub const VERSION: &str = "0.9.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1346,6 +1346,82 @@ fn parse_sequence_message(
         "DOTTED_CROSS_ARROW" => (SequenceLineStyle::Dotted, SequenceArrowhead::Cross, false),
         "SOLID_POINT_ARROW" => (SequenceLineStyle::Solid, SequenceArrowhead::Point, false),
         "DOTTED_POINT_ARROW" => (SequenceLineStyle::Dotted, SequenceArrowhead::Point, false),
+        "SOLID_FILLED_TOP" => (
+            SequenceLineStyle::Solid,
+            SequenceArrowhead::FilledTop,
+            false,
+        ),
+        "SOLID_FILLED_BOTTOM" => (
+            SequenceLineStyle::Solid,
+            SequenceArrowhead::FilledBottom,
+            false,
+        ),
+        "SOLID_STICK_TOP" => (SequenceLineStyle::Solid, SequenceArrowhead::StickTop, false),
+        "SOLID_STICK_BOTTOM" => (
+            SequenceLineStyle::Solid,
+            SequenceArrowhead::StickBottom,
+            false,
+        ),
+        "DOTTED_FILLED_TOP" => (
+            SequenceLineStyle::Dotted,
+            SequenceArrowhead::FilledTop,
+            false,
+        ),
+        "DOTTED_FILLED_BOTTOM" => (
+            SequenceLineStyle::Dotted,
+            SequenceArrowhead::FilledBottom,
+            false,
+        ),
+        "DOTTED_STICK_TOP" => (
+            SequenceLineStyle::Dotted,
+            SequenceArrowhead::StickTop,
+            false,
+        ),
+        "DOTTED_STICK_BOTTOM" => (
+            SequenceLineStyle::Dotted,
+            SequenceArrowhead::StickBottom,
+            false,
+        ),
+        "SOLID_REVERSE_FILLED_TOP" => (
+            SequenceLineStyle::Solid,
+            SequenceArrowhead::ReverseFilledTop,
+            false,
+        ),
+        "SOLID_REVERSE_FILLED_BOTTOM" => (
+            SequenceLineStyle::Solid,
+            SequenceArrowhead::ReverseFilledBottom,
+            false,
+        ),
+        "SOLID_REVERSE_STICK_TOP" => (
+            SequenceLineStyle::Solid,
+            SequenceArrowhead::ReverseStickTop,
+            false,
+        ),
+        "SOLID_REVERSE_STICK_BOTTOM" => (
+            SequenceLineStyle::Solid,
+            SequenceArrowhead::ReverseStickBottom,
+            false,
+        ),
+        "DOTTED_REVERSE_FILLED_TOP" => (
+            SequenceLineStyle::Dotted,
+            SequenceArrowhead::ReverseFilledTop,
+            false,
+        ),
+        "DOTTED_REVERSE_FILLED_BOTTOM" => (
+            SequenceLineStyle::Dotted,
+            SequenceArrowhead::ReverseFilledBottom,
+            false,
+        ),
+        "DOTTED_REVERSE_STICK_TOP" => (
+            SequenceLineStyle::Dotted,
+            SequenceArrowhead::ReverseStickTop,
+            false,
+        ),
+        "DOTTED_REVERSE_STICK_BOTTOM" => (
+            SequenceLineStyle::Dotted,
+            SequenceArrowhead::ReverseStickBottom,
+            false,
+        ),
         other => {
             return Err(token_error(
                 &arrow,
@@ -2904,6 +2980,38 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         );
         assert_eq!(diagram.participants[5].kind, SequenceParticipantKind::Queue);
     }
+
+    #[test]
+    fn sequence_parses_half_arrow_families() {
+        let diagram = parse_sequence_diagram(
+            r#"sequenceDiagram
+A-|\B: filled top
+B--|/A: dotted filled bottom
+A-\\B: stick top
+B//-A: reverse stick top
+"#,
+        )
+        .unwrap();
+        let arrows: Vec<_> = diagram
+            .events
+            .iter()
+            .filter_map(|event| match event {
+                SequenceEvent::Message {
+                    arrowhead,
+                    line_style,
+                    ..
+                } => Some((arrowhead, line_style)),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(arrows[0].0, &SequenceArrowhead::FilledTop);
+        assert_eq!(
+            arrows[1],
+            (&SequenceArrowhead::FilledBottom, &SequenceLineStyle::Dotted)
+        );
+        assert_eq!(arrows[2].0, &SequenceArrowhead::StickTop);
+        assert_eq!(arrows[3].0, &SequenceArrowhead::ReverseStickTop);
+    }
 }
 #[cfg(test)]
 mod tests {
@@ -2920,7 +3028,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.8.0");
+        assert_eq!(crate::VERSION, "0.9.0");
     }
 
     #[test]

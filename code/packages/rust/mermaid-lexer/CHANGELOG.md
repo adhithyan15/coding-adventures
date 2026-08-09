@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.0
+
+- Tokenize all Mermaid 11.16.1 solid and dotted half-arrow forms.
+
 ## 0.7.0
 
 - Tokenize inline sequence participant configuration objects.

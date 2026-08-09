@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.0 - 2026-08-09
+
+- Preserve half-arrow style and endpoint semantics through sequence layout.
+
 ## 0.4.0 - 2026-08-09
 
 - Lay out sequence participant groups around their member lanes.

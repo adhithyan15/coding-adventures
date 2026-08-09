@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.8.0";
+pub const VERSION: &str = "0.9.0";
 
 use std::collections::HashMap;
 
@@ -1299,7 +1299,18 @@ where
                     },
                     stroke_dash_offset: None,
                 }));
-                instructions.extend(sequence_arrowhead(&start, &end, arrowhead));
+                let reverse = matches!(
+                    arrowhead,
+                    SequenceArrowhead::ReverseFilledTop
+                        | SequenceArrowhead::ReverseFilledBottom
+                        | SequenceArrowhead::ReverseStickTop
+                        | SequenceArrowhead::ReverseStickBottom
+                );
+                if reverse {
+                    instructions.extend(sequence_arrowhead(&end, &start, arrowhead));
+                } else {
+                    instructions.extend(sequence_arrowhead(&start, &end, arrowhead));
+                }
                 if *bidirectional {
                     instructions.extend(sequence_arrowhead(&end, &start, arrowhead));
                 }
@@ -1683,6 +1694,11 @@ fn sequence_arrowhead(
         x: back_x - px * 5.0,
         y: back_y - py * 5.0,
     };
+    let (top, bottom) = if left.y <= right.y {
+        (&left, &right)
+    } else {
+        (&right, &left)
+    };
     let commands = match arrowhead {
         SequenceArrowhead::Open => vec![
             PathCommand::MoveTo {
@@ -1737,12 +1753,49 @@ fn sequence_arrowhead(
             },
             PathCommand::Close,
         ],
+        SequenceArrowhead::FilledTop | SequenceArrowhead::ReverseFilledTop => vec![
+            PathCommand::MoveTo { x: tip.x, y: tip.y },
+            PathCommand::LineTo { x: top.x, y: top.y },
+            PathCommand::LineTo {
+                x: back_x,
+                y: back_y,
+            },
+            PathCommand::Close,
+        ],
+        SequenceArrowhead::FilledBottom | SequenceArrowhead::ReverseFilledBottom => vec![
+            PathCommand::MoveTo { x: tip.x, y: tip.y },
+            PathCommand::LineTo {
+                x: bottom.x,
+                y: bottom.y,
+            },
+            PathCommand::LineTo {
+                x: back_x,
+                y: back_y,
+            },
+            PathCommand::Close,
+        ],
+        SequenceArrowhead::StickTop | SequenceArrowhead::ReverseStickTop => vec![
+            PathCommand::MoveTo { x: top.x, y: top.y },
+            PathCommand::LineTo { x: tip.x, y: tip.y },
+        ],
+        SequenceArrowhead::StickBottom | SequenceArrowhead::ReverseStickBottom => vec![
+            PathCommand::MoveTo {
+                x: bottom.x,
+                y: bottom.y,
+            },
+            PathCommand::LineTo { x: tip.x, y: tip.y },
+        ],
     };
     vec![PaintInstruction::Path(PaintPath {
         base: PaintBase::default(),
         commands,
         fill: match arrowhead {
-            SequenceArrowhead::Filled | SequenceArrowhead::Point => Some("#334155".into()),
+            SequenceArrowhead::Filled
+            | SequenceArrowhead::Point
+            | SequenceArrowhead::FilledTop
+            | SequenceArrowhead::FilledBottom
+            | SequenceArrowhead::ReverseFilledTop
+            | SequenceArrowhead::ReverseFilledBottom => Some("#334155".into()),
             _ => None,
         },
         fill_rule: None,
@@ -2557,7 +2610,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.8.0");
+        assert_eq!(crate::VERSION, "0.9.0");
     }
 
     #[test]
@@ -2572,6 +2625,28 @@ mod tests {
         ];
         for kind in kinds {
             assert!(!sequence_participant_icon(&kind, 20.0, 20.0).is_empty());
+        }
+    }
+
+    #[test]
+    fn sequence_half_arrows_emit_half_head_geometry() {
+        let start = Point { x: 0.0, y: 20.0 };
+        let end = Point { x: 100.0, y: 20.0 };
+        for arrowhead in [
+            SequenceArrowhead::FilledTop,
+            SequenceArrowhead::FilledBottom,
+            SequenceArrowhead::StickTop,
+            SequenceArrowhead::StickBottom,
+            SequenceArrowhead::ReverseFilledTop,
+            SequenceArrowhead::ReverseFilledBottom,
+            SequenceArrowhead::ReverseStickTop,
+            SequenceArrowhead::ReverseStickBottom,
+        ] {
+            let instructions = sequence_arrowhead(&start, &end, &arrowhead);
+            assert!(matches!(
+                instructions.as_slice(),
+                [PaintInstruction::Path(_)]
+            ));
         }
     }
 

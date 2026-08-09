@@ -7,7 +7,7 @@ use diagram_ir::{
     SequenceEvent, SequenceNotePlacement,
 };
 
-pub const VERSION: &str = "0.4.0";
+pub const VERSION: &str = "0.5.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -402,6 +402,35 @@ mod tests {
             item,
             LayoutedSequenceItem::Message {
                 number: Some(1),
+                ..
+            }
+        )));
+    }
+
+    #[test]
+    fn preserves_half_arrow_semantics() {
+        let diagram = SequenceDiagram {
+            title: None,
+            auto_number: false,
+            participants: vec![participant("Alice"), participant("Bob")],
+            participant_groups: vec![],
+            events: vec![SequenceEvent::Message {
+                from: "Alice".into(),
+                to: "Bob".into(),
+                label: "Half".into(),
+                line_style: SequenceLineStyle::Dotted,
+                arrowhead: SequenceArrowhead::ReverseStickBottom,
+                bidirectional: false,
+                activate: false,
+                deactivate: false,
+            }],
+        };
+        let layout = layout_sequence_diagram(&diagram);
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedSequenceItem::Message {
+                line_style: SequenceLineStyle::Dotted,
+                arrowhead: SequenceArrowhead::ReverseStickBottom,
                 ..
             }
         )));

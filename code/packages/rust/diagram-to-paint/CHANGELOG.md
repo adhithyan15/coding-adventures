@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added normal and reverse filled/stick sequence half-arrow geometry.
 - Added backend-neutral sequence symbols for boundary, control, entity,
   database, collections, and queue participants.
 - Added sequence participant-group backgrounds and labels.
