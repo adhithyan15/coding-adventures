@@ -284,7 +284,92 @@ Later packages own:
 - caching, retry, rate limiting, metrics, and replica-set decorators;
 - repository verification, publication ordering, discovery, merge, and GC.
 
-## 12. Acceptance gates
+## 12. `storage-core` adapter profile
+
+Phase 1A's first persistent adapter is the separate
+`vault-pm-storage-storage-core` crate. It depends on `vault-pm-storage` and
+`storage-core`; neither foundational package depends on the adapter. The
+adapter accepts an injected `StorageBackend` and owns no filesystem path,
+clock, process, environment, network, entropy, key, record-codec, or custody
+authority.
+
+### 12.1 Locator binding and names
+
+`initialize(locator)` first initializes the injected backend and then binds it
+to one vault using an immutable marker record:
+
+- marker namespace is lowercase hex of
+  `SHA-256("vault-pm/storage-core/binding/namespace/v1")`;
+- marker key is lowercase hex of
+  `SHA-256("vault-pm/storage-core/binding/key/v1")`;
+- marker body is the exact 32-byte `VaultLocator`;
+- content type is `application/octet-stream` and metadata is an empty object.
+
+An absent marker is written with `if_absent`. A conditional-write race is
+re-read. Exact locator bytes mean idempotent success; different bytes mean
+`StoreError::Conflict`. Binding therefore survives adapter and process restart.
+All data operations fail with `NotInitialized` until binding succeeds.
+
+For vault data, `BucketId` maps to a `storage-core` namespace as lowercase hex
+of its 32 bytes, and `ObjectId` maps to a key by the same rule. No title,
+record type, username, path, provider label, or other caller-readable value is
+used in a namespace or key.
+
+### 12.2 Immutable operations
+
+- `get` and `stat` translate absent records to `None`, preserve exact body
+  bytes and length, and reject an oversized externally inserted record as
+  corruption.
+- `put_immutable` first compares any existing body. Equal bytes return
+  `AlreadyPresent`; different bytes return `Corruption`. An absent record is
+  written with `if_absent`; a race is re-read and classified by the same rule.
+- `list` delegates stable key pagination but accepts only limits from 1 through
+  `MAX_LIST_LIMIT`. Its opaque cursor is exactly 64 bytes:
+  `bucket_id || last_object_id`. A wrong bucket, wrong length, malformed
+  storage key, duplicate, descending, or oversized record is corruption or a
+  closed cursor input error, never a skipped result.
+- `delete_unreferenced` is supported. It stats first, returns `Missing` when
+  absent, and deletes with the observed `storage-core` revision so a concurrent
+  replacement becomes `Conflict` rather than deleting unchecked state.
+- `changes` returns `Unsupported`; `storage-core` has no change-feed contract.
+
+The reported adapter capabilities are strong read/list-after-write and
+conditional create within one injected backend instance, physical delete,
+and the V1 64 MiB object maximum. Conditional replace, change feed, push,
+resumable upload, range read, server checksum, and sharing are false. The
+initial preferred pack size is 8 MiB. These are optimization facts only.
+
+### 12.3 Error and trust boundary
+
+The adapter pattern-matches `StorageError` without formatting or copying its
+namespace, key, revision, field, or backend message. `Conflict` maps to the
+closed vault conflict, `Unavailable` maps to network failure, and other
+unexpected storage-core failures map to provider failure. A record body,
+locator, bucket, object ID, backend path, revision, or storage error string must
+not appear in adapter `Debug`, `Display`, or conformance failures.
+
+`storage-core` guarantees a conditional write only relative to one backend
+instance. The adapter does not promote that to a cross-process or cloud
+invariant. The Phase 1A filesystem composition uses one `FsStorageBackend`
+instance per open vault and the product's single-writer process policy.
+
+### 12.4 Required verification
+
+The adapter must:
+
+1. pass `run_conformance_suite` over `InMemoryStorageBackend`;
+2. pass the same suite over a fresh `FsStorageBackend` root;
+3. prove locator binding survives filesystem-backend reconstruction;
+4. prove immutable replay versus different-byte corruption after a
+   conditional-create race;
+5. reject cross-bucket/malformed cursors and malformed injected keys;
+6. expose no backend or opaque identifier bytes in diagnostics;
+7. exceed 95% line coverage, pass Clippy/rustdoc with warnings denied, and pass
+   the monorepo affected build; and
+8. declare no direct capabilities; filesystem and clock authority remain in
+   the injected `storage-fs` implementation.
+
+## 13. Acceptance gates
 
 - the spec, fixture, Rust model, README, changelog, and capability manifest agree;
 - the reference backend passes the reusable suite with pagination limits of 1,

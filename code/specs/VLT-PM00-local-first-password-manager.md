@@ -1256,7 +1256,9 @@ changelog, focused build, and downstream validation.
 
 ### Phase 1A — local CLI
 
-6. `StorageCoreObjectStore` + filesystem conformance.
+6. `StorageCoreObjectStore` + filesystem conformance, using the opaque mapping,
+   persistent locator binding, immutable-race handling, cursor format, closed
+   error translation, and acceptance gates in VLT-PM02 section 12.
 7. `vault-pm-repository`: publication, verification, local heads, history, GC
    plan.
 8. `vault-pm-application`: init/open/item/search/history/export/audit workflows.
