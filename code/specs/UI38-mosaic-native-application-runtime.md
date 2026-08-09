@@ -308,8 +308,14 @@ unblocks multiple downstream targets; never count source generation as completio
 - [ ] Type-check the complete generated Trestle application on every target, not
   only focused fixtures; SwiftUI still needs type-correct truthiness lowering and
   collision-safe generated member names, while Flutter still needs boolean
-  truthiness lowering and required input values, and Qt still needs plain `Input`
-  lowering before that gate can pass.
+  truthiness lowering and required input values. Qt's plain multiline `Input`
+  lowering is complete; the complete TaskApp now reaches Qt's QML compiler, which
+  rejects styled fixed-width `Box` output because it assigns `implicitWidth` once
+  for the fixed width and again for content-derived wrapper sizing. Deduplicate
+  those generated size bindings before the Qt full-app gate can pass. Standalone
+  Qt package compilation also needs collision-safe signal names: Notes' `onDelete`
+  currently lowers to QML's reserved `signal delete()` identifier, although the
+  composed TaskApp's namespaced `onDeleteNote` avoids that collision.
 
 ### P1 — reusable application vocabulary
 
