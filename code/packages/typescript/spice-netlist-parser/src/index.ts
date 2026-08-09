@@ -1523,6 +1523,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("BJT TNOM must be finite and positive");
   }
+  const bjtFlickerNoiseCoefficient = params.get("KF");
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtFlickerNoiseCoefficient !== undefined &&
+    (!Number.isFinite(bjtFlickerNoiseCoefficient) || bjtFlickerNoiseCoefficient < 0.0)
+  ) {
+    throw new NetlistParseError("BJT KF must be finite and non-negative");
+  }
   const gateSourceCapacitance = params.get("CGS") ?? params.get("CGS0");
   if (
     (kind === "NJF" || kind === "PJF") &&
@@ -2260,6 +2268,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("BR") ?? model.params.get("BETA_R") ?? 1.0,
       model.params.get("IKR") ?? 0.0,
       nominalTemperature !== undefined ? nominalTemperature + 273.15 : undefined,
+      model.params.get("KF") ?? 0.0,
     );
   }
   if (prefix === "J") {

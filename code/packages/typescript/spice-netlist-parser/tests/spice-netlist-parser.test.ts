@@ -1903,6 +1903,24 @@ Q1 col base emit fast
     );
   });
 
+  it.each([
+    ["0", 0.0],
+    ["2e-18", 2.0e-18],
+  ])("parses BJT flicker-noise coefficient KF=%s", (value, expected) => {
+    const parsed = parseNetlist(`.model fast NPN(KF=${value})\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      flickerNoiseCoefficient: expected,
+    });
+  });
+
+  it.each(["-1e-18", "1e999"])("rejects invalid BJT KF=%s", (value) => {
+    expect(() => parseNetlist(`.model fast NPN(KF=${value})`)).toThrow(
+      "BJT KF must be finite and non-negative",
+    );
+  });
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)
