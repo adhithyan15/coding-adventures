@@ -695,16 +695,15 @@
       "id": "ES-PATH-042",
       "spine_node": "SPINE-SAY-WHAT-I-WANT",
       "lessons": [
-        "ES-C18-subjuntivo",
-        "ES-C18-inherited-subjunctive-stems",
-        "ES-C18-subjunctive-outliers",
-        "ES-C18-subjunctive-name",
         "ES-C18-quiero-que",
-        "ES-C18-wanting-clause-trap",
+        "ES-C18-subjuntivo",
+        "ES-C18-comer-subjuntivo",
+        "ES-C18-vivir-subjuntivo",
+        "ES-C18-querer-subjuntivo",
+        "ES-C18-poder-subjuntivo",
+        "ES-C18-hacer-subjuntivo",
         "ES-C18-ojala",
-        "ES-C18-practice",
-        "ES-C18-practice-subjects",
-        "ES-C18-practice-mood"
+        "ES-C18-practice"
       ],
       "before": [],
       "inline": [
@@ -2037,16 +2036,15 @@
       "canDo": "I can use the Spanish-specific vocabulary and grammar that support this shared ability.",
       "prerequisites": [],
       "lessons": [
-        "ES-C18-subjuntivo",
-        "ES-C18-inherited-subjunctive-stems",
-        "ES-C18-subjunctive-outliers",
-        "ES-C18-subjunctive-name",
         "ES-C18-quiero-que",
-        "ES-C18-wanting-clause-trap",
+        "ES-C18-subjuntivo",
+        "ES-C18-comer-subjuntivo",
+        "ES-C18-vivir-subjuntivo",
+        "ES-C18-querer-subjuntivo",
+        "ES-C18-poder-subjuntivo",
+        "ES-C18-hacer-subjuntivo",
         "ES-C18-ojala",
-        "ES-C18-practice",
-        "ES-C18-practice-subjects",
-        "ES-C18-practice-mood"
+        "ES-C18-practice"
       ]
     },
     {

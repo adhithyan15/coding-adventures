@@ -384,7 +384,8 @@ describe("the real corpus", () => {
     // retrieves all twelve in its atom-free terminal checkpoint.
     // Chapter 17 repeats that bounded twelve-atom shape across seven teaching
     // steps and one atom-free terminal checkpoint.
-    expect(report.summary.atomsTaught).toBe(2619);
+    // Chapter 18 does the same across eight teaching steps before its checkpoint.
+    expect(report.summary.atomsTaught).toBe(2631);
     // +2, and it goes UP, which is worth stating plainly. Three of the five new atoms
     // are TA-W09's and nothing follows TA-W09, so they are orphans by construction:
     // PA-YA-01, E-SIGN-02, READ-PEYAR-03. TA-W08's two are revisited by TA-W09.
@@ -467,7 +468,8 @@ describe("the real corpus", () => {
     // inside known Madrid, Roberto, español, and the singular-person frontier.
     // Chapter 15 removes one more net leak by deferring every plural form and using
     // only already-declared café, en, bien, and Madrid in its singular examples.
-    expect(report.summary.forwardReferences).toBe(426);
+    // Chapter 18 removes one more by deferring its untaught clause-frame examples.
+    expect(report.summary.forwardReferences).toBe(425);
 
     // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
     // day as 766 -> 749. The absolute figures drift as main lands lessons; what the
@@ -521,7 +523,9 @@ describe("the real corpus", () => {
     // but five deliberately tiny teaching steps spread the earliest atoms beyond R1.
     // Chapter 16 adds two net R1 misses: the early imperfect atoms are
     // retrieved locally, but its eight-lesson footprint pushes two beyond R1.
-    expect(report.summary.missedByWindow.R1).toBe(860);
+    // Chapter 18 adds four: its terminal checkpoint retrieves all twelve atoms,
+    // but eight small teaching steps push the earliest four beyond R1.
+    expect(report.summary.missedByWindow.R1).toBe(864);
     // +2 net, and the composition is the interesting part: all FIVE new atoms miss R2
     // as well, offset by THREE pre-existing atoms that TA-W09 pulls back into it.
     // TA-W09 sits 12 lessons after TA-W06 and 8 after TA-W07, both inside R2's 5-15
@@ -543,7 +547,8 @@ describe("the real corpus", () => {
     // Chapters 17 onward still own the farther reinforcement window.
     // Chapter 17 adds seven more: the local checkpoint retrieves every atom,
     // while later chapters still own the five-to-fifteen-lesson revisit window.
-    expect(report.summary.missedByWindow.R2).toBe(1794);
+    // Chapter 18 adds five more far-window misses for the same reason.
+    expect(report.summary.missedByWindow.R2).toBe(1799);
   });
 
   it("shows what a declared reading order was worth", () => {
@@ -571,7 +576,8 @@ describe("the real corpus", () => {
       // point of the pin: new content is supposed to leave the walk alone.
       // Chapter 16 replaces three legacy lessons with eight bounded steps;
       // Chapter 17 replaces four legacy lessons with eight bounded steps.
-      lessonCount: 189,
+      // Chapter 18 replaces ten legacy lessons with nine bounded steps.
+      lessonCount: 188,
       lessonsWithoutSequence: 0,
       forwardPrerequisites: 0,
       // Chapters 9, 10, and 13 each add nine atoms, Chapter 11 adds eleven, and
@@ -580,7 +586,8 @@ describe("the real corpus", () => {
       // Chapter 15 adds twelve atoms across five steps, then revisits all twelve.
       // Chapter 16 adds twelve atoms without adding an unrevisited orphan.
       // Chapter 17 does the same across its future and conditional ramp.
-      atomsTaught: 372,
+      // Chapter 18 does the same across its singular subjunctive ramp.
+      atomsTaught: 384,
       atomsNeverRevisited: 65,
     });
   });

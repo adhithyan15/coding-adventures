@@ -463,16 +463,29 @@
       "chapter": 18,
       "title": "The Subjunctive --- the Mood of the Not-Yet-Real",
       "label": "ch:subjunctive",
-      "canDo": "I can form the present Spanish subjunctive and use it after a small set of wishes, doubts, and not-yet-real prompts.",
+      "canDo": "I can distinguish an asserted event from a wanted one and use the learned singular present-subjunctive forms after quiero que or ojalá.",
       "spineNodes": [
         "SPINE-SAY-WHAT-I-WANT"
       ],
       "payoff": {
-        "lesson": "ES-C18-practice-mood",
+        "lesson": "ES-C18-practice",
         "kind": "task",
-        "summary": "Complete ES-C18-practice-mood, the canonical closing checkpoint, and demonstrate the chapter promise: form the present Spanish subjunctive and use it after a small set of wishes, doubts, and not-yet-real prompts.",
-        "assesses": [],
-        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+        "summary": "Complete ES-C18-practice and choose asserted versus wanted meaning before retrieving the singular forms of hablar, comer, vivir, querer, poder, and hacer in the two learned trigger frames.",
+        "assesses": [
+          "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
+          "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
+          "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR",
+          "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP",
+          "ES-ETYMON-SUBJUNCTIVE-SUBIUNCTIVUS",
+          "ES-GRAMMAR-ER-SUBJUNCTIVE-SINGULAR",
+          "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR",
+          "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
+          "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
+          "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR",
+          "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER",
+          "ES-ETYMON-OJALA-HISPANIC-ARABIC"
+        ],
+        "note": "The payoff retrieves all twelve Chapter-18 atoms with mapped activities and deliberately defers plural persons, additional irregular verbs, object pronouns, person nouns, and additional subjunctive triggers."
       }
     },
     {

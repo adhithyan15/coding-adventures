@@ -650,6 +650,7 @@ describe("the whole corpus", () => {
     // Chapter 10 replaces a four-column possessive table with singular known-noun
     // frames. Chapter 15 replaces its two wide teaching tables with voice-first
     // singular comparisons; only the mapped terminal table still needs sight.
-    expect(refusals).toBe(66);
+    // Chapter 18 removes its remaining refused wide table.
+    expect(refusals).toBe(65);
   });
 });

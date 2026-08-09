@@ -878,7 +878,8 @@ describe("corpus regression", () => {
       // sight-dependent, so the split adds three lessons without widening the seam.
       // Chapter 16 replaces three legacy lessons with eight bounded steps.
       // Chapter 17 replaces four legacy lessons with eight bounded steps.
-      totalLessons: 1681,
+      // Chapter 18 replaces ten legacy lessons with nine bounded steps.
+      totalLessons: 1680,
       // Chapters 10 and 13 replace wide legacy tables with small singular-only
       // comparisons, so three more lessons move from sight to voice.
       // All seven Chapter-16 teaching steps are voice-first; only the terminal
@@ -890,7 +891,8 @@ describe("corpus regression", () => {
       // strand. Verified against the GENERATED manifest, not the source — all three now
       // record reasons ["no-visual-dependency"], so the script teaching genuinely left
       // the lesson rather than a heading being renamed out from under the classifier.
-      sight: 525,
+      // Chapter 18 removes its one remaining sight-only lesson.
+      sight: 524,
       // +3 pen: the Tamil ch1 writing lessons. Rule 1 in src/modality.ts derives
       // this from the lesson TYPE alone — it says outright that it does not look at
       // the body — so all three record reasons ["writing-type","script-block"], and
@@ -935,13 +937,15 @@ describe("corpus regression", () => {
       // sight checkpoint, raising the useful prefix by four.
       // Chapter 16's reachable voice-first prefix grows by six.
       // Chapter 17's reachable voice-first prefix grows by five.
-      drivablePrefixTotal: 902,
+      // All nine redesigned Chapter-18 steps are reachable by ear.
+      drivablePrefixTotal: 911,
       // -2: chapters 21 and 23 each take a writing lesson and stop being ear-only.
       // Spreading the strand cannot happen without landing a pen lesson somewhere.
       // Spanish Chapters 10 and 13 are now fully drivable from their canonical ASTs.
-      fullyDrivableChapters: 324,
-      // Tamil chapter 2 and Spanish chapter 13 can now be started by ear.
-      unstartableChapters: 141,
+      // Spanish Chapter 18 also becomes fully drivable.
+      fullyDrivableChapters: 325,
+      // Tamil chapter 2, Spanish chapter 13, and Spanish chapter 18 can now start by ear.
+      unstartableChapters: 140,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
     });

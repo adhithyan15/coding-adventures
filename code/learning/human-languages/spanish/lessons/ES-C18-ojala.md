@@ -1,52 +1,68 @@
 ---
+schema_version: 2
 id: ES-C18-ojala
+spine_node: SPINE-SAY-WHAT-I-WANT
+sequence: 1208
 chapter: 18
-sequence: 1240
 type: etymology
-headword: ojalá
-gloss: a wish-word borrowed from Andalusi Arabic that triggers the subjunctive without que or a main verb
-prerequisites: [ES-C18-wanting-clause-trap]
-sounds: [vowel-a, accent-mark]
-roots: [arabic-law-sha-allah]
-etymology_hook: "ojalá comes from Andalusi Arabic law šāʾ Allāh, 'if God should will'; Spanish borrowed a function word that now triggers a whole grammatical mood"
-est_minutes: 4
-reviews_of: [ES-C18-wanting-clause-trap, ES-C05-hasta]
+headword: ojalá + subjunctive
+gloss: a wish trigger borrowed through Hispanic Arabic
+concept_tag: ES-SUBJUNCTIVE-OJALA
+prerequisites: [ES-C18-hacer-subjuntivo, ES-C05-hasta]
+sounds: [vowel-a, stress-final, accent-acute]
+roots: [arabic-wa-sha-allah]
+etymology_hook: "the RAE records ojalá from Hispanic Arabic wa šá lláh, 'and God has willed'; modern ojalá expresses a strong wish and directly licenses the subjunctive"
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED, ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR, ES-LEX-HABLAR, ES-LEX-ESPANOL]
+introduces:
+  knowledge: [ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER, ES-ETYMON-OJALA-HISPANIC-ARABIC]
+practises:
+  knowledge: [ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED, ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR, ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER, ES-ETYMON-OJALA-HISPANIC-ARABIC]
+skills: [listening, speaking, reading, writing]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C18-hacer-subjuntivo, ES-C05-hasta]
 ---
 
-# ojalá — a wish borrowed whole
+# ojalá + subjunctive — a wish borrowed through Arabic
 
-## A trigger by itself
+## Warm-up
+<!-- hl-knowledge: introduces=[ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER]; assesses=[ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED, ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR, ES-LEX-HABLAR, ES-LEX-ESPANOL] -->
 
-> **Ojalá hable español.** — I hope he speaks Spanish. / May he speak Spanish.
+[PAUSE 2s] **Ojalá hables español** means “I hope you speak Spanish” or “May
+you speak Spanish.” **Ojalá** expresses the wish by itself. It needs neither a
+main verb nor **que** before the subjunctive. Keep the first frame tiny:
 
-**Ojalá** takes the subjunctive without **que** or a separate main verb. The
-word itself expresses the wish, so there is no factual assertion to put in
-the indicative.
+> **Ojalá + subjunctive**
 
-## From Andalusi Arabic
+That is a usable modern pattern. It does not make the Arabic source phrase new
+Spanish vocabulary.
 
-The standard account derives **ojalá** from Andalusi Arabic **law šāʾ
-Allāh**, "if God should will." The **Allāh** remains audible in the second
-half.
+## The wish-word, taken apart
+<!-- hl-knowledge: introduces=[ES-ETYMON-OJALA-HISPANIC-ARABIC]; assesses=[ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER] -->
 
-Chapter 5 gave you another Arabic function word: **hasta**, from **ḥattā**.
-Borrowing nouns such as **azúcar**, **aceite**, and **álgebra** is ordinary.
-Borrowing grammatical tools is rarer. Spanish borrowed both a preposition
-and a word that selects a whole mood.
-
-English "God willing" expresses the same idea, and English has now borrowed
-Arabic **inshallah** directly as well.
+The Real Academia Española records **ojalá** from Hispanic Arabic **wa šá
+lláh**, “and God has willed.” Long contact in al-Andalus carried the expression
+into Spanish, where its sound and grammatical life changed. You met another
+Arabic-derived function word in **hasta**. The historical phrase explains a
+route; only modern **ojalá** is available for your Spanish sentences.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED, ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR, ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER, ES-ETYMON-OJALA-HISPANIC-ARABIC] -->
+<!-- hl-activity: {"id":"ES-C18-ojala-trigger","kind":"text","assesses":["ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER","ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR","ES-LEX-HABLAR","ES-LEX-ESPANOL"],"prompt":"Say 'I hope you speak Spanish' to one friend using ojalá.","answer":"Ojalá hables español.","accepted":["Ojalá hables español","Ojala hables espanol"],"feedback":{"correct":"Right: Ojalá hables español.","incorrect":"Use ojalá directly before the tú subjunctive hables."},"response_seconds":9} -->
+<!-- hl-activity: {"id":"ES-C18-ojala-no-que","kind":"text","assesses":["ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER"],"prompt":"Does the learned ojalá frame require que before hables? Answer yes or no.","answer":"no","accepted":[],"feedback":{"correct":"Right: ojalá directly licenses the subjunctive in this frame.","incorrect":"No: say Ojalá hables, without que."},"response_seconds":5} -->
+<!-- hl-activity: {"id":"ES-C18-ojala-source","kind":"text","assesses":["ES-ETYMON-OJALA-HISPANIC-ARABIC"],"prompt":"Through which historical language variety did Spanish receive ojalá?","answer":"Hispanic Arabic","accepted":["Arabic","Andalusi Arabic","Hispano-Arabic"],"feedback":{"correct":"Right: the recorded route is through Hispanic Arabic.","incorrect":"The historical route named here is Hispanic Arabic."},"response_seconds":7} -->
 
-[PAUSE 1s]
-- [YOU SAY: "ojalá hable" — may he speak]
-- [YOU SAY: "ojalá venga" — I hope she comes]
-- [YOU SAY: "hasta / ojalá" — two Arabic function words]
+[PAUSE 1s] Use only modern **ojalá** as the Spanish trigger.
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER, ES-ETYMON-OJALA-HISPANIC-ARABIC] -->
 
-[PAUSE 3s] Does **ojalá** require **que**? (**No.**) Which mood follows it?
-(**The subjunctive.**) What is its source phrase? (**Andalusi Arabic law
-šāʾ Allāh, "if God should will."**) Which other Arabic function word have
-you learned? (**Hasta.**)
+[PAUSE 3s] What follows **ojalá** in the learned frame? (The **subjunctive**.)
+Does it need **que**? (**No.**) Which historical language variety carried the
+word into Spanish? (**Hispanic Arabic.**) Is the older Arabic phrase usable as
+new Spanish vocabulary here? (**No.**)
