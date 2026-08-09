@@ -6,6 +6,8 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Head-content start tags processed after an explicit head end tag and before
+  the body has started now report the required after-head parse error.
 - A `dt` or `dd` start tag now reports the in-body parse error when
   implied-end-tag recovery closes a non-current description-list item,
   covering the remaining silent in-body list case without changing DOM

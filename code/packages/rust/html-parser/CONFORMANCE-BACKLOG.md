@@ -28,8 +28,8 @@ tree-construction cases and all 6,806 html5lib tokenizer cases with zero missing
 signatures and zero normalized skips. DOM output is complete, but diagnostic
 coverage is not:
 the checked 2,637-case tree corpus declares 6,243 errors across 2,183 cases.
-After the non-current description-list item start-tag diagnostic slice, 2,075
-of those cases emit at least one lexer or parser diagnostic and 108 remain
+After the post-head head-content start-tag diagnostic slice, 2,080 of those
+cases emit at least one lexer or parser diagnostic and 103 remain
 uncovered.
 Another 139 cases emit diagnostics despite having no legacy `#errors` rows.
 These are reviewed rather than automatically removed: 89 are full-document
@@ -38,8 +38,9 @@ error, including the current processing-instruction cases.
 
 The concrete document-shell insertion-mode inventory is complete: missing and
 nonconforming doctypes, duplicate shell tags, body/html boundary errors,
-after-body and frameset modes, implied-shell paragraph end tags, and rejected
-frameset starts all report their current-Standard parse errors.
+post-head head-content starts, after-body and frameset modes, implied-shell
+paragraph end tags, and rejected frameset starts all report their
+current-Standard parse errors.
 
 Fragment in-body EOF diagnostics are also complete. Authored disallowed open
 elements now report the same error as full-document parsing, while synthetic
@@ -65,7 +66,7 @@ open table blocks adoption-agency recovery. Description-list item start tags
 now report when implied-end-tag recovery closes a non-current `dt` or `dd`,
 without flagging adjacent description-list items.
 
-The fresh 108-case residual inventory keeps the next concrete groups in the
+The fresh 103-case residual inventory keeps the next concrete groups in the
 existing priority order: remaining table foster-parenting and table-scope
 boundaries;
 select/template recovery; script-tokenizer EOF recovery; plaintext/frameset

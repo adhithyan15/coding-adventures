@@ -4952,6 +4952,19 @@ impl HtmlParser {
         }
 
         if !in_foreign_content
+            && !self.is_fragment
+            && self.explicit_head_end_seen
+            && !self.has_open_element("head")
+            && !self.document_has_body_element()
+            && is_head_element(&name)
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-head-content-start-tag-after-head",
+                format!("start tag `<{name}>` was processed after the head had closed"),
+            ));
+        }
+
+        if !in_foreign_content
             && self.current_element_is("frameset")
             && !matches!(name.as_str(), "frame" | "frameset" | "noframes")
         {
@@ -33167,6 +33180,33 @@ mod tests {
                 )
             ]
         );
+    }
+
+    #[test]
+    fn reports_head_content_start_tags_after_an_explicit_head_end() {
+        for (source, tag_name) in [
+            ("<!doctype html><head></head><title>x</title>", "title"),
+            ("<!doctype html></head><base>", "base"),
+            ("<!doctype html></head><basefont>", "basefont"),
+            ("<!doctype html></head><bgsound>", "bgsound"),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+                diagnostic.code == "unexpected-head-content-start-tag-after-head"
+                    && diagnostic.message.contains(tag_name)
+            }));
+        }
+
+        for source in [
+            "<!doctype html><title>x</title>",
+            "<!doctype html><head><title>x</title></head>",
+            "<!doctype html><body><title>x</title>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-head-content-start-tag-after-head"
+            }));
+        }
     }
 
     #[test]
