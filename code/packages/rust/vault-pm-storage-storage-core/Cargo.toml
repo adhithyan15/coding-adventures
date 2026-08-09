@@ -1,0 +1,14 @@
+[package]
+name = "coding_adventures_vault_pm_storage_storage_core"
+version = "0.1.0"
+edition = "2021"
+description = "VLT-PM02 adapter from the immutable vault object-store contract to storage-core"
+
+[dependencies]
+coding-adventures-json-value = { path = "../json-value" }
+coding_adventures_sha256 = { path = "../sha256" }
+coding_adventures_vault_pm_storage = { path = "../vault-pm-storage" }
+storage-core = { path = "../storage-core" }
+
+[dev-dependencies]
+coding_adventures_storage_fs = { path = "../storage-fs" }

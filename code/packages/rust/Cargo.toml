@@ -1055,4 +1055,5 @@ members = [
   "chief-of-staff-agent-stdio-protocol",
   "chief-of-staff-agent-stdio-host",
   "vault-pm-storage",
+  "vault-pm-storage-storage-core",
 ]
