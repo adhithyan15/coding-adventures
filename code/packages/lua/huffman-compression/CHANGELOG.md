@@ -6,6 +6,13 @@ documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- The Unix and Windows standalone BUILD recipes now install the transitive
+  `coding-adventures-heap` rock before `coding-adventures-huffman-tree`.
+
 ## [0.1.0] — 2026-04-12
 
 ### Added

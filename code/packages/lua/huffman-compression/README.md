@@ -45,9 +45,15 @@ luarocks make --local coding-adventures-huffman-compression-0.1.0-1.rockspec
 Requires `coding-adventures-huffman-tree` (DT27) to be installed first:
 
 ```bash
+cd ../heap
+luarocks make --local --deps-mode=none coding-adventures-heap-0.1.0-1.rockspec
 cd ../huffman-tree
-luarocks make --local coding-adventures-huffman-tree-0.1.0-1.rockspec
+luarocks make --local --deps-mode=none coding-adventures-huffman-tree-0.1.0-1.rockspec
 ```
+
+`coding-adventures-heap` is the Huffman tree builder's transitive local-rock
+prerequisite. The package BUILD recipes install both rocks in that order when
+starting from an empty LuaRocks tree.
 
 ## Running Tests
 

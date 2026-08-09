@@ -13,6 +13,16 @@ local original = deflate.decompress(compressed)
 assert(original == data)
 ```
 
+## Dependencies
+
+- `coding-adventures-lzss`
+- `coding-adventures-huffman-tree`
+- `coding-adventures-heap`, the transitive priority-queue prerequisite of the
+  Huffman tree builder
+
+The canonical Unix and Windows BUILD recipes install this complete local-rock
+closure in dependency order, so they work from an empty LuaRocks tree.
+
 ## Wire Format
 
 ```

@@ -79,10 +79,14 @@ At the start of the stream, bucket 0 is used.
 
 - `coding-adventures-huffman-tree` (DT27) — canonical Huffman tree builder
 
+- `coding-adventures-heap` is the transitive priority-queue prerequisite of the
+  Huffman tree builder.
+
 ## Running Tests
 
 ```bash
 # Install dependencies first.
+cd ../heap && luarocks make --local --deps-mode=none coding-adventures-heap-0.1.0-1.rockspec
 cd ../huffman-tree && luarocks make --local --deps-mode=none coding-adventures-huffman-tree-0.1.0-1.rockspec
 cd ../brotli && luarocks make --local --deps-mode=none coding-adventures-brotli-0.1.0-1.rockspec
 

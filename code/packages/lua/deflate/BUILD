@@ -1,3 +1,4 @@
+luarocks show coding-adventures-heap 1>/dev/null 2>/dev/null || (cd ../heap && luarocks make --local --deps-mode=none coding-adventures-heap-0.1.0-1.rockspec)
 luarocks show coding-adventures-huffman-tree 1>/dev/null 2>/dev/null || (cd ../huffman-tree && luarocks make --local --deps-mode=none coding-adventures-huffman-tree-0.1.0-1.rockspec)
 luarocks show coding-adventures-lzss 1>/dev/null 2>/dev/null || (cd ../lzss && luarocks make --local --deps-mode=none coding-adventures-lzss-0.1.0-1.rockspec)
 luarocks make --local --deps-mode=none coding-adventures-deflate-0.1.0-1.rockspec
