@@ -130,10 +130,13 @@ and given the same citation.
 4. Where no ductus exists, do not invent lifts — keep the steps as part order and
    leave `penLifts` out.
 
-Only **ம** currently has an authored ductus. The remaining **227** prose part
+Tamil **அ** now joins **ம** with an authored ductus. The primer's Frame 4 shows
+four connected movements for அ's curl-and-loop body, followed by one lift and
+the separate right upright; the font-backed path and learner prose preserve that
+five-movement, two-stroke order exactly. The remaining **226** prose part
 orders across ten scripts (`arabic` 21, `chinese` 24, `cyrillic` 33,
 `devanagari` 28, `gujarati` 33, `hebrew` 22, `japanese` 34,
-`perso-arabic` 9, `tamil` 10, `urdu-nastaliq` 13) are explicitly **unverified for
+`perso-arabic` 9, `tamil` 9, `urdu-nastaliq` 13) are explicitly **unverified for
 pen lifts**. The data validator rejects a lift count without a citation (or a
 citation without a count), and Language Ladder's ductus test proves every verified
 claim has the same cited, font-checked path. That closes `HL-C19`; future entries

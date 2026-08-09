@@ -7,16 +7,28 @@
   "signature": "Curvy and loopy with flat top-bars on many letters, repeated arches, and no continuous head-line.",
   "complete": false,
   "combination": "A consonant carries an inherent 'a' (க = ka). A vowel sign replaces that vowel (க + ா → கா = kā). The puḷḷi ் — a DOT above the letter — removes the vowel entirely (க் = k). Unlike Devanagari, Tamil does NOT fuse the bare consonant into a conjunct: the dot stays visible and both letters keep their full shape. (A handful of Sanskrit-borrowed ligatures are the exception — க்ஷ kṣa and ஸ்ரீ śrī.)",
-  "notes": "Used by Tamil in this curriculum. The inventory below covers the greeting and self-introduction vocabulary of Chapters 1–2 and grows from there; it is deliberately not the full 247-character grid. Stroke orders are the common handwriting convention, not a standard — Tamil is taught with regional and school-to-school variation. IMPORTANT for authors: a `strokeOrder` list names the PARTS of a letter in writing order; it does NOT by itself say where the pen lifts. Only ம has an authored, font-checked pen path (`DUCTUS` in language-ladder's `strokes.ts`), and that path shows ம is a SINGLE unbroken stroke even though its parts have separate names — so its steps are worded to forbid a lift. The other ten letters here have no verified pen path, so read their steps as part order only, and do not add or assume lifts until a cited ductus exists. Component descriptions name the pieces a learner can see in the vendored Noto Sans Tamil face; several letters share a straight top bar and are best learned as a family (ண/ன, ந, ற).",
+  "notes": "Used by Tamil in this curriculum. The inventory below covers the greeting and self-introduction vocabulary of Chapters 1–2 and grows from there; it is deliberately not the full 247-character grid. Stroke orders are the common handwriting convention, not a standard — Tamil is taught with regional and school-to-school variation. IMPORTANT for authors: a `strokeOrder` list names the PARTS of a letter in writing order; it does NOT by itself say where the pen lifts. அ and ம have authored, font-checked pen paths (`DUCTUS` in language-ladder's `strokes.ts`). அ has two pen-down runs with one lift before its separate right upright; ம is a single unbroken stroke even though its parts have separate names. The other nine letters here have no verified pen path, so read their steps as part order only, and do not add or assume lifts until a cited ductus exists. Component descriptions name the pieces a learner can see in the vendored Noto Sans Tamil face; several letters share a straight top bar and are best learned as a family (ண/ன, ந, ற).",
   "letters": [
     {
       "glyph": "அ",
       "sound": "a",
       "role": "independent-vowel",
       "components": ["a curl at the upper left", "a long horizontal stroke", "a straight vertical on the right"],
-      "strokeOrder": ["upper-left curl", "horizontal", "right vertical"],
-      "strokeOrderNote": "conventional",
-      "notes": "The first letter of the Tamil alphabet, and the vowel every consonant already contains."
+      "strokeOrder": [
+        "start inside the upper curl and sweep around it",
+        "without lifting, continue down the outer curve",
+        "without lifting, turn around the lower loop",
+        "without lifting, carry the horizontal to the right edge — then lift once",
+        "set the pen at the top of the separate right upright and draw straight down"
+      ],
+      "strokeOrderNote": "two strokes — four joined movements, one pen lift, then the right upright; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 4, அ",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 4, அ (Univ. of Texas at Austin), p. 192",
+        "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+        "variation": "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. This is one attested order."
+      },
+      "notes": "The first letter of the Tamil alphabet, and the vowel every consonant already contains. The connected curl-and-loop body is one pen-down run; only the separate upright on the far right requires the single lift."
     },
     {
       "glyph": "ஆ",

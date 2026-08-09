@@ -165,10 +165,11 @@ in font units, and `ductusview.ts` flips them together with exactly **one**
 `scale(1,-1)` group — so a mistake cannot leave a plausible-looking stroke
 sitting upside down on a correct letter.
 
-**Only Tamil ம has an authored pen path today.** `DUCTUS` admits no letter
+**Tamil அ and ம have authored pen paths today.** `DUCTUS` admits no letter
 without a citation for its stroke order, and hand-drawing a letter is forbidden
 outright (a subtly wrong Tamil ண looks perfect to exactly the audience that
-cannot yet read Tamil, so the error would ship *as the lesson*). Every other
+cannot yet read Tamil, so the error would ship *as the lesson*). அ exercises a
+real two-stroke path with one lift; ம remains one unbroken stroke. Every other
 letter falls back to the numbered prose list, unchanged. Extending the coverage
 is HL-C09, and it needs a cited source per letter.
 
