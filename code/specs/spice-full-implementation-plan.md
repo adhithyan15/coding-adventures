@@ -4570,10 +4570,16 @@ the Rust, Python, and TypeScript surfaces together.
      base-emitter-junction-potential field.
 
 448. Python and TypeScript Berkeley SPICE BJT base-emitter-grading parity.
-   - Status: implemented in this BJT MJE parity slice.
+   - Status: completed in PR 10111.
    - Both parser facades validate finite `MJE` / `ME` values in `[0, 1)`,
      prefer canonical `MJE`, and lower the result into the shared engine
      base-emitter-grading-coefficient field.
+
+449. Python and TypeScript Berkeley SPICE BJT base-collector-potential parity.
+   - Status: implemented in this BJT VJC parity slice.
+   - Both parser facades validate positive finite `VJC` / `PC` values, prefer
+     canonical `VJC`, and lower the result into the shared engine
+     base-collector-junction-potential field.
 
 ## Backlog
 

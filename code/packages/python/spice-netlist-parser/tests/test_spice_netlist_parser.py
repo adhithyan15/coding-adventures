@@ -1496,6 +1496,37 @@ def test_rejects_invalid_bjt_base_emitter_grading_coefficient(
         parse_netlist(f".model fast NPN({alias}={value})")
 
 
+@pytest.mark.parametrize("alias", ["VJC", "PC"])
+@pytest.mark.parametrize(("value", "expected"), [("0.5", 0.5), ("0.8", 0.8)])
+def test_parse_bjt_base_collector_junction_potential(
+    alias: str, value: str, expected: float
+) -> None:
+    parsed = parse_netlist(
+        f".model fast NPN({alias}={value})\nQ1 col base emit fast"
+    )
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Vjc == expected
+
+
+def test_bjt_vjc_takes_precedence_over_pc() -> None:
+    parsed = parse_netlist(".model fast NPN(PC=0.5 VJC=0.8)\nQ1 col base emit fast")
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Vjc == 0.8
+
+
+@pytest.mark.parametrize("alias", ["VJC", "PC"])
+@pytest.mark.parametrize("value", ["0", "-0.1", "1e999"])
+def test_rejects_invalid_bjt_base_collector_junction_potential(
+    alias: str, value: str
+) -> None:
+    with pytest.raises(NetlistParseError, match="BJT VJC must be finite and positive"):
+        parse_netlist(f".model fast NPN({alias}={value})")
+
+
 def test_parse_jfet_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
