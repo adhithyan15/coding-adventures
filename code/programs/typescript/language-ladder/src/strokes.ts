@@ -6,6 +6,8 @@
 // the motion of the pen: where it starts, which way it goes, and — the part a
 // static picture of the finished letter cannot show — where it stays down and
 // where (if ever) it lifts.
+
+import persoArabic from "../../../../learning/human-languages/data/scripts/perso-arabic.json";
 //
 // The model, in one breath
 // ------------------------
@@ -184,10 +186,13 @@ function truncateToFraction(pts: Point[], fraction: number): Point[] {
 
 const clamp01 = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n);
 
-const PERSIAN_ALPHABET_URL =
-  "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet";
-const persianAlphabetCitation = (detail: string) =>
-  `Persian Online, How to Write Persian Characters, ${detail} (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)`;
+const persianAlphabetSource = (glyph: string): StrokeSource => {
+  const letter = persoArabic.letters.find((candidate) => candidate.glyph === glyph);
+  if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
+    throw new Error(`Persian ${glyph} has no verified source`);
+  }
+  return letter.strokeOrderSource;
+};
 
 // ---------------------------------------------------------------------------
 // The authored letters.
@@ -206,6 +211,8 @@ const persianAlphabetCitation = (detail: string) =>
 // place the left dot above, then lifts again to place the right dot.
 // The later س row stays pen-down: it shapes all three teeth right-to-left and
 // flows directly into the final bowl as one continuous Naskh stroke.
+// Near the end of the same demonstration, ل descends its tall upright and
+// turns directly into the leftward base curve without lifting the chalk.
 // அ is Frame 4's first row: movements 1-4 remain on the connected body, then
 // the hand lifts once before movement 5 draws the separate right upright. ஆ is
 // the next row: it repeats movements 1-5, then continues from that upright into
@@ -253,12 +260,7 @@ export const DUCTUS: Record<string, LetterDuctus> = {
         ],
       },
     ],
-    source: {
-      citation: persianAlphabetCitation("opening ا demonstration at 00:08–00:11"),
-      url: PERSIAN_ALPHABET_URL,
-      variation:
-        "The cited freehand lesson demonstrates isolated ا as one top-to-bottom Naskh stroke while presenting the alphabet right-to-left. Contextual joins change neighbouring ink, but the isolated non-connector remains the same one-stroke stem; this path fits the vendored Noto Naskh outline.",
-    },
+    source: persianAlphabetSource("ا"),
   },
   "ب": {
     glyph: "ب",
@@ -301,12 +303,7 @@ export const DUCTUS: Record<string, LetterDuctus> = {
         ],
       },
     ],
-    source: {
-      citation: persianAlphabetCitation("opening ب demonstration at 00:11–00:15"),
-      url: PERSIAN_ALPHABET_URL,
-      variation:
-        "The cited freehand lesson demonstrates isolated ب as a shallow right-to-left Naskh bowl, followed by one pen lift and the separate dot below. Contextual joins reshape the bowl in connected text; this isolated learner path fits the vendored Noto Naskh outline.",
-    },
+    source: persianAlphabetSource("ب"),
   },
   "ت": {
     glyph: "ت",
@@ -361,12 +358,7 @@ export const DUCTUS: Record<string, LetterDuctus> = {
         ],
       },
     ],
-    source: {
-      citation: persianAlphabetCitation("ت demonstration at 00:22–00:27"),
-      url: PERSIAN_ALPHABET_URL,
-      variation:
-        "The cited freehand lesson demonstrates isolated ت as a shallow right-to-left Naskh bowl, followed by one lift to the left dot above and another lift to the right dot. The intervening پ row is not in this starter inventory. Contextual joins reshape the bowl; this isolated learner path fits the vendored Noto Naskh outline.",
-    },
+    source: persianAlphabetSource("ت"),
   },
   "س": {
     glyph: "س",
@@ -406,12 +398,40 @@ export const DUCTUS: Record<string, LetterDuctus> = {
         ],
       },
     ],
-    source: {
-      citation: persianAlphabetCitation("س demonstration at 01:29–01:35"),
-      url: PERSIAN_ALPHABET_URL,
-      variation:
-        "The cited freehand lesson demonstrates isolated س as one continuous right-to-left Naskh movement: three teeth flow directly into the final bowl with no pen lift. Contextual joins shorten the final bowl before following letters; this isolated learner path fits the vendored Noto Naskh outline.",
-    },
+    source: persianAlphabetSource("س"),
+  },
+  "ل": {
+    glyph: "ل",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the upright downward",
+            path: [
+              { x: 458, y: 640 },
+              { x: 445, y: 500 },
+              { x: 440, y: 420 },
+              { x: 450, y: 240 },
+              { x: 475, y: 80 },
+              { x: 510, y: -20 },
+            ],
+          },
+          {
+            label: "turn into the base curve without lifting",
+            path: [
+              { x: 510, y: -20 },
+              { x: 465, y: -120 },
+              { x: 350, y: -205 },
+              { x: 205, y: -215 },
+              { x: 105, y: -135 },
+              { x: 90, y: -75 },
+              { x: 100, y: 25 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: persianAlphabetSource("ل"),
   },
   அ: {
     glyph: "அ",
