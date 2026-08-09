@@ -17,3 +17,8 @@ All notable changes to this package are documented here.
 - IDs, documents, conflicts, and views use custom redacted formatters.
 - Item and view drop paths wipe secret-bearing or sensitive string values.
 - Concurrent secret edits and delete/edit races are retained as conflicts.
+- Observed sets enforce hard retained-value, add-operation, and tombstone
+  limits during mutation, exact reconstruction, and merge.
+- Operation-ID collisions and dangling removal tombstones are rejected.
+- Tombstone compaction requires an explicit repository causal-stability
+  predicate and preserves concurrent or later adds.

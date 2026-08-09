@@ -1243,6 +1243,11 @@ changelog, focused build, and downstream validation.
 5. Security review of format/key hierarchy before persistent user data exists,
    including fixed wire/GC bounds for accumulated observed-set tombstones and
    operation IDs before domain state is decoded from persistent objects.
+   VLT-PM03 fixes each observed set at 256 retained values, 1,024 add-operation
+   IDs, and 1,024 removal tombstones; mutation, exact reconstruction, and merge
+   reject growth before insertion. Compaction requires repository-supplied
+   proof that every retained head observed the removal and no authorized
+   publisher can reintroduce the old add.
    VLT01's declared 95% line-coverage target is met at 96.99% under Tarpaulin
    LLVM (773/797 lines) after focused malformed-manifest and metadata tests.
    VLT02's record, opaque-payload, and error diagnostics use closed redacted

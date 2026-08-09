@@ -76,21 +76,45 @@ VLT02 records remain opaque and retain their validated content type.
 `ObservedSet<T>` records each add as `(value, OperationId)` and each removal as
 the set of add-operation IDs observed at removal time.
 
-- `add(value, operation_id)` is idempotent.
+- `add(value, operation_id)` is fallible and idempotent.
 - `remove(value)` tombstones every currently observed add for that value.
+- `observe_removal(value, operation_id)` reconstructs one exact tombstone and
+  rejects an operation that is not an add for the same value.
 - A later add with a new operation ID makes the value present again.
-- `merge(a, b)` unions adds and removals.
+- `merge(a, b)` fallibly unions adds and removals without crossing a bound.
 - Merge is associative, commutative, and idempotent.
-- Tombstones are retained. Only a future repository GC operation with proof
-  that every retained head observed the removal may discard them.
+- An operation ID may name only one value within an observed set. Repeating
+  the same `(value, operation_id)` pair is idempotent; reusing the ID for a
+  different value is invalid persistent state.
 
-The in-memory V1 document bounds present values. Before a repository decoder
-accepts persistent observed sets, the Phase 0 security review must fix total
-wire bounds for retained values, tombstones, and operation IDs plus the proof
-required for safe compaction.
+Every V1 observed set has the following hard retained-state limits in addition
+to the item-level present-value limits in section 6:
 
-`OperationId` uniqueness is a caller invariant. A future repository can derive
-it from a signed device/counter operation or a domain-separated commit value.
+| Resource | Hard limit per observed set |
+|---|---:|
+| distinct retained values, present or absent | 256 |
+| retained add-operation IDs | 1,024 |
+| retained removal tombstones | 1,024 |
+
+Mutation, exact reconstruction, and merge enforce the limits before inserting
+the next entry. A persistent decoder must rebuild through `add` and
+`observe_removal`; it must not allocate attacker-declared collections and then
+validate them afterward. A bound failure is closed and does not return partial
+state.
+
+Tombstones and their matching adds are retained by default.
+`compact_stable_removals` may discard a removed pair only when the repository
+asserts that every retained head observed the removal and no authorized
+publisher can later introduce a head containing the pre-removal add. That
+usually requires every live device frontier to dominate the removal or an
+authority-signed revocation of devices that do not. Backup age, wall time,
+provider listing age, and observation by only the current head are not GC
+proof. Supplying the causal-stability predicate is a security-critical
+repository obligation; VLT-PM03 performs only the deterministic pair removal.
+
+`OperationId` uniqueness across different observed sets and LWW registers
+remains a caller invariant. A future repository can derive it from a signed
+device/counter operation or a domain-separated commit value.
 
 ### 5.2 Last-writer-wins register
 
@@ -179,9 +203,9 @@ does not expose a "redaction off" flag.
 
 Errors are closed and low-resolution: `InvalidIdentifier`,
 `InvalidContentType`, `InvalidTimestamp`, `InvalidTag`, `BoundExceeded`,
-`SchemaMismatch`, `IdentityMismatch`, and `InvalidConflict`. `Display` uses
-package literals only and never includes input content, IDs, tags, record
-values, or attacker-controlled text.
+`InvalidObservedSet`, `SchemaMismatch`, `IdentityMismatch`, and
+`InvalidConflict`. `Display` uses package literals only and never includes
+input content, IDs, tags, record values, or attacker-controlled text.
 
 ## 10. Required verification
 
@@ -197,7 +221,15 @@ V1 tests must cover:
 8. whole-record and delete/edit conflict preservation;
 9. deterministic tombstone merge;
 10. conflict resolution retaining both candidates; and
-11. redacted views containing no fixture secret or opaque payload bytes.
+11. redacted views containing no fixture secret or opaque payload bytes;
+12. retained value, add-operation, and tombstone hard limits;
+13. operation-ID collision and dangling-tombstone rejection;
+14. bounded merge rejection without partial state; and
+15. compaction retaining unproven tombstones and preserving later adds.
+
+Phase 0 evidence on 2026-08-09 is 29 passing unit tests and 527/532 executable
+lines (99.06%) under Tarpaulin's LLVM engine, including the retained-state,
+collision, dangling-tombstone, merge-amplification, and compaction cases.
 
 ## 11. Security properties and non-goals
 
