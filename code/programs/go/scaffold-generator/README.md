@@ -13,6 +13,11 @@ They include exact direct opam/Dune tool constraints, Alcotest, formatting and
 coverage commands, local dependency pins, and schema-v1 capability profiles.
 Transitive opam-repository/switch locking remains a separate CI-toolchain gate.
 
+Lua scaffolds read both versioned and unversioned repository-local rockspec
+dependencies. Their Unix and Windows recipes install the full local closure in
+leaf-to-root order with dependency resolution disabled before installing and
+testing the generated package.
+
 ## Why
 
 The lessons.md documents 12+ recurring CI failure categories caused by agents

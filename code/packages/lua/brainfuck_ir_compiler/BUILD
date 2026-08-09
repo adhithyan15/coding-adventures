@@ -1,10 +1,14 @@
-(cd ../compiler_ir && luarocks make --local coding-adventures-compiler-ir-0.1.0-1.rockspec)
-(cd ../compiler_source_map && luarocks make --local coding-adventures-compiler-source-map-0.1.0-1.rockspec)
-(cd ../directed_graph && luarocks make --local coding-adventures-directed-graph-0.1.0-1.rockspec)
-(cd ../state_machine && luarocks make --local coding-adventures-state-machine-0.1.0-1.rockspec)
-(cd ../grammar_tools && luarocks make --local coding-adventures-grammar-tools-0.1.0-1.rockspec)
-(cd ../lexer && luarocks make --local coding-adventures-lexer-0.1.0-1.rockspec)
-(cd ../parser && luarocks make --local coding-adventures-parser-0.1.0-1.rockspec)
-(cd ../brainfuck && luarocks make --local coding-adventures-brainfuck-0.1.0-1.rockspec)
-luarocks make --local coding-adventures-brainfuck-ir-compiler-0.1.0-1.rockspec
+luarocks show coding-adventures-compiler-ir >/dev/null 2>&1 || (cd ../compiler_ir && luarocks make --local --deps-mode=none coding-adventures-compiler-ir-0.1.0-1.rockspec)
+luarocks show coding-adventures-compiler-source-map >/dev/null 2>&1 || (cd ../compiler_source_map && luarocks make --local --deps-mode=none coding-adventures-compiler-source-map-0.1.0-1.rockspec)
+luarocks show coding-adventures-directed-graph >/dev/null 2>&1 || (cd ../directed_graph && luarocks make --local --deps-mode=none coding-adventures-directed-graph-0.1.0-1.rockspec)
+luarocks show coding-adventures-state-machine >/dev/null 2>&1 || (cd ../state_machine && luarocks make --local --deps-mode=none coding-adventures-state-machine-0.1.0-1.rockspec)
+luarocks show coding-adventures-grammar-tools >/dev/null 2>&1 || (cd ../grammar_tools && luarocks make --local --deps-mode=none coding-adventures-grammar-tools-0.1.0-1.rockspec)
+luarocks show coding-adventures-lexer >/dev/null 2>&1 || (cd ../lexer && luarocks make --local --deps-mode=none coding-adventures-lexer-0.1.0-1.rockspec)
+luarocks show coding-adventures-parser >/dev/null 2>&1 || (cd ../parser && luarocks make --local --deps-mode=none coding-adventures-parser-0.1.0-1.rockspec)
+luarocks show coding-adventures-interpreter-ir >/dev/null 2>&1 || (cd ../interpreter_ir && luarocks make --local --deps-mode=none coding-adventures-interpreter-ir-0.1.0-1.rockspec)
+luarocks show coding-adventures-vm-core >/dev/null 2>&1 || (cd ../vm_core && luarocks make --local --deps-mode=none coding-adventures-vm-core-0.1.0-1.rockspec)
+luarocks show coding-adventures-codegen-core >/dev/null 2>&1 || (cd ../codegen_core && luarocks make --local --deps-mode=none coding-adventures-codegen-core-0.1.0-1.rockspec)
+luarocks show coding-adventures-jit-core >/dev/null 2>&1 || (cd ../jit_core && luarocks make --local --deps-mode=none coding-adventures-jit-core-0.1.0-1.rockspec)
+luarocks show coding-adventures-brainfuck >/dev/null 2>&1 || (cd ../brainfuck && luarocks make --local --deps-mode=none coding-adventures-brainfuck-0.1.0-1.rockspec)
+luarocks make --local --deps-mode=none coding-adventures-brainfuck-ir-compiler-0.1.0-1.rockspec
 cd tests && busted . --verbose --pattern=test_

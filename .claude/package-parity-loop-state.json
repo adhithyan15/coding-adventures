@@ -11,18 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 10145,
+  "active_pr": 10216,
   "last_inventory": {
-    "revision": "7252f0a978b218e35fcbfcebcb7844205e8e4428",
+    "revision": "cbe099305ed5536cd4d025a91276609553ab846d",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1264,
-    "implementation_package_slots": 4420,
+    "implementation_identities": 1270,
+    "implementation_package_slots": 4426,
     "high_consensus_packages": 173,
     "high_consensus_missing_slots": 269,
-    "singleton_packages": 814,
-    "singleton_missing_slots": 11396,
-    "rust_singletons": 618,
+    "singleton_packages": 820,
+    "singleton_missing_slots": 11480,
+    "rust_singletons": 624,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -361,20 +361,74 @@
     {
       "id": "build-tool-go-lua-missing-windows-validation-parity",
       "title": "Make Go enforce absent Lua BUILD_windows closure parity",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-file-standalone-integrity-lua"],
       "branch": "codex/go-lua-windows-validator-parity",
       "pr_number": 10145,
-      "notes": "Discovered while implementing the Lua Windows standalone wave. Python and Lua validation treat an absent BUILD_windows as missing the canonical Lua sibling-install closure, but Go's missingLuaSiblingInstalls returns early when either recipe is absent. Add the absent-override fixture and align Go with the normative validation contract in a separate build-tool tranche; the current package-metadata repair does not widen into validator source. Selected after PR #10110 merged externally, then retained after the shared SPICE sequence through externally merged PR #10144: the collision-checked 7252f0a978 inventory remains at 1,264 identities, 4,420 slots, 173 high-consensus packages with 269 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets. The dependency/leverage pass puts this small normative validator alignment ahead of the broader canonical Unix closure and Python alias-table repairs. The implemented slice extends the process-free validation schema and semantic oracle with normalized canonical and Windows Lua sibling-install sets, adds an absent-BUILD_windows shared fixture, consumes that fixture from a real Go validator regression, and removes only Go's absent-Windows early exit. On the rebased final base, 59 conformance tests plus 52 subtests pass and the valid corpus contains 57 cases, 217 files, 16 implementations, and 15 established lanes. All Go build-tool tests pass with 77.0% validator coverage, plus vet, build, and module verification; full repository validation retains the exact unrelated 17 diagnostics (Perl 2, Python 12, Swift 3) and reports zero Lua diagnostics. The unaffected full Python build-tool suite passes 353 tests at 85.26% coverage and the Lua build-tool suite passes 61 tests at 73.95% aggregate coverage. Ruff, compileall, Bandit, JSON/schema, state-graph, diff-check, collision, added-line credential, and direct authority-boundary reviews pass with no new dependency or execution authority. Ready-for-review PR #10145 owns this delivery."
+      "notes": "Discovered while implementing the Lua Windows standalone wave. Python and Lua validation treat an absent BUILD_windows as missing the canonical Lua sibling-install closure, but Go's missingLuaSiblingInstalls returns early when either recipe is absent. Add the absent-override fixture and align Go with the normative validation contract in a separate build-tool tranche; the current package-metadata repair does not widen into validator source. Selected after PR #10110 merged externally, then retained after the shared SPICE sequence through externally merged PR #10144: the collision-checked 7252f0a978 inventory remains at 1,264 identities, 4,420 slots, 173 high-consensus packages with 269 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets. The dependency/leverage pass puts this small normative validator alignment ahead of the broader canonical Unix closure and Python alias-table repairs. The implemented slice extends the process-free validation schema and semantic oracle with normalized canonical and Windows Lua sibling-install sets, adds an absent-BUILD_windows shared fixture, consumes that fixture from a real Go validator regression, and removes only Go's absent-Windows early exit. On the rebased final base, 59 conformance tests plus 52 subtests pass and the valid corpus contains 57 cases, 217 files, 16 implementations, and 15 established lanes. All Go build-tool tests pass with 77.0% validator coverage, plus vet, build, and module verification; full repository validation retains the exact unrelated 17 diagnostics (Perl 2, Python 12, Swift 3) and reports zero Lua diagnostics. The unaffected full Python build-tool suite passes 353 tests at 85.26% coverage and the Lua build-tool suite passes 61 tests at 73.95% aggregate coverage. Ruff, compileall, Bandit, JSON/schema, state-graph, diff-check, collision, added-line credential, and direct authority-boundary reviews pass with no new dependency or execution authority. Ready-for-review PR #10145 merged externally as 694cfb2822 on 2026-08-09."
     },
     {
       "id": "build-file-standalone-integrity-lua-transitive-unix",
       "title": "Close transitive sibling prerequisites in canonical Lua BUILDs",
+      "status": "pr-open",
+      "depends_on": ["build-file-standalone-integrity-lua"],
+      "branch": "codex/lua-transitive-unix-closure-parity",
+      "pr_number": 10216,
+      "notes": "Discovered by fresh-tree Windows validation of the selected Lua standalone wave. The canonical Unix recipes for brainfuck_ir_compiler, brainfuck_wasm_compiler, and their IR/WASM prerequisites list only direct sibling rocks, but clean LuaRocks trees expose unpublished transitive local dependencies such as interpreter_ir, vm_core, codegen_core, jit_core, wasm_types, and wasm_opcodes. Audit every canonical Lua BUILD that bootstraps siblings, add the exact transitive closure in dependency order, retain dependency-resolution hardening, and validate from fresh isolated trees as a separate metadata tranche rather than widening the Windows repair. Selected after PR #10145 merged externally because it is the next dependency in the reviewed standalone-build chain and closes real fresh-tree package execution before the broader Python ecosystem-alias repair. The collision-checked 21326ba062 inventory remains at 1,264 identities, 4,420 slots, 173 high-consensus packages with 269 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets; the completed SPICE model-card sequence through PR #10165 adds no identity or unowned gap, and PR #10156 expands already-owned Chief host-control and native-supervisor contracts rather than creating a new owner. A collision-free rockspec audit covers all 246 Lua identities and 121 canonical recipes that bootstrap siblings. It confirms the selected Brainfuck/IR/WASM chain as one coherent closure and classifies the remaining eleven independent missing-prerequisite recipes into six pending dependency-shaped follow-ups before implementation continues. The implementation closes 12, 22, 4, and 5 matching hardened prerequisites for brainfuck_ir_compiler, brainfuck_wasm_compiler, ir_to_wasm_compiler, and ir_to_wasm_validator; improves Lua scaffold dependency parsing and emits the same standalone contract for new packages. Four separate fresh LuaRocks trees pass 86 package tests with zero failures, errors, or pending cases; the end-to-end compiler source reaches 81.32% coverage. Scaffold-generator tests pass at 73.8% coverage with Go vet, build, and module verification; 59 language-neutral conformance tests pass and the valid corpus contains 57 cases, 217 files, 16 implementations, and 15 established lanes. The unaffected Python build-tool suite passes 353 tests at 85.26% coverage and its full 258-package Lua dry-run validation is clean; the Lua build-tool suite passes 61 tests at 73.95% production coverage. Full Go repository validation returns only the exact unrelated 17-diagnostic baseline (Perl 2, Python 12, Swift 3) with zero Lua diagnostics. Collision, state-graph, JSON, diff, syntax, added-line credential, dependency-diff, and direct authority-boundary checks pass. The post-#10176 collision-checked f6926d9d9c inventory has 1,266 identities, 4,422 slots, 173 high-consensus packages with 269 gaps, 816 singletons with 11,424 gaps, 620 Rust singletons, and zero collisions or unknown buckets. The sole new identity, chief-of-staff-pipeline-bindings, is zero-capability deterministic logic over injected storage and now has a separate pending portable-conformance owner; the intervening Chief and SPICE expansions remain assigned to existing owners and do not displace this completed dependency-shaped Lua delivery. The post-#10187 collision-checked 2282e161e7 inventory has 1,267 identities, 4,423 slots, 173 high-consensus packages with 269 gaps, 817 singletons with 11,438 gaps, 621 Rust singletons, and zero collisions or unknown buckets. Its sole new identity since the prior snapshot, chief-of-staff-host-data-plane, is an authority-free dispatcher over injected storage and services and now has a separate pending portable-conformance owner. The post-#10190 collision-checked 437f19ff06 inventory has 1,268 identities, 4,424 slots, 173 high-consensus packages with 269 gaps, 818 singletons with 11,452 gaps, 622 Rust singletons, and zero collisions or unknown buckets. The sole new identity, chief-of-staff-host, is a concrete native child executable and now has a dependency-blocked native-authority review; the Smart Home and SPICE expansions remain assigned to existing portable owners, so the dependency/leverage ranking still retains this Lua tranche. The post-#10210 collision-checked 919d683e7a inventory has 1,269 identities, 4,425 slots, 173 high-consensus packages with 269 gaps, 819 singletons with 11,466 gaps, 623 Rust singletons, and zero collisions or unknown buckets. Its sole new identity since the prior 437f19ff06 snapshot, chief-of-staff-daemon-secret-file, is an explicitly privileged cross-platform filesystem/FFI adapter and now has a separate native-authority review. The UniFi operational-telemetry slice and final SPICE parser/engine mismatch audit extend existing owners without adding identities; with the remaining JFET B policy explicitly blocked on review, no unowned eligible gap displaces this completed highest-leverage Lua tranche. The post-#10212 collision-checked cbe099305e inventory has 1,270 identities, 4,426 slots, 173 high-consensus packages with 269 gaps, 820 singletons with 11,480 gaps, 624 Rust singletons, and zero collisions or unknown buckets. Its sole new identity, chief-of-staff-daemon-authority-provisioning, is a privileged filesystem-backed composition boundary with a dependency-blocked native-authority review; the newly surfaced pure daemon configuration contract and existing Ollama native provider are classified separately. The human-language modality update adds no implementation identity, so the dependency/leverage ranking still retains this completed Lua tranche. Ready-for-review PR #10216 opened from validated implementation commit 2b248a8f17 with the complete fresh-tree, package, build-tool, conformance, inventory, diff, and security summary."
+    },
+    {
+      "id": "build-file-lua-huffman-heap-transitive-closure",
+      "title": "Install heap before Lua Huffman dependents",
       "status": "pending",
       "depends_on": ["build-file-standalone-integrity-lua"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by fresh-tree Windows validation of the selected Lua standalone wave. The canonical Unix recipes for brainfuck_ir_compiler, brainfuck_wasm_compiler, and their IR/WASM prerequisites list only direct sibling rocks, but clean LuaRocks trees expose unpublished transitive local dependencies such as interpreter_ir, vm_core, codegen_core, jit_core, wasm_types, and wasm_opcodes. Audit every canonical Lua BUILD that bootstraps siblings, add the exact transitive closure in dependency order, retain dependency-resolution hardening, and validate from fresh isolated trees as a separate metadata tranche rather than widening the Windows repair."
+      "notes": "Discovered by the complete canonical Lua sibling-bootstrap audit for the selected Unix closure tranche. brotli, deflate, and huffman-compression install huffman-tree but omit huffman-tree's unpublished local heap prerequisite on a clean LuaRocks tree. Repair the shared heap-to-Huffman chain as its own dependency-shaped metadata item."
+    },
+    {
+      "id": "build-file-lua-parser-lexer-transitive-closure",
+      "title": "Install lexer before Lua parser dependents",
+      "status": "pending",
+      "depends_on": ["build-file-standalone-integrity-lua"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the complete canonical Lua sibling-bootstrap audit for the selected Unix closure tranche. dartmouth_basic_parser and json_parser install their language lexer plus parser but omit the shared lexer rock required transitively on a clean LuaRocks tree. Repair the common lexer prerequisite as a separate dependency-shaped metadata item."
+    },
+    {
+      "id": "build-file-lua-data-store-hyperloglog-transitive-closure",
+      "title": "Install HyperLogLog before Lua data-store engine",
+      "status": "pending",
+      "depends_on": ["build-file-standalone-integrity-lua"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the complete canonical Lua sibling-bootstrap audit for the selected Unix closure tranche. in-memory-data-store installs in-memory-data-store-engine but omits that engine's unpublished local hyperloglog prerequisite on a clean LuaRocks tree."
+    },
+    {
+      "id": "build-file-lua-json-value-transitive-closure",
+      "title": "Close the Lua JSON value parser prerequisites",
+      "status": "pending",
+      "depends_on": ["build-file-standalone-integrity-lua"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the complete canonical Lua sibling-bootstrap audit for the selected Unix closure tranche. json_value bootstraps grammar-tools and json-parser but omits directed-graph, state-machine, lexer, json-lexer, and parser from the clean-tree transitive closure."
+    },
+    {
+      "id": "build-file-lua-lattice-transitive-closure",
+      "title": "Close the Lua Lattice parser and transpiler prerequisites",
+      "status": "pending",
+      "depends_on": ["build-file-standalone-integrity-lua"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the complete canonical Lua sibling-bootstrap audit for the selected Unix closure tranche. lattice_parser, lattice_ast_to_css, and lattice_transpiler omit shared directed-graph, state-machine, lexer, lattice-lexer, parser, and lattice-parser prerequisites at successive points in one dependency chain."
+    },
+    {
+      "id": "build-file-lua-wasm-runtime-execution-transitive-closure",
+      "title": "Install WASM execution before Lua WASM runtime",
+      "status": "pending",
+      "depends_on": ["build-file-standalone-integrity-lua"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the complete canonical Lua sibling-bootstrap audit for the selected Unix closure tranche. wasm_runtime installs the parser, virtual machine, and low-level WASM rocks but omits its direct unpublished local wasm-execution prerequisite on a clean LuaRocks tree."
     },
     {
       "id": "build-tool-python-ecosystem-scoped-alias-resolution",
@@ -1291,7 +1345,7 @@
       "depends_on": ["chief-secure-host-channel-portable-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-clean fbd52e79 inventory after PR #9681 added Rust-only chief-of-staff-host-control-protocol. Define language-neutral fixtures for Ready, Heartbeat, and Terminate records; orchestrator/host role and direction enforcement; lifecycle ordering; replay and package-hash mismatch rejection; caller-supplied trusted monotonic receipt times; and terminal failure after malformed or unauthenticated input. The package is zero-capability over complete encrypted frames, but it remains blocked on the secure-host-channel primitive stack; clocks, descriptors, streams, processes, filesystems, networks, package verification, and supervisor effects remain injected or native."
+      "notes": "Discovered in the collision-clean fbd52e79 inventory after PR #9681 added Rust-only chief-of-staff-host-control-protocol. Define language-neutral fixtures for Ready, Heartbeat, and Terminate records; orchestrator/host role and direction enforcement; lifecycle ordering; replay and package-hash mismatch rejection; caller-supplied trusted monotonic receipt times; and terminal failure after malformed or unauthenticated input. PR #10156 expands this existing portable owner with bounded receive, publish, acknowledge, and provider-neutral completion records; canonical UUID-v7 validation; strictly monotonic one-in-flight request correlation; exact response-kind matching; bounded field and aggregate limits; and stable redacted failures. PR #10163 further binds one exact public package-trust record to the fresh authenticated session before Ready, with strict type, tier, identifier, size, direction, and exactly-once lifecycle validation. PR #10169 adds one authenticated exactly-once pre-Ready LaunchBindings record after package trust: up to 128 unique signed channel names map read/write directions to canonical UUID-v7 identifiers, with optional bounded Level 1 model, temperature, and token-cap settings. The package is zero-capability over complete encrypted frames, but it remains blocked on the secure-host-channel primitive stack; clocks, descriptors, streams, processes, filesystems, networks, package verification, channel and model-provider effects, and supervisor authority remain injected or native."
     },
     {
       "id": "venture-browser-qt-portable-bridge-and-native-host",
@@ -1739,12 +1793,12 @@
     },
     {
       "id": "smart-home-airgradient-portable-core-extraction-and-conformance",
-      "title": "Extract and port the portable AirGradient local telemetry core",
+      "title": "Extract and port portable AirGradient telemetry and custom-egress planning",
       "status": "pending",
-      "depends_on": [],
+      "depends_on": ["smart-home-data-governance-portable-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered after merged PR #9548 added the Rust-only AirGradient local monitor integration. Share bounded /measures/current JSON validation, firmware/model/sensor normalization, environmental measurement identities and units, stable errors, deterministic read-only sensor projection, and language-neutral telemetry fixtures. mDNS, DNS/TCP, plaintext LAN HTTP execution, endpoint authorization, trusted time, console I/O, and runtime mutation are excluded native-host responsibilities."
+      "notes": "Discovered after merged PR #9548 added the Rust-only AirGradient local monitor integration. Share bounded /measures/current JSON validation, firmware/model/sensor normalization, environmental measurement identities and units, stable errors, deterministic read-only sensor projection, and language-neutral telemetry fixtures. Merged PR #10173 expands this owner with bounded device_set_mqtt_broker and device_set_http_domain validation, credential-free mqtt/mqtts explicit-port policy, custom-domain-to-exact-HTTPS-origin planning, consent-before-I/O enablement, privacy-protective disablement, coupled telemetry/configuration/OTA routing, exact configuration readback, configured-only projection, and destination/userinfo redaction. Port these deterministic validators, planners, comparison rules, and projections after the data-governance contract; mDNS, DNS/TCP, LAN HTTP execution, trusted time, human approval, device mutation, credentials, console I/O, and runtime effects remain native-host responsibilities."
     },
     {
       "id": "smart-home-reolink-portable-core-extraction-and-conformance",
@@ -1771,7 +1825,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Share a Python/Rust/TypeScript corpus for MOS W/L/NRD/NRS/AD/AS/PD/PS and TOX/U0/UO/KP/VT0/VTO/VTH validation, including aliases, case, duplicates, NaN/Infinity, and stable diagnostics. Discovered across merged PRs #9427, #9429, #9432, #9436, #9437, #9439, #9443, #9448, #9450, #9453, #9459, #9464, #9469, and #9473. Merged PR #9829 adds finite non-negative diode KF validation and Python/TypeScript lowering coverage. Merged PRs #10093, #10095, #10096, #10097, #10099, #10101, #10103, #10105, #10106, #10108, #10109, #10111, #10113, #10114, #10115, #10117, #10118, #10119, #10121, #10122, #10123, #10125, #10126, #10127, #10129, #10130, #10131, #10133, #10134, #10136, #10138, #10140, #10143, and #10144 add finite JFET/BJT VTOTC, TNOM, BEX, BETATCE, XTI, EG, VAF, VAR, NF, NR, VJE, MJE, VJC, MJC, FC, IKF, ISE, NE, ISC, NC, XTB, BR, IKR, TNOM, KF, AF, PTF, XTF, ITF, VTF, RE, RC, RB, and RBM validation with mirrored Python/TypeScript lowering coverage. These are narrow partial advances rather than completion of this shared multi-lane corpus."
+      "notes": "Share a Python/Rust/TypeScript corpus for MOS W/L/NRD/NRS/AD/AS/PD/PS and TOX/U0/UO/KP/VT0/VTO/VTH validation, including aliases, case, duplicates, NaN/Infinity, and stable diagnostics. Discovered across merged PRs #9427, #9429, #9432, #9436, #9437, #9439, #9443, #9448, #9450, #9453, #9459, #9464, #9469, and #9473. Merged PR #9829 adds finite non-negative diode KF validation and Python/TypeScript lowering coverage. Merged PRs #10093, #10095, #10096, #10097, #10099, #10101, #10103, #10105, #10106, #10108, #10109, #10111, #10113, #10114, #10115, #10117, #10118, #10119, #10121, #10122, #10123, #10125, #10126, #10127, #10129, #10130, #10131, #10133, #10134, #10136, #10138, #10140, #10143, #10144, #10147, #10148, #10149, #10151, and #10152 add finite JFET/BJT/MOS VTOTC, TNOM, BEX, BETATCE, XTI, EG, VAF, VAR, NF, NR, VJE, MJE, VJC, MJC, FC, IKF, ISE, NE, ISC, NC, XTB, BR, IKR, TNOM, KF, AF, PTF, XTF, ITF, VTF, RE, RC, RB, RBM, IRB, XCJC, CGSO, CGDO, and CGBO validation with mirrored Python/TypeScript lowering coverage. Merged PRs #10155, #10157, #10160, #10162, #10165, #10166, and #10167 normalize DIODE, NJFET, NJ, PJFET, PJ, NCH, and PCH model-card aliases to the engine's canonical diode, JFET, and MOS types in both parser facades, with mirrored lowering tests and no new package identity. Merged PR #10168 further matches the engine's alias-key contract by ignoring hyphen and underscore separators for supported model types while preserving unmatched kinds. Merged PR #10172 normalizes model-parameter hyphens to underscores, including BETA-F and T-NOM. Merged PR #10174 lowers JFET BET with canonical BETA precedence; merged PR #10176 lowers JFET VT0 and VTH with canonical VTO precedence; and merged PR #10178 lowers JFET LAM with canonical LAMBDA precedence. Merged PRs #10181, #10182, and #10185 add mirrored positive-finite BETA/BET, finite VTO/VT0/VTH, and finite LAMBDA/LAM validation. Merged PR #10187 gives canonical TNOM precedence over T_NOM for BJT and JFET validation and lowering. Merged PR #10189 gives MOS Level-1 canonical T_NOM precedence over the TNOM alias, preserves instance overrides, and reuses the normalized model map for TOX-derived defaults. Merged PRs #10191, #10196, #10198, #10200, #10204, and #10206 give canonical MOS Level-1 LAMBDA, U0, VT0, N_SUB, CBS, and CBD precedence over their documented aliases in both parser facades. Merged PR #10209 then makes the Python and TypeScript engine normalizers prefer explicitly supplied canonical model parameters over aliases regardless of source order while retaining the unresolved JFET B policy. Merged PR #10210 completes the independent diode/BJT/JFET/MOS parser-versus-engine type, parameter, direct-lowering, validation, and alias-precedence audit and records the only residual JFET B meaning as blocked on a reviewed beta-versus-doping-tail policy decision. This shared corpus remains pending until that policy and the Rust fixture denominator are resolved."
     },
     {
       "id": "smart-home-switch-entity-command-contract",
@@ -1897,10 +1951,10 @@
       "id": "chief-process-supervisor-native-authority-review",
       "title": "Review the Chief process supervisor native-authority exception",
       "status": "pending",
-      "depends_on": ["chief-service-reconciler-portable-conformance", "chief-host-control-protocol-portable-conformance"],
+      "depends_on": ["chief-service-reconciler-portable-conformance", "chief-host-control-protocol-portable-conformance", "chief-pipeline-bindings-portable-conformance", "chief-host-data-plane-portable-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-clean 9ad8105f inventory after PR #9687 added Rust-only chief-of-staff-process-supervisor. The crate is explicitly the concrete OS-process authority: it re-verifies package files, executes and signals child processes, owns pipes and reaping, reads and sleeps against monotonic time, and performs secure bootstrap over portable dependency contracts. Review and record native-lane exceptions after the service-reconciler and host-control protocol cores are fixture-complete; do not create unsafe all-language process-control ports."
+      "notes": "Discovered in the collision-clean 9ad8105f inventory after PR #9687 added Rust-only chief-of-staff-process-supervisor. The crate is explicitly the concrete OS-process authority: it re-verifies package files, executes and signals child processes, owns pipes and reaping, reads and sleeps against monotonic time, and performs secure bootstrap over portable dependency contracts. PR #10156 extends the same native owner with retained pending data-plane requests and exact correlated response dispatch over the existing authenticated process pipes; channel-storage, authorization, and model-provider execution remain separately injected. PR #10163 makes the supervisor deliver exact public package trust over the authenticated control session so the child can independently re-verify its package before readiness, without adding a second portable identity. PR #10169 obtains manifest-blind launch bindings from an injected authority, checks runtime and optional model compatibility, and delivers the authenticated typed record before Ready. PR #10175 replaces the deny-only provider with storage-backed fail-closed resolution through the separately owned zero-capability pipeline-bindings package; this expands the native supervisor composition without making process control portable. PR #10180 automatically dispatches authenticated child receive, publish, acknowledge, and model-completion requests through the separately owned injected host-data-plane boundary while retaining process pipes, lifecycle, and correlation in this native owner. PR #10188 makes the reviewed supervisor launch the separately owned concrete Level 1 host executable with an explicit skill runtime argument; host behavior, current-directory package verification, stdio control, and bounded sleep remain in the new child-host native review. Review and record native-lane exceptions after the service-reconciler and host-control protocol cores are fixture-complete; do not create unsafe all-language process-control ports."
     },
     {
       "id": "chief-orchestrator-core-portable-conformance",
@@ -1909,7 +1963,7 @@
       "depends_on": ["chief-channel-endpoints-portable-conformance", "chief-service-reconciler-portable-conformance", "chief-process-supervisor-native-authority-review"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-clean 481a30c3 inventory after PR #9696 added Rust-only chief-of-staff-orchestrator-core. The zero-capability, transport-independent core composes injected storage, supervisor, channel authorization, and monotonic time. Define language-neutral fixtures for stable host registration/listing, desired-state transitions, bounded one-tick reconciliation, clock regression, health inspection, safe deregistration, authorize-before-mutate channel creation/destruction, idempotency, stable errors, and payload-blind/keyless behavior. Expand only after the channel endpoint and service reconciler contracts land and the concrete process supervisor has a reviewed native-authority exception."
+      "notes": "Discovered in the collision-clean 481a30c3 inventory after PR #9696 added Rust-only chief-of-staff-orchestrator-core. The zero-capability, transport-independent core composes injected storage, supervisor, channel authorization, and monotonic time. Define language-neutral fixtures for stable host registration/listing, desired-state transitions, bounded one-tick reconciliation, clock regression, health inspection, safe deregistration, authorize-before-mutate channel creation/destruction, idempotency, stable errors, and payload-blind/keyless behavior. PR #10169 adds manifest-blind injected launch-binding lookup before spawn and fail-closed absent or incompatible binding handling within this existing portable owner. PR #10180 threads the injected host-data-plane dispatcher into process start while keeping the orchestration core payload-blind. Expand only after the channel endpoint and service reconciler contracts land and the concrete process supervisor has a reviewed native-authority exception."
     },
     {
       "id": "websocket-core-portable-conformance",
@@ -1996,10 +2050,10 @@
       "id": "chief-daemon-keyring-native-authority-review",
       "title": "Review the Chief daemon keyring native-authority exception",
       "status": "pending",
-      "depends_on": ["chief-daemon-runtime-native-authority-review"],
+      "depends_on": ["chief-daemon-runtime-native-authority-review", "chief-daemon-secret-file-native-authority-review"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-clean 5c85a498 inventory after chief-of-staff-daemon-keyring landed as a Rust-only production key loader. The crate opens operator-configured filesystem paths, rejects link/device/race substitutions through native file-handle inspection, and supplies trusted keys to the concrete Chief host, so the package is not an all-language portable target. Review the minimum truthful fs:read and platform file-identity evidence; keep bounded 32-byte Ed25519 key decoding, subgroup validation, trust-tier mapping, and redacted stable diagnostics in shared portable fixtures where reusable; and record the residual file-loading adapter as a native-runtime exception. This review is excluded from autonomous delivery selection by parity policy."
+      "notes": "Discovered in the collision-clean 5c85a498 inventory after chief-of-staff-daemon-keyring landed as a Rust-only production key loader. The crate opens operator-configured filesystem paths, rejects link/device/race substitutions through native file-handle inspection, and supplies trusted keys to the concrete Chief host, so the package is not an all-language portable target. Review the minimum truthful fs:read and platform file-identity evidence; keep bounded 32-byte Ed25519 key decoding, subgroup validation, trust-tier mapping, and redacted stable diagnostics in shared portable fixtures where reusable; and record the residual file-loading adapter as a native-runtime exception. Merged PR #10208 adds a separately owned native secret-file adapter whose no-link, exact-length, owner-only semantics should be reused by future keyring composition rather than duplicated here. This review is excluded from autonomous delivery selection by parity policy."
     },
     {
       "id": "chief-daemon-credential-native-authority-review",
@@ -2014,10 +2068,10 @@
       "id": "chief-daemon-executable-native-authority-review",
       "title": "Review the Chief daemon composition-root native-authority exception",
       "status": "pending",
-      "depends_on": ["chief-daemon-runtime-native-authority-review", "chief-daemon-keyring-native-authority-review", "chief-daemon-credential-native-authority-review", "chief-process-supervisor-native-authority-review"],
+      "depends_on": ["chief-daemon-runtime-native-authority-review", "chief-daemon-keyring-native-authority-review", "chief-daemon-credential-native-authority-review", "chief-process-supervisor-native-authority-review", "chief-daemon-authority-provisioning-native-authority-review"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-clean bbb0276a inventory after chief-of-staff-daemon landed as the Rust-only concrete D18 composition root. It reads environment and configuration, opens trusted files, creates and writes durable credential/state paths, listens on loopback, executes and signals child processes, handles shutdown signals, and owns monotonic scheduling and bounded waits. Review the composed authority and platform evidence after its component native reviews; keep only dependency-injected orchestration ordering in portable contracts, and do not manufacture all-language privileged daemon executables. This review is excluded from autonomous delivery selection by parity policy and does not displace the active Haskell Rust resolver repair."
+      "notes": "Discovered in the collision-clean bbb0276a inventory after chief-of-staff-daemon landed as the Rust-only concrete D18 composition root. It reads environment and configuration, opens trusted files, creates and writes durable credential/state paths, listens on loopback, executes and signals child processes, handles shutdown signals, and owns monotonic scheduling and bounded waits. PR #10175 composes the separately owned zero-capability pipeline-binding resolver into this native daemon instead of the former deny-only provider; persistent storage and host launch remain inside the existing privileged composition-root review. PR #10180 composes the durable host-data-plane authorizer with a redacted unavailable service until concrete channel-key and model-provider authority is reviewed. Merged PRs #10194 and #10203 keep the production daemon fail-closed while adding a separately owned authority-backed channel/model service and exact in-memory key registry; filesystem or Vault provisioning and model-client construction remain explicit native composition work. Merged PR #10208 adds a separately reviewed owner-only secret-file adapter for future private-key provisioning rather than silently widening the daemon's file authority. Merged PR #10212 stages typed file-backed channel-key and exact Ollama authority provisioning behind a separately owned native adapter but intentionally does not inject those authorities into the daemon yet; require that provisioning review before the composition root is widened. Review the composed authority and platform evidence after its component native reviews; keep only dependency-injected orchestration ordering in portable contracts, and do not manufacture all-language privileged daemon executables. This review is excluded from autonomous delivery selection by parity policy and does not displace the active parity delivery."
     },
     {
       "id": "chief-daemon-service-files-portable-conformance",
@@ -2059,10 +2113,10 @@
       "id": "chief-skill-runtime-portable-conformance",
       "title": "Fixture and port the Chief Level 1 skill runtime coordinator",
       "status": "pending",
-      "depends_on": ["chief-skill-parser-portable-conformance", "chief-channel-endpoints-portable-conformance"],
+      "depends_on": ["chief-skill-parser-portable-conformance", "chief-channel-endpoints-portable-conformance", "chief-host-control-protocol-portable-conformance", "chief-skill-package-verification-portable-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-clean 1c441926 inventory after chief-of-staff-skill-runtime landed as a Rust-only package with an explicit empty capability profile. Define language-neutral fixtures for one-message processing, exact parsed-instruction and verified-message prompt construction, injected LLM failure, publish-before-acknowledge ordering, publish failure without acknowledgement, stable diagnostics, and payload-blind coordination. Port only the deterministic coordinator over injected channel endpoints and LlmClient interfaces after the parser and endpoint contracts land; model providers, storage, transport, crypto, clocks, runtime launch, and host capability approval remain injected or native."
+      "notes": "Discovered in the collision-clean 1c441926 inventory after chief-of-staff-skill-runtime landed as a Rust-only package with an explicit empty capability profile. Define language-neutral fixtures for one-message processing, exact parsed-instruction and verified-message prompt construction, injected LLM failure, publish-before-acknowledge ordering, publish failure without acknowledgement, stable diagnostics, and payload-blind coordination. PR #10169 expands the same portable owner with exact signed channel-name and direction matching plus deterministic conversion of authenticated Level 1 model, temperature, and token-cap settings into runtime configuration. Port only the deterministic coordinator over injected channel endpoints and LlmClient interfaces after the parser and endpoint contracts land; model providers, storage, transport, crypto, clocks, runtime launch, and host capability approval remain injected or native."
     },
     {
       "id": "chief-sdk-portable-conformance",
@@ -2098,7 +2152,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-clean b76de6c6 inventory after smart-home-enphase-envoy-integration landed as a mixed Rust-only package. Define language-neutral fixtures for credential-free HTTPS-origin and loopback-test validation, gateway serial and VaultRef handling, the two bounded GET request plans, bearer-header redaction, HTTP response framing limits, meter inventory/readings correlation by EID, duplicate and malformed record rejection, stable identities, aggregate health, telemetry projection, and authorization-before-effect ordering behind an injected transport. Port the deterministic validation, parsing, planning, and projection core across supported lanes while keeping live DNS/TCP/TLS, token materialization, Vault access, clocks, and SmartHomeRuntime host effects outside the portable contract."
+      "notes": "Discovered in the collision-clean b76de6c6 inventory after smart-home-enphase-envoy-integration landed as a mixed Rust-only package. Define language-neutral fixtures for credential-free HTTPS-origin and loopback-test validation, gateway serial and VaultRef handling, bounded meter and inverter GET request plans, bearer-header redaction, HTTP response framing limits, meter inventory/readings correlation by EID, duplicate and malformed record rejection, stable identities, aggregate health, telemetry projection, and authorization-before-effect ordering behind an injected transport. Merged PR #10184 expands this owner with bounded per-inverter production parsing; decimal native-identifier validation; duplicate rejection; finite non-negative power relationships; stable sorted 128-bit lowercase keyed pseudonyms derived from an injected 32-byte key, gateway serial, and inverter serial; pseudonymous entity projection; and exact identifier-inspection request planning before transport. Port the deterministic validation, parsing, planning, pseudonymization, and projection core across supported lanes while keeping live DNS/TCP/TLS, token and pseudonym-key materialization, Vault access, clocks, and SmartHomeRuntime host effects outside the portable contract."
     },
     {
       "id": "smart-home-enphase-envoy-native-authority-review",
@@ -2107,7 +2161,7 @@
       "depends_on": ["smart-home-enphase-envoy-portable-core-extraction-and-conformance", "rust-network-substrate-capability-truthfulness", "smart-home-lan-http-native-executor-consolidation"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-clean b76de6c6 inventory after smart-home-enphase-envoy-integration landed with concrete TcpStream, DNS resolution, platform TLS, bearer-token materialization, bounded network reads, and SmartHomeRuntime authorization and mutation. Review the minimum truthful connect, DNS, TLS, credential, time, and runtime authority plus platform evidence; consolidate the concrete LAN executor with the shared smart-home transport owner; require secrets and diagnostics to stay redacted and zeroized; and record the residual production adapter as a native-runtime exception after the deterministic core has portable fixture ownership. This review is excluded from autonomous delivery selection by parity policy."
+      "notes": "Discovered in the collision-clean b76de6c6 inventory after smart-home-enphase-envoy-integration landed with concrete TcpStream, DNS resolution, platform TLS, bearer-token materialization, bounded network reads, and SmartHomeRuntime authorization and mutation. Merged PR #10184 adds a third authenticated inverter request plus Vault-leased pseudonym-key custody, ephemeral raw-identifier handling, and consent-before-I/O enforcement; those concrete credential, transport, trusted-time, zeroization, and runtime effects remain in this native review while deterministic parsing and pseudonymization belong to the portable core. Review the minimum truthful connect, DNS, TLS, credential, time, and runtime authority plus platform evidence; consolidate the concrete LAN executor with the shared smart-home transport owner; require secrets and diagnostics to stay redacted and zeroized; and record the residual production adapter as a native-runtime exception after the deterministic core has portable fixture ownership. This review is excluded from autonomous delivery selection by parity policy."
     },
     {
       "id": "smart-home-synology-surveillance-native-authority-review",
@@ -2134,7 +2188,7 @@
       "depends_on": ["rust-network-substrate-capability-truthfulness", "smart-home-lan-http-native-executor-consolidation"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-clean 7650dfef inventory after smart-home-unifi-network-integration landed as a Rust-only production adapter. The crate owns concrete TCP and platform-TLS transport, Vault-referenced API-key authentication, endpoint policy, bounded authenticated HTTPS inspection, and SmartHomeRuntime authorization, so it is not an all-language portable target. Review truthful connect/TLS/credential/runtime authority and platform evidence; keep bounded official-API response validation, stable site/device health projection, request planning, pagination, and redaction semantics in shared portable contracts where reusable; and record the residual adapter as a native-runtime exception. This review is excluded from autonomous delivery selection by parity policy and does not displace the active Haskell Python resolver repair."
+      "notes": "Discovered in the collision-clean 7650dfef inventory after smart-home-unifi-network-integration landed as a Rust-only production adapter. The crate owns concrete TCP and platform-TLS transport, Vault-referenced API-key authentication, endpoint policy, bounded authenticated HTTPS inspection, and SmartHomeRuntime authorization, so it is not an all-language portable target. Review truthful connect/TLS/credential/runtime authority and platform evidence; keep bounded official-API response validation, stable site/device health projection, request planning, pagination, and redaction semantics in shared portable contracts where reusable; and record the residual adapter as a native-runtime exception. Merged PR #10193 adds official bounded client pagination, separate identifier and five-minute presence grants, Vault-leased pseudonym-key custody, zeroizing raw response storage, stable host-scoped pseudonyms, redacted projection, and expiry. Merged PR #10205 adds official exact-target latest-statistics requests, a 64-device bound, one-minute pre-I/O rate limit, two-minute operational-telemetry retention, validated CPU/memory/load/uptime/uplink/radio projection, and deliberate native-heartbeat omission. Keep the grant reducer and bounded response/projection fixtures portable under the data-governance contract while retaining credentials, TLS, live pagination/polling, pseudonym-key custody, runtime mutation, and trusted time in this native review. This review is excluded from autonomous delivery selection by parity policy and does not displace the active parity delivery."
     },
     {
       "id": "chief-agent-stdio-protocol-portable-conformance",
@@ -2207,6 +2261,78 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean 6d206c3c inventory after http-digest-auth landed as a Rust-only authority-free RFC 7616 parser and authorization builder. Define language-neutral vectors for bounded challenge parsing, MD5 and SHA-256 session and non-session algorithms, qop=auth and legacy forms, quoted escaping, digest inputs, nonce-count formatting, duplicate and injection rejection, unsupported algorithm/qop failures, zeroized secret intermediates where supported, and non-displayable authorization values. Port deterministic parsing and construction across suitable lanes while network I/O, credential custody and leasing, nonce-count persistence, retry policy, and CSPRNG client-nonce generation remain injected or native."
+    },
+    {
+      "id": "smart-home-data-governance-portable-conformance",
+      "title": "Fixture and port bounded smart-home data-governance policy",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 1d3722ec inventory after merged PR #10158 added Rust-only smart-home-data-governance. The crate is an authority-free, deny-by-default reducer over caller-supplied principals, resources, consent references, purposes, validity windows, operations, destinations, and trusted time. Define language-neutral fixtures for exact active-grant matching, bounded grant capacity and fields, HTTPS-origin normalization and rejection, operation/destination compatibility, expiry boundaries, privacy-protective stop-egress allowance, stable decisions and errors, and redacted sensitive diagnostics. Merged PR #10173 expands this same owner with credential-free MQTT host/port destination validation, exact consent-bound custom HTTP and MQTT egress decisions, destination and userinfo redaction, and privacy-protective shutdown semantics; concrete AirGradient readback, firmware limits, credentials, transport, and runtime mutation remain native. Merged PR #10184 adds deny-by-default device-identifier inspection with exact ephemeral or positive bounded-retention matching, rejects zero-duration and inapplicable retention, and explicitly keeps configuration and telemetry-egress operations retention-free. Merged PR #10193 adds a separate presence data category with the same exact ephemeral or positive bounded-retention policy; the UniFi adapter requires independent device-identifier and five-minute presence grants before any credential or network effect. Merged PR #10205 adds operational telemetry as another exact ephemeral or positive bounded-retention category; live UniFi device metrics require a local two-minute retention grant before credentials or transport. Port this pure policy across suitable established lanes; consent storage and approval, trusted clocks, destination authorization, network transport, device mutation, runtime command approval, and model or telemetry egress remain injected or native."
+    },
+    {
+      "id": "chief-pipeline-bindings-portable-conformance",
+      "title": "Fixture and port durable authorized Chief pipeline bindings",
+      "status": "pending",
+      "depends_on": ["chief-channel-endpoints-portable-conformance", "chief-service-registry-portable-conformance", "chief-host-control-protocol-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean f6926d9d inventory after merged PR #10175 added Rust-only chief-of-staff-pipeline-bindings. The package has an explicit empty capability profile and deterministic logic over an injected StorageBackend. Define language-neutral fixtures for bounded versioned records; exact host/package, pipeline UUID-v7, agent, named channel UUID, direction, and optional Level 1 model bindings; current registration and active membership checks; immutable channel-to-pipeline claims; cross-pipeline reuse rejection; revision-CAS wire, replace, and unwire behavior; idempotent unwire with retained non-authorizing claims; corruption and restart behavior; and fail-closed launch revalidation. Merged PR #10180 further requires exact AgentId and revalidates registration, claims, lifecycle, and directional membership for every dispatched request within this same portable owner. Port the pure reducer after its endpoint, service-registry, and host-control dependencies; storage persistence, service mutation, process launch, clocks, transport, credentials, and daemon composition remain injected or native."
+    },
+    {
+      "id": "chief-host-data-plane-portable-conformance",
+      "title": "Fixture and port authorized Chief host data-plane dispatch",
+      "status": "pending",
+      "depends_on": ["chief-pipeline-bindings-portable-conformance", "chief-host-control-protocol-portable-conformance", "chief-service-registry-portable-conformance", "chief-channel-endpoints-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean b7c291b2 inventory after merged PR #10180 added Rust-only chief-of-staff-host-data-plane. The source is authority-free deterministic authorization and dispatch over injected StorageBackend and HostDataPlaneService interfaces, but the new package does not yet carry a package-local required_capabilities.json and must add an explicit empty profile as part of delivery. Define language-neutral fixtures for durable per-request binding reload; exact host/package, pipeline, AgentId, claim, lifecycle, active membership, and read/write direction checks; exact Level 1 model selector, temperature, and token-cap matching; receive, publish, acknowledge, and completion dispatch; service-response validation; stable host-control error mapping; and redacted failures. Merged PR #10194 adds an authority-backed service over the established encrypted endpoints: bounded receive-to-ack delivery tracking, sealed receiver grants before publish, exact model-client resolution, provider-neutral completion conversion, and output-bound validation. Merged PR #10203 adds an immutable zeroizing registry that releases short-lived receiver or originator keys only for exact current pipeline, agent, channel, and direction matches, rejects zero or duplicate secrets, and exposes no secret formatting. Merged PR #10212 adds deterministic exact-model registry cardinality and empty-state introspection consumed by the separately reviewed provisioning adapter; fixture those observations without widening the portable owner into provider construction. Add endpoint conformance as a direct prerequisite and fixture the deterministic identity, direction, ledger, error, response, and registry semantics; secret provisioning, channel cryptography, provider credentials/construction, storage persistence, transport, process pipes, clocks, and daemon composition remain injected or native."
+    },
+    {
+      "id": "chief-level-one-host-native-authority-review",
+      "title": "Review the concrete Chief Level 1 child-host native-authority exception",
+      "status": "pending",
+      "depends_on": ["chief-host-control-protocol-portable-conformance", "chief-host-data-plane-portable-conformance", "chief-process-supervisor-native-authority-review", "chief-skill-runtime-portable-conformance", "chief-skill-package-verification-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 437f19ff06 inventory after merged PR #10188 added Rust-only chief-of-staff-host. This concrete child executable owns process arguments, current-directory package access, authenticated stdin/stdout control I/O, monotonic process-local time, and bounded sleep while composing package verification, launch binding, skill runtime, and completion requests. Review the minimum truthful process-stream, filesystem, clock, and sleep authority and add a package-local capability profile after the host-control, data-plane, supervisor, skill-runtime, and sealed-package contracts are fixture-complete. Keep exact one-read/one-write launch topology, receive-complete-publish-acknowledge ordering, heartbeat and terminate semantics, stable redacted failures, and fail-closed response mapping in portable dependencies; do not manufacture all-language native child executables. This native-runtime review is excluded from autonomous delivery selection by parity policy."
+    },
+    {
+      "id": "chief-daemon-secret-file-native-authority-review",
+      "title": "Review the Chief owner-only secret-file native-authority exception",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-checked 3a27b69887 inventory after merged PR #10208 added Rust-only chief-of-staff-daemon-secret-file. This package is deliberately a concrete cross-platform trust-boundary adapter with truthful fs:read and native FFI capabilities: it walks an absolute path without following links, requires an exact non-zero length and regular object, enforces effective ownership with no group/world access on Unix or a protected current-user-only DACL on Windows, holds ancestor handles against replacement, rejects reparse points and non-regular blocking objects, and returns content only in zeroizing storage. Review the minimum native filesystem/FFI authority, platform-specific race evidence, bounded stable payload-blind errors, and capability manifest; require Chief keyring and model/channel provisioning to reuse this adapter instead of duplicating unsafe file access. Merged PR #10212 is the first concrete consumer: its provisioning boundary requests exact 32-byte directional key material and preserves zeroization while binding the result to exact pipeline, agent, channel, and direction identities. The existing-file-only reader never creates, repairs, rewrites, logs, or exposes secret material, so no all-language privileged port should be manufactured. This native-runtime review is excluded from autonomous delivery selection by parity policy and does not displace the active portable Lua delivery."
+    },
+    {
+      "id": "chief-daemon-config-portable-conformance",
+      "title": "Fixture and port the pure Chief daemon configuration contract",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Newly surfaced during the post-#10212 ownership audit of the existing Rust-only chief-of-staff-daemon-config package. The package has an explicit empty capability profile and performs closed-schema parsing over caller-supplied TOML plus caller-supplied absolute home paths without filesystem or environment access. Define language-neutral fixtures for duplicate and unknown rejection; bounded paths, ports, timeouts, and collections; canonical UUID-v7 pipeline and channel identities; exact trimmed agent identities; read-versus-write directional key-field shapes; unique model selectors; explicit bounded endpoint and timeout declarations; stable payload-blind errors; and deterministic caller-supplied-home path resolution. Port only this pure parser and typed projection; secret reads, environment discovery, provider construction, process launch, clocks, sockets, and daemon composition remain native or injected."
+    },
+    {
+      "id": "llm-provider-ollama-native-authority-review",
+      "title": "Review the Ollama provider native-network exception",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Newly surfaced during the post-#10212 ownership audit of the existing Rust-only llm-provider-ollama package. The concrete provider truthfully declares loopback and local-network authority and owns DNS resolution, TCP connection, HTTP request/response I/O, and socket timeouts, so the full package is not an all-language portable target. Review the minimum network/time authority, bounded response handling, redaction, and platform evidence. Preserve reusable fixtures for trimmed bounded model selectors, exact pathless http://host:port authorities with explicit non-zero ports, non-zero timeouts capped at five minutes, deterministic request shaping, bounded HTTP/JSON parsing, token usage, finish reasons, and stable failures; retain DNS, transport, trusted time, reachability, and live model execution in the native adapter. This native-runtime review is excluded from autonomous delivery selection by parity policy."
+    },
+    {
+      "id": "chief-daemon-authority-provisioning-native-authority-review",
+      "title": "Review the Chief data-plane authority-provisioning native exception",
+      "status": "pending",
+      "depends_on": ["chief-daemon-config-portable-conformance", "chief-daemon-secret-file-native-authority-review", "chief-host-data-plane-portable-conformance", "llm-provider-ollama-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-checked cbe099305e inventory after merged PR #10212 added Rust-only chief-of-staff-daemon-authority-provisioning. This privileged pre-composition adapter truthfully declares fs:read, consumes the owner-only no-link exact-length secret-file boundary, retains key material only in zeroizing buffers, binds each exact 32-byte receiver or originator secret to canonical pipeline, agent, channel, and direction identities, and constructs exact bounded Ollama model authorities without a network probe. Review duplicate and placeholder rejection, owner-only path containment, exact-length reads, zeroization, stable payload-blind startup errors, immutable registry construction, truthful capability shape, and the absence of reachability or logging side effects. Keep closed TOML parsing, identity validation, registry observations, and reusable model/endpoint/timeout validation in their portable or separately reviewed owners; filesystem access, provider transport, key custody, and eventual daemon injection remain native. This native-runtime review is excluded from autonomous delivery selection by parity policy and does not displace the active portable Lua delivery."
     }
   ]
 }

@@ -442,13 +442,22 @@ func readLuaDeps(pkgDir string) ([]string, error) {
 	if rockspecData == nil {
 		return nil, nil
 	}
-	// Parse lines like: "coding-adventures-logic-gates >= 0.1.0",
-	re := regexp.MustCompile(`"coding-adventures-([a-z0-9-]+)\s*>=`)
+	// Restrict discovery to the authoritative dependency table so package,
+	// source, and build strings cannot become false edges. LuaRocks permits
+	// both versioned and unversioned dependency strings.
+	dependenciesRe := regexp.MustCompile(`(?ms)^[ \t]*dependencies[ \t]*=[ \t]*\{(.*?)^[ \t]*\}`)
+	block := dependenciesRe.FindSubmatch(rockspecData)
+	if len(block) != 2 {
+		return nil, nil
+	}
+	localDepRe := regexp.MustCompile(`["']coding-adventures-([a-z0-9-]+)(?:[ \t]+[^"']*)?["']`)
+	seen := make(map[string]bool)
 	var deps []string
-	for _, line := range strings.Split(string(rockspecData), "\n") {
-		m := re.FindStringSubmatch(line)
-		if len(m) == 2 {
-			deps = append(deps, m[1])
+	for _, match := range localDepRe.FindAllSubmatch(block[1], -1) {
+		dep := string(match[1])
+		if !seen[dep] {
+			seen[dep] = true
+			deps = append(deps, dep)
 		}
 	}
 	return deps, nil
@@ -1652,10 +1661,10 @@ done_testing;
 //     src/coding_adventures/{snake}/init.lua       — main module
 //     tests/test_{snake}.lua                       — test suite
 //
-// The BUILD file only needs one command:
-//   cd tests && busted . --verbose --pattern=test_
-//
-// LuaRocks dep install is handled by the CI workflow, not BUILD.
+// BUILD and BUILD_windows bootstrap every local rock in leaf-to-root order,
+// install the package itself without remote dependency resolution, and then
+// run the Busted suite. This makes each recipe standalone on a clean LuaRocks
+// tree instead of relying on state left by an earlier package build.
 
 func generateLua(targetDir, pkgName, description, layerCtx string, directDeps, orderedDeps []string) error {
 	snake := toSnakeCase(pkgName)
@@ -1677,8 +1686,32 @@ func generateLua(targetDir, pkgName, description, layerCtx string, directDeps, o
 	fmt.Fprintf(&rockspec, "        [\"coding_adventures.%s\"] = \"src/coding_adventures/%s/init.lua\",\n", snake, snake)
 	rockspec.WriteString("    },\n}\n")
 
-	// BUILD — just the busted command
-	build := "cd tests && busted . --verbose --pattern=test_\n"
+	var build, buildWindows strings.Builder
+	for _, dep := range orderedDeps {
+		depDir := toSnakeCase(dep)
+		fmt.Fprintf(
+			&build,
+			"luarocks show coding-adventures-%s >/dev/null 2>&1 || (cd ../%s && luarocks make --local --deps-mode=none coding-adventures-%s-0.1.0-1.rockspec)\n",
+			dep,
+			depDir,
+			dep,
+		)
+		fmt.Fprintf(
+			&buildWindows,
+			"luarocks show coding-adventures-%s 1>nul 2>nul || (cd ..\\%s && luarocks make --local --deps-mode=none coding-adventures-%s-0.1.0-1.rockspec)\n",
+			dep,
+			depDir,
+			dep,
+		)
+	}
+	selfInstall := fmt.Sprintf(
+		"luarocks make --local --deps-mode=none coding-adventures-%s-0.1.0-1.rockspec\n",
+		pkgName,
+	)
+	build.WriteString(selfInstall)
+	build.WriteString("cd tests && busted . --verbose --pattern=test_\n")
+	buildWindows.WriteString(selfInstall)
+	buildWindows.WriteString("cd tests && busted . --verbose --pattern=test_\n")
 
 	// required_capabilities.json
 	capJSON := fmt.Sprintf(`{
@@ -1753,9 +1786,9 @@ end)
 
 	rockspecFilename := fmt.Sprintf("coding-adventures-%s-0.1.0-1.rockspec", pkgName)
 	files := map[string]string{
-		rockspecFilename:             build, // placeholder, overwritten below
-		"BUILD":                      build,
-		"BUILD_windows":              build,
+		rockspecFilename:             build.String(), // placeholder, overwritten below
+		"BUILD":                      build.String(),
+		"BUILD_windows":              buildWindows.String(),
 		"required_capabilities.json": capJSON,
 		filepath.Join("src", "coding_adventures", snake, "init.lua"): initLua,
 		filepath.Join("tests", "test_"+snake+".lua"):                 testLua,
@@ -2600,10 +2633,10 @@ int main(void) {
 		filepath.Join("src", symbol+".c"):        source,
 		filepath.Join("tests", symbol+"_test.c"): test,
 		"BUILD":                                  build,
-		"BUILD_windows":                           buildWin,
-		filepath.Join("tools", "run.sh"):          runSh,
-		filepath.Join("tools", "run.ps1"):         runPs1,
-		".gitignore":                              "_build/\n",
+		"BUILD_windows":                          buildWin,
+		filepath.Join("tools", "run.sh"):         runSh,
+		filepath.Join("tools", "run.ps1"):        runPs1,
+		".gitignore":                             "_build/\n",
 	})
 }
 
@@ -2656,10 +2689,10 @@ int main() {
 		filepath.Join("include", symbol+".hpp"):    header,
 		filepath.Join("tests", symbol+"_test.cpp"): test,
 		"BUILD":                           build,
-		"BUILD_windows":                            buildWin,
-		filepath.Join("tools", "run.sh"):           runSh,
-		filepath.Join("tools", "run.ps1"):           runPs1,
-		".gitignore":                               "_build/\n",
+		"BUILD_windows":                   buildWin,
+		filepath.Join("tools", "run.sh"):  runSh,
+		filepath.Join("tools", "run.ps1"): runPs1,
+		".gitignore":                      "_build/\n",
 	})
 }
 
