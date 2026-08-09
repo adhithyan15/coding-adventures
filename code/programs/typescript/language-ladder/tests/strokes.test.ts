@@ -274,6 +274,15 @@ describe("handwriting ductus", () => {
     );
   });
 
+  it("Persian س joins its three teeth directly to the final bowl", () => {
+    const sin = DUCTUS["س"];
+    expect(penLifts(sin)).toBe(0);
+    expect(sin.strokes).toHaveLength(1);
+    expect(sin.strokes[0].segments).toHaveLength(2);
+    const path = penPath(sin.strokes[0]);
+    expect(path[0].x).toBeGreaterThan(path.at(-1)!.x);
+  });
+
   // The PROVENANCE GATE. A stroke's SHAPE is checked against the font above;
   // its ORDER cannot be — so it must trace to a cited source, or it does not
   // ship. This is the counterpart, for hand-authored order, of "facts enter
@@ -404,6 +413,13 @@ describe("handwriting ductus", () => {
     expect(src.url).toContain("laits.utexas.edu/persian_grammar/video");
     expect(src.citation).toMatch(/Persian Online.*ت.*00:22–00:27/i);
     expect(src.variation).toMatch(/right-to-left.*left dot.*another lift.*right dot.*Noto Naskh/i);
+  });
+
+  it("Persian س traces to the later continuous teeth-and-bowl demonstration", () => {
+    const src = DUCTUS["س"].source;
+    expect(src.url).toContain("laits.utexas.edu/persian_grammar/video");
+    expect(src.citation).toMatch(/Persian Online.*س.*01:29–01:35/i);
+    expect(src.variation).toMatch(/continuous right-to-left.*three teeth.*final bowl.*no pen lift.*Noto Naskh/i);
   });
 });
 
