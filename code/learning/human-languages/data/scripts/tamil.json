@@ -7,7 +7,7 @@
   "signature": "Curvy and loopy with flat top-bars on many letters, repeated arches, and no continuous head-line.",
   "complete": false,
   "combination": "A consonant carries an inherent 'a' (க = ka). A vowel sign replaces that vowel (க + ா → கா = kā). The puḷḷi ் — a DOT above the letter — removes the vowel entirely (க் = k). Unlike Devanagari, Tamil does NOT fuse the bare consonant into a conjunct: the dot stays visible and both letters keep their full shape. (A handful of Sanskrit-borrowed ligatures are the exception — க்ஷ kṣa and ஸ்ரீ śrī.)",
-  "notes": "Used by Tamil in this curriculum. The inventory below covers the greeting and self-introduction vocabulary of Chapters 1–2 and grows from there; it is deliberately not the full 247-character grid. Stroke orders are the common handwriting convention, not a standard — Tamil is taught with regional and school-to-school variation. IMPORTANT for authors: a `strokeOrder` list names the PARTS of a letter in writing order; it does NOT by itself say where the pen lifts. அ, ஆ, இ, க, ம, வ, and ல have authored, font-checked pen paths (`DUCTUS` in language-ladder's `strokes.ts`). அ and ஆ each have two pen-down runs with one lift before the separate right upright; ஆ then continues into its long-vowel loop without another lift. இ keeps its first five movements joined, lifts once before the outer-left climb, and joins that climb to the final arch. க uses three pen-down runs: its upper frame, lower-left bowl, and lower-right bowl. ம, வ, and ல are each a single unbroken stroke even though their parts have separate names. The other four letters here have no verified pen path, so read their steps as part order only, and do not add or assume lifts until a cited ductus exists. Component descriptions name the pieces a learner can see in the vendored Noto Sans Tamil face; several letters share a straight top bar and are best learned as a family (ண/ன, ந, ற).",
+  "notes": "Used by Tamil in this curriculum. The inventory below covers the greeting and self-introduction vocabulary of Chapters 1–2 and grows from there; it is deliberately not the full 247-character grid. Stroke orders are the common handwriting convention, not a standard — Tamil is taught with regional and school-to-school variation. IMPORTANT for authors: a `strokeOrder` list names the PARTS of a letter in writing order; it does NOT by itself say where the pen lifts. அ, ஆ, இ, க, ம, வ, ல, and ற have authored, font-checked pen paths (`DUCTUS` in language-ladder's `strokes.ts`). அ and ஆ each have two pen-down runs with one lift before the separate right upright; ஆ then continues into its long-vowel loop without another lift. இ keeps its first five movements joined, lifts once before the outer-left climb, and joins that climb to the final arch. க and ற each use three pen-down runs with two verified lifts. ம, வ, and ல are each a single unbroken stroke even though their parts have separate names. The other three letters here have no verified pen path, so read their steps as part order only, and do not add or assume lifts until a cited ductus exists. Component descriptions name the pieces a learner can see in the vendored Noto Sans Tamil face; several letters share a straight top bar and are best learned as a family (ண/ன, ந, ற).",
   "letters": [
     {
       "glyph": "அ",
@@ -199,9 +199,21 @@
       "role": "consonant",
       "inherentVowel": "a",
       "components": ["two arches side by side, giving three legs down to the baseline", "the right leg continues BELOW the baseline, sweeps left, and drops into a long descender"],
-      "strokeOrder": ["first arch", "second arch", "right leg", "the sweep left below the baseline and the descender"],
-      "strokeOrderNote": "conventional",
-      "notes": "The hard/trilled r, distinct from ர. In நன்றி the pair ன் + ற is said as a single cluster."
+      "strokeOrder": [
+        "start at the lower left, climb the left side, and arch to the middle",
+        "without lifting, descend the first middle upright — then lift once",
+        "set the pen at the adjacent middle upright and descend — then lift a second time",
+        "set the pen at the middle top, arch over, and descend the right side",
+        "without lifting again, sweep left below the baseline and drop into the long descender — and only now lift"
+      ],
+      "strokeOrderNote": "three strokes — two joined movements, one pen lift, the adjacent middle descent, a second lift, then two joined movements; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 10, ற",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 10, ற (Univ. of Texas at Austin), p. 194",
+        "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+        "variation": "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. This is one attested order."
+      },
+      "notes": "The hard/trilled r, distinct from ர. Frame 10's five numbered movements form three pen-down runs: movements 1–2 join, movement 3 restarts on the neighboring middle descent, and movements 4–5 join the right arch to the sweep and descender. In நன்றி the pair ன் + ற is said as a single cluster."
     }
   ],
   "marks": [
