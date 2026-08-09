@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `SealedStore::put_if_absent` for collision-safe encrypted record creation
+  without overwriting an existing credential address.
 - `SealedStore::init_with_kek` and `SealedStore::unseal_with_kek` for
   caller-owned random root KEKs unwrapped by `vault-key-custody`.
 - Additive per-entry KEK source markers with backward-compatible parsing:

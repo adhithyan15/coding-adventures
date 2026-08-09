@@ -49,12 +49,18 @@ let vault = SealedStore::new(backend.clone());
 
 vault.init(b"correct horse battery staple", &InitOptions::default())?;
 vault.put("passwords", "github.com", b"my-pat-token", None)?;
+vault.put_if_absent("passwords", "new-service", b"one-time-secret")?;
 
 let secret = vault.get("passwords", "github.com")?.unwrap();
 assert_eq!(&*secret.plaintext, b"my-pat-token");
 
 vault.seal(); // wipes the KEK from RAM
 ```
+
+`put_if_absent` applies the backend's atomic absence condition after envelope
+encryption, so a generated credential address can never overwrite an existing
+record. Failed conditional writes still drop and zeroize the fresh cleartext
+DEK before returning.
 
 For a product vault, generate one random root KEK, wrap it with a
 `vault-key-custody` provider, and inject the unwrapped key material:

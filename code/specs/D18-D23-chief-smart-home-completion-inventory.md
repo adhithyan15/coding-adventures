@@ -1514,6 +1514,39 @@ claiming cross-store atomicity:
   presented as atomic with runtime persistence. A recoverable transaction
   journal remains required before automated credential provisioning can ship.
 
+## Current Recoverable Pairing Transaction Slice
+
+This slice closes the reusable cross-store recovery prerequisite without yet
+claiming that an existing vendor pairing actor has adopted it:
+
+- `smart-home-pairing-transaction` writes a secret-free durable journal before
+  credential creation and exposes stable paginated discovery so a restart host
+  can enumerate every pending transaction.
+- Fresh credentials use transaction-owned opaque references and Vault keys
+  with sealed-Vault `put_if_absent`; generated address collisions cannot
+  overwrite an existing record. Journal records retain only D23 principal and
+  pairing identity, opaque Vault references, exact Vault and runtime revisions,
+  timestamps, metadata, and transaction state.
+- D23 `CompletePairing` authorization is proven against a cloned durable
+  runtime before journal or Vault writes. Runtime completion then uses the
+  expected-revision persist-before-swap path.
+- Recovery distinguishes prepared, Vault-written, runtime-committed, and
+  cleanup-complete states. It detects a Vault write or runtime commit whose
+  following journal acknowledgement was interrupted.
+- An uncommitted credential is deleted only at the exact revision returned by
+  its original Vault creation. After runtime commit, the previous credential is
+  deleted only at the exact revision captured during preparation; replacement
+  drift or a partial runtime reference leaves the journal pending instead of
+  deleting a newer or potentially referenced record.
+- Tests prove first-install and replacement commit, no credential bytes in the
+  journal, restart discovery, recovery on both sides of runtime CAS, stale
+  runtime rollback, cleanup revision-conflict and partial-reference retention,
+  and authorization denial before any journal or Vault write.
+- The existing Hue pairing actor still performs its historical direct
+  Vault-then-in-memory-runtime handoff. Migrating that production composition to
+  this coordinator is the next prerequisite before any vendor host may perform
+  automated credential provisioning.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
@@ -1525,20 +1558,20 @@ JSON sessions independently, but does not document how a secure session binds
 to that image request; the only documented direct URL credentials require
 disabling secure sessions and are rejected. Frigate snapshot delivery remains
 blocked on a cookie-capable media authentication boundary. Revision-guarded
-D23 pairing completion is now available, but the sealed Vault and runtime store
-remain independent commit domains. The strongest next prerequisite is a
-secret-free durable prepare/commit/cleanup journal that can recover a crash or
-rollback failure around new-record creation, runtime CAS, and old-record
-deletion before any host becomes an implicit credential writer.
+D23 pairing completion and its recoverable cross-store journal are now
+available. The strongest next prerequisite is migrating the Hue pairing actor
+off its direct Vault-then-in-memory-runtime handoff so one production pairing
+path proves D23 principal propagation, durable runtime revision ownership,
+startup recovery, and actor-state replacement through the coordinator.
 
-1. Add a secret-free, recoverable pairing transaction protocol spanning sealed
-   Vault and runtime-store commit domains. It must journal prepare, new opaque
-   reference, previous opaque reference, expected runtime revision, commit, and
-   cleanup status; recover crashes; bind rollback/deletion to exact revisions;
-   and migrate the existing Hue pairing service before enabling automated
-   ONVIF, ZoneMinder, Axis, or Reolink credential provisioning. Snapshot
-   delivery itself is complete and must not become an implicit credential
-   writer.
+1. Migrate `smart-home-hue-pairing-service` to the recoverable pairing
+   coordinator. Its actor request must carry the exact D23 principal and
+   expected durable runtime revision; startup must enumerate and resolve
+   pending journals before accepting another pairing; successful resolution
+   must replace actor runtime state from the committed snapshot. Only after
+   that production path is proven may ONVIF, ZoneMinder, Axis, or Reolink gain
+   automated credential provisioning. Snapshot delivery itself is complete and
+   must not become an implicit credential writer.
 2. Add authenticated AirGradient MQTT only after official firmware removes
    plaintext credential logging and one-shot Vault-leased credential injection
    can be proven without request-plan or normalized-state exposure.
