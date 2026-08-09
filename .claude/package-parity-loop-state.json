@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 10238,
   "last_inventory": {
     "revision": "94414638fd85f0c1db8cdec6c9a55db815f71ddc",
     "schema_version": 3,
@@ -381,13 +381,13 @@
     {
       "id": "build-file-lua-huffman-heap-transitive-closure",
       "title": "Install heap before Lua Huffman dependents",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-file-standalone-integrity-lua"],
       "branch": "codex/lua-huffman-heap-transitive-closure",
-      "pr_number": null,
+      "pr_number": 10238,
       "selection_revision": "a4f536011230cd85e7b02cec8d84a0c26d869076",
       "selection_notes": "Selected after PR #10216 merged and the post-merge ownership refresh. Heap is the smallest unblocked shared prerequisite among the six audited Lua follow-ups and closes the clean-tree Huffman chain for brotli, deflate, and huffman-compression.",
-      "notes": "Discovered by the complete canonical Lua sibling-bootstrap audit for the selected Unix closure tranche. brotli, deflate, and huffman-compression install huffman-tree but omit huffman-tree's unpublished local heap prerequisite on a clean LuaRocks tree. Repair the shared heap-to-Huffman chain as its own dependency-shaped metadata item. The collision-checked pre-publication refresh at 94414638fd retains this selection: PRs #10230 and #10234 change only Tamil material, PRs #10232, #10233, and #10235 expand existing ALGOL and diagram package surfaces without adding identities, and PR #10229 adds only the excluded Rust-native smart-home-onvif-snapshot-host composition boundary and its dependency-blocked review. Exact-head validation uses six independent clean LuaRocks trees across the canonical Unix and Windows recipes: 113 tests pass per platform with zero failures, errors, or pending cases, and installed-runtime smoke resolves each consumer plus heap outside the source tree. Focused production coverage is 93.55% for heap, 98.70% for huffman-tree, 99.05% for deflate, and 98.23% for huffman-compression. The Python build tool passes 353 tests at 85.26% coverage; the Lua build tool passes 61 tests; the Go build tool passes its full test, vet, and build gates; and parity reporter tests pass 10 cases. Full validation discovers 4,835 packages and reproduces only the exact unrelated 17-diagnostic Perl, Python, and Swift baseline with zero Lua diagnostics. Collision, inventory, state-graph, JSON, BUILD syntax, diff, dependency-diff, added-line credential, and direct authority-boundary checks pass; the existing unrelated Python Ruff and mypy debt is unchanged because this tranche modifies no Python source."
+      "notes": "Discovered by the complete canonical Lua sibling-bootstrap audit for the selected Unix closure tranche. brotli, deflate, and huffman-compression install huffman-tree but omit huffman-tree's unpublished local heap prerequisite on a clean LuaRocks tree. Repair the shared heap-to-Huffman chain as its own dependency-shaped metadata item. The collision-checked pre-publication refresh at 94414638fd retains this selection: PRs #10230 and #10234 change only Tamil material, PRs #10232, #10233, and #10235 expand existing ALGOL and diagram package surfaces without adding identities, and PR #10229 adds only the excluded Rust-native smart-home-onvif-snapshot-host composition boundary and its dependency-blocked review. Exact-head validation uses six independent clean LuaRocks trees across the canonical Unix and Windows recipes: 113 tests pass per platform with zero failures, errors, or pending cases, and installed-runtime smoke resolves each consumer plus heap outside the source tree. Focused production coverage is 93.55% for heap, 98.70% for huffman-tree, 99.05% for deflate, and 98.23% for huffman-compression. The Python build tool passes 353 tests at 85.26% coverage; the Lua build tool passes 61 tests; the Go build tool passes its full test, vet, and build gates; and parity reporter tests pass 10 cases. Full validation discovers 4,835 packages and reproduces only the exact unrelated 17-diagnostic Perl, Python, and Swift baseline with zero Lua diagnostics. Collision, inventory, state-graph, JSON, BUILD syntax, diff, dependency-diff, added-line credential, and direct authority-boundary checks pass; the existing unrelated Python Ruff and mypy debt is unchanged because this tranche modifies no Python source. Ready-for-review PR #10238 opened from validated implementation commit 82db178d1c after confirming no other parity PR was active."
     },
     {
       "id": "build-file-lua-parser-lexer-transitive-closure",
