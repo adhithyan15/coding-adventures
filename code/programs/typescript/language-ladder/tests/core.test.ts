@@ -6,6 +6,7 @@ import {
   buildScriptView,
   scriptSummary,
   falseFriends,
+  handwritingHeading,
 } from "../src/core.ts";
 import type { Letter, ScriptData } from "../src/types.ts";
 import { SCRIPTS } from "../src/data.ts";
@@ -94,6 +95,33 @@ describe("toLetterView", () => {
     const v = toLetterView(letter({ tone: "1", inherentVowel: "a" }));
     expect(v.tone).toBe("1");
     expect(v.inherentVowel).toBe("a");
+  });
+
+  it("treats prose as part order until both verification fields exist", () => {
+    expect(toLetterView(letter()).handwritingEvidence).toBe("parts-only");
+    expect(toLetterView(letter({ penLifts: 0 })).handwritingEvidence).toBe("parts-only");
+    expect(
+      toLetterView(
+        letter({
+          penLifts: 0,
+          strokeOrderSource: { citation: "A real primer", url: "https://example.test/primer" },
+        }),
+      ).handwritingEvidence,
+    ).toBe("verified-ductus");
+  });
+});
+
+describe("handwritingHeading", () => {
+  it("calls uncited prose shape parts and leaves pen lifts explicitly unverified", () => {
+    expect(handwritingHeading(toLetterView(letter()), false)).toBe(
+      "Shape parts — usual order (pen lifts unverified)",
+    );
+  });
+
+  it("reserves pen-path language for an authored ductus", () => {
+    expect(handwritingHeading(toLetterView(letter({ strokeOrderNote: "cited" })), true)).toBe(
+      "Write it — verified pen path (cited)",
+    );
   });
 });
 

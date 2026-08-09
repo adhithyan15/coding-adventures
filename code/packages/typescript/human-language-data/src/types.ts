@@ -507,7 +507,11 @@ export interface Letter {
    * be inferred from `strokeOrder.length`.
    */
   penLifts?: number;
-  /** Provenance of the stroke ORDER, where the order is claimed rather than sketched. */
+  /**
+   * Provenance of the stroke ORDER, where the order is claimed rather than
+   * sketched. Required whenever `penLifts` is present; without both fields the
+   * UI labels `strokeOrder` as part order only and makes no lift claim.
+   */
   strokeOrderSource?: StrokeOrderSource;
   notes?: string;
 }

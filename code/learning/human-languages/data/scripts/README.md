@@ -56,10 +56,11 @@ holds the structured tone (`"1"`–`"4"` | `"neutral"`). No `forms`, no `marks`.
 }
 ```
 
-`components` is the point: each glyph broken into named parts you can practise one
-at a time on paper. `strokeOrder` is the common handwriting convention and is
-always flagged as such — freely-licensed authoritative stroke data does not exist
-for most of these scripts.
+`components` is the point: each glyph is broken into named parts you can practise
+one at a time on paper. `strokeOrder` puts those visible parts in their usual
+writing order; it is not a count of pen-down strokes. Language Ladder labels every
+uncited list **"Shape parts — usual order (pen lifts unverified)"**. Only a cited,
+font-checked ductus may turn that into a verified pen path.
 
 ## Handwriting: parts, not the grid
 
@@ -129,11 +130,14 @@ and given the same citation.
 4. Where no ductus exists, do not invent lifts — keep the steps as part order and
    leave `penLifts` out.
 
-Only **ம** currently has an authored ductus. The remaining prose stroke orders —
-192 letters across nine scripts (`arabic` 21, `chinese` 24, `cyrillic` 33,
-`devanagari` 28, `gujarati` 31, `hebrew` 22, `perso-arabic` 9, `tamil` 10,
-`urdu-nastaliq` 13) — are **unverified for pen lifts** and are tracked as
-`HL-C19` in the [backlog](../../BACKLOG.md).
+Only **ம** currently has an authored ductus. The remaining **227** prose part
+orders across ten scripts (`arabic` 21, `chinese` 24, `cyrillic` 33,
+`devanagari` 28, `gujarati` 33, `hebrew` 22, `japanese` 34,
+`perso-arabic` 9, `tamil` 10, `urdu-nastaliq` 13) are explicitly **unverified for
+pen lifts**. The data validator rejects a lift count without a citation (or a
+citation without a count), and Language Ladder's ductus test proves every verified
+claim has the same cited, font-checked path. That closes `HL-C19`; future entries
+join one side of this enforced boundary automatically.
 
 **Telugu, Kannada and Malayalam currently have zero authored letters** and
 therefore no `penLifts` anywhere. See [`BACKLOG.md`](../../BACKLOG.md) HL-C41 for
