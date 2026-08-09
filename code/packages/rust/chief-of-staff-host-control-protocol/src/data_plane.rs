@@ -300,6 +300,15 @@ pub enum DataPlaneResponse {
     },
 }
 
+/// Validate that a response can be encoded within every public data-plane bound.
+///
+/// Services can call this before returning provider- or channel-supplied fields so
+/// an oversized or malformed result becomes a stable adapter failure instead of a
+/// later authenticated-session framing failure.
+pub fn validate_data_plane_response(response: &DataPlaneResponse) -> Result<(), ControlError> {
+    encode(&DataRecord::Response(response.clone())).map(|_| ())
+}
+
 impl DataPlaneResponse {
     /// Return the correlation identity.
     pub fn id(&self) -> RequestId {
@@ -1120,6 +1129,10 @@ mod tests {
                 .collect(),
         };
         assert_eq!(
+            validate_data_plane_response(&too_many_messages),
+            Err(ControlError::InvalidDataPlaneRecord)
+        );
+        assert_eq!(
             encode(&DataRecord::Response(too_many_messages)),
             Err(ControlError::InvalidDataPlaneRecord)
         );
@@ -1146,6 +1159,10 @@ mod tests {
             sequence: 0,
             timestamp_ns: 0,
         };
+        assert_eq!(
+            validate_data_plane_response(&invalid_published),
+            Err(ControlError::InvalidDataPlaneRecord)
+        );
         assert_eq!(
             encode(&DataRecord::Response(invalid_published)),
             Err(ControlError::InvalidDataPlaneRecord)

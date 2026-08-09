@@ -75,6 +75,9 @@ acknowledge require the requested UUID to have read access, publish requires wri
 access, and completion requires the exact authorized model selector, temperature,
 and token cap. A service response must preserve the request ID and successful
 operation kind; drift is returned only as a redacted stable failure.
+Injected services validate complete responses against the same public codec bounds
+before returning channel- or provider-supplied fields, so malformed output cannot
+defer failure into authenticated framing.
 
 ## Lifecycle
 

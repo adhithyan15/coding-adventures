@@ -2,5 +2,11 @@
 
 ## Unreleased
 
+- Add the authority-backed concrete service over real encrypted durable channel
+  endpoints and exact provider-neutral LLM clients.
+- Retain a bounded receive-to-ack delivery ledger, provision sealed receiver
+  grants before publication, and fail closed on unknown keys or model selectors.
+- Validate all channel/provider response fields against the authenticated wire
+  bounds before returning them to process supervision.
 - Add durable per-request pipeline authorization, injected service dispatch,
   response-shape validation, and a fail-closed unavailable production service.
