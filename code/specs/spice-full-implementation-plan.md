@@ -4853,9 +4853,15 @@ the Rust, Python, and TypeScript surfaces together.
      preserving instance parameter overrides.
 
 497. Python and TypeScript Berkeley SPICE MOS source-junction capacitance alias precedence.
-   - Status: implemented in this MOS source-junction capacitance precedence slice.
+   - Status: completed in PR 10204.
    - Both parser facades give engine-canonical Level-1 `CBS` precedence over
      the `CJS` alias during lowering, matching validation while preserving
+     instance parameter overrides.
+
+498. Python and TypeScript Berkeley SPICE MOS drain-junction capacitance alias precedence.
+   - Status: implemented in this MOS drain-junction capacitance precedence slice.
+   - Both parser facades give engine-canonical Level-1 `CBD` precedence over
+     the `CJD` alias during lowering, matching validation while preserving
      instance parameter overrides.
 
 ## Backlog

@@ -2151,6 +2151,7 @@ function mosfetParams(
     modelParams.delete("N");
   }
   if (modelParams.has("CBS")) modelParams.delete("CJS");
+  if (modelParams.has("CBD")) modelParams.delete("CJD");
   const params: Record<string, number> = {};
   for (const [name, value] of [...modelParams, ...instanceParams]) {
     const key = MOSFET_PARAM_ALIASES.get(name) ?? (name as keyof MosfetLevel1Params);

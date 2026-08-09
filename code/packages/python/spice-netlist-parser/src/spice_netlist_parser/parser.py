@@ -2675,6 +2675,8 @@ def _build_mosfet_model(model: ModelCard, instance_params: dict[str, float]) -> 
         model_params.pop("N", None)
     if "CBS" in model_params:
         model_params.pop("CJS", None)
+    if "CBD" in model_params:
+        model_params.pop("CJD", None)
     params = {**model_params, **instance_params}
     defaults = Level1Params()
     values = {

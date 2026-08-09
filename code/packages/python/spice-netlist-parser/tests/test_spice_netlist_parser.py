@@ -3456,6 +3456,16 @@ def test_gives_mosfet_cbs_precedence_over_source_junction_capacitance_alias() ->
     assert isclose(mosfet.model.model.params.CBS, 6.0e-12)
 
 
+def test_gives_mosfet_cbd_precedence_over_drain_junction_capacitance_alias() -> None:
+    parsed = parse_netlist(
+        ".model nfast NMOS(CBD=7p CJD=9p)\nM1 d g s b nfast\n"
+    )
+
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.CBD, 7.0e-12)
+
+
 @pytest.mark.parametrize("alias", ["LAMBDA", "LAM"])
 def test_rejects_non_finite_mosfet_model_channel_modulation(alias: str) -> None:
     with pytest.raises(NetlistParseError, match="MOSFET LAMBDA must be finite"):
