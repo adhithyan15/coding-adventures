@@ -709,8 +709,9 @@ export const host = {
 
   // Vault — host checks manifest + trust boundary + tier
   vault: {
-    requestLease(secretName: string, ttl: number): Promise<Lease>,
+    requestLease(secretName: string, ttlMs: number): Promise<VaultLeaseReceipt>,
     requestDirect(secretName: string, consumer: AgentId): Promise<void>,
+    releaseLease(vaultRef: VaultRef): Promise<void>,
   },
 
   // Channels — host verifies agent is registered originator/receiver
@@ -784,7 +785,7 @@ simply never makes the call.
 Every host API call passes through a middleware chain before being proxied:
 
 ```
-Agent calls host.vault.requestLease("bank-creds", 10)
+Agent calls host.vault.requestLease("bank-creds", 10_000)
 │
 ▼
 ┌─────────────────────────────────────────────────┐
@@ -1467,16 +1468,21 @@ EncryptedSecret
 Lease
 ═══════════════════════════════════════════════════════════════
 ┌──────────────────┬─────────────────────────────────────────┐
-│ lease_id         │ UUID v7                                  │
+│ lease_id         │ Internal 128-bit CSPRNG identifier       │
 │ secret_name      │ Which secret this lease grants           │
 │ requester_id     │ Who requested the lease                  │
-│ lease_key        │ One-time symmetric key (256-bit)         │
+│ payload          │ Zeroizing bytes inside trusted runtime   │
 │ created_at       │ Timestamp                                │
 │ expires_at       │ created_at + ttl                         │
-│ expired          │ Boolean (set when TTL elapses)           │
-│ revoked          │ Boolean (set on manual revocation)       │
+│ read_count       │ Diagnostic count; zero before consume    │
+│ revoked          │ True after release, revoke, or consume   │
 └──────────────────┴─────────────────────────────────────────┘
 ```
+
+The internal `lease_id`, secret name, requester identity, and payload never cross
+the host boundary. The agent-facing receipt is exactly
+`{ vault_ref, expires_at_ms }`, where `vault_ref` is an opaque bearer capability
+that contains no secret material. Receipt diagnostics MUST redact `vault_ref`.
 
 **Vault unlock — platform-agnostic biometric abstraction:**
 
@@ -1527,8 +1533,9 @@ Agent: "log into bank"                Vault: decrypts password
   Agent never saw the password.
 ```
 
-**Leased mode** — the requesting agent gets temporary access to the secret via a
-one-time lease key with a TTL.
+**Leased mode** — the requesting agent gets a short-lived opaque reference. The
+agent can pass that reference only to an approved host operation that explicitly
+accepts a Vault reference. It cannot resolve the reference into secret bytes.
 
 ```
 Leased Mode: Weather API Key
@@ -1538,27 +1545,25 @@ Agent: "I need the weather API key"
        ▼ Channel A (encrypted)
   Vault receives request
   Vault checks: weather-api-key.allowed_mode = "leased"
-  Vault generates:
-    lease_key = random_bytes(32)
-    encrypted_secret = XChaCha20_Poly1305_encrypt(
-      key = lease_key,
-      plaintext = api_key
-    )
-    lease = { id, ttl: 10s, lease_key, ... }
+  Vault stores the API key in a zeroizing one-shot lease
+  Vault generates an unguessable bearer reference
        │
        ▼ Channel B (encrypted)
   Agent receives:
-    { lease_id, encrypted_secret, lease_key, expires_at }
-  Agent decrypts: api_key = decrypt(encrypted_secret, lease_key)
-  Agent makes HTTP request via host.network.fetch with api_key
+    { vault_ref, expires_at_ms }
+  Agent passes vault_ref to an approved host operation
+  Host atomically consumes the lease
+  Ephemeral proxy uses the API key, zeroizes it, and exits
+  Agent never receives plaintext or decryption material
   ...10 seconds pass...
-  Lease expires.
-  Vault re-encrypts api_key with a NEW lease key.
-  The old lease_key is dead.
-  Even if the agent stored lease_key, it is useless now.
+  Any unconsumed reference expires and can no longer resolve.
 ```
 
-**Three layers of encryption on any secret in transit:**
+TTL and revocation are enforceable only until a trusted operation consumes the
+reference. No design can revoke plaintext or an unwrap key after either has been
+delivered to an untrusted agent, which is why this contract delivers neither.
+
+**Protection layers on a leased secret:**
 
 ```
 Layer 0: Encryption at rest
@@ -1570,11 +1575,10 @@ Layer 1: Channel encryption
   Each authorized receiver obtains that CMK from an identity-bound
   sealed key grant. Without it, the entire payload is ciphertext.
 
-Layer 2: Lease encryption (leased mode only)
-  Even after decrypting the channel message, the secret itself
-  is encrypted with a one-time lease key. You need BOTH keys.
-
-  Total: THREE layers of encryption between disk and use.
+Layer 2: Host-resolved response wrapping (leased mode only)
+  The channel carries only an opaque VaultRef. The payload remains in
+  zeroizing trusted memory until an approved host operation atomically
+  consumes it. Expiry or release destroys the unused payload.
 ```
 
 ---
@@ -1846,7 +1850,13 @@ type MessageId = String;    // UUID v7
 type ChannelId = String;    // UUID v7
 type AgentId = String;      // UUID v7
 type HostId = String;       // UUID v7
-type LeaseId = String;      // UUID v7
+type LeaseId = String;      // internal 128-bit CSPRNG token
+type VaultRef = String;      // opaque bearer capability
+
+struct VaultLeaseReceipt {
+    vault_ref: VaultRef,
+    expires_at_ms: u64,
+}
 
 // === Enums ===
 enum PrivilegeTier { Tier0 = 0, Tier1 = 1, Tier2 = 2, Tier3 = 3 }
@@ -1872,6 +1882,11 @@ This is the JSON-RPC interface over stdin/stdout. The host process implements th
 server side in Rust; agents call the client side via the chief-of-staff SDK.
 
 ```typescript
+type VaultLeaseReceipt = {
+  vault_ref: string,
+  expires_at_ms: number,
+}
+
 // === Network ===
 // Host checks: manifest.capabilities contains net:connect:{url.host}:{url.port}
 // Host spawns: ephemeral NetworkProxyAgent → dies after response
@@ -1892,14 +1907,15 @@ function fs_write(path: string, data: Uint8Array): Promise<void>
 // Host spawns: ephemeral VaultClientAgent → dies after response
 function vault_request_lease(
   secret_name: string,
-  ttl_seconds: number
-): Promise<{ lease_id: string, encrypted_secret: Uint8Array,
-             lease_key: Uint8Array, expires_at: number }>
+  ttl_ms: number
+): Promise<{ vault_ref: string, expires_at_ms: number }>
 
 function vault_request_direct(
   secret_name: string,
   consumer_agent_id: string
 ): Promise<void>
+
+function vault_release_lease(vault_ref: string): Promise<void>
 
 // === Channels ===
 // Host checks: agent is registered originator/receiver for this channel
@@ -1962,12 +1978,14 @@ fn vault_request_direct(
     consumer_channel_id: ChannelId,
 ) -> Result<()>
 
-/// Leased mode: issue a time-limited lease.
+/// Leased mode: issue a time-limited opaque receipt. Payload bytes remain
+/// inside the trusted Vault/host boundary and are consumed atomically by an
+/// approved host operation.
 fn vault_request_lease(
     handle: &VaultHandle,
     secret_name: &str,
     requester_id: AgentId,
-    ttl_seconds: u32,
+    ttl_ms: u64,
 ) -> Result<Lease>
 
 /// Revoke a lease immediately.
@@ -2074,7 +2092,7 @@ fn request_hardware_key(
 6. Orchestrator verifies package signatures, spawns host actors.
    Each host reads its own manifest, launches its own Deno process.
 
-7. Finance Agent calls host.vault.requestLease("bank-creds", 10)
+7. Finance Agent calls host.vault.requestLease("bank-creds", 10_000)
    Finance Agent's host middleware:
    ├── Capability check: vault:lease:bank-creds in manifest? YES
    ├── Trust boundary: Tier 2, already approved via Face ID
@@ -2082,17 +2100,18 @@ fn request_hardware_key(
    └── Spawn ephemeral VaultClientAgent
 
 8. VaultClientAgent forwards request to Vault actor (via Unix socket).
-   Vault issues lease: { lease_key, encrypted_password, expires_in: 10s }
+   Vault issues receipt: { vault_ref, expires_at_ms }
    VaultClientAgent returns to host. VaultClientAgent dies.
 
-9. Host returns lease to Finance Agent via JSON-RPC.
+9. Host returns the opaque receipt to Finance Agent via JSON-RPC.
 
-10. Finance Agent calls host.network.fetch("https://bank.com/balance")
-    with decrypted credentials.
+10. Finance Agent calls the approved host-mediated bank operation with vault_ref.
+    The host atomically consumes the lease; the Finance Agent never receives the
+    credential.
     Host spawns ephemeral NetworkProxyAgent("bank.com", 443).
     NetworkProxyAgent fetches balance, returns, dies.
 
-11. Lease expires. Password gone. Lease key dead.
+11. The consumed reference is already unusable. Any unconsumed reference expires.
 
 12. Finance Agent formats result, writes via host.channel.write().
 
@@ -2287,10 +2306,10 @@ daemon instance.
     failure.
 15. **Vault direct mode.** Request direct delivery — verify secret appears on consumer
     channel, not on agent's channels.
-16. **Vault leased mode.** Request lease — verify lease key decrypts secret, verify
-    TTL is correct.
+16. **Vault leased mode.** Request lease — verify the receipt contains only an
+    opaque VaultRef and authoritative expiry, while the secret remains host-side.
 17. **Vault lease expiry.** Create lease with 1-second TTL, wait 2 seconds — verify
-    expired and lease key invalid.
+    the reference no longer resolves.
 18. **Vault lease revocation.** Create lease, revoke immediately — verify revoked.
 19. **Privilege tier 0.** Wire a Tier 0 pipeline — verify no approval triggered.
 20. **Privilege tier 2 without biometric.** Attempt Tier 2 pipeline — verify blocked.
@@ -2320,8 +2339,9 @@ daemon instance.
     end-to-end encryption and decryption through host.* API.
 33. **Pipeline isolation.** Create email pipeline and finance pipeline. Attempt to
     read from a finance channel using the email agent's host — verify denied.
-34. **Vault + host integration.** Agent requests leased secret via host, uses it,
-    lease expires, agent requests again — verify new lease key is different.
+34. **Vault + host integration.** Agent requests an opaque lease via host, passes the
+    VaultRef to an approved host operation, and verifies atomic one-shot consumption;
+    request again and verify the previous reference remains unusable.
 35. **Host crash recovery.** Kill host actor, orchestrator restarts host, host
     relaunches Deno — verify agent resumes from last channel ack.
 36. **Orchestrator crash recovery.** Kill orchestrator, OS restarts it — verify all

@@ -1,8 +1,10 @@
 //! Host-side broker for issuing opaque Chief of Staff secret leases.
 //!
-//! Model-facing tools receive only a [`VaultRef`]. Raw payload bytes remain in
-//! the zeroizing lease manager and can only be consumed by a trusted host
-//! handler.
+//! Model-facing tools receive only a [`VaultLeaseReceipt`] containing a
+//! bearer-capability [`VaultRef`] and its authoritative expiry. They never
+//! receive plaintext, ciphertext, or an unwrap key. Raw payload bytes remain
+//! in the zeroizing lease manager and can only be atomically consumed by a
+//! trusted host handler.
 
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
@@ -19,12 +21,21 @@ use smart_home_core::VaultRef;
 const VAULT_REF_PREFIX: &str = "vault-lease:";
 
 /// A newly issued lease receipt safe to return across the tool boundary.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq)]
 pub struct VaultLeaseReceipt {
     /// Opaque handle understood only by the trusted host broker.
     pub vault_ref: VaultRef,
     /// Authoritative lease expiry in milliseconds since Unix epoch.
     pub expires_at_ms: u64,
+}
+
+impl fmt::Debug for VaultLeaseReceipt {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("VaultLeaseReceipt")
+            .field("vault_ref", &"<redacted>")
+            .field("expires_at_ms", &self.expires_at_ms)
+            .finish()
+    }
 }
 
 /// Errors produced by the Chief vault lease boundary.
@@ -86,6 +97,10 @@ impl ChiefVaultRuntime {
     }
 
     /// Issue a short-lived opaque reference for a named secret.
+    ///
+    /// The receipt is the canonical agent-facing `{ vault_ref,
+    /// expires_at_ms }` shape. Secret bytes and decryption material never cross
+    /// this boundary.
     pub fn request_lease(
         &self,
         secret_name: &str,
@@ -107,6 +122,10 @@ impl ChiefVaultRuntime {
     }
 
     /// Atomically resolve and revoke a lease inside a trusted host handler.
+    ///
+    /// Agent and model code must not call this boundary directly. Successful
+    /// resolution returns zeroizing payload storage and makes the reference
+    /// unusable for every subsequent request.
     pub fn consume(&self, vault_ref: &VaultRef) -> Result<LeasePayload, VaultRuntimeError> {
         let lease_id = lease_id(vault_ref)?;
         self.leases.consume(&lease_id).map_err(Into::into)
@@ -149,6 +168,21 @@ mod tests {
             .expect("trusted host should consume lease");
         assert_eq!(payload.as_bytes(), SECRET);
         assert!(vault.consume(&receipt.vault_ref).is_err());
+    }
+
+    #[test]
+    fn lease_receipt_debug_redacts_bearer_capability() {
+        let vault = ChiefVaultRuntime::new();
+        vault.register_secret("weather-api-key", LeasePayload::new(SECRET.to_vec()));
+
+        let receipt = vault
+            .request_lease("weather-api-key", 30_000)
+            .expect("lease should be issued");
+        let debug = format!("{receipt:?}");
+
+        assert!(debug.contains("vault_ref: \"<redacted>\""));
+        assert!(debug.contains("expires_at_ms"));
+        assert!(!debug.contains(receipt.vault_ref.as_str()));
     }
 
     #[test]
