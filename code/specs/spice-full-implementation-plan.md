@@ -4706,9 +4706,14 @@ the Rust, Python, and TypeScript surfaces together.
    - This completes the audited direct BJT engine-field lowering set.
 
 473. Python and TypeScript Berkeley SPICE MOS Level-1 gate-source-overlap validation parity.
-   - Status: implemented in this MOS CGSO validation parity slice.
+   - Status: completed in PR 10149.
    - Both parser facades validate finite, non-negative `CGSO` values before
      lowering them into the existing MOS Level-1 gate-source overlap field.
+
+474. Python and TypeScript Berkeley SPICE MOS Level-1 gate-drain-overlap validation parity.
+   - Status: implemented in this MOS CGDO validation parity slice.
+   - Both parser facades validate finite, non-negative `CGDO` values before
+     lowering them into the existing MOS Level-1 gate-drain overlap field.
 
 ## Backlog
 

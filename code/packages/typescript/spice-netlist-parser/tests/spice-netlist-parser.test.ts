@@ -3507,6 +3507,25 @@ Xright c d load
     expect(element.params.CGSO).toBeCloseTo(expected, 15);
   });
 
+  it.each(["-1p", "1e999"])("rejects invalid MOSFET model CGDO=%s", (overlap) => {
+    expect(() =>
+      parseNetlist(`.model nfast NMOS(CGDO=${overlap})\nM1 d g s b nfast\n`),
+    ).toThrow("MOSFET CGDO must be finite and non-negative");
+  });
+
+  it.each([
+    ["0", 0.0],
+    ["4p", 4.0e-12],
+  ])("lowers valid MOSFET model CGDO=%s", (overlap, expected) => {
+    const parsed = parseNetlist(
+      `.model nfast NMOS(CGDO=${overlap})\nM1 d g s b nfast\n`,
+    );
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") throw new Error("unexpected element kind");
+    expect(element.params.CGDO).toBeCloseTo(expected, 15);
+  });
+
   it.each(["-1p", "1e999"])("rejects invalid MOSFET model JS=%s", (junctionCurrent) => {
     expect(() =>
       parseNetlist(`.model nfast NMOS(JS=${junctionCurrent})\nM1 d g s b nfast\n`),
