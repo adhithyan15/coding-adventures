@@ -1,68 +1,84 @@
 ---
+schema_version: 2
 id: ES-C11-stem-changes
-chapter: 11
+spine_node: SPINE-SAY-WHAT-I-WANT
 sequence: 940
+chapter: 11
 type: phrase
-headword: e→ie, o→ue
-gloss: the stem-change patterns, side by side — the "boot"
+headword: e → ie and o → ue
+gloss: comparing the two vowel changes inside the learned singular forms
 concept_tag: ES-STEM-CHANGES
-prerequisites: [ES-C11-querer, ES-C11-poder]
+prerequisites: [ES-C11-querer, ES-C11-poder, ES-C08-tener]
 sounds: [diphthong-ie, diphthong-ue]
 roots: [latin-stressed-vowel-breaking]
-etymology_hook: "why the vowels crack: Latin's short stressed e and o 'broke' into ie and ue in Spanish (terra→tierra, porta→puerta) — the same law that shapes the stem-changers"
-est_minutes: 4
+etymology_hook: "many stressed short e and o vowels changed into ie and ue on the road from Latin to Spanish; the learned singular verb forms preserve that history"
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-LEX-PODER, ES-GRAMMAR-PODER-PRESENT-SINGULAR]
+introduces:
+  knowledge: [ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR, ES-HISTORY-LATIN-STRESSED-VOWEL-BREAKING]
+practises:
+  knowledge: [ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-LEX-PODER, ES-GRAMMAR-PODER-PRESENT-SINGULAR, ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR, ES-HISTORY-LATIN-STRESSED-VOWEL-BREAKING]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C11-querer, ES-C11-poder, ES-C08-tener]
 ---
 
-# e→ie and o→ue — one rule, two vowels
+# e → ie and o → ue — compare the singular forms
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-GRAMMAR-PODER-PRESENT-SINGULAR] -->
 
-[PAUSE 2s] You've now seen both stem-changes: *querer → quiero* (e→ie) and *poder →
-puedo* (o→ue). They aren't two random quirks — they're **one sound-law**, and
-knowing it turns a "memorize each verb" chore into a pattern you can predict.
+[PAUSE 2s] You now own three small singular sets: **tengo, tienes, tiene**;
+**quiero, quieres, quiere**; and **puedo, puedes, puede**. Compare only those
+learned forms before extending the pattern later.
 
-## The rule: stressed short vowels broke
+## The word, taken apart — why vowels opened
+<!-- hl-knowledge: introduces=[ES-HISTORY-LATIN-STRESSED-VOWEL-BREAKING]; assesses=[ES-LEX-TENER, ES-LEX-QUERER, ES-LEX-PODER] -->
 
-In the leap from Latin to Spanish, a **short, stressed *e*** broke into **ie**, and
-a **short, stressed *o*** broke into **ue**. It happened in ordinary nouns too, not
-just verbs:
+On the road from Latin to Spanish, many short **e** and **o** vowels opened
+when stressed: **e → ie** and **o → ue**. That history helps explain why a
+verb's stem can look different across its forms.
 
-| Latin | Spanish | break |
+It is a clue, not a machine that predicts every form. Learn each verb's small
+set, then use the shared history to organize what you remember.
+
+## Grammar Lens: two changes, one learned frame
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR]; assesses=[ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-GRAMMAR-PODER-PRESENT-SINGULAR, ES-HISTORY-LATIN-STRESSED-VOWEL-BREAKING] -->
+
+| person | **tener / querer**, e → ie family | **poder**, o → ue |
 |---|---|---|
-| *terra* | *tierra* ("earth") | e → ie |
-| *septem* | *siete* ("seven") | e → ie |
-| *porta* | *puerta* ("door") | o → ue |
-| *novem* | *nueve* ("nine") | o → ue |
+| yo | **tengo / quiero** | **puedo** |
+| tú | **tienes / quieres** | **puedes** |
+| él / ella / usted | **tiene / quiere** | **puede** |
 
-(You already met *siete* and *nueve* in the numbers — now you know *why* they have
-that glide.) In verbs, the stem vowel is stressed in the "boot" forms and unstressed
-in *nosotros/vosotros* — so it breaks in the boot and stays plain outside it.
+The comparison says exactly this:
 
-## The boot, for both patterns
+- **querer** shows **ie** in all three forms learned here.
+- **poder** shows **ue** in all three forms learned here.
+- **tener** reminds you that a common verb may combine more than one change:
+  **tengo** has its known **g**, while **tienes** and **tiene** show **ie**.
 
-| | e→ie (*querer*) | o→ue (*poder*) |
-|---|---|---|
-| yo | qu**ie**ro | p**ue**do |
-| tú | qu**ie**res | p**ue**des |
-| él/ella/ud | qu**ie**re | p**ue**de |
-| **nosotros** | qu**e**remos | p**o**demos |
-| ellos/uds | qu**ie**ren | p**ue**den |
-
-Same shape both times: the four "corner" forms crack, the *nosotros* form stays
-plain — the boot. *tener* (→ *tienes*), from Chapter 8, was your first taste; now
-you own the whole rule.
+No plural form and no new verb is part of today's generalization.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR, ES-HISTORY-LATIN-STRESSED-VOWEL-BREAKING, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-GRAMMAR-PODER-PRESENT-SINGULAR] -->
+<!-- hl-activity: {"id":"ES-C11-stem-changes-yo-contrast","kind":"text","assesses":["ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR","ES-GRAMMAR-QUERER-PRESENT-SINGULAR","ES-GRAMMAR-PODER-PRESENT-SINGULAR"],"prompt":"Give the learned yo forms of querer and poder, in that order.","answer":"quiero, puedo","accepted":["quiero puedo","quiero / puedo"],"feedback":{"correct":"Right: quiero, puedo — e→ie beside o→ue.","incorrect":"Use the learned yo forms: quiero, then puedo."},"response_seconds":8} -->
+<!-- hl-activity: {"id":"ES-C11-stem-changes-tu-contrast","kind":"text","assesses":["ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR","ES-GRAMMAR-TENER-PRESENT-SINGULAR","ES-GRAMMAR-QUERER-PRESENT-SINGULAR","ES-GRAMMAR-PODER-PRESENT-SINGULAR"],"prompt":"Give the learned tú forms of tener, querer, and poder, in that order.","answer":"tienes, quieres, puedes","accepted":["tienes quieres puedes","tienes / quieres / puedes"],"feedback":{"correct":"Right: tienes, quieres, puedes.","incorrect":"Retrieve the three known tú forms: tienes, quieres, puedes."},"response_seconds":10} -->
 
 [PAUSE 1s]
-- [YOU SAY: the pairs — "querer/quiero (e→ie), poder/puedo (o→ue)"]
-- [YOU SAY: the noun echoes — "terra→tierra, porta→puerta"]
-- [YOU SAY: conjugate both boots, noticing *queremos*/*podemos* stay plain]
+- [YOU SAY: “quiero, quieres, quiere”]
+- [YOU SAY: “puedo, puedes, puede”]
+- [YOU SAY: “stressed e and o often opened to ie and ue”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR, ES-HISTORY-LATIN-STRESSED-VOWEL-BREAKING] -->
 
-[PAUSE 3s] What single sound-law lies behind e→ie and o→ue? (Short **stressed**
-Latin *e* and *o* broke into *ie* and *ue*.) Which persons crack, and which stays
-plain? (The "boot" — all but *nosotros/vosotros*.) Give a *noun* that shows each
-break. (*tierra* ← *terra*; *puerta* ← *porta*.) Next: **nuestro** — "our."
+[PAUSE 3s] Which change appears in *querer*? (**e → ie**.) In *poder*?
+(**o → ue**.) Why is the history useful but not a complete prediction rule?
+(It organizes learned forms, but individual verbs can combine or resist
+changes.) Next: one possessive that agrees with a known noun's gender.

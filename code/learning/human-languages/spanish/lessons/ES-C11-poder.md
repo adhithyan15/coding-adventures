@@ -1,77 +1,90 @@
 ---
+schema_version: 2
 id: ES-C11-poder
-chapter: 11
+spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 930
+chapter: 11
 type: word
 headword: poder
-gloss: to be able / can — a stem-changing verb, o→ue
+gloss: to be able or can — with the singular present forms puedo, puedes, and puede
 concept_tag: VERB-CAN
-prerequisites: [ES-C11-querer, ES-C06-hablar]
+prerequisites: [ES-C11-querer, ES-C06-hablar, ES-C07-comer, ES-C07-vivir]
 sounds: [diphthong-ue, r-tap]
 roots: [potere-latin]
-etymology_hook: "poder ← Latin potēre 'to be able' → power, potent, possible, potential; the stressed o breaks to ue (puedo) — the second stem-change pattern"
-est_minutes: 4
-reviews_of: [ES-C11-querer, ES-C10-ir-a-futuro]
+etymology_hook: "poder descends through Latin potere from posse 'to be able'; English power, potent, potential, and possible preserve the same ability family"
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR]
+introduces:
+  knowledge: [ES-LEX-PODER, ES-GRAMMAR-PODER-PRESENT-SINGULAR, ES-ETYMON-POTERE]
+practises:
+  knowledge: [ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-LEX-PODER, ES-GRAMMAR-PODER-PRESENT-SINGULAR, ES-ETYMON-POTERE]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C11-querer, ES-C10-ir-a-futuro, ES-C06-hablar, ES-C07-comer, ES-C07-vivir]
 ---
 
-# poder — "to be able," and the o→ue crack
+# poder — ability with the o → ue change
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR] -->
 
-[PAUSE 2s] *querer* broke *e → ie*. Now meet the **other** stem-change: *o → ue*.
-The verb is **poder**, "to be able / can" — and once you have *querer* (want) and
-*poder* (can), you can say almost anything you *want to* or *can* do.
+[PAUSE 2s] **Quiero hablar** says what you want to do. Now change the first
+verb to say what you are able to do. The second verb will remain a known
+infinitive.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-- `diphthong-ue` — the stem breaks to **-ue-** under stress: **puedo** = *PWE-do*
-  (a *w*-glide).
+- diphthong-ue — **puedo** begins *pwe-* with one smooth glide.
+- r-tap — end **poder** with one light tap.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-PODER, ES-ETYMON-POTERE]; assesses=[] -->
 
-**poder** comes from Latin **potēre** (from *posse*), *"to be able, to have
-power."* It's literally the verb *power* — and the family shows it:
+**poder** means “to be able”; in a sentence it often translates as “can.”
+It descends through Latin **potere** from **posse**, “to be able.” English
+**power**, **potent**, **potential**, and **possible** belong to the same
+family. Ability is the power to do something.
 
-- **power** itself (English took it through Old French *poeir* ← *potēre*).
-- **potent, potential, omnipotent** ("all-powerful"), **possible** ("able to be"),
-  **posse** ("(those) able" to be summoned).
+## Grammar Lens: the three singular forms
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-PODER-PRESENT-SINGULAR]; assesses=[ES-LEX-PODER, ES-ETYMON-POTERE, ES-GRAMMAR-QUERER-PRESENT-SINGULAR] -->
 
-So *puedo* and *power* are the same word — one a Spanish verb, the other its English
-noun.
+| person | present of **poder** |
+|---|---|
+| yo | **puedo** |
+| tú | **puedes** |
+| él / ella / usted | **puede** |
 
-## Grammar Lens: the o→ue stem-change
+Say **puedo · puedes · puede**. In these three learned forms, the stem **o**
+opens into **ue**. Plural persons wait.
 
-*poder* is a stem-changer of the **o→ue** kind: the stressed stem *o* breaks to
-**ue**, in the same **boot** shape (all forms but *nosotros/vosotros*):
+Follow the form of **poder** with one unchanged infinitive:
 
-| yo | **puedo** | (o → ue) |
-| tú | **puedes** | (o → ue) |
-| él/ella/usted | **puede** | (o → ue) |
-| nosotros | **podemos** | (plain *o* — unstressed) |
-| ellos/ustedes | **pueden** | (o → ue) |
+- **Puedo hablar.** — “I can speak.”
+- **Puedes comer.** — “You can eat.”
+- **Puede vivir.** — “He, she, or formal you can live.”
 
-Just like *querer*, only *podemos* keeps the plain vowel. (Other *o→ue* verbs you'll
-meet: *dormir* "sleep" → *duermo*, *volver* "return" → *vuelvo*.)
-
-## Grammar Lens: poder + infinitive ("I can …")
-
-Point *poder* at an **infinitive** to say what you're able to do — just like *ir a*
-+ infinitive, but for ability:
-
-> **Puedo hablar** español. — "I can speak Spanish."
-> **¿Puedes** venir? — "Can you come?"
-> **No puedo** — "I can't."
+Compare **Quiero hablar** with **Puedo hablar**: only the first verb changes the
+meaning from want to ability.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PODER, ES-GRAMMAR-PODER-PRESENT-SINGULAR, ES-ETYMON-POTERE, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR] -->
+<!-- hl-activity: {"id":"ES-C11-poder-singular-forms","kind":"text","assesses":["ES-LEX-PODER","ES-GRAMMAR-PODER-PRESENT-SINGULAR"],"prompt":"Give the learned singular present forms of poder: yo, tú, then él/ella/usted.","answer":"puedo, puedes, puede","accepted":["puedo puedes puede","puedo / puedes / puede"],"feedback":{"correct":"Right: puedo, puedes, puede.","incorrect":"Keep the o→ue stem and use the three singular endings: puedo, puedes, puede."},"response_seconds":10} -->
+<!-- hl-activity: {"id":"ES-C11-poder-can-eat","kind":"text","assesses":["ES-LEX-PODER","ES-GRAMMAR-PODER-PRESENT-SINGULAR","ES-LEX-COMER"],"prompt":"Say 'You can eat' to one friend in Spanish.","answer":"Puedes comer.","accepted":["Puedes comer"],"feedback":{"correct":"Right: Puedes comer.","incorrect":"Use the tú form puedes followed by the unchanged infinitive comer."},"response_seconds":8} -->
 
 [PAUSE 1s]
-- [YOU SAY: "poder" then "puedo, puedes, puede, podemos, pueden" — the *ue* crack]
-- [YOU SAY: "Puedo hablar español"; "¿Puedes venir?"]
-- [YOU SAY: "poder / power" — the same Latin *potēre*]
+- [YOU SAY: “poder — puedo, puedes, puede”]
+- [YOU SAY: “Puedo hablar”]
+- [YOU SAY: “poder — power — possible”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PODER, ES-GRAMMAR-PODER-PRESENT-SINGULAR, ES-ETYMON-POTERE] -->
 
-[PAUSE 3s] What Latin verb is *poder* from, and its English twin? (*potēre* "to be
-able"; *power*.) Give its five forms. (*Puedo, puedes, puede, podemos, pueden*.)
-How do you say "I can speak"? (*Puedo hablar* — *poder* + infinitive.) Next: the two
-cracks (e→ie and o→ue) side by side.
+[PAUSE 3s] What does *poder* mean? (“To be able; can.”) Give the three learned
+forms. (*Puedo, puedes, puede.*) What English word is its close cousin?
+(*Power.*) Next: compare only the singular forms you have actually learned.

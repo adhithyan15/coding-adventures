@@ -1,70 +1,77 @@
 ---
+schema_version: 2
 id: ES-C11-practice
-chapter: 11
+spine_node: SPINE-SAY-WHAT-I-WANT
 sequence: 960
+chapter: 11
 type: practice-mix
 headword: (practice)
-gloss: wanting, being able, and the stem-change boot
+gloss: singular wanting, ability, vowel-change comparison, and our day or night
 concept_tag: CH11-PRACTICE
 prerequisites: [ES-C11-querer, ES-C11-poder, ES-C11-stem-changes, ES-C11-nuestro]
 sounds: []
 roots: []
-est_minutes: 4
-reviews_of: [ES-C11-querer, ES-C11-poder, ES-C11-nuestro, ES-C10-practice]
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-ETYMON-QUAERERE, ES-LEX-PODER, ES-GRAMMAR-PODER-PRESENT-SINGULAR, ES-ETYMON-POTERE, ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR, ES-HISTORY-LATIN-STRESSED-VOWEL-BREAKING, ES-LEX-POSSESSIVES-NUESTRO-NUESTRA, ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR, ES-ETYMON-NOSTER, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-LEX-DIA, ES-LEX-NOCHE]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-ETYMON-QUAERERE, ES-LEX-PODER, ES-GRAMMAR-PODER-PRESENT-SINGULAR, ES-ETYMON-POTERE, ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR, ES-HISTORY-LATIN-STRESSED-VOWEL-BREAKING, ES-LEX-POSSESSIVES-NUESTRO-NUESTRA, ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR, ES-ETYMON-NOSTER, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-LEX-DIA, ES-LEX-NOCHE]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus, fluency]
+register: neutral
+variety: general
+reviews_of: [ES-C11-querer, ES-C11-poder, ES-C11-stem-changes, ES-C11-nuestro, ES-C10-practice]
 ---
 
-# Practice — querer, poder, and the boot
+# Practice — wanting, ability, and our known nouns
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-LEX-PODER, ES-GRAMMAR-PODER-PRESENT-SINGULAR, ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR, ES-LEX-POSSESSIVES-NUESTRO-NUESTRA, ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR] -->
 
-[PAUSE 2s] Two power-verbs and a rule this chapter: **querer** (want, e→ie),
-**poder** (can, o→ue), and the **stem-change boot** that shapes them both — plus
-**nuestro**, the fully-agreeing "our." Drill the cracks until *quiero/puedo* come
-without thinking.
+[PAUSE 2s] This checkpoint adds nothing. Retrieve two three-form verbs,
+compare their two vowel changes, and choose **nuestro** or **nuestra** before
+one known singular noun.
 
-## Conjugate both boots, out loud
+## Grammar Lens: the complete small chapter frame
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-LEX-PODER, ES-GRAMMAR-PODER-PRESENT-SINGULAR, ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-LEX-POSSESSIVES-NUESTRO-NUESTRA, ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR, ES-LEX-DIA, ES-LEX-NOCHE] -->
 
-[PAUSE 1s]
-- **querer** (e→ie): **quiero · quieres · quiere · queremos · quieren** (only
-  *queremos* stays plain).
-- **poder** (o→ue): **puedo · puedes · puede · podemos · pueden** (only *podemos*
-  stays plain).
+- wanting: **quiero · quieres · quiere** plus a known infinitive.
+- ability: **puedo · puedes · puede** plus a known infinitive.
+- the contrast: **e → ie** in the learned *querer* set; **o → ue** in the
+  learned *poder* set.
+- singular “our”: **nuestro día · nuestra noche**.
 
-## Chain the verbs (want to / can + infinitive)
+Plural persons and plural possessive agreement remain deferred.
 
-[PAUSE 1s]
-- **Quiero** hablar español. — "I want to speak Spanish."
-- **Puedo** hablar un poco. — "I can speak a little."
-- **¿Quieres** comer? — "Do you want to eat?" · **¿Puedes** venir? — "Can you come?"
-- **Vamos a** poder — "we're going to be able to" (reusing the near future from
-  Ch.10).
+## The words, taken apart — retrieve the history
+<!-- hl-knowledge: introduces=[]; assesses=[ES-ETYMON-QUAERERE, ES-ETYMON-POTERE, ES-HISTORY-LATIN-STRESSED-VOWEL-BREAKING, ES-ETYMON-NOSTER] -->
 
-## nuestro, agreeing
-
-[PAUSE 1s]
-- **nuestra casa** (fem.), **nuestro coche** (masc.), **nuestros amigos** (masc.
-  pl.) — match gender *and* number, unlike *mi/tu/su*.
-
-## Say something real
-
-> — ¿Qué **quieres** hacer? — **Quiero** ir a un café con **nuestros** amigos. ¿**Puedes**
-> venir? — Sí, **puedo**. **Podemos** ir ahora.
-
-Every tool of the chapter: *quiero* (want, e→ie), *puedes/puedo/podemos* (can,
-o→ue), *nuestros* (our, agreeing), and *ir a* from Ch.10.
+- **querer** continues Latin *quaerere*, “seek,” the family of **query**.
+- **poder** continues the Latin ability family behind **power** and **possible**.
+- stressed Latin **e** and **o** often opened into Spanish **ie** and **ue**.
+- **nuestro, nuestra** continue Latin *noster*, “our.”
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-LEX-PODER, ES-GRAMMAR-PODER-PRESENT-SINGULAR, ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-LEX-POSSESSIVES-NUESTRO-NUESTRA, ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR, ES-LEX-DIA, ES-LEX-NOCHE] -->
+<!-- hl-activity: {"id":"ES-C11-practice-querer-forms","kind":"text","assesses":["ES-LEX-QUERER","ES-GRAMMAR-QUERER-PRESENT-SINGULAR"],"prompt":"Give the learned singular forms of querer: yo, tú, then usted.","answer":"quiero, quieres, quiere","accepted":["quiero quieres quiere","quiero / quieres / quiere"],"feedback":{"correct":"Right: quiero, quieres, quiere.","incorrect":"Retrieve the three learned forms: quiero, quieres, quiere."},"response_seconds":9} -->
+<!-- hl-activity: {"id":"ES-C11-practice-poder-forms","kind":"text","assesses":["ES-LEX-PODER","ES-GRAMMAR-PODER-PRESENT-SINGULAR"],"prompt":"Give the learned singular forms of poder: yo, tú, then usted.","answer":"puedo, puedes, puede","accepted":["puedo puedes puede","puedo / puedes / puede"],"feedback":{"correct":"Right: puedo, puedes, puede.","incorrect":"Retrieve the three learned forms: puedo, puedes, puede."},"response_seconds":9} -->
+<!-- hl-activity: {"id":"ES-C11-practice-want-to-speak","kind":"text","assesses":["ES-LEX-QUERER","ES-GRAMMAR-QUERER-PRESENT-SINGULAR","ES-LEX-HABLAR"],"prompt":"Say 'I want to speak' in Spanish.","answer":"Quiero hablar.","accepted":["Quiero hablar"],"feedback":{"correct":"Right: Quiero hablar.","incorrect":"Use quiero followed by the known infinitive hablar."},"response_seconds":8} -->
+<!-- hl-activity: {"id":"ES-C11-practice-can-eat","kind":"text","assesses":["ES-LEX-PODER","ES-GRAMMAR-PODER-PRESENT-SINGULAR","ES-LEX-COMER"],"prompt":"Say 'You can eat' to one friend in Spanish.","answer":"Puedes comer.","accepted":["Puedes comer"],"feedback":{"correct":"Right: Puedes comer.","incorrect":"Use puedes followed by the known infinitive comer."},"response_seconds":8} -->
+<!-- hl-activity: {"id":"ES-C11-practice-our-night","kind":"text","assesses":["ES-LEX-POSSESSIVES-NUESTRO-NUESTRA","ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR","ES-LEX-NOCHE"],"prompt":"Say 'our night' in Spanish.","answer":"nuestra noche","accepted":["nuestra noche."],"feedback":{"correct":"Right: feminine noche takes nuestra.","incorrect":"Choose feminine singular nuestra before noche."},"response_seconds":7} -->
 
 [PAUSE 1s]
-- [YOU SAY: conjugate *querer* and *poder* fully, back to back]
-- [YOU SAY: chain three — "Quiero comer," "Puedo hablar," "¿Quieres venir?"]
-- [YOU SAY: "nuestra casa, nuestro coche" — the agreeing possessive]
-
-[REPEAT x2] "¿Qué quieres hacer? — Quiero … . ¿Puedes …? — Sí, puedo."
+- [YOU SAY: “quiero hablar; puedo hablar”]
+- [YOU SAY: “quieres comer; puedes comer”]
+- [YOU SAY: “nuestro día; nuestra noche”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-ETYMON-QUAERERE, ES-LEX-PODER, ES-GRAMMAR-PODER-PRESENT-SINGULAR, ES-ETYMON-POTERE, ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR, ES-HISTORY-LATIN-STRESSED-VOWEL-BREAKING, ES-LEX-POSSESSIVES-NUESTRO-NUESTRA, ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR, ES-ETYMON-NOSTER] -->
 
-[PAUSE 3s] Give the *yo* of *querer* and *poder*. (*Quiero, puedo*.) Which form of
-each stays plain, and why? (*Queremos/podemos* — the stress is on the ending.) How
-does *nuestro* agree, versus *mi/tu/su*? (Gender **and** number — four forms.) Next
-chapter carries the grammar forward — this book now runs on rules.
+[PAUSE 3s] Give the two singular sets. (*Quiero, quieres, quiere; puedo,
+puedes, puede.*) Which vowel contrast organizes them? (**e → ie** beside
+**o → ue**.) Say “our day” and “our night.” (*Nuestro día; nuestra noche.*)
+Chapter 12 can now build from this closed singular frontier.

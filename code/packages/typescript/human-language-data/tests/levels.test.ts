@@ -220,10 +220,10 @@ describe("corpus snapshot", () => {
     // +2: Spanish Chapter 9 maps its identity and ser/estar contrast lessons onto
     // the existing pre-A1 social spine.
     expect(summary.byLevel["pre-A1"]).toBe(868);
-    // +2: Chapter 10 places singular ir on the location node and singular possessives
-    // on definite reference. Its future frame and payoff remain at A2.
-    expect(summary.byLevel.A1).toBe(308);
-    expect(summary.byLevel.A2).toBe(395); // +25: Spanish chapters 14-18 plus prerequisite closure
+    // Chapter 10 adds singular ir and possessives at A1. Chapter 11 adds one more
+    // definite-reference lesson there; wanting, ability, comparison, and payoff are A2.
+    expect(summary.byLevel.A1).toBe(309);
+    expect(summary.byLevel.A2).toBe(396); // +26: Spanish chapters 11 and 14-18 plus prerequisite closure
     // 8, not 0: Spanish chapters 38 and 41 realize SPINE-NARRATE-EVENTS and
     // SPINE-GIVE-REASONS, four lessons each — the only B1 nodes any track has touched.
     // B2-C2 remain authored-but-unrealized, in every track.
@@ -234,8 +234,9 @@ describe("corpus snapshot", () => {
 
     // HL-C63 places 47 orphan chapter lessons and two Spanish prerequisites. Chapters
     // Chapters 7-9 then map their terminal practices and Chapter 9's remaining
-    // teaching lessons. Chapter 10 closes two more explicit mapping gaps.
-    expect(summary.unmapped).toBe(90);
+    // teaching lessons. Chapter 10 closes two more gaps; Chapter 11 closes its
+    // possessive and terminal-practice gaps.
+    expect(summary.unmapped).toBe(88);
     expect(summary.mappedPercent).toBe(95);
   });
 
@@ -284,7 +285,7 @@ describe("corpus snapshot", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const ramp = lessonsUpToLevel(lessons, paths, spine, "A1");
     // The whole point: this is a FILTER over the one corpus, not a second corpus.
-    expect(ramp).toHaveLength(1176); // +2: Chapter-10 location and possessive lessons join the edition
+    expect(ramp).toHaveLength(1177); // +1: Chapter-11 singular nuestro/nuestra joins the edition
     expect(ramp.length).toBeLessThan(lessons.length);
   });
 });

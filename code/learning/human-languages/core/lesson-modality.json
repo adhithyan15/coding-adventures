@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:4884bf27a839c259",
+  "sourceHash": "fnv1a64:14553764d5f31492",
   "summary": {
     "totalLessons": 1669,
     "voice": 1083,
@@ -34073,7 +34073,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:544fa5d83e0f113f"
+      "sourceHash": "fnv1a64:08454707b72c09c7"
     },
     {
       "id": "ES-C11-poder",
@@ -34091,7 +34091,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d5319cef387b6b17"
+      "sourceHash": "fnv1a64:4c9a2e25f9b051f0"
     },
     {
       "id": "ES-C11-stem-changes",
@@ -34109,7 +34109,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8b3b70b2c52e51a2"
+      "sourceHash": "fnv1a64:74d1ef9de7d3017e"
     },
     {
       "id": "ES-C11-nuestro",
@@ -34127,7 +34127,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:93e91c4220c73ee9"
+      "sourceHash": "fnv1a64:68fbc905ec59096b"
     },
     {
       "id": "ES-C11-practice",
@@ -34145,7 +34145,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5fac26b4274aff47"
+      "sourceHash": "fnv1a64:2ae18b5f06383c22"
     },
     {
       "id": "ES-C12-hacer",
