@@ -6,7 +6,7 @@ Human Languages curriculum gap report
 0 tracks without books; 0 lesson chapters without book chapters
 0 legacy, 19 mixed, 3 version-2 schema tracks
 1507 drivable lessons (90% of the corpus)
-levels: 866 pre-A1, 297 A1, 350 A2, 8 B1; 148 unmapped (91% placed)
+levels: 866 pre-A1, 301 A1, 395 A2, 8 B1; 99 unmapped (94% placed)
 ramp: 40 lessons above 3 new atoms (573 unmeasurable, 66% measurable); 24 chapters above 12
 script ramp: 61 lessons above 3 new glyphs; 5 opening more than 1 writing system at once; steepest HI-W01-shirorekha-na-ma at 12
 cousin layer: 173 lessons show another script (max 26 glyphs) — context, never charged to the budget
@@ -14,7 +14,7 @@ order: 483 lessons with no declared sequence across 18 tracks; 230 prerequisites
 reinforcement: 474 of 2507 atoms never revisited (19%); missed windows R1 852, R2 1718, R3 1211, R4 134
 forward references: 468 uses of material a later lesson teaches
 levels ATTAINED (HL09 §3.1): none; 22 track(s) touch a level they have not attained
-98 of 513 book chapters without an HL05 capability; 25 payoffs below the 0.5 representativeness floor; 3 tracks already clean
+0 of 513 book chapters without an HL05 capability; 27 payoffs below the 0.5 representativeness floor; 12 tracks already clean
 
 Longest effective lessons:
 

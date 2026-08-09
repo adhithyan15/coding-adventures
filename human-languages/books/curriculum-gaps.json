@@ -22,7 +22,7 @@
     "legacySchemaTracks": 0,
     "mixedSchemaTracks": 19,
     "version2SchemaTracks": 3,
-    "lessonsWithoutLevel": 148,
+    "lessonsWithoutLevel": 99,
     "rampOverBudgetLessons": 40,
     "scriptRampOverBudgetLessons": 61,
     "lessonsOpeningMultipleScripts": 5,
@@ -30,9 +30,9 @@
     "forwardReviews": 273,
     "atomsNeverRevisited": 474,
     "forwardReferences": 468,
-    "chaptersWithoutCapability": 98,
-    "chapterPayoffsNotRepresentative": 25,
-    "chapterGateCleanTracks": 3,
+    "chaptersWithoutCapability": 0,
+    "chapterPayoffsNotRepresentative": 27,
+    "chapterGateCleanTracks": 12,
     "drivableLessons": 1507,
     "drivablePercent": 90,
     "chaptersWithoutDrivablePrefix": 41,
@@ -1982,18 +1982,6 @@
   "chapters": {
     "findings": [
       {
-        "code": "chapter-missing-capability",
-        "language": "arabic",
-        "chapter": 1,
-        "message": "arabic chapter 1 (\"Greetings\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "arabic",
-        "chapter": 2,
-        "message": "arabic chapter 2 (\"Introducing Yourself\") has no authored canDo/payoff."
-      },
-      {
         "code": "chapter-payoff-not-representative",
         "language": "arabic",
         "chapter": 3,
@@ -2008,263 +1996,11 @@
         "message": "arabic chapter 4 payoff assesses 2/16 of the chapter's atoms (0.13), below the 0.5 floor."
       },
       {
-        "code": "chapter-missing-capability",
-        "language": "bengali",
-        "chapter": 1,
-        "message": "bengali chapter 1 (\"Greetings\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "bengali",
-        "chapter": 2,
-        "message": "bengali chapter 2 (\"Introducing Yourself\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "bengali",
-        "chapter": 3,
-        "message": "bengali chapter 3 (\"How Are You?\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "bengali",
-        "chapter": 4,
-        "message": "bengali chapter 4 (\"Farewells\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "bengali",
-        "chapter": 5,
-        "message": "bengali chapter 5 (\"The First Verbs\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "french",
-        "chapter": 1,
-        "message": "french chapter 1 (\"Greetings\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "french",
-        "chapter": 2,
-        "message": "french chapter 2 (\"Introducing Yourself\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "french",
-        "chapter": 3,
-        "message": "french chapter 3 (\"How Are You?\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "french",
-        "chapter": 4,
-        "message": "french chapter 4 (\"Farewells\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "french",
-        "chapter": 5,
-        "message": "french chapter 5 (\"The First Verbs\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "french",
-        "chapter": 6,
-        "message": "french chapter 6 (\"Numbers One to Ten\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "french",
-        "chapter": 7,
-        "message": "french chapter 7 (\"The Days of the Week\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "french",
-        "chapter": 8,
-        "message": "french chapter 8 (\"Telling the Time\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "french",
-        "chapter": 9,
-        "message": "french chapter 9 (\"Months and Seasons\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "french",
-        "chapter": 10,
-        "message": "french chapter 10 (\"Family\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "french",
-        "chapter": 11,
-        "message": "french chapter 11 (\"Bread, Water, Wine\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "french",
-        "chapter": 12,
-        "message": "french chapter 12 (\"Numbers Eleven to Twenty\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "french",
-        "chapter": 13,
-        "message": "french chapter 13 (\"Colours\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "french",
-        "chapter": 14,
-        "message": "french chapter 14 (\"To Have, and How Old You Are\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "french",
-        "chapter": 15,
-        "message": "french chapter 15 (\"The Compound Past\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "french",
-        "chapter": 16,
-        "message": "french chapter 16 (\"To Be, and the Past That Takes It\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "german",
-        "chapter": 1,
-        "message": "german chapter 1 (\"Greetings\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "german",
-        "chapter": 2,
-        "message": "german chapter 2 (\"Introducing Yourself\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "german",
-        "chapter": 3,
-        "message": "german chapter 3 (\"How Are You?\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "german",
-        "chapter": 4,
-        "message": "german chapter 4 (\"Farewells\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "german",
-        "chapter": 5,
-        "message": "german chapter 5 (\"The First Verbs\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "german",
-        "chapter": 6,
-        "message": "german chapter 6 (\"Numbers One to Ten\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "german",
-        "chapter": 7,
-        "message": "german chapter 7 (\"The Days of the Week\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "german",
-        "chapter": 8,
-        "message": "german chapter 8 (\"Telling the Time\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "german",
-        "chapter": 9,
-        "message": "german chapter 9 (\"Months and Seasons\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "german",
-        "chapter": 10,
-        "message": "german chapter 10 (\"Family\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "german",
-        "chapter": 11,
-        "message": "german chapter 11 (\"Bread, Water, Wine\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "german",
-        "chapter": 12,
-        "message": "german chapter 12 (\"Numbers Eleven to Twenty\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "german",
-        "chapter": 13,
-        "message": "german chapter 13 (\"Colours\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "german",
-        "chapter": 14,
-        "message": "german chapter 14 (\"To Have, and How Old You Are\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "german",
-        "chapter": 15,
-        "message": "german chapter 15 (\"The Two Past Tenses\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "german",
-        "chapter": 16,
-        "message": "german chapter 16 (\"To Be, and the Past That Takes It\") has no authored canDo/payoff."
-      },
-      {
         "code": "chapter-payoff-not-representative",
         "language": "german",
         "chapter": 17,
         "lessonId": "GE-C17-hand",
         "message": "german chapter 17 payoff assesses 4/12 of the chapter's atoms (0.33), below the 0.5 floor."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "gujarati",
-        "chapter": 1,
-        "message": "gujarati chapter 1 (\"Greetings\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "gujarati",
-        "chapter": 2,
-        "message": "gujarati chapter 2 (\"Introducing Yourself\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "gujarati",
-        "chapter": 3,
-        "message": "gujarati chapter 3 (\"How Are You?\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "gujarati",
-        "chapter": 4,
-        "message": "gujarati chapter 4 (\"Farewells\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "gujarati",
-        "chapter": 5,
-        "message": "gujarati chapter 5 (\"The First Verbs\") has no authored canDo/payoff."
       },
       {
         "code": "chapter-payoff-not-representative",
@@ -2281,24 +2017,6 @@
         "message": "hindi chapter 2 payoff assesses 2/12 of the chapter's atoms (0.17), below the 0.5 floor."
       },
       {
-        "code": "chapter-missing-capability",
-        "language": "hindi",
-        "chapter": 3,
-        "message": "hindi chapter 3 (\"How Are You?\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "hindi",
-        "chapter": 4,
-        "message": "hindi chapter 4 (\"Farewells\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "hindi",
-        "chapter": 5,
-        "message": "hindi chapter 5 (\"The First Verbs\") has no authored canDo/payoff."
-      },
-      {
         "code": "chapter-payoff-not-representative",
         "language": "hindi",
         "chapter": 6,
@@ -2311,72 +2029,6 @@
         "chapter": 32,
         "lessonId": "HI-C32-evening-register",
         "message": "hindi chapter 32 payoff assesses 1/3 of the chapter's atoms (0.33), below the 0.5 floor."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "italian",
-        "chapter": 1,
-        "message": "italian chapter 1 (\"Greetings\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "kannada",
-        "chapter": 1,
-        "message": "kannada chapter 1 (\"Greetings\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "kannada",
-        "chapter": 2,
-        "message": "kannada chapter 2 (\"Introducing Yourself\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "kannada",
-        "chapter": 3,
-        "message": "kannada chapter 3 (\"How Are You?\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "kannada",
-        "chapter": 4,
-        "message": "kannada chapter 4 (\"Farewells\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "kannada",
-        "chapter": 5,
-        "message": "kannada chapter 5 (\"The First Verbs\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "malayalam",
-        "chapter": 1,
-        "message": "malayalam chapter 1 (\"Greetings\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "malayalam",
-        "chapter": 2,
-        "message": "malayalam chapter 2 (\"Introducing Yourself\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "malayalam",
-        "chapter": 3,
-        "message": "malayalam chapter 3 (\"How Are You?\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "malayalam",
-        "chapter": 4,
-        "message": "malayalam chapter 4 (\"Farewells\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "malayalam",
-        "chapter": 5,
-        "message": "malayalam chapter 5 (\"The First Verbs\") has no authored canDo/payoff."
       },
       {
         "code": "chapter-payoff-not-representative",
@@ -2400,42 +2052,6 @@
         "message": "malayalam chapter 24 payoff assesses 1/3 of the chapter's atoms (0.33), below the 0.5 floor."
       },
       {
-        "code": "chapter-missing-capability",
-        "language": "marathi",
-        "chapter": 1,
-        "message": "marathi chapter 1 (\"Greetings\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "marathi",
-        "chapter": 2,
-        "message": "marathi chapter 2 (\"Introducing Yourself\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "marathi",
-        "chapter": 3,
-        "message": "marathi chapter 3 (\"How Are You?\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "marathi",
-        "chapter": 4,
-        "message": "marathi chapter 4 (\"Farewells\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "marathi",
-        "chapter": 5,
-        "message": "marathi chapter 5 (\"The First Verbs\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "persian",
-        "chapter": 1,
-        "message": "persian chapter 1 (\"Greetings and responses\") has no authored canDo/payoff."
-      },
-      {
         "code": "chapter-payoff-not-representative",
         "language": "persian",
         "chapter": 4,
@@ -2450,83 +2066,11 @@
         "message": "persian chapter 5 payoff assesses 4/11 of the chapter's atoms (0.36), below the 0.5 floor."
       },
       {
-        "code": "chapter-missing-capability",
-        "language": "portuguese",
-        "chapter": 1,
-        "message": "portuguese chapter 1 (\"Greetings\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "punjabi",
-        "chapter": 1,
-        "message": "punjabi chapter 1 (\"Greetings\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "punjabi",
-        "chapter": 2,
-        "message": "punjabi chapter 2 (\"Introducing Yourself\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "punjabi",
-        "chapter": 3,
-        "message": "punjabi chapter 3 (\"How Are You?\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "punjabi",
-        "chapter": 4,
-        "message": "punjabi chapter 4 (\"Farewells\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "punjabi",
-        "chapter": 5,
-        "message": "punjabi chapter 5 (\"The First Verbs\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "russian",
-        "chapter": 1,
-        "message": "russian chapter 1 (\"Greetings and courtesy\") has no authored canDo/payoff."
-      },
-      {
         "code": "chapter-payoff-not-representative",
         "language": "russian",
         "chapter": 3,
         "lessonId": "RU-C03-idti",
         "message": "russian chapter 3 payoff assesses 5/19 of the chapter's atoms (0.26), below the 0.5 floor."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "sanskrit",
-        "chapter": 1,
-        "message": "sanskrit chapter 1 (\"Greetings\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "sanskrit",
-        "chapter": 2,
-        "message": "sanskrit chapter 2 (\"Introducing Yourself\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "sanskrit",
-        "chapter": 3,
-        "message": "sanskrit chapter 3 (\"How Are You?\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "sanskrit",
-        "chapter": 4,
-        "message": "sanskrit chapter 4 (\"Farewells\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "sanskrit",
-        "chapter": 5,
-        "message": "sanskrit chapter 5 (\"The First Verbs\") has no authored canDo/payoff."
       },
       {
         "code": "chapter-payoff-not-representative",
@@ -2564,78 +2108,6 @@
         "message": "spanish chapter 6 payoff assesses 9/19 of the chapter's atoms (0.47), below the 0.5 floor."
       },
       {
-        "code": "chapter-missing-capability",
-        "language": "spanish",
-        "chapter": 7,
-        "message": "spanish chapter 7 (\"Eating, Drinking, Living --- the \\emph{-er\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "spanish",
-        "chapter": 8,
-        "message": "spanish chapter 8 (\"Numbers, and How Old You Are\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "spanish",
-        "chapter": 9,
-        "message": "spanish chapter 9 (\"\\emph{Ser\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "spanish",
-        "chapter": 10,
-        "message": "spanish chapter 10 (\"Going, and the Future You Can Already Say\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "spanish",
-        "chapter": 11,
-        "message": "spanish chapter 11 (\"Verbs That Break in the Middle --- the Stem Changers\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "spanish",
-        "chapter": 12,
-        "message": "spanish chapter 12 (\"\\emph{Hacer\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "spanish",
-        "chapter": 13,
-        "message": "spanish chapter 13 (\"\\emph{Poner\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "spanish",
-        "chapter": 14,
-        "message": "spanish chapter 14 (\"The Preterite --- Your First Past Tense\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "spanish",
-        "chapter": 15,
-        "message": "spanish chapter 15 (\"Completing the Preterite --- Three Families, One Question\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "spanish",
-        "chapter": 16,
-        "message": "spanish chapter 16 (\"The Imperfect --- the Past That Kept Going\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "spanish",
-        "chapter": 17,
-        "message": "spanish chapter 17 (\"The Future and the Conditional --- One Weld, Twice\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "spanish",
-        "chapter": 18,
-        "message": "spanish chapter 18 (\"The Subjunctive --- the Mood of the Not-Yet-Real\") has no authored canDo/payoff."
-      },
-      {
         "code": "chapter-payoff-not-representative",
         "language": "spanish",
         "chapter": 26,
@@ -2643,28 +2115,18 @@
         "message": "spanish chapter 26 payoff assesses 3/8 of the chapter's atoms (0.38), below the 0.5 floor."
       },
       {
-        "code": "chapter-missing-capability",
-        "language": "tamil",
-        "chapter": 2,
-        "message": "tamil chapter 2 (\"Introducing Yourself\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "tamil",
-        "chapter": 3,
-        "message": "tamil chapter 3 (\"How Are You?\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
+        "code": "chapter-payoff-not-representative",
         "language": "tamil",
         "chapter": 4,
-        "message": "tamil chapter 4 (\"Farewells\") has no authored canDo/payoff."
+        "lessonId": "TA-C04-practice",
+        "message": "tamil chapter 4 payoff assesses 0/1 of the chapter's atoms (0.00), below the 0.5 floor."
       },
       {
-        "code": "chapter-missing-capability",
+        "code": "chapter-payoff-not-representative",
         "language": "tamil",
         "chapter": 5,
-        "message": "tamil chapter 5 (\"The First Verbs\") has no authored canDo/payoff."
+        "lessonId": "TA-C05-practice",
+        "message": "tamil chapter 5 payoff assesses 0/4 of the chapter's atoms (0.00), below the 0.5 floor."
       },
       {
         "code": "chapter-payoff-not-representative",
@@ -2695,42 +2157,6 @@
         "message": "tamil chapter 20 payoff assesses 2/5 of the chapter's atoms (0.40), below the 0.5 floor."
       },
       {
-        "code": "chapter-missing-capability",
-        "language": "telugu",
-        "chapter": 1,
-        "message": "telugu chapter 1 (\"Greetings\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "telugu",
-        "chapter": 2,
-        "message": "telugu chapter 2 (\"Introducing Yourself\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "telugu",
-        "chapter": 3,
-        "message": "telugu chapter 3 (\"How Are You?\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "telugu",
-        "chapter": 4,
-        "message": "telugu chapter 4 (\"Farewells\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "telugu",
-        "chapter": 5,
-        "message": "telugu chapter 5 (\"The First Verbs\") has no authored canDo/payoff."
-      },
-      {
-        "code": "chapter-missing-capability",
-        "language": "urdu",
-        "chapter": 1,
-        "message": "urdu chapter 1 (\"Greetings and responses\") has no authored canDo/payoff."
-      },
-      {
         "code": "chapter-payoff-not-representative",
         "language": "urdu",
         "chapter": 4,
@@ -2749,18 +2175,18 @@
       {
         "language": "arabic",
         "bookChapters": 36,
-        "declaredChapters": 34,
-        "missingCapability": 2,
-        "findings": 4,
+        "declaredChapters": 36,
+        "missingCapability": 0,
+        "findings": 2,
         "clean": false
       },
       {
         "language": "bengali",
         "bookChapters": 12,
-        "declaredChapters": 7,
-        "missingCapability": 5,
-        "findings": 5,
-        "clean": false
+        "declaredChapters": 12,
+        "missingCapability": 0,
+        "findings": 0,
+        "clean": true
       },
       {
         "language": "chinese",
@@ -2773,42 +2199,42 @@
       {
         "language": "french",
         "bookChapters": 31,
-        "declaredChapters": 15,
-        "missingCapability": 16,
-        "findings": 16,
-        "clean": false
+        "declaredChapters": 31,
+        "missingCapability": 0,
+        "findings": 0,
+        "clean": true
       },
       {
         "language": "german",
         "bookChapters": 31,
-        "declaredChapters": 15,
-        "missingCapability": 16,
-        "findings": 17,
+        "declaredChapters": 31,
+        "missingCapability": 0,
+        "findings": 1,
         "clean": false
       },
       {
         "language": "gujarati",
         "bookChapters": 12,
-        "declaredChapters": 7,
-        "missingCapability": 5,
-        "findings": 5,
-        "clean": false
+        "declaredChapters": 12,
+        "missingCapability": 0,
+        "findings": 0,
+        "clean": true
       },
       {
         "language": "hindi",
         "bookChapters": 39,
-        "declaredChapters": 36,
-        "missingCapability": 3,
-        "findings": 7,
+        "declaredChapters": 39,
+        "missingCapability": 0,
+        "findings": 4,
         "clean": false
       },
       {
         "language": "italian",
         "bookChapters": 25,
-        "declaredChapters": 24,
-        "missingCapability": 1,
-        "findings": 1,
-        "clean": false
+        "declaredChapters": 25,
+        "missingCapability": 0,
+        "findings": 0,
+        "clean": true
       },
       {
         "language": "japanese",
@@ -2821,10 +2247,10 @@
       {
         "language": "kannada",
         "bookChapters": 40,
-        "declaredChapters": 35,
-        "missingCapability": 5,
-        "findings": 5,
-        "clean": false
+        "declaredChapters": 40,
+        "missingCapability": 0,
+        "findings": 0,
+        "clean": true
       },
       {
         "language": "latin",
@@ -2837,102 +2263,102 @@
       {
         "language": "malayalam",
         "bookChapters": 34,
-        "declaredChapters": 29,
-        "missingCapability": 5,
-        "findings": 8,
+        "declaredChapters": 34,
+        "missingCapability": 0,
+        "findings": 3,
         "clean": false
       },
       {
         "language": "marathi",
         "bookChapters": 13,
-        "declaredChapters": 8,
-        "missingCapability": 5,
-        "findings": 5,
-        "clean": false
+        "declaredChapters": 13,
+        "missingCapability": 0,
+        "findings": 0,
+        "clean": true
       },
       {
         "language": "persian",
         "bookChapters": 8,
-        "declaredChapters": 7,
-        "missingCapability": 1,
-        "findings": 3,
+        "declaredChapters": 8,
+        "missingCapability": 0,
+        "findings": 2,
         "clean": false
       },
       {
         "language": "portuguese",
         "bookChapters": 26,
-        "declaredChapters": 25,
-        "missingCapability": 1,
-        "findings": 1,
-        "clean": false
+        "declaredChapters": 26,
+        "missingCapability": 0,
+        "findings": 0,
+        "clean": true
       },
       {
         "language": "punjabi",
         "bookChapters": 13,
-        "declaredChapters": 8,
-        "missingCapability": 5,
-        "findings": 5,
-        "clean": false
+        "declaredChapters": 13,
+        "missingCapability": 0,
+        "findings": 0,
+        "clean": true
       },
       {
         "language": "russian",
         "bookChapters": 10,
-        "declaredChapters": 9,
-        "missingCapability": 1,
-        "findings": 2,
+        "declaredChapters": 10,
+        "missingCapability": 0,
+        "findings": 1,
         "clean": false
       },
       {
         "language": "sanskrit",
         "bookChapters": 13,
-        "declaredChapters": 8,
-        "missingCapability": 5,
-        "findings": 6,
+        "declaredChapters": 13,
+        "missingCapability": 0,
+        "findings": 1,
         "clean": false
       },
       {
         "language": "spanish",
         "bookChapters": 41,
-        "declaredChapters": 29,
-        "missingCapability": 12,
-        "findings": 17,
+        "declaredChapters": 41,
+        "missingCapability": 0,
+        "findings": 5,
         "clean": false
       },
       {
         "language": "tamil",
         "bookChapters": 38,
-        "declaredChapters": 34,
-        "missingCapability": 4,
-        "findings": 8,
+        "declaredChapters": 38,
+        "missingCapability": 0,
+        "findings": 6,
         "clean": false
       },
       {
         "language": "telugu",
         "bookChapters": 34,
-        "declaredChapters": 29,
-        "missingCapability": 5,
-        "findings": 5,
-        "clean": false
+        "declaredChapters": 34,
+        "missingCapability": 0,
+        "findings": 0,
+        "clean": true
       },
       {
         "language": "urdu",
         "bookChapters": 12,
-        "declaredChapters": 11,
-        "missingCapability": 1,
-        "findings": 3,
+        "declaredChapters": 12,
+        "missingCapability": 0,
+        "findings": 2,
         "clean": false
       }
     ],
     "summary": {
       "bookChapters": 513,
-      "declaredChapters": 415,
-      "chaptersWithoutCapability": 98,
+      "declaredChapters": 513,
+      "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
-      "payoffsNotRepresentative": 25,
+      "payoffsNotRepresentative": 27,
       "unknownPayoffLessons": 0,
       "titleDrift": 0,
       "duplicateChapters": 0,
-      "cleanTracks": 3,
+      "cleanTracks": 12,
       "payoffRepresentativeness": 0.5
     }
   },
@@ -2940,15 +2366,15 @@
     "totalLessons": 1669,
     "byLevel": {
       "pre-A1": 866,
-      "A1": 297,
-      "A2": 350,
+      "A1": 301,
+      "A2": 395,
       "B1": 8,
       "B2": 0,
       "C1": 0,
       "C2": 0
     },
-    "unmapped": 148,
-    "mappedPercent": 91,
+    "unmapped": 99,
+    "mappedPercent": 94,
     "tracks": [
       {
         "language": "arabic",
@@ -2971,13 +2397,13 @@
         "byLevel": {
           "pre-A1": 33,
           "A1": 1,
-          "A2": 14,
+          "A2": 19,
           "B1": 0,
           "B2": 0,
           "C1": 0,
           "C2": 0
         },
-        "unmapped": 9,
+        "unmapped": 4,
         "reach": "A2"
       },
       {
@@ -3000,14 +2426,14 @@
         "lessonCount": 105,
         "byLevel": {
           "pre-A1": 42,
-          "A1": 22,
+          "A1": 24,
           "A2": 25,
           "B1": 0,
           "B2": 0,
           "C1": 0,
           "C2": 0
         },
-        "unmapped": 16,
+        "unmapped": 14,
         "reach": "A2"
       },
       {
@@ -3015,14 +2441,14 @@
         "lessonCount": 106,
         "byLevel": {
           "pre-A1": 47,
-          "A1": 18,
+          "A1": 20,
           "A2": 24,
           "B1": 0,
           "B2": 0,
           "C1": 0,
           "C2": 0
         },
-        "unmapped": 17,
+        "unmapped": 15,
         "reach": "A2"
       },
       {
@@ -3031,13 +2457,13 @@
         "byLevel": {
           "pre-A1": 34,
           "A1": 2,
-          "A2": 14,
+          "A2": 19,
           "B1": 0,
           "B2": 0,
           "C1": 0,
           "C2": 0
         },
-        "unmapped": 9,
+        "unmapped": 4,
         "reach": "A2"
       },
       {
@@ -3136,13 +2562,13 @@
         "byLevel": {
           "pre-A1": 36,
           "A1": 2,
-          "A2": 14,
+          "A2": 19,
           "B1": 0,
           "B2": 0,
           "C1": 0,
           "C2": 0
         },
-        "unmapped": 10,
+        "unmapped": 5,
         "reach": "A2"
       },
       {
@@ -3211,13 +2637,13 @@
         "byLevel": {
           "pre-A1": 34,
           "A1": 3,
-          "A2": 14,
+          "A2": 19,
           "B1": 0,
           "B2": 0,
           "C1": 0,
           "C2": 0
         },
-        "unmapped": 8,
+        "unmapped": 3,
         "reach": "A2"
       },
       {
@@ -3226,13 +2652,13 @@
         "byLevel": {
           "pre-A1": 61,
           "A1": 33,
-          "A2": 37,
+          "A2": 62,
           "B1": 8,
           "B2": 0,
           "C1": 0,
           "C2": 0
         },
-        "unmapped": 38,
+        "unmapped": 13,
         "reach": "B1"
       },
       {
