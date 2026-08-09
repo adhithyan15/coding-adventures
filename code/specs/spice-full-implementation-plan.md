@@ -4663,9 +4663,14 @@ the Rust, Python, and TypeScript surfaces together.
      them into the shared engine forward-transit-time-bias-coefficient field.
 
 465. Python and TypeScript Berkeley SPICE BJT transit-time-current parity.
-   - Status: implemented in this BJT ITF parity slice.
+   - Status: completed in PR 10134.
    - Both parser facades validate finite, non-negative `ITF` values and lower
      them into the shared engine forward-transit-time-current field.
+
+466. Python and TypeScript Berkeley SPICE BJT transit-time-voltage parity.
+   - Status: implemented in this BJT VTF parity slice.
+   - Both parser facades validate finite, non-negative `VTF` values and lower
+     them into the shared engine forward-transit-time-voltage-scale field.
 
 ## Backlog
 
