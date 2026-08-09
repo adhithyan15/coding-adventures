@@ -2134,6 +2134,25 @@ def test_parse_jfet_bet_alias_with_canonical_precedence() -> None:
     assert aliased.beta == 900.0e-6
 
 
+def test_parse_jfet_threshold_aliases_with_canonical_precedence() -> None:
+    parsed = parse_netlist(
+        ".model canonical NJF(VTO=-3 VT0=-2 VTH=-1)\n"
+        ".model vtzero NJF(VT0=-2)\n"
+        ".model threshold NJF(VTH=-1)\n"
+        "J1 drain gate source canonical\n"
+        "J2 drain gate source vtzero\n"
+        "J3 drain gate source threshold"
+    )
+
+    canonical, vtzero, threshold = parsed.circuit.elements
+    assert isinstance(canonical, JFET)
+    assert canonical.vto == -3.0
+    assert isinstance(vtzero, JFET)
+    assert vtzero.vto == -2.0
+    assert isinstance(threshold, JFET)
+    assert threshold.vto == -1.0
+
+
 def test_parse_pjfet_model_type_alias() -> None:
     parsed = parse_netlist(
         ".model fast PJFET(BETA=2m)\nJ1 drain gate source fast"

@@ -2215,6 +2215,30 @@ J1 drain gate source fast
     });
   });
 
+  it("parses JFET threshold aliases with canonical precedence", () => {
+    const parsed = parseNetlist(
+      ".model canonical NJF(VTO=-3 VT0=-2 VTH=-1)\n" +
+        ".model vtzero NJF(VT0=-2)\n" +
+        ".model threshold NJF(VTH=-1)\n" +
+        "J1 drain gate source canonical\n" +
+        "J2 drain gate source vtzero\n" +
+        "J3 drain gate source threshold",
+    );
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      thresholdVoltage: -3.0,
+    });
+    expect(parsed.circuit.elements()[1]).toMatchObject({
+      kind: "jfet",
+      thresholdVoltage: -2.0,
+    });
+    expect(parsed.circuit.elements()[2]).toMatchObject({
+      kind: "jfet",
+      thresholdVoltage: -1.0,
+    });
+  });
+
   it("parses the PJFET model type alias", () => {
     const parsed = parseNetlist(".model fast PJFET(BETA=2m)\nJ1 drain gate source fast");
 
