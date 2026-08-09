@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Give canonical MOS Level-1 `CBD` precedence over the `CJD` alias.
 - Give canonical MOS Level-1 `CBS` precedence over the `CJS` alias.
 - Give canonical MOS Level-1 `N_SUB` precedence over the `NSUB` and `N` aliases.
 - Give canonical MOS Level-1 `VT0` precedence over the `VTO` and `VTH` aliases.
