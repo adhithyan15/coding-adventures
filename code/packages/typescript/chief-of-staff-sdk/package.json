@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/chief-of-staff-sdk",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Capability-safe TypeScript SDK for Chief of Staff agents",
   "type": "module",
   "main": "src/index.ts",

@@ -6,7 +6,7 @@ clock, or random-number permissions. It sends typed requests to a host over an
 injected transport, and the host enforces the sealed manifest.
 
 The SDK supports Level 2 one-file handlers and Level 3 direct encrypted-channel
-access. A Level 2 agent contains only its handler:
+and Vault access. A Level 2 agent contains only its handler:
 
 ```typescript
 import { defineAgent } from "@coding-adventures/chief-of-staff-sdk";
@@ -55,6 +55,29 @@ Channel payloads use canonical base64 on the wire and `Uint8Array` in agent
 code. Sequence numbers and nanosecond timestamps use decimal strings on the
 wire and `bigint` in agent code, avoiding JavaScript's 53-bit integer limit.
 
+Level 3 agents can request host-mediated Vault operations without receiving
+secret bytes or cryptographic keys:
+
+```typescript
+import {
+  vault_release_lease,
+  vault_request_direct,
+  vault_request_lease,
+} from "@coding-adventures/chief-of-staff-sdk";
+
+const lease = await vault_request_lease("bank-creds", 10_000);
+await approvedHostOperation({ vault_ref: lease.vault_ref });
+await vault_release_lease(lease.vault_ref);
+
+await vault_request_direct("browser-session", "browser-agent");
+```
+
+The returned `vault_ref` is an opaque bearer capability. It remains directly
+accessible for approved host calls but is non-enumerable, immutable, and
+replaced with `<redacted>` by JSON serialization. Agent code must not log,
+persist, derive meaning from, or send the reference outside approved host
+operations.
+
 ## Security properties
 
 - JSON-RPC version, response ID, result/error exclusivity, and result shapes
@@ -63,5 +86,7 @@ wire and `bigint` in agent code, avoiding JavaScript's 53-bit integer limit.
   content types, payloads, and protocol lines are rejected.
 - Host errors retain their numeric code and structured data without exposing
   unchecked response objects as SDK values.
+- Vault TTLs, receipts, and null acknowledgements are validated before use;
+  opaque lease references are redacted from enumerable and JSON diagnostics.
 - Level 2 input must be strict UTF-8, handler output must be non-empty text,
   and publication must succeed before acknowledgement.

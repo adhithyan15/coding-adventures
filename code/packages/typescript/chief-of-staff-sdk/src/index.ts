@@ -4,6 +4,7 @@ const MAX_IDENTIFIER_BYTES = 4 * 1024;
 const MAX_CONTENT_TYPE_BYTES = 1024;
 const MAX_PAYLOAD_BYTES = 64 * 1024 * 1024;
 const MAX_PROTOCOL_LINE_BYTES = 90 * 1024 * 1024;
+const MAX_VAULT_LEASE_TTL_MS = 7_776_000_000;
 const BASE64_ALPHABET =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
@@ -152,6 +153,20 @@ export interface Message {
   readonly contentType: string;
   /** Verified plaintext payload. */
   readonly payload: Uint8Array;
+}
+
+/**
+ * Opaque, agent-facing Vault lease receipt.
+ *
+ * `vault_ref` is a bearer capability, not a secret or a secret identifier.
+ * It is deliberately non-enumerable on receipts returned by this SDK, and
+ * JSON diagnostics replace it with `<redacted>`.
+ */
+export interface VaultLeaseReceipt {
+  /** Opaque reference accepted only by approved host-mediated operations. */
+  readonly vault_ref: string;
+  /** Unix expiry time in milliseconds. */
+  readonly expires_at_ms: number;
 }
 
 /** UTF-8 message presented to a one-file Level 2 agent handler. */
@@ -337,7 +352,50 @@ export class ChannelClient {
   }
 }
 
+/** Typed Level 3 Vault client over one host transport. */
+export class VaultClient {
+  constructor(private readonly transport: HostTransport) {}
+
+  /** Request a time-limited opaque reference without exposing secret bytes. */
+  async requestLease(
+    secretName: string,
+    ttlMs: number,
+  ): Promise<VaultLeaseReceipt> {
+    validateIdentifier(secretName, "secretName");
+    validateVaultLeaseTtl(ttlMs);
+    const result = await this.transport.request("vault.requestLease", {
+      name: secretName,
+      ttl_ms: ttlMs,
+    });
+    return decodeVaultLeaseReceipt(result);
+  }
+
+  /** Ask the host to deliver a secret directly to another trusted consumer. */
+  async requestDirect(
+    secretName: string,
+    consumerAgentId: string,
+  ): Promise<void> {
+    validateIdentifier(secretName, "secretName");
+    validateIdentifier(consumerAgentId, "consumerAgentId");
+    const result = await this.transport.request("vault.requestDirect", {
+      name: secretName,
+      consumer_agent_id: consumerAgentId,
+    });
+    validateNullResult(result, "vault.requestDirect");
+  }
+
+  /** Surrender an unused bearer reference before its normal expiry. */
+  async releaseLease(vaultRef: string): Promise<void> {
+    validateIdentifier(vaultRef, "vaultRef");
+    const result = await this.transport.request("vault.releaseLease", {
+      vault_ref: vaultRef,
+    });
+    validateNullResult(result, "vault.releaseLease");
+  }
+}
+
 let defaultChannelClient: ChannelClient | undefined;
+let defaultVaultClient: VaultClient | undefined;
 
 /** Configure the host transport used by the module-level SDK functions. */
 export function configureHostTransport(transport: HostTransport): void {
@@ -349,11 +407,13 @@ export function configureHostTransport(transport: HostTransport): void {
     throw new ChiefSdkError("transport must implement request(method, params)");
   }
   defaultChannelClient = new ChannelClient(transport);
+  defaultVaultClient = new VaultClient(transport);
 }
 
 /** Remove the configured transport, primarily for wrapper shutdown and tests. */
 export function clearHostTransport(): void {
   defaultChannelClient = undefined;
+  defaultVaultClient = undefined;
 }
 
 /** Read through the configured Level 3 channel client. */
@@ -378,11 +438,95 @@ export function channel_ack(
   return configuredClient().ack(channelId, messageId);
 }
 
+/** Request an opaque lease through the configured Level 3 Vault client. */
+export function vault_request_lease(
+  secretName: string,
+  ttlMs: number,
+): Promise<VaultLeaseReceipt> {
+  return configuredVaultClient().requestLease(secretName, ttlMs);
+}
+
+/** Request host-to-consumer secret delivery without receiving secret bytes. */
+export function vault_request_direct(
+  secretName: string,
+  consumerAgentId: string,
+): Promise<void> {
+  return configuredVaultClient().requestDirect(secretName, consumerAgentId);
+}
+
+/** Release an opaque Vault lease through the configured host transport. */
+export function vault_release_lease(vaultRef: string): Promise<void> {
+  return configuredVaultClient().releaseLease(vaultRef);
+}
+
 function configuredClient(): ChannelClient {
   if (defaultChannelClient === undefined) {
     throw new ChiefSdkError("host transport is not configured");
   }
   return defaultChannelClient;
+}
+
+function configuredVaultClient(): VaultClient {
+  if (defaultVaultClient === undefined) {
+    throw new ChiefSdkError("host transport is not configured");
+  }
+  return defaultVaultClient;
+}
+
+function decodeVaultLeaseReceipt(value: unknown): VaultLeaseReceipt {
+  if (!isRecord(value)) {
+    throw new ChiefSdkError("vault.requestLease result must be an object");
+  }
+  const vaultRef = value["vault_ref"];
+  const expiresAtMs = value["expires_at_ms"];
+  validateIdentifier(vaultRef, "vault.requestLease vault_ref");
+  if (
+    typeof expiresAtMs !== "number" ||
+    !Number.isSafeInteger(expiresAtMs) ||
+    expiresAtMs < 0
+  ) {
+    throw new ChiefSdkError(
+      "vault.requestLease expires_at_ms must be a non-negative safe integer",
+    );
+  }
+
+  const receipt = { expires_at_ms: expiresAtMs } as VaultLeaseReceipt;
+  Object.defineProperties(receipt, {
+    vault_ref: {
+      value: vaultRef,
+      enumerable: false,
+      writable: false,
+      configurable: false,
+    },
+    toJSON: {
+      value: () => ({
+        vault_ref: "<redacted>",
+        expires_at_ms: expiresAtMs,
+      }),
+      enumerable: false,
+      writable: false,
+      configurable: false,
+    },
+  });
+  return Object.freeze(receipt);
+}
+
+function validateVaultLeaseTtl(value: number): void {
+  if (
+    !Number.isSafeInteger(value) ||
+    value < 1 ||
+    value > MAX_VAULT_LEASE_TTL_MS
+  ) {
+    throw new ChiefSdkError(
+      "ttlMs must be an integer from 1 through 7776000000 milliseconds",
+    );
+  }
+}
+
+function validateNullResult(value: unknown, method: string): void {
+  if (value !== null) {
+    throw new ChiefSdkError(`${method} result must be null`);
+  }
 }
 
 function decodeMessage(value: unknown): Message {

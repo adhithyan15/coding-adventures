@@ -6,6 +6,7 @@ import {
   HostRpcError,
   JsonRpcLineTransport,
   SimpleAgentRuntime,
+  VaultClient,
   channel_ack,
   channel_read,
   channel_write,
@@ -14,6 +15,9 @@ import {
   configureHostTransport,
   createDefinedAgentRuntime,
   defineAgent,
+  vault_release_lease,
+  vault_request_direct,
+  vault_request_lease,
   type HostTransport,
   type JsonLineDuplex,
 } from "../src/index.js";
@@ -295,6 +299,146 @@ describe("module-level channel API", () => {
       "channel.read",
       "channel.write",
       "channel.ack",
+    ]);
+  });
+});
+
+describe("VaultClient", () => {
+  it("requests an opaque lease and redacts its bearer reference from diagnostics", async () => {
+    const transport = new ScriptedTransport({
+      vault_ref: "vault-ref-secret-bearer",
+      expires_at_ms: 1_800_000_000_000,
+    });
+
+    const receipt = await new VaultClient(transport).requestLease(
+      "bank-creds",
+      10_000,
+    );
+
+    expect(transport.calls).toEqual([
+      {
+        method: "vault.requestLease",
+        params: { name: "bank-creds", ttl_ms: 10_000 },
+      },
+    ]);
+    expect(receipt.vault_ref).toBe("vault-ref-secret-bearer");
+    expect(receipt.expires_at_ms).toBe(1_800_000_000_000);
+    expect(Object.keys(receipt)).toEqual(["expires_at_ms"]);
+    expect({ ...receipt }).toEqual({ expires_at_ms: 1_800_000_000_000 });
+    expect(JSON.stringify(receipt)).toBe(
+      '{"vault_ref":"<redacted>","expires_at_ms":1800000000000}',
+    );
+    expect(JSON.stringify(receipt)).not.toContain("secret-bearer");
+    expect(Object.isFrozen(receipt)).toBe(true);
+  });
+
+  it("requests direct delivery and releases only through the host", async () => {
+    const transport = new ScriptedTransport(null, null);
+    const client = new VaultClient(transport);
+
+    await expect(
+      client.requestDirect("bank-creds", "browser-agent"),
+    ).resolves.toBeUndefined();
+    await expect(
+      client.releaseLease("vault-ref-secret-bearer"),
+    ).resolves.toBeUndefined();
+    expect(transport.calls).toEqual([
+      {
+        method: "vault.requestDirect",
+        params: {
+          name: "bank-creds",
+          consumer_agent_id: "browser-agent",
+        },
+      },
+      {
+        method: "vault.releaseLease",
+        params: { vault_ref: "vault-ref-secret-bearer" },
+      },
+    ]);
+  });
+
+  it.each([
+    [null, "object"],
+    [{}, "vault_ref"],
+    [{ vault_ref: "", expires_at_ms: 1 }, "vault_ref"],
+    [{ vault_ref: 7, expires_at_ms: 1 }, "vault_ref"],
+    [{ vault_ref: "ref", expires_at_ms: -1 }, "expires_at_ms"],
+    [{ vault_ref: "ref", expires_at_ms: 1.5 }, "expires_at_ms"],
+    [
+      { vault_ref: "ref", expires_at_ms: Number.MAX_SAFE_INTEGER + 1 },
+      "expires_at_ms",
+    ],
+    [{ vault_ref: "ref", expires_at_ms: "1" }, "expires_at_ms"],
+  ])("rejects malformed vault.requestLease result %j", async (result, message) => {
+    await expect(
+      new VaultClient(new ScriptedTransport(result)).requestLease("secret", 1),
+    ).rejects.toThrow(message);
+  });
+
+  it.each([0, 7_776_000_001, 1.5, Number.NaN])(
+    "rejects invalid lease TTL %j before calling the host",
+    async (ttlMs) => {
+      const transport = new ScriptedTransport();
+      await expect(
+        new VaultClient(transport).requestLease("secret", ttlMs),
+      ).rejects.toThrow("ttlMs");
+      expect(transport.calls).toEqual([]);
+    },
+  );
+
+  it("rejects invalid arguments and malformed null acknowledgements", async () => {
+    const invalid = new ScriptedTransport();
+    const invalidClient = new VaultClient(invalid);
+    await expect(invalidClient.requestLease("", 1)).rejects.toThrow(
+      "secretName",
+    );
+    await expect(invalidClient.requestDirect("secret", "")).rejects.toThrow(
+      "consumerAgentId",
+    );
+    await expect(invalidClient.releaseLease("")).rejects.toThrow("vaultRef");
+    expect(invalid.calls).toEqual([]);
+
+    await expect(
+      new VaultClient(new ScriptedTransport({})).requestDirect(
+        "secret",
+        "consumer",
+      ),
+    ).rejects.toThrow("must be null");
+    await expect(
+      new VaultClient(new ScriptedTransport("ok")).releaseLease("ref"),
+    ).rejects.toThrow("must be null");
+  });
+});
+
+describe("module-level Vault API", () => {
+  it("fails closed until configured", () => {
+    expect(() => vault_request_lease("secret", 1)).toThrow("not configured");
+    expect(() => vault_request_direct("secret", "consumer")).toThrow(
+      "not configured",
+    );
+    expect(() => vault_release_lease("ref")).toThrow("not configured");
+  });
+
+  it("delegates lease, direct delivery, and release to the configured transport", async () => {
+    const transport = new ScriptedTransport(
+      { vault_ref: "opaque-ref", expires_at_ms: 2_000 },
+      null,
+      null,
+    );
+    configureHostTransport(transport);
+
+    await expect(vault_request_lease("secret", 1_000)).resolves.toMatchObject({
+      vault_ref: "opaque-ref",
+      expires_at_ms: 2_000,
+    });
+    await expect(
+      vault_request_direct("secret", "consumer"),
+    ).resolves.toBeUndefined();
+    await expect(vault_release_lease("opaque-ref")).resolves.toBeUndefined();
+    expect(transport.calls.map((call) => call.method)).toEqual([
+      "vault.requestLease",
+      "vault.requestDirect",
+      "vault.releaseLease",
     ]);
   });
 });

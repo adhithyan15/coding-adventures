@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.0] - 2026-08-08
+
+### Added
+
+- Typed Level 3 Vault lease, direct-delivery, and release APIs.
+- Strict Vault parameter/result validation and redaction-safe opaque lease
+  receipts.
+
 ## [0.2.0] - 2026-08-03
 
 ### Added
