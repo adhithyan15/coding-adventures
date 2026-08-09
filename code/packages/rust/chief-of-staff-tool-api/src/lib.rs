@@ -855,6 +855,7 @@ pub fn builtin_tool_catalog() -> Vec<ToolDefinition> {
         job_list_definition(),
         job_status_definition(),
         vault_request_lease_definition(),
+        vault_request_direct_definition(),
     ]
     .into()
 }
@@ -2092,6 +2093,31 @@ fn vault_request_lease_definition() -> ToolDefinition {
         vec!["vault:lease"],
         Some("vault"),
         vec!["vault", "lease", "secret"],
+    )
+}
+
+fn vault_request_direct_definition() -> ToolDefinition {
+    builtin_definition(
+        "vault.request_direct",
+        "Request direct vault delivery",
+        "Ask the trusted host to deliver a named secret to an approved consumer without returning secret bytes to the caller.",
+        object_schema(
+            vec![
+                SchemaProperty::new("secret_name", JsonSchema::String),
+                SchemaProperty::new("consumer_agent_id", JsonSchema::String),
+            ],
+            vec!["secret_name", "consumer_agent_id"],
+            false,
+        ),
+        Some(JsonSchema::Null),
+        ToolSideEffects::External,
+        ToolIdempotency::Never,
+        ToolConcurrency::Serialized,
+        ToolStreaming::Events,
+        PrivilegeTier::Tier2,
+        vec!["vault:direct"],
+        Some("vault"),
+        vec!["vault", "direct", "delivery", "secret"],
     )
 }
 
@@ -5500,7 +5526,7 @@ mod tests {
         let catalog = builtin_tool_catalog();
         let mut registry = InMemoryToolRegistry::new();
 
-        assert_eq!(catalog.len(), 34);
+        assert_eq!(catalog.len(), 35);
         for definition in catalog {
             assert!(
                 definition.validate().ok,
@@ -5551,6 +5577,7 @@ mod tests {
                 "skill.read_asset",
                 "skill.read_manifest",
                 "skill.uninstall",
+                "vault.request_direct",
                 "vault.request_lease",
             ]
         );
@@ -5598,7 +5625,10 @@ mod tests {
                 "skill.uninstall",
             ]
         );
-        assert_eq!(vault_ids, vec!["vault.request_lease"]);
+        assert_eq!(
+            vault_ids,
+            vec!["vault.request_lease", "vault.request_direct"]
+        );
         assert_eq!(
             builtin_tool_definition("job.install")
                 .unwrap()
@@ -5622,6 +5652,12 @@ mod tests {
                 .unwrap()
                 .required_capabilities,
             vec!["vault:lease"]
+        );
+        assert_eq!(
+            builtin_tool_definition("vault.request_direct")
+                .unwrap()
+                .required_capabilities,
+            vec!["vault:direct"]
         );
     }
 
@@ -5680,6 +5716,60 @@ mod tests {
     }
 
     #[test]
+    fn vault_direct_builtin_has_no_secret_return_channel() {
+        let definition = builtin_tool_definition("vault.request_direct")
+            .expect("direct vault built-in should exist");
+
+        assert_eq!(definition.side_effects, ToolSideEffects::External);
+        assert_eq!(definition.idempotency, ToolIdempotency::Never);
+        assert_eq!(definition.concurrency, ToolConcurrency::Serialized);
+        assert_eq!(definition.streaming, ToolStreaming::Events);
+        assert_eq!(definition.required_tier, PrivilegeTier::Tier2);
+        assert_eq!(definition.preferred_lock_scope.as_deref(), Some("vault"));
+
+        let arguments = JsonValue::Object(vec![
+            (
+                "secret_name".to_string(),
+                JsonValue::String("browser-session".to_string()),
+            ),
+            (
+                "consumer_agent_id".to_string(),
+                JsonValue::String("browser-agent".to_string()),
+            ),
+        ]);
+        assert!(definition.input_schema.validate_value(&arguments).ok);
+
+        let unexpected_argument = JsonValue::Object(vec![
+            (
+                "secret_name".to_string(),
+                JsonValue::String("browser-session".to_string()),
+            ),
+            (
+                "consumer_agent_id".to_string(),
+                JsonValue::String("browser-agent".to_string()),
+            ),
+            (
+                "ttl_ms".to_string(),
+                JsonValue::Number(JsonNumber::Integer(1)),
+            ),
+        ]);
+        assert!(
+            !definition
+                .input_schema
+                .validate_value(&unexpected_argument)
+                .ok
+        );
+
+        let output = definition.output_schema.as_ref().unwrap();
+        assert!(output.validate_value(&JsonValue::Null).ok);
+        assert!(
+            !output
+                .validate_value(&JsonValue::String("secret material".to_string()))
+                .ok
+        );
+    }
+
+    #[test]
     fn builtin_catalog_can_query_by_capability_tag_and_limit() {
         let read_memory = builtin_tools_matching(
             ToolCatalogQuery::new()
@@ -5712,22 +5802,23 @@ mod tests {
         let export = builtin_tool_catalog_export(ToolCatalogQuery::new());
 
         assert!(export.ok());
-        assert_eq!(export.summary.total_tools, 34);
-        assert_eq!(export.schema_documents.len(), 34);
+        assert_eq!(export.summary.total_tools, 35);
+        assert_eq!(export.schema_documents.len(), 35);
         assert_eq!(export.summary.by_family.get("context"), Some(&6));
         assert_eq!(export.summary.by_family.get("artifact"), Some(&7));
         assert_eq!(export.summary.by_family.get("skill"), Some(&7));
         assert_eq!(export.summary.by_family.get("memory"), Some(&7));
         assert_eq!(export.summary.by_family.get("job"), Some(&6));
-        assert_eq!(export.summary.by_family.get("vault"), Some(&1));
+        assert_eq!(export.summary.by_family.get("vault"), Some(&2));
         assert_eq!(export.summary.tag_count("store"), 27);
         assert_eq!(export.summary.tag_count("scheduler"), 6);
         assert_eq!(export.summary.required_capability_count("memory:read"), 3);
         assert_eq!(export.summary.required_capability_count("skills:read"), 3);
         assert!(export.summary.has_tag("store"));
         assert!(export.summary.has_required_capability("jobs:run"));
+        assert!(export.summary.has_required_capability("vault:direct"));
         assert!(export.summary.has_required_capability("vault:lease"));
-        assert_eq!(export.summary.streaming_tools, 18);
+        assert_eq!(export.summary.streaming_tools, 19);
         assert!(export.summary.has_write_or_external_tools());
         assert!(export.summary.has_serialized_tools());
         assert!(export.summary.has_capability_gates());
