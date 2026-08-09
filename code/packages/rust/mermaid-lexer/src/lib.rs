@@ -13,6 +13,7 @@ const SANKEY_TOKEN_GRAMMAR_SOURCE: &str =
 const GITGRAPH_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/gitgraph.tokens");
 const ER_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/er.tokens");
+const C4_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/c4.tokens");
 
 fn create_lexer<'a>(source: &'a str, grammar_source: &str, grammar_name: &str) -> GrammarLexer<'a> {
     let grammar = parse_token_grammar(grammar_source)
@@ -38,6 +39,10 @@ pub fn create_mermaid_gitgraph_lexer(source: &str) -> GrammarLexer<'_> {
 
 pub fn create_mermaid_er_lexer(source: &str) -> GrammarLexer<'_> {
     create_lexer(source, ER_TOKEN_GRAMMAR_SOURCE, "er.tokens")
+}
+
+pub fn create_mermaid_c4_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, C4_TOKEN_GRAMMAR_SOURCE, "c4.tokens")
 }
 
 pub fn tokenize_mermaid(source: &str) -> Vec<Token> {
@@ -73,6 +78,13 @@ pub fn tokenize_mermaid_er(source: &str) -> Vec<Token> {
     lexer
         .tokenize()
         .unwrap_or_else(|e| panic!("Mermaid ER tokenization failed: {e}"))
+}
+
+pub fn tokenize_mermaid_c4(source: &str) -> Vec<Token> {
+    let mut lexer = create_mermaid_c4_lexer(source);
+    lexer
+        .tokenize()
+        .unwrap_or_else(|e| panic!("Mermaid C4 tokenization failed: {e}"))
 }
 
 #[cfg(test)]
@@ -232,5 +244,22 @@ mod tests {
         assert!(values.contains(&"--"));
         assert!(values.contains(&"o{"));
         assert!(values.contains(&"PK"));
+    }
+
+    #[test]
+    fn tokenizes_c4_macros_and_keyed_arguments() {
+        let tokens = tokenize_mermaid_c4(
+            "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",
+        );
+        let values: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_ != TokenType::Eof)
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert!(values.contains(&"C4Context"));
+        assert!(values.contains(&"Person"));
+        assert!(values.contains(&"$sprite"));
+        assert!(values.contains(&"Rel"));
     }
 }
