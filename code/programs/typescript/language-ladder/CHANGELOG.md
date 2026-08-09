@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Persian looping-body ductus (HL-C09T)
+
+- Add Persian ه from UT Austin Persian Online's 02:47–02:50 demonstration as
+  one unbroken isolated looping-body movement with zero lifts.
+- Fit that single run to the vendored Noto Naskh form's wider two-counter
+  outline and leftward baseline finish, with source/data/geometry agreement.
+- Render a real one-frame filmstrip using the Persian font route established by
+  HL-C09S, completing the nine-letter Persian starter inventory.
+
 ### Added — cited Persian loop-and-tail ductus (HL-C09S)
 
 - Correct the source-adjacent queue after confirming that و appears between ن

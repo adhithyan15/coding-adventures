@@ -90,6 +90,8 @@ const PERSIAN_NUN = DUCTUS["ن"];
 const persianNunOutline = naskhOutline("ن");
 const PERSIAN_WAW = DUCTUS["و"];
 const persianWawOutline = naskhOutline("و");
+const PERSIAN_HEH = DUCTUS["ه"];
+const persianHehOutline = naskhOutline("ه");
 
 /** Walk a node tree, collecting every node the predicate accepts. */
 function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = []): SvgNode[] {
@@ -101,7 +103,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds all eleven authored Tamil letters and Persian ا, ب, ت, س, ل, م, ن, and و", () => {
+  it("finds all eleven authored Tamil letters and all nine Persian starter letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -121,6 +123,7 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("م")?.glyph).toBe("م");
     expect(ductusFor("ن")?.glyph).toBe("ن");
     expect(ductusFor("و")?.glyph).toBe("و");
+    expect(ductusFor("ه")?.glyph).toBe("ه");
   });
 
   it("returns undefined for a letter nobody has authored a stroke order for", () => {
@@ -851,6 +854,36 @@ describe("Persian و — its small head flows into one leftward tail", () => {
     expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(PERSIAN_WAW.strokes[0], 1),
+    );
+  });
+});
+
+describe("Persian ه — its isolated looping body stays in one pen-down run", () => {
+  const steps = ductusSteps(PERSIAN_HEH);
+  const strip = ductusFilmstrip(PERSIAN_HEH, persianHehOutline);
+
+  it("keeps the sourced looping body in one pen-down run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "loop the isolated body and finish left without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0]);
+  });
+
+  it("reports one movement in one unbroken stroke", () => {
+    expect(strip.frames).toHaveLength(1);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 1 movement");
+  });
+
+  it("finishes the Noto Naskh path without a completed-stroke overlay", () => {
+    const paths = byTag(strip.frames[0], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      persianHehOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(PERSIAN_HEH.strokes[0], 1),
     );
   });
 });

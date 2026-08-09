@@ -218,6 +218,8 @@ const persianAlphabetSource = (glyph: string): StrokeSource => {
 // The next ن sweeps its bowl right-to-left, then lifts once to place the dot.
 // Contrary to the old queue, the source then demonstrates و before ه: its
 // small head loops and flows into the leftward curving tail without a lift.
+// The later isolated ه closes one simple handwritten loop without lifting; its
+// one pen-down path is fitted to Noto Naskh's wider two-counter isolated form.
 // அ is Frame 4's first row: movements 1-4 remain on the connected body, then
 // the hand lifts once before movement 5 draws the separate right upright. ஆ is
 // the next row: it repeats movements 1-5, then continues from that upright into
@@ -569,6 +571,60 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: persianAlphabetSource("و"),
+  },
+  "ه": {
+    glyph: "ه",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "loop the isolated body and finish left without lifting",
+            path: [
+              { x: 315, y: 400 },
+              { x: 285, y: 375 },
+              { x: 255, y: 350 },
+              { x: 230, y: 325 },
+              { x: 205, y: 300 },
+              { x: 190, y: 260 },
+              { x: 190, y: 210 },
+              { x: 205, y: 165 },
+              { x: 235, y: 125 },
+              { x: 275, y: 105 },
+              { x: 320, y: 110 },
+              { x: 355, y: 135 },
+              { x: 380, y: 175 },
+              { x: 390, y: 225 },
+              { x: 380, y: 275 },
+              { x: 355, y: 320 },
+              { x: 315, y: 355 },
+              { x: 360, y: 355 },
+              { x: 410, y: 340 },
+              { x: 455, y: 315 },
+              { x: 500, y: 275 },
+              { x: 535, y: 225 },
+              { x: 555, y: 170 },
+              { x: 555, y: 115 },
+              { x: 535, y: 70 },
+              { x: 535, y: 50 },
+              { x: 500, y: 40 },
+              { x: 455, y: 30 },
+              { x: 415, y: 45 },
+              { x: 385, y: 75 },
+              { x: 365, y: 100 },
+              { x: 345, y: 75 },
+              { x: 310, y: 65 },
+              { x: 270, y: 65 },
+              { x: 225, y: 70 },
+              { x: 175, y: 65 },
+              { x: 120, y: 65 },
+              { x: 70, y: 65 },
+              { x: 25, y: 65 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: persianAlphabetSource("ه"),
   },
   அ: {
     glyph: "அ",

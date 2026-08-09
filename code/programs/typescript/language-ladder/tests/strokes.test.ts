@@ -326,6 +326,18 @@ describe("handwriting ductus", () => {
     expect(tail[0].x).toBeGreaterThan(tail.at(-1)!.x);
   });
 
+  it("Persian ه keeps its isolated looping body in one pen-down run", () => {
+    const heh = DUCTUS["ه"];
+    expect(penLifts(heh)).toBe(0);
+    expect(heh.strokes).toHaveLength(1);
+    expect(heh.strokes[0].segments).toHaveLength(1);
+    const path = penPath(heh.strokes[0]);
+    expect(Math.max(...path.map((point) => point.y))).toBeGreaterThan(
+      Math.min(...path.map((point) => point.y)),
+    );
+    expect(path[0].x).toBeGreaterThan(path.at(-1)!.x);
+  });
+
   // The PROVENANCE GATE. A stroke's SHAPE is checked against the font above;
   // its ORDER cannot be — so it must trace to a cited source, or it does not
   // ship. This is the counterpart, for hand-authored order, of "facts enter
@@ -365,6 +377,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansTamil-Static.ttf",
     );
     expect(verifiedLetterFont("و", DUCTUS["و"].source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
+    );
+    expect(verifiedLetterFont("ه", DUCTUS["ه"].source.url)).toBe(
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
     expect(verifiedLetterFont("و", "https://example.invalid/wrong-source")).toBeUndefined();
@@ -501,6 +516,15 @@ describe("handwriting ductus", () => {
     expect(src.url).toContain("laits.utexas.edu/persian_grammar/video");
     expect(src.citation).toMatch(/Persian Online.*و.*02:43–02:45/i);
     expect(src.variation).toMatch(/isolated.*continuous Naskh.*small head.*leftward curving tail.*no pen lift.*Noto Naskh/i);
+  });
+
+  it("Persian ه traces to the later continuous looping-body demonstration", () => {
+    const src = DUCTUS["ه"].source;
+    expect(src.url).toContain("laits.utexas.edu/persian_grammar/video");
+    expect(src.citation).toMatch(/Persian Online.*ه.*02:47–02:50/i);
+    expect(src.variation).toMatch(
+      /simple closed handwritten loop.*no pen lift.*Noto Naskh.*two counters.*leftward baseline/i,
+    );
   });
 });
 
