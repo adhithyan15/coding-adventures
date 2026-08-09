@@ -11,6 +11,14 @@
   learner prose and citation identical to the authored path, and exercise the
   real two-stroke filmstrip instead of relying only on a synthetic fixture.
 
+### Added — connected long-vowel loop for Tamil ஆ (HL-C09B)
+
+- Add Frame 4's next row, Tamil ஆ, reusing the source's four-movement அ body,
+  then preserving one lift before a second pen-down run that joins the right
+  upright directly to the long-vowel loop.
+- Check all six movements against the full Noto Sans Tamil outline and pin the
+  real filmstrip's one-lift transition so list numbering cannot invent a second.
+
 ### Added — canonical lesson figures
 
 - Preserve standalone Markdown images as typed lesson blocks instead of flattening

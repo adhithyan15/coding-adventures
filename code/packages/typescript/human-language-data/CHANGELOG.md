@@ -10,6 +10,12 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
   pen lift before its separate right upright, matching Language Ladder's
   font-checked ductus and the UT Austin primer's Frame 4.
 
+### Added - verified Tamil ஆ handwriting
+
+- Record the cited six-movement order for Tamil ஆ: one lift separates the
+  shared அ-shaped body from a second run whose upright flows into the long-vowel
+  loop without another lift.
+
 ### Added - generated lesson figures
 
 - Generate deterministic etymology-route SVGs from the canonical lesson `roots`
