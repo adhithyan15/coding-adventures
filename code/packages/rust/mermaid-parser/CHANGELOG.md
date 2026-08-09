@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.0
+
+- Added recursive grammar and semantic lowering for nested sequence control blocks.
+- Rejects unterminated blocks instead of silently degrading their contents.
+
 ## 0.4.0
 
 - Added grammar-backed sequence parsing for participants, actors, aliases,

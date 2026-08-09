@@ -1,6 +1,6 @@
-//! diagram-ir v0.4.0 — DG00/DG04 semantic IR
+//! diagram-ir v0.5.0 — DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.4.0";
+pub const VERSION: &str = "0.5.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -190,6 +190,18 @@ pub enum SequenceNotePlacement {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub enum SequenceBlockKind {
+    Loop,
+    Rect,
+    Opt,
+    Alt,
+    Par,
+    ParOver,
+    Critical,
+    Break,
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub enum SequenceEvent {
     Message {
         from: String,
@@ -209,6 +221,16 @@ pub enum SequenceEvent {
         participants: Vec<String>,
         placement: SequenceNotePlacement,
         text: String,
+    },
+    BlockStart {
+        kind: SequenceBlockKind,
+        label: String,
+    },
+    BlockBranch {
+        label: String,
+    },
+    BlockEnd {
+        kind: SequenceBlockKind,
     },
 }
 
@@ -259,6 +281,21 @@ pub enum LayoutedSequenceItem {
         width: f64,
         height: f64,
         text: String,
+    },
+    BlockFrame {
+        kind: SequenceBlockKind,
+        label: String,
+        depth: usize,
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+    },
+    BlockDivider {
+        label: String,
+        x: f64,
+        y: f64,
+        width: f64,
     },
 }
 
@@ -813,8 +850,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn version_is_0_4_0() {
-        assert_eq!(VERSION, "0.4.0");
+    fn version_is_0_5_0() {
+        assert_eq!(VERSION, "0.5.0");
     }
     #[test]
     fn default_direction_is_tb() {

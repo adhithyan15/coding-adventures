@@ -35,8 +35,8 @@ Mermaid
 
 The sequence subset includes participants and actors, aliases, standard solid
 and dotted message arrows, bidirectional/cross/point arrowheads, notes,
-activations, titles, and automatic numbering. Control blocks and advanced
-participant metadata remain explicit compatibility gaps.
+activations, titles, automatic numbering, and nested control blocks with branch
+separators. Advanced participant metadata remains an explicit compatibility gap.
 
 All other Mermaid 11.16.1 family headers are recognized and return an explicit
 `recognized but not implemented` error until their grammar, lowering, layout,

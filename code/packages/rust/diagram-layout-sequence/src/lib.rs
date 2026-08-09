@@ -3,11 +3,11 @@
 use std::collections::HashMap;
 
 use diagram_ir::{
-    LayoutedSequenceDiagram, LayoutedSequenceItem, SequenceDiagram, SequenceEvent,
-    SequenceNotePlacement,
+    LayoutedSequenceDiagram, LayoutedSequenceItem, SequenceBlockKind, SequenceDiagram,
+    SequenceEvent, SequenceNotePlacement,
 };
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -16,6 +16,20 @@ const MIN_LANE_W: f64 = 150.0;
 const EVENT_H: f64 = 58.0;
 const NOTE_H: f64 = 38.0;
 const ACTIVATION_W: f64 = 12.0;
+const BLOCK_HEADER_H: f64 = 48.0;
+const BLOCK_BRANCH_H: f64 = 48.0;
+const BLOCK_BOTTOM_PAD: f64 = 14.0;
+const BLOCK_AFTER_GAP: f64 = 12.0;
+const BLOCK_INSET: f64 = 10.0;
+
+struct BlockFrameState {
+    kind: SequenceBlockKind,
+    label: String,
+    depth: usize,
+    x: f64,
+    y: f64,
+    width: f64,
+}
 
 /// Lay out an ordered sequence diagram. Participant order is semantic and is
 /// therefore retained exactly rather than optimized by the layout engine.
@@ -52,6 +66,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
     let mut y = event_start;
     let mut activation_starts: HashMap<String, Vec<f64>> = HashMap::new();
     let mut message_number = 0usize;
+    let mut block_stack: Vec<BlockFrameState> = Vec::new();
 
     for event in &diagram.events {
         match event {
@@ -150,6 +165,47 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     text: text.clone(),
                 });
                 y += NOTE_H + 20.0;
+            }
+            SequenceEvent::BlockStart { kind, label } => {
+                let depth = block_stack.len();
+                let x = MARGIN + depth as f64 * BLOCK_INSET;
+                block_stack.push(BlockFrameState {
+                    kind: kind.clone(),
+                    label: label.clone(),
+                    depth,
+                    x,
+                    y,
+                    width: (width - x * 2.0).max(120.0),
+                });
+                y += BLOCK_HEADER_H;
+            }
+            SequenceEvent::BlockBranch { label } => {
+                if let Some(frame) = block_stack.last() {
+                    items.push(LayoutedSequenceItem::BlockDivider {
+                        label: label.clone(),
+                        x: frame.x,
+                        y,
+                        width: frame.width,
+                    });
+                }
+                y += BLOCK_BRANCH_H;
+            }
+            SequenceEvent::BlockEnd { kind } => {
+                if let Some(frame) = block_stack.pop() {
+                    debug_assert_eq!(&frame.kind, kind);
+                    y += BLOCK_BOTTOM_PAD;
+                    let frame_height = y - frame.y;
+                    items.push(LayoutedSequenceItem::BlockFrame {
+                        kind: frame.kind,
+                        label: frame.label,
+                        depth: frame.depth,
+                        x: frame.x,
+                        y: frame.y,
+                        width: frame.width,
+                        height: frame_height,
+                    });
+                    y += BLOCK_AFTER_GAP;
+                }
             }
         }
     }
@@ -282,5 +338,58 @@ mod tests {
         assert!(layout.items.iter().any(
             |item| matches!(item, LayoutedSequenceItem::Activation { y1, y2, .. } if y2 > y1)
         ));
+    }
+
+    #[test]
+    fn lays_out_nested_block_frames_and_branch_dividers() {
+        let diagram = SequenceDiagram {
+            title: None,
+            auto_number: false,
+            participants: vec![participant("Alice"), participant("Bob")],
+            events: vec![
+                SequenceEvent::BlockStart {
+                    kind: SequenceBlockKind::Alt,
+                    label: "Ready".into(),
+                },
+                SequenceEvent::BlockStart {
+                    kind: SequenceBlockKind::Loop,
+                    label: "Retry".into(),
+                },
+                SequenceEvent::Message {
+                    from: "Alice".into(),
+                    to: "Bob".into(),
+                    label: "Ping".into(),
+                    line_style: SequenceLineStyle::Solid,
+                    arrowhead: SequenceArrowhead::Filled,
+                    bidirectional: false,
+                    activate: false,
+                    deactivate: false,
+                },
+                SequenceEvent::BlockEnd {
+                    kind: SequenceBlockKind::Loop,
+                },
+                SequenceEvent::BlockBranch {
+                    label: "Fallback".into(),
+                },
+                SequenceEvent::BlockEnd {
+                    kind: SequenceBlockKind::Alt,
+                },
+            ],
+        };
+        let layout = layout_sequence_diagram(&diagram);
+        let frames: Vec<_> = layout
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedSequenceItem::BlockFrame {
+                    depth, x, height, ..
+                } => Some((*depth, *x, *height)),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(frames.len(), 2);
+        assert!(frames.iter().any(|(depth, _, _)| *depth == 1));
+        assert!(frames.iter().all(|(_, _, height)| *height > BLOCK_HEADER_H));
+        assert!(layout.items.iter().any(|item| matches!(item, LayoutedSequenceItem::BlockDivider { label, .. } if label == "Fallback")));
     }
 }

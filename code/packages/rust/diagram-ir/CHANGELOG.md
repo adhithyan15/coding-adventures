@@ -1,5 +1,10 @@
 # Changelog — diagram-ir
 
+## 0.5.0
+
+- Added nested sequence block start, branch, and end events.
+- Added layouted sequence frames and branch dividers.
+
 ## 0.4.0
 
 - Added semantic sequence participants, messages, notes, and activation events.

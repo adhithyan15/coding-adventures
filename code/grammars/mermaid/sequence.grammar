@@ -1,8 +1,9 @@
 # @version 1
 # Mermaid 11.16.1 sequence diagram parser grammar: initial native subset.
 
-document = { NEWLINE } HEADER { NEWLINE | statement } EOF ;
-statement = participant_stmt | message_stmt | activation_stmt | note_stmt | title_stmt | autonumber_stmt ;
+document = { NEWLINE } HEADER body EOF ;
+body = { NEWLINE | statement } ;
+statement = participant_stmt | message_stmt | activation_stmt | note_stmt | title_stmt | autonumber_stmt | control_block ;
 
 participant_stmt = ( "participant" | "actor" ) identifier [ "as" text ] ;
 message_stmt = identifier message_arrow [ PLUS | MINUS ] identifier COLON [ text ] ;
@@ -10,6 +11,12 @@ activation_stmt = ( "activate" | "deactivate" ) identifier ;
 note_stmt = "note" ( ( "left" | "right" ) "of" identifier | "over" actor_pair ) COLON text ;
 title_stmt = "title" text ;
 autonumber_stmt = "autonumber" [ "off" | identifier [ identifier ] ] ;
+
+control_block = simple_block | alt_block | par_block | critical_block ;
+simple_block = ( "loop" | "rect" | "opt" | "break" ) [ text ] NEWLINE body "end" ;
+alt_block = "alt" [ text ] NEWLINE body { "else" [ text ] NEWLINE body } "end" ;
+par_block = ( "par" | "par_over" ) [ text ] NEWLINE body { "and" [ text ] NEWLINE body } "end" ;
+critical_block = "critical" [ text ] NEWLINE body { "option" [ text ] NEWLINE body } "end" ;
 
 actor_pair = identifier [ COMMA identifier ] ;
 message_arrow = SOLID_OPEN_ARROW | DOTTED_OPEN_ARROW | SOLID_FILLED_ARROW | DOTTED_FILLED_ARROW | BIDIRECTIONAL_SOLID | BIDIRECTIONAL_DOTTED | SOLID_CROSS_ARROW | DOTTED_CROSS_ARROW | SOLID_POINT_ARROW | DOTTED_POINT_ARROW ;
