@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0 - 2026-08-09
+
+- Preserve central-connection endpoint markers through sequence layout.
+
 ## 0.5.0 - 2026-08-09
 
 - Preserve half-arrow style and endpoint semantics through sequence layout.

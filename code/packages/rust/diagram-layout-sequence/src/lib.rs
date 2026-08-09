@@ -7,7 +7,7 @@ use diagram_ir::{
     SequenceEvent, SequenceNotePlacement,
 };
 
-pub const VERSION: &str = "0.5.0";
+pub const VERSION: &str = "0.6.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -98,6 +98,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 line_style,
                 arrowhead,
                 bidirectional,
+                central_connection,
                 activate,
                 deactivate,
             } => {
@@ -116,6 +117,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     line_style: line_style.clone(),
                     arrowhead: arrowhead.clone(),
                     bidirectional: *bidirectional,
+                    central_connection: central_connection.clone(),
                     number: diagram.auto_number.then_some(message_number),
                 });
                 if *activate {
@@ -349,8 +351,8 @@ fn close_activation(
 mod tests {
     use super::*;
     use diagram_ir::{
-        DiagramLabel, SequenceArrowhead, SequenceLineStyle, SequenceParticipant,
-        SequenceParticipantKind,
+        DiagramLabel, SequenceArrowhead, SequenceCentralConnection, SequenceLineStyle,
+        SequenceParticipant, SequenceParticipantKind,
     };
 
     fn participant(id: &str) -> SequenceParticipant {
@@ -377,6 +379,7 @@ mod tests {
                 line_style: SequenceLineStyle::Solid,
                 arrowhead: SequenceArrowhead::Filled,
                 bidirectional: false,
+                central_connection: SequenceCentralConnection::None,
                 activate: false,
                 deactivate: false,
             }],
@@ -421,6 +424,7 @@ mod tests {
                 line_style: SequenceLineStyle::Dotted,
                 arrowhead: SequenceArrowhead::ReverseStickBottom,
                 bidirectional: false,
+                central_connection: SequenceCentralConnection::Both,
                 activate: false,
                 deactivate: false,
             }],
@@ -431,6 +435,7 @@ mod tests {
             LayoutedSequenceItem::Message {
                 line_style: SequenceLineStyle::Dotted,
                 arrowhead: SequenceArrowhead::ReverseStickBottom,
+                central_connection: SequenceCentralConnection::Both,
                 ..
             }
         )));
@@ -483,6 +488,7 @@ mod tests {
                     line_style: SequenceLineStyle::Solid,
                     arrowhead: SequenceArrowhead::Filled,
                     bidirectional: false,
+                    central_connection: SequenceCentralConnection::None,
                     activate: false,
                     deactivate: false,
                 },
@@ -529,6 +535,7 @@ mod tests {
                     line_style: SequenceLineStyle::Solid,
                     arrowhead: SequenceArrowhead::Filled,
                     bidirectional: false,
+                    central_connection: SequenceCentralConnection::None,
                     activate: false,
                     deactivate: false,
                 },
@@ -542,6 +549,7 @@ mod tests {
                     line_style: SequenceLineStyle::Solid,
                     arrowhead: SequenceArrowhead::Filled,
                     bidirectional: false,
+                    central_connection: SequenceCentralConnection::None,
                     activate: false,
                     deactivate: false,
                 },

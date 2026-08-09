@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.8.0";
+pub const VERSION: &str = "0.9.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -111,7 +111,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.8.0");
+        assert_eq!(VERSION, "0.9.0");
     }
 
     #[test]
@@ -368,5 +368,19 @@ A\\-B: reverse stick bottom
         assert!(names.contains(&"SOLID_STICK_BOTTOM"));
         assert!(names.contains(&"SOLID_REVERSE_FILLED_TOP"));
         assert!(names.contains(&"SOLID_REVERSE_STICK_BOTTOM"));
+    }
+
+    #[test]
+    fn tokenizes_sequence_central_connections() {
+        let tokens = tokenize_mermaid_sequence(
+            "sequenceDiagram\nAlice->>()John: destination\nAlice()->>John: source\nJohn()->>()Alice: both\n",
+        );
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| token.type_name.as_deref() == Some("CENTRAL"))
+                .count(),
+            4
+        );
     }
 }

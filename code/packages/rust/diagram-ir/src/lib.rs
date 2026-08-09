@@ -1,6 +1,6 @@
 //! diagram-ir v0.7.0 — DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.9.0";
+pub const VERSION: &str = "0.10.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -205,6 +205,14 @@ pub enum SequenceArrowhead {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub enum SequenceCentralConnection {
+    None,
+    Source,
+    Destination,
+    Both,
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub enum SequenceNotePlacement {
     LeftOf,
     RightOf,
@@ -232,6 +240,7 @@ pub enum SequenceEvent {
         line_style: SequenceLineStyle,
         arrowhead: SequenceArrowhead,
         bidirectional: bool,
+        central_connection: SequenceCentralConnection,
         activate: bool,
         deactivate: bool,
     },
@@ -305,6 +314,7 @@ pub enum LayoutedSequenceItem {
         line_style: SequenceLineStyle,
         arrowhead: SequenceArrowhead,
         bidirectional: bool,
+        central_connection: SequenceCentralConnection,
         number: Option<usize>,
     },
     Activation {
@@ -893,8 +903,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn version_is_0_9_0() {
-        assert_eq!(VERSION, "0.9.0");
+    fn version_is_0_10_0() {
+        assert_eq!(VERSION, "0.10.0");
     }
     #[test]
     fn default_direction_is_tb() {

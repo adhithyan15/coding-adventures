@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.0
+
+- Parse source, destination, and dual sequence central connections.
+
 ## 0.9.0
 
 - Parse normal and reverse filled/stick half arrows into sequence IR.

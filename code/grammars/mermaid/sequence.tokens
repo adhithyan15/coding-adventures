@@ -34,6 +34,7 @@ SOLID_FILLED_ARROW       = "->>"
 SOLID_OPEN_ARROW         = "->"
 SOLID_CROSS_ARROW        = "-x"
 SOLID_POINT_ARROW        = "-)"
+CENTRAL                  = "()"
 COLON                    = ":"
 COLOR                    = /rgba?\([^\)\r\n]*\)/
 CONFIG                   = /@\{[^\}\r\n]*\}/

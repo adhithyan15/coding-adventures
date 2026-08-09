@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.9.0";
+pub const VERSION: &str = "0.10.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -448,10 +448,11 @@ use diagram_ir::{
     Axis, AxisKind, ChartDiagram, ChartKind, ChartOrientation, ChartSeries, Compartment,
     CompartmentKind, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType, GitDiagram,
     GitEvent, PieSlice, RelKind, SankeyFlow, SankeyNode, SequenceArrowhead, SequenceBlockKind,
-    SequenceDiagram, SequenceEvent, SequenceLineStyle, SequenceNotePlacement, SequenceParticipant,
-    SequenceParticipantGroup, SequenceParticipantKind, SeriesKind, StructuralDiagram,
-    StructuralGroup, StructuralKind, StructuralNode, StructuralNodeKind, StructuralRelationship,
-    TaskStart, TaskStatus, TemporalBody, TemporalDiagram, TemporalKind,
+    SequenceCentralConnection, SequenceDiagram, SequenceEvent, SequenceLineStyle,
+    SequenceNotePlacement, SequenceParticipant, SequenceParticipantGroup, SequenceParticipantKind,
+    SeriesKind, StructuralDiagram, StructuralGroup, StructuralKind, StructuralNode,
+    StructuralNodeKind, StructuralRelationship, TaskStart, TaskStatus, TemporalBody,
+    TemporalDiagram, TemporalKind,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -1334,6 +1335,7 @@ fn parse_sequence_message(
     participant_indices: &mut HashMap<String, usize>,
 ) -> Result<(), ParseError> {
     let from = take_sequence_identifier(cursor)?;
+    let central_source = cursor.consume_if("CENTRAL").is_some();
     let arrow = cursor.advance().clone();
     let (line_style, arrowhead, bidirectional) = match token_name(&arrow) {
         "SOLID_OPEN_ARROW" => (SequenceLineStyle::Solid, SequenceArrowhead::Open, false),
@@ -1429,6 +1431,13 @@ fn parse_sequence_message(
             ))
         }
     };
+    let central_destination = cursor.consume_if("CENTRAL").is_some();
+    let central_connection = match (central_source, central_destination) {
+        (false, false) => SequenceCentralConnection::None,
+        (true, false) => SequenceCentralConnection::Source,
+        (false, true) => SequenceCentralConnection::Destination,
+        (true, true) => SequenceCentralConnection::Both,
+    };
     let activate = cursor.consume_if("PLUS").is_some();
     let deactivate = if activate {
         false
@@ -1449,6 +1458,7 @@ fn parse_sequence_message(
         line_style,
         arrowhead,
         bidirectional,
+        central_connection,
         activate,
         deactivate,
     });
@@ -3012,6 +3022,32 @@ B//-A: reverse stick top
         assert_eq!(arrows[2].0, &SequenceArrowhead::StickTop);
         assert_eq!(arrows[3].0, &SequenceArrowhead::ReverseStickTop);
     }
+
+    #[test]
+    fn sequence_parses_central_connection_endpoints() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nAlice->>()John: destination\nAlice()->>John: source\nJohn()->>()Alice: both\n",
+        )
+        .unwrap();
+        let connections: Vec<_> = diagram
+            .events
+            .iter()
+            .filter_map(|event| match event {
+                SequenceEvent::Message {
+                    central_connection, ..
+                } => Some(central_connection),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(
+            connections,
+            vec![
+                &SequenceCentralConnection::Destination,
+                &SequenceCentralConnection::Source,
+                &SequenceCentralConnection::Both,
+            ]
+        );
+    }
 }
 #[cfg(test)]
 mod tests {
@@ -3028,7 +3064,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.9.0");
+        assert_eq!(crate::VERSION, "0.10.0");
     }
 
     #[test]
