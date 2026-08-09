@@ -1629,6 +1629,27 @@ Q1 col base emit fast
     );
   });
 
+  it.each([
+    ["0", 0.0],
+    ["0.5", 0.5],
+  ])("parses BJT forward-bias depletion coefficient FC=%s", (value, expected) => {
+    const parsed = parseNetlist(`.model fast NPN(FC=${value})\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      forwardBiasDepletionCoefficient: expected,
+    });
+  });
+
+  it.each(["-0.1", "1", "1e999"])(
+    "rejects invalid BJT forward-bias depletion coefficient FC=%s",
+    (value) => {
+      expect(() => parseNetlist(`.model fast NPN(FC=${value})`)).toThrow(
+        "BJT FC must be finite and in [0, 1)",
+      );
+    },
+  );
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)

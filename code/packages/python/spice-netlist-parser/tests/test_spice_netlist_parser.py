@@ -1560,6 +1560,25 @@ def test_rejects_invalid_bjt_base_collector_grading_coefficient(
         parse_netlist(f".model fast NPN({alias}={value})")
 
 
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("0.5", 0.5)])
+def test_parse_bjt_forward_bias_depletion_coefficient(
+    value: str, expected: float
+) -> None:
+    parsed = parse_netlist(f".model fast NPN(FC={value})\nQ1 col base emit fast")
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Fc == expected
+
+
+@pytest.mark.parametrize("value", ["-0.1", "1", "1e999"])
+def test_rejects_invalid_bjt_forward_bias_depletion_coefficient(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match=r"BJT FC must be finite and in \[0, 1\)"
+    ):
+        parse_netlist(f".model fast NPN(FC={value})")
+
+
 def test_parse_jfet_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
