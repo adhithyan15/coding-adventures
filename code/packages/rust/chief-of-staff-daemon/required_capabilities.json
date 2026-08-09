@@ -12,8 +12,8 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "configured config, public keys, packages, credential, and state paths",
-      "justification": "Loads bounded configuration and composes the existing keyring, package verification, credential, and durable registry adapters."
+      "target": "configured config, public keys, private channel keys, packages, credential, and state paths",
+      "justification": "Loads bounded configuration and composes the keyring, owner-only channel-key provisioning, package verification, credential, and durable registry adapters."
     },
     {
       "category": "fs",
@@ -32,6 +32,12 @@
       "action": "listen",
       "target": "configured loopback address",
       "justification": "Serves the authenticated local WebSocket control API."
+    },
+    {
+      "category": "net",
+      "action": "connect",
+      "target": "explicitly configured Ollama endpoints",
+      "justification": "Executes exact authorized Level 1 completion requests without probing endpoints during startup."
     },
     {
       "category": "proc",

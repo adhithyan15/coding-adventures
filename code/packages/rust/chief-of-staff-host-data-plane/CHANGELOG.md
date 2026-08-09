@@ -1,9 +1,9 @@
 # Changelog
 
-- Expose exact model-registry cardinality without exposing provider clients.
-
 ## Unreleased
 
+- Expose exact model-registry cardinality without exposing provider clients.
+- Document production daemon injection for non-empty typed authority declarations.
 - Add an exact zeroizing pipeline/agent/channel key registry for safe production
   provisioning adapters, with fail-closed duplicate, direction, and identity scope.
 

@@ -30,10 +30,10 @@ and releases fresh short-lived crypto owners only when the current durable bindi
 matches all three identities. It deliberately does not read files or define a
 vault format; those are replaceable provisioning adapters.
 
-The production daemon still injects the unavailable service because its closed
-configuration and pipeline-wiring APIs do not yet provision channel custody or
-model providers. A later composition PR must add those explicit operator-owned
-inputs rather than inventing secret storage or a default network endpoint here.
+The production daemon injects this service only for a non-empty typed data-plane
+configuration. It provisions explicit operator-owned channel-key files and exact
+Ollama clients; absent or empty declarations retain the unavailable service. No
+secret format or default network endpoint is invented here.
 
 ## Validation
 

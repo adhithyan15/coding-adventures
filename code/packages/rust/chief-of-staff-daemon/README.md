@@ -2,8 +2,9 @@
 
 Concrete, dependency-free-at-runtime executable for the D18 Chief of Staff
 orchestrator. It composes the repository-owned configuration, credential,
-package trust, storage, process supervision, control API, WebSocket runtime,
-reconciliation, and shutdown packages without adding new policy.
+package trust, storage, process supervision, exact data-plane authorities,
+control API, WebSocket runtime, reconciliation, and shutdown packages without
+adding new policy.
 
 Run with the spec-default config path:
 
@@ -26,6 +27,13 @@ interval. Channel topology mutation remains denied until the Trust Checker is
 implemented. Host launch bindings come only from the shared durable pipeline
 binding store; absent, stale, destroyed, directionally unauthorized, or
 cross-pipeline records fail before process creation.
+
+A non-empty optional `[data_plane]` table is provisioned before serving. Raw
+32-byte channel secrets are loaded through the owner-only no-link reader, model
+tags resolve only to their explicitly configured Ollama clients, and publishes
+receive fresh UUID-v7 identities plus process-monotonic timestamps. Startup does
+not probe model endpoints. An absent or empty table preserves the fail-closed
+unavailable service for existing control-plane-only deployments.
 
 SIGINT, SIGTERM, Ctrl+C, Ctrl+Break, console close, logoff, and system shutdown
 request a cooperative listener stop. Dropping the composed process supervisor
