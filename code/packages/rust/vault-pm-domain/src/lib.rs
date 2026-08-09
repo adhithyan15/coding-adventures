@@ -342,6 +342,45 @@ impl<T: Ord + Clone> ObservedSet<T> {
             .collect()
     }
 
+    /// Iterate every retained value, including values hidden by removals.
+    ///
+    /// Persistent codecs must use this together with
+    /// [`Self::retained_add_operations`] and
+    /// [`Self::retained_removal_operations`] instead of serializing only
+    /// [`Self::values`]. Dropping removed observations can resurrect a value
+    /// after a later merge.
+    pub fn retained_values(&self) -> impl ExactSizeIterator<Item = &T> {
+        self.adds.keys()
+    }
+
+    /// Iterate the retained add operations for one exact retained value.
+    ///
+    /// The iterator is deterministically ordered. An unknown value produces
+    /// an empty iterator.
+    pub fn retained_add_operations<'a>(
+        &'a self,
+        value: &T,
+    ) -> impl Iterator<Item = OperationId> + 'a {
+        self.adds
+            .get(value)
+            .into_iter()
+            .flat_map(|operations| operations.iter().copied())
+    }
+
+    /// Iterate the retained removal tombstones for one exact retained value.
+    ///
+    /// The iterator is deterministically ordered. An unknown or never-removed
+    /// value produces an empty iterator.
+    pub fn retained_removal_operations<'a>(
+        &'a self,
+        value: &T,
+    ) -> impl Iterator<Item = OperationId> + 'a {
+        self.removals
+            .get(value)
+            .into_iter()
+            .flat_map(|operations| operations.iter().copied())
+    }
+
     /// Return the number of distinct values retained on wire, including absent values.
     pub fn retained_value_count(&self) -> usize {
         self.adds.len()
@@ -1551,6 +1590,39 @@ mod tests {
             set.observe_removal(&"missing".to_string(), operation(1)),
             Err(DomainError::InvalidObservedSet)
         );
+    }
+
+    #[test]
+    fn retained_observations_round_trip_without_resurrection() {
+        let mut source = ObservedSet::new();
+        source.add("a".to_string(), operation(1)).unwrap();
+        source.add("a".to_string(), operation(2)).unwrap();
+        source.add("b".to_string(), operation(3)).unwrap();
+        source.remove(&"a".to_string());
+        source.add("a".to_string(), operation(4)).unwrap();
+        source.remove(&"b".to_string());
+
+        let mut reconstructed = ObservedSet::new();
+        for value in source.retained_values() {
+            for operation in source.retained_add_operations(value) {
+                reconstructed.add(value.clone(), operation).unwrap();
+            }
+            for operation in source.retained_removal_operations(value) {
+                reconstructed.observe_removal(value, operation).unwrap();
+            }
+        }
+
+        assert_eq!(reconstructed, source);
+        assert!(reconstructed.contains(&"a".to_string()));
+        assert!(!reconstructed.contains(&"b".to_string()));
+        assert!(source
+            .retained_add_operations(&"missing".to_string())
+            .next()
+            .is_none());
+        assert!(source
+            .retained_removal_operations(&"missing".to_string())
+            .next()
+            .is_none());
     }
 
     #[test]

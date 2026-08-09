@@ -102,6 +102,13 @@ the next entry. A persistent decoder must rebuild through `add` and
 validate them afterward. A bound failure is closed and does not return partial
 state.
 
+A persistent encoder must iterate `retained_values` and, for each value, the
+deterministically ordered `retained_add_operations` and
+`retained_removal_operations`. The present-only `values` projection is for UI
+and filtering, not persistence. Omitting a retained add or tombstone is data
+loss and can resurrect a removed value after a later merge. These persistence
+iterators are explicit accessors and do not alter redacted diagnostics.
+
 Tombstones and their matching adds are retained by default.
 `compact_stable_removals` may discard a removed pair only when the repository
 asserts that every retained head observed the removal and no authorized
@@ -227,9 +234,10 @@ V1 tests must cover:
 14. bounded merge rejection without partial state; and
 15. compaction retaining unproven tombstones and preserving later adds.
 
-Phase 0 evidence on 2026-08-09 is 29 passing unit tests and 527/532 executable
-lines (99.06%) under Tarpaulin's LLVM engine, including the retained-state,
-collision, dangling-tombstone, merge-amplification, and compaction cases.
+Phase 0 evidence on 2026-08-09 is 30 passing unit tests and 537/542 executable
+lines (99.08%) under Tarpaulin's LLVM engine, including the retained-state,
+collision, dangling-tombstone, merge-amplification, persistence-round-trip, and
+compaction cases.
 
 ## 11. Security properties and non-goals
 
