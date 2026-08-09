@@ -959,21 +959,31 @@ fn emit_styled_layout_container_qml(
 
     let inset = qml_padding(props).unwrap_or_else(|| "0".to_string());
     let paint_lines = qml_rectangle_paint_lines(props);
+    let has_fixed_width = style_prop(props, "width")
+        .and_then(qml_px_or_none)
+        .is_some();
+    let has_fixed_height = style_prop(props, "height")
+        .and_then(qml_px_or_none)
+        .is_some();
     let mut out = String::new();
     writeln!(out, "{pad}Rectangle {{").unwrap();
     for line in qml_layout_size_lines(props) {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
-    writeln!(
-        out,
-        "{inner_pad}implicitWidth: childrenRect.x + childrenRect.width + {inset}"
-    )
-    .unwrap();
-    writeln!(
-        out,
-        "{inner_pad}implicitHeight: childrenRect.y + childrenRect.height + {inset}"
-    )
-    .unwrap();
+    if !has_fixed_width {
+        writeln!(
+            out,
+            "{inner_pad}implicitWidth: childrenRect.x + childrenRect.width + {inset}"
+        )
+        .unwrap();
+    }
+    if !has_fixed_height {
+        writeln!(
+            out,
+            "{inner_pad}implicitHeight: childrenRect.y + childrenRect.height + {inset}"
+        )
+        .unwrap();
+    }
     if paint_lines.iter().all(|line| !line.starts_with("color:")) {
         writeln!(out, "{inner_pad}color: \"transparent\"").unwrap();
     }
@@ -8409,6 +8419,56 @@ mod tests {
             out.contains("spacing: 16"),
             "missing native spacing:\n{out}"
         );
+    }
+
+    #[test]
+    fn styled_wrapper_does_not_assign_fixed_dimensions_twice() {
+        let style = StyleDef {
+            component_name: "Sidebar".to_string(),
+            parts: vec![PartStyle {
+                name: "sidebar".to_string(),
+                base: vec![
+                    sp("width", "236px"),
+                    sp("height", "480px"),
+                    sp("padding", "20px"),
+                    sp("background", "#1a1714"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let layout = LayoutDef {
+            component_name: "Sidebar".to_string(),
+            root: LayoutNode {
+                tag: "Column".to_string(),
+                part_name: Some("sidebar".to_string()),
+                props: vec![],
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![lp("content", LayoutPropValue::String("Menu".to_string()))],
+                    children: vec![],
+                }],
+            },
+        };
+        let out = from_pipeline(&component("Sidebar", vec![], vec![]), &layout, &style)
+            .unwrap()
+            .output;
+
+        assert_eq!(
+            out.matches("implicitWidth:").count(),
+            1,
+            "fixed width and content-derived width must not both be emitted:\n{out}"
+        );
+        assert_eq!(
+            out.matches("implicitHeight:").count(),
+            1,
+            "fixed height and content-derived height must not both be emitted:\n{out}"
+        );
+        assert!(out.contains("implicitWidth: 236"));
+        assert!(out.contains("Layout.preferredWidth: 236"));
+        assert!(out.contains("implicitHeight: 480"));
+        assert!(out.contains("Layout.preferredHeight: 480"));
     }
 
     #[test]
