@@ -1579,6 +1579,39 @@ def test_rejects_invalid_bjt_forward_bias_depletion_coefficient(value: str) -> N
         parse_netlist(f".model fast NPN(FC={value})")
 
 
+@pytest.mark.parametrize("alias", ["IKF", "IK"])
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("2m", 2.0e-3)])
+def test_parse_bjt_forward_beta_rolloff_current(
+    alias: str, value: str, expected: float
+) -> None:
+    parsed = parse_netlist(
+        f".model fast NPN({alias}={value})\nQ1 col base emit fast"
+    )
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Ikf == expected
+
+
+def test_bjt_ikf_takes_precedence_over_ik() -> None:
+    parsed = parse_netlist(".model fast NPN(IK=1m IKF=2m)\nQ1 col base emit fast")
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Ikf == 2.0e-3
+
+
+@pytest.mark.parametrize("alias", ["IKF", "IK"])
+@pytest.mark.parametrize("value", ["-1m", "1e999"])
+def test_rejects_invalid_bjt_forward_beta_rolloff_current(
+    alias: str, value: str
+) -> None:
+    with pytest.raises(
+        NetlistParseError, match="BJT IKF must be finite and non-negative"
+    ):
+        parse_netlist(f".model fast NPN({alias}={value})")
+
+
 def test_parse_jfet_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
