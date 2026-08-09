@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Normalize hyphen and underscore separators in supported model type aliases.
 - Normalize the `PCH` model type alias to canonical `PMOS` cards.
 - Normalize the `NCH` model type alias to canonical `NMOS` cards.
 - Normalize the `PJ` model type alias to canonical `PJF` cards.

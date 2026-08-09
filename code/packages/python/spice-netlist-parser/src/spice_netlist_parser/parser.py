@@ -1977,7 +1977,7 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
     kind: str
     params_text: str
     joined_tail = " ".join(fields[2:]).strip()
-    inline = re.match(r"^([A-Za-z][A-Za-z0-9_]*)\s*(?:\((.*)\))?$", joined_tail)
+    inline = re.match(r"^([A-Za-z][A-Za-z0-9_-]*)\s*(?:\((.*)\))?$", joined_tail)
     if len(fields) == 3 and inline is not None:
         kind = inline.group(1).upper()
         params_text = inline.group(2) or ""
@@ -1986,15 +1986,16 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
         params_text = " ".join(fields[3:]).strip()
         if params_text.startswith("(") and params_text.endswith(")"):
             params_text = params_text[1:-1]
-    if kind == "DIODE":
+    kind_key = kind.replace("-", "").replace("_", "")
+    if kind_key == "DIODE":
         kind = "D"
-    elif kind in {"NJFET", "NJ"}:
+    elif kind_key in {"NJFET", "NJ"}:
         kind = "NJF"
-    elif kind in {"PJFET", "PJ"}:
+    elif kind_key in {"PJFET", "PJ"}:
         kind = "PJF"
-    elif kind == "NCH":
+    elif kind_key == "NCH":
         kind = "NMOS"
-    elif kind == "PCH":
+    elif kind_key == "PCH":
         kind = "PMOS"
     params = _parse_model_params(params_text)
     if kind == "D":

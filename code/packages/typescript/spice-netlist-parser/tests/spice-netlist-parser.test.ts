@@ -2763,6 +2763,26 @@ M1 out gate 0 0 nfast W=2u L=180n
     expect(element.params.KP).toBeCloseTo(120.0e-6, 12);
   });
 
+  it("normalizes model type alias separators", () => {
+    const parsed = parseNetlist(
+      ".model jfast n-jfet(BETA=2m)\n" +
+        ".model pfast p_ch(VTO=0.4 KP=120u)\n" +
+        "J1 drain gate source jfast\n" +
+        "M1 d g s b pfast",
+    );
+
+    expect(parsed.models.get("jfast")?.kind).toBe("NJF");
+    expect(parsed.models.get("pfast")?.kind).toBe("PMOS");
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      polarity: "NJF",
+    });
+    expect(parsed.circuit.elements()[1]).toMatchObject({
+      kind: "mosfet",
+      type: "PMOS",
+    });
+  });
+
   it("parses PMOS MOSFET aliases", () => {
     const parsed = parseNetlist(`
 .model pfast PMOS(VTO=0.4 KP=120u NSUB=1.2)

@@ -4760,12 +4760,18 @@ the Rust, Python, and TypeScript surfaces together.
      lowering.
 
 482. Python and TypeScript Berkeley SPICE P-channel MOS model-type alias parity.
-   - Status: implemented in this PCH model-type normalization slice.
+   - Status: completed in PR 10167.
    - Both parser facades normalize the engine-supported `PCH` model type alias
      to canonical `PMOS`, preserving MOS Level-1 validation and instance
      lowering.
    - This completes the audited engine-advertised `DIODE`, `NJFET`, `NJ`,
      `PJFET`, `PJ`, `NCH`, and `PCH` model-type alias set.
+
+483. Python and TypeScript Berkeley SPICE model-type separator normalization parity.
+   - Status: implemented in this model-type separator normalization slice.
+   - Both parser facades mirror the engine type-key contract for supported
+     aliases by ignoring hyphen and underscore separators, including the
+     engine-tested `n-jfet` spelling, while preserving unknown model kinds.
 
 ## Backlog
 
