@@ -1093,6 +1093,21 @@ impl Tokenizer {
                         .trim_end_matches(')');
                     self.temporary_buffer.push_str(literal);
                 }
+                _ if action.starts_with("parse_error_if_appropriate_end_tag(")
+                    && action.ends_with(')') =>
+                {
+                    let code = action
+                        .trim_start_matches("parse_error_if_appropriate_end_tag(")
+                        .trim_end_matches(')')
+                        .to_string();
+                    if self.current_end_tag_matches_last_start_tag() {
+                        self.diagnostics.push(Diagnostic {
+                            code,
+                            position,
+                            state: state.to_string(),
+                        });
+                    }
+                }
                 _ if action.starts_with("parse_error(") && action.ends_with(')') => {
                     let code = action
                         .trim_start_matches("parse_error(")
@@ -1115,6 +1130,14 @@ impl Tokenizer {
             self.tokens
                 .push_back(Token::Text(std::mem::take(&mut self.text_buffer)));
         }
+    }
+
+    fn current_end_tag_matches_last_start_tag(&self) -> bool {
+        matches!(
+            self.current_token.as_ref(),
+            Some(CurrentToken::EndTag { name })
+                if self.last_start_tag.as_deref() == Some(name.as_str())
+        )
     }
 
     fn append_tag_name(&mut self, action: &str, ch: char, lowercase: bool) -> Result<()> {

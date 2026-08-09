@@ -4252,6 +4252,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
+                "parse_error_if_appropriate_end_tag(eof-in-tag)".to_string(),
                 "discard_current_token".to_string(),
                 "append_text(</)".to_string(),
                 "append_temporary_buffer_to_text".to_string(),
@@ -4389,6 +4390,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
+                "parse_error_if_appropriate_end_tag(eof-in-tag)".to_string(),
                 "discard_current_token".to_string(),
                 "append_text(</)".to_string(),
                 "append_temporary_buffer_to_text".to_string(),
@@ -4566,6 +4568,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
+                "parse_error_if_appropriate_end_tag(eof-in-tag)".to_string(),
                 "discard_current_token".to_string(),
                 "append_text(</)".to_string(),
                 "append_temporary_buffer_to_text".to_string(),
@@ -4615,6 +4618,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
+                "parse_error_if_appropriate_end_tag(eof-in-tag)".to_string(),
                 "discard_current_token".to_string(),
                 "append_text(</)".to_string(),
                 "append_temporary_buffer_to_text".to_string(),
@@ -4664,6 +4668,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
+                "parse_error_if_appropriate_end_tag(eof-in-tag)".to_string(),
                 "discard_current_token".to_string(),
                 "append_text(</)".to_string(),
                 "append_temporary_buffer_to_text".to_string(),
@@ -4743,6 +4748,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
+                "parse_error_if_appropriate_end_tag(eof-in-tag)".to_string(),
                 "discard_current_token".to_string(),
                 "append_text(</)".to_string(),
                 "append_temporary_buffer_to_text".to_string(),
@@ -4792,6 +4798,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
+                "parse_error_if_appropriate_end_tag(eof-in-tag)".to_string(),
                 "discard_current_token".to_string(),
                 "append_text(</)".to_string(),
                 "append_temporary_buffer_to_text".to_string(),
@@ -4841,6 +4848,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
+                "parse_error_if_appropriate_end_tag(eof-in-tag)".to_string(),
                 "discard_current_token".to_string(),
                 "append_text(</)".to_string(),
                 "append_temporary_buffer_to_text".to_string(),
@@ -4998,6 +5006,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
+                "parse_error_if_appropriate_end_tag(eof-in-tag)".to_string(),
                 "discard_current_token".to_string(),
                 "append_text(</)".to_string(),
                 "append_temporary_buffer_to_text".to_string(),
@@ -5052,6 +5061,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
+                "parse_error_if_appropriate_end_tag(eof-in-tag)".to_string(),
                 "discard_current_token".to_string(),
                 "append_text(</)".to_string(),
                 "append_temporary_buffer_to_text".to_string(),

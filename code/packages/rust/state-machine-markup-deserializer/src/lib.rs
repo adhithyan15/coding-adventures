@@ -770,6 +770,9 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
     if action.starts_with("parse_error(") && action.ends_with(')') {
         return Ok(());
     }
+    if action.starts_with("parse_error_if_appropriate_end_tag(") && action.ends_with(')') {
+        return Ok(());
+    }
     if action.starts_with("set_return_state(") && action.ends_with(')') {
         return Ok(());
     }

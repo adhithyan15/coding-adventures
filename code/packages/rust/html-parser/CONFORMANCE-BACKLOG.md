@@ -28,8 +28,8 @@ tree-construction cases and all 6,806 html5lib tokenizer cases with zero missing
 signatures and zero normalized skips. DOM output is complete, but diagnostic
 coverage is not:
 the checked 2,637-case tree corpus declares 6,243 errors across 2,183 cases.
-After the seeded fragment-context boundary diagnostic slice, 2,145 of those
-cases emit at least one lexer or parser diagnostic and 38 remain
+After the script end-tag EOF diagnostic slice, 2,159 of those cases emit at
+least one lexer or parser diagnostic and 24 remain
 uncovered.
 Another 139 cases emit diagnostics despite having no legacy `#errors` rows.
 These are reviewed rather than automatically removed: 89 are full-document
@@ -66,24 +66,23 @@ open table blocks adoption-agency recovery. Description-list item start tags
 now report when implied-end-tag recovery closes a non-current `dt` or `dd`,
 without flagging adjacent description-list items.
 
-The fresh 38-case residual inventory keeps the next concrete groups in this
-priority order: script-tokenizer EOF recovery; plaintext/frameset and
-document-tail boundaries; and the final fragment-context rows for colgroup
-text, an after-body token, and an HTML start tag in a seeded SVG context. The
-current corpus no longer has a silent table-shell, foreign end-tag,
-formatting-only, or general in-body group.
+The fresh 24-case residual inventory keeps the next concrete groups in this
+priority order: plaintext handling across document-shell, template, and
+frameset contexts; frameset and document-tail boundaries; and the final
+fragment-context rows for colgroup text, an after-body token, and an HTML start
+tag in a seeded SVG context. The current corpus no longer has a silent
+script-tokenizer, table-shell, foreign end-tag, formatting-only, or general
+in-body group.
 
 Prioritized work items:
 
-1. **Script-tokenizer EOF recovery.** Cover malformed script end tags that
-   reach EOF while the lexer is still assembling the tag.
-2. **Plaintext, frameset, and document-tail boundaries.** Cover EOF and stray
+1. **Plaintext, frameset, and document-tail boundaries.** Cover EOF and stray
    content diagnostics after plaintext and frameset transitions.
-3. **Fragment-context parsing.** Cover the final colgroup text, after-body, and
+2. **Fragment-context parsing.** Cover the final colgroup text, after-body, and
    foreign HTML start-tag rows. Invalid start and end tags targeting seeded
    fragment-context elements now report without mutating their synthetic
    shells.
-4. **Table, select, and template insertion modes.** Continue the algorithm
+3. **Table, select, and template insertion modes.** Continue the algorithm
    audit beyond the currently exercised diagnostic corpus.
    Non-whitespace table text now reports when it is foster-parented. The
    specialized SVG and MathML start-tag path now reports when table insertion
@@ -99,14 +98,14 @@ Prioritized work items:
    starts. Seeded table and foreign fragment-shell boundaries now report their
    required parse errors. The only silent table fragment row is non-whitespace
    text in a seeded `colgroup` context.
-5. **Adoption agency and active formatting.** Cover malformed formatting cases
+4. **Adoption agency and active formatting.** Cover malformed formatting cases
    without changing their now-conforming DOM output.
-6. **Diagnostic positions and error taxonomy.** Carry source positions into
+5. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
-7. **Input boundary review.** Document the Unicode-code-point parser boundary
+6. **Input boundary review.** Document the Unicode-code-point parser boundary
    and either add or explicitly separate byte decoding and encoding sniffing.
-8. **Algorithm and differential audit.** Map implemented states/modes to the
+7. **Algorithm and differential audit.** Map implemented states/modes to the
    current HTML Standard and add deterministic differential/fuzz coverage for
    branches not exercised by the upstream corpora.
 

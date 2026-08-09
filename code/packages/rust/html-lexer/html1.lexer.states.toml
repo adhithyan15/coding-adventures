@@ -1904,6 +1904,7 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = [
+  "parse_error_if_appropriate_end_tag(eof-in-tag)",
   "discard_current_token",
   "append_text(</)",
   "append_temporary_buffer_to_text",
@@ -1964,6 +1965,7 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = [
+  "parse_error_if_appropriate_end_tag(eof-in-tag)",
   "discard_current_token",
   "append_text(</)",
   "append_temporary_buffer_to_text",
@@ -2051,6 +2053,7 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = [
+  "parse_error_if_appropriate_end_tag(eof-in-tag)",
   "discard_current_token",
   "append_text(</)",
   "append_temporary_buffer_to_text",
@@ -2076,6 +2079,7 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = [
+  "parse_error_if_appropriate_end_tag(eof-in-tag)",
   "discard_current_token",
   "append_text(</)",
   "append_temporary_buffer_to_text",
@@ -2101,6 +2105,7 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = [
+  "parse_error_if_appropriate_end_tag(eof-in-tag)",
   "discard_current_token",
   "append_text(</)",
   "append_temporary_buffer_to_text",
@@ -2138,6 +2143,7 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = [
+  "parse_error_if_appropriate_end_tag(eof-in-tag)",
   "discard_current_token",
   "append_text(</)",
   "append_temporary_buffer_to_text",
@@ -2163,6 +2169,7 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = [
+  "parse_error_if_appropriate_end_tag(eof-in-tag)",
   "discard_current_token",
   "append_text(</)",
   "append_temporary_buffer_to_text",
@@ -2188,6 +2195,7 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = [
+  "parse_error_if_appropriate_end_tag(eof-in-tag)",
   "discard_current_token",
   "append_text(</)",
   "append_temporary_buffer_to_text",
@@ -2277,6 +2285,7 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = [
+  "parse_error_if_appropriate_end_tag(eof-in-tag)",
   "discard_current_token",
   "append_text(</)",
   "append_temporary_buffer_to_text",
@@ -2309,6 +2318,7 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = [
+  "parse_error_if_appropriate_end_tag(eof-in-tag)",
   "discard_current_token",
   "append_text(</)",
   "append_temporary_buffer_to_text",

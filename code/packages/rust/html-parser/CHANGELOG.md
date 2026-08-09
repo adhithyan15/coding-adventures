@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Malformed script end tags that reach EOF while the lexer is assembling the
+  tag now report `eof-in-tag`, covering 14 previously silent malformed corpus
+  cases without changing DOM recovery or undeclared-diagnostic coverage.
 - Start and end tags rejected against seeded fragment-context elements now
   report their required parse errors, covering 37 previously silent table,
   select, frameset, document-shell, and foreign fragment cases without changing

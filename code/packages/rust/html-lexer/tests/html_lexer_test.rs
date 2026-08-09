@@ -6294,6 +6294,112 @@ fn parser_facing_end_tag_continuation_contexts_recover_seeded_text_and_diagnosti
 }
 
 #[test]
+fn script_end_tag_continuations_report_eof_in_tag() {
+    for (state, temporary_buffer, input, expected_text) in [
+        (
+            HtmlTokenizerState::ScriptDataEndTagWhitespace,
+            "script ",
+            "",
+            "</script ",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEndTagAttributes,
+            "script class=x",
+            "",
+            "</script class=x",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEndTagAttributes,
+            "script class=",
+            "\"x",
+            "</script class=\"x",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEndTagAttributes,
+            "script class=",
+            "'x",
+            "</script class='x",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataSelfClosingEndTag,
+            "script",
+            "",
+            "</script/",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapedEndTagWhitespace,
+            "script ",
+            "",
+            "</script ",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapedEndTagAttributes,
+            "script class=x",
+            "",
+            "</script class=x",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapedEndTagAttributes,
+            "script class=",
+            "\"x",
+            "</script class=\"x",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapedEndTagAttributes,
+            "script class=",
+            "'x",
+            "</script class='x",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapedSelfClosingEndTag,
+            "script",
+            "",
+            "</script/",
+        ),
+    ] {
+        let context =
+            HtmlLexContext::end_tag_continuation(state, "script", "script", temporary_buffer)
+                .unwrap();
+        let mut lexer = create_html_lexer_with_context(&context).unwrap();
+
+        lexer.push(input).unwrap();
+        lexer.finish().unwrap();
+
+        assert_eq!(
+            lexer.drain_tokens(),
+            vec![Token::Text(expected_text.to_string()), Token::Eof],
+            "context {state:?}"
+        );
+        assert_eq!(
+            lexer
+                .diagnostics()
+                .iter()
+                .map(|diagnostic| diagnostic.code.as_str())
+                .collect::<Vec<_>>(),
+            vec!["eof-in-tag"],
+            "context {state:?}"
+        );
+    }
+
+    let context = HtmlLexContext::end_tag_continuation(
+        HtmlTokenizerState::ScriptDataEndTagWhitespace,
+        "script",
+        "style",
+        "style ",
+    )
+    .unwrap();
+    let mut lexer = create_html_lexer_with_context(&context).unwrap();
+
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![Token::Text("</style ".to_string()), Token::Eof]
+    );
+    assert!(lexer.diagnostics().is_empty());
+}
+
+#[test]
 fn parser_facing_end_tag_continuation_contexts_keep_mismatches_literal() {
     for (state, last_start_tag, current_end_tag, temporary_buffer, input, expected_text) in [
         (
