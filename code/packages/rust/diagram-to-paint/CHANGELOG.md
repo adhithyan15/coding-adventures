@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added backend-neutral sequence symbols for boundary, control, entity,
+  database, collections, and queue participants.
 - Added sequence participant-group backgrounds and labels.
 - Added a Mermaid Pie -> chart layout -> PaintScene -> Metal PNG example and
   Apple end-to-end test.

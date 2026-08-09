@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0
+
+- Tokenize inline sequence participant configuration objects.
+
 ## 0.6.0
 
 - Tokenize sequence participant boxes and CSS functional colors.

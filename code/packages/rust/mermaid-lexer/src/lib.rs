@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.6.0";
+pub const VERSION: &str = "0.7.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -111,7 +111,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.6.0");
+        assert_eq!(VERSION, "0.7.0");
     }
 
     #[test]
@@ -333,5 +333,16 @@ mod tests {
         assert!(tokens
             .iter()
             .any(|token| token.value == "rgba(33,66,99,0.5)"));
+    }
+
+    #[test]
+    fn tokenizes_sequence_participant_configuration() {
+        let tokens = tokenize_mermaid_sequence(
+            "sequenceDiagram\nparticipant API@{ \"type\": \"boundary\", \"alias\": \"Public API\" }\n",
+        );
+        assert!(tokens.iter().any(|token| token.value == "API"));
+        assert!(tokens
+            .iter()
+            .any(|token| token.type_name.as_deref() == Some("CONFIG")));
     }
 }

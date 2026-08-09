@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.8.0
+
+- Added Mermaid sequence participant stereotype kinds.
+
 ## 0.7.0
 
 - Added semantic and layout IR primitives for sequence participant groups.

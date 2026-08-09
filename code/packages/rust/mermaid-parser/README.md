@@ -38,7 +38,9 @@ and dotted message arrows, bidirectional/cross/point arrowheads, notes,
 activations, titles, automatic numbering, and nested control blocks with branch
 separators. Participant creation and destruction are lifecycle events consumed
 by layout. Participant `box` declarations preserve group labels, fills, and
-membership. Advanced participant metadata remains an explicit compatibility gap.
+membership. Actor-menu links, properties, and details remain explicit compatibility gaps.
+Inline participant configurations support Mermaid's `type` and `alias` fields,
+including boundary, control, entity, database, collections, and queue symbols.
 
 All other Mermaid 11.16.1 family headers are recognized and return an explicit
 `recognized but not implemented` error until their grammar, lowering, layout,

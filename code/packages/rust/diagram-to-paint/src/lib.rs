@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.7.0";
+pub const VERSION: &str = "0.8.0";
 
 use std::collections::HashMap;
 
@@ -1408,6 +1408,10 @@ where
                 height,
                 ..
             } => {
+                let specialized = !matches!(
+                    kind,
+                    SequenceParticipantKind::Participant | SequenceParticipantKind::Actor
+                );
                 instructions.push(PaintInstruction::Rect(PaintRect {
                     base: PaintBase::default(),
                     x: *x,
@@ -1417,24 +1421,34 @@ where
                     fill: Some(match kind {
                         SequenceParticipantKind::Participant => "#eff6ff".into(),
                         SequenceParticipantKind::Actor => "#f0fdf4".into(),
+                        _ => "#f0fdfa".into(),
                     }),
                     stroke: Some(match kind {
                         SequenceParticipantKind::Participant => "#2563eb".into(),
                         SequenceParticipantKind::Actor => "#16a34a".into(),
+                        _ => "#0f766e".into(),
                     }),
                     stroke_width: Some(1.5),
                     corner_radius: Some(match kind {
                         SequenceParticipantKind::Participant => 5.0,
                         SequenceParticipantKind::Actor => *height / 2.0,
+                        _ => 5.0,
                     }),
                     stroke_dash: None,
                     stroke_dash_offset: None,
                 }));
+                if specialized {
+                    instructions.extend(sequence_participant_icon(
+                        kind,
+                        *x + 24.0,
+                        *y + height / 2.0,
+                    ));
+                }
                 text_children.push(text_node(
                     label,
-                    *x + 8.0,
+                    *x + if specialized { 44.0 } else { 8.0 },
                     *y + 11.0,
-                    *width - 16.0,
+                    *width - if specialized { 50.0 } else { 16.0 },
                     *height - 12.0,
                     label_font.clone(),
                     text_color,
@@ -1506,6 +1520,134 @@ fn sequence_block_name(kind: &SequenceBlockKind) -> &'static str {
         SequenceBlockKind::ParOver => "par_over",
         SequenceBlockKind::Critical => "critical",
         SequenceBlockKind::Break => "break",
+    }
+}
+
+fn sequence_participant_icon(
+    kind: &SequenceParticipantKind,
+    cx: f64,
+    cy: f64,
+) -> Vec<PaintInstruction> {
+    let ellipse = |rx: f64, ry: f64| {
+        PaintInstruction::Ellipse(PaintEllipse {
+            base: PaintBase::default(),
+            cx,
+            cy,
+            rx,
+            ry,
+            fill: Some("#ffffff".into()),
+            stroke: Some("#0f766e".into()),
+            stroke_width: Some(1.5),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        })
+    };
+    let path = |commands| {
+        PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands,
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#0f766e".into()),
+            stroke_width: Some(1.5),
+            stroke_cap: Some(StrokeCap::Round),
+            stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        })
+    };
+    match kind {
+        SequenceParticipantKind::Boundary => vec![
+            ellipse(9.0, 9.0),
+            path(vec![
+                PathCommand::MoveTo { x: cx + 9.0, y: cy },
+                PathCommand::LineTo {
+                    x: cx + 16.0,
+                    y: cy,
+                },
+                PathCommand::MoveTo {
+                    x: cx + 16.0,
+                    y: cy - 13.0,
+                },
+                PathCommand::LineTo {
+                    x: cx + 16.0,
+                    y: cy + 13.0,
+                },
+            ]),
+        ],
+        SequenceParticipantKind::Control => vec![
+            ellipse(11.0, 11.0),
+            path(vec![
+                PathCommand::MoveTo {
+                    x: cx - 8.0,
+                    y: cy - 10.0,
+                },
+                PathCommand::LineTo {
+                    x: cx - 1.0,
+                    y: cy - 15.0,
+                },
+                PathCommand::LineTo {
+                    x: cx + 1.0,
+                    y: cy - 8.0,
+                },
+            ]),
+        ],
+        SequenceParticipantKind::Entity => vec![
+            ellipse(10.0, 10.0),
+            path(vec![
+                PathCommand::MoveTo {
+                    x: cx - 12.0,
+                    y: cy + 13.0,
+                },
+                PathCommand::LineTo {
+                    x: cx + 12.0,
+                    y: cy + 13.0,
+                },
+            ]),
+        ],
+        SequenceParticipantKind::Database => vec![ellipse(12.0, 15.0)],
+        SequenceParticipantKind::Collections => vec![
+            PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(),
+                x: cx - 9.0,
+                y: cy - 13.0,
+                width: 20.0,
+                height: 22.0,
+                fill: Some("#ffffff".into()),
+                stroke: Some("#0f766e".into()),
+                stroke_width: Some(1.25),
+                corner_radius: Some(2.0),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }),
+            PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(),
+                x: cx - 13.0,
+                y: cy - 9.0,
+                width: 20.0,
+                height: 22.0,
+                fill: None,
+                stroke: Some("#0f766e".into()),
+                stroke_width: Some(1.25),
+                corner_radius: Some(2.0),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }),
+        ],
+        SequenceParticipantKind::Queue => vec![PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: cx - 14.0,
+            y: cy - 9.0,
+            width: 28.0,
+            height: 18.0,
+            fill: Some("#ffffff".into()),
+            stroke: Some("#0f766e".into()),
+            stroke_width: Some(1.5),
+            corner_radius: Some(9.0),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        })],
+        SequenceParticipantKind::Participant | SequenceParticipantKind::Actor => vec![],
     }
 }
 
@@ -2415,7 +2557,22 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.7.0");
+        assert_eq!(crate::VERSION, "0.8.0");
+    }
+
+    #[test]
+    fn sequence_stereotypes_emit_distinct_icon_geometry() {
+        let kinds = [
+            SequenceParticipantKind::Boundary,
+            SequenceParticipantKind::Control,
+            SequenceParticipantKind::Entity,
+            SequenceParticipantKind::Database,
+            SequenceParticipantKind::Collections,
+            SequenceParticipantKind::Queue,
+        ];
+        for kind in kinds {
+            assert!(!sequence_participant_icon(&kind, 20.0, 20.0).is_empty());
+        }
     }
 
     #[test]
