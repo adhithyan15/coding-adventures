@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Lower the JFET `BET` transconductance alias with canonical `BETA` precedence.
 - Normalize hyphens in supported model-card parameter aliases.
 - Normalize hyphen and underscore separators in supported model type aliases.
 - Normalize the `PCH` model type alias to canonical `PMOS` cards.

@@ -1373,7 +1373,9 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             fields[2],
             fields[3],
             polarity=model.kind,
-            beta=model.params.get("BETA", model.params.get("B", 1.0e-4)),
+            beta=model.params.get(
+                "BETA", model.params.get("BET", model.params.get("B", 1.0e-4))
+            ),
             vto=model.params.get("VTO", -2.0 if model.kind == "NJF" else 2.0),
             lambda_=model.params.get("LAMBDA", 0.0),
             Cgs=model.params.get("CGS", model.params.get("CGS0", 0.0)),
