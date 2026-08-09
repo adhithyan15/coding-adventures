@@ -1643,6 +1643,15 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("JFET BETA must be finite and positive");
   }
+  const jfetThresholdVoltage =
+    params.get("VTO") ?? params.get("VT0") ?? params.get("VTH");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetThresholdVoltage !== undefined &&
+    !Number.isFinite(jfetThresholdVoltage)
+  ) {
+    throw new NetlistParseError("JFET VTO must be finite");
+  }
   const gateSourceCapacitance = params.get("CGS") ?? params.get("CGS0");
   if (
     (kind === "NJF" || kind === "PJF") &&

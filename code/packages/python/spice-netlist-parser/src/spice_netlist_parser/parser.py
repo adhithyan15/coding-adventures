@@ -2354,6 +2354,11 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             not math.isfinite(transconductance) or transconductance <= 0.0
         ):
             raise NetlistParseError("JFET BETA must be finite and positive")
+        threshold_voltage = params.get(
+            "VTO", params.get("VT0", params.get("VTH"))
+        )
+        if threshold_voltage is not None and not math.isfinite(threshold_voltage):
+            raise NetlistParseError("JFET VTO must be finite")
         gate_source_capacitance = params.get("CGS", params.get("CGS0"))
         if gate_source_capacitance is not None and (
             not math.isfinite(gate_source_capacitance)

@@ -2162,6 +2162,12 @@ def test_parse_jfet_threshold_aliases_with_canonical_precedence() -> None:
     assert threshold.vto == -1.0
 
 
+@pytest.mark.parametrize("parameter", ["VTO", "VT0", "VTH"])
+def test_rejects_non_finite_jfet_threshold_voltage(parameter: str) -> None:
+    with pytest.raises(NetlistParseError, match="JFET VTO must be finite"):
+        parse_netlist(f".model fast NJF({parameter}=1e999)")
+
+
 def test_parse_jfet_lam_alias_with_canonical_precedence() -> None:
     parsed = parse_netlist(
         ".model canonical NJF(LAMBDA=0.02 LAM=0.03)\n"

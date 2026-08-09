@@ -2252,6 +2252,15 @@ J1 drain gate source fast
     });
   });
 
+  it.each(["VTO", "VT0", "VTH"])(
+    "rejects non-finite JFET threshold voltage %s",
+    (parameter) => {
+      expect(() => parseNetlist(`.model fast NJF(${parameter}=1e999)`)).toThrow(
+        "JFET VTO must be finite",
+      );
+    },
+  );
+
   it("parses the JFET LAM alias with canonical precedence", () => {
     const parsed = parseNetlist(
       ".model canonical NJF(LAMBDA=0.02 LAM=0.03)\n" +
