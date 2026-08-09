@@ -27,11 +27,12 @@ use chief_of_staff_host_runtime::{
     OrchestratorProfileSummary,
 };
 use chief_of_staff_tool_api::{
-    ApprovalAssurance, ApprovalState, JsonSchema, PrivilegeTier, RequestedBy, SchemaProperty,
-    ToolApiError, ToolApprovalChallenge, ToolApprovalGrant, ToolAuditRecordQuery, ToolCallError,
-    ToolConcurrency, ToolDefinition, ToolErrorKind, ToolEventKind, ToolExecutionJournal,
-    ToolExecutionJournalHealthSummary, ToolHandlerOutput, ToolIdempotency, ToolInvocationRequest,
-    ToolPolicyProfile, ToolSideEffects, ToolStability, ToolStreaming,
+    builtin_tool_definition, ApprovalAssurance, ApprovalState, JsonSchema, PrivilegeTier,
+    RequestedBy, SchemaProperty, ToolApiError, ToolApprovalChallenge, ToolApprovalGrant,
+    ToolAuditRecordQuery, ToolCallError, ToolConcurrency, ToolDefinition, ToolErrorKind,
+    ToolEventKind, ToolExecutionJournal, ToolExecutionJournalHealthSummary, ToolHandlerOutput,
+    ToolIdempotency, ToolInvocationRequest, ToolPolicyProfile, ToolSideEffects, ToolStability,
+    ToolStreaming,
 };
 use chief_of_staff_tool_audit_store::{ToolAuditStore, ToolAuditStoreInventorySummary};
 use chief_of_staff_vault_runtime::ChiefVaultRuntime;
@@ -1055,7 +1056,7 @@ impl UmbrellaPipeline {
                     WRITE_TOOL_ID.to_string(),
                 ],
                 required_capabilities: vec![
-                    "vault_lease".to_string(),
+                    "vault:lease".to_string(),
                     "weather_api_read".to_string(),
                     "filesystem_write".to_string(),
                 ],
@@ -1611,34 +1612,8 @@ fn register_vault_lease_tool(
     runtime: &mut OrchestratorProfileRuntime,
     vault: Arc<ChiefVaultRuntime>,
 ) -> Result<(), HostRuntimeError> {
-    let mut definition = tool_definition(
-        VAULT_TOOL_ID,
-        "Request vault lease",
-        "Issue a short-lived opaque VaultRef for use by a trusted host tool.",
-        JsonSchema::Object {
-            properties: vec![
-                SchemaProperty::new("secret_name", JsonSchema::String),
-                SchemaProperty::new("ttl_ms", JsonSchema::Integer),
-            ],
-            required: vec!["secret_name".to_string(), "ttl_ms".to_string()],
-            allow_unknown_fields: false,
-        },
-        Some(JsonSchema::Object {
-            properties: vec![
-                SchemaProperty::new("vault_ref", JsonSchema::String),
-                SchemaProperty::new("expires_at_ms", JsonSchema::Integer),
-            ],
-            required: vec!["vault_ref".to_string(), "expires_at_ms".to_string()],
-            allow_unknown_fields: false,
-        }),
-        ToolSideEffects::External,
-        ToolIdempotency::Never,
-        ToolConcurrency::Serialized,
-        ToolStreaming::Events,
-        vec!["vault_lease"],
-        vec!["vault", "lease", "secret"],
-    );
-    definition.required_tier = PrivilegeTier::Tier2;
+    let definition = builtin_tool_definition(VAULT_TOOL_ID)
+        .expect("the canonical vault lease built-in must be present");
     runtime.register_handler(definition, move |arguments, _context| {
         let secret_name = field_string(&arguments, "secret_name")?;
         let ttl_ms = field_i64(&arguments, "ttl_ms")?;

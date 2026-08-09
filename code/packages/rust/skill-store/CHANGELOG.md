@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Accept canonical colon-delimited capability scopes in stored skill manifests
+  and requirement filters.
 - `SkillCatalogSummary` plus `SkillStore::catalog_summary()` for compact
   installed-version, active-state, and asset-material rollups.
 - `SkillRequirementSummary` plus `SkillStore::requirement_summary()` for
