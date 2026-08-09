@@ -1,174 +1,179 @@
 Spanish, chapter 13: \emph{Poner}, \emph{Salir}, \emph{Venir} --- Completing the \emph{-go} Club.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+4 lessons. All 4 can be done entirely by ear.
 
 
 Lesson 1 of 4.
-poner — "to put," and the club gains a member.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+poner — putting or placing with three singular forms.
 
 Warm-up.
 [pause 2 seconds]
-In Chapter 12 you met the -go club — tengo, hago, digo — and three members "to come": pongo, salgo, vengo. Here is the first of them. poner ("to put / to place") is a plain -er verb everywhere except the yo-form, which grows the familiar g: pongo.
+You already know hago, haces, hace and the careful comparison tengo, hago, digo. Add one verb on its own evidence: poner, “to put” or “to place.”
 
 Sounds you'll need.
-g-hard — the g in pongo is the hard -go you now know from tengo.
+The g in pongo has the familiar hard sound. Tap the final r of poner lightly; do not turn it into the stronger written rr sound.
 
 The word, taken apart.
-poner comes from Latin pōnere, "to put, to place, to set down" — and its stem pon-/pos- ("place") is one of the busiest roots in English:
-position, pose, posit — a placing.
-with prefixes: compose ("place together"), deposit ("place down"), expose ("place out"), oppose / opponent ("place against"), propose ("place forward"), postpone ("place after"), component, deposit.
-So poner and position share the same "place" root — you are putting something in its pōnere.
+poner descends from Latin pōnere, “to put or place.” English keeps the same placing family in position, compose (“place together”), and deposit (“place down”). The two shapes pon- and pos- are historical relatives, so poner and position are cousins even though their endings differ.
 
-Grammar Lens: the -go yo-form.
-Only the yo-form is irregular — it takes the g — the rest is a regular -er present:
-[a table of 5 rows, read aloud]
-yo, pongo, (-go, like tengo).
-tú, pones, (regular).
-él/ella/usted, pone, (regular).
-nosotros, ponemos, (regular).
-ellos/ustedes, ponen, (regular).
-The everyday payoff: poner la mesa ("to set the table"), poner música ("to put on music"), and the reflexive ponerse — "to put on (clothes)" or "to become" (me pongo nervioso, "I get nervous").
+Grammar Lens: only the three singular forms.
+[a table of 3 rows, read aloud]
+person: yo. present of poner: pongo.
+person: tú. present of poner: pones.
+person: él / ella / usted. present of poner: pone.
+Say the bounded set as pongo, pones, pone. The learned yo form joins the known comparison because it ends in -go. That resemblance helps memory; it still does not predict an unseen verb.
+For now, practise the forms and their meaning without importing a new object. Later lessons can add the nouns needed for expressions such as setting a table or putting on clothing. Plural persons and reflexive ponerse also wait.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "poner" then the set — "pongo, pones, pone, ponemos, ponen" — the g only in pongo]
+[your turn — say: “poner — pongo, pones, pone”]
 [pause 8 seconds for the answer]
-[your turn — say: "Pongo la mesa" ("I set the table"); "Me pongo el abrigo" ("I put on the coat")]
+[your turn — say: “pōnere — position — poner”]
 [pause 8 seconds for the answer]
-[your turn — say: "poner" then English "position, compose, deposit" — the place-family]
+[your turn — say: “a learned comparison, not a prediction rule”]
 [pause 8 seconds for the answer]
+[question — say your answer, then pause 10 seconds]
+Give the learned singular present forms of poner: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+What two English verbs does poner cover?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Latin verb is poner from, and two English cousins? (pōnere "to place"; position/compose/deposit — any two.) Give its yo-form and the club it joins. (pongo — the -go club, with tengo/hago/digo.) What does poner la mesa mean? ("To set the table.") Next: salir — another -go verb, and a leaping etymology.
+What does poner mean? (“To put” or “to place.”) Give its three learned forms. (Pongo, pones, pone.) Which Latin source and English cousin help explain it? (Pōnere; position, compose, or deposit.) Next: learn salir inside the same three-person frame.
 
 
 Lesson 2 of 4.
-salir — "to go out," from a verb that meant "to leap".
+salir — leaving with three singular forms.
 
 Warm-up.
 [pause 2 seconds]
-The second -go verb: salir ("to leave, to go out"). Same story as poner — regular -ir everywhere but the yo-form, which grows the g: salgo. But its origin is a delight: salir comes from a Latin verb for leaping.
+You can retrieve pongo, pones, pone, and you already use de with a place name. Keep that frontier while adding salir, “to leave” or “to go out.”
+
+Sounds you'll need.
+The g in salgo is hard. Keep the l clear in every form: salgo, sales, sale.
 
 The word, taken apart.
-salir comes from Latin salīre, "to leap, to jump, to spring" — and over time "leaping out" softened into simply "going out." The leap survives across English:
-salient ("leaping out," so: prominent, sticking out), sally ("a sudden rush out"), somersault (sopra + saltus, "a leap over").
-with prefixes: assail / assault ("leap at"), resilient ("leap back"), result ("leap back out"), insult ("leap upon").
-and the salmon — salīre gave Latin salmō, "the leaper," for the fish that leaps upstream.
-So every time you say salgo ("I go out"), you are using the old "leap" verb behind salient and salmon.
+salir descends from Latin salīre, “to leap” or “to jump.” The older image of leaping outward developed into the everyday meaning “to go out.” English salient first carried the sense “leaping” or “springing,” and a sally is a sudden movement outward. Those cousins preserve the same motion without requiring a long list of uncertain relatives.
 
-Grammar Lens: the -go yo-form.
-[a table of 5 rows, read aloud]
-yo, salgo, (-go, like pongo/tengo).
-tú, sales, (regular).
-él/ella/usted, sale, (regular).
-nosotros, salimos, (regular).
-ellos/ustedes, salen, (regular).
-The everyday payoff: salir de casa ("to leave the house"), salir con alguien ("to go out with someone" — to date), and la salida ("the exit" — the sign you'll read at every station). Note: English exit is from a different Latin verb, exīre ("go out"); Spanish chose the leaping one.
+Grammar Lens: one more singular set.
+[a table of 3 rows, read aloud]
+person: yo. present of salir: salgo.
+person: tú. present of salir: sales.
+person: él / ella / usted. present of salir: sale.
+Say salgo, sales, sale. Only the learned yo form contains g. Compare it with pongo because both forms are now known, not because one form could have predicted the other.
+Reuse the known word de and the familiar place name Madrid:
+Salgo de Madrid. — “I leave Madrid.”
+Sales de Madrid. — “You leave Madrid.”
+Sale de Madrid. — “He, she, or formal you leaves Madrid.”
+Plural persons, dating expressions, house vocabulary, and the noun for “exit” wait until their own lessons.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "salir" then the set — "salgo, sales, sale, salimos, salen"]
+[your turn — say: “salir — salgo, sales, sale”]
 [pause 8 seconds for the answer]
-[your turn — say: "Salgo de casa" ("I leave the house"); "la salida" ("the exit")]
+[your turn — say: “Salgo de Madrid.”]
 [pause 8 seconds for the answer]
-[your turn — say: "salir" then English "salient, salmon, somersault" — the leap-family]
+[your turn — say: “salīre — salient — salir”]
 [pause 8 seconds for the answer]
+[question — say your answer, then pause 10 seconds]
+Give the learned singular present forms of salir: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 8 seconds]
+Say 'I leave Madrid' in Spanish.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What did salir's Latin root salīre originally mean? ("To leap / jump.") Name two English cousins. (salient/sally/somersault/salmon — any two.) Give the yo-form and the sign it hides. (salgo; la salida = the exit.) Next: venir — the last -go verb, and the trickiest, because it also cracks its stem.
+What does salir mean? (“To leave” or “to go out.”) Give the three learned forms. (Salgo, sales, sale.) What did Latin salīre mean? (“To leap” or “to jump.”) Name one English cousin. (Salient or sally.) Next: add venir and compare it only with already-learned tener.
 
 
 Lesson 3 of 4.
-venir — "to come," the last club member, cracked and g-grown.
+venir — coming with three singular forms.
 
 Warm-up.
 [pause 2 seconds]
-The sixth and final member of the -go club: venir ("to come"). And like decir back in Chapter 12, it is doubly irregular — it stacks the -go yo-form and a stem-change. Learn venir and the whole system you've been building since tener clicks shut.
+You can say salgo de Madrid, and you already know tengo, tienes, tiene. Now learn venir, “to come,” inside exactly the same three singular persons.
 
 Sounds you'll need.
-g-hard — the -go of vengo.
-diphthong-ie — the stressed stem e breaks to ie: vienes = vee-EH-nes.
+The g in vengo is hard. In vienes and viene, let ie move as one smooth vowel sequence.
 
 The word, taken apart.
-venir comes from Latin venīre, "to come" — a root ven-/vent- that comes toward English from every direction:
-adventure (ad-venīre, "what comes to you"), event ("what comes out"), convene / convention ("come together"), invent ("come upon"), prevent ("come before"), intervene, revenue ("what comes back"), avenue ("a coming-toward"), and souvenir (French, "a thing that comes to mind").
+venir descends from Latin venīre, “to come.” English convene means “come together”; an event is something that “comes out”; and adventure passed through the idea of what may “come to” a person. The recurring ven- or vent- shape marks this old coming family.
 
-Grammar Lens: two irregularities at once.
-(1) The -go yo-form, like pongo/salgo/tengo: vengo. (2) The e becomes ie stem-change, like querer/tener: the stressed stem breaks to ie — the "boot" again.
-[a table of 5 rows, read aloud]
-yo, vengo, (-go form).
-tú, vienes, (e becomes ie).
-él/ella/usted, viene, (e becomes ie).
-nosotros, venimos, (plain e — unstressed).
-ellos/ustedes, vienen, (e becomes ie).
-Venimos alone keeps the plain e (stress on the ending), drawing the boot; everything inside it cracks to ie, and the yo corner carries the -go. This is the exact shape of tener (tengo / tienes) — venir is its mirror twin.
-
-The club is complete.
-You have now met all six: tengo, hago, digo, pongo, salgo, vengo. Three plain -go (poner, salir, hacer), one -go + e becomes i (decir), two -go + e becomes ie (tener, venir). The corner is closed.
+Grammar Lens: one known comparison, still singular.
+[a table of 3 rows, read aloud]
+person: yo. present of venir: vengo. known tener comparison: tengo.
+person: tú. present of venir: vienes. known tener comparison: tienes.
+person: él / ella / usted. present of venir: viene. known tener comparison: tiene.
+Say vengo, vienes, viene. The learned singular forms line up closely with tengo, tienes, tiene: the yo form ends in -go, while the other two show ie. This comparison describes two complete learned sets; it does not introduce a plural “boot” table or license guesses about other verbs.
+Now contrast leaving and coming with known de and Madrid:
+Salgo de Madrid. — “I leave Madrid.”
+Vengo de Madrid. — “I come from Madrid.”
+Vienes de Madrid. — “You come from Madrid.”
+Plural persons and free-standing arrival vocabulary wait for later lessons.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "venir" then the set — "vengo, vienes, viene, venimos, vienen" — the g in vengo, the ie through the boot, plain e in venimos]
+[your turn — say: “venir — vengo, vienes, viene”]
 [pause 8 seconds for the answer]
-[your turn — say: "Vengo de España" ("I come from Spain"); "¿Vienes?" ("Are you coming?")]
+[your turn — say: “Vengo de Madrid.”]
 [pause 8 seconds for the answer]
-[your turn — say: "venir" then English "adventure, convene, event" — the come-family]
+[your turn — say: “vengo / tengo — vienes / tienes”]
 [pause 8 seconds for the answer]
+[question — say your answer, then pause 10 seconds]
+Give the learned singular present forms of venir: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 8 seconds]
+Say 'I come from Madrid' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Give the tú forms of venir and tener, in that order.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Name venir's two irregularities. (The -go yo-form vengo, and the e becomes ie stem-change.) Which form escapes the boot, and why? (venimos — stress on the ending.) What Latin verb, and two English cousins? (venīre; adventure/event/convene — any two.) Which earlier verb is venir's exact twin? (tener — tengo/tienes = vengo/vienes.) Next: practice — the whole -go club at once.
+What does venir mean? (“To come.”) Give its three learned forms. (Vengo, vienes, viene.) Which learned verb provides the close comparison? (Tener: tengo, tienes, tiene.) Which Latin source and English cousin help explain it? (Venīre; convene, event, or adventure.) Next: compare all six learned yo forms only after retrieving this chapter's three verbs.
 
 
 Lesson 4 of 4.
-Practice — the -go club, complete.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Practice — putting, leaving, and coming in the singular.
 
 Warm-up.
 [pause 2 seconds]
-Chapter 12 opened the -go club with tengo, hago, digo; this chapter closed it with pongo, salgo, vengo. All six in one place now — say them until the yo-forms are automatic.
+This checkpoint adds nothing. Retrieve the three bounded singular sets first. Only then widen the memory comparison from three learned yo forms to six.
 
-Drill 1 — the full roll-call.
-[pause 1 second]
-Say each infinitive, then its yo-form:
-tener becomes tengo, hacer becomes hago, decir becomes digo.
-poner becomes pongo, salir becomes salgo, venir becomes vengo.
-[pause 2 seconds]
-What do all six yo-forms share? (The -go.) In which form only? (The yo-form — the rest is regular, plus any stem-change.)
+Grammar Lens: the complete Chapter 13 frame.
+putting or placing: pongo, pones, pone.
+leaving or going out: salgo, sales, sale.
+coming: vengo, vienes, viene.
+known-word contrast: Salgo de Madrid. Vengo de Madrid.
+known singular comparison: vengo / tengo, vienes / tienes, viene / tiene.
+Now that all three new verbs have been taught, the learned yo comparison can grow to exactly tengo, hago, digo, pongo, salgo, vengo. It remains a retrieval aid, not a rule for predicting any unseen verb.
+Plural persons, full boot diagrams, reflexive clothing expressions, house and table nouns, clock times, dinner vocabulary, and other unseen contexts remain outside this checkpoint.
 
-Drill 2 — the three kinds.
-[pause 1 second]
-Sort the club by how irregular:
-plain -go (regular otherwise): hago, pongo, salgo.
--go + e becomes i (the decir type): digo (dices/dice).
--go + e becomes ie (the boot twins): tengo (tienes), vengo (vienes).
+The words, taken apart — retrieve the history.
+poner continues Latin pōnere, the placing family of position.
+salir continues Latin salīre, the leaping family of salient.
+venir continues Latin venīre, the coming family of convene.
+different inherited histories and analogy let the six known yo forms converge on -go; the shared shape does not make a productive prediction rule.
 
-Drill 3 — run the two boot verbs.
+Guided Practice.
 [pause 1 second]
-Say tener and venir full — they are mirror twins:
-tener: tengo, tienes, tiene, tenemos, tienen.
-venir: vengo, vienes, viene, venimos, vienen.
-Only tenemos / venimos keep the plain e — the boot.
-
-Drill 4 — put it to use.
-[pause 1 second]
-Say each out loud:
-"Vengo de casa y pongo la mesa." — "I come from home and set the table."
-"Salgo a las ocho." — "I leave at eight."
-"¿Qué haces? — Hago la cena." — "What are you doing? — I'm making dinner."
-"Digo que sí." — "I say yes."
-
-Drill 5 — the root families (say the cousin).
-[pause 1 second]
-One English cousin each:
-poner from pōnere becomes? (position / compose / deposit.)
-salir from salīre becomes? (salient / salmon / somersault.)
-venir from venīre becomes? (adventure / event / convene.)
+[your turn — say: “pongo, pones, pone”]
+[pause 8 seconds for the answer]
+[your turn — say: “salgo, sales, sale”]
+[pause 8 seconds for the answer]
+[your turn — say: “vengo, vienes, viene”]
+[pause 8 seconds for the answer]
+[your turn — say: “tengo, hago, digo, pongo, salgo, vengo”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the learned singular forms of poner: yo, tú, then usted.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular forms of salir: yo, tú, then usted.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular forms of venir: yo, tú, then usted.
+[question — say your answer, then pause 11 seconds]
+Say 'I leave Madrid; I come from Madrid' in Spanish.
+[question — say your answer, then pause 12 seconds]
+Give the learned yo forms of tener, hacer, decir, poner, salir, and venir, in that order.
+[question — say your answer, then pause 10 seconds]
+Match each Spanish verb to one English cousin: poner, salir, venir.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Recite the six yo-forms of the club. (tengo, hago, digo, pongo, salgo, vengo.) Which two are the e becomes ie "boot" twins? (tener and venir.) Which single verb is -go and e becomes i? (decir — digo/dices.) You now hold the whole irregular -go corner of Spanish — its oldest, most-used verbs, mastered as one pattern.
+Give all three new singular sets. (Pongo, pones, pone; salgo, sales, sale; vengo, vienes, viene.) Which six learned yo forms now share -go? (Tengo, hago, digo, pongo, salgo, vengo.) Why is the list a memory aid rather than a prediction rule? (Different histories converged on one shape.) Chapter 14 may now introduce a new time frame without borrowing any plural form from this chapter.

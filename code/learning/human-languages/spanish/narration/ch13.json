@@ -3,31 +3,24 @@
   "language": "spanish",
   "chapter": 13,
   "title": "\\emph{Poner}, \\emph{Salir}, \\emph{Venir} --- Completing the \\emph{-go} Club",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9012955fa6cf35df",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:2a7a320cd76d90aa",
   "lessons": [
     {
       "id": "ES-C13-poner",
       "sequence": 1010,
-      "title": "poner — \"to put,\" and the club gains a member",
+      "title": "poner — putting or placing with three singular forms",
       "headword": "poner",
       "romanization": "poner",
-      "gloss": "to put / to place — a -go yo-form, pongo",
+      "gloss": "to put or place — with the singular present forms pongo, pones, and pone",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c049d52a0fb55326",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:41d7740488cc0829",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "In Chapter 12 you met the -go club — tengo, hago, digo — and three members \"to come\": pongo, salgo, vengo. Here is the first of them. poner (\"to put / to place\") is a plain -er verb everywhere except the yo-form, which grows the familiar g: pongo."
+              "text": "You already know hago, haces, hace and the careful comparison tengo, hago, digo. Add one verb on its own evidence: poner, “to put” or “to place.”"
             }
           ]
         },
@@ -53,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "g-hard — the g in pongo is the hard -go you now know from tengo."
+              "text": "The g in pongo has the familiar hard sound. Tap the final r of poner lightly; do not turn it into the stronger written rr sound."
             }
           ]
         },
@@ -64,47 +57,36 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "poner comes from Latin pōnere, \"to put, to place, to set down\" — and its stem pon-/pos- (\"place\") is one of the busiest roots in English:"
-            },
-            {
-              "kind": "speech",
-              "text": "position, pose, posit — a placing."
-            },
-            {
-              "kind": "speech",
-              "text": "with prefixes: compose (\"place together\"), deposit (\"place down\"), expose (\"place out\"), oppose / opponent (\"place against\"), propose (\"place forward\"), postpone (\"place after\"), component, deposit."
-            },
-            {
-              "kind": "speech",
-              "text": "So poner and position share the same \"place\" root — you are putting something in its pōnere."
+              "text": "poner descends from Latin pōnere, “to put or place.” English keeps the same placing family in position, compose (“place together”), and deposit (“place down”). The two shapes pon- and pos- are historical relatives, so poner and position are cousins even though their endings differ."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: the -go yo-form",
+          "title": "Grammar Lens: only the three singular forms",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Only the yo-form is irregular — it takes the g — the rest is a regular -er present:"
-            },
-            {
               "kind": "table",
-              "headers": [],
-              "columns": 3,
-              "rowCount": 5,
+              "headers": [
+                "person",
+                "present of poner"
+              ],
+              "columns": 2,
+              "rowCount": 3,
               "utterances": [
-                "yo, pongo, (-go, like tengo).",
-                "tú, pones, (regular).",
-                "él/ella/usted, pone, (regular).",
-                "nosotros, ponemos, (regular).",
-                "ellos/ustedes, ponen, (regular)."
+                "person: yo. present of poner: pongo.",
+                "person: tú. present of poner: pones.",
+                "person: él / ella / usted. present of poner: pone."
               ]
             },
             {
               "kind": "speech",
-              "text": "The everyday payoff: poner la mesa (\"to set the table\"), poner música (\"to put on music\"), and the reflexive ponerse — \"to put on (clothes)\" or \"to become\" (me pongo nervioso, \"I get nervous\")."
+              "text": "Say the bounded set as pongo, pones, pone. The learned yo form joins the known comparison because it ends in -go. That resemblance helps memory; it still does not predict an unseen verb."
+            },
+            {
+              "kind": "speech",
+              "text": "For now, practise the forms and their meaning without importing a new object. Later lessons can add the nouns needed for expressions such as setting a table or putting on clothing. Plural persons and reflexive ponerse also wait."
             }
           ]
         },
@@ -122,29 +104,69 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"poner\" then the set — \"pongo, pones, pone, ponemos, ponen\" — the g only in pongo",
+              "instruction": "“poner — pongo, pones, pone”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"poner\" then the set — \"**pongo**, pones, pone, ponemos, ponen\" — the *g* only in *pongo*]"
+              "source": "[YOU SAY: “poner — pongo, pones, pone”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Pongo la mesa\" (\"I set the table\"); \"Me pongo el abrigo\" (\"I put on the coat\")",
+              "instruction": "“pōnere — position — poner”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Pongo la mesa\" (\"I set the table\"); \"Me pongo el abrigo\" (\"I put on the coat\")]"
+              "source": "[YOU SAY: “pōnere — position — poner”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"poner\" then English \"position, compose, deposit\" — the place-family",
+              "instruction": "“a learned comparison, not a prediction rule”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"poner\" then English \"position, compose, deposit\" — the place-family]"
+              "source": "[YOU SAY: “a learned comparison, not a prediction rule”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-poner-singular-forms",
+              "prompt": "Give the learned singular present forms of poner: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-LEX-PONER",
+                "ES-GRAMMAR-PONER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "pongo, pones, pone",
+                "pongo pones pone",
+                "pongo / pones / pone"
+              ],
+              "feedback": {
+                "correct": "Right: pongo, pones, pone.",
+                "incorrect": "Keep the g in the yo form: pongo, pones, pone."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-poner-meaning",
+              "prompt": "What two English verbs does poner cover?",
+              "assesses": [
+                "ES-LEX-PONER"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "to put or to place",
+                "put or place",
+                "to put and to place",
+                "put and place"
+              ],
+              "feedback": {
+                "correct": "Right: poner means to put or to place.",
+                "incorrect": "Retrieve the placing pair: to put or to place."
+              }
             }
           ]
         },
@@ -161,7 +183,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin verb is poner from, and two English cousins? (pōnere \"to place\"; position/compose/deposit — any two.) Give its yo-form and the club it joins. (pongo — the -go club, with tengo/hago/digo.) What does poner la mesa mean? (\"To set the table.\") Next: salir — another -go verb, and a leaping etymology."
+              "text": "What does poner mean? (“To put” or “to place.”) Give its three learned forms. (Pongo, pones, pone.) Which Latin source and English cousin help explain it? (Pōnere; position, compose, or deposit.) Next: learn salir inside the same three-person frame."
             }
           ]
         }
@@ -170,17 +192,17 @@
     {
       "id": "ES-C13-salir",
       "sequence": 1020,
-      "title": "salir — \"to go out,\" from a verb that meant \"to leap\"",
+      "title": "salir — leaving with three singular forms",
       "headword": "salir",
       "romanization": "salir",
-      "gloss": "to leave / to go out — a -go yo-form, salgo, from a root that means \"to leap\"",
+      "gloss": "to leave or go out — with the singular present forms salgo, sales, and sale",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe496f4ed5343157",
+      "sourceHash": "fnv1a64:4515a7f8f143bbd4",
       "notice": null,
       "blocks": [
         {
@@ -196,150 +218,7 @@
             },
             {
               "kind": "speech",
-              "text": "The second -go verb: salir (\"to leave, to go out\"). Same story as poner — regular -ir everywhere but the yo-form, which grows the g: salgo. But its origin is a delight: salir comes from a Latin verb for leaping."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "salir comes from Latin salīre, \"to leap, to jump, to spring\" — and over time \"leaping out\" softened into simply \"going out.\" The leap survives across English:"
-            },
-            {
-              "kind": "speech",
-              "text": "salient (\"leaping out,\" so: prominent, sticking out), sally (\"a sudden rush out\"), somersault (sopra + saltus, \"a leap over\")."
-            },
-            {
-              "kind": "speech",
-              "text": "with prefixes: assail / assault (\"leap at\"), resilient (\"leap back\"), result (\"leap back out\"), insult (\"leap upon\")."
-            },
-            {
-              "kind": "speech",
-              "text": "and the salmon — salīre gave Latin salmō, \"the leaper,\" for the fish that leaps upstream."
-            },
-            {
-              "kind": "speech",
-              "text": "So every time you say salgo (\"I go out\"), you are using the old \"leap\" verb behind salient and salmon."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the -go yo-form",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "yo, salgo, (-go, like pongo/tengo).",
-                "tú, sales, (regular).",
-                "él/ella/usted, sale, (regular).",
-                "nosotros, salimos, (regular).",
-                "ellos/ustedes, salen, (regular)."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "The everyday payoff: salir de casa (\"to leave the house\"), salir con alguien (\"to go out with someone\" — to date), and la salida (\"the exit\" — the sign you'll read at every station). Note: English exit is from a different Latin verb, exīre (\"go out\"); Spanish chose the leaping one."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"salir\" then the set — \"salgo, sales, sale, salimos, salen\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"salir\" then the set — \"**salgo**, sales, sale, salimos, salen\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Salgo de casa\" (\"I leave the house\"); \"la salida\" (\"the exit\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Salgo de casa\" (\"I leave the house\"); \"la salida\" (\"the exit\")]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"salir\" then English \"salient, salmon, somersault\" — the leap-family",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"salir\" then English \"salient, salmon, somersault\" — the leap-family]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What did salir's Latin root salīre originally mean? (\"To leap / jump.\") Name two English cousins. (salient/sally/somersault/salmon — any two.) Give the yo-form and the sign it hides. (salgo; la salida = the exit.) Next: venir — the last -go verb, and the trickiest, because it also cracks its stem."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C13-venir",
-      "sequence": 1030,
-      "title": "venir — \"to come,\" the last club member, cracked and g-grown",
-      "headword": "venir",
-      "romanization": "venir",
-      "gloss": "to come — doubly irregular, vengo + e becomes ie, completing the -go club",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:c3cbc4d6fcbeaafc",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The sixth and final member of the -go club: venir (\"to come\"). And like decir back in Chapter 12, it is doubly irregular — it stacks the -go yo-form and a stem-change. Learn venir and the whole system you've been building since tener clicks shut."
+              "text": "You can retrieve pongo, pones, pone, and you already use de with a place name. Keep that frontier while adding salir, “to leave” or “to go out.”"
             }
           ]
         },
@@ -350,11 +229,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "g-hard — the -go of vengo."
-            },
-            {
-              "kind": "speech",
-              "text": "diphthong-ie — the stressed stem e breaks to ie: vienes = vee-EH-nes."
+              "text": "The g in salgo is hard. Keep the l clear in every form: salgo, sales, sale."
             }
           ]
         },
@@ -365,55 +240,57 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "venir comes from Latin venīre, \"to come\" — a root ven-/vent- that comes toward English from every direction:"
-            },
-            {
-              "kind": "speech",
-              "text": "adventure (ad-venīre, \"what comes to you\"), event (\"what comes out\"), convene / convention (\"come together\"), invent (\"come upon\"), prevent (\"come before\"), intervene, revenue (\"what comes back\"), avenue (\"a coming-toward\"), and souvenir (French, \"a thing that comes to mind\")."
+              "text": "salir descends from Latin salīre, “to leap” or “to jump.” The older image of leaping outward developed into the everyday meaning “to go out.” English salient first carried the sense “leaping” or “springing,” and a sally is a sudden movement outward. Those cousins preserve the same motion without requiring a long list of uncertain relatives."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: two irregularities at once",
+          "title": "Grammar Lens: one more singular set",
           "segments": [
             {
-              "kind": "speech",
-              "text": "(1) The -go yo-form, like pongo/salgo/tengo: vengo. (2) The e becomes ie stem-change, like querer/tener: the stressed stem breaks to ie — the \"boot\" again."
-            },
-            {
               "kind": "table",
-              "headers": [],
-              "columns": 3,
-              "rowCount": 5,
+              "headers": [
+                "person",
+                "present of salir"
+              ],
+              "columns": 2,
+              "rowCount": 3,
               "utterances": [
-                "yo, vengo, (-go form).",
-                "tú, vienes, (e becomes ie).",
-                "él/ella/usted, viene, (e becomes ie).",
-                "nosotros, venimos, (plain e — unstressed).",
-                "ellos/ustedes, vienen, (e becomes ie)."
+                "person: yo. present of salir: salgo.",
+                "person: tú. present of salir: sales.",
+                "person: él / ella / usted. present of salir: sale."
               ]
             },
             {
               "kind": "speech",
-              "text": "Venimos alone keeps the plain e (stress on the ending), drawing the boot; everything inside it cracks to ie, and the yo corner carries the -go. This is the exact shape of tener (tengo / tienes) — venir is its mirror twin."
+              "text": "Say salgo, sales, sale. Only the learned yo form contains g. Compare it with pongo because both forms are now known, not because one form could have predicted the other."
+            },
+            {
+              "kind": "speech",
+              "text": "Reuse the known word de and the familiar place name Madrid:"
+            },
+            {
+              "kind": "speech",
+              "text": "Salgo de Madrid. — “I leave Madrid.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Sales de Madrid. — “You leave Madrid.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Sale de Madrid. — “He, she, or formal you leaves Madrid.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Plural persons, dating expressions, house vocabulary, and the noun for “exit” wait until their own lessons."
             }
           ]
         },
         {
           "index": 4,
-          "type": "unknown",
-          "title": "The club is complete",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "You have now met all six: tengo, hago, digo, pongo, salgo, vengo. Three plain -go (poner, salir, hacer), one -go + e becomes i (decir), two -go + e becomes ie (tener, venir). The corner is closed."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -426,34 +303,74 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"venir\" then the set — \"vengo, vienes, viene, venimos, vienen\" — the g in vengo, the ie through the boot, plain e in venimos",
+              "instruction": "“salir — salgo, sales, sale”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"venir\" then the set — \"**vengo**, vienes, viene, venimos, vienen\" — the *g* in *vengo*, the *ie* through the boot, plain *e* in *venimos*]"
+              "source": "[YOU SAY: “salir — salgo, sales, sale”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Vengo de España\" (\"I come from Spain\"); \"¿Vienes?\" (\"Are you coming?\")",
+              "instruction": "“Salgo de Madrid.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Vengo de España\" (\"I come from Spain\"); \"¿Vienes?\" (\"Are you coming?\")]"
+              "source": "[YOU SAY: “Salgo de Madrid.”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"venir\" then English \"adventure, convene, event\" — the come-family",
+              "instruction": "“salīre — salient — salir”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"venir\" then English \"adventure, convene, event\" — the come-family]"
+              "source": "[YOU SAY: “salīre — salient — salir”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-salir-singular-forms",
+              "prompt": "Give the learned singular present forms of salir: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-LEX-SALIR",
+                "ES-GRAMMAR-SALIR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "salgo, sales, sale",
+                "salgo sales sale",
+                "salgo / sales / sale"
+              ],
+              "feedback": {
+                "correct": "Right: salgo, sales, sale.",
+                "incorrect": "Keep the g in the yo form: salgo, sales, sale."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-salir-leave-madrid",
+              "prompt": "Say 'I leave Madrid' in Spanish.",
+              "assesses": [
+                "ES-LEX-SALIR",
+                "ES-GRAMMAR-SALIR-PRESENT-SINGULAR",
+                "ES-LEX-DE"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "salgo de madrid.",
+                "salgo de madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Salgo de Madrid.",
+                "incorrect": "Use salgo, then the known de plus Madrid."
+              }
             }
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -465,34 +382,27 @@
             },
             {
               "kind": "speech",
-              "text": "Name venir's two irregularities. (The -go yo-form vengo, and the e becomes ie stem-change.) Which form escapes the boot, and why? (venimos — stress on the ending.) What Latin verb, and two English cousins? (venīre; adventure/event/convene — any two.) Which earlier verb is venir's exact twin? (tener — tengo/tienes = vengo/vienes.) Next: practice — the whole -go club at once."
+              "text": "What does salir mean? (“To leave” or “to go out.”) Give the three learned forms. (Salgo, sales, sale.) What did Latin salīre mean? (“To leap” or “to jump.”) Name one English cousin. (Salient or sally.) Next: add venir and compare it only with already-learned tener."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C13-practice",
-      "sequence": 1040,
-      "title": "Practice — the -go club, complete",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "the whole -go club, complete — tengo, hago, digo, pongo, salgo, vengo",
+      "id": "ES-C13-venir",
+      "sequence": 1030,
+      "title": "venir — coming with three singular forms",
+      "headword": "venir",
+      "romanization": "venir",
+      "gloss": "to come — with the singular present forms vengo, vienes, and viene",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2497b5ca46b70d45",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:e57140341daa0138",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -507,107 +417,82 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 12 opened the -go club with tengo, hago, digo; this chapter closed it with pongo, salgo, vengo. All six in one place now — say them until the yo-forms are automatic."
+              "text": "You can say salgo de Madrid, and you already know tengo, tienes, tiene. Now learn venir, “to come,” inside exactly the same three singular persons."
             }
           ]
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Drill 1 — the full roll-call",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
               "kind": "speech",
-              "text": "Say each infinitive, then its yo-form:"
-            },
-            {
-              "kind": "speech",
-              "text": "tener becomes tengo, hacer becomes hago, decir becomes digo."
-            },
-            {
-              "kind": "speech",
-              "text": "poner becomes pongo, salir becomes salgo, venir becomes vengo."
-            },
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What do all six yo-forms share? (The -go.) In which form only? (The yo-form — the rest is regular, plus any stem-change.)"
+              "text": "The g in vengo is hard. In vienes and viene, let ie move as one smooth vowel sequence."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "Drill 2 — the three kinds",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
               "kind": "speech",
-              "text": "Sort the club by how irregular:"
-            },
-            {
-              "kind": "speech",
-              "text": "plain -go (regular otherwise): hago, pongo, salgo."
-            },
-            {
-              "kind": "speech",
-              "text": "-go + e becomes i (the decir type): digo (dices/dice)."
-            },
-            {
-              "kind": "speech",
-              "text": "-go + e becomes ie (the boot twins): tengo (tienes), vengo (vienes)."
+              "text": "venir descends from Latin venīre, “to come.” English convene means “come together”; an event is something that “comes out”; and adventure passed through the idea of what may “come to” a person. The recurring ven- or vent- shape marks this old coming family."
             }
           ]
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Drill 3 — run the two boot verbs",
+          "type": "grammar",
+          "title": "Grammar Lens: one known comparison, still singular",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
+              "kind": "table",
+              "headers": [
+                "person",
+                "present of venir",
+                "known tener comparison"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. present of venir: vengo. known tener comparison: tengo.",
+                "person: tú. present of venir: vienes. known tener comparison: tienes.",
+                "person: él / ella / usted. present of venir: viene. known tener comparison: tiene."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Say tener and venir full — they are mirror twins:"
+              "text": "Say vengo, vienes, viene. The learned singular forms line up closely with tengo, tienes, tiene: the yo form ends in -go, while the other two show ie. This comparison describes two complete learned sets; it does not introduce a plural “boot” table or license guesses about other verbs."
             },
             {
               "kind": "speech",
-              "text": "tener: tengo, tienes, tiene, tenemos, tienen."
+              "text": "Now contrast leaving and coming with known de and Madrid:"
             },
             {
               "kind": "speech",
-              "text": "venir: vengo, vienes, viene, venimos, vienen."
+              "text": "Salgo de Madrid. — “I leave Madrid.”"
             },
             {
               "kind": "speech",
-              "text": "Only tenemos / venimos keep the plain e — the boot."
+              "text": "Vengo de Madrid. — “I come from Madrid.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Vienes de Madrid. — “You come from Madrid.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Plural persons and free-standing arrival vocabulary wait for later lessons."
             }
           ]
         },
         {
           "index": 4,
-          "type": "unknown",
-          "title": "Drill 4 — put it to use",
+          "type": "guided-production",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "pause",
@@ -616,58 +501,96 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Say each out loud:"
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“venir — vengo, vienes, viene”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “venir — vengo, vienes, viene”]"
             },
             {
-              "kind": "speech",
-              "text": "\"Vengo de casa y pongo la mesa.\" — \"I come from home and set the table.\""
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Vengo de Madrid.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Vengo de Madrid.”]"
             },
             {
-              "kind": "speech",
-              "text": "\"Salgo a las ocho.\" — \"I leave at eight.\""
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“vengo / tengo — vienes / tienes”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “vengo / tengo — vienes / tienes”]"
             },
             {
-              "kind": "speech",
-              "text": "\"¿Qué haces? — Hago la cena.\" — \"What are you doing? — I'm making dinner.\""
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-venir-singular-forms",
+              "prompt": "Give the learned singular present forms of venir: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-LEX-VENIR",
+                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "vengo, vienes, viene",
+                "vengo vienes viene",
+                "vengo / vienes / viene"
+              ],
+              "feedback": {
+                "correct": "Right: vengo, vienes, viene.",
+                "incorrect": "Retrieve the bounded set: vengo, vienes, viene."
+              }
             },
             {
-              "kind": "speech",
-              "text": "\"Digo que sí.\" — \"I say yes.\""
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-venir-come-from-madrid",
+              "prompt": "Say 'I come from Madrid' in Spanish.",
+              "assesses": [
+                "ES-LEX-VENIR",
+                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR",
+                "ES-LEX-DE"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "vengo de madrid.",
+                "vengo de madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Vengo de Madrid.",
+                "incorrect": "Use vengo, then the known de plus Madrid."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-venir-tener-contrast",
+              "prompt": "Give the tú forms of venir and tener, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "vienes, tienes",
+                "vienes tienes",
+                "vienes / tienes"
+              ],
+              "feedback": {
+                "correct": "Right: vienes, tienes.",
+                "incorrect": "Both learned tú forms show ie: vienes, tienes."
+              }
             }
           ]
         },
         {
           "index": 5,
-          "type": "unknown",
-          "title": "Drill 5 — the root families (say the cousin)",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "One English cousin each:"
-            },
-            {
-              "kind": "speech",
-              "text": "poner from pōnere becomes? (position / compose / deposit.)"
-            },
-            {
-              "kind": "speech",
-              "text": "salir from salīre becomes? (salient / salmon / somersault.)"
-            },
-            {
-              "kind": "speech",
-              "text": "venir from venīre becomes? (adventure / event / convene.)"
-            }
-          ]
-        },
-        {
-          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -679,7 +602,297 @@
             },
             {
               "kind": "speech",
-              "text": "Recite the six yo-forms of the club. (tengo, hago, digo, pongo, salgo, vengo.) Which two are the e becomes ie \"boot\" twins? (tener and venir.) Which single verb is -go and e becomes i? (decir — digo/dices.) You now hold the whole irregular -go corner of Spanish — its oldest, most-used verbs, mastered as one pattern."
+              "text": "What does venir mean? (“To come.”) Give its three learned forms. (Vengo, vienes, viene.) Which learned verb provides the close comparison? (Tener: tengo, tienes, tiene.) Which Latin source and English cousin help explain it? (Venīre; convene, event, or adventure.) Next: compare all six learned yo forms only after retrieving this chapter's three verbs."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C13-practice",
+      "sequence": 1040,
+      "title": "Practice — putting, leaving, and coming in the singular",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "singular putting, leaving, and coming, plus the six learned yo forms",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a19b038a7a3c9e38",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This checkpoint adds nothing. Retrieve the three bounded singular sets first. Only then widen the memory comparison from three learned yo forms to six."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the complete Chapter 13 frame",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "putting or placing: pongo, pones, pone."
+            },
+            {
+              "kind": "speech",
+              "text": "leaving or going out: salgo, sales, sale."
+            },
+            {
+              "kind": "speech",
+              "text": "coming: vengo, vienes, viene."
+            },
+            {
+              "kind": "speech",
+              "text": "known-word contrast: Salgo de Madrid. Vengo de Madrid."
+            },
+            {
+              "kind": "speech",
+              "text": "known singular comparison: vengo / tengo, vienes / tienes, viene / tiene."
+            },
+            {
+              "kind": "speech",
+              "text": "Now that all three new verbs have been taught, the learned yo comparison can grow to exactly tengo, hago, digo, pongo, salgo, vengo. It remains a retrieval aid, not a rule for predicting any unseen verb."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural persons, full boot diagrams, reflexive clothing expressions, house and table nouns, clock times, dinner vocabulary, and other unseen contexts remain outside this checkpoint."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The words, taken apart — retrieve the history",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "poner continues Latin pōnere, the placing family of position."
+            },
+            {
+              "kind": "speech",
+              "text": "salir continues Latin salīre, the leaping family of salient."
+            },
+            {
+              "kind": "speech",
+              "text": "venir continues Latin venīre, the coming family of convene."
+            },
+            {
+              "kind": "speech",
+              "text": "different inherited histories and analogy let the six known yo forms converge on -go; the shared shape does not make a productive prediction rule."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“pongo, pones, pone”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “pongo, pones, pone”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“salgo, sales, sale”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “salgo, sales, sale”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“vengo, vienes, viene”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “vengo, vienes, viene”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“tengo, hago, digo, pongo, salgo, vengo”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “tengo, hago, digo, pongo, salgo, vengo”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-practice-poner-forms",
+              "prompt": "Give the learned singular forms of poner: yo, tú, then usted.",
+              "assesses": [
+                "ES-LEX-PONER",
+                "ES-GRAMMAR-PONER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "pongo, pones, pone",
+                "pongo pones pone",
+                "pongo / pones / pone"
+              ],
+              "feedback": {
+                "correct": "Right: pongo, pones, pone.",
+                "incorrect": "Retrieve only the learned singular set: pongo, pones, pone."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-practice-salir-forms",
+              "prompt": "Give the learned singular forms of salir: yo, tú, then usted.",
+              "assesses": [
+                "ES-LEX-SALIR",
+                "ES-GRAMMAR-SALIR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "salgo, sales, sale",
+                "salgo sales sale",
+                "salgo / sales / sale"
+              ],
+              "feedback": {
+                "correct": "Right: salgo, sales, sale.",
+                "incorrect": "Retrieve only the learned singular set: salgo, sales, sale."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-practice-venir-forms",
+              "prompt": "Give the learned singular forms of venir: yo, tú, then usted.",
+              "assesses": [
+                "ES-LEX-VENIR",
+                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "vengo, vienes, viene",
+                "vengo vienes viene",
+                "vengo / vienes / viene"
+              ],
+              "feedback": {
+                "correct": "Right: vengo, vienes, viene.",
+                "incorrect": "Retrieve only the learned singular set: vengo, vienes, viene."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-practice-leave-come",
+              "prompt": "Say 'I leave Madrid; I come from Madrid' in Spanish.",
+              "assesses": [
+                "ES-LEX-SALIR",
+                "ES-GRAMMAR-SALIR-PRESENT-SINGULAR",
+                "ES-LEX-VENIR",
+                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR",
+                "ES-LEX-DE"
+              ],
+              "responseSeconds": 11,
+              "acceptedResponses": [
+                "salgo de madrid; vengo de madrid.",
+                "salgo de madrid. vengo de madrid.",
+                "salgo de madrid, vengo de madrid",
+                "salgo de madrid y vengo de madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Salgo de Madrid; vengo de Madrid.",
+                "incorrect": "Contrast the two learned yo forms: salgo for leave, vengo for come."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-practice-six-yo-forms",
+              "prompt": "Give the learned yo forms of tener, hacer, decir, poner, salir, and venir, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-YO-GO-CONTRAST-LEARNED",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-PONER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-SALIR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "tengo, hago, digo, pongo, salgo, vengo",
+                "tengo hago digo pongo salgo vengo",
+                "tengo / hago / digo / pongo / salgo / vengo"
+              ],
+              "feedback": {
+                "correct": "Right: tengo, hago, digo, pongo, salgo, vengo.",
+                "incorrect": "Retrieve only the six learned forms, in order: tengo, hago, digo, pongo, salgo, vengo."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-practice-root-families",
+              "prompt": "Match each Spanish verb to one English cousin: poner, salir, venir.",
+              "assesses": [
+                "ES-ETYMON-PONERE",
+                "ES-ETYMON-SALIRE",
+                "ES-ETYMON-VENIRE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "poner—position; salir—salient; venir—convene",
+                "poner position salir salient venir convene",
+                "poner: position; salir: salient; venir: convene",
+                "position salient convene"
+              ],
+              "feedback": {
+                "correct": "Right: poner—position; salir—salient; venir—convene.",
+                "incorrect": "Use the placing, leaping, and coming families: position, salient, convene."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give all three new singular sets. (Pongo, pones, pone; salgo, sales, sale; vengo, vienes, viene.) Which six learned yo forms now share -go? (Tengo, hago, digo, pongo, salgo, vengo.) Why is the list a memory aid rather than a prediction rule? (Different histories converged on one shape.) Chapter 14 may now introduce a new time frame without borrowing any plural form from this chapter."
             }
           ]
         }

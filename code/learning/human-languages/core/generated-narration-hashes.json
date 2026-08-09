@@ -6546,19 +6546,19 @@
     {
       "language": "spanish",
       "chapter": 13,
-      "sourceHash": "fnv1a64:9012955fa6cf35df",
+      "sourceHash": "fnv1a64:2a7a320cd76d90aa",
       "lessonIds": [
         "ES-C13-poner",
         "ES-C13-salir",
         "ES-C13-venir",
         "ES-C13-practice"
       ],
-      "voiceLessons": 2,
-      "drivablePrefix": 0,
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
       "text": "spanish/narration/ch13.txt",
       "json": "spanish/narration/ch13.json",
-      "textHash": "fnv1a64:1338be47b159cfbd",
-      "jsonHash": "fnv1a64:d15d6e67c2d879bf"
+      "textHash": "fnv1a64:bbb79f704e4608f6",
+      "jsonHash": "fnv1a64:bcb2c9894ea7a045"
     },
     {
       "language": "spanish",

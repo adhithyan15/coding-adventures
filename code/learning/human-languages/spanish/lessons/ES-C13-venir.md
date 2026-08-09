@@ -1,80 +1,94 @@
 ---
+schema_version: 2
 id: ES-C13-venir
-chapter: 13
+spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 1030
+chapter: 13
 type: word
 headword: venir
-gloss: to come — doubly irregular, vengo + e→ie, completing the -go club
+gloss: to come — with the singular present forms vengo, vienes, and viene
 concept_tag: VERB-COME
-prerequisites: [ES-C13-salir, ES-C11-querer]
+prerequisites: [ES-C13-salir, ES-C08-tener, ES-C09-soy-de]
 sounds: [g-hard, diphthong-ie]
 roots: [venire-latin]
-etymology_hook: "venir ← Latin venīre 'to come' → adventure, convene, event, invent, avenue, souvenir; doubly irregular like decir — the -go yo-form vengo AND the e→ie stem-change (vienes/viene), completing the club"
-est_minutes: 4
-reviews_of: [ES-C13-salir, ES-C13-poner, ES-C11-querer, ES-C12-decir]
+etymology_hook: "venir descends from Latin venīre 'to come'; English convene, event, and adventure preserve the same coming family"
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-SALIR, ES-GRAMMAR-SALIR-PRESENT-SINGULAR, ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-HISTORY-YO-GO-CONVERGENCE, ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-DE]
+introduces:
+  knowledge: [ES-LEX-VENIR, ES-GRAMMAR-VENIR-PRESENT-SINGULAR, ES-ETYMON-VENIRE]
+practises:
+  knowledge: [ES-LEX-SALIR, ES-GRAMMAR-SALIR-PRESENT-SINGULAR, ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-HISTORY-YO-GO-CONVERGENCE, ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-DE, ES-LEX-VENIR, ES-GRAMMAR-VENIR-PRESENT-SINGULAR, ES-ETYMON-VENIRE]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C13-salir, ES-C08-tener, ES-C12-practice, ES-C09-soy-de]
 ---
 
-# venir — "to come," the last club member, cracked *and* g-grown
+# venir — coming with three singular forms
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SALIR, ES-GRAMMAR-SALIR-PRESENT-SINGULAR, ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-DE] -->
 
-[PAUSE 2s] The sixth and final member of the **-go club**: **venir** ("to come").
-And like *decir* back in Chapter 12, it is **doubly irregular** — it stacks the
-**-go** *yo*-form **and** a stem-change. Learn *venir* and the whole system you've
-been building since *tener* clicks shut.
+[PAUSE 2s] You can say **salgo de Madrid**, and you already know **tengo,
+tienes, tiene**. Now learn **venir**, “to come,” inside exactly the same three
+singular persons.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-- `g-hard` — the *-go* of **vengo**.
-- `diphthong-ie` — the stressed stem *e* breaks to **ie**: **vienes** = *vee-EH-nes*.
+The **g** in **vengo** is hard. In **vienes** and **viene**, let **ie** move as
+one smooth vowel sequence.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-VENIR, ES-ETYMON-VENIRE]; assesses=[] -->
 
-**venir** comes from Latin **venīre**, *"to come"* — a root **ven-/vent-** that
-comes *toward* English from every direction:
+**venir** descends from Latin **venīre**, “to come.” English **convene** means
+“come together”; an **event** is something that “comes out”; and **adventure**
+passed through the idea of what may “come to” a person. The recurring **ven-**
+or **vent-** shape marks this old coming family.
 
-- **adventure** (*ad-venīre*, "what **comes to** you"), **event** ("what comes
-  out"), **convene / convention** ("come together"), **invent** ("come upon"),
-  **prevent** ("come before"), **intervene**, **revenue** ("what **comes back**"),
-  **avenue** ("a coming-toward"), and **souvenir** (French, "a thing that **comes
-  to mind**").
+## Grammar Lens: one known comparison, still singular
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-VENIR-PRESENT-SINGULAR]; assesses=[ES-LEX-VENIR, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-GRAMMAR-SALIR-PRESENT-SINGULAR, ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-HISTORY-YO-GO-CONVERGENCE, ES-ETYMON-VENIRE] -->
 
-## Grammar Lens: two irregularities at once
+| person | present of **venir** | known **tener** comparison |
+|---|---|---|
+| yo | **vengo** | **tengo** |
+| tú | **vienes** | **tienes** |
+| él / ella / usted | **viene** | **tiene** |
 
-**(1) The -go yo-form**, like *pongo/salgo/tengo*: **vengo**.
-**(2) The e→ie stem-change**, like *querer/tener*: the stressed stem breaks to
-*ie* — the "boot" again.
+Say **vengo · vienes · viene**. The learned singular forms line up closely
+with **tengo · tienes · tiene**: the **yo** form ends in **-go**, while the other
+two show **ie**. This comparison describes two complete learned sets; it does
+not introduce a plural “boot” table or license guesses about other verbs.
 
-| yo | **vengo** | (-go form) |
-| tú | **vienes** | (e → ie) |
-| él/ella/usted | **viene** | (e → ie) |
-| nosotros | venimos | (plain *e* — unstressed) |
-| ellos/ustedes | **vienen** | (e → ie) |
+Now contrast leaving and coming with known **de** and Madrid:
 
-*Venimos* alone keeps the plain *e* (stress on the ending), drawing the **boot**;
-everything inside it cracks to *ie*, and the *yo* corner carries the *-go*. This
-is the exact shape of *tener* (*tengo / tienes*) — *venir* is its mirror twin.
+- **Salgo de Madrid.** — “I leave Madrid.”
+- **Vengo de Madrid.** — “I come from Madrid.”
+- **Vienes de Madrid.** — “You come from Madrid.”
 
-## The club is complete
-
-You have now met all six: **tengo · hago · digo · pongo · salgo · vengo**. Three
-plain *-go* (poner, salir, hacer), one *-go* + *e→i* (decir), two *-go* + *e→ie*
-(tener, venir). The corner is closed.
+Plural persons and free-standing arrival vocabulary wait for later lessons.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-VENIR, ES-GRAMMAR-VENIR-PRESENT-SINGULAR, ES-ETYMON-VENIRE, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-SALIR, ES-GRAMMAR-SALIR-PRESENT-SINGULAR, ES-LEX-DE] -->
+<!-- hl-activity: {"id":"ES-C13-venir-singular-forms","kind":"text","assesses":["ES-LEX-VENIR","ES-GRAMMAR-VENIR-PRESENT-SINGULAR"],"prompt":"Give the learned singular present forms of venir: yo, tú, then él/ella/usted.","answer":"vengo, vienes, viene","accepted":["vengo vienes viene","vengo / vienes / viene"],"feedback":{"correct":"Right: vengo, vienes, viene.","incorrect":"Retrieve the bounded set: vengo, vienes, viene."},"response_seconds":10} -->
+<!-- hl-activity: {"id":"ES-C13-venir-come-from-madrid","kind":"text","assesses":["ES-LEX-VENIR","ES-GRAMMAR-VENIR-PRESENT-SINGULAR","ES-LEX-DE"],"prompt":"Say 'I come from Madrid' in Spanish.","answer":"Vengo de Madrid.","accepted":["Vengo de Madrid"],"feedback":{"correct":"Right: Vengo de Madrid.","incorrect":"Use vengo, then the known de plus Madrid."},"response_seconds":8} -->
+<!-- hl-activity: {"id":"ES-C13-venir-tener-contrast","kind":"text","assesses":["ES-GRAMMAR-VENIR-PRESENT-SINGULAR","ES-GRAMMAR-TENER-PRESENT-SINGULAR"],"prompt":"Give the tú forms of venir and tener, in that order.","answer":"vienes, tienes","accepted":["vienes tienes","vienes / tienes"],"feedback":{"correct":"Right: vienes, tienes.","incorrect":"Both learned tú forms show ie: vienes, tienes."},"response_seconds":7} -->
 
 [PAUSE 1s]
-- [YOU SAY: "venir" then the set — "**vengo**, vienes, viene, venimos, vienen" —
-  the *g* in *vengo*, the *ie* through the boot, plain *e* in *venimos*]
-- [YOU SAY: "Vengo de España" ("I come from Spain"); "¿Vienes?" ("Are you
-  coming?")]
-- [YOU SAY: "venir" then English "adventure, convene, event" — the come-family]
+- [YOU SAY: “venir — vengo, vienes, viene”]
+- [YOU SAY: “Vengo de Madrid.”]
+- [YOU SAY: “vengo / tengo — vienes / tienes”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-VENIR, ES-GRAMMAR-VENIR-PRESENT-SINGULAR, ES-ETYMON-VENIRE] -->
 
-[PAUSE 3s] Name *venir*'s **two** irregularities. (The *-go* *yo*-form **vengo**,
-and the **e→ie** stem-change.) Which form escapes the boot, and why? (*venimos* —
-stress on the ending.) What Latin verb, and two English cousins? (*venīre*;
-adventure/event/convene — any two.) Which earlier verb is *venir*'s exact twin?
-(**tener** — *tengo/tienes* = *vengo/vienes*.) Next: **practice** — the whole
-*-go* club at once.
+[PAUSE 3s] What does *venir* mean? (“To come.”) Give its three learned forms.
+(*Vengo, vienes, viene.*) Which learned verb provides the close comparison?
+(*Tener*: *tengo, tienes, tiene*.) Which Latin source and English cousin help
+explain it? (*Venīre*; *convene*, *event*, or *adventure*.) Next: compare all
+six learned **yo** forms only after retrieving this chapter's three verbs.

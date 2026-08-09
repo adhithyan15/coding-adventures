@@ -327,16 +327,26 @@
       "chapter": 13,
       "title": "\\emph{Poner}, \\emph{Salir}, \\emph{Venir} --- Completing the \\emph{-go} Club",
       "label": "ch:completing-go-club",
-      "canDo": "I can use poner, salir, and venir and complete the practical Spanish -go verb family.",
+      "canDo": "I can use the three learned singular forms of poner, salir, and venir and compare their yo forms with tengo, hago, and digo.",
       "spineNodes": [
         "SPINE-SAY-WHAT-I-DO"
       ],
       "payoff": {
         "lesson": "ES-C13-practice",
         "kind": "task",
-        "summary": "Complete ES-C13-practice, the canonical closing checkpoint, and demonstrate the chapter promise: use poner, salir, and venir and complete the practical Spanish -go verb family.",
-        "assesses": [],
-        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+        "summary": "Complete ES-C13-practice, the canonical closing checkpoint, and demonstrate the chapter promise with known words and only the learned singular person frame.",
+        "assesses": [
+          "ES-LEX-PONER",
+          "ES-GRAMMAR-PONER-PRESENT-SINGULAR",
+          "ES-ETYMON-PONERE",
+          "ES-LEX-SALIR",
+          "ES-GRAMMAR-SALIR-PRESENT-SINGULAR",
+          "ES-ETYMON-SALIRE",
+          "ES-LEX-VENIR",
+          "ES-GRAMMAR-VENIR-PRESENT-SINGULAR",
+          "ES-ETYMON-VENIRE"
+        ],
+        "note": "The payoff retrieves all nine Chapter-13 atoms and deliberately leaves plural persons, full boot diagrams, reflexive clothing, house and table nouns, clock times, dinner vocabulary, and unseen yo-go verbs for later lessons."
       }
     },
     {
