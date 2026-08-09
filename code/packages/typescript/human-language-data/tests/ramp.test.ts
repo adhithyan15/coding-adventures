@@ -110,7 +110,9 @@ describe("corpus snapshot", () => {
     // and many unmeasurable lessons has not proved it is gentle. Ratchet this DOWN as
     // schema-v2 migration lands; the violation count will rise as it does, and that is
     // the measurement improving rather than the corpus worsening.
-    expect(report.summary.unmeasurableLessons).toBe(573); // +1: TA-C01-answering, schema-v1 like its chapter
+    // Five Chapter-7 teaching lessons now declare atoms; its practice lesson remains
+    // correctly atom-free, so the blind spot falls by five rather than six.
+    expect(report.summary.unmeasurableLessons).toBe(568); // +1: TA-C01-answering, schema-v1 like its chapter
     // 65 -> 66: vocabulary wave 4 added 52 schema-v2 lessons, all measurable, so the
     // denominator and the measurable share both grow.
     expect(report.summary.measurablePercent).toBe(66);

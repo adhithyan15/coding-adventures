@@ -310,15 +310,17 @@ describe("the real corpus", () => {
     // chapter 2 came to teach the assembled phrase "en peyar" before "peyar" existed,
     // and to ask "what is your name?" last, after the chapter's own practice lesson. Nothing detected it, because a chapter with no declared order
     // has no order to contradict.
-    expect(report.summary.lessonsWithoutSequence).toBe(483);    // 19 -> 18: Tamil joins chinese, japanese and latin as a fully-ordered track —
+    // HL-C65 resolves the six Chapter-7 lessons from their prerequisite chain, so
+    // Spanish becomes fully ordered: 483 -> 477 and 18 -> 17 tracks with debt.
+    expect(report.summary.lessonsWithoutSequence).toBe(477);    // 19 -> 18: Tamil joins chinese, japanese and latin as a fully-ordered track —
     // the fourth of 22, not the first.
-    expect(report.summary.tracksWithUnorderedLessons).toBe(18);
+    expect(report.summary.tracksWithUnorderedLessons).toBe(17);
         // 245 -> 240. Not five prerequisites fixed — five that were never real. Without a
     // `sequence` the walk falls back to alphabetical, so "TA-C01-aam requires
     // TA-C01-vanakkam-family-register" read as a forward prerequisite purely because
     // `aam` sorts first. Declaring chapter 1's order removed the artifact.    // 240 -> 230, and forwardReviews 285 -> 273 below: ten lessons each stopped
     // depending on something taught later. No lesson changed; only Tamil's order did.
-    expect(report.summary.forwardPrerequisites).toBe(230);
+    expect(report.summary.forwardPrerequisites).toBe(225);
 
     // Lessons claiming to review material the learner has not reached yet.
     // 300 -> 285. Fourteen are the same alphabetical-fallback artifact as
@@ -330,7 +332,7 @@ describe("the real corpus", () => {
     // reviewed TA-C04-naalai, both before those lessons existed. Both were forward
     // under the old alphabetical fallback too; the hand-authored book runs them the
     // other way round, so the sequences now follow the book. Tamil forward reviews: 0.
-    expect(report.summary.forwardReviews).toBe(273);
+    expect(report.summary.forwardReviews).toBe(267);
 
     // REINFORCEMENT. The founding promise is that the course "constantly
     // re-emphasizes what was learnt previously". It shipped with HALF taught once.
@@ -369,14 +371,16 @@ describe("the real corpus", () => {
     // +5: TA-W08-read-en introduces 2, TA-W09-read-peyar 3. They teach எ, ப, ய and the
     // ெ sign — the glyphs Tamil chapter 2 was still explaining inside its own speaking
     // lessons because the writing strand had never covered them.
-    expect(report.summary.atomsTaught).toBe(2507);
+    // Chapter 7 adds exactly its configured chapter budget of 12 atoms. Its terminal
+    // practice revisits the whole chapter and also rescues two older Spanish atoms.
+    expect(report.summary.atomsTaught).toBe(2519);
     // +2, and it goes UP, which is worth stating plainly. Three of the five new atoms
     // are TA-W09's and nothing follows TA-W09, so they are orphans by construction:
     // PA-YA-01, E-SIGN-02, READ-PEYAR-03. TA-W08's two are revisited by TA-W09.
     // Against that, TA-W09 re-uses ர when it spells பெயர், so declaring
     // CA-ONE-LETTER-01 pulls that atom out of the orphan set for the first time
     // (revisits 0 -> 1). Three in, one out.
-    expect(report.summary.atomsNeverRevisited).toBe(474);
+    expect(report.summary.atomsNeverRevisited).toBe(472);
     expect(report.summary.neverRevisitedPercent).toBe(19);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
@@ -432,7 +436,8 @@ describe("the real corpus", () => {
     // TA-W03-pulli-vanakkam and TA-C01-practice, none of which had prose edited. They
     // stopped counting because chapter 1 now declares its order.
     // -1, same cause.
-    expect(report.summary.forwardReferences).toBe(468);
+    // Removing pan/agua and the rest of the later café vocabulary closes six leaks.
+    expect(report.summary.forwardReferences).toBe(462);
 
     // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
     // day as 766 -> 749. The absolute figures drift as main lands lessons; what the
@@ -478,14 +483,14 @@ describe("the real corpus", () => {
     // +5, exactly the five new atoms and no offsets. The strand's cadence puts
     // consecutive script lessons 4-5 apart and R1 is a 1-3 window, so an atom a script
     // lesson introduces cannot be reinforced inside R1 by the next one.
-    expect(report.summary.missedByWindow.R1).toBe(852);
+    expect(report.summary.missedByWindow.R1).toBe(854);
     // +2 net, and the composition is the interesting part: all FIVE new atoms miss R2
     // as well, offset by THREE pre-existing atoms that TA-W09 pulls back into it.
     // TA-W09 sits 12 lessons after TA-W06 and 8 after TA-W07, both inside R2's 5-15
     // window, so practising INDEPENDENT-VOWEL-I-01, LA-AI-SIGN-02 and CA-ONE-LETTER-01
     // there reinforces them at a distance R1 could never reach. Measured: all three go
     // from missing R1/R2/R3 to missing only R1/R3.
-    expect(report.summary.missedByWindow.R2).toBe(1718);
+    expect(report.summary.missedByWindow.R2).toBe(1725);
   });
 
   it("shows what a declared reading order was worth", () => {
@@ -512,42 +517,40 @@ describe("the real corpus", () => {
       // move -- no new unsequenced lesson, no new forward prerequisite -- which is the
       // point of the pin: new content is supposed to leave the walk alone.
       lessonCount: 177,
-      lessonsWithoutSequence: 6,
-      forwardPrerequisites: 5,
-      atomsTaught: 260,
-      atomsNeverRevisited: 70,
+      lessonsWithoutSequence: 0,
+      forwardPrerequisites: 0,
+      atomsTaught: 272,
+      atomsNeverRevisited: 68,
     });
   });
 
-  it("leaves chapter 7 unsequenced, because its sources contradict", () => {
-    // curriculum.json says comer -> beber -> que -> vivir -> donde; the lesson prose
-    // `Next:` chain AND ES-C07-beber's own reviews_of say comer -> vivir -> beber ->
-    // que -> donde. Under the ledger's order, beber reviews a lesson that has not
-    // happened. Guessing would bake a false ramp into every later measurement, so
-    // these six stay unsequenced until the project owner rules.
+  it("resolves chapter 7 from its prerequisite chain and authored prose", () => {
+    // The old map contradicted both the prose and `reviews_of`. HL-C65 makes the
+    // dependency-safe order explicit, including the terminal practice lesson.
     const { lessons } = loadEverything();
-    const unsequenced = measureContinuity(lessons)
-      .order.filter((d) => d.language === "spanish" && d.kind === "no-sequence")
-      .map((d) => d.lessonId)
-      .sort();
-    expect(unsequenced).toEqual([
-      "ES-C07-beber",
+    const chapter = lessons
+      .filter((lesson) => lesson.language === "spanish" && lesson.realization.chapter === 7)
+      .sort((a, b) => Number(a.frontmatter.sequence) - Number(b.frontmatter.sequence))
+      .map((lesson) => lesson.realization.lessonId);
+    expect(chapter).toEqual([
       "ES-C07-comer",
+      "ES-C07-vivir",
+      "ES-C07-beber",
+      "ES-C07-que",
       "ES-C07-donde",
       "ES-C07-practice",
-      "ES-C07-que",
-      "ES-C07-vivir",
     ]);
   });
 
-  it("finds the forward references a human reviewer found by reading", () => {
+  it("keeps the later forward-reference debt without Chapter 7's vocabulary leak", () => {
     const { lessons } = loadEverything();
     const found = measureContinuity(lessons).forwardReferences;
     const of = (word: string) => found.find((f) => f.language === "spanish" && f.word === word);
 
-    // "Como pan y bebo agua" — in chapter 7. Both words are chapter 26.
-    expect(of("pan")).toMatchObject({ lessonId: "ES-C07-beber", taughtBy: "ES-C26-pan" });
-    expect(of("agua")).toMatchObject({ lessonId: "ES-C07-beber", taughtBy: "ES-C26-agua" });
+    // Chapter 7 now builds with previously learned café. Pan still leaks elsewhere;
+    // agua no longer has any early use in Spanish.
+    expect(of("pan")).toMatchObject({ lessonId: "ES-C14-practice", taughtBy: "ES-C26-pan" });
+    expect(of("agua")).toBeUndefined();
     // A chapter that taught 1-10 drilling a chapter-31 number.
     expect(of("diecinueve")?.lessonId).toBe("ES-C08-practice");
   });

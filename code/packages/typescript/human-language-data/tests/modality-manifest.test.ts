@@ -915,12 +915,14 @@ describe("corpus regression", () => {
       // freeing the first two extends the ear-only run until en-peyar, which is still
       // sight and stops it. TA-C02-enna sits behind that blocker and became drivable
       // without adding to any prefix.
-      drivablePrefixTotal: 878,
+      // Chapter 7's real order begins with comer's four-column comparison rather
+      // than the old alphabetical fallback's ear-only beber lesson.
+      drivablePrefixTotal: 877,
       // -2: chapters 21 and 23 each take a writing lesson and stop being ear-only.
       // Spreading the strand cannot happen without landing a pen lesson somewhere.
       fullyDrivableChapters: 321,
       // -1: Tamil chapter 2 can now be started by ear.
-      unstartableChapters: 141,
+      unstartableChapters: 142,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
     });
