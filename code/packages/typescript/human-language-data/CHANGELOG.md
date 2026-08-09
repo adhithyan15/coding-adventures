@@ -48,6 +48,13 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
   one lift, and a second lift precedes the right arch's joined below-baseline
   sweep and descender, matching Frame 10 and Language Ladder's font-checked path.
 
+### Added - verified Tamil ன handwriting
+
+- Record Frame 13's cited six-movement order for Tamil ன as two pen-down runs:
+  the left spiral, single inner arch, and top bar stay connected through five
+  movements, then one lift precedes the separate right upright, matching
+  Language Ladder's font-checked path.
+
 ### Added - generated lesson figures
 
 - Generate deterministic etymology-route SVGs from the canonical lesson `roots`

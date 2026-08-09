@@ -63,6 +63,8 @@ const LA = DUCTUS["ல"];
 const laOutline = tamilOutline("ல");
 const RRA = DUCTUS["ற"];
 const rraOutline = tamilOutline("ற");
+const NNA = DUCTUS["ன"];
+const nnaOutline = tamilOutline("ன");
 
 /** Walk a node tree, collecting every node the predicate accepts. */
 function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = []): SvgNode[] {
@@ -74,7 +76,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds all eight authored Tamil letters", () => {
+  it("finds all nine authored Tamil letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -83,6 +85,7 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("வ")?.glyph).toBe("வ");
     expect(ductusFor("ல")?.glyph).toBe("ல");
     expect(ductusFor("ற")?.glyph).toBe("ற");
+    expect(ductusFor("ன")?.glyph).toBe("ன");
   });
 
   it("returns undefined for a letter nobody has authored a stroke order for", () => {
@@ -459,6 +462,31 @@ describe("ற — a real cited three-stroke five-movement filmstrip", () => {
     expect(done).toHaveLength(2);
     expect(done.map((path) => path.attrs.d)).toEqual([penPathD(RRA.strokes[0], 1), penPathD(RRA.strokes[1], 1)]);
     expect(pen.attrs.d).toBe(penPathD(RRA.strokes[2], 1));
+  });
+});
+
+describe("ன — a real cited two-stroke six-movement filmstrip", () => {
+  const steps = ductusSteps(NNA);
+  const strip = ductusFilmstrip(NNA, nnaOutline);
+
+  it("joins the loop, inner arch, and top bar before the sole lift", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0, 0, 1]);
+  });
+
+  it("reports six movements in two strokes with one lift", () => {
+    expect(strip.frames).toHaveLength(6);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 6 movements");
+  });
+
+  it("keeps the completed loop-and-bar stroke visible while drawing the upright", () => {
+    const last = strip.frames[5];
+    const done = byTag(last, "path").filter((path) => path.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
+    expect(done).toHaveLength(1);
+    expect(done[0].attrs.d).toBe(penPathD(NNA.strokes[0], 1));
+    expect(pen.attrs.d).toBe(penPathD(NNA.strokes[1], 1));
   });
 });
 
