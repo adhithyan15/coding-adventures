@@ -1296,6 +1296,9 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
         base_emitter_leakage_current = model.params.get(
             "ISE", model.params.get("C2", 0.0) * saturation_current
         )
+        base_collector_leakage_current = model.params.get(
+            "ISC", model.params.get("C4", 0.0) * saturation_current
+        )
         return BJT(
             name,
             fields[1],
@@ -1332,6 +1335,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             Ikf=model.params.get("IKF", model.params.get("IK", 0.0)),
             Ise=base_emitter_leakage_current,
             Ne=model.params.get("NE", 1.0),
+            Isc=base_collector_leakage_current,
         )
     if prefix == "J":
         _require_fields(fields, 5, "JFET")
@@ -2188,6 +2192,29 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             or base_emitter_leakage_emission_coefficient <= 0.0
         ):
             raise NetlistParseError("BJT NE must be finite and positive")
+        base_collector_leakage_ratio = params.get("C4")
+        base_collector_leakage_current = params.get("ISC")
+        if (
+            base_collector_leakage_current is None
+            and base_collector_leakage_ratio is not None
+            and (
+                not math.isfinite(base_collector_leakage_ratio)
+                or base_collector_leakage_ratio < 0.0
+            )
+        ):
+            raise NetlistParseError("BJT C4 must be finite and non-negative")
+        if (
+            base_collector_leakage_current is None
+            and base_collector_leakage_ratio is not None
+        ):
+            base_collector_leakage_current = base_collector_leakage_ratio * params.get(
+                "IS", 1e-14
+            )
+        if base_collector_leakage_current is not None and (
+            not math.isfinite(base_collector_leakage_current)
+            or base_collector_leakage_current < 0.0
+        ):
+            raise NetlistParseError("BJT ISC must be finite and non-negative")
     if kind in {"NJF", "PJF"}:
         gate_source_capacitance = params.get("CGS", params.get("CGS0"))
         if gate_source_capacitance is not None and (

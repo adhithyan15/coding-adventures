@@ -1461,6 +1461,27 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("BJT NE must be finite and positive");
   }
+  const bjtBaseCollectorLeakageRatio = params.get("C4");
+  const explicitBjtBaseCollectorLeakageCurrent = params.get("ISC");
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    explicitBjtBaseCollectorLeakageCurrent === undefined &&
+    bjtBaseCollectorLeakageRatio !== undefined &&
+    (!Number.isFinite(bjtBaseCollectorLeakageRatio) || bjtBaseCollectorLeakageRatio < 0.0)
+  ) {
+    throw new NetlistParseError("BJT C4 must be finite and non-negative");
+  }
+  const bjtBaseCollectorLeakageCurrent = explicitBjtBaseCollectorLeakageCurrent ??
+    (bjtBaseCollectorLeakageRatio === undefined
+      ? undefined
+      : bjtBaseCollectorLeakageRatio * (params.get("IS") ?? 1.0e-14));
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtBaseCollectorLeakageCurrent !== undefined &&
+    (!Number.isFinite(bjtBaseCollectorLeakageCurrent) || bjtBaseCollectorLeakageCurrent < 0.0)
+  ) {
+    throw new NetlistParseError("BJT ISC must be finite and non-negative");
+  }
   const gateSourceCapacitance = params.get("CGS") ?? params.get("CGS0");
   if (
     (kind === "NJF" || kind === "PJF") &&
@@ -2152,6 +2173,8 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
     const saturationCurrent = model.params.get("IS") ?? 1.0e-14;
     const baseEmitterLeakageCurrent = model.params.get("ISE") ??
       (model.params.get("C2") ?? 0.0) * saturationCurrent;
+    const baseCollectorLeakageCurrent = model.params.get("ISC") ??
+      (model.params.get("C4") ?? 0.0) * saturationCurrent;
     return bjt(
       name,
       fields[1],
@@ -2189,6 +2212,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("IKF") ?? model.params.get("IK") ?? 0.0,
       baseEmitterLeakageCurrent,
       model.params.get("NE") ?? 1.0,
+      baseCollectorLeakageCurrent,
     );
   }
   if (prefix === "J") {
