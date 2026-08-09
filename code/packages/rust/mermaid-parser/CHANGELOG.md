@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.0
+
+- Parse normal and reverse filled/stick half arrows into sequence IR.
+
 ## 0.8.0
 
 - Parse participant `type` and `alias` configuration with external-alias precedence.

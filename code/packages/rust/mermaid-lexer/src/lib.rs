@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.7.0";
+pub const VERSION: &str = "0.8.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -111,7 +111,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.7.0");
+        assert_eq!(VERSION, "0.8.0");
     }
 
     #[test]
@@ -344,5 +344,29 @@ mod tests {
         assert!(tokens
             .iter()
             .any(|token| token.type_name.as_deref() == Some("CONFIG")));
+    }
+
+    #[test]
+    fn tokenizes_sequence_half_arrows() {
+        let tokens = tokenize_mermaid_sequence(
+            r#"sequenceDiagram
+A-|\B: filled top
+A-|/B: filled bottom
+A-\\B: stick top
+A-//B: stick bottom
+A/|-B: reverse filled top
+A\\-B: reverse stick bottom
+"#,
+        );
+        let names: Vec<&str> = tokens
+            .iter()
+            .filter_map(|token| token.type_name.as_deref())
+            .collect();
+        assert!(names.contains(&"SOLID_FILLED_TOP"));
+        assert!(names.contains(&"SOLID_FILLED_BOTTOM"));
+        assert!(names.contains(&"SOLID_STICK_TOP"));
+        assert!(names.contains(&"SOLID_STICK_BOTTOM"));
+        assert!(names.contains(&"SOLID_REVERSE_FILLED_TOP"));
+        assert!(names.contains(&"SOLID_REVERSE_STICK_BOTTOM"));
     }
 }

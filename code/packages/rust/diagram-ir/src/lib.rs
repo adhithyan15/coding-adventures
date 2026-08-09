@@ -1,6 +1,6 @@
 //! diagram-ir v0.7.0 — DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.8.0";
+pub const VERSION: &str = "0.9.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -194,6 +194,14 @@ pub enum SequenceArrowhead {
     Filled,
     Cross,
     Point,
+    FilledTop,
+    FilledBottom,
+    StickTop,
+    StickBottom,
+    ReverseFilledTop,
+    ReverseFilledBottom,
+    ReverseStickTop,
+    ReverseStickBottom,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -885,8 +893,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn version_is_0_8_0() {
-        assert_eq!(VERSION, "0.8.0");
+    fn version_is_0_9_0() {
+        assert_eq!(VERSION, "0.9.0");
     }
     #[test]
     fn default_direction_is_tb() {

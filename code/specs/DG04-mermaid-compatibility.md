@@ -118,7 +118,7 @@ block events. Sequence layout resolves those events into nested frames and
 branch dividers before existing PaintInstructions render them. Participant
 `create` and `destroy` statements lower into lifecycle events; layout uses them
 to place dynamic participant headers, bound lifelines, and emit destruction
-markers. Actor-menu links, properties, details, and advanced arrow variants
+markers. Actor-menu links, properties, details, and central connections
 remain compatibility work. Participant `box` declarations now lower into
 semantic groups, lane-enclosing layout geometry, and backend-neutral Paint
 rectangles and labels, including the supported named and `rgb`/`rgba` color
@@ -129,6 +129,9 @@ rather than degrade silently.
 Inline participant configuration now carries `type` and `alias` into semantic
 IR. Boundary, control, entity, database, collections, and queue kinds lower to
 backend-neutral path, ellipse, and rectangle symbols and have Metal PNG coverage.
+Mermaid 11.16.1 half arrows are grammar-backed across every solid/dotted,
+normal/reverse, filled/stick, and top/bottom form. Their endpoint semantics
+survive layout and lower to backend-neutral Paint paths.
 
 ### Structural Groups
 

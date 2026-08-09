@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.9.0
+
+- Added normal and reverse filled/stick half-arrow semantics for sequence messages.
+
 ## 0.8.0
 
 - Added Mermaid sequence participant stereotype kinds.
