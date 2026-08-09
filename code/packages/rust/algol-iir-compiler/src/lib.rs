@@ -1282,18 +1282,13 @@ impl Compiler {
             } else {
                 ProcedureParamMode::Name
             };
-            match (mode, ty) {
-                (ProcedureParamMode::Name, ProcedureParamType::Array { .. }) => {
-                    return Err(CompileError::Unsupported(format!(
-                        "call-by-name array parameter {p:?}"
-                    )))
-                }
-                (ProcedureParamMode::Name, ProcedureParamType::Scalar(ScalarType::String)) => {
-                    return Err(CompileError::Unsupported(format!(
-                        "call-by-name string parameter {p:?}"
-                    )))
-                }
-                _ => {}
+            if matches!(
+                (mode, ty),
+                (ProcedureParamMode::Name, ProcedureParamType::Array { .. })
+            ) {
+                return Err(CompileError::Unsupported(format!(
+                    "call-by-name array parameter {p:?}"
+                )));
             }
             params.push(ProcedureParam { name: p, ty, mode });
         }
@@ -2293,6 +2288,39 @@ impl Compiler {
                 binding.ty.name()
             )));
         }
+        if target.ty == ScalarType::String {
+            // Keep call-by-name writes aligned with normal string assignment:
+            // a variable receives a fresh runtime string instead of an alias to
+            // the evaluated source handle.
+            let empty = self.fresh_temp();
+            let copy = if target.is_global {
+                self.fresh_temp()
+            } else {
+                target.slot.clone()
+            };
+            self.emit(IIRInstr::new(
+                "str_const",
+                Some(empty.clone()),
+                vec![Operand::Str(String::new())],
+                "str",
+            ));
+            self.emit(IIRInstr::new(
+                "str_concat",
+                Some(copy.clone()),
+                vec![Operand::Var(value.slot), Operand::Var(empty)],
+                "str",
+            ));
+            if target.is_global {
+                self.emit(IIRInstr::new(
+                    "global_store",
+                    None,
+                    vec![Operand::Str(target.slot.clone()), Operand::Var(copy)],
+                    "void",
+                ));
+            }
+            self.initialized_string_slots.insert(target.slot);
+            return Ok(());
+        }
         if target.is_global {
             self.emit(IIRInstr::new(
                 "global_store",
@@ -2793,6 +2821,24 @@ impl Compiler {
                     continue;
                 }
                 let name = self.simple_variable_name(var_node)?;
+                if self.active_by_name_binding(&name).is_some() {
+                    let value = self.fresh_temp();
+                    self.emit(IIRInstr::new(
+                        "str_const",
+                        Some(value.clone()),
+                        vec![Operand::Str(literal.clone())],
+                        "str",
+                    ));
+                    self.emit_named_scalar_write(
+                        &name,
+                        ExprValue {
+                            slot: value,
+                            ty: ScalarType::String,
+                        },
+                    )?;
+                    saw_string_target = true;
+                    continue;
+                }
                 let binding = self.require_var(&name)?;
                 if binding.ty != ScalarType::String {
                     return Err(CompileError::Type(format!(
@@ -2868,6 +2914,17 @@ impl Compiler {
                         continue;
                     }
                     let name = self.simple_variable_name(var_node)?;
+                    if self.active_by_name_binding(&name).is_some() {
+                        self.emit_named_scalar_write(
+                            &name,
+                            ExprValue {
+                                slot: src_slot.clone(),
+                                ty: ScalarType::String,
+                            },
+                        )?;
+                        saw_string_target = true;
+                        continue;
+                    }
                     let binding = self.require_var(&name)?;
                     let target_ty = binding.ty;
                     let target_slot = binding.slot.clone();
@@ -7296,6 +7353,36 @@ mod tests {
                            boolean procedure invert(x); boolean x; invert := not x; \
                            if invert(false) then result := 42 else result := 0 end";
         assert_eq!(run_i64(boolean_src), 42);
+    }
+
+    #[test]
+    fn call_by_name_supports_and_forwards_string_formals() {
+        let src = "begin string s; integer result; \
+                   integer procedure forward(x); string x; \
+                     begin integer procedure consume(x); string x; \
+                           begin x := 'OK'; \
+                                 if x = 'OK' then consume := 42 else consume := 0 end; \
+                           forward := consume(x) end; \
+                   s := 'NO'; result := forward(s) end";
+        assert_eq!(run_i64(src), 42);
+
+        let copied_value_src = "begin string source, destination; integer result; \
+                                integer procedure replace(x, y); value y; string x, y; \
+                                  begin x := y; \
+                                        if x = 'OK' then replace := 42 else replace := 0 end; \
+                                source := 'OK'; destination := 'NO'; \
+                                result := replace(destination, source) end";
+        assert_eq!(run_i64(copied_value_src), 42);
+
+        let err = compile_source(
+            "begin integer result; procedure set(x); string x; x := 'NO'; \
+             set('OK'); result := 42 end",
+            "call_by_name_string_literal_write",
+        )
+        .expect_err("a written string name formal needs an lvalue actual");
+        assert!(err
+            .to_string()
+            .contains("requires an assignable variable actual"));
     }
 
     #[test]
