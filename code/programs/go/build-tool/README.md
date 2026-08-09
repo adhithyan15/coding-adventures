@@ -78,6 +78,12 @@ bytes stop resolution with `METADATA_INVALID_UTF8`, identify the package and
 repository-relative manifest, and return CLI exit code 2 without exposing the
 checkout path or silently replacing input.
 
+Lua standalone-build validation follows the shared language-neutral fixture
+contract. When a canonical `BUILD` installs repository-local sibling rocks,
+an absent `BUILD_windows` is an empty Windows closure rather than a reason to
+skip comparison. The validator reports every missing canonical sibling in
+stable sorted order; an explicit Windows recipe may add transitive local rocks.
+
 Cargo dependency resolution reads inline path dependencies from the top-level
 `[dependencies]` table. When a dependency uses a local source alias together
 with `package = "published-name"`, the published package name drives internal

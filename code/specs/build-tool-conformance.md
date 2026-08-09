@@ -757,12 +757,18 @@ Validation input is the sole normalized repository-data snapshot for this
 domain. It does not carry a second inline BUILD-file source of truth, and the
 adapter MUST NOT consult the workspace or host checkout.
 
-The closed process-free v1 record currently exposes only
-`build_file_presence`, whose result is derived exactly from each package's
-normalized `build_file_state`. The other diagnostic families above remain the
-target contract, but they are not valid pure-domain check values until their
-inputs and deterministic semantic oracles are added. A self-consistent result
-is never sufficient evidence for an unmodeled validation check.
+The closed process-free v1 record exposes `build_file_presence`, whose result
+is derived exactly from each package's normalized `build_file_state`, and
+`lua_windows_sibling_parity`. The Lua check consumes only normalized package
+data: `canonical_lua_sibling_installs`, `windows_build_file_state`, and
+`windows_lua_sibling_installs`. Every referenced sibling is a declared package
+identity. A canonical sibling missing from the Windows set produces
+`STANDALONE_PREREQUISITE_MISSING` at the package's `BUILD_windows` path,
+including when `windows_build_file_state` is `missing`; Windows may contain
+additional transitive siblings. The other diagnostic families above remain
+the target contract, but they are not valid pure-domain check values until
+their inputs and deterministic semantic oracles are added. A self-consistent
+result is never sufficient evidence for an unmodeled validation check.
 
 Canonical result ordering is domain-aware:
 

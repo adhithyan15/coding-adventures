@@ -32,6 +32,9 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Fixed
 
+- Lua standalone validation now treats an absent `BUILD_windows` as missing
+  the canonical sibling-install closure, matching the shared
+  `lua_windows_sibling_parity` fixture plus the Python and Lua validators.
 - TypeScript dependency resolution now parses root `package.json` objects,
   registers only the exact top-level `name` alias, and accepts only direct
   keys from `dependencies` and `devDependencies`. Single-line tables resolve

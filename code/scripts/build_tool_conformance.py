@@ -972,6 +972,9 @@ def _validate_pure_case_semantics(
             _toolchain_for_language(by_name[name]["language"])
     elif domain == "validation":
         by_name = _package_index(options["packages"])
+        lua_windows_sibling_parity = (
+            "lua_windows_sibling_parity" in options["checks"]
+        )
         _validate_unique_paths(
             [package["rel_path"] for package in by_name.values()],
             "CASE_NESTED_PATH_UNSAFE",
@@ -984,7 +987,45 @@ def _validate_pure_case_semantics(
                         "CASE_NESTED_GLOB_UNSAFE",
                         f"unsafe declared source {pattern!r}: {error}",
                     )
-            for field in ("build_references", "declared_deps"):
+            reference_fields = ["build_references", "declared_deps"]
+            if lua_windows_sibling_parity:
+                reference_fields.extend(
+                    (
+                        "canonical_lua_sibling_installs",
+                        "windows_lua_sibling_installs",
+                    )
+                )
+                if package["language"] != "lua":
+                    raise ConformanceError(
+                        "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+                        "lua_windows_sibling_parity accepts only Lua packages",
+                    )
+                for field in (
+                    "canonical_lua_sibling_installs",
+                    "windows_lua_sibling_installs",
+                ):
+                    if package[field] != sorted(package[field]):
+                        raise ConformanceError(
+                            "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+                            f"{field} must be sorted",
+                        )
+                if (
+                    package["build_file_state"] != "present"
+                    and package["canonical_lua_sibling_installs"]
+                ):
+                    raise ConformanceError(
+                        "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+                        "a non-present canonical BUILD cannot declare sibling installs",
+                    )
+                if (
+                    package["windows_build_file_state"] != "present"
+                    and package["windows_lua_sibling_installs"]
+                ):
+                    raise ConformanceError(
+                        "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+                        "a non-present BUILD_windows cannot declare sibling installs",
+                    )
+            for field in reference_fields:
                 for name in package[field]:
                     if name not in by_name:
                         raise ConformanceError(
@@ -1284,6 +1325,59 @@ def _expected_shards(options: dict[str, Any]) -> list[dict[str, Any]]:
     return shards
 
 
+def _expected_validation_diagnostics(
+    options: dict[str, Any],
+) -> list[dict[str, Any]]:
+    checks = set(options["checks"])
+    diagnostics: list[dict[str, Any]] = []
+    if "build_file_presence" in checks:
+        for package in options["packages"]:
+            state = package["build_file_state"]
+            if state == "present":
+                continue
+            diagnostics.append(
+                {
+                    "code": {
+                        "missing": "BUILD_FILE_MISSING",
+                        "empty": "BUILD_FILE_EMPTY",
+                    }[state],
+                    "severity": "error",
+                    "path": package["rel_path"],
+                }
+            )
+    if "lua_windows_sibling_parity" in checks:
+        for package in options["packages"]:
+            missing = sorted(
+                set(package["canonical_lua_sibling_installs"])
+                - set(package["windows_lua_sibling_installs"])
+            )
+            if not missing:
+                continue
+            diagnostics.append(
+                {
+                    "code": "STANDALONE_PREREQUISITE_MISSING",
+                    "severity": "error",
+                    "path": f"{package['rel_path']}/BUILD_windows",
+                    "package": package["name"],
+                    "details": {
+                        "missing_sibling_installs": missing,
+                        "windows_build_file_state": package[
+                            "windows_build_file_state"
+                        ],
+                    },
+                }
+            )
+    return sorted(
+        diagnostics,
+        key=lambda item: (
+            item["code"],
+            item.get("path", ""),
+            item.get("package", ""),
+            json.dumps(item.get("details", {}), sort_keys=True),
+        ),
+    )
+
+
 def _validate_pure_result_semantics(
     case: dict[str, Any],
     result: dict[str, Any],
@@ -1448,22 +1542,34 @@ def _validate_pure_result_semantics(
     elif domain == "validation":
         codes = payload.get("diagnostic_codes", [])
         valid = payload.get("valid")
-        if set(options["checks"]) == {"build_file_presence"}:
-            expected_codes = sorted(
-                {
-                    {
-                        "missing": "BUILD_FILE_MISSING",
-                        "empty": "BUILD_FILE_EMPTY",
-                    }[package["build_file_state"]]
-                    for package in options["packages"]
-                    if package["build_file_state"] != "present"
-                }
+        expected_diagnostics = _expected_validation_diagnostics(options)
+        expected_codes = sorted(
+            {diagnostic["code"] for diagnostic in expected_diagnostics}
+        )
+        diagnostic_projection = [
+            {
+                key: diagnostic[key]
+                for key in ("code", "severity", "path", "package", "details")
+                if key in diagnostic
+            }
+            for diagnostic in result["diagnostics"]
+        ]
+        diagnostic_projection.sort(
+            key=lambda item: (
+                item["code"],
+                item.get("path", ""),
+                item.get("package", ""),
+                json.dumps(item.get("details", {}), sort_keys=True),
             )
-            if sorted(codes) != expected_codes:
-                raise ConformanceError(
-                    f"{prefix}_VALIDATION_INCONSISTENT",
-                    "build-file diagnostics do not match the normalized snapshot",
-                )
+        )
+        if (
+            sorted(codes) != expected_codes
+            or diagnostic_projection != expected_diagnostics
+        ):
+            raise ConformanceError(
+                f"{prefix}_VALIDATION_INCONSISTENT",
+                "validation diagnostics do not match the normalized snapshot",
+            )
         consistent = (
             outcome == "ok" and valid is True and not codes and not diagnostic_codes
         ) or (

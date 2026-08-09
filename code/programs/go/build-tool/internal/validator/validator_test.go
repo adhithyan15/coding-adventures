@@ -1,14 +1,89 @@
 package validator
 
 import (
+	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 )
+
+type luaWindowsSiblingFixture struct {
+	Input struct {
+		Options struct {
+			Packages []struct {
+				Name                        string   `json:"name"`
+				RelPath                     string   `json:"rel_path"`
+				Language                    string   `json:"language"`
+				BuildFileState              string   `json:"build_file_state"`
+				CanonicalLuaSiblingInstalls []string `json:"canonical_lua_sibling_installs"`
+				WindowsBuildFileState       string   `json:"windows_build_file_state"`
+				WindowsLuaSiblingInstalls   []string `json:"windows_lua_sibling_installs"`
+			} `json:"packages"`
+		} `json:"options"`
+	} `json:"input"`
+	Expected struct {
+		Diagnostics []struct {
+			Code    string `json:"code"`
+			Path    string `json:"path"`
+			Package string `json:"package"`
+			Details struct {
+				MissingSiblingInstalls []string `json:"missing_sibling_installs"`
+				WindowsBuildFileState  string   `json:"windows_build_file_state"`
+			} `json:"details"`
+		} `json:"diagnostics"`
+	} `json:"expected"`
+}
+
+func loadLuaWindowsSiblingFixture(t *testing.T, name string) luaWindowsSiblingFixture {
+	t.Helper()
+	_, sourceFile, _, ok := runtime.Caller(0)
+	if !ok {
+		t.Fatal("could not locate validator test source")
+	}
+	repoRoot := filepath.Clean(filepath.Join(
+		filepath.Dir(sourceFile), "..", "..", "..", "..", "..", "..",
+	))
+	fixturePath := filepath.Join(
+		repoRoot, "code", "specs", "fixtures", "build-tool-v1", "cases", name,
+	)
+	data, err := os.ReadFile(fixturePath)
+	if err != nil {
+		t.Fatalf("read shared fixture %s: %v", name, err)
+	}
+	var fixture luaWindowsSiblingFixture
+	if err := json.Unmarshal(data, &fixture); err != nil {
+		t.Fatalf("decode shared fixture %s: %v", name, err)
+	}
+	return fixture
+}
+
+func luaSiblingInstallLine(packageName string, windows bool) string {
+	directory := strings.TrimPrefix(packageName, "lua/")
+	rock := strings.ReplaceAll(directory, "_", "-")
+	prefix := "../"
+	if windows {
+		prefix = `..\`
+	}
+	return fmt.Sprintf(
+		"(cd %s%s && luarocks make --local --deps-mode=none coding-adventures-%s-0.1.0-1.rockspec)",
+		prefix, directory, rock,
+	)
+}
+
+func luaSelfInstallLine(packageName string) string {
+	directory := strings.TrimPrefix(packageName, "lua/")
+	rock := strings.ReplaceAll(directory, "_", "-")
+	return fmt.Sprintf(
+		"luarocks make --local --deps-mode=none coding-adventures-%s-0.1.0-1.rockspec",
+		rock,
+	)
+}
 
 func makePackages(t *testing.T, defs []struct {
 	name     string
@@ -674,6 +749,91 @@ luarocks make --local coding-adventures-arm1-gatelevel-0.1.0-1.rockspec
 	}
 	if !strings.Contains(err.Error(), "final self-install does not pass --deps-mode=none or --no-manifest") {
 		t.Fatalf("expected deps-mode guidance, got %v", err)
+	}
+}
+
+func TestValidateBuildFilesConsumesAbsentWindowsLuaSiblingFixture(t *testing.T) {
+	fixture := loadLuaWindowsSiblingFixture(
+		t,
+		"validation-lua-windows-sibling-parity-absent.json",
+	)
+	definitions := make([]struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}, 0, len(fixture.Input.Options.Packages))
+	for _, packageRecord := range fixture.Input.Options.Packages {
+		definitions = append(definitions, struct {
+			name     string
+			relPath  string
+			lang     string
+			commands []string
+		}{
+			name: packageRecord.Name, relPath: packageRecord.RelPath, lang: packageRecord.Language,
+		})
+	}
+	packages := makePackages(t, definitions)
+	byName := make(map[string]discovery.Package, len(packages))
+	for _, pkg := range packages {
+		byName[pkg.Name] = pkg
+	}
+
+	for _, packageRecord := range fixture.Input.Options.Packages {
+		pkg := byName[packageRecord.Name]
+		canonical := make([]string, 0, len(packageRecord.CanonicalLuaSiblingInstalls)+1)
+		for _, sibling := range packageRecord.CanonicalLuaSiblingInstalls {
+			canonical = append(canonical, luaSiblingInstallLine(sibling, false))
+		}
+		if packageRecord.BuildFileState == "present" {
+			canonical = append(canonical, luaSelfInstallLine(packageRecord.Name))
+			writeBuildFile(t, pkg.Path, "BUILD", strings.Join(canonical, "\n")+"\n")
+		}
+
+		if packageRecord.WindowsBuildFileState == "present" {
+			windows := make([]string, 0, len(packageRecord.WindowsLuaSiblingInstalls)+1)
+			for _, sibling := range packageRecord.WindowsLuaSiblingInstalls {
+				windows = append(windows, luaSiblingInstallLine(sibling, true))
+			}
+			windows = append(windows, luaSelfInstallLine(packageRecord.Name))
+			writeBuildFile(t, pkg.Path, "BUILD_windows", strings.Join(windows, "\n")+"\n")
+		}
+	}
+
+	if len(fixture.Expected.Diagnostics) != 1 {
+		t.Fatalf("expected one shared diagnostic, got %d", len(fixture.Expected.Diagnostics))
+	}
+	diagnostic := fixture.Expected.Diagnostics[0]
+	if diagnostic.Code != "STANDALONE_PREREQUISITE_MISSING" {
+		t.Fatalf("unexpected shared diagnostic code %q", diagnostic.Code)
+	}
+	if diagnostic.Details.WindowsBuildFileState != "missing" {
+		t.Fatalf("fixture must exercise an absent BUILD_windows override")
+	}
+	if _, err := os.Stat(filepath.Join(byName[diagnostic.Package].Path, "BUILD_windows")); !os.IsNotExist(err) {
+		t.Fatalf("fixture BUILD_windows must be absent, got %v", err)
+	}
+
+	graph := directedgraph.New()
+	for _, pkg := range packages {
+		graph.AddNode(pkg.Name)
+	}
+	err := ValidateBuildFiles(packages, graph)
+	if err == nil {
+		t.Fatal("expected absent Lua BUILD_windows validation failure")
+	}
+	message := err.Error()
+	if !strings.Contains(message, "BUILD_windows is missing sibling installs present in BUILD") {
+		t.Fatalf("expected missing sibling install message, got %v", err)
+	}
+	if !strings.Contains(filepath.ToSlash(message), diagnostic.Path) {
+		t.Fatalf("expected fixture diagnostic path %q, got %v", diagnostic.Path, err)
+	}
+	for _, sibling := range diagnostic.Details.MissingSiblingInstalls {
+		directory := strings.TrimPrefix(sibling, "lua/")
+		if !strings.Contains(message, "../"+directory) {
+			t.Fatalf("expected missing sibling %q, got %v", sibling, err)
+		}
 	}
 }
 

@@ -131,7 +131,7 @@ class CorpusTests(unittest.TestCase):
         summary = runner.validate_corpus(FIXTURE_ROOT)
 
         self.assertEqual(summary["schema_version"], 1)
-        self.assertEqual(summary["case_count"], 56)
+        self.assertEqual(summary["case_count"], 57)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -580,6 +580,36 @@ class PureDomainValidationTests(unittest.TestCase):
             pure_domain_schema=self._schema_args()["pure_domain_schema"],
         )
 
+    def test_lua_windows_sibling_parity_is_derived_from_snapshot(self) -> None:
+        case = load_case("validation-lua-windows-sibling-parity-absent.json")
+        runner.validate_case_document(case, **self._schema_args())
+        runner.assert_result_matches(
+            case,
+            copy.deepcopy(case["expected"]),
+            pure_domain_schema=self._schema_args()["pure_domain_schema"],
+        )
+
+        repaired = copy.deepcopy(case)
+        demo = repaired["input"]["options"]["packages"][1]
+        demo["windows_build_file_state"] = "present"
+        demo["windows_lua_sibling_installs"] = list(
+            demo["canonical_lua_sibling_installs"]
+        )
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(repaired, **self._schema_args())
+        self.assertEqual(raised.exception.code, "EXPECTED_VALIDATION_INCONSISTENT")
+
+    def test_lua_windows_sibling_snapshot_rejects_impossible_state(self) -> None:
+        case = load_case("validation-lua-windows-sibling-parity-absent.json")
+        demo = case["input"]["options"]["packages"][1]
+        demo["windows_lua_sibling_installs"] = ["lua/arithmetic"]
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(case, **self._schema_args())
+        self.assertEqual(
+            raised.exception.code,
+            "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+        )
+
     def test_starlark_load_scanner_handles_lexical_literal_forms(self) -> None:
         commented = load_case("starlark-structured-context.json")
         commented["workspace"]["files"][0]["content_utf8"] = (
@@ -851,7 +881,7 @@ class CommandLineTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
-        self.assertEqual(summary["case_count"], 56)
+        self.assertEqual(summary["case_count"], 57)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

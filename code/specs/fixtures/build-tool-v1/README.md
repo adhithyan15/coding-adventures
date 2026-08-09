@@ -35,7 +35,7 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 38-case bootstrap corpus covers every process-free v1 domain:
+The 57-case bootstrap corpus covers every process-free v1 domain:
 
 - canonical package and program membership, language-registry classification,
   fixture-tree exclusion, fail-closed duplicate package identities, plus
@@ -51,8 +51,9 @@ The 38-case bootstrap corpus covers every process-free v1 domain:
 - inline-only Starlark module resolution, bounded evaluation requests,
   structured command extraction, and stable missing/outside errors;
 - deterministic prerequisite-closed sharding and invalid input handling;
-- normalized BUILD-file validation snapshots and the complete toolchain registry,
-  including OCaml; and
+- normalized BUILD-file validation snapshots, absent Lua `BUILD_windows`
+  sibling-closure parity, and the complete toolchain registry, including
+  OCaml; and
 - process-free CLI exit-decision classification.
 
 The outer envelope and build-plan payload use `schema.json`,
