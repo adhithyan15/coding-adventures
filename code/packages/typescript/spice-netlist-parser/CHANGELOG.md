@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate and lower BJT model-card `ITF` forward transit-time current.
 - Validate and lower BJT model-card `XTF` forward transit-time bias
   coefficient.
 - Validate and lower BJT model-card `PTF` forward excess phase.
