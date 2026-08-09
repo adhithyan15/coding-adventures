@@ -546,6 +546,7 @@ members = [
     "image-codec-arw",
     "image-codec-orf",
     "image-codec-nef",
+    "mosaic-app-runtime",
     "mosaic-analyzer",
     "mosaic-driver",
     "mosaic-compile",
