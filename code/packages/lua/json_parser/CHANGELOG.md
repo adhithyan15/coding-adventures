@@ -1,5 +1,13 @@
 # Changelog — coding-adventures-json-parser
 
+## [Unreleased]
+
+### Fixed
+
+- The Unix and Windows standalone BUILD recipes now install the shared
+  `coding-adventures-lexer` rock before `json_lexer`, and the Unix self-install
+  no longer consults remote dependency resolution.
+
 ## [0.1.0] - 2026-03-29
 
 ### Added

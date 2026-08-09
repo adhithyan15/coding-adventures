@@ -3,6 +3,14 @@
 All notable changes to this package will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Fixed
+
+- The Unix and Windows standalone BUILD recipes now install the shared
+  `coding-adventures-lexer` rock before `dartmouth_basic_lexer`, and the Unix
+  self-install no longer consults remote dependency resolution.
+
 ## [0.1.0] — 2026-04-10
 
 ### Added

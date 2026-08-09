@@ -32,6 +32,15 @@ grammar_tools (parse_parser_grammar)
 json_lexer → lexer → grammar_tools (parse_token_grammar)
 ```
 
+The canonical Unix and Windows BUILD recipes install the shared `lexer` rock
+before `json_lexer`, preserving the complete clean-tree transitive closure.
+
+## Running tests
+
+```bash
+cd tests && busted . --verbose --pattern=test_
+```
+
 ## Usage
 
 ```lua
