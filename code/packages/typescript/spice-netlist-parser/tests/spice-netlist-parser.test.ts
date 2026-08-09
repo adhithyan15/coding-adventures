@@ -3483,6 +3483,16 @@ Xright c d load
     },
   );
 
+  it("gives MOSFET VT0 precedence over threshold aliases", () => {
+    const parsed = parseNetlist(
+      ".model nfast NMOS(VT0=-0.38 VTO=-0.42 VTH=-0.46)\nM1 d g s b nfast\n",
+    );
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") throw new Error("unexpected element kind");
+    expect(element.params.VT0).toBe(-0.38);
+  });
+
   it.each(["LAMBDA", "LAM"])(
     "rejects non-finite MOSFET model channel-modulation alias %s",
     (alias) => {

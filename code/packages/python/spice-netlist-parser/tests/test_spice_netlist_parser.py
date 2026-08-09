@@ -3426,6 +3426,16 @@ def test_lowers_finite_mosfet_model_threshold_voltage_aliases(alias: str) -> Non
     assert mosfet.model.model.params.VT0 == -0.38
 
 
+def test_gives_mosfet_vt0_precedence_over_threshold_aliases() -> None:
+    parsed = parse_netlist(
+        ".model nfast NMOS(VT0=-0.38 VTO=-0.42 VTH=-0.46)\nM1 d g s b nfast\n"
+    )
+
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert mosfet.model.model.params.VT0 == -0.38
+
+
 @pytest.mark.parametrize("alias", ["LAMBDA", "LAM"])
 def test_rejects_non_finite_mosfet_model_channel_modulation(alias: str) -> None:
     with pytest.raises(NetlistParseError, match="MOSFET LAMBDA must be finite"):
