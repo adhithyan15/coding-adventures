@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.9.0";
+pub const VERSION: &str = "0.10.0";
 
 use std::collections::HashMap;
 
@@ -35,8 +35,8 @@ use diagram_ir::{
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
     LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation, Point, RelKind, SequenceArrowhead,
-    SequenceBlockKind, SequenceLineStyle, SequenceParticipantKind, TaskStatus,
-    TextAlign as GeoTextAlign,
+    SequenceBlockKind, SequenceCentralConnection, SequenceLineStyle, SequenceParticipantKind,
+    TaskStatus, TextAlign as GeoTextAlign,
 };
 use layout_ir::{Color, Content, FontSpec, PositionedNode, TextAlign, TextContent};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
@@ -1079,6 +1079,7 @@ where
 {
     let mut instructions = Vec::new();
     let mut text_children = Vec::new();
+    let mut central_markers = Vec::new();
     let label_font = options.label_font.clone();
     let text_color = Color {
         r: 30,
@@ -1239,6 +1240,7 @@ where
                 line_style,
                 arrowhead,
                 bidirectional,
+                central_connection,
                 number,
             } => {
                 let (commands, start, end, label_x, label_width) = if (*from_x - *to_x).abs() < 0.1
@@ -1313,6 +1315,14 @@ where
                 }
                 if *bidirectional {
                     instructions.extend(sequence_arrowhead(&end, &start, arrowhead));
+                }
+                for point in match central_connection {
+                    SequenceCentralConnection::None => vec![],
+                    SequenceCentralConnection::Source => vec![start],
+                    SequenceCentralConnection::Destination => vec![end],
+                    SequenceCentralConnection::Both => vec![start, end],
+                } {
+                    central_markers.push(point);
                 }
                 let rendered_label = match number {
                     Some(number) => format!("{number}. {label}"),
@@ -1467,6 +1477,21 @@ where
             }
             _ => {}
         }
+    }
+
+    for point in central_markers {
+        instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+            base: PaintBase::default(),
+            cx: point.x,
+            cy: point.y,
+            rx: 5.0,
+            ry: 5.0,
+            fill: Some("#ffffff".into()),
+            stroke: Some("#334155".into()),
+            stroke_width: Some(1.5),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
     }
 
     if let Some(title) = &diagram.title {
@@ -2610,7 +2635,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.9.0");
+        assert_eq!(crate::VERSION, "0.10.0");
     }
 
     #[test]

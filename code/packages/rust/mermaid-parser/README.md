@@ -41,6 +41,8 @@ by layout. Participant `box` declarations preserve group labels, fills, and
 membership. Actor-menu links, properties, and details remain explicit compatibility gaps.
 All Mermaid 11.16.1 solid/dotted, normal/reverse filled and stick half-arrow
 forms preserve their line style, half orientation, and endpoint through Paint.
+Central connection markers before and/or after an arrow preserve source,
+destination, and dual endpoint semantics through layout and Paint.
 Inline participant configurations support Mermaid's `type` and `alias` fields,
 including boundary, control, entity, database, collections, and queue symbols.
 

@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.10.0
+
+- Added source, destination, and dual central-connection semantics.
+
 ## 0.9.0
 
 - Added normal and reverse filled/stick half-arrow semantics for sequence messages.

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.0
+
+- Tokenize sequence central-connection markers.
+
 ## 0.8.0
 
 - Tokenize all Mermaid 11.16.1 solid and dotted half-arrow forms.
