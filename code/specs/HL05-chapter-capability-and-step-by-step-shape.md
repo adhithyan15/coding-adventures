@@ -147,8 +147,10 @@ Reserving it now means enabling it later is a flag flip, not a corpus migration.
 construction:
 
 - introduces exactly one `*-PATTERN-*` knowledge atom;
-- declares `slots`, an ordered list of `{ name, fillers[] }` where every filler is a
-  knowledge atom **already in the lesson's closure**;
+- declares `slots`, an ordered map from slot name to `fillers[]`, where every filler is
+  a knowledge atom **already in the lesson's closure**. The repository's deliberately
+  small YAML reader preserves authored map order and exposes the same data to books
+  and apps as ordered `{ name, fillers[] }` objects;
 - carries a `guided-production` block whose activity instantiates at least three
   distinct fillers;
 - obeys every existing schema-v2 rule without exception — block directives, the
@@ -158,6 +160,17 @@ A `pattern` lesson is what lets a chapter generalise. `## Grammar Lens` stays ex
 where it is, inside a word lesson, for grammar that belongs to one word. The two are
 complementary: the Lens explains why *this* word behaves this way, the pattern hands
 the reader a productive template.
+
+```yaml
+type: pattern
+requires:
+  knowledge: [ES-LEX-COMER, ES-LEX-BEBER, ES-LEX-CAFE]
+introduces:
+  knowledge: [ES-PATTERN-ER-FUTURE-SINGULAR]
+slots:
+  infinitive: [ES-LEX-COMER, ES-LEX-BEBER]
+  object: [ES-LEX-CAFE]
+```
 
 ## Validation gates
 

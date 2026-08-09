@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "The Future and the Conditional --- One Weld, Twice",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:fd5a428019978292",
+  "sourceHash": "fnv1a64:218d74f425d8c0a9",
   "lessons": [
     {
       "id": "ES-C17-futuro",
@@ -215,7 +215,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a83b02a31f84419d",
+      "sourceHash": "fnv1a64:364132e4811e693d",
       "notice": null,
       "blocks": [
         {
@@ -315,7 +315,7 @@
               "id": "ES-C17-comer-futuro-singular-forms",
               "prompt": "Give the learned singular future forms of comer: yo, tú, then él/ella/usted.",
               "assesses": [
-                "ES-GRAMMAR-ER-FUTURE-SINGULAR",
+                "ES-PATTERN-ER-FUTURE-SINGULAR",
                 "ES-LEX-COMER"
               ],
               "responseSeconds": 9,
@@ -336,7 +336,7 @@
               "prompt": "Use the learned -er future pattern to say 'I will drink coffee' in Spanish.",
               "assesses": [
                 "ES-GRAMMAR-FUTURE-PREDICTION-INTENTION",
-                "ES-GRAMMAR-ER-FUTURE-SINGULAR",
+                "ES-PATTERN-ER-FUTURE-SINGULAR",
                 "ES-LEX-BEBER",
                 "ES-LEX-CAFE"
               ],
@@ -359,7 +359,7 @@
               "prompt": "Which endings do hablaré and comeré share across the learned singular row?",
               "assesses": [
                 "ES-GRAMMAR-AR-FUTURE-SINGULAR",
-                "ES-GRAMMAR-ER-FUTURE-SINGULAR"
+                "ES-PATTERN-ER-FUTURE-SINGULAR"
               ],
               "responseSeconds": 7,
               "acceptedResponses": [
@@ -406,7 +406,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfca1a3d5e51f7cc",
+      "sourceHash": "fnv1a64:b2a1acbcf5f86386",
       "notice": null,
       "blocks": [
         {
@@ -548,7 +548,7 @@
               "prompt": "Give the future yo forms of hablar, comer, and vivir, in that order.",
               "assesses": [
                 "ES-GRAMMAR-AR-FUTURE-SINGULAR",
-                "ES-GRAMMAR-ER-FUTURE-SINGULAR",
+                "ES-PATTERN-ER-FUTURE-SINGULAR",
                 "ES-GRAMMAR-IR-FUTURE-SINGULAR"
               ],
               "responseSeconds": 9,
@@ -789,7 +789,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8badac42336cf4f0",
+      "sourceHash": "fnv1a64:cd03a74929d2d356",
       "notice": null,
       "blocks": [
         {
@@ -898,7 +898,7 @@
               "id": "ES-C17-comer-condicional-future-pair",
               "prompt": "Give the yo pair 'I will eat; I would eat' in Spanish.",
               "assesses": [
-                "ES-GRAMMAR-ER-FUTURE-SINGULAR",
+                "ES-PATTERN-ER-FUTURE-SINGULAR",
                 "ES-GRAMMAR-ER-CONDITIONAL-SINGULAR",
                 "ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL"
               ],
@@ -1394,7 +1394,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:75975cb2984d8cc7",
+      "sourceHash": "fnv1a64:96921ab1be6b2913",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1528,7 +1528,7 @@
               "prompt": "Give the future yo forms of hablar, comer, and vivir, in that order.",
               "assesses": [
                 "ES-GRAMMAR-AR-FUTURE-SINGULAR",
-                "ES-GRAMMAR-ER-FUTURE-SINGULAR",
+                "ES-PATTERN-ER-FUTURE-SINGULAR",
                 "ES-GRAMMAR-IR-FUTURE-SINGULAR"
               ],
               "responseSeconds": 9,

@@ -14,6 +14,7 @@ import type {
   LessonBodyBlock,
   LessonBlockKnowledge,
   LessonBlockType,
+  LessonPatternSlot,
   Realization,
   Script,
   Taxonomy,
@@ -30,6 +31,8 @@ export interface ParsedLesson {
   preamble: string;
   /** Typed, ordered body blocks for schema-v2 validation and rendering. */
   blocks: LessonBodyBlock[];
+  /** Ordered substitution points declared by a productive `pattern` lesson. */
+  patternSlots?: LessonPatternSlot[];
   /** Deterministic fingerprint of the canonical frontmatter and typed body AST. */
   sourceHash: string;
   realization: Realization;
@@ -43,6 +46,23 @@ function arrayify(value: Frontmatter[string] | undefined): string[] {
 
 function str(value: Frontmatter[string] | undefined): string {
   return typeof value === "string" ? value : "";
+}
+
+/**
+ * Parse the tiny-YAML representation of HL05's ordered pattern slots.
+ *
+ * The frontmatter reader deliberately supports only one nested-map level, so
+ * authors write an indented `slots:` map and receive flattened
+ * `slots.infinitive` keys here. Object insertion order preserves the authored
+ * slot order for book and app renderers.
+ */
+function parsePatternSlots(frontmatter: Frontmatter): LessonPatternSlot[] {
+  return Object.entries(frontmatter)
+    .filter(([key]) => key.startsWith("slots."))
+    .map(([key, value]) => ({
+      name: key.slice("slots.".length),
+      fillers: arrayify(value),
+    }));
 }
 
 function classifyBlock(title: string): LessonBlockType {
@@ -282,6 +302,7 @@ export function parseLesson(
     etymologyHook: str(fm.etymology_hook),
   };
   const typedBody = parseBodyBlocks(body);
+  const patternSlots = parsePatternSlots(fm);
   const parsed: ParsedLesson = {
     language,
     script: resolvedScript,
@@ -292,6 +313,7 @@ export function parseLesson(
     sourceHash: "",
     realization,
   };
+  if (patternSlots.length > 0) parsed.patternSlots = patternSlots;
   parsed.sourceHash = canonicalLessonHash(parsed);
   return parsed;
 }

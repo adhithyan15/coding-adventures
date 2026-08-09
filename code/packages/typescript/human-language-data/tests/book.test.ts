@@ -360,6 +360,10 @@ Use it politely.
       source("C", 30, "Agreement").replace("type: word", "type: grammar"),
       "test",
     );
+    const pattern = parseLesson(
+      source("E", 35, "Known words + ending").replace("type: word", "type: pattern"),
+      "test",
+    );
     const practice = parseLesson(
       source("D", 40, "Drill").replace("type: word", "type: practice"),
       "test",
@@ -371,15 +375,15 @@ Use it politely.
         unicodeScript: "Devanagari",
         scriptCommand: "dv",
       },
-      [practice, grammar, repeated, first],
+      [practice, pattern, grammar, repeated, first],
       [
         capability(2, "Polite speech", "ch:polite"),
         capability(1, "Introductions & Greetings", "ch:greetings"),
       ],
     );
 
-    expect(generated).toContain("% canonical-index-candidates: 5");
-    expect(generated).toContain("% canonical-index-entries: 4");
+    expect(generated).toContain("% canonical-index-candidates: 6");
+    expect(generated).toContain("% canonical-index-entries: 5");
     expect(generated).toContain("\\chapter*{Index}");
     expect(generated).toContain("\\section*{G}");
     expect(generated).toContain("\\textbf{greeting}\\enspace\\emph{\\dv{नमस्ते}}\\enspace(namaste)");
@@ -391,6 +395,7 @@ Use it politely.
         "\\hyperref[ch:polite]{Chapter~2, p.~\\pageref*{ch:polite}}",
     );
     expect(generated).toContain("grammar topic");
+    expect(generated).toContain("productive pattern");
     expect(generated).toContain("chapter topic");
     expect(generated).not.toContain("Drill");
   });

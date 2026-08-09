@@ -64,6 +64,8 @@ export const CONTENT_TYPES = new Set(["word", "phrase"]);
  *
  * `grammar` and `etymology` are short support lessons whose progression lives
  * in knowledge atoms rather than the cross-language vocabulary join.
+ * `pattern` teaches a productive frame whose typed slots reuse already-known
+ * atoms; the frame itself, not a new lexical realization, is the new knowledge.
  *
  * `pronunciation` is the newest member, and it exists because of Mandarin. Every
  * earlier track's pronunciation facts are *segmental* — "the h is silent", "this
@@ -85,6 +87,7 @@ export const EXEMPT_TYPES = new Set([
   "grammar",
   "etymology",
   "pronunciation",
+  "pattern",
 ]);
 
 /** A language-local concept id: two-letter lang prefix + SCREAMING-KEBAB name. */

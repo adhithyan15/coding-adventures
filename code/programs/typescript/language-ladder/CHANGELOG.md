@@ -4,6 +4,9 @@
 
 ### Added — public Language Ladder
 
+- Carry canonical ordered `patternSlots` from parsed curriculum lessons into the
+  app lesson model, so mixed practice can instantiate productive frames from the
+  same known-filler contract as the books and validators.
 - Publish the validated production build to the repository's existing GitHub
   Pages site at `/coding-adventures/language-ladder/` whenever the app, shared
   data package, or human-language curriculum changes.

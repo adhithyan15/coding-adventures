@@ -1391,6 +1391,7 @@ interface BookIndexEntry {
 
 const INDEX_LESSON_TYPES = new Map<string, string>([
   ["grammar", "grammar topic"],
+  ["pattern", "productive pattern"],
   ["writing", "script and writing topic"],
   ["etymology", "etymology topic"],
   ["culture", "culture and usage topic"],

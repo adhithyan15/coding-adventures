@@ -11,7 +11,8 @@ import {
   loadEverything,
   loadTrackChapters,
 } from "../src/loader.js";
-import { CHAPTER_GATE_CODES, runChapterGates } from "../src/chapters.js";
+import { CHAPTER_GATE_CODES, runChapterGates, runPatternGates } from "../src/chapters.js";
+import { EXEMPT_TYPES } from "../src/constants.js";
 import { parseLesson } from "../src/parse.js";
 import type { BookCorpus, ChapterPolicy, TrackChapters } from "../src/types.js";
 
@@ -38,6 +39,31 @@ function lesson(id: string, chapter: number, introduces: string[] = []) {
     `---\nschema_version: 2\nid: ${id}\nchapter: ${chapter}\ntype: word\n` +
       `headword: hola\ngloss: hello\nconcept_tag: GREETING-HELLO\n---\n\n` +
       `# ${id}\n\n## Warm-up\n\n${directive}Say it.\n`,
+    "spanish",
+  );
+}
+
+function patternLesson(options: {
+  introduces?: string[];
+  requires?: string[];
+  slots?: string;
+  examples?: string[];
+}) {
+  const introduces = options.introduces ?? ["ES-PATTERN-FRAME"];
+  const requires = options.requires ?? ["ES-LEX-HABLAR", "ES-LEX-COMER"];
+  const slots = options.slots ?? "  infinitive: [ES-LEX-HABLAR, ES-LEX-COMER]";
+  const examples = options.examples ?? ["hablaré", "comerás", "hablará"];
+  return parseLesson(
+    `---\nschema_version: 2\nid: ES-P01-frame\nchapter: 1\ntype: pattern\n` +
+      `headword: infinitive + ending\ngloss: a productive frame\n` +
+      `requires:\n  knowledge: [${requires.join(", ")}]\n` +
+      `introduces:\n  knowledge: [${introduces.join(", ")}]\n` +
+      `slots:\n${slots}\n---\n\n# A frame\n\n` +
+      `## Warm-up\n<!-- hl-knowledge: introduces=[]; assesses=[] -->\n\nRecall the verbs.\n\n` +
+      `## Grammar Lens: the frame\n<!-- hl-knowledge: introduces=[${introduces.join(", ")}]; assesses=[] -->\n\nNotice it.\n\n` +
+      `## Guided Practice\n<!-- hl-knowledge: introduces=[]; assesses=[${introduces[0]}] -->\n\n` +
+      `${examples.map((example) => `- ${example}`).join("\n")}\n\n` +
+      `## Wrap-up Recall\n<!-- hl-knowledge: introduces=[]; assesses=[${introduces[0]}] -->\n\nRecall it.\n`,
     "spanish",
   );
 }
@@ -76,6 +102,7 @@ describe("the gate catalogue", () => {
     expect(CHAPTER_GATE_CODES).toHaveLength(9);
     expect(CHAPTER_GATE_CODES).toContain("chapter-missing-capability");
     expect(CHAPTER_GATE_CODES).toContain("pattern-multiple-atoms");
+    expect(EXEMPT_TYPES).toContain("pattern");
   });
 });
 
@@ -211,6 +238,54 @@ describe("the chapter gates", () => {
   });
 });
 
+describe("the pattern gates", () => {
+  it("CONTROL: one pattern atom, closed slots, and three productions fire nothing", () => {
+    const parsed = patternLesson({});
+    expect(parsed.patternSlots).toEqual([
+      { name: "infinitive", fillers: ["ES-LEX-HABLAR", "ES-LEX-COMER"] },
+    ]);
+    expect(runPatternGates([parsed])).toEqual([]);
+  });
+
+  it("pattern-multiple-atoms: the pattern atom must be the lesson's only introduction", () => {
+    const findings = runPatternGates([
+      patternLesson({ introduces: ["ES-PATTERN-FRAME", "ES-GRAMMAR-EXTRA"] }),
+    ]);
+    expect(findings.map((finding) => finding.code)).toContain("pattern-multiple-atoms");
+  });
+
+  it("pattern-missing-production: fewer than three instantiations are not productive", () => {
+    const findings = runPatternGates([patternLesson({ examples: ["hablaré", "comerás"] })]);
+    expect(findings.map((finding) => finding.code)).toContain("pattern-missing-production");
+  });
+
+  it("pattern-missing-production: repeated copies do not count as distinct instantiations", () => {
+    const findings = runPatternGates([
+      patternLesson({ examples: ["hablaré", "hablaré", "hablaré"] }),
+    ]);
+    expect(findings.map((finding) => finding.code)).toContain("pattern-missing-production");
+  });
+
+  it("pattern-slot-not-closed: every declared filler must be required knowledge", () => {
+    const findings = runPatternGates([
+      patternLesson({ slots: "  infinitive: [ES-LEX-HABLAR, ES-LEX-VIVIR]" }),
+    ]);
+    expect(findings.map((finding) => finding.code)).toContain("pattern-slot-not-closed");
+    expect(findings[0]?.message).toContain("ES-LEX-VIVIR");
+  });
+
+  it("pattern-slot-not-closed: a pattern cannot omit or scalarize its slot list", () => {
+    const missing = patternLesson({ slots: "" });
+    const scalar = patternLesson({ slots: "  infinitive: ES-LEX-HABLAR" });
+    expect(runPatternGates([missing]).map((finding) => finding.code)).toContain(
+      "pattern-slot-not-closed",
+    );
+    expect(runPatternGates([scalar]).map((finding) => finding.code)).toContain(
+      "pattern-slot-not-closed",
+    );
+  });
+});
+
 describe("corpus snapshot", () => {
   // The first published measurement (HL-C03). These are DEBT counts, not a pass mark:
   // the gates are report-only precisely because this debt predates them. Ratchet them
@@ -284,7 +359,7 @@ describe("corpus snapshot", () => {
     ]);
   });
 
-  it("finds no pattern lessons yet, because HL-C05 has not landed", () => {
+  it("validates the first canonical pattern lesson", () => {
     const { books: corpus, lessons } = loadEverything();
     const report = runChapterGates({
       books: corpus,
@@ -292,9 +367,14 @@ describe("corpus snapshot", () => {
       trackChapters: loadTrackChapters(),
       policy: loadChapterPolicy(),
     });
-    const pattern = report.findings.filter((f) => f.code.startsWith("pattern-"));
-    // Zero is the correct answer, not a stub: the rules are wired so the first authored
-    // pattern lesson is checked the moment it exists.
-    expect(pattern).toEqual([]);
+    const patternLessons = lessons.filter((lesson) => lesson.realization.type === "pattern");
+    expect(patternLessons.map((lesson) => lesson.realization.lessonId)).toEqual([
+      "ES-C17-comer-futuro",
+    ]);
+    expect(patternLessons[0]?.patternSlots).toEqual([
+      { name: "infinitive", fillers: ["ES-LEX-COMER", "ES-LEX-BEBER"] },
+      { name: "object", fillers: ["ES-LEX-CAFE"] },
+    ]);
+    expect(report.findings.filter((finding) => finding.code.startsWith("pattern-"))).toEqual([]);
   });
 });
