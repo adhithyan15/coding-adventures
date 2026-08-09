@@ -140,8 +140,8 @@ describe("etymology is a hook, not a skill", () => {
     // etymology hooks. Delete the waiver and this reads 87. (The detail says 35
     // waived, not 34, because `waived` counts every etymology atom in scope — one of
     // them is already revisited twice and was never in the shortfall.)
-    expect(reinforcement.shortfall).toBe(53);
-    expect(reinforcement.detail).toContain("35 etymology hook(s) waived");
+    expect(reinforcement.shortfall).toBe(51);
+    expect(reinforcement.detail).toContain("36 etymology hook(s) waived");
   });
 
   it("leaves continuity's own numbers alone", () => {

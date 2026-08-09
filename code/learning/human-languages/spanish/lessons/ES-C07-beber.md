@@ -1,31 +1,49 @@
 ---
+schema_version: 2
 id: ES-C07-beber
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 600
 chapter: 7
 type: word
 headword: beber
 gloss: to drink (another -er verb — cementing the pattern)
 concept_tag: VERB-DRINK
-prerequisites: [ES-C07-comer]
+prerequisites: [ES-C07-vivir]
 sounds: [v-b, r-tap]
 roots: [bibere-latin]
 etymology_hook: "beber ← Latin bibere 'to drink' → English beverage, imbibe, bibulous, bib"
-est_minutes: 3
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [ES-LEX-COMER, ES-LEX-VIVIR, ES-GRAMMAR-ER-PRESENT-SINGULAR, ES-GRAMMAR-IR-PRESENT-SINGULAR, ES-LEX-CAFE]
+introduces:
+  knowledge: [ES-LEX-BEBER]
+practises:
+  knowledge: [ES-LEX-COMER, ES-LEX-VIVIR, ES-GRAMMAR-ER-PRESENT-SINGULAR, ES-GRAMMAR-IR-PRESENT-SINGULAR, ES-LEX-CAFE, ES-LEX-BEBER]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C07-comer, ES-C07-vivir]
 ---
 
 # beber — "to drink," and the pattern is yours
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMER, ES-LEX-VIVIR, ES-GRAMMAR-ER-PRESENT-SINGULAR, ES-GRAMMAR-IR-PRESENT-SINGULAR] -->
 
 [PAUSE 2s] One more **-er** verb to make the pattern automatic — **beber**, "to
 drink." Pair it with *comer* and you can talk about eating and drinking, the
 heart of any café or restaurant.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - `v-b` — both *b*'s are the soft Spanish *b*: *be-**BER***.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-BEBER]; assesses=[] -->
 
 **beber** comes from Latin **bibere**, *"to drink"* — a thirsty little root that
 soaked into English:
@@ -36,6 +54,7 @@ soaked into English:
   **beer**'s cousins hover nearby.
 
 ## Grammar Lens: no new grammar — that's the point
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-BEBER, ES-GRAMMAR-ER-PRESENT-SINGULAR] -->
 
 *beber* is a regular **-er** verb, so it takes the endings you already own:
 
@@ -43,20 +62,24 @@ soaked into English:
 | tú | **bebes** | you drink |
 | él/ella/usted | **bebe** | he/she drinks / you (formal) drink |
 
-Nothing new to learn — you're just *reusing the machine*. Now you can say:
+Nothing new to learn — you're just *reusing the machine*. With the word *café*
+from the previous chapter, you can already say:
 
-> **Como** pan y **bebo** agua. — "I eat bread and drink water."
+> **Bebo café.** — "I drink coffee."
 
-Two verbs, two nouns, one sentence you built yourself.
+One new verb, one known noun, one sentence you built yourself.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMER, ES-LEX-VIVIR, ES-GRAMMAR-ER-PRESENT-SINGULAR, ES-GRAMMAR-IR-PRESENT-SINGULAR, ES-LEX-CAFE, ES-LEX-BEBER] -->
 
 [PAUSE 1s]
 - [YOU SAY: "beber" — *be-BER*]
 - [YOU SAY: "bebo, bebes, bebe" — the familiar *-o/-es/-e*]
-- [YOU SAY: "Como y bebo" — "I eat and drink"]
+- [YOU SAY: "Bebo café" — "I drink coffee"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-BEBER, ES-GRAMMAR-ER-PRESENT-SINGULAR, ES-LEX-CAFE] -->
+<!-- hl-activity: {"id":"ES-C07-beber-coffee","kind":"text","assesses":["ES-LEX-BEBER","ES-GRAMMAR-ER-PRESENT-SINGULAR","ES-LEX-CAFE"],"prompt":"Say 'I drink coffee' in Spanish.","answer":"Bebo café.","accepted":["Bebo café","bebo cafe","bebo cafe."],"feedback":{"correct":"Right: Bebo café.","incorrect":"Use the yo form bebo with the known noun café: Bebo café."},"response_seconds":8} -->
 
 [PAUSE 3s] What Latin verb is *beber* from, and its English cousins? (*bibere* —
 beverage, imbibe.) Did *beber* need any new endings? (No — it's a regular *-er*

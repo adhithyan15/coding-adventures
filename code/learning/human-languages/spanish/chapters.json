@@ -157,7 +157,7 @@
       "chapter": 7,
       "title": "Eating, Drinking, Living --- the \\emph{-er} and \\emph{-ir} Verbs",
       "label": "ch:er-ir-verbs",
-      "canDo": "I can conjugate regular Spanish -er and -ir verbs and say what I eat, drink, and where I live.",
+      "canDo": "I can use the singular forms of regular Spanish -er and -ir verbs to ask and answer what someone eats or drinks and where they live.",
       "spineNodes": [
         "SPINE-SAY-WHAT-I-DO",
         "SPINE-EXCHANGE-NAMES",
@@ -166,9 +166,21 @@
       "payoff": {
         "lesson": "ES-C07-practice",
         "kind": "task",
-        "summary": "Complete ES-C07-practice, the canonical closing checkpoint, and demonstrate the chapter promise: conjugate regular Spanish -er and -ir verbs and say what I eat, drink, and where I live.",
-        "assesses": [],
-        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+        "summary": "Ask and answer a short exchange about eating, drinking, studying, and where someone lives, using the three singular regular verb patterns and only previously introduced words.",
+        "assesses": [
+          "ES-LEX-COMER",
+          "ES-GRAMMAR-ER-PRESENT-SINGULAR",
+          "ES-ETYMON-COMEDERE",
+          "ES-LEX-VIVIR",
+          "ES-GRAMMAR-IR-PRESENT-SINGULAR",
+          "ES-ETYMON-VIVERE",
+          "ES-LEX-BEBER",
+          "ES-LEX-QUE",
+          "ES-ETYMON-QUID",
+          "ES-LEX-DONDE",
+          "ES-LEX-EN",
+          "ES-ETYMON-DE-UNDE"
+        ]
       }
     },
     {

@@ -6439,21 +6439,21 @@
     {
       "language": "spanish",
       "chapter": 7,
-      "sourceHash": "fnv1a64:4158219fe9416bef",
+      "sourceHash": "fnv1a64:a68b0d451345acb7",
       "lessonIds": [
-        "ES-C07-beber",
         "ES-C07-comer",
-        "ES-C07-donde",
-        "ES-C07-practice",
+        "ES-C07-vivir",
+        "ES-C07-beber",
         "ES-C07-que",
-        "ES-C07-vivir"
+        "ES-C07-donde",
+        "ES-C07-practice"
       ],
       "voiceLessons": 4,
-      "drivablePrefix": 1,
+      "drivablePrefix": 0,
       "text": "spanish/narration/ch07.txt",
       "json": "spanish/narration/ch07.json",
-      "textHash": "fnv1a64:83d9f545f7c1d05e",
-      "jsonHash": "fnv1a64:77f829dbacddb53b"
+      "textHash": "fnv1a64:b916697c279b6033",
+      "jsonHash": "fnv1a64:f16be189b1f6a8e7"
     },
     {
       "language": "spanish",
