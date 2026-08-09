@@ -1,84 +1,78 @@
 ---
+schema_version: 2
 id: ES-C16-imperfecto
-chapter: 16
+spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 1110
-type: word
-headword: hablaba, comía
-gloss: the imperfect — the past that kept going, and the most regular tense in Spanish
+chapter: 16
+type: grammar
+headword: hablaba
+gloss: the singular -ar imperfect — hablaba, hablabas, hablaba
 concept_tag: ES-IMPERFECT
-prerequisites: [ES-C15-practice, ES-C07-comer, ES-C07-vivir]
-sounds: [accent-acute, hiatus-ia]
-roots: [latin-abam-ebam]
-etymology_hook: "-aba ← Latin -ābam, -ía ← -ēbam (the b wore away in the -er/-ir set but survives whole in -ar); -er and -ir share ONE set a third time; the accent on -ía breaks the diphthong so i and a are two syllables"
-est_minutes: 4
-reviews_of: [ES-C15-practice, ES-C15-comer-vivir-preterite, ES-C06-hablar, ES-C07-comer]
+prerequisites: [ES-C15-practice, ES-C06-hablar]
+sounds: [stress-penultimate]
+roots: [latin-abam]
+etymology_hook: "hablaba continues the Latin -ābam imperfect family, with its b still audible in Spanish -aba"
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRETERITE-SINGULAR]
+introduces:
+  knowledge: [ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL, ES-GRAMMAR-AR-IMPERFECT-SINGULAR]
+practises:
+  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL, ES-GRAMMAR-AR-IMPERFECT-SINGULAR]
+skills: [listening, speaking, reading, writing]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C15-practice, ES-C06-hablar]
 ---
 
-# hablaba, comía — the past that kept going
+# hablaba — let a past action stay open
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL]; assesses=[ES-LEX-HABLAR, ES-GRAMMAR-AR-PRETERITE-SINGULAR] -->
 
-[PAUSE 2s] The preterite told you a past thing **finished**. The **imperfect**
-tells you a past thing was **going on** — "I **was speaking**," "I **used to
-speak**." And after Chapter 15's strong verbs, here is the good news: this is the
-**most regular tense in the language**.
+[PAUSE 2s] **Hablé español** presents speaking as a completed past event. A
+different past, the **imperfect**, can leave the action open: **Hablaba
+español** — “I was speaking Spanish” or “I used to speak Spanish.” The sentence
+does not say where the action ended.
 
-## Two sets, and you can guess the second
+## Grammar Lens: three familiar persons
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-AR-IMPERFECT-SINGULAR]; assesses=[ES-LEX-HABLAR, ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL] -->
 
-Drop the ending, add:
-
-| | -ar (hablar) | -er / -ir (comer, vivir) |
-|---|---|---|
-| yo | habl**aba** | com**ía** / viv**ía** |
-| tú | habl**abas** | com**ías** |
-| él/ella/usted | habl**aba** | com**ía** |
-| nosotros | habl**ábamos** | com**íamos** |
-| ellos/ustedes | habl**aban** | com**ían** |
-
-**-er and -ir share one set again** — the third time now (preterite, and here).
-Two conjugations, one pattern.
-
-## The accents, and why
-
-Two different jobs:
-
-- **hablábamos** — the stress falls **three syllables back**, so it must be
-  written. Only this one form in the *-ar* set takes an accent.
-- **comía** — the accent **splits the vowels**. Without it, *ia* would be one
-  syllable (like *piano*); with it, *co-mí-a* is three. **Every** form in the
-  *-er/-ir* set needs it.
-
-## Where they come from
-
-| Spanish | ← Latin |
+| person | open or habitual past |
 |---|---|
-| habl**aba** | *-ābam* |
-| com**ía** | *-ēbam* |
+| yo | habl**aba** |
+| tú | habl**abas** |
+| él / ella / usted | habl**aba** |
 
-Same Latin ending, two fates: the **b** survived whole in *-aba*, but wore away
-in the other set (*-ēbam → -ea → -ía*). One sound, two outcomes, in the same
-language.
+Say **hablaba · hablabas · hablaba**. The first and third forms are identical;
+the surrounding conversation or an explicit person tells you who is speaking.
+Plural persons wait.
 
-## One trap, and a broken rule
+## The ending, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-IMPERFECT-SINGULAR] -->
 
-*Yo hablaba* and *él hablaba* are **identical**. So Spanish, which normally
-**drops** its pronouns (Chapter 6), often puts *yo* back in the imperfect — the
-ending stopped doing its job, so the pronoun steps in.
+Spanish **-aba** continues the Latin imperfect family in **-ābam**. Historical
+sound change reshaped the complete Latin forms, but the **b** remains a useful
+audible bridge between **-ābam** and Spanish **-aba**.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HABLAR, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL, ES-GRAMMAR-AR-IMPERFECT-SINGULAR] -->
+<!-- hl-activity: {"id":"ES-C16-imperfecto-singular-forms","kind":"text","assesses":["ES-GRAMMAR-AR-IMPERFECT-SINGULAR","ES-LEX-HABLAR"],"prompt":"Give the learned singular imperfect forms of hablar: yo, tú, then él/ella/usted.","answer":"hablaba, hablabas, hablaba","accepted":["hablaba hablabas hablaba","hablaba / hablabas / hablaba"],"feedback":{"correct":"Right: hablaba, hablabas, hablaba.","incorrect":"Keep habl- and retrieve -aba, -abas, -aba."},"response_seconds":9} -->
+<!-- hl-activity: {"id":"ES-C16-imperfecto-hable-hablaba","kind":"text","assesses":["ES-GRAMMAR-AR-PRETERITE-SINGULAR","ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL","ES-GRAMMAR-AR-IMPERFECT-SINGULAR"],"prompt":"Which form leaves 'I spoke' open or habitual: hablé or hablaba?","answer":"hablaba","accepted":[],"feedback":{"correct":"Right: hablaba leaves the past action open or habitual.","incorrect":"Hablé presents a completed event; hablaba leaves it open or habitual."},"response_seconds":7} -->
+<!-- hl-activity: {"id":"ES-C16-imperfecto-history","kind":"text","assesses":["ES-GRAMMAR-AR-IMPERFECT-SINGULAR"],"prompt":"Which consonant links Latin -ābam with Spanish -aba?","answer":"b","accepted":["the b","b sound"],"feedback":{"correct":"Right: the b remains audible in Spanish -aba.","incorrect":"Listen inside both endings: -ābam and -aba contain b."},"response_seconds":6} -->
 
 [PAUSE 1s]
-- [YOU SAY: "hablaba, hablabas, hablaba, hablábamos, hablaban"]
-- [YOU SAY: "comía, comías, comía, comíamos, comían"]
-- [YOU SAY: "co-mí-a" — three syllables, not two]
-- [YOU SAY: "Cuando era niño, hablaba español en casa"]
+- [YOU SAY: “hablaba, hablabas, hablaba”]
+- [YOU SAY: “Hablé español. Hablaba español.”]
+- [YOU SAY: “-ābam and -aba share b”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL, ES-GRAMMAR-AR-IMPERFECT-SINGULAR] -->
 
-[PAUSE 3s] What does the imperfect express? (A past action **going on** or
-**habitual** — "was doing," "used to do.") Which two conjugations share a set?
-(**-er and -ir**, again.) Why does *comía* need an accent? (To **break the
-diphthong** — *co-mí-a*, three syllables.) Which *-ar* form takes one, and why?
-(**Hablábamos** — the stress is three syllables back.) Why does Spanish put *yo*
-back here? (*Yo* and *él* forms are **identical**.) Next: the only three
-irregular verbs in the whole tense.
+[PAUSE 3s] Give the three learned forms. (*Hablaba, hablabas, hablaba.*) What
+can the imperfect do? (Leave a past action ongoing or habitual.) Which Latin
+family stands behind **-aba**? (**-ābam**.) Next: build the same gentle frame
+with **comer**.

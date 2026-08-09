@@ -225,7 +225,8 @@ describe("corpus snapshot", () => {
     // newly mapped terminal checkpoints at A2 on SPINE-SAY-WHAT-I-DO.
     expect(summary.byLevel.A1).toBe(309);
     // Chapter 15's split adds three more mapped A2 lessons without changing its node.
-    expect(summary.byLevel.A2).toBe(401); // +31: Spanish chapters 11-18 plus prerequisite closure
+    // Chapter 16's split adds five more mapped A2 lessons on the same node.
+    expect(summary.byLevel.A2).toBe(406); // +36: Spanish chapters 11-18 plus prerequisite closure
     // 8, not 0: Spanish chapters 38 and 41 realize SPINE-NARRATE-EVENTS and
     // SPINE-GIVE-REASONS, four lessons each — the only B1 nodes any track has touched.
     // B2-C2 remain authored-but-unrealized, in every track.
