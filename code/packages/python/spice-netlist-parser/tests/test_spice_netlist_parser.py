@@ -798,6 +798,15 @@ Rload out 0 1k
     assert 0.0 < result.node_voltages["out"] < 0.7
 
 
+def test_parse_diode_model_type_alias() -> None:
+    parsed = parse_netlist(".model clamp DIODE(IS=2p)\nD1 in out clamp")
+
+    assert parsed.models["clamp"].kind == "D"
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Is == 2.0e-12
+
+
 def test_parse_diode_saturation_current_alias() -> None:
     parsed = parse_netlist(
         """

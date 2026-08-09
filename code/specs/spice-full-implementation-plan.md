@@ -4716,9 +4716,16 @@ the Rust, Python, and TypeScript surfaces together.
      lowering them into the existing MOS Level-1 gate-drain overlap field.
 
 475. Python and TypeScript Berkeley SPICE MOS Level-1 gate-body-overlap validation parity.
-   - Status: implemented in this MOS CGBO validation parity slice.
+   - Status: completed in PR 10152.
    - Both parser facades validate finite, non-negative `CGBO` values before
      lowering them into the existing MOS Level-1 gate-body overlap field.
+   - This completes the audited MOS Level-1 `CGSO` / `CGDO` / `CGBO`
+     overlap-capacitance validation set.
+
+476. Python and TypeScript Berkeley SPICE diode model-type alias parity.
+   - Status: implemented in this model-type normalization slice.
+   - Both parser facades normalize the engine-supported `DIODE` model type
+     alias to canonical `D`, preserving diode validation and instance lowering.
 
 ## Backlog
 

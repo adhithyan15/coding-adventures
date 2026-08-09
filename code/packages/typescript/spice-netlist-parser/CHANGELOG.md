@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Normalize the `DIODE` model type alias to canonical `D` cards.
 - Validate finite, non-negative MOS Level-1 model-card `CGBO` values.
 - Validate finite, non-negative MOS Level-1 model-card `CGDO` values.
 - Validate finite, non-negative MOS Level-1 model-card `CGSO` values.
