@@ -7,7 +7,7 @@ use diagram_ir::{
     SequenceEvent, SequenceNotePlacement,
 };
 
-pub const VERSION: &str = "0.7.0";
+pub const VERSION: &str = "0.8.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -25,6 +25,7 @@ const BLOCK_INSET: f64 = 10.0;
 struct BlockFrameState {
     kind: SequenceBlockKind,
     label: String,
+    fill: Option<String>,
     depth: usize,
     x: f64,
     y: f64,
@@ -227,18 +228,21 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 });
                 y += NOTE_H + 20.0;
             }
-            SequenceEvent::BlockStart { kind, label } => {
+            SequenceEvent::BlockStart { kind, label, fill } => {
                 let depth = block_stack.len();
                 let x = MARGIN + depth as f64 * BLOCK_INSET;
                 block_stack.push(BlockFrameState {
                     kind: kind.clone(),
                     label: label.clone(),
+                    fill: fill.clone(),
                     depth,
                     x,
                     y,
                     width: (width - x * 2.0).max(120.0),
                 });
-                y += BLOCK_HEADER_H;
+                if kind != &SequenceBlockKind::Rect {
+                    y += BLOCK_HEADER_H;
+                }
             }
             SequenceEvent::BlockBranch { label } => {
                 if let Some(frame) = block_stack.last() {
@@ -259,6 +263,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     items.push(LayoutedSequenceItem::BlockFrame {
                         kind: frame.kind,
                         label: frame.label,
+                        fill: frame.fill,
                         depth: frame.depth,
                         x: frame.x,
                         y: frame.y,
@@ -484,10 +489,12 @@ mod tests {
                 SequenceEvent::BlockStart {
                     kind: SequenceBlockKind::Alt,
                     label: "Ready".into(),
+                    fill: None,
                 },
                 SequenceEvent::BlockStart {
                     kind: SequenceBlockKind::Loop,
                     label: "Retry".into(),
+                    fill: None,
                 },
                 SequenceEvent::Message {
                     from: "Alice".into(),

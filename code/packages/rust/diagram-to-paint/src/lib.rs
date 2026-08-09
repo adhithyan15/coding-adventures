@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.11.0";
+pub const VERSION: &str = "0.12.0";
 
 use std::collections::HashMap;
 
@@ -1142,6 +1142,7 @@ where
         if let LayoutedSequenceItem::BlockFrame {
             kind,
             label,
+            fill: frame_fill,
             x,
             y,
             width,
@@ -1156,27 +1157,29 @@ where
                 y: *y,
                 width: *width,
                 height: *height,
-                fill: Some(fill.into()),
-                stroke: Some(stroke.into()),
+                fill: Some(frame_fill.as_deref().unwrap_or(fill).into()),
+                stroke: (kind != &SequenceBlockKind::Rect).then(|| stroke.into()),
                 stroke_width: Some(1.25),
                 corner_radius: Some(4.0),
                 stroke_dash: None,
                 stroke_dash_offset: None,
             }));
-            let frame_label = if label.is_empty() {
-                sequence_block_name(kind).to_string()
-            } else {
-                format!("{}  {label}", sequence_block_name(kind))
-            };
-            text_children.push(text_node(
-                &frame_label,
-                *x + 8.0,
-                *y + 6.0,
-                *width - 16.0,
-                20.0,
-                label_font.clone(),
-                text_color,
-            ));
+            if kind != &SequenceBlockKind::Rect {
+                let frame_label = if label.is_empty() {
+                    sequence_block_name(kind).to_string()
+                } else {
+                    format!("{}  {label}", sequence_block_name(kind))
+                };
+                text_children.push(text_node(
+                    &frame_label,
+                    *x + 8.0,
+                    *y + 6.0,
+                    *width - 16.0,
+                    20.0,
+                    label_font.clone(),
+                    text_color,
+                ));
+            }
         }
     }
 
@@ -2643,7 +2646,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.11.0");
+        assert_eq!(crate::VERSION, "0.12.0");
     }
 
     #[test]

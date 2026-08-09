@@ -15,8 +15,9 @@ note_stmt = "note" ( ( "left" | "right" ) "of" identifier | "over" actor_pair ) 
 title_stmt = "title" text ;
 autonumber_stmt = "autonumber" [ "off" | NUMBER [ NUMBER ] ] ;
 
-control_block = simple_block | alt_block | par_block | critical_block ;
-simple_block = ( "loop" | "rect" | "opt" | "break" ) [ text ] NEWLINE body "end" ;
+control_block = simple_block | rect_block | alt_block | par_block | critical_block ;
+simple_block = ( "loop" | "opt" | "break" ) [ text ] NEWLINE body "end" ;
+rect_block = "rect" COLOR NEWLINE body "end" ;
 alt_block = "alt" [ text ] NEWLINE body { "else" [ text ] NEWLINE body } "end" ;
 par_block = ( "par" | "par_over" ) [ text ] NEWLINE body { "and" [ text ] NEWLINE body } "end" ;
 critical_block = "critical" [ text ] NEWLINE body { "option" [ text ] NEWLINE body } "end" ;

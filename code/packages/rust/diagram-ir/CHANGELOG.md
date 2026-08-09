@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.12.0
+
+- Added optional sequence block fills for background highlights.
+
 ## 0.11.0
 
 - Added decimal sequence-number start and increment values.

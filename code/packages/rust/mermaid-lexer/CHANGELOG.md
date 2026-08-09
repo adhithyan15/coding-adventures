@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.11.0
+
+- Reuse functional color tokens for sequence `rect` highlights.
+
 ## 0.10.0
 
 - Tokenize autonumber decimals with Mermaid's two-place precision limit.

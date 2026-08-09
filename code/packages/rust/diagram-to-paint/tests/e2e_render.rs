@@ -9,6 +9,7 @@
 
 #[cfg(target_vendor = "apple")]
 mod apple {
+    use diagram_ir::{SequenceBlockKind, SequenceEvent};
     use diagram_layout_chart::layout_chart_diagram;
     use diagram_layout_graph::layout_graph_diagram;
     use diagram_layout_sequence::layout_sequence_diagram;
@@ -353,6 +354,17 @@ mod apple {
         .expect("Mermaid sequence parse failed");
         diagram.auto_number_start = 10.5;
         diagram.auto_number_step = 2.25;
+        diagram.events.insert(
+            0,
+            SequenceEvent::BlockStart {
+                kind: SequenceBlockKind::Rect,
+                label: String::new(),
+                fill: Some("rgba(255, 200, 100, 0.12)".into()),
+            },
+        );
+        diagram.events.push(SequenceEvent::BlockEnd {
+            kind: SequenceBlockKind::Rect,
+        });
         let layout = layout_sequence_diagram(&diagram);
 
         let shaper = CoreTextShaper;
@@ -403,6 +415,11 @@ mod apple {
             instruction,
             paint_instructions::PaintInstruction::Ellipse(ellipse)
                 if ellipse.rx == 5.0 && ellipse.ry == 5.0
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            paint_instructions::PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("rgba(255, 200, 100, 0.12)")
         )));
     }
 }

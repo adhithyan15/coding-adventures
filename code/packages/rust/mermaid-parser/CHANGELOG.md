@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.12.0
+
+- Parse nested `rect` blocks with required `rgb` or `rgba` fills.
+
 ## 0.11.0
 
 - Parse Mermaid 11.15+ autonumber start and increment values.

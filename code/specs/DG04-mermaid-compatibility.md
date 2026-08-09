@@ -137,6 +137,8 @@ source/destination endpoint semantics and Paint ellipse markers layered above
 activation bars.
 Automatic numbering preserves Mermaid 11.15+ decimal start and increment
 values through semantic IR, layout, and shaped Paint labels.
+Nested `rect` background highlights require Mermaid `rgb`/`rgba` syntax and
+carry that fill through semantic block events, layout frames, and Paint.
 
 ### Structural Groups
 
