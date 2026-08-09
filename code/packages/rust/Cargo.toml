@@ -762,6 +762,7 @@ members = [
     "vault-search",
     "vault-attachments",
     "vault-import-export",
+    "vault-pm-format",
     "storage-fs",
     "chief-of-staff-channel-crypto",
     "chief-of-staff-channel-store",

@@ -1,0 +1,9 @@
+[package]
+name = "coding_adventures_vault_pm_format"
+version = "0.1.0"
+edition = "2021"
+description = "VLT-PM01 canonical password-manager repository formats, IDs, signing preimages, and strict V1 decoders"
+
+[dependencies]
+coding_adventures_canonical_cbor = { path = "../canonical-cbor" }
+coding_adventures_sha256 = { path = "../sha256" }
