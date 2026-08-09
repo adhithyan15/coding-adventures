@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate and lower BJT model-card `RB` base resistance.
 - Validate and lower BJT model-card `RC` collector resistance.
 - Validate and lower BJT model-card `RE` emitter resistance.
 - Validate and lower BJT model-card `VTF` forward transit-time voltage scale.
