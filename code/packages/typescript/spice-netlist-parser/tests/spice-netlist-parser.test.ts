@@ -3493,6 +3493,16 @@ Xright c d load
     expect(element.params.VT0).toBe(-0.38);
   });
 
+  it("gives MOSFET N_SUB precedence over substrate-doping aliases", () => {
+    const parsed = parseNetlist(
+      ".model nfast NMOS(N_SUB=1.8 NSUB=1.6 N=1.4)\nM1 d g s b nfast\n",
+    );
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") throw new Error("unexpected element kind");
+    expect(element.params.N_SUB).toBe(1.8);
+  });
+
   it.each(["LAMBDA", "LAM"])(
     "rejects non-finite MOSFET model channel-modulation alias %s",
     (alias) => {

@@ -2146,6 +2146,10 @@ function mosfetParams(
     modelParams.delete("VTO");
     modelParams.delete("VTH");
   }
+  if (modelParams.has("N_SUB")) {
+    modelParams.delete("NSUB");
+    modelParams.delete("N");
+  }
   const params: Record<string, number> = {};
   for (const [name, value] of [...modelParams, ...instanceParams]) {
     const key = MOSFET_PARAM_ALIASES.get(name) ?? (name as keyof MosfetLevel1Params);

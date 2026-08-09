@@ -4841,9 +4841,15 @@ the Rust, Python, and TypeScript surfaces together.
      preserving instance parameter overrides.
 
 495. Python and TypeScript Berkeley SPICE MOS threshold-voltage alias precedence.
-   - Status: implemented in this MOS threshold-voltage precedence slice.
+   - Status: completed in PR 10198.
    - Both parser facades give engine-canonical Level-1 `VT0` precedence over
      the `VTO` and `VTH` aliases during lowering, matching validation while
+     preserving instance parameter overrides.
+
+496. Python and TypeScript Berkeley SPICE MOS substrate-doping alias precedence.
+   - Status: implemented in this MOS substrate-doping precedence slice.
+   - Both parser facades give engine-canonical Level-1 `N_SUB` precedence over
+     the `NSUB` and `N` aliases during lowering, matching validation while
      preserving instance parameter overrides.
 
 ## Backlog
