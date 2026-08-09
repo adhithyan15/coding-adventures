@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Bind authenticated channel UUIDs and bounded model settings to an independently
+  verified Level 1 package, rejecting missing, extra, or wrong-direction names.
 - Construct Level 1 runtimes directly from authenticated, policy-matched sealed
   SKILL packages.
 

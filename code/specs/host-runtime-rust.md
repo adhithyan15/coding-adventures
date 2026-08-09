@@ -186,11 +186,16 @@ Before reading the agent's manifest, the host:
    key, trust class, and maximum tier selected by the orchestrator. The host has
    no ambient key-file or vault access and rejects readiness if this record is
    absent, malformed, or duplicated.
-3. Computes the SHA-256 hash of the rest of the package using the
+3. Accepts exactly one authenticated `LaunchBindings` record after trust. Once
+   verification succeeds, the Level 1 host requires its channel names and
+   directions to match the signed manifest exactly and requires bounded model
+   settings; missing, extra, wrong-direction, or runtime-incompatible bindings
+   prevent readiness.
+4. Computes the SHA-256 hash of the rest of the package using the
    same deterministic file-set ordering D18 specifies.
-4. Verifies the package's Ed25519 SIGNATURE against the hash with
+5. Verifies the package's Ed25519 SIGNATURE against the hash with
    the trusted public key.
-5. On failure → exit 2 with a structured error sent to the
+6. On failure → exit 2 with a structured error sent to the
    orchestrator over the channel before exit (so the orchestrator
    logs the reason).
 

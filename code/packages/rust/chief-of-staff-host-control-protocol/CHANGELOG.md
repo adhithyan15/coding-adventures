@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add an exactly-once pre-ready `LaunchBindings` record with canonical bounded
+  channel name-to-UUID mappings and optional bounded Level 1 model settings.
 - Add a bounded authenticated `PackageTrust` record that must be delivered
   exactly once before a child can announce independently verified readiness.
 - Add authenticated channel receive, publish, and acknowledge requests plus

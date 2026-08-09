@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Require the production process composition to inject a manifest-blind host
+  launch-binding authority alongside package trust and process identity.
 - Add safe package reload for stopped hosts with absent or exited supervisor authority.
 - Atomically write replacement identity and post-reload desired state before reconciliation.
 

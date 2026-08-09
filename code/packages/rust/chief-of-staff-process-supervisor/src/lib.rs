@@ -9,7 +9,7 @@
 
 use chief_of_staff_channel_crypto::ChannelId;
 use chief_of_staff_host_control_protocol::{
-    ChildControl, ChildEvent, CompletionCall, DataPlaneRequest, DataPlaneResponse,
+    ChildControl, ChildEvent, CompletionCall, DataPlaneRequest, DataPlaneResponse, LaunchBindings,
     OrchestratorControl, OrchestratorEvent, PackageTrust, PackageTrustType,
 };
 use chief_of_staff_host_runtime::{
@@ -62,6 +62,8 @@ pub enum ProcessSupervisorError {
     Framing,
     /// Authenticated host-control processing failed closed.
     Control,
+    /// Pipeline launch bindings were absent, invalid, or incompatible with the package runtime.
+    LaunchBindings,
     /// A different package is already active under this host name.
     ActivePackageMismatch,
     /// No supervised process exists under the requested host name.
@@ -81,6 +83,7 @@ impl Display for ProcessSupervisorError {
             Self::BootstrapTimeout => "process-supervisor: bootstrap timed out",
             Self::Framing => "process-supervisor: invalid framed record",
             Self::Control => "process-supervisor: host-control failure",
+            Self::LaunchBindings => "process-supervisor: launch bindings unavailable",
             Self::ActivePackageMismatch => "process-supervisor: active package identity mismatch",
             Self::HostNotFound => "process-supervisor: host not found",
         })
@@ -88,6 +91,46 @@ impl Display for ProcessSupervisorError {
 }
 
 impl std::error::Error for ProcessSupervisorError {}
+
+/// Redacted failure returned by a manifest-blind launch-binding authority.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct LaunchBindingProviderError;
+
+impl Display for LaunchBindingProviderError {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter.write_str("host launch bindings unavailable")
+    }
+}
+
+impl std::error::Error for LaunchBindingProviderError {}
+
+/// Injected manifest-blind authority for one registered host's launch bindings.
+///
+/// Implementations are expected to resolve durable pipeline wiring by immutable
+/// host and package identity. The independently verifying child remains
+/// responsible for matching returned names to its signed manifest.
+pub trait HostLaunchBindingProvider: Send + Sync {
+    /// Return the exact authorized bindings for this registered package launch.
+    fn launch_bindings(
+        &self,
+        registration: &HostRegistration,
+        runtime: AgentPackageRuntime,
+    ) -> Result<LaunchBindings, LaunchBindingProviderError>;
+}
+
+/// Fail-closed launch-binding provider for compositions without pipeline wiring.
+#[derive(Default)]
+pub struct DenyHostLaunchBindings;
+
+impl HostLaunchBindingProvider for DenyHostLaunchBindings {
+    fn launch_bindings(
+        &self,
+        _registration: &HostRegistration,
+        _runtime: AgentPackageRuntime,
+    ) -> Result<LaunchBindings, LaunchBindingProviderError> {
+        Err(LaunchBindingProviderError)
+    }
+}
 
 /// One shell-free executable plus bounded fixed arguments used for every host.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -378,6 +421,7 @@ impl OwnedInstance {
 pub struct ProcessHostSupervisor {
     config: ProcessSupervisorConfig,
     keyring: Arc<PackageKeyring>,
+    launch_bindings: Arc<dyn HostLaunchBindingProvider>,
     identity: Arc<IdentityKeyPair>,
     clock: Arc<dyn MonotonicClock>,
     sessions: Box<dyn SessionIdSource>,
@@ -389,6 +433,7 @@ impl ProcessHostSupervisor {
     pub fn new(
         config: ProcessSupervisorConfig,
         keyring: Arc<PackageKeyring>,
+        launch_bindings: Arc<dyn HostLaunchBindingProvider>,
         identity: Arc<IdentityKeyPair>,
         clock: Arc<dyn MonotonicClock>,
         sessions: Box<dyn SessionIdSource>,
@@ -396,6 +441,7 @@ impl ProcessHostSupervisor {
         Self {
             config,
             keyring,
+            launch_bindings,
             identity,
             clock,
             sessions,
@@ -418,6 +464,11 @@ impl ProcessHostSupervisor {
             .trusted_key(package.key_id())
             .ok_or(ProcessSupervisorError::PackageVerification)
             .and_then(package_trust_record)?;
+        let launch_bindings = self
+            .launch_bindings
+            .launch_bindings(registration, package.runtime())
+            .map_err(|_| ProcessSupervisorError::LaunchBindings)?;
+        validate_runtime_bindings(package.runtime(), &launch_bindings)?;
 
         let session = self.sessions.next_session()?;
         let host = HostId::new(registration.host_name().as_str().to_owned())
@@ -507,6 +558,10 @@ impl ProcessHostSupervisor {
                 .provide_package_trust(package_trust)
                 .map_err(|_| ProcessSupervisorError::Control)?;
             write_record(&mut stdin, &trust)?;
+            let bindings = control
+                .provide_launch_bindings(launch_bindings)
+                .map_err(|_| ProcessSupervisorError::Control)?;
+            write_record(&mut stdin, &bindings)?;
             Ok(control)
         })();
 
@@ -717,9 +772,24 @@ impl<R: Read, W: Write> ChildProcessControl<R, W> {
             .map_err(|_| ProcessSupervisorError::Control)?
         {
             OrchestratorEvent::PackageTrust(trust) => trusted_package_key(trust),
-            OrchestratorEvent::Terminate | OrchestratorEvent::Response(_) => {
-                Err(ProcessSupervisorError::Control)
-            }
+            OrchestratorEvent::LaunchBindings(_)
+            | OrchestratorEvent::Terminate
+            | OrchestratorEvent::Response(_) => Err(ProcessSupervisorError::Control),
+        }
+    }
+
+    /// Receive pipeline-authorized channel UUIDs and optional Level 1 model settings.
+    pub fn receive_launch_bindings(&mut self) -> Result<LaunchBindings, ProcessSupervisorError> {
+        let frame = read_record(&mut self.reader)?;
+        match self
+            .control
+            .receive_orchestrator(&frame)
+            .map_err(|_| ProcessSupervisorError::Control)?
+        {
+            OrchestratorEvent::LaunchBindings(bindings) => Ok(bindings),
+            OrchestratorEvent::PackageTrust(_)
+            | OrchestratorEvent::Terminate
+            | OrchestratorEvent::Response(_) => Err(ProcessSupervisorError::Control),
         }
     }
 
@@ -802,9 +872,9 @@ impl<R: Read, W: Write> ChildProcessControl<R, W> {
             .map_err(|_| ProcessSupervisorError::Control)?
         {
             OrchestratorEvent::Terminate => Ok(()),
-            OrchestratorEvent::PackageTrust(_) | OrchestratorEvent::Response(_) => {
-                Err(ProcessSupervisorError::Control)
-            }
+            OrchestratorEvent::PackageTrust(_)
+            | OrchestratorEvent::LaunchBindings(_)
+            | OrchestratorEvent::Response(_) => Err(ProcessSupervisorError::Control),
         }
     }
 
@@ -825,9 +895,9 @@ impl<R: Read, W: Write> ChildProcessControl<R, W> {
             .map_err(|_| ProcessSupervisorError::Control)?
         {
             OrchestratorEvent::Response(response) => Ok(response),
-            OrchestratorEvent::PackageTrust(_) | OrchestratorEvent::Terminate => {
-                Err(ProcessSupervisorError::Control)
-            }
+            OrchestratorEvent::PackageTrust(_)
+            | OrchestratorEvent::LaunchBindings(_)
+            | OrchestratorEvent::Terminate => Err(ProcessSupervisorError::Control),
         }
     }
 }
@@ -870,6 +940,16 @@ fn privilege_tier_number(tier: PrivilegeTier) -> u8 {
         PrivilegeTier::Tier1 => 1,
         PrivilegeTier::Tier2 => 2,
         PrivilegeTier::Tier3 => 3,
+    }
+}
+
+fn validate_runtime_bindings(
+    runtime: AgentPackageRuntime,
+    bindings: &LaunchBindings,
+) -> Result<(), ProcessSupervisorError> {
+    match (runtime, bindings.level_one_model()) {
+        (AgentPackageRuntime::Skill, Some(_)) | (AgentPackageRuntime::Deno, None) => Ok(()),
+        _ => Err(ProcessSupervisorError::LaunchBindings),
     }
 }
 
@@ -1132,6 +1212,10 @@ mod tests {
             let trust = control.receive_package_trust().unwrap();
             assert_eq!(trust.key_id, "prod-memory");
             assert_eq!(trust.public_key, [19; 32]);
+            assert_eq!(
+                control.receive_launch_bindings().unwrap(),
+                LaunchBindings::new(Vec::new(), None).unwrap()
+            );
             control.ready(package_hash).unwrap();
             control.heartbeat().unwrap();
             control.receive_terminate().unwrap();
@@ -1148,6 +1232,10 @@ mod tests {
             )
             .unwrap();
         write_record(&mut parent_writer, &trust).unwrap();
+        let bindings = control
+            .provide_launch_bindings(LaunchBindings::new(Vec::new(), None).unwrap())
+            .unwrap();
+        write_record(&mut parent_writer, &bindings).unwrap();
         let ready = read_record(&mut parent_reader).unwrap();
         assert!(matches!(
             control.receive_child(&ready, 10).unwrap(),

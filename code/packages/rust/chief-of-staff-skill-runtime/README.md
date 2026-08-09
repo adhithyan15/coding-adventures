@@ -10,6 +10,11 @@ retained by sealed-package verification. Loading rejects non-Skill runtimes and
 packages whose signed manifest differs from the policy derived from the signed
 `SKILL.md`.
 
+`LevelOneLaunchPlan::from_verified_package` additionally requires the exact set
+and read/write direction of pipeline-authorized channel names to match that
+signed policy. It retains only their canonical UUIDs and converts the bounded
+authenticated model binding into the existing provider-neutral runtime config.
+
 The package performs no operating-system access. Channel endpoints and the LLM
 provider are injected, so tests remain deterministic and deployments can swap
 storage, transport, crypto, and model implementations independently.

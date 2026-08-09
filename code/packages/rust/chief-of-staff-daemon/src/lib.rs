@@ -11,8 +11,8 @@ use chief_of_staff_daemon_policy::{DenyChannelWiring, LocalAuthError, LocalBeare
 use chief_of_staff_daemon_runtime::{ChiefDaemonRuntime, DaemonRuntimeError, ReconcileSchedule};
 use chief_of_staff_orchestrator_core::OrchestratorCore;
 use chief_of_staff_process_supervisor::{
-    HostProgram, ProcessSupervisorConfig, ProcessSupervisorError, SystemMonotonicClock,
-    UuidV7SessionIdSource,
+    DenyHostLaunchBindings, HostProgram, ProcessSupervisorConfig, ProcessSupervisorError,
+    SystemMonotonicClock, UuidV7SessionIdSource,
 };
 use chief_of_staff_service_reconciler::{ConfigError as ReconcileConfigError, ReconcileConfig};
 use coding_adventures_storage_fs::FsStorageBackend;
@@ -256,6 +256,7 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
         backend,
         process_config,
         keyring,
+        Arc::new(DenyHostLaunchBindings),
         Arc::new(generate_identity_keypair()),
         clock,
         Box::new(UuidV7SessionIdSource),

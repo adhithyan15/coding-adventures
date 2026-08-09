@@ -1,5 +1,5 @@
 use chief_of_staff_host_control_protocol::{
-    CompletionCall, DataPlaneResponse, PromptMessage, PromptRole,
+    ChannelBindingAccess, CompletionCall, DataPlaneResponse, PromptMessage, PromptRole,
 };
 use chief_of_staff_host_runtime::{verify_agent_package, AgentPackageRuntime, PackageKeyring};
 use chief_of_staff_process_supervisor::ChildProcessControl;
@@ -80,9 +80,19 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     let mut keyring = PackageKeyring::new();
     keyring.trust(control.receive_package_trust()?)?;
     let package = verify_agent_package(Path::new("."), &keyring)?;
+    let launch_bindings = control.receive_launch_bindings()?;
+    if launch_bindings.channels().len() != 2
+        || launch_bindings.channels()[0].name() != "weather-reports"
+        || launch_bindings.channels()[0].access() != ChannelBindingAccess::Write
+        || launch_bindings.channels()[1].name() != "weather-requests"
+        || launch_bindings.channels()[1].access() != ChannelBindingAccess::Read
+    {
+        return Err("unexpected authorized channel bindings".into());
+    }
     let expected_runtime = match package.runtime() {
-        AgentPackageRuntime::Deno => "deno",
-        AgentPackageRuntime::Skill => "skill",
+        AgentPackageRuntime::Deno if launch_bindings.level_one_model().is_none() => "deno",
+        AgentPackageRuntime::Skill if launch_bindings.level_one_model().is_some() => "skill",
+        _ => return Err("launch model settings do not match package runtime".into()),
     };
     if arguments != ["--package-runtime", expected_runtime] {
         return Err("package runtime launch argument mismatch".into());

@@ -12,7 +12,8 @@ use chief_of_staff_channel_endpoints::{
 };
 use chief_of_staff_host_runtime::PackageKeyring;
 use chief_of_staff_process_supervisor::{
-    MonotonicClock, ProcessHostSupervisor, ProcessSupervisorConfig, SessionIdSource,
+    HostLaunchBindingProvider, MonotonicClock, ProcessHostSupervisor, ProcessSupervisorConfig,
+    SessionIdSource,
 };
 use chief_of_staff_service_reconciler::{
     HostSupervisor, ReconcileConfig, ReconcileError, ReconcileReport, ServiceReconciler,
@@ -418,6 +419,7 @@ impl<A> OrchestratorCore<ProcessHostSupervisor, A> {
         backend: Arc<dyn StorageBackend>,
         process_config: ProcessSupervisorConfig,
         keyring: Arc<PackageKeyring>,
+        launch_bindings: Arc<dyn HostLaunchBindingProvider>,
         identity: Arc<IdentityKeyPair>,
         clock: Arc<dyn MonotonicClock>,
         sessions: Box<dyn SessionIdSource>,
@@ -427,6 +429,7 @@ impl<A> OrchestratorCore<ProcessHostSupervisor, A> {
         let supervisor = ProcessHostSupervisor::new(
             process_config,
             keyring,
+            launch_bindings,
             identity,
             Arc::clone(&clock),
             sessions,
@@ -442,7 +445,9 @@ mod tests {
     use chief_of_staff_channel_endpoints::{
         AgentId, ChannelLifecycle, OriginatorIdentity, ReceiverIdentity,
     };
-    use chief_of_staff_process_supervisor::{HostProgram, UuidV7SessionIdSource};
+    use chief_of_staff_process_supervisor::{
+        DenyHostLaunchBindings, HostProgram, UuidV7SessionIdSource,
+    };
     use chief_of_staff_service_reconciler::{ReconcileAction, SupervisorOperation};
     use chief_of_staff_service_registry::{PackagePath, RestartPolicy};
     use coding_adventures_x3dh::generate_identity_keypair;
@@ -1199,6 +1204,7 @@ mod tests {
             backend,
             config,
             keyring,
+            Arc::new(DenyHostLaunchBindings),
             identity,
             clock,
             Box::<UuidV7SessionIdSource>::default(),

@@ -11,6 +11,7 @@ use chief_of_staff_secure_host_channel::{ChannelError, ChannelRole, SecureHostCh
 use core::fmt::{self, Display, Formatter};
 
 mod data_plane;
+mod launch;
 
 pub use data_plane::{
     CompletionCall, CompletionFinishReason, CompletionProvider, CompletionResult, CompletionUsage,
@@ -23,6 +24,12 @@ use data_plane::{
     COMPLETED_RESPONSE_TAG, COMPLETE_REQUEST_TAG, FAILED_RESPONSE_TAG, PUBLISHED_RESPONSE_TAG,
     PUBLISH_REQUEST_TAG, RECEIVED_RESPONSE_TAG, RECEIVE_REQUEST_TAG,
 };
+use launch::{decode_launch_bindings, encode_launch_bindings};
+pub use launch::{
+    ChannelBinding, ChannelBindingAccess, LaunchBindings, LevelOneModelBinding,
+    MAX_LAUNCH_CHANNEL_BINDINGS, MAX_LAUNCH_CHANNEL_NAME_BYTES, MAX_LAUNCH_COMPLETION_TOKENS,
+    MAX_LAUNCH_MODEL_BYTES,
+};
 
 const MAGIC: &[u8; 4] = b"D18C";
 const VERSION: u8 = 1;
@@ -30,6 +37,7 @@ const READY_TAG: u8 = 1;
 const HEARTBEAT_TAG: u8 = 2;
 const TERMINATE_TAG: u8 = 3;
 const PACKAGE_TRUST_TAG: u8 = 4;
+const LAUNCH_BINDINGS_TAG: u8 = 5;
 const HEADER_BYTES: usize = 6;
 const READY_BYTES: usize = HEADER_BYTES + 32;
 const MAX_PACKAGE_KEY_ID_BYTES: usize = 128;
@@ -68,10 +76,12 @@ pub enum ChildEvent {
 }
 
 /// Authenticated orchestrator event accepted by a child.
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum OrchestratorEvent {
     /// The exact package-signing trust selected by the supervising parent.
     PackageTrust(PackageTrust),
+    /// Pipeline-authorized channel UUIDs and optional Level 1 model settings.
+    LaunchBindings(LaunchBindings),
     /// Begin graceful host shutdown.
     Terminate,
     /// One exactly correlated response to the child's pending request.
@@ -95,6 +105,8 @@ pub enum ControlError {
     InvalidDataPlaneRecord,
     /// Package-signing trust violated its closed key, tier, or identifier contract.
     InvalidPackageTrust,
+    /// Launch bindings violated their name, UUID, model, uniqueness, or size contract.
+    InvalidLaunchBindings,
     /// The peer sent a valid message kind owned by the opposite direction.
     WrongMessageDirection,
     /// The operation violates readiness or termination ordering.
@@ -121,6 +133,7 @@ impl Display for ControlError {
             Self::UnknownMessageKind => "host-control: unknown message kind",
             Self::InvalidDataPlaneRecord => "host-control: invalid data-plane record",
             Self::InvalidPackageTrust => "host-control: invalid package trust",
+            Self::InvalidLaunchBindings => "host-control: invalid launch bindings",
             Self::WrongMessageDirection => "host-control: wrong message direction",
             Self::InvalidState => "host-control: invalid lifecycle state",
             Self::PackageMismatch => "host-control: package identity mismatch",
@@ -208,6 +221,7 @@ pub struct OrchestratorControl {
     expected_package_hash: [u8; 32],
     state: ControlState,
     trust_sent: bool,
+    launch_bindings_sent: bool,
     last_request_id: u64,
     pending_request: Option<(RequestId, DataPlaneOperation)>,
 }
@@ -226,6 +240,7 @@ impl OrchestratorControl {
             expected_package_hash,
             state: ControlState::AwaitingReady,
             trust_sent: false,
+            launch_bindings_sent: false,
             last_request_id: 0,
             pending_request: None,
         })
@@ -251,7 +266,7 @@ impl OrchestratorControl {
         };
         match (self.state, record) {
             (ControlState::AwaitingReady, ControlRecord::Ready(package_hash))
-                if self.trust_sent =>
+                if self.trust_sent && self.launch_bindings_sent =>
             {
                 if package_hash != self.expected_package_hash {
                     return Err(self.close(ControlError::PackageMismatch));
@@ -280,6 +295,7 @@ impl OrchestratorControl {
             (
                 _,
                 ControlRecord::PackageTrust(_)
+                | ControlRecord::LaunchBindings(_)
                 | ControlRecord::Terminate
                 | ControlRecord::Response(_),
             ) => Err(self.close(ControlError::WrongMessageDirection)),
@@ -301,6 +317,29 @@ impl OrchestratorControl {
             Err(error) => return Err(self.close(ControlError::Channel(error))),
         };
         self.trust_sent = true;
+        Ok(frame)
+    }
+
+    /// Authenticate pipeline-authorized launch bindings after package trust and before readiness.
+    pub fn provide_launch_bindings(
+        &mut self,
+        bindings: LaunchBindings,
+    ) -> Result<Vec<u8>, ControlError> {
+        if self.state == ControlState::Closed {
+            return Err(ControlError::Closed);
+        }
+        if self.state != ControlState::AwaitingReady
+            || !self.trust_sent
+            || self.launch_bindings_sent
+        {
+            return Err(ControlError::InvalidState);
+        }
+        let plaintext = encode_record(ControlRecord::LaunchBindings(bindings))?;
+        let frame = match self.channel.send(&plaintext) {
+            Ok(frame) => frame,
+            Err(error) => return Err(self.close(ControlError::Channel(error))),
+        };
+        self.launch_bindings_sent = true;
         Ok(frame)
     }
 
@@ -381,6 +420,7 @@ pub struct ChildControl {
     channel: SecureHostChannel,
     state: ControlState,
     trust_received: bool,
+    launch_bindings_received: bool,
     next_request_id: Option<u64>,
     pending_request: Option<(RequestId, DataPlaneOperation)>,
 }
@@ -395,6 +435,7 @@ impl ChildControl {
             channel,
             state: ControlState::AwaitingReady,
             trust_received: false,
+            launch_bindings_received: false,
             next_request_id: Some(1),
             pending_request: None,
         })
@@ -405,7 +446,10 @@ impl ChildControl {
         if self.state == ControlState::Closed {
             return Err(ControlError::Closed);
         }
-        if self.state != ControlState::AwaitingReady || !self.trust_received {
+        if self.state != ControlState::AwaitingReady
+            || !self.trust_received
+            || !self.launch_bindings_received
+        {
             return Err(ControlError::InvalidState);
         }
         let plaintext = encode_record(ControlRecord::Ready(package_hash))?;
@@ -502,11 +546,24 @@ impl ChildControl {
         };
         match record {
             ControlRecord::PackageTrust(trust) => {
-                if self.state != ControlState::AwaitingReady || self.trust_received {
+                if self.state != ControlState::AwaitingReady
+                    || self.trust_received
+                    || self.launch_bindings_received
+                {
                     return Err(self.close(ControlError::InvalidState));
                 }
                 self.trust_received = true;
                 Ok(OrchestratorEvent::PackageTrust(trust))
+            }
+            ControlRecord::LaunchBindings(bindings) => {
+                if self.state != ControlState::AwaitingReady
+                    || !self.trust_received
+                    || self.launch_bindings_received
+                {
+                    return Err(self.close(ControlError::InvalidState));
+                }
+                self.launch_bindings_received = true;
+                Ok(OrchestratorEvent::LaunchBindings(bindings))
             }
             ControlRecord::Terminate => {
                 self.state = ControlState::Terminating;
@@ -591,6 +648,7 @@ enum ControlRecord {
     Heartbeat,
     Terminate,
     PackageTrust(PackageTrust),
+    LaunchBindings(LaunchBindings),
     Request(DataPlaneRequest),
     Response(DataPlaneResponse),
 }
@@ -601,6 +659,9 @@ fn encode_record(record: ControlRecord) -> Result<Vec<u8>, ControlError> {
         ControlRecord::Heartbeat | ControlRecord::Terminate => HEADER_BYTES,
         ControlRecord::PackageTrust(trust) => {
             HEADER_BYTES + 1 + trust.key_id.len() + PACKAGE_TRUST_FIXED_BYTES
+        }
+        ControlRecord::LaunchBindings(bindings) => {
+            HEADER_BYTES + encode_launch_bindings(bindings).len()
         }
         ControlRecord::Request(_) | ControlRecord::Response(_) => HEADER_BYTES + 128,
     });
@@ -624,6 +685,10 @@ fn encode_record(record: ControlRecord) -> Result<Vec<u8>, ControlError> {
             });
             output.push(trust.maximum_tier);
             output.extend_from_slice(&trust.public_key);
+        }
+        ControlRecord::LaunchBindings(bindings) => {
+            output.push(LAUNCH_BINDINGS_TAG);
+            output.extend_from_slice(&encode_launch_bindings(&bindings));
         }
         ControlRecord::Request(request) => {
             let (tag, body) = data_plane::encode(&DataRecord::Request(request))?;
@@ -701,6 +766,9 @@ fn decode_record(bytes: &[u8]) -> Result<ControlRecord, ControlError> {
                 maximum_tier,
             )?))
         }
+        LAUNCH_BINDINGS_TAG => Ok(ControlRecord::LaunchBindings(decode_launch_bindings(
+            &bytes[HEADER_BYTES..],
+        )?)),
         RECEIVE_REQUEST_TAG
         | PUBLISH_REQUEST_TAG
         | ACKNOWLEDGE_REQUEST_TAG
@@ -805,6 +873,19 @@ mod tests {
         PackageTrust::new("prod-test", PackageTrustType::Production, [17; 32], 3).unwrap()
     }
 
+    fn launch_bindings() -> LaunchBindings {
+        LaunchBindings::new(
+            vec![
+                ChannelBinding::new("weather-requests", ChannelBindingAccess::Read, uuid_v7(1))
+                    .unwrap(),
+                ChannelBinding::new("weather-reports", ChannelBindingAccess::Write, uuid_v7(2))
+                    .unwrap(),
+            ],
+            Some(LevelOneModelBinding::new("test-model", 0.0, 128).unwrap()),
+        )
+        .unwrap()
+    }
+
     fn trusted_pair(hash: [u8; 32]) -> (OrchestratorControl, ChildControl) {
         let (mut orchestrator, mut child) = control_pair(hash);
         let trust = package_trust();
@@ -812,6 +893,14 @@ mod tests {
         assert_eq!(
             child.receive_orchestrator(&frame).unwrap(),
             OrchestratorEvent::PackageTrust(trust)
+        );
+        let bindings = launch_bindings();
+        let frame = orchestrator
+            .provide_launch_bindings(bindings.clone())
+            .unwrap();
+        assert_eq!(
+            child.receive_orchestrator(&frame).unwrap(),
+            OrchestratorEvent::LaunchBindings(bindings)
         );
         (orchestrator, child)
     }
@@ -1115,6 +1204,11 @@ mod tests {
         assert_eq!(child.state(), ControlState::AwaitingReady);
         let trust = orchestrator.provide_package_trust(package_trust()).unwrap();
         child.receive_orchestrator(&trust).unwrap();
+        assert_eq!(child.ready([3u8; 32]), Err(ControlError::InvalidState));
+        let bindings = orchestrator
+            .provide_launch_bindings(launch_bindings())
+            .unwrap();
+        child.receive_orchestrator(&bindings).unwrap();
         child.ready([3u8; 32]).unwrap();
         assert_eq!(child.ready([3u8; 32]), Err(ControlError::InvalidState));
         assert_eq!(child.state(), ControlState::Running);
@@ -1339,6 +1433,14 @@ mod tests {
             child.receive_orchestrator(&frame),
             Ok(OrchestratorEvent::PackageTrust(trust))
         );
+        assert_eq!(child.ready(hash), Err(ControlError::InvalidState));
+        let bindings = orchestrator
+            .provide_launch_bindings(launch_bindings())
+            .unwrap();
+        assert!(matches!(
+            child.receive_orchestrator(&bindings),
+            Ok(OrchestratorEvent::LaunchBindings(_))
+        ));
         assert!(child.ready(hash).is_ok());
 
         let (orchestrator_channel, mut child_channel) = raw_pair(43);
@@ -1364,6 +1466,53 @@ mod tests {
             Err(ControlError::InvalidState)
         );
         assert_eq!(child.state(), ControlState::Closed);
+    }
+
+    #[test]
+    fn launch_bindings_are_exactly_once_after_trust_and_before_ready() {
+        let hash = [32; 32];
+        let (mut orchestrator, mut child) = control_pair(hash);
+        assert_eq!(
+            orchestrator.provide_launch_bindings(launch_bindings()),
+            Err(ControlError::InvalidState)
+        );
+        let trust = orchestrator.provide_package_trust(package_trust()).unwrap();
+        child.receive_orchestrator(&trust).unwrap();
+        let bindings = launch_bindings();
+        let frame = orchestrator
+            .provide_launch_bindings(bindings.clone())
+            .unwrap();
+        assert_eq!(
+            orchestrator.provide_launch_bindings(bindings.clone()),
+            Err(ControlError::InvalidState)
+        );
+        assert_eq!(
+            child.receive_orchestrator(&frame),
+            Ok(OrchestratorEvent::LaunchBindings(bindings.clone()))
+        );
+
+        let duplicate = orchestrator
+            .channel
+            .send(&encode_record(ControlRecord::LaunchBindings(bindings)).unwrap())
+            .unwrap();
+        assert_eq!(
+            child.receive_orchestrator(&duplicate),
+            Err(ControlError::InvalidState)
+        );
+        assert_eq!(child.state(), ControlState::Closed);
+
+        let (orchestrator_channel, mut child_channel) = raw_pair(44);
+        let mut orchestrator = OrchestratorControl::new(orchestrator_channel, hash).unwrap();
+        let trust = orchestrator.provide_package_trust(package_trust()).unwrap();
+        child_channel.receive(&trust).unwrap();
+        let premature_ready = child_channel
+            .send(&encode_record(ControlRecord::Ready(hash)).unwrap())
+            .unwrap();
+        assert_eq!(
+            orchestrator.receive_child(&premature_ready, 1),
+            Err(ControlError::InvalidState)
+        );
+        assert_eq!(orchestrator.state(), ControlState::Closed);
     }
 
     #[test]
