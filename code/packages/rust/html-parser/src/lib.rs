@@ -6258,6 +6258,17 @@ impl HtmlParser {
             return false;
         }
 
+        if self.current_element_is_table_structure()
+            && (incoming_name == "a" || is_formatting_element(incoming_name))
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-formatting-start-tag-in-table",
+                format!(
+                    "formatting start tag `<{incoming_name}>` in a table context was foster parented"
+                ),
+            ));
+        }
+
         if !self.current_element_is_table_structure()
             && self.current_parent_is_fostered_before_open_table()
             && incoming_name == "nobr" {
@@ -33441,6 +33452,45 @@ mod tests {
                 "end tag `</font>` could not close a formatting element across table scope"
             )]
         );
+    }
+
+    #[test]
+    fn reports_formatting_start_tags_fostered_from_table_structure() {
+        for (source, name) in [
+            ("<!doctype html><table><a>x</table>", "a"),
+            ("<!doctype html><table><tbody><b>x</table>", "b"),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic
+                        == &ParserDiagnostic::new(
+                            "unexpected-formatting-start-tag-in-table",
+                            format!(
+                                "formatting start tag `<{name}>` in a table context was foster parented"
+                            ),
+                        )
+                }),
+                "source {source:?}"
+            );
+        }
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<a><tr>", "table").unwrap();
+        assert_eq!(
+            fragment.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-formatting-start-tag-in-table",
+                "formatting start tag `<a>` in a table context was foster parented"
+            )]
+        );
+
+        for source in ["<!doctype html><a>x", "<!doctype html><table><tr><td><b>x"] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-formatting-start-tag-in-table"
+            }));
+        }
     }
 
     #[test]

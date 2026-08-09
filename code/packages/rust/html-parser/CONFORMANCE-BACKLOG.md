@@ -28,8 +28,8 @@ tree-construction cases and all 6,806 html5lib tokenizer cases with zero missing
 signatures and zero normalized skips. DOM output is complete, but diagnostic
 coverage is not:
 the checked 2,637-case tree corpus declares 6,243 errors across 2,183 cases.
-After the template table-mode text diagnostic slice, 2,092 of those cases emit
-at least one lexer or parser diagnostic and 91 remain
+After the foster-parented formatting start-tag diagnostic slice, 2,108 of those
+cases emit at least one lexer or parser diagnostic and 75 remain
 uncovered.
 Another 139 cases emit diagnostics despite having no legacy `#errors` rows.
 These are reviewed rather than automatically removed: 89 are full-document
@@ -66,17 +66,15 @@ open table blocks adoption-agency recovery. Description-list item start tags
 now report when implied-end-tag recovery closes a non-current `dt` or `dd`,
 without flagging adjacent description-list items.
 
-The fresh 91-case residual inventory keeps the next concrete groups in the
-existing priority order: remaining table foster-parenting and table-scope
-boundaries;
-select/template recovery; script-tokenizer EOF recovery; plaintext/frameset
-boundaries; and foreign-fragment stray tags plus MathML/SVG table integration.
+The fresh 75-case residual inventory keeps the next concrete groups in this
+priority order: remaining table fragment scope and shell boundaries;
+script-tokenizer EOF recovery; plaintext/frameset and document-tail boundaries;
+and foreign-fragment stray tags plus MathML/SVG table integration. The current
+corpus no longer has a silent formatting-only or general in-body group.
 
 Prioritized work items:
 
-1. **In-body insertion mode.** Cover the remaining formatting-reconstruction
-   and stray-tag diagnostics.
-2. **Table, select, and template insertion modes.** Cover the remaining foster
+1. **Table, select, and template insertion modes.** Cover the remaining foster
    parenting, table scopes, select recovery, and template mode-stack errors.
    Non-whitespace table text now reports when it is foster-parented. The
    specialized SVG and MathML start-tag path now reports when table insertion
@@ -87,21 +85,27 @@ Prioritized work items:
    start tags now report the general in-table parse error. Nested `select` and
    `input` start tags now report when they force recovery from select mode.
    Non-whitespace text after a template row now reports when it forces recovery
-   from template table mode. The
+   from template table mode. Formatting start tags now report when table
+   structure foster-parents them, covering the remaining silent fostered-anchor
+   starts. The
    remaining fragment EOF inventory includes fostered-anchor `eof-in-table`
    rows and MathML/SVG table-boundary scope recovery.
-3. **Adoption agency and active formatting.** Cover malformed formatting cases
-   without changing their now-conforming DOM output.
+2. **Script-tokenizer EOF recovery.** Cover malformed script end tags that
+   reach EOF while the lexer is still assembling the tag.
+3. **Plaintext, frameset, and document-tail boundaries.** Cover EOF and stray
+   content diagnostics after plaintext and frameset transitions.
 4. **Foreign content and fragment parsing.** Cover SVG/MathML integration
    boundaries and context-sensitive fragment errors. HTML start tags that force
    recovery from foreign content now report their parse error; remaining work
    includes foreign end-tag and fragment-shell recovery.
-5. **Diagnostic positions and error taxonomy.** Carry source positions into
+5. **Adoption agency and active formatting.** Cover malformed formatting cases
+   without changing their now-conforming DOM output.
+6. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
-6. **Input boundary review.** Document the Unicode-code-point parser boundary
+7. **Input boundary review.** Document the Unicode-code-point parser boundary
    and either add or explicitly separate byte decoding and encoding sniffing.
-7. **Algorithm and differential audit.** Map implemented states/modes to the
+8. **Algorithm and differential audit.** Map implemented states/modes to the
    current HTML Standard and add deterministic differential/fuzz coverage for
    branches not exercised by the upstream corpora.
 
