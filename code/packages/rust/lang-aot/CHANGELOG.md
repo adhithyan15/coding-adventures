@@ -1,5 +1,12 @@
 # Changelog — `lang-aot`
 
+## 0.220.43 - 2026-08-09 (ALGOL direct formal procedures — seven-backend matrix)
+
+The matrix now passes `square` through an ALGOL `procedure` formal and forwards
+that formal through a nested wrapper on Native AOT, LLVM, WASM, JVM, CLR, VM,
+and JIT. Both specialised wrappers call the original declared target directly,
+proving the compiler needs no new runtime function-pointer ABI for this slice.
+
 ## 0.220.42 - 2026-08-09 (ALGOL recursive scalar name remapping — seven-backend matrix)
 
 The matrix now runs a recursively remapped ALGOL scalar name pair on Native

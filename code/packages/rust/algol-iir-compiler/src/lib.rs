@@ -270,6 +270,9 @@ enum ProcedureParamType {
         elem_ty: ScalarType,
         dimensions: usize,
     },
+    /// A formal procedure is compiled by direct, call-site-specialised
+    /// substitution. It therefore has no ordinary IIR value representation.
+    Procedure,
 }
 
 /// Whether an ALGOL formal receives an eager value or re-evaluates its actual
@@ -327,12 +330,22 @@ struct ByNameBinding {
     key: String,
 }
 
+/// A direct source procedure supplied for a formal-procedure parameter.
+///
+/// The portable IIR ABI does not carry function pointers or closures. The
+/// enclosing procedure is specialised at its direct call site instead, so a
+/// call through the formal can resolve to this statically known procedure.
+#[derive(Debug, Clone)]
+struct ProcedureBinding {
+    source_name: String,
+}
+
 /// One direct sibling currently being lowered for a procedure with scalar
 /// call-by-name formals. Several siblings can coexist while a recursive call
 /// remaps its formals, for example `flip(n, y, x)`.
 #[derive(Debug, Clone)]
 struct InFlightByNameSpecialization {
-    scalar_binding_key: String,
+    binding_key: String,
     function_name: String,
 }
 
@@ -366,6 +379,9 @@ struct Compiler {
     /// Active call-by-name formal substitutions while lowering one specialised
     /// procedure body.
     by_name_bindings: HashMap<String, ByNameBinding>,
+    /// Direct source procedures substituted for active formal-procedure
+    /// parameters while lowering one specialised procedure body.
+    procedure_bindings: HashMap<String, ProcedureBinding>,
     /// A temporarily suspended formal resolves its stored actual expression in
     /// the caller's injected global environment rather than recursively through
     /// itself (for example `f(x)` where `x` is both formal and actual).
@@ -421,6 +437,7 @@ impl Default for Compiler {
             proc_sigs: HashMap::new(),
             proc_decls: HashMap::new(),
             by_name_bindings: HashMap::new(),
+            procedure_bindings: HashMap::new(),
             suspended_by_name: HashSet::new(),
             by_name_specialization_counter: 0,
             by_name_capture_counter: 0,
@@ -610,14 +627,14 @@ impl Compiler {
             let sig = self.proc_sigs.get(&name).ok_or_else(|| {
                 CompileError::Malformed(format!("procedure {name:?} was not registered"))
             })?;
-            if sig
-                .params
-                .iter()
-                .any(|param| param.mode == ProcedureParamMode::Name)
+            if sig.params.iter().any(|param| {
+                param.mode == ProcedureParamMode::Name
+                    || matches!(param.ty, ProcedureParamType::Procedure)
+            })
             {
-                // A name formal is not an ordinary ABI value. Its direct call
-                // sites create specialised siblings after the actual expression
-                // and caller environment are known.
+                // Name and procedure formals are not ordinary ABI values. Their
+                // direct call sites create specialised siblings after the actual
+                // expression or procedure target is known.
                 return Ok(());
             }
             let func = self.compile_procedure(proc_decl)?;
@@ -1193,6 +1210,7 @@ impl Compiler {
                 .ok_or_else(|| CompileError::Malformed(format!(
                     "unknown array parameter element type {ty:?}"
                 ))),
+            ["procedure"] => Ok(ProcedureParamType::Procedure),
             [ty] => scalar(ty)
                 .map(ProcedureParamType::Scalar)
                 .ok_or_else(|| CompileError::Unsupported(format!("{ty} parameters"))),
@@ -1290,8 +1308,13 @@ impl Compiler {
                     elem_ty,
                     dimensions: array_formal_dimension_count(proc_decl, &p)?,
                 },
-                ProcedureParamType::Scalar(_) => ty,
+                ProcedureParamType::Scalar(_) | ProcedureParamType::Procedure => ty,
             };
+            if matches!(ty, ProcedureParamType::Procedure) && value_names.contains(&p) {
+                return Err(CompileError::Unsupported(format!(
+                    "value procedure parameter {p:?}"
+                )));
+            }
             let mode = if value_names.contains(&p) {
                 ProcedureParamMode::Value
             } else {
@@ -1341,7 +1364,7 @@ impl Compiler {
         &mut self,
         proc_decl: &GrammarASTNode,
     ) -> Result<IIRFunction, CompileError> {
-        self.compile_procedure_with_bindings(proc_decl, None, HashMap::new())
+        self.compile_procedure_with_bindings(proc_decl, None, HashMap::new(), HashMap::new())
     }
 
     /// Lower a procedure body, optionally as a call-site-specialised sibling
@@ -1351,6 +1374,7 @@ impl Compiler {
         proc_decl: &GrammarASTNode,
         specialised_name: Option<String>,
         by_name_bindings: HashMap<String, ByNameBinding>,
+        procedure_bindings: HashMap<String, ProcedureBinding>,
     ) -> Result<IIRFunction, CompileError> {
         self.set_loc(proc_decl);
         let (source_name, params, ret) = self.procedure_parts(proc_decl)?;
@@ -1371,6 +1395,8 @@ impl Compiler {
         let saved_scopes = std::mem::replace(&mut self.scopes, vec![HashMap::new()]);
         let saved_by_name_bindings =
             std::mem::replace(&mut self.by_name_bindings, by_name_bindings);
+        let saved_procedure_bindings =
+            std::mem::replace(&mut self.procedure_bindings, procedure_bindings);
 
         // E6: a procedure body addresses an enclosing block scalar that was
         // materialised as a global (`is_global`).  The fresh scope above hides
@@ -1407,6 +1433,14 @@ impl Compiler {
                 if !self.by_name_bindings.contains_key(pname) {
                     return Err(CompileError::Malformed(format!(
                         "call-by-name parameter {pname:?} has no call-site binding"
+                    )));
+                }
+                continue;
+            }
+            if matches!(*pty, ProcedureParamType::Procedure) {
+                if !self.procedure_bindings.contains_key(pname) {
+                    return Err(CompileError::Malformed(format!(
+                        "formal procedure parameter {pname:?} has no call-site binding"
                     )));
                 }
                 continue;
@@ -1479,6 +1513,9 @@ impl Compiler {
                         )?;
                     }
                 }
+                ProcedureParamType::Procedure => unreachable!(
+                    "formal procedure parameters are bound through specialisation"
+                ),
             }
         }
         let result_slot = if let Some(ret) = ret {
@@ -1587,6 +1624,7 @@ impl Compiler {
         self.initialized_string_slots = saved_initialized_string_slots;
         self.scopes = saved_scopes;
         self.by_name_bindings = saved_by_name_bindings;
+        self.procedure_bindings = saved_procedure_bindings;
 
         Ok(func)
     }
@@ -1820,17 +1858,28 @@ impl Compiler {
             .map(|t| t.value.clone())
             .ok_or_else(|| CompileError::Malformed("call has no procedure name".into()))?;
 
+        // A formal procedure shadows any source procedure with the same
+        // spelling. Its enclosing sibling already captured a direct source
+        // target, so the ordinary call path can use that target's signature.
+        let target_source_name = self
+            .procedure_bindings
+            .get(&name)
+            .map(|binding| binding.source_name.clone())
+            .unwrap_or_else(|| name.clone());
+
         // ALGOL 60 §3.2.4 *standard functions* (`abs`, `sign`, `entier`, …) are
         // built into the language, not user-declared procedures, so they have no
         // `proc_sigs` entry.  A program may still legally *redeclare* one as its
         // own procedure — so we only fall back to the built-in when the name is
         // not a user-declared procedure.  This keeps the override semantics the
         // Report grants while making `abs(x)` work out of the box.
-        let sig = match self.proc_sigs.get(&name).cloned() {
+        let sig = match self.proc_sigs.get(&target_source_name).cloned() {
             Some(sig) => sig,
             None => {
-                if let Some(result) = self.try_emit_standard_function(&name, node)? {
-                    return Ok(Some(result));
+                if target_source_name == name {
+                    if let Some(result) = self.try_emit_standard_function(&name, node)? {
+                        return Ok(Some(result));
+                    }
                 }
                 return Err(CompileError::Type(format!(
                     "call to undeclared procedure {name:?}"
@@ -1853,14 +1902,14 @@ impl Compiler {
             )));
         }
 
-        let target_name = if sig
-            .params
-            .iter()
-            .any(|param| param.mode == ProcedureParamMode::Name)
+        let target_name = if sig.params.iter().any(|param| {
+            param.mode == ProcedureParamMode::Name
+                || matches!(param.ty, ProcedureParamType::Procedure)
+        })
         {
-            self.compile_by_name_specialization(&name, &sig, &actuals)?
+            self.compile_by_name_specialization(&target_source_name, &sig, &actuals)?
         } else {
-            name.clone()
+            target_source_name
         };
 
         let mut arg_slots = Vec::with_capacity(actuals.len() * 4);
@@ -1961,6 +2010,10 @@ impl Compiler {
                         }
                     }
                 }
+                ProcedureParamType::Procedure => {
+                    // The specialised body substitutes this direct target; a
+                    // formal procedure does not cross the fixed IIR ABI.
+                }
             }
         }
 
@@ -1984,12 +2037,12 @@ impl Compiler {
         })
     }
 
-    /// Compile one direct call to a procedure with name formals. The portable
-    /// IIR ABI has no typed closure parameter, so name scalars use a specialised
-    /// sibling: it keeps each actual expression in the callee's lowering
-    /// context, where reads can re-emit it against caller bindings published as
-    /// globals. Name arrays retain the ordinary typed descriptor ABI because a
-    /// bare array actual already supplies shared caller storage.
+    /// Compile one direct call to a procedure with name or formal-procedure
+    /// parameters. The portable IIR ABI has no typed closure parameter, so
+    /// name scalars retain each actual expression in the callee's lowering
+    /// context and formal procedures retain a direct source target. Name arrays
+    /// still use the ordinary typed descriptor ABI because a bare array actual
+    /// already supplies shared caller storage.
     fn compile_by_name_specialization(
         &mut self,
         source_name: &str,
@@ -2000,14 +2053,18 @@ impl Compiler {
             param.mode == ProcedureParamMode::Name
                 && matches!(param.ty, ProcedureParamType::Scalar(_))
         });
+        let has_procedure_formal = sig
+            .params
+            .iter()
+            .any(|param| matches!(param.ty, ProcedureParamType::Procedure));
         let in_flight = self.compiling_by_name_procedures.get(source_name).cloned();
         if let Some(in_flight) = &in_flight {
             // Name arrays already travel through the ordinary typed descriptor
             // ABI, so a recursive call can re-enter the active sibling. Scalar
-            // names may also form a finite remapping graph, but every recursive
-            // actual must still be a direct active formal: a changed expression
+            // names and formal procedures form finite binding graphs. Scalar
+            // actuals must still be direct active formals: a changed expression
             // needs a runtime thunk frame.
-            if !has_scalar_name_formal {
+            if !has_scalar_name_formal && !has_procedure_formal {
                 return in_flight
                     .last()
                     .map(|entry| entry.function_name.clone())
@@ -2024,23 +2081,31 @@ impl Compiler {
             }
         }
 
-        let mut bindings = HashMap::new();
+        let mut by_name_bindings = HashMap::new();
+        let mut procedure_bindings = HashMap::new();
         for (param, actual) in sig.params.iter().zip(actuals) {
-            if param.mode != ProcedureParamMode::Name {
-                continue;
+            match param.ty {
+                ProcedureParamType::Scalar(ty) if param.mode == ProcedureParamMode::Name => {
+                    let (actual, key) = self.prepare_by_name_actual(actual)?;
+                    by_name_bindings.insert(param.name.clone(), ByNameBinding { actual, ty, key });
+                }
+                ProcedureParamType::Procedure => {
+                    let binding = self.prepare_procedure_actual(source_name, &param.name, actual)?;
+                    procedure_bindings.insert(param.name.clone(), binding);
+                }
+                _ => {}
             }
-            let ProcedureParamType::Scalar(ty) = param.ty else {
-                continue;
-            };
-            let (actual, key) = self.prepare_by_name_actual(actual)?;
-            bindings.insert(param.name.clone(), ByNameBinding { actual, ty, key });
         }
-        let scalar_binding_key = self.scalar_by_name_binding_key(sig, &bindings);
+        let binding_key = self.specialization_binding_key(
+            sig,
+            &by_name_bindings,
+            &procedure_bindings,
+        );
 
         if let Some(in_flight) = &in_flight {
             if let Some(entry) = in_flight
                 .iter()
-                .find(|entry| entry.scalar_binding_key == scalar_binding_key)
+                .find(|entry| entry.binding_key == binding_key)
             {
                 return Ok(entry.function_name.clone());
             }
@@ -2065,13 +2130,14 @@ impl Compiler {
                 .entry(source_name.to_string())
                 .or_default()
                 .push(InFlightByNameSpecialization {
-                    scalar_binding_key,
+                    binding_key,
                     function_name: specialised_name.clone(),
                 });
             let function = self.compile_procedure_with_bindings(
                 &proc_decl,
                 Some(specialised_name.clone()),
-                bindings,
+                by_name_bindings,
+                procedure_bindings,
             )?;
             self.functions.push(function);
             Ok(specialised_name)
@@ -2109,28 +2175,62 @@ impl Compiler {
         })
     }
 
-    /// Serialize scalar name bindings in formal order. Stored actual keys
-    /// resolve temporary aliases to captured storage, so recursive remappings
-    /// can identify a previously compiled sibling.
-    fn scalar_by_name_binding_key(
+    /// Serialize every non-ABI specialization binding in formal order. Scalar
+    /// actual keys resolve temporary aliases to captured storage, while a
+    /// formal procedure has a direct source target. This lets recursive calls
+    /// find an already-active sibling whenever the binding graph closes.
+    fn specialization_binding_key(
         &self,
         sig: &ProcSig,
-        bindings: &HashMap<String, ByNameBinding>,
+        by_name_bindings: &HashMap<String, ByNameBinding>,
+        procedure_bindings: &HashMap<String, ProcedureBinding>,
     ) -> String {
         sig.params
             .iter()
-            .filter(|param| {
-                param.mode == ProcedureParamMode::Name
-                    && matches!(param.ty, ProcedureParamType::Scalar(_))
-            })
-            .map(|param| {
-                let binding = bindings
-                    .get(&param.name)
-                    .expect("scalar name formal must have a prepared binding");
-                format!("{}={}", param.name, binding.key)
+            .filter_map(|param| match param.ty {
+                ProcedureParamType::Scalar(_) if param.mode == ProcedureParamMode::Name => {
+                    let binding = by_name_bindings
+                        .get(&param.name)
+                        .expect("scalar name formal must have a prepared binding");
+                    Some(format!("scalar:{}={}", param.name, binding.key))
+                }
+                ProcedureParamType::Procedure => {
+                    let binding = procedure_bindings
+                        .get(&param.name)
+                        .expect("formal procedure must have a prepared binding");
+                    Some(format!("procedure:{}={}", param.name, binding.source_name))
+                }
+                _ => None,
             })
             .collect::<Vec<_>>()
             .join("|")
+    }
+
+    /// Resolve a formal-procedure actual to a direct declared procedure. An
+    /// already-active formal forwards its captured target, so nested wrappers
+    /// do not need function pointers or a new IIR ABI shape.
+    fn prepare_procedure_actual(
+        &self,
+        caller_name: &str,
+        formal_name: &str,
+        actual: &GrammarASTNode,
+    ) -> Result<ProcedureBinding, CompileError> {
+        let actual_name = expr_variable_name(actual).ok_or_else(|| {
+            CompileError::Type(format!(
+                "procedure {caller_name:?}: formal procedure {formal_name:?} requires a direct procedure name"
+            ))
+        })?;
+        if let Some(binding) = self.procedure_bindings.get(&actual_name) {
+            return Ok(binding.clone());
+        }
+        if self.proc_sigs.contains_key(&actual_name) {
+            return Ok(ProcedureBinding {
+                source_name: actual_name,
+            });
+        }
+        Err(CompileError::Type(format!(
+            "procedure {caller_name:?}: formal procedure {formal_name:?} requires a declared procedure, got {actual_name:?}"
+        )))
     }
 
     /// Freeze one name actual in its caller's lexical environment before a
@@ -7444,6 +7544,78 @@ mod tests {
         )
         .expect_err("proper procedure does not yield a value");
         assert!(err.to_string().contains("no return value"));
+    }
+
+    #[test]
+    fn formal_procedure_calls_a_direct_typed_actual() {
+        let src = "begin integer result; \
+                   integer procedure twice(x); value x; integer x; twice := x + x; \
+                   integer procedure apply(p, x); value x; procedure p; integer x; \
+                     apply := p(x); \
+                   result := apply(twice, 21) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "formal_procedure_direct").expect("compiles");
+        let apply = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("__algol_by_name_apply_"))
+            .expect("formal procedures require a direct specialised sibling");
+        assert_eq!(apply.params, vec![("x".to_string(), "i64".to_string())]);
+        assert!(apply.instructions.iter().any(|instr| {
+            instr.op == "call" && instr.srcs.first() == Some(&Operand::Var("twice".to_string()))
+        }));
+    }
+
+    #[test]
+    fn formal_procedure_forwards_through_a_nested_wrapper() {
+        let src = "begin integer result; \
+                   integer procedure square(x); value x; integer x; square := x * x; \
+                   integer procedure dispatch(p, x); value x; procedure p; integer x; \
+                     begin integer procedure forward(p, x); value x; procedure p; integer x; \
+                           forward := p(x); \
+                           dispatch := forward(p, x) end; \
+                   result := dispatch(square, 6) end";
+        assert_eq!(run_i64(src), 36);
+
+        let module = compile_source(src, "formal_procedure_forwarding").expect("compiles");
+        assert!(
+            module
+                .functions
+                .iter()
+                .any(|function| function.name.starts_with("__algol_by_name_dispatch_"))
+                && module
+                    .functions
+                    .iter()
+                    .any(|function| function.name.starts_with("__algol_by_name_forward_")),
+            "each direct formal-procedure wrapper needs its own sibling"
+        );
+    }
+
+    #[test]
+    fn formal_procedure_rejects_non_procedure_actuals() {
+        let err = compile_source(
+            "begin integer scalar, result; \
+             integer procedure apply(p, x); value x; procedure p; integer x; apply := p(x); \
+             scalar := 7; result := apply(scalar, 6) end",
+            "formal_procedure_non_procedure_actual",
+        )
+        .expect_err("a scalar is not a direct procedure actual");
+        assert!(err
+            .to_string()
+            .contains("requires a declared procedure"));
+    }
+
+    #[test]
+    fn formal_procedure_rejects_value_mode() {
+        let err = compile_source(
+            "begin integer result; \
+             integer procedure apply(p); value p; procedure p; apply := 0; \
+             result := 0 end",
+            "formal_procedure_value_mode",
+        )
+        .expect_err("value procedure formals need a runtime descriptor ABI");
+        assert!(err.to_string().contains("value procedure parameter"));
     }
 
     #[test]
