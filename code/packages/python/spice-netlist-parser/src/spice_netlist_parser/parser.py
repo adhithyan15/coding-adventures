@@ -2529,6 +2529,10 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             not math.isfinite(params["CGDO"]) or params["CGDO"] < 0.0
         ):
             raise NetlistParseError("MOSFET CGDO must be finite and non-negative")
+        if "CGBO" in params and (
+            not math.isfinite(params["CGBO"]) or params["CGBO"] < 0.0
+        ):
+            raise NetlistParseError("MOSFET CGBO must be finite and non-negative")
         for parameter_name, canonical in (
             ("CBS", "CBS"),
             ("CJS", "CBS"),

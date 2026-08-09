@@ -3554,6 +3554,33 @@ def test_lowers_valid_mosfet_model_gate_drain_overlap_capacitance(
     assert isclose(mosfet.model.model.params.CGDO, expected)
 
 
+@pytest.mark.parametrize("gate_body_overlap", ["-1p", "1e999"])
+def test_rejects_invalid_mosfet_model_gate_body_overlap_capacitance(
+    gate_body_overlap: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET CGBO must be finite and non-negative",
+    ):
+        parse_netlist(
+            f".model nfast NMOS(CGBO={gate_body_overlap})\nM1 d g s b nfast\n"
+        )
+
+
+@pytest.mark.parametrize(
+    ("gate_body_overlap", "expected"), [("0", 0.0), ("5p", 5.0e-12)]
+)
+def test_lowers_valid_mosfet_model_gate_body_overlap_capacitance(
+    gate_body_overlap: str, expected: float
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS(CGBO={gate_body_overlap})\nM1 d g s b nfast\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.CGBO, expected)
+
+
 @pytest.mark.parametrize("junction_current", ["-1p", "1e999"])
 def test_rejects_invalid_mosfet_model_junction_current(
     junction_current: str,
