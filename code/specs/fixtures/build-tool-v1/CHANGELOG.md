@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-08-08
+
+- Added the process-free `lua_windows_sibling_parity` validation check and an
+  absent-`BUILD_windows` fixture that requires the complete canonical Lua
+  sibling-install set with `STANDALONE_PREREQUISITE_MISSING` diagnostics.
+
 ## 2026-08-03
 
 - Expanded the canonical language-registry case with representative Elixir,

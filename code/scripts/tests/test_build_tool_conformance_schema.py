@@ -337,7 +337,7 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
     def test_validation_v1_exposes_only_checks_with_semantic_oracles(self) -> None:
         self.assertEqual(
             self.pure_schema["$defs"]["validation_check"]["enum"],
-            ["build_file_presence"],
+            ["build_file_presence", "lua_windows_sibling_parity"],
         )
 
     def test_package_names_require_nonempty_safe_segments(self) -> None:

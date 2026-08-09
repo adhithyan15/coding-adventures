@@ -1004,7 +1004,8 @@
     },
     "validation_check": {
       "enum": [
-        "build_file_presence"
+        "build_file_presence",
+        "lua_windows_sibling_parity"
       ]
     },
     "validation_diagnostic_code": {
@@ -1072,6 +1073,19 @@
         },
         "declared_deps": {
           "$ref": "#/$defs/package_names"
+        },
+        "canonical_lua_sibling_installs": {
+          "$ref": "#/$defs/package_names"
+        },
+        "windows_build_file_state": {
+          "enum": [
+            "present",
+            "empty",
+            "missing"
+          ]
+        },
+        "windows_lua_sibling_installs": {
+          "$ref": "#/$defs/package_names"
         }
       }
     },
@@ -1127,7 +1141,42 @@
                 "$ref": "#/$defs/edge"
               }
             }
-          }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "checks": {
+                    "contains": {
+                      "const": "lua_windows_sibling_parity"
+                    }
+                  }
+                },
+                "required": [
+                  "checks"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "packages": {
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "canonical_lua_sibling_installs",
+                        "windows_build_file_state",
+                        "windows_lua_sibling_installs"
+                      ],
+                      "properties": {
+                        "language": {
+                          "const": "lua"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
         }
       }
     },

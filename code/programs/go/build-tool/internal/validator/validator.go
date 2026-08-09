@@ -840,7 +840,7 @@ func selfLuaInstallDisablesDeps(lines []string, selfRock string) bool {
 }
 
 func missingLuaSiblingInstalls(unixLines, windowsLines []string) []string {
-	if len(unixLines) == 0 || len(windowsLines) == 0 {
+	if len(unixLines) == 0 {
 		return nil
 	}
 

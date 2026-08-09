@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "id": "validation/lua-windows-sibling-parity-absent",
+  "domain": "validation",
+  "summary": "A Lua canonical BUILD with sibling installs requires an explicit Windows closure even when BUILD_windows is absent.",
+  "platforms": [
+    "windows"
+  ],
+  "capabilities": [
+    "validation"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "validation",
+    "options": {
+      "platform": "windows",
+      "checks": [
+        "lua_windows_sibling_parity"
+      ],
+      "packages": [
+        {
+          "name": "lua/arithmetic",
+          "rel_path": "code/packages/lua/arithmetic",
+          "language": "lua",
+          "build_file_state": "present",
+          "build_references": [],
+          "is_starlark": false,
+          "declared_srcs": [],
+          "declared_deps": [],
+          "canonical_lua_sibling_installs": [],
+          "windows_build_file_state": "present",
+          "windows_lua_sibling_installs": []
+        },
+        {
+          "name": "lua/demo",
+          "rel_path": "code/packages/lua/demo",
+          "language": "lua",
+          "build_file_state": "present",
+          "build_references": [
+            "lua/arithmetic",
+            "lua/logic_gates"
+          ],
+          "is_starlark": false,
+          "declared_srcs": [],
+          "declared_deps": [],
+          "canonical_lua_sibling_installs": [
+            "lua/arithmetic",
+            "lua/logic_gates"
+          ],
+          "windows_build_file_state": "missing",
+          "windows_lua_sibling_installs": []
+        },
+        {
+          "name": "lua/logic_gates",
+          "rel_path": "code/packages/lua/logic_gates",
+          "language": "lua",
+          "build_file_state": "present",
+          "build_references": [],
+          "is_starlark": false,
+          "declared_srcs": [],
+          "declared_deps": [],
+          "canonical_lua_sibling_installs": [],
+          "windows_build_file_state": "present",
+          "windows_lua_sibling_installs": []
+        }
+      ],
+      "dependency_edges": []
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "validation/lua-windows-sibling-parity-absent",
+    "domain": "validation",
+    "outcome": "error",
+    "result": {
+      "valid": false,
+      "diagnostic_codes": [
+        "STANDALONE_PREREQUISITE_MISSING"
+      ]
+    },
+    "diagnostics": [
+      {
+        "code": "STANDALONE_PREREQUISITE_MISSING",
+        "severity": "error",
+        "path": "code/packages/lua/demo/BUILD_windows",
+        "package": "lua/demo",
+        "details": {
+          "missing_sibling_installs": [
+            "lua/arithmetic",
+            "lua/logic_gates"
+          ],
+          "windows_build_file_state": "missing"
+        }
+      }
+    ]
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}
