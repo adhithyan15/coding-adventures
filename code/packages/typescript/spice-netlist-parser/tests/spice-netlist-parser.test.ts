@@ -2208,6 +2208,17 @@ J1 drain gate source fast
     });
   });
 
+  it("parses the PJ model type alias", () => {
+    const parsed = parseNetlist(".model fast PJ(BETA=2m)\nJ1 drain gate source fast");
+
+    expect(parsed.models.get("fast")?.kind).toBe("PJF");
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      polarity: "PJF",
+      beta: 2.0e-3,
+    });
+  });
+
   it.each(["CGS", "CGS0"])(
     "parses the JFET %s gate-source capacitance alias",
     (parameter) => {

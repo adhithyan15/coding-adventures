@@ -1154,7 +1154,7 @@ function parseModelCard(fields: readonly string[]): ModelCard {
     kind = "D";
   } else if (rawKind === "NJFET" || rawKind === "NJ") {
     kind = "NJF";
-  } else if (rawKind === "PJFET") {
+  } else if (rawKind === "PJFET" || rawKind === "PJ") {
     kind = "PJF";
   }
   const params = parseModelParams(paramsText);
