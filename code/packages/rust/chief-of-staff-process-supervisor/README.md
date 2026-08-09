@@ -14,10 +14,12 @@ environment or registry input.
 
 The same authenticated session now carries the host data plane. Child-side
 helpers serialize bounded channel receive/publish/acknowledge and provider-neutral
-completion exchanges. The supervisor retains one authenticated request per host
-until an injected service adapter answers through `respond_data_plane`, preserving
-exact correlation across real cross-platform process pipes without adding an
-unauthenticated side channel.
+completion exchanges. When a dispatcher is injected, the supervisor automatically
+reauthorizes and answers each request before processing the next record. A manual
+composition may instead retain one authenticated request per host until its
+service adapter answers through `respond_data_plane`. Both paths preserve exact
+correlation across real cross-platform process pipes without adding an
+unauthenticated side channel or exposing payloads to the orchestration core.
 
 Its keyring and X3DH identity are shared through owned `Arc` handles, and its
 session source is `Send`, so the complete supervisor can move with the daemon's
@@ -30,9 +32,8 @@ orchestrator. The production storage-backed provider revalidates exact host
 registration, immutable pipeline channel claims, active topology, and directional
 membership before every spawn. A fail-closed provider remains available to
 compositions that intentionally have no durable pipeline wiring.
-Channel endpoint and LLM service implementations remain injected by
-the concrete host/daemon composition rather than entering this process-authority
-crate.
+Channel endpoint and LLM service implementations remain injected behind
+`chief-of-staff-host-data-plane` rather than entering this process-authority crate.
 
 ## Validation
 

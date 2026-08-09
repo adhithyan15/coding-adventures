@@ -522,9 +522,15 @@ The strict readiness, heartbeat, and termination state machine is specified in
 That same authenticated session carries a serialized, bounded channel and
 provider-neutral completion data plane after readiness. The protocol permits one
 request in flight with exact monotonic correlation; the orchestrator-side adapter
-authorizes and executes the operation without creating a second child pipe. The
-payload-blind orchestration core receives no request body; the process adapter
-hands it only to the separately injected channel/LLM authority.
+authorizes and executes the operation without creating a second child pipe. For
+every request, the dedicated data-plane dispatcher reloads the exact pipeline
+binding, immutable claims, active channel topology, directional membership, and
+model settings. It rejects unknown or wrong-direction channel UUIDs and any model
+setting drift before invoking the separately injected channel/LLM service, then
+validates response identity and operation shape before returning it. The
+payload-blind orchestration core receives no request body. Until concrete channel
+key custody and model providers are composed, the production daemon uses the same
+authorization boundary with a redacted unavailable service.
 
 ```
 ┌────────────────────────────────────────────────────────────────┐

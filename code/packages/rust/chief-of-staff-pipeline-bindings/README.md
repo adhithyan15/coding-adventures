@@ -15,6 +15,9 @@ irreversibly destroyed and UUIDs must never be recycled.
 Launch resolution repeats the registration, claim, lifecycle, and membership
 checks. A stale record therefore cannot authorize a replaced package, destroyed
 channel, changed topology, or cross-pipeline channel.
+Callers that service the host data plane resolve the complete current binding,
+including the pipeline's authorized agent identity; child launch delivery keeps
+using the narrower channel/model-only view.
 Unwiring is revision-CAS guarded while the host record exists and idempotent
 after it is absent; immutable channel claims remain as non-authorizing audit state.
 

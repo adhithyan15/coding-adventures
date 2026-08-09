@@ -35,7 +35,9 @@ The generic core receives:
 A production constructor composes the core with `ProcessHostSupervisor`, owned
 shared handles to its trusted package keyring and long-lived X3DH identity, a
 fixed absolute child program, fresh UUID-v7 session source, and the same
-monotonic clock used for authenticated receipt evidence.
+monotonic clock used for authenticated receipt evidence. It also requires a
+`HostDataPlaneDispatcher`; the supervisor hands authenticated requests directly
+to that injected boundary, so the generic core remains payload-blind.
 
 The core owns an `Arc<dyn StorageBackend>` and the process supervisor owns
 `Arc` handles to its cryptographic trust objects. The complete control plane is

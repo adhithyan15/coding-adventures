@@ -10,6 +10,7 @@ use chief_of_staff_channel_crypto::ChannelId;
 use chief_of_staff_channel_endpoints::{
     ChannelDefinition, ChannelDefinitionStore, ChannelEndpointError,
 };
+use chief_of_staff_host_data_plane::HostDataPlaneDispatcher;
 use chief_of_staff_host_runtime::PackageKeyring;
 use chief_of_staff_process_supervisor::{
     HostLaunchBindingProvider, MonotonicClock, ProcessHostSupervisor, ProcessSupervisorConfig,
@@ -420,6 +421,7 @@ impl<A> OrchestratorCore<ProcessHostSupervisor, A> {
         process_config: ProcessSupervisorConfig,
         keyring: Arc<PackageKeyring>,
         launch_bindings: Arc<dyn HostLaunchBindingProvider>,
+        data_plane_dispatcher: Arc<dyn HostDataPlaneDispatcher>,
         identity: Arc<IdentityKeyPair>,
         clock: Arc<dyn MonotonicClock>,
         sessions: Box<dyn SessionIdSource>,
@@ -433,7 +435,8 @@ impl<A> OrchestratorCore<ProcessHostSupervisor, A> {
             identity,
             Arc::clone(&clock),
             sessions,
-        );
+        )
+        .with_data_plane_dispatcher(data_plane_dispatcher);
         Self::new(backend, supervisor, authorizer, clock, reconcile_config)
     }
 }
@@ -445,6 +448,7 @@ mod tests {
     use chief_of_staff_channel_endpoints::{
         AgentId, ChannelLifecycle, OriginatorIdentity, ReceiverIdentity,
     };
+    use chief_of_staff_host_data_plane::UnavailableHostDataPlaneDispatcher;
     use chief_of_staff_process_supervisor::{
         DenyHostLaunchBindings, HostProgram, UuidV7SessionIdSource,
     };
@@ -1205,6 +1209,7 @@ mod tests {
             config,
             keyring,
             Arc::new(DenyHostLaunchBindings),
+            Arc::new(UnavailableHostDataPlaneDispatcher),
             identity,
             clock,
             Box::<UuidV7SessionIdSource>::default(),

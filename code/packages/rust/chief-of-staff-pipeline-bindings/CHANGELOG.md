@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Expose complete revalidated launch authority, including the pipeline's agent
+  identity, for per-request host data-plane authorization and service dispatch.
+
 ## 0.1.0
 
 - Add bounded versioned host-binding and immutable channel-claim records.

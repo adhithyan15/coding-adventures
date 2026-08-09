@@ -9,6 +9,9 @@ use chief_of_staff_daemon_credential::{load_or_create_credential, CredentialFile
 use chief_of_staff_daemon_keyring::{load_package_keyring, KeyringLoadError};
 use chief_of_staff_daemon_policy::{DenyChannelWiring, LocalAuthError, LocalBearerAuthorizer};
 use chief_of_staff_daemon_runtime::{ChiefDaemonRuntime, DaemonRuntimeError, ReconcileSchedule};
+use chief_of_staff_host_data_plane::{
+    DurableHostDataPlaneDispatcher, UnavailableHostDataPlaneService,
+};
 use chief_of_staff_orchestrator_core::OrchestratorCore;
 use chief_of_staff_process_supervisor::{
     DurableHostLaunchBindings, HostProgram, ProcessSupervisorConfig, ProcessSupervisorError,
@@ -253,11 +256,16 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
     let schedule = ReconcileSchedule::new(interval).map_err(ChiefDaemonError::Runtime)?;
     let clock = Arc::new(SystemMonotonicClock::new());
     let launch_bindings = Arc::new(DurableHostLaunchBindings::new(Arc::clone(&backend)));
+    let data_plane = Arc::new(DurableHostDataPlaneDispatcher::new(
+        Arc::clone(&backend),
+        Arc::new(UnavailableHostDataPlaneService),
+    ));
     let core = OrchestratorCore::with_process_supervisor(
         backend,
         process_config,
         keyring,
         launch_bindings,
+        data_plane,
         Arc::new(generate_identity_keypair()),
         clock,
         Box::new(UuidV7SessionIdSource),
