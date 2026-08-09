@@ -24,6 +24,15 @@ zeroizing response tree and never enter entity IDs, metadata, state, logs, or
 debug output. Confirmed inverter entities expose only last/max reported active
 power, device type, and last-report time under the pseudonym.
 
+Identifier-key rotation consumes the source and destination 32-byte leases as
+one atomic batch, reads the inverter endpoint exactly once, and derives only
+old/new pseudonym pairs from the zeroizing response. The host requires exact
+correspondence with every installed inverter before building a whole-device
+replacement, including deterministic replacement identities for the gateway's
+meter entities. Both keys and all native serial values are disposed before the
+revision-guarded runtime-store migration begins. Opaque automation definitions
+or state that still reference a source identity cause the durable write and
+live runtime swap to fail closed.
+
 Cloud login, token generation or renewal, legacy gateway authentication,
-pseudonym-key rotation or identity migration, live battery or relay topology,
-and control APIs remain outside this package.
+live battery or relay topology, and control APIs remain outside this package.

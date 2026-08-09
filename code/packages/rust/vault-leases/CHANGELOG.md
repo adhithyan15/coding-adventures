@@ -7,12 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.2.0] - 2026-08-09
+
 ### Added
 
+- `LeaseManager::consume_many` and an atomic in-memory implementation that
+  validate every distinct lease before removing any payload, then return
+  ordered one-shot payloads or leave the complete batch untouched.
 - `LeaseTableSummary`, `InMemoryLeaseManager::summary_at`, and
-  `InMemoryLeaseManager::table_summary_at` for metadata-only
-  lease-table status, read coverage, consumed-row, payload-retention,
-  expiry-range, and pending-sweep checks.
+  `InMemoryLeaseManager::table_summary_at` for metadata-only lease-table
+  status, read coverage, consumed-row, payload-retention, expiry-range, and
+  pending-sweep checks.
 
 ## [0.1.0] — 2026-05-04
 

@@ -44,6 +44,7 @@ process(payload.as_bytes());
 | `lookup`      | read metadata only (no payload bytes)                    |
 | `read`        | multi-read: returns payload + bumps `read_count`         |
 | `consume`     | one-shot: returns payload **and** revokes atomically     |
+| `consume_many`| one-shot batch: all payloads or no lease mutation        |
 | `expire_due`  | sweep entries whose expiry is `<= now_ms` or are revoked |
 
 `InMemoryLeaseManager::summary_at(now_ms)` gives status loops a
@@ -84,8 +85,9 @@ without asking for secret payload bytes.
   vs "already reaped" — no oracle.
 - **Payload zeroization**: every payload is held in
   `Zeroizing<Vec<u8>>` and wiped on revoke / expire / drop.
-- **Atomic `consume`**: mutex-guarded read-and-revoke; a second
-  `consume` always sees `Revoked`.
+- **Atomic consumption**: `consume` provides mutex-guarded read-and-revoke;
+  `consume_many` validates a distinct batch under the same lock before taking
+  any payload. A failed batch leaves every lease usable.
 - **`Debug` on payload is redacted** so a stray `dbg!` cannot leak
   the bytes.
 

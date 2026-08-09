@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.0
+
+- Add host-owned Enphase inverter pseudonym-key rotation over one bounded
+  authenticated production response and two atomically consumed one-shot key
+  leases.
+- Derive exact old/new inverter correspondence while raw serials remain in the
+  zeroizing response tree, then dispose both keys before runtime migration.
+- Persist complete gateway, meter, and inverter identity replacement through
+  the runtime store's expected-revision CAS path, rejecting stale automation
+  references before live state changes.
+
 ## 0.2.0
 
 - Add authenticated per-microinverter production inspection over Enphase's

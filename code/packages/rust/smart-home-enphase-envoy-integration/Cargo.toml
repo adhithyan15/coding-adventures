@@ -1,11 +1,12 @@
 [package]
 name = "smart-home-enphase-envoy-integration"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "Authenticated local Enphase IQ Gateway aggregate and pseudonymous per-inverter telemetry inspection"
 license = "MIT"
 
 [dependencies]
+coding_adventures_vault_leases = { path = "../vault-leases" }
 coding_adventures_zeroize = { path = "../zeroize" }
 coding_adventures_sha256 = { path = "../sha256" }
 http-core = { path = "../http-core" }
@@ -16,5 +17,10 @@ smart-home-data-governance = { path = "../smart-home-data-governance" }
 smart-home-discovery = { path = "../smart-home-discovery" }
 smart-home-local-http = { path = "../smart-home-local-http" }
 smart-home-runtime = { path = "../smart-home-runtime" }
+smart-home-runtime-store = { path = "../smart-home-runtime-store" }
+storage-core = { path = "../storage-core" }
 tls-platform = { path = "../tls-platform" }
 url-parser = { path = "../url-parser" }
+
+[dev-dependencies]
+storage-local-folder = { path = "../storage-local-folder" }

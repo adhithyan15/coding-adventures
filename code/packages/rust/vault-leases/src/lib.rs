@@ -518,6 +518,13 @@ pub trait LeaseManager: Send + Sync {
     /// to use the same ID fails with `Revoked`.
     fn consume(&self, id: &LeaseId) -> Result<LeasePayload, LeaseError>;
 
+    /// Atomically consume a non-empty set of distinct leases.
+    ///
+    /// Every lease is validated before any payload is removed. If one lease is
+    /// missing, expired, revoked, or duplicated, all leases remain untouched.
+    /// Successful payloads are returned in the same order as `ids`.
+    fn consume_many(&self, ids: &[LeaseId]) -> Result<Vec<LeasePayload>, LeaseError>;
+
     /// Reap entries whose `expires_at_ms <= now_ms` *or* that have
     /// been revoked. Returns the number of entries actually
     /// removed. Caller-driven so the manager doesn't depend on a
@@ -782,6 +789,48 @@ impl LeaseManager for InMemoryLeaseManager {
         Ok(payload)
     }
 
+    fn consume_many(&self, ids: &[LeaseId]) -> Result<Vec<LeasePayload>, LeaseError> {
+        if ids.is_empty() {
+            return Err(LeaseError::InvalidParameter(
+                "consume_many requires at least one lease",
+            ));
+        }
+        let mut unique = std::collections::HashSet::with_capacity(ids.len());
+        if ids.iter().any(|id| !unique.insert(id)) {
+            return Err(LeaseError::InvalidParameter(
+                "consume_many lease ids must be distinct",
+            ));
+        }
+
+        let mut g = self.inner.lock().expect("lease mutex poisoned");
+        let now = Self::now_ms();
+        for id in ids {
+            let entry = g.get(id).ok_or(LeaseError::NotFound)?;
+            if entry.revoked || entry.payload.is_none() {
+                return Err(LeaseError::Revoked);
+            }
+            if entry.expires_at_ms <= now {
+                return Err(LeaseError::Expired);
+            }
+        }
+
+        let mut payloads = Vec::with_capacity(ids.len());
+        for id in ids {
+            let entry = g
+                .get_mut(id)
+                .expect("consume_many validated every lease under the same lock");
+            payloads.push(
+                entry
+                    .payload
+                    .take()
+                    .expect("consume_many validated every payload under the same lock"),
+            );
+            entry.revoked = true;
+            entry.read_count = entry.read_count.saturating_add(1);
+        }
+        Ok(payloads)
+    }
+
     fn expire_due(&self, now_ms: u64) -> Result<usize, LeaseError> {
         let mut g = self.inner.lock().expect("lease mutex poisoned");
         // Collect IDs to drop first to avoid mutating-while-iterating.
@@ -895,6 +944,46 @@ mod tests {
         assert_eq!(info.read_count, 1);
         assert_eq!(info.status_at(info.issued_at_ms), LeaseStatus::Revoked);
         assert_eq!(info.remaining_ttl_ms_at(info.issued_at_ms), 0);
+    }
+
+    #[test]
+    fn consume_many_returns_ordered_payloads_and_revokes_every_lease() {
+        let mgr = InMemoryLeaseManager::new();
+        let first = mgr.issue(mk_payload("first"), 60_000).unwrap();
+        let second = mgr.issue(mk_payload("second"), 60_000).unwrap();
+
+        let payloads = mgr.consume_many(&[second.clone(), first.clone()]).unwrap();
+
+        assert_eq!(payloads[0].as_bytes(), b"second");
+        assert_eq!(payloads[1].as_bytes(), b"first");
+        assert!(matches!(mgr.read(&first), Err(LeaseError::Revoked)));
+        assert!(matches!(mgr.read(&second), Err(LeaseError::Revoked)));
+    }
+
+    #[test]
+    fn consume_many_failure_leaves_every_lease_usable() {
+        let mgr = InMemoryLeaseManager::new();
+        let first = mgr.issue(mk_payload("first"), 60_000).unwrap();
+        let second = mgr.issue(mk_payload("second"), 60_000).unwrap();
+        mgr.revoke(&second).unwrap();
+
+        assert!(matches!(
+            mgr.consume_many(&[first.clone(), second]),
+            Err(LeaseError::Revoked)
+        ));
+        assert_eq!(mgr.consume(&first).unwrap().as_bytes(), b"first");
+    }
+
+    #[test]
+    fn consume_many_rejects_duplicate_ids_without_consuming() {
+        let mgr = InMemoryLeaseManager::new();
+        let id = mgr.issue(mk_payload("once"), 60_000).unwrap();
+
+        assert!(matches!(
+            mgr.consume_many(&[id.clone(), id.clone()]),
+            Err(LeaseError::InvalidParameter(_))
+        ));
+        assert_eq!(mgr.consume(&id).unwrap().as_bytes(), b"once");
     }
 
     #[test]

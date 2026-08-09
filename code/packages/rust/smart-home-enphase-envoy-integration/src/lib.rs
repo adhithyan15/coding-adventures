@@ -3,6 +3,7 @@
 #![forbid(unsafe_code)]
 
 use coding_adventures_sha256::sha256;
+use coding_adventures_vault_leases::{LeaseError, LeaseId, LeaseManager};
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use http1::{parse_response_head, Http1ParseError};
 use http_core::{BodyKind, Header};
@@ -24,12 +25,19 @@ use smart_home_local_http::{
     LocalHttpAuth, LocalHttpEndpoint, LocalHttpError, LocalHttpMethod, LocalHttpRequestPlan,
     LocalHttpRequestTemplate, LocalHttpScheme,
 };
-use smart_home_runtime::{RuntimeError, SmartHomeRuntime};
+use smart_home_runtime::{
+    RetainedDeviceIdentityReplacement, RetainedEntityIdentityReplacement, RuntimeError,
+    RuntimeRetainedIdentityMigration, RuntimeRetainedIdentityMigrationReport, SmartHomeRuntime,
+};
+use smart_home_runtime_store::{
+    DurableAutomationDefinition, RuntimeStoreError, SmartHomeRuntimeStore,
+};
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
 use std::io::{self, Read, Write};
 use std::net::{TcpStream, ToSocketAddrs};
 use std::time::Duration;
+use storage_core::{Revision, StorageBackend};
 use tls_platform::{default_connector, TlsConfig, TlsConnector};
 use url_parser::{Url, UrlError};
 
@@ -68,6 +76,8 @@ pub enum EnphaseError {
     MissingField(&'static str),
     DataGovernanceDenied(DataGovernanceDenial),
     Runtime(RuntimeError),
+    RuntimeStore(RuntimeStoreError),
+    Lease(LeaseError),
 }
 
 impl fmt::Display for EnphaseError {
@@ -98,6 +108,8 @@ impl fmt::Display for EnphaseError {
                 )
             }
             Self::Runtime(error) => error.fmt(formatter),
+            Self::RuntimeStore(error) => error.fmt(formatter),
+            Self::Lease(error) => write!(formatter, "Enphase identifier-key lease failed: {error}"),
         }
     }
 }
@@ -125,6 +137,18 @@ impl From<serde_json::Error> for EnphaseError {
 impl From<RuntimeError> for EnphaseError {
     fn from(error: RuntimeError) -> Self {
         Self::Runtime(error)
+    }
+}
+
+impl From<RuntimeStoreError> for EnphaseError {
+    fn from(error: RuntimeStoreError) -> Self {
+        Self::RuntimeStore(error)
+    }
+}
+
+impl From<LeaseError> for EnphaseError {
+    fn from(error: LeaseError) -> Self {
+        Self::Lease(error)
     }
 }
 
@@ -304,6 +328,59 @@ pub struct EnphaseInverter {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EnphaseInverterIdentityRotation {
+    pub source_pseudonym: String,
+    pub destination_pseudonym: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EnphaseIdentifierKeyRotationReport {
+    pub rotated_inverters: usize,
+    pub migration: RuntimeRetainedIdentityMigrationReport,
+    pub revision: Revision,
+}
+
+pub struct EnphaseIdentifierKeyRotationRequest<'a> {
+    pub principal_id: AgentId,
+    pub source_key_lease_id: &'a LeaseId,
+    pub destination_key_lease_id: &'a LeaseId,
+    pub automation_definitions: &'a [DurableAutomationDefinition],
+    pub automation_state: Option<JsonValue>,
+    pub observed_at_ms: u64,
+    pub expected_revision: Revision,
+}
+
+impl<'a> EnphaseIdentifierKeyRotationRequest<'a> {
+    pub fn new(
+        principal_id: AgentId,
+        source_key_lease_id: &'a LeaseId,
+        destination_key_lease_id: &'a LeaseId,
+        observed_at_ms: u64,
+        expected_revision: Revision,
+    ) -> Self {
+        Self {
+            principal_id,
+            source_key_lease_id,
+            destination_key_lease_id,
+            automation_definitions: &[],
+            automation_state: None,
+            observed_at_ms,
+            expected_revision,
+        }
+    }
+
+    pub fn with_automation_context(
+        mut self,
+        automation_definitions: &'a [DurableAutomationDefinition],
+        automation_state: Option<JsonValue>,
+    ) -> Self {
+        self.automation_definitions = automation_definitions;
+        self.automation_state = automation_state;
+        self
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct EnphaseRequestPlans {
     pub meters: LocalHttpRequestPlan,
     pub readings: LocalHttpRequestPlan,
@@ -326,6 +403,19 @@ pub trait EnphaseTransport {
     ) -> Result<Vec<EnphaseInverter>, EnphaseError> {
         Err(EnphaseError::Validation(
             "transport does not implement per-inverter inspection".to_string(),
+        ))
+    }
+
+    fn inspect_inverter_identity_rotation(
+        &mut self,
+        _plan: &LocalHttpRequestPlan,
+        _token: &EnphaseAccessToken,
+        _source_key: &EnphaseIdentifierKey,
+        _destination_key: &EnphaseIdentifierKey,
+        _gateway_serial: &str,
+    ) -> Result<Vec<EnphaseInverterIdentityRotation>, EnphaseError> {
+        Err(EnphaseError::Validation(
+            "transport does not implement per-inverter identity rotation".to_string(),
         ))
     }
 }
@@ -456,6 +546,18 @@ impl EnphaseTransport for EnphaseLanTransport {
         let response = self.get_sensitive_json(plan, token, "inverter production")?;
         parse_inverters(&response.0, identifier_key, gateway_serial)
     }
+
+    fn inspect_inverter_identity_rotation(
+        &mut self,
+        plan: &LocalHttpRequestPlan,
+        token: &EnphaseAccessToken,
+        source_key: &EnphaseIdentifierKey,
+        destination_key: &EnphaseIdentifierKey,
+        gateway_serial: &str,
+    ) -> Result<Vec<EnphaseInverterIdentityRotation>, EnphaseError> {
+        let response = self.get_sensitive_json(plan, token, "inverter production")?;
+        parse_inverter_identity_rotation(&response.0, source_key, destination_key, gateway_serial)
+    }
 }
 
 pub struct EnphaseClient<T> {
@@ -523,6 +625,20 @@ impl<T: EnphaseTransport> EnphaseClient<T> {
             &self.config.gateway_serial,
         )?;
         Ok(snapshot)
+    }
+
+    fn inspect_inverter_identity_rotation(
+        &mut self,
+        source_key: &EnphaseIdentifierKey,
+        destination_key: &EnphaseIdentifierKey,
+    ) -> Result<Vec<EnphaseInverterIdentityRotation>, EnphaseError> {
+        self.transport.inspect_inverter_identity_rotation(
+            &self.plans.inverters,
+            &self.token,
+            source_key,
+            destination_key,
+            &self.config.gateway_serial,
+        )
     }
 }
 
@@ -593,6 +709,84 @@ impl<T: EnphaseTransport> EnphaseRuntimeIntegration<T> {
         )?;
         let snapshot = self.client.inspect_with_inverters()?;
         install_snapshot(runtime, &self.client.config, &snapshot, observed_at_ms)
+    }
+
+    pub fn rotate_inverter_identifier_key_authorized<B, L>(
+        &mut self,
+        runtime: &mut SmartHomeRuntime,
+        store: &SmartHomeRuntimeStore<B>,
+        leases: &L,
+        request: EnphaseIdentifierKeyRotationRequest<'_>,
+    ) -> Result<EnphaseIdentifierKeyRotationReport, EnphaseError>
+    where
+        B: StorageBackend,
+        L: LeaseManager + ?Sized,
+    {
+        if request.source_key_lease_id == request.destination_key_lease_id {
+            return Err(EnphaseError::Validation(
+                "source and destination identifier-key leases must be distinct".to_string(),
+            ));
+        }
+        authorize_read(
+            runtime,
+            request.principal_id.clone(),
+            request.observed_at_ms,
+        )?;
+        authorize_identifier_inspection(
+            &self.data_governance,
+            &request.principal_id,
+            &self.client.config.gateway_serial,
+            request.observed_at_ms,
+        )?;
+
+        let mut payloads = leases.consume_many(&[
+            request.source_key_lease_id.clone(),
+            request.destination_key_lease_id.clone(),
+        ])?;
+        let destination_payload = payloads
+            .pop()
+            .expect("two requested leases return two ordered payloads");
+        let source_payload = payloads
+            .pop()
+            .expect("two requested leases return two ordered payloads");
+        let source_key = EnphaseIdentifierKey::new(source_payload.as_bytes().to_vec())?;
+        let destination_key = EnphaseIdentifierKey::new(destination_payload.as_bytes().to_vec())?;
+        drop(source_payload);
+        drop(destination_payload);
+        if source_key.bytes.as_slice() == destination_key.bytes.as_slice() {
+            return Err(EnphaseError::Validation(
+                "destination identifier key must differ from the source key".to_string(),
+            ));
+        }
+
+        let destination_namespace =
+            gateway_identity_pseudonym(&destination_key, &self.client.config.gateway_serial);
+        let rotations = self
+            .client
+            .inspect_inverter_identity_rotation(&source_key, &destination_key)?;
+        drop(source_key);
+        drop(destination_key);
+
+        let rotated_inverters = rotations.len();
+        let migration = build_inverter_identity_migration(
+            runtime,
+            &self.client.config,
+            &rotations,
+            &destination_namespace,
+        )?;
+        let (migration, revision) = store.migrate_retained_identities(
+            runtime,
+            &migration,
+            request.automation_definitions,
+            request.automation_state,
+            request.observed_at_ms,
+            request.expected_revision,
+        )?;
+        Ok(EnphaseIdentifierKeyRotationReport {
+            rotated_inverters,
+            migration,
+            revision,
+        })
     }
 }
 
@@ -962,44 +1156,98 @@ fn parse_inverters(
     let mut seen = BTreeSet::new();
     let mut inverters = Vec::with_capacity(values.len());
     for value in values {
-        let inverter = value
-            .as_object()
-            .ok_or(EnphaseError::MissingField("inverter production object"))?;
-        let serial = inverter
-            .get("serialNumber")
-            .and_then(JsonValue::as_str)
-            .ok_or(EnphaseError::MissingField("serialNumber"))?;
-        if serial.is_empty()
-            || serial.len() > 64
-            || !serial.bytes().all(|byte| byte.is_ascii_digit())
-        {
-            return Err(EnphaseError::Validation(
-                "microinverter serial must be bounded decimal text".to_string(),
-            ));
-        }
+        let (serial, last_report_date, device_type, last_report_watts, max_report_watts) =
+            parse_inverter_record(value)?;
         let pseudonym = inverter_pseudonym(identifier_key, gateway_serial, serial);
         if !seen.insert(pseudonym.clone()) {
             return Err(EnphaseError::Validation(
                 "duplicate microinverter identifier".to_string(),
             ));
         }
-        let last_report_watts = required_nonnegative_f64(inverter, "lastReportWatts")?;
-        let max_report_watts = required_nonnegative_f64(inverter, "maxReportWatts")?;
-        if last_report_watts > max_report_watts {
-            return Err(EnphaseError::Validation(
-                "microinverter last report exceeds its maximum report".to_string(),
-            ));
-        }
         inverters.push(EnphaseInverter {
             pseudonym,
-            last_report_date: required_u64(inverter, "lastReportDate")?,
-            device_type: required_u64(inverter, "devType")?,
+            last_report_date,
+            device_type,
             last_report_watts,
             max_report_watts,
         });
     }
     inverters.sort_by(|left, right| left.pseudonym.cmp(&right.pseudonym));
     Ok(inverters)
+}
+
+fn parse_inverter_identity_rotation(
+    data: &JsonValue,
+    source_key: &EnphaseIdentifierKey,
+    destination_key: &EnphaseIdentifierKey,
+    gateway_serial: &str,
+) -> Result<Vec<EnphaseInverterIdentityRotation>, EnphaseError> {
+    let values = data
+        .as_array()
+        .ok_or(EnphaseError::MissingField("inverter production array"))?;
+    if values.is_empty() || values.len() > MAX_INVERTERS {
+        return Err(EnphaseError::Validation(format!(
+            "inverter rotation response must contain 1-{MAX_INVERTERS} entries"
+        )));
+    }
+    let mut source_pseudonyms = BTreeSet::new();
+    let mut destination_pseudonyms = BTreeSet::new();
+    let mut rotations = Vec::with_capacity(values.len());
+    for value in values {
+        let (serial, _, _, _, _) = parse_inverter_record(value)?;
+        let source_pseudonym = inverter_pseudonym(source_key, gateway_serial, serial);
+        let destination_pseudonym = inverter_pseudonym(destination_key, gateway_serial, serial);
+        if source_pseudonym == destination_pseudonym {
+            return Err(EnphaseError::Validation(
+                "identifier-key rotation produced an unchanged pseudonym".to_string(),
+            ));
+        }
+        if !source_pseudonyms.insert(source_pseudonym.clone()) {
+            return Err(EnphaseError::Validation(
+                "duplicate source microinverter identifier".to_string(),
+            ));
+        }
+        if !destination_pseudonyms.insert(destination_pseudonym.clone()) {
+            return Err(EnphaseError::Validation(
+                "duplicate destination microinverter identifier".to_string(),
+            ));
+        }
+        rotations.push(EnphaseInverterIdentityRotation {
+            source_pseudonym,
+            destination_pseudonym,
+        });
+    }
+    rotations.sort_by(|left, right| left.source_pseudonym.cmp(&right.source_pseudonym));
+    Ok(rotations)
+}
+
+fn parse_inverter_record(value: &JsonValue) -> Result<(&str, u64, u64, f64, f64), EnphaseError> {
+    let inverter = value
+        .as_object()
+        .ok_or(EnphaseError::MissingField("inverter production object"))?;
+    let serial = inverter
+        .get("serialNumber")
+        .and_then(JsonValue::as_str)
+        .ok_or(EnphaseError::MissingField("serialNumber"))?;
+    if serial.is_empty() || serial.len() > 64 || !serial.bytes().all(|byte| byte.is_ascii_digit()) {
+        return Err(EnphaseError::Validation(
+            "microinverter serial must be bounded decimal text".to_string(),
+        ));
+    }
+    let last_report_watts = required_nonnegative_f64(inverter, "lastReportWatts")?;
+    let max_report_watts = required_nonnegative_f64(inverter, "maxReportWatts")?;
+    if last_report_watts > max_report_watts {
+        return Err(EnphaseError::Validation(
+            "microinverter last report exceeds its maximum report".to_string(),
+        ));
+    }
+    Ok((
+        serial,
+        required_u64(inverter, "lastReportDate")?,
+        required_u64(inverter, "devType")?,
+        last_report_watts,
+        max_report_watts,
+    ))
 }
 
 fn required_nonnegative_f64(
@@ -1032,6 +1280,166 @@ fn inverter_pseudonym(
     input.extend_from_slice(inverter_serial.as_bytes());
     let digest = Zeroizing::new(sha256(input.as_slice()));
     lowercase_hex(&digest[..16])
+}
+
+fn gateway_identity_pseudonym(
+    identifier_key: &EnphaseIdentifierKey,
+    gateway_serial: &str,
+) -> String {
+    let mut input = Zeroizing::new(Vec::with_capacity(
+        identifier_key.bytes.len() + gateway_serial.len() + 32,
+    ));
+    input.extend_from_slice(identifier_key.bytes.as_slice());
+    input.extend_from_slice(b"enphase-gateway-identity-v1\0");
+    input.extend_from_slice(gateway_serial.as_bytes());
+    let digest = Zeroizing::new(sha256(input.as_slice()));
+    lowercase_hex(&digest[..16])
+}
+
+fn build_inverter_identity_migration(
+    runtime: &SmartHomeRuntime,
+    config: &EnphaseConfig,
+    rotations: &[EnphaseInverterIdentityRotation],
+    destination_namespace: &str,
+) -> Result<RuntimeRetainedIdentityMigration, EnphaseError> {
+    if rotations.is_empty() {
+        return Err(EnphaseError::Validation(
+            "identifier-key rotation requires at least one microinverter".to_string(),
+        ));
+    }
+    let source_devices = runtime
+        .registry()
+        .devices()
+        .filter(|device| {
+            device.bridge_id == config.bridge_id
+                && device.identifiers.iter().any(|identifier| {
+                    identifier.family == ProtocolFamily::Vendor(PROTOCOL_ID.to_string())
+                        && identifier.kind == "gateway_serial"
+                        && identifier.value == config.gateway_serial
+                })
+        })
+        .collect::<Vec<_>>();
+    let [source_device] = source_devices.as_slice() else {
+        return Err(EnphaseError::Validation(
+            "rotation requires exactly one installed Enphase gateway for the configured serial"
+                .to_string(),
+        ));
+    };
+
+    let destination_device_id = DeviceId::trusted(format!("enphase:{destination_namespace}"));
+    let mut destinations_by_source = rotations
+        .iter()
+        .map(|rotation| {
+            (
+                rotation.source_pseudonym.clone(),
+                rotation.destination_pseudonym.clone(),
+            )
+        })
+        .collect::<BTreeMap<_, _>>();
+    if destinations_by_source.len() != rotations.len() {
+        return Err(EnphaseError::Validation(
+            "rotation response contains duplicate source pseudonyms".to_string(),
+        ));
+    }
+
+    let mut entity_replacements = Vec::with_capacity(source_device.entity_ids.len());
+    let mut destination_entity_ids = Vec::with_capacity(source_device.entity_ids.len());
+    let mut matched_inverters = 0usize;
+    for source_entity_id in &source_device.entity_ids {
+        let source_entity = runtime.registry().entity(source_entity_id).ok_or_else(|| {
+            EnphaseError::Validation(format!(
+                "installed gateway references missing entity {source_entity_id}"
+            ))
+        })?;
+        let mut replacement = source_entity.clone();
+        replacement.device_id = destination_device_id.clone();
+        replacement.state = None;
+
+        let destination_entity_id = if metadata_value(
+            &source_entity.metadata,
+            "enphase.identifier_form",
+        ) == Some("keyed_pseudonym")
+        {
+            let source_pseudonym =
+                metadata_value(&source_entity.metadata, "enphase.inverter_pseudonym").ok_or_else(
+                    || {
+                        EnphaseError::Validation(format!(
+                            "inverter entity {source_entity_id} is missing its source pseudonym"
+                        ))
+                    },
+                )?;
+            let destination_pseudonym =
+                destinations_by_source.remove(source_pseudonym).ok_or_else(|| {
+                    EnphaseError::Validation(format!(
+                        "inverter response does not correspond to installed entity {source_entity_id}"
+                    ))
+                })?;
+            replacement.name = format!("Enphase microinverter {}", &destination_pseudonym[..8]);
+            set_metadata(
+                &mut replacement.metadata,
+                "enphase.inverter_pseudonym",
+                &destination_pseudonym,
+            );
+            matched_inverters = matched_inverters.saturating_add(1);
+            EntityId::trusted(format!(
+                "enphase:{destination_namespace}:inverter:{destination_pseudonym}"
+            ))
+        } else if let Some(eid) = metadata_value(&source_entity.metadata, "enphase.eid") {
+            if eid.is_empty() || !eid.bytes().all(|byte| byte.is_ascii_digit()) {
+                return Err(EnphaseError::Validation(format!(
+                    "meter entity {source_entity_id} has an invalid native EID"
+                )));
+            }
+            EntityId::trusted(format!("enphase:{destination_namespace}:meter:{eid}"))
+        } else {
+            return Err(EnphaseError::Validation(format!(
+                "installed Enphase entity {source_entity_id} has no governed identity form"
+            )));
+        };
+        replacement.entity_id = destination_entity_id.clone();
+        destination_entity_ids.push(destination_entity_id);
+        entity_replacements.push(RetainedEntityIdentityReplacement::new(
+            source_entity_id.clone(),
+            replacement,
+        ));
+    }
+    if matched_inverters != rotations.len() || !destinations_by_source.is_empty() {
+        return Err(EnphaseError::Validation(
+            "inverter response does not exactly match the installed pseudonymous inverter set"
+                .to_string(),
+        ));
+    }
+
+    let mut replacement_device = (**source_device).clone();
+    replacement_device.device_id = destination_device_id;
+    replacement_device.entity_ids = destination_entity_ids;
+    set_metadata(
+        &mut replacement_device.metadata,
+        "enphase.identifier_namespace",
+        destination_namespace,
+    );
+    Ok(RuntimeRetainedIdentityMigration::new(vec![
+        RetainedDeviceIdentityReplacement::new(
+            source_device.device_id.clone(),
+            replacement_device,
+            entity_replacements,
+        ),
+    ]))
+}
+
+fn metadata_value<'a>(metadata: &'a [Metadata], key: &str) -> Option<&'a str> {
+    metadata
+        .iter()
+        .find(|entry| entry.key == key)
+        .map(|entry| entry.value.as_str())
+}
+
+fn set_metadata(metadata: &mut Vec<Metadata>, key: &str, value: &str) {
+    if let Some(entry) = metadata.iter_mut().find(|entry| entry.key == key) {
+        entry.value = value.to_string();
+    } else {
+        metadata.push(Metadata::new(key, value));
+    }
 }
 
 fn lowercase_hex(bytes: &[u8]) -> String {
@@ -1508,14 +1916,19 @@ fn find_crlf(bytes: &[u8], start: usize) -> Option<usize> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use coding_adventures_vault_leases::{InMemoryLeaseManager, LeasePayload, LeaseStatus};
     use smart_home_core::{CapabilityGrant, CapabilityGrantId, PrivilegeTier};
     use smart_home_data_governance::{ConsentReceiptRef, DataPurpose, DataUseGrant};
     use std::net::TcpListener;
+    use std::path::PathBuf;
     use std::sync::mpsc;
     use std::thread;
+    use std::time::{SystemTime, UNIX_EPOCH};
+    use storage_local_folder::LocalFolderStorageBackend;
 
     const TOKEN: &str = "eyJhbGciOiJFUzI1NiJ9.test.signature";
     const IDENTIFIER_KEY: [u8; 32] = [0x5a; 32];
+    const ROTATED_IDENTIFIER_KEY: [u8; 32] = [0x6b; 32];
     const INVERTER_SERIAL_1: &str = "121935144671";
     const INVERTER_SERIAL_2: &str = "121935144623";
 
@@ -1644,6 +2057,30 @@ mod tests {
             )
             .unwrap();
         policy
+    }
+
+    fn temp_root(name: &str) -> PathBuf {
+        let unique = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        std::env::temp_dir().join(format!(
+            "smart-home-enphase-{name}-{}-{unique}",
+            std::process::id()
+        ))
+    }
+
+    fn installed_inverter_runtime(
+        base_url: &str,
+    ) -> (SmartHomeRuntime, AgentId, InstalledEnphaseGateway) {
+        let (mut runtime, principal) = authorized_runtime();
+        let key = EnphaseIdentifierKey::new(IDENTIFIER_KEY.to_vec()).unwrap();
+        let values = SensitiveJson(inverter_production());
+        let mut installed_snapshot = snapshot();
+        installed_snapshot.inverters = parse_inverters(&values.0, &key, "122233344455").unwrap();
+        let installed =
+            install_snapshot(&mut runtime, &config(base_url), &installed_snapshot, 4_000).unwrap();
+        (runtime, principal, installed)
     }
 
     #[test]
@@ -1860,6 +2297,285 @@ mod tests {
             ))
         ));
         assert_eq!(integration.client.transport.calls, 0);
+    }
+
+    struct RotationCountingTransport {
+        calls: usize,
+    }
+
+    impl EnphaseTransport for RotationCountingTransport {
+        fn inspect(
+            &mut self,
+            _plans: &EnphaseRequestPlans,
+            _token: &EnphaseAccessToken,
+        ) -> Result<EnphaseSnapshot, EnphaseError> {
+            Ok(snapshot())
+        }
+
+        fn inspect_inverter_identity_rotation(
+            &mut self,
+            _plan: &LocalHttpRequestPlan,
+            _token: &EnphaseAccessToken,
+            source_key: &EnphaseIdentifierKey,
+            destination_key: &EnphaseIdentifierKey,
+            gateway_serial: &str,
+        ) -> Result<Vec<EnphaseInverterIdentityRotation>, EnphaseError> {
+            self.calls = self.calls.saturating_add(1);
+            parse_inverter_identity_rotation(
+                &inverter_production(),
+                source_key,
+                destination_key,
+                gateway_serial,
+            )
+        }
+    }
+
+    #[test]
+    fn rotation_without_identifier_consent_consumes_no_key_and_reaches_no_transport() {
+        let (mut runtime, principal, _) = installed_inverter_runtime("http://127.0.0.1:1");
+        let root = temp_root("rotation-consent-denial");
+        let store = SmartHomeRuntimeStore::new(LocalFolderStorageBackend::new(root.clone()));
+        let revision = store.save(&runtime, &[], 4_000).unwrap();
+        let leases = InMemoryLeaseManager::new();
+        let source_lease = leases
+            .issue(LeasePayload::new(IDENTIFIER_KEY.to_vec()), 60_000)
+            .unwrap();
+        let destination_lease = leases
+            .issue(LeasePayload::new(ROTATED_IDENTIFIER_KEY.to_vec()), 60_000)
+            .unwrap();
+        let client = EnphaseClient::new(
+            config("http://127.0.0.1:1"),
+            EnphaseAccessToken::new(TOKEN).unwrap(),
+            RotationCountingTransport { calls: 0 },
+        )
+        .unwrap();
+        let mut integration = EnphaseRuntimeIntegration::new(client);
+
+        assert!(matches!(
+            integration.rotate_inverter_identifier_key_authorized(
+                &mut runtime,
+                &store,
+                &leases,
+                EnphaseIdentifierKeyRotationRequest::new(
+                    principal,
+                    &source_lease,
+                    &destination_lease,
+                    5_000,
+                    revision,
+                ),
+            ),
+            Err(EnphaseError::DataGovernanceDenied(
+                DataGovernanceDenial::NoMatchingConsent
+            ))
+        ));
+        assert_eq!(integration.client.transport.calls, 0);
+        assert_eq!(
+            leases.consume(&source_lease).unwrap().as_bytes(),
+            IDENTIFIER_KEY
+        );
+        assert_eq!(
+            leases.consume(&destination_lease).unwrap().as_bytes(),
+            ROTATED_IDENTIFIER_KEY
+        );
+        std::fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn rotation_parser_derives_exact_old_and_new_pseudonyms_without_serials() {
+        let source_key = EnphaseIdentifierKey::new(IDENTIFIER_KEY.to_vec()).unwrap();
+        let destination_key = EnphaseIdentifierKey::new(ROTATED_IDENTIFIER_KEY.to_vec()).unwrap();
+        let values = SensitiveJson(inverter_production());
+
+        let rotations = parse_inverter_identity_rotation(
+            &values.0,
+            &source_key,
+            &destination_key,
+            "122233344455",
+        )
+        .unwrap();
+
+        assert_eq!(rotations.len(), 2);
+        assert!(rotations.iter().all(|rotation| {
+            rotation.source_pseudonym.len() == 32
+                && rotation.destination_pseudonym.len() == 32
+                && rotation.source_pseudonym != rotation.destination_pseudonym
+                && !format!("{rotation:?}").contains(INVERTER_SERIAL_1)
+                && !format!("{rotation:?}").contains(INVERTER_SERIAL_2)
+        }));
+    }
+
+    #[test]
+    fn rotation_rejects_stale_automation_identity_without_swapping_live_state() {
+        let (mut runtime, principal, installed) = installed_inverter_runtime("http://127.0.0.1:1");
+        let root = temp_root("rotation-stale-automation");
+        let store = SmartHomeRuntimeStore::new(LocalFolderStorageBackend::new(root.clone()));
+        let revision = store.save(&runtime, &[], 4_000).unwrap();
+        let leases = InMemoryLeaseManager::new();
+        let source_lease = leases
+            .issue(LeasePayload::new(IDENTIFIER_KEY.to_vec()), 60_000)
+            .unwrap();
+        let destination_lease = leases
+            .issue(LeasePayload::new(ROTATED_IDENTIFIER_KEY.to_vec()), 60_000)
+            .unwrap();
+        let definitions = vec![DurableAutomationDefinition::new(
+            "automation:stale-inverter",
+            true,
+            serde_json::json!({
+                "entity_id": installed.inverter_entity_ids[0].to_string()
+            }),
+        )
+        .unwrap()];
+        let client = EnphaseClient::new(
+            config("http://127.0.0.1:1"),
+            EnphaseAccessToken::new(TOKEN).unwrap(),
+            RotationCountingTransport { calls: 0 },
+        )
+        .unwrap();
+        let mut integration = EnphaseRuntimeIntegration::new(client)
+            .with_data_governance(identifier_policy(&principal));
+
+        let error = integration
+            .rotate_inverter_identifier_key_authorized(
+                &mut runtime,
+                &store,
+                &leases,
+                EnphaseIdentifierKeyRotationRequest::new(
+                    principal,
+                    &source_lease,
+                    &destination_lease,
+                    5_000,
+                    revision,
+                )
+                .with_automation_context(&definitions, None),
+            )
+            .unwrap_err();
+
+        assert!(matches!(
+            error,
+            EnphaseError::RuntimeStore(RuntimeStoreError::Validation {
+                field: "automation_definitions",
+                ..
+            })
+        ));
+        assert_eq!(integration.client.transport.calls, 1);
+        assert!(runtime.registry().device(&installed.device_id).is_some());
+        assert!(installed
+            .inverter_entity_ids
+            .iter()
+            .all(|entity_id| runtime.registry().entity(entity_id).is_some()));
+        let restored = store.load().unwrap().unwrap();
+        assert!(restored
+            .runtime
+            .registry()
+            .device(&installed.device_id)
+            .is_some());
+        std::fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn governed_rotation_consumes_two_keys_reads_once_and_persists_atomically() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        let base_url = format!("http://{address}");
+        let (sender, receiver) = mpsc::channel();
+        let server = thread::spawn(move || {
+            let (mut stream, _) = listener.accept().unwrap();
+            let request = read_request(&mut stream);
+            sender.send(request).unwrap();
+            let body = serde_json::to_vec(&inverter_production()).unwrap();
+            write!(
+                stream,
+                "HTTP/1.1 200 OK\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+                body.len()
+            )
+            .unwrap();
+            stream.write_all(&body).unwrap();
+        });
+
+        let (mut runtime, principal, installed) = installed_inverter_runtime(&base_url);
+        let root = temp_root("identifier-rotation");
+        let store = SmartHomeRuntimeStore::new(LocalFolderStorageBackend::new(root.clone()));
+        let initial_revision = store.save(&runtime, &[], 4_000).unwrap();
+        let leases = InMemoryLeaseManager::new();
+        let source_lease = leases
+            .issue(LeasePayload::new(IDENTIFIER_KEY.to_vec()), 60_000)
+            .unwrap();
+        let destination_lease = leases
+            .issue(LeasePayload::new(ROTATED_IDENTIFIER_KEY.to_vec()), 60_000)
+            .unwrap();
+        let expected_namespace = gateway_identity_pseudonym(
+            &EnphaseIdentifierKey::new(ROTATED_IDENTIFIER_KEY.to_vec()).unwrap(),
+            "122233344455",
+        );
+        let expected_device_id = DeviceId::trusted(format!("enphase:{expected_namespace}"));
+        let client = EnphaseClient::new(
+            config(&base_url),
+            EnphaseAccessToken::new(TOKEN).unwrap(),
+            EnphaseLanTransport::default(),
+        )
+        .unwrap();
+        let mut integration = EnphaseRuntimeIntegration::new(client)
+            .with_data_governance(identifier_policy(&principal));
+
+        let report = integration
+            .rotate_inverter_identifier_key_authorized(
+                &mut runtime,
+                &store,
+                &leases,
+                EnphaseIdentifierKeyRotationRequest::new(
+                    principal,
+                    &source_lease,
+                    &destination_lease,
+                    5_000,
+                    initial_revision,
+                ),
+            )
+            .unwrap();
+        server.join().unwrap();
+
+        assert_eq!(report.rotated_inverters, 2);
+        assert_eq!(report.migration.migrated_devices, 1);
+        assert_eq!(report.migration.migrated_entities, 4);
+        let requests = receiver.try_iter().collect::<Vec<_>>();
+        assert_eq!(requests.len(), 1);
+        assert!(requests[0].starts_with("GET /api/v1/production/inverters HTTP/1.1\r\n"));
+        assert!(requests[0].contains(&format!("Authorization: Bearer {TOKEN}\r\n")));
+        assert_eq!(
+            leases.lookup(&source_lease).unwrap().status_at(0),
+            LeaseStatus::Revoked
+        );
+        assert_eq!(
+            leases.lookup(&destination_lease).unwrap().status_at(0),
+            LeaseStatus::Revoked
+        );
+        assert!(runtime.registry().device(&installed.device_id).is_none());
+        assert!(installed
+            .inverter_entity_ids
+            .iter()
+            .all(|entity_id| runtime.registry().entity(entity_id).is_none()));
+        let replacement = runtime.registry().device(&expected_device_id).unwrap();
+        assert_eq!(replacement.entity_ids.len(), 4);
+        assert_eq!(
+            metadata_value(&replacement.metadata, "enphase.identifier_namespace"),
+            Some(expected_namespace.as_str())
+        );
+        let debug = format!("{:?}", runtime.registry());
+        assert!(!debug.contains(INVERTER_SERIAL_1));
+        assert!(!debug.contains(INVERTER_SERIAL_2));
+
+        let restored = store.load().unwrap().unwrap();
+        assert_eq!(restored.revision, report.revision);
+        assert!(restored
+            .runtime
+            .registry()
+            .device(&expected_device_id)
+            .is_some());
+        assert!(restored
+            .runtime
+            .registry()
+            .device(&installed.device_id)
+            .is_none());
+        std::fs::remove_dir_all(root).unwrap();
     }
 
     #[test]
