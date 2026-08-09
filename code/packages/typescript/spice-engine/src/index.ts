@@ -8411,6 +8411,7 @@ export function normalizeModelCard(
 ): NormalizedModelCard {
   const kind = normalizeModelCardType(modelType);
   const aliases = parameterAliases(kind);
+  const parameterKeys = new Set(Object.keys(parameters).map(parameterKey));
   const normalized: Record<string, number> = {};
   const unsupported: string[] = [];
   for (const [rawName, rawValue] of Object.entries(parameters)) {
@@ -8422,6 +8423,7 @@ export function normalizeModelCard(
       }
       continue;
     }
+    if (key !== canonical && parameterKeys.has(canonical)) continue;
     const value = Number(rawValue);
     if (canonical === "LEVEL") {
       if (!Number.isFinite(value) || Math.abs(value - 1.0) > 1.0e-12) {

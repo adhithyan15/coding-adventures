@@ -1,5 +1,8 @@
 # Changelog
 
+- Give explicitly supplied canonical model-card parameter names precedence over
+  aliases regardless of source order.
+
 - Reject negative and non-finite Level-1 MOS model-card `AF` values before
   flicker-noise calculations.
 

@@ -552,14 +552,18 @@ def normalize_model_card(
 
     kind = normalize_model_card_type(model_type)
     aliases = _parameter_aliases(kind)
+    raw_parameters = parameters or {}
+    parameter_keys = {_parameter_key(raw_name) for raw_name in raw_parameters}
     normalized: dict[str, float] = {}
     unsupported: list[str] = []
-    for raw_name, raw_value in (parameters or {}).items():
+    for raw_name, raw_value in raw_parameters.items():
         key = _parameter_key(raw_name)
         canonical = aliases.get(key)
         if canonical is None:
             if key not in unsupported:
                 unsupported.append(key)
+            continue
+        if key != canonical and canonical in parameter_keys:
             continue
         value = float(raw_value)
         if canonical == "LEVEL":
