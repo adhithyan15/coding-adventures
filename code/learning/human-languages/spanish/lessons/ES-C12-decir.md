@@ -1,80 +1,89 @@
 ---
+schema_version: 2
 id: ES-C12-decir
-chapter: 12
+spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 980
+chapter: 12
 type: word
 headword: decir
-gloss: to say / to tell — doubly irregular, digo + e→i
+gloss: to say or tell — with the singular present forms digo, dices, and dice
 concept_tag: VERB-SAY
-prerequisites: [ES-C12-hacer, ES-C11-querer]
-sounds: [diphthong-none-i, g-hard]
+prerequisites: [ES-C12-hacer, ES-C03-como, ES-C01-hola]
+sounds: [g-hard, vowel-i]
 roots: [dicere-latin]
-etymology_hook: "decir ← Latin dīcere 'to say, tell' → dictate, diction, dictionary, predict, verdict, contradict; doubly irregular — the -go yo-form digo (like hago/tengo) AND the e→i stem-change (dices/dice)"
-est_minutes: 4
-reviews_of: [ES-C12-hacer, ES-C11-querer, ES-C11-stem-changes]
+etymology_hook: "decir descends from Latin dicere 'to say or tell'; English diction, dictionary, predict, and verdict preserve the same saying family"
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-HACER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-LEX-COMO, ES-LEX-HOLA]
+introduces:
+  knowledge: [ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR, ES-ETYMON-DICERE]
+practises:
+  knowledge: [ES-LEX-HACER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-LEX-COMO, ES-LEX-HOLA, ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR, ES-ETYMON-DICERE]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C12-hacer, ES-C03-como, ES-C01-hola]
 ---
 
-# decir — "to say," the verb with two irregularities at once
+# decir — saying with the same small person frame
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HACER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-LEX-COMO, ES-LEX-HOLA] -->
 
-[PAUSE 2s] **decir** ("to say / to tell") is the trickiest verb yet — and the most
-instructive, because it stacks **two** patterns you already know onto one word:
-the **-go** *yo*-form from *hacer/tener*, **and** a stem-change from Chapter 11.
-Learn *decir* and the whole system clicks together.
+[PAUSE 2s] You can ask **cómo**, say **hola**, and retrieve **hago, haces,
+hace**. Keep those three persons fixed while adding the verb “to say.”
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-- `diphthong-none-i` — here the stressed stem *e* does **not** break to *ie*;
-  instead it **closes to i**: *digo, dices, dice*. A third kind of stem-change.
+In **digo**, the **g** before **o** is hard. Keep the **i** in all three learned
+forms short and clear: **digo, dices, dice**.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-DECIR, ES-ETYMON-DICERE]; assesses=[] -->
 
-**decir** comes from Latin **dīcere**, *"to say, to tell, to point out"* — and its
-root **dic-/dict-** ("say") runs straight through English:
+**decir** means “to say” or “to tell.” It descends from Latin **dīcere**, “to
+say.” English keeps the same root in **diction**, **dictionary**, **predict**
+(“say beforehand”), and **verdict** (“a true saying”).
 
-- **dictate, diction, dictionary, dictaphone** — all about *saying*.
-- with prefixes: **predict** ("say beforehand"), **contradict** ("say against"),
-  **verdict** ("a true saying"), **indicate** ("point out"), **dedicate**,
-  **edict**, **index**.
+## Grammar Lens: one more three-form set
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-DECIR-PRESENT-SINGULAR]; assesses=[ES-LEX-DECIR, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-ETYMON-DICERE] -->
 
-So *decir* is the "say" root behind *dictionary* itself — the book of what words
-*say*.
+| person | present of **decir** |
+|---|---|
+| yo | **digo** |
+| tú | **dices** |
+| él / ella / usted | **dice** |
 
-## Grammar Lens: two irregularities stacked
+Say **digo · dices · dice**. The **yo** form has **g**, while the other two
+learned forms do not. Do not build a full table or a general vowel-change rule
+from this small set yet.
 
-**(1) The -go yo-form.** Like *hago* and *tengo*, the *yo*-form grows a **g**:
-**digo**.
+Now combine it only with known language:
 
-**(2) The e→i stem-change.** In the stressed forms, the stem *e* **closes to i** —
-not the *ie* of *querer*, but a tighter shift to plain **i**:
-
-| yo | **digo** | (-go form; stem also → i) |
-| tú | **dices** | (e → i) |
-| él/ella/usted | **dice** | (e → i) |
-| nosotros | **decimos** | (plain *e* — unstressed) |
-| ellos/ustedes | **dicen** | (e → i) |
-
-The **boot** shape returns: *decimos* alone keeps the plain *e*, because the stress
-falls on the ending. Everything inside the boot shifts to *i*; the *yo* corner
-also carries the *-go*.
-
-**The everyday payoff:** **¿Cómo se dice…?** — "How do you say…?", the single most
-useful question a learner owns. And **dime** ("tell me").
+- **Digo hola.** — “I say hello.”
+- **Dices hola.** — “You say hello.”
+- **Dice hola.** — “He, she, or formal you says hello.”
+- **¿Cómo dices “hola”?** — “How do you say ‘hello’?”
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR, ES-ETYMON-DICERE, ES-LEX-COMO, ES-LEX-HOLA] -->
+<!-- hl-activity: {"id":"ES-C12-decir-singular-forms","kind":"text","assesses":["ES-LEX-DECIR","ES-GRAMMAR-DECIR-PRESENT-SINGULAR"],"prompt":"Give the learned singular present forms of decir: yo, tú, then él/ella/usted.","answer":"digo, dices, dice","accepted":["digo dices dice","digo / dices / dice"],"feedback":{"correct":"Right: digo, dices, dice.","incorrect":"Keep the g in the yo form only: digo, dices, dice."},"response_seconds":10} -->
+<!-- hl-activity: {"id":"ES-C12-decir-say-hello","kind":"text","assesses":["ES-LEX-DECIR","ES-GRAMMAR-DECIR-PRESENT-SINGULAR","ES-LEX-HOLA"],"prompt":"Say 'I say hello' in Spanish.","answer":"Digo hola.","accepted":["Digo hola"],"feedback":{"correct":"Right: Digo hola.","incorrect":"Use the yo form digo before the known word hola."},"response_seconds":8} -->
+<!-- hl-activity: {"id":"ES-C12-decir-how-do-you-say","kind":"text","assesses":["ES-LEX-DECIR","ES-GRAMMAR-DECIR-PRESENT-SINGULAR","ES-LEX-COMO","ES-LEX-HOLA"],"prompt":"Ask one friend 'How do you say hello?' in Spanish.","answer":"¿Cómo dices ‘hola’?","accepted":["¿Cómo dices hola?","Cómo dices hola?","Como dices hola?","¿Como dices hola?"],"feedback":{"correct":"Right: ¿Cómo dices ‘hola’?","incorrect":"Begin with cómo and use the tú form dices: ¿Cómo dices hola?"},"response_seconds":9} -->
 
 [PAUSE 1s]
-- [YOU SAY: "decir" then the set — "**digo**, dices, dice, decimos, dicen" — the
-  *g* in *digo*, the *i* through the boot, the plain *e* in *decimos*]
-- [YOU SAY: "¿Cómo se dice 'coffee' en español?" — "Se dice 'café'."]
-- [YOU SAY: "decir" then English "dictate, predict, verdict" — the say-family]
+- [YOU SAY: “decir — digo, dices, dice”]
+- [YOU SAY: “Digo hola. ¿Cómo dices hola?”]
+- [YOU SAY: “dīcere — diction — decir”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR, ES-ETYMON-DICERE] -->
 
-[PAUSE 3s] What Latin verb is *decir* from, and three English cousins?
-(*dīcere*; dictate/diction/predict/verdict — any three.) Name its **two**
-irregularities. (The *-go* *yo*-form **digo**, and the **e→i** stem-change.) Which
-form keeps the plain *e*, and why? (*decimos* — stress on the ending, outside the
-boot.) How do you ask "How do you say…?" (**¿Cómo se dice…?**) Next: the whole
-**-go** family, side by side.
+[PAUSE 3s] What does *decir* mean? (“To say” or “to tell.”) Give the three
+learned forms. (*Digo, dices, dice.*) Which Latin source and English cousin help
+explain it? (*Dīcere*; *diction*, *dictionary*, or *predict*.) Next: compare
+only the three **yo** forms you have actually learned.

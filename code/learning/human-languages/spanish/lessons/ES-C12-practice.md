@@ -1,66 +1,80 @@
 ---
+schema_version: 2
 id: ES-C12-practice
-chapter: 12
+spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 1000
+chapter: 12
 type: practice-mix
 headword: (practice)
-gloss: doing, making, saying — hacer, decir, and the -go club
+gloss: singular doing, making, saying, and the learned tengo · hago · digo comparison
 concept_tag: CH12-PRACTICE
 prerequisites: [ES-C12-hacer, ES-C12-decir, ES-C12-yo-go]
 sounds: []
 roots: []
-est_minutes: 4
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-HACER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-ETYMON-FACERE, ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR, ES-ETYMON-DICERE, ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-HISTORY-YO-GO-CONVERGENCE, ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-CAFE, ES-LEX-COMO, ES-LEX-HOLA]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ES-LEX-HACER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-ETYMON-FACERE, ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR, ES-ETYMON-DICERE, ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-HISTORY-YO-GO-CONVERGENCE, ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-CAFE, ES-LEX-COMO, ES-LEX-HOLA]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus, fluency]
+register: neutral
+variety: general
 reviews_of: [ES-C12-hacer, ES-C12-decir, ES-C12-yo-go, ES-C11-practice]
 ---
 
-# Practice — hacer, decir, and the -go club
+# Practice — doing, making, and saying in the singular
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HACER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR, ES-GRAMMAR-YO-GO-CONTRAST-LEARNED] -->
 
-[PAUSE 2s] This chapter added two workhorse verbs — **hacer** ("do/make") and
-**decir** ("say") — and the **-go** club that unites their *yo*-forms with
-*tengo*. Time to make them automatic.
+[PAUSE 2s] This checkpoint adds nothing. Retrieve two bounded three-form sets,
+use them with known words, and compare only **tengo, hago, digo**.
 
-## Drill 1 — the -go yo-forms
+## Grammar Lens: the complete small chapter frame
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HACER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR, ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-CAFE, ES-LEX-COMO, ES-LEX-HOLA] -->
 
-[PAUSE 1s] Say the *yo*-form for each, then the *tú*-form (which drops the *g*):
+- doing or making: **hago · haces · hace**.
+- saying or telling: **digo · dices · dice**.
+- the learned **yo** comparison: **tengo · hago · digo**.
+- known-word use: **Hago café. Digo hola. ¿Cómo dices “hola”?**
 
-- **hacer** → yo **hago**, tú **haces**
-- **decir** → yo **digo**, tú **dices** (mind the *e→i*)
-- **tener** → yo **tengo**, tú **tienes** (mind the *e→ie*)
+Plural persons, weather nouns, homework vocabulary, and unseen verbs remain
+outside this checkpoint.
 
-[PAUSE 2s] What do all three *yo*-forms share? (The **-go**.) What happens to it
-in the *tú*-form? (It **drops** — the *-go* is *yo*-only.)
+## The words, taken apart — retrieve the history
+<!-- hl-knowledge: introduces=[]; assesses=[ES-ETYMON-FACERE, ES-ETYMON-DICERE, ES-HISTORY-YO-GO-CONVERGENCE] -->
 
-## Drill 2 — say the full present
+- **hacer** continues Latin *facere*, the making family of **fact** and
+  **factory**.
+- **decir** continues Latin *dīcere*, the saying family of **diction** and
+  **predict**.
+- inherited sound changes and analogy made three known **yo** forms converge
+  on **-go**; the resemblance does not predict forms you have not learned.
 
-[PAUSE 1s] Run each verb top to bottom:
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HACER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR, ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-CAFE, ES-LEX-COMO, ES-LEX-HOLA] -->
+<!-- hl-activity: {"id":"ES-C12-practice-hacer-forms","kind":"text","assesses":["ES-LEX-HACER","ES-GRAMMAR-HACER-PRESENT-SINGULAR"],"prompt":"Give the learned singular forms of hacer: yo, tú, then usted.","answer":"hago, haces, hace","accepted":["hago haces hace","hago / haces / hace"],"feedback":{"correct":"Right: hago, haces, hace.","incorrect":"Retrieve only the learned singular set: hago, haces, hace."},"response_seconds":9} -->
+<!-- hl-activity: {"id":"ES-C12-practice-decir-forms","kind":"text","assesses":["ES-LEX-DECIR","ES-GRAMMAR-DECIR-PRESENT-SINGULAR"],"prompt":"Give the learned singular forms of decir: yo, tú, then usted.","answer":"digo, dices, dice","accepted":["digo dices dice","digo / dices / dice"],"feedback":{"correct":"Right: digo, dices, dice.","incorrect":"Retrieve only the learned singular set: digo, dices, dice."},"response_seconds":9} -->
+<!-- hl-activity: {"id":"ES-C12-practice-yo-go-order","kind":"text","assesses":["ES-GRAMMAR-YO-GO-CONTRAST-LEARNED","ES-GRAMMAR-TENER-PRESENT-SINGULAR","ES-GRAMMAR-HACER-PRESENT-SINGULAR","ES-GRAMMAR-DECIR-PRESENT-SINGULAR"],"prompt":"Give the learned yo forms of tener, hacer, and decir, in that order.","answer":"tengo, hago, digo","accepted":["tengo hago digo","tengo / hago / digo"],"feedback":{"correct":"Right: tengo, hago, digo.","incorrect":"Retrieve the bounded comparison: tengo, hago, digo."},"response_seconds":9} -->
+<!-- hl-activity: {"id":"ES-C12-practice-make-coffee","kind":"text","assesses":["ES-LEX-HACER","ES-GRAMMAR-HACER-PRESENT-SINGULAR","ES-LEX-CAFE"],"prompt":"Say 'I make coffee' in Spanish.","answer":"Hago café.","accepted":["Hago café","Hago cafe","Hago cafe."],"feedback":{"correct":"Right: Hago café.","incorrect":"Use hago before the known noun café."},"response_seconds":8} -->
+<!-- hl-activity: {"id":"ES-C12-practice-how-say-hello","kind":"text","assesses":["ES-LEX-DECIR","ES-GRAMMAR-DECIR-PRESENT-SINGULAR","ES-LEX-COMO","ES-LEX-HOLA"],"prompt":"Ask one friend 'How do you say hello?' in Spanish.","answer":"¿Cómo dices ‘hola’?","accepted":["¿Cómo dices hola?","Cómo dices hola?","Como dices hola?","¿Como dices hola?"],"feedback":{"correct":"Right: ¿Cómo dices ‘hola’?","incorrect":"Use cómo plus the tú form dices: ¿Cómo dices hola?"},"response_seconds":9} -->
 
-- **hacer**: hago · haces · hace · hacemos · hacen.
-- **decir**: digo · dices · dice · decimos · dicen — the **boot**: only *decimos*
-  keeps the plain *e*.
-
-## Drill 3 — put it to use
-
-[PAUSE 1s] Say each out loud:
-
-- "**¿Qué haces?**" — "What are you doing?"
-- "**Hago la tarea.**" — "I'm doing the homework."
-- "**¿Cómo se dice 'window'?**" — "How do you say 'window'?"
-- "**Hace frío hoy.**" — "It's cold today" (weather with *hacer* — "it makes
-  cold").
-
-## Drill 4 — the root families (say the cousin)
-
-[PAUSE 1s] Name an English cousin from the same Latin root:
-
-- **hacer** ← *facere* → ? (**fact / factory / perfect / manufacture** — any.)
-- **decir** ← *dīcere* → ? (**dictate / diction / predict / verdict** — any.)
+[PAUSE 1s]
+- [YOU SAY: “hago, haces, hace”]
+- [YOU SAY: “digo, dices, dice”]
+- [YOU SAY: “tengo, hago, digo”]
+- [YOU SAY: “Hago café. Digo hola.”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HACER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-ETYMON-FACERE, ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR, ES-ETYMON-DICERE, ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-HISTORY-YO-GO-CONVERGENCE] -->
 
-[PAUSE 3s] Give the *yo*-forms of *hacer*, *decir*, and *tener*. (**hago, digo,
-tengo** — the *-go* club.) In *decir*, which form escapes the *e→i* boot, and why?
-(*decimos* — stress on the ending.) How does Spanish say "it's hot"? (**Hace
-calor.**) You can now *do*, *make*, and *say* in Spanish — and you have seen that
-its most irregular verbs are its most-used, oldest words.
+[PAUSE 3s] Give both three-form sets. (*Hago, haces, hace; digo, dices,
+dice.*) Which three learned **yo** forms share **-go**? (*Tengo, hago, digo.*)
+Why is that comparison a memory aid rather than a prediction rule? (Its mixed
+history does not license unseen forms.) Chapter 13 may now introduce its own
+verbs one at a time.

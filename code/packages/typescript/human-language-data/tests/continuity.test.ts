@@ -372,20 +372,21 @@ describe("the real corpus", () => {
     // ெ sign — the glyphs Tamil chapter 2 was still explaining inside its own speaking
     // lessons because the writing strand had never covered them.
     // Chapters 7 and 8 each add their configured 12-atom budget. Chapters 9 and 10
-    // each add nine smaller atoms. Chapter 11 adds eleven more while limiting both
-    // stem changes and possessive agreement to the already-owned singular frame.
+    // each add nine smaller atoms. Chapter 11 adds eleven, then Chapter 12 adds eight
+    // while keeping every new verb inside the already-owned singular frame.
     // Every terminal practice lesson revisits its chapter, so measurable teaching
     // grows while the corpus orphan count can still fall.
-    expect(report.summary.atomsTaught).toBe(2560);
+    expect(report.summary.atomsTaught).toBe(2568);
     // +2, and it goes UP, which is worth stating plainly. Three of the five new atoms
     // are TA-W09's and nothing follows TA-W09, so they are orphans by construction:
     // PA-YA-01, E-SIGN-02, READ-PEYAR-03. TA-W08's two are revisited by TA-W09.
     // Against that, TA-W09 re-uses ர when it spells பெயர், so declaring
     // CA-ONE-LETTER-01 pulls that atom out of the orphan set for the first time
     // (revisits 0 -> 1). Three in, one out.
-    // Chapters 10 and 11 revisit every atom they introduce in their terminal
-    // checkpoints; Chapter 10 also gives an older ir-class atom another genuine use.
-    expect(report.summary.atomsNeverRevisited).toBe(471);
+    // Chapters 10-12 revisit every atom they introduce in their terminal
+    // checkpoints. Chapter 12 also gives the older silent-h atom another genuine use,
+    // pulling one pre-existing atom out of the orphan set.
+    expect(report.summary.atomsNeverRevisited).toBe(470);
     expect(report.summary.neverRevisitedPercent).toBe(18);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
@@ -449,7 +450,9 @@ describe("the real corpus", () => {
     // undeclared nouns, and no connective luego from much later in the course.
     // Chapter 11 removes five more by dropping full boot tables, future verbs, and
     // undeclared house/car/friend vocabulary from its singular-only migration.
-    expect(report.summary.forwardReferences).toBe(438);
+    // Chapter 12 removes seven more: weather and homework nouns, a window prompt,
+    // plural forms, and the three Chapter-13 verbs no longer appear early.
+    expect(report.summary.forwardReferences).toBe(431);
 
     // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
     // day as 766 -> 749. The absolute figures drift as main lands lessons; what the
@@ -510,8 +513,9 @@ describe("the real corpus", () => {
     // five-lesson reinforcement still lands before R2's 5-15-lesson span. Chapter
     // 10 adds nine typed atoms whose terminal retrieval is likewise earlier than R2.
     // Chapter 11 makes seven additional far windows measurable before a later lesson
-    // can reach the 5-15 lesson R2 span.
-    expect(report.summary.missedByWindow.R2).toBe(1758);
+    // can reach the 5-15 lesson R2 span. Chapter 12 makes eight more: its local payoff
+    // is deliberately too close to count as far-window reinforcement.
+    expect(report.summary.missedByWindow.R2).toBe(1766);
   });
 
   it("shows what a declared reading order was worth", () => {
@@ -540,10 +544,10 @@ describe("the real corpus", () => {
       lessonCount: 177,
       lessonsWithoutSequence: 0,
       forwardPrerequisites: 0,
-      // Chapters 9 and 10 each add nine atoms, then Chapter 11 adds eleven, while
-      // every terminal checkpoint revisits its full typed chapter.
-      atomsTaught: 313,
-      atomsNeverRevisited: 67,
+      // Chapters 9 and 10 each add nine atoms, Chapter 11 adds eleven, and Chapter 12
+      // adds eight; every terminal checkpoint revisits its full typed chapter.
+      atomsTaught: 321,
+      atomsNeverRevisited: 66,
     });
   });
 

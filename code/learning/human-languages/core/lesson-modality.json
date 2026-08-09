@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:14553764d5f31492",
+  "sourceHash": "fnv1a64:f25f6eb298a84fee",
   "summary": {
     "totalLessons": 1669,
     "voice": 1083,
@@ -34163,7 +34163,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0c31a56e74c2d5ee"
+      "sourceHash": "fnv1a64:78a7c17b4f995139"
     },
     {
       "id": "ES-C12-decir",
@@ -34181,7 +34181,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4b8ca2a96fcd9236"
+      "sourceHash": "fnv1a64:dfd5c865a1ed923f"
     },
     {
       "id": "ES-C12-yo-go",
@@ -34199,7 +34199,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:17afaf4786688193"
+      "sourceHash": "fnv1a64:fdf24e9e4f051892"
     },
     {
       "id": "ES-C12-practice",
@@ -34217,7 +34217,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fe2365102528f58f"
+      "sourceHash": "fnv1a64:6fcf2a836c0b72e8"
     },
     {
       "id": "ES-C13-poner",

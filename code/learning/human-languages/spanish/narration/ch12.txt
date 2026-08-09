@@ -3,156 +3,168 @@ Spanish, chapter 12: \emph{Hacer}, \emph{Decir}, and the \emph{-go} Verb Club.
 
 
 Lesson 1 of 4.
-hacer — "to do / to make," and the yo-form that grows a g.
+hacer — doing or making with three singular forms.
 
 Warm-up.
 [pause 2 seconds]
-One verb covers both English "do" and "make" in Spanish: hacer. It is one of the language's workhorses — and it hides two patterns you have already met: the f becomes h softening from Chapter 6, and a surprise -go ending in the yo-form, exactly like tengo.
+You already use tengo, tienes, tiene, and you already know café and the question word qué. Reuse that small frontier for one verb that covers both English “do” and “make.”
 
 Sounds you'll need.
-jota-h-silent — the h in hacer is silent (a-THER / a-SER). That silent h is the ghost of a Latin f.
+The h in hacer is silent, just as it is in hola. In hago, the written g has the hard sound heard before a.
 
 The word, taken apart.
-hacer comes from Latin facere, "to do, to make" — and Spanish softened the Latin f- to a now-silent h-, the very same change that turned fabulārī becomes hablar and filium becomes hijo back in Chapter 6. The Latin facere is one of the richest roots in English:
-fact ("a thing done"), factory ("a place of making"), manufacture ("made by hand"), feat, feature.
-with prefixes: affect / effect (ad-/ex- + fac), perfect ("thoroughly done"), satisfy ("make enough"), difficult ("not easy to do"), benefit ("do well").
-So hacer and factory are the same "make" root, one worn down in Spanish, one kept crisp in Latin-through-English.
+hacer means “to do” or “to make.” It descends from Latin facere, with the same making root preserved in English fact, factory, and manufacture. Much of early Castilian changed word-initial Latin f into an h sound that later became silent, leaving the spelling as a historical trace.
 
-Grammar Lens: the -go yo-form.
-hacer is regular in most of its present tense — but the yo-form is irregular: it grows a g, giving hago (not haço). You have seen this exact move before: tener becomes tengo. It is a small, high-frequency club of "-go" verbs.
-[a table of 5 rows, read aloud]
-yo, hago, (irregular — grows a g).
-tú, haces, (regular).
-él/ella/usted, hace, (regular).
-nosotros, hacemos, (regular).
-ellos/ustedes, hacen, (regular).
-The everyday payoff — weather. Spanish reports the weather with hacer, literally "it makes": hace calor ("it's hot" = "it makes heat"), hace frío ("it's cold"), hace sol ("it's sunny"). And the all-purpose question ¿Qué haces? — "What are you doing?"
+Grammar Lens: only the three singular forms.
+[a table of 3 rows, read aloud]
+person: yo. present of hacer: hago.
+person: tú. present of hacer: haces.
+person: él / ella / usted. present of hacer: hace.
+Say the bounded set as hago, haces, hace. Only the learned yo form contains g. Compare it with the familiar tengo, but do not extend the comparison beyond forms you already own.
+Use the forms with one known object:
+Hago café. — “I make coffee.”
+Haces café. — “You make coffee.”
+Hace café. — “He, she, or formal you makes coffee.”
+You can also ask ¿Qué haces? — “What are you doing?” Plural persons and weather expressions wait for later lessons.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "hacer" then the set — "hago, haces, hace, hacemos, hacen" — hear the g only in hago]
+[your turn — say: “hacer — hago, haces, hace”]
 [pause 8 seconds for the answer]
-[your turn — say: "¿Qué haces?" ("What are you doing?"); "Hago café" ("I make coffee")]
+[your turn — say: “¿Qué haces? Hago café.”]
 [pause 8 seconds for the answer]
-[your turn — say: "Hace calor" / "Hace frío" — weather = "it makes…"]
+[your turn — say: “facere — fact — factory — hacer”]
 [pause 8 seconds for the answer]
-[your turn — say: "hacer" then English "fact, factory, perfect" — the make/do family]
-[pause 8 seconds for the answer]
+[question — say your answer, then pause 10 seconds]
+Give the learned singular present forms of hacer: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 8 seconds]
+Say 'I make coffee' in Spanish.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What two English verbs does hacer cover? ("do" and "make.") What Latin root, and two English cousins? (facere; fact/factory/perfect.) Give the yo-form, and the other verb it echoes. (hago — the -go club, like tengo.) How does Spanish say "it's hot"? (Hace calor — "it makes heat.") Next: decir, "to say" — a verb that cracks and grows a g.
+What two English verbs does hacer cover? (“Do” and “make.”) Give the three learned forms. (Hago, haces, hace.) Which Latin source and English cousin help explain it? (Facere; fact or factory.) Next: add decir without widening the person frame.
 
 
 Lesson 2 of 4.
-decir — "to say," the verb with two irregularities at once.
+decir — saying with the same small person frame.
 
 Warm-up.
 [pause 2 seconds]
-decir ("to say / to tell") is the trickiest verb yet — and the most instructive, because it stacks two patterns you already know onto one word: the -go yo-form from hacer/tener, and a stem-change from Chapter 11. Learn decir and the whole system clicks together.
+You can ask cómo, say hola, and retrieve hago, haces, hace. Keep those three persons fixed while adding the verb “to say.”
 
 Sounds you'll need.
-diphthong-none-i — here the stressed stem e does not break to ie; instead it closes to i: digo, dices, dice. A third kind of stem-change.
+In digo, the g before o is hard. Keep the i in all three learned forms short and clear: digo, dices, dice.
 
 The word, taken apart.
-decir comes from Latin dīcere, "to say, to tell, to point out" — and its root dic-/dict- ("say") runs straight through English:
-dictate, diction, dictionary, dictaphone — all about saying.
-with prefixes: predict ("say beforehand"), contradict ("say against"), verdict ("a true saying"), indicate ("point out"), dedicate, edict, index.
-So decir is the "say" root behind dictionary itself — the book of what words say.
+decir means “to say” or “to tell.” It descends from Latin dīcere, “to say.” English keeps the same root in diction, dictionary, predict (“say beforehand”), and verdict (“a true saying”).
 
-Grammar Lens: two irregularities stacked.
-(1) The -go yo-form. Like hago and tengo, the yo-form grows a g: digo.
-(2) The e becomes i stem-change. In the stressed forms, the stem e closes to i — not the ie of querer, but a tighter shift to plain i:
-[a table of 5 rows, read aloud]
-yo, digo, (-go form; stem also becomes i).
-tú, dices, (e becomes i).
-él/ella/usted, dice, (e becomes i).
-nosotros, decimos, (plain e — unstressed).
-ellos/ustedes, dicen, (e becomes i).
-The boot shape returns: decimos alone keeps the plain e, because the stress falls on the ending. Everything inside the boot shifts to i; the yo corner also carries the -go.
-The everyday payoff: ¿Cómo se dice…? — "How do you say…?", the single most useful question a learner owns. And dime ("tell me").
+Grammar Lens: one more three-form set.
+[a table of 3 rows, read aloud]
+person: yo. present of decir: digo.
+person: tú. present of decir: dices.
+person: él / ella / usted. present of decir: dice.
+Say digo, dices, dice. The yo form has g, while the other two learned forms do not. Do not build a full table or a general vowel-change rule from this small set yet.
+Now combine it only with known language:
+Digo hola. — “I say hello.”
+Dices hola. — “You say hello.”
+Dice hola. — “He, she, or formal you says hello.”
+¿Cómo dices “hola”? — “How do you say ‘hello’?”
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "decir" then the set — "digo, dices, dice, decimos, dicen" — the g in digo, the i through the boot, the plain e in decimos]
+[your turn — say: “decir — digo, dices, dice”]
 [pause 8 seconds for the answer]
-[your turn — say: "¿Cómo se dice 'coffee' en español?" — "Se dice 'café'."]
+[your turn — say: “Digo hola. ¿Cómo dices hola?”]
 [pause 8 seconds for the answer]
-[your turn — say: "decir" then English "dictate, predict, verdict" — the say-family]
+[your turn — say: “dīcere — diction — decir”]
 [pause 8 seconds for the answer]
+[question — say your answer, then pause 10 seconds]
+Give the learned singular present forms of decir: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 8 seconds]
+Say 'I say hello' in Spanish.
+[question — say your answer, then pause 9 seconds]
+Ask one friend 'How do you say hello?' in Spanish.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Latin verb is decir from, and three English cousins? (dīcere; dictate/diction/predict/verdict — any three.) Name its two irregularities. (The -go yo-form digo, and the e becomes i stem-change.) Which form keeps the plain e, and why? (decimos — stress on the ending, outside the boot.) How do you ask "How do you say…?" (¿Cómo se dice…?) Next: the whole -go family, side by side.
+What does decir mean? (“To say” or “to tell.”) Give the three learned forms. (Digo, dices, dice.) Which Latin source and English cousin help explain it? (Dīcere; diction, dictionary, or predict.) Next: compare only the three yo forms you have actually learned.
 
 
 Lesson 3 of 4.
-The "-go" club — one irregular corner, many verbs.
+tengo, hago, digo — compare only what you know.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The pattern until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: one visible corner until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-You have now met three verbs whose yo-form ends in a surprising -go: tener becomes tengo, hacer becomes hago, decir becomes digo. That is not three coincidences — it is a club. Learn the membership and you never have to re-learn the shape.
+Three learned verbs now place g in the yo form: tengo, hago, digo. Compare those three without guessing the form of any unseen verb.
 
-The pattern.
-Most Spanish verbs build a tidy yo-form (hablo, como, vivo). But a small set of very common verbs grow a hard g in the yo-form only — the rest of the present tense behaves normally. You have two members already; here is the core club:
-There is a table here I cannot read to you — 4 columns and 6 rows, and it has more columns than can be held in the ear at once. Its columns are: verb, meaning, yo-form, you've met it?. Come back and look at it when you have stopped.
-Three you know, three to come — and every one follows the same rule: -go in the yo-form, regular elsewhere (with any stem-change stacked on top, as in digo).
+Grammar Lens: one visible corner.
+There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: infinitive, meaning, learned yo form, learned tú form. Come back and look at it when you have stopped.
+The shared observation is narrow: each learned yo form ends in -go, while each learned tú form does not. This is a memory organizer for three known forms, not permission to manufacture new ones.
 
-Why the g? (a Latin fossil).
-The g is an inheritance. Latin's first-person forms and old sound-laws left a velar (a back-of-the-mouth g/k) clinging to these particular verbs; Spanish regularized it into a clean -go. You do not need the history to use them — but it explains why the club is closed and old: these are among the most-used verbs in the language, and the oldest, most-used words are exactly the ones that keep their irregularities (like English am/was, go/went).
+The pattern, taken apart — convergence, not one magic rule.
+The three modern forms did not arise by attaching one productive Latin -go ending. Older stem sounds changed in different ways, and analogy helped common verbs converge on a familiar shape. That mixed history explains why the group is useful to remember but unsafe as a prediction rule.
+Later lessons can introduce other verbs on their own evidence. For now, the complete comparison is exactly tengo, hago, digo.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the three you know — "tengo, hago, digo" — feel the shared -go]
+[your turn — say: “tengo — hago — digo”]
 [pause 8 seconds for the answer]
-[your turn — say: the three to come — "pongo, salgo, vengo" — same ending]
+[your turn — say: “tienes — haces — dices”]
 [pause 8 seconds for the answer]
-[your turn — say: a mixed drill — "yo tengo, yo hago, yo digo" then "tú tienes, tú haces, tú dices" — the -go is yo-only]
+[your turn — say: “a memory organizer, not a prediction machine”]
 [pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the learned yo forms of tener, hacer, and decir, in that order.
+[question — say your answer, then pause 6 seconds]
+Which learned yo form means 'I do' or 'I make'?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What do tengo, hago, and digo share, and in which form only? (A -go ending, in the yo-form only.) Name three more members of the club. (pongo, salgo, vengo — from poner, salir, venir.) Are these verbs irregular everywhere? (No — just the yo-form; the rest is regular, plus any stem-change.) Why is the club old and closed? (These are the most-used, oldest verbs — the ones that keep their fossils.) Next: practice — put hacer, decir, and the -go club to work.
+Which three learned yo forms end in -go? (Tengo, hago, digo.) May this comparison predict an unseen verb? (No.) Why not? (Different sound histories and analogy converged on the same shape.) Next: retrieve the whole chapter without adding any word or form.
 
 
 Lesson 4 of 4.
-Practice — hacer, decir, and the -go club.
+Practice — doing, making, and saying in the singular.
 
 Warm-up.
 [pause 2 seconds]
-This chapter added two workhorse verbs — hacer ("do/make") and decir ("say") — and the -go club that unites their yo-forms with tengo. Time to make them automatic.
+This checkpoint adds nothing. Retrieve two bounded three-form sets, use them with known words, and compare only tengo, hago, digo.
 
-Drill 1 — the -go yo-forms.
-[pause 1 second]
-Say the yo-form for each, then the tú-form (which drops the g):
-hacer becomes yo hago, tú haces.
-decir becomes yo digo, tú dices (mind the e becomes i).
-tener becomes yo tengo, tú tienes (mind the e becomes ie).
-[pause 2 seconds]
-What do all three yo-forms share? (The -go.) What happens to it in the tú-form? (It drops — the -go is yo-only.)
+Grammar Lens: the complete small chapter frame.
+doing or making: hago, haces, hace.
+saying or telling: digo, dices, dice.
+the learned yo comparison: tengo, hago, digo.
+known-word use: Hago café. Digo hola. ¿Cómo dices “hola”?
+Plural persons, weather nouns, homework vocabulary, and unseen verbs remain outside this checkpoint.
 
-Drill 2 — say the full present.
-[pause 1 second]
-Run each verb top to bottom:
-hacer: hago, haces, hace, hacemos, hacen.
-decir: digo, dices, dice, decimos, dicen — the boot: only decimos keeps the plain e.
+The words, taken apart — retrieve the history.
+hacer continues Latin facere, the making family of fact and factory.
+decir continues Latin dīcere, the saying family of diction and predict.
+inherited sound changes and analogy made three known yo forms converge on -go; the resemblance does not predict forms you have not learned.
 
-Drill 3 — put it to use.
+Guided Practice.
 [pause 1 second]
-Say each out loud:
-"¿Qué haces?" — "What are you doing?"
-"Hago la tarea." — "I'm doing the homework."
-"¿Cómo se dice 'window'?" — "How do you say 'window'?"
-"Hace frío hoy." — "It's cold today" (weather with hacer — "it makes cold").
-
-Drill 4 — the root families (say the cousin).
-[pause 1 second]
-Name an English cousin from the same Latin root:
-hacer from facere becomes? (fact / factory / perfect / manufacture — any.)
-decir from dīcere becomes? (dictate / diction / predict / verdict — any.)
+[your turn — say: “hago, haces, hace”]
+[pause 8 seconds for the answer]
+[your turn — say: “digo, dices, dice”]
+[pause 8 seconds for the answer]
+[your turn — say: “tengo, hago, digo”]
+[pause 8 seconds for the answer]
+[your turn — say: “Hago café. Digo hola.”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the learned singular forms of hacer: yo, tú, then usted.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular forms of decir: yo, tú, then usted.
+[question — say your answer, then pause 9 seconds]
+Give the learned yo forms of tener, hacer, and decir, in that order.
+[question — say your answer, then pause 8 seconds]
+Say 'I make coffee' in Spanish.
+[question — say your answer, then pause 9 seconds]
+Ask one friend 'How do you say hello?' in Spanish.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the yo-forms of hacer, decir, and tener. (hago, digo, tengo — the -go club.) In decir, which form escapes the e becomes i boot, and why? (decimos — stress on the ending.) How does Spanish say "it's hot"? (Hace calor.) You can now do, make, and say in Spanish — and you have seen that its most irregular verbs are its most-used, oldest words.
+Give both three-form sets. (Hago, haces, hace; digo, dices, dice.) Which three learned yo forms share -go? (Tengo, hago, digo.) Why is that comparison a memory aid rather than a prediction rule? (Its mixed history does not license unseen forms.) Chapter 13 may now introduce its own verbs one at a time.

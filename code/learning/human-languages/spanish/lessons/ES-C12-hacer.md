@@ -1,80 +1,93 @@
 ---
+schema_version: 2
 id: ES-C12-hacer
-chapter: 12
+spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 970
+chapter: 12
 type: word
 headword: hacer
-gloss: to do / to make — an irregular yo-form, hago
+gloss: to do or make — with the singular present forms hago, haces, and hace
 concept_tag: VERB-DO-MAKE
-prerequisites: [ES-C08-tener, ES-C06-hablar]
-sounds: [jota-h-silent, g-hard]
+prerequisites: [ES-C11-practice, ES-C08-tener, ES-C06-cafe, ES-C07-que]
+sounds: [silent-h, g-hard]
 roots: [facere-latin]
-etymology_hook: "hacer ← Latin facere 'to do, make' → fact, factory, affect, perfect, manufacture, satisfy; the f→h softening (facere→hacer, like Ch.6 hablar) and the -go yo-form hago (like tengo)"
-est_minutes: 4
-reviews_of: [ES-C08-tener, ES-C10-practice]
+etymology_hook: "hacer descends from Latin facere 'to do or make'; English fact, factory, and manufacture preserve the same making family"
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-CAFE, ES-LEX-QUE, ES-SOUND-H-SILENT]
+introduces:
+  knowledge: [ES-LEX-HACER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-ETYMON-FACERE]
+practises:
+  knowledge: [ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-CAFE, ES-LEX-QUE, ES-SOUND-H-SILENT, ES-LEX-HACER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-ETYMON-FACERE]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C11-practice, ES-C08-tener, ES-C06-cafe, ES-C07-que]
 ---
 
-# hacer — "to do / to make," and the yo-form that grows a g
+# hacer — doing or making with three singular forms
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-CAFE, ES-LEX-QUE] -->
 
-[PAUSE 2s] One verb covers both English "do" **and** "make" in Spanish:
-**hacer**. It is one of the language's workhorses — and it hides two patterns you
-have already met: the **f→h** softening from Chapter 6, and a surprise **-go**
-ending in the *yo*-form, exactly like *tengo*.
+[PAUSE 2s] You already use **tengo, tienes, tiene**, and you already know
+**café** and the question word **qué**. Reuse that small frontier for one verb
+that covers both English “do” and “make.”
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[ES-SOUND-H-SILENT] -->
 
-- `jota-h-silent` — the **h** in *hacer* is **silent** (*a-THER* / *a-SER*). That
-  silent *h* is the ghost of a Latin **f**.
+The **h** in **hacer** is silent, just as it is in **hola**. In **hago**, the
+written **g** has the hard sound heard before **a**.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-HACER, ES-ETYMON-FACERE]; assesses=[] -->
 
-**hacer** comes from Latin **facere**, *"to do, to make"* — and Spanish softened
-the Latin **f-** to a now-silent **h-**, the very same change that turned
-*fabulārī → hablar* and *filium → hijo* back in Chapter 6. The Latin *facere* is
-one of the richest roots in English:
+**hacer** means “to do” or “to make.” It descends from Latin **facere**, with
+the same making root preserved in English **fact**, **factory**, and
+**manufacture**. Much of early Castilian changed word-initial Latin **f** into
+an **h** sound that later became silent, leaving the spelling as a historical
+trace.
 
-- **fact** ("a thing done"), **factory** ("a place of making"), **manufacture**
-  ("made by hand"), **feat**, **feature**.
-- with prefixes: **affect / effect** (*ad-/ex-* + *fac*), **perfect** ("thoroughly
-  done"), **satisfy** ("make enough"), **difficult** ("not easy to do"),
-  **benefit** ("do well").
+## Grammar Lens: only the three singular forms
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-HACER-PRESENT-SINGULAR]; assesses=[ES-LEX-HACER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-ETYMON-FACERE] -->
 
-So *hacer* and *factory* are the same "make" root, one worn down in Spanish, one
-kept crisp in Latin-through-English.
+| person | present of **hacer** |
+|---|---|
+| yo | **hago** |
+| tú | **haces** |
+| él / ella / usted | **hace** |
 
-## Grammar Lens: the -go yo-form
+Say the bounded set as **hago · haces · hace**. Only the learned **yo** form
+contains **g**. Compare it with the familiar **tengo**, but do not extend the
+comparison beyond forms you already own.
 
-*hacer* is regular in most of its present tense — but the **yo**-form is
-irregular: it grows a **g**, giving **hago** (not *~~haço~~*). You have seen this
-exact move before: *tener → tengo*. It is a small, high-frequency club of "-go"
-verbs.
+Use the forms with one known object:
 
-| yo | **hago** | (irregular — grows a *g*) |
-| tú | haces | (regular) |
-| él/ella/usted | hace | (regular) |
-| nosotros | hacemos | (regular) |
-| ellos/ustedes | hacen | (regular) |
+- **Hago café.** — “I make coffee.”
+- **Haces café.** — “You make coffee.”
+- **Hace café.** — “He, she, or formal you makes coffee.”
 
-**The everyday payoff — weather.** Spanish reports the weather with *hacer*,
-literally "it **makes**": **hace calor** ("it's hot" = "it makes heat"), **hace
-frío** ("it's cold"), **hace sol** ("it's sunny"). And the all-purpose question
-**¿Qué haces?** — "What are you doing?"
+You can also ask **¿Qué haces?** — “What are you doing?” Plural persons and
+weather expressions wait for later lessons.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HACER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-ETYMON-FACERE, ES-LEX-CAFE, ES-LEX-QUE] -->
+<!-- hl-activity: {"id":"ES-C12-hacer-singular-forms","kind":"text","assesses":["ES-LEX-HACER","ES-GRAMMAR-HACER-PRESENT-SINGULAR"],"prompt":"Give the learned singular present forms of hacer: yo, tú, then él/ella/usted.","answer":"hago, haces, hace","accepted":["hago haces hace","hago / haces / hace"],"feedback":{"correct":"Right: hago, haces, hace.","incorrect":"Keep the g only in the yo form: hago, haces, hace."},"response_seconds":10} -->
+<!-- hl-activity: {"id":"ES-C12-hacer-make-coffee","kind":"text","assesses":["ES-LEX-HACER","ES-GRAMMAR-HACER-PRESENT-SINGULAR","ES-LEX-CAFE"],"prompt":"Say 'I make coffee' in Spanish.","answer":"Hago café.","accepted":["Hago café","Hago cafe","Hago cafe."],"feedback":{"correct":"Right: Hago café.","incorrect":"Use the yo form hago before the known noun café."},"response_seconds":8} -->
 
 [PAUSE 1s]
-- [YOU SAY: "hacer" then the set — "**hago**, haces, hace, hacemos, hacen" — hear
-  the *g* only in *hago*]
-- [YOU SAY: "¿Qué haces?" ("What are you doing?"); "Hago café" ("I make coffee")]
-- [YOU SAY: "Hace calor" / "Hace frío" — weather = "it makes…"]
-- [YOU SAY: "hacer" then English "fact, factory, perfect" — the make/do family]
+- [YOU SAY: “hacer — hago, haces, hace”]
+- [YOU SAY: “¿Qué haces? Hago café.”]
+- [YOU SAY: “facere — fact — factory — hacer”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HACER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-ETYMON-FACERE] -->
 
-[PAUSE 3s] What two English verbs does *hacer* cover? ("**do**" and "**make**.")
-What Latin root, and two English cousins? (*facere*; fact/factory/perfect.) Give
-the *yo*-form, and the other verb it echoes. (**hago** — the *-go* club, like
-*tengo*.) How does Spanish say "it's hot"? (**Hace calor** — "it makes heat.")
-Next: **decir**, "to say" — a verb that cracks *and* grows a g.
+[PAUSE 3s] What two English verbs does *hacer* cover? (“Do” and “make.”) Give
+the three learned forms. (*Hago, haces, hace.*) Which Latin source and English
+cousin help explain it? (*Facere*; *fact* or *factory*.) Next: add **decir**
+without widening the person frame.
