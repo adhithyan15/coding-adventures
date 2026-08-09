@@ -441,9 +441,22 @@
       "payoff": {
         "lesson": "ES-C17-practice",
         "kind": "task",
-        "summary": "Complete ES-C17-practice, the canonical closing checkpoint, and demonstrate the chapter promise: form the Spanish future and conditional from the infinitive and use each for its core meaning.",
-        "assesses": [],
-        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+        "summary": "Complete ES-C17-practice and retrieve the bounded singular future and conditional rows for hablar, comer, and vivir plus the learned har-, tendr-, and podr- stems.",
+        "assesses": [
+          "ES-GRAMMAR-FUTURE-PREDICTION-INTENTION",
+          "ES-GRAMMAR-AR-FUTURE-SINGULAR",
+          "ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL",
+          "ES-GRAMMAR-ER-FUTURE-SINGULAR",
+          "ES-GRAMMAR-IR-FUTURE-SINGULAR",
+          "ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL",
+          "ES-GRAMMAR-AR-CONDITIONAL-SINGULAR",
+          "ES-GRAMMAR-ER-CONDITIONAL-SINGULAR",
+          "ES-GRAMMAR-IR-CONDITIONAL-SINGULAR",
+          "ES-GRAMMAR-HACER-FUTURE-CONDITIONAL-SINGULAR",
+          "ES-GRAMMAR-TENER-FUTURE-CONDITIONAL-SINGULAR",
+          "ES-GRAMMAR-PODER-FUTURE-CONDITIONAL-SINGULAR"
+        ],
+        "note": "The payoff retrieves all twelve Chapter-17 atoms with mapped activities and deliberately defers every plural form, additional irregular stem, auxiliary paradigm, object-pronoun frame, and clock-time conjecture."
       }
     },
     {

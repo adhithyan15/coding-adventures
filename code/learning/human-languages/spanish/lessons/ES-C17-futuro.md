@@ -1,100 +1,83 @@
 ---
+schema_version: 2
 id: ES-C17-futuro
-chapter: 17
+spine_node: SPINE-TALK-ABOUT-FUTURE
 sequence: 1140
-type: word
+chapter: 17
+type: grammar
 headword: hablaré
-gloss: the future — a compound tense that welded itself shut
+gloss: the singular simple future of hablar — hablaré, hablarás, hablará
 concept_tag: ES-FUTURE
-prerequisites: [ES-C16-practice, ES-C10-ir-a-futuro]
+prerequisites: [ES-C16-practice, ES-C10-ir-a-futuro, ES-C06-hablar]
 sounds: [accent-acute, stress-final]
 roots: [latin-infinitive-habere]
-etymology_hook: "hablaré is hablar + he — the infinitive plus the present of haber, 'I HAVE to speak' → 'I will speak'; Latin's own future (amābō) died and Romance built a compound to replace it, which then FUSED into a single word, so the endings -é/-ás/-á/-emos/-án are a whole verb worn down to a suffix"
-est_minutes: 4
+etymology_hook: "Spanish simple-future forms continue a Romance construction in which an infinitive combined with present forms of haber; repeated use helped the pieces become one written word"
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE, ES-SOUND-WRITTEN-ACCENT]
+introduces:
+  knowledge: [ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-GRAMMAR-AR-FUTURE-SINGULAR, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL]
+practises:
+  knowledge: [ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE, ES-SOUND-WRITTEN-ACCENT, ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-GRAMMAR-AR-FUTURE-SINGULAR, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL]
+skills: [listening, speaking, reading, writing]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C16-practice, ES-C10-ir-a-futuro, ES-C06-hablar]
 ---
 
-# hablaré — the future, welded shut
+# hablaré — keep the infinitive, add the future
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-FUTURE-PREDICTION-INTENTION]; assesses=[ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE] -->
 
-[PAUSE 2s] Chapter 10 gave you one future (*voy a hablar*). Here is the other.
+[PAUSE 2s] **Voy a hablar español** uses the near-future frame you already
+know. Spanish also has a one-word future: **Hablaré español** — “I will speak
+Spanish.” It can present a future prediction or intention without adding a new
+subject or object.
 
-## The forms
+## Grammar Lens: three familiar persons
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-AR-FUTURE-SINGULAR]; assesses=[ES-LEX-HABLAR, ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-SOUND-WRITTEN-ACCENT] -->
 
-Take the **whole infinitive** and add the endings:
+Keep the whole infinitive **hablar**, then add one ending:
 
-| | |
+| person | simple future |
 |---|---|
 | yo | hablar**é** |
 | tú | hablar**ás** |
-| él/ella/usted | hablar**á** |
-| nosotros | hablar**emos** |
-| ellos/ustedes | hablar**án** |
+| él / ella / usted | hablar**á** |
 
-Notice something odd: you don't drop *-ar* first. Every other tense you've
-learned strips the ending off. **The future keeps the infinitive whole** and
-builds on top of it — *comer* → *comeré*, *vivir* → *viviré*. One set of endings
-for all three conjugations.
+Say **hablaré · hablarás · hablará**. Each form has final stress, marked by an
+accent. Plural persons wait.
 
-## Why the infinitive survives
+## The weld, taken apart
+<!-- hl-knowledge: introduces=[ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL]; assesses=[ES-GRAMMAR-AR-FUTURE-SINGULAR] -->
 
-Latin's own future — *amābō*, "I will love" — **died out**. Speakers replaced it
-with a phrase:
+Late Latin and early Romance used more than one way to speak about the future.
+One influential construction placed an infinitive beside present forms of
+Latin **habēre**, “to have.” Through repeated use and sound change, descendants
+of those pieces became the endings in forms such as **hablaré**.
 
-> ***amāre habeō*** — "I **have** to love" → "I will love"
-
-Infinitive + the verb *habēre*, "to have." Exactly the English "I **have to**
-go," which also slides toward the future.
-
-Then the phrase **fused**. Say *hablar he* fast enough, often enough, for enough
-centuries, and it becomes one word:
-
-| stage | form |
-|---|---|
-| two words | *hablar* + *he* |
-| squeezed | *hablar-he* |
-| welded | **hablaré** |
-
-So the endings aren't endings at all, historically. They are the present tense of
-*haber* worn down to a suffix:
-
-| *haber* (present) | future ending |
-|---|---|
-| he | -**é** |
-| has | -**ás** |
-| ha | -**á** |
-| hemos | -**emos** |
-| han | -**án** |
-
-Line them up and they're the same list. **A compound tense that closed up into a
-simple one** — the exact reverse of what French and Italian did with their
-compound past, which stayed open as two words.
-
-## The seam is still visible in Portuguese
-
-Portuguese welded its future too (*falarei* is one word). But in **formal European
-Portuguese** a pronoun can still be lodged **inside** it:
-
-> **falá-lo-ei** — "I will speak it"
-
-That *-lo-* is sitting in the join, between *falar* and *ei*. A leftover, not the
-normal pattern — Brazilian Portuguese doesn't do it, and neither does speech. But
-it shows the seam Spanish sealed over completely is still faintly open next door.
+That history explains why the infinitive remains visible. It does **not** mean
+that a modern learner should attach the full modern verb **haber**, and it does
+not require the claim that every older future vanished at one moment.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE, ES-SOUND-WRITTEN-ACCENT, ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-GRAMMAR-AR-FUTURE-SINGULAR, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL] -->
+<!-- hl-activity: {"id":"ES-C17-futuro-singular-forms","kind":"text","assesses":["ES-GRAMMAR-AR-FUTURE-SINGULAR","ES-LEX-HABLAR"],"prompt":"Give the learned singular future forms of hablar: yo, tú, then él/ella/usted.","answer":"hablaré, hablarás, hablará","accepted":["hablaré hablarás hablará","hablaré / hablarás / hablará"],"feedback":{"correct":"Right: hablaré, hablarás, hablará.","incorrect":"Keep hablar whole and add -é, -ás, -á."},"response_seconds":9} -->
+<!-- hl-activity: {"id":"ES-C17-futuro-hablare-espanol","kind":"text","assesses":["ES-GRAMMAR-FUTURE-PREDICTION-INTENTION","ES-GRAMMAR-AR-FUTURE-SINGULAR","ES-LEX-HABLAR","ES-LEX-ESPANOL"],"prompt":"Say 'I will speak Spanish' in Spanish.","answer":"Hablaré español.","accepted":["Hablaré español"],"feedback":{"correct":"Right: Hablaré español.","incorrect":"Use the yo future hablaré before known español."},"response_seconds":7} -->
+<!-- hl-activity: {"id":"ES-C17-futuro-history","kind":"text","assesses":["ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL"],"prompt":"Which Latin verb meaning 'to have' contributed material to the Romance future endings?","answer":"habēre","accepted":["habere","haber"],"feedback":{"correct":"Right: forms of habēre contributed to the future construction.","incorrect":"The historical partner was habēre, the source of haber."},"response_seconds":7} -->
 
 [PAUSE 1s]
-- [YOU SAY: "hablaré, hablarás, hablará, hablaremos, hablarán"]
-- [YOU SAY: "comeré, viviré" — the infinitive stays whole]
-- [YOU SAY: the weld — "hablar + he → hablaré"]
-- [YOU SAY: the two futures — "voy a hablar … hablaré"]
+- [YOU SAY: “hablaré, hablarás, hablará”]
+- [YOU SAY: “Voy a hablar español. Hablaré español.”]
+- [YOU SAY: “infinitive plus historical habēre material”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-GRAMMAR-AR-FUTURE-SINGULAR, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL] -->
 
-[PAUSE 3s] What do you add the future endings to? (**The whole infinitive** — you
-don't strip it.) What happened to Latin's own future? (It **died**; Romance
-replaced it with a phrase.) What was that phrase? (**Infinitive + *habēre***,
-"I have to speak.") So what are the endings really? (**The present of *haber***,
-fused on.) Which language still shows the seam? (**Portuguese** — *falá-lo-ei*.)
-Next: the same trick, with a different tense of *haber*.
+[PAUSE 3s] Give the three learned forms. (*Hablaré, hablarás, hablará.*) What
+stays visible? (The whole infinitive.) What older verb contributed to the
+endings? (Latin **habēre**.) Next: test the same endings on **comer**.

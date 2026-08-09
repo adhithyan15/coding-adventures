@@ -6,7 +6,7 @@ type: word
 headword: hable, coma, viva
 gloss: "the regular present subjunctive — built from the yo form, with the vowel flipped"
 concept_tag: ES-SUBJUNCTIVE-PRESENT
-prerequisites: [ES-C17-future-guessing, ES-C12-yo-go, ES-C11-stem-changes, ES-C06-hablar, ES-C07-comer]
+prerequisites: [ES-C17-practice, ES-C12-yo-go, ES-C11-stem-changes, ES-C06-hablar, ES-C07-comer]
 sounds: [vowel-e, vowel-a, accent-mark, stress-default-vowel-ns]
 roots: [latin-subiunctivus, pie-yewg]
 etymology_hook: "build the regular present subjunctive from the present yo form: drop -o, then give -ar verbs e-endings and -er/-ir verbs a-endings"
@@ -20,9 +20,8 @@ reviews_of: [ES-C12-yo-go, ES-C11-stem-changes, ES-C06-hablar, ES-C07-vivir]
 
 [PAUSE 2s] Every tense so far — *hablo*, *hablé*, *hablaba*, *hablaré*,
 *hablaría* — has belonged to one **mood**, the **indicative**: the mood of
-assertion. It states how things are, and it keeps stating even when it guesses
-(Chapter 17's *Serán las tres*, "it must be three," is still an assertion — a
-confident one about an unknown).
+assertion. It presents something as a statement, prediction, or imagined
+outcome from the speaker's point of view.
 
 Spanish has **another mood** for what is not asserted at all: things wanted,
 doubted, feared, hoped for. That is the **subjunctive**, and the good news is

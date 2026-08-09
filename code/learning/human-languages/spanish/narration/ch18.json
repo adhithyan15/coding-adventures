@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "The Subjunctive --- the Mood of the Not-Yet-Real",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:611f103a3f18023d",
+  "sourceHash": "fnv1a64:feab749898cc6963",
   "lessons": [
     {
       "id": "ES-C18-subjuntivo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:91ce99547c890c02",
+      "sourceHash": "fnv1a64:7cb1969a72cb0c24",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -44,7 +44,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every tense so far — hablo, hablé, hablaba, hablaré, hablaría — has belonged to one mood, the indicative: the mood of assertion. It states how things are, and it keeps stating even when it guesses (Chapter 17's Serán las tres, \"it must be three,\" is still an assertion — a confident one about an unknown)."
+              "text": "Every tense so far — hablo, hablé, hablaba, hablaré, hablaría — has belonged to one mood, the indicative: the mood of assertion. It presents something as a statement, prediction, or imagined outcome from the speaker's point of view."
             },
             {
               "kind": "speech",

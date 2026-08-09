@@ -629,8 +629,8 @@ family kept *grātia* even where everyday thanks went elsewhere.
   Ch. 16's own "third time" count is muddled and Ch. 17 collapses all **three**
   conjugations anyway.
   - The lesson opens by naming the **indicative** as a mood rather than claiming
-    earlier tenses stated facts — Ch. 17's *Serán las tres* ("it must be three")
-    is a guess, but still an assertion, so "facts" would have contradicted it.
+    earlier tenses stated facts: predictions and imagined outcomes can still be
+    presented from the speaker's asserted point of view.
   - **Deriving it from *yo* is the whole pedagogical point**, because every
     irregular *yo* form is then inherited **for free**. The ***-go* club** of
     Chapters **12–13** — six verbs already learned — transfers whole as *tenga,
@@ -736,48 +736,37 @@ family kept *grātia* even where everyday thanks went elsewhere.
 
 ## Chapter 17 — The future and the conditional, or one weld twice
 
-- **Chapter 17 authored** (`ES-C17-futuro`, `-condicional`, `-practice`): two
-  tenses that turn out to be **one construction** — reviewing Ch.6/10/11/12/13/16
-  via `reviews_of`.
-- **the future** (`ES-C17-futuro`): *hablaré…hablarán*, built on the **whole
-  infinitive** — the one tense that doesn't strip the ending — with a single set of
-  endings for all three conjugations. The etymology carries the lesson: Latin's own
-  future ***amābō*** **died out**, and Romance replaced it with a phrase,
-  **infinitive + *habēre*** (*amāre habeō*, "I **have to** love"), exactly parallel
-  to English *I have to go* drifting toward futurity. That phrase then **fused**:
-  *hablar he* → *hablar-he* → **hablaré**. So the endings are not endings at all
-  historically — they are the **present of *haber*** (*he/has/ha/hemos/han*) worn
-  down to a suffix, and lining the two lists up shows them identical. Framed as **a
-  compound tense that closed up into a simple one**, the mirror image of the
-  parallel-4 tracks' Ch.15 compound past, which stayed open. Closes with the seam
-  still faintly visible next door: **formal European Portuguese** can lodge a
-  pronoun **inside** the fused future — **falá-*lo*-ei** — a leftover, not the norm
-  (Brazilian Portuguese and ordinary speech don't).
-- **the conditional** (`ES-C17-condicional`): *hablaría* — the **same weld**, with
-  the **imperfect** of *haber* swapped in for the present, which is precisely why
-  its endings are the ***-ía/-ías/-íamos/-ían*** the learner already met as Ch.16's
-  *-er/-ir* imperfect. One trick, two tenses of one auxiliary. Uses covered:
-  hypothetical *would*, politeness (*¿podrías?*, *me gustaría*), and
-  **future-in-the-past** (*dijo que hablaría*) — which makes sense once you know an
-  imperfect is buried inside it.
-- **practice**: the **ten irregular stems** sorted into three families —
-  drop-the-vowel (*podré, querré, sabré, habré*); drop-then-**wedge-a-d**
-  (*tendré, pondré, vendré, saldré*), because dropping alone squeezed ***-n'r-***
-  or ***-l'r-*** together and Old Spanish resolved it rather than leave it (with a
-  note that modern Spanish says *honra*/*alrededor* perfectly well, and that
-  medieval Spanish first tried **metathesis** — *terné, porné, verné* — before the
-  *d*-forms won); and the choppers (**diré, haré**). Two payoffs: the **same bent
-  stem serves both tenses** (ten shapes, twenty conjugations), and **all six**
-  members of Ch.12–13's *-go club* resurface here — four as the *-dr-* group,
-  *hacer* and *decir* as the choppers — the oldest, most-used verbs misbehaving in
-  the same places again. Ends on the
-  **future of probability** (*¿Dónde estará?* "Where can he be?"; *Serán las tres*
-  "It must be three"), with the conditional doing the same for the past — a leap
-  that follows naturally from a tense built out of "I **have to**."
-- Note: *haber* has no lesson of its own yet; it appears here as **etymology**, with
-  its forms shown as evidence, not as a paradigm the learner must produce.
-- Taxonomy: namespaced `ES-FUTURE`, `ES-CONDITIONAL`; practice label
-  `CH17-PRACTICE`.
+Chapter 17 now uses schema v2 throughout: explicit order, sub-five-minute
+duration, typed prerequisite closure, shared-spine placement, and twenty-eight
+objective answer contracts. Seven teaching lessons introduce twelve atoms,
+never more than three at once; the terminal checkpoint introduces none and
+retrieves the whole chapter.
+
+The migration replaces full five-person paradigms with a singular-person ramp.
+Learners receive **hablaré, hablarás, hablará**; then **comeré, comerás,
+comerá**; then **viviré, vivirás, vivirá**. The conditional repeats that gentle
+order with **hablaría**, **comería**, and **viviría**. Every plural form waits,
+and each regular verb family gets its own retrieval step before comparison.
+
+Only three already-known irregular verbs enter the chapter: **hacer** uses
+**har-**, **tener** uses **tendr-**, and **poder** uses **podr-**. Each stem is
+practised with the same learned future and conditional endings. The other seven
+stems from the old inventory, including untaught production of *saber* and
+*haber*, remain deferred rather than appearing inside one crowded checkpoint.
+
+Examples stay within the declared corpus and natural combinations:
+**Hablaré español**, **Beberé café**, **Viviré en Madrid**, **Haría café**, and
+**Podría hablar español**. The old politeness, object-pronoun,
+future-in-the-past, Portuguese mesoclisis, and clock-time conjecture examples
+wait for their own prerequisites instead of being translated around gaps.
+
+The etymological bridge is also more careful. Romance future and conditional
+forms grew from constructions pairing an infinitive with forms of Latin
+*habēre*: present material contributed to the future and past or imperfect
+material to the conditional. The lessons acknowledge competing forms and
+layered sound change rather than saying one Latin future simply died, treating
+modern *haber* as a suffix table, or presenting the modern forms as a one-step
+weld. The terminal checkpoint maps all twelve atoms and adds nothing new.
 
 ## Chapter 16 — The imperfect, and choosing between the two pasts
 
