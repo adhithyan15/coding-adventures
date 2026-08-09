@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate and lower BJT model-card `FC` forward-bias depletion coefficient.
 - Validate and lower BJT model-card `MJC` / `MC` base-collector grading
   coefficient.
 - Validate and lower BJT model-card `VJC` / `PC` base-collector junction
