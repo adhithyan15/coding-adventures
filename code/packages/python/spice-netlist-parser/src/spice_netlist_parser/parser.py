@@ -2359,6 +2359,11 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
         )
         if threshold_voltage is not None and not math.isfinite(threshold_voltage):
             raise NetlistParseError("JFET VTO must be finite")
+        channel_length_modulation = params.get("LAMBDA", params.get("LAM"))
+        if channel_length_modulation is not None and not math.isfinite(
+            channel_length_modulation
+        ):
+            raise NetlistParseError("JFET LAMBDA must be finite")
         gate_source_capacitance = params.get("CGS", params.get("CGS0"))
         if gate_source_capacitance is not None and (
             not math.isfinite(gate_source_capacitance)

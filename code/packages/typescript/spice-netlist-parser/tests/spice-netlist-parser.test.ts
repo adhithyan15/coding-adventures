@@ -2279,6 +2279,15 @@ J1 drain gate source fast
     });
   });
 
+  it.each(["LAMBDA", "LAM"])(
+    "rejects non-finite JFET channel-length modulation %s",
+    (parameter) => {
+      expect(() => parseNetlist(`.model fast NJF(${parameter}=1e999)`)).toThrow(
+        "JFET LAMBDA must be finite",
+      );
+    },
+  );
+
   it("parses the PJFET model type alias", () => {
     const parsed = parseNetlist(".model fast PJFET(BETA=2m)\nJ1 drain gate source fast");
 

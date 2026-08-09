@@ -4805,9 +4805,15 @@ the Rust, Python, and TypeScript surfaces together.
      `B` parameter policy.
 
 489. Python and TypeScript Berkeley SPICE JFET threshold-voltage validation parity.
-   - Status: implemented in this JFET threshold-validation slice.
+   - Status: completed in PR 10182.
    - Both parser facades reject non-finite `VTO`, `VT0`, and `VTH` values
      with canonical `VTO` precedence, without changing the unresolved `B`
+     parameter policy.
+
+490. Python and TypeScript Berkeley SPICE JFET channel-length-modulation validation parity.
+   - Status: implemented in this JFET channel-length-modulation validation slice.
+   - Both parser facades reject non-finite `LAMBDA` and `LAM` values with
+     canonical `LAMBDA` precedence, without changing the unresolved `B`
      parameter policy.
 
 ## Backlog

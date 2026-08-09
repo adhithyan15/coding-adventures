@@ -2183,6 +2183,12 @@ def test_parse_jfet_lam_alias_with_canonical_precedence() -> None:
     assert aliased.lambda_ == 0.04
 
 
+@pytest.mark.parametrize("parameter", ["LAMBDA", "LAM"])
+def test_rejects_non_finite_jfet_channel_length_modulation(parameter: str) -> None:
+    with pytest.raises(NetlistParseError, match="JFET LAMBDA must be finite"):
+        parse_netlist(f".model fast NJF({parameter}=1e999)")
+
+
 def test_parse_pjfet_model_type_alias() -> None:
     parsed = parse_netlist(
         ".model fast PJFET(BETA=2m)\nJ1 drain gate source fast"

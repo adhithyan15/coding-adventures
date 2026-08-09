@@ -1652,6 +1652,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("JFET VTO must be finite");
   }
+  const jfetChannelLengthModulation = params.get("LAMBDA") ?? params.get("LAM");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetChannelLengthModulation !== undefined &&
+    !Number.isFinite(jfetChannelLengthModulation)
+  ) {
+    throw new NetlistParseError("JFET LAMBDA must be finite");
+  }
   const gateSourceCapacitance = params.get("CGS") ?? params.get("CGS0");
   if (
     (kind === "NJF" || kind === "PJF") &&
