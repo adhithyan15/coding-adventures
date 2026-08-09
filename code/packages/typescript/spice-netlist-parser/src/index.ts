@@ -1539,6 +1539,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("BJT AF must be finite and non-negative");
   }
+  const bjtForwardExcessPhase = params.get("PTF");
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtForwardExcessPhase !== undefined &&
+    (!Number.isFinite(bjtForwardExcessPhase) || bjtForwardExcessPhase < 0.0)
+  ) {
+    throw new NetlistParseError("BJT PTF must be finite and non-negative");
+  }
   const gateSourceCapacitance = params.get("CGS") ?? params.get("CGS0");
   if (
     (kind === "NJF" || kind === "PJF") &&
@@ -2278,6 +2286,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       nominalTemperature !== undefined ? nominalTemperature + 273.15 : undefined,
       model.params.get("KF") ?? 0.0,
       model.params.get("AF") ?? 1.0,
+      model.params.get("PTF") ?? 0.0,
     );
   }
   if (prefix === "J") {

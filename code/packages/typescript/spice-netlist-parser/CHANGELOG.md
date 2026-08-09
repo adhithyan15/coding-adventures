@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate and lower BJT model-card `PTF` forward excess phase.
 - Validate and lower BJT model-card `AF` flicker-noise exponent.
 - Validate and lower BJT model-card `KF` flicker-noise coefficient.
 - Validate and lower BJT model-card `TNOM` / `T_NOM` nominal temperature.
