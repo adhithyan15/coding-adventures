@@ -1521,6 +1521,25 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — recursive name arrays. Arrays do not require scalar thunks:
+    // every call carries the existing typed descriptor, so the two specialised
+    // siblings may call each other recursively while sharing the original
+    // three cells. The odd/even pair writes 30, 20, and 10 before its base case
+    // sums them to 60 on every standard backend.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer array values[1:3]; integer result; \
+                  integer procedure even(a, n); value n; integer array a; integer n; \
+                    if n = 0 then even := a[1] + a[2] + a[3] \
+                    else begin a[n] := n * 10; even := odd(a, n - 1) end; \
+                  integer procedure odd(a, n); value n; integer array a; integer n; \
+                    if n = 0 then odd := a[1] + a[2] + a[3] \
+                    else begin a[n] := n * 10; odd := even(a, n - 1) end; \
+                  result := even(values, 3) end",
+        expect: Expect::Exit(60),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — direct and forwarded string name formals. The nested
     // `consume` formal shares the outer spelling, so the specialised sibling
     // must retain the original caller string binding through its generated
@@ -6365,6 +6384,37 @@ fn algol_call_by_name_array_forwarding_runs_on_every_available_standard_backend(
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but name-array forwarding did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_recursive_name_array_formals_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure even(a, n)")
+                && program.src.contains("integer procedure odd(a, n)")
+                && program.src.contains("result := even(values, 3)")
+        })
+        .expect("the recursive name-array ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but recursive name-array execution did not complete"
             );
             continue;
         };

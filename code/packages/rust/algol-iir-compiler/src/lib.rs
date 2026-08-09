@@ -362,9 +362,10 @@ struct Compiler {
     /// Monotonic suffix for generated lexical aliases used while a name actual
     /// is forwarded through another specialised sibling.
     by_name_capture_counter: usize,
-    /// Source procedures currently being specialised. A recursive name call
-    /// needs an environment-aware thunk ABI rather than another direct sibling.
-    compiling_by_name_procedures: HashSet<String>,
+    /// Source procedures currently being specialised and their direct sibling
+    /// names. Name-array-only recursion can reuse this descriptor ABI; scalar
+    /// name recursion still needs an environment-aware thunk ABI.
+    compiling_by_name_procedures: HashMap<String, String>,
     /// Switch name → its ordered designational expressions. A `goto s[i]`
     /// evaluates the selected expression at run time, which permits both
     /// conditional and nested switch-list elements.
@@ -409,7 +410,7 @@ impl Default for Compiler {
             suspended_by_name: HashSet::new(),
             by_name_specialization_counter: 0,
             by_name_capture_counter: 0,
-            compiling_by_name_procedures: HashSet::new(),
+            compiling_by_name_procedures: HashMap::new(),
             switches: HashMap::new(),
             resolving_switches: HashSet::new(),
             switch_expansion_steps: 0,
@@ -1981,10 +1982,22 @@ impl Compiler {
         sig: &ProcSig,
         actuals: &[&GrammarASTNode],
     ) -> Result<String, CompileError> {
-        if !self
+        let has_scalar_name_formal = sig.params.iter().any(|param| {
+            param.mode == ProcedureParamMode::Name
+                && matches!(param.ty, ProcedureParamType::Scalar(_))
+        });
+        if let Some(specialised_name) = self
             .compiling_by_name_procedures
-            .insert(source_name.to_string())
+            .get(source_name)
+            .cloned()
         {
+            // Name arrays already travel through the ordinary typed descriptor
+            // ABI, so a recursive call can re-enter the sibling currently being
+            // compiled. Scalar names instead carry caller expressions and need
+            // a true runtime thunk before recursion is sound.
+            if !has_scalar_name_formal {
+                return Ok(specialised_name);
+            }
             return Err(CompileError::Unsupported(format!(
                 "recursive call-by-name procedure {source_name:?}"
             )));
@@ -2023,6 +2036,8 @@ impl Compiler {
             let suffix = self.by_name_specialization_counter;
             self.by_name_specialization_counter += 1;
             let specialised_name = format!("__algol_by_name_{source_name}_{suffix}");
+            self.compiling_by_name_procedures
+                .insert(source_name.to_string(), specialised_name.clone());
             let function = self.compile_procedure_with_bindings(
                 &proc_decl,
                 Some(specialised_name.clone()),
@@ -7413,6 +7428,57 @@ mod tests {
                 (array_param_dim_lower_slot("a", 1), "i64".to_string()),
             ],
             "a name array retains the complete ordinary descriptor ABI"
+        );
+    }
+
+    #[test]
+    fn call_by_name_array_formals_support_direct_recursion() {
+        let src = "begin integer array values[1:3]; integer result; \
+                   integer procedure fill(a, n); value n; integer array a; integer n; \
+                     if n = 0 then fill := a[1] + a[2] + a[3] \
+                     else begin a[n] := n * 10; fill := fill(a, n - 1) end; \
+                   result := fill(values, 3) end";
+        assert_eq!(run_i64(src), 60);
+
+        let module = compile_source(src, "call_by_name_array_recursion").expect("compiles");
+        let fill = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("__algol_by_name_fill_"))
+            .expect("a recursive name array must lower to a specialised sibling");
+        assert!(
+            fill.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first() == Some(&Operand::Var(fill.name.clone()))
+            }),
+            "the recursive call must re-enter the current specialised sibling"
+        );
+    }
+
+    #[test]
+    fn call_by_name_array_formals_support_mutual_recursion() {
+        let src = "begin integer array values[1:3]; integer result; \
+                   integer procedure even(a, n); value n; integer array a; integer n; \
+                     if n = 0 then even := a[1] + a[2] + a[3] \
+                     else begin a[n] := n * 10; even := odd(a, n - 1) end; \
+                   integer procedure odd(a, n); value n; integer array a; integer n; \
+                     if n = 0 then odd := a[1] + a[2] + a[3] \
+                     else begin a[n] := n * 10; odd := even(a, n - 1) end; \
+                   result := even(values, 3) end";
+        assert_eq!(run_i64(src), 60);
+
+        let module = compile_source(src, "call_by_name_array_mutual_recursion")
+            .expect("compiles");
+        assert!(
+            module
+                .functions
+                .iter()
+                .any(|function| function.name.starts_with("__algol_by_name_even_"))
+                && module
+                    .functions
+                    .iter()
+                    .any(|function| function.name.starts_with("__algol_by_name_odd_")),
+            "each member of a mutually recursive name-array group needs a sibling"
         );
     }
 
