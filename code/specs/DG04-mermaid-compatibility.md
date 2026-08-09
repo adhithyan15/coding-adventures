@@ -116,10 +116,12 @@ Nested Mermaid 11.16.1 control blocks (`loop`, `opt`, `alt`/`else`, `par`/`and`,
 `par_over`, `critical`/`option`, `break`, and `rect`) lower into ordered semantic
 block events. Sequence layout resolves those events into nested frames and
 branch dividers before existing PaintInstructions render them. Participant
-creation/destruction and metadata, links, and advanced arrow variants remain
-compatibility work. The family remains partial until those forms and the pinned
-upstream corpus pass; unsupported forms must fail grammar validation rather
-than degrade silently.
+`create` and `destroy` statements lower into lifecycle events; layout uses them
+to place dynamic participant headers, bound lifelines, and emit destruction
+markers. Participant configuration metadata, links, and advanced arrow variants
+remain compatibility work. The family remains partial until those forms and the
+pinned upstream corpus pass; unsupported forms must fail grammar validation
+rather than degrade silently.
 
 ### Structural Groups
 

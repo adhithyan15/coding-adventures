@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.6.0
+
+- Added sequence participant creation/destruction events and destruction geometry.
+
 ## 0.5.0
 
 - Added nested sequence block start, branch, and end events.

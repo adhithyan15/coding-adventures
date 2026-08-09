@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.0
+
+- Added Mermaid sequence participant lifecycle tokens.
+
 ## 0.4.0
 
 - Added tokens for every Mermaid 11.16.1 sequence control block and branch separator.

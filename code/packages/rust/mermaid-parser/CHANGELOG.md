@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0
+
+- Added grammar-backed `create participant`, `create actor`, and `destroy` lowering.
+
 ## 0.5.0
 
 - Added recursive grammar and semantic lowering for nested sequence control blocks.

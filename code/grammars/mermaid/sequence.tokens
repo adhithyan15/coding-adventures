@@ -28,6 +28,8 @@ WORD                     = /[^ \t\r\n:,+-]+/
 keywords:
   participant
   actor
+  create
+  destroy
   as
   activate
   deactivate

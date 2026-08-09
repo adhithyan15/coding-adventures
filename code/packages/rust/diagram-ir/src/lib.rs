@@ -1,6 +1,6 @@
-//! diagram-ir v0.5.0 — DG00/DG04 semantic IR
+//! diagram-ir v0.6.0 — DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.5.0";
+pub const VERSION: &str = "0.6.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -217,6 +217,12 @@ pub enum SequenceEvent {
         participant: String,
         active: bool,
     },
+    ParticipantCreated {
+        participant: String,
+    },
+    ParticipantDestroyed {
+        participant: String,
+    },
     Note {
         participants: Vec<String>,
         placement: SequenceNotePlacement,
@@ -274,6 +280,11 @@ pub enum LayoutedSequenceItem {
         x: f64,
         y1: f64,
         y2: f64,
+    },
+    Destruction {
+        participant: String,
+        x: f64,
+        y: f64,
     },
     Note {
         x: f64,
@@ -850,8 +861,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn version_is_0_5_0() {
-        assert_eq!(VERSION, "0.5.0");
+    fn version_is_0_6_0() {
+        assert_eq!(VERSION, "0.6.0");
     }
     #[test]
     fn default_direction_is_tb() {
