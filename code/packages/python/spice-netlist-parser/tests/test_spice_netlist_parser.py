@@ -2035,6 +2035,33 @@ def test_rejects_invalid_bjt_base_resistance_half_current(value: str) -> None:
         parse_netlist(f".model fast NPN(IRB={value})")
 
 
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("0.4", 0.4), ("1", 1.0)])
+def test_parse_bjt_base_collector_capacitance_fraction(
+    value: str, expected: float
+) -> None:
+    parsed = parse_netlist(f".model fast NPN(XCJC={value})\nQ1 col base emit fast")
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Xcjc == expected
+
+
+def test_bjt_omitted_base_collector_capacitance_fraction_defaults_to_one() -> None:
+    parsed = parse_netlist(".model fast NPN\nQ1 col base emit fast")
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Xcjc == 1.0
+
+
+@pytest.mark.parametrize("value", ["-0.1", "1.1", "1e999"])
+def test_rejects_invalid_bjt_base_collector_capacitance_fraction(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="BJT XCJC must be finite and between zero and one"
+    ):
+        parse_netlist(f".model fast NPN(XCJC={value})")
+
+
 def test_parse_jfet_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
