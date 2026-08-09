@@ -122,6 +122,38 @@ export function validate(input: ValidateInput): Issue[] {
     else info("core-coverage", msg);
   }
 
+  // A prose part list is not evidence about pen lifts. Verified lift counts
+  // therefore travel as an inseparable pair: the count plus its cited source.
+  // Anything else remains an explicitly unverified part order in the app.
+  for (const [scriptId, script] of Object.entries(scripts)) {
+    for (const letter of script.letters) {
+      if (letter.strokeOrder.length === 0) continue;
+      const hasPenLifts = letter.penLifts !== undefined;
+      const hasSource = letter.strokeOrderSource !== undefined;
+      const subject = `${scriptId} ${letter.glyph}`;
+
+      if (hasPenLifts !== hasSource) {
+        err(
+          "partial-stroke-verification",
+          `${subject}: penLifts and strokeOrderSource must be supplied together`,
+        );
+        continue;
+      }
+      if (!hasPenLifts) continue;
+
+      if (!Number.isInteger(letter.penLifts) || letter.penLifts! < 0) {
+        err("invalid-pen-lifts", `${subject}: penLifts must be a non-negative integer`);
+      }
+      const source = letter.strokeOrderSource!;
+      if (source.citation.trim().length < 10) {
+        err("invalid-stroke-order-source", `${subject}: stroke-order citation is too short`);
+      }
+      if (!/^https?:\/\/\S+$/.test(source.url)) {
+        err("invalid-stroke-order-source", `${subject}: stroke-order source needs an HTTP(S) URL`);
+      }
+    }
+  }
+
   return issues;
 }
 

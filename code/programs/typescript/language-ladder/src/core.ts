@@ -83,12 +83,24 @@ export interface LetterView {
   components: string[];
   strokeOrder: string[];
   strokeOrderNote: string;
+  /** Whether the prose is backed by a cited pen path or names parts only. */
+  handwritingEvidence: "verified-ductus" | "parts-only";
   notes: string;
   falseFriend: boolean;
   /** Set when this is a retroflex/alveolar special consonant (ḷ/ṟ/ṉ). */
   special: SpecialConsonant | null;
   /** How many distinct strokes/pieces — a rough "how hard to draw" signal. */
   strokeCount: number;
+}
+
+/** Learner-facing heading that never upgrades a prose part list into lift advice. */
+export function handwritingHeading(
+  letter: Pick<LetterView, "strokeOrderNote">,
+  hasVerifiedPenPath: boolean,
+): string {
+  return hasVerifiedPenPath
+    ? `Write it — verified pen path (${letter.strokeOrderNote})`
+    : "Shape parts — usual order (pen lifts unverified)";
 }
 
 /** Turn one raw `Letter` into its view-model. */
@@ -102,6 +114,10 @@ export function toLetterView(letter: Letter): LetterView {
     components: letter.components ?? [],
     strokeOrder: letter.strokeOrder ?? [],
     strokeOrderNote: letter.strokeOrderNote ?? "",
+    handwritingEvidence:
+      letter.penLifts !== undefined && letter.strokeOrderSource !== undefined
+        ? "verified-ductus"
+        : "parts-only",
     notes: letter.notes ?? "",
     falseFriend: isFalseFriend(letter),
     special: specialConsonant(letter),

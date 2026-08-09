@@ -11,6 +11,7 @@ import { SCRIPTS } from "./data.ts";
 import {
   buildScriptView,
   scriptSummary,
+  handwritingHeading,
   type LetterView,
   type ScriptSummary,
 } from "./core.ts";
@@ -676,11 +677,12 @@ function renderDetail(v: LetterView, siblings: Sibling[] = []): HTMLElement {
   // A handful of letters go further: an authored, font-validated PEN PATH, so
   // the section becomes a stroke-by-stroke build-up instead of a list. Only ம
   // has one today (`DUCTUS` admits no letter without a cited source), and every
-  // other letter falls back to the prose list below, unchanged.
+  // other letter falls back to a prose PART list. Its heading explicitly says
+  // that numbering does not claim separate strokes or any particular lifts.
   if (ductusFor(v.glyph)) {
-    d.appendChild(section(`Write it — stroke order (${v.strokeOrderNote})`, renderDuctusSection(v)));
+    d.appendChild(section(handwritingHeading(v, true), renderDuctusSection(v)));
   } else if (v.strokeOrder.length > 0) {
-    d.appendChild(section(`Write it — stroke order (${v.strokeOrderNote})`, orderedListOf(v.strokeOrder)));
+    d.appendChild(section(handwritingHeading(v, false), orderedListOf(v.strokeOrder)));
   }
   if (v.notes) {
     const note = el("p", "detail__notes");

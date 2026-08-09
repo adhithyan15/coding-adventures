@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseFont, boundsOf, type Contour } from "../src/truetype";
+import { SCRIPTS } from "../src/data";
 import {
   DUCTUS,
   penPath,
@@ -183,6 +184,27 @@ describe("handwriting ductus", () => {
       expect(letter.source, `${letter.glyph} has no source`).toBeDefined();
       expect(letter.source.citation.length, `${letter.glyph} citation is empty`).toBeGreaterThan(10);
       expect(letter.source.url, `${letter.glyph} source url is not a real link`).toMatch(/^https?:\/\/\S+$/);
+    }
+  });
+
+  it("every verified prose claim has the same font-checked ductus and source", () => {
+    const verified = SCRIPTS.flatMap((script) =>
+      script.letters
+        .filter((letter) => letter.penLifts !== undefined || letter.strokeOrderSource !== undefined)
+        .map((letter) => ({ script: script.script, letter })),
+    );
+    expect(verified).toHaveLength(letters.length);
+    for (const { script, letter } of verified) {
+      const ductus = DUCTUS[letter.glyph];
+      expect(ductus, `${script} ${letter.glyph} claims verification without a ductus`).toBeDefined();
+      expect(letter.penLifts).toBe(penLifts(ductus));
+      expect(letter.strokeOrderSource).toEqual(ductus.source);
+    }
+    for (const ductus of letters) {
+      expect(
+        verified.some(({ letter }) => letter.glyph === ductus.glyph),
+        `${ductus.glyph} has a ductus but no verified prose claim`,
+      ).toBe(true);
     }
   });
 

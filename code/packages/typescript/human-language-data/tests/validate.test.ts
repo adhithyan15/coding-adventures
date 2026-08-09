@@ -158,6 +158,68 @@ describe("validate", () => {
     expect(hasErrors(issues)).toBe(false);
   });
 
+  it("requires pen-lift counts and their cited source to travel together", () => {
+    const script = (letter: ScriptData["letters"][number]): ScriptData => ({
+      script: "test",
+      name: "Test",
+      font: "f",
+      direction: "ltr",
+      system: "alphabet",
+      letters: [letter],
+    });
+    const base = {
+      glyph: "x",
+      sound: "x",
+      role: "letter",
+      components: ["part"],
+      strokeOrder: ["part"],
+      strokeOrderNote: "part order",
+    };
+
+    for (const partial of [
+      { ...base, penLifts: 0 },
+      {
+        ...base,
+        strokeOrderSource: { citation: "A real teaching primer", url: "https://example.test/primer" },
+      },
+    ]) {
+      const issues = validate({ taxonomy, lessons: [], scripts: { test: script(partial) } });
+      expect(issues.some((i) => i.code === "partial-stroke-verification")).toBe(true);
+    }
+  });
+
+  it("validates a claimed pen-lift count and its provenance", () => {
+    const verified: ScriptData = {
+      script: "test",
+      name: "Test",
+      font: "f",
+      direction: "ltr",
+      system: "alphabet",
+      letters: [
+        {
+          glyph: "x",
+          sound: "x",
+          role: "letter",
+          components: ["part"],
+          strokeOrder: ["part"],
+          strokeOrderNote: "verified",
+          penLifts: 0,
+          strokeOrderSource: {
+            citation: "A real teaching primer",
+            url: "https://example.test/primer",
+          },
+        },
+      ],
+    };
+    expect(validate({ taxonomy, lessons: [], scripts: { test: verified } })).toEqual([]);
+
+    verified.letters[0].penLifts = -1;
+    verified.letters[0].strokeOrderSource = { citation: "short", url: "not-a-url" };
+    const issues = validate({ taxonomy, lessons: [], scripts: { test: verified } });
+    expect(issues.some((i) => i.code === "invalid-pen-lifts")).toBe(true);
+    expect(issues.filter((i) => i.code === "invalid-stroke-order-source")).toHaveLength(2);
+  });
+
   it("summarize counts levels", () => {
     const issues = validate({ taxonomy, lessons: [good("spanish", "ES1", "bad!")] });
     expect(summarize(issues)).toMatch(/error\(s\)/);

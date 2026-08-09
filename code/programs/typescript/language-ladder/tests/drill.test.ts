@@ -20,6 +20,7 @@ function lv(glyph: string, over: Partial<LetterView> = {}): LetterView {
     components: [],
     strokeOrder: [],
     strokeOrderNote: "",
+    handwritingEvidence: "parts-only",
     notes: "",
     falseFriend: false,
     special: null,

@@ -26,9 +26,12 @@ export interface Letter {
   forms?: Record<string, string>;
   /** The literal "pieces" a learner draws — the heart of "break it apart". */
   components: string[];
-  /** A conventional stroke order for paper practice. */
+  /** Named shape parts in their usual writing order; not a pen-lift count. */
   strokeOrder: string[];
   strokeOrderNote: string;
+  /** Present together only when a cited, font-checked ductus verifies the claim. */
+  penLifts?: number;
+  strokeOrderSource?: { citation: string; url: string; variation?: string };
   /** Free-text notes; may flag a "FALSE FRIEND" of a Latin letter. */
   notes?: string;
 }
