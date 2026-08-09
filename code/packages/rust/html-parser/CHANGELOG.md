@@ -6,6 +6,11 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Plaintext elements left open at EOF across the document shell and templates
+  now report their required parse error. Text-mode lexer handoff now occurs
+  only after tree construction accepts the start tag, so plaintext rejected in
+  or after a frameset remains tokenized as markup and reports the rejected
+  start and end tags. This covers 12 previously silent malformed corpus cases.
 - Malformed script end tags that reach EOF while the lexer is assembling the
   tag now report `eof-in-tag`, covering 14 previously silent malformed corpus
   cases without changing DOM recovery or undeclared-diagnostic coverage.
