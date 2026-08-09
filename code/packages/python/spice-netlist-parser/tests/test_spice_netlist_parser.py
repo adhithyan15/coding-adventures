@@ -3500,6 +3500,33 @@ def test_lowers_valid_mosfet_model_sidewall_capacitance(
     assert isclose(mosfet.model.model.params.CJSW, expected)
 
 
+@pytest.mark.parametrize("gate_source_overlap", ["-1p", "1e999"])
+def test_rejects_invalid_mosfet_model_gate_source_overlap_capacitance(
+    gate_source_overlap: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET CGSO must be finite and non-negative",
+    ):
+        parse_netlist(
+            f".model nfast NMOS(CGSO={gate_source_overlap})\nM1 d g s b nfast\n"
+        )
+
+
+@pytest.mark.parametrize(
+    ("gate_source_overlap", "expected"), [("0", 0.0), ("3p", 3.0e-12)]
+)
+def test_lowers_valid_mosfet_model_gate_source_overlap_capacitance(
+    gate_source_overlap: str, expected: float
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS(CGSO={gate_source_overlap})\nM1 d g s b nfast\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.CGSO, expected)
+
+
 @pytest.mark.parametrize("junction_current", ["-1p", "1e999"])
 def test_rejects_invalid_mosfet_model_junction_current(
     junction_current: str,
