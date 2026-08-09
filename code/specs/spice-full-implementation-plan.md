@@ -4632,9 +4632,15 @@ the Rust, Python, and TypeScript surfaces together.
      reverse-beta field.
 
 459. Python and TypeScript Berkeley SPICE BJT reverse-beta-roll-off parity.
-   - Status: implemented in this BJT IKR parity slice.
+   - Status: completed in PR 10126.
    - Both parser facades validate finite, non-negative `IKR` values and lower
      them into the shared engine reverse-beta-roll-off-current field.
+
+460. Python and TypeScript Berkeley SPICE BJT nominal-temperature parity.
+   - Status: implemented in this BJT TNOM parity slice.
+   - Both parser facades validate positive finite `TNOM` / `T_NOM` values,
+     prefer `T_NOM`, convert Celsius model-card values to Kelvin, and lower the
+     result into the shared engine nominal-temperature field.
 
 ## Backlog
 

@@ -1299,6 +1299,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
         base_collector_leakage_current = model.params.get(
             "ISC", model.params.get("C4", 0.0) * saturation_current
         )
+        nominal_temperature = model.params.get("T_NOM", model.params.get("TNOM"))
         return BJT(
             name,
             fields[1],
@@ -1340,6 +1341,9 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             Xtb=model.params.get("XTB", 0.0),
             beta_r=model.params.get("BR", model.params.get("BETA_R", 1.0)),
             Ikr=model.params.get("IKR", 0.0),
+            Tnom=(
+                nominal_temperature + 273.15 if nominal_temperature is not None else None
+            ),
         )
     if prefix == "J":
         _require_fields(fields, 5, "JFET")
@@ -2241,6 +2245,11 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             or reverse_beta_rolloff_current < 0.0
         ):
             raise NetlistParseError("BJT IKR must be finite and non-negative")
+        nominal_temperature = params.get("T_NOM", params.get("TNOM"))
+        if nominal_temperature is not None and (
+            not math.isfinite(nominal_temperature) or nominal_temperature <= 0.0
+        ):
+            raise NetlistParseError("BJT TNOM must be finite and positive")
     if kind in {"NJF", "PJF"}:
         gate_source_capacitance = params.get("CGS", params.get("CGS0"))
         if gate_source_capacitance is not None and (

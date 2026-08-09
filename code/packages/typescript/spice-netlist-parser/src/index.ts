@@ -1515,6 +1515,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("BJT IKR must be finite and non-negative");
   }
+  const bjtNominalTemperature = params.get("T_NOM") ?? params.get("TNOM");
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtNominalTemperature !== undefined &&
+    (!Number.isFinite(bjtNominalTemperature) || bjtNominalTemperature <= 0.0)
+  ) {
+    throw new NetlistParseError("BJT TNOM must be finite and positive");
+  }
   const gateSourceCapacitance = params.get("CGS") ?? params.get("CGS0");
   if (
     (kind === "NJF" || kind === "PJF") &&
@@ -2208,6 +2216,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       (model.params.get("C2") ?? 0.0) * saturationCurrent;
     const baseCollectorLeakageCurrent = model.params.get("ISC") ??
       (model.params.get("C4") ?? 0.0) * saturationCurrent;
+    const nominalTemperature = model.params.get("T_NOM") ?? model.params.get("TNOM");
     return bjt(
       name,
       fields[1],
@@ -2250,6 +2259,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("XTB") ?? 0.0,
       model.params.get("BR") ?? model.params.get("BETA_R") ?? 1.0,
       model.params.get("IKR") ?? 0.0,
+      nominalTemperature !== undefined ? nominalTemperature + 273.15 : undefined,
     );
   }
   if (prefix === "J") {

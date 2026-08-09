@@ -1800,6 +1800,36 @@ def test_rejects_invalid_bjt_reverse_beta_rolloff_current(value: str) -> None:
         parse_netlist(f".model fast NPN(IKR={value})")
 
 
+@pytest.mark.parametrize(("alias", "value"), [("TNOM", "50"), ("T_NOM", "75")])
+def test_parse_bjt_nominal_temperature(alias: str, value: str) -> None:
+    parsed = parse_netlist(
+        f".model fast NPN({alias}={value})\nQ1 col base emit fast"
+    )
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Tnom == pytest.approx(float(value) + 273.15)
+
+
+def test_bjt_t_nom_takes_precedence_over_tnom() -> None:
+    parsed = parse_netlist(
+        ".model fast NPN(TNOM=-1 T_NOM=50)\nQ1 col base emit fast"
+    )
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Tnom == pytest.approx(323.15)
+
+
+@pytest.mark.parametrize("alias", ["TNOM", "T_NOM"])
+@pytest.mark.parametrize("value", ["0", "-1", "1e999"])
+def test_rejects_invalid_bjt_nominal_temperature(alias: str, value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="BJT TNOM must be finite and positive"
+    ):
+        parse_netlist(f".model fast NPN({alias}={value})")
+
+
 def test_parse_jfet_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """

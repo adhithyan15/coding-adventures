@@ -1869,6 +1869,40 @@ Q1 col base emit fast
     );
   });
 
+  it.each([
+    ["TNOM", "50"],
+    ["T_NOM", "75"],
+  ])("parses BJT nominal temperature %s=%s", (alias, value) => {
+    const parsed = parseNetlist(`.model fast NPN(${alias}=${value})\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      nominalTemperatureKelvin: Number(value) + 273.15,
+    });
+  });
+
+  it("gives BJT T_NOM precedence over TNOM", () => {
+    const parsed = parseNetlist(`.model fast NPN(TNOM=-1 T_NOM=50)\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      nominalTemperatureKelvin: 323.15,
+    });
+  });
+
+  it.each([
+    ["TNOM", "0"],
+    ["TNOM", "-1"],
+    ["TNOM", "1e999"],
+    ["T_NOM", "0"],
+    ["T_NOM", "-1"],
+    ["T_NOM", "1e999"],
+  ])("rejects invalid BJT nominal temperature %s=%s", (alias, value) => {
+    expect(() => parseNetlist(`.model fast NPN(${alias}=${value})`)).toThrow(
+      "BJT TNOM must be finite and positive",
+    );
+  });
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)
