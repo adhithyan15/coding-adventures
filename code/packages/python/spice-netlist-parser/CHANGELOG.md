@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Validate and lower BJT model-card `MJC` / `MC` base-collector grading
+  coefficient.
 - Validate and lower BJT model-card `VJC` / `PC` base-collector junction
   potential.
 - Validate and lower BJT model-card `MJE` / `ME` base-emitter grading
