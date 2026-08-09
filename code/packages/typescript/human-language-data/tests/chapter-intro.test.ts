@@ -6,10 +6,11 @@ import { loadTrackChapters } from "../src/loader.js";
 import { renderBookChapter } from "../src/book.js";
 import { loadLessons } from "../src/loader.js";
 
-// `.tex` only: generatedBookOutputs also carries the generated hashes JSON, which is
-// not a chapter and has no opening.
+// Numbered chapter `.tex` only: generatedBookOutputs also carries the generated
+// hashes JSON and canonical reference appendices, neither of which has a chapter
+// capability opening.
 const generated = [...generatedBookOutputs().entries()]
-  .filter(([path]) => path.endsWith(".tex"))
+  .filter(([path]) => /\/ch\d+[^/]*\.tex$/.test(path))
   .map(([, tex]) => tex);
 
 describe("the chapter opening", () => {
@@ -33,7 +34,7 @@ describe("the chapter opening", () => {
           ?.chapters.find((c) => c.chapter === chapter)?.canDo,
       );
     const withoutOpening = [...generatedBookOutputs().entries()]
-      .filter(([path]) => path.endsWith(".tex"))
+      .filter(([path]) => /\/ch\d+[^/]*\.tex$/.test(path))
       .filter(([, tex]) => !tex.includes("\\begin{chapteropening}"))
       .map(([path]) => path);
 

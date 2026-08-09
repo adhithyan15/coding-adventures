@@ -4,6 +4,7 @@ import {
   bookVoice,
   renderBookChapter,
   renderInlineMarkdown,
+  renderReferenceAppendix,
 } from "../src/book.js";
 import { parseLesson } from "../src/parse.js";
 
@@ -100,6 +101,50 @@ describe("canonical LaTeX chapter rendering", () => {
     expect(generated.tex).toContain("\\begin{tabularx}{\\linewidth}");
     expect(generated.tex).toContain("\\textbf{person} & \\textbf{form} \\\\");
     expect(generated.tex).toContain("I & \\textbf{hablo} \\\\");
+  });
+
+  it("renders a canonical Markdown reference as structured book back matter", () => {
+    const generated = renderReferenceAppendix(
+      {
+        language: "test",
+        title: "Pronunciation & Script Reference",
+        source: "test/pronunciation-reference.md",
+        output: "test/book/chapters/appendix-pronunciation.tex",
+        unicodeScript: "Devanagari",
+        scriptCommand: "dv",
+      },
+      `# Test — Pronunciation Reference
+
+A [repository note](../data/script.json) and an [external source](https://example.test/ref).
+
+## Read देवनागरी
+
+1. Start with **दे**.
+   Keep the continuation with the same step.
+2. Then read **वन**.
+
+### Sound ids
+
+| id | anchor |
+|---|---|
+| \`first\` | **दे** |
+`,
+    );
+
+    expect(generated).toContain("% GENERATED FILE. Edit test/pronunciation-reference.md");
+    expect(generated).toContain("\\chapter*{Pronunciation \\& Script Reference}");
+    expect(generated).toContain("A repository note and an \\href{https://example.test/ref}");
+    expect(generated).toContain("\\section*{Read \\dv{देवनागरी}}");
+    expect(generated).toContain("\\begin{enumerate}\n\\raggedright");
+    expect(generated).toContain(
+      "\\item Start with \\textbf{\\dv{दे}}. Keep the continuation with the same step.",
+    );
+    expect(generated).toContain("\\subsection*{Sound ids}");
+    expect(generated).toContain(
+      "\\item \\begin{minipage}[t]{\\linewidth}\n  \\textbf{id:} \\texttt{first}",
+    );
+    expect(generated).toContain("\\par \\textbf{anchor:} \\textbf{\\dv{दे}}");
+    expect(generated).not.toContain("# Test");
   });
 
   it("keeps indented Markdown quote continuations in one LaTeX quote", () => {

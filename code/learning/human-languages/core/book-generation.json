@@ -145,6 +145,47 @@
       }
     ]
   },
+  "referenceAppendices": [
+    {
+      "language": "chinese",
+      "title": "Pronunciation & Character Guide",
+      "source": "chinese/pronunciation-reference.md",
+      "output": "chinese/book/chapters/appendix-pronunciation.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
+    },
+    {
+      "language": "japanese",
+      "title": "Pronunciation & Writing Reference",
+      "source": "japanese/pronunciation-reference.md",
+      "output": "japanese/book/chapters/appendix-pronunciation.tex",
+      "scriptSet": "japanese-main"
+    },
+    {
+      "language": "persian",
+      "title": "Pronunciation & Script Reference",
+      "source": "persian/pronunciation-reference.md",
+      "output": "persian/book/chapters/appendix-pronunciation.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
+    },
+    {
+      "language": "russian",
+      "title": "Pronunciation & Cyrillic Reference",
+      "source": "russian/pronunciation-reference.md",
+      "output": "russian/book/chapters/appendix-pronunciation.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "urdu",
+      "title": "Pronunciation & Script Reference",
+      "source": "urdu/pronunciation-reference.md",
+      "output": "urdu/book/chapters/appendix-pronunciation.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    }
+  ],
   "targets": [
     {
       "language": "arabic",

@@ -1,0 +1,64 @@
+% GENERATED FILE. Edit chinese/pronunciation-reference.md, then run npm run generate:books.
+
+\chapter*{Pronunciation \& Character Guide}
+\addcontentsline{toc}{chapter}{Pronunciation \& Character Guide}
+\markboth{Pronunciation}{Pronunciation}
+
+Reference material, never a gate. Every lesson teaches the sounds its own word needs, inline, and links here for anyone who wants the fuller picture. Nobody has to read this page before Lesson 1, and most readers never will.
+
+The ids in each heading are the values a lesson's \texttt{sounds:} frontmatter list points at.
+
+\section*{Why this page is different from every other track's}
+
+In an alphabetic or abugida track, \textquotedblleft{}the sounds you'll need\textquotedblright{} is a list of \emph{segments}: this letter is silent, that vowel is long, this consonant is retroflex. Each fact is attached to a letter, and the letter is on the page.
+
+Mandarin adds a second, orthogonally different kind of fact. \textbf{Tone} rides on a whole syllable, is not written in the characters at all, and is \emph{phonemic} — it distinguishes words the way a consonant does. A segmental note cannot express it. So this page has two halves: tones first, because they are the part an English speaker has no instinct for, then the segments.
+
+The machine-readable form of the first half lives in the Chinese script reference under \texttt{tones} and \texttt{toneSandhi}.
+
+\section*{Tones}
+
+Mandarin has four tones plus a neutral one. Pinyin writes the tone as a mark over the vowel; the characters do not record it anywhere.
+
+The classic demonstration uses one syllable, \emph{ma}:
+
+\begin{itemize}
+\raggedright
+\setlength{\itemsep}{0.35em}
+  \item \texttt{tone-1} — first, high level (contour 55). Held high and flat, one steady note. \emph{mā} — mother.
+  \item \texttt{tone-2} — second, rising (35). Climbs from mid to high, like the pitch on a surprised English \textquotedblleft{}huh?\textquotedblright{}. \emph{má} — hemp.
+  \item \texttt{tone-3} — third, dipping (214). Sinks low and creaky; said alone it rises again a little at the end, but in running speech it usually just stays low. \emph{mǎ} — horse.
+  \item \texttt{tone-4} — fourth, falling (51). Drops sharply from high to low, like a clipped \textquotedblleft{}No!\textquotedblright{}. \emph{mà} — to scold.
+  \item \texttt{tone-neutral} — unstressed. Short and light, with no mark written at all, pitched by whatever came before it. \emph{ma} — a question particle.
+\end{itemize}
+
+\subsection*{tone-lexical — tone is part of the word}
+
+The single fact that matters most, taught in the first lesson: changing the pitch of a Mandarin syllable changes \textbf{which word it is}, not how you feel about it. \emph{mā}, \emph{má}, \emph{mǎ} and \emph{mà} are four separate words. English uses pitch for mood and emphasis only, so this is a genuinely new job for an English speaker's voice.
+
+\subsection*{tone-sandhi-third — two third tones in a row}
+
+\textbf{When a third tone is followed by another third tone, the first is spoken as a rising second tone.}
+
+Written \textbf{nǐ hǎo}, said \textbf{ní hǎo}. Neither the pinyin nor the characters record the change; dictionaries print the citation tone each word carries alone. This is why a reader who trusts only the page mispronounces the commonest greeting in the language.
+
+\subsection*{tone-sandhi-bu — \zh{不} before a fourth tone}
+
+\zh{不} \emph{bù} is said \emph{bú} when the next syllable has a fourth tone: \emph{bù shì} $\to$ \emph{bú shì}. Recorded here for completeness; no Chapter 1 lesson needs it.
+
+\section*{Segments}
+
+Pinyin is a romanization, not English spelling. A few letters do work you would not guess.
+
+\begin{itemize}
+\raggedright
+\setlength{\itemsep}{0.35em}
+  \item \texttt{pinyin-n} — as in English \emph{no}.
+  \item \texttt{pinyin-i} — after most consonants, the \emph{ee} of \textquotedblleft{}see\textquotedblright{}. (After \emph{z-, c-, s-, zh-, ch-, sh-, r-} it is a different, buzzier vowel; no Chapter 1 word uses those.)
+  \item \texttt{pinyin-h} — rougher than English \emph{h}, scraped at the back of the mouth, closer to the \emph{ch} of Scottish \emph{loch} softened.
+  \item \texttt{pinyin-ao} — one gliding vowel, the \emph{ow} of \textquotedblleft{}how\textquotedblright{}. Not two syllables.
+\end{itemize}
+
+\section*{The characters themselves}
+
+Stroke shapes, components, and stroke order for every character this track has introduced live in Chinese script reference. Unlike the Indic scripts in this curriculum, where stroke order is conventional, Chinese stroke order is a \textbf{taught, standardised system} — top before bottom, left before right, horizontal before vertical, outside before inside, and close a box last. That file marks its stroke orders \texttt{authoritative} for exactly that reason.

@@ -55,12 +55,12 @@ there, which is the wall HL00 exists to remove.
 
 It does not claim a stroke count as a prerequisite. Stroke order for kana and
 kanji is real and taught, and it lives in
-[`../data/scripts/japanese.json`](../data/scripts/japanese.json) beside each
+[Japanese script reference](../data/scripts/japanese.json) beside each
 sign, to be consulted when a hand is free.
 
 ## Sources
 
-- [Wiktionary: はい](https://en.wiktionary.org/wiki/%E3%81%AF%E3%81%84)
-- [Wiktionary: 今日は](https://en.wiktionary.org/wiki/%E4%BB%8A%E6%97%A5%E3%81%AF)
-- [Wiktionary: 有難う](https://en.wiktionary.org/wiki/%E6%9C%89%E9%9B%A3%E3%81%86)
-- [Wiktionary: コーヒー](https://en.wiktionary.org/wiki/%E3%82%B3%E3%83%BC%E3%83%92%E3%83%BC)
+- Wiktionary: [はい](https://en.wiktionary.org/wiki/%E3%81%AF%E3%81%84),
+  [今日は](https://en.wiktionary.org/wiki/%E4%BB%8A%E6%97%A5%E3%81%AF),
+  [有難う](https://en.wiktionary.org/wiki/%E6%9C%89%E9%9B%A3%E3%81%86), and
+  [コーヒー](https://en.wiktionary.org/wiki/%E3%82%B3%E3%83%BC%E3%83%92%E3%83%BC).

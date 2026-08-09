@@ -19,8 +19,8 @@ distinguishes words the way a consonant does. A segmental note cannot express it
 So this page has two halves: tones first, because they are the part an English
 speaker has no instinct for, then the segments.
 
-The machine-readable form of the first half lives in
-[`data/scripts/chinese.json`](../data/scripts/chinese.json) under `tones` and
+The machine-readable form of the first half lives in the
+[Chinese script reference](../data/scripts/chinese.json) under `tones` and
 `toneSandhi`.
 
 ## Tones
@@ -30,26 +30,26 @@ the vowel; the characters do not record it anywhere.
 
 The classic demonstration uses one syllable, *ma*:
 
-- **`tone-1`** — first, high level (contour 55). Held high and flat, one steady
+- `tone-1` — first, high level (contour 55). Held high and flat, one steady
   note. *mā* — mother.
-- **`tone-2`** — second, rising (35). Climbs from mid to high, like the pitch on
+- `tone-2` — second, rising (35). Climbs from mid to high, like the pitch on
   a surprised English "huh?". *má* — hemp.
-- **`tone-3`** — third, dipping (214). Sinks low and creaky; said alone it rises
+- `tone-3` — third, dipping (214). Sinks low and creaky; said alone it rises
   again a little at the end, but in running speech it usually just stays low.
   *mǎ* — horse.
-- **`tone-4`** — fourth, falling (51). Drops sharply from high to low, like a
+- `tone-4` — fourth, falling (51). Drops sharply from high to low, like a
   clipped "No!". *mà* — to scold.
-- **`tone-neutral`** — unstressed. Short and light, with no mark written at all,
+- `tone-neutral` — unstressed. Short and light, with no mark written at all,
   pitched by whatever came before it. *ma* — a question particle.
 
-### `tone-lexical` — tone is part of the word
+### tone-lexical — tone is part of the word
 
 The single fact that matters most, taught in the first lesson: changing the pitch
 of a Mandarin syllable changes **which word it is**, not how you feel about it.
 *mā*, *má*, *mǎ* and *mà* are four separate words. English uses pitch for mood
 and emphasis only, so this is a genuinely new job for an English speaker's voice.
 
-### `tone-sandhi-third` — two third tones in a row
+### tone-sandhi-third — two third tones in a row
 
 **When a third tone is followed by another third tone, the first is spoken as a
 rising second tone.**
@@ -59,7 +59,7 @@ the change; dictionaries print the citation tone each word carries alone. This i
 why a reader who trusts only the page mispronounces the commonest greeting in the
 language.
 
-### `tone-sandhi-bu` — 不 before a fourth tone
+### tone-sandhi-bu — 不 before a fourth tone
 
 不 *bù* is said *bú* when the next syllable has a fourth tone: *bù shì* → *bú
 shì*. Recorded here for completeness; no Chapter 1 lesson needs it.
@@ -69,19 +69,19 @@ shì*. Recorded here for completeness; no Chapter 1 lesson needs it.
 Pinyin is a romanization, not English spelling. A few letters do work you would
 not guess.
 
-- **`pinyin-n`** — as in English *no*.
-- **`pinyin-i`** — after most consonants, the *ee* of "see". (After *z-, c-, s-,
+- `pinyin-n` — as in English *no*.
+- `pinyin-i` — after most consonants, the *ee* of "see". (After *z-, c-, s-,
   zh-, ch-, sh-, r-* it is a different, buzzier vowel; no Chapter 1 word uses
   those.)
-- **`pinyin-h`** — rougher than English *h*, scraped at the back of the mouth,
+- `pinyin-h` — rougher than English *h*, scraped at the back of the mouth,
   closer to the *ch* of Scottish *loch* softened.
-- **`pinyin-ao`** — one gliding vowel, the *ow* of "how". Not two syllables.
+- `pinyin-ao` — one gliding vowel, the *ow* of "how". Not two syllables.
 
 ## The characters themselves
 
 Stroke shapes, components, and stroke order for every character this track has
 introduced live in
-[`data/scripts/chinese.json`](../data/scripts/chinese.json). Unlike the Indic
+[Chinese script reference](../data/scripts/chinese.json). Unlike the Indic
 scripts in this curriculum, where stroke order is conventional, Chinese stroke
 order is a **taught, standardised system** — top before bottom, left before
 right, horizontal before vertical, outside before inside, and close a box last.

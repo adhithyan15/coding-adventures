@@ -131,6 +131,64 @@ describe("canonical book generator filesystem shell", () => {
     expect(chapter).toContain("\\te{తెలుగు} \\ta{தமிழ்}");
   });
 
+  it("writes and byte-checks configured canonical reference appendices", () => {
+    const root = fixture();
+    const configPath = join(root, "core", "book-generation.json");
+    const config = JSON.parse(readFileSync(configPath, "utf8")) as Record<string, unknown>;
+    writeFileSync(join(root, "test", "pronunciation-reference.md"), `# Test reference
+
+## The script
+
+- Read **తెలుగు**.
+`);
+    writeFileSync(
+      configPath,
+      `${JSON.stringify({
+        ...config,
+        referenceAppendices: [{
+          language: "test",
+          title: "Pronunciation Reference",
+          source: "test/pronunciation-reference.md",
+          output: "test/book/chapters/appendix-pronunciation.tex",
+          unicodeScript: "Telugu",
+          scriptCommand: "te",
+        }],
+      })}\n`,
+    );
+
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    expect(runBookGeneration(["--write"], root)).toBe(0);
+    const appendix = join(root, "test", "book", "chapters", "appendix-pronunciation.tex");
+    expect(readFileSync(appendix, "utf8")).toContain("\\textbf{\\te{తెలుగు}}");
+    expect(runBookGeneration(["--check"], root)).toBe(0);
+
+    writeFileSync(appendix, "stale\n");
+    expect(runBookGeneration(["--check"], root)).toBe(1);
+    expect(process.stderr.write).toHaveBeenCalledWith(
+      "test/book/chapters/appendix-pronunciation.tex: generated output is missing or stale\n",
+    );
+  });
+
+  it("rejects reference sources outside the curriculum root", () => {
+    const root = fixture();
+    const configPath = join(root, "core", "book-generation.json");
+    const config = JSON.parse(readFileSync(configPath, "utf8")) as Record<string, unknown>;
+    writeFileSync(
+      configPath,
+      `${JSON.stringify({
+        ...config,
+        referenceAppendices: [{
+          language: "test",
+          title: "Pronunciation Reference",
+          source: "../escape.md",
+          output: "test/book/chapters/appendix-pronunciation.tex",
+        }],
+      })}\n`,
+    );
+    expect(() => generatedBookOutputs(root)).toThrow(/unsafe generated book source/);
+  });
+
   it("fails closed on an unknown reusable script set", () => {
     const root = fixture();
     const config = join(root, "core", "book-generation.json");
@@ -302,6 +360,34 @@ describe("hand-written chapters", () => {
           true,
         );
       }
+    }
+  });
+});
+
+describe("pronunciation reference coverage", () => {
+  const root = defaultCurriculumRoot();
+
+  it("includes pronunciation back matter in every registered book", () => {
+    const registry = JSON.parse(
+      readFileSync(join(root, "core", "languages.json"), "utf8"),
+    ) as { languages: Array<{ id: string }> };
+    expect(registry.languages.length).toBeGreaterThan(0);
+    for (const { id } of registry.languages) {
+      const book = join(root, id, "book", "book.tex");
+      const appendix = join(root, id, "book", "chapters", "appendix-pronunciation.tex");
+      expect(existsSync(book), `${id} book`).toBe(true);
+      expect(readFileSync(book, "utf8"), `${id} book input`).toContain(
+        "\\input{chapters/appendix-pronunciation}",
+      );
+      expect(existsSync(appendix), `${id} pronunciation appendix`).toBe(true);
+    }
+  });
+
+  it("generates and byte-gates the five references that were missing", () => {
+    const outputs = generatedBookOutputs(root);
+    for (const language of ["chinese", "japanese", "persian", "russian", "urdu"]) {
+      const relative = `${language}/book/chapters/appendix-pronunciation.tex`;
+      expect(outputs.get(relative), relative).toMatch(/^% GENERATED FILE\./);
     }
   });
 });
