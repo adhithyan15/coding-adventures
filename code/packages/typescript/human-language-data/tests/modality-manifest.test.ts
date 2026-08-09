@@ -873,16 +873,19 @@ describe("corpus regression", () => {
       // several tracks' honest `## The letters in this word` blocks add `sight`, so
       // the whole-lesson share dips 66% -> 65% even though every one of these blocks
       // is detachable and `coreDrivable` again loses nothing.
-      totalLessons: 1669,
+      // Chapter 15 splits two legacy teaching lessons into five bounded teaching
+      // steps. All five remain voice-first; only the mapped terminal comparison is
+      // sight-dependent, so the split adds three lessons without widening the seam.
+      totalLessons: 1672,
       // Chapters 10 and 13 replace wide legacy tables with small singular-only
       // comparisons, so three more lessons move from sight to voice.
-      voice: 1085,
+      voice: 1089,
       // -3 sight / +3 voice: TA-C02-en, -enna and -peyar dropped their "The letters in
       // this word" sections once TA-W08 and TA-W09 gave those glyphs a home in the
       // strand. Verified against the GENERATED manifest, not the source — all three now
       // record reasons ["no-visual-dependency"], so the script teaching genuinely left
       // the lesson rather than a heading being renamed out from under the classifier.
-      sight: 526,
+      sight: 525,
       // +3 pen: the Tamil ch1 writing lessons. Rule 1 in src/modality.ts derives
       // this from the lesson TYPE alone — it says outright that it does not look at
       // the body — so all three record reasons ["writing-type","script-block"], and
@@ -891,7 +894,7 @@ describe("corpus regression", () => {
       // to this table.
       // +2: both new lessons are writing lessons.
       pen: 58,
-      drivableLessons: 1085,
+      drivableLessons: 1089,
       drivablePercent: 65,
       trackCount: 22,
       chapterCount: 513,
@@ -923,7 +926,9 @@ describe("corpus regression", () => {
       // micro-lessons and extends the Spanish chapter prefix through all five steps.
       // The Chapter-10 migration extends the safe prefix by two lessons; Chapter 13
       // adds four more reachable lessons by migrating its full terminal checkpoint.
-      drivablePrefixTotal: 887,
+      // Spanish Chapter 15 now offers five consecutive voice lessons before its
+      // sight checkpoint, raising the useful prefix by four.
+      drivablePrefixTotal: 891,
       // -2: chapters 21 and 23 each take a writing lesson and stop being ear-only.
       // Spreading the strand cannot happen without landing a pen lesson somewhere.
       // Spanish Chapters 10 and 13 are now fully drivable from their canonical ASTs.

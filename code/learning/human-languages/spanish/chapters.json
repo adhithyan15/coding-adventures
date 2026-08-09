@@ -376,16 +376,29 @@
       "chapter": 15,
       "title": "Completing the Preterite --- Three Families, One Question",
       "label": "ch:completing-preterite",
-      "canDo": "I can choose and form the principal irregular Spanish preterite families.",
+      "canDo": "I can form the singular completed past of regular -er/-ir verbs and the known strong verbs tener, hacer, and estar.",
       "spineNodes": [
         "SPINE-TALK-ABOUT-PAST"
       ],
       "payoff": {
         "lesson": "ES-C15-practice",
         "kind": "task",
-        "summary": "Complete ES-C15-practice, the canonical closing checkpoint, and demonstrate the chapter promise: choose and form the principal irregular Spanish preterite families.",
-        "assesses": [],
-        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+        "summary": "Complete ES-C15-practice and retrieve the bounded singular sets for comer, vivir, tener, hacer, and estar with their spelling and historical contrasts.",
+        "assesses": [
+          "ES-GRAMMAR-ER-PRETERITE-SINGULAR",
+          "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS",
+          "ES-HISTORY-ER-IR-PRETERITE-LATIN-PERFECT",
+          "ES-GRAMMAR-IR-PRETERITE-SINGULAR",
+          "ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE",
+          "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN",
+          "ES-GRAMMAR-TENER-PRETERITE-SINGULAR",
+          "ES-ETYMON-TUVE",
+          "ES-GRAMMAR-HACER-PRETERITE-SINGULAR",
+          "ES-ETYMON-HICE",
+          "ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR",
+          "ES-ETYMON-ESTUVE-ANALOGY"
+        ],
+        "note": "The payoff retrieves all twelve Chapter-15 atoms with mapped activities and deliberately defers every plural form, additional irregular verbs, and new time, place, person, or object vocabulary."
       }
     },
     {

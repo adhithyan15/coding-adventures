@@ -582,16 +582,74 @@
       "after": []
     },
     {
-      "id": "ES-PATH-039",
+      "id": "ES-PATH-039-COMER-PRETERITE-CH15",
       "spine_node": "SPINE-TALK-ABOUT-PAST",
       "lessons": [
-        "ES-C15-comer-vivir-preterite",
-        "ES-C15-preterite-fuertes",
+        "ES-C15-comer-preterite"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-039-COMER-PRETERITE-CH15"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-039-VIVIR-PRETERITE-CH15",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C15-comer-vivir-preterite"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-039-VIVIR-PRETERITE-CH15"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-039-TENER-PRETERITE-CH15",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C15-tener-preterite"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-039-TENER-PRETERITE-CH15"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-039-HACER-PRETERITE-CH15",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C15-hacer-preterite"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-039-HACER-PRETERITE-CH15"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-039-ESTAR-PRETERITE-CH15",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C15-preterite-fuertes"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-039-ESTAR-PRETERITE-CH15"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-039-CONSOLIDATION-CH15",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
         "ES-C15-practice"
       ],
       "before": [],
       "inline": [
-        "ES-EXT-039-LANGUAGE-SPECIFIC"
+        "ES-EXT-039-CONSOLIDATION-CH15"
       ],
       "after": []
     },
@@ -1076,7 +1134,12 @@
         "ES-PATH-038-SER-IR-PRETERITE-CH14",
         "ES-PATH-038-AR-PRETERITE-CH14",
         "ES-PATH-038-CONSOLIDATION-CH14",
-        "ES-PATH-039",
+        "ES-PATH-039-COMER-PRETERITE-CH15",
+        "ES-PATH-039-VIVIR-PRETERITE-CH15",
+        "ES-PATH-039-TENER-PRETERITE-CH15",
+        "ES-PATH-039-HACER-PRETERITE-CH15",
+        "ES-PATH-039-ESTAR-PRETERITE-CH15",
+        "ES-PATH-039-CONSOLIDATION-CH15",
         "ES-PATH-040"
       ],
       "omits": [
@@ -1856,15 +1919,68 @@
       ]
     },
     {
-      "id": "ES-EXT-039-LANGUAGE-SPECIFIC",
+      "id": "ES-EXT-039-COMER-PRETERITE-CH15",
       "stage": "A2",
       "kind": "required",
       "category": "language-specific",
-      "canDo": "I can use the Spanish-specific vocabulary and grammar that support this shared ability.",
+      "canDo": "I can form the three singular completed-past forms of comer.",
       "prerequisites": [],
       "lessons": [
-        "ES-C15-comer-vivir-preterite",
-        "ES-C15-preterite-fuertes",
+        "ES-C15-comer-preterite"
+      ]
+    },
+    {
+      "id": "ES-EXT-039-VIVIR-PRETERITE-CH15",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can form the three singular completed-past forms of vivir and compare them with comer.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C15-comer-vivir-preterite"
+      ]
+    },
+    {
+      "id": "ES-EXT-039-TENER-PRETERITE-CH15",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can form the three strong singular completed-past forms of tener.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C15-tener-preterite"
+      ]
+    },
+    {
+      "id": "ES-EXT-039-HACER-PRETERITE-CH15",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can form the three strong singular completed-past forms of hacer.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C15-hacer-preterite"
+      ]
+    },
+    {
+      "id": "ES-EXT-039-ESTAR-PRETERITE-CH15",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can form the three strong singular completed-past forms of estar.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C15-preterite-fuertes"
+      ]
+    },
+    {
+      "id": "ES-EXT-039-CONSOLIDATION-CH15",
+      "stage": "A2",
+      "kind": "supporting",
+      "category": "language-specific",
+      "canDo": "I can retrieve and compare the learned regular and strong singular completed-past patterns without new vocabulary.",
+      "prerequisites": [],
+      "lessons": [
         "ES-C15-practice"
       ]
     },
