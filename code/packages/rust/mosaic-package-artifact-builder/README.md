@@ -56,6 +56,9 @@ Flutter project shells replace the no-op host stub with the standard Dart FFI
 runtime while preserving `MosaicApp(mosaicHost: ...)` injection. Set
 `MOSAIC_APP_LIBRARY` to the Rust application library, or package it under the
 target platform's conventional `mosaic_app` name.
+Qt project shells install a standard QObject host backed by `QLibrary` and
+Qt JSON/variant APIs. Explicit package host assets can still replace
+`MosaicHost.h/.cpp` for specialized native surfaces and effects.
 
 Packages may declare optional `[host_assets]` file copies in
 `mosaic-package.toml`. Matching backend assets are copied from package-relative
