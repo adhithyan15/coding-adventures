@@ -76,8 +76,7 @@ export interface Stroke {
  * a handwriting primer, a stroke database, or a named native writer. There is
  * no authoritative machine-readable stroke database for Tamil (or any Indic
  * script, Arabic, or Hebrew), so the order is read from a cited teaching
- * source, and `variation` records that Tamil is taught with school-to-school
- * differences — this is one attested order, not the only one.
+ * source, and `variation` records where the attested teaching form can vary.
  */
 export interface StrokeSource {
   citation: string;
@@ -188,10 +187,14 @@ const clamp01 = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n);
 // ---------------------------------------------------------------------------
 // The authored letters.
 //
-// The cited primer numbers the hand movements for each letter. Coordinates are
-// font units, checked in strokes.test against the rendered glyph (shape) and
-// against `source` (order), not trusted because they look plausible here.
+// The cited sources show or number the hand movements for each letter.
+// Coordinates are font units, checked in strokes.test against the rendered
+// glyph (shape) and against `source` (order), not trusted because they look
+// plausible here.
 //
+// Persian ا opens UT Austin's freehand alphabet demonstration: one vertical
+// movement travels from the top to the baseline. The lesson presents the
+// alphabet right-to-left, while this isolated non-connector remains one stroke.
 // அ is Frame 4's first row: movements 1-4 remain on the connected body, then
 // the hand lifts once before movement 5 draws the separate right upright. ஆ is
 // the next row: it repeats movements 1-5, then continues from that upright into
@@ -219,6 +222,34 @@ const clamp01 = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n);
 // ---------------------------------------------------------------------------
 
 export const DUCTUS: Record<string, LetterDuctus> = {
+  "ا": {
+    glyph: "ا",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the tall stem downward",
+            path: [
+              { x: 120, y: 640 },
+              { x: 120, y: 580 },
+              { x: 119, y: 500 },
+              { x: 124, y: 400 },
+              { x: 128, y: 250 },
+              { x: 129, y: 100 },
+              { x: 127, y: 10 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: {
+      citation:
+        "Persian Online, How to Write Persian Characters, opening ا demonstration at 00:08–00:11 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+      url: "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+      variation:
+        "The cited freehand lesson demonstrates isolated ا as one top-to-bottom Naskh stroke while presenting the alphabet right-to-left. Contextual joins change neighbouring ink, but the isolated non-connector remains the same one-stroke stem; this path fits the vendored Noto Naskh outline.",
+    },
+  },
   அ: {
     glyph: "அ",
     strokes: [

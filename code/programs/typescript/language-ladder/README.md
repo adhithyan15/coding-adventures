@@ -166,7 +166,8 @@ in font units, and `ductusview.ts` flips them together with exactly **one**
 sitting upside down on a correct letter.
 
 **All eleven starter Tamil letters — அ, ஆ, இ, க, ம, வ, ல, ற, ன, ண, and ந —
-have authored pen paths today.** `DUCTUS` admits no letter without a citation
+and Persian ا have authored pen paths today.** `DUCTUS` admits no letter without
+a citation
 for its stroke order, and hand-drawing a letter is forbidden
 outright (a subtly wrong Tamil ண looks perfect to exactly the audience that
 cannot yet read Tamil, so the error would ship *as the lesson*). அ and ஆ exercise
@@ -187,9 +188,12 @@ the sole lift. ந uses three runs: its opening three movements stay joined, the
 middle rise joins the top bar after one lift, and a second lift precedes its
 right-hand descent and tail. Frame 12's looped handwritten form differs from
 Noto's straighter typographic form, so the source records that adaptation while
-the mechanical gates keep every authored point on the actual font. Every other
-script still falls back to the numbered prose list, unchanged. Extending the
-coverage is HL-C09, and it needs a cited source per letter.
+the mechanical gates keep every authored point on the actual font. Persian ا is
+the first right-to-left-script filmstrip: UT Austin's freehand lesson shows its
+isolated Naskh stem descending in one continuous movement, and the same gates
+fit that path to the vendored Noto Naskh outline. Unverified letters still fall
+back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
+and it needs a cited source per letter.
 
 ## Where it fits
 

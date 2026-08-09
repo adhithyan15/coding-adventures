@@ -4,6 +4,12 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - verified Persian ا handwriting
+
+- Record UT Austin Persian Online's opening freehand demonstration for isolated
+  ا as one top-to-bottom Naskh movement with zero lifts, matching Language
+  Ladder's font-checked path and the vendored Noto Naskh outline.
+
 ### Added - verified Tamil அ handwriting
 
 - Record the cited five-movement, two-stroke order for Tamil அ with exactly one

@@ -23,6 +23,16 @@ const load = (name: string) => {
 };
 const tamil = () => parseFont(load("NotoSansTamil-Static.ttf"));
 
+const fontForDuctus = (letter: LetterDuctus) => {
+  const script = SCRIPTS.find((candidate) =>
+    candidate.letters.some(
+      (entry) => entry.glyph === letter.glyph && entry.strokeOrderSource?.url === letter.source.url,
+    ),
+  );
+  if (!script) throw new Error(`no verified script/font owns ${letter.glyph}`);
+  return parseFont(load(script.font.split("/").pop()!));
+};
+
 // ---------------------------------------------------------------------------
 // Flatten a glyph's contours to polygons and answer two questions about a
 // point: is it ON the letter's ink (non-zero winding), and how FAR is it from
@@ -137,7 +147,7 @@ describe("handwriting ductus", () => {
 
   for (const letter of letters) {
     describe(`${letter.glyph}`, () => {
-      const glyph = () => tamil().glyphFor(letter.glyph)!;
+      const glyph = () => fontForDuctus(letter).glyphFor(letter.glyph)!;
 
       it("every stroke's pen path lies on the real letter", () => {
         const inInk = makeInInk(glyph().contours);
@@ -232,6 +242,15 @@ describe("handwriting ductus", () => {
     expect(penLifts(DUCTUS["ந"])).toBe(2);
     expect(DUCTUS["ந"].strokes).toHaveLength(3);
     expect(DUCTUS["ந"].strokes.map((stroke) => stroke.segments.length)).toEqual([3, 2, 1]);
+  });
+
+  it("Persian ا is one downward pen-down run", () => {
+    const alef = DUCTUS["ا"];
+    expect(penLifts(alef)).toBe(0);
+    expect(alef.strokes).toHaveLength(1);
+    expect(alef.strokes[0].segments).toHaveLength(1);
+    const path = penPath(alef.strokes[0]);
+    expect(path[0].y).toBeGreaterThan(path.at(-1)!.y);
   });
 
   // The PROVENANCE GATE. A stroke's SHAPE is checked against the font above;
@@ -343,6 +362,13 @@ describe("handwriting ductus", () => {
     expect(src.url).toContain("tamilscript");
     expect(src.citation).toMatch(/Appendix I.*Frame 12.*ந/);
     expect(src.variation).toMatch(/looped handwritten form.*Noto/i);
+  });
+
+  it("Persian ا traces to UT Austin's opening right-to-left freehand demonstration", () => {
+    const src = DUCTUS["ا"].source;
+    expect(src.url).toContain("laits.utexas.edu/persian_grammar/video");
+    expect(src.citation).toMatch(/Persian Online.*ا.*00:08–00:11/i);
+    expect(src.variation).toMatch(/top-to-bottom.*right-to-left.*Noto Naskh/i);
   });
 });
 
