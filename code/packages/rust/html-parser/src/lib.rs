@@ -5335,6 +5335,10 @@ impl HtmlParser {
             if attribute_value(&attributes, "type")
                 .is_some_and(|value| value.eq_ignore_ascii_case("hidden"))
             {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-hidden-input-start-tag-in-table",
+                    "hidden input start tag in a table context was inserted with a parse error",
+                ));
                 self.append_node(Node::element(name, attributes));
             } else {
                 self.insert_node_before_open_table(Node::element(name, attributes));
@@ -33462,6 +33466,36 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "unexpected-character-in-table"));
+    }
+
+    #[test]
+    fn reports_hidden_input_start_tags_in_tables() {
+        for source in [
+            "<!doctype html><table><input type=hidDEN></table>",
+            "<!doctype html><table> \n<input type='HIDDEN'></table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic
+                        == &ParserDiagnostic::new(
+                            "unexpected-hidden-input-start-tag-in-table",
+                            "hidden input start tag in a table context was inserted with a parse error",
+                        )
+                }),
+                "source {source:?}"
+            );
+        }
+
+        for source in [
+            "<!doctype html><input type=hidden>",
+            "<!doctype html><table><input type=text></table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-hidden-input-start-tag-in-table"
+            }));
+        }
     }
 
     #[test]

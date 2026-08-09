@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Hidden `input` start tags processed in table structure now report the
+  required parse error, covering 4 previously silent malformed corpus cases
+  without changing DOM recovery or undeclared-diagnostic coverage.
 - Head-content start tags processed after an explicit head end tag and before
   the body has started now report the required after-head parse error.
 - A `dt` or `dd` start tag now reports the in-body parse error when
