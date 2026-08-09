@@ -106,6 +106,7 @@ The contract types have an implementation-independent wire representation:
 
 ```rust
 pub struct StartContext {
+    pub protocol_version: u32,
     pub locale: String,
     pub color_scheme: ColorScheme,
     pub text_scale: f32,
@@ -114,6 +115,7 @@ pub struct StartContext {
 }
 
 pub struct Event {
+    pub protocol_version: u32,
     pub sequence: u64,
     pub name: String,
     pub payload: serde_json::Value,
@@ -126,6 +128,7 @@ pub struct AppUpdate {
 }
 
 pub struct Update {
+    pub protocol_version: u32,
     pub revision: u64,
     pub props: serde_json::Value,
     pub effects: Vec<Effect>,
@@ -139,6 +142,11 @@ records/enums in the model language will make that contract author-friendly, but
 the runtime boundary must not depend on a particular generated host language.
 The application never chooses a transport revision: `mosaic-app-runtime` wraps each
 successful `AppUpdate` in an `Update` and assigns its revision.
+Every start, event, and update envelope carries `protocol_version`; the runtime
+rejects a mismatch before invoking application code. Snapshot schema versions
+remain independent. Startup also rejects a non-finite or non-positive `text_scale`.
+An application method returning an error must leave its observable state unchanged;
+the runtime does not consume sequence or revision state, so the host can retry.
 
 ### 4.1 Determinism and ordering
 
@@ -281,7 +289,7 @@ unblocks multiple downstream targets; never count source generation as completio
 
 ### P0 — cross-backend execution spine
 
-- [ ] Implement `mosaic-app-runtime` contract types and deterministic engine tests.
+- [x] Implement `mosaic-app-runtime` contract types and deterministic engine tests.
 - [ ] Implement panic-safe C ABI and WebAssembly exports with buffer-ownership tests.
 - [ ] Generate package-independent bindings for the five native backend families.
 - [ ] Generate standard effect hosts, beginning with storage and lifecycle.
