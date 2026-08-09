@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - type-correct fractional font sizes
+
+Fractional MSL font sizes now round to the nearest positive integer at Qt's
+`font.pixelSize` boundary. Generated QML no longer passes a real value to an
+integer property that makes the native application fail while loading.
+
 ### Fixed - duplicate fixed wrapper dimensions
 
 Painted or padded `Row` and `Column` wrappers no longer emit a second,

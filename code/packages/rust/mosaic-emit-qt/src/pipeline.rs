@@ -528,7 +528,7 @@ struct CellTextStyle {
     horizontal_alignment: Option<&'static str>,
     /// True when `font-family: monospace`.
     font_family_mono: bool,
-    /// `font.pixelSize` value (digits only).
+    /// Integer `font.pixelSize` value.
     font_pixel_size: Option<String>,
     /// Inner content inset, from `padding: Npx`.
     padding: Option<String>,
@@ -560,6 +560,20 @@ fn qml_px_or_none(v: &str) -> Option<String> {
     } else {
         None
     }
+}
+
+/// Lower an MSL font size to Qt's integer-only `font.pixelSize` type.
+///
+/// MSL and the other native backends allow fractional font sizes. Qt's pixel
+/// property does not, so round to the nearest positive pixel at this backend
+/// boundary instead of emitting QML that compiles but fails when loaded.
+fn qml_font_pixel_size(v: &str) -> Option<String> {
+    let value = qml_px_or_none(v)?.parse::<f64>().ok()?;
+    let rounded = value.round();
+    if !(1.0..=f64::from(i32::MAX)).contains(&rounded) {
+        return None;
+    }
+    Some(format!("{rounded:.0}"))
 }
 
 /// Validate a CSS-ish colour value as a `#RGB` / `#RRGGBB` hex literal
@@ -738,7 +752,7 @@ fn lower_styled_box(node: &LayoutNode, part: &str, ctx: &EmitCtx) -> StyledBox {
             .map(|v| v.trim() == "monospace")
             .unwrap_or(ctx.inherited.font_family_mono),
         font_pixel_size: style_prop(base, "font-size")
-            .and_then(qml_px_or_none)
+            .and_then(qml_font_pixel_size)
             .or_else(|| ctx.inherited.font_pixel_size.clone()),
         padding: style_prop(base, "padding").and_then(qml_px_or_none),
         color: None,
@@ -905,7 +919,7 @@ fn qml_text_part_style_lines(props: &[StyleProp]) -> Vec<String> {
     if let Some(color) = style_prop(props, "color").and_then(qml_hex_color_or_none) {
         lines.push(format!("color: \"{color}\""));
     }
-    if let Some(size) = style_prop(props, "font-size").and_then(qml_px_or_none) {
+    if let Some(size) = style_prop(props, "font-size").and_then(qml_font_pixel_size) {
         lines.push(format!("font.pixelSize: {size}"));
     }
     if let Some(family) = style_prop(props, "font-family").and_then(qml_font_family) {
@@ -2965,7 +2979,7 @@ fn emit_host_table_qml(
                 font_family_mono: style_prop(sheet, "font-family")
                     .map(|v| v.trim() == "monospace")
                     .unwrap_or(false),
-                font_pixel_size: style_prop(sheet, "font-size").and_then(qml_px_or_none),
+                font_pixel_size: style_prop(sheet, "font-size").and_then(qml_font_pixel_size),
             }
         }
         None => ctx.inherited.clone(),
@@ -7989,7 +8003,7 @@ mod tests {
                         sp("background", "#1e1e1e"),
                         sp("color", "#cccccc"),
                         sp("font-family", "monospace"),
-                        sp("font-size", "12px"),
+                        sp("font-size", "12.5px"),
                     ],
                     transitions: vec![],
                     states: vec![],
@@ -8233,6 +8247,10 @@ mod tests {
         assert!(
             out.contains("font.family: \"monospace\""),
             "inherited monospace font missing:\n{out}"
+        );
+        assert!(
+            out.contains("font.pixelSize: 13"),
+            "fractional inherited font size must lower to a Qt integer:\n{out}"
         );
     }
 
@@ -8479,7 +8497,7 @@ mod tests {
                 name: "app-title".to_string(),
                 base: vec![
                     sp("color", "#f8fafc"),
-                    sp("font-size", "28"),
+                    sp("font-size", "28.5"),
                     sp("font-weight", "700"),
                     sp("text-align", "center"),
                 ],
@@ -8505,8 +8523,12 @@ mod tests {
             "missing text color:\n{out}"
         );
         assert!(
-            out.contains("font.pixelSize: 28"),
+            out.contains("font.pixelSize: 29"),
             "missing font size:\n{out}"
+        );
+        assert!(
+            !out.contains("font.pixelSize: 28.5"),
+            "Qt's integer pixelSize property must not receive a fraction:\n{out}"
         );
         assert!(
             out.contains("font.bold: true"),
