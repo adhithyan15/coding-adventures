@@ -22,9 +22,9 @@
 //! ```
 //!
 //! The **master KEK** lives in RAM only while the store is *unsealed*.
-//! It is derived from an operator password via Argon2id, verified
-//! against a known-plaintext verifier stored in the manifest, and wiped
-//! on `seal()` or drop.
+//! It is either derived from an operator password via Argon2id or injected
+//! after a caller-owned custody ceremony, verified against a known-plaintext
+//! verifier stored in the manifest, and wiped on `seal()` or drop.
 
 #![forbid(unsafe_code)]
 
@@ -210,6 +210,8 @@ pub enum SealedStoreError {
     Sealed,
     /// Unseal failed because the derived KEK could not decrypt the verifier.
     BadPassword,
+    /// An injected KEK could not decrypt any injected entry's verifier.
+    InvalidKek,
     /// A persisted AEAD tag or AAD check failed — record was tampered with.
     Tamper { namespace: String, key: String },
     /// Backend returned an error.
@@ -229,6 +231,7 @@ impl std::fmt::Display for SealedStoreError {
             Self::NotInitialized => write!(f, "vault-sealed-store not initialized"),
             Self::Sealed => write!(f, "vault-sealed-store is sealed"),
             Self::BadPassword => write!(f, "vault-sealed-store unseal: bad password"),
+            Self::InvalidKek => write!(f, "vault-sealed-store unseal: invalid injected KEK"),
             Self::Tamper { namespace, key } => {
                 write!(
                     f,
@@ -410,7 +413,52 @@ impl SealedStore {
             opts.argon2id_parallelism,
         )?;
 
-        // 5. Produce the verifier (known-plaintext AEAD under the KEK).
+        self.commit_initial_kek(
+            kek,
+            KekSource::PasswordDerived,
+            Some(salt),
+            opts.argon2id_time_cost,
+            opts.argon2id_memory_kib,
+            opts.argon2id_parallelism,
+        )
+    }
+
+    /// Create a fresh vault around a caller-supplied random 32-byte KEK.
+    ///
+    /// The raw KEK is never persisted. Callers should generate it with a
+    /// CSPRNG, persist only a custodian-wrapped copy, and drop their copy
+    /// immediately after this call returns.
+    pub fn init_with_kek(&self, kek: &[u8; KEY_LEN]) -> Result<(), SealedStoreError> {
+        if self
+            .backend
+            .get(RESERVED_NAMESPACE, MANIFEST_KEY)?
+            .is_some()
+        {
+            return Err(SealedStoreError::AlreadyInitialized);
+        }
+
+        let mut owned = Zeroizing::new([0u8; KEY_LEN]);
+        owned.copy_from_slice(kek);
+        self.commit_initial_kek(
+            owned,
+            KekSource::Injected,
+            None,
+            DEFAULT_ARGON2_TIME_COST,
+            DEFAULT_ARGON2_MEMORY_KIB,
+            DEFAULT_ARGON2_PARALLELISM,
+        )
+    }
+
+    fn commit_initial_kek(
+        &self,
+        kek: Zeroizing<[u8; KEY_LEN]>,
+        source: KekSource,
+        salt: Option<Vec<u8>>,
+        time_cost: u32,
+        memory_kib: u32,
+        parallelism: u32,
+    ) -> Result<(), SealedStoreError> {
+        // Produce the verifier (known-plaintext AEAD under the KEK).
         let verifier_nonce: [u8; NONCE_LEN] =
             random_array().map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
         let (verifier_ct, verifier_tag) = xchacha20_poly1305_aead_encrypt(
@@ -420,17 +468,18 @@ impl SealedStore {
             b"vault-verifier",
         );
 
-        // 6. Assemble and persist the manifest.
+        // Assemble and persist the manifest.
         let kek_id = "kek-1".to_string();
         let manifest = build_manifest_json(
             MANIFEST_VERSION,
-            opts.argon2id_time_cost,
-            opts.argon2id_memory_kib,
-            opts.argon2id_parallelism,
+            time_cost,
+            memory_kib,
+            parallelism,
             &[KekEntry {
                 id: kek_id.clone(),
                 status: "active",
-                salt: salt.clone(),
+                source,
+                salt,
                 verifier_nonce,
                 verifier_tag,
                 verifier_ct,
@@ -449,7 +498,7 @@ impl SealedStore {
 
         self.backend.put(put)?;
 
-        // 7. Install the KEK in memory. We move the `Zeroizing<[u8;32]>`
+        // Install the KEK in memory. We move the `Zeroizing<[u8;32]>`
         //    directly into the state so no extra stack copy is ever created.
         self.state
             .lock()
@@ -482,10 +531,20 @@ impl SealedStore {
         // O(len(keks)) Argon2 runs per bad unseal attempt — acceptable for
         // any realistic key history (≤ a handful of entries).
         for entry in &manifest.keks {
+            if entry.source != KekSource::PasswordDerived {
+                continue;
+            }
+            let salt = entry
+                .salt
+                .as_ref()
+                .ok_or_else(|| SealedStoreError::Validation {
+                    field: "salt".to_string(),
+                    message: "missing for password-derived KEK".to_string(),
+                })?;
             // Derive under *this* entry's salt.
             let candidate = derive_kek(
                 password,
-                &entry.salt,
+                salt,
                 manifest.time_cost,
                 manifest.memory_kib,
                 manifest.parallelism,
@@ -518,6 +577,44 @@ impl SealedStore {
             // `candidate` falls out of scope here and Zeroizing wipes it.
         }
         Err(SealedStoreError::BadPassword)
+    }
+
+    /// Verify and load a caller-supplied injected KEK.
+    ///
+    /// Password-derived entries are deliberately ignored so callers cannot
+    /// accidentally bypass the custody path on a password-backed manifest.
+    pub fn unseal_with_kek(&self, kek: &[u8; KEY_LEN]) -> Result<(), SealedStoreError> {
+        let manifest_record = self
+            .backend
+            .get(RESERVED_NAMESPACE, MANIFEST_KEY)?
+            .ok_or(SealedStoreError::NotInitialized)?;
+        let manifest = Manifest::parse(&manifest_record.metadata)?;
+
+        let mut candidate = Zeroizing::new([0u8; KEY_LEN]);
+        candidate.copy_from_slice(kek);
+        for entry in &manifest.keks {
+            if entry.source != KekSource::Injected {
+                continue;
+            }
+            let decrypted = xchacha20_poly1305_aead_decrypt(
+                &entry.verifier_ct,
+                &candidate,
+                &entry.verifier_nonce,
+                b"vault-verifier",
+                &entry.verifier_tag,
+            );
+            if ct_eq(decrypted.as_deref().unwrap_or(&[]), &VERIFIER_PLAINTEXT) {
+                self.state
+                    .lock()
+                    .expect("vault state mutex poisoned")
+                    .unsealed = Some(UnsealedKey {
+                    id: entry.id.clone(),
+                    key: candidate,
+                });
+                return Ok(());
+            }
+        }
+        Err(SealedStoreError::InvalidKek)
     }
 
     // ---- data plane -------------------------------------------------------
@@ -844,7 +941,8 @@ impl SealedStore {
         manifest.keks.push(KekEntry {
             id: new_kek_id.clone(),
             status: "active",
-            salt: new_salt,
+            source: KekSource::PasswordDerived,
+            salt: Some(new_salt),
             verifier_nonce,
             verifier_tag,
             verifier_ct,
@@ -1221,13 +1319,29 @@ fn validate_argon2_params(
 struct KekEntry {
     id: String,
     status: &'static str, // "active" | "retired"
+    source: KekSource,
     /// Per-KEK Argon2id salt. Each entry is independently verifiable so an
     /// operator can always unseal under the password that minted *this*
     /// KEK, even after many rotations.
-    salt: Vec<u8>,
+    salt: Option<Vec<u8>>,
     verifier_nonce: [u8; NONCE_LEN],
     verifier_tag: [u8; TAG_LEN],
     verifier_ct: Vec<u8>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum KekSource {
+    PasswordDerived,
+    Injected,
+}
+
+impl KekSource {
+    fn as_str(self) -> &'static str {
+        match self {
+            Self::PasswordDerived => "password-derived",
+            Self::Injected => "injected",
+        }
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -1261,13 +1375,16 @@ fn build_manifest_json(
     let keks_json: Vec<JsonValue> = keks
         .iter()
         .map(|e| {
-            JsonValue::Object(vec![
+            let mut fields = vec![
                 ("id".to_string(), JsonValue::String(e.id.clone())),
                 (
                     "status".to_string(),
                     JsonValue::String(e.status.to_string()),
                 ),
-                ("salt".to_string(), JsonValue::String(hex_encode(&e.salt))),
+                (
+                    "source".to_string(),
+                    JsonValue::String(e.source.as_str().to_string()),
+                ),
                 (
                     "verifier_nonce".to_string(),
                     JsonValue::String(hex_encode(&e.verifier_nonce)),
@@ -1280,7 +1397,11 @@ fn build_manifest_json(
                     "verifier_ct".to_string(),
                     JsonValue::String(hex_encode(&e.verifier_ct)),
                 ),
-            ])
+            ];
+            if let Some(salt) = &e.salt {
+                fields.push(("salt".to_string(), JsonValue::String(hex_encode(salt))));
+            }
+            JsonValue::Object(fields)
         })
         .collect();
     JsonValue::Object(vec![
@@ -1434,17 +1555,36 @@ impl Manifest {
                     })
                 }
             };
-            let salt =
-                hex_decode(get_string(eo, "salt")?).map_err(|_| SealedStoreError::Validation {
-                    field: "salt".to_string(),
-                    message: "invalid hex".to_string(),
+            let source = match eo.iter().find(|(key, _)| key == "source") {
+                None => KekSource::PasswordDerived,
+                Some((_, JsonValue::String(value))) if value == "password-derived" => {
+                    KekSource::PasswordDerived
+                }
+                Some((_, JsonValue::String(value))) if value == "injected" => KekSource::Injected,
+                Some(_) => {
+                    return Err(SealedStoreError::Validation {
+                        field: "source".to_string(),
+                        message: "unsupported".to_string(),
+                    })
+                }
+            };
+            let salt = if source == KekSource::PasswordDerived {
+                let salt = hex_decode(get_string(eo, "salt")?).map_err(|_| {
+                    SealedStoreError::Validation {
+                        field: "salt".to_string(),
+                        message: "invalid hex".to_string(),
+                    }
                 })?;
-            if salt.len() < ARGON2_SALT_MIN_LEN || salt.len() > ARGON2_SALT_MAX_LEN {
-                return Err(SealedStoreError::Validation {
-                    field: "salt".to_string(),
-                    message: "length out of range".to_string(),
-                });
-            }
+                if salt.len() < ARGON2_SALT_MIN_LEN || salt.len() > ARGON2_SALT_MAX_LEN {
+                    return Err(SealedStoreError::Validation {
+                        field: "salt".to_string(),
+                        message: "length out of range".to_string(),
+                    });
+                }
+                Some(salt)
+            } else {
+                None
+            };
             let verifier_nonce =
                 hex_decode_fixed::<NONCE_LEN>(get_string(eo, "verifier_nonce")?, "verifier_nonce")?;
             let verifier_tag =
@@ -1467,6 +1607,7 @@ impl Manifest {
             keks.push(KekEntry {
                 id,
                 status,
+                source,
                 salt,
                 verifier_nonce,
                 verifier_tag,
@@ -1669,6 +1810,9 @@ fn hex_decode_fixed<const N: usize>(s: &str, field: &str) -> Result<[u8; N], Sea
 #[cfg(test)]
 mod tests {
     use super::*;
+    use coding_adventures_vault_key_custody::{
+        fresh_random_key, KeyCustodian, PassphraseCustodian,
+    };
     use storage_core::InMemoryStorageBackend;
 
     fn fast_opts() -> InitOptions {
@@ -1698,6 +1842,124 @@ mod tests {
         let got = store.get("app", "k1").unwrap().unwrap();
         assert_eq!(&*got.plaintext, b"hello world");
         assert_eq!(got.revision, rev);
+    }
+
+    #[test]
+    fn injected_kek_roundtrips_across_store_instances() {
+        let (store, backend) = new_store();
+        let root_kek = [0xA5; KEY_LEN];
+        store.init_with_kek(&root_kek).unwrap();
+        store
+            .put("passwords", "example.com", b"secret", None)
+            .unwrap();
+        drop(store);
+
+        let reopened = SealedStore::new(Arc::clone(&backend));
+        reopened.unseal_with_kek(&root_kek).unwrap();
+        assert_eq!(
+            &*reopened
+                .get("passwords", "example.com")
+                .unwrap()
+                .unwrap()
+                .plaintext,
+            b"secret"
+        );
+    }
+
+    #[test]
+    fn custody_wrapped_root_kek_composes_with_injected_seam() {
+        let (store, backend) = new_store();
+        let label = b"vault-pm/root-kek".to_vec();
+        let custodian = PassphraseCustodian::with_params(b"correct horse", 1, 32, 4).unwrap();
+        let root_kek = fresh_random_key().unwrap();
+        let wrapped = custodian.wrap(&label, &root_kek).unwrap();
+
+        store.init_with_kek(&root_kek).unwrap();
+        store.put("items", "item-1", b"credential", None).unwrap();
+        drop(root_kek);
+        drop(store);
+
+        let reopened = SealedStore::new(Arc::clone(&backend));
+        let unwrapped = custodian.unwrap(&label, &wrapped).unwrap();
+        reopened.unseal_with_kek(&unwrapped).unwrap();
+        drop(unwrapped);
+        assert_eq!(
+            &*reopened.get("items", "item-1").unwrap().unwrap().plaintext,
+            b"credential"
+        );
+    }
+
+    #[test]
+    fn injected_and_password_unseal_paths_are_isolated() {
+        let (store, backend) = new_store();
+        let root_kek = [0xA5; KEY_LEN];
+        store.init_with_kek(&root_kek).unwrap();
+        store.seal();
+
+        assert!(matches!(
+            store.unseal_with_kek(&[0x5A; KEY_LEN]),
+            Err(SealedStoreError::InvalidKek)
+        ));
+        assert!(matches!(
+            store.unseal(b"not-a-kek"),
+            Err(SealedStoreError::BadPassword)
+        ));
+
+        let manifest = backend
+            .get(RESERVED_NAMESPACE, MANIFEST_KEY)
+            .unwrap()
+            .unwrap();
+        let parsed = Manifest::parse(&manifest.metadata).unwrap();
+        assert_eq!(parsed.keks[0].source, KekSource::Injected);
+        assert!(parsed.keks[0].salt.is_none());
+    }
+
+    #[test]
+    fn injected_unseal_rejects_password_derived_manifest() {
+        let (store, _) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        store.seal();
+        assert!(matches!(
+            store.unseal_with_kek(&[0xA5; KEY_LEN]),
+            Err(SealedStoreError::InvalidKek)
+        ));
+        store.unseal(b"pw").unwrap();
+    }
+
+    #[test]
+    fn legacy_manifest_without_source_defaults_to_password_derived() {
+        let (store, backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        let manifest = backend
+            .get(RESERVED_NAMESPACE, MANIFEST_KEY)
+            .unwrap()
+            .unwrap();
+        let mut metadata = match manifest.metadata.clone() {
+            JsonValue::Object(fields) => fields,
+            _ => panic!("bad manifest"),
+        };
+        for (_, value) in metadata.iter_mut().filter(|(key, _)| key == "keks") {
+            if let JsonValue::Array(entries) = value {
+                for entry in entries {
+                    if let JsonValue::Object(fields) = entry {
+                        fields.retain(|(key, _)| key != "source");
+                    }
+                }
+            }
+        }
+        let update = StoragePutInput::new(
+            RESERVED_NAMESPACE.to_string(),
+            MANIFEST_KEY.to_string(),
+            MANIFEST_CONTENT_TYPE.to_string(),
+            JsonValue::Object(metadata),
+            Vec::new(),
+        )
+        .unwrap()
+        .with_if_revision(Some(manifest.revision));
+        backend.put(update).unwrap();
+
+        let reopened = SealedStore::new(Arc::clone(&backend));
+        reopened.unseal(b"pw").unwrap();
     }
 
     #[test]
@@ -1869,6 +2131,17 @@ mod tests {
             store.init(b"pw", &fast_opts()),
             Err(SealedStoreError::AlreadyInitialized)
         ));
+        assert!(matches!(
+            store.init_with_kek(&[0xA5; KEY_LEN]),
+            Err(SealedStoreError::AlreadyInitialized)
+        ));
+
+        let (store, _) = new_store();
+        store.init_with_kek(&[0xA5; KEY_LEN]).unwrap();
+        assert!(matches!(
+            store.init(b"pw", &fast_opts()),
+            Err(SealedStoreError::AlreadyInitialized)
+        ));
     }
 
     #[test]
@@ -1881,6 +2154,10 @@ mod tests {
         assert!(matches!(
             store.get("ns", "k"),
             Err(SealedStoreError::Sealed)
+        ));
+        assert!(matches!(
+            store.unseal_with_kek(&[0xA5; KEY_LEN]),
+            Err(SealedStoreError::NotInitialized)
         ));
     }
 
@@ -2078,7 +2355,8 @@ mod tests {
             KekEntry {
                 id: "kek-1".into(),
                 status: "retired",
-                salt: vec![0; 16],
+                source: KekSource::PasswordDerived,
+                salt: Some(vec![0; 16]),
                 verifier_nonce: [0; NONCE_LEN],
                 verifier_tag: [0; TAG_LEN],
                 verifier_ct: vec![],
@@ -2086,7 +2364,8 @@ mod tests {
             KekEntry {
                 id: "kek-7".into(),
                 status: "active",
-                salt: vec![0; 16],
+                source: KekSource::PasswordDerived,
+                salt: Some(vec![0; 16]),
                 verifier_nonce: [0; NONCE_LEN],
                 verifier_tag: [0; TAG_LEN],
                 verifier_ct: vec![],
@@ -2099,7 +2378,8 @@ mod tests {
         let overflow = [KekEntry {
             id: format!("kek-{}", u64::MAX),
             status: "active",
-            salt: vec![0; 16],
+            source: KekSource::PasswordDerived,
+            salt: Some(vec![0; 16]),
             verifier_nonce: [0; NONCE_LEN],
             verifier_tag: [0; TAG_LEN],
             verifier_ct: vec![],
@@ -2294,5 +2574,44 @@ mod tests {
         let store2 = SealedStore::new(Arc::clone(&backend));
         let err = store2.unseal(b"pw").unwrap_err();
         assert!(matches!(err, SealedStoreError::Validation { .. }));
+    }
+
+    #[test]
+    fn manifest_with_unknown_kek_source_is_rejected() {
+        let (store, backend) = new_store();
+        store.init_with_kek(&[0xA5; KEY_LEN]).unwrap();
+        let manifest = backend
+            .get(RESERVED_NAMESPACE, MANIFEST_KEY)
+            .unwrap()
+            .unwrap();
+        let mut metadata = match manifest.metadata.clone() {
+            JsonValue::Object(fields) => fields,
+            _ => panic!("bad manifest"),
+        };
+        for (_, value) in metadata.iter_mut().filter(|(key, _)| key == "keks") {
+            if let JsonValue::Array(entries) = value {
+                if let Some(JsonValue::Object(fields)) = entries.first_mut() {
+                    for (_, value) in fields.iter_mut().filter(|(key, _)| key == "source") {
+                        *value = JsonValue::String("attacker-controlled".to_string());
+                    }
+                }
+            }
+        }
+        let update = StoragePutInput::new(
+            RESERVED_NAMESPACE.to_string(),
+            MANIFEST_KEY.to_string(),
+            MANIFEST_CONTENT_TYPE.to_string(),
+            JsonValue::Object(metadata),
+            Vec::new(),
+        )
+        .unwrap()
+        .with_if_revision(Some(manifest.revision));
+        backend.put(update).unwrap();
+
+        let reopened = SealedStore::new(Arc::clone(&backend));
+        assert!(matches!(
+            reopened.unseal_with_kek(&[0xA5; KEY_LEN]),
+            Err(SealedStoreError::Validation { ref field, .. }) if field == "source"
+        ));
     }
 }

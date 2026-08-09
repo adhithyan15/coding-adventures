@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `SealedStore::init_with_kek` and `SealedStore::unseal_with_kek` for
+  caller-owned random root KEKs unwrapped by `vault-key-custody`.
+- Additive per-entry KEK source markers with backward-compatible parsing:
+  source-less v1 manifests remain password-derived, while injected entries
+  omit Argon2 salt and cannot be opened through the password path.
 - `SealedEnvelopeSummary` and `SealedStore::summarize` for redacted
   per-record envelope metadata: revision, timestamps, algorithm/version,
   KEK id, and byte counts without ciphertext, wrapped DEK, nonce, tag, or

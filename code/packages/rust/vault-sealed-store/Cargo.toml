@@ -2,7 +2,7 @@
 name = "coding_adventures_vault_sealed_store"
 version = "0.1.0"
 edition = "2021"
-description = "Vault at-rest encryption layer — envelope encryption over any StorageBackend (VLT01)"
+description = "Vault at-rest envelope encryption with password-derived or custody-injected KEKs (VLT01)"
 
 [dependencies]
 storage-core = { path = "../storage-core" }
@@ -12,3 +12,6 @@ coding_adventures_chacha20_poly1305 = { path = "../chacha20-poly1305" }
 coding_adventures_csprng = { path = "../csprng" }
 coding_adventures_zeroize = { path = "../zeroize" }
 coding_adventures_ct_compare = { path = "../ct-compare" }
+
+[dev-dependencies]
+coding_adventures_vault_key_custody = { path = "../vault-key-custody" }

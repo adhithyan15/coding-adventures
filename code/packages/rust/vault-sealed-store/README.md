@@ -5,7 +5,7 @@ Rust implementation of **VLT01** (`code/specs/VLT01-vault-sealed-store.md`)
 
 This crate turns any `storage_core::StorageBackend` into an
 **encrypted-secrets store** whose plaintext is only readable while a
-correct operator password is loaded in memory. Hosts can also read a
+verified password-derived or custody-supplied KEK is loaded in memory. Hosts can also read a
 sealed-safe status summary for initialization, KEK history, and namespace
 registry health without decrypting record bodies. Unsealed hosts can also
 inspect redacted per-record envelope summaries that expose algorithms and
@@ -31,8 +31,9 @@ logs.
 Envelope encryption means: every secret gets a fresh 32-byte Data
 Encryption Key (DEK) from the CSPRNG. The DEK encrypts the plaintext
 with XChaCha20-Poly1305. The DEK itself is then wrapped under a master
-Key Encryption Key (KEK) derived from the operator password via
-Argon2id. Rotating the KEK is O(records × 32 bytes), not
+Key Encryption Key (KEK), either derived from the operator password via
+Argon2id or injected after a caller-owned custody ceremony. Rotating a
+password-derived KEK is O(records × 32 bytes), not
 O(records × body size).
 
 ## Usage
@@ -55,6 +56,28 @@ assert_eq!(&*secret.plaintext, b"my-pat-token");
 vault.seal(); // wipes the KEK from RAM
 ```
 
+For a product vault, generate one random root KEK, wrap it with a
+`vault-key-custody` provider, and inject the unwrapped key material:
+
+```rust
+# use std::sync::Arc;
+# use coding_adventures_vault_sealed_store::SealedStore;
+# use storage_core::{InMemoryStorageBackend, StorageBackend};
+# let backend: Arc<dyn StorageBackend> = Arc::new(InMemoryStorageBackend::new());
+# backend.initialize()?;
+# let vault = SealedStore::new(backend);
+let root_kek: [u8; 32] = coding_adventures_csprng::random_array()?;
+vault.init_with_kek(&root_kek)?;
+vault.seal();
+vault.unseal_with_kek(&root_kek)?;
+# Ok::<(), Box<dyn std::error::Error>>(())
+```
+
+The manifest records that this KEK was injected, but never persists the
+key itself. Password unseal ignores injected entries and injected unseal
+ignores password-derived entries. Legacy manifests without a source marker
+continue to be treated as password-derived.
+
 ## Threat model
 
 See the spec for the full argument. In short:
@@ -63,9 +86,9 @@ See the spec for the full argument. In short:
   who sees the storage at rest but not the unsealed process's memory.
 - Integrity is enforced via AEAD; AAD binds each ciphertext to its
   storage address so records cannot be swapped.
-- The only password-derived persisted artifact is a verifier AEAD of 16
-  zero bytes — an attacker's only path is offline brute force against
-  Argon2id at the configured parameters.
+- The only key-derived persisted artifact is a verifier AEAD of 16 zero
+  bytes. For password-derived KEKs, an attacker's only path is offline
+  brute force against Argon2id at the configured parameters.
 
 ## Dependencies
 
