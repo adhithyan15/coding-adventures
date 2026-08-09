@@ -4,22 +4,22 @@
   "chapter": 12,
   "title": "\\emph{Hacer}, \\emph{Decir}, and the \\emph{-go} Verb Club",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ab04c43bed11cbe9",
+  "sourceHash": "fnv1a64:6ce3fa06498db937",
   "lessons": [
     {
       "id": "ES-C12-hacer",
       "sequence": 970,
-      "title": "hacer — \"to do / to make,\" and the yo-form that grows a g",
+      "title": "hacer — doing or making with three singular forms",
       "headword": "hacer",
       "romanization": "hacer",
-      "gloss": "to do / to make — an irregular yo-form, hago",
+      "gloss": "to do or make — with the singular present forms hago, haces, and hace",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c31a56e74c2d5ee",
+      "sourceHash": "fnv1a64:78a7c17b4f995139",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "One verb covers both English \"do\" and \"make\" in Spanish: hacer. It is one of the language's workhorses — and it hides two patterns you have already met: the f becomes h softening from Chapter 6, and a surprise -go ending in the yo-form, exactly like tengo."
+              "text": "You already use tengo, tienes, tiene, and you already know café and the question word qué. Reuse that small frontier for one verb that covers both English “do” and “make.”"
             }
           ]
         },
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "jota-h-silent — the h in hacer is silent (a-THER / a-SER). That silent h is the ghost of a Latin f."
+              "text": "The h in hacer is silent, just as it is in hola. In hago, the written g has the hard sound heard before a."
             }
           ]
         },
@@ -57,47 +57,52 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "hacer comes from Latin facere, \"to do, to make\" — and Spanish softened the Latin f- to a now-silent h-, the very same change that turned fabulārī becomes hablar and filium becomes hijo back in Chapter 6. The Latin facere is one of the richest roots in English:"
-            },
-            {
-              "kind": "speech",
-              "text": "fact (\"a thing done\"), factory (\"a place of making\"), manufacture (\"made by hand\"), feat, feature."
-            },
-            {
-              "kind": "speech",
-              "text": "with prefixes: affect / effect (ad-/ex- + fac), perfect (\"thoroughly done\"), satisfy (\"make enough\"), difficult (\"not easy to do\"), benefit (\"do well\")."
-            },
-            {
-              "kind": "speech",
-              "text": "So hacer and factory are the same \"make\" root, one worn down in Spanish, one kept crisp in Latin-through-English."
+              "text": "hacer means “to do” or “to make.” It descends from Latin facere, with the same making root preserved in English fact, factory, and manufacture. Much of early Castilian changed word-initial Latin f into an h sound that later became silent, leaving the spelling as a historical trace."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: the -go yo-form",
+          "title": "Grammar Lens: only the three singular forms",
           "segments": [
             {
-              "kind": "speech",
-              "text": "hacer is regular in most of its present tense — but the yo-form is irregular: it grows a g, giving hago (not haço). You have seen this exact move before: tener becomes tengo. It is a small, high-frequency club of \"-go\" verbs."
-            },
-            {
               "kind": "table",
-              "headers": [],
-              "columns": 3,
-              "rowCount": 5,
+              "headers": [
+                "person",
+                "present of hacer"
+              ],
+              "columns": 2,
+              "rowCount": 3,
               "utterances": [
-                "yo, hago, (irregular — grows a g).",
-                "tú, haces, (regular).",
-                "él/ella/usted, hace, (regular).",
-                "nosotros, hacemos, (regular).",
-                "ellos/ustedes, hacen, (regular)."
+                "person: yo. present of hacer: hago.",
+                "person: tú. present of hacer: haces.",
+                "person: él / ella / usted. present of hacer: hace."
               ]
             },
             {
               "kind": "speech",
-              "text": "The everyday payoff — weather. Spanish reports the weather with hacer, literally \"it makes\": hace calor (\"it's hot\" = \"it makes heat\"), hace frío (\"it's cold\"), hace sol (\"it's sunny\"). And the all-purpose question ¿Qué haces? — \"What are you doing?\""
+              "text": "Say the bounded set as hago, haces, hace. Only the learned yo form contains g. Compare it with the familiar tengo, but do not extend the comparison beyond forms you already own."
+            },
+            {
+              "kind": "speech",
+              "text": "Use the forms with one known object:"
+            },
+            {
+              "kind": "speech",
+              "text": "Hago café. — “I make coffee.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Haces café. — “You make coffee.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Hace café. — “He, she, or formal you makes coffee.”"
+            },
+            {
+              "kind": "speech",
+              "text": "You can also ask ¿Qué haces? — “What are you doing?” Plural persons and weather expressions wait for later lessons."
             }
           ]
         },
@@ -115,38 +120,71 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hacer\" then the set — \"hago, haces, hace, hacemos, hacen\" — hear the g only in hago",
+              "instruction": "“hacer — hago, haces, hace”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hacer\" then the set — \"**hago**, haces, hace, hacemos, hacen\" — hear the *g* only in *hago*]"
+              "source": "[YOU SAY: “hacer — hago, haces, hace”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"¿Qué haces?\" (\"What are you doing?\"); \"Hago café\" (\"I make coffee\")",
+              "instruction": "“¿Qué haces? Hago café.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿Qué haces?\" (\"What are you doing?\"); \"Hago café\" (\"I make coffee\")]"
+              "source": "[YOU SAY: “¿Qué haces? Hago café.”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Hace calor\" / \"Hace frío\" — weather = \"it makes…\"",
+              "instruction": "“facere — fact — factory — hacer”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Hace calor\" / \"Hace frío\" — weather = \"it makes…\"]"
+              "source": "[YOU SAY: “facere — fact — factory — hacer”]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hacer\" then English \"fact, factory, perfect\" — the make/do family",
-              "spoken": true,
-              "scored": false,
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C12-hacer-singular-forms",
+              "prompt": "Give the learned singular present forms of hacer: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-LEX-HACER",
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "hago, haces, hace",
+                "hago haces hace",
+                "hago / haces / hace"
+              ],
+              "feedback": {
+                "correct": "Right: hago, haces, hace.",
+                "incorrect": "Keep the g only in the yo form: hago, haces, hace."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C12-hacer-make-coffee",
+              "prompt": "Say 'I make coffee' in Spanish.",
+              "assesses": [
+                "ES-LEX-HACER",
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
+                "ES-LEX-CAFE"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hacer\" then English \"fact, factory, perfect\" — the make/do family]"
+              "acceptedResponses": [
+                "hago café.",
+                "hago café",
+                "hago cafe",
+                "hago cafe."
+              ],
+              "feedback": {
+                "correct": "Right: Hago café.",
+                "incorrect": "Use the yo form hago before the known noun café."
+              }
             }
           ]
         },
@@ -163,7 +201,7 @@
             },
             {
               "kind": "speech",
-              "text": "What two English verbs does hacer cover? (\"do\" and \"make.\") What Latin root, and two English cousins? (facere; fact/factory/perfect.) Give the yo-form, and the other verb it echoes. (hago — the -go club, like tengo.) How does Spanish say \"it's hot\"? (Hace calor — \"it makes heat.\") Next: decir, \"to say\" — a verb that cracks and grows a g."
+              "text": "What two English verbs does hacer cover? (“Do” and “make.”) Give the three learned forms. (Hago, haces, hace.) Which Latin source and English cousin help explain it? (Facere; fact or factory.) Next: add decir without widening the person frame."
             }
           ]
         }
@@ -172,17 +210,17 @@
     {
       "id": "ES-C12-decir",
       "sequence": 980,
-      "title": "decir — \"to say,\" the verb with two irregularities at once",
+      "title": "decir — saying with the same small person frame",
       "headword": "decir",
       "romanization": "decir",
-      "gloss": "to say / to tell — doubly irregular, digo + e becomes i",
+      "gloss": "to say or tell — with the singular present forms digo, dices, and dice",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b8ca2a96fcd9236",
+      "sourceHash": "fnv1a64:dfd5c865a1ed923f",
       "notice": null,
       "blocks": [
         {
@@ -198,7 +236,7 @@
             },
             {
               "kind": "speech",
-              "text": "decir (\"to say / to tell\") is the trickiest verb yet — and the most instructive, because it stacks two patterns you already know onto one word: the -go yo-form from hacer/tener, and a stem-change from Chapter 11. Learn decir and the whole system clicks together."
+              "text": "You can ask cómo, say hola, and retrieve hago, haces, hace. Keep those three persons fixed while adding the verb “to say.”"
             }
           ]
         },
@@ -209,7 +247,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "diphthong-none-i — here the stressed stem e does not break to ie; instead it closes to i: digo, dices, dice. A third kind of stem-change."
+              "text": "In digo, the g before o is hard. Keep the i in all three learned forms short and clear: digo, dices, dice."
             }
           ]
         },
@@ -220,55 +258,52 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "decir comes from Latin dīcere, \"to say, to tell, to point out\" — and its root dic-/dict- (\"say\") runs straight through English:"
-            },
-            {
-              "kind": "speech",
-              "text": "dictate, diction, dictionary, dictaphone — all about saying."
-            },
-            {
-              "kind": "speech",
-              "text": "with prefixes: predict (\"say beforehand\"), contradict (\"say against\"), verdict (\"a true saying\"), indicate (\"point out\"), dedicate, edict, index."
-            },
-            {
-              "kind": "speech",
-              "text": "So decir is the \"say\" root behind dictionary itself — the book of what words say."
+              "text": "decir means “to say” or “to tell.” It descends from Latin dīcere, “to say.” English keeps the same root in diction, dictionary, predict (“say beforehand”), and verdict (“a true saying”)."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: two irregularities stacked",
+          "title": "Grammar Lens: one more three-form set",
           "segments": [
             {
-              "kind": "speech",
-              "text": "(1) The -go yo-form. Like hago and tengo, the yo-form grows a g: digo."
-            },
-            {
-              "kind": "speech",
-              "text": "(2) The e becomes i stem-change. In the stressed forms, the stem e closes to i — not the ie of querer, but a tighter shift to plain i:"
-            },
-            {
               "kind": "table",
-              "headers": [],
-              "columns": 3,
-              "rowCount": 5,
+              "headers": [
+                "person",
+                "present of decir"
+              ],
+              "columns": 2,
+              "rowCount": 3,
               "utterances": [
-                "yo, digo, (-go form; stem also becomes i).",
-                "tú, dices, (e becomes i).",
-                "él/ella/usted, dice, (e becomes i).",
-                "nosotros, decimos, (plain e — unstressed).",
-                "ellos/ustedes, dicen, (e becomes i)."
+                "person: yo. present of decir: digo.",
+                "person: tú. present of decir: dices.",
+                "person: él / ella / usted. present of decir: dice."
               ]
             },
             {
               "kind": "speech",
-              "text": "The boot shape returns: decimos alone keeps the plain e, because the stress falls on the ending. Everything inside the boot shifts to i; the yo corner also carries the -go."
+              "text": "Say digo, dices, dice. The yo form has g, while the other two learned forms do not. Do not build a full table or a general vowel-change rule from this small set yet."
             },
             {
               "kind": "speech",
-              "text": "The everyday payoff: ¿Cómo se dice…? — \"How do you say…?\", the single most useful question a learner owns. And dime (\"tell me\")."
+              "text": "Now combine it only with known language:"
+            },
+            {
+              "kind": "speech",
+              "text": "Digo hola. — “I say hello.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Dices hola. — “You say hello.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Dice hola. — “He, she, or formal you says hello.”"
+            },
+            {
+              "kind": "speech",
+              "text": "¿Cómo dices “hola”? — “How do you say ‘hello’?”"
             }
           ]
         },
@@ -286,29 +321,93 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"decir\" then the set — \"digo, dices, dice, decimos, dicen\" — the g in digo, the i through the boot, the plain e in decimos",
+              "instruction": "“decir — digo, dices, dice”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"decir\" then the set — \"**digo**, dices, dice, decimos, dicen\" — the *g* in *digo*, the *i* through the boot, the plain *e* in *decimos*]"
+              "source": "[YOU SAY: “decir — digo, dices, dice”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"¿Cómo se dice 'coffee' en español?\" — \"Se dice 'café'.\"",
+              "instruction": "“Digo hola. ¿Cómo dices hola?”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿Cómo se dice 'coffee' en español?\" — \"Se dice 'café'.\"]"
+              "source": "[YOU SAY: “Digo hola. ¿Cómo dices hola?”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"decir\" then English \"dictate, predict, verdict\" — the say-family",
+              "instruction": "“dīcere — diction — decir”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"decir\" then English \"dictate, predict, verdict\" — the say-family]"
+              "source": "[YOU SAY: “dīcere — diction — decir”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C12-decir-singular-forms",
+              "prompt": "Give the learned singular present forms of decir: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-LEX-DECIR",
+                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "digo, dices, dice",
+                "digo dices dice",
+                "digo / dices / dice"
+              ],
+              "feedback": {
+                "correct": "Right: digo, dices, dice.",
+                "incorrect": "Keep the g in the yo form only: digo, dices, dice."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C12-decir-say-hello",
+              "prompt": "Say 'I say hello' in Spanish.",
+              "assesses": [
+                "ES-LEX-DECIR",
+                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR",
+                "ES-LEX-HOLA"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "digo hola.",
+                "digo hola"
+              ],
+              "feedback": {
+                "correct": "Right: Digo hola.",
+                "incorrect": "Use the yo form digo before the known word hola."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C12-decir-how-do-you-say",
+              "prompt": "Ask one friend 'How do you say hello?' in Spanish.",
+              "assesses": [
+                "ES-LEX-DECIR",
+                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR",
+                "ES-LEX-COMO",
+                "ES-LEX-HOLA"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "¿cómo dices 'hola'?",
+                "¿cómo dices hola?",
+                "cómo dices hola?",
+                "como dices hola?",
+                "¿como dices hola?"
+              ],
+              "feedback": {
+                "correct": "Right: ¿Cómo dices ‘hola’?",
+                "incorrect": "Begin with cómo and use the tú form dices: ¿Cómo dices hola?"
+              }
             }
           ]
         },
@@ -325,7 +424,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin verb is decir from, and three English cousins? (dīcere; dictate/diction/predict/verdict — any three.) Name its two irregularities. (The -go yo-form digo, and the e becomes i stem-change.) Which form keeps the plain e, and why? (decimos — stress on the ending, outside the boot.) How do you ask \"How do you say…?\" (¿Cómo se dice…?) Next: the whole -go family, side by side."
+              "text": "What does decir mean? (“To say” or “to tell.”) Give the three learned forms. (Digo, dices, dice.) Which Latin source and English cousin help explain it? (Dīcere; diction, dictionary, or predict.) Next: compare only the three yo forms you have actually learned."
             }
           ]
         }
@@ -334,26 +433,26 @@
     {
       "id": "ES-C12-yo-go",
       "sequence": 990,
-      "title": "The \"-go\" club — one irregular corner, many verbs",
-      "headword": "-go",
-      "romanization": "-go",
-      "gloss": "the \"-go\" verbs — a small club whose yo-form ends in -go",
+      "title": "tengo, hago, digo — compare only what you know",
+      "headword": "tengo · hago · digo",
+      "romanization": "tengo · hago · digo",
+      "gloss": "comparing the three learned yo forms that end in -go",
       "script": "latin",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:17afaf4786688193",
+      "sourceHash": "fnv1a64:fdf24e9e4f051892",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes for one table that cannot be read aloud"
         ],
         "waitUntilStopped": [
-          "The pattern"
+          "Grammar Lens: one visible corner"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The pattern until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: one visible corner until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -369,46 +468,46 @@
             },
             {
               "kind": "speech",
-              "text": "You have now met three verbs whose yo-form ends in a surprising -go: tener becomes tengo, hacer becomes hago, decir becomes digo. That is not three coincidences — it is a club. Learn the membership and you never have to re-learn the shape."
+              "text": "Three learned verbs now place g in the yo form: tengo, hago, digo. Compare those three without guessing the form of any unseen verb."
             }
           ]
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The pattern",
+          "type": "grammar",
+          "title": "Grammar Lens: one visible corner",
           "segments": [
-            {
-              "kind": "speech",
-              "text": "Most Spanish verbs build a tidy yo-form (hablo, como, vivo). But a small set of very common verbs grow a hard g in the yo-form only — the rest of the present tense behaves normally. You have two members already; here is the core club:"
-            },
             {
               "kind": "table-skipped",
               "reason": "too-wide",
               "columns": 4,
-              "rowCount": 6,
+              "rowCount": 3,
               "headers": [
-                "verb",
+                "infinitive",
                 "meaning",
-                "yo-form",
-                "you've met it?"
+                "learned yo form",
+                "learned tú form"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 6 rows, and it has more columns than can be held in the ear at once. Its columns are: verb, meaning, yo-form, you've met it?. Come back and look at it when you have stopped."
+              "text": "There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: infinitive, meaning, learned yo form, learned tú form. Come back and look at it when you have stopped."
             },
             {
               "kind": "speech",
-              "text": "Three you know, three to come — and every one follows the same rule: -go in the yo-form, regular elsewhere (with any stem-change stacked on top, as in digo)."
+              "text": "The shared observation is narrow: each learned yo form ends in -go, while each learned tú form does not. This is a memory organizer for three known forms, not permission to manufacture new ones."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "Why the g? (a Latin fossil)",
+          "type": "etymology",
+          "title": "The pattern, taken apart — convergence, not one magic rule",
           "segments": [
             {
               "kind": "speech",
-              "text": "The g is an inheritance. Latin's first-person forms and old sound-laws left a velar (a back-of-the-mouth g/k) clinging to these particular verbs; Spanish regularized it into a clean -go. You do not need the history to use them — but it explains why the club is closed and old: these are among the most-used verbs in the language, and the oldest, most-used words are exactly the ones that keep their irregularities (like English am/was, go/went)."
+              "text": "The three modern forms did not arise by attaching one productive Latin -go ending. Older stem sounds changed in different ways, and analogy helped common verbs converge on a familiar shape. That mixed history explains why the group is useful to remember but unsafe as a prediction rule."
+            },
+            {
+              "kind": "speech",
+              "text": "Later lessons can introduce other verbs on their own evidence. For now, the complete comparison is exactly tengo, hago, digo."
             }
           ]
         },
@@ -426,29 +525,70 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three you know — \"tengo, hago, digo\" — feel the shared -go",
+              "instruction": "“tengo — hago — digo”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three you know — \"**tengo, hago, digo**\" — feel the shared *-go*]"
+              "source": "[YOU SAY: “tengo — hago — digo”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three to come — \"pongo, salgo, vengo\" — same ending",
+              "instruction": "“tienes — haces — dices”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three to come — \"**pongo, salgo, vengo**\" — same ending]"
+              "source": "[YOU SAY: “tienes — haces — dices”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "a mixed drill — \"yo tengo, yo hago, yo digo\" then \"tú tienes, tú haces, tú dices\" — the -go is yo-only",
+              "instruction": "“a memory organizer, not a prediction machine”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: a mixed drill — \"yo tengo, yo hago, yo digo\" then \"tú tienes, tú haces, tú dices\" — the *-go* is *yo*-only]"
+              "source": "[YOU SAY: “a memory organizer, not a prediction machine”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C12-yo-go-learned-order",
+              "prompt": "Give the learned yo forms of tener, hacer, and decir, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-YO-GO-CONTRAST-LEARNED",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "tengo, hago, digo",
+                "tengo hago digo",
+                "tengo / hago / digo"
+              ],
+              "feedback": {
+                "correct": "Right: tengo, hago, digo.",
+                "incorrect": "Retrieve the three learned yo forms: tengo, hago, digo."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C12-yo-go-hacer-choice",
+              "prompt": "Which learned yo form means 'I do' or 'I make'?",
+              "assesses": [
+                "ES-GRAMMAR-YO-GO-CONTRAST-LEARNED",
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "hago",
+                "yo hago"
+              ],
+              "feedback": {
+                "correct": "Right: hago means 'I do' or 'I make.'",
+                "incorrect": "Choose hago, the learned yo form of hacer."
+              }
             }
           ]
         },
@@ -465,7 +605,7 @@
             },
             {
               "kind": "speech",
-              "text": "What do tengo, hago, and digo share, and in which form only? (A -go ending, in the yo-form only.) Name three more members of the club. (pongo, salgo, vengo — from poner, salir, venir.) Are these verbs irregular everywhere? (No — just the yo-form; the rest is regular, plus any stem-change.) Why is the club old and closed? (These are the most-used, oldest verbs — the ones that keep their fossils.) Next: practice — put hacer, decir, and the -go club to work."
+              "text": "Which three learned yo forms end in -go? (Tengo, hago, digo.) May this comparison predict an unseen verb? (No.) Why not? (Different sound histories and analogy converged on the same shape.) Next: retrieve the whole chapter without adding any word or form."
             }
           ]
         }
@@ -474,17 +614,17 @@
     {
       "id": "ES-C12-practice",
       "sequence": 1000,
-      "title": "Practice — hacer, decir, and the -go club",
+      "title": "Practice — doing, making, and saying in the singular",
       "headword": "(practice)",
       "romanization": "(practice)",
-      "gloss": "doing, making, saying — hacer, decir, and the -go club",
+      "gloss": "singular doing, making, saying, and the learned tengo, hago, digo comparison",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe2365102528f58f",
+      "sourceHash": "fnv1a64:6fcf2a836c0b72e8",
       "notice": null,
       "blocks": [
         {
@@ -500,78 +640,60 @@
             },
             {
               "kind": "speech",
-              "text": "This chapter added two workhorse verbs — hacer (\"do/make\") and decir (\"say\") — and the -go club that unites their yo-forms with tengo. Time to make them automatic."
+              "text": "This checkpoint adds nothing. Retrieve two bounded three-form sets, use them with known words, and compare only tengo, hago, digo."
             }
           ]
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Drill 1 — the -go yo-forms",
+          "type": "grammar",
+          "title": "Grammar Lens: the complete small chapter frame",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
+              "kind": "speech",
+              "text": "doing or making: hago, haces, hace."
             },
             {
               "kind": "speech",
-              "text": "Say the yo-form for each, then the tú-form (which drops the g):"
+              "text": "saying or telling: digo, dices, dice."
             },
             {
               "kind": "speech",
-              "text": "hacer becomes yo hago, tú haces."
+              "text": "the learned yo comparison: tengo, hago, digo."
             },
             {
               "kind": "speech",
-              "text": "decir becomes yo digo, tú dices (mind the e becomes i)."
+              "text": "known-word use: Hago café. Digo hola. ¿Cómo dices “hola”?"
             },
             {
               "kind": "speech",
-              "text": "tener becomes yo tengo, tú tienes (mind the e becomes ie)."
-            },
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What do all three yo-forms share? (The -go.) What happens to it in the tú-form? (It drops — the -go is yo-only.)"
+              "text": "Plural persons, weather nouns, homework vocabulary, and unseen verbs remain outside this checkpoint."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "Drill 2 — say the full present",
+          "type": "etymology",
+          "title": "The words, taken apart — retrieve the history",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
+              "kind": "speech",
+              "text": "hacer continues Latin facere, the making family of fact and factory."
             },
             {
               "kind": "speech",
-              "text": "Run each verb top to bottom:"
+              "text": "decir continues Latin dīcere, the saying family of diction and predict."
             },
             {
               "kind": "speech",
-              "text": "hacer: hago, haces, hace, hacemos, hacen."
-            },
-            {
-              "kind": "speech",
-              "text": "decir: digo, dices, dice, decimos, dicen — the boot: only decimos keeps the plain e."
+              "text": "inherited sound changes and analogy made three known yo forms converge on -go; the resemblance does not predict forms you have not learned."
             }
           ]
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Drill 3 — put it to use",
+          "type": "guided-production",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "pause",
@@ -580,54 +702,153 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Say each out loud:"
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“hago, haces, hace”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “hago, haces, hace”]"
             },
             {
-              "kind": "speech",
-              "text": "\"¿Qué haces?\" — \"What are you doing?\""
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“digo, dices, dice”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “digo, dices, dice”]"
             },
             {
-              "kind": "speech",
-              "text": "\"Hago la tarea.\" — \"I'm doing the homework.\""
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“tengo, hago, digo”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “tengo, hago, digo”]"
             },
             {
-              "kind": "speech",
-              "text": "\"¿Cómo se dice 'window'?\" — \"How do you say 'window'?\""
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Hago café. Digo hola.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Hago café. Digo hola.”]"
             },
             {
-              "kind": "speech",
-              "text": "\"Hace frío hoy.\" — \"It's cold today\" (weather with hacer — \"it makes cold\")."
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C12-practice-hacer-forms",
+              "prompt": "Give the learned singular forms of hacer: yo, tú, then usted.",
+              "assesses": [
+                "ES-LEX-HACER",
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "hago, haces, hace",
+                "hago haces hace",
+                "hago / haces / hace"
+              ],
+              "feedback": {
+                "correct": "Right: hago, haces, hace.",
+                "incorrect": "Retrieve only the learned singular set: hago, haces, hace."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C12-practice-decir-forms",
+              "prompt": "Give the learned singular forms of decir: yo, tú, then usted.",
+              "assesses": [
+                "ES-LEX-DECIR",
+                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "digo, dices, dice",
+                "digo dices dice",
+                "digo / dices / dice"
+              ],
+              "feedback": {
+                "correct": "Right: digo, dices, dice.",
+                "incorrect": "Retrieve only the learned singular set: digo, dices, dice."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C12-practice-yo-go-order",
+              "prompt": "Give the learned yo forms of tener, hacer, and decir, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-YO-GO-CONTRAST-LEARNED",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "tengo, hago, digo",
+                "tengo hago digo",
+                "tengo / hago / digo"
+              ],
+              "feedback": {
+                "correct": "Right: tengo, hago, digo.",
+                "incorrect": "Retrieve the bounded comparison: tengo, hago, digo."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C12-practice-make-coffee",
+              "prompt": "Say 'I make coffee' in Spanish.",
+              "assesses": [
+                "ES-LEX-HACER",
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
+                "ES-LEX-CAFE"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "hago café.",
+                "hago café",
+                "hago cafe",
+                "hago cafe."
+              ],
+              "feedback": {
+                "correct": "Right: Hago café.",
+                "incorrect": "Use hago before the known noun café."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C12-practice-how-say-hello",
+              "prompt": "Ask one friend 'How do you say hello?' in Spanish.",
+              "assesses": [
+                "ES-LEX-DECIR",
+                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR",
+                "ES-LEX-COMO",
+                "ES-LEX-HOLA"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "¿cómo dices 'hola'?",
+                "¿cómo dices hola?",
+                "cómo dices hola?",
+                "como dices hola?",
+                "¿como dices hola?"
+              ],
+              "feedback": {
+                "correct": "Right: ¿Cómo dices ‘hola’?",
+                "incorrect": "Use cómo plus the tú form dices: ¿Cómo dices hola?"
+              }
             }
           ]
         },
         {
           "index": 4,
-          "type": "unknown",
-          "title": "Drill 4 — the root families (say the cousin)",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Name an English cousin from the same Latin root:"
-            },
-            {
-              "kind": "speech",
-              "text": "hacer from facere becomes? (fact / factory / perfect / manufacture — any.)"
-            },
-            {
-              "kind": "speech",
-              "text": "decir from dīcere becomes? (dictate / diction / predict / verdict — any.)"
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -639,7 +860,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the yo-forms of hacer, decir, and tener. (hago, digo, tengo — the -go club.) In decir, which form escapes the e becomes i boot, and why? (decimos — stress on the ending.) How does Spanish say \"it's hot\"? (Hace calor.) You can now do, make, and say in Spanish — and you have seen that its most irregular verbs are its most-used, oldest words."
+              "text": "Give both three-form sets. (Hago, haces, hace; digo, dices, dice.) Which three learned yo forms share -go? (Tengo, hago, digo.) Why is that comparison a memory aid rather than a prediction rule? (Its mixed history does not license unseen forms.) Chapter 13 may now introduce its own verbs one at a time."
             }
           ]
         }

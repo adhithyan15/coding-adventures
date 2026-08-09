@@ -1,71 +1,79 @@
 ---
+schema_version: 2
 id: ES-C12-yo-go
-chapter: 12
+spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 990
+chapter: 12
 type: phrase
-headword: -go
-gloss: the "-go" verbs — a small club whose yo-form ends in -go
+headword: tengo · hago · digo
+gloss: comparing the three learned yo forms that end in -go
 concept_tag: ES-YO-GO
 prerequisites: [ES-C12-hacer, ES-C12-decir, ES-C08-tener]
 sounds: [g-hard]
-roots: [latin-velar-yo]
-etymology_hook: "the -go yo-forms (tengo, hago, digo, pongo, salgo, vengo) — a Latin-inherited club where the 1st-person present grows a hard g; learn the pattern once and every member follows"
-est_minutes: 4
-reviews_of: [ES-C12-hacer, ES-C12-decir, ES-C08-tener]
+roots: [spanish-yo-go-convergence]
+etymology_hook: "tengo, hago, and digo reached a shared -go shape through inherited sound changes and analogy, not through one productive ending that can predict unseen verbs"
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HACER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR]
+introduces:
+  knowledge: [ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-HISTORY-YO-GO-CONVERGENCE]
+practises:
+  knowledge: [ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HACER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR, ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-HISTORY-YO-GO-CONVERGENCE]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C08-tener, ES-C12-hacer, ES-C12-decir]
 ---
 
-# The "-go" club — one irregular corner, many verbs
+# tengo · hago · digo — compare only what you know
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR] -->
 
-[PAUSE 2s] You have now met three verbs whose **yo**-form ends in a surprising
-**-go**: *tener → **tengo***, *hacer → **hago***, *decir → **digo***. That is not
-three coincidences — it is a **club**. Learn the membership and you never have to
-re-learn the shape.
+[PAUSE 2s] Three learned verbs now place **g** in the **yo** form: **tengo,
+hago, digo**. Compare those three without guessing the form of any unseen verb.
 
-## The pattern
+## Grammar Lens: one visible corner
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-YO-GO-CONTRAST-LEARNED]; assesses=[ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HACER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR] -->
 
-Most Spanish verbs build a tidy *yo*-form (*hablo, como, vivo*). But a small set
-of very common verbs **grow a hard *g*** in the *yo*-form only — the rest of the
-present tense behaves normally. You have two members already; here is the core
-club:
-
-| verb | meaning | **yo**-form | you've met it? |
+| infinitive | meaning | learned **yo** form | learned **tú** form |
 |---|---|---|---|
-| **tener** | to have | **tengo** | ✓ Chapter 8 |
-| **hacer** | to do/make | **hago** | ✓ this chapter |
-| **decir** | to say | **digo** | ✓ this chapter |
-| **poner** | to put | **pongo** | coming |
-| **salir** | to leave/go out | **salgo** | coming |
-| **venir** | to come | **vengo** | coming |
+| **tener** | to have | **tengo** | **tienes** |
+| **hacer** | to do / make | **hago** | **haces** |
+| **decir** | to say / tell | **digo** | **dices** |
 
-Three you know, three to come — and every one follows the same rule: **-go in the
-*yo*-form, regular elsewhere** (with any stem-change stacked on top, as in
-*digo*).
+The shared observation is narrow: each learned **yo** form ends in **-go**,
+while each learned **tú** form does not. This is a memory organizer for three
+known forms, not permission to manufacture new ones.
 
-## Why the g? (a Latin fossil)
+## The pattern, taken apart — convergence, not one magic rule
+<!-- hl-knowledge: introduces=[ES-HISTORY-YO-GO-CONVERGENCE]; assesses=[ES-GRAMMAR-YO-GO-CONTRAST-LEARNED] -->
 
-The *g* is an inheritance. Latin's first-person forms and old sound-laws left a
-**velar** (a back-of-the-mouth *g/k*) clinging to these particular verbs; Spanish
-regularized it into a clean *-go*. You do not need the history to use them — but
-it explains why the club is closed and old: these are among the **most-used verbs
-in the language**, and the oldest, most-used words are exactly the ones that keep
-their irregularities (like English *am/was*, *go/went*).
+The three modern forms did not arise by attaching one productive Latin **-go**
+ending. Older stem sounds changed in different ways, and analogy helped common
+verbs converge on a familiar shape. That mixed history explains why the group
+is useful to remember but unsafe as a prediction rule.
+
+Later lessons can introduce other verbs on their own evidence. For now, the
+complete comparison is exactly **tengo · hago · digo**.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-HISTORY-YO-GO-CONVERGENCE, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR] -->
+<!-- hl-activity: {"id":"ES-C12-yo-go-learned-order","kind":"text","assesses":["ES-GRAMMAR-YO-GO-CONTRAST-LEARNED","ES-GRAMMAR-TENER-PRESENT-SINGULAR","ES-GRAMMAR-HACER-PRESENT-SINGULAR","ES-GRAMMAR-DECIR-PRESENT-SINGULAR"],"prompt":"Give the learned yo forms of tener, hacer, and decir, in that order.","answer":"tengo, hago, digo","accepted":["tengo hago digo","tengo / hago / digo"],"feedback":{"correct":"Right: tengo, hago, digo.","incorrect":"Retrieve the three learned yo forms: tengo, hago, digo."},"response_seconds":9} -->
+<!-- hl-activity: {"id":"ES-C12-yo-go-hacer-choice","kind":"text","assesses":["ES-GRAMMAR-YO-GO-CONTRAST-LEARNED","ES-GRAMMAR-HACER-PRESENT-SINGULAR"],"prompt":"Which learned yo form means 'I do' or 'I make'?","answer":"hago","accepted":["yo hago"],"feedback":{"correct":"Right: hago means 'I do' or 'I make.'","incorrect":"Choose hago, the learned yo form of hacer."},"response_seconds":6} -->
 
 [PAUSE 1s]
-- [YOU SAY: the three you know — "**tengo, hago, digo**" — feel the shared *-go*]
-- [YOU SAY: the three to come — "**pongo, salgo, vengo**" — same ending]
-- [YOU SAY: a mixed drill — "yo tengo, yo hago, yo digo" then "tú tienes, tú
-  haces, tú dices" — the *-go* is *yo*-only]
+- [YOU SAY: “tengo — hago — digo”]
+- [YOU SAY: “tienes — haces — dices”]
+- [YOU SAY: “a memory organizer, not a prediction machine”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-HISTORY-YO-GO-CONVERGENCE] -->
 
-[PAUSE 3s] What do *tengo*, *hago*, and *digo* share, and in which form only?
-(A **-go** ending, in the **yo**-form only.) Name three more members of the club.
-(*pongo, salgo, vengo* — from *poner, salir, venir*.) Are these verbs irregular
-everywhere? (No — **just the yo-form**; the rest is regular, plus any stem-change.)
-Why is the club old and closed? (These are the most-used, oldest verbs — the ones
-that keep their fossils.) Next: **practice** — put *hacer*, *decir*, and the *-go*
-club to work.
+[PAUSE 3s] Which three learned **yo** forms end in **-go**? (*Tengo, hago,
+digo.*) May this comparison predict an unseen verb? (No.) Why not? (Different
+sound histories and analogy converged on the same shape.) Next: retrieve the
+whole chapter without adding any word or form.

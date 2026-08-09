@@ -221,9 +221,10 @@ describe("corpus snapshot", () => {
     // the existing pre-A1 social spine.
     expect(summary.byLevel["pre-A1"]).toBe(868);
     // Chapter 10 adds singular ir and possessives at A1. Chapter 11 adds one more
-    // definite-reference lesson there; wanting, ability, comparison, and payoff are A2.
+    // definite-reference lesson there; its other work is A2. Chapter 12 adds its
+    // newly mapped terminal checkpoint at A2 on SPINE-SAY-WHAT-I-DO.
     expect(summary.byLevel.A1).toBe(309);
-    expect(summary.byLevel.A2).toBe(396); // +26: Spanish chapters 11 and 14-18 plus prerequisite closure
+    expect(summary.byLevel.A2).toBe(397); // +27: Spanish chapters 11-12 and 14-18 plus prerequisite closure
     // 8, not 0: Spanish chapters 38 and 41 realize SPINE-NARRATE-EVENTS and
     // SPINE-GIVE-REASONS, four lessons each — the only B1 nodes any track has touched.
     // B2-C2 remain authored-but-unrealized, in every track.
@@ -235,8 +236,8 @@ describe("corpus snapshot", () => {
     // HL-C63 places 47 orphan chapter lessons and two Spanish prerequisites. Chapters
     // Chapters 7-9 then map their terminal practices and Chapter 9's remaining
     // teaching lessons. Chapter 10 closes two more gaps; Chapter 11 closes its
-    // possessive and terminal-practice gaps.
-    expect(summary.unmapped).toBe(88);
+    // possessive and terminal-practice gaps; Chapter 12 closes its payoff gap.
+    expect(summary.unmapped).toBe(87);
     expect(summary.mappedPercent).toBe(95);
   });
 

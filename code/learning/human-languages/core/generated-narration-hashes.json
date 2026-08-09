@@ -6529,7 +6529,7 @@
     {
       "language": "spanish",
       "chapter": 12,
-      "sourceHash": "fnv1a64:ab04c43bed11cbe9",
+      "sourceHash": "fnv1a64:6ce3fa06498db937",
       "lessonIds": [
         "ES-C12-hacer",
         "ES-C12-decir",
@@ -6540,8 +6540,8 @@
       "drivablePrefix": 2,
       "text": "spanish/narration/ch12.txt",
       "json": "spanish/narration/ch12.json",
-      "textHash": "fnv1a64:a42b135aad54fbf6",
-      "jsonHash": "fnv1a64:6d4545dddf731948"
+      "textHash": "fnv1a64:8fe8ac6d00d8a860",
+      "jsonHash": "fnv1a64:18fbf230b3e75f0e"
     },
     {
       "language": "spanish",

@@ -450,12 +450,57 @@
       "after": []
     },
     {
+      "id": "ES-PATH-030-HACER-CH12",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C12-hacer"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-030-HACER-CH12"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-030-DECIR-CH12",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C12-decir"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-030-DECIR-CH12"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-030-YO-GO-CH12",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C12-yo-go"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-030-YO-GO-CH12"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-030-CONSOLIDATION-CH12",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C12-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-030-CONSOLIDATION-CH12"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-030",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "ES-C12-hacer",
-        "ES-C12-decir",
-        "ES-C12-yo-go",
         "ES-C13-poner",
         "ES-C13-salir",
         "ES-C13-venir"
@@ -924,6 +969,10 @@
         "ES-PATH-030-TENER",
         "ES-PATH-030-SER",
         "ES-PATH-030-ABILITY-CH11",
+        "ES-PATH-030-HACER-CH12",
+        "ES-PATH-030-DECIR-CH12",
+        "ES-PATH-030-YO-GO-CH12",
+        "ES-PATH-030-CONSOLIDATION-CH12",
         "ES-PATH-030",
         "ES-PATH-031",
         "ES-PATH-032",
@@ -1786,6 +1835,50 @@
       ]
     },
     {
+      "id": "ES-EXT-030-HACER-CH12",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the three learned singular forms of hacer with known words.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C12-hacer"
+      ]
+    },
+    {
+      "id": "ES-EXT-030-DECIR-CH12",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the three learned singular forms of decir with known words and cómo.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C12-decir"
+      ]
+    },
+    {
+      "id": "ES-EXT-030-YO-GO-CH12",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can compare the learned tengo, hago, and digo forms without predicting unseen verbs.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C12-yo-go"
+      ]
+    },
+    {
+      "id": "ES-EXT-030-CONSOLIDATION-CH12",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve singular doing, making, saying, and the learned yo-go comparison together.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C12-practice"
+      ]
+    },
+    {
       "id": "ES-EXT-030-LANGUAGE-SPECIFIC",
       "stage": "A1",
       "kind": "required",
@@ -1793,7 +1886,6 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C12-yo-go",
         "ES-C13-salir"
       ]
     }
