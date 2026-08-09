@@ -4787,9 +4787,15 @@ the Rust, Python, and TypeScript surfaces together.
      the unresolved legacy `B` beta-alias versus doping-tail policy collision.
 
 486. Python and TypeScript Berkeley SPICE JFET threshold-alias parity.
-   - Status: implemented in this JFET threshold-alias slice.
+   - Status: completed in PR 10176.
    - Both parser facades lower the engine-advertised `VT0` and `VTH` aliases
      into the JFET threshold-voltage field with canonical `VTO` precedence,
+     without changing the unresolved `B` parameter policy.
+
+487. Python and TypeScript Berkeley SPICE JFET `LAM` alias parity.
+   - Status: implemented in this JFET `LAM` alias slice.
+   - Both parser facades lower the engine-advertised `LAM` alias into the JFET
+     channel-length-modulation field with canonical `LAMBDA` precedence,
      without changing the unresolved `B` parameter policy.
 
 ## Backlog
