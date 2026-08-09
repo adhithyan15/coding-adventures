@@ -19,3 +19,7 @@ probes without credentials, prefers advertised SHA-256 Digest over MD5 and
 Basic, uses a fresh CSPRNG client nonce, and permits one refreshed Digest
 challenge retry. Endpoint URIs, credentials, authorization values, and response
 bytes are absent from errors and debug output.
+
+Credential registration fails when an entity already has credentials. Hosts
+must explicitly remove the old value before replacement, which keeps one
+delivery from silently overwriting another host-owned credential lifetime.

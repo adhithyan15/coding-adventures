@@ -37,6 +37,11 @@ The security context is installed once in `CameraMediaService` by the native hos
 - `CameraMediaPrincipalSource` derives the authenticated `AgentId` from the
   active host/session, not the untrusted access request or each operation call.
 - `CameraMediaExecutor` owns the actual network/media operation.
+- `CameraMediaCredentialRegistry` lets a trusted host scope transport
+  credentials around delivery without exposing them through broker state.
+
+Hosts can perform the same exact grant check as lease issuance before resolving
+credentials, and can test endpoint presence without reading the secret URI.
 
 The policy core itself performs no filesystem, network, process, environment, FFI,
 clock, standard-I/O, or entropy operation. Endpoint and lease tables are bounded;

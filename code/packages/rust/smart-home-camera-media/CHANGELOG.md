@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Add a grant-only authorization preflight and endpoint-presence query so a
+  production host can reject work before touching credential or network
+  boundaries without exposing retained endpoint values.
+- Add a narrow executor credential-registry boundary for host-scoped credential
+  registration and removal around one authorized delivery.
+
 ## 0.3.0
 
 - Retain an optional reviewed canonical host and pinned socket with registered
