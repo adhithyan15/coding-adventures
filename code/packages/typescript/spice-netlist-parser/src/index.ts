@@ -2071,10 +2071,10 @@ function parseModelParams(paramsText: string): ReadonlyMap<string, number> {
   if (paramsText.trim().length === 0) {
     return params;
   }
-  const pattern = /([A-Za-z][A-Za-z0-9_]*)\s*=\s*([^,\s)]+)/g;
+  const pattern = /([A-Za-z][A-Za-z0-9_-]*)\s*=\s*([^,\s)]+)/g;
   let match: RegExpExecArray | null;
   while ((match = pattern.exec(paramsText)) !== null) {
-    params.set(match[1].toUpperCase(), parseValue(match[2]));
+    params.set(match[1].toUpperCase().replace(/-/g, "_"), parseValue(match[2]));
   }
   const leftover = paramsText.replace(pattern, "").replace(/[,\s]/g, "");
   if (leftover.length > 0 || params.size === 0) {

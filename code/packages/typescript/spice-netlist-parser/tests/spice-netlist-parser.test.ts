@@ -2783,6 +2783,26 @@ M1 out gate 0 0 nfast W=2u L=180n
     });
   });
 
+  it("normalizes model parameter alias hyphens", () => {
+    const parsed = parseNetlist(
+      ".model qfast NPN(BETA-F=125)\n" +
+        ".model mfast NMOS(T-NOM=325 KP=120u)\n" +
+        "Q1 collector base emitter qfast\n" +
+        "M1 d g s b mfast",
+    );
+
+    expect(parsed.models.get("qfast")?.params.get("BETA_F")).toBe(125.0);
+    expect(parsed.models.get("mfast")?.params.get("T_NOM")).toBe(325.0);
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      forwardBeta: 125.0,
+    });
+    expect(parsed.circuit.elements()[1]).toMatchObject({
+      kind: "mosfet",
+      params: { T_NOM: 325.0 },
+    });
+  });
+
   it("parses PMOS MOSFET aliases", () => {
     const parsed = parseNetlist(`
 .model pfast PMOS(VTO=0.4 KP=120u NSUB=1.2)

@@ -2666,6 +2666,23 @@ def test_parse_separator_normalized_model_type_aliases() -> None:
     assert mosfet.model.type == MosfetType.PMOS
 
 
+def test_parse_hyphen_normalized_model_parameter_aliases() -> None:
+    parsed = parse_netlist(
+        ".model qfast NPN(BETA-F=125)\n"
+        ".model mfast NMOS(T-NOM=325 KP=120u)\n"
+        "Q1 collector base emitter qfast\n"
+        "M1 d g s b mfast"
+    )
+
+    assert parsed.models["qfast"].params["BETA_F"] == 125.0
+    assert parsed.models["mfast"].params["T_NOM"] == 325.0
+    bjt, mosfet = parsed.circuit.elements
+    assert isinstance(bjt, BJT)
+    assert bjt.beta_f == 125.0
+    assert isinstance(mosfet, Mosfet)
+    assert mosfet.model.model.params.T_NOM == 325.0
+
+
 def test_parse_pmos_mosfet_model() -> None:
     parsed = parse_netlist(
         """
