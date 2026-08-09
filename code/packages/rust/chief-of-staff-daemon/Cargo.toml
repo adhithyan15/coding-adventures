@@ -14,7 +14,9 @@ name = "chief-of-staff-daemon"
 path = "src/main.rs"
 
 [dependencies]
+chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }
 chief-of-staff-daemon-api = { path = "../chief-of-staff-daemon-api" }
+chief-of-staff-daemon-authority-provisioning = { path = "../chief-of-staff-daemon-authority-provisioning" }
 chief-of-staff-daemon-config = { path = "../chief-of-staff-daemon-config" }
 chief-of-staff-daemon-credential = { path = "../chief-of-staff-daemon-credential" }
 chief-of-staff-daemon-keyring = { path = "../chief-of-staff-daemon-keyring" }
@@ -25,6 +27,7 @@ chief-of-staff-orchestrator-core = { path = "../chief-of-staff-orchestrator-core
 chief-of-staff-process-supervisor = { path = "../chief-of-staff-process-supervisor" }
 chief-of-staff-service-reconciler = { path = "../chief-of-staff-service-reconciler" }
 coding_adventures_x3dh = { path = "../x3dh" }
+coding_adventures_uuid = { path = "../uuid" }
 process-shutdown = { path = "../process-shutdown" }
 storage-core = { path = "../storage-core" }
 coding_adventures_storage_fs = { path = "../storage-fs" }

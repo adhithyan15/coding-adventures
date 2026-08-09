@@ -3,19 +3,26 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+use chief_of_staff_channel_endpoints::{
+    MessageId, MessageMetadata, MessageMetadataError, MessageMetadataSource,
+};
 use chief_of_staff_daemon_api::{BindAddress, DaemonApi, DaemonApiError};
+use chief_of_staff_daemon_authority_provisioning::{
+    provision_authorities, AuthorityProvisioningError,
+};
 use chief_of_staff_daemon_config::{parse_config, ChiefConfig, ConfigError};
 use chief_of_staff_daemon_credential::{load_or_create_credential, CredentialFileError};
 use chief_of_staff_daemon_keyring::{load_package_keyring, KeyringLoadError};
 use chief_of_staff_daemon_policy::{DenyChannelWiring, LocalAuthError, LocalBearerAuthorizer};
 use chief_of_staff_daemon_runtime::{ChiefDaemonRuntime, DaemonRuntimeError, ReconcileSchedule};
 use chief_of_staff_host_data_plane::{
-    DurableHostDataPlaneDispatcher, UnavailableHostDataPlaneService,
+    AuthorityBackedHostDataPlaneService, DurableHostDataPlaneDispatcher, HostDataPlaneService,
+    UnavailableHostDataPlaneService,
 };
 use chief_of_staff_orchestrator_core::OrchestratorCore;
 use chief_of_staff_process_supervisor::{
-    DurableHostLaunchBindings, HostProgram, ProcessSupervisorConfig, ProcessSupervisorError,
-    SystemMonotonicClock, UuidV7SessionIdSource,
+    DurableHostLaunchBindings, HostProgram, MonotonicClock, ProcessSupervisorConfig,
+    ProcessSupervisorError, SystemMonotonicClock, UuidV7SessionIdSource,
 };
 use chief_of_staff_service_reconciler::{ConfigError as ReconcileConfigError, ReconcileConfig};
 use coding_adventures_storage_fs::FsStorageBackend;
@@ -58,6 +65,8 @@ pub enum ChiefDaemonError {
     Config(ConfigError),
     /// A configured trusted package key could not be loaded.
     Keyring(KeyringLoadError),
+    /// Explicit channel-key or model-provider authority provisioning failed.
+    Authority(AuthorityProvisioningError),
     /// The local operator credential could not be loaded or created safely.
     Credential(CredentialFileError),
     /// Local bearer policy construction failed.
@@ -94,6 +103,7 @@ impl Display for ChiefDaemonError {
             Self::ConfigFileEncoding => "chief daemon: config file is not UTF-8",
             Self::Config(_) => "chief daemon: config validation failed",
             Self::Keyring(_) => "chief daemon: package keyring failed",
+            Self::Authority(_) => "chief daemon: data-plane authority provisioning failed",
             Self::Credential(_) => "chief daemon: operator credential failed",
             Self::Authentication(_) => "chief daemon: local authentication policy failed",
             Self::Storage(_) => "chief daemon: durable storage failed",
@@ -254,11 +264,14 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
         ReconcileConfig::new(interval_ns.saturating_mul(HEARTBEAT_GRACE_INTERVALS))
             .map_err(ChiefDaemonError::Reconciliation)?;
     let schedule = ReconcileSchedule::new(interval).map_err(ChiefDaemonError::Runtime)?;
-    let clock = Arc::new(SystemMonotonicClock::new());
+    let clock: Arc<dyn MonotonicClock> = Arc::new(SystemMonotonicClock::new());
     let launch_bindings = Arc::new(DurableHostLaunchBindings::new(Arc::clone(&backend)));
+    let metadata_source: Arc<dyn MessageMetadataSource> =
+        Arc::new(SystemMessageMetadataSource::new(Arc::clone(&clock)));
+    let service = compose_data_plane_service(&config, home, Arc::clone(&backend), metadata_source)?;
     let data_plane = Arc::new(DurableHostDataPlaneDispatcher::new(
         Arc::clone(&backend),
-        Arc::new(UnavailableHostDataPlaneService),
+        service,
     ));
     let core = OrchestratorCore::with_process_supervisor(
         backend,
@@ -278,6 +291,51 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
         config.orchestrator().port(),
     ));
     run_platform(address, api, schedule)
+}
+
+fn compose_data_plane_service(
+    config: &ChiefConfig,
+    home: &Path,
+    backend: Arc<dyn StorageBackend>,
+    metadata_source: Arc<dyn MessageMetadataSource>,
+) -> Result<Arc<dyn HostDataPlaneService>, ChiefDaemonError> {
+    if config.data_plane().channel_keys().is_empty()
+        && config.data_plane().ollama_models().is_empty()
+    {
+        return Ok(Arc::new(UnavailableHostDataPlaneService));
+    }
+    let authorities =
+        provision_authorities(config.data_plane(), home).map_err(ChiefDaemonError::Authority)?;
+    let (channel_keys, models) = authorities.into_parts();
+    Ok(Arc::new(AuthorityBackedHostDataPlaneService::new(
+        backend,
+        Arc::new(channel_keys),
+        Arc::new(models),
+        metadata_source,
+    )))
+}
+
+struct SystemMessageMetadataSource {
+    clock: Arc<dyn MonotonicClock>,
+}
+
+impl SystemMessageMetadataSource {
+    fn new(clock: Arc<dyn MonotonicClock>) -> Self {
+        Self { clock }
+    }
+}
+
+impl MessageMetadataSource for SystemMessageMetadataSource {
+    fn next_metadata(&self) -> Result<MessageMetadata, MessageMetadataError> {
+        let uuid = coding_adventures_uuid::v7()
+            .map_err(|_| MessageMetadataError::new("message identity unavailable"))?;
+        let message_id = MessageId::from_uuid_v7(uuid.bytes())
+            .map_err(|_| MessageMetadataError::new("message identity invalid"))?;
+        Ok(MessageMetadata {
+            message_id,
+            timestamp_ns: self.clock.now_ns(),
+        })
+    }
 }
 
 fn serve<P, C, A>(
@@ -438,6 +496,7 @@ fn same_file(left: &Metadata, right: &Metadata) -> bool {
 mod tests {
     use super::*;
     use std::sync::atomic::{AtomicU64, Ordering};
+    use storage_core::InMemoryStorageBackend;
 
     static NEXT_DIR: AtomicU64 = AtomicU64::new(0);
 
@@ -547,6 +606,40 @@ hardware_key_timeout = 60
         fs::write(&path, VALID_CONFIG).unwrap();
         let config = load_config_file(&path).unwrap();
         assert_eq!(config.orchestrator().port(), 7463);
+    }
+
+    #[test]
+    fn configured_authorities_fail_startup_without_disclosing_secret_paths() {
+        let directory = TestDir::new();
+        let config = parse_config(&format!(
+            "{VALID_CONFIG}\n[data_plane]\nchannel_keys = [\n  {{ pipeline_id = \"018f0c10-7b4a-7cc0-8000-000000000001\", agent_id = \"weather\", channel_id = \"018f0c10-7b4a-7cc0-8000-000000000002\", access = \"read\", private_key_path = \"~/missing-private-key.bin\" }},\n]\nollama_models = []\n"
+        ))
+        .unwrap();
+        let backend: Arc<dyn StorageBackend> = Arc::new(InMemoryStorageBackend::new());
+        let clock: Arc<dyn MonotonicClock> = Arc::new(SystemMonotonicClock::new());
+        let metadata: Arc<dyn MessageMetadataSource> =
+            Arc::new(SystemMessageMetadataSource::new(clock));
+        let Err(error) = compose_data_plane_service(&config, &directory.0, backend, metadata)
+        else {
+            panic!("missing private authority unexpectedly composed");
+        };
+        assert!(matches!(error, ChiefDaemonError::Authority(_)));
+        assert_eq!(
+            error.to_string(),
+            "chief daemon: data-plane authority provisioning failed"
+        );
+        assert!(!error.to_string().contains("missing-private-key.bin"));
+    }
+
+    #[test]
+    fn production_publish_metadata_is_uuid_v7_and_monotonic() {
+        let clock: Arc<dyn MonotonicClock> = Arc::new(SystemMonotonicClock::new());
+        let source = SystemMessageMetadataSource::new(clock);
+        let first = source.next_metadata().unwrap();
+        let second = source.next_metadata().unwrap();
+        assert_eq!(first.message_id.as_bytes()[6] >> 4, 7);
+        assert_eq!(first.message_id.as_bytes()[8] & 0xc0, 0x80);
+        assert!(second.timestamp_ns >= first.timestamp_ns);
     }
 
     #[test]

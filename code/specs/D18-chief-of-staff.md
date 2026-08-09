@@ -540,10 +540,11 @@ binding, immutable claims, active channel topology, directional membership, and
 model settings. It rejects unknown or wrong-direction channel UUIDs and any model
 setting drift before invoking the separately injected channel/LLM service, then
 validates response identity and operation shape before returning it. The
-payload-blind orchestration core receives no request body. Until the provisioned
-authorities are injected into composition, the production daemon uses the same
-authorization boundary with a redacted unavailable service. The reusable
-authority-backed service now executes against the real encrypted durable channel
+payload-blind orchestration core receives no request body. When the optional
+data-plane table is absent or empty, the production daemon uses the same
+authorization boundary with a redacted unavailable service. A non-empty table is
+provisioned at daemon startup and injects the authority-backed service, which
+executes against the real encrypted durable channel
 endpoints, retains a bounded delivery-to-acknowledgement ledger, provisions sealed
 receiver grants before publication, and resolves only exact model selectors. Key
 release and provider construction remain separately injected authorities so the
@@ -553,7 +554,8 @@ The concrete pre-composition key registry owns only zeroizing secret buffers, bi
 each directional key to an exact pipeline, agent, and channel, and releases a new
 short-lived crypto owner only after all three identities match the reloaded durable
 binding. Filesystem and Vault formats remain separate provisioning adapters.
-The file-backed production adapter consumes only the typed declarations above,
+The file-backed production adapter in the concrete daemon consumes only the typed
+declarations above,
 loads raw private material through owner-only no-link exact-length reads, and
 constructs exact Ollama clients without probing the network. A future Vault
 adapter may populate the same registries without changing execution semantics.
@@ -2220,9 +2222,10 @@ contracts. With no arguments it resolves `~/.chief-of-staff/config.toml` from th
 platform user-home environment; one explicit absolute config path is also accepted.
 The config file is bounded to 256 KiB, must remain a regular non-link file throughout
 loading, and is parsed by the closed schema above. Startup then loads the package
-keyring and local credential, initializes the filesystem service registry, constructs
-the verified shell-free host supervisor, binds the authenticated WebSocket API to the
-validated loopback address, reconciles once, and schedules further reconciliation at
+keyring and local credential, initializes the filesystem service registry, provisions
+any non-empty typed data-plane declarations, constructs the verified shell-free host
+supervisor, binds the authenticated WebSocket API to the validated loopback address,
+reconciles once, and schedules further reconciliation at
 `health_check_interval`. Three missed intervals are tolerated before a heartbeat is
 stale. Channel topology mutation remains fail-closed until the Trust Checker exists.
 Unix `SIGINT`/`SIGTERM` and Windows console termination events cooperatively stop the

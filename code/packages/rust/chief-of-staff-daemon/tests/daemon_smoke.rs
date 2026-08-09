@@ -98,6 +98,12 @@ container = true
 tier_1_auto_approve_timeout = 5
 biometric_timeout = 30
 hardware_key_timeout = 60
+
+[data_plane]
+channel_keys = []
+ollama_models = [
+  {{ model = "qwen2.5:0.5b", endpoint = "http://127.0.0.1:9", timeout = 1000 }},
+]
 "#
     );
     let path = home.join("config.toml");
@@ -106,7 +112,7 @@ hardware_key_timeout = 60
 }
 
 #[test]
-fn daemon_binds_reconciles_and_stops_on_sigterm() {
+fn daemon_provisions_without_network_probe_binds_and_stops_on_sigterm() {
     let directory = TestDir::new();
     let port = TcpListener::bind(("127.0.0.1", 0))
         .unwrap()
