@@ -1236,7 +1236,9 @@ changelog, focused build, and downstream validation.
    fault-injection backend, specified by `VLT-PM02-storage.md`.
 3. Extend VLT01/custody seam to accept an injected random root KEK.
 4. `vault-pm-domain`: product IDs, documents, conflicts, redacted views.
-5. Security review of format/key hierarchy before persistent user data exists.
+5. Security review of format/key hierarchy before persistent user data exists,
+   including closure of VLT01's existing measured line-coverage gap against its
+   declared 95% target (88.2% under Tarpaulin LLVM after the root-KEK seam).
 
 ### Phase 1A — local CLI
 
