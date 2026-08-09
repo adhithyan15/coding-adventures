@@ -23,6 +23,13 @@ for already-constructed clients. Provider and channel output is validated agains
 the public wire bounds before it can turn into an authenticated-session framing
 failure.
 
+`ExactChannelKeyAuthority` is the corresponding pre-composition key registry. It
+consumes zeroizing secret owners, scopes every read or write key to one exact
+pipeline, agent, and channel, rejects duplicate or cross-direction registrations,
+and releases fresh short-lived crypto owners only when the current durable binding
+matches all three identities. It deliberately does not read files or define a
+vault format; those are replaceable provisioning adapters.
+
 The production daemon still injects the unavailable service because its closed
 configuration and pipeline-wiring APIs do not yet provision channel custody or
 model providers. A later composition PR must add those explicit operator-owned

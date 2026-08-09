@@ -12,6 +12,7 @@ chief-of-staff-channel-store = { path = "../chief-of-staff-channel-store" }
 chief-of-staff-host-control-protocol = { path = "../chief-of-staff-host-control-protocol" }
 chief-of-staff-pipeline-bindings = { path = "../chief-of-staff-pipeline-bindings" }
 chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
+coding_adventures_zeroize = { path = "../zeroize" }
 llm-gateway = { path = "../llm-gateway" }
 storage-core = { path = "../storage-core" }
 
