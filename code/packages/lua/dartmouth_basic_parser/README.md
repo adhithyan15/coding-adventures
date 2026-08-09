@@ -34,6 +34,10 @@ dartmouth_basic_parser   ← this package
     state_machine         ← dependency of lexer
 ```
 
+The shared `lexer` package sits between each language lexer and
+`grammar_tools`; the canonical BUILD recipes install it explicitly so the
+parser remains standalone on a clean local LuaRocks tree.
+
 The parser reads `code/grammars/dartmouth_basic.grammar` at startup (once,
 cached). The grammar has 29 rules covering the full 1964 specification.
 

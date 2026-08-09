@@ -1136,6 +1136,68 @@ credential-envelope, reference-grammar, request-ordering, cleanup, and
 redaction fixtures. This excluded native addition does not displace the
 selected Huffman/heap closure.
 
+PR #10238 then merged externally as `ad16d517120` after every required check
+completed successfully or was skipped. The collision-checked schema-3 refresh
+at `6e0a40b7a6` now contains 1,277 established identities and 4,433 package
+slots across 15 lanes, with 173 high-consensus packages and 269 missing slots,
+827 singletons and 11,578 missing slots, 631 Rust singletons, zero canonical
+collisions, and zero unknown buckets. The exact delta from `94414638fd` is five
+new Rust-only identities and no deleted or normalized identities:
+
+- `diagram-layout-sequence` is a deterministic backend-neutral geometry
+  package. Its portable-conformance owner covers participant groups and
+  lifecycles, messages, notes, activations, nested control frames, ordering,
+  geometry, and stable validation failures.
+- `mosaic-app-runtime` is an authority-free revisioned protocol state machine.
+  Its portable owner covers protocol and startup gates, exact sequence and
+  revision progression, transactional failures, snapshot/restore behavior,
+  effects, accessibility announcements, and overflow rejection.
+- `mosaic-app-capi` is an unsafe panic-contained C ABI and memory-ownership
+  bridge over that portable runtime. It has a dependency-blocked native ABI/FFI
+  applicability review rather than fabricated all-language C-wrapper ports.
+- `smart-home-zoneminder-snapshot-host` and
+  `smart-home-synology-snapshot-host` are concrete Human Approval, Vault,
+  SystemTime, OS-CSPRNG, credential/session, TCP/TLS, and pinned native-executor
+  composition hosts. Separate dependency-blocked reviews own their authority,
+  cleanup, redaction, and platform evidence; reusable deterministic request,
+  response, authorization-order, and cleanup fixtures stay with portable
+  camera-media and vendor integration owners.
+
+The remaining ALGOL, Chief, Mermaid/diagram, Tamil, and Vault changes in this
+refresh expand existing package surfaces without adding another identity. The
+dependency/leverage pass selects
+`build-file-lua-parser-lexer-transitive-closure`: it repairs the lowest shared
+`lexer` prerequisite for the independent Dartmouth BASIC and JSON parser front
+doors and unlocks the downstream JSON and Lattice closure wave. The existing
+WASM runtime/execution follow-up is blocked for re-audit because both current
+recipes already install `wasm-execution`; it is not an eligible implementation
+gap on this revision.
+
+The final pre-publication fetch advances the collision-checked base to
+`1c5ed9c1e9` without changing those counts or the selected dependency shape.
+PR #10259 extends the existing Mermaid sequence pipeline and its new layout
+owner with participant stereotypes; PR #10256 changes Persian handwriting and
+existing human-language surfaces; and PR #10258 expands the existing Rust HTML
+parser. The first two stay with existing owners; the HTML change exposes a
+pre-existing unowned deterministic frontend, now recorded as
+`html-frontend-portable-conformance` for tokenizer handoff, tree construction,
+recovery, exact diagnostics, document and fragment projection, and html5lib
+fixtures. None adds a package identity or touches the Lua parser recipes, so
+the parser/lexer closure remains selected.
+
+A final pre-publication fetch advances the collision-checked base again to
+`5e1304f064`: merged PR #10260 adds the sole new identity, authority-free Rust
+`vault-pm-format`. The inventory is now 1,278 identities across 4,434 slots,
+173 high-consensus packages with 269 missing slots, 828 singleton packages
+with 11,592 missing slots, and 632 Rust singletons, with zero collisions or
+unknown buckets. `vault-pm-format-portable-conformance` now owns strict V1
+repository codecs, canonical field ordering and rejection, domain-separated
+IDs and signing preimages, exact version and suite gates, stable failures, and
+resource bounds over caller-provided bytes. Storage, clocks, entropy, key
+derivation, encryption, signatures, secret custody, and synchronization stay
+outside the pure format layer. This independent new owner does not displace the
+in-progress shared Lua parser prerequisite.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
