@@ -1,6 +1,6 @@
 [package]
 name = "smart-home-airgradient-local-integration"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2021"
 description = "AirGradient local monitor telemetry and typed configuration integration for the smart-home runtime"
 license = "MIT"
@@ -15,3 +15,4 @@ smart-home-discovery = { path = "../smart-home-discovery" }
 smart-home-local-http = { path = "../smart-home-local-http" }
 smart-home-runtime = { path = "../smart-home-runtime" }
 url-parser = { path = "../url-parser" }
+coding_adventures_zeroize = { path = "../zeroize" }

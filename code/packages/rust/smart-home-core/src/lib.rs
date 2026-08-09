@@ -1341,6 +1341,8 @@ pub enum DeviceControlCommandType {
     SetCorrectionProfile,
     SetCountry,
     SetCloudUpload,
+    SetMqttBroker,
+    SetHttpDomain,
     SetCameraRecording,
     RecallCameraPtzPreset,
     MoveCameraPtz,
@@ -1394,7 +1396,9 @@ impl DeviceControlCommandType {
             | Self::SetCompensatedDisplay
             | Self::SetCorrectionProfile
             | Self::SetCountry
-            | Self::SetCloudUpload => CapabilityId::trusted("device.configuration"),
+            | Self::SetCloudUpload
+            | Self::SetMqttBroker
+            | Self::SetHttpDomain => CapabilityId::trusted("device.configuration"),
             Self::SetCameraRecording => CapabilityId::trusted("camera.recording"),
             Self::RecallCameraPtzPreset | Self::MoveCameraPtz => {
                 CapabilityId::trusted("camera.ptz")
@@ -1462,6 +1466,8 @@ pub fn tier_for_command(command_type: CommandType) -> PrivilegeTier {
         | CommandType::DeviceControl(DeviceControlCommandType::SetCorrectionProfile)
         | CommandType::DeviceControl(DeviceControlCommandType::SetCountry)
         | CommandType::DeviceControl(DeviceControlCommandType::SetCloudUpload)
+        | CommandType::DeviceControl(DeviceControlCommandType::SetMqttBroker)
+        | CommandType::DeviceControl(DeviceControlCommandType::SetHttpDomain)
         | CommandType::DeviceControl(DeviceControlCommandType::SetCameraRecording)
         | CommandType::DeviceControl(DeviceControlCommandType::RecallCameraPtzPreset)
         | CommandType::DeviceControl(DeviceControlCommandType::MoveCameraPtz) => {

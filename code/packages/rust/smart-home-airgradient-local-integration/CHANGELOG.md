@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.0
+
+- Add human-approved, readback-verified credential-free MQTT broker and custom
+  HTTPS-domain routing over the documented local `/config` contract.
+- Require exact destination-bound consent before enabling either telemetry
+  route while allowing privacy-protective shutdown without consent.
+- Redact configured destinations and any pre-existing MQTT userinfo from debug
+  and normalized state; reject credential-bearing command values because the
+  current upstream firmware logs parsed MQTT credentials.
+
 ## 0.4.0
 
 - Add human-approved, readback-verified country and AirGradient cloud-upload

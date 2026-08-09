@@ -28,6 +28,7 @@ pub enum DataOperation {
 pub enum DataDestination {
     LocalDevice,
     HttpsOrigin(String),
+    MqttBroker(String),
 }
 
 impl fmt::Debug for DataDestination {
@@ -35,6 +36,7 @@ impl fmt::Debug for DataDestination {
         match self {
             Self::LocalDevice => formatter.write_str("LocalDevice"),
             Self::HttpsOrigin(_) => formatter.write_str("HttpsOrigin([REDACTED])"),
+            Self::MqttBroker(_) => formatter.write_str("MqttBroker([REDACTED])"),
         }
     }
 }
@@ -56,10 +58,28 @@ impl DataDestination {
         Ok(Self::HttpsOrigin(origin.trim_end_matches('/').to_string()))
     }
 
+    pub fn mqtt_broker(uri: impl Into<String>) -> Result<Self, DataGovernanceError> {
+        let uri = uri.into();
+        let parsed = Url::parse(&uri).map_err(|_| DataGovernanceError::InvalidDestination)?;
+        if !matches!(parsed.scheme.as_str(), "mqtt" | "mqtts")
+            || parsed.host.is_none()
+            || parsed.port.is_none()
+            || parsed.userinfo.is_some()
+            || parsed.query.is_some()
+            || parsed.fragment.is_some()
+            || !matches!(parsed.path.as_str(), "" | "/")
+            || has_unsafe_text(&uri)
+        {
+            return Err(DataGovernanceError::InvalidDestination);
+        }
+        Ok(Self::MqttBroker(uri.trim_end_matches('/').to_string()))
+    }
+
     pub fn kind(&self) -> DataDestinationKind {
         match self {
             Self::LocalDevice => DataDestinationKind::LocalDevice,
             Self::HttpsOrigin(_) => DataDestinationKind::HttpsOrigin,
+            Self::MqttBroker(_) => DataDestinationKind::MqttBroker,
         }
     }
 }
@@ -68,6 +88,7 @@ impl DataDestination {
 pub enum DataDestinationKind {
     LocalDevice,
     HttpsOrigin,
+    MqttBroker,
 }
 
 #[derive(Clone, PartialEq, Eq)]
@@ -328,16 +349,13 @@ fn has_unsafe_text(value: &str) -> bool {
     value.chars().any(char::is_control)
 }
 
-fn operation_destination_is_valid(
-    operation: DataOperation,
-    destination: &DataDestination,
-) -> bool {
+fn operation_destination_is_valid(operation: DataOperation, destination: &DataDestination) -> bool {
     matches!(
         (operation, destination),
         (DataOperation::Configure, DataDestination::LocalDevice)
             | (
                 DataOperation::StartEgress | DataOperation::StopEgress,
-                DataDestination::HttpsOrigin(_)
+                DataDestination::HttpsOrigin(_) | DataDestination::MqttBroker(_)
             )
     )
 }
@@ -352,6 +370,10 @@ mod tests {
 
     fn cloud() -> DataDestination {
         DataDestination::https_origin("https://api.airgradient.com").unwrap()
+    }
+
+    fn mqtt() -> DataDestination {
+        DataDestination::mqtt_broker("mqtts://broker.example.test:8883").unwrap()
     }
 
     fn grant() -> DataUseGrant {
@@ -487,6 +509,61 @@ mod tests {
         assert_eq!(
             DataPurpose::new("line\tbreak"),
             Err(DataGovernanceError::InvalidPurpose)
+        );
+        for destination in [
+            "mqtts://broker.example.test",
+            "mqtts://user:secret@broker.example.test:8883",
+            "mqtts://broker.example.test:8883/topic",
+            "http://broker.example.test:8883",
+        ] {
+            assert_eq!(
+                DataDestination::mqtt_broker(destination),
+                Err(DataGovernanceError::InvalidDestination)
+            );
+        }
+        assert!(!format!("{:?}", mqtt()).contains("broker.example.test"));
+    }
+
+    #[test]
+    fn mqtt_grants_are_exact_and_stop_is_privacy_protective() {
+        let principal = principal();
+        let mut policy = DataGovernancePolicy::default();
+        policy
+            .add_grant(
+                DataUseGrant::new(
+                    principal.clone(),
+                    "airgradient:monitor:configuration",
+                    DataCategory::EnvironmentalTelemetry,
+                    DataOperation::StartEgress,
+                    mqtt(),
+                    DataPurpose::new("operator-selected MQTT telemetry route").unwrap(),
+                    ConsentReceiptRef::new("consent://smart-home/mqtt-1").unwrap(),
+                    100,
+                    200,
+                )
+                .unwrap(),
+            )
+            .unwrap();
+        assert!(policy
+            .decide(&DataUseRequest {
+                principal_id: &principal,
+                resource_id: "airgradient:monitor:configuration",
+                category: DataCategory::EnvironmentalTelemetry,
+                operation: DataOperation::StartEgress,
+                destination: mqtt(),
+                now_ms: 150,
+            })
+            .is_allowed());
+        assert_eq!(
+            policy.decide(&DataUseRequest {
+                principal_id: &principal,
+                resource_id: "airgradient:monitor:configuration",
+                category: DataCategory::EnvironmentalTelemetry,
+                operation: DataOperation::StopEgress,
+                destination: mqtt(),
+                now_ms: 250,
+            }),
+            DataGovernanceDecision::Allow(DataGovernanceAllowance::PrivacyProtective)
         );
     }
 }

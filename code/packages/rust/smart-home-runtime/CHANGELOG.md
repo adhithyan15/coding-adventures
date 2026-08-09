@@ -10,6 +10,8 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Keep MQTT-broker and custom-HTTP-domain configuration commands non-optimistic
+  until a native integration confirms exact device readback.
 - Keep country and cloud-upload configuration commands non-optimistic until a
   native integration confirms device readback.
 - Keep camera recording changes non-optimistic until a native integration

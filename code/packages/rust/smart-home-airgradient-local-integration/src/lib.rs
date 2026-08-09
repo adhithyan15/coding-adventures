@@ -2,6 +2,7 @@
 
 #![forbid(unsafe_code)]
 
+use coding_adventures_zeroize::Zeroizing;
 use http1::{parse_response_head, Http1ParseError};
 use http_core::BodyKind;
 use serde_json::{Map as JsonMap, Value as JsonValue};
@@ -30,7 +31,7 @@ use std::net::{TcpStream, ToSocketAddrs};
 use std::time::Duration;
 use url_parser::{Url, UrlError};
 
-pub const VERSION: &str = "0.3.0";
+pub const VERSION: &str = "0.5.0";
 pub const INTEGRATION_ID: &str = "airgradient";
 pub const PROTOCOL_ID: &str = "airgradient_local_api";
 pub const MEASUREMENT_PATH: &str = "/measures/current";
@@ -167,13 +168,26 @@ impl From<RuntimeError> for AirGradientError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq)]
 pub struct AirGradientConfig {
     pub bridge_id: BridgeId,
     pub base_url: String,
     pub display_name: String,
     pub expected_serial: Option<String>,
     pub timeout: Duration,
+}
+
+impl fmt::Debug for AirGradientConfig {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("AirGradientConfig")
+            .field("bridge_id", &self.bridge_id)
+            .field("base_url", &self.base_url)
+            .field("display_name", &self.display_name)
+            .field("expected_serial", &self.expected_serial)
+            .field("timeout", &self.timeout)
+            .finish()
+    }
 }
 
 impl AirGradientConfig {
@@ -321,6 +335,8 @@ pub struct AirGradientConfiguration {
     pub control: AirGradientConfigurationControl,
     pub country: Option<AirGradientCountryCode>,
     pub post_data_to_airgradient: Option<bool>,
+    pub mqtt_broker_uri: Option<AirGradientMqttBrokerUri>,
+    pub http_domain: Option<AirGradientHttpDomain>,
     pub led_bar_mode: String,
     pub led_bar_brightness: u8,
     pub display_brightness: u8,
@@ -358,6 +374,159 @@ impl AirGradientCountryCode {
 impl fmt::Debug for AirGradientCountryCode {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("AirGradientCountryCode([REDACTED])")
+    }
+}
+
+#[derive(Clone, PartialEq, Eq)]
+pub struct AirGradientMqttDestination(String);
+
+impl AirGradientMqttDestination {
+    pub fn new(value: impl Into<String>) -> Result<Self, AirGradientError> {
+        let value = value.into().trim_end_matches('/').to_string();
+        if value.len() > 255 {
+            return Err(AirGradientError::Validation(
+                "MQTT broker URI exceeds 255 bytes".to_string(),
+            ));
+        }
+        DataDestination::mqtt_broker(value.clone()).map_err(|error| {
+            AirGradientError::Validation(format!("invalid MQTT broker destination: {error}"))
+        })?;
+        Ok(Self(value))
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+
+    fn governed_destination(&self) -> Result<DataDestination, AirGradientError> {
+        DataDestination::mqtt_broker(self.0.clone()).map_err(|error| {
+            AirGradientError::Validation(format!("invalid MQTT broker destination: {error}"))
+        })
+    }
+}
+
+impl fmt::Debug for AirGradientMqttDestination {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("AirGradientMqttDestination([REDACTED])")
+    }
+}
+
+pub struct AirGradientMqttBrokerUri(Zeroizing<String>);
+
+impl Clone for AirGradientMqttBrokerUri {
+    fn clone(&self) -> Self {
+        Self(Zeroizing::new(self.0.to_string()))
+    }
+}
+
+impl PartialEq for AirGradientMqttBrokerUri {
+    fn eq(&self, other: &Self) -> bool {
+        self.as_str() == other.as_str()
+    }
+}
+
+impl Eq for AirGradientMqttBrokerUri {}
+
+impl AirGradientMqttBrokerUri {
+    fn from_device(value: &str) -> Result<Self, AirGradientError> {
+        let parsed = Url::parse(value)?;
+        if !matches!(parsed.scheme.as_str(), "mqtt" | "mqtts")
+            || parsed.host.is_none()
+            || parsed.port.is_none()
+            || parsed.query.is_some()
+            || parsed.fragment.is_some()
+            || !matches!(parsed.path.as_str(), "" | "/")
+            || value.len() > 255
+            || has_unsafe_http_text(value)
+        {
+            return Err(AirGradientError::Validation(
+                "device returned an invalid MQTT broker URI".to_string(),
+            ));
+        }
+        Ok(Self(Zeroizing::new(
+            value.trim_end_matches('/').to_string(),
+        )))
+    }
+
+    pub fn is_configured(&self) -> bool {
+        !self.0.is_empty()
+    }
+
+    fn as_str(&self) -> &str {
+        &self.0
+    }
+
+    fn governed_destination(&self) -> Result<DataDestination, AirGradientError> {
+        let parsed = Url::parse(&self.0)?;
+        let host = parsed
+            .host
+            .as_deref()
+            .ok_or(AirGradientError::MissingField("MQTT broker host"))?;
+        let port = parsed
+            .port
+            .ok_or(AirGradientError::MissingField("MQTT broker port"))?;
+        let host = if host.contains(':') {
+            format!("[{host}]")
+        } else {
+            host.to_string()
+        };
+        DataDestination::mqtt_broker(format!("{}://{host}:{port}", parsed.scheme)).map_err(
+            |error| {
+                AirGradientError::Validation(format!(
+                    "invalid configured MQTT broker destination: {error}"
+                ))
+            },
+        )
+    }
+}
+
+impl fmt::Debug for AirGradientMqttBrokerUri {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("AirGradientMqttBrokerUri([REDACTED])")
+    }
+}
+
+#[derive(Clone, PartialEq, Eq)]
+pub struct AirGradientHttpDomain(String);
+
+impl AirGradientHttpDomain {
+    pub fn new(value: impl Into<String>) -> Result<Self, AirGradientError> {
+        let value = value.into().to_ascii_lowercase();
+        let labels = value.split('.').collect::<Vec<_>>();
+        if value.is_empty()
+            || value.len() > 253
+            || labels.len() < 2
+            || labels.iter().any(|label| {
+                label.is_empty()
+                    || label.len() > 63
+                    || label.starts_with('-')
+                    || label.ends_with('-')
+                    || !label
+                        .bytes()
+                        .all(|byte| byte.is_ascii_alphanumeric() || byte == b'-')
+            })
+        {
+            return Err(AirGradientError::Validation(
+                "HTTP domain must be a fully qualified DNS name".to_string(),
+            ));
+        }
+        Ok(Self(value))
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+
+    fn governed_destination(&self) -> Result<DataDestination, AirGradientError> {
+        DataDestination::https_origin(format!("https://{}", self.0)).map_err(|error| {
+            AirGradientError::Validation(format!("invalid custom HTTP destination: {error}"))
+        })
+    }
+}
+
+impl fmt::Debug for AirGradientHttpDomain {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("AirGradientHttpDomain([REDACTED])")
     }
 }
 
@@ -425,7 +594,7 @@ impl AirGradientTransport for AirGradientLanTransport {
             .effective_port()
             .ok_or(AirGradientError::MissingField("URL port"))?;
         let timeout = Duration::from_millis(plan.timeout_ms.max(1));
-        let request = encode_http_request(&url, plan)?;
+        let request = encode_http_request(&url, plan, &plan.body)?;
         let mut stream = connect_tcp(host, port, timeout)?;
         stream
             .write_all(&request)
@@ -766,16 +935,35 @@ impl<T: AirGradientTransport> AirGradientRuntimeIntegration<T> {
         let plan = airgradient_command_plan(&self.command_targets, &request)?;
         let target_entity_id = request.entity_id.clone();
         let command = runtime.authorize_command_tool(principal_id.clone(), request, now_ms)?;
-        if let Some(operation) = plan.governance {
+        if let Some(operation) = plan
+            .governance
+            .as_ref()
+            .filter(|operation| !operation.requires_current_configuration())
+        {
             authorize_data_use(
                 &self.data_governance,
                 &principal_id,
                 &target_entity_id,
-                operation,
+                operation.resolve(None)?,
                 now_ms,
             )?;
         }
         let configuration = self.client.configuration()?;
+        if let Some(operation) = plan
+            .governance
+            .as_ref()
+            .filter(|operation| operation.requires_current_configuration())
+        {
+            if let Some(operation) = operation.resolve(Some(&configuration))? {
+                authorize_data_use(
+                    &self.data_governance,
+                    &principal_id,
+                    &target_entity_id,
+                    Some(operation),
+                    now_ms,
+                )?;
+            }
+        }
         if configuration.control == AirGradientConfigurationControl::Cloud {
             return Err(AirGradientError::CloudConfigurationConflict);
         }
@@ -816,10 +1004,86 @@ struct AirGradientCommandPlan {
     governance: Option<GovernedAirGradientOperation>,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 enum GovernedAirGradientOperation {
     ConfigureCountry,
     SetCloudUpload(bool),
+    SetMqttBroker(Option<AirGradientMqttDestination>),
+    SetHttpDomain(Option<AirGradientHttpDomain>),
+}
+
+impl GovernedAirGradientOperation {
+    fn requires_current_configuration(&self) -> bool {
+        matches!(self, Self::SetMqttBroker(None) | Self::SetHttpDomain(None))
+    }
+
+    fn resolve(
+        &self,
+        configuration: Option<&AirGradientConfiguration>,
+    ) -> Result<Option<ResolvedDataOperation>, AirGradientError> {
+        match self {
+            Self::ConfigureCountry => Ok(Some(ResolvedDataOperation {
+                category: DataCategory::CoarseLocation,
+                operation: DataOperation::Configure,
+                destination: DataDestination::LocalDevice,
+            })),
+            Self::SetCloudUpload(enabled) => Ok(Some(ResolvedDataOperation {
+                category: DataCategory::EnvironmentalTelemetry,
+                operation: if *enabled {
+                    DataOperation::StartEgress
+                } else {
+                    DataOperation::StopEgress
+                },
+                destination: DataDestination::https_origin(AIRGRADIENT_CLOUD_ORIGIN).map_err(
+                    |error| {
+                        AirGradientError::Validation(format!(
+                            "invalid AirGradient cloud origin: {error}"
+                        ))
+                    },
+                )?,
+            })),
+            Self::SetMqttBroker(Some(destination)) => Ok(Some(ResolvedDataOperation {
+                category: DataCategory::EnvironmentalTelemetry,
+                operation: DataOperation::StartEgress,
+                destination: destination.governed_destination()?,
+            })),
+            Self::SetMqttBroker(None) => configuration
+                .ok_or(AirGradientError::MissingField("current configuration"))?
+                .mqtt_broker_uri
+                .as_ref()
+                .map(|destination| {
+                    Ok(ResolvedDataOperation {
+                        category: DataCategory::EnvironmentalTelemetry,
+                        operation: DataOperation::StopEgress,
+                        destination: destination.governed_destination()?,
+                    })
+                })
+                .transpose(),
+            Self::SetHttpDomain(Some(destination)) => Ok(Some(ResolvedDataOperation {
+                category: DataCategory::EnvironmentalTelemetry,
+                operation: DataOperation::StartEgress,
+                destination: destination.governed_destination()?,
+            })),
+            Self::SetHttpDomain(None) => configuration
+                .ok_or(AirGradientError::MissingField("current configuration"))?
+                .http_domain
+                .as_ref()
+                .map(|destination| {
+                    Ok(ResolvedDataOperation {
+                        category: DataCategory::EnvironmentalTelemetry,
+                        operation: DataOperation::StopEgress,
+                        destination: destination.governed_destination()?,
+                    })
+                })
+                .transpose(),
+        }
+    }
+}
+
+struct ResolvedDataOperation {
+    category: DataCategory,
+    operation: DataOperation,
+    destination: DataDestination,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -841,6 +1105,8 @@ enum ExpectedConfiguration {
     },
     Country(AirGradientCountryCode),
     CloudUpload(bool),
+    MqttBroker(Option<AirGradientMqttDestination>),
+    HttpDomain(Option<AirGradientHttpDomain>),
 }
 
 impl ExpectedConfiguration {
@@ -888,6 +1154,18 @@ impl ExpectedConfiguration {
             Self::CloudUpload(expected) => (
                 configuration.post_data_to_airgradient == Some(*expected),
                 "postDataToAirGradient",
+            ),
+            Self::MqttBroker(expected) => (
+                match (expected, configuration.mqtt_broker_uri.as_ref()) {
+                    (None, None) => true,
+                    (Some(expected), Some(actual)) => actual.as_str() == expected.as_str(),
+                    _ => false,
+                },
+                "mqttBrokerUrl",
+            ),
+            Self::HttpDomain(expected) => (
+                configuration.http_domain.as_ref() == expected.as_ref(),
+                "httpDomain",
             ),
         };
         if matches {
@@ -1118,6 +1396,57 @@ fn airgradient_command_plan(
                 governance: Some(GovernedAirGradientOperation::SetCloudUpload(enabled)),
             })
         }
+        CommandType::DeviceControl(DeviceControlCommandType::SetMqttBroker)
+            if target == AirGradientCommandTarget::Configuration =>
+        {
+            let destination = match &request.arguments {
+                Value::Null => None,
+                Value::Text(value) => Some(AirGradientMqttDestination::new(value)?),
+                _ => {
+                    return invalid_command_arguments(
+                        request.command_type,
+                        "a credential-free mqtt or mqtts broker URI with an explicit port, or null to disable",
+                    )
+                }
+            };
+            Ok(AirGradientCommandPlan {
+                update: configuration_update(
+                    "mqttBrokerUrl",
+                    JsonValue::String(
+                        destination
+                            .as_ref()
+                            .map_or_else(String::new, |value| value.as_str().to_string()),
+                    ),
+                ),
+                expected: Some(ExpectedConfiguration::MqttBroker(destination.clone())),
+                governance: Some(GovernedAirGradientOperation::SetMqttBroker(destination)),
+            })
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetHttpDomain)
+            if target == AirGradientCommandTarget::Configuration =>
+        {
+            let destination =
+                match &request.arguments {
+                    Value::Null => None,
+                    Value::Text(value) => Some(AirGradientHttpDomain::new(value)?),
+                    _ => return invalid_command_arguments(
+                        request.command_type,
+                        "a fully qualified DNS name, or null to restore the AirGradient default",
+                    ),
+                };
+            Ok(AirGradientCommandPlan {
+                update: configuration_update(
+                    "httpDomain",
+                    JsonValue::String(
+                        destination
+                            .as_ref()
+                            .map_or_else(String::new, |value| value.as_str().to_string()),
+                    ),
+                ),
+                expected: Some(ExpectedConfiguration::HttpDomain(destination.clone())),
+                governance: Some(GovernedAirGradientOperation::SetHttpDomain(destination)),
+            })
+        }
         CommandType::DeviceControl(_) => invalid_command_arguments(
             request.command_type,
             "an AirGradient entity that advertises the command capability",
@@ -1140,36 +1469,18 @@ fn authorize_data_use(
     policy: &DataGovernancePolicy,
     principal_id: &AgentId,
     entity_id: &EntityId,
-    operation: GovernedAirGradientOperation,
+    operation: Option<ResolvedDataOperation>,
     now_ms: u64,
 ) -> Result<(), AirGradientError> {
-    let (category, operation, destination) = match operation {
-        GovernedAirGradientOperation::ConfigureCountry => (
-            DataCategory::CoarseLocation,
-            DataOperation::Configure,
-            DataDestination::LocalDevice,
-        ),
-        GovernedAirGradientOperation::SetCloudUpload(true) => (
-            DataCategory::EnvironmentalTelemetry,
-            DataOperation::StartEgress,
-            DataDestination::https_origin(AIRGRADIENT_CLOUD_ORIGIN).map_err(|error| {
-                AirGradientError::Validation(format!("invalid AirGradient cloud origin: {error}"))
-            })?,
-        ),
-        GovernedAirGradientOperation::SetCloudUpload(false) => (
-            DataCategory::EnvironmentalTelemetry,
-            DataOperation::StopEgress,
-            DataDestination::https_origin(AIRGRADIENT_CLOUD_ORIGIN).map_err(|error| {
-                AirGradientError::Validation(format!("invalid AirGradient cloud origin: {error}"))
-            })?,
-        ),
+    let Some(operation) = operation else {
+        return Ok(());
     };
     match policy.decide(&DataUseRequest {
         principal_id,
         resource_id: entity_id.as_str(),
-        category,
-        operation,
-        destination,
+        category: operation.category,
+        operation: operation.operation,
+        destination: operation.destination,
         now_ms,
     }) {
         DataGovernanceDecision::Allow(_) => Ok(()),
@@ -1352,6 +1663,14 @@ fn configuration_value(configuration: &AirGradientConfiguration) -> Value {
     if let Some(enabled) = configuration.post_data_to_airgradient {
         fields.push(("cloud_upload_enabled".to_string(), Value::Bool(enabled)));
     }
+    fields.push((
+        "mqtt_broker_configured".to_string(),
+        Value::Bool(configuration.mqtt_broker_uri.is_some()),
+    ));
+    fields.push((
+        "custom_http_domain_configured".to_string(),
+        Value::Bool(configuration.http_domain.is_some()),
+    ));
     if configuration.country.is_some() {
         fields.push(("country_configured".to_string(), Value::Bool(true)));
     }
@@ -1459,6 +1778,8 @@ fn parse_configuration(data: &JsonValue) -> Result<AirGradientConfiguration, Air
         control,
         country: optional_country(data)?,
         post_data_to_airgradient: optional_bool(data, "postDataToAirGradient")?,
+        mqtt_broker_uri: optional_mqtt_broker_uri(data)?,
+        http_domain: optional_http_domain(data)?,
         led_bar_mode: required_string(data, "ledBarMode")?.to_ascii_lowercase(),
         led_bar_brightness: required_percentage(data, "ledBarBrightness")?,
         display_brightness: required_percentage(data, "displayBrightness")?,
@@ -1470,6 +1791,38 @@ fn parse_configuration(data: &JsonValue) -> Result<AirGradientConfiguration, Air
         monitor_display_compensated_values: optional_bool(data, "monitorDisplayCompensatedValues")?,
         corrections: parse_corrections(data)?,
     })
+}
+
+fn optional_mqtt_broker_uri(
+    data: &JsonMap<String, JsonValue>,
+) -> Result<Option<AirGradientMqttBrokerUri>, AirGradientError> {
+    let Some(value) = data.get("mqttBrokerUrl") else {
+        return Ok(None);
+    };
+    let value = value
+        .as_str()
+        .ok_or_else(|| AirGradientError::Validation("mqttBrokerUrl must be text".to_string()))?;
+    if value.is_empty() {
+        Ok(None)
+    } else {
+        AirGradientMqttBrokerUri::from_device(value).map(Some)
+    }
+}
+
+fn optional_http_domain(
+    data: &JsonMap<String, JsonValue>,
+) -> Result<Option<AirGradientHttpDomain>, AirGradientError> {
+    let Some(value) = data.get("httpDomain") else {
+        return Ok(None);
+    };
+    let value = value
+        .as_str()
+        .ok_or_else(|| AirGradientError::Validation("httpDomain must be text".to_string()))?;
+    if value.is_empty() {
+        Ok(None)
+    } else {
+        AirGradientHttpDomain::new(value).map(Some)
+    }
 }
 
 fn optional_country(
@@ -1797,7 +2150,8 @@ fn has_unsafe_http_text(value: &str) -> bool {
 fn encode_http_request(
     url: &Url,
     plan: &LocalHttpRequestPlan,
-) -> Result<Vec<u8>, AirGradientError> {
+    body: &[u8],
+) -> Result<Zeroizing<Vec<u8>>, AirGradientError> {
     let host = url
         .host
         .as_deref()
@@ -1822,11 +2176,13 @@ fn encode_http_request(
     } else {
         format!("{host}:{port}")
     };
-    let mut request = format!(
-        "{} {target} HTTP/1.1\r\nHost: {host_header}\r\nConnection: close\r\n",
-        plan.method.as_str()
-    )
-    .into_bytes();
+    let mut request = Zeroizing::new(
+        format!(
+            "{} {target} HTTP/1.1\r\nHost: {host_header}\r\nConnection: close\r\n",
+            plan.method.as_str()
+        )
+        .into_bytes(),
+    );
     let mut seen = BTreeSet::new();
     for header in &plan.headers {
         if has_unsafe_http_text(&header.name) || has_unsafe_http_text(&header.value) {
@@ -1838,10 +2194,10 @@ fn encode_http_request(
         request.extend_from_slice(format!("{}: {}\r\n", header.name, header.value).as_bytes());
     }
     if !seen.contains("content-length") {
-        request.extend_from_slice(format!("Content-Length: {}\r\n", plan.body.len()).as_bytes());
+        request.extend_from_slice(format!("Content-Length: {}\r\n", body.len()).as_bytes());
     }
     request.extend_from_slice(b"\r\n");
-    request.extend_from_slice(&plan.body);
+    request.extend_from_slice(body);
     Ok(request)
 }
 
@@ -1975,6 +2331,11 @@ mod tests {
     const CONFIG_GOVERNED_INITIAL: &str = r#"{"configurationControl":"both","country":"US","postDataToAirGradient":false,"ledBarMode":"co2","ledBarBrightness":80,"displayBrightness":70}"#;
     const CONFIG_COUNTRY_CA: &str = r#"{"configurationControl":"both","country":"CA","postDataToAirGradient":false,"ledBarMode":"co2","ledBarBrightness":80,"displayBrightness":70}"#;
     const CONFIG_UPLOAD_ENABLED: &str = r#"{"configurationControl":"both","country":"CA","postDataToAirGradient":true,"ledBarMode":"co2","ledBarBrightness":80,"displayBrightness":70}"#;
+    const CONFIG_CUSTOM_EGRESS_DISABLED: &str = r#"{"configurationControl":"both","mqttBrokerUrl":"","httpDomain":"","ledBarMode":"co2","ledBarBrightness":80,"displayBrightness":70}"#;
+    const CONFIG_MQTT_ENABLED: &str = r#"{"configurationControl":"both","mqttBrokerUrl":"mqtts://broker.example.test:8883","httpDomain":"","ledBarMode":"co2","ledBarBrightness":80,"displayBrightness":70}"#;
+    const CONFIG_CUSTOM_EGRESS_ENABLED: &str = r#"{"configurationControl":"both","mqttBrokerUrl":"mqtts://broker.example.test:8883","httpDomain":"telemetry.example.test","ledBarMode":"co2","ledBarBrightness":80,"displayBrightness":70}"#;
+    const CONFIG_EXISTING_CREDENTIALED_EGRESS: &str = r#"{"configurationControl":"both","mqttBrokerUrl":"mqtts://device-user:device-secret@broker.example.test:8883","httpDomain":"telemetry.example.test","ledBarMode":"co2","ledBarBrightness":80,"displayBrightness":70}"#;
+    const CONFIG_MQTT_DISABLED_HTTP_ENABLED: &str = r#"{"configurationControl":"both","mqttBrokerUrl":"","httpDomain":"telemetry.example.test","ledBarMode":"co2","ledBarBrightness":80,"displayBrightness":70}"#;
 
     fn advanced_config(
         temperature_unit: &str,
@@ -2101,6 +2462,40 @@ mod tests {
                 .unwrap(),
             )
             .unwrap();
+        policy
+    }
+
+    fn custom_egress_policy(principal: &AgentId, entity_id: &EntityId) -> DataGovernancePolicy {
+        let mut policy = DataGovernancePolicy::default();
+        for (destination, purpose, consent_ref) in [
+            (
+                DataDestination::mqtt_broker("mqtts://broker.example.test:8883").unwrap(),
+                "operator-selected AirGradient MQTT telemetry route",
+                "consent://airgradient/mqtt-1",
+            ),
+            (
+                DataDestination::https_origin("https://telemetry.example.test").unwrap(),
+                "operator-selected AirGradient HTTPS telemetry route",
+                "consent://airgradient/http-1",
+            ),
+        ] {
+            policy
+                .add_grant(
+                    DataUseGrant::new(
+                        principal.clone(),
+                        entity_id.as_str(),
+                        DataCategory::EnvironmentalTelemetry,
+                        DataOperation::StartEgress,
+                        destination,
+                        DataPurpose::new(purpose).unwrap(),
+                        ConsentReceiptRef::new(consent_ref).unwrap(),
+                        1_000,
+                        20_000,
+                    )
+                    .unwrap(),
+                )
+                .unwrap();
+        }
         policy
     }
 
@@ -2342,6 +2737,14 @@ mod tests {
                 Value::Text("CA".to_string()),
             ),
             (DeviceControlCommandType::SetCloudUpload, Value::Bool(true)),
+            (
+                DeviceControlCommandType::SetMqttBroker,
+                Value::Text("mqtts://broker.example.test:8883".to_string()),
+            ),
+            (
+                DeviceControlCommandType::SetHttpDomain,
+                Value::Text("telemetry.example.test".to_string()),
+            ),
         ] {
             let request = RuntimeCommandToolRequest::new(
                 EntityId::trusted("airgradient:ecda3b1eaaaf:configuration"),
@@ -2362,6 +2765,168 @@ mod tests {
             assert_eq!(integration.transport().calls, 2);
             assert_eq!(runtime.optimistic_state_count(), 0);
         }
+    }
+
+    #[test]
+    fn exact_custom_egress_destinations_are_consented_and_verified_over_real_tcp() {
+        let payloads = [
+            MEASUREMENTS,
+            CONFIG_CUSTOM_EGRESS_DISABLED,
+            CONFIG_CUSTOM_EGRESS_DISABLED,
+            "{}",
+            CONFIG_MQTT_ENABLED,
+            CONFIG_MQTT_ENABLED,
+            "{}",
+            CONFIG_CUSTOM_EGRESS_ENABLED,
+        ]
+        .into_iter()
+        .map(response)
+        .collect();
+        let (port, requests, handle) = start_server(payloads);
+        let client =
+            AirGradientClient::new(config(port), AirGradientLanTransport::default()).unwrap();
+        let principal = AgentId::trusted("agent:airgradient-custom-egress");
+        let configuration = EntityId::trusted("airgradient:ecda3b1eaaaf:configuration");
+        let mut integration = AirGradientRuntimeIntegration::new(client)
+            .with_data_governance(custom_egress_policy(&principal, &configuration));
+        let mut runtime = SmartHomeRuntime::new();
+        grant(&mut runtime, &principal);
+        integration
+            .inspect_and_install_authorized(&mut runtime, principal.clone(), 5_000)
+            .unwrap();
+
+        for (command_type, arguments) in [
+            (
+                DeviceControlCommandType::SetMqttBroker,
+                Value::Text("mqtts://broker.example.test:8883".to_string()),
+            ),
+            (
+                DeviceControlCommandType::SetHttpDomain,
+                Value::Text("telemetry.example.test".to_string()),
+            ),
+        ] {
+            integration
+                .dispatch_command_authorized(
+                    &mut runtime,
+                    principal.clone(),
+                    RuntimeCommandToolRequest::new(
+                        configuration.clone(),
+                        CommandType::DeviceControl(command_type),
+                        arguments,
+                    ),
+                    6_000,
+                )
+                .unwrap();
+        }
+
+        handle.join().unwrap();
+        let requests = requests.lock().unwrap();
+        assert_eq!(requests.len(), 8);
+        assert!(requests[3].contains(r#"{"mqttBrokerUrl":"mqtts://broker.example.test:8883"}"#));
+        assert!(requests[6].contains(r#"{"httpDomain":"telemetry.example.test"}"#));
+        let state = runtime
+            .registry()
+            .entity(&configuration)
+            .unwrap()
+            .state
+            .as_ref()
+            .unwrap();
+        assert!(matches!(
+            &state.value,
+            Value::Object(fields)
+                if fields.contains(&("mqtt_broker_configured".to_string(), Value::Bool(true)))
+                    && fields.contains(&("custom_http_domain_configured".to_string(), Value::Bool(true)))
+                    && !format!("{fields:?}").contains("broker.example.test")
+                    && !format!("{fields:?}").contains("telemetry.example.test")
+        ));
+    }
+
+    #[test]
+    fn custom_egress_shutdown_is_privacy_protective_and_redacts_existing_credentials() {
+        let payloads = [
+            MEASUREMENTS,
+            CONFIG_EXISTING_CREDENTIALED_EGRESS,
+            CONFIG_EXISTING_CREDENTIALED_EGRESS,
+            "{}",
+            CONFIG_MQTT_DISABLED_HTTP_ENABLED,
+            CONFIG_MQTT_DISABLED_HTTP_ENABLED,
+            "{}",
+            CONFIG_CUSTOM_EGRESS_DISABLED,
+        ]
+        .into_iter()
+        .map(response)
+        .collect();
+        let (port, requests, handle) = start_server(payloads);
+        let client =
+            AirGradientClient::new(config(port), AirGradientLanTransport::default()).unwrap();
+        let principal = AgentId::trusted("agent:airgradient-disable-custom-egress");
+        let configuration = EntityId::trusted("airgradient:ecda3b1eaaaf:configuration");
+        let mut integration = AirGradientRuntimeIntegration::new(client);
+        let mut runtime = SmartHomeRuntime::new();
+        grant(&mut runtime, &principal);
+        integration
+            .inspect_and_install_authorized(&mut runtime, principal.clone(), 5_000)
+            .unwrap();
+        let installed_state = runtime
+            .registry()
+            .entity(&configuration)
+            .unwrap()
+            .state
+            .as_ref()
+            .unwrap();
+        assert!(!format!("{installed_state:?}").contains("device-secret"));
+
+        for command_type in [
+            DeviceControlCommandType::SetMqttBroker,
+            DeviceControlCommandType::SetHttpDomain,
+        ] {
+            integration
+                .dispatch_command_authorized(
+                    &mut runtime,
+                    principal.clone(),
+                    RuntimeCommandToolRequest::new(
+                        configuration.clone(),
+                        CommandType::DeviceControl(command_type),
+                        Value::Null,
+                    ),
+                    6_000,
+                )
+                .unwrap();
+        }
+
+        handle.join().unwrap();
+        let requests = requests.lock().unwrap();
+        assert_eq!(requests.len(), 8);
+        assert!(requests[3].contains(r#"{"mqttBrokerUrl":""}"#));
+        assert!(requests[6].contains(r#"{"httpDomain":""}"#));
+        assert!(requests
+            .iter()
+            .all(|request| !request.contains("device-secret")));
+    }
+
+    #[test]
+    fn custom_egress_inputs_are_strict_and_credential_free() {
+        for destination in [
+            "mqtts://broker.example.test",
+            "mqtts://user:secret@broker.example.test:8883",
+            "mqtts://broker.example.test:8883/topic",
+            "https://broker.example.test:8883",
+        ] {
+            assert!(AirGradientMqttDestination::new(destination).is_err());
+        }
+        for domain in [
+            "localhost",
+            "https://telemetry.example.test",
+            "-bad.example",
+        ] {
+            assert!(AirGradientHttpDomain::new(domain).is_err());
+        }
+        let parsed = parse_configuration(
+            &serde_json::from_str::<JsonValue>(CONFIG_EXISTING_CREDENTIALED_EGRESS).unwrap(),
+        )
+        .unwrap();
+        assert!(parsed.mqtt_broker_uri.is_some());
+        assert!(!format!("{parsed:?}").contains("device-secret"));
     }
 
     #[test]
