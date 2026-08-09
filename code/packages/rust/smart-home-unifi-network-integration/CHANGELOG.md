@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0
+
+- Add bounded official connected-client inspection behind D23 read,
+  device-identifier, and five-minute presence authorization.
+- Derive host-scoped client pseudonyms from a separate zeroizing 32-byte key and
+  exclude native IDs, names, MACs, IPs, and connection timestamps from runtime.
+- Install only expiring pseudonymous presence and access shape, with exact
+  loopback coverage and consent denial before transport.
+
 ## 0.1.0
 
 - Add D23-authorized local UniFi Network application, site, and adopted-device

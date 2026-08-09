@@ -45111,7 +45111,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         base_entry(
             "unifi",
             "UniFi Network",
-            "Authenticated local UniFi Network application, site, and adopted-device health inspection.",
+            "Authenticated local UniFi Network device health and pseudonymous connected-client presence inspection.",
             IntegrationCategory::LocalHub,
             ConnectivityClass::LocalPolling,
             ImplementationStatus::FirstPartyRuntime,
@@ -45136,7 +45136,8 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         .with_notes(&[
             "Production inspection uses the official local /proxy/network/integration/v1 API over HTTPS; plain HTTP is loopback-test-only.",
             "The Vault-backed API key is materialized only as X-API-Key inside the bounded transport and never enters normalized state or request-plan debug output.",
-            "Remote Site Manager, connected clients, detailed statistics, events, adoption, guest authorization, port actions, and configuration remain separate policy- or command-specific work.",
+            "Connected clients require separate ephemeral identifier and five-minute presence grants; native IDs, names, MACs, IPs, and connection timestamps are replaced by host-scoped keyed pseudonyms before runtime install.",
+            "Remote Site Manager, retained client identity migration, detailed statistics, events, adoption, guest authorization, port actions, and configuration remain separate policy- or command-specific work.",
         ]),
         base_entry(
             "sonos",
@@ -81130,6 +81131,14 @@ mod tests {
         assert!(!unifi
             .required_primitives
             .contains(&PrimitiveFamily::CameraMedia));
+        assert!(unifi
+            .notes
+            .iter()
+            .any(|note| note.contains("five-minute presence grants")));
+        assert!(unifi
+            .notes
+            .iter()
+            .any(|note| note.contains("host-scoped keyed pseudonyms")));
     }
 
     #[test]

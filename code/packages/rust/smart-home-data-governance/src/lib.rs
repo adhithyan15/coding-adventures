@@ -16,6 +16,7 @@ pub enum DataCategory {
     CoarseLocation,
     DeviceIdentifier,
     EnvironmentalTelemetry,
+    Presence,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -666,6 +667,50 @@ mod tests {
                 200,
             ),
             Err(DataGovernanceError::InvalidGrant)
+        );
+    }
+
+    #[test]
+    fn presence_inspection_requires_exact_bounded_retention() {
+        let principal = principal();
+        let mut policy = DataGovernancePolicy::default();
+        policy
+            .add_grant(
+                DataUseGrant::new(
+                    principal.clone(),
+                    "unifi:home:connected-clients",
+                    DataCategory::Presence,
+                    DataOperation::Inspect,
+                    DataDestination::LocalDevice,
+                    DataPurpose::new("show current home-network presence").unwrap(),
+                    ConsentReceiptRef::new("consent://smart-home/unifi-presence-1").unwrap(),
+                    DataRetention::Bounded {
+                        maximum_age_ms: 300_000,
+                    },
+                    100,
+                    200,
+                )
+                .unwrap(),
+            )
+            .unwrap();
+        let mut request = DataUseRequest {
+            principal_id: &principal,
+            resource_id: "unifi:home:connected-clients",
+            category: DataCategory::Presence,
+            operation: DataOperation::Inspect,
+            destination: DataDestination::LocalDevice,
+            retention: DataRetention::Bounded {
+                maximum_age_ms: 300_000,
+            },
+            now_ms: 150,
+        };
+        assert!(policy.decide(&request).is_allowed());
+        request.retention = DataRetention::Bounded {
+            maximum_age_ms: 300_001,
+        };
+        assert_eq!(
+            policy.decide(&request),
+            DataGovernanceDecision::Deny(DataGovernanceDenial::NoMatchingConsent)
         );
     }
 }
