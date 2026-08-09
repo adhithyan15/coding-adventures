@@ -1,7 +1,7 @@
 # VLT-PM02 — Password-manager object storage contract
 
-**Status:** Draft V1  
-**Parent:** VLT-PM00 §11 and §23 Phase 0  
+**Status:** Draft V1
+**Parent:** VLT-PM00 §11 and §23 Phase 0
 **Depends on:** VLT-PM01 object identifiers
 
 ## 1. Purpose
