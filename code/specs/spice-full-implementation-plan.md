@@ -4865,22 +4865,30 @@ the Rust, Python, and TypeScript surfaces together.
      instance parameter overrides.
 
 499. Python and TypeScript model-card engine canonical alias precedence.
-   - Status: implemented in this engine normalization precedence slice.
+   - Status: completed in PR 10209.
    - Both engine normalizers give explicitly supplied canonical parameter names
      precedence over aliases regardless of source order, matching parser-facade
      validation and lowering while leaving the unresolved JFET `B` policy unchanged.
 
+500. Python and TypeScript parser/engine model-card mismatch closeout audit.
+   - Status: completed in this model-card audit reconciliation slice.
+   - Every engine-advertised model type and accepted parameter name is present
+     in both parser facades, and the independent direct lowering, validation,
+     and alias-precedence audits are complete for diode, BJT, JFET, and MOS
+     Level 1 fields apart from the documented JFET `B` policy collision.
+   - Further model-card parity work is blocked on deciding whether legacy JFET
+     `B` means beta, Parker-Skellern doping-tail shaping, or is rejected as
+     ambiguous; one card value must not populate both engine fields silently.
+
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE model-card validation parity.
-   - Resolve the JFET `B` policy before lowering it: all three parser facades
-     currently use `B` as a legacy beta alias, while the engine model uses `B`
-     for Parker-Skellern doping-tail shaping. Do not assign one card value to
-     both fields silently.
-   - Reconcile the JFET `B` policy before any remaining doping-tail lowering.
-   - Continue the audited BJT model-card gaps after the smaller JFET fields;
-     prioritize direct engine fields before adding new model surfaces.
-   - Re-audit MOS lowering after those direct JFET and BJT omissions close.
+   - Status: blocked on the JFET `B` policy decision after completing all
+     independent parser/engine model-card mismatch audits.
+   - All three parser facades currently use `B` as a legacy beta alias, while
+     the engine model uses `B` for Parker-Skellern doping-tail shaping. Decide
+     which meaning is accepted, or reject `B` as ambiguous; do not assign one
+     card value to both fields silently.
 
 2. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
