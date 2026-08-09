@@ -186,6 +186,125 @@
       "scriptCommand": "ur"
     }
   ],
+  "glossaries": [
+    {
+      "language": "arabic",
+      "output": "arabic/book/chapters/appendix-glossary.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "bengali",
+      "output": "bengali/book/chapters/appendix-glossary.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "chinese",
+      "output": "chinese/book/chapters/appendix-glossary.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
+    },
+    {
+      "language": "french",
+      "output": "french/book/chapters/appendix-glossary.tex"
+    },
+    {
+      "language": "german",
+      "output": "german/book/chapters/appendix-glossary.tex"
+    },
+    {
+      "language": "gujarati",
+      "output": "gujarati/book/chapters/appendix-glossary.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
+      "language": "hindi",
+      "output": "hindi/book/chapters/appendix-glossary.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "italian",
+      "output": "italian/book/chapters/appendix-glossary.tex"
+    },
+    {
+      "language": "japanese",
+      "output": "japanese/book/chapters/appendix-glossary.tex",
+      "scriptSet": "japanese-main"
+    },
+    {
+      "language": "kannada",
+      "output": "kannada/book/chapters/appendix-glossary.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "latin",
+      "output": "latin/book/chapters/appendix-glossary.tex"
+    },
+    {
+      "language": "malayalam",
+      "output": "malayalam/book/chapters/appendix-glossary.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "marathi",
+      "output": "marathi/book/chapters/appendix-glossary.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
+      "language": "persian",
+      "output": "persian/book/chapters/appendix-glossary.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
+    },
+    {
+      "language": "portuguese",
+      "output": "portuguese/book/chapters/appendix-glossary.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ptar"
+    },
+    {
+      "language": "punjabi",
+      "output": "punjabi/book/chapters/appendix-glossary.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "russian",
+      "output": "russian/book/chapters/appendix-glossary.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "sanskrit",
+      "output": "sanskrit/book/chapters/appendix-glossary.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "spanish",
+      "output": "spanish/book/chapters/appendix-glossary.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "esar"
+    },
+    {
+      "language": "tamil",
+      "output": "tamil/book/chapters/appendix-glossary.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "telugu",
+      "output": "telugu/book/chapters/appendix-glossary.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "urdu",
+      "output": "urdu/book/chapters/appendix-glossary.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    }
+  ],
   "targets": [
     {
       "language": "arabic",
