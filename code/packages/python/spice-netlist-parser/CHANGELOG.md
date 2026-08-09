@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate and lower optional BJT model-card `RBM` minimum base resistance.
 - Validate and lower BJT model-card `RB` base resistance.
 - Validate and lower BJT model-card `RC` collector resistance.
 - Validate and lower BJT model-card `RE` emitter resistance.
