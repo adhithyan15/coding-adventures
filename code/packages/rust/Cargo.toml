@@ -943,6 +943,7 @@ members = [
     "smart-home-zigbee-integration",
     "smart-home-matter-integration",
     "smart-home-onvif-integration",
+    "smart-home-onvif-pairing-service",
     "smart-home-onvif-snapshot-host",
     "smart-home-zoneminder-snapshot-host",
     "smart-home-shelly-integration",
