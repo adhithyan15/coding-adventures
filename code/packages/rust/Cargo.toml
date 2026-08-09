@@ -933,6 +933,7 @@ members = [
     "smart-home-data-governance",
     "smart-home-event-streams",
     "smart-home-hue-pairing-service",
+    "smart-home-pairing-transaction",
     "smart-home-local-http",
     "smart-home-platform-http",
     "smart-home-automation-runtime",

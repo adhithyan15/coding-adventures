@@ -627,6 +627,27 @@ impl SealedStore {
         plaintext: &[u8],
         if_revision: Option<Revision>,
     ) -> Result<Revision, SealedStoreError> {
+        self.put_with_condition(namespace, key, plaintext, if_revision, false)
+    }
+
+    /// Encrypt and create one record only when the key is absent.
+    pub fn put_if_absent(
+        &self,
+        namespace: &str,
+        key: &str,
+        plaintext: &[u8],
+    ) -> Result<Revision, SealedStoreError> {
+        self.put_with_condition(namespace, key, plaintext, None, true)
+    }
+
+    fn put_with_condition(
+        &self,
+        namespace: &str,
+        key: &str,
+        plaintext: &[u8],
+        if_revision: Option<Revision>,
+        if_absent: bool,
+    ) -> Result<Revision, SealedStoreError> {
         check_external_namespace(namespace)?;
 
         // Must be unsealed before we do *any* side-effect — otherwise an
@@ -685,7 +706,11 @@ impl SealedStore {
             ciphertext,
         )
         .map_err(SealedStoreError::Storage)?;
-        put_in = put_in.with_if_revision(if_revision);
+        put_in = if if_absent {
+            put_in.with_if_absent()
+        } else {
+            put_in.with_if_revision(if_revision)
+        };
 
         let rec = self.backend.put(put_in)?;
         // `dek` drops here, wiping the cleartext DEK bytes.
@@ -2231,6 +2256,23 @@ mod tests {
             err,
             SealedStoreError::Storage(StorageError::Conflict { .. })
         ));
+    }
+
+    #[test]
+    fn put_if_absent_never_overwrites_an_existing_record() {
+        let (store, _) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        let revision = store.put_if_absent("ns", "k", b"original").unwrap();
+
+        let error = store.put_if_absent("ns", "k", b"replacement").unwrap_err();
+
+        assert!(matches!(
+            error,
+            SealedStoreError::Storage(StorageError::Conflict { .. })
+        ));
+        let record = store.get("ns", "k").unwrap().unwrap();
+        assert_eq!(record.revision, revision);
+        assert_eq!(&*record.plaintext, b"original");
     }
 
     #[test]
