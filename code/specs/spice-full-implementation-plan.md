@@ -4626,10 +4626,15 @@ the Rust, Python, and TypeScript surfaces together.
      shared engine forward-beta-temperature-exponent field.
 
 458. Python and TypeScript Berkeley SPICE BJT reverse-beta parity.
-   - Status: implemented in this BJT BR parity slice.
+   - Status: completed in PR 10125.
    - Both parser facades validate positive finite `BR` / `BETA_R` values,
      prefer canonical `BR`, and lower the result into the shared engine
      reverse-beta field.
+
+459. Python and TypeScript Berkeley SPICE BJT reverse-beta-roll-off parity.
+   - Status: implemented in this BJT IKR parity slice.
+   - Both parser facades validate finite, non-negative `IKR` values and lower
+     them into the shared engine reverse-beta-roll-off-current field.
 
 ## Backlog
 

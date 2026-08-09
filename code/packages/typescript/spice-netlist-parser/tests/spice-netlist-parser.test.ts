@@ -1851,6 +1851,24 @@ Q1 col base emit fast
     );
   });
 
+  it.each([
+    ["0", 0.0],
+    ["2m", 2.0e-3],
+  ])("parses BJT reverse-beta roll-off current IKR=%s", (value, expected) => {
+    const parsed = parseNetlist(`.model fast NPN(IKR=${value})\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      reverseBetaRolloffCurrent: expected,
+    });
+  });
+
+  it.each(["-1m", "1e999"])("rejects invalid BJT IKR=%s", (value) => {
+    expect(() => parseNetlist(`.model fast NPN(IKR=${value})`)).toThrow(
+      "BJT IKR must be finite and non-negative",
+    );
+  });
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)
