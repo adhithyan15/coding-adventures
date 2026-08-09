@@ -45478,7 +45478,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         base_entry(
             "enphase_envoy",
             "Enphase Envoy",
-            "Authenticated local Enphase IQ Gateway meter inventory and aggregate energy telemetry.",
+            "Authenticated local Enphase IQ Gateway aggregate and pseudonymous per-inverter energy telemetry.",
             IntegrationCategory::EnergyClimate,
             ConnectivityClass::LocalPolling,
             ImplementationStatus::FirstPartyRuntime,
@@ -45505,7 +45505,8 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         .with_notes(&[
             "Production inspection uses a pre-generated Vault-backed bearer token over HTTPS; plain HTTP is loopback-test-only.",
             "Caller-supplied trust roots preserve certificate verification for IQ Gateways that use self-signed certificates.",
-            "Cloud token renewal, legacy authentication, inverter serials, live battery or relay topology, and controls remain separate policy-specific work.",
+            "Per-inverter inspection requires exact purpose, consent, ephemeral raw-identifier retention, and a Vault-leased pseudonymization key before transport.",
+            "Raw inverter serials never enter normalized identity or state; key rotation, cloud token renewal, legacy authentication, live battery or relay topology, and controls remain separate policy-specific work.",
         ]),
         base_entry(
             "fronius",

@@ -1,5 +1,8 @@
 # Changelog
 
+- Record Enphase's governed pseudonymous per-inverter production inspection and
+  its explicit identifier-purpose, consent, and ephemeral-retention boundary.
+
 - Record challenge-selected Basic/Digest authentication for the Axis VAPIX
   production transport.
 - Promote Enphase Envoy to a first-party authenticated local IQ Gateway meter

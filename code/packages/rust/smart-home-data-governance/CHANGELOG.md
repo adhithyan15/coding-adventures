@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0
+
+- Add exact device-identifier inspection policy with explicit ephemeral or
+  bounded retention semantics.
+- Bind retention to grants and requests, reject zero-duration or inapplicable
+  identifier retention, and keep inspection deny-by-default.
+- Mark configuration and telemetry-egress operations explicitly as having no
+  policy-level retention so cross-operation grants remain fail-closed.
+
 ## 0.2.0
 
 - Add exact credential-free MQTT broker destinations for telemetry start/stop

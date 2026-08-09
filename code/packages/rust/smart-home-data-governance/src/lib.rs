@@ -1,4 +1,4 @@
-//! Bounded privacy, consent, and telemetry-egress policy for D23 integrations.
+//! Bounded privacy, consent, identifier-use, and telemetry-egress policy for D23 integrations.
 
 #![forbid(unsafe_code)]
 
@@ -14,14 +14,23 @@ pub const MAX_CONSENT_REFERENCE_BYTES: usize = 512;
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DataCategory {
     CoarseLocation,
+    DeviceIdentifier,
     EnvironmentalTelemetry,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DataOperation {
     Configure,
+    Inspect,
     StartEgress,
     StopEgress,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DataRetention {
+    NotApplicable,
+    Ephemeral,
+    Bounded { maximum_age_ms: u64 },
 }
 
 #[derive(Clone, PartialEq, Eq)]
@@ -142,6 +151,7 @@ pub struct DataUseGrant {
     destination: DataDestination,
     purpose: DataPurpose,
     consent_ref: ConsentReceiptRef,
+    retention: DataRetention,
     granted_at_ms: u64,
     expires_at_ms: u64,
 }
@@ -156,6 +166,7 @@ impl DataUseGrant {
         destination: DataDestination,
         purpose: DataPurpose,
         consent_ref: ConsentReceiptRef,
+        retention: DataRetention,
         granted_at_ms: u64,
         expires_at_ms: u64,
     ) -> Result<Self, DataGovernanceError> {
@@ -168,7 +179,7 @@ impl DataUseGrant {
         }
         if expires_at_ms <= granted_at_ms
             || operation == DataOperation::StopEgress
-            || !operation_destination_is_valid(operation, &destination)
+            || !request_shape_is_valid(operation, &destination, retention)
         {
             return Err(DataGovernanceError::InvalidGrant);
         }
@@ -180,6 +191,7 @@ impl DataUseGrant {
             destination,
             purpose,
             consent_ref,
+            retention,
             granted_at_ms,
             expires_at_ms,
         })
@@ -191,6 +203,7 @@ impl DataUseGrant {
             && self.category == request.category
             && self.operation == request.operation
             && self.destination == request.destination
+            && self.retention == request.retention
             && request.now_ms >= self.granted_at_ms
             && request.now_ms < self.expires_at_ms
     }
@@ -207,6 +220,7 @@ impl fmt::Debug for DataUseGrant {
             .field("destination_kind", &self.destination.kind())
             .field("purpose", &self.purpose)
             .field("consent_ref", &self.consent_ref)
+            .field("retention", &self.retention)
             .field("granted_at_ms", &self.granted_at_ms)
             .field("expires_at_ms", &self.expires_at_ms)
             .finish()
@@ -219,6 +233,7 @@ pub struct DataUseRequest<'a> {
     pub category: DataCategory,
     pub operation: DataOperation,
     pub destination: DataDestination,
+    pub retention: DataRetention,
     pub now_ms: u64,
 }
 
@@ -231,6 +246,7 @@ impl fmt::Debug for DataUseRequest<'_> {
             .field("category", &self.category)
             .field("operation", &self.operation)
             .field("destination_kind", &self.destination.kind())
+            .field("retention", &self.retention)
             .field("now_ms", &self.now_ms)
             .finish()
     }
@@ -291,7 +307,7 @@ impl DataGovernancePolicy {
         if request.resource_id.trim().is_empty()
             || request.resource_id.len() > MAX_RESOURCE_BYTES
             || has_unsafe_text(request.resource_id)
-            || !operation_destination_is_valid(request.operation, &request.destination)
+            || !request_shape_is_valid(request.operation, &request.destination, request.retention)
         {
             return DataGovernanceDecision::Deny(DataGovernanceDenial::InvalidRequest);
         }
@@ -349,14 +365,32 @@ fn has_unsafe_text(value: &str) -> bool {
     value.chars().any(char::is_control)
 }
 
-fn operation_destination_is_valid(operation: DataOperation, destination: &DataDestination) -> bool {
+fn request_shape_is_valid(
+    operation: DataOperation,
+    destination: &DataDestination,
+    retention: DataRetention,
+) -> bool {
     matches!(
-        (operation, destination),
-        (DataOperation::Configure, DataDestination::LocalDevice)
-            | (
-                DataOperation::StartEgress | DataOperation::StopEgress,
-                DataDestination::HttpsOrigin(_) | DataDestination::MqttBroker(_)
-            )
+        (operation, destination, retention),
+        (
+            DataOperation::Configure,
+            DataDestination::LocalDevice,
+            DataRetention::NotApplicable
+        ) | (
+            DataOperation::Inspect,
+            DataDestination::LocalDevice,
+            DataRetention::Ephemeral
+        ) | (
+            DataOperation::Inspect,
+            DataDestination::LocalDevice,
+            DataRetention::Bounded {
+                maximum_age_ms: 1..
+            }
+        ) | (
+            DataOperation::StartEgress | DataOperation::StopEgress,
+            DataDestination::HttpsOrigin(_) | DataDestination::MqttBroker(_),
+            DataRetention::NotApplicable
+        )
     )
 }
 
@@ -385,6 +419,7 @@ mod tests {
             cloud(),
             DataPurpose::new("operator-requested vendor dashboard upload").unwrap(),
             ConsentReceiptRef::new("consent://smart-home/receipt-1").unwrap(),
+            DataRetention::NotApplicable,
             100,
             200,
         )
@@ -398,6 +433,7 @@ mod tests {
             category: DataCategory::EnvironmentalTelemetry,
             operation: DataOperation::StartEgress,
             destination: cloud(),
+            retention: DataRetention::NotApplicable,
             now_ms,
         }
     }
@@ -454,6 +490,7 @@ mod tests {
             category: DataCategory::EnvironmentalTelemetry,
             operation: DataOperation::StopEgress,
             destination: DataDestination::LocalDevice,
+            retention: DataRetention::NotApplicable,
             now_ms: 150,
         };
         assert_eq!(
@@ -469,6 +506,7 @@ mod tests {
                 cloud(),
                 DataPurpose::new("operator-selected monitor country").unwrap(),
                 ConsentReceiptRef::new("consent://smart-home/receipt-2").unwrap(),
+                DataRetention::NotApplicable,
                 100,
                 200,
             ),
@@ -538,6 +576,7 @@ mod tests {
                     mqtt(),
                     DataPurpose::new("operator-selected MQTT telemetry route").unwrap(),
                     ConsentReceiptRef::new("consent://smart-home/mqtt-1").unwrap(),
+                    DataRetention::NotApplicable,
                     100,
                     200,
                 )
@@ -551,6 +590,7 @@ mod tests {
                 category: DataCategory::EnvironmentalTelemetry,
                 operation: DataOperation::StartEgress,
                 destination: mqtt(),
+                retention: DataRetention::NotApplicable,
                 now_ms: 150,
             })
             .is_allowed());
@@ -561,9 +601,71 @@ mod tests {
                 category: DataCategory::EnvironmentalTelemetry,
                 operation: DataOperation::StopEgress,
                 destination: mqtt(),
+                retention: DataRetention::NotApplicable,
                 now_ms: 250,
             }),
             DataGovernanceDecision::Allow(DataGovernanceAllowance::PrivacyProtective)
+        );
+    }
+
+    #[test]
+    fn identifier_inspection_requires_consent_scoped_ephemeral_retention() {
+        let principal = principal();
+        let mut policy = DataGovernancePolicy::default();
+        policy
+            .add_grant(
+                DataUseGrant::new(
+                    principal.clone(),
+                    "enphase:gateway:microinverters",
+                    DataCategory::DeviceIdentifier,
+                    DataOperation::Inspect,
+                    DataDestination::LocalDevice,
+                    DataPurpose::new("diagnose per-inverter solar production").unwrap(),
+                    ConsentReceiptRef::new("consent://smart-home/enphase-inverters-1").unwrap(),
+                    DataRetention::Ephemeral,
+                    100,
+                    200,
+                )
+                .unwrap(),
+            )
+            .unwrap();
+        let mut request = DataUseRequest {
+            principal_id: &principal,
+            resource_id: "enphase:gateway:microinverters",
+            category: DataCategory::DeviceIdentifier,
+            operation: DataOperation::Inspect,
+            destination: DataDestination::LocalDevice,
+            retention: DataRetention::Ephemeral,
+            now_ms: 150,
+        };
+        assert_eq!(
+            policy.decide(&request),
+            DataGovernanceDecision::Allow(DataGovernanceAllowance::ExplicitConsent)
+        );
+        request.retention = DataRetention::Bounded { maximum_age_ms: 1 };
+        assert_eq!(
+            policy.decide(&request),
+            DataGovernanceDecision::Deny(DataGovernanceDenial::NoMatchingConsent)
+        );
+        request.retention = DataRetention::NotApplicable;
+        assert_eq!(
+            policy.decide(&request),
+            DataGovernanceDecision::Deny(DataGovernanceDenial::InvalidRequest)
+        );
+        assert_eq!(
+            DataUseGrant::new(
+                principal,
+                "enphase:gateway:microinverters",
+                DataCategory::DeviceIdentifier,
+                DataOperation::Inspect,
+                DataDestination::LocalDevice,
+                DataPurpose::new("diagnose per-inverter solar production").unwrap(),
+                ConsentReceiptRef::new("consent://smart-home/enphase-inverters-2").unwrap(),
+                DataRetention::Bounded { maximum_age_ms: 0 },
+                100,
+                200,
+            ),
+            Err(DataGovernanceError::InvalidGrant)
         );
     }
 }

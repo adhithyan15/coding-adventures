@@ -2,6 +2,7 @@
 
 #![forbid(unsafe_code)]
 
+use coding_adventures_sha256::sha256;
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use http1::{parse_response_head, Http1ParseError};
 use http_core::{BodyKind, Header};
@@ -11,6 +12,10 @@ use smart_home_core::{
     DeviceId, Entity, EntityId, EntityKind, Health, IntegrationId, Metadata, ProtocolFamily,
     ProtocolIdentifier, SmartHomeTool, StateConfidence, StateSnapshot, StateSource, Value,
     ValueKind, VaultRef,
+};
+use smart_home_data_governance::{
+    DataCategory, DataDestination, DataGovernanceDecision, DataGovernanceDenial,
+    DataGovernancePolicy, DataOperation, DataRetention, DataUseRequest,
 };
 use smart_home_discovery::{
     DiscoveryConfidence, DiscoveryRecord, DiscoverySource, PairingRequirement,
@@ -28,13 +33,15 @@ use std::time::Duration;
 use tls_platform::{default_connector, TlsConfig, TlsConnector};
 use url_parser::{Url, UrlError};
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 pub const INTEGRATION_ID: &str = "enphase_envoy";
 pub const PROTOCOL_ID: &str = "enphase_iq_gateway_local_api";
 pub const METERS_PATH: &str = "/ivp/meters";
 pub const METER_READINGS_PATH: &str = "/ivp/meters/readings";
+pub const INVERTER_PRODUCTION_PATH: &str = "/api/v1/production/inverters";
 pub const DEFAULT_MAX_RESPONSE_BYTES: usize = 2 * 1024 * 1024;
 pub const MAX_METERS: usize = 16;
+pub const MAX_INVERTERS: usize = 1_024;
 const MAX_SECRET_BYTES: usize = 16 * 1024;
 const MAX_TEXT_BYTES: usize = 1_024;
 
@@ -59,6 +66,7 @@ pub enum EnphaseError {
     },
     Json(serde_json::Error),
     MissingField(&'static str),
+    DataGovernanceDenied(DataGovernanceDenial),
     Runtime(RuntimeError),
 }
 
@@ -83,6 +91,12 @@ impl fmt::Display for EnphaseError {
             ),
             Self::Json(error) => write!(formatter, "invalid Enphase JSON: {error}"),
             Self::MissingField(field) => write!(formatter, "Enphase response is missing {field}"),
+            Self::DataGovernanceDenied(reason) => {
+                write!(
+                    formatter,
+                    "Enphase data-governance policy denied the request: {reason:?}"
+                )
+            }
             Self::Runtime(error) => error.fmt(formatter),
         }
     }
@@ -138,6 +152,30 @@ impl EnphaseAccessToken {
 impl fmt::Debug for EnphaseAccessToken {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("EnphaseAccessToken([REDACTED])")
+    }
+}
+
+pub struct EnphaseIdentifierKey {
+    bytes: Zeroizing<Vec<u8>>,
+}
+
+impl EnphaseIdentifierKey {
+    pub fn new(bytes: impl Into<Vec<u8>>) -> Result<Self, EnphaseError> {
+        let bytes = bytes.into();
+        if bytes.len() != 32 {
+            return Err(EnphaseError::Validation(
+                "identifier pseudonymization key must contain exactly 32 bytes".to_string(),
+            ));
+        }
+        Ok(Self {
+            bytes: Zeroizing::new(bytes),
+        })
+    }
+}
+
+impl fmt::Debug for EnphaseIdentifierKey {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("EnphaseIdentifierKey([REDACTED])")
     }
 }
 
@@ -253,12 +291,23 @@ pub struct EnphaseMeter {
 #[derive(Debug, Clone, PartialEq)]
 pub struct EnphaseSnapshot {
     pub meters: Vec<EnphaseMeter>,
+    pub inverters: Vec<EnphaseInverter>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct EnphaseInverter {
+    pub pseudonym: String,
+    pub last_report_date: u64,
+    pub device_type: u64,
+    pub last_report_watts: f64,
+    pub max_report_watts: f64,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct EnphaseRequestPlans {
     pub meters: LocalHttpRequestPlan,
     pub readings: LocalHttpRequestPlan,
+    pub inverters: LocalHttpRequestPlan,
 }
 
 pub trait EnphaseTransport {
@@ -267,6 +316,18 @@ pub trait EnphaseTransport {
         plans: &EnphaseRequestPlans,
         token: &EnphaseAccessToken,
     ) -> Result<EnphaseSnapshot, EnphaseError>;
+
+    fn inspect_inverters(
+        &mut self,
+        _plan: &LocalHttpRequestPlan,
+        _token: &EnphaseAccessToken,
+        _identifier_key: &EnphaseIdentifierKey,
+        _gateway_serial: &str,
+    ) -> Result<Vec<EnphaseInverter>, EnphaseError> {
+        Err(EnphaseError::Validation(
+            "transport does not implement per-inverter inspection".to_string(),
+        ))
+    }
 }
 
 pub struct EnphaseLanTransport {
@@ -356,6 +417,22 @@ impl EnphaseLanTransport {
         }
         Ok(serde_json::from_slice(&response.body)?)
     }
+
+    fn get_sensitive_json(
+        &mut self,
+        plan: &LocalHttpRequestPlan,
+        token: &EnphaseAccessToken,
+        operation: &'static str,
+    ) -> Result<SensitiveJson, EnphaseError> {
+        let response = self.request(plan, token)?;
+        if response.status != 200 {
+            return Err(EnphaseError::HttpStatus {
+                operation,
+                status: response.status,
+            });
+        }
+        Ok(SensitiveJson(serde_json::from_slice(&response.body)?))
+    }
 }
 
 impl EnphaseTransport for EnphaseLanTransport {
@@ -368,6 +445,17 @@ impl EnphaseTransport for EnphaseLanTransport {
         let readings = self.get_json(&plans.readings, token, "meter readings")?;
         parse_snapshot(&meters, &readings)
     }
+
+    fn inspect_inverters(
+        &mut self,
+        plan: &LocalHttpRequestPlan,
+        token: &EnphaseAccessToken,
+        identifier_key: &EnphaseIdentifierKey,
+        gateway_serial: &str,
+    ) -> Result<Vec<EnphaseInverter>, EnphaseError> {
+        let response = self.get_sensitive_json(plan, token, "inverter production")?;
+        parse_inverters(&response.0, identifier_key, gateway_serial)
+    }
 }
 
 pub struct EnphaseClient<T> {
@@ -375,6 +463,7 @@ pub struct EnphaseClient<T> {
     token: EnphaseAccessToken,
     transport: T,
     plans: EnphaseRequestPlans,
+    identifier_key: Option<EnphaseIdentifierKey>,
 }
 
 impl<T: EnphaseTransport> EnphaseClient<T> {
@@ -392,16 +481,48 @@ impl<T: EnphaseTransport> EnphaseClient<T> {
             METER_READINGS_PATH,
             timeout_ms,
         )?;
+        let inverters = get_plan(
+            &endpoint,
+            &config.token_ref,
+            INVERTER_PRODUCTION_PATH,
+            timeout_ms,
+        )?;
         Ok(Self {
             config,
             token,
             transport,
-            plans: EnphaseRequestPlans { meters, readings },
+            plans: EnphaseRequestPlans {
+                meters,
+                readings,
+                inverters,
+            },
+            identifier_key: None,
         })
+    }
+
+    pub fn with_identifier_key(mut self, identifier_key: EnphaseIdentifierKey) -> Self {
+        self.identifier_key = Some(identifier_key);
+        self
     }
 
     pub fn inspect(&mut self) -> Result<EnphaseSnapshot, EnphaseError> {
         self.transport.inspect(&self.plans, &self.token)
+    }
+
+    pub fn inspect_with_inverters(&mut self) -> Result<EnphaseSnapshot, EnphaseError> {
+        let identifier_key = self.identifier_key.as_ref().ok_or_else(|| {
+            EnphaseError::Validation(
+                "per-inverter inspection requires a Vault-leased identifier key".to_string(),
+            )
+        })?;
+        let mut snapshot = self.transport.inspect(&self.plans, &self.token)?;
+        snapshot.inverters = self.transport.inspect_inverters(
+            &self.plans.inverters,
+            &self.token,
+            identifier_key,
+            &self.config.gateway_serial,
+        )?;
+        Ok(snapshot)
     }
 }
 
@@ -411,6 +532,10 @@ impl<T> fmt::Debug for EnphaseClient<T> {
             .debug_struct("EnphaseClient")
             .field("config", &self.config)
             .field("token", &"[REDACTED]")
+            .field(
+                "identifier_key",
+                &self.identifier_key.as_ref().map(|_| "[REDACTED]"),
+            )
             .field("plans", &self.plans)
             .finish_non_exhaustive()
     }
@@ -421,15 +546,25 @@ pub struct InstalledEnphaseGateway {
     pub bridge_id: BridgeId,
     pub device_id: DeviceId,
     pub meter_entity_ids: Vec<EntityId>,
+    pub inverter_entity_ids: Vec<EntityId>,
 }
 
 pub struct EnphaseRuntimeIntegration<T> {
     client: EnphaseClient<T>,
+    data_governance: DataGovernancePolicy,
 }
 
 impl<T: EnphaseTransport> EnphaseRuntimeIntegration<T> {
     pub fn new(client: EnphaseClient<T>) -> Self {
-        Self { client }
+        Self {
+            client,
+            data_governance: DataGovernancePolicy::default(),
+        }
+    }
+
+    pub fn with_data_governance(mut self, data_governance: DataGovernancePolicy) -> Self {
+        self.data_governance = data_governance;
+        self
     }
 
     pub fn inspect_and_install_authorized(
@@ -440,6 +575,23 @@ impl<T: EnphaseTransport> EnphaseRuntimeIntegration<T> {
     ) -> Result<InstalledEnphaseGateway, EnphaseError> {
         authorize_read(runtime, principal_id, observed_at_ms)?;
         let snapshot = self.client.inspect()?;
+        install_snapshot(runtime, &self.client.config, &snapshot, observed_at_ms)
+    }
+
+    pub fn inspect_inverters_and_install_authorized(
+        &mut self,
+        runtime: &mut SmartHomeRuntime,
+        principal_id: AgentId,
+        observed_at_ms: u64,
+    ) -> Result<InstalledEnphaseGateway, EnphaseError> {
+        authorize_read(runtime, principal_id.clone(), observed_at_ms)?;
+        authorize_identifier_inspection(
+            &self.data_governance,
+            &principal_id,
+            &self.client.config.gateway_serial,
+            observed_at_ms,
+        )?;
+        let snapshot = self.client.inspect_with_inverters()?;
         install_snapshot(runtime, &self.client.config, &snapshot, observed_at_ms)
     }
 }
@@ -477,6 +629,7 @@ pub fn install_snapshot(
             "meter snapshot must not be empty".to_string(),
         ));
     }
+    validate_inverter_snapshot(&snapshot.inverters)?;
     let serial_component = stable_component(&config.gateway_serial);
     let device_id = DeviceId::trusted(format!("enphase:{serial_component}"));
     let health = aggregate_health(&snapshot.meters);
@@ -494,6 +647,10 @@ pub fn install_snapshot(
     bridge.metadata = vec![
         Metadata::new("enphase.transport", "local_bearer_token"),
         Metadata::new("enphase.meter_count", snapshot.meters.len().to_string()),
+        Metadata::new(
+            "enphase.inverter_count",
+            snapshot.inverters.len().to_string(),
+        ),
     ];
     runtime.upsert_bridge(bridge)?;
 
@@ -502,6 +659,18 @@ pub fn install_snapshot(
         .iter()
         .map(|meter| EntityId::trusted(format!("enphase:{serial_component}:meter:{}", meter.eid)))
         .collect::<Vec<_>>();
+    let inverter_entity_ids = snapshot
+        .inverters
+        .iter()
+        .map(|inverter| {
+            EntityId::trusted(format!(
+                "enphase:{serial_component}:inverter:{}",
+                inverter.pseudonym
+            ))
+        })
+        .collect::<Vec<_>>();
+    let mut entity_ids = meter_entity_ids.clone();
+    entity_ids.extend(inverter_entity_ids.iter().cloned());
     runtime.upsert_device(Device {
         device_id: device_id.clone(),
         bridge_id: config.bridge_id.clone(),
@@ -511,16 +680,22 @@ pub fn install_snapshot(
         serial: Some(config.gateway_serial.clone()),
         firmware_version: None,
         room_id: None,
-        entity_ids: meter_entity_ids.clone(),
+        entity_ids,
         identifiers: vec![protocol_identifier(
             "gateway_serial",
             &config.gateway_serial,
         )?],
         health,
-        metadata: vec![Metadata::new(
-            "enphase.native_meter_count",
-            snapshot.meters.len().to_string(),
-        )],
+        metadata: vec![
+            Metadata::new(
+                "enphase.native_meter_count",
+                snapshot.meters.len().to_string(),
+            ),
+            Metadata::new(
+                "enphase.pseudonymous_inverter_count",
+                snapshot.inverters.len().to_string(),
+            ),
+        ],
     })?;
     for (meter, entity_id) in snapshot.meters.iter().zip(&meter_entity_ids) {
         runtime.upsert_entity(Entity {
@@ -550,11 +725,76 @@ pub fn install_snapshot(
             ],
         })?;
     }
+    for (inverter, entity_id) in snapshot.inverters.iter().zip(&inverter_entity_ids) {
+        runtime.upsert_entity(Entity {
+            entity_id: entity_id.clone(),
+            device_id: device_id.clone(),
+            kind: EntityKind::Sensor,
+            name: format!("Enphase microinverter {}", &inverter.pseudonym[..8]),
+            capabilities: vec![Capability::new(
+                CapabilityId::trusted("sensor.measurement"),
+                CapabilityMode::Observe,
+                ValueKind::Object,
+            )],
+            state: Some(StateSnapshot {
+                entity_id: entity_id.clone(),
+                value: inverter_value(inverter),
+                source: StateSource::Poll,
+                observed_at_ms,
+                received_at_ms: observed_at_ms,
+                expires_at_ms: None,
+                confidence: StateConfidence::Confirmed,
+            }),
+            metadata: vec![
+                Metadata::new("enphase.identifier_form", "keyed_pseudonym"),
+                Metadata::new("enphase.inverter_pseudonym", &inverter.pseudonym),
+                Metadata::new("enphase.device_type", inverter.device_type.to_string()),
+            ],
+        })?;
+    }
     Ok(InstalledEnphaseGateway {
         bridge_id: config.bridge_id.clone(),
         device_id,
         meter_entity_ids,
+        inverter_entity_ids,
     })
+}
+
+fn validate_inverter_snapshot(inverters: &[EnphaseInverter]) -> Result<(), EnphaseError> {
+    if inverters.len() > MAX_INVERTERS {
+        return Err(EnphaseError::Validation(format!(
+            "inverter production exceeds {MAX_INVERTERS} entries"
+        )));
+    }
+    let mut seen = BTreeSet::new();
+    for inverter in inverters {
+        if inverter.pseudonym.len() != 32
+            || !inverter
+                .pseudonym
+                .bytes()
+                .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+        {
+            return Err(EnphaseError::Validation(
+                "microinverter pseudonym must be 128-bit lowercase hexadecimal text".to_string(),
+            ));
+        }
+        if !seen.insert(&inverter.pseudonym) {
+            return Err(EnphaseError::Validation(
+                "duplicate microinverter pseudonym".to_string(),
+            ));
+        }
+        if !inverter.last_report_watts.is_finite()
+            || inverter.last_report_watts < 0.0
+            || !inverter.max_report_watts.is_finite()
+            || inverter.max_report_watts < 0.0
+            || inverter.last_report_watts > inverter.max_report_watts
+        {
+            return Err(EnphaseError::Validation(
+                "microinverter power readings are invalid".to_string(),
+            ));
+        }
+    }
+    Ok(())
 }
 
 fn authorize_read(
@@ -572,6 +812,30 @@ fn authorize_read(
             tool,
             missing_capabilities: decision.missing_capabilities,
         }))
+    }
+}
+
+fn authorize_identifier_inspection(
+    policy: &DataGovernancePolicy,
+    principal_id: &AgentId,
+    gateway_serial: &str,
+    now_ms: u64,
+) -> Result<(), EnphaseError> {
+    let resource_id = format!(
+        "enphase:{}:microinverters",
+        stable_component(gateway_serial)
+    );
+    match policy.decide(&DataUseRequest {
+        principal_id,
+        resource_id: &resource_id,
+        category: DataCategory::DeviceIdentifier,
+        operation: DataOperation::Inspect,
+        destination: DataDestination::LocalDevice,
+        retention: DataRetention::Ephemeral,
+        now_ms,
+    }) {
+        DataGovernanceDecision::Allow(_) => Ok(()),
+        DataGovernanceDecision::Deny(reason) => Err(EnphaseError::DataGovernanceDenied(reason)),
     }
 }
 
@@ -625,7 +889,10 @@ fn parse_snapshot(
         )));
     }
     parsed.sort_by_key(|meter| meter.eid);
-    Ok(EnphaseSnapshot { meters: parsed })
+    Ok(EnphaseSnapshot {
+        meters: parsed,
+        inverters: Vec::new(),
+    })
 }
 
 fn parse_meter(
@@ -652,6 +919,129 @@ fn parse_meter(
         current_a: required_f64(reading, "current")?,
         frequency_hz: required_f64(reading, "freq")?,
     })
+}
+
+struct SensitiveJson(JsonValue);
+
+impl Drop for SensitiveJson {
+    fn drop(&mut self) {
+        zeroize_json_strings(&mut self.0);
+    }
+}
+
+fn zeroize_json_strings(value: &mut JsonValue) {
+    match value {
+        JsonValue::String(text) => text.zeroize(),
+        JsonValue::Array(values) => {
+            for value in values {
+                zeroize_json_strings(value);
+            }
+        }
+        JsonValue::Object(values) => {
+            for value in values.values_mut() {
+                zeroize_json_strings(value);
+            }
+        }
+        JsonValue::Null | JsonValue::Bool(_) | JsonValue::Number(_) => {}
+    }
+}
+
+fn parse_inverters(
+    data: &JsonValue,
+    identifier_key: &EnphaseIdentifierKey,
+    gateway_serial: &str,
+) -> Result<Vec<EnphaseInverter>, EnphaseError> {
+    let values = data
+        .as_array()
+        .ok_or(EnphaseError::MissingField("inverter production array"))?;
+    if values.len() > MAX_INVERTERS {
+        return Err(EnphaseError::Validation(format!(
+            "inverter production exceeds {MAX_INVERTERS} entries"
+        )));
+    }
+    let mut seen = BTreeSet::new();
+    let mut inverters = Vec::with_capacity(values.len());
+    for value in values {
+        let inverter = value
+            .as_object()
+            .ok_or(EnphaseError::MissingField("inverter production object"))?;
+        let serial = inverter
+            .get("serialNumber")
+            .and_then(JsonValue::as_str)
+            .ok_or(EnphaseError::MissingField("serialNumber"))?;
+        if serial.is_empty()
+            || serial.len() > 64
+            || !serial.bytes().all(|byte| byte.is_ascii_digit())
+        {
+            return Err(EnphaseError::Validation(
+                "microinverter serial must be bounded decimal text".to_string(),
+            ));
+        }
+        let pseudonym = inverter_pseudonym(identifier_key, gateway_serial, serial);
+        if !seen.insert(pseudonym.clone()) {
+            return Err(EnphaseError::Validation(
+                "duplicate microinverter identifier".to_string(),
+            ));
+        }
+        let last_report_watts = required_nonnegative_f64(inverter, "lastReportWatts")?;
+        let max_report_watts = required_nonnegative_f64(inverter, "maxReportWatts")?;
+        if last_report_watts > max_report_watts {
+            return Err(EnphaseError::Validation(
+                "microinverter last report exceeds its maximum report".to_string(),
+            ));
+        }
+        inverters.push(EnphaseInverter {
+            pseudonym,
+            last_report_date: required_u64(inverter, "lastReportDate")?,
+            device_type: required_u64(inverter, "devType")?,
+            last_report_watts,
+            max_report_watts,
+        });
+    }
+    inverters.sort_by(|left, right| left.pseudonym.cmp(&right.pseudonym));
+    Ok(inverters)
+}
+
+fn required_nonnegative_f64(
+    object: &JsonMap<String, JsonValue>,
+    field: &'static str,
+) -> Result<f64, EnphaseError> {
+    required_f64(object, field).and_then(|value| {
+        if value >= 0.0 {
+            Ok(value)
+        } else {
+            Err(EnphaseError::Validation(format!(
+                "{field} must not be negative"
+            )))
+        }
+    })
+}
+
+fn inverter_pseudonym(
+    identifier_key: &EnphaseIdentifierKey,
+    gateway_serial: &str,
+    inverter_serial: &str,
+) -> String {
+    let mut input = Zeroizing::new(Vec::with_capacity(
+        identifier_key.bytes.len() + gateway_serial.len() + inverter_serial.len() + 24,
+    ));
+    input.extend_from_slice(identifier_key.bytes.as_slice());
+    input.extend_from_slice(b"enphase-inverter-v1\0");
+    input.extend_from_slice(gateway_serial.as_bytes());
+    input.push(0);
+    input.extend_from_slice(inverter_serial.as_bytes());
+    let digest = Zeroizing::new(sha256(input.as_slice()));
+    lowercase_hex(&digest[..16])
+}
+
+fn lowercase_hex(bytes: &[u8]) -> String {
+    const HEX: &[u8; 16] = b"0123456789abcdef";
+    let mut output = String::with_capacity(bytes.len() * 2);
+    for byte in bytes {
+        output.push(HEX[(byte >> 4) as usize] as char);
+        output.push(HEX[(byte & 0x0f) as usize] as char);
+    }
+    output
 }
 
 fn required_u64(
@@ -821,6 +1211,27 @@ fn meter_value(meter: &EnphaseMeter) -> Value {
         (
             "frequency_hz".to_string(),
             Value::Number(meter.frequency_hz),
+        ),
+    ])
+}
+
+fn inverter_value(inverter: &EnphaseInverter) -> Value {
+    Value::Object(vec![
+        (
+            "last_report_date_s".to_string(),
+            Value::Number(inverter.last_report_date as f64),
+        ),
+        (
+            "device_type".to_string(),
+            Value::Number(inverter.device_type as f64),
+        ),
+        (
+            "last_report_watts".to_string(),
+            Value::Number(inverter.last_report_watts),
+        ),
+        (
+            "max_report_watts".to_string(),
+            Value::Number(inverter.max_report_watts),
         ),
     ])
 }
@@ -1098,11 +1509,15 @@ fn find_crlf(bytes: &[u8], start: usize) -> Option<usize> {
 mod tests {
     use super::*;
     use smart_home_core::{CapabilityGrant, CapabilityGrantId, PrivilegeTier};
+    use smart_home_data_governance::{ConsentReceiptRef, DataPurpose, DataUseGrant};
     use std::net::TcpListener;
     use std::sync::mpsc;
     use std::thread;
 
     const TOKEN: &str = "eyJhbGciOiJFUzI1NiJ9.test.signature";
+    const IDENTIFIER_KEY: [u8; 32] = [0x5a; 32];
+    const INVERTER_SERIAL_1: &str = "121935144671";
+    const INVERTER_SERIAL_2: &str = "121935144623";
 
     fn config(base_url: &str) -> EnphaseConfig {
         EnphaseConfig::new(
@@ -1170,6 +1585,25 @@ mod tests {
         ])
     }
 
+    fn inverter_production() -> JsonValue {
+        serde_json::json!([
+            {
+                "serialNumber": INVERTER_SERIAL_1,
+                "lastReportDate": 1654171836_u64,
+                "devType": 1_u64,
+                "lastReportWatts": 15.0,
+                "maxReportWatts": 38.0
+            },
+            {
+                "serialNumber": INVERTER_SERIAL_2,
+                "lastReportDate": 1654171766_u64,
+                "devType": 1_u64,
+                "lastReportWatts": 5.0,
+                "maxReportWatts": 5.0
+            }
+        ])
+    }
+
     fn snapshot() -> EnphaseSnapshot {
         parse_snapshot(&meter_inventory(), &meter_readings()).unwrap()
     }
@@ -1188,6 +1622,28 @@ mod tests {
             .with_expiry(20_000),
         );
         (runtime, principal_id)
+    }
+
+    fn identifier_policy(principal_id: &AgentId) -> DataGovernancePolicy {
+        let mut policy = DataGovernancePolicy::default();
+        policy
+            .add_grant(
+                DataUseGrant::new(
+                    principal_id.clone(),
+                    "enphase:122233344455:microinverters",
+                    DataCategory::DeviceIdentifier,
+                    DataOperation::Inspect,
+                    DataDestination::LocalDevice,
+                    DataPurpose::new("diagnose per-inverter solar production").unwrap(),
+                    ConsentReceiptRef::new("consent://enphase/inverter-inspection-1").unwrap(),
+                    DataRetention::Ephemeral,
+                    1_000,
+                    20_000,
+                )
+                .unwrap(),
+            )
+            .unwrap();
+        policy
     }
 
     #[test]
@@ -1232,13 +1688,81 @@ mod tests {
     }
 
     #[test]
+    fn inverter_parser_pseudonymizes_serials_and_rejects_identity_drift() {
+        let key = EnphaseIdentifierKey::new(IDENTIFIER_KEY.to_vec()).unwrap();
+        let values = SensitiveJson(inverter_production());
+        let parsed = parse_inverters(&values.0, &key, "122233344455").unwrap();
+        assert_eq!(parsed.len(), 2);
+        assert_eq!(parsed[0].pseudonym.len(), 32);
+        assert_eq!(
+            inverter_pseudonym(&key, "122233344455", INVERTER_SERIAL_1),
+            inverter_pseudonym(&key, "122233344455", INVERTER_SERIAL_1)
+        );
+        assert!(parsed
+            .iter()
+            .all(|inverter| !inverter.pseudonym.contains(INVERTER_SERIAL_1)
+                && !inverter.pseudonym.contains(INVERTER_SERIAL_2)));
+        let other_key = EnphaseIdentifierKey::new(vec![0x6b; 32]).unwrap();
+        let reparsed = parse_inverters(&values.0, &other_key, "122233344455").unwrap();
+        assert_ne!(parsed[0].pseudonym, reparsed[0].pseudonym);
+
+        let mut duplicate = inverter_production();
+        duplicate.as_array_mut().unwrap()[1]["serialNumber"] =
+            JsonValue::String(INVERTER_SERIAL_1.to_string());
+        let error = parse_inverters(&duplicate, &key, "122233344455").unwrap_err();
+        assert!(error.to_string().contains("duplicate microinverter"));
+        assert!(!error.to_string().contains(INVERTER_SERIAL_1));
+
+        let oversized = JsonValue::Array(vec![JsonValue::Null; MAX_INVERTERS + 1]);
+        assert!(parse_inverters(&oversized, &key, "122233344455")
+            .unwrap_err()
+            .to_string()
+            .contains("exceeds"));
+    }
+
+    #[test]
+    fn identifier_keys_are_strict_and_redacted() {
+        assert!(EnphaseIdentifierKey::new(vec![0x5a; 31]).is_err());
+        let key = EnphaseIdentifierKey::new(IDENTIFIER_KEY.to_vec()).unwrap();
+        assert_eq!(format!("{key:?}"), "EnphaseIdentifierKey([REDACTED])");
+    }
+
+    #[test]
+    fn install_rejects_invalid_pseudonyms_before_runtime_mutation() {
+        let (mut runtime, _) = authorized_runtime();
+        let mut snapshot = snapshot();
+        snapshot.inverters.push(EnphaseInverter {
+            pseudonym: "short".to_string(),
+            last_report_date: 1,
+            device_type: 1,
+            last_report_watts: 1.0,
+            max_report_watts: 2.0,
+        });
+        assert!(install_snapshot(
+            &mut runtime,
+            &config("http://127.0.0.1:1"),
+            &snapshot,
+            5_000
+        )
+        .unwrap_err()
+        .to_string()
+        .contains("pseudonym"));
+        assert!(runtime
+            .registry()
+            .bridge(&BridgeId::trusted("enphase.test"))
+            .is_none());
+    }
+
+    #[test]
     fn token_and_client_debug_are_redacted() {
         let token = EnphaseAccessToken::new(TOKEN).unwrap();
         assert!(!format!("{token:?}").contains(TOKEN));
-        let client =
-            EnphaseClient::new(config("http://127.0.0.1:1"), token, FixedTransport).unwrap();
+        let client = EnphaseClient::new(config("http://127.0.0.1:1"), token, FixedTransport)
+            .unwrap()
+            .with_identifier_key(EnphaseIdentifierKey::new(IDENTIFIER_KEY.to_vec()).unwrap());
         let debug = format!("{client:?}");
         assert!(!debug.contains(TOKEN));
+        assert!(!debug.contains("5a5a5a"));
         assert!(debug.contains("[REDACTED]"));
     }
 
@@ -1319,6 +1843,26 @@ mod tests {
     }
 
     #[test]
+    fn inverter_inspection_without_identifier_consent_reaches_no_transport() {
+        let (mut runtime, principal) = authorized_runtime();
+        let client = EnphaseClient::new(
+            config("http://127.0.0.1:1"),
+            EnphaseAccessToken::new(TOKEN).unwrap(),
+            CountingTransport { calls: 0 },
+        )
+        .unwrap()
+        .with_identifier_key(EnphaseIdentifierKey::new(IDENTIFIER_KEY.to_vec()).unwrap());
+        let mut integration = EnphaseRuntimeIntegration::new(client);
+        assert!(matches!(
+            integration.inspect_inverters_and_install_authorized(&mut runtime, principal, 5_000,),
+            Err(EnphaseError::DataGovernanceDenied(
+                DataGovernanceDenial::NoMatchingConsent
+            ))
+        ));
+        assert_eq!(integration.client.transport.calls, 0);
+    }
+
+    #[test]
     fn bounded_reader_rejects_oversized_payloads() {
         let mut bytes = &b"abcdef"[..];
         assert!(matches!(
@@ -1371,6 +1915,77 @@ mod tests {
             assert!(request.contains(&format!("Authorization: Bearer {TOKEN}\r\n")));
             assert!(request.contains("Accept: application/json\r\n"));
             assert!(!request.contains(&token_ref_text));
+        }
+    }
+
+    #[test]
+    fn governed_loopback_inverter_inspection_installs_only_pseudonymous_identity() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        let (sender, receiver) = mpsc::channel();
+        let server = thread::spawn(move || {
+            let mut requests = Vec::new();
+            for response in [meter_inventory(), meter_readings(), inverter_production()] {
+                let (mut stream, _) = listener.accept().unwrap();
+                stream
+                    .set_read_timeout(Some(Duration::from_secs(2)))
+                    .unwrap();
+                requests.push(read_request(&mut stream));
+                let body = serde_json::to_vec(&response).unwrap();
+                let head = format!(
+                    "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+                    body.len()
+                );
+                stream.write_all(head.as_bytes()).unwrap();
+                stream.write_all(&body).unwrap();
+            }
+            sender.send(requests).unwrap();
+        });
+
+        let config = config(&format!("http://{address}"));
+        let token_ref_text = config.token_ref.as_str().to_string();
+        let client = EnphaseClient::new(
+            config,
+            EnphaseAccessToken::new(TOKEN).unwrap(),
+            EnphaseLanTransport::default(),
+        )
+        .unwrap()
+        .with_identifier_key(EnphaseIdentifierKey::new(IDENTIFIER_KEY.to_vec()).unwrap());
+        let (mut runtime, principal) = authorized_runtime();
+        let mut integration = EnphaseRuntimeIntegration::new(client)
+            .with_data_governance(identifier_policy(&principal));
+        let installed = integration
+            .inspect_inverters_and_install_authorized(&mut runtime, principal, 5_000)
+            .unwrap();
+
+        server.join().unwrap();
+        let requests = receiver.recv().unwrap();
+        assert_eq!(requests.len(), 3);
+        assert!(requests[0].starts_with("GET /ivp/meters HTTP/1.1\r\n"));
+        assert!(requests[1].starts_with("GET /ivp/meters/readings HTTP/1.1\r\n"));
+        assert!(requests[2].starts_with("GET /api/v1/production/inverters HTTP/1.1\r\n"));
+        for request in requests {
+            assert!(request.contains(&format!("Authorization: Bearer {TOKEN}\r\n")));
+            assert!(!request.contains(&token_ref_text));
+            assert!(!request.contains(INVERTER_SERIAL_1));
+            assert!(!request.contains(INVERTER_SERIAL_2));
+        }
+
+        assert_eq!(installed.inverter_entity_ids.len(), 2);
+        let expected = inverter_pseudonym(
+            &EnphaseIdentifierKey::new(IDENTIFIER_KEY.to_vec()).unwrap(),
+            "122233344455",
+            INVERTER_SERIAL_1,
+        );
+        assert!(installed
+            .inverter_entity_ids
+            .iter()
+            .any(|entity_id| entity_id.as_str().ends_with(&expected)));
+        for entity_id in &installed.inverter_entity_ids {
+            let debug = format!("{:?}", runtime.registry().entity(entity_id).unwrap());
+            assert!(!debug.contains(INVERTER_SERIAL_1));
+            assert!(!debug.contains(INVERTER_SERIAL_2));
+            assert!(debug.contains("keyed_pseudonym"));
         }
     }
 
