@@ -3503,6 +3503,16 @@ Xright c d load
     expect(element.params.N_SUB).toBe(1.8);
   });
 
+  it("gives MOSFET CBS precedence over the source-junction capacitance alias", () => {
+    const parsed = parseNetlist(
+      ".model nfast NMOS(CBS=6p CJS=8p)\nM1 d g s b nfast\n",
+    );
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") throw new Error("unexpected element kind");
+    expect(element.params.CBS).toBeCloseTo(6.0e-12, 18);
+  });
+
   it.each(["LAMBDA", "LAM"])(
     "rejects non-finite MOSFET model channel-modulation alias %s",
     (alias) => {

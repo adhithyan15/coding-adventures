@@ -4847,10 +4847,16 @@ the Rust, Python, and TypeScript surfaces together.
      preserving instance parameter overrides.
 
 496. Python and TypeScript Berkeley SPICE MOS substrate-doping alias precedence.
-   - Status: implemented in this MOS substrate-doping precedence slice.
+   - Status: completed in PR 10200.
    - Both parser facades give engine-canonical Level-1 `N_SUB` precedence over
      the `NSUB` and `N` aliases during lowering, matching validation while
      preserving instance parameter overrides.
+
+497. Python and TypeScript Berkeley SPICE MOS source-junction capacitance alias precedence.
+   - Status: implemented in this MOS source-junction capacitance precedence slice.
+   - Both parser facades give engine-canonical Level-1 `CBS` precedence over
+     the `CJS` alias during lowering, matching validation while preserving
+     instance parameter overrides.
 
 ## Backlog
 
