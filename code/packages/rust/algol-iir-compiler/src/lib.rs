@@ -1310,11 +1310,9 @@ impl Compiler {
                 },
                 ProcedureParamType::Scalar(_) | ProcedureParamType::Procedure => ty,
             };
-            if matches!(ty, ProcedureParamType::Procedure) && value_names.contains(&p) {
-                return Err(CompileError::Unsupported(format!(
-                    "value procedure parameter {p:?}"
-                )));
-            }
+            // Formal procedures are replaced with a statically captured target
+            // during direct specialisation, so value mode does not need a
+            // first-class procedure value in the IIR ABI.
             let mode = if value_names.contains(&p) {
                 ProcedureParamMode::Value
             } else {
@@ -7693,15 +7691,29 @@ mod tests {
     }
 
     #[test]
-    fn formal_procedure_rejects_value_mode() {
-        let err = compile_source(
-            "begin integer result; \
-             integer procedure apply(p); value p; procedure p; apply := 0; \
-             result := 0 end",
-            "formal_procedure_value_mode",
-        )
-        .expect_err("value procedure formals need a runtime descriptor ABI");
-        assert!(err.to_string().contains("value procedure parameter"));
+    fn formal_procedure_value_mode_forwards_a_direct_actual() {
+        let src = "begin integer result; \
+                   integer procedure square(x); value x; integer x; square := x * x; \
+                   integer procedure dispatch(p, x); value p, x; procedure p; integer x; \
+                     begin integer procedure forward(p, x); value p, x; procedure p; integer x; \
+                           forward := p(x); \
+                           dispatch := forward(p, x) end; \
+                   result := dispatch(square, 6) end";
+        assert_eq!(run_i64(src), 36);
+
+        let module = compile_source(src, "formal_procedure_value_mode").expect("compiles");
+        let forward = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("__algol_by_name_forward_"))
+            .expect("value-mode forwarding needs a specialised sibling");
+        assert!(
+            forward.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first() == Some(&Operand::Var("square".to_string()))
+            }),
+            "a value-mode formal procedure must retain its direct target"
+        );
     }
 
     #[test]
