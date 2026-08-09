@@ -24,13 +24,20 @@ channel, or call a model provider.
 
 Every control session has exactly two roles inherited from the secure channel:
 
-- the orchestrator sends `Terminate` and responses;
+- the orchestrator sends one pre-ready `PackageTrust`, `Terminate`, and responses;
 - the child host sends `Ready`, `Heartbeat`, and requests.
 
 The orchestrator control endpoint is constructed with the immutable package hash
 from the service-registry registration. A `Ready` record carries the exact package
 hash independently reverified by the child. A mismatch is terminal and must never
 produce `Running` evidence.
+
+After the secure-channel handshake and before `Ready`, the orchestrator sends the
+exact relevant public package key, trust class, and maximum privilege tier selected
+during its own package verification. The child must authenticate this record, build
+its own one-key verification keyring, and independently re-read and verify the package.
+The record contains no private key and is bound to the fresh encrypted session. A
+missing, duplicate, malformed, or post-ready trust record is rejected.
 
 The timestamp attached to a received child event is not sent by the child. It is a
 caller-supplied monotonic receipt time sampled by the supervising process after the
@@ -50,24 +57,27 @@ contract matches the Level 1 runtime and avoids an unbounded correlation table.
 
 The orchestrator endpoint begins in `AwaitingReady`:
 
-1. The first authenticated child message must be `Ready(expected_package_hash)`.
-2. A matching `Ready` transitions the endpoint to `Running` and yields authoritative
+1. It sends exactly one `PackageTrust` before accepting readiness.
+2. The first authenticated child message must be `Ready(expected_package_hash)`.
+3. A matching `Ready` transitions the endpoint to `Running` and yields authoritative
    package, session, and receipt-time evidence.
-3. `Heartbeat` is accepted only in `Running` and refreshes the authoritative
+4. `Heartbeat` is accepted only in `Running` and refreshes the authoritative
    receipt time.
-4. One data-plane request is accepted only in `Running`; no second request is
+5. One data-plane request is accepted only in `Running`; no second request is
    accepted until the orchestrator sends its exact correlated response.
-5. `Terminate` may be sent while awaiting readiness or running, and transitions the
+6. `Terminate` may be sent while awaiting readiness or running, and transitions the
    endpoint to `Terminating`.
-6. No further application message is accepted or emitted after termination begins.
+7. No further application message is accepted or emitted after termination begins.
 
 The child endpoint begins in `AwaitingReady`:
 
-1. It must independently verify the package before sending `Ready(package_hash)`.
-2. It may send `Heartbeat` only after readiness.
-3. It may send one bounded data-plane request after readiness and must wait for the
+1. It accepts exactly one authenticated `PackageTrust` record.
+2. It must independently verify the package with that trust before sending
+   `Ready(package_hash)`.
+3. It may send `Heartbeat` only after readiness.
+4. It may send one bounded data-plane request after readiness and must wait for the
    exactly correlated response before sending another.
-4. It accepts only correlated responses or `Terminate` from the orchestrator and
+5. It accepts only correlated responses or `Terminate` from the orchestrator and
    enters `Terminating` on the latter.
 
 Duplicate readiness, heartbeat-before-ready, child-sent terminate,
@@ -97,6 +107,7 @@ Kinds are:
 | 1   | child -> orchestrator | `Ready`     | 32-byte package SHA-256 |
 | 2   | child -> orchestrator | `Heartbeat` | empty                    |
 | 3   | orchestrator -> child | `Terminate` | empty                    |
+| 4   | orchestrator -> child | `PackageTrust` | key ID, key type, maximum tier, Ed25519 public key |
 | 10  | child -> orchestrator | `Receive` | request ID, channel UUID-v7, limit |
 | 11  | child -> orchestrator | `Publish` | request ID, channel UUID-v7, content type, payload |
 | 12  | child -> orchestrator | `Acknowledge` | request ID, channel and message UUID-v7 |
@@ -107,8 +118,9 @@ Kinds are:
 | 23  | orchestrator -> child | `Completed` | request ID and provider-neutral completion result |
 | 24  | orchestrator -> child | `Failed` | request ID and redacted stable failure code |
 
-All integers are big-endian. Variable bytes and UTF-8 strings use a `u32` length;
-vectors use their specified `u8` or `u16` count. UUID fields must be canonical
+All multi-byte integers are big-endian. The package key ID uses a bounded `u8`
+length; data-plane variable bytes and UTF-8 strings use a `u32` length; vectors
+use their specified `u8` or `u16` count. UUID fields must be canonical
 UUID-v7 values. Data-plane bodies are capped at 768 KiB, a single channel payload
 or completion text at 512 KiB, a receive page and completion prompt at 64 items,
 and completion metadata at 32 unique canonically ordered keys. Completion calls
@@ -132,6 +144,7 @@ pub enum ChildEvent {
 }
 
 pub enum OrchestratorEvent {
+    PackageTrust(PackageTrust),
     Terminate,
     Response(DataPlaneResponse),
 }
@@ -144,6 +157,8 @@ impl OrchestratorControl {
         -> Result<Self, ControlError>;
     pub fn receive_child(&mut self, frame: &[u8], received_at_ns: u64)
         -> Result<ChildEvent, ControlError>;
+    pub fn provide_package_trust(&mut self, trust: PackageTrust)
+        -> Result<Vec<u8>, ControlError>;
     pub fn terminate(&mut self) -> Result<Vec<u8>, ControlError>;
     pub fn respond(&mut self, response: DataPlaneResponse)
         -> Result<Vec<u8>, ControlError>;
@@ -193,6 +208,7 @@ service dispatch, and hard-kill fallback belong to adapters specified in
 The package must cover:
 
 - matching readiness followed by multiple heartbeats;
+- authenticated bounded package trust required exactly once before readiness;
 - authenticated round trips for receive, publish, acknowledge, completion, and
   redacted failure;
 - one-in-flight ordering, monotonic request IDs, exact response correlation, and

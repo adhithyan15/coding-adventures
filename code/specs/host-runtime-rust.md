@@ -180,11 +180,12 @@ bootstrapped.
 
 Before reading the agent's manifest, the host:
 
-1. Reads `argv[1]/PUBKEY_ID`.
-2. Reads the trusted-keys file from a path the orchestrator gave it
-   in the bootstrap (the host has no vault access of its own; the
-   orchestrator passes the relevant trusted public keys as part of
-   the bootstrap blob, signed by the orchestrator's identity key).
+1. Reads `./PUBKEY_ID` from the package working directory.
+2. Completes the fresh secure-channel handshake and accepts exactly one
+   authenticated `PackageTrust` control record containing the relevant public
+   key, trust class, and maximum tier selected by the orchestrator. The host has
+   no ambient key-file or vault access and rejects readiness if this record is
+   absent, malformed, or duplicated.
 3. Computes the SHA-256 hash of the rest of the package using the
    same deterministic file-set ordering D18 specifies.
 4. Verifies the package's Ed25519 SIGNATURE against the hash with

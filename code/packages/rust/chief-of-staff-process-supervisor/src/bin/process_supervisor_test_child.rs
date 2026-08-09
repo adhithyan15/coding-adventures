@@ -1,22 +1,14 @@
 use chief_of_staff_host_control_protocol::{
     CompletionCall, DataPlaneResponse, PromptMessage, PromptRole,
 };
-use chief_of_staff_host_runtime::{
-    verify_agent_package, AgentPackageRuntime, PackageKeyType, PackageKeyring, TrustedPackageKey,
-};
+use chief_of_staff_host_runtime::{verify_agent_package, AgentPackageRuntime, PackageKeyring};
 use chief_of_staff_process_supervisor::ChildProcessControl;
-use chief_of_staff_tool_api::PrivilegeTier;
 use std::collections::BTreeMap;
 use std::env;
 use std::io::{self, Write};
 use std::path::Path;
 use std::thread;
 use std::time::Duration;
-
-const TEST_PUBLIC_KEY: [u8; 32] = [
-    25, 127, 107, 35, 225, 108, 133, 50, 198, 171, 200, 56, 250, 205, 94, 167, 137, 190, 12, 118,
-    178, 146, 3, 52, 3, 155, 250, 139, 61, 54, 141, 97,
-];
 
 fn has_marker(name: &str) -> bool {
     Path::new(name).is_file()
@@ -81,15 +73,13 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         return Ok(());
     }
 
-    let mut keyring = PackageKeyring::new();
-    keyring.trust(TrustedPackageKey::new(
-        "prod-test",
-        PackageKeyType::Production,
-        TEST_PUBLIC_KEY,
-        PrivilegeTier::Tier3,
-    )?)?;
-    let package = verify_agent_package(Path::new("."), &keyring)?;
     let arguments = env::args().skip(1).collect::<Vec<_>>();
+    let stdin = io::stdin();
+    let stdout = io::stdout();
+    let mut control = ChildProcessControl::bootstrap(stdin.lock(), stdout.lock())?;
+    let mut keyring = PackageKeyring::new();
+    keyring.trust(control.receive_package_trust()?)?;
+    let package = verify_agent_package(Path::new("."), &keyring)?;
     let expected_runtime = match package.runtime() {
         AgentPackageRuntime::Deno => "deno",
         AgentPackageRuntime::Skill => "skill",
@@ -97,10 +87,6 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     if arguments != ["--package-runtime", expected_runtime] {
         return Err("package runtime launch argument mismatch".into());
     }
-    let stdin = io::stdin();
-    let stdout = io::stdout();
-    let mut control = ChildProcessControl::bootstrap(stdin.lock(), stdout.lock())?;
-
     if has_marker("EXIT_BEFORE_READY") {
         return Ok(());
     }

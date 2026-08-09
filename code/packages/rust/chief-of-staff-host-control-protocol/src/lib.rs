@@ -29,8 +29,11 @@ const VERSION: u8 = 1;
 const READY_TAG: u8 = 1;
 const HEARTBEAT_TAG: u8 = 2;
 const TERMINATE_TAG: u8 = 3;
+const PACKAGE_TRUST_TAG: u8 = 4;
 const HEADER_BYTES: usize = 6;
 const READY_BYTES: usize = HEADER_BYTES + 32;
+const MAX_PACKAGE_KEY_ID_BYTES: usize = 128;
+const PACKAGE_TRUST_FIXED_BYTES: usize = 1 + 1 + 32;
 
 /// Observable state of one authenticated control endpoint.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -67,6 +70,8 @@ pub enum ChildEvent {
 /// Authenticated orchestrator event accepted by a child.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum OrchestratorEvent {
+    /// The exact package-signing trust selected by the supervising parent.
+    PackageTrust(PackageTrust),
     /// Begin graceful host shutdown.
     Terminate,
     /// One exactly correlated response to the child's pending request.
@@ -88,6 +93,8 @@ pub enum ControlError {
     UnknownMessageKind,
     /// A data-plane body violated its static shape, UTF-8, UUID, or size bounds.
     InvalidDataPlaneRecord,
+    /// Package-signing trust violated its closed key, tier, or identifier contract.
+    InvalidPackageTrust,
     /// The peer sent a valid message kind owned by the opposite direction.
     WrongMessageDirection,
     /// The operation violates readiness or termination ordering.
@@ -113,6 +120,7 @@ impl Display for ControlError {
             Self::UnsupportedVersion => "host-control: unsupported version",
             Self::UnknownMessageKind => "host-control: unknown message kind",
             Self::InvalidDataPlaneRecord => "host-control: invalid data-plane record",
+            Self::InvalidPackageTrust => "host-control: invalid package trust",
             Self::WrongMessageDirection => "host-control: wrong message direction",
             Self::InvalidState => "host-control: invalid lifecycle state",
             Self::PackageMismatch => "host-control: package identity mismatch",
@@ -126,11 +134,80 @@ impl Display for ControlError {
 
 impl std::error::Error for ControlError {}
 
+/// Signing-key class carried to the child before package readiness.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum PackageTrustType {
+    /// Operator-controlled production package key.
+    Production,
+    /// Local developer key, restricted to Tier 0 or Tier 1 packages.
+    Developer,
+    /// Independently operated third-party package key.
+    ThirdParty,
+}
+
+/// Exact public package trust authenticated to one child session.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct PackageTrust {
+    key_id: String,
+    key_type: PackageTrustType,
+    public_key: [u8; 32],
+    maximum_tier: u8,
+}
+
+impl PackageTrust {
+    /// Validate one package-signing public key and its maximum privilege tier.
+    pub fn new(
+        key_id: impl Into<String>,
+        key_type: PackageTrustType,
+        public_key: [u8; 32],
+        maximum_tier: u8,
+    ) -> Result<Self, ControlError> {
+        let key_id = key_id.into();
+        if key_id.is_empty()
+            || key_id.len() > MAX_PACKAGE_KEY_ID_BYTES
+            || !key_id
+                .bytes()
+                .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'_' | b'.'))
+            || maximum_tier > 3
+            || (key_type == PackageTrustType::Developer && maximum_tier > 1)
+        {
+            return Err(ControlError::InvalidPackageTrust);
+        }
+        Ok(Self {
+            key_id,
+            key_type,
+            public_key,
+            maximum_tier,
+        })
+    }
+
+    /// Return the stable package key identifier.
+    pub fn key_id(&self) -> &str {
+        &self.key_id
+    }
+
+    /// Return the authenticated package trust class.
+    pub fn key_type(&self) -> PackageTrustType {
+        self.key_type
+    }
+
+    /// Return the raw Ed25519 public verification key.
+    pub fn public_key(&self) -> [u8; 32] {
+        self.public_key
+    }
+
+    /// Return the maximum package privilege tier accepted for this key.
+    pub fn maximum_tier(&self) -> u8 {
+        self.maximum_tier
+    }
+}
+
 /// Orchestrator-side lifecycle wrapper around one secure host channel.
 pub struct OrchestratorControl {
     channel: SecureHostChannel,
     expected_package_hash: [u8; 32],
     state: ControlState,
+    trust_sent: bool,
     last_request_id: u64,
     pending_request: Option<(RequestId, DataPlaneOperation)>,
 }
@@ -148,6 +225,7 @@ impl OrchestratorControl {
             channel,
             expected_package_hash,
             state: ControlState::AwaitingReady,
+            trust_sent: false,
             last_request_id: 0,
             pending_request: None,
         })
@@ -172,7 +250,9 @@ impl OrchestratorControl {
             Err(error) => return Err(self.close(error)),
         };
         match (self.state, record) {
-            (ControlState::AwaitingReady, ControlRecord::Ready(package_hash)) => {
+            (ControlState::AwaitingReady, ControlRecord::Ready(package_hash))
+                if self.trust_sent =>
+            {
                 if package_hash != self.expected_package_hash {
                     return Err(self.close(ControlError::PackageMismatch));
                 }
@@ -197,11 +277,31 @@ impl OrchestratorControl {
                 self.pending_request = Some((request.id(), request.operation()));
                 Ok(ChildEvent::Request(request))
             }
-            (_, ControlRecord::Terminate | ControlRecord::Response(_)) => {
-                Err(self.close(ControlError::WrongMessageDirection))
-            }
+            (
+                _,
+                ControlRecord::PackageTrust(_)
+                | ControlRecord::Terminate
+                | ControlRecord::Response(_),
+            ) => Err(self.close(ControlError::WrongMessageDirection)),
             _ => Err(self.close(ControlError::InvalidState)),
         }
+    }
+
+    /// Authenticate the exact relevant package-signing trust before readiness.
+    pub fn provide_package_trust(&mut self, trust: PackageTrust) -> Result<Vec<u8>, ControlError> {
+        if self.state == ControlState::Closed {
+            return Err(ControlError::Closed);
+        }
+        if self.state != ControlState::AwaitingReady || self.trust_sent {
+            return Err(ControlError::InvalidState);
+        }
+        let plaintext = encode_record(ControlRecord::PackageTrust(trust))?;
+        let frame = match self.channel.send(&plaintext) {
+            Ok(frame) => frame,
+            Err(error) => return Err(self.close(ControlError::Channel(error))),
+        };
+        self.trust_sent = true;
+        Ok(frame)
     }
 
     /// Encrypt the response to the one pending child request.
@@ -280,6 +380,7 @@ impl OrchestratorControl {
 pub struct ChildControl {
     channel: SecureHostChannel,
     state: ControlState,
+    trust_received: bool,
     next_request_id: Option<u64>,
     pending_request: Option<(RequestId, DataPlaneOperation)>,
 }
@@ -293,6 +394,7 @@ impl ChildControl {
         Ok(Self {
             channel,
             state: ControlState::AwaitingReady,
+            trust_received: false,
             next_request_id: Some(1),
             pending_request: None,
         })
@@ -303,7 +405,7 @@ impl ChildControl {
         if self.state == ControlState::Closed {
             return Err(ControlError::Closed);
         }
-        if self.state != ControlState::AwaitingReady {
+        if self.state != ControlState::AwaitingReady || !self.trust_received {
             return Err(ControlError::InvalidState);
         }
         let plaintext = encode_record(ControlRecord::Ready(package_hash))?;
@@ -399,6 +501,13 @@ impl ChildControl {
             Err(error) => return Err(self.close(error)),
         };
         match record {
+            ControlRecord::PackageTrust(trust) => {
+                if self.state != ControlState::AwaitingReady || self.trust_received {
+                    return Err(self.close(ControlError::InvalidState));
+                }
+                self.trust_received = true;
+                Ok(OrchestratorEvent::PackageTrust(trust))
+            }
             ControlRecord::Terminate => {
                 self.state = ControlState::Terminating;
                 Ok(OrchestratorEvent::Terminate)
@@ -481,6 +590,7 @@ enum ControlRecord {
     Ready([u8; 32]),
     Heartbeat,
     Terminate,
+    PackageTrust(PackageTrust),
     Request(DataPlaneRequest),
     Response(DataPlaneResponse),
 }
@@ -489,6 +599,9 @@ fn encode_record(record: ControlRecord) -> Result<Vec<u8>, ControlError> {
     let mut output = Vec::with_capacity(match &record {
         ControlRecord::Ready(_) => READY_BYTES,
         ControlRecord::Heartbeat | ControlRecord::Terminate => HEADER_BYTES,
+        ControlRecord::PackageTrust(trust) => {
+            HEADER_BYTES + 1 + trust.key_id.len() + PACKAGE_TRUST_FIXED_BYTES
+        }
         ControlRecord::Request(_) | ControlRecord::Response(_) => HEADER_BYTES + 128,
     });
     output.extend_from_slice(MAGIC);
@@ -500,6 +613,18 @@ fn encode_record(record: ControlRecord) -> Result<Vec<u8>, ControlError> {
         }
         ControlRecord::Heartbeat => output.push(HEARTBEAT_TAG),
         ControlRecord::Terminate => output.push(TERMINATE_TAG),
+        ControlRecord::PackageTrust(trust) => {
+            output.push(PACKAGE_TRUST_TAG);
+            output.push(trust.key_id.len() as u8);
+            output.extend_from_slice(trust.key_id.as_bytes());
+            output.push(match trust.key_type {
+                PackageTrustType::Production => 1,
+                PackageTrustType::Developer => 2,
+                PackageTrustType::ThirdParty => 3,
+            });
+            output.push(trust.maximum_tier);
+            output.extend_from_slice(&trust.public_key);
+        }
         ControlRecord::Request(request) => {
             let (tag, body) = data_plane::encode(&DataRecord::Request(request))?;
             output.push(tag);
@@ -546,6 +671,35 @@ fn decode_record(bytes: &[u8]) -> Result<ControlRecord, ControlError> {
                 return Err(ControlError::MalformedRecord);
             }
             Ok(ControlRecord::Terminate)
+        }
+        PACKAGE_TRUST_TAG => {
+            let body = &bytes[HEADER_BYTES..];
+            let key_id_length = *body.first().ok_or(ControlError::InvalidPackageTrust)? as usize;
+            if key_id_length == 0 || key_id_length > MAX_PACKAGE_KEY_ID_BYTES {
+                return Err(ControlError::InvalidPackageTrust);
+            }
+            let expected_length = 1 + key_id_length + PACKAGE_TRUST_FIXED_BYTES;
+            if body.len() != expected_length {
+                return Err(ControlError::InvalidPackageTrust);
+            }
+            let key_id = std::str::from_utf8(&body[1..1 + key_id_length])
+                .map_err(|_| ControlError::InvalidPackageTrust)?;
+            let key_type = match body[1 + key_id_length] {
+                1 => PackageTrustType::Production,
+                2 => PackageTrustType::Developer,
+                3 => PackageTrustType::ThirdParty,
+                _ => return Err(ControlError::InvalidPackageTrust),
+            };
+            let maximum_tier = body[2 + key_id_length];
+            let public_key = body[3 + key_id_length..]
+                .try_into()
+                .map_err(|_| ControlError::InvalidPackageTrust)?;
+            Ok(ControlRecord::PackageTrust(PackageTrust::new(
+                key_id,
+                key_type,
+                public_key,
+                maximum_tier,
+            )?))
         }
         RECEIVE_REQUEST_TAG
         | PUBLISH_REQUEST_TAG
@@ -647,8 +801,23 @@ mod tests {
         }
     }
 
-    fn running_pair(hash: [u8; 32]) -> (OrchestratorControl, ChildControl) {
+    fn package_trust() -> PackageTrust {
+        PackageTrust::new("prod-test", PackageTrustType::Production, [17; 32], 3).unwrap()
+    }
+
+    fn trusted_pair(hash: [u8; 32]) -> (OrchestratorControl, ChildControl) {
         let (mut orchestrator, mut child) = control_pair(hash);
+        let trust = package_trust();
+        let frame = orchestrator.provide_package_trust(trust.clone()).unwrap();
+        assert_eq!(
+            child.receive_orchestrator(&frame).unwrap(),
+            OrchestratorEvent::PackageTrust(trust)
+        );
+        (orchestrator, child)
+    }
+
+    fn running_pair(hash: [u8; 32]) -> (OrchestratorControl, ChildControl) {
+        let (mut orchestrator, mut child) = trusted_pair(hash);
         let ready = child.ready(hash).unwrap();
         orchestrator.receive_child(&ready, 1).unwrap();
         (orchestrator, child)
@@ -657,7 +826,7 @@ mod tests {
     #[test]
     fn matching_ready_and_heartbeats_preserve_trusted_receipt_times() {
         let hash = [7u8; 32];
-        let (mut orchestrator, mut child) = control_pair(hash);
+        let (mut orchestrator, mut child) = trusted_pair(hash);
         let ready = child.ready(hash).unwrap();
         assert_eq!(
             orchestrator.receive_child(&ready, 100).unwrap(),
@@ -911,7 +1080,7 @@ mod tests {
 
     #[test]
     fn package_mismatch_fails_closed() {
-        let (mut orchestrator, mut child) = control_pair([1u8; 32]);
+        let (mut orchestrator, mut child) = trusted_pair([1u8; 32]);
         let ready = child.ready([2u8; 32]).unwrap();
         assert_eq!(
             orchestrator.receive_child(&ready, 10),
@@ -940,9 +1109,12 @@ mod tests {
 
     #[test]
     fn local_child_ordering_is_non_destructive() {
-        let (_, mut child) = control_pair([3u8; 32]);
+        let (mut orchestrator, mut child) = control_pair([3u8; 32]);
         assert_eq!(child.heartbeat(), Err(ControlError::InvalidState));
+        assert_eq!(child.ready([3u8; 32]), Err(ControlError::InvalidState));
         assert_eq!(child.state(), ControlState::AwaitingReady);
+        let trust = orchestrator.provide_package_trust(package_trust()).unwrap();
+        child.receive_orchestrator(&trust).unwrap();
         child.ready([3u8; 32]).unwrap();
         assert_eq!(child.ready([3u8; 32]), Err(ControlError::InvalidState));
         assert_eq!(child.state(), ControlState::Running);
@@ -961,9 +1133,7 @@ mod tests {
         );
         assert_eq!(orchestrator.state(), ControlState::Closed);
 
-        let (orchestrator_channel, child_channel) = raw_pair(4);
-        let mut orchestrator = OrchestratorControl::new(orchestrator_channel, [4; 32]).unwrap();
-        let mut child = ChildControl::new(child_channel).unwrap();
+        let (mut orchestrator, mut child) = trusted_pair([4; 32]);
         let first = child.ready([4; 32]).unwrap();
         orchestrator.receive_child(&first, 1).unwrap();
         let duplicate = child
@@ -1005,7 +1175,7 @@ mod tests {
         );
         assert_eq!(orchestrator.state(), ControlState::Closed);
 
-        let (mut orchestrator, mut child) = control_pair([6; 32]);
+        let (mut orchestrator, mut child) = trusted_pair([6; 32]);
         let ready = child.ready([6; 32]).unwrap();
         orchestrator.receive_child(&ready, 8).unwrap();
         let terminate = orchestrator.terminate().unwrap();
@@ -1048,7 +1218,7 @@ mod tests {
     #[test]
     fn secure_tampering_and_replay_fail_closed() {
         let hash = [8; 32];
-        let (mut orchestrator, mut child) = control_pair(hash);
+        let (mut orchestrator, mut child) = trusted_pair(hash);
         let mut ready = child.ready(hash).unwrap();
         *ready.last_mut().unwrap() ^= 1;
         assert!(matches!(
@@ -1057,7 +1227,7 @@ mod tests {
         ));
         assert_eq!(orchestrator.state(), ControlState::Closed);
 
-        let (mut orchestrator, mut child) = control_pair(hash);
+        let (mut orchestrator, mut child) = trusted_pair(hash);
         let ready = child.ready(hash).unwrap();
         orchestrator.receive_child(&ready, 1).unwrap();
         assert!(matches!(
@@ -1070,22 +1240,25 @@ mod tests {
     #[test]
     fn codec_is_strict_bounded_and_complete() {
         let records = [
-            ControlRecord::Ready([9; 32]),
-            ControlRecord::Heartbeat,
-            ControlRecord::Terminate,
+            (ControlRecord::Ready([9; 32]), ControlError::MalformedRecord),
+            (ControlRecord::Heartbeat, ControlError::MalformedRecord),
+            (ControlRecord::Terminate, ControlError::MalformedRecord),
+            (
+                ControlRecord::PackageTrust(package_trust()),
+                ControlError::InvalidPackageTrust,
+            ),
         ];
-        for record in records {
+        for (record, truncated_error) in records {
             let encoded = encode_record(record.clone()).unwrap();
             assert_eq!(decode_record(&encoded), Ok(record));
             for end in 0..encoded.len() {
-                assert_eq!(
-                    decode_record(&encoded[..end]),
-                    Err(ControlError::MalformedRecord)
-                );
+                let error = decode_record(&encoded[..end]).unwrap_err();
+                assert!(matches!(error, ControlError::MalformedRecord) || error == truncated_error);
             }
             let mut trailing = encoded;
             trailing.push(0);
-            assert_eq!(decode_record(&trailing), Err(ControlError::MalformedRecord));
+            let error = decode_record(&trailing).unwrap_err();
+            assert!(matches!(error, ControlError::MalformedRecord) || error == truncated_error);
         }
 
         let mut bad_magic = encode_record(ControlRecord::Heartbeat).unwrap();
@@ -1106,6 +1279,91 @@ mod tests {
             decode_record(&bad_tag),
             Err(ControlError::UnknownMessageKind)
         );
+    }
+
+    #[test]
+    fn package_trust_is_bounded_typed_and_required_before_ready() {
+        for invalid in ["", "bad key", "x/", &"x".repeat(129)] {
+            assert_eq!(
+                PackageTrust::new(invalid, PackageTrustType::Production, [1; 32], 3),
+                Err(ControlError::InvalidPackageTrust)
+            );
+        }
+        assert_eq!(
+            PackageTrust::new("dev", PackageTrustType::Developer, [1; 32], 2),
+            Err(ControlError::InvalidPackageTrust)
+        );
+        assert_eq!(
+            PackageTrust::new("prod", PackageTrustType::Production, [1; 32], 4),
+            Err(ControlError::InvalidPackageTrust)
+        );
+        for trust in [
+            PackageTrust::new("dev", PackageTrustType::Developer, [2; 32], 1).unwrap(),
+            PackageTrust::new("third", PackageTrustType::ThirdParty, [3; 32], 2).unwrap(),
+        ] {
+            let record = ControlRecord::PackageTrust(trust);
+            assert_eq!(
+                decode_record(&encode_record(record.clone()).unwrap()),
+                Ok(record)
+            );
+        }
+
+        let mut invalid_type = encode_record(ControlRecord::PackageTrust(package_trust())).unwrap();
+        let key_id_length = invalid_type[HEADER_BYTES] as usize;
+        invalid_type[HEADER_BYTES + 1 + key_id_length] = 99;
+        assert_eq!(
+            decode_record(&invalid_type),
+            Err(ControlError::InvalidPackageTrust)
+        );
+        let mut invalid_tier = encode_record(ControlRecord::PackageTrust(package_trust())).unwrap();
+        invalid_tier[HEADER_BYTES + 2 + key_id_length] = 4;
+        assert_eq!(
+            decode_record(&invalid_tier),
+            Err(ControlError::InvalidPackageTrust)
+        );
+
+        let hash = [31; 32];
+        let (mut orchestrator, mut child) = control_pair(hash);
+        assert_eq!(child.ready(hash), Err(ControlError::InvalidState));
+        let trust = package_trust();
+        assert_eq!(trust.key_id(), "prod-test");
+        assert_eq!(trust.key_type(), PackageTrustType::Production);
+        assert_eq!(trust.public_key(), [17; 32]);
+        assert_eq!(trust.maximum_tier(), 3);
+        let frame = orchestrator.provide_package_trust(trust.clone()).unwrap();
+        assert_eq!(
+            orchestrator.provide_package_trust(trust.clone()),
+            Err(ControlError::InvalidState)
+        );
+        assert_eq!(
+            child.receive_orchestrator(&frame),
+            Ok(OrchestratorEvent::PackageTrust(trust))
+        );
+        assert!(child.ready(hash).is_ok());
+
+        let (orchestrator_channel, mut child_channel) = raw_pair(43);
+        let mut orchestrator = OrchestratorControl::new(orchestrator_channel, hash).unwrap();
+        let premature_ready = child_channel
+            .send(&encode_record(ControlRecord::Ready(hash)).unwrap())
+            .unwrap();
+        assert_eq!(
+            orchestrator.receive_child(&premature_ready, 1),
+            Err(ControlError::InvalidState)
+        );
+        assert_eq!(orchestrator.state(), ControlState::Closed);
+
+        let (mut orchestrator, mut child) = control_pair(hash);
+        let first = orchestrator.provide_package_trust(package_trust()).unwrap();
+        child.receive_orchestrator(&first).unwrap();
+        let duplicate = orchestrator
+            .channel
+            .send(&encode_record(ControlRecord::PackageTrust(package_trust())).unwrap())
+            .unwrap();
+        assert_eq!(
+            child.receive_orchestrator(&duplicate),
+            Err(ControlError::InvalidState)
+        );
+        assert_eq!(child.state(), ControlState::Closed);
     }
 
     #[test]
@@ -1144,6 +1402,7 @@ mod tests {
             ControlError::UnsupportedVersion,
             ControlError::UnknownMessageKind,
             ControlError::InvalidDataPlaneRecord,
+            ControlError::InvalidPackageTrust,
             ControlError::WrongMessageDirection,
             ControlError::InvalidState,
             ControlError::PackageMismatch,
