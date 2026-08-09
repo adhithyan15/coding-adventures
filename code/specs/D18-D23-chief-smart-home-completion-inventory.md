@@ -253,22 +253,31 @@ network I/O into the Chief bridge:
 ## Current Hue Pairing Service Slice
 
 This slice runs the physical-presence registration exchange through production
-host boundaries and durable secret storage:
+host boundaries, durable secret storage, and the recoverable pairing
+transaction coordinator:
 
-- `smart-home-hue-pairing-service` owns the D23 runtime, an injectable Hue
-  registration transport, and the repository's sealed Vault store inside one
-  actor state.
+- `smart-home-hue-pairing-service` restores its D23 runtime from the durable
+  runtime store and resolves every pending pairing journal before creating an
+  actor that can accept another request.
+- Schema-v2 actor requests carry the exact D23 principal and expected durable
+  runtime revision. D23 Human Approval is checked before LAN I/O, journal
+  creation, or Vault writes and checked again inside the coordinator.
 - The production transport executes bounded HTTP/1 over LAN TCP or the shared
   TLS platform. HTTPS remains certificate-verifying and accepts caller-supplied
   Hue trust roots instead of silently disabling verification.
-- A pending D23 session drives the canonical `/api` registration request,
-  successful application and client keys are encrypted at rest, and D23
-  receives only a random `VaultRef`.
-- If runtime completion fails after the Vault write, the service attempts a
-  revision-bound rollback so an unusable credential is not left behind.
-- Real loopback-network and local-folder restart tests prove the request reaches
-  LAN I/O, credentials survive a Vault restart, and raw secrets never enter
-  runtime state, event metadata, actor snapshots, or pairing reports.
+- A pending authorized D23 session drives the canonical `/api` registration
+  request. Successful application and client keys remain zeroizing and
+  process-local until the coordinator writes a transaction-owned sealed record;
+  the journal, runtime, messages, snapshots, and reports receive only an opaque
+  `VaultRef` and non-secret metadata.
+- Runtime completion is persisted with expected-revision CAS before actor state
+  is replaced from the returned durable snapshot. Replaced credentials are
+  removed only at the exact revision captured by the journal.
+- Real loopback-network and local-folder tests prove delivery, restart recovery
+  around interrupted journal acknowledgements, stale-revision rollback,
+  replacement cleanup, denial before I/O or writes, cleanup-drift refusal, and
+  absence of raw credentials from runtime, journal, event, snapshot, message,
+  and report state.
 
 ## Current Hue LAN Integration Slice
 
@@ -1542,10 +1551,9 @@ claiming that an existing vendor pairing actor has adopted it:
   journal, restart discovery, recovery on both sides of runtime CAS, stale
   runtime rollback, cleanup revision-conflict and partial-reference retention,
   and authorization denial before any journal or Vault write.
-- The existing Hue pairing actor still performs its historical direct
-  Vault-then-in-memory-runtime handoff. Migrating that production composition to
-  this coordinator is the next prerequisite before any vendor host may perform
-  automated credential provisioning.
+- The Hue pairing actor now uses this coordinator as the first production
+  composition. Other vendor credential-provisioning paths must reuse this
+  durable protocol and prove their own exact pairing and secret-input boundary.
 
 ## Smart Home Remaining Work
 
@@ -1559,19 +1567,21 @@ to that image request; the only documented direct URL credentials require
 disabling secure sessions and are rejected. Frigate snapshot delivery remains
 blocked on a cookie-capable media authentication boundary. Revision-guarded
 D23 pairing completion and its recoverable cross-store journal are now
-available. The strongest next prerequisite is migrating the Hue pairing actor
-off its direct Vault-then-in-memory-runtime handoff so one production pairing
-path proves D23 principal propagation, durable runtime revision ownership,
-startup recovery, and actor-state replacement through the coordinator.
+available, and the Hue production actor now proves D23 principal propagation,
+durable runtime revision ownership, startup recovery, and actor-state
+replacement through the coordinator. The strongest next post-merge audit is
+explicit ONVIF credential provisioning: it must identify a host-owned secret
+input boundary that keeps supplied credentials zeroizing and out of actor
+messages, journals, runtime state, reports, and logs before the existing ONVIF
+snapshot host may receive an automatically installed opaque reference.
 
-1. Migrate `smart-home-hue-pairing-service` to the recoverable pairing
-   coordinator. Its actor request must carry the exact D23 principal and
-   expected durable runtime revision; startup must enumerate and resolve
-   pending journals before accepting another pairing; successful resolution
-   must replace actor runtime state from the committed snapshot. Only after
-   that production path is proven may ONVIF, ZoneMinder, Axis, or Reolink gain
-   automated credential provisioning. Snapshot delivery itself is complete and
-   must not become an implicit credential writer.
+1. Audit explicit ONVIF credential provisioning against the completed Hue
+   transaction composition. Require exact D23 pairing authorization, a bounded
+   host-owned zeroizing secret-input boundary, transaction-owned opaque
+   references, expected-revision runtime CAS, startup recovery, replacement
+   cleanup, and exact installed-bridge correspondence. Do not make snapshot
+   delivery an implicit credential writer and do not assume this slice is
+   executable until the secret-input owner is concrete.
 2. Add authenticated AirGradient MQTT only after official firmware removes
    plaintext credential logging and one-shot Vault-leased credential injection
    can be proven without request-plan or normalized-state exposure.
