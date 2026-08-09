@@ -1,77 +1,89 @@
 ---
+schema_version: 2
 id: ES-C10-ir
-chapter: 10
+spine_node: SPINE-ASK-LOCATION
 sequence: 880
+chapter: 10
 type: word
 headword: ir
-gloss: to go (the most irregular Spanish verb — three Latin verbs in one)
+gloss: to go — with the three singular present forms voy, vas, and va
 concept_tag: VERB-GO
-prerequisites: [ES-C09-ser, ES-C04-estar]
+prerequisites: [ES-C09-practice]
 sounds: [vowel-i, diphthong-oy]
 roots: [ire-vadere-latin]
-etymology_hook: "ir ← Latin īre 'to go', but its present (voy/vas/va/vamos/van) comes from a DIFFERENT verb, vādere — suppletion, exactly like English go/went"
-est_minutes: 4
-reviews_of: [ES-C09-ser, ES-C09-practice]
+etymology_hook: "ir comes from Latin īre 'to go', while voy, vas, and va continue forms of Latin vādere 'to advance' — a suppletive mixture like English go and went"
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-TU, ES-LEX-USTED, ES-GRAMMAR-USTED-THIRD-PERSON, ES-LEX-DONDE]
+introduces:
+  knowledge: [ES-LEX-IR, ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR, ES-ETYMON-IRE-VADERE]
+practises:
+  knowledge: [ES-LEX-TU, ES-LEX-USTED, ES-GRAMMAR-USTED-THIRD-PERSON, ES-LEX-DONDE, ES-LEX-IR, ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR, ES-ETYMON-IRE-VADERE]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C09-practice, ES-C07-donde, ES-C03-tu-usted-register]
 ---
 
-# ir — "to go," stitched from three verbs
+# ir — “to go,” from more than one historical stem
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-TU, ES-LEX-USTED, ES-GRAMMAR-USTED-THIRD-PERSON, ES-LEX-DONDE] -->
 
-[PAUSE 2s] You've met two suppletive verbs now — *ser* (soy/eres/es…) and, in a
-way, *estar*. **ir**, "to go," is the extreme case: its forms come from **three
-different Latin verbs** fused into one. English does the very same thing with *go*
-/ *went*, so the idea is already familiar.
+[PAUSE 2s] You already match different verb forms with **tú** and **usted**,
+and you can ask **¿Dónde…?**, “Where…?” Today, add one new verb and only its
+three singular-person forms.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-- `vowel-i` — the infinitive **ir** is just *eer*, two letters, one of the
-  shortest verbs in Spanish.
-- `diphthong-oy` — **voy** = *boy* (a *b/v* sound + "oy"), sharing the *-oy* tail
-  of *soy, estoy, doy*.
+- `vowel-i` — **ir** is one clear syllable, like *ear* without a glide.
+- `diphthong-oy` — **voy** ends with the sound in English *boy*.
 
-## The word, taken apart — suppletion, in the extreme
+## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-IR, ES-ETYMON-IRE-VADERE]; assesses=[] -->
 
-Three Latin verbs meaning "go" collapsed into Spanish *ir*:
+**ir** means “to go.” Its infinitive descends from Latin **īre**, also “to go.”
+The present forms below followed a different Latin verb, **vādere**, “to go
+forward” or “advance.” English **invade** and **evade** preserve that *vad-* family.
 
-| where it shows up | ← Latin | note |
-|---|---|---|
-| the infinitive **ir** | *īre* "to go" | gives English *exit* (*ex-īre* "go out"), *transit*, *ambition* |
-| the present **voy, vas, va, vamos, van** | *vādere* "to advance, rush" | gives English **invade, evade, wade** |
-| the past *fui* (later) | *esse/fuī* "to be" | the same *fu-* as *ser*'s past |
+One modern verb built from historically different stems is called
+**suppletive**. English does the same thing when *go* changes to *went*, an old
+form borrowed from *wend*.
 
-So the present tense doesn't come from *ir* at all — it comes from *vādere*:
+## Grammar Lens: only three forms today
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR]; assesses=[ES-LEX-IR, ES-ETYMON-IRE-VADERE, ES-LEX-TU, ES-LEX-USTED, ES-GRAMMAR-USTED-THIRD-PERSON] -->
 
-| yo | **voy** | (the *-oy*, like *soy/estoy/doy*) |
-| tú | **vas** | |
-| él/ella/usted | **va** | |
-| nosotros | **vamos** | (this is also "let's go!") |
-| ellos/ustedes | **van** | |
+| person | present of **ir** |
+|---|---|
+| yo | **voy** |
+| tú | **vas** |
+| él / ella / usted | **va** |
 
-This is **suppletion** — the exact phenomenon behind English *go* (present) vs
-*went* (past, borrowed from an old verb *wend*). Spanish just does it inside a
-single tense.
+Say the small set as **voy · vas · va**. The plural forms are deliberately left
+for a later lesson.
 
-## Grammar Lens: voy a + place (going somewhere)
+The known question word now gives you a useful prompt:
 
-Point *ir* at a destination with **a** ("to," ← Latin *ad*):
-
-> **Voy a** Madrid. — "I'm going to Madrid."
-> **Vamos a** casa. — "We're going home / Let's go home."
-
-*a* + *el* contracts to **al**: *voy al café* ("to the café"). Next lesson, this
-same *voy a…* becomes a way to talk about the **future**.
+> **¿Dónde va usted?** — “Where are you going?”
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-IR, ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR, ES-ETYMON-IRE-VADERE, ES-LEX-DONDE, ES-LEX-USTED] -->
+<!-- hl-activity: {"id":"ES-C10-ir-singular-forms","kind":"text","assesses":["ES-LEX-IR","ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR"],"prompt":"Give the three learned singular present forms of ir: yo, tú, then él/ella/usted.","answer":"voy, vas, va","accepted":["voy vas va","voy / vas / va"],"feedback":{"correct":"Right: voy, vas, va.","incorrect":"Use the three singular forms: voy, vas, va."},"response_seconds":10} -->
+<!-- hl-activity: {"id":"ES-C10-ir-formal-question","kind":"text","assesses":["ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR","ES-LEX-DONDE","ES-LEX-USTED"],"prompt":"Complete the formal question: ¿Dónde ___ usted?","answer":"va","accepted":["¿Dónde va usted?","Donde va usted?"],"feedback":{"correct":"Right: usted takes va — ¿Dónde va usted?","incorrect":"Usted uses the third-person singular form va."},"response_seconds":8} -->
 
 [PAUSE 1s]
-- [YOU SAY: "ir" then the present set — "voy, vas, va, vamos, van"]
-- [YOU SAY: "voy" / English "invade", "evade" — the *vādere* family]
-- [YOU SAY: "Voy a Madrid," "Vamos a casa" — *ir a* + a place]
+- [YOU SAY: “ir — voy, vas, va”]
+- [YOU SAY: “¿Dónde va usted?”]
+- [YOU SAY: “īre gives ir; vādere gives the present set”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-IR, ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR, ES-ETYMON-IRE-VADERE] -->
 
-[PAUSE 3s] What three Latin verbs feed Spanish *ir*? (*īre* — infinitive; *vādere*
-— the present *voy/vas…*; *esse/fuī* — the past.) What English pair shows the same
-suppletion? (*go / went*.) Give the present of *ir*. (*Voy, vas, va, vamos, van*.)
-Next: turn *voy a…* into **the future**.
+[PAUSE 3s] What does *ir* mean? (“To go.”) Give the three forms learned today.
+(*Voy, vas, va.*) Why do they look unlike *ir*? (The infinitive and present set
+come through different Latin stems.) Next: place **a** and a known infinitive
+after this small set to talk about what is coming.

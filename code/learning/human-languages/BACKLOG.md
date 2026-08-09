@@ -5,7 +5,7 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-08, after publishing #10142 and completing HL-C67.
+Last prioritized: 2026-08-08, after merging #10142 and completing HL-C68.
 With all 22 downloadable books now carrying pronunciation, glossary,
 review-question, answer-key, and English-first index back matter, HL-C50 is
 complete. The HL-C63 audit confirmed that all 98 missing handwritten chapters
@@ -24,9 +24,11 @@ node without drift. HL-C65 migrates Spanish Chapter 7 across the schema-v2
 boundary in #10132. HL-C66 carries Spanish Chapter 8 across that boundary in
 #10135. HL-C67 carries Spanish Chapter 9 across the same boundary in #10142,
 with the `ser`/`estar` contrast limited to already-known identity, state, and
-location language. The next bounded slice is HL-C68, Spanish Chapter 10, where
-`ir`, the near-future frame, and possessives must be split into prerequisite-safe
-steps.
+location language. HL-C68 migrates Spanish Chapter 10 in this PR: `ir`, the
+near-future frame, and possessives advance only from the singular-person,
+known-infinitive, and known-noun frontier. The next bounded slice is HL-C69,
+Spanish Chapter 11, where two stem-change patterns and the first agreeing
+possessive must be split without reviving full paradigms or undeclared nouns.
 The index audit found **2,070** canonical candidates across the corpus: **1,430**
 word and phrase lessons for English-first lookup, **127** dedicated grammar,
 writing, etymology, culture, and pronunciation lessons, **415** chapter
@@ -34,10 +36,10 @@ capabilities, and **98** additional handwritten chapter declarations. Practice
 drills stay out of the index; the checked title/label manifest provides durable
 navigation even where the authored capability ledger is still missing.
 Current generated baseline: **22** registered tracks, **1,669** canonical lessons,
-**1,570** mapped lessons, and **22** downloadable LaTeX books spanning **513**
-chapters, **408** of them generated from the canonical lesson AST. Twenty-five mapped
+**1,579** mapped lessons, and **22** downloadable LaTeX books spanning **513**
+chapters, **408** of them generated from the canonical lesson AST. Twenty-six mapped
 non-lexical lessons across 18 tracks now carry
-compiled objective activities; 94 mapped non-lexical lessons remain explicit
+compiled objective activities; 93 mapped non-lexical lessons remain explicit
 activity-coverage debt, including 16 legacy lessons that first need schema-v2
 body contracts. HL-V01 keeps the remaining migration debt reproducible in both
 JSON and human-readable reports; the canonical schema-v2 tranches prove one
@@ -211,7 +213,8 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C65 | Complete (#10132) | Migrate Spanish Chapter 7, the first chapter after the schema boundary, onto the strict schema-v2 lesson contract and resolve its ambiguous authored order from canonical prerequisites and prose. | All six Chapter-7 lessons declare unique sequence, duration, shared-spine placement, typed knowledge closure, and objective practice where appropriate; one documented prerequisite-safe order drives the app, narration, and chapter payoff; generated/drift-gated outputs are current; no lesson exceeds five minutes or the atom budget. |
 | HL-C66 | Complete (#10135) | Continue the schema migration through Spanish Chapter 8, keeping numbers, age, and `tener` on the Chapter-7 prerequisite frontier instead of treating the next handwritten chapter as an opaque legacy island. | All five Chapter-8 lessons declare unique sequence, duration, shared-spine placement, typed knowledge closure, and objective practice where appropriate; the terminal practice lesson is mapped and represents the chapter payoff; no lesson exceeds five minutes or either atom budget; app, narration, and downloadable-book outputs remain derived from the same sources. |
 | HL-C67 | Complete (#10142) | Continue the schema migration through Spanish Chapter 9, deriving the `ser`/`estar` contrast from the already-taught `estar`, `tener`, identity, state, and location frontier instead of presenting the contrast as a memorized rule list. | All five Chapter-9 lessons declare unique sequence, duration, shared-spine placement, typed knowledge closure, and objective practice where appropriate; minimal pairs introduce no vocabulary or forms ahead of their lesson; the terminal practice lesson is mapped and represents the chapter payoff; no lesson exceeds five minutes or either atom budget; app, narration, and downloadable-book outputs remain derived from the same sources. |
-| HL-C68 | Queued | Continue the schema migration through Spanish Chapter 10, introducing `ir`, `ir a` + infinitive, and `mi`/`tu`/`su` only from the Chapter-9 singular-person and identity/location frontier. | All four Chapter-10 lessons declare unique sequence, duration, shared-spine placement, typed knowledge closure, and objective practice where appropriate; `ir` does not front-load untaught plural forms, the future frame reuses only known infinitives, possessives introduce no undeclared nouns or agreement, the terminal practice lesson is mapped and representative, and all derived outputs remain current. |
+| HL-C68 | Complete (this PR) | Continue the schema migration through Spanish Chapter 10, introducing `ir`, `ir a` + infinitive, and `mi`/`tu`/`su` only from the Chapter-9 singular-person and identity/location frontier. | All four Chapter-10 lessons declare unique sequence, duration, shared-spine placement, typed knowledge closure, and objective practice where appropriate; `ir` does not front-load untaught plural forms, the future frame reuses only known infinitives, possessives introduce no undeclared nouns or agreement, the terminal practice lesson is mapped and representative, and all derived outputs remain current. |
+| HL-C69 | Queued | Continue the schema migration through Spanish Chapter 11, introducing singular `querer` and `poder`, then singular `nuestro`/`nuestra`, from the Chapter-10 frontier without restoring full boot tables or undeclared noun paradigms. | All five Chapter-11 lessons declare unique sequence, duration, shared-spine placement, typed knowledge closure, and objective practice where appropriate; `querer` extends the already-known singular `tener` stem change, `poder` adds only the singular `o`→`ue` pattern, the comparison lesson generalizes no form it has not taught, `nuestro`/`nuestra` reuse known masculine and feminine singular nouns while plural agreement waits, the terminal practice is mapped and representative, and all derived outputs remain current. |
 | HL-C19 | Queued | Verify every prose `strokeOrder` against an authored ductus, so no letter's step list implies a pen lift nothing has checked. | All 190 prose stroke orders across the nine scripts (`arabic` 21, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 29, `hebrew` 22, `perso-arabic` 9, `tamil` 10, `urdu-nastaliq` 13) either carry a font-checked pen path with `penLifts` + `strokeOrderSource`, or are worded so they claim part order only. Today exactly one letter — Tamil ம — is verified; the audit that found it is written up in [`data/scripts/README.md`](data/scripts/README.md). Follows HL-C09, which authors the paths this check consumes. |
 | HL-C30 | Closed — no move is both legal and useful | Recover Arabic's drivable prefix by moving the writing lessons that open Chapters 3 and 4 later in their chapters. | Measured and answered: zero. Both chapters are prefix-0 under **every** legal ordering because neither has a `voice` lesson without an in-chapter prerequisite, and all 18 of Arabic's `sight` lessons are tables, not script. Corpus-wide only 2 chapters (`portuguese ch2`, `italian ch2`, +4 lessons) can be improved by reordering at all; 116 of the 123 zero-prefix chapters are table-blocked at the root and belong to HL-C17. See *Findings from HL-C30*. |
 | HL-C24 | Complete (#9979) | Pilot real chapter payoff lessons on the weakest Latin chapters. | Latin chapters 19, 21, 33, and 36 each own a dedicated terminal consolidation lesson built only from already-taught material, and `chapters.json` points their `payoff.lesson` at it. |

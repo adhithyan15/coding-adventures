@@ -220,8 +220,9 @@ describe("corpus snapshot", () => {
     // +2: Spanish Chapter 9 maps its identity and ser/estar contrast lessons onto
     // the existing pre-A1 social spine.
     expect(summary.byLevel["pre-A1"]).toBe(868);
-    // +2: the chapter's location lesson and terminal payoff join the A1 path.
-    expect(summary.byLevel.A1).toBe(306);
+    // +2: Chapter 10 places singular ir on the location node and singular possessives
+    // on definite reference. Its future frame and payoff remain at A2.
+    expect(summary.byLevel.A1).toBe(308);
     expect(summary.byLevel.A2).toBe(395); // +25: Spanish chapters 14-18 plus prerequisite closure
     // 8, not 0: Spanish chapters 38 and 41 realize SPINE-NARRATE-EVENTS and
     // SPINE-GIVE-REASONS, four lessons each — the only B1 nodes any track has touched.
@@ -233,9 +234,9 @@ describe("corpus snapshot", () => {
 
     // HL-C63 places 47 orphan chapter lessons and two Spanish prerequisites. Chapters
     // Chapters 7-9 then map their terminal practices and Chapter 9's remaining
-    // teaching lessons, leaving 92 explicit migration gaps.
-    expect(summary.unmapped).toBe(92);
-    expect(summary.mappedPercent).toBe(94);
+    // teaching lessons. Chapter 10 closes two more explicit mapping gaps.
+    expect(summary.unmapped).toBe(90);
+    expect(summary.mappedPercent).toBe(95);
   });
 
   it("shows twenty tracks have reached A2, and only two have not reached A1", () => {
@@ -283,7 +284,7 @@ describe("corpus snapshot", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const ramp = lessonsUpToLevel(lessons, paths, spine, "A1");
     // The whole point: this is a FILTER over the one corpus, not a second corpus.
-    expect(ramp).toHaveLength(1174); // +4: Chapter-9 pre-A1 and A1 lessons join the edition
+    expect(ramp).toHaveLength(1176); // +2: Chapter-10 location and possessive lessons join the edition
     expect(ramp.length).toBeLessThan(lessons.length);
   });
 });

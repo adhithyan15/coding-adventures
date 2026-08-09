@@ -342,10 +342,57 @@
       "after": []
     },
     {
+      "id": "ES-PATH-015-IR",
+      "spine_node": "SPINE-ASK-LOCATION",
+      "lessons": [
+        "ES-C10-ir"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-015-IR"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-041-NEAR-FUTURE",
+      "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+      "lessons": [
+        "ES-C10-ir-a-futuro"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-041-NEAR-FUTURE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-003-POSSESSIVE",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C10-mi-tu-su"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-003-POSSESSIVE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-041-CONSOLIDATION",
+      "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+      "lessons": [
+        "ES-C10-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-041-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-030",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "ES-C10-ir",
         "ES-C11-querer",
         "ES-C11-poder",
         "ES-C12-hacer",
@@ -407,7 +454,6 @@
       "id": "ES-PATH-041",
       "spine_node": "SPINE-TALK-ABOUT-FUTURE",
       "lessons": [
-        "ES-C10-ir-a-futuro",
         "ES-C17-futuro",
         "ES-C17-condicional",
         "ES-C17-practice",
@@ -788,7 +834,8 @@
     "SPINE-ASK-LOCATION": {
       "segments": [
         "ES-PATH-015",
-        "ES-PATH-015-LOCATION"
+        "ES-PATH-015-LOCATION",
+        "ES-PATH-015-IR"
       ],
       "omits": [],
       "relocates": {}
@@ -796,6 +843,7 @@
     "SPINE-DEFINITE-REFERENCE": {
       "segments": [
         "ES-PATH-003",
+        "ES-PATH-003-POSSESSIVE",
         "ES-PATH-020",
         "ES-PATH-027"
       ],
@@ -834,7 +882,8 @@
       ],
       "relocates": {
         "VERB-SPEAK": "SPINE-POLITE-REQUEST-REPAIR",
-        "VERB-WORK": "SPINE-POLITE-REQUEST-REPAIR"
+        "VERB-WORK": "SPINE-POLITE-REQUEST-REPAIR",
+        "VERB-GO": "SPINE-ASK-LOCATION"
       }
     },
     "SPINE-NEGATE-AND-ASK": {
@@ -867,6 +916,8 @@
     },
     "SPINE-TALK-ABOUT-FUTURE": {
       "segments": [
+        "ES-PATH-041-NEAR-FUTURE",
+        "ES-PATH-041-CONSOLIDATION",
         "ES-PATH-041"
       ],
       "omits": [
@@ -1373,6 +1424,50 @@
       ]
     },
     {
+      "id": "ES-EXT-015-IR",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the three singular present forms of Spanish ir to ask where someone is going.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C10-ir"
+      ]
+    },
+    {
+      "id": "ES-EXT-041-NEAR-FUTURE",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can build the Spanish near future with a singular form of ir, a, and a known infinitive.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C10-ir-a-futuro"
+      ]
+    },
+    {
+      "id": "ES-EXT-003-POSSESSIVE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can place mi, tu, or su before a known singular noun.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C10-mi-tu-su"
+      ]
+    },
+    {
+      "id": "ES-EXT-041-CONSOLIDATION",
+      "stage": "A2",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve singular ir, a near-future frame, and singular possessive determiners together.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C10-practice"
+      ]
+    },
+    {
       "id": "ES-EXT-018-LANGUAGE-SPECIFIC",
       "stage": "A1",
       "kind": "required",
@@ -1549,7 +1644,6 @@
       "canDo": "I can use the Spanish-specific vocabulary and grammar that support this shared ability.",
       "prerequisites": [],
       "lessons": [
-        "ES-C10-ir-a-futuro",
         "ES-C17-futuro",
         "ES-C17-condicional",
         "ES-C17-practice",

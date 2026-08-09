@@ -253,7 +253,8 @@ describe("corpus snapshot", () => {
     // TA-W04-i-sign-write-nandri when the writing strand was spread out and its payoff
     // was not widened. Both are recorded in tamil/chapters.json's own notes.
     // Empty `assesses` lists on schema-v1 chapters remain unscored rather than pretending
-    // to pass. The current typed-atom corpus still exposes 27 genuinely thin payoffs.
+    // to pass. Chapter 10 now assesses all nine atoms in its terminal checkpoint, so
+    // the current typed-atom corpus still exposes 27 genuinely thin payoffs.
     expect(report.summary.payoffsNotRepresentative).toBe(27);
   });
 
