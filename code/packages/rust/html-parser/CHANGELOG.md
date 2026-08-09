@@ -6,6 +6,10 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Start and end tags rejected against seeded fragment-context elements now
+  report their required parse errors, covering 37 previously silent table,
+  select, frameset, document-shell, and foreign fragment cases without changing
+  DOM recovery or undeclared-diagnostic coverage.
 - Formatting start tags foster-parented out of table structure now report the
   required in-table parse error, covering 16 previously silent malformed corpus
   cases without changing DOM recovery or undeclared-diagnostic coverage.
