@@ -56,6 +56,9 @@ use llm_gateway::{
 
 const DEFAULT_ENDPOINT: &str = "http://localhost:11434";
 const CHAT_PATH: &str = "/api/chat";
+const MAX_CONFIGURED_MODEL_BYTES: usize = 200;
+const MAX_CONFIGURED_ENDPOINT_BYTES: usize = 512;
+const MAX_CONFIGURED_TIMEOUT: Duration = Duration::from_secs(5 * 60);
 
 // Cap on response body size. A misconfigured or malicious endpoint
 // could otherwise stream gigabytes before the timeout elapsed and
@@ -74,6 +77,29 @@ pub struct OllamaClient {
     timeout: Duration,
 }
 
+/// Stable payload-blind failure while constructing an explicit Ollama client.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum OllamaConfigurationError {
+    /// The model selector was empty, unbounded, padded, or contained control characters.
+    InvalidModel,
+    /// The endpoint was not one exact bounded `http://host:port` authority.
+    InvalidEndpoint,
+    /// The request timeout was zero or exceeded five minutes.
+    InvalidTimeout,
+}
+
+impl core::fmt::Display for OllamaConfigurationError {
+    fn fmt(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        formatter.write_str(match self {
+            Self::InvalidModel => "ollama client: invalid model",
+            Self::InvalidEndpoint => "ollama client: invalid endpoint",
+            Self::InvalidTimeout => "ollama client: invalid timeout",
+        })
+    }
+}
+
+impl std::error::Error for OllamaConfigurationError {}
+
 impl OllamaClient {
     /// Construct against the default `http://localhost:11434`.
     /// `model_name` should be the local model tag (e.g.,
@@ -84,6 +110,38 @@ impl OllamaClient {
             model_name: model_name.into(),
             timeout: Duration::from_secs(120),
         }
+    }
+
+    /// Construct one fully validated explicit client for production provisioning.
+    ///
+    /// The endpoint must be exactly `http://host:port` with no path, query,
+    /// fragment, user information, or implicit port. This constructor performs no
+    /// network access; reachability remains an explicit operator pre-flight.
+    pub fn try_new(
+        model_name: impl Into<String>,
+        endpoint: impl Into<String>,
+        timeout: Duration,
+    ) -> Result<Self, OllamaConfigurationError> {
+        let model_name = model_name.into();
+        let endpoint = endpoint.into();
+        if model_name.trim().is_empty()
+            || model_name.trim() != model_name
+            || model_name.len() > MAX_CONFIGURED_MODEL_BYTES
+            || model_name.chars().any(char::is_control)
+        {
+            return Err(OllamaConfigurationError::InvalidModel);
+        }
+        if endpoint.len() > MAX_CONFIGURED_ENDPOINT_BYTES || parse_endpoint(&endpoint).is_none() {
+            return Err(OllamaConfigurationError::InvalidEndpoint);
+        }
+        if timeout.is_zero() || timeout > MAX_CONFIGURED_TIMEOUT {
+            return Err(OllamaConfigurationError::InvalidTimeout);
+        }
+        Ok(Self {
+            endpoint,
+            model_name,
+            timeout,
+        })
     }
 
     /// Override the endpoint URL. Accepts forms like
@@ -192,10 +250,7 @@ impl OllamaClient {
                 serde_json::Value::String("json".to_string()),
             );
         }
-        body.insert(
-            "options".to_string(),
-            serde_json::Value::Object(options),
-        );
+        body.insert("options".to_string(), serde_json::Value::Object(options));
 
         serde_json::Value::Object(body)
     }
@@ -204,8 +259,9 @@ impl OllamaClient {
     /// response body. The function is shared between `complete` and
     /// `complete_json` so the wire-protocol logic lives in one place.
     fn post(&self, path: &str, body: &serde_json::Value, model: &str) -> Result<String, LlmError> {
-        let (host, port) = parse_endpoint(&self.endpoint)
-            .ok_or_else(|| self.transport_err(model, format!("invalid endpoint: {}", self.endpoint)))?;
+        let (host, port) = parse_endpoint(&self.endpoint).ok_or_else(|| {
+            self.transport_err(model, format!("invalid endpoint: {}", self.endpoint))
+        })?;
 
         let addr = (host.as_str(), port)
             .to_socket_addrs()
@@ -257,8 +313,7 @@ impl OllamaClient {
             ));
         }
 
-        parse_http_response(&raw)
-            .map_err(|detail| self.transport_err(model, detail))
+        parse_http_response(&raw).map_err(|detail| self.transport_err(model, detail))
     }
 }
 
@@ -290,11 +345,16 @@ fn flatten_content(c: &MessageContent) -> String {
 /// header line. Allowed: ASCII alphanumerics, `.`, `-`, `_`.
 fn parse_endpoint(endpoint: &str) -> Option<(String, u16)> {
     let rest = endpoint.strip_prefix("http://")?;
-    let rest = rest.split('/').next()?;
+    if rest
+        .bytes()
+        .any(|byte| matches!(byte, b'/' | b'?' | b'#' | b'@'))
+    {
+        return None;
+    }
     let mut parts = rest.split(':');
     let host = parts.next()?.to_string();
     let port: u16 = parts.next()?.parse().ok()?;
-    if host.is_empty() {
+    if host.is_empty() || port == 0 || parts.next().is_some() {
         return None;
     }
     if !host
@@ -322,8 +382,8 @@ fn parse_http_response(raw: &[u8]) -> Result<String, String> {
         .windows(sep.len())
         .position(|w| w == sep)
         .ok_or_else(|| "no header/body separator in response".to_string())?;
-    let header_block = std::str::from_utf8(&raw[..split])
-        .map_err(|e| format!("non-UTF-8 header: {e}"))?;
+    let header_block =
+        std::str::from_utf8(&raw[..split]).map_err(|e| format!("non-UTF-8 header: {e}"))?;
     let body_bytes = &raw[split + sep.len()..];
 
     // Status line: "HTTP/1.1 200 OK"
@@ -458,9 +518,7 @@ fn dechunk(mut buf: &[u8]) -> Result<String, String> {
 
 /// Parse Ollama's chat response. We need: assistant text,
 /// prompt_eval_count, eval_count, done_reason.
-fn parse_ollama_response(
-    body: &str,
-) -> Result<(String, TokenUsage, FinishReason), String> {
+fn parse_ollama_response(body: &str) -> Result<(String, TokenUsage, FinishReason), String> {
     let v: serde_json::Value =
         serde_json::from_str(body).map_err(|e| format!("response is not JSON: {e}"))?;
 
@@ -475,10 +533,7 @@ fn parse_ollama_response(
         .get("prompt_eval_count")
         .and_then(|n| n.as_u64())
         .unwrap_or(0) as usize;
-    let output_tokens = v
-        .get("eval_count")
-        .and_then(|n| n.as_u64())
-        .unwrap_or(0) as usize;
+    let output_tokens = v.get("eval_count").and_then(|n| n.as_u64()).unwrap_or(0) as usize;
 
     let finish_reason = match v.get("done_reason").and_then(|s| s.as_str()) {
         Some("stop") => FinishReason::Stop,
@@ -506,12 +561,12 @@ impl LlmClient for OllamaClient {
 
     fn capabilities(&self) -> Capabilities {
         Capabilities {
-            json_mode_native: true,         // via format=json
-            tool_use_native: false,          // polyfilled
-            streaming_native: true,          // we just don't expose it yet
-            prompt_caching_native: false,    // no cross-request cache
-            multimodal_image_input: false,   // model-dependent; conservative default
-            max_context_window: 8_192,       // model-dependent; conservative default
+            json_mode_native: true,        // via format=json
+            tool_use_native: false,        // polyfilled
+            streaming_native: true,        // we just don't expose it yet
+            prompt_caching_native: false,  // no cross-request cache
+            multimodal_image_input: false, // model-dependent; conservative default
+            max_context_window: 8_192,     // model-dependent; conservative default
         }
     }
 
@@ -657,8 +712,8 @@ impl LlmClient for OllamaClient {
 /// Not called automatically; exposed for callers that want a fast
 /// pre-flight before issuing real completions.
 pub fn ping(endpoint: &str, timeout: Duration) -> Result<(), String> {
-    let (host, port) = parse_endpoint(endpoint)
-        .ok_or_else(|| format!("invalid endpoint: {endpoint}"))?;
+    let (host, port) =
+        parse_endpoint(endpoint).ok_or_else(|| format!("invalid endpoint: {endpoint}"))?;
     let addr = (host.as_str(), port)
         .to_socket_addrs()
         .map_err(|e| format!("resolve: {e}"))?
@@ -669,9 +724,7 @@ pub fn ping(endpoint: &str, timeout: Duration) -> Result<(), String> {
     stream
         .set_read_timeout(Some(timeout))
         .map_err(|e| format!("set_read_timeout: {e}"))?;
-    let req = format!(
-        "GET /api/tags HTTP/1.1\r\nHost: {host}:{port}\r\nConnection: close\r\n\r\n"
-    );
+    let req = format!("GET /api/tags HTTP/1.1\r\nHost: {host}:{port}\r\nConnection: close\r\n\r\n");
     stream
         .write_all(req.as_bytes())
         .map_err(|e| format!("write: {e}"))?;
@@ -733,13 +786,9 @@ mod tests {
                     }
                     read_so_far.extend_from_slice(&buf[..n]);
                     if !headers_done {
-                        if let Some(idx) = read_so_far
-                            .windows(4)
-                            .position(|w| w == b"\r\n\r\n")
-                        {
+                        if let Some(idx) = read_so_far.windows(4).position(|w| w == b"\r\n\r\n") {
                             headers_done = true;
-                            let header_str =
-                                std::str::from_utf8(&read_so_far[..idx]).unwrap();
+                            let header_str = std::str::from_utf8(&read_so_far[..idx]).unwrap();
                             // Capture path from request line
                             if let Some(line) = header_str.lines().next() {
                                 let mut parts = line.split_whitespace();
@@ -749,9 +798,7 @@ mod tests {
                                 }
                             }
                             for line in header_str.lines() {
-                                if let Some(v) =
-                                    line.strip_prefix("Content-Length:")
-                                {
+                                if let Some(v) = line.strip_prefix("Content-Length:") {
                                     content_length = v.trim().parse().unwrap_or(0);
                                 }
                             }
@@ -766,10 +813,7 @@ mod tests {
                     } else {
                         // Header read; check whether body is complete.
                         // Find the body-start offset:
-                        if let Some(idx) = read_so_far
-                            .windows(4)
-                            .position(|w| w == b"\r\n\r\n")
-                        {
+                        if let Some(idx) = read_so_far.windows(4).position(|w| w == b"\r\n\r\n") {
                             let body_so_far = read_so_far.len() - (idx + 4);
                             if body_so_far >= content_length {
                                 let body = &read_so_far[idx + 4..idx + 4 + content_length];
@@ -781,7 +825,11 @@ mod tests {
                     }
                 }
 
-                let reason = if (200..300).contains(&response_status) { "OK" } else { "ERR" };
+                let reason = if (200..300).contains(&response_status) {
+                    "OK"
+                } else {
+                    "ERR"
+                };
                 let resp = format!(
                     "HTTP/1.1 {status} {reason}\r\n\
                      Content-Type: application/json\r\n\
@@ -806,8 +854,18 @@ mod tests {
 
         fn finish(mut self) -> (String, String) {
             self.join.take().unwrap().join().unwrap();
-            let body = self.captured_body.lock().unwrap().clone().unwrap_or_default();
-            let path = self.captured_path.lock().unwrap().clone().unwrap_or_default();
+            let body = self
+                .captured_body
+                .lock()
+                .unwrap()
+                .clone()
+                .unwrap_or_default();
+            let path = self
+                .captured_path
+                .lock()
+                .unwrap()
+                .clone()
+                .unwrap_or_default();
             (path, body)
         }
     }
@@ -873,6 +931,47 @@ mod tests {
         assert!(parse_endpoint("http://evil.example.com\r\nX-Injected:11434").is_none());
         assert!(parse_endpoint("http://has space:11434").is_none());
         assert!(parse_endpoint("http://has\ttab:11434").is_none());
+    }
+
+    #[test]
+    fn explicit_constructor_validates_the_complete_configuration() {
+        let client = OllamaClient::try_new(
+            "llama3.1:8b",
+            "http://127.0.0.1:11434",
+            Duration::from_secs(120),
+        )
+        .unwrap();
+        let identity = client.identity();
+        assert_eq!(identity.model_family, "llama3.1:8b");
+        assert_eq!(identity.endpoint.as_deref(), Some("http://127.0.0.1:11434"));
+
+        assert_eq!(
+            OllamaClient::try_new(" model", "http://127.0.0.1:11434", Duration::from_secs(1))
+                .unwrap_err(),
+            OllamaConfigurationError::InvalidModel
+        );
+        for endpoint in [
+            "https://127.0.0.1:11434",
+            "http://127.0.0.1",
+            "http://127.0.0.1:0",
+            "http://127.0.0.1:11434/",
+            "http://user@127.0.0.1:11434",
+            "http://127.0.0.1:11434:80",
+        ] {
+            assert_eq!(
+                OllamaClient::try_new("model", endpoint, Duration::from_secs(1)).unwrap_err(),
+                OllamaConfigurationError::InvalidEndpoint
+            );
+        }
+        assert_eq!(
+            OllamaClient::try_new("model", "http://127.0.0.1:11434", Duration::ZERO).unwrap_err(),
+            OllamaConfigurationError::InvalidTimeout
+        );
+        assert_eq!(
+            OllamaClient::try_new("model", "http://127.0.0.1:11434", Duration::from_secs(301))
+                .unwrap_err(),
+            OllamaConfigurationError::InvalidTimeout
+        );
     }
 
     #[test]
@@ -1045,7 +1144,9 @@ mod tests {
         let err = client.complete(req).unwrap_err();
         match err {
             LlmError::OutputTruncated {
-                output_tokens, max_tokens, ..
+                output_tokens,
+                max_tokens,
+                ..
             } => {
                 assert_eq!(output_tokens, 256);
                 assert_eq!(max_tokens, Some(256));
@@ -1093,8 +1194,7 @@ mod tests {
         // never doubled the cap. The fix in this PR routes
         // MaxTokens+parse-fail to `OutputTruncated` so the
         // retry helper can cap-double up to MAX_TOKENS_CEILING.
-        let truncated_json =
-            r#"{"document_id":"x","nodes":[{"id":"N1","term":{"functor":"foo","args":["unterminated stri"#;
+        let truncated_json = r#"{"document_id":"x","nodes":[{"id":"N1","term":{"functor":"foo","args":["unterminated stri"#;
         let server = ScriptedServer::spawn(
             200,
             &serde_json::json!({
@@ -1250,10 +1350,7 @@ mod tests {
 
     #[test]
     fn complete_json_sets_format_and_appends_schema_hint() {
-        let server = ScriptedServer::spawn(
-            200,
-            &ollama_chat_response("{\"answer\":42}", 5, 3),
-        );
+        let server = ScriptedServer::spawn(200, &ollama_chat_response("{\"answer\":42}", 5, 3));
         let client = OllamaClient::new("m").with_endpoint(server.endpoint.clone());
         let schema = JsonSchema {
             name: "AnswerObj".into(),
@@ -1274,10 +1371,7 @@ mod tests {
 
     #[test]
     fn complete_json_returns_schema_invalid_when_response_is_not_json() {
-        let server = ScriptedServer::spawn(
-            200,
-            &ollama_chat_response("not a json document", 2, 2),
-        );
+        let server = ScriptedServer::spawn(200, &ollama_chat_response("not a json document", 2, 2));
         let client = OllamaClient::new("m").with_endpoint(server.endpoint.clone());
         let schema = JsonSchema {
             name: "X".into(),

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/chief-of-staff-daemon-authority-provisioning",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads only explicitly configured raw channel-key files through the owner-only no-link secret-file boundary."
+    }
+  ],
+  "justification": "Constructs immutable exact channel-key and Ollama authorities from validated operator configuration without logging secret values or performing network access."
+}

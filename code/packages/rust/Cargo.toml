@@ -1028,6 +1028,7 @@ members = [
   "task-wasm",
   "chief-of-staff-daemon-credential",
   "chief-of-staff-daemon-secret-file",
+  "chief-of-staff-daemon-authority-provisioning",
   "chief-of-staff-daemon",
   "chief-of-staff-daemon-service-files",
   "chief-of-staff-daemon-installer",

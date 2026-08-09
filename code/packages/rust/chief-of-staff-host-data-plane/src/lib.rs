@@ -358,6 +358,16 @@ impl ExactModelProviderRegistry {
         self.providers.insert(model, provider);
         Ok(())
     }
+
+    /// Return the number of exact model selectors retained by this registry.
+    pub fn len(&self) -> usize {
+        self.providers.len()
+    }
+
+    /// Return whether this registry denies every model lookup.
+    pub fn is_empty(&self) -> bool {
+        self.providers.is_empty()
+    }
 }
 
 impl ModelProviderAuthority for ExactModelProviderRegistry {

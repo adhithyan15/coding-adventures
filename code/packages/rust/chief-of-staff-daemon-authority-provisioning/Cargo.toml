@@ -1,0 +1,16 @@
+[package]
+name = "chief-of-staff-daemon-authority-provisioning"
+version = "0.1.0"
+edition = "2021"
+description = "Explicit file-backed channel-key and Ollama authority provisioning for D18"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
+chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }
+chief-of-staff-daemon-config = { path = "../chief-of-staff-daemon-config" }
+chief-of-staff-daemon-secret-file = { path = "../chief-of-staff-daemon-secret-file" }
+chief-of-staff-host-data-plane = { path = "../chief-of-staff-host-data-plane" }
+chief-of-staff-pipeline-bindings = { path = "../chief-of-staff-pipeline-bindings" }
+coding_adventures_zeroize = { path = "../zeroize" }
+llm-provider-ollama = { path = "../llm-provider-ollama" }

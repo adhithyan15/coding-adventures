@@ -15,6 +15,14 @@ The package performs no filesystem or environment access. `~` paths are resolved
 only when the caller supplies an explicit absolute home directory, keeping daemon
 composition deterministic and testable.
 
+An optional `[data_plane]` table declares exact production authorities without
+putting secret bytes in TOML. Directional channel-key entries bind canonical
+UUID-v7 pipeline and channel identities plus an exact agent identity to raw
+32-byte owner-only files. Ollama entries bind one unique launch model selector to
+one explicit endpoint and a non-zero timeout capped at five minutes. The parser
+validates and retains only typed declarations; a separate provisioning adapter
+performs all file and provider construction.
+
 ## Validation
 
 ```sh

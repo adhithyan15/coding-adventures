@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Add a fallible production constructor that validates a bounded model, one
+  exact `http://host:port` endpoint, and a non-zero timeout capped at five
+  minutes without performing network access.
+- Reject endpoint paths, queries, fragments, user information, extra authority
+  separators, and port zero before constructing a configured client.
+
 ## [0.3.0] - 2026-05-13 — mid-string truncation surfaces as OutputTruncated
 
 ### Fixed
