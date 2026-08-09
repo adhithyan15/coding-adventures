@@ -57,6 +57,8 @@ const I = DUCTUS["இ"];
 const iOutline = tamilOutline("இ");
 const KA = DUCTUS["க"];
 const kaOutline = tamilOutline("க");
+const VA = DUCTUS["வ"];
+const vaOutline = tamilOutline("வ");
 
 /** Walk a node tree, collecting every node the predicate accepts. */
 function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = []): SvgNode[] {
@@ -68,12 +70,13 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds all five authored Tamil letters", () => {
+  it("finds all six authored Tamil letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
     expect(ductusFor("இ")?.glyph).toBe("இ");
     expect(ductusFor("க")?.glyph).toBe("க");
+    expect(ductusFor("வ")?.glyph).toBe("வ");
   });
 
   it("returns undefined for a letter nobody has authored a stroke order for", () => {
@@ -377,6 +380,30 @@ describe("க — a real cited three-stroke filmstrip", () => {
     expect(done).toHaveLength(2);
     expect(done.map((path) => path.attrs.d)).toEqual([penPathD(KA.strokes[0], 1), penPathD(KA.strokes[1], 1)]);
     expect(pen.attrs.d).toBe(penPathD(KA.strokes[2], 1));
+  });
+});
+
+describe("வ — a real cited unbroken five-movement filmstrip", () => {
+  const steps = ductusSteps(VA);
+  const strip = ductusFilmstrip(VA, vaOutline);
+
+  it("keeps every movement in the same pen-down run", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0, 0]);
+  });
+
+  it("reports five movements in one unbroken stroke", () => {
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 5 movements");
+  });
+
+  it("finishes the sole stroke without any completed-stroke overlay", () => {
+    const last = strip.frames[4];
+    const done = byTag(last, "path").filter((path) => path.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
+    expect(done).toHaveLength(0);
+    expect(pen.attrs.d).toBe(penPathD(VA.strokes[0], 1));
   });
 });
 

@@ -198,6 +198,12 @@ describe("handwriting ductus", () => {
     expect(DUCTUS["க"].strokes.map((stroke) => stroke.segments.length)).toEqual([3, 2, 1]);
   });
 
+  it("வ joins all five movements without lifting the pen", () => {
+    expect(penLifts(DUCTUS["வ"])).toBe(0);
+    expect(DUCTUS["வ"].strokes).toHaveLength(1);
+    expect(DUCTUS["வ"].strokes[0].segments).toHaveLength(5);
+  });
+
   // The PROVENANCE GATE. A stroke's SHAPE is checked against the font above;
   // its ORDER cannot be — so it must trace to a cited source, or it does not
   // ship. This is the counterpart, for hand-authored order, of "facts enter
@@ -264,6 +270,13 @@ describe("handwriting ductus", () => {
     const src = DUCTUS["க"].source;
     expect(src.url).toContain("tamilscript");
     expect(src.citation).toMatch(/Appendix I.*Frame 3.*க/);
+    expect(src.variation, "must not present one order as the only order").toMatch(/variation|no single/i);
+  });
+
+  it("வ's stroke order traces to Frame 9's first row", () => {
+    const src = DUCTUS["வ"].source;
+    expect(src.url).toContain("tamilscript");
+    expect(src.citation).toMatch(/Appendix I.*Frame 9.*வ/);
     expect(src.variation, "must not present one order as the only order").toMatch(/variation|no single/i);
   });
 });
