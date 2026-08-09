@@ -5,11 +5,11 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-09, after #10211 merged for HL-C15. HL-C05 is in progress
-on `codex/pattern-lesson-pilot`: Spanish `ES-C17-comer-futuro` is the first canonical
+Last prioritized: 2026-08-09, after publishing #10215 for HL-C05. Spanish
+`ES-C17-comer-futuro` is now the first canonical
 productive frame, with ordered app-visible slots limited to already-known *comer*,
 *beber*, and *café*. Its three gates now exercise real content rather than passing over
-an empty set.
+an empty set. HL-C06 is the next bounded structural slice after #10215 merges.
 With all 22 downloadable books now carrying pronunciation, glossary,
 review-question, answer-key, and English-first index back matter, HL-C50 is
 complete. The HL-C63 audit confirmed that all 98 missing handwritten chapters
@@ -223,7 +223,7 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C02 | Complete (#9957) | Add the `chapters.json` schema, loader, and `core/chapter-policy.json`. | `ChapterCapability`, `TrackChapters`, and `ChapterPolicy`, `loadTrackChapters` beside `loadLanguageCurricula`, all 22 track ledgers, and the policy loader and round-trip tests are shipped. |
 | HL-C03 | Complete (#9994) | Land the nine HL05 gates as report-only output and publish the first chapter snapshot. | All nine stable `CHAPTER_GATE_CODES` run through the gap report; the live snapshot now measures all 513 chapters and keeps recorded debt report-only. |
 | HL-C04 | Complete (#10207) | Derive book chapter titles and labels from `chapters.json`. | All 513 generated and handwritten declarations now resolve their title and label from the capability ledgers; duplicate metadata is rejected, missing capabilities fail closed, the title-drift gate remains at zero, and the shared book/app hash covers the canonical title and label. |
-| HL-C05 | In progress — `codex/pattern-lesson-pilot` | Add the `pattern` lesson type and its first canonical realization. | Spanish `ES-C17-comer-futuro` introduces only `ES-PATTERN-ER-FUTURE-SINGULAR`, exposes ordered infinitive/object slots over required knowledge, and instantiates the frame three times; focused controls prove all three gates. |
+| HL-C05 | Complete (#10215) | Add the `pattern` lesson type and its first canonical realization. | Spanish `ES-C17-comer-futuro` introduces only `ES-PATTERN-ER-FUTURE-SINGULAR`, exposes ordered infinitive/object slots over required knowledge, and instantiates the frame three times; focused controls prove all three gates. |
 | HL-C06 | Queued | Add the figure pipeline: SVG generation, `graphicx`, SVG→PDF in CI, and a `--check` hash gate. | A generated figure round-trips from canonical data into a compiled PDF and fails CI on drift, reusing `paint-vm-svg`'s `renderToSvgString`. |
 | HL-C07 | Complete (#9963) | Add the log-scanning warning gate with recorded per-track baselines. | Overfull/underfull boxes, missing glyphs, hyperref warnings, duplicate destinations, and font substitutions are machine-checked by `scan_latex_log_warnings.py` after the `latexmk` loop, against `core/latex-warning-baseline.json`. Baselines ship unseeded — `null` means unmeasured, never zero — so the gate reports today and fails the moment a seeded track regresses. The first CI run on main emits the real counts into the job summary for a human to paste back. |
 | HL-C08 | Complete (#9974) | Render the ductus in Language Ladder. | `penPathD`/`penTip` drive the tested SVG stroke build-up in the app; the currently authored ductus is shared with validation and script practice. |
