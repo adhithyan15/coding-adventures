@@ -2598,8 +2598,9 @@ def _parse_model_params(params_text: str) -> dict[str, float]:
         return {}
     params: dict[str, float] = {}
     spans: list[tuple[int, int]] = []
-    for match in re.finditer(r"([A-Za-z][A-Za-z0-9_]*)\s*=\s*([^,\s)]+)", params_text):
-        params[match.group(1).upper()] = parse_value(match.group(2))
+    for match in re.finditer(r"([A-Za-z][A-Za-z0-9_-]*)\s*=\s*([^,\s)]+)", params_text):
+        key = match.group(1).upper().replace("-", "_")
+        params[key] = parse_value(match.group(2))
         spans.append(match.span())
     cursor = 0
     for start, end in spans:

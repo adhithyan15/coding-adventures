@@ -4768,10 +4768,17 @@ the Rust, Python, and TypeScript surfaces together.
      `PJFET`, `PJ`, `NCH`, and `PCH` model-type alias set.
 
 483. Python and TypeScript Berkeley SPICE model-type separator normalization parity.
-   - Status: implemented in this model-type separator normalization slice.
+   - Status: completed in PR 10168.
    - Both parser facades mirror the engine type-key contract for supported
      aliases by ignoring hyphen and underscore separators, including the
      engine-tested `n-jfet` spelling, while preserving unknown model kinds.
+
+484. Python and TypeScript Berkeley SPICE model-parameter separator normalization parity.
+   - Status: implemented in this model-parameter separator normalization slice.
+   - Both parser facades mirror the engine parameter-key contract by converting
+     hyphens to underscores in `.model` parameter names, preserving existing
+     validation, alias precedence, and lowering for spellings such as
+     `BETA-F` and `T-NOM`.
 
 ## Backlog
 
