@@ -44,3 +44,7 @@ endpoint generations invalidate pre-rotation leases; URL userinfo and fragments
 fail closed. Plaintext endpoints are disabled by default and require an explicit
 loopback-fixture policy opt-in. Query tokens are permitted only on otherwise
 accepted secure endpoints and remain inside the trusted executor boundary.
+
+The sibling `smart-home-camera-media-http-executor` package is the concrete
+pinned HTTPS snapshot host for this boundary. Stream resources remain owned by
+future supervised media hosts with explicit teardown and retention semantics.

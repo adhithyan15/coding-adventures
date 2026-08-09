@@ -919,6 +919,7 @@ members = [
     "irc-server-capi",
     "smart-home-core",
     "smart-home-camera-media",
+    "smart-home-camera-media-http-executor",
     "smart-home-dashboard-core",
     "smart-home-capability-cage",
     "smart-home-discovery",

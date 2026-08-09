@@ -1,0 +1,21 @@
+[package]
+name = "smart-home-camera-media-http-executor"
+version = "0.1.0"
+edition = "2021"
+description = "Pinned authenticated HTTP snapshot executor for smart-home camera media leases"
+license = "MIT"
+
+[dependencies]
+base64 = "0.22"
+coding_adventures_csprng = { path = "../csprng" }
+coding_adventures_zeroize = { path = "../zeroize" }
+http-core = { path = "../http-core" }
+http-digest-auth = { path = "../http-digest-auth" }
+http1 = { path = "../http1" }
+smart-home-camera-media = { path = "../smart-home-camera-media" }
+smart-home-core = { path = "../smart-home-core" }
+tls-platform = { path = "../tls-platform" }
+url-parser = { path = "../url-parser" }
+
+[dev-dependencies]
+smart-home-runtime = { path = "../smart-home-runtime" }
