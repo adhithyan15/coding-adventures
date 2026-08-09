@@ -7743,6 +7743,30 @@ mod tests {
     }
 
     #[test]
+    fn formal_procedure_forwards_through_recursion() {
+        let src = "begin integer result; \
+                   integer procedure twice(x); value x; integer x; twice := x * 2; \
+                   integer procedure descend(p, n); value n; procedure p; integer n; \
+                     if n = 0 then descend := p(21) else descend := descend(p, n - 1); \
+                   result := descend(twice, 4) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "formal_procedure_recursive_forwarding").expect("compiles");
+        let descend = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("__algol_by_name_descend_"))
+            .expect("recursive formal forwarding needs a specialised sibling");
+        assert!(
+            descend.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first() == Some(&Operand::Var(descend.name.clone()))
+            }),
+            "the recursive formal call must reuse its active specialised sibling"
+        );
+    }
+
+    #[test]
     fn call_by_name_re_evaluates_the_caller_expression() {
         let src = "begin integer n, result; \
                    integer procedure observe(x); integer x; \

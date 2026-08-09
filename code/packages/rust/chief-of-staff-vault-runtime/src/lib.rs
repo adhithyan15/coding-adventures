@@ -1,10 +1,10 @@
-//! Host-side broker for issuing opaque Chief of Staff secret leases.
+//! Host-side broker for opaque Chief of Staff secret leases and direct delivery.
 //!
 //! Model-facing tools receive only a [`VaultLeaseReceipt`] containing a
 //! bearer-capability [`VaultRef`] and its authoritative expiry. They never
 //! receive plaintext, ciphertext, or an unwrap key. Raw payload bytes remain
-//! in the zeroizing lease manager and can only be atomically consumed by a
-//! trusted host handler.
+//! in zeroizing storage and can only be atomically consumed by a trusted host
+//! handler or moved into a replaceable [`VaultDirectDelivery`] boundary.
 
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
@@ -19,6 +19,47 @@ use coding_adventures_vault_leases::{
 use smart_home_core::VaultRef;
 
 const VAULT_REF_PREFIX: &str = "vault-lease:";
+const MAX_CONSUMER_AGENT_ID_BYTES: usize = 4 * 1024;
+
+/// Failure reported by a trusted direct-delivery adapter.
+///
+/// Variants intentionally carry no free-form diagnostic text so adapters
+/// cannot accidentally turn an error or log path into a secret channel.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum VaultDirectDeliveryError {
+    /// No trusted consumer is registered for the requested identifier.
+    ConsumerNotFound,
+    /// The trusted consumer refused the delivery.
+    Rejected,
+    /// The trusted transport is temporarily unavailable.
+    Unavailable,
+}
+
+impl fmt::Display for VaultDirectDeliveryError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::ConsumerNotFound => f.write_str("direct-delivery consumer not found"),
+            Self::Rejected => f.write_str("direct delivery rejected"),
+            Self::Unavailable => f.write_str("direct-delivery transport unavailable"),
+        }
+    }
+}
+
+impl std::error::Error for VaultDirectDeliveryError {}
+
+/// Replaceable trusted boundary that accepts direct secret deliveries.
+///
+/// Implementations may route the owned, zeroizing payload over an authenticated
+/// browser, agent, or host channel. They must not return the bytes to the
+/// requesting agent or include them in diagnostics.
+pub trait VaultDirectDelivery: Send + Sync {
+    /// Deliver one owned payload to the already-authorized consumer.
+    fn deliver(
+        &self,
+        consumer_agent_id: &str,
+        payload: LeasePayload,
+    ) -> Result<(), VaultDirectDeliveryError>;
+}
 
 /// A newly issued lease receipt safe to return across the tool boundary.
 #[derive(Clone, PartialEq, Eq)]
@@ -43,8 +84,12 @@ impl fmt::Debug for VaultLeaseReceipt {
 pub enum VaultRuntimeError {
     /// The requested secret name is not registered with this broker.
     SecretNotFound,
+    /// The consumer identifier is empty or exceeds the protocol bound.
+    InvalidConsumerAgentId,
     /// The supplied reference was not minted by this broker format.
     InvalidVaultRef,
+    /// The trusted direct-delivery adapter rejected the operation.
+    DirectDelivery(VaultDirectDeliveryError),
     /// The underlying lease manager rejected the operation.
     Lease(LeaseError),
 }
@@ -53,7 +98,9 @@ impl fmt::Display for VaultRuntimeError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::SecretNotFound => f.write_str("secret not found"),
+            Self::InvalidConsumerAgentId => f.write_str("invalid consumer agent identifier"),
             Self::InvalidVaultRef => f.write_str("invalid VaultRef"),
+            Self::DirectDelivery(error) => write!(f, "{error}"),
             Self::Lease(error) => write!(f, "lease operation failed: {error}"),
         }
     }
@@ -64,6 +111,12 @@ impl std::error::Error for VaultRuntimeError {}
 impl From<LeaseError> for VaultRuntimeError {
     fn from(value: LeaseError) -> Self {
         Self::Lease(value)
+    }
+}
+
+impl From<VaultDirectDeliveryError> for VaultRuntimeError {
+    fn from(value: VaultDirectDeliveryError) -> Self {
+        Self::DirectDelivery(value)
     }
 }
 
@@ -121,6 +174,32 @@ impl ChiefVaultRuntime {
         })
     }
 
+    /// Deliver a named secret to a trusted consumer without returning it.
+    ///
+    /// The registered secret is cloned directly into zeroizing payload storage
+    /// and ownership is transferred to `delivery`. The caller receives only
+    /// success or a bounded, secret-free error.
+    pub fn request_direct(
+        &self,
+        secret_name: &str,
+        consumer_agent_id: &str,
+        delivery: &dyn VaultDirectDelivery,
+    ) -> Result<(), VaultRuntimeError> {
+        if consumer_agent_id.is_empty() || consumer_agent_id.len() > MAX_CONSUMER_AGENT_ID_BYTES {
+            return Err(VaultRuntimeError::InvalidConsumerAgentId);
+        }
+
+        let payload = self
+            .secrets
+            .lock()
+            .expect("vault secret mutex poisoned")
+            .get(secret_name)
+            .cloned()
+            .ok_or(VaultRuntimeError::SecretNotFound)?;
+        delivery.deliver(consumer_agent_id, payload)?;
+        Ok(())
+    }
+
     /// Atomically resolve and revoke a lease inside a trusted host handler.
     ///
     /// Agent and model code must not call this boundary directly. Successful
@@ -151,6 +230,38 @@ mod tests {
     use super::*;
 
     const SECRET: &[u8] = b"chief-vault-runtime-secret";
+
+    #[derive(Default)]
+    struct RecordingDelivery {
+        deliveries: Mutex<Vec<(String, Vec<u8>)>>,
+        result: Mutex<Option<VaultDirectDeliveryError>>,
+    }
+
+    impl RecordingDelivery {
+        fn rejecting(error: VaultDirectDeliveryError) -> Self {
+            Self {
+                deliveries: Mutex::new(Vec::new()),
+                result: Mutex::new(Some(error)),
+            }
+        }
+    }
+
+    impl VaultDirectDelivery for RecordingDelivery {
+        fn deliver(
+            &self,
+            consumer_agent_id: &str,
+            payload: LeasePayload,
+        ) -> Result<(), VaultDirectDeliveryError> {
+            self.deliveries
+                .lock()
+                .unwrap()
+                .push((consumer_agent_id.to_string(), payload.as_bytes().to_vec()));
+            match *self.result.lock().unwrap() {
+                Some(error) => Err(error),
+                None => Ok(()),
+            }
+        }
+    }
 
     #[test]
     fn opaque_reference_resolves_once_inside_host_boundary() {
@@ -201,5 +312,49 @@ mod tests {
             .consume(&VaultRef::trusted("raw-secret-or-random-handle"))
             .is_err());
         assert!(vault.request_lease("missing", 30_000).is_err());
+    }
+
+    #[test]
+    fn direct_delivery_moves_secret_only_into_trusted_adapter() {
+        let vault = ChiefVaultRuntime::new();
+        vault.register_secret("browser-session", LeasePayload::new(SECRET.to_vec()));
+        let delivery = RecordingDelivery::default();
+
+        vault
+            .request_direct("browser-session", "browser-agent", &delivery)
+            .expect("trusted delivery should succeed");
+
+        let deliveries = delivery.deliveries.lock().unwrap();
+        assert_eq!(deliveries.len(), 1);
+        assert_eq!(deliveries[0].0, "browser-agent");
+        assert_eq!(deliveries[0].1, SECRET);
+    }
+
+    #[test]
+    fn direct_delivery_fails_closed_before_or_at_adapter_boundary() {
+        let vault = ChiefVaultRuntime::new();
+        vault.register_secret("browser-session", LeasePayload::new(SECRET.to_vec()));
+        let delivery = RecordingDelivery::default();
+
+        assert!(matches!(
+            vault.request_direct("browser-session", "", &delivery),
+            Err(VaultRuntimeError::InvalidConsumerAgentId)
+        ));
+        assert!(matches!(
+            vault.request_direct("missing", "browser-agent", &delivery),
+            Err(VaultRuntimeError::SecretNotFound)
+        ));
+        assert!(delivery.deliveries.lock().unwrap().is_empty());
+
+        let rejecting = RecordingDelivery::rejecting(VaultDirectDeliveryError::Rejected);
+        let error = vault
+            .request_direct("browser-session", "browser-agent", &rejecting)
+            .expect_err("adapter rejection must reach the host");
+        assert!(matches!(
+            error,
+            VaultRuntimeError::DirectDelivery(VaultDirectDeliveryError::Rejected)
+        ));
+        assert!(!format!("{error:?}").contains("runtime-secret"));
+        assert!(!error.to_string().contains("runtime-secret"));
     }
 }
