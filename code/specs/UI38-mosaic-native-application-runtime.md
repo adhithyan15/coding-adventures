@@ -295,12 +295,11 @@ unblocks multiple downstream targets; never count source generation as completio
 - [ ] Implement WebAssembly exports over the same JSON envelopes.
 - [ ] Generate package-independent bindings for the five native backend families.
   - [x] Compose/JVM through the standard JNA binding.
-  - [ ] SwiftUI, XAML, Qt/QML, and Flutter.
+  - [x] SwiftUI through the standard Foundation/C dynamic binding.
+  - [ ] XAML, Qt/QML, and Flutter.
 - [ ] Generate standard effect hosts, beginning with storage and lifecycle.
 - [ ] Add `native-complete` capability/degradation analysis to the compiler.
 - [ ] Add launch-and-dispatch conformance fixtures for every native backend.
-- [ ] Make `mosaic-compile pkg` return a non-zero status for package or emitter
-  failures so CI cannot accept a missing native artifact.
 - [ ] Route every compile entry point through one package-composition pipeline;
   standalone `mosaic-compile` currently inlines dependency layouts without merging
   their MSL, while the artifact builder merges both layout and style.

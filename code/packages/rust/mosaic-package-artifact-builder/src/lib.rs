@@ -1064,10 +1064,20 @@ fn emit_project_shell(
             .map_err(|e| pipeline_emit_err(component, e))?;
             let component_source = r.output.clone();
             if let Some(proj) = r.project {
-                let flat: [(&str, &str); 2] = [
-                    ("Package.swift", &proj.package_swift),
-                    ("README.md", &proj.readme),
-                ];
+                let package_swift =
+                    mosaic_app_bindings::swift_package_with_runtime_binding(&proj.package_swift);
+                let app_swift =
+                    mosaic_app_bindings::swift_app_with_runtime_binding(&proj.app_swift);
+                let runtime_binding = mosaic_app_bindings::swift_runtime_binding();
+                let readme = format!(
+                    "{}\n## Rust application runtime\n\nThis package includes Mosaic's standard SwiftUI binding. Set \
+                     `MOSAIC_APP_LIBRARY` to the Rust application dylib path, or package it as \
+                     `libmosaic_app.dylib`. The generated Foundation host owns the application \
+                     handle, event sequence, snapshots, returned buffers, and teardown.\n",
+                    proj.readme
+                );
+                let flat: [(&str, &str); 2] =
+                    [("Package.swift", &package_swift), ("README.md", &readme)];
                 for (rel, body) in flat {
                     let p = backend_dir.join(rel);
                     write_file(&p, body.as_bytes())?;
@@ -1077,8 +1087,21 @@ fn emit_project_shell(
                 if let Some(parent) = nested.parent() {
                     create_dir_all(parent)?;
                 }
-                write_file(&nested, proj.app_swift.as_bytes())?;
+                write_file(&nested, app_swift.as_bytes())?;
                 written.push(nested);
+
+                let runtime_host = backend_dir.join("Sources/App/MosaicRuntimeHost.swift");
+                write_file(&runtime_host, runtime_binding.host_swift.as_bytes())?;
+                written.push(runtime_host);
+
+                let runtime_header =
+                    backend_dir.join("Sources/CMosaicRuntime/include/CMosaicRuntime.h");
+                write_file(&runtime_header, runtime_binding.header.as_bytes())?;
+                written.push(runtime_header);
+
+                let runtime_loader = backend_dir.join("Sources/CMosaicRuntime/CMosaicRuntime.c");
+                write_file(&runtime_loader, runtime_binding.loader_c.as_bytes())?;
+                written.push(runtime_loader);
 
                 let component_nested = backend_dir.join(format!("Sources/App/{component}.swift"));
                 write_file(&component_nested, component_source.as_bytes())?;
@@ -4345,6 +4368,9 @@ version = "1"
                     "README.md",
                     "Sources/App/App.swift",
                     "Sources/App/Grid.swift",
+                    "Sources/App/MosaicRuntimeHost.swift",
+                    "Sources/CMosaicRuntime/include/CMosaicRuntime.h",
+                    "Sources/CMosaicRuntime/CMosaicRuntime.c",
                 ],
             ),
             (
@@ -4549,6 +4575,49 @@ version = "1"
         assert!(host.contains("class MosaicHost"));
         assert!(host.contains("static MosaicHost? load() => null;"));
         assert!(host.contains("FutureOr<Map<String, Object?>?> handleEvent"));
+    }
+
+    #[test]
+    fn swiftui_project_shell_installs_standard_rust_runtime_binding() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::SwiftUI,
+            emit_project: true,
+            theme: None,
+        })
+        .expect("SwiftUI package build");
+
+        let dir = out.path().join("swiftui");
+        let package = fs::read_to_string(dir.join("Package.swift")).expect("Package.swift");
+        assert!(package.contains("name: \"CMosaicRuntime\""));
+        assert!(package.contains("dependencies: [\"CMosaicRuntime\"]"));
+        let readme = fs::read_to_string(dir.join("README.md")).expect("README.md");
+        assert!(readme.contains("MOSAIC_APP_LIBRARY"));
+        assert!(readme.contains("owns the application handle"));
+
+        let app = fs::read_to_string(dir.join("Sources/App/App.swift")).expect("App.swift");
+        assert!(app.contains("MosaicRuntimeHost.load() ?? MosaicHostBridge.load()"));
+
+        let host = fs::read_to_string(dir.join("Sources/App/MosaicRuntimeHost.swift"))
+            .expect("MosaicRuntimeHost.swift");
+        assert!(host.contains("final class MosaicRuntimeHost"));
+        assert!(host.contains("mosaic_binding_create"));
+        assert!(host.contains("mosaic_binding_dispatch"));
+        assert!(host.contains("mosaic_binding_buffer_free"));
+        assert!(host.contains("mosaic_binding_destroy"));
+        assert!(host.contains("deinit { close() }"));
+
+        let header =
+            fs::read_to_string(dir.join("Sources/CMosaicRuntime/include/CMosaicRuntime.h"))
+                .expect("CMosaicRuntime.h");
+        assert!(header.contains("mosaic_binding_runtime *mosaic_binding_open"));
+        let loader = fs::read_to_string(dir.join("Sources/CMosaicRuntime/CMosaicRuntime.c"))
+            .expect("CMosaicRuntime.c");
+        assert!(loader.contains("dlsym(runtime->library, symbol)"));
+        assert!(loader.contains("mosaic_app_restore"));
     }
 
     #[test]

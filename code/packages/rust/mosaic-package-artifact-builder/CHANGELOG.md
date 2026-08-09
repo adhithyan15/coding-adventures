@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased] - standard SwiftUI Rust runtime binding
+
+- SwiftUI package shells now install Mosaic's package-independent Foundation/C
+  binding and prefer it over legacy package-owned `MosaicHost` adapters.
+- The generated C target dynamically resolves the fixed Rust application ABI,
+  while the Swift host owns startup, event sequencing, snapshots, buffers, and
+  runtime teardown without app-authored platform glue.
+
 ## [Unreleased] - standard Compose Rust runtime binding
 
 - Compose Desktop project shells now install Mosaic's package-independent JNA
