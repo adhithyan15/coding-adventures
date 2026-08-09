@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.14.0";
+pub const VERSION: &str = "0.15.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1083,6 +1083,7 @@ fn parse_sequence_body(
             "note" => parse_sequence_note(cursor, diagram, participant_indices)?,
             "link" | "links" => parse_sequence_links(cursor, diagram, participant_indices)?,
             "properties" => parse_sequence_properties(cursor, diagram, participant_indices)?,
+            "details" => parse_sequence_details(cursor, diagram, participant_indices)?,
             "title" => {
                 cursor.advance();
                 diagram.title = Some(take_sequence_line_text(cursor));
@@ -1205,6 +1206,31 @@ fn parse_sequence_properties(
             target.push(property);
         }
     }
+    Ok(())
+}
+
+fn parse_sequence_details(
+    cursor: &mut TokenCursor,
+    diagram: &mut SequenceDiagram,
+    participant_indices: &mut HashMap<String, usize>,
+) -> Result<(), ParseError> {
+    cursor.advance();
+    let participant = take_sequence_identifier(cursor)?;
+    ensure_sequence_participant(diagram, participant_indices, &participant);
+    cursor
+        .consume_if("COLON")
+        .ok_or_else(|| token_error(cursor.current(), "expected ':' before actor details"))?;
+    let mut reference = String::new();
+    while !cursor.at_eof() && token_name(cursor.current()) != "NEWLINE" {
+        reference.push_str(&cursor.advance().value);
+    }
+    if reference.is_empty() {
+        return Err(token_error(
+            cursor.current(),
+            "expected a host document element ID for actor details",
+        ));
+    }
+    diagram.participants[participant_indices[&participant]].details_reference = Some(reference);
     Ok(())
 }
 
@@ -1693,6 +1719,7 @@ fn upsert_sequence_participant(
         group_id: None,
         links: Vec::new(),
         properties: Vec::new(),
+        details_reference: None,
     });
 }
 
@@ -3233,6 +3260,18 @@ B//-A: reverse stick top
             property.name == "limits" && property.value_json == "{\"daily\":5}"
         }));
     }
+
+    #[test]
+    fn sequence_parses_actor_details_reference() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nparticipant Alice\ndetails Alice: alice-info\n",
+        )
+        .unwrap();
+        assert_eq!(
+            diagram.participants[0].details_reference.as_deref(),
+            Some("alice-info")
+        );
+    }
 }
 #[cfg(test)]
 mod tests {
@@ -3249,7 +3288,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.14.0");
+        assert_eq!(crate::VERSION, "0.15.0");
     }
 
     #[test]

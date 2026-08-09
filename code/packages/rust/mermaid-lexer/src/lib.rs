@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.13.0";
+pub const VERSION: &str = "0.14.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -111,7 +111,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.13.0");
+        assert_eq!(VERSION, "0.14.0");
     }
 
     #[test]
@@ -417,5 +417,14 @@ A\\-B: reverse stick bottom
         assert!(tokens
             .iter()
             .any(|token| token.type_name.as_deref() == Some("JSON_OBJECT")));
+    }
+
+    #[test]
+    fn tokenizes_sequence_actor_details_reference() {
+        let tokens = tokenize_mermaid_sequence("sequenceDiagram\ndetails Alice: alice-info\n");
+        assert!(tokens.iter().any(|token| token.value == "details"));
+        assert!(tokens.iter().any(|token| token.value == "alice"));
+        assert!(tokens.iter().any(|token| token.value == "-"));
+        assert!(tokens.iter().any(|token| token.value == "info"));
     }
 }

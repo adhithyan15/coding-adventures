@@ -120,8 +120,9 @@ branch dividers before existing PaintInstructions render them. Participant
 to place dynamic participant headers, bound lifelines, and emit destruction
 markers. Singular and JSON-map actor-menu links lower through semantic IR and
 layout into PaintScene metadata. Actor `properties` preserve arbitrary JSON
-values through the same pipeline. DOM-referenced `details` remain compatibility
-work. Participant `box` declarations now lower into
+values through the same pipeline. DOM-referenced `details` element IDs also
+survive the pipeline as scene metadata; host-document resolution remains
+embedding-layer compatibility work. Participant `box` declarations now lower into
 semantic groups, lane-enclosing layout geometry, and backend-neutral Paint
 rectangles and labels, including the supported named and `rgb`/`rgba` color
 forms. The family remains partial until those forms and the

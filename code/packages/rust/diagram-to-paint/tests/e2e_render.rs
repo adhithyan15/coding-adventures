@@ -373,6 +373,7 @@ mod apple {
             name: "role".into(),
             value_json: "\"administrator\"".into(),
         });
+        diagram.participants[0].details_reference = Some("user-details".into());
         let layout = layout_sequence_diagram(&diagram);
 
         let shaper = CoreTextShaper;
@@ -419,6 +420,16 @@ mod apple {
                 .and_then(|metadata| metadata.get("sequence.participant.User.property.role"))
                 .map(String::as_str),
             Some("\"administrator\"")
+        );
+        assert_eq!(
+            scene
+                .metadata
+                .as_ref()
+                .and_then(|metadata| {
+                    metadata.get("sequence.participant.User.details_reference")
+                })
+                .map(String::as_str),
+            Some("user-details")
         );
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,

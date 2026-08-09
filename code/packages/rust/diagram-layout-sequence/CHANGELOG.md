@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.11.0 - 2026-08-09
+
+- Preserve actor details references on participant layout items.
+
 ## 0.10.0 - 2026-08-09
 
 - Preserve actor properties on participant layout items.

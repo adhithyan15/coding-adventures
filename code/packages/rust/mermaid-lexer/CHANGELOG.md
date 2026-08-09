@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.14.0
+
+- Tokenize sequence actor `details` references.
+
 ## 0.13.0
 
 - Tokenize sequence actor property objects, including nested JSON values.

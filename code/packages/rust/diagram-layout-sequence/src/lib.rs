@@ -7,7 +7,7 @@ use diagram_ir::{
     SequenceEvent, SequenceNotePlacement,
 };
 
-pub const VERSION: &str = "0.10.0";
+pub const VERSION: &str = "0.11.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -76,6 +76,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 kind: participant.kind.clone(),
                 links: participant.links.clone(),
                 properties: participant.properties.clone(),
+                details_reference: participant.details_reference.clone(),
                 x: center - box_width / 2.0,
                 y: header_y,
                 width: box_width,
@@ -174,6 +175,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                         kind: definition.kind.clone(),
                         links: definition.links.clone(),
                         properties: definition.properties.clone(),
+                        details_reference: definition.details_reference.clone(),
                         x: center - box_width / 2.0,
                         y,
                         width: box_width,
@@ -373,6 +375,7 @@ mod tests {
             group_id: None,
             links: vec![],
             properties: vec![],
+            details_reference: None,
         }
     }
 
