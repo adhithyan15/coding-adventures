@@ -28175,16 +28175,6 @@
         "revisits": 4
       },
       {
-        "atom": "ES-GRAMMAR-ER-FUTURE-SINGULAR",
-        "language": "spanish",
-        "introducedBy": "ES-C17-comer-futuro",
-        "introducedAt": 108,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "ES-GRAMMAR-ER-PRESENT-SINGULAR",
         "language": "spanish",
         "introducedBy": "ES-C07-comer",
@@ -28643,6 +28633,16 @@
           "R3"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "ES-PATTERN-ER-FUTURE-SINGULAR",
+        "language": "spanish",
+        "introducedBy": "ES-C17-comer-futuro",
+        "introducedAt": 108,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "ES-SCRIPT-ACUTE-ACCENT",
