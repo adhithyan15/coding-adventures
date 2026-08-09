@@ -4,6 +4,14 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - native multiline legacy Input lowering
+
+The still-supported UI25 `Input ( multiline: true )` primitive now lowers to
+Qt Quick Controls' native `TextArea`, including value, read-only, placeholder,
+placeholder-backed accessible naming, part identity, change-event, styling, and
+Escape handling. Single-line legacy `Input` reuses the existing `HostInput`
+lowering.
+
 ### Added - live native page-host attachment
 
 Generated Qt shells now register optional host-owned QML types before loading

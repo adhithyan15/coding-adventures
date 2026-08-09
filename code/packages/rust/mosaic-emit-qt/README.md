@@ -110,19 +110,20 @@ Three things to notice:
 | `Image`       | `Image { source: "..." }` or `Image { source: slotName }`                   |
 | `Divider`     | `Rectangle { height: 1; color: "#888"; Layout.fillWidth: true }`            |
 | `Stack`       | `Item { ... }` with `anchors.fill: parent` on each child — Z-axis overlay   |
-| `HostInput`   | `TextInput { text: ...; readOnly: ...; onAccepted/Keys.onEscapePressed }`   |
+| `Input`       | `TextArea { ... }` when multiline; otherwise the `HostInput` lowering       |
+| `HostInput`   | `TextInput` or placeholder-capable `TextField` with native input semantics   |
 | `HostButton`  | `Button { text: ...; enabled: ...; onClicked: ... }` (from Controls 2.15)   |
 | `HostScroll`  | `ScrollView { ... children ... }` (from Controls 2.15)                      |
 | `HostDialog`  | `Popup { modal: ...; visible: ...; closePolicy: ...; contentItem: ColumnLayout { ... } }` (from Controls 2.15) |
 
 The `QtQuick.Controls 2.15` import is added **only when** the layout
-tree uses a Controls-backed primitive (`HostButton`, `HostScroll`, or
-`HostDialog`), keeping the import set minimal for components that
-don't need it.
+tree uses a Controls-backed primitive, including multiline `Input` and
+placeholder-capable `Input`/`HostInput`, keeping the import set minimal for
+components that don't need it.
 
 ### Host primitive prop mappings (UI29 §3)
 
-**`HostInput` (`TextInput`):**
+**`Input` / `HostInput` (`TextArea`, `TextField`, or `TextInput`):**
 
 | moslayout prop          | QML output                                              |
 |---|---|
@@ -130,10 +131,9 @@ don't need it.
 | `value: "literal"`      | `text: "literal"`                                       |
 | `read-only: slot: x`    | `readOnly: x`                                           |
 | `read-only: true/false` | `readOnly: true/false`                                  |
-| `placeholder: "..."`    | Comment only — `TextInput` has no placeholder attr; the |
-|                         | QML idiom is a sibling `Text` shown when `text === ""`. |
-|                         | Deferred to a follow-up PR.                             |
-| `onChange: emit: onE`   | `onTextChanged: e()`                                    |
+| `placeholder: "..."`    | `placeholderText: "..."` on `TextField` / `TextArea`    |
+| `multiline: true`        | `TextArea` for legacy `Input`; Enter inserts a newline   |
+| `onChange: emit: onE`   | `onTextChanged: e(text)` for a one-parameter emit        |
 | `onCommit: emit: onE`   | `onAccepted: e(text)` (Enter)                           |
 | `onCancel: emit: onE`   | `Keys.onEscapePressed: { e(); event.accepted = true }`  |
 
@@ -229,11 +229,6 @@ Several Mosaic features are accepted but not yet emitted:
   signature so downstream callers can build against the stable
   shape, but its properties are not yet inlined into element
   attributes.
-- **`HostInput` placeholder text is not rendered.** `TextInput` has no
-  placeholder attribute; the QML idiom requires a sibling `Text`
-  element. Today the emitter writes a `// placeholder: "..."` comment
-  so the value is at least visible in the generated source.
-
 Each deferred item is intentionally a focused, additive PR.
 
 ## Tests

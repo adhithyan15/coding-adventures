@@ -1274,6 +1274,7 @@ fn emit_qml_tree(
     // own emitter functions, mirroring the React backend's
     // `emit_input_jsx` carve-out for `Input`.
     match node.tag.as_str() {
+        "Input" => return emit_legacy_input_qml(node, depth, ctx),
         "HostInput" => return emit_host_input_qml(node, depth, ctx),
         "HostButton" => return emit_host_button_qml(node, depth, ctx),
         "HostDialog" => return emit_host_dialog_qml(node, depth, ctx),
@@ -1676,13 +1677,13 @@ fn primitive_to_qml(tag: &str) -> Result<QmlElement, PipelineEmitError> {
             is_text: false,
             is_image: false,
         },
-        // `HostInput`, `HostButton`, `HostDialog`, `HostCheckbox`, and
+        // `Input`, `HostInput`, `HostButton`, `HostDialog`, `HostCheckbox`, and
         // `HostRadio` are handled by
         // their own emitters earlier in `emit_qml_tree`; reaching this
         // branch would be an internal logic error.
-        "HostInput" | "HostButton" | "HostDialog" | "HostCheckbox" | "HostRadio"
+        "Input" | "HostInput" | "HostButton" | "HostDialog" | "HostCheckbox" | "HostRadio"
         | "HostLink" | "HostTooltip" | "HostNumberInput" => unreachable!(
-            "HostInput/HostButton/HostDialog/HostCheckbox/HostRadio/HostLink/HostTooltip/HostNumberInput are handled by dedicated emitters; should not reach primitive_to_qml"
+            "Input/HostInput/HostButton/HostDialog/HostCheckbox/HostRadio/HostLink/HostTooltip/HostNumberInput are handled by dedicated emitters; should not reach primitive_to_qml"
         ),
         other => return Err(PipelineEmitError::UnknownPrimitive(other.to_string())),
     })
@@ -1872,11 +1873,38 @@ fn emit_host_input_qml(
     depth: usize,
     ctx: &EmitCtx,
 ) -> Result<String, PipelineEmitError> {
+    emit_text_input_qml(node, depth, ctx, false)
+}
+
+/// Lower the still-supported UI25 `Input` primitive.
+///
+/// UI29 deliberately narrowed `HostInput` to a single-line control, but the
+/// Notes package still needs UI25's multiline editor contract. Keep the
+/// single-line form on the normal host-input path and use Qt Quick Controls'
+/// native `TextArea` for `multiline: true`.
+fn emit_legacy_input_qml(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx,
+) -> Result<String, PipelineEmitError> {
+    let multiline = find_keyword_prop(node, "multiline") == Some("true");
+    emit_text_input_qml(node, depth, ctx, multiline)
+}
+
+/// Shared lowering for Qt's single-line and multiline text controls.
+fn emit_text_input_qml(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx,
+    multiline: bool,
+) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
     let placeholder_line = build_placeholder_text_attribute(node);
-    let control_tag = if placeholder_line.is_some() {
+    let control_tag = if multiline {
+        "TextArea"
+    } else if placeholder_line.is_some() {
         "TextField"
     } else {
         "TextInput"
@@ -1913,7 +1941,19 @@ fn emit_host_input_qml(
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
 
-    // placeholderText is available when HostInput lowers to TextField.
+    // Qt exposes TextArea's native editable-text role. Use its placeholder as
+    // the default accessible name too, matching SwiftUI's legacy Input lowering
+    // and ensuring the unlabeled legacy primitive is still announced usefully.
+    if multiline {
+        if let Some(value) = placeholder_line
+            .as_deref()
+            .and_then(|line| line.strip_prefix("placeholderText: "))
+        {
+            writeln!(out, "{inner_pad}Accessible.name: {value}").unwrap();
+        }
+    }
+
+    // placeholderText is available on TextField and TextArea.
     if let Some(line) = placeholder_line {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
@@ -1926,12 +1966,15 @@ fn emit_host_input_qml(
         writeln!(out, "{inner_pad}onTextChanged: {camel}({arg})").unwrap();
     }
 
-    // onAccepted: e(<arg>)
-    if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
-        let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
-        validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
-        let arg = pick_signal_arg(emit_name, ctx.emits);
-        writeln!(out, "{inner_pad}onAccepted: {camel}({arg})").unwrap();
+    // TextArea has no `accepted` signal: Enter inserts a newline. The
+    // single-line controls preserve HostInput's Enter-to-commit contract.
+    if !multiline {
+        if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
+            let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+            validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+            let arg = pick_signal_arg(emit_name, ctx.emits);
+            writeln!(out, "{inner_pad}onAccepted: {camel}({arg})").unwrap();
+        }
     }
 
     // Keys.onEscapePressed: { e(<arg>); event.accepted = true }
@@ -2801,7 +2844,8 @@ fn build_dialog_title_text_line(node: &LayoutNode) -> Option<String> {
 }
 
 /// True iff any node in the layout tree lowers to a `QtQuick.Controls`
-/// element. Today: `HostInput` with `placeholder` → `TextField`,
+/// element. Today: `HostInput`/single-line legacy `Input` with
+/// `placeholder` → `TextField`, multiline legacy `Input` → `TextArea`,
 /// `HostButton` → `Button`, `HostScroll` → `ScrollView`,
 /// `HostDialog` → `Popup`, `HostCheckbox` → `CheckBox`,
 /// `HostRadio` → `RadioButton`, `HostTooltip` → `ToolTip` attached
@@ -2809,6 +2853,12 @@ fn build_dialog_title_text_line(node: &LayoutNode) -> Option<String> {
 /// NOT here because it lowers to a plain `Text` element with rich-
 /// text + onLinkActivated, not a QtQuick.Controls widget.
 fn tree_needs_controls_import(node: &LayoutNode) -> bool {
+    if node.tag == "Input"
+        && (find_keyword_prop(node, "multiline") == Some("true")
+            || build_placeholder_text_attribute(node).is_some())
+    {
+        return true;
+    }
     if node.tag == "HostInput" && build_placeholder_text_attribute(node).is_some() {
         return true;
     }
@@ -4530,6 +4580,89 @@ mod tests {
             "missing slot placeholder binding in:\n{}",
             result.output
         );
+    }
+
+    #[test]
+    fn legacy_multiline_input_emits_native_text_area() {
+        let m = component(
+            "Notes",
+            vec![slot("body-value", SlotType::Text, true)],
+            vec![emit_decl(
+                "onBodyChange",
+                vec![param("value", EmitPayloadType::Text)],
+            )],
+        );
+        let l = LayoutDef {
+            component_name: "Notes".to_string(),
+            root: LayoutNode {
+                tag: "Input".to_string(),
+                part_name: Some("notes-body-input".to_string()),
+                props: vec![
+                    LayoutProp {
+                        name: "value".to_string(),
+                        value: LayoutPropValue::SlotRef("body-value".to_string()),
+                    },
+                    LayoutProp {
+                        name: "placeholder".to_string(),
+                        value: LayoutPropValue::String("Write something…".to_string()),
+                    },
+                    LayoutProp {
+                        name: "multiline".to_string(),
+                        value: LayoutPropValue::Keyword("true".to_string()),
+                    },
+                    LayoutProp {
+                        name: "onChange".to_string(),
+                        value: LayoutPropValue::EmitRef("onBodyChange".to_string()),
+                    },
+                    LayoutProp {
+                        name: "onCommit".to_string(),
+                        value: LayoutPropValue::EmitRef("onBodyChange".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+
+        let result = from_pipeline(&m, &l, &empty_style("Notes")).unwrap();
+        assert!(result.output.contains("import QtQuick.Controls 2.15"));
+        assert!(result.output.contains("TextArea {"));
+        assert!(result.output.contains("objectName: \"notes-body-input\""));
+        assert!(result.output.contains("text: bodyValue"));
+        assert!(result
+            .output
+            .contains("placeholderText: \"Write something…\""));
+        assert!(result
+            .output
+            .contains("Accessible.name: \"Write something…\""));
+        assert!(result.output.contains("onTextChanged: bodyChange(text)"));
+        assert!(
+            !result.output.contains("onAccepted:"),
+            "TextArea Enter must insert a newline rather than commit:\n{}",
+            result.output
+        );
+    }
+
+    #[test]
+    fn legacy_single_line_input_reuses_native_host_input_lowering() {
+        let m = component("Search", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "Search".to_string(),
+            root: LayoutNode {
+                tag: "Input".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "placeholder".to_string(),
+                    value: LayoutPropValue::String("Search".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+
+        let result = from_pipeline(&m, &l, &empty_style("Search")).unwrap();
+        assert!(result.output.contains("import QtQuick.Controls 2.15"));
+        assert!(result.output.contains("TextField {"));
+        assert!(result.output.contains("placeholderText: \"Search\""));
+        assert!(!result.output.contains("TextArea {"));
     }
 
     // -------- Test 20a: HostInput onCommit (parameterless signal) --------
