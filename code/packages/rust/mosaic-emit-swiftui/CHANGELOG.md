@@ -4,6 +4,14 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - Native multiline Input compatibility
+
+The still-supported UI25 `Input` primitive now lowers to an accessible SwiftUI
+`TextEditor` when `multiline: true`, including visible placeholder text,
+dispatch-driven editing, maximum-length enforcement, and the authored MLL part
+identifier. Trestle Notes can therefore compile without collapsing its body
+editor into a single-line field.
+
 ### Added - optional generated-shell interaction acceptance
 
 Generated SwiftUI applications now call an optional package-host interaction

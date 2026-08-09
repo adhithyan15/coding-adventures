@@ -2156,6 +2156,11 @@ fn emit_view_tree(
         // primitives backed by SwiftUI's `TextField` and `Button`
         // respectively. They read slot/emit refs off the node props; see
         // the per-function doc comments below for the full mapping.
+        // UI25's legacy `Input` remains the only authored primitive with a
+        // multiline contract. Keep accepting it until the kernel grows a
+        // dedicated multiline control; single-line Input shares HostInput's
+        // native lowering while multiline Input uses TextEditor.
+        "Input" => emit_legacy_input(node, indent)?,
         "HostInput" => emit_host_input(node, indent)?,
         "HostButton" => emit_host_button(node, indent, emits, for_payload)?,
         "HostSurface" => emit_host_surface(node, indent),
@@ -2617,6 +2622,85 @@ fn swift_text_expression(node: &LayoutNode) -> String {
 // =====================================================================
 // UI29 kernel partial — HostInput / HostButton emitters
 // =====================================================================
+
+/// Lower the still-supported UI25 `Input` primitive. `HostInput` deliberately
+/// covers only the single-line kernel surface, while UI25 `Input` also carries
+/// the multiline text-editor contract used by Trestle Notes.
+fn emit_legacy_input(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+    if find_keyword_prop(node, "multiline") != Some("true") {
+        return emit_host_input(node, indent);
+    }
+
+    let pad = " ".repeat(indent);
+    let child_pad = " ".repeat(indent + 4);
+    let placeholder = find_string_prop(node, "placeholder").unwrap_or("");
+    let placeholder_lit = format!("\"{}\"", escape_swift_string(placeholder));
+
+    let value_expr = match node.props.iter().find(|p| p.name == "value") {
+        Some(p) => match &p.value {
+            LayoutPropValue::SlotRef(slot) => {
+                let camel = to_camel_case_first_lower(slot);
+                validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+                camel
+            }
+            LayoutPropValue::Expr(text) => text.clone(),
+            LayoutPropValue::String(text) => format!("\"{}\"", escape_swift_string(text)),
+            _ => "\"\"".to_string(),
+        },
+        None => "\"\"".to_string(),
+    };
+
+    let max_length = node.props.iter().find_map(|prop| {
+        if prop.name == "max-length" {
+            if let LayoutPropValue::Number(value) = &prop.value {
+                return Some(value.max(0.0) as u64);
+            }
+        }
+        None
+    });
+
+    let text_binding = match find_emit_ref_prop(node, "onChange") {
+        Some(emit_name) if find_slot_ref_prop(node, "value").is_some() => {
+            let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+            validate_emit_name(&case_name)?;
+            let new_value = max_length
+                .map(|limit| format!("String($0.prefix({limit}))"))
+                .unwrap_or_else(|| "$0".to_string());
+            format!(
+                "Binding(get: {{ {value_expr} }}, set: {{ dispatch(.{case_name}(value: {new_value})) }})"
+            )
+        }
+        _ => format!(".constant({value_expr})"),
+    };
+
+    let mut output = format!("{pad}ZStack(alignment: .topLeading) {{\n");
+    if !placeholder.is_empty() {
+        output.push_str(&format!(
+            "{child_pad}if {value_expr}.isEmpty {{\n{child_pad}    Text({placeholder_lit})\n{child_pad}        .foregroundColor(.secondary)\n{child_pad}        .padding(.horizontal, 5)\n{child_pad}        .padding(.vertical, 8)\n{child_pad}        .allowsHitTesting(false)\n{child_pad}        .accessibilityHidden(true)\n{child_pad}}}\n"
+        ));
+    }
+    output.push_str(&format!("{child_pad}TextEditor(text: {text_binding})"));
+    if !placeholder.is_empty() {
+        output.push_str(&format!(".accessibilityLabel({placeholder_lit})"));
+    }
+    if let Some(part_name) = &node.part_name {
+        output.push_str(&format!(
+            ".accessibilityIdentifier(\"{}\")",
+            escape_swift_string(part_name)
+        ));
+    }
+    if let Some(slot) = find_slot_ref_prop(node, "read-only") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        output.push_str(&format!(".disabled({camel})"));
+    } else if let Some(keyword) = find_keyword_prop(node, "read-only") {
+        if keyword == "true" || keyword == "false" {
+            output.push_str(&format!(".disabled({keyword})"));
+        }
+    }
+    output.push_str(&format!("\n{pad}}}\n"));
+    Ok(output)
+}
 
 /// Lower a UI29 `HostInput` node to a SwiftUI `TextField`.
 ///
@@ -5081,6 +5165,46 @@ mod tests {
             !out.contains(".onChange(of:"),
             "the setter is the dispatch path; no separate .onChange modifier, got:\n{out}"
         );
+    }
+
+    #[test]
+    fn legacy_multiline_input_emits_accessible_text_editor() {
+        let input = LayoutNode {
+            tag: "Input".to_string(),
+            part_name: Some("notes-body-input".to_string()),
+            props: vec![
+                prop_string("placeholder", "Write something…"),
+                prop_slot_ref("value", "body-value"),
+                prop_keyword("multiline", "true"),
+                LayoutProp {
+                    name: "max-length".to_string(),
+                    value: LayoutPropValue::Number(2_000.0),
+                },
+                prop_emit_ref("onChange", "onBodyChange"),
+            ],
+            children: vec![],
+        };
+        let layout = layout_with("Notes", container_node("Box", vec![input]));
+        let out = from_pipeline(
+            &component(
+                "Notes",
+                vec![slot("body-value", SlotType::Text, true)],
+                vec![emit(
+                    "onBodyChange",
+                    vec![param("value", EmitPayloadType::Text)],
+                )],
+            ),
+            &layout,
+            &empty_style("Notes"),
+        )
+        .unwrap()
+        .output;
+
+        assert!(out.contains("TextEditor(text: Binding(get: { bodyValue }"));
+        assert!(out.contains("String($0.prefix(2000))"));
+        assert!(out.contains("Text(\"Write something…\")"));
+        assert!(out.contains(".accessibilityLabel(\"Write something…\")"));
+        assert!(out.contains(".accessibilityIdentifier(\"notes-body-input\")"));
     }
 
     // ---------------------------------------------------------------------

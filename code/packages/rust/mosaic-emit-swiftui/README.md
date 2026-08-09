@@ -116,6 +116,7 @@ does not install automatic press tracking.
 | `Divider`        | `Divider()`                                   |
 | `Stack`          | `ZStack { ... }` *(v0.2.0; UI29 kernel)*      |
 | `HostScroll`     | `ScrollView { ... }` *(v0.2.0; UI29 kernel)*  |
+| `Input`          | `TextEditor` when `multiline: true`; otherwise the native `TextField` path *(UI25 compatibility)* |
 | `HostInput`      | `TextField` with a dispatching `Binding` when `onChange` is wired *(UI29 kernel)* |
 | `HostButton`     | `Button(action: { dispatch(.tap) }) { Text(label) }` *(v0.2.0; UI29 kernel)* |
 | `HostSurface`    | Host-supplied `AnyView` from a `node` slot          |
