@@ -34,6 +34,13 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
   and right upright form one unbroken pen-down run with zero lifts, matching the
   Frame 9 source and Language Ladder's font-checked path.
 
+### Added - verified Tamil ல handwriting
+
+- Record the cited four-movement order for Tamil ல: its outward spiral, middle
+  descent, deep right-hand turn, and open tip form one unbroken pen-down run
+  with zero lifts, matching the next row of Frame 9 and Language Ladder's
+  font-checked path.
+
 ### Added - generated lesson figures
 
 - Generate deterministic etymology-route SVGs from the canonical lesson `roots`

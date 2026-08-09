@@ -59,6 +59,8 @@ const KA = DUCTUS["க"];
 const kaOutline = tamilOutline("க");
 const VA = DUCTUS["வ"];
 const vaOutline = tamilOutline("வ");
+const LA = DUCTUS["ல"];
+const laOutline = tamilOutline("ல");
 
 /** Walk a node tree, collecting every node the predicate accepts. */
 function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = []): SvgNode[] {
@@ -70,13 +72,14 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds all six authored Tamil letters", () => {
+  it("finds all seven authored Tamil letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
     expect(ductusFor("இ")?.glyph).toBe("இ");
     expect(ductusFor("க")?.glyph).toBe("க");
     expect(ductusFor("வ")?.glyph).toBe("வ");
+    expect(ductusFor("ல")?.glyph).toBe("ல");
   });
 
   it("returns undefined for a letter nobody has authored a stroke order for", () => {
@@ -404,6 +407,30 @@ describe("வ — a real cited unbroken five-movement filmstrip", () => {
     const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
     expect(done).toHaveLength(0);
     expect(pen.attrs.d).toBe(penPathD(VA.strokes[0], 1));
+  });
+});
+
+describe("ல — a real cited unbroken four-movement filmstrip", () => {
+  const steps = ductusSteps(LA);
+  const strip = ductusFilmstrip(LA, laOutline);
+
+  it("keeps every movement in the same pen-down run", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0]);
+  });
+
+  it("reports four movements in one unbroken stroke", () => {
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 4 movements");
+  });
+
+  it("finishes the sole stroke without any completed-stroke overlay", () => {
+    const last = strip.frames[3];
+    const done = byTag(last, "path").filter((path) => path.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
+    expect(done).toHaveLength(0);
+    expect(pen.attrs.d).toBe(penPathD(LA.strokes[0], 1));
   });
 });
 
