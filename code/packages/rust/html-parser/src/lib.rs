@@ -4663,7 +4663,9 @@ impl HtmlParser {
                             ));
                             self.open_elements.pop();
                         }
-                        if (self.is_fragment || self.has_open_element("body"))
+                        if (self.is_fragment
+                            || self.has_open_element("body")
+                            || self.current_element_is("plaintext"))
                             && self.has_disallowed_authored_open_element_for_eof()
                         {
                             self.diagnostics.push(ParserDiagnostic::new(
@@ -4968,6 +4970,10 @@ impl HtmlParser {
             && self.current_element_is("frameset")
             && !matches!(name.as_str(), "frame" | "frameset" | "noframes")
         {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-start-tag-in-frameset",
+                format!("start tag `<{name}>` in a frameset was ignored"),
+            ));
             return;
         }
         if !in_foreign_content
@@ -4977,6 +4983,10 @@ impl HtmlParser {
             && name != "html"
             && name != "frameset"
         {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-start-tag-after-frameset",
+                format!("start tag `<{name}>` after a frameset was ignored"),
+            ));
             return;
         }
         if !in_foreign_content
@@ -4986,6 +4996,10 @@ impl HtmlParser {
             && name != "html"
             && name != "frameset"
         {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-start-tag-after-frameset",
+                format!("start tag `<{name}>` after a frameset was ignored"),
+            ));
             return;
         }
         if !in_foreign_content
@@ -8957,7 +8971,7 @@ fn drain_parser_tokens(
         parser.process_lexer_token(token, final_drain);
 
         let next_context = if let Some(name) = start_tag_name {
-            (parser.current_namespace().is_none())
+            (parser.current_namespace().is_none() && parser.current_element_is(&name))
                 .then(|| {
                     HtmlLexContext::for_element_text_with_scripting(&name, parser.options.scripting)
                 })
@@ -31857,6 +31871,67 @@ mod tests {
                 )
             ]
         );
+    }
+
+    #[test]
+    fn reports_plaintext_eof_across_document_shell_and_template_contexts() {
+        for source in [
+            "<!doctype html><html><plaintext></plaintext>",
+            "<!doctype html><head><plaintext></plaintext>",
+            "<!doctype html><template><plaintext>a</template>b",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .any(|diagnostic| { diagnostic.code == "eof-with-unclosed-elements" }),
+                "source {source:?}"
+            );
+        }
+
+        let noscript = parse_html_with_diagnostics_and_options(
+            "<!doctype html><html><noscript><plaintext></plaintext>",
+            HtmlParseOptions {
+                scripting: HtmlScriptingMode::Disabled,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+        assert!(noscript
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| { diagnostic.code == "eof-with-unclosed-elements" }));
+    }
+
+    #[test]
+    fn rejected_plaintext_does_not_switch_lexer_state_after_frameset() {
+        for (source, code) in [
+            (
+                "<!doctype html><frameset><plaintext></plaintext>",
+                "unexpected-start-tag-in-frameset",
+            ),
+            (
+                "<!doctype html><frameset></frameset><plaintext></plaintext>",
+                "unexpected-start-tag-after-frameset",
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .any(|diagnostic| diagnostic.code == code),
+                "source {source:?}"
+            );
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .any(|diagnostic| diagnostic.code == "unexpected-end-tag"),
+                "source {source:?}"
+            );
+        }
     }
 
     #[test]
