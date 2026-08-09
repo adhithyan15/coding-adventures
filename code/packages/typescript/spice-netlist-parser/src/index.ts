@@ -1482,6 +1482,15 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("BJT ISC must be finite and non-negative");
   }
+  const bjtBaseCollectorLeakageEmissionCoefficient = params.get("NC");
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtBaseCollectorLeakageEmissionCoefficient !== undefined &&
+    (!Number.isFinite(bjtBaseCollectorLeakageEmissionCoefficient) ||
+      bjtBaseCollectorLeakageEmissionCoefficient <= 0.0)
+  ) {
+    throw new NetlistParseError("BJT NC must be finite and positive");
+  }
   const gateSourceCapacitance = params.get("CGS") ?? params.get("CGS0");
   if (
     (kind === "NJF" || kind === "PJF") &&
@@ -2213,6 +2222,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       baseEmitterLeakageCurrent,
       model.params.get("NE") ?? 1.0,
       baseCollectorLeakageCurrent,
+      model.params.get("NC") ?? 2.0,
     );
   }
   if (prefix === "J") {
