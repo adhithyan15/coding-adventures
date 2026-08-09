@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add a bounded authenticated `PackageTrust` record that must be delivered
+  exactly once before a child can announce independently verified readiness.
 - Add authenticated channel receive, publish, and acknowledge requests plus
   provider-neutral text completion requests and responses.
 - Enforce bounded binary fields, canonical UUID-v7 identities, one in-flight

@@ -50,9 +50,11 @@ stream is terminal for that child.
 After spawning, the parent writes one `BootstrapOffer` and waits for one
 `ClientHello`. The wait has a non-zero configured real-time bound. The accepted
 secure channel is wrapped in `OrchestratorControl`. Subsequent framed records
-are encrypted host-control frames. The child-side helper performs the inverse
-bootstrap over any `Read` and `Write`, then exposes only `ready`, `heartbeat`,
-and `receive_terminate` operations.
+are encrypted host-control frames. Before accepting readiness, the parent sends
+the exact relevant package-signing public trust selected by its verified package
+snapshot. The child-side helper performs the inverse bootstrap over any `Read`
+and `Write`, receives that authenticated trust, then exposes readiness, heartbeat,
+termination, and data-plane operations.
 
 ## Package and Identity Safety
 
@@ -64,7 +66,8 @@ Before every actual spawn, including a restart, the adapter:
    `HostRegistration`; and
 3. refuses to launch on any verification or identity mismatch.
 
-The child independently verifies its package before sending
+The child constructs its own one-key `PackageKeyring` from the authenticated
+public trust, independently re-reads and verifies its package, and only then sends
 `Ready(package_hash)`. A mismatched authenticated readiness record closes the
 control endpoint and terminates the child.
 
@@ -150,7 +153,8 @@ The package must cover:
 - zero-length, oversized, truncated, and valid framed records;
 - invalid configuration and stable redacted diagnostics;
 - signature or registered-hash failure before process spawn;
-- real cross-platform child bootstrap, matching readiness, heartbeat, and
+- real cross-platform child bootstrap, authenticated public package trust,
+  independent package verification, matching readiness, heartbeat, and
   graceful termination;
 - real cross-platform child exchanges for every data-plane operation over the
   established secure process pipes;

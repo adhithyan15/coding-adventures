@@ -3,7 +3,9 @@
 `chief-of-staff-process-supervisor` is the concrete OS-process authority for
 D18 Chief hosts. It re-verifies a registered signed package immediately before
 each spawn, owns and reaps the child, bootstraps a fresh UUID-v7 secure channel,
-and reports readiness and heartbeat only after authenticated control messages.
+delivers the exact relevant public package trust over that authenticated channel,
+and reports readiness and heartbeat only after the child independently verifies
+the package with that trust.
 The single configured host executable receives a final reserved
 `--package-runtime deno|skill` pair derived from that verified package snapshot,
 giving the production host a fail-closed runtime-dispatch seam without ambient

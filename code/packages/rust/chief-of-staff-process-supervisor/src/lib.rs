@@ -10,14 +10,17 @@
 use chief_of_staff_channel_crypto::ChannelId;
 use chief_of_staff_host_control_protocol::{
     ChildControl, ChildEvent, CompletionCall, DataPlaneRequest, DataPlaneResponse,
-    OrchestratorControl, OrchestratorEvent,
+    OrchestratorControl, OrchestratorEvent, PackageTrust, PackageTrustType,
 };
-use chief_of_staff_host_runtime::{verify_agent_package, AgentPackageRuntime, PackageKeyring};
+use chief_of_staff_host_runtime::{
+    verify_agent_package, AgentPackageRuntime, PackageKeyType, PackageKeyring, TrustedPackageKey,
+};
 use chief_of_staff_secure_host_channel::{
     BootstrapOffer, ChildBootstrap, ClientHello, HostId, OrchestratorBootstrap, SessionId,
 };
 use chief_of_staff_service_reconciler::{HostSupervisor, SupervisorObservation};
 use chief_of_staff_service_registry::{HostName, HostRegistration};
+use chief_of_staff_tool_api::PrivilegeTier;
 use coding_adventures_x3dh::IdentityKeyPair;
 use core::fmt::{self, Display, Formatter};
 use std::collections::BTreeMap;
@@ -410,6 +413,11 @@ impl ProcessHostSupervisor {
         if package.digest() != *registration.package_hash() {
             return Err(ProcessSupervisorError::PackageMismatch);
         }
+        let package_trust = self
+            .keyring
+            .trusted_key(package.key_id())
+            .ok_or(ProcessSupervisorError::PackageVerification)
+            .and_then(package_trust_record)?;
 
         let session = self.sessions.next_session()?;
         let host = HostId::new(registration.host_name().as_str().to_owned())
@@ -493,8 +501,13 @@ impl ProcessHostSupervisor {
             let channel = bootstrap
                 .accept(&hello)
                 .map_err(|_| ProcessSupervisorError::Bootstrap)?;
-            OrchestratorControl::new(channel, *registration.package_hash())
-                .map_err(|_| ProcessSupervisorError::Control)
+            let mut control = OrchestratorControl::new(channel, *registration.package_hash())
+                .map_err(|_| ProcessSupervisorError::Control)?;
+            let trust = control
+                .provide_package_trust(package_trust)
+                .map_err(|_| ProcessSupervisorError::Control)?;
+            write_record(&mut stdin, &trust)?;
+            Ok(control)
         })();
 
         match startup {
@@ -695,6 +708,21 @@ impl<R: Read, W: Write> ChildProcessControl<R, W> {
         })
     }
 
+    /// Receive the exact authenticated public trust required for package verification.
+    pub fn receive_package_trust(&mut self) -> Result<TrustedPackageKey, ProcessSupervisorError> {
+        let frame = read_record(&mut self.reader)?;
+        match self
+            .control
+            .receive_orchestrator(&frame)
+            .map_err(|_| ProcessSupervisorError::Control)?
+        {
+            OrchestratorEvent::PackageTrust(trust) => trusted_package_key(trust),
+            OrchestratorEvent::Terminate | OrchestratorEvent::Response(_) => {
+                Err(ProcessSupervisorError::Control)
+            }
+        }
+    }
+
     /// Send one authenticated readiness record with the independently verified hash.
     pub fn ready(&mut self, package_hash: [u8; 32]) -> Result<(), ProcessSupervisorError> {
         let frame = self
@@ -774,7 +802,9 @@ impl<R: Read, W: Write> ChildProcessControl<R, W> {
             .map_err(|_| ProcessSupervisorError::Control)?
         {
             OrchestratorEvent::Terminate => Ok(()),
-            OrchestratorEvent::Response(_) => Err(ProcessSupervisorError::Control),
+            OrchestratorEvent::PackageTrust(_) | OrchestratorEvent::Response(_) => {
+                Err(ProcessSupervisorError::Control)
+            }
         }
     }
 
@@ -795,8 +825,51 @@ impl<R: Read, W: Write> ChildProcessControl<R, W> {
             .map_err(|_| ProcessSupervisorError::Control)?
         {
             OrchestratorEvent::Response(response) => Ok(response),
-            OrchestratorEvent::Terminate => Err(ProcessSupervisorError::Control),
+            OrchestratorEvent::PackageTrust(_) | OrchestratorEvent::Terminate => {
+                Err(ProcessSupervisorError::Control)
+            }
         }
+    }
+}
+
+fn package_trust_record(key: &TrustedPackageKey) -> Result<PackageTrust, ProcessSupervisorError> {
+    let key_type = match key.key_type {
+        PackageKeyType::Production => PackageTrustType::Production,
+        PackageKeyType::Developer => PackageTrustType::Developer,
+        PackageKeyType::ThirdParty => PackageTrustType::ThirdParty,
+    };
+    PackageTrust::new(
+        &key.key_id,
+        key_type,
+        key.public_key,
+        privilege_tier_number(key.maximum_tier),
+    )
+    .map_err(|_| ProcessSupervisorError::PackageVerification)
+}
+
+fn trusted_package_key(trust: PackageTrust) -> Result<TrustedPackageKey, ProcessSupervisorError> {
+    let key_type = match trust.key_type() {
+        PackageTrustType::Production => PackageKeyType::Production,
+        PackageTrustType::Developer => PackageKeyType::Developer,
+        PackageTrustType::ThirdParty => PackageKeyType::ThirdParty,
+    };
+    let maximum_tier = match trust.maximum_tier() {
+        0 => PrivilegeTier::Tier0,
+        1 => PrivilegeTier::Tier1,
+        2 => PrivilegeTier::Tier2,
+        3 => PrivilegeTier::Tier3,
+        _ => return Err(ProcessSupervisorError::Control),
+    };
+    TrustedPackageKey::new(trust.key_id(), key_type, trust.public_key(), maximum_tier)
+        .map_err(|_| ProcessSupervisorError::Control)
+}
+
+fn privilege_tier_number(tier: PrivilegeTier) -> u8 {
+    match tier {
+        PrivilegeTier::Tier0 => 0,
+        PrivilegeTier::Tier1 => 1,
+        PrivilegeTier::Tier2 => 2,
+        PrivilegeTier::Tier3 => 3,
     }
 }
 
@@ -1056,6 +1129,9 @@ mod tests {
         let child = thread::spawn(move || {
             let mut control = ChildProcessControl::bootstrap(child_reader, child_writer).unwrap();
             assert_eq!(control.session_id(), session);
+            let trust = control.receive_package_trust().unwrap();
+            assert_eq!(trust.key_id, "prod-memory");
+            assert_eq!(trust.public_key, [19; 32]);
             control.ready(package_hash).unwrap();
             control.heartbeat().unwrap();
             control.receive_terminate().unwrap();
@@ -1065,6 +1141,13 @@ mod tests {
         let hello = ClientHello::from_bytes(&read_record(&mut parent_reader).unwrap()).unwrap();
         let channel = bootstrap.accept(&hello).unwrap();
         let mut control = OrchestratorControl::new(channel, package_hash).unwrap();
+        let trust = control
+            .provide_package_trust(
+                PackageTrust::new("prod-memory", PackageTrustType::Production, [19; 32], 3)
+                    .unwrap(),
+            )
+            .unwrap();
+        write_record(&mut parent_writer, &trust).unwrap();
         let ready = read_record(&mut parent_reader).unwrap();
         assert!(matches!(
             control.receive_child(&ready, 10).unwrap(),

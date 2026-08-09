@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Deliver the exact relevant public package key, trust class, and tier over the
+  fresh child session, removing the test child's hard-coded verification key.
 - Pass the authenticated package runtime to the single configured host program
   as the reserved final `--package-runtime deno|skill` argument pair.
 - Carry bounded correlated channel and completion exchanges over the established
