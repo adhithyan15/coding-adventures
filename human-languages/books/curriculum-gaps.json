@@ -22,20 +22,20 @@
     "legacySchemaTracks": 0,
     "mixedSchemaTracks": 19,
     "version2SchemaTracks": 3,
-    "lessonsWithoutLevel": 99,
+    "lessonsWithoutLevel": 98,
     "rampOverBudgetLessons": 40,
     "scriptRampOverBudgetLessons": 61,
     "lessonsOpeningMultipleScripts": 5,
-    "lessonsWithoutSequence": 483,
-    "forwardReviews": 273,
-    "atomsNeverRevisited": 474,
-    "forwardReferences": 468,
+    "lessonsWithoutSequence": 477,
+    "forwardReviews": 267,
+    "atomsNeverRevisited": 472,
+    "forwardReferences": 462,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 27,
     "chapterGateCleanTracks": 12,
     "drivableLessons": 1507,
     "drivablePercent": 90,
-    "chaptersWithoutDrivablePrefix": 41,
+    "chaptersWithoutDrivablePrefix": 42,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -1787,8 +1787,8 @@
         "status": "mixed",
         "lessonCount": 177,
         "versions": {
-          "1": 56,
-          "2": 121
+          "1": 50,
+          "2": 127
         }
       },
       {
@@ -2366,14 +2366,14 @@
     "totalLessons": 1669,
     "byLevel": {
       "pre-A1": 866,
-      "A1": 301,
+      "A1": 302,
       "A2": 395,
       "B1": 8,
       "B2": 0,
       "C1": 0,
       "C2": 0
     },
-    "unmapped": 99,
+    "unmapped": 98,
     "mappedPercent": 94,
     "tracks": [
       {
@@ -2651,14 +2651,14 @@
         "lessonCount": 177,
         "byLevel": {
           "pre-A1": 61,
-          "A1": 33,
+          "A1": 34,
           "A2": 62,
           "B1": 8,
           "B2": 0,
           "C1": 0,
           "C2": 0
         },
-        "unmapped": 13,
+        "unmapped": 12,
         "reach": "B1"
       },
       {
@@ -3313,8 +3313,8 @@
       {
         "language": "spanish",
         "lessonCount": 177,
-        "measurable": 115,
-        "unmeasurable": 62,
+        "measurable": 120,
+        "unmeasurable": 57,
         "lessonViolations": 0,
         "chapterViolations": 4
       },
@@ -4320,7 +4320,7 @@
     "summary": {
       "lessonViolations": 40,
       "chapterViolations": 24,
-      "unmeasurableLessons": 573,
+      "unmeasurableLessons": 568,
       "measurablePercent": 66,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
@@ -11077,136 +11077,6 @@
         "detail": "no declared reading order; position is a fallback, not a fact"
       },
       {
-        "lessonId": "ES-C07-beber",
-        "language": "spanish",
-        "chapter": 7,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C07-beber",
-        "language": "spanish",
-        "chapter": 7,
-        "kind": "forward-review",
-        "other": "ES-C07-comer",
-        "detail": "reviews ES-C07-comer, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C07-beber",
-        "language": "spanish",
-        "chapter": 7,
-        "kind": "forward-review",
-        "other": "ES-C07-vivir",
-        "detail": "reviews ES-C07-vivir, which the learner does not reach for another 5 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C07-beber",
-        "language": "spanish",
-        "chapter": 7,
-        "kind": "forward-prerequisite",
-        "other": "ES-C07-comer",
-        "detail": "requires ES-C07-comer, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C07-comer",
-        "language": "spanish",
-        "chapter": 7,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C07-donde",
-        "language": "spanish",
-        "chapter": 7,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C07-donde",
-        "language": "spanish",
-        "chapter": 7,
-        "kind": "forward-review",
-        "other": "ES-C07-que",
-        "detail": "reviews ES-C07-que, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C07-donde",
-        "language": "spanish",
-        "chapter": 7,
-        "kind": "forward-review",
-        "other": "ES-C07-vivir",
-        "detail": "reviews ES-C07-vivir, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C07-donde",
-        "language": "spanish",
-        "chapter": 7,
-        "kind": "forward-prerequisite",
-        "other": "ES-C07-que",
-        "detail": "requires ES-C07-que, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C07-donde",
-        "language": "spanish",
-        "chapter": 7,
-        "kind": "forward-prerequisite",
-        "other": "ES-C07-vivir",
-        "detail": "requires ES-C07-vivir, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C07-practice",
-        "language": "spanish",
-        "chapter": 7,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C07-practice",
-        "language": "spanish",
-        "chapter": 7,
-        "kind": "forward-review",
-        "other": "ES-C07-vivir",
-        "detail": "reviews ES-C07-vivir, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C07-practice",
-        "language": "spanish",
-        "chapter": 7,
-        "kind": "forward-review",
-        "other": "ES-C07-que",
-        "detail": "reviews ES-C07-que, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ES-C07-practice",
-        "language": "spanish",
-        "chapter": 7,
-        "kind": "forward-prerequisite",
-        "other": "ES-C07-vivir",
-        "detail": "requires ES-C07-vivir, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C07-practice",
-        "language": "spanish",
-        "chapter": 7,
-        "kind": "forward-prerequisite",
-        "other": "ES-C07-que",
-        "detail": "requires ES-C07-que, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "ES-C07-que",
-        "language": "spanish",
-        "chapter": 7,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ES-C07-vivir",
-        "language": "spanish",
-        "chapter": 7,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
         "lessonId": "TE-C01-avunu",
         "language": "telugu",
         "chapter": 1,
@@ -11923,6 +11793,19 @@
         "revisits": 0
       },
       {
+        "atom": "ES-ETYMON-VIVERE",
+        "language": "spanish",
+        "introducedBy": "ES-C07-vivir",
+        "introducedAt": 58,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-VUESTRA-MERCED",
         "language": "spanish",
         "introducedBy": "ES-C03-usted-origin",
@@ -11979,19 +11862,6 @@
         "language": "spanish",
         "introducedBy": "ES-W01-tilde-diacritica",
         "introducedAt": 35,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-GRAMMAR-QUESTION-ACCENT",
-        "language": "spanish",
-        "introducedBy": "ES-C03-como-acento",
-        "introducedAt": 19,
         "missed": [
           "R1",
           "R2",
@@ -12096,19 +11966,6 @@
         "language": "spanish",
         "introducedBy": "ES-C04-y",
         "introducedAt": 33,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ORTHOGRAPHY-PUNCTUATION-SPAN",
-        "language": "spanish",
-        "introducedBy": "ES-W03-question-span",
-        "introducedAt": 39,
         "missed": [
           "R1",
           "R2",
@@ -13291,6 +13148,30 @@
         "revisits": 0
       },
       {
+        "atom": "ES-ETYMON-COMEDERE",
+        "language": "spanish",
+        "introducedBy": "ES-C07-comer",
+        "introducedAt": 57,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-DE-UNDE",
+        "language": "spanish",
+        "introducedBy": "ES-C07-donde",
+        "introducedAt": 61,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-DOUBLE-N",
         "language": "spanish",
         "introducedBy": "ES-W02-enye",
@@ -13431,6 +13312,18 @@
           "R1",
           "R2",
           "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-QUID",
+        "language": "spanish",
+        "introducedBy": "ES-C07-que",
+        "introducedAt": 60,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
         ],
         "revisits": 1
       },
@@ -13639,6 +13532,18 @@
         "revisits": 1
       },
       {
+        "atom": "ES-GRAMMAR-IR-PRESENT-SINGULAR",
+        "language": "spanish",
+        "introducedBy": "ES-C07-vivir",
+        "introducedAt": 58,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "ES-GRAMMAR-NO-02",
         "language": "spanish",
         "introducedBy": "ES-C19-no",
@@ -13661,6 +13566,18 @@
           "R4"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "ES-GRAMMAR-QUESTION-ACCENT",
+        "language": "spanish",
+        "introducedBy": "ES-C03-como-acento",
+        "introducedAt": 19,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ES-GRAMMAR-REFLEXIVE-FIRST-PERSON",
@@ -13723,6 +13640,18 @@
         "revisits": 0
       },
       {
+        "atom": "ES-LEX-BEBER",
+        "language": "spanish",
+        "introducedBy": "ES-C07-beber",
+        "introducedAt": 59,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-LEX-BUENAS-NOCHES",
         "language": "spanish",
         "introducedBy": "ES-C02-buenas-noches",
@@ -13783,28 +13712,28 @@
         "revisits": 3
       },
       {
-        "atom": "ES-LEX-ESPANOL",
+        "atom": "ES-LEX-DONDE",
         "language": "spanish",
-        "introducedBy": "ES-C06-espanol",
-        "introducedAt": 54,
+        "introducedBy": "ES-C07-donde",
+        "introducedAt": 61,
         "missed": [
           "R2",
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 1
       },
       {
-        "atom": "ES-LEX-ESTUDIAR",
+        "atom": "ES-LEX-EN",
         "language": "spanish",
-        "introducedBy": "ES-C06-estudiar",
-        "introducedAt": 53,
+        "introducedBy": "ES-C07-donde",
+        "introducedAt": 61,
         "missed": [
           "R2",
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 1
       },
       {
         "atom": "ES-LEX-HABLO-ESPANOL",
@@ -13951,6 +13880,18 @@
         "revisits": 0
       },
       {
+        "atom": "ES-LEX-QUE",
+        "language": "spanish",
+        "introducedBy": "ES-C07-que",
+        "introducedAt": 60,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-LEX-SE-LLAMA",
         "language": "spanish",
         "introducedBy": "ES-C03-se-llama",
@@ -14023,6 +13964,18 @@
         "revisits": 0
       },
       {
+        "atom": "ES-LEX-VIVIR",
+        "language": "spanish",
+        "introducedBy": "ES-C07-vivir",
+        "introducedAt": 58,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "ES-MORPH-BUENO-BUENA",
         "language": "spanish",
         "introducedBy": "ES-C01-bien",
@@ -14045,6 +13998,18 @@
           "R4"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "ES-ORTHOGRAPHY-PUNCTUATION-SPAN",
+        "language": "spanish",
+        "introducedBy": "ES-W03-question-span",
+        "introducedAt": 39,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ES-PRAGMATICS-AND-YOU",
@@ -18191,6 +18156,17 @@
         "revisits": 2
       },
       {
+        "atom": "ES-GRAMMAR-ER-PRESENT-SINGULAR",
+        "language": "spanish",
+        "introducedBy": "ES-C07-comer",
+        "introducedAt": 57,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "ES-GRAMMAR-GUSTAR-INVERSION-09",
         "language": "spanish",
         "introducedBy": "ES-C35-gustar",
@@ -18265,7 +18241,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "ES-GRAMMAR-STATE-LOCATION-ESTAR",
@@ -18386,7 +18362,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 5
       },
       {
         "atom": "ES-LEX-CAMINAR-07",
@@ -18398,6 +18374,17 @@
           "R3"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-COMER",
+        "language": "spanish",
+        "introducedBy": "ES-C07-comer",
+        "introducedAt": 57,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
       },
       {
         "atom": "ES-LEX-COMO",
@@ -18466,10 +18453,32 @@
         "revisits": 1
       },
       {
+        "atom": "ES-LEX-ESPANOL",
+        "language": "spanish",
+        "introducedBy": "ES-C06-espanol",
+        "introducedAt": 54,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "ES-LEX-ESTAR",
         "language": "spanish",
         "introducedBy": "ES-C04-estar",
         "introducedAt": 28,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ES-LEX-ESTUDIAR",
+        "language": "spanish",
+        "introducedBy": "ES-C06-estudiar",
+        "introducedAt": 53,
         "missed": [
           "R3",
           "R4"
@@ -18805,17 +18814,6 @@
           "R2"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "ES-SCRIPT-ACUTE-ACCENT",
-        "language": "spanish",
-        "introducedBy": "ES-W01-acento",
-        "introducedAt": 34,
-        "missed": [
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
       },
       {
         "atom": "ES-SCRIPT-ENYE",
@@ -27143,7 +27141,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 5
+        "revisits": 7
       },
       {
         "atom": "ES-GRAMMAR-CONOCER-SABER-12",
@@ -27454,6 +27452,16 @@
           "R3"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "ES-SCRIPT-ACUTE-ACCENT",
+        "language": "spanish",
+        "introducedBy": "ES-W01-acento",
+        "introducedAt": 34,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 4
       },
       {
         "atom": "FA-DIALOGUE-NAME-EXCHANGE",
@@ -34816,22 +34824,6 @@
         "lessonsEarly": 75
       },
       {
-        "lessonId": "ES-C07-beber",
-        "language": "spanish",
-        "position": 57,
-        "word": "pan",
-        "taughtBy": "ES-C26-pan",
-        "lessonsEarly": 74
-      },
-      {
-        "lessonId": "ES-C07-beber",
-        "language": "spanish",
-        "position": 57,
-        "word": "agua",
-        "taughtBy": "ES-C26-agua",
-        "lessonsEarly": 72
-      },
-      {
         "lessonId": "ES-C08-practice",
         "language": "spanish",
         "position": 67,
@@ -34878,14 +34870,6 @@
         "word": "fuß",
         "taughtBy": "GE-C31-fuss",
         "lessonsEarly": 70
-      },
-      {
-        "lessonId": "ES-C07-practice",
-        "language": "spanish",
-        "position": 60,
-        "word": "agua",
-        "taughtBy": "ES-C26-agua",
-        "lessonsEarly": 69
       },
       {
         "lessonId": "IT-C01-notte",
@@ -35128,6 +35112,14 @@
         "lessonsEarly": 46
       },
       {
+        "lessonId": "ES-C07-vivir",
+        "language": "spanish",
+        "position": 58,
+        "word": "viva",
+        "taughtBy": "ES-C18-subjuntivo",
+        "lessonsEarly": 45
+      },
+      {
         "lessonId": "TE-C05-pani-ceyu",
         "language": "telugu",
         "position": 27,
@@ -35136,19 +35128,19 @@
         "lessonsEarly": 45
       },
       {
+        "lessonId": "ES-C03-como-acento",
+        "language": "spanish",
+        "position": 19,
+        "word": "dónde",
+        "taughtBy": "ES-C07-donde",
+        "lessonsEarly": 42
+      },
+      {
         "lessonId": "ES-C03-familia-qu",
         "language": "spanish",
         "position": 20,
-        "word": "qué",
-        "taughtBy": "ES-C07-que",
-        "lessonsEarly": 41
-      },
-      {
-        "lessonId": "ES-C07-vivir",
-        "language": "spanish",
-        "position": 62,
-        "word": "viva",
-        "taughtBy": "ES-C18-subjuntivo",
+        "word": "dónde",
+        "taughtBy": "ES-C07-donde",
         "lessonsEarly": 41
       },
       {
@@ -35176,11 +35168,11 @@
         "lessonsEarly": 41
       },
       {
-        "lessonId": "ES-C03-como-acento",
+        "lessonId": "ES-C03-familia-qu",
         "language": "spanish",
-        "position": 19,
-        "word": "dónde",
-        "taughtBy": "ES-C07-donde",
+        "position": 20,
+        "word": "qué",
+        "taughtBy": "ES-C07-que",
         "lessonsEarly": 40
       },
       {
@@ -35190,14 +35182,6 @@
         "word": "andare",
         "taughtBy": "IT-C16-andare",
         "lessonsEarly": 40
-      },
-      {
-        "lessonId": "ES-C03-familia-qu",
-        "language": "spanish",
-        "position": 20,
-        "word": "dónde",
-        "taughtBy": "ES-C07-donde",
-        "lessonsEarly": 39
       },
       {
         "lessonId": "ES-C14-practice",
@@ -36368,14 +36352,6 @@
         "lessonsEarly": 4
       },
       {
-        "lessonId": "ES-C07-comer",
-        "language": "spanish",
-        "position": 58,
-        "word": "vivir",
-        "taughtBy": "ES-C07-vivir",
-        "lessonsEarly": 4
-      },
-      {
         "lessonId": "ES-C12-yo-go",
         "language": "spanish",
         "position": 84,
@@ -36525,22 +36501,6 @@
         "position": 31,
         "word": "খাওয়া",
         "taughtBy": "BN-C07-khaowa",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "ES-C07-donde",
-        "language": "spanish",
-        "position": 59,
-        "word": "vivir",
-        "taughtBy": "ES-C07-vivir",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "ES-C07-practice",
-        "language": "spanish",
-        "position": 60,
-        "word": "tres",
-        "taughtBy": "ES-C08-numeros-1-5",
         "lessonsEarly": 3
       },
       {
@@ -36773,22 +36733,6 @@
         "position": 47,
         "word": "por favor",
         "taughtBy": "ES-C06-por-favor",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "ES-C07-donde",
-        "language": "spanish",
-        "position": 59,
-        "word": "qué",
-        "taughtBy": "ES-C07-que",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "ES-C07-practice",
-        "language": "spanish",
-        "position": 60,
-        "word": "vivir",
-        "taughtBy": "ES-C07-vivir",
         "lessonsEarly": 2
       },
       {
@@ -37256,19 +37200,35 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "ES-C07-beber",
+        "lessonId": "ES-C07-comer",
         "language": "spanish",
         "position": 57,
-        "word": "comer",
-        "taughtBy": "ES-C07-comer",
+        "word": "vivir",
+        "taughtBy": "ES-C07-vivir",
         "lessonsEarly": 1
       },
       {
         "lessonId": "ES-C07-practice",
         "language": "spanish",
+        "position": 62,
+        "word": "tres",
+        "taughtBy": "ES-C08-numeros-1-5",
+        "lessonsEarly": 1
+      },
+      {
+        "lessonId": "ES-C07-que",
+        "language": "spanish",
         "position": 60,
-        "word": "qué",
-        "taughtBy": "ES-C07-que",
+        "word": "dónde",
+        "taughtBy": "ES-C07-donde",
+        "lessonsEarly": 1
+      },
+      {
+        "lessonId": "ES-C07-vivir",
+        "language": "spanish",
+        "position": 58,
+        "word": "beber",
+        "taughtBy": "ES-C07-beber",
         "lessonsEarly": 1
       },
       {
@@ -38656,12 +38616,12 @@
       {
         "language": "spanish",
         "lessonCount": 177,
-        "lessonsWithoutSequence": 6,
-        "forwardPrerequisites": 5,
-        "forwardReviews": 6,
-        "atomsTaught": 260,
-        "atomsNeverRevisited": 70,
-        "forwardReferences": 98
+        "lessonsWithoutSequence": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
+        "atomsTaught": 272,
+        "atomsNeverRevisited": 68,
+        "forwardReferences": 92
       },
       {
         "language": "tamil",
@@ -38695,20 +38655,20 @@
       }
     ],
     "summary": {
-      "lessonsWithoutSequence": 483,
-      "tracksWithUnorderedLessons": 18,
-      "forwardPrerequisites": 230,
-      "forwardReviews": 273,
-      "atomsTaught": 2507,
-      "atomsNeverRevisited": 474,
+      "lessonsWithoutSequence": 477,
+      "tracksWithUnorderedLessons": 17,
+      "forwardPrerequisites": 225,
+      "forwardReviews": 267,
+      "atomsTaught": 2519,
+      "atomsNeverRevisited": 472,
       "neverRevisitedPercent": 19,
       "missedByWindow": {
-        "R1": 852,
-        "R2": 1718,
-        "R3": 1211,
-        "R4": 134
+        "R1": 854,
+        "R2": 1725,
+        "R3": 1220,
+        "R4": 146
       },
-      "forwardReferences": 468
+      "forwardReferences": 462
     }
   },
   "levelGate": {
@@ -39112,8 +39072,8 @@
           },
           {
             "criterion": "reinforcement",
-            "detail": "53 atom(s) at or below pre-A1 are revisited fewer than twice (35 etymology hook(s) waived)",
-            "shortfall": 53
+            "detail": "51 atom(s) at or below pre-A1 are revisited fewer than twice (36 etymology hook(s) waived)",
+            "shortfall": 51
           }
         ],
         "vocabulary": 136
@@ -44965,7 +44925,7 @@
         "pen": 7,
         "coreVoice": 152,
         "drivablePercent": 86,
-        "drivablePrefixTotal": 122,
+        "drivablePrefixTotal": 121,
         "chapters": [
           {
             "language": "spanish",
@@ -45068,7 +45028,7 @@
               "voice",
               "sight"
             ],
-            "drivablePrefix": 1,
+            "drivablePrefix": 0,
             "firstNonVoiceLesson": "ES-C07-comer"
           },
           {

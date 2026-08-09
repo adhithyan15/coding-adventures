@@ -6,13 +6,13 @@ Human Languages curriculum gap report
 0 tracks without books; 0 lesson chapters without book chapters
 0 legacy, 19 mixed, 3 version-2 schema tracks
 1507 drivable lessons (90% of the corpus)
-levels: 866 pre-A1, 301 A1, 395 A2, 8 B1; 99 unmapped (94% placed)
-ramp: 40 lessons above 3 new atoms (573 unmeasurable, 66% measurable); 24 chapters above 12
+levels: 866 pre-A1, 302 A1, 395 A2, 8 B1; 98 unmapped (94% placed)
+ramp: 40 lessons above 3 new atoms (568 unmeasurable, 66% measurable); 24 chapters above 12
 script ramp: 61 lessons above 3 new glyphs; 5 opening more than 1 writing system at once; steepest HI-W01-shirorekha-na-ma at 12
 cousin layer: 173 lessons show another script (max 26 glyphs) — context, never charged to the budget
-order: 483 lessons with no declared sequence across 18 tracks; 230 prerequisites and 273 reviews pointing forward
-reinforcement: 474 of 2507 atoms never revisited (19%); missed windows R1 852, R2 1718, R3 1211, R4 134
-forward references: 468 uses of material a later lesson teaches
+order: 477 lessons with no declared sequence across 17 tracks; 225 prerequisites and 267 reviews pointing forward
+reinforcement: 472 of 2519 atoms never revisited (19%); missed windows R1 854, R2 1725, R3 1220, R4 146
+forward references: 462 uses of material a later lesson teaches
 levels ATTAINED (HL09 §3.1): none; 22 track(s) touch a level they have not attained
 0 of 513 book chapters without an HL05 capability; 27 payoffs below the 0.5 representativeness floor; 12 tracks already clean
 
@@ -40,12 +40,12 @@ Modality (HL08) — derived from lesson type and block structure, never from `sk
   punjabi: 18 voice, 43 sight, 0 pen; 98% drivable; 13 chapters, 60 lessons reachable in chapter-prefix order; 42 rescued by a detachable writing segment
   russian: 34 voice, 11 sight, 5 pen; 88% drivable; 10 chapters, 43 lessons reachable in chapter-prefix order; 10 rescued by a detachable writing segment
   sanskrit: 23 voice, 36 sight, 0 pen; 97% drivable; 13 chapters, 52 lessons reachable in chapter-prefix order; 34 rescued by a detachable writing segment
-  spanish: 152 voice, 18 sight, 7 pen; 86% drivable; 41 chapters, 122 lessons reachable in chapter-prefix order
+  spanish: 152 voice, 18 sight, 7 pen; 86% drivable; 41 chapters, 121 lessons reachable in chapter-prefix order
   tamil: 62 voice, 43 sight, 13 pen; 85% drivable; 38 chapters, 86 lessons reachable in chapter-prefix order; 38 rescued by a detachable writing segment
   telugu: 39 voice, 35 sight, 0 pen; 93% drivable; 34 chapters, 65 lessons reachable in chapter-prefix order; 30 rescued by a detachable writing segment
   urdu: 31 voice, 15 sight, 0 pen; 100% drivable; 12 chapters, 46 lessons reachable in chapter-prefix order; 15 rescued by a detachable writing segment
 
-Chapters that cannot be started by ear (drivable prefix 0): 41
+Chapters that cannot be started by ear (drivable prefix 0): 42
   arabic ch3: 0 of 9 (first blocker AR-W07-hook-family-ha-kha)
   arabic ch4: 0 of 8 (first blocker AR-W10-ayn)
   arabic ch8: 0 of 2 (first blocker AR-C08-al-ahad-al-khamis)
