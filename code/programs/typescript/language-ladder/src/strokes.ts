@@ -188,16 +188,103 @@ const clamp01 = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n);
 // ---------------------------------------------------------------------------
 // The authored letters.
 //
-// ம first, and alone, until every letter after it is sourced the same way. It
-// is ONE stroke — the hand does not lift — made of the FIVE joined parts the
-// cited primer numbers: down the left upright, along the bottom, up the right
-// side, over the top, and down the middle. Each part's path starts on the
-// previous part's last point, so `joinGaps` is zero and the whole thing is a
-// single motion. Coordinates are font units, checked in strokes.test against
-// the rendered glyph (shape) and against `source` (order), not eyeballed here.
+// The cited primer numbers the hand movements for each letter. Coordinates are
+// font units, checked in strokes.test against the rendered glyph (shape) and
+// against `source` (order), not trusted because they look plausible here.
+//
+// அ is Frame 4's first row: movements 1-4 remain on the connected body, then
+// the hand lifts once before movement 5 draws the separate right upright.
+// ம is Frame 1's third row: all five movements join into one unbroken stroke.
 // ---------------------------------------------------------------------------
 
 export const DUCTUS: Record<string, LetterDuctus> = {
+  அ: {
+    glyph: "அ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "curl around the upper loop",
+            path: [
+              { x: 500, y: 510 },
+              { x: 440, y: 530 },
+              { x: 380, y: 500 },
+              { x: 340, y: 445 },
+              { x: 335, y: 385 },
+              { x: 360, y: 330 },
+              { x: 420, y: 285 },
+              { x: 490, y: 280 },
+              { x: 550, y: 310 },
+              { x: 590, y: 365 },
+              { x: 595, y: 430 },
+            ],
+          },
+          {
+            label: "sweep down the outer curve",
+            path: [
+              { x: 595, y: 430 },
+              { x: 650, y: 500 },
+              { x: 710, y: 460 },
+              { x: 755, y: 390 },
+              { x: 775, y: 300 },
+              { x: 775, y: 215 },
+              { x: 755, y: 130 },
+              { x: 710, y: 55 },
+            ],
+          },
+          {
+            label: "turn around the lower loop",
+            path: [
+              { x: 710, y: 55 },
+              { x: 650, y: -5 },
+              { x: 570, y: -50 },
+              { x: 470, y: -80 },
+              { x: 350, y: -90 },
+              { x: 240, y: -80 },
+              { x: 150, y: -50 },
+              { x: 90, y: 0 },
+              { x: 70, y: 55 },
+              { x: 90, y: 105 },
+              { x: 145, y: 140 },
+              { x: 215, y: 140 },
+            ],
+          },
+          {
+            label: "carry the horizontal to the right",
+            path: [
+              { x: 215, y: 140 },
+              { x: 350, y: 140 },
+              { x: 520, y: 140 },
+              { x: 700, y: 140 },
+              { x: 850, y: 140 },
+              { x: 950, y: 140 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "draw the right upright down",
+            path: [
+              { x: 990, y: 530 },
+              { x: 990, y: 390 },
+              { x: 990, y: 230 },
+              { x: 990, y: 70 },
+              { x: 990, y: -130 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: {
+      citation:
+        "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 4, அ (Univ. of Texas at Austin), p. 192",
+      url: "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+      variation:
+        "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. This is one attested order.",
+    },
+  },
   ம: {
     glyph: "ம",
     strokes: [

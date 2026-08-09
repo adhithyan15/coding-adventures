@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — first multi-stroke cited ductus (HL-C09A)
+
+- Add Tamil அ from Radhakrishnan's *Tamil Script Learners Manual*, Frame 4:
+  four connected movements trace the body, then one verified lift precedes the
+  separate right upright.
+- Check both strokes against the vendored Noto Sans Tamil outline, keep the
+  learner prose and citation identical to the authored path, and exercise the
+  real two-stroke filmstrip instead of relying only on a synthetic fixture.
+
 ### Added — canonical lesson figures
 
 - Preserve standalone Markdown images as typed lesson blocks instead of flattening

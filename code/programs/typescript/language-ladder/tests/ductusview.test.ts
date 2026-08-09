@@ -49,6 +49,8 @@ const tamilOutline = (character: string): GlyphOutline => {
 
 const MA = DUCTUS["ம"];
 const outline = tamilOutline("ம");
+const A = DUCTUS["அ"];
+const aOutline = tamilOutline("அ");
 
 /** Walk a node tree, collecting every node the predicate accepts. */
 function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = []): SvgNode[] {
@@ -60,8 +62,9 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds ம, the one authored letter", () => {
+  it("finds both authored Tamil letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
+    expect(ductusFor("அ")?.glyph).toBe("அ");
   });
 
   it("returns undefined for a letter nobody has authored a stroke order for", () => {
@@ -268,11 +271,35 @@ describe("the build-up advances", () => {
   });
 });
 
+describe("அ — a real cited two-stroke filmstrip", () => {
+  const steps = ductusSteps(A);
+  const strip = ductusFilmstrip(A, aOutline);
+
+  it("places the only pen lift before the separate right upright", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0, 1]);
+  });
+
+  it("reports the source-backed movement, stroke, and lift counts", () => {
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 5 movements");
+  });
+
+  it("keeps the completed body visible while drawing the upright", () => {
+    const last = strip.frames[4];
+    const done = byTag(last, "path").filter((path) => path.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
+    expect(done).toHaveLength(1);
+    expect(done[0].attrs.d).toBe(penPathD(A.strokes[0], 1));
+    expect(pen.attrs.d).toBe(penPathD(A.strokes[1], 1));
+  });
+});
+
 // ---------------------------------------------------------------------------
-// Multi-stroke letters. No such letter is AUTHORED yet — ம is one stroke — so
-// this uses a synthetic two-stroke ductus purely to exercise the renderer's
-// lift handling. It is a test fixture, not curriculum data: nothing here is
-// ever shown to a learner, and no letter enters DUCTUS without a citation.
+// Generic multi-stroke edge cases still use a synthetic ductus so the test can
+// vary stroke counts independently of curriculum data. Nothing in this fixture
+// is ever shown to a learner, and no letter enters DUCTUS without a citation.
 // ---------------------------------------------------------------------------
 describe("a letter written in more than one stroke", () => {
   const twoStroke: LetterDuctus = {
