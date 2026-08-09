@@ -26,6 +26,12 @@ pub const MAX_TAG_LEN: usize = 128;
 pub const MAX_ATTACHMENTS: usize = 64;
 /// Maximum direct causal parents on one candidate.
 pub const MAX_CAUSAL_PARENTS: usize = 16;
+/// Maximum distinct values retained by one observed-remove set.
+pub const MAX_OBSERVED_VALUES: usize = 256;
+/// Maximum add-operation IDs retained by one observed-remove set.
+pub const MAX_OBSERVED_ADD_OPERATIONS: usize = 1024;
+/// Maximum removal tombstones retained by one observed-remove set.
+pub const MAX_OBSERVED_TOMBSTONES: usize = 1024;
 
 /// Closed, payload-free domain failures.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -40,6 +46,8 @@ pub enum DomainError {
     InvalidTag,
     /// A bounded collection exceeded its V1 limit.
     BoundExceeded,
+    /// Observed-set state reused an operation ID or referenced an unknown add.
+    InvalidObservedSet,
     /// An item's declared schema did not match its VLT02 record.
     SchemaMismatch,
     /// Candidate item identities or immutable schemas disagreed.
@@ -56,6 +64,7 @@ impl core::fmt::Display for DomainError {
             Self::InvalidTimestamp => "vault-pm-domain: invalid timestamp",
             Self::InvalidTag => "vault-pm-domain: invalid tag",
             Self::BoundExceeded => "vault-pm-domain: bound exceeded",
+            Self::InvalidObservedSet => "vault-pm-domain: invalid observed set",
             Self::SchemaMismatch => "vault-pm-domain: record schema mismatch",
             Self::IdentityMismatch => "vault-pm-domain: immutable identity mismatch",
             Self::InvalidConflict => "vault-pm-domain: invalid conflict operation",
@@ -233,8 +242,28 @@ impl<T: Ord + Clone> ObservedSet<T> {
     }
 
     /// Observe an idempotent add operation.
-    pub fn add(&mut self, value: T, operation: OperationId) {
-        self.adds.entry(value).or_default().insert(operation);
+    pub fn add(&mut self, value: T, operation: OperationId) -> Result<bool, DomainError> {
+        if self
+            .adds
+            .get(&value)
+            .is_some_and(|operations| operations.contains(&operation))
+        {
+            return Ok(false);
+        }
+        if self
+            .adds
+            .iter()
+            .any(|(candidate, operations)| candidate != &value && operations.contains(&operation))
+        {
+            return Err(DomainError::InvalidObservedSet);
+        }
+        if self.add_operation_count() == MAX_OBSERVED_ADD_OPERATIONS
+            || (!self.adds.contains_key(&value)
+                && self.retained_value_count() == MAX_OBSERVED_VALUES)
+        {
+            return Err(DomainError::BoundExceeded);
+        }
+        Ok(self.adds.entry(value).or_default().insert(operation))
     }
 
     /// Remove all add operations for `value` observed by this replica.
@@ -247,6 +276,40 @@ impl<T: Ord + Clone> ObservedSet<T> {
             .or_default()
             .extend(observed.iter().copied());
         true
+    }
+
+    /// Record one exact removal tombstone while reconstructing bounded state.
+    ///
+    /// The referenced add must already be present for the same value. This
+    /// lets a persistent decoder rebuild mixed removed/re-added state without
+    /// accepting dangling or cross-value operation IDs.
+    pub fn observe_removal(
+        &mut self,
+        value: &T,
+        operation: OperationId,
+    ) -> Result<bool, DomainError> {
+        if !self
+            .adds
+            .get(value)
+            .is_some_and(|operations| operations.contains(&operation))
+        {
+            return Err(DomainError::InvalidObservedSet);
+        }
+        if self
+            .removals
+            .get(value)
+            .is_some_and(|operations| operations.contains(&operation))
+        {
+            return Ok(false);
+        }
+        if self.tombstone_count() == MAX_OBSERVED_TOMBSTONES {
+            return Err(DomainError::BoundExceeded);
+        }
+        Ok(self
+            .removals
+            .entry(value.clone())
+            .or_default()
+            .insert(operation))
     }
 
     /// Return whether at least one add remains unremoved.
@@ -278,24 +341,67 @@ impl<T: Ord + Clone> ObservedSet<T> {
             .filter(|value| self.contains(value))
             .collect()
     }
+
+    /// Return the number of distinct values retained on wire, including absent values.
+    pub fn retained_value_count(&self) -> usize {
+        self.adds.len()
+    }
+
+    /// Return the number of retained add-operation IDs.
+    pub fn add_operation_count(&self) -> usize {
+        self.adds.values().map(BTreeSet::len).sum()
+    }
+
+    /// Return the number of retained removal tombstones.
+    pub fn tombstone_count(&self) -> usize {
+        self.removals.values().map(BTreeSet::len).sum()
+    }
+
     /// Merge by unioning add observations and removal tombstones.
-    pub fn merge(&self, other: &Self) -> Self {
+    pub fn merge(&self, other: &Self) -> Result<Self, DomainError> {
         let mut merged = self.clone();
         for (value, operations) in &other.adds {
-            merged
-                .adds
-                .entry(value.clone())
-                .or_default()
-                .extend(operations.iter().copied());
+            for operation in operations {
+                merged.add(value.clone(), *operation)?;
+            }
         }
         for (value, operations) in &other.removals {
-            merged
-                .removals
-                .entry(value.clone())
-                .or_default()
-                .extend(operations.iter().copied());
+            for operation in operations {
+                merged.observe_removal(value, *operation)?;
+            }
         }
-        merged
+        Ok(merged)
+    }
+
+    /// Compact removed add/tombstone pairs proven causally stable by the repository.
+    ///
+    /// The predicate may return `true` only when every retained head has
+    /// observed the removal and no authorized publisher can later reintroduce
+    /// the pre-removal add. Without that external proof, callers must retain
+    /// the pair. The return value is the number of compacted operation IDs.
+    pub fn compact_stable_removals(
+        &mut self,
+        mut is_causally_stable: impl FnMut(OperationId) -> bool,
+    ) -> usize {
+        let mut compacted = 0;
+        let removals = &mut self.removals;
+        self.adds.retain(|value, adds| {
+            let Some(tombstones) = removals.get_mut(value) else {
+                return true;
+            };
+            adds.retain(|operation| {
+                if tombstones.contains(operation) && is_causally_stable(*operation) {
+                    tombstones.remove(operation);
+                    compacted += 1;
+                    false
+                } else {
+                    true
+                }
+            });
+            !adds.is_empty()
+        });
+        self.removals.retain(|_, tombstones| !tombstones.is_empty());
+        compacted
     }
 }
 
@@ -326,11 +432,9 @@ impl<T: Ord + Clone> core::fmt::Debug for ObservedSet<T> {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         f.debug_struct("ObservedSet")
             .field("present_count", &self.len())
-            .field("value_count", &self.adds.len())
-            .field(
-                "removal_value_count",
-                &self.removals.values().filter(|set| !set.is_empty()).count(),
-            )
+            .field("retained_value_count", &self.retained_value_count())
+            .field("add_operation_count", &self.add_operation_count())
+            .field("tombstone_count", &self.tombstone_count())
             .finish()
     }
 }
@@ -847,10 +951,10 @@ fn merge_concurrent(
                 a.created_at_ms().min(b.created_at_ms()),
                 a.updated_at_ms().max(b.updated_at_ms()),
                 a.favorite().merge(b.favorite()),
-                a.collection_ids().merge(b.collection_ids()),
-                a.tags().merge(b.tags()),
+                a.collection_ids().merge(b.collection_ids())?,
+                a.tags().merge(b.tags())?,
                 a.payload().clone(),
-                a.attachments().merge(b.attachments()),
+                a.attachments().merge(b.attachments())?,
             )?;
             let candidate = ItemCandidate::new(
                 merge_revision,
@@ -1246,6 +1350,12 @@ mod tests {
         OperationId::new([byte; 32])
     }
 
+    fn indexed_operation(index: usize) -> OperationId {
+        let mut bytes = [0u8; 32];
+        bytes[..8].copy_from_slice(&(index as u64).to_be_bytes());
+        OperationId::new(bytes)
+    }
+
     fn login(password: &str) -> AnyRecord {
         AnyRecord::Login(Login {
             title: "Example".into(),
@@ -1258,7 +1368,7 @@ mod tests {
 
     fn document(id: u8, revision: u8, password: &str) -> ItemCandidate {
         let mut tags = ObservedSet::new();
-        tags.add("work".to_string(), operation(revision));
+        tags.add("work".to_string(), operation(revision)).unwrap();
         let document = ItemDocument::new(
             ItemId::new([id; 16]),
             ContentType::new(LOGIN_V1).unwrap(),
@@ -1336,11 +1446,11 @@ mod tests {
     #[test]
     fn observed_set_supports_remove_and_readd() {
         let mut set = ObservedSet::new();
-        set.add("a".to_string(), operation(1));
+        set.add("a".to_string(), operation(1)).unwrap();
         assert!(set.contains(&"a".to_string()));
         assert!(set.remove(&"a".to_string()));
         assert!(!set.contains(&"a".to_string()));
-        set.add("a".to_string(), operation(2));
+        set.add("a".to_string(), operation(2)).unwrap();
         assert!(set.contains(&"a".to_string()));
         assert_eq!(set.len(), 1);
     }
@@ -1348,23 +1458,139 @@ mod tests {
     #[test]
     fn observed_set_merge_obeys_crdt_laws() {
         let mut a = ObservedSet::new();
-        a.add("a".to_string(), operation(1));
+        a.add("a".to_string(), operation(1)).unwrap();
         let mut b = ObservedSet::new();
-        b.add("b".to_string(), operation(2));
+        b.add("b".to_string(), operation(2)).unwrap();
         let mut c = ObservedSet::new();
-        c.add("c".to_string(), operation(3));
-        assert_eq!(a.merge(&a), a);
-        assert_eq!(a.merge(&b), b.merge(&a));
-        assert_eq!(a.merge(&b).merge(&c), a.merge(&b.merge(&c)));
+        c.add("c".to_string(), operation(3)).unwrap();
+        assert_eq!(a.merge(&a).unwrap(), a);
+        assert_eq!(a.merge(&b).unwrap(), b.merge(&a).unwrap());
+        assert_eq!(
+            a.merge(&b).unwrap().merge(&c).unwrap(),
+            a.merge(&b.merge(&c).unwrap()).unwrap()
+        );
     }
 
     #[test]
     fn observed_remove_wins_for_observed_add_after_merge() {
         let mut source = ObservedSet::new();
-        source.add("a".to_string(), operation(1));
+        source.add("a".to_string(), operation(1)).unwrap();
         let mut removed = source.clone();
         removed.remove(&"a".to_string());
-        assert!(!source.merge(&removed).contains(&"a".to_string()));
+        assert!(!source.merge(&removed).unwrap().contains(&"a".to_string()));
+    }
+
+    #[test]
+    fn observed_set_enforces_retained_wire_bounds_and_operation_uniqueness() {
+        let mut values = ObservedSet::new();
+        for index in 0..MAX_OBSERVED_VALUES {
+            assert_eq!(
+                values.add(format!("value-{index}"), indexed_operation(index)),
+                Ok(true)
+            );
+        }
+        assert_eq!(values.retained_value_count(), MAX_OBSERVED_VALUES);
+        assert_eq!(
+            values.add(
+                "one-value-too-many".to_string(),
+                indexed_operation(MAX_OBSERVED_VALUES)
+            ),
+            Err(DomainError::BoundExceeded)
+        );
+
+        let mut operations = ObservedSet::new();
+        for index in 0..MAX_OBSERVED_ADD_OPERATIONS {
+            assert_eq!(
+                operations.add("value".to_string(), indexed_operation(index)),
+                Ok(true)
+            );
+        }
+        assert_eq!(
+            operations.add(
+                "value".to_string(),
+                indexed_operation(MAX_OBSERVED_ADD_OPERATIONS)
+            ),
+            Err(DomainError::BoundExceeded)
+        );
+        assert_eq!(
+            operations.add_operation_count(),
+            MAX_OBSERVED_ADD_OPERATIONS
+        );
+        assert!(operations.remove(&"value".to_string()));
+        assert_eq!(operations.tombstone_count(), MAX_OBSERVED_TOMBSTONES);
+
+        let mut collision = ObservedSet::new();
+        assert_eq!(collision.add("a".to_string(), operation(1)), Ok(true));
+        assert_eq!(collision.add("a".to_string(), operation(1)), Ok(false));
+        assert_eq!(
+            collision.add("b".to_string(), operation(1)),
+            Err(DomainError::InvalidObservedSet)
+        );
+    }
+
+    #[test]
+    fn exact_removal_reconstruction_rejects_dangling_operations() {
+        let mut set = ObservedSet::new();
+        set.add("a".to_string(), operation(1)).unwrap();
+        set.add("a".to_string(), operation(2)).unwrap();
+        assert_eq!(
+            set.observe_removal(&"a".to_string(), operation(1)),
+            Ok(true)
+        );
+        assert_eq!(
+            set.observe_removal(&"a".to_string(), operation(1)),
+            Ok(false)
+        );
+        assert!(set.contains(&"a".to_string()));
+        assert_eq!(set.tombstone_count(), 1);
+        assert_eq!(
+            set.observe_removal(&"a".to_string(), operation(3)),
+            Err(DomainError::InvalidObservedSet)
+        );
+        assert_eq!(
+            set.observe_removal(&"missing".to_string(), operation(1)),
+            Err(DomainError::InvalidObservedSet)
+        );
+    }
+
+    #[test]
+    fn observed_set_merge_rejects_combined_operation_amplification() {
+        let mut left = ObservedSet::new();
+        let mut right = ObservedSet::new();
+        for index in 0..600 {
+            left.add("value".to_string(), indexed_operation(index))
+                .unwrap();
+            right
+                .add("value".to_string(), indexed_operation(index + 600))
+                .unwrap();
+        }
+        assert_eq!(left.merge(&right), Err(DomainError::BoundExceeded));
+    }
+
+    #[test]
+    fn compaction_requires_stability_and_preserves_readds() {
+        let mut set = ObservedSet::new();
+        set.add("a".to_string(), operation(1)).unwrap();
+        set.remove(&"a".to_string());
+        set.add("a".to_string(), operation(2)).unwrap();
+        set.add("b".to_string(), operation(3)).unwrap();
+        set.remove(&"b".to_string());
+
+        assert_eq!(
+            set.compact_stable_removals(|candidate| candidate == operation(1)),
+            1
+        );
+        assert!(set.contains(&"a".to_string()));
+        assert!(!set.contains(&"b".to_string()));
+        assert_eq!(set.add_operation_count(), 2);
+        assert_eq!(set.tombstone_count(), 1);
+        assert_eq!(set.retained_value_count(), 2);
+
+        assert_eq!(set.compact_stable_removals(|_| true), 1);
+        assert_eq!(set.values(), vec![&"a".to_string()]);
+        assert_eq!(set.retained_value_count(), 1);
+        assert_eq!(set.add_operation_count(), 1);
+        assert_eq!(set.tombstone_count(), 0);
     }
 
     #[test]
@@ -1404,7 +1630,7 @@ mod tests {
         assert_eq!(bad_timestamp.unwrap_err(), DomainError::InvalidTimestamp);
 
         let mut tags = ObservedSet::new();
-        tags.add("bad\ntag".to_string(), operation(2));
+        tags.add("bad\ntag".to_string(), operation(2)).unwrap();
         let bad_tag = ItemDocument::new(
             ItemId::new([1; 16]),
             ContentType::new(LOGIN_V1).unwrap(),
@@ -1423,7 +1649,8 @@ mod tests {
     fn document_enforces_membership_bounds() {
         let mut tags = ObservedSet::new();
         for index in 0..=MAX_TAGS {
-            tags.add(format!("tag-{index}"), OperationId::new([index as u8; 32]));
+            tags.add(format!("tag-{index}"), OperationId::new([index as u8; 32]))
+                .unwrap();
         }
         let result = ItemDocument::new(
             ItemId::new([1; 16]),
@@ -1482,7 +1709,7 @@ mod tests {
         let left = document(1, 1, "same");
         let mut right = document(1, 2, "same");
         if let ItemState::Live(value) = &mut right.state {
-            value.tags.add("personal".into(), operation(8));
+            value.tags.add("personal".into(), operation(8)).unwrap();
             value.favorite = LwwRegister::new(true, 21, operation(9));
             value.updated_at_ms = 21;
         }
@@ -1761,7 +1988,8 @@ mod tests {
         let mut set = ObservedSet::new();
         assert!(set.is_empty());
         assert!(!set.remove(&"missing".to_string()));
-        set.add("visible-only-explicitly".to_string(), operation(1));
+        set.add("visible-only-explicitly".to_string(), operation(1))
+            .unwrap();
         assert_eq!(set.values(), vec![&"visible-only-explicitly".to_string()]);
         let set_debug = format!("{set:?}");
         assert!(set_debug.contains("present_count"));
@@ -1856,7 +2084,7 @@ mod tests {
         }
 
         let mut tags = ObservedSet::new();
-        tags.add("retired".into(), operation(20));
+        tags.add("retired".into(), operation(20)).unwrap();
         tags.remove(&"retired".to_string());
         let document = ItemDocument::new(
             ItemId::new([8; 16]),
@@ -2117,6 +2345,7 @@ mod tests {
             DomainError::InvalidTimestamp,
             DomainError::InvalidTag,
             DomainError::BoundExceeded,
+            DomainError::InvalidObservedSet,
             DomainError::SchemaMismatch,
             DomainError::IdentityMismatch,
             DomainError::InvalidConflict,
