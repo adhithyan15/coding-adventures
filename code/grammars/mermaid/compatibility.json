@@ -86,7 +86,7 @@
     {
       "id": "gitgraph",
       "headers": ["gitGraph", "gitGraph:"],
-      "status": "detected",
+      "status": "partial",
       "ir": "temporal",
       "smoke_source": "gitGraph\ncommit\nbranch develop\ncheckout develop\ncommit"
     },
@@ -114,7 +114,7 @@
     {
       "id": "sankey",
       "headers": ["sankey", "sankey-beta"],
-      "status": "detected",
+      "status": "partial",
       "ir": "chart",
       "smoke_source": "sankey\nA,B,10"
     },

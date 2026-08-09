@@ -16,11 +16,17 @@ use diagram_ir::{
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
-use mermaid_lexer::{tokenize_mermaid, tokenize_mermaid_pie};
+use mermaid_lexer::{
+    tokenize_mermaid, tokenize_mermaid_gitgraph, tokenize_mermaid_pie, tokenize_mermaid_sankey,
+};
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
 const PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/mermaid.grammar");
 const PIE_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/pie.grammar");
+const SANKEY_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/sankey.grammar");
+const GITGRAPH_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/gitgraph.grammar");
 
 /// Recursion-depth cap for the Mermaid [`GrammarParser`] — see
 /// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
@@ -181,6 +187,30 @@ pub fn parse_mermaid_pie_ast(source: &str) -> Result<GrammarASTNode, ParseError>
     let tokens = tokenize_mermaid_pie(source);
     let grammar = parse_parser_grammar(PIE_PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|e| panic!("Failed to parse pie.grammar: {e}"));
+    let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
+    parser.parse().map_err(|e| ParseError {
+        message: e.message,
+        line: e.token.line,
+        col: e.token.column,
+    })
+}
+
+pub fn parse_mermaid_sankey_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
+    let tokens = tokenize_mermaid_sankey(source);
+    let grammar = parse_parser_grammar(SANKEY_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|e| panic!("Failed to parse sankey.grammar: {e}"));
+    let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
+    parser.parse().map_err(|e| ParseError {
+        message: e.message,
+        line: e.token.line,
+        col: e.token.column,
+    })
+}
+
+pub fn parse_mermaid_gitgraph_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
+    let tokens = tokenize_mermaid_gitgraph(source);
+    let grammar = parse_parser_grammar(GITGRAPH_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|e| panic!("Failed to parse gitgraph.grammar: {e}"));
     let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
     parser.parse().map_err(|e| ParseError {
         message: e.message,
@@ -352,6 +382,7 @@ fn token_name(token: &Token) -> &str {
         TokenType::String => "STRING",
         TokenType::Keyword => "KEYWORD",
         TokenType::Colon => "COLON",
+        TokenType::Comma => "COMMA",
         TokenType::Newline => "NEWLINE",
         TokenType::Semicolon => "SEMICOLON",
         TokenType::Eof => "EOF",
@@ -365,9 +396,10 @@ fn token_name(token: &Token) -> &str {
 
 use diagram_ir::{
     Axis, AxisKind, ChartDiagram, ChartKind, ChartOrientation, ChartSeries, Compartment,
-    CompartmentKind, GanttDiagram, GanttSection, GanttTask, PieSlice, RelKind, SeriesKind,
-    StructuralDiagram, StructuralKind, StructuralNode, StructuralNodeKind, StructuralRelationship,
-    TaskStart, TaskStatus, TemporalBody, TemporalDiagram, TemporalKind,
+    CompartmentKind, GanttDiagram, GanttSection, GanttTask, GitBranch, GitDiagram, GitEvent,
+    PieSlice, RelKind, SankeyFlow, SankeyNode, SeriesKind, StructuralDiagram, StructuralKind,
+    StructuralNode, StructuralNodeKind, StructuralRelationship, TaskStart, TaskStatus, TemporalBody,
+    TemporalDiagram, TemporalKind,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -447,7 +479,13 @@ impl MermaidDiagramType {
     pub fn has_native_pipeline(self) -> bool {
         matches!(
             self,
-            Self::Flowchart | Self::Class | Self::Gantt | Self::Pie | Self::XyChart
+            Self::Flowchart
+                | Self::Class
+                | Self::Gantt
+                | Self::GitGraph
+                | Self::Pie
+                | Self::Sankey
+                | Self::XyChart
         )
     }
 }
@@ -524,6 +562,14 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
         MermaidDiagramType::Class => parse_class_diagram(source).map(MermaidDiagram::Structural),
         MermaidDiagramType::XyChart => parse_xychart(source).map(MermaidDiagram::Chart),
         MermaidDiagramType::Pie => parse_pie(source).map(MermaidDiagram::Chart),
+        MermaidDiagramType::Sankey => parse_sankey(source).map(MermaidDiagram::Chart),
+        MermaidDiagramType::GitGraph => parse_gitgraph(source).map(|git| {
+            MermaidDiagram::Temporal(TemporalDiagram {
+                kind: TemporalKind::Git,
+                title: None,
+                body: TemporalBody::Git(git),
+            })
+        }),
         MermaidDiagramType::Gantt => parse_gantt(source).map(|g| {
             MermaidDiagram::Temporal(TemporalDiagram {
                 kind: TemporalKind::Gantt,
@@ -988,6 +1034,253 @@ fn unquote_mermaid_string(raw: &str) -> String {
     result
 }
 
+// ── Sankey parser ─────────────────────────────────────────────────────────
+
+/// Parse Mermaid's three-column Sankey CSV dialect into the shared chart IR.
+pub fn parse_sankey(source: &str) -> Result<ChartDiagram, ParseError> {
+    parse_mermaid_sankey_ast(source)?;
+
+    let mut cursor = TokenCursor::new(tokenize_mermaid_sankey(source));
+    cursor.skip_terminators();
+    cursor
+        .consume_if("HEADER")
+        .ok_or_else(|| token_error(cursor.current(), "expected Sankey header"))?;
+    cursor.skip_terminators();
+
+    let mut nodes: Vec<SankeyNode> = Vec::new();
+    let mut flows: Vec<SankeyFlow> = Vec::new();
+
+    while !cursor.at_eof() {
+        let source_id = parse_sankey_field(&mut cursor)?;
+        cursor
+            .consume_if("COMMA")
+            .ok_or_else(|| token_error(cursor.current(), "expected ',' after Sankey source"))?;
+        let target_id = parse_sankey_field(&mut cursor)?;
+        cursor
+            .consume_if("COMMA")
+            .ok_or_else(|| token_error(cursor.current(), "expected ',' after Sankey target"))?;
+        let weight_token = cursor
+            .consume_if("NUMBER")
+            .ok_or_else(|| token_error(cursor.current(), "expected Sankey flow weight"))?;
+        let weight = weight_token.value.parse::<f64>().map_err(|_| {
+            token_error(
+                &weight_token,
+                format!("invalid Sankey flow weight {:?}", weight_token.value),
+            )
+        })?;
+
+        for id in [&source_id, &target_id] {
+            if !nodes.iter().any(|node| node.id == *id) {
+                nodes.push(SankeyNode {
+                    id: id.clone(),
+                    label: Some(id.clone()),
+                });
+            }
+        }
+        flows.push(SankeyFlow {
+            source: source_id,
+            target: target_id,
+            weight,
+        });
+        cursor.skip_terminators();
+    }
+
+    Ok(ChartDiagram {
+        title: None,
+        kind: ChartKind::Sankey,
+        x_axis: None,
+        y_axis: None,
+        series: vec![],
+        slices: vec![],
+        sankey_nodes: nodes,
+        flows,
+        orientation: ChartOrientation::Horizontal,
+    })
+}
+
+fn parse_sankey_field(cursor: &mut TokenCursor) -> Result<String, ParseError> {
+    let token = cursor.current().clone();
+    if !matches!(token_name(&token), "STRING" | "BARE_FIELD" | "NUMBER") {
+        return Err(token_error(&token, "expected Sankey CSV field"));
+    }
+
+    let value = cursor.advance().value.trim().replace("\"\"", "\"");
+    if value.is_empty() {
+        return Err(token_error(&token, "Sankey CSV fields cannot be empty"));
+    }
+    Ok(value)
+}
+
+// ── GitGraph parser ───────────────────────────────────────────────────────
+
+/// Parse Mermaid GitGraph syntax into the shared temporal IR.
+///
+/// The grammar accepts Mermaid's complete command surface. Cherry-pick is
+/// rejected during lowering until the temporal IR can represent it without
+/// losing parent-commit semantics.
+pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
+    parse_mermaid_gitgraph_ast(source)?;
+
+    let mut cursor = TokenCursor::new(tokenize_mermaid_gitgraph(source));
+    cursor.skip_terminators();
+    cursor
+        .consume_if("HEADER")
+        .ok_or_else(|| token_error(cursor.current(), "expected GitGraph header"))?;
+
+    let direction = cursor
+        .consume_if("DIRECTION")
+        .map(|token| direction_from_token(&token))
+        .transpose()?
+        .unwrap_or(DiagramDirection::Lr);
+    cursor.consume_if("COLON");
+    cursor.skip_terminators();
+
+    let mut branches = vec![GitBranch {
+        name: "main".to_string(),
+    }];
+    let mut events = Vec::new();
+    let mut current_branch = "main".to_string();
+
+    while !cursor.at_eof() {
+        let command = cursor.current().clone();
+        match command.value.as_str() {
+            "commit" => {
+                cursor.advance();
+                let mut id = None;
+                let mut message = None;
+                let mut tag = None;
+                while !gitgraph_statement_ended(&cursor) {
+                    match token_name(cursor.current()) {
+                        "ID_ATTR" => {
+                            cursor.advance();
+                            id = Some(parse_gitgraph_string(&mut cursor, "commit id")?);
+                        }
+                        "MSG_ATTR" => {
+                            cursor.advance();
+                            message = Some(parse_gitgraph_string(&mut cursor, "commit message")?);
+                        }
+                        "TAG_ATTR" => {
+                            cursor.advance();
+                            tag = Some(parse_gitgraph_string(&mut cursor, "commit tag")?);
+                        }
+                        "TYPE_ATTR" => {
+                            cursor.advance();
+                            expect_gitgraph_token(&mut cursor, "COMMIT_TYPE", "commit type")?;
+                        }
+                        "STRING" => {
+                            message = Some(cursor.advance().value.clone());
+                        }
+                        _ => return Err(token_error(cursor.current(), "invalid commit attribute")),
+                    }
+                }
+                events.push(GitEvent::Commit {
+                    id,
+                    message,
+                    tag,
+                    branch: current_branch.clone(),
+                });
+            }
+            "branch" => {
+                cursor.advance();
+                let branch = parse_gitgraph_reference(&mut cursor)?;
+                if cursor.consume_if("ORDER_ATTR").is_some() {
+                    expect_gitgraph_token(&mut cursor, "INT", "branch order")?;
+                }
+                if !branches.iter().any(|candidate| candidate.name == branch) {
+                    branches.push(GitBranch { name: branch });
+                }
+            }
+            "checkout" | "switch" => {
+                cursor.advance();
+                let branch = parse_gitgraph_reference(&mut cursor)?;
+                if !branches.iter().any(|candidate| candidate.name == branch) {
+                    return Err(token_error(
+                        &command,
+                        format!("cannot checkout unknown GitGraph branch {branch:?}"),
+                    ));
+                }
+                current_branch = branch.clone();
+                events.push(GitEvent::Checkout { branch });
+            }
+            "merge" => {
+                cursor.advance();
+                let from = parse_gitgraph_reference(&mut cursor)?;
+                let mut id = None;
+                let mut tag = None;
+                while !gitgraph_statement_ended(&cursor) {
+                    match token_name(cursor.current()) {
+                        "ID_ATTR" => {
+                            cursor.advance();
+                            id = Some(parse_gitgraph_string(&mut cursor, "merge id")?);
+                        }
+                        "TAG_ATTR" => {
+                            cursor.advance();
+                            tag = Some(parse_gitgraph_string(&mut cursor, "merge tag")?);
+                        }
+                        "TYPE_ATTR" => {
+                            cursor.advance();
+                            expect_gitgraph_token(&mut cursor, "COMMIT_TYPE", "merge type")?;
+                        }
+                        _ => return Err(token_error(cursor.current(), "invalid merge attribute")),
+                    }
+                }
+                events.push(GitEvent::Merge { from, id, tag });
+            }
+            "cherry-pick" => {
+                return Err(token_error(
+                    &command,
+                    "GitGraph cherry-pick is recognized but requires a native temporal IR event",
+                ));
+            }
+            _ => {
+                return Err(token_error(
+                    &command,
+                    format!("unsupported GitGraph command {:?}", command.value),
+                ));
+            }
+        }
+        cursor.skip_terminators();
+    }
+
+    Ok(GitDiagram {
+        direction,
+        branches,
+        events,
+    })
+}
+
+fn gitgraph_statement_ended(cursor: &TokenCursor) -> bool {
+    cursor.at_eof() || token_name(cursor.current()) == "NEWLINE"
+}
+
+fn parse_gitgraph_reference(cursor: &mut TokenCursor) -> Result<String, ParseError> {
+    let token = cursor.current().clone();
+    if !matches!(token_name(&token), "REFERENCE" | "STRING") {
+        return Err(token_error(&token, "expected GitGraph reference"));
+    }
+    Ok(cursor.advance().value.clone())
+}
+
+fn parse_gitgraph_string(
+    cursor: &mut TokenCursor,
+    description: &str,
+) -> Result<String, ParseError> {
+    Ok(expect_gitgraph_token(cursor, "STRING", description)?.value)
+}
+
+fn expect_gitgraph_token(
+    cursor: &mut TokenCursor,
+    name: &str,
+    description: &str,
+) -> Result<Token, ParseError> {
+    cursor.consume_if(name).ok_or_else(|| {
+        token_error(
+            cursor.current(),
+            format!("expected GitGraph {description}"),
+        )
+    })
+}
+
 // ── gantt parser ──────────────────────────────────────────────────────────
 
 /// Parse a Mermaid `gantt` block into a `GanttDiagram`.
@@ -1156,6 +1449,18 @@ mod tests_dg04 {
   \"Dogs\" : 60
   \"Cats\" : 40";
 
+    const SANKEY_SRC: &str = "sankey
+Grid,\"Heating, homes\",113.726
+Grid,Losses,56";
+
+    const GITGRAPH_SRC: &str = "gitGraph LR:
+commit id: \"root\" msg: \"Initial commit\"
+branch develop order: 1
+checkout develop
+commit id: \"feature\" tag: \"v1\"
+checkout main
+merge develop id: \"merge-1\"";
+
     #[test]
     fn class_diagram_parses_nodes() {
         let d = parse_class_diagram(CLASS_SRC).unwrap();
@@ -1236,6 +1541,40 @@ mod tests_dg04 {
     }
 
     #[test]
+    fn sankey_parses_csv_flows_and_nodes() {
+        let d = parse_sankey(SANKEY_SRC).unwrap();
+        assert_eq!(d.kind, ChartKind::Sankey);
+        assert_eq!(d.flows.len(), 2);
+        assert_eq!(d.sankey_nodes.len(), 3);
+        assert_eq!(d.flows[0].target, "Heating, homes");
+        assert_eq!(d.flows[0].weight, 113.726);
+    }
+
+    #[test]
+    fn gitgraph_parses_branch_history() {
+        let d = parse_gitgraph(GITGRAPH_SRC).unwrap();
+        assert_eq!(d.direction, DiagramDirection::Lr);
+        assert_eq!(d.branches.len(), 2);
+        assert_eq!(d.events.len(), 5);
+        assert!(matches!(
+            &d.events[1],
+            GitEvent::Checkout { branch } if branch == "develop"
+        ));
+        assert!(matches!(
+            &d.events[4],
+            GitEvent::Merge { from, id, .. }
+                if from == "develop" && id.as_deref() == Some("merge-1")
+        ));
+    }
+
+    #[test]
+    fn gitgraph_reports_cherry_pick_ir_gap() {
+        let error = parse_gitgraph("gitGraph\ncherry-pick id: \"abc123\"").unwrap_err();
+        assert!(error.message.contains("cherry-pick"));
+        assert!(error.message.contains("temporal IR"));
+    }
+
+    #[test]
     fn dispatch_flowchart() {
         let src = "flowchart LR\n  A --> B";
         match parse_any_mermaid(src).unwrap() {
@@ -1276,6 +1615,22 @@ mod tests_dg04 {
         match parse_any_mermaid(PIE_SRC).unwrap() {
             MermaidDiagram::Chart(chart) => assert_eq!(chart.kind, ChartKind::Pie),
             _ => panic!("expected Chart"),
+        }
+    }
+
+    #[test]
+    fn dispatch_sankey() {
+        match parse_any_mermaid(SANKEY_SRC).unwrap() {
+            MermaidDiagram::Chart(chart) => assert_eq!(chart.kind, ChartKind::Sankey),
+            _ => panic!("expected Chart"),
+        }
+    }
+
+    #[test]
+    fn dispatch_gitgraph() {
+        match parse_any_mermaid(GITGRAPH_SRC).unwrap() {
+            MermaidDiagram::Temporal(diagram) => assert_eq!(diagram.kind, TemporalKind::Git),
+            _ => panic!("expected Temporal"),
         }
     }
 }

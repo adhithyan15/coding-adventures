@@ -1,0 +1,33 @@
+# @version 1
+#
+# Mermaid 11.16.1 GitGraph token grammar.
+#
+# Upstream grammar:
+# https://github.com/mermaid-js/mermaid/blob/mermaid%4011.16.1/packages/parser/src/language/gitGraph/gitGraph.langium
+
+skip:
+  WHITESPACE      = /[ \t]+/
+  COMMENT         = /%%[^\r\n]*/
+
+NEWLINE           = /\r?\n/
+HEADER            = /gitGraph:?/
+CHERRY_PICK       = "cherry-pick"
+ID_ATTR           = "id:"
+MSG_ATTR          = "msg:"
+TAG_ATTR          = "tag:"
+TYPE_ATTR         = "type:"
+ORDER_ATTR        = "order:"
+PARENT_ATTR       = "parent:"
+COLON             = ":"
+STRING            = /"([^"\\]|\\.)*"|'([^'\\]|\\.)*'/
+INT               = /0|[1-9][0-9]*/
+DIRECTION         = /LR|TB|BT/
+COMMIT_TYPE       = /NORMAL|REVERSE|HIGHLIGHT/
+REFERENCE         = /[A-Za-z0-9_](?:[-.\/A-Za-z0-9_]*[A-Za-z0-9_])?/
+
+keywords:
+  commit
+  branch
+  merge
+  checkout
+  switch
