@@ -22,6 +22,12 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
   its inner curl and lower loops, then one lift precedes a second run joining the
   outer-left climb to the final arch.
 
+### Added - verified Tamil க handwriting
+
+- Record the cited six-movement order for Tamil க: its upper frame and two lower
+  bowls form three pen-down runs with exactly two lifts, matching the Frame 3
+  source and Language Ladder's font-checked path.
+
 ### Added - generated lesson figures
 
 - Generate deterministic etymology-route SVGs from the canonical lesson `roots`
