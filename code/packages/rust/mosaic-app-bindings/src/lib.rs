@@ -66,6 +66,24 @@ pub fn xaml_runtime_binding(namespace: &str) -> String {
         .replace("__MOSAIC_NAMESPACE__", namespace)
 }
 
+/// Generate the standard Flutter/Dart FFI host binding.
+pub fn flutter_runtime_binding() -> String {
+    include_str!("../templates/flutter/mosaic_host.dart").replace(
+        "__MOSAIC_PROTOCOL_VERSION__",
+        &mosaic_app_runtime::PROTOCOL_VERSION.to_string(),
+    )
+}
+
+/// Add the small allocation helper used by Dart's native FFI to a generated
+/// Flutter package manifest.
+pub fn flutter_pubspec_with_runtime_binding(pubspec_yaml: &str) -> String {
+    pubspec_yaml.replacen(
+        "dependencies:\n",
+        "dependencies:\n  ffi: '>=2.1.0 <3.0.0'\n",
+        1,
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -203,5 +221,48 @@ mod tests {
             dispatch < commit,
             "sequence must commit only after dispatch succeeds"
         );
+    }
+
+    #[test]
+    fn flutter_binding_owns_the_full_c_abi_lifecycle() {
+        let source = flutter_runtime_binding();
+        for symbol in [
+            "mosaic_app_create",
+            "mosaic_app_dispatch",
+            "mosaic_app_snapshot",
+            "mosaic_app_restore",
+            "mosaic_buffer_free",
+            "mosaic_app_destroy",
+        ] {
+            assert!(source.contains(symbol), "missing {symbol}");
+        }
+        assert!(source.contains("DynamicLibrary.open"));
+        assert!(source.contains("finally {\n      _bufferFree(buffer);"));
+        assert!(source.contains("void dispose()"));
+        assert!(source.contains("const MosaicHost()"));
+    }
+
+    #[test]
+    fn flutter_binding_uses_shared_protocol_and_successful_sequences() {
+        let source = flutter_runtime_binding();
+        assert!(source.contains(&format!(
+            "static const int _protocolVersion = {};",
+            mosaic_app_runtime::PROTOCOL_VERSION
+        )));
+        assert!(!source.contains("__MOSAIC_PROTOCOL_VERSION__"));
+        let dispatch = source.find("_dispatch(_app, input, output)").unwrap();
+        let commit = source.find("_sequence = nextSequence").unwrap();
+        assert!(
+            dispatch < commit,
+            "sequence must commit only after dispatch succeeds"
+        );
+    }
+
+    #[test]
+    fn flutter_pubspec_installs_the_ffi_allocator() {
+        let pubspec =
+            flutter_pubspec_with_runtime_binding("dependencies:\n  flutter:\n    sdk: flutter\n");
+        assert!(pubspec.contains("ffi: '>=2.1.0 <3.0.0'"));
+        assert!(pubspec.contains("flutter:\n    sdk: flutter"));
     }
 }

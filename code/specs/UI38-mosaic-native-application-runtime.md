@@ -297,7 +297,8 @@ unblocks multiple downstream targets; never count source generation as completio
   - [x] Compose/JVM through the standard JNA binding.
   - [x] SwiftUI through the standard Foundation/C dynamic binding.
   - [x] XAML through the standard .NET native binding.
-  - [ ] Qt/QML and Flutter.
+  - [x] Flutter through the standard Dart FFI binding.
+  - [ ] Qt/QML.
 - [ ] Generate standard effect hosts, beginning with storage and lifecycle.
 - [ ] Add `native-complete` capability/degradation analysis to the compiler.
 - [ ] Add launch-and-dispatch conformance fixtures for every native backend.
@@ -306,7 +307,8 @@ unblocks multiple downstream targets; never count source generation as completio
   their MSL, while the artifact builder merges both layout and style.
 - [ ] Type-check the complete generated Trestle application on every target, not
   only focused fixtures; SwiftUI still needs type-correct truthiness lowering and
-  collision-safe generated member names before that gate can pass.
+  collision-safe generated member names, while Flutter still needs boolean
+  truthiness lowering and required input values before that gate can pass.
 
 ### P1 — reusable application vocabulary
 

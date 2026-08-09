@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add the package-independent Flutter/Dart FFI binding and preserve the public
+  injectable `MosaicHost` contract for tests and specialized packages.
 - Add the package-independent XAML/.NET binding using built-in native loading
   and JSON support.
 - Add the package-independent SwiftUI/Foundation binding and C dynamic loader.
