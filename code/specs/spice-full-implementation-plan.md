@@ -4576,10 +4576,16 @@ the Rust, Python, and TypeScript surfaces together.
      base-emitter-grading-coefficient field.
 
 449. Python and TypeScript Berkeley SPICE BJT base-collector-potential parity.
-   - Status: implemented in this BJT VJC parity slice.
+   - Status: completed in PR 10113.
    - Both parser facades validate positive finite `VJC` / `PC` values, prefer
      canonical `VJC`, and lower the result into the shared engine
      base-collector-junction-potential field.
+
+450. Python and TypeScript Berkeley SPICE BJT base-collector-grading parity.
+   - Status: implemented in this BJT MJC parity slice.
+   - Both parser facades validate finite `MJC` / `MC` values in `[0, 1)`,
+     prefer canonical `MJC`, and lower the result into the shared engine
+     base-collector-grading-coefficient field.
 
 ## Backlog
 
