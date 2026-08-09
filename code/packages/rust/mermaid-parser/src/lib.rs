@@ -396,10 +396,10 @@ fn token_name(token: &Token) -> &str {
 
 use diagram_ir::{
     Axis, AxisKind, ChartDiagram, ChartKind, ChartOrientation, ChartSeries, Compartment,
-    CompartmentKind, GanttDiagram, GanttSection, GanttTask, GitBranch, GitDiagram, GitEvent,
-    PieSlice, RelKind, SankeyFlow, SankeyNode, SeriesKind, StructuralDiagram, StructuralKind,
-    StructuralNode, StructuralNodeKind, StructuralRelationship, TaskStart, TaskStatus, TemporalBody,
-    TemporalDiagram, TemporalKind,
+    CompartmentKind, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType, GitDiagram,
+    GitEvent, PieSlice, RelKind, SankeyFlow, SankeyNode, SeriesKind, StructuralDiagram,
+    StructuralKind, StructuralNode, StructuralNodeKind, StructuralRelationship, TaskStart,
+    TaskStatus, TemporalBody, TemporalDiagram, TemporalKind,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -1115,9 +1115,8 @@ fn parse_sankey_field(cursor: &mut TokenCursor) -> Result<String, ParseError> {
 
 /// Parse Mermaid GitGraph syntax into the shared temporal IR.
 ///
-/// The grammar accepts Mermaid's complete command surface. Cherry-pick is
-/// rejected during lowering until the temporal IR can represent it without
-/// losing parent-commit semantics.
+/// The grammar and temporal IR preserve Mermaid's complete command surface,
+/// including branch order, commit types, and cherry-pick parent metadata.
 pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
     parse_mermaid_gitgraph_ast(source)?;
 
@@ -1137,6 +1136,7 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
 
     let mut branches = vec![GitBranch {
         name: "main".to_string(),
+        order: None,
     }];
     let mut events = Vec::new();
     let mut current_branch = "main".to_string();
@@ -1149,6 +1149,7 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
                 let mut id = None;
                 let mut message = None;
                 let mut tag = None;
+                let mut type_ = GitCommitType::Normal;
                 while !gitgraph_statement_ended(&cursor) {
                     match token_name(cursor.current()) {
                         "ID_ATTR" => {
@@ -1165,7 +1166,7 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
                         }
                         "TYPE_ATTR" => {
                             cursor.advance();
-                            expect_gitgraph_token(&mut cursor, "COMMIT_TYPE", "commit type")?;
+                            type_ = parse_gitgraph_commit_type(&mut cursor)?;
                         }
                         "STRING" => {
                             message = Some(cursor.advance().value.clone());
@@ -1178,16 +1179,24 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
                     message,
                     tag,
                     branch: current_branch.clone(),
+                    type_,
                 });
             }
             "branch" => {
                 cursor.advance();
                 let branch = parse_gitgraph_reference(&mut cursor)?;
+                let mut order = None;
                 if cursor.consume_if("ORDER_ATTR").is_some() {
-                    expect_gitgraph_token(&mut cursor, "INT", "branch order")?;
+                    let token = expect_gitgraph_token(&mut cursor, "INT", "branch order")?;
+                    order = Some(token.value.parse::<i64>().map_err(|_| {
+                        token_error(&token, format!("invalid branch order {:?}", token.value))
+                    })?);
                 }
                 if !branches.iter().any(|candidate| candidate.name == branch) {
-                    branches.push(GitBranch { name: branch });
+                    branches.push(GitBranch {
+                        name: branch,
+                        order,
+                    });
                 }
             }
             "checkout" | "switch" => {
@@ -1207,6 +1216,7 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
                 let from = parse_gitgraph_reference(&mut cursor)?;
                 let mut id = None;
                 let mut tag = None;
+                let mut type_ = GitCommitType::Normal;
                 while !gitgraph_statement_ended(&cursor) {
                     match token_name(cursor.current()) {
                         "ID_ATTR" => {
@@ -1219,18 +1229,55 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
                         }
                         "TYPE_ATTR" => {
                             cursor.advance();
-                            expect_gitgraph_token(&mut cursor, "COMMIT_TYPE", "merge type")?;
+                            type_ = parse_gitgraph_commit_type(&mut cursor)?;
                         }
                         _ => return Err(token_error(cursor.current(), "invalid merge attribute")),
                     }
                 }
-                events.push(GitEvent::Merge { from, id, tag });
+                events.push(GitEvent::Merge {
+                    from,
+                    id,
+                    tag,
+                    type_,
+                });
             }
             "cherry-pick" => {
-                return Err(token_error(
-                    &command,
-                    "GitGraph cherry-pick is recognized but requires a native temporal IR event",
-                ));
+                cursor.advance();
+                let mut id = None;
+                let mut tag = None;
+                let mut parent = None;
+                while !gitgraph_statement_ended(&cursor) {
+                    match token_name(cursor.current()) {
+                        "ID_ATTR" => {
+                            cursor.advance();
+                            id = Some(parse_gitgraph_string(&mut cursor, "cherry-pick id")?);
+                        }
+                        "TAG_ATTR" => {
+                            cursor.advance();
+                            tag = Some(parse_gitgraph_string(&mut cursor, "cherry-pick tag")?);
+                        }
+                        "PARENT_ATTR" => {
+                            cursor.advance();
+                            parent =
+                                Some(parse_gitgraph_string(&mut cursor, "cherry-pick parent")?);
+                        }
+                        _ => {
+                            return Err(token_error(
+                                cursor.current(),
+                                "invalid cherry-pick attribute",
+                            ));
+                        }
+                    }
+                }
+                let id = id.ok_or_else(|| {
+                    token_error(&command, "GitGraph cherry-pick requires an id attribute")
+                })?;
+                events.push(GitEvent::CherryPick {
+                    id,
+                    tag,
+                    parent,
+                    branch: current_branch.clone(),
+                });
             }
             _ => {
                 return Err(token_error(
@@ -1268,17 +1315,27 @@ fn parse_gitgraph_string(
     Ok(expect_gitgraph_token(cursor, "STRING", description)?.value)
 }
 
+fn parse_gitgraph_commit_type(cursor: &mut TokenCursor) -> Result<GitCommitType, ParseError> {
+    let token = expect_gitgraph_token(cursor, "COMMIT_TYPE", "commit type")?;
+    match token.value.as_str() {
+        "NORMAL" => Ok(GitCommitType::Normal),
+        "REVERSE" => Ok(GitCommitType::Reverse),
+        "HIGHLIGHT" => Ok(GitCommitType::Highlight),
+        _ => Err(token_error(
+            &token,
+            format!("invalid GitGraph commit type {:?}", token.value),
+        )),
+    }
+}
+
 fn expect_gitgraph_token(
     cursor: &mut TokenCursor,
     name: &str,
     description: &str,
 ) -> Result<Token, ParseError> {
-    cursor.consume_if(name).ok_or_else(|| {
-        token_error(
-            cursor.current(),
-            format!("expected GitGraph {description}"),
-        )
-    })
+    cursor
+        .consume_if(name)
+        .ok_or_else(|| token_error(cursor.current(), format!("expected GitGraph {description}")))
 }
 
 // ── gantt parser ──────────────────────────────────────────────────────────
@@ -1568,10 +1625,18 @@ merge develop id: \"merge-1\"";
     }
 
     #[test]
-    fn gitgraph_reports_cherry_pick_ir_gap() {
-        let error = parse_gitgraph("gitGraph\ncherry-pick id: \"abc123\"").unwrap_err();
-        assert!(error.message.contains("cherry-pick"));
-        assert!(error.message.contains("temporal IR"));
+    fn gitgraph_parses_cherry_pick_metadata() {
+        let d = parse_gitgraph(
+            "gitGraph\ncommit id: \"abc123\"\ncherry-pick id: \"abc123\" parent: \"root\"",
+        )
+        .unwrap();
+        assert!(matches!(
+            &d.events[1],
+            GitEvent::CherryPick { id, parent, branch, .. }
+                if id == "abc123"
+                    && parent.as_deref() == Some("root")
+                    && branch == "main"
+        ));
     }
 
     #[test]

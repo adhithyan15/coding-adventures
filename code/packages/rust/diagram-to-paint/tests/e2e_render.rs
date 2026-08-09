@@ -226,7 +226,7 @@ mod apple {
     #[test]
     fn render_mermaid_gitgraph_to_png() {
         let git = parse_gitgraph(
-            "gitGraph LR:\ncommit id: \"root\"\nbranch feature\ncheckout feature\ncommit id: \"work\" msg: \"Build parser\"\ncheckout main\nmerge feature tag: \"v1\"",
+            "gitGraph LR:\ncommit id: \"root\"\nbranch feature\ncheckout feature\ncommit id: \"work\" msg: \"Build parser\"\ncherry-pick id: \"root\" parent: \"work\"\ncheckout main\nmerge feature tag: \"v1\"",
         )
         .expect("Mermaid GitGraph parse failed");
         let temporal = diagram_ir::TemporalDiagram {

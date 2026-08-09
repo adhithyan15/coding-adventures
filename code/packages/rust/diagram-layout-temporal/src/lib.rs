@@ -195,7 +195,7 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
 
     for event in &diagram.events {
         match event {
-            GitEvent::Commit { id, message, tag, branch } => {
+            GitEvent::Commit { id, message, tag, branch, .. } => {
                 let lane = *branch_lanes.entry(branch.clone()).or_insert_with(|| {
                     let l = next_lane; next_lane += 1; l
                 });
@@ -218,7 +218,7 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
                     let l = next_lane; next_lane += 1; l
                 });
             }
-            GitEvent::Merge { from, id, tag } => {
+            GitEvent::Merge { from, id, tag, .. } => {
                 let from_lane = *branch_lanes.get(from).unwrap_or(&0);
                 let to_lane   = *branch_lanes.get(&current_branch).unwrap_or(&0);
                 let from_y    = lane_y(from_lane);
@@ -233,6 +233,23 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
                     x: x_cursor, y: to_y,
                     id: commit_id,
                     message: Some(format!("merge {from}")),
+                    tag: tag.clone(),
+                });
+                x_cursor += COMMIT_SPACING;
+            }
+            GitEvent::CherryPick { id, tag, parent, branch } => {
+                let lane = *branch_lanes.entry(branch.clone()).or_insert_with(|| {
+                    let l = next_lane; next_lane += 1; l
+                });
+                let cy = lane_y(lane);
+                commit_x.insert(id.clone(), (x_cursor, cy));
+                items.push(LayoutedTemporalItem::CommitNode {
+                    x: x_cursor, y: cy,
+                    id: id.clone(),
+                    message: Some(match parent {
+                        Some(parent) => format!("cherry-pick {id} from {parent}"),
+                        None => format!("cherry-pick {id}"),
+                    }),
                     tag: tag.clone(),
                 });
                 x_cursor += COMMIT_SPACING;
@@ -286,15 +303,15 @@ mod tests {
             title: None,
             body: TemporalBody::Git(GitDiagram {
                 direction: DiagramDirection::Lr,
-                branches: vec![GitBranch { name: "main".into() }],
+                branches: vec![GitBranch { name: "main".into(), order: None }],
                 events: vec![
                     GitEvent::Commit {
                         id: Some("a1".into()), message: Some("init".into()),
-                        tag: None, branch: "main".into(),
+                        tag: None, branch: "main".into(), type_: GitCommitType::Normal,
                     },
                     GitEvent::Commit {
                         id: Some("a2".into()), message: Some("feature".into()),
-                        tag: None, branch: "main".into(),
+                        tag: None, branch: "main".into(), type_: GitCommitType::Normal,
                     },
                 ],
             }),
