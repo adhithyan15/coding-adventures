@@ -2731,6 +2731,22 @@ M1 out gate 0 0 nfast W=2u L=180n
     expect(result.voltage("out")).toBeLessThan(1.8);
   });
 
+  it("parses the NCH model type alias", () => {
+    const parsed = parseNetlist(".model nfast NCH(VTO=0.45 KP=200u)\nM1 d g s b nfast");
+
+    expect(parsed.models.get("nfast")?.kind).toBe("NMOS");
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "mosfet",
+      type: "NMOS",
+    });
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") {
+      throw new Error("unexpected element kind");
+    }
+    expect(element.params.KP).toBeCloseTo(200.0e-6, 12);
+  });
+
   it("parses PMOS MOSFET aliases", () => {
     const parsed = parseNetlist(`
 .model pfast PMOS(VTO=0.4 KP=120u NSUB=1.2)

@@ -1156,6 +1156,8 @@ function parseModelCard(fields: readonly string[]): ModelCard {
     kind = "NJF";
   } else if (rawKind === "PJFET" || rawKind === "PJ") {
     kind = "PJF";
+  } else if (rawKind === "NCH") {
+    kind = "NMOS";
   }
   const params = parseModelParams(paramsText);
   const diodeSaturationCurrent = params.get("IS") ?? params.get("JS");
