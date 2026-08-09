@@ -1834,6 +1834,56 @@ mod tests {
         (store, backend)
     }
 
+    fn valid_manifest_metadata() -> JsonValue {
+        build_manifest_json(
+            MANIFEST_VERSION,
+            1,
+            32,
+            4,
+            &[KekEntry {
+                id: "kek-1".into(),
+                status: "active",
+                source: KekSource::PasswordDerived,
+                salt: Some(vec![0x42; 16]),
+                verifier_nonce: [0; NONCE_LEN],
+                verifier_tag: [0; TAG_LEN],
+                verifier_ct: vec![0; VERIFIER_PLAINTEXT.len()],
+            }],
+            0,
+        )
+    }
+
+    fn set_object_field(value: &mut JsonValue, field: &str, replacement: JsonValue) {
+        let JsonValue::Object(fields) = value else {
+            panic!("expected object");
+        };
+        let (_, value) = fields.iter_mut().find(|(name, _)| name == field).unwrap();
+        *value = replacement;
+    }
+
+    fn set_first_kek_field(value: &mut JsonValue, field: &str, replacement: JsonValue) {
+        let JsonValue::Object(fields) = value else {
+            panic!("expected manifest object");
+        };
+        let (_, JsonValue::Array(keks)) =
+            fields.iter_mut().find(|(name, _)| name == "keks").unwrap()
+        else {
+            panic!("expected keks array");
+        };
+        let JsonValue::Object(first) = keks.first_mut().unwrap() else {
+            panic!("expected KEK object");
+        };
+        let (_, value) = first.iter_mut().find(|(name, _)| name == field).unwrap();
+        *value = replacement;
+    }
+
+    fn assert_validation_field(error: SealedStoreError, expected: &str) {
+        assert!(matches!(
+            error,
+            SealedStoreError::Validation { ref field, .. } if field == expected
+        ));
+    }
+
     #[test]
     fn init_then_put_get_roundtrip() {
         let (store, _) = new_store();
@@ -2347,6 +2397,161 @@ mod tests {
         );
         assert!(hex_decode("abc").is_err());
         assert!(hex_decode("xz").is_err());
+    }
+
+    #[test]
+    fn public_defaults_and_error_display_paths_are_covered() {
+        let defaults = InitOptions::default();
+        assert_eq!(defaults.argon2id_time_cost, DEFAULT_ARGON2_TIME_COST);
+        assert_eq!(defaults.argon2id_memory_kib, DEFAULT_ARGON2_MEMORY_KIB);
+        assert_eq!(defaults.argon2id_parallelism, DEFAULT_ARGON2_PARALLELISM);
+        assert!(defaults.salt_override.is_none());
+
+        let errors = [
+            SealedStoreError::AlreadyInitialized,
+            SealedStoreError::NotInitialized,
+            SealedStoreError::Sealed,
+            SealedStoreError::BadPassword,
+            SealedStoreError::InvalidKek,
+            SealedStoreError::Tamper {
+                namespace: "ns".into(),
+                key: "key".into(),
+            },
+            SealedStoreError::Storage(StorageError::Backend {
+                message: "backend unavailable".into(),
+            }),
+            SealedStoreError::Crypto("primitive rejected input".into()),
+            SealedStoreError::Validation {
+                field: "field".into(),
+                message: "invalid".into(),
+            },
+        ];
+        for error in errors {
+            assert!(error.to_string().starts_with("vault-sealed-store"));
+        }
+    }
+
+    #[test]
+    fn manifest_parser_rejects_each_bounded_field_shape() {
+        let mut missing_keks = valid_manifest_metadata();
+        let JsonValue::Object(fields) = &mut missing_keks else {
+            unreachable!();
+        };
+        fields.retain(|(name, _)| name != "keks");
+        assert_validation_field(Manifest::parse(&missing_keks).unwrap_err(), "keks");
+
+        let mut non_array_keks = valid_manifest_metadata();
+        set_object_field(
+            &mut non_array_keks,
+            "keks",
+            JsonValue::String("not-an-array".into()),
+        );
+        assert_validation_field(Manifest::parse(&non_array_keks).unwrap_err(), "keks");
+
+        let mut empty_keks = valid_manifest_metadata();
+        set_object_field(&mut empty_keks, "keks", JsonValue::Array(Vec::new()));
+        assert_validation_field(Manifest::parse(&empty_keks).unwrap_err(), "keks");
+
+        let mut unsupported_status = valid_manifest_metadata();
+        set_first_kek_field(
+            &mut unsupported_status,
+            "status",
+            JsonValue::String("unknown".into()),
+        );
+        assert_validation_field(Manifest::parse(&unsupported_status).unwrap_err(), "status");
+
+        let mut invalid_salt_hex = valid_manifest_metadata();
+        set_first_kek_field(
+            &mut invalid_salt_hex,
+            "salt",
+            JsonValue::String("zz".into()),
+        );
+        assert_validation_field(Manifest::parse(&invalid_salt_hex).unwrap_err(), "salt");
+
+        let mut short_salt = valid_manifest_metadata();
+        set_first_kek_field(
+            &mut short_salt,
+            "salt",
+            JsonValue::String(hex_encode(&[0; 7])),
+        );
+        assert_validation_field(Manifest::parse(&short_salt).unwrap_err(), "salt");
+
+        let mut invalid_verifier_hex = valid_manifest_metadata();
+        set_first_kek_field(
+            &mut invalid_verifier_hex,
+            "verifier_ct",
+            JsonValue::String("zz".into()),
+        );
+        assert_validation_field(
+            Manifest::parse(&invalid_verifier_hex).unwrap_err(),
+            "verifier_ct",
+        );
+
+        let mut short_verifier = valid_manifest_metadata();
+        set_first_kek_field(
+            &mut short_verifier,
+            "verifier_ct",
+            JsonValue::String(hex_encode(&[0; 1])),
+        );
+        assert_validation_field(Manifest::parse(&short_verifier).unwrap_err(), "verifier_ct");
+    }
+
+    #[test]
+    fn sealed_metadata_and_json_helpers_reject_malformed_values() {
+        let valid = || {
+            build_sealed_metadata(
+                &[0; NONCE_LEN],
+                &[0; TAG_LEN],
+                b"aad",
+                &[0; KEY_LEN],
+                &[0; NONCE_LEN],
+                &[0; TAG_LEN],
+                "kek-1",
+            )
+        };
+        let parse_error = |metadata: &JsonValue| match SealedRecordMeta::parse(metadata) {
+            Ok(_) => panic!("expected malformed metadata to fail"),
+            Err(error) => error,
+        };
+
+        let mut bad_version = valid();
+        set_object_field(
+            &mut bad_version,
+            "vault_sealed_version",
+            JsonValue::Number(JsonNumber::Integer(999)),
+        );
+        assert_validation_field(parse_error(&bad_version), "vault_sealed_version");
+
+        let mut invalid_aad = valid();
+        set_object_field(&mut invalid_aad, "body_aad", JsonValue::String("zz".into()));
+        assert_validation_field(parse_error(&invalid_aad), "body_aad");
+
+        let mut invalid_wrapped_dek = valid();
+        set_object_field(
+            &mut invalid_wrapped_dek,
+            "wrapped_dek",
+            JsonValue::String("zz".into()),
+        );
+        assert_validation_field(parse_error(&invalid_wrapped_dek), "wrapped_dek");
+
+        assert_validation_field(
+            expect_object(&JsonValue::Null, "object").unwrap_err(),
+            "object",
+        );
+        assert_validation_field(get_field(&[], "missing").unwrap_err(), "missing");
+        let number_field = [(
+            "value".to_string(),
+            JsonValue::Number(JsonNumber::Integer(1)),
+        )];
+        assert_validation_field(get_string(&number_field, "value").unwrap_err(), "value");
+        let negative_field = [(
+            "value".to_string(),
+            JsonValue::Number(JsonNumber::Integer(-1)),
+        )];
+        assert_validation_field(get_u32(&negative_field, "value").unwrap_err(), "value");
+        assert_validation_field(get_u64(&negative_field, "value").unwrap_err(), "value");
+        assert_validation_field(hex_decode_fixed::<2>("zz", "hex").unwrap_err(), "hex");
+        assert_validation_field(hex_decode_fixed::<2>("00", "hex").unwrap_err(), "hex");
     }
 
     #[test]

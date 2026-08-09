@@ -19,6 +19,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   KEK id, and byte counts without ciphertext, wrapped DEK, nonce, tag, or
   AAD bytes.
 
+### Security
+
+- Raised measured Tarpaulin LLVM line coverage from 88.71% to 96.99%
+  (773/797), closing VLT01's declared 95% target with focused rejection tests
+  for malformed KEK manifests, sealed-record metadata, JSON field types,
+  fixed-width hex, and public error formatting.
+
 ## [0.1.0] — 2026-04-22
 
 ### Added

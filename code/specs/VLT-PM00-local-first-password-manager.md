@@ -1241,10 +1241,10 @@ changelog, focused build, and downstream validation.
 3. Extend VLT01/custody seam to accept an injected random root KEK.
 4. `vault-pm-domain`: product IDs, documents, conflicts, redacted views.
 5. Security review of format/key hierarchy before persistent user data exists,
-   including closure of VLT01's existing measured line-coverage gap against its
-   declared 95% target (88.2% under Tarpaulin LLVM after the root-KEK seam),
-   and fixed wire/GC bounds for accumulated observed-set tombstones and
+   including fixed wire/GC bounds for accumulated observed-set tombstones and
    operation IDs before domain state is decoded from persistent objects.
+   VLT01's declared 95% line-coverage target is met at 96.99% under Tarpaulin
+   LLVM (773/797 lines) after focused malformed-manifest and metadata tests.
    VLT02's record, opaque-payload, and error diagnostics use closed redacted
    `Debug` implementations, so callers that bypass VLT-PM03 views do not emit
    raw record fields through ordinary diagnostic formatting.

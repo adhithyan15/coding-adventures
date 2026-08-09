@@ -89,6 +89,9 @@ See the spec for the full argument. In short:
 - The only key-derived persisted artifact is a verifier AEAD of 16 zero
   bytes. For password-derived KEKs, an attacker's only path is offline
   brute force against Argon2id at the configured parameters.
+- The security suite measures 96.99% line coverage under Tarpaulin LLVM
+  (773/797 lines), exceeding VLT01's declared 95% target. Rejection paths for
+  malformed manifests and sealed metadata are exercised directly.
 
 ## Dependencies
 
