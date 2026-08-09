@@ -4,27 +4,22 @@
   "started": "2026-07-29",
   "policy": {
     "maximum_active_parity_prs": 1,
-    "merge_authority": "auto-merge-after-required-checks",
+    "merge_authority": "external-review-and-merge-only",
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass",
     "delivery_scope": "portable-packages-and-build-tools-only",
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 9916,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9916",
-    "branch": "codex/typescript-node-builtin-declarations",
-    "status": "open"
-  },
+  "active_pr": 10110,
   "last_inventory": {
-    "revision": "00e47db9a4a8407800c678a50c64475c11699708",
+    "revision": "1ab517497fbdf89048a694750909dc528a6fa2bd",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1264,
-    "implementation_package_slots": 4419,
+    "implementation_package_slots": 4420,
     "high_consensus_packages": 173,
-    "high_consensus_missing_slots": 270,
+    "high_consensus_missing_slots": 269,
     "singleton_packages": 814,
     "singleton_missing_slots": 11396,
     "rust_singletons": 618,
@@ -348,7 +343,7 @@
     {
       "id": "typescript-node-builtin-type-declarations",
       "title": "Audit TypeScript Node builtin declaration ownership",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/typescript-node-builtin-declarations",
       "pr_number": 9916,
@@ -357,11 +352,38 @@
     {
       "id": "build-file-standalone-integrity-lua",
       "title": "Repair the Lua BUILD_windows standalone prerequisite wave",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-file-standalone-integrity"],
+      "branch": "codex/lua-build-windows-standalone",
+      "pr_number": 10110,
+      "notes": "Materialized during Python build-tool validation after the rockspec encoding repair. Ten Lua packages whose canonical BUILD recipes bootstrap siblings lack BUILD_windows standalone recipes: brainfuck_ir_compiler, brainfuck_wasm_compiler, correlation_vector, ir_to_wasm_compiler, ir_to_wasm_validator, json_serializer, ls00, qr-code, wasm_module_encoder, and zstd. Rebased cleanly onto origin/main 005c38161e before implementation, onto post-#10093 origin/main 4833046722, onto post-#10103 origin/main 6c27df28af, onto post-#10106 origin/main 16a9192aaf, onto post-#10108 origin/main cb09f5b9ee, and onto post-#10109 origin/main 1ab517497f after each refreshed collision-clean 1,264-identity/4,420-slot inventory left this item as the coherent root. The implementation adds all ten standalone recipes with 67 ordered sibling installs, closes clean-tree transitive prerequisites, and makes the ZStd CLI interop tests Windows-native. Fresh isolated LuaRocks validation passes 351 tests with zero failures, errors, or pending cases; wasm_module_encoder production coverage is 90.50%. Python build-tool validation is clean across 4,829 packages; its full 353-test suite passes at 85.26% coverage. Lua build-tool validation passes 61 tests at 73.95% aggregate coverage. Go test, vet, build, and module verification pass; full repository validation retains the exact unrelated 17-diagnostic Perl/Python/Swift baseline and reports zero Lua diagnostics. Changed-file luacheck, luac, parity collisions, state graph, diff, credential scan, and direct security review pass. Ready-for-review PR #10110 owns this delivery."
+    },
+    {
+      "id": "build-tool-go-lua-missing-windows-validation-parity",
+      "title": "Make Go enforce absent Lua BUILD_windows closure parity",
+      "status": "pending",
+      "depends_on": ["build-file-standalone-integrity-lua"],
       "branch": null,
       "pr_number": null,
-      "notes": "Materialized during Python build-tool validation after the rockspec encoding repair. Ten pre-existing Lua BUILD_windows files omit sibling installs present in BUILD: brainfuck_ir_compiler, brainfuck_wasm_compiler, correlation_vector, ir_to_wasm_compiler, ir_to_wasm_validator, json_serializer, ls00, qr-code, wasm_module_encoder, and zstd. Repair these as one dependency-shaped standalone-build wave; the current metadata-only slice does not alter BUILD files."
+      "notes": "Discovered while implementing the Lua Windows standalone wave. Python and Lua validation treat an absent BUILD_windows as missing the canonical Lua sibling-install closure, but Go's missingLuaSiblingInstalls returns early when either recipe is absent. Add the absent-override fixture and align Go with the normative validation contract in a separate build-tool tranche; the current package-metadata repair does not widen into validator source."
+    },
+    {
+      "id": "build-file-standalone-integrity-lua-transitive-unix",
+      "title": "Close transitive sibling prerequisites in canonical Lua BUILDs",
+      "status": "pending",
+      "depends_on": ["build-file-standalone-integrity-lua"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by fresh-tree Windows validation of the selected Lua standalone wave. The canonical Unix recipes for brainfuck_ir_compiler, brainfuck_wasm_compiler, and their IR/WASM prerequisites list only direct sibling rocks, but clean LuaRocks trees expose unpublished transitive local dependencies such as interpreter_ir, vm_core, codegen_core, jit_core, wasm_types, and wasm_opcodes. Audit every canonical Lua BUILD that bootstraps siblings, add the exact transitive closure in dependency order, retain dependency-resolution hardening, and validate from fresh isolated trees as a separate metadata tranche rather than widening the Windows repair."
+    },
+    {
+      "id": "build-tool-python-ecosystem-scoped-alias-resolution",
+      "title": "Scope Python build-tool dependency aliases by ecosystem",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered while independently checking the Lua closure graph. Python build-tool resolution constructs one global alias map for every ecosystem, so later Python, Perl, Haskell, and other package aliases overwrite Lua rock aliases; on the 4,829-package repository snapshot, 251 of 258 canonical Lua rock names resolve to a non-Lua identity. Define language-neutral collision fixtures, preserve intentional explicitly qualified cross-language edges, scope ordinary manifest aliases to their owning ecosystem, and compare complete real-lane graphs with the canonical Go oracle in a separate build-tool tranche."
     },
     {
       "id": "typescript-starlark-interpreter-strict-build",
@@ -1749,7 +1771,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Share a Python/Rust/TypeScript corpus for MOS W/L/NRD/NRS/AD/AS/PD/PS and TOX/U0/UO/KP/VT0/VTO/VTH validation, including aliases, case, duplicates, NaN/Infinity, and stable diagnostics. Discovered across merged PRs #9427, #9429, #9432, #9436, #9437, #9439, #9443, #9448, #9450, #9453, #9459, #9464, #9469, and #9473. Merged PR #9829 adds finite non-negative diode KF validation and Python/TypeScript lowering coverage, but it is a narrow partial advance rather than completion of this shared multi-lane corpus."
+      "notes": "Share a Python/Rust/TypeScript corpus for MOS W/L/NRD/NRS/AD/AS/PD/PS and TOX/U0/UO/KP/VT0/VTO/VTH validation, including aliases, case, duplicates, NaN/Infinity, and stable diagnostics. Discovered across merged PRs #9427, #9429, #9432, #9436, #9437, #9439, #9443, #9448, #9450, #9453, #9459, #9464, #9469, and #9473. Merged PR #9829 adds finite non-negative diode KF validation and Python/TypeScript lowering coverage. Merged PRs #10093, #10095, #10096, #10097, #10099, #10101, #10103, #10105, #10106, #10108, and #10109 add finite JFET/BJT VTOTC, TNOM, BEX, BETATCE, XTI, EG, VAF, VAR, NF, NR, and VJE validation with mirrored Python/TypeScript lowering coverage. These are narrow partial advances rather than completion of this shared multi-lane corpus."
     },
     {
       "id": "smart-home-switch-entity-command-contract",

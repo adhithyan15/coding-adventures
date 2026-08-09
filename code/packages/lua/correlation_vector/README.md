@@ -50,8 +50,11 @@ luarocks install coding-adventures-correlation-vector
 Or from source:
 
 ```bash
-luarocks make --local coding-adventures-correlation-vector-0.1.0-1.rockspec
+luarocks make --local --deps-mode=none coding-adventures-correlation-vector-0.1.0-1.rockspec
 ```
+
+Inside the monorepo, the build tool selects `BUILD_windows` on Windows and
+installs the same leaf-to-root local prerequisite closure as `BUILD`.
 
 ---
 
@@ -161,7 +164,7 @@ print(#log:history(cv_id))  -- 0 (empty)
 
 ```bash
 # Install dependencies first (leaf to root), then:
-luarocks make --local coding-adventures-correlation-vector-0.1.0-1.rockspec
+luarocks make --local --deps-mode=none coding-adventures-correlation-vector-0.1.0-1.rockspec
 cd tests && busted . --verbose --pattern=test_
 ```
 

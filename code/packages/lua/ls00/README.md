@@ -78,8 +78,11 @@ server:serve()  -- blocks until EOF
 ## Installation
 
 ```bash
-luarocks make --local coding-adventures-ls00-0.1.0-1.rockspec
+luarocks make --local --deps-mode=none coding-adventures-ls00-0.1.0-1.rockspec
 ```
+
+Inside the monorepo, the build tool selects `BUILD_windows` on Windows and
+installs the local JSON-RPC rock before LS00.
 
 ## Testing
 

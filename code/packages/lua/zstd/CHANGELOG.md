@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- Added a standalone `BUILD_windows` recipe that installs the local LZSS rock
+  before ZStd and runs the test suite with the Windows Lua module path. The
+  real-ZStd interop tests now use native null-device and shell-quoting rules so
+  the Windows build executes them instead of reporting false toolchain skips.
+
 ## [0.1.3] - 2026-08-05
 
 ### Fixed

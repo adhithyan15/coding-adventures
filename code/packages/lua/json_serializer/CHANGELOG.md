@@ -1,5 +1,12 @@
 # Changelog — coding-adventures-json-serializer (Lua)
 
+## [Unreleased]
+
+### Fixed
+
+- Added a standalone `BUILD_windows` recipe that mirrors the complete local
+  parser and JSON prerequisite closure before the package and its tests.
+
 ## 0.1.0 — initial release
 
 ### Added

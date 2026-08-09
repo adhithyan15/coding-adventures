@@ -101,6 +101,16 @@ generic fallbacks. The canonical order is specified and tested in
 must win over a Starlark plan; current implementations that do otherwise are
 non-conforming.
 
+An override is a complete standalone recipe, not a patch applied to the
+canonical `BUILD`. It must therefore preserve every canonical repository-local
+prerequisite and install the complete closure in dependency order before
+building the package itself.
+Lua packages whose canonical recipe installs sibling rocks require a
+`BUILD_windows` recipe with the same sibling closure, Windows path and redirect
+syntax, and equivalent dependency-resolution hardening. Each BUILD line runs
+in a separate shell process, so no prerequisite may rely on a previous line's
+working-directory change.
+
 ### Language Inference
 
 The package's language is inferred from its directory path. The build system scans path components for known language names:
