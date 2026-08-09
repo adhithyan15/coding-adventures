@@ -165,7 +165,7 @@ in font units, and `ductusview.ts` flips them together with exactly **one**
 `scale(1,-1)` group — so a mistake cannot leave a plausible-looking stroke
 sitting upside down on a correct letter.
 
-**Tamil அ, ஆ, இ, க, ம, வ, ல, ற, and ன have authored pen paths today.** `DUCTUS` admits no letter
+**Tamil அ, ஆ, இ, க, ம, வ, ல, ற, ன, and ண have authored pen paths today.** `DUCTUS` admits no letter
 without a citation for its stroke order, and hand-drawing a letter is forbidden
 outright (a subtly wrong Tamil ண looks perfect to exactly the audience that
 cannot yet read Tamil, so the error would ship *as the lesson*). அ and ஆ exercise
@@ -180,9 +180,11 @@ four-movement run with no lift. ற uses three pen-down runs: its left arch join
 the first middle descent, the adjacent descent restarts after one lift, and a
 second lift precedes the right arch's joined sweep and descender. ன joins its
 left spiral, single inner arch, and top bar through five movements before one
-lift precedes its separate right upright. Every other letter falls back to the
-numbered prose list, unchanged. Extending the coverage is HL-C09, and it needs a
-cited source per letter.
+lift precedes its separate right upright. ண follows the same two-run pattern,
+keeping its extra inner arch joined to the rest of the body and top bar before
+the sole lift.
+Every other letter falls back to the numbered prose list, unchanged. Extending
+the coverage is HL-C09, and it needs a cited source per letter.
 
 ## Where it fits
 
