@@ -20,6 +20,9 @@ composition may instead retain one authenticated request per host until its
 service adapter answers through `respond_data_plane`. Both paths preserve exact
 correlation across real cross-platform process pipes without adding an
 unauthenticated side channel or exposing payloads to the orchestration core.
+If graceful termination arrives while the child is blocked on an exchange, the
+child helper returns a distinct termination condition so a concrete host can exit
+successfully instead of misclassifying shutdown as a protocol failure.
 
 Its keyring and X3DH identity are shared through owned `Arc` handles, and its
 session source is `Send`, so the complete supervisor can move with the daemon's

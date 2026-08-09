@@ -58,6 +58,9 @@ UUID and optional Level 1 model bindings. A provider failure or runtime/model
 mismatch fails before process creation. The child-side helper performs the inverse
 bootstrap over any `Read` and `Write`, receives both authenticated inputs, then
 exposes readiness, heartbeat, termination, and data-plane operations.
+An authenticated `Terminate` received while a child helper waits for a data-plane
+response is surfaced as a distinct graceful-termination condition. This lets a
+real host exit cleanly even when the parent begins shutdown between idle polls.
 An optional injected `HostDataPlaneDispatcher` automatically answers each
 authenticated request before the next record is processed. The dispatcher owns
 durable per-request authorization and the separately injected service boundary;
@@ -144,7 +147,8 @@ The package exposes:
 - owned, movable `ProcessHostSupervisor`, implementing the reconciler
   `HostSupervisor` trait;
 - `ChildProcessControl<R, W>` for lifecycle plus serialized authenticated
-  receive/publish/acknowledge/completion exchanges;
+  receive/publish/acknowledge/completion exchanges and distinct graceful
+  termination during an exchange;
 - automatic request dispatch when a `HostDataPlaneDispatcher` is injected;
 - `pending_data_plane_request` and `respond_data_plane` hooks for manual
   compositions, retaining one correlated request until an adapter answers; and

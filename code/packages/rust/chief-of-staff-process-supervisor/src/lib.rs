@@ -65,6 +65,8 @@ pub enum ProcessSupervisorError {
     Framing,
     /// Authenticated host-control processing failed closed.
     Control,
+    /// The orchestrator requested graceful termination during a data-plane exchange.
+    Terminated,
     /// Pipeline launch bindings were absent, invalid, or incompatible with the package runtime.
     LaunchBindings,
     /// A different package is already active under this host name.
@@ -86,6 +88,7 @@ impl Display for ProcessSupervisorError {
             Self::BootstrapTimeout => "process-supervisor: bootstrap timed out",
             Self::Framing => "process-supervisor: invalid framed record",
             Self::Control => "process-supervisor: host-control failure",
+            Self::Terminated => "process-supervisor: graceful termination requested",
             Self::LaunchBindings => "process-supervisor: launch bindings unavailable",
             Self::ActivePackageMismatch => "process-supervisor: active package identity mismatch",
             Self::HostNotFound => "process-supervisor: host not found",
@@ -957,9 +960,10 @@ impl<R: Read, W: Write> ChildProcessControl<R, W> {
             .map_err(|_| ProcessSupervisorError::Control)?
         {
             OrchestratorEvent::Response(response) => Ok(response),
-            OrchestratorEvent::PackageTrust(_)
-            | OrchestratorEvent::LaunchBindings(_)
-            | OrchestratorEvent::Terminate => Err(ProcessSupervisorError::Control),
+            OrchestratorEvent::Terminate => Err(ProcessSupervisorError::Terminated),
+            OrchestratorEvent::PackageTrust(_) | OrchestratorEvent::LaunchBindings(_) => {
+                Err(ProcessSupervisorError::Control)
+            }
         }
     }
 }
@@ -1233,6 +1237,10 @@ mod tests {
             ),
             (ProcessSupervisorError::Framing, "invalid framed record"),
             (ProcessSupervisorError::Control, "host-control failure"),
+            (
+                ProcessSupervisorError::Terminated,
+                "graceful termination requested",
+            ),
             (
                 ProcessSupervisorError::ActivePackageMismatch,
                 "active package identity mismatch",
