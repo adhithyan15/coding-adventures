@@ -1,0 +1,14 @@
+# @version 1
+# Mermaid 11.16.1 C4 parser grammar.
+
+document = { NEWLINE } HEADER { NEWLINE | statement } EOF ;
+statement = element_stmt | relationship_stmt | boundary_stmt | config_stmt | TITLE | DIRECTION ;
+
+element_stmt = ELEMENT_MACRO arguments ;
+relationship_stmt = RELATION_MACRO arguments ;
+config_stmt = CONFIG_MACRO arguments ;
+boundary_stmt = BOUNDARY_MACRO arguments [ NEWLINE ] LBRACE { NEWLINE | statement } RBRACE ;
+
+arguments = LPAREN [ argument ] { COMMA [ argument ] } RPAREN ;
+argument = STRING | IDENTIFIER | NUMBER | key_value ;
+key_value = KV_KEY EQUALS ( STRING | IDENTIFIER | NUMBER ) ;

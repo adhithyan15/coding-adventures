@@ -93,7 +93,7 @@
     {
       "id": "c4",
       "headers": ["C4Context", "C4Container", "C4Component", "C4Dynamic", "C4Deployment"],
-      "status": "detected",
+      "status": "partial",
       "ir": "structural",
       "smoke_source": "C4Context\nPerson(user, \"User\")"
     },

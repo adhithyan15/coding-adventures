@@ -17,8 +17,8 @@ use diagram_ir::{
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
 use mermaid_lexer::{
-    tokenize_mermaid, tokenize_mermaid_er, tokenize_mermaid_gitgraph, tokenize_mermaid_pie,
-    tokenize_mermaid_sankey,
+    tokenize_mermaid, tokenize_mermaid_c4, tokenize_mermaid_er, tokenize_mermaid_gitgraph,
+    tokenize_mermaid_pie, tokenize_mermaid_sankey,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -29,6 +29,7 @@ const SANKEY_PARSER_GRAMMAR_SOURCE: &str =
 const GITGRAPH_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/gitgraph.grammar");
 const ER_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/er.grammar");
+const C4_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/c4.grammar");
 
 /// Recursion-depth cap for the Mermaid [`GrammarParser`] — see
 /// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
@@ -233,6 +234,18 @@ pub fn parse_mermaid_er_ast(source: &str) -> Result<GrammarASTNode, ParseError> 
     })
 }
 
+pub fn parse_mermaid_c4_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
+    let tokens = tokenize_mermaid_c4(source);
+    let grammar = parse_parser_grammar(C4_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|e| panic!("Failed to parse c4.grammar: {e}"));
+    let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
+    parser.parse().map_err(|e| ParseError {
+        message: e.message,
+        line: e.token.line,
+        col: e.token.column,
+    })
+}
+
 pub fn parse_to_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
     let mut cursor = TokenCursor::new(tokenize_mermaid(source));
     cursor.skip_terminators();
@@ -397,6 +410,9 @@ fn token_name(token: &Token) -> &str {
         TokenType::Keyword => "KEYWORD",
         TokenType::Colon => "COLON",
         TokenType::Comma => "COMMA",
+        TokenType::Equals => "EQUALS",
+        TokenType::LParen => "LPAREN",
+        TokenType::RParen => "RPAREN",
         TokenType::LBrace => "LBRACE",
         TokenType::RBrace => "RBRACE",
         TokenType::LBracket => "LBRACKET",
@@ -499,6 +515,7 @@ impl MermaidDiagramType {
             self,
             Self::Flowchart
                 | Self::Class
+                | Self::C4
                 | Self::Er
                 | Self::Gantt
                 | Self::GitGraph
@@ -579,6 +596,7 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
     match diagram_type {
         MermaidDiagramType::Flowchart => parse_to_diagram(source).map(MermaidDiagram::Graph),
         MermaidDiagramType::Class => parse_class_diagram(source).map(MermaidDiagram::Structural),
+        MermaidDiagramType::C4 => parse_c4_diagram(source).map(MermaidDiagram::Structural),
         MermaidDiagramType::Er => parse_er_diagram(source).map(MermaidDiagram::Structural),
         MermaidDiagramType::XyChart => parse_xychart(source).map(MermaidDiagram::Chart),
         MermaidDiagramType::Pie => parse_pie(source).map(MermaidDiagram::Chart),
@@ -1411,7 +1429,10 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 token_name(&relation_token),
                 "IDENTIFYING" | "NON_IDENTIFYING"
             ) {
-                return Err(token_error(&relation_token, "expected ER relationship type"));
+                return Err(token_error(
+                    &relation_token,
+                    "expected ER relationship type",
+                ));
             }
             cursor.advance();
             let to_mult = parse_er_cardinality(&mut cursor)?;
@@ -1452,7 +1473,10 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 cursor.skip_terminators();
                 while cursor.consume_if("RBRACE").is_none() {
                     if cursor.at_eof() {
-                        return Err(token_error(cursor.current(), "unterminated ER attribute block"));
+                        return Err(token_error(
+                            cursor.current(),
+                            "unterminated ER attribute block",
+                        ));
                     }
                     let mut attribute_type = parse_er_name(&mut cursor)?;
                     if cursor.consume_if("LBRACKET").is_some() {
@@ -1484,12 +1508,7 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     cursor.skip_terminators();
                 }
             }
-            let index = upsert_er_node(
-                &mut nodes,
-                &mut node_indices,
-                entity_id,
-                entity_label,
-            );
+            let index = upsert_er_node(&mut nodes, &mut node_indices, entity_id, entity_label);
             if !fields.is_empty() {
                 nodes[index].compartments.push(Compartment {
                     kind: CompartmentKind::Fields,
@@ -1578,6 +1597,174 @@ fn upsert_er_node(
         label,
         stereotype: Some("entity".to_string()),
         node_kind: StructuralNodeKind::Entity,
+        compartments: Vec::new(),
+    });
+    index
+}
+
+// ── C4 parser ─────────────────────────────────────────────────────────────
+
+/// Parse Mermaid C4 macros into the shared structural IR.
+pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
+    parse_mermaid_c4_ast(source)?;
+
+    let mut cursor = TokenCursor::new(tokenize_mermaid_c4(source));
+    cursor.skip_terminators();
+    cursor
+        .consume_if("HEADER")
+        .ok_or_else(|| token_error(cursor.current(), "expected C4 diagram header"))?;
+    cursor.skip_terminators();
+
+    let mut title = None;
+    let mut nodes = Vec::new();
+    let mut node_indices = HashMap::new();
+    let mut relationships = Vec::new();
+
+    while !cursor.at_eof() {
+        match token_name(cursor.current()) {
+            "TITLE" => {
+                let value = cursor.advance().value.clone();
+                title = Some(value.trim_start_matches("title").trim().to_string());
+            }
+            "DIRECTION" | "CONFIG_MACRO" => {
+                cursor.advance();
+                if token_name(cursor.current()) == "LPAREN" {
+                    parse_c4_arguments(&mut cursor)?;
+                }
+            }
+            "RBRACE" => {
+                cursor.advance();
+            }
+            "BOUNDARY_MACRO" | "ELEMENT_MACRO" => {
+                let macro_token = cursor.advance().clone();
+                let args = parse_c4_arguments(&mut cursor)?;
+                let id = args.first().cloned().unwrap_or_default();
+                if id.is_empty() {
+                    return Err(token_error(&macro_token, "C4 element requires an alias"));
+                }
+                let label = args
+                    .get(1)
+                    .filter(|value| !value.is_empty())
+                    .cloned()
+                    .unwrap_or_else(|| id.clone());
+                let index = upsert_c4_node(
+                    &mut nodes,
+                    &mut node_indices,
+                    id,
+                    label,
+                    macro_token.value.clone(),
+                );
+                let details: Vec<String> = args
+                    .iter()
+                    .skip(2)
+                    .filter(|value| !value.is_empty() && !value.starts_with('$'))
+                    .cloned()
+                    .collect();
+                if !details.is_empty() {
+                    nodes[index].compartments.push(Compartment {
+                        kind: CompartmentKind::Fields,
+                        entries: details,
+                    });
+                }
+                if token_name(cursor.current()) == "LBRACE" {
+                    cursor.advance();
+                }
+            }
+            "RELATION_MACRO" => {
+                let macro_token = cursor.advance().clone();
+                let args = parse_c4_arguments(&mut cursor)?;
+                if args.len() < 3 {
+                    return Err(token_error(
+                        &macro_token,
+                        "C4 relationship requires source, target, and label",
+                    ));
+                }
+                relationships.push(StructuralRelationship {
+                    from: args[0].clone(),
+                    to: args[1].clone(),
+                    kind: RelKind::Association,
+                    from_mult: None,
+                    to_mult: None,
+                    label: Some(args[2].clone()),
+                });
+            }
+            _ => return Err(token_error(cursor.current(), "unsupported C4 statement")),
+        }
+        cursor.skip_terminators();
+    }
+
+    Ok(StructuralDiagram {
+        kind: StructuralKind::C4,
+        title,
+        nodes,
+        relationships,
+    })
+}
+
+fn parse_c4_arguments(cursor: &mut TokenCursor) -> Result<Vec<String>, ParseError> {
+    cursor
+        .consume_if("LPAREN")
+        .ok_or_else(|| token_error(cursor.current(), "expected '(' after C4 macro"))?;
+    let mut args = Vec::new();
+    let mut needs_value = true;
+
+    while token_name(cursor.current()) != "RPAREN" {
+        if cursor.at_eof() || token_name(cursor.current()) == "NEWLINE" {
+            return Err(token_error(cursor.current(), "unterminated C4 arguments"));
+        }
+        if cursor.consume_if("COMMA").is_some() {
+            if needs_value {
+                args.push(String::new());
+            }
+            needs_value = true;
+            continue;
+        }
+
+        let token = cursor.current().clone();
+        let value = match token_name(&token) {
+            "KV_KEY" => {
+                cursor.advance();
+                cursor.consume_if("EQUALS").ok_or_else(|| {
+                    token_error(cursor.current(), "expected '=' in C4 keyed argument")
+                })?;
+                let value = parse_c4_argument_value(cursor)?;
+                format!("{}={value}", token.value)
+            }
+            "STRING" | "IDENTIFIER" | "NUMBER" => parse_c4_argument_value(cursor)?,
+            _ => return Err(token_error(&token, "expected C4 argument")),
+        };
+        args.push(value);
+        needs_value = false;
+    }
+    cursor.advance();
+    Ok(args)
+}
+
+fn parse_c4_argument_value(cursor: &mut TokenCursor) -> Result<String, ParseError> {
+    let token = cursor.current().clone();
+    if !matches!(token_name(&token), "STRING" | "IDENTIFIER" | "NUMBER") {
+        return Err(token_error(&token, "expected C4 argument value"));
+    }
+    Ok(cursor.advance().value.clone())
+}
+
+fn upsert_c4_node(
+    nodes: &mut Vec<StructuralNode>,
+    indices: &mut HashMap<String, usize>,
+    id: String,
+    label: String,
+    stereotype: String,
+) -> usize {
+    if let Some(index) = indices.get(&id).copied() {
+        return index;
+    }
+    let index = nodes.len();
+    indices.insert(id.clone(), index);
+    nodes.push(StructuralNode {
+        id,
+        label,
+        stereotype: Some(stereotype),
+        node_kind: StructuralNodeKind::Class,
         compartments: Vec::new(),
     });
     index
@@ -1773,6 +1960,14 @@ ORDER[Purchase] {
 int id PK
 }";
 
+    const C4_SRC: &str = "C4Context
+title Banking System
+Person(customer, \"Customer\", \"Uses online banking\")
+System_Boundary(bank, \"Bank\") {
+System(web, \"Internet Banking\", \"Handles accounts\")
+}
+Rel(customer, web, \"Uses\", \"HTTPS\")";
+
     #[test]
     fn class_diagram_parses_nodes() {
         let d = parse_class_diagram(CLASS_SRC).unwrap();
@@ -1899,7 +2094,10 @@ int id PK
         let d = parse_er_diagram(ER_SRC).unwrap();
         assert_eq!(d.kind, StructuralKind::Er);
         assert_eq!(
-            d.nodes.iter().map(|node| node.id.as_str()).collect::<Vec<_>>(),
+            d.nodes
+                .iter()
+                .map(|node| node.id.as_str())
+                .collect::<Vec<_>>(),
             vec!["CUSTOMER", "ORDER"]
         );
         assert_eq!(d.relationships.len(), 1);
@@ -1909,6 +2107,17 @@ int id PK
         assert_eq!(customer.compartments[0].entries.len(), 2);
         let order = d.nodes.iter().find(|node| node.id == "ORDER").unwrap();
         assert_eq!(order.label, "Purchase");
+    }
+
+    #[test]
+    fn c4_parses_elements_boundaries_and_relationships() {
+        let d = parse_c4_diagram(C4_SRC).unwrap();
+        assert_eq!(d.kind, StructuralKind::C4);
+        assert_eq!(d.title.as_deref(), Some("Banking System"));
+        assert_eq!(d.nodes.len(), 3);
+        assert_eq!(d.relationships.len(), 1);
+        assert_eq!(d.relationships[0].from, "customer");
+        assert_eq!(d.relationships[0].to, "web");
     }
 
     #[test]
@@ -1975,6 +2184,14 @@ int id PK
     fn dispatch_er() {
         match parse_any_mermaid(ER_SRC).unwrap() {
             MermaidDiagram::Structural(diagram) => assert_eq!(diagram.kind, StructuralKind::Er),
+            _ => panic!("expected Structural"),
+        }
+    }
+
+    #[test]
+    fn dispatch_c4() {
+        match parse_any_mermaid(C4_SRC).unwrap() {
+            MermaidDiagram::Structural(diagram) => assert_eq!(diagram.kind, StructuralKind::C4),
             _ => panic!("expected Structural"),
         }
     }

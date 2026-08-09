@@ -1,0 +1,25 @@
+# @version 1
+# Mermaid 11.16.1 C4 token grammar.
+
+skip:
+  WHITESPACE       = /[ \t]+/
+  COMMENT          = /%%[^\r\n]*/
+
+NEWLINE            = /\r?\n/
+HEADER             = /C4Context|C4Container|C4Component|C4Dynamic|C4Deployment/
+TITLE              = /title[ \t]+[^\r\n]+/
+DIRECTION          = /direction[ \t]+(?:TB|BT|LR|RL)/
+BOUNDARY_MACRO     = /Enterprise_Boundary|System_Boundary|Container_Boundary|Boundary|Deployment_Node|Node_L|Node_R|Node/
+RELATION_MACRO     = /RelIndex|Rel_Back|Rel_Down|Rel_Left|Rel_Right|Rel_Up|Rel_B|Rel_D|Rel_L|Rel_R|Rel_U|BiRel|Rel/
+ELEMENT_MACRO      = /Person_Ext|Person|SystemQueue_Ext|SystemDb_Ext|System_Ext|SystemQueue|SystemDb|System|ContainerQueue_Ext|ContainerDb_Ext|Container_Ext|ContainerQueue|ContainerDb|Container|ComponentQueue_Ext|ComponentDb_Ext|Component_Ext|ComponentQueue|ComponentDb|Component/
+CONFIG_MACRO       = /UpdateElementStyle|UpdateRelStyle|UpdateLayoutConfig/
+LPAREN             = "("
+RPAREN             = ")"
+LBRACE             = "{"
+RBRACE             = "}"
+COMMA              = ","
+EQUALS             = "="
+STRING             = /"([^"\\]|\\.)*"/
+KV_KEY             = /\$[A-Za-z_][A-Za-z0-9_]*/
+NUMBER             = /-?[0-9]+(?:\.[0-9]+)?/
+IDENTIFIER         = /[A-Za-z_][A-Za-z0-9_.-]*/
