@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.13.0";
+pub const VERSION: &str = "0.14.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -450,9 +450,9 @@ use diagram_ir::{
     GitEvent, PieSlice, RelKind, SankeyFlow, SankeyNode, SequenceArrowhead, SequenceBlockKind,
     SequenceCentralConnection, SequenceDiagram, SequenceEvent, SequenceLineStyle, SequenceLink,
     SequenceNotePlacement, SequenceParticipant, SequenceParticipantGroup, SequenceParticipantKind,
-    SeriesKind, StructuralDiagram, StructuralGroup, StructuralKind, StructuralNode,
-    StructuralNodeKind, StructuralRelationship, TaskStart, TaskStatus, TemporalBody,
-    TemporalDiagram, TemporalKind,
+    SequenceProperty, SeriesKind, StructuralDiagram, StructuralGroup, StructuralKind,
+    StructuralNode, StructuralNodeKind, StructuralRelationship, TaskStart, TaskStatus,
+    TemporalBody, TemporalDiagram, TemporalKind,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -1082,6 +1082,7 @@ fn parse_sequence_body(
             }
             "note" => parse_sequence_note(cursor, diagram, participant_indices)?,
             "link" | "links" => parse_sequence_links(cursor, diagram, participant_indices)?,
+            "properties" => parse_sequence_properties(cursor, diagram, participant_indices)?,
             "title" => {
                 cursor.advance();
                 diagram.title = Some(take_sequence_line_text(cursor));
@@ -1164,6 +1165,46 @@ fn parse_sequence_links(
     };
     let index = participant_indices[&participant];
     diagram.participants[index].links.extend(links);
+    Ok(())
+}
+
+fn parse_sequence_properties(
+    cursor: &mut TokenCursor,
+    diagram: &mut SequenceDiagram,
+    participant_indices: &mut HashMap<String, usize>,
+) -> Result<(), ParseError> {
+    cursor.advance();
+    let participant = take_sequence_identifier(cursor)?;
+    ensure_sequence_participant(diagram, participant_indices, &participant);
+    cursor
+        .consume_if("COLON")
+        .ok_or_else(|| token_error(cursor.current(), "expected ':' before actor properties"))?;
+    let token = cursor.advance().clone();
+    if token_name(&token) != "JSON_OBJECT" {
+        return Err(token_error(
+            &token,
+            "expected a JSON object of actor properties",
+        ));
+    }
+    let properties = serde_json::from_str::<serde_json::Map<String, serde_json::Value>>(
+        &token.value,
+    )
+    .map_err(|error| token_error(&token, format!("invalid actor properties JSON: {error}")))?;
+    let target = &mut diagram.participants[participant_indices[&participant]].properties;
+    for (name, value) in properties {
+        let property = SequenceProperty {
+            name,
+            value_json: value.to_string(),
+        };
+        if let Some(existing) = target
+            .iter_mut()
+            .find(|existing| existing.name == property.name)
+        {
+            *existing = property;
+        } else {
+            target.push(property);
+        }
+    }
     Ok(())
 }
 
@@ -1651,6 +1692,7 @@ fn upsert_sequence_participant(
         style: None,
         group_id: None,
         links: Vec::new(),
+        properties: Vec::new(),
     });
 }
 
@@ -3172,6 +3214,25 @@ B//-A: reverse stick top
         assert!(alice.links.iter().any(|link| link.label == "Wiki"));
         assert!(alice.links.iter().any(|link| link.label == "Repo"));
     }
+
+    #[test]
+    fn sequence_parses_and_merges_actor_properties() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nparticipant Alice\nproperties Alice: {\"role\": \"admin\", \"active\": true, \"limits\": {\"daily\": 5}}\nproperties Alice: {\"role\": \"owner\"}\n",
+        )
+        .unwrap();
+        let properties = &diagram.participants[0].properties;
+        assert_eq!(properties.len(), 3);
+        assert!(properties
+            .iter()
+            .any(|property| property.name == "role" && property.value_json == "\"owner\""));
+        assert!(properties
+            .iter()
+            .any(|property| property.name == "active" && property.value_json == "true"));
+        assert!(properties.iter().any(|property| {
+            property.name == "limits" && property.value_json == "{\"daily\":5}"
+        }));
+    }
 }
 #[cfg(test)]
 mod tests {
@@ -3188,7 +3249,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.13.0");
+        assert_eq!(crate::VERSION, "0.14.0");
     }
 
     #[test]

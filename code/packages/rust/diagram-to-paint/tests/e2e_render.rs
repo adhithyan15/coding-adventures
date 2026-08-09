@@ -9,7 +9,7 @@
 
 #[cfg(target_vendor = "apple")]
 mod apple {
-    use diagram_ir::{SequenceBlockKind, SequenceEvent, SequenceLink};
+    use diagram_ir::{SequenceBlockKind, SequenceEvent, SequenceLink, SequenceProperty};
     use diagram_layout_chart::layout_chart_diagram;
     use diagram_layout_graph::layout_graph_diagram;
     use diagram_layout_sequence::layout_sequence_diagram;
@@ -369,6 +369,10 @@ mod apple {
             label: "Dashboard".into(),
             url: "https://example.com/dashboard".into(),
         });
+        diagram.participants[0].properties.push(SequenceProperty {
+            name: "role".into(),
+            value_json: "\"administrator\"".into(),
+        });
         let layout = layout_sequence_diagram(&diagram);
 
         let shaper = CoreTextShaper;
@@ -407,6 +411,14 @@ mod apple {
                 .and_then(|metadata| metadata.get("sequence.participant.User.link.Dashboard"))
                 .map(String::as_str),
             Some("https://example.com/dashboard")
+        );
+        assert_eq!(
+            scene
+                .metadata
+                .as_ref()
+                .and_then(|metadata| metadata.get("sequence.participant.User.property.role"))
+                .map(String::as_str),
+            Some("\"administrator\"")
         );
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,

@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.13.0";
+pub const VERSION: &str = "0.14.0";
 
 use std::collections::HashMap;
 
@@ -1429,6 +1429,7 @@ where
                 label,
                 kind,
                 links,
+                properties,
                 x,
                 y,
                 width,
@@ -1439,6 +1440,12 @@ where
                     scene_metadata.insert(
                         format!("sequence.participant.{id}.link.{}", link.label),
                         link.url.clone(),
+                    );
+                }
+                for property in properties {
+                    scene_metadata.insert(
+                        format!("sequence.participant.{id}.property.{}", property.name),
+                        property.value_json.clone(),
                     );
                 }
                 let specialized = !matches!(
@@ -2655,7 +2662,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.13.0");
+        assert_eq!(crate::VERSION, "0.14.0");
     }
 
     #[test]

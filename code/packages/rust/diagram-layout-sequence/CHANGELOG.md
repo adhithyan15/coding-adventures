@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.0 - 2026-08-09
+
+- Preserve actor properties on participant layout items.
+
 ## 0.9.0 - 2026-08-09
 
 - Preserve actor links on participant layout items for backend-neutral lowering.

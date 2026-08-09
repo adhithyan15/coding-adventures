@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.13.0
+
+- Tokenize sequence actor property objects, including nested JSON values.
+
 ## 0.12.0
 
 - Tokenize sequence actor-link URLs and JSON link maps.
