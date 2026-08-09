@@ -312,10 +312,12 @@ unblocks multiple downstream targets; never count source generation as completio
   lowering and fixed-dimension wrapper deduplication are complete, and the complete
   TaskApp now passes Qt's QML compiler, AUTOMOC, C++ compiler, and linker. Fractional
   font sizing is type-correct and the app remains running in a headless launch.
-  That launch is not diagnostic-clean yet: styled `HostButton` backgrounds produce
-  repeated warnings and ignored paint because Qt's native macOS Controls style does
-  not support background customization. Choose a customization-capable Controls
-  style or preserve native button paint before the clean-launch gate passes.
+  Generated shells now select Qt's customization-capable Basic Controls style by
+  default, so styled `HostButton` backgrounds render without the native macOS
+  style's repeated warnings or ignored paint; an explicit host
+  `QT_QUICK_CONTROLS_STYLE` still wins. The headless macOS launch retains one
+  lower-priority Qt font-alias performance diagnostic for Basic's `Sans Serif`
+  fallback, which is not present in the generated TaskApp QML.
   Standalone Qt package compilation also needs collision-safe signal names: Notes'
   `onDelete` currently lowers to QML's reserved `signal delete()` identifier,
   although the composed TaskApp's namespaced `onDeleteNote` avoids that collision.

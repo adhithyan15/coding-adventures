@@ -30,11 +30,13 @@ cross-platform proving application. Items are ordered by risk and dependency.
   Flutter, and Compose reuse one controller, renderer, and C ABI implementation
   owned by `venture-browser-cairo`; their stable backend-named libraries and
   symbols remain thin compatibility surfaces over that session.
-- [ ] **P2 — Qt native-control style compatibility.** The macOS-native Qt
-  Quick Controls style rejects custom `background` items emitted from Mosaic
-  MSL. Define a native-compatible palette/appearance lowering (or an explicit
-  per-project style contract) so generated Qt shells do not warn and silently
-  drop authored button backgrounds while retaining native controls.
+- [x] **P2 — Qt native-control style compatibility.** Generated Qt shells select
+  the customization-capable Basic Quick Controls style unless the host explicitly
+  sets `QT_QUICK_CONTROLS_STYLE`, so Mosaic MSL backgrounds render without the
+  macOS-native style's warnings or silently dropped paint.
+- [ ] **P3 — Qt Basic-style font fallback diagnostic.** Remove the one-time
+  macOS `Sans Serif` alias-population warning without baking a platform-specific
+  font family into generated QML or overriding an explicit host font policy.
 - [x] **P0 regression — POSIX entry-point shell compatibility.** Keep `BUILD`
   compatible with the repository build tool's `/bin/sh` executor while it
   delegates the backend matrix to the Bash-specific implementation script.

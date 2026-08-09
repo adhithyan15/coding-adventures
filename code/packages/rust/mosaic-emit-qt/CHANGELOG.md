@@ -4,6 +4,14 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - customization-capable generated Qt shells
+
+Generated Qt project shells now default to the Basic Qt Quick Controls style
+when the host has not selected `QT_QUICK_CONTROLS_STYLE`. This keeps MSL-backed
+button backgrounds, borders, and radii supported instead of producing native-
+style warnings and silently ignoring paint. Explicit host style selection still
+wins.
+
 ### Fixed - type-correct fractional font sizes
 
 Fractional MSL font sizes now round to the nearest positive integer at Qt's
