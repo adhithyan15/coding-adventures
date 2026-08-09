@@ -4723,9 +4723,15 @@ the Rust, Python, and TypeScript surfaces together.
      overlap-capacitance validation set.
 
 476. Python and TypeScript Berkeley SPICE diode model-type alias parity.
-   - Status: implemented in this model-type normalization slice.
+   - Status: completed in PR 10155.
    - Both parser facades normalize the engine-supported `DIODE` model type
      alias to canonical `D`, preserving diode validation and instance lowering.
+
+477. Python and TypeScript Berkeley SPICE N-channel JFET model-type alias parity.
+   - Status: implemented in this NJFET model-type normalization slice.
+   - Both parser facades normalize the engine-supported `NJFET` model type
+     alias to canonical `NJF`, preserving JFET validation and instance lowering
+     without changing the unresolved `B` parameter policy.
 
 ## Backlog
 
