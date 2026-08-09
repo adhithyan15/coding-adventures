@@ -8,6 +8,13 @@ canonical use cases drive the design — and the explicit goal is that
 *both* of them can be built on the same primitives without forking the
 stack:
 
+The product-level composition and phased delivery plan for the first
+end-user password manager lives in
+[`VLT-PM00-local-first-password-manager.md`](./VLT-PM00-local-first-password-manager.md).
+It starts with a local-only CLI, preserves storage-agnosticism through an
+immutable encrypted object repository, then adds bring-your-own-cloud sync,
+web, desktop, browser-extension, mobile, sharing, and recovery surfaces.
+
 1. **End-user password manager** — a Bitwarden / 1Password /
    KeePassXC-class app, where a human types a master password (plus
    maybe a YubiKey, plus maybe a passkey) and sees their logins,
