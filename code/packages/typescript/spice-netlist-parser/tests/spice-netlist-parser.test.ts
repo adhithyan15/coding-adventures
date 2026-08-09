@@ -3421,6 +3421,17 @@ Xright c d load
     },
   );
 
+  it("gives MOSFET U0 precedence over UO for KP derivation", () => {
+    const parsed = parseNetlist(
+      ".model nfast NMOS(U0=450 UO=600 TOX=12n)\nM1 d g s b nfast\n",
+    );
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") throw new Error("unexpected element kind");
+    expect(element.params.U0).toBe(450.0);
+    expect(element.params.KP).toBeCloseTo(1.294924875e-4, 15);
+  });
+
   it("preserves explicit MOSFET model KP over mobility derivation", () => {
     const parsed = parseNetlist(".model nfast NMOS(U0=450 TOX=12n KP=123u)\nM1 d g s b nfast\n");
     const element = parsed.circuit.elements()[0];

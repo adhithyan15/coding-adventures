@@ -3373,6 +3373,17 @@ def test_lowers_mosfet_model_surface_mobility_and_derives_kp(alias: str) -> None
     assert isclose(mosfet.model.model.params.KP, 1.294924875e-4)
 
 
+def test_gives_mosfet_u0_precedence_over_uo_for_kp_derivation() -> None:
+    parsed = parse_netlist(
+        ".model nfast NMOS(U0=450 UO=600 TOX=12n)\nM1 d g s b nfast\n"
+    )
+
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert mosfet.model.model.params.U0 == 450.0
+    assert isclose(mosfet.model.model.params.KP, 1.294924875e-4)
+
+
 def test_explicit_mosfet_model_kp_overrides_mobility_derivation() -> None:
     parsed = parse_netlist(".model nfast NMOS(U0=450 TOX=12n KP=123u)\nM1 d g s b nfast\n")
 
