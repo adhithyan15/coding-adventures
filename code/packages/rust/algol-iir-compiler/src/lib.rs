@@ -1748,7 +1748,15 @@ impl Compiler {
             .find(|t| t.effective_type_name() == "NAME")
             .map(|t| t.value.clone())
             .ok_or_else(|| CompileError::Malformed("procedure statement has no name".into()))?;
-        if self.try_emit_standard_output_stmt(&name, node)? {
+        // A formal procedure binding captures a direct source target. Standard
+        // output procedures have no declared signature, so reuse their
+        // statement-only lowering after resolving that target.
+        let target_source_name = self
+            .procedure_bindings
+            .get(&name)
+            .map(|binding| binding.source_name.clone())
+            .unwrap_or_else(|| name.clone());
+        if self.try_emit_standard_output_stmt(&target_source_name, node)? {
             return Ok(());
         }
         self.emit_call_common(node, false)?;
@@ -2226,13 +2234,15 @@ impl Compiler {
                 source_name: actual_name,
             });
         }
-        if is_supported_standard_function(&actual_name) {
+        if is_supported_standard_function(&actual_name)
+            || is_supported_standard_output_procedure(&actual_name)
+        {
             return Ok(ProcedureBinding {
                 source_name: actual_name,
             });
         }
         Err(CompileError::Type(format!(
-            "procedure {caller_name:?}: formal procedure {formal_name:?} requires a declared procedure or supported standard function, got {actual_name:?}"
+            "procedure {caller_name:?}: formal procedure {formal_name:?} requires a declared procedure, supported standard function, or standard output procedure, got {actual_name:?}"
         )))
     }
 
@@ -5109,6 +5119,13 @@ fn is_supported_standard_function(name: &str) -> bool {
     )
 }
 
+/// Standard output procedures that direct formal-procedure bindings may
+/// substitute. They retain their existing statement-only lowering and never
+/// become dynamic procedure values.
+fn is_supported_standard_output_procedure(name: &str) -> bool {
+    matches!(name, "print" | "output")
+}
+
 /// Collect the `NAME` tokens of an `ident_list` (`NAME { COMMA NAME }`) in
 /// order — used to read a procedure's formal parameters, `value` list, and
 /// `spec_part` identifier groups.
@@ -7629,6 +7646,39 @@ mod tests {
     }
 
     #[test]
+    fn formal_procedure_forwards_a_standard_output_procedure() {
+        let src = "begin \
+                   procedure dispatch(p, s); value s; procedure p; string s; \
+                     begin procedure forward(p, s); value s; procedure p; string s; \
+                           p(s); \
+                           forward(p, s) end; \
+                   dispatch(print, 'OK') end";
+        let module = compile_source(src, "formal_procedure_standard_output").expect("compiles");
+        let specialised_output = module
+            .functions
+            .iter()
+            .filter(|function| function.name.starts_with("__algol_by_name_"))
+            .collect::<Vec<_>>();
+        assert_eq!(specialised_output.len(), 2);
+        assert_eq!(
+            specialised_output
+                .iter()
+                .flat_map(|function| function.instructions.iter())
+                .filter(|instr| instr.op == "print_str")
+                .count(),
+            1,
+            "the nested formal call should reuse standard output lowering"
+        );
+        assert!(
+            specialised_output.iter().all(|function| function.instructions.iter().all(|instr| {
+                !(instr.op == "call"
+                    && instr.srcs.first() == Some(&Operand::Var("print".to_string())))
+            })),
+            "a standard-output actual must not become an IIR call target"
+        );
+    }
+
+    #[test]
     fn formal_procedure_rejects_non_procedure_actuals() {
         let err = compile_source(
             "begin integer scalar, result; \
@@ -7639,7 +7689,7 @@ mod tests {
         .expect_err("a scalar is not a direct procedure actual");
         assert!(err
             .to_string()
-            .contains("requires a declared procedure or supported standard function"));
+            .contains("requires a declared procedure, supported standard function, or standard output procedure"));
     }
 
     #[test]

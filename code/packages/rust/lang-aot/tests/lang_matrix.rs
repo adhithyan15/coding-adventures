@@ -1609,6 +1609,22 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a standard output procedure travels through nested direct
+    // `procedure` formals. The specialised wrappers retain the direct `print`
+    // target and reuse its statement-only `print_str` lowering, so no
+    // function-pointer ABI or output-procedure signature is needed.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin \
+                  procedure dispatch(p, s); value s; procedure p; string s; \
+                    begin procedure forward(p, s); value s; procedure p; string s; \
+                          p(s); \
+                          forward(p, s) end; \
+                  dispatch(print, 'FORMAL') end",
+        expect: Expect::Stdout("FORMAL"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — direct and forwarded string name formals. The nested
     // `consume` formal shares the outer spelling, so the specialised sibling
     // must retain the original caller string binding through its generated
@@ -6607,6 +6623,36 @@ fn algol_standard_function_formal_procedure_runs_on_every_available_standard_bac
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but standard-function formal-procedure execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_standard_output_formal_procedure_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("dispatch(print, 'FORMAL')")
+                && program.src.contains("procedure forward(p, s)")
+        })
+        .expect("the standard-output formal-procedure program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but standard-output formal-procedure execution did not complete"
             );
             continue;
         };
