@@ -23,6 +23,10 @@ All notable changes to this program will be documented in this file.
 
 ### Fixed
 
+- Lua dependency discovery is now restricted to the rockspec `dependencies`
+  table, accepts versioned and unversioned local rocks, and emits standalone
+  Unix and Windows recipes with the full ordered local closure plus hardened
+  self-install.
 - OCaml descriptions now reject `*)` and use context-safe quoted metadata
   serialization before any file is written.
 - Dune `%{...}` interpolation openers are rejected before any scaffold output.

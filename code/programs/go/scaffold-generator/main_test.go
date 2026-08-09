@@ -780,6 +780,79 @@ func TestGeneratePerlNoDeps(t *testing.T) {
 	}
 }
 
+func TestGenerateLuaBuildsInstallTransitiveClosure(t *testing.T) {
+	tmpDir := t.TempDir()
+	if err := generateLua(
+		tmpDir,
+		"my-pkg",
+		"My package",
+		"",
+		[]string{"graph"},
+		[]string{"bitset", "graph"},
+	); err != nil {
+		t.Fatalf("generateLua: %v", err)
+	}
+
+	rockspec, err := os.ReadFile(filepath.Join(tmpDir, "coding-adventures-my-pkg-0.1.0-1.rockspec"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(rockspec), `"coding-adventures-graph >= 0.1.0"`) {
+		t.Error("rockspec missing direct dependency")
+	}
+	if strings.Contains(string(rockspec), `"coding-adventures-bitset >= 0.1.0"`) {
+		t.Error("rockspec must declare only direct dependencies")
+	}
+
+	wantUnix := "" +
+		"luarocks show coding-adventures-bitset >/dev/null 2>&1 || (cd ../bitset && luarocks make --local --deps-mode=none coding-adventures-bitset-0.1.0-1.rockspec)\n" +
+		"luarocks show coding-adventures-graph >/dev/null 2>&1 || (cd ../graph && luarocks make --local --deps-mode=none coding-adventures-graph-0.1.0-1.rockspec)\n" +
+		"luarocks make --local --deps-mode=none coding-adventures-my-pkg-0.1.0-1.rockspec\n" +
+		"cd tests && busted . --verbose --pattern=test_\n"
+	wantWindows := "" +
+		"luarocks show coding-adventures-bitset 1>nul 2>nul || (cd ..\\bitset && luarocks make --local --deps-mode=none coding-adventures-bitset-0.1.0-1.rockspec)\n" +
+		"luarocks show coding-adventures-graph 1>nul 2>nul || (cd ..\\graph && luarocks make --local --deps-mode=none coding-adventures-graph-0.1.0-1.rockspec)\n" +
+		"luarocks make --local --deps-mode=none coding-adventures-my-pkg-0.1.0-1.rockspec\n" +
+		"cd tests && busted . --verbose --pattern=test_\n"
+
+	for name, want := range map[string]string{"BUILD": wantUnix, "BUILD_windows": wantWindows} {
+		got, err := os.ReadFile(filepath.Join(tmpDir, name))
+		if err != nil {
+			t.Fatal(err)
+		}
+		if string(got) != want {
+			t.Errorf("%s = %q, want %q", name, got, want)
+		}
+	}
+}
+
+func TestReadLuaDepsUsesOnlyDependencyTable(t *testing.T) {
+	pkgDir := t.TempDir()
+	rockspec := `package = "coding-adventures-self-decoy"
+version = "0.1.0-1"
+source = { url = "git://example.invalid/coding-adventures-source-decoy" }
+dependencies = {
+    "lua >= 5.4",
+    "coding-adventures-versioned >= 0.1.0",
+    "coding-adventures-unversioned",
+}
+build = {
+    decoy = "coding-adventures-build-decoy >= 0.1.0",
+}
+`
+	if err := os.WriteFile(filepath.Join(pkgDir, "coding-adventures-self-decoy-0.1.0-1.rockspec"), []byte(rockspec), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	deps, err := readLuaDeps(pkgDir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := strings.Join(deps, ","); got != "versioned,unversioned" {
+		t.Fatalf("readLuaDeps = %q, want versioned,unversioned", got)
+	}
+}
+
 func TestGenerateHaskellUsesRepositoryConventions(t *testing.T) {
 	tmpDir := t.TempDir()
 	if err := generateHaskell(

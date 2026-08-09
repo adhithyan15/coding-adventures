@@ -608,10 +608,12 @@ graph. This allowlist is validation-only: undeclared references and references
 from any other ignored metadata block still fail closed.
 
 For a Lua package whose canonical `BUILD` bootstraps repository-local sibling
-rocks, validation MUST require a `BUILD_windows` standalone recipe. That recipe
-MUST preserve every canonical sibling install, add any transitive local rocks
-needed for a clean build, and install the complete closure in dependency order
-using Windows path and redirect syntax. If a canonical sibling install uses
+rocks, the canonical recipe itself MUST install the complete transitive local
+rock closure in dependency order before its final self-install; listing only
+direct siblings is not standalone on a clean LuaRocks tree. Validation MUST
+also require a `BUILD_windows` standalone recipe. That recipe MUST preserve
+every canonical sibling install and the same complete closure using Windows
+path and redirect syntax. If a canonical sibling install uses
 `--deps-mode=none` or
 `--no-manifest`, the Windows install MUST retain equivalent hardening. Once a
 recipe bootstraps sibling rocks, its final self-install MUST also disable

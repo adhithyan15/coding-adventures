@@ -950,18 +950,139 @@ separately owned Go-validator and canonical-Unix closure contracts and the
 Python ecosystem-scoped alias repair.
 
 Ready-for-review PR #10110 merged externally as `03f0d5f7a1` on 2026-08-09.
-After the subsequent SPICE parser sequence through externally merged PR #10144,
-the refreshed collision-checked schema-3 inventory at `7252f0a978` remains
+After the subsequent SPICE parser sequence through externally merged PR #10152,
+the refreshed collision-checked schema-3 inventory at `7c9bfffbc3` remains
 unchanged at 1,264 established implementation identities and 4,420 package
 slots across 15 lanes, with 173 high-consensus packages and 269 missing slots,
 814 singletons and 11,396 missing slots, 618 Rust singletons, zero canonical
 collisions, and zero unknown buckets. PRs #10111, #10113, #10114, #10115,
 #10117, #10118, #10119, #10121, #10122, #10123, #10125, #10126, #10127,
-#10129, #10130, #10131, #10133, #10134, #10136, #10138, #10140, #10143, and
-#10144 advance the existing shared SPICE owner without adding identities or
-exposing an unowned gap. The dependency/leverage pass selects the small Go
-absent-`BUILD_windows` validator alignment next, ahead of the broader canonical
-Unix closure and Python ecosystem-alias repairs.
+#10129, #10130, #10131, #10133, #10134, #10136, #10138, #10140, #10143,
+#10144, #10147, #10148, #10149, #10151, and #10152 advance the existing shared
+SPICE owner without adding identities or exposing an unowned gap.
+Ready-for-review PR #10145 merged externally as `694cfb2822` on 2026-08-09. The
+dependency/leverage pass now selects the canonical Lua transitive-Unix closure,
+which is the next dependency in the reviewed standalone-build chain, ahead of
+the broader Python ecosystem-alias repair. A fresh audit of all 246 Lua
+rockspec identities and all 121 canonical recipes that bootstrap sibling rocks
+keeps the Brainfuck/IR/WASM chain as the single selected item. It also records
+eleven unrelated missing-prerequisite recipes as six pending dependency-shaped
+follow-ups: Huffman/heap, parser/lexer, data-store/HyperLogLog, JSON value,
+Lattice, and WASM runtime/execution closure.
+
+After the remaining model-card sequence merged externally, the collision-checked
+schema-3 inventory at `21326ba062` is still unchanged at 1,264 established
+implementation identities and 4,420 package slots across 15 lanes, with 173
+high-consensus packages and 269 missing slots, 814 singletons and 11,396 missing
+slots, 618 Rust singletons, zero canonical collisions, and zero unknown buckets.
+PRs #10155, #10157, #10160, #10162, and #10165 normalize DIODE, NJFET, NJ,
+PJFET, and PJ model-card aliases to canonical engine types and complete the
+audited diode/JFET alias set without adding an identity or unowned gap. PR #10156
+expands the already-owned portable Chief host-control protocol and native process-
+supervisor review with an authenticated bounded data plane rather than creating a
+new backlog owner. The dependency/leverage pass therefore retains the implemented
+Lua transitive-Unix closure as the sole in-progress root ahead of the broader
+Python ecosystem-alias repair.
+
+The post-#10190 refresh at `437f19ff06` contains 1,268 established identities
+and 4,424 package slots across 15 lanes, with 173 high-consensus packages and
+269 missing slots, 818 singletons and 11,452 missing slots, 622 Rust singletons,
+zero canonical collisions, and zero unknown buckets. PRs #10166 through #10168,
+#10172, #10174, #10176, #10178, #10181, #10182, #10185, #10187, and #10189
+extend the existing SPICE owner with model aliases, separator normalization,
+finite validation, and family-specific TNOM/T_NOM precedence without adding an
+identity. PR #10169 likewise extends the already-owned Chief
+host-control, skill-runtime, orchestrator, and native process-supervisor
+boundaries with authenticated launch bindings.
+
+PR #10175 introduces `chief-of-staff-pipeline-bindings`, a zero-capability
+deterministic reducer over injected storage. Its pending portable-conformance
+owner covers bounded versioned records, exact host/package and pipeline/agent
+bindings, directional channel membership, immutable cross-pipeline claims,
+revision-CAS mutation, restart behavior, and fail-closed revalidation. PR #10180
+introduces the sole additional identity, `chief-of-staff-host-data-plane`, an
+authority-free dispatcher over injected storage and services. Its new pending
+portable owner covers per-request complete-binding checks, direction and AgentId
+authorization, exact model settings, response-shape validation, stable redacted
+errors, and an explicit empty capability profile. Storage persistence, channel
+keys, model providers, process pipes, and daemon composition remain injected or
+native.
+
+PR #10173 expands the existing data-governance and AirGradient portable owners
+with credential-free MQTT destination validation, exact consent-bound custom
+egress, privacy-protective disablement, deterministic HTTP-origin planning,
+readback comparison, and redacted projection; live device I/O and mutation remain
+native. PR #10184 further expands the data-governance and Enphase portable owners
+with exact identifier-retention policy, bounded inverter parsing, injected-key
+pseudonymization, and pseudonymous projection while Vault, transport, time, and
+runtime effects remain native. PR #10188 adds the sole new identity,
+`chief-of-staff-host`, as a concrete child executable over process arguments,
+the package working directory, authenticated standard streams, monotonic time,
+and bounded sleep. Its dependency-blocked native-authority review records that
+exception instead of manufacturing portable executable ports. PRs #10186 and
+#10190 add no implementation identity. The dependency/leverage pass retains the
+completed Lua transitive-Unix closure as the sole in-progress root because its
+dependencies are merged, it
+closes four fresh-tree failures, and it unlocks six classified Lua follow-ups.
+The portable Chief owners and new native child-host review are dependency-blocked
+behind their channel, registry, host-control, supervisor, and skill prerequisites
+and do not displace it.
+
+The post-#10210 refresh at `919d683e7a` contains 1,269 established identities
+and 4,425 package slots across 15 lanes, with 173 high-consensus packages and
+269 missing slots, 819 singletons and 11,466 missing slots, 623 Rust singletons,
+zero canonical collisions, and zero unknown buckets. The sole new identity is
+`chief-of-staff-daemon-secret-file` from PR #10208. Its explicit filesystem-read
+and native-FFI capabilities, no-link handle-relative traversal, owner-only access
+checks, exact-length bounded reads, and zeroizing storage make it a reviewed
+cross-platform native trust boundary rather than an all-language portable target.
+A new excluded native-authority owner records that work and makes the existing
+Chief keyring review depend on it.
+
+PRs #10194 and #10203 expand the existing Chief host-data-plane owner with the
+real encrypted endpoint service, bounded delivery-to-ack tracking, exact model
+selection, and zeroizing pipeline/agent/channel/direction-scoped key release;
+secret provisioning, provider construction, cryptography, storage, and transport
+remain injected or native. PR #10193 expands the existing Smart Home governance
+and UniFi reviews with independently granted bounded presence, official paginated
+response handling, host-scoped pseudonyms, five-minute expiry, and redaction while
+live TLS, credentials, key custody, and trusted time remain native. PR #10205
+adds exact-target operational telemetry with a 64-device bound, one-minute
+pre-I/O poll limit, two-minute retention, bounded projection, and deliberate
+native-heartbeat omission under those same portable/native owners. PRs #10191,
+#10196, #10198, #10200, #10204, #10206, and #10209 extend the existing shared
+SPICE owner with canonical MOS alias precedence in both parser facades and engine
+normalizers. PR #10210 completes the independent parser/engine model-card mismatch
+audit and blocks the sole residual JFET `B` ambiguity on a reviewed meaning-policy
+decision. The human-language changes through #10207 add no implementation identity.
+None of these changes creates a higher-leverage eligible unowned gap, so the
+completed Lua transitive-Unix closure remains the sole in-progress item.
+
+The post-#10212 refresh at `cbe099305e` contains 1,270 established identities
+and 4,426 package slots across 15 lanes, with 173 high-consensus packages and
+269 missing slots, 820 singletons and 11,480 missing slots, 624 Rust singletons,
+zero canonical collisions, and zero unknown buckets. PR #10211 changes only the
+existing TypeScript human-language-data package and book artifacts, so it adds
+no identity or parity owner. PR #10212 adds the sole new identity,
+`chief-of-staff-daemon-authority-provisioning`, as a truthful filesystem-read
+boundary that loads exact owner-only 32-byte channel secrets into zeroizing
+pipeline/agent/channel/direction authorities and constructs exact bounded Ollama
+registries without probing the network. A dependency-blocked native-authority
+review owns that package and now gates the existing daemon composition-root
+review; the production daemon still deliberately uses its unavailable service
+until the provisioned authorities are injected.
+
+The same audit surfaced two previously unowned existing contracts. A new
+portable Chief daemon-config owner covers its zero-capability closed TOML parser,
+canonical UUID-v7 directional key declarations, bounded unique model selectors,
+explicit endpoints and timeouts, caller-supplied-home path resolution, and stable
+failures. A separate Ollama native-authority review owns DNS/TCP/local-network
+HTTP and socket timeouts while retaining reusable bounded model, endpoint,
+timeout, request, and response fixtures. The secret-file and host-data-plane
+owners record their exact-length first consumer and deterministic registry
+observations. All three additions are either portable backlog work or excluded
+native reviews; none displaces the completed Lua tranche, which still closes four
+verified fresh-tree failures and unlocks six classified follow-ups.
 
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
