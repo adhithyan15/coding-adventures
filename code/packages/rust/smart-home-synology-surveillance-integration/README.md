@@ -14,13 +14,17 @@ zeroizing transport memory and never enter request plans or normalized state.
 Camera entities expose confirmed native status, channel, vendor, and model.
 Normal and ready cameras map online; transitional states map degraded; native
 connection, authorization, stream, storage, and disabled states map offline.
+When package information explicitly grants snapshot access, camera entities
+also expose `camera.snapshot`. The transport can open one isolated snapshot
+session, revalidate the exact privilege-filtered camera, produce the documented
+version-9 `GetSnapshot` bearer endpoint in zeroizing memory, and explicitly
+close that session after a trusted host finishes delivery.
 Plain HTTP is accepted only for loopback protocol tests.
 
-This slice intentionally does not expose snapshots, recordings, playback,
-exports, events, PTZ, external recording, configuration, OTP, or remembered
-device-token flows. Those operations need the existing media/event hosts,
-operation-specific D23 contracts, or a concrete interactive authentication
-lifecycle.
+This integration does not itself deliver media. Recordings, playback, exports,
+events, PTZ, external recording, configuration, OTP, remembered device-token
+flows, and reusable sessions remain outside its bounded inspection/session
+contract.
 
 Protocol references:
 

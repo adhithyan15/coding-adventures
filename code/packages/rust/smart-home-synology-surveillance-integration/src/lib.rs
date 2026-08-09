@@ -34,7 +34,7 @@ pub const PROTOCOL_ID: &str = "synology_surveillance_webapi";
 pub const API_INFO_PATH: &str = "/webapi/query.cgi?api=SYNO.API.Info&method=Query&version=1&query=SYNO.API.Auth%2CSYNO.SurveillanceStation.Info%2CSYNO.SurveillanceStation.Camera";
 pub const DEFAULT_MAX_RESPONSE_BYTES: usize = 2 * 1024 * 1024;
 pub const MAX_CAMERAS: usize = 1_024;
-const MAX_SECRET_BYTES: usize = 8 * 1024;
+pub const MAX_CREDENTIAL_FIELD_BYTES: usize = 8 * 1024;
 const MAX_TEXT_BYTES: usize = 1_024;
 const AUTH_API: &str = "SYNO.API.Auth";
 const INFO_API: &str = "SYNO.SurveillanceStation.Info";
@@ -71,6 +71,8 @@ pub enum SynologyError {
     },
     Json(serde_json::Error),
     MissingField(&'static str),
+    SnapshotNotAllowed,
+    SnapshotCameraUnavailable,
     Runtime(RuntimeError),
 }
 
@@ -107,6 +109,12 @@ impl fmt::Display for SynologyError {
             ),
             Self::Json(error) => write!(formatter, "invalid Synology JSON: {error}"),
             Self::MissingField(field) => write!(formatter, "Synology response is missing {field}"),
+            Self::SnapshotNotAllowed => {
+                formatter.write_str("Synology snapshot access is not allowed")
+            }
+            Self::SnapshotCameraUnavailable => {
+                formatter.write_str("Synology snapshot camera is not available")
+            }
             Self::Runtime(error) => error.fmt(formatter),
         }
     }
@@ -155,8 +163,8 @@ impl SynologyCredentials {
                 "username and password must not be empty".to_string(),
             ));
         }
-        if username.len() > MAX_SECRET_BYTES
-            || password.len() > MAX_SECRET_BYTES
+        if username.len() > MAX_CREDENTIAL_FIELD_BYTES
+            || password.len() > MAX_CREDENTIAL_FIELD_BYTES
             || username.contains('\0')
             || password.contains('\0')
         {
@@ -285,6 +293,23 @@ pub struct SynologyRequestPlans {
     timeout_ms: u64,
 }
 
+impl SynologyRequestPlans {
+    fn new(config: &SynologyConfig) -> Result<Self, SynologyError> {
+        let endpoint = config.endpoint()?;
+        let timeout_ms = duration_ms(config.timeout);
+        let api_info = LocalHttpRequestTemplate::new(LocalHttpMethod::Get, API_INFO_PATH)?
+            .with_accept("application/json")
+            .with_timeout_ms(timeout_ms)
+            .with_auth(LocalHttpAuth::None)
+            .plan(&endpoint, Vec::new())?;
+        Ok(Self {
+            api_info,
+            endpoint,
+            timeout_ms,
+        })
+    }
+}
+
 pub trait SynologyTransport {
     fn inspect(
         &mut self,
@@ -297,6 +322,30 @@ pub struct SynologyLanTransport {
     connector: Box<dyn TlsConnector>,
     tls_config: TlsConfig,
     maximum_response_bytes: usize,
+}
+
+/// One operation-scoped Surveillance Station session and its bearer endpoint.
+pub struct SynologySnapshotSession {
+    endpoint_uri: Zeroizing<String>,
+    session: Session,
+    auth_path: String,
+    auth_version: u64,
+}
+
+impl SynologySnapshotSession {
+    pub fn endpoint_uri(&self) -> &str {
+        self.endpoint_uri.as_str()
+    }
+}
+
+impl fmt::Debug for SynologySnapshotSession {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("SynologySnapshotSession")
+            .field("endpoint_uri", &"[REDACTED]")
+            .field("session", &"[REDACTED]")
+            .finish_non_exhaustive()
+    }
 }
 
 impl Default for SynologyLanTransport {
@@ -385,6 +434,169 @@ impl SynologyLanTransport {
             });
         }
         parse_api_data(&response.body, operation)
+    }
+
+    /// Open one isolated session, revalidate the exact privilege-filtered
+    /// camera, and return its documented version-9 JPEG snapshot endpoint.
+    pub fn open_snapshot_session(
+        &mut self,
+        config: &SynologyConfig,
+        credentials: &SynologyCredentials,
+        camera_id: u64,
+    ) -> Result<SynologySnapshotSession, SynologyError> {
+        if camera_id == 0 {
+            return Err(SynologyError::SnapshotCameraUnavailable);
+        }
+        let plans = SynologyRequestPlans::new(config)?;
+        let response = self.request(&plans.api_info, None, &[])?;
+        if response.status != 200 {
+            return Err(SynologyError::HttpStatus {
+                operation: "API discovery",
+                status: response.status,
+            });
+        }
+        let catalog = parse_api_catalog(&response.body)?;
+        let login_version = catalog.auth.version.to_string();
+        let login_body = form_encode(&[
+            ("api", AUTH_API),
+            ("method", "login"),
+            ("version", login_version.as_str()),
+            ("account", credentials.username.as_str()),
+            ("passwd", credentials.password.as_str()),
+            ("session", "SurveillanceStation"),
+            ("format", "sid"),
+            ("enable_syno_token", "yes"),
+        ]);
+        let login = self.api_request(
+            &plans,
+            LocalHttpMethod::Post,
+            &catalog.auth.path,
+            &[],
+            login_body.as_bytes(),
+            "login",
+        )?;
+        let session = parse_session(login)?;
+
+        let prepared = (|| {
+            let common = session_parameters(&session);
+            let info_version = catalog.info.version.to_string();
+            let mut info_parameters = vec![
+                ("api", INFO_API),
+                ("method", "GetInfo"),
+                ("version", info_version.as_str()),
+            ];
+            info_parameters.extend(common.iter().copied());
+            let info = self.api_request(
+                &plans,
+                LocalHttpMethod::Get,
+                &catalog.info.path,
+                &info_parameters,
+                &[],
+                "package info",
+            )?;
+            if parse_surveillance_info(info)?.allow_snapshot != Some(true) {
+                return Err(SynologyError::SnapshotNotAllowed);
+            }
+
+            let camera_version = catalog.camera.version.to_string();
+            let limit = MAX_CAMERAS.to_string();
+            let mut camera_parameters = vec![
+                ("api", CAMERA_API),
+                ("method", "List"),
+                ("version", camera_version.as_str()),
+                ("offset", "0"),
+                ("limit", limit.as_str()),
+                ("basic", "true"),
+                ("streamInfo", "false"),
+                ("blPrivilege", "true"),
+                ("privCamType", "1"),
+                ("blIncludeDeletedCam", "false"),
+            ];
+            camera_parameters.extend(common.iter().copied());
+            let cameras = self.api_request(
+                &plans,
+                LocalHttpMethod::Get,
+                &catalog.camera.path,
+                &camera_parameters,
+                &[],
+                "camera list",
+            )?;
+            if !parse_cameras(cameras)?
+                .iter()
+                .any(|camera| camera.id == camera_id)
+            {
+                return Err(SynologyError::SnapshotCameraUnavailable);
+            }
+
+            let camera_id = camera_id.to_string();
+            let mut snapshot_parameters = vec![
+                ("api", CAMERA_API),
+                ("method", "GetSnapshot"),
+                ("version", camera_version.as_str()),
+                ("id", camera_id.as_str()),
+                ("profileType", "0"),
+            ];
+            snapshot_parameters.extend(common.iter().copied());
+            api_url(&plans.endpoint, &catalog.camera.path, &snapshot_parameters)
+        })();
+
+        match prepared {
+            Ok(endpoint_uri) => Ok(SynologySnapshotSession {
+                endpoint_uri,
+                session,
+                auth_path: catalog.auth.path,
+                auth_version: catalog.auth.version,
+            }),
+            Err(error) => {
+                let _ =
+                    self.logout_session(&plans, &catalog.auth.path, catalog.auth.version, &session);
+                Err(error)
+            }
+        }
+    }
+
+    /// Explicitly close an operation-scoped snapshot session.
+    pub fn close_snapshot_session(
+        &mut self,
+        config: &SynologyConfig,
+        session: SynologySnapshotSession,
+    ) -> Result<(), SynologyError> {
+        let plans = SynologyRequestPlans::new(config)?;
+        self.logout_session(
+            &plans,
+            &session.auth_path,
+            session.auth_version,
+            &session.session,
+        )
+    }
+
+    fn logout_session(
+        &mut self,
+        plans: &SynologyRequestPlans,
+        auth_path: &str,
+        auth_version: u64,
+        session: &Session,
+    ) -> Result<(), SynologyError> {
+        let auth_version = auth_version.to_string();
+        let mut parameters = vec![
+            ("api", AUTH_API),
+            ("method", "logout"),
+            ("version", auth_version.as_str()),
+            ("session", "SurveillanceStation"),
+            ("_sid", session.sid.as_str()),
+        ];
+        if let Some(token) = session.synotoken.as_deref() {
+            parameters.push(("SynoToken", token));
+        }
+        self.api_request(
+            plans,
+            LocalHttpMethod::Get,
+            auth_path,
+            &parameters,
+            &[],
+            "logout",
+        )?;
+        Ok(())
     }
 }
 
@@ -523,22 +735,12 @@ impl<T: SynologyTransport> SynologyClient<T> {
         credentials: SynologyCredentials,
         transport: T,
     ) -> Result<Self, SynologyError> {
-        let endpoint = config.endpoint()?;
-        let timeout_ms = duration_ms(config.timeout);
-        let api_info = LocalHttpRequestTemplate::new(LocalHttpMethod::Get, API_INFO_PATH)?
-            .with_accept("application/json")
-            .with_timeout_ms(timeout_ms)
-            .with_auth(LocalHttpAuth::None)
-            .plan(&endpoint, Vec::new())?;
+        let plans = SynologyRequestPlans::new(&config)?;
         Ok(Self {
             config,
             credentials,
             transport,
-            plans: SynologyRequestPlans {
-                api_info,
-                endpoint,
-                timeout_ms,
-            },
+            plans,
         })
     }
 
@@ -669,16 +871,24 @@ pub fn install_snapshot(
             health,
             metadata,
         })?;
+        let mut capabilities = vec![Capability::new(
+            CapabilityId::trusted("camera.health"),
+            CapabilityMode::Observe,
+            ValueKind::Object,
+        )];
+        if snapshot.info.allow_snapshot == Some(true) {
+            capabilities.push(Capability::new(
+                CapabilityId::trusted("camera.snapshot"),
+                CapabilityMode::Command,
+                ValueKind::Text,
+            ));
+        }
         runtime.upsert_entity(Entity {
             entity_id: camera_entity_id.clone(),
             device_id: device_id.clone(),
             kind: EntityKind::Camera,
             name: camera.name.clone(),
-            capabilities: vec![Capability::new(
-                CapabilityId::trusted("camera.health"),
-                CapabilityMode::Observe,
-                ValueKind::Object,
-            )],
+            capabilities,
             state: Some(StateSnapshot {
                 entity_id: camera_entity_id.clone(),
                 value: camera_value(camera),
@@ -735,6 +945,14 @@ struct ApiCatalog {
 struct Session {
     sid: Zeroizing<String>,
     synotoken: Option<Zeroizing<String>>,
+}
+
+fn session_parameters(session: &Session) -> Vec<(&str, &str)> {
+    let mut parameters = vec![("_sid", session.sid.as_str())];
+    if let Some(token) = session.synotoken.as_deref() {
+        parameters.push(("SynoToken", token));
+    }
+    parameters
 }
 
 struct SecretJson(JsonValue);
@@ -992,7 +1210,10 @@ fn bounded_text(field: &str, value: &str) -> Result<String, SynologyError> {
 }
 
 fn validate_secret(field: &str, value: &str) -> Result<(), SynologyError> {
-    if value.is_empty() || value.len() > MAX_SECRET_BYTES || value.contains(['\r', '\n', '\0']) {
+    if value.is_empty()
+        || value.len() > MAX_CREDENTIAL_FIELD_BYTES
+        || value.contains(['\r', '\n', '\0'])
+    {
         Err(SynologyError::Validation(format!(
             "{field} is empty, oversized, or unsafe"
         )))
@@ -1575,6 +1796,27 @@ mod tests {
                 .health,
             Health::Online
         );
+        assert!(back
+            .capabilities
+            .iter()
+            .any(|capability| capability.capability_id.as_str() == "camera.snapshot"));
+    }
+
+    #[test]
+    fn snapshot_capability_requires_explicit_nvr_permission() {
+        let mut snapshot = snapshot();
+        snapshot.info.allow_snapshot = Some(false);
+        let config = config(5001);
+        let mut runtime = SmartHomeRuntime::new();
+        let installed = install_snapshot(&mut runtime, &config, &snapshot, 2_000).unwrap();
+        let entity = runtime
+            .registry()
+            .entity(&installed.cameras[0].camera_entity_id)
+            .unwrap();
+        assert!(!entity
+            .capabilities
+            .iter()
+            .any(|capability| capability.capability_id.as_str() == "camera.snapshot"));
     }
 
     #[test]
@@ -1690,6 +1932,63 @@ mod tests {
         assert!(requests[2..]
             .iter()
             .all(|(head, _)| { !head.contains("secret-password") && !head.contains("operator") }));
+    }
+
+    #[test]
+    fn rejected_snapshot_setup_logs_out_the_open_session() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let port = listener.local_addr().unwrap().port();
+        let requests = Arc::new(Mutex::new(Vec::new()));
+        let server_requests = Arc::clone(&requests);
+        let responses = vec![
+            r#"{"success":true,"data":{"SYNO.API.Auth":{"path":"auth.cgi","minVersion":1,"maxVersion":6},"SYNO.SurveillanceStation.Info":{"path":"entry.cgi","minVersion":1,"maxVersion":5},"SYNO.SurveillanceStation.Camera":{"path":"entry.cgi","minVersion":1,"maxVersion":9}}}"#,
+            r#"{"success":true,"data":{"sid":"secret.sid.value","synotoken":"secret-token"}}"#,
+            r#"{"success":true,"data":{"version":{"major":9,"minor":2,"build":11289},"cameraNumber":1,"maxCameraSupport":40,"userPriv":4,"allowSnapshot":false,"allowManualRec":false}}"#,
+            r#"{"success":true}"#,
+        ];
+        let handle = thread::spawn(move || {
+            for body in responses {
+                let (stream, _) = listener.accept().unwrap();
+                let mut reader = BufReader::new(stream);
+                let mut head = String::new();
+                loop {
+                    let mut line = String::new();
+                    reader.read_line(&mut line).unwrap();
+                    if line == "\r\n" {
+                        break;
+                    }
+                    head.push_str(&line);
+                }
+                let length = head
+                    .lines()
+                    .find_map(|line| line.strip_prefix("Content-Length: "))
+                    .unwrap_or("0")
+                    .parse::<usize>()
+                    .unwrap();
+                let mut request_body = vec![0u8; length];
+                reader.read_exact(&mut request_body).unwrap();
+                server_requests.lock().unwrap().push(head);
+                let reply = format!(
+                    "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
+                    body.len(),
+                    body
+                );
+                reader.get_mut().write_all(reply.as_bytes()).unwrap();
+            }
+        });
+
+        let config = config(port);
+        let mut transport = SynologyLanTransport::default();
+        let error = transport
+            .open_snapshot_session(&config, &credentials(), 20)
+            .unwrap_err();
+        handle.join().unwrap();
+        assert!(matches!(error, SynologyError::SnapshotNotAllowed));
+        let requests = requests.lock().unwrap();
+        assert_eq!(requests.len(), 4);
+        assert!(requests[3].contains("method=logout"));
+        assert!(requests[3].contains("_sid=secret.sid.value"));
+        assert!(requests[3].contains("SynoToken=secret-token"));
     }
 
     #[test]
