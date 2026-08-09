@@ -1,8 +1,8 @@
 [package]
 name = "smart-home-unifi-network-integration"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-description = "Authenticated local UniFi Network device and pseudonymous connected-client inspection"
+description = "Authenticated local UniFi Network health, bounded live statistics, and pseudonymous client inspection"
 license = "MIT"
 
 [dependencies]

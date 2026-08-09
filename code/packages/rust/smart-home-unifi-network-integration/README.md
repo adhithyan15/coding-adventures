@@ -1,7 +1,7 @@
 # smart-home-unifi-network-integration
 
-Production-facing read-only UniFi Network and connected-client presence
-inspection for D23.
+Production-facing read-only UniFi Network health, live device statistics, and
+connected-client presence inspection for D23.
 
 The integration accepts a manually configured local UniFi OS HTTPS origin and
 a Vault API-key reference. After D23 authorizes smart_home.read, the transport
@@ -25,13 +25,25 @@ runtime identity, state, metadata, errors, or debug output. Pseudonymous client
 state exposes only current presence, connection type, and optional access shape,
 and expires after five minutes.
 
+Live adopted-device statistics use the official
+`/v1/sites/{siteId}/devices/{deviceId}/statistics/latest` endpoint only for an
+explicit set of already-installed devices. D23 read authorization and an exact
+local operational-telemetry grant with two-minute retention must succeed before
+I/O. A poll contains at most 64 unique targets and the integration refuses a
+second poll before one minute has elapsed. CPU and memory utilization, load
+averages, uptime, optional uplink rates, and bounded radio frequency/retry
+readings are validated before installation and expire after two minutes. Native
+heartbeat timestamps are intentionally discarded.
+
 This slice intentionally excludes remote Site Manager access, connected-client
-native details and retained identity migration, detailed statistics, event
-streaming, adoption, guest authorization, port actions, and configuration
-mutations. Those require privacy and telemetry-egress policy, supervised event
-hosts, or operation-specific D23 contracts and readable verification.
+native details and retained identity migration, historical statistics,
+unbounded fleet polling, event streaming, adoption, guest authorization, port
+actions, and configuration mutations. Those require privacy and
+telemetry-egress policy, supervised event hosts, or operation-specific D23
+contracts and readable verification.
 
 Protocol references:
 
 - [Getting Started with the Official UniFi API](https://help.ui.com/hc/en-us/articles/30076656117655-Getting-Started-with-the-Official-UniFi-API)
 - [UniFi Network API](https://developer.ui.com/network/v10.4.57/gettingstarted)
+- [Get Latest Device Statistics](https://developer.ui.com/network/v9.1.120/getdevicelateststatistics)

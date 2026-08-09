@@ -16,6 +16,7 @@ pub enum DataCategory {
     CoarseLocation,
     DeviceIdentifier,
     EnvironmentalTelemetry,
+    OperationalTelemetry,
     Presence,
 }
 
@@ -708,6 +709,48 @@ mod tests {
         request.retention = DataRetention::Bounded {
             maximum_age_ms: 300_001,
         };
+        assert_eq!(
+            policy.decide(&request),
+            DataGovernanceDecision::Deny(DataGovernanceDenial::NoMatchingConsent)
+        );
+    }
+
+    #[test]
+    fn operational_telemetry_requires_exact_local_retention() {
+        let principal = principal();
+        let mut policy = DataGovernancePolicy::default();
+        policy
+            .add_grant(
+                DataUseGrant::new(
+                    principal.clone(),
+                    "unifi:home:device-statistics",
+                    DataCategory::OperationalTelemetry,
+                    DataOperation::Inspect,
+                    DataDestination::LocalDevice,
+                    DataPurpose::new("inspect short-lived network device health metrics").unwrap(),
+                    ConsentReceiptRef::new("consent://smart-home/unifi-statistics-1").unwrap(),
+                    DataRetention::Bounded {
+                        maximum_age_ms: 120_000,
+                    },
+                    100,
+                    200,
+                )
+                .unwrap(),
+            )
+            .unwrap();
+        let mut request = DataUseRequest {
+            principal_id: &principal,
+            resource_id: "unifi:home:device-statistics",
+            category: DataCategory::OperationalTelemetry,
+            operation: DataOperation::Inspect,
+            destination: DataDestination::LocalDevice,
+            retention: DataRetention::Bounded {
+                maximum_age_ms: 120_000,
+            },
+            now_ms: 150,
+        };
+        assert!(policy.decide(&request).is_allowed());
+        request.retention = DataRetention::Ephemeral;
         assert_eq!(
             policy.decide(&request),
             DataGovernanceDecision::Deny(DataGovernanceDenial::NoMatchingConsent)

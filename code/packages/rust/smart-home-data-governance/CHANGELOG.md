@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0
+
+- Add operational telemetry as a distinct consent category for bounded local
+  health and performance inspection.
+- Prove that operational-telemetry grants match exact retention and remain
+  deny-by-default for near-match requests.
+
 ## 0.4.0
 
 - Add a host-owned presence category that can be bound to explicit ephemeral or

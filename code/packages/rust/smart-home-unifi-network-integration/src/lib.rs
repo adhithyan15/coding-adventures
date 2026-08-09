@@ -33,7 +33,7 @@ use std::time::Duration;
 use tls_platform::{default_connector, TlsConfig, TlsConnector};
 use url_parser::{Url, UrlError};
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 pub const INTEGRATION_ID: &str = "unifi";
 pub const PROTOCOL_ID: &str = "unifi_network_integration_api";
 pub const API_BASE_PATH: &str = "/proxy/network/integration";
@@ -45,6 +45,10 @@ pub const MAX_SITES: usize = 128;
 pub const MAX_DEVICES: usize = 2_048;
 pub const MAX_CONNECTED_CLIENTS: usize = 8_192;
 pub const CLIENT_PRESENCE_RETENTION_MS: u64 = 5 * 60 * 1_000;
+pub const MAX_STATISTICS_TARGETS_PER_POLL: usize = 64;
+pub const STATISTICS_MIN_POLL_INTERVAL_MS: u64 = 60 * 1_000;
+pub const STATISTICS_RETENTION_MS: u64 = 2 * 60 * 1_000;
+const MAX_STATISTICS_RADIOS: usize = 64;
 const MAX_SECRET_BYTES: usize = 8 * 1024;
 const MAX_TEXT_BYTES: usize = 1_024;
 
@@ -69,6 +73,9 @@ pub enum UniFiError {
     },
     Json(serde_json::Error),
     MissingField(&'static str),
+    PollRateLimited {
+        retry_at_ms: u64,
+    },
     DataGovernanceDenied(DataGovernanceDenial),
     Runtime(RuntimeError),
 }
@@ -94,6 +101,10 @@ impl fmt::Display for UniFiError {
             ),
             Self::Json(error) => write!(formatter, "invalid UniFi JSON: {error}"),
             Self::MissingField(field) => write!(formatter, "UniFi response is missing {field}"),
+            Self::PollRateLimited { retry_at_ms } => write!(
+                formatter,
+                "UniFi statistics poll is rate limited until {retry_at_ms}"
+            ),
             Self::DataGovernanceDenied(reason) => {
                 write!(
                     formatter,
@@ -294,6 +305,45 @@ pub struct UniFiConnectedClient {
     pub access_authorized: Option<bool>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub struct UniFiStatisticsTarget {
+    pub site_id: String,
+    pub device_id: String,
+}
+
+impl UniFiStatisticsTarget {
+    pub fn new(
+        site_id: impl Into<String>,
+        device_id: impl Into<String>,
+    ) -> Result<Self, UniFiError> {
+        let site_id = site_id.into();
+        let device_id = device_id.into();
+        safe_path_id(&site_id)?;
+        safe_path_id(&device_id)?;
+        Ok(Self { site_id, device_id })
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct UniFiRadioStatistics {
+    pub frequency_ghz: f64,
+    pub tx_retries_pct: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct UniFiDeviceStatistics {
+    pub target: UniFiStatisticsTarget,
+    pub uptime_sec: u64,
+    pub load_average_1_min: f64,
+    pub load_average_5_min: f64,
+    pub load_average_15_min: f64,
+    pub cpu_utilization_pct: f64,
+    pub memory_utilization_pct: f64,
+    pub uplink_tx_rate_bps: Option<u64>,
+    pub uplink_rx_rate_bps: Option<u64>,
+    pub radios: Vec<UniFiRadioStatistics>,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct UniFiRequestPlans {
     pub endpoint: LocalHttpEndpoint,
@@ -319,6 +369,17 @@ pub trait UniFiTransport {
     ) -> Result<Vec<UniFiConnectedClient>, UniFiError> {
         Err(UniFiError::Validation(
             "transport does not implement connected-client inspection".to_string(),
+        ))
+    }
+
+    fn inspect_device_statistics(
+        &mut self,
+        _plans: &UniFiRequestPlans,
+        _api_key: &UniFiApiKey,
+        _targets: &[UniFiStatisticsTarget],
+    ) -> Result<Vec<UniFiDeviceStatistics>, UniFiError> {
+        Err(UniFiError::Validation(
+            "transport does not implement device-statistics inspection".to_string(),
         ))
     }
 }
@@ -529,6 +590,27 @@ impl UniFiTransport for UniFiLanTransport {
         validate_client_uniqueness(&clients)?;
         Ok(clients)
     }
+
+    fn inspect_device_statistics(
+        &mut self,
+        plans: &UniFiRequestPlans,
+        api_key: &UniFiApiKey,
+        targets: &[UniFiStatisticsTarget],
+    ) -> Result<Vec<UniFiDeviceStatistics>, UniFiError> {
+        validate_statistics_targets(targets)?;
+        let mut statistics = Vec::with_capacity(targets.len());
+        for target in targets {
+            let path = format!(
+                "/v1/sites/{}/devices/{}/statistics/latest",
+                safe_path_id(&target.site_id)?,
+                safe_path_id(&target.device_id)?
+            );
+            let plan = get_plan(&plans.endpoint, &plans.api_key_ref, &path, plans.timeout_ms)?;
+            let response = self.get_sensitive_json(&plan, api_key, "latest device statistics")?;
+            statistics.push(parse_device_statistics(&response.0, target)?);
+        }
+        Ok(statistics)
+    }
 }
 
 pub struct UniFiClient<T> {
@@ -589,6 +671,15 @@ impl<T: UniFiTransport> UniFiClient<T> {
         )?;
         Ok(snapshot)
     }
+
+    pub fn inspect_device_statistics(
+        &mut self,
+        targets: &[UniFiStatisticsTarget],
+    ) -> Result<Vec<UniFiDeviceStatistics>, UniFiError> {
+        validate_statistics_targets(targets)?;
+        self.transport
+            .inspect_device_statistics(&self.plans, &self.api_key, targets)
+    }
 }
 
 impl<T> fmt::Debug for UniFiClient<T> {
@@ -622,6 +713,7 @@ pub struct InstalledUniFiNetwork {
 pub struct UniFiRuntimeIntegration<T> {
     client: UniFiClient<T>,
     data_governance: DataGovernancePolicy,
+    last_statistics_poll_at_ms: Option<u64>,
 }
 
 impl<T: UniFiTransport> UniFiRuntimeIntegration<T> {
@@ -629,6 +721,7 @@ impl<T: UniFiTransport> UniFiRuntimeIntegration<T> {
         Self {
             client,
             data_governance: DataGovernancePolicy::default(),
+            last_statistics_poll_at_ms: None,
         }
     }
 
@@ -663,6 +756,38 @@ impl<T: UniFiTransport> UniFiRuntimeIntegration<T> {
         )?;
         let snapshot = self.client.inspect_with_connected_clients()?;
         install_snapshot(runtime, &self.client.config, &snapshot, observed_at_ms)
+    }
+
+    pub fn inspect_statistics_and_install_authorized(
+        &mut self,
+        runtime: &mut SmartHomeRuntime,
+        principal_id: AgentId,
+        targets: &[UniFiStatisticsTarget],
+        observed_at_ms: u64,
+    ) -> Result<Vec<EntityId>, UniFiError> {
+        validate_statistics_targets(targets)?;
+        validate_statistics_targets_installed(runtime, &self.client.config, targets)?;
+        let retry_at_ms = self
+            .last_statistics_poll_at_ms
+            .map(|last| last.saturating_add(STATISTICS_MIN_POLL_INTERVAL_MS));
+        if retry_at_ms.is_some_and(|retry_at| observed_at_ms < retry_at) {
+            return Err(UniFiError::PollRateLimited {
+                retry_at_ms: retry_at_ms.unwrap_or(observed_at_ms),
+            });
+        }
+        authorize_read(runtime, principal_id.clone(), observed_at_ms)?;
+        authorize_statistics_inspection(
+            &self.data_governance,
+            &principal_id,
+            &self.client.config,
+            observed_at_ms,
+        )?;
+        let statistics = self.client.inspect_device_statistics(targets)?;
+        validate_statistics_response(targets, &statistics)?;
+        let installed =
+            install_device_statistics(runtime, &self.client.config, &statistics, observed_at_ms)?;
+        self.last_statistics_poll_at_ms = Some(observed_at_ms);
+        Ok(installed)
     }
 }
 
@@ -842,6 +967,101 @@ pub fn install_snapshot(
     })
 }
 
+pub fn install_device_statistics(
+    runtime: &mut SmartHomeRuntime,
+    config: &UniFiConfig,
+    statistics: &[UniFiDeviceStatistics],
+    observed_at_ms: u64,
+) -> Result<Vec<EntityId>, UniFiError> {
+    validate_statistics_batch(statistics)?;
+    let expires_at_ms = observed_at_ms
+        .checked_add(STATISTICS_RETENTION_MS)
+        .ok_or_else(|| UniFiError::Validation("statistics expiry overflows time".to_string()))?;
+    let mut prepared = Vec::with_capacity(statistics.len());
+    for reading in statistics {
+        let device_id = normalized_device_id(&reading.target)?;
+        let mut device = runtime
+            .registry()
+            .device(&device_id)
+            .filter(|device| device.bridge_id == config.bridge_id)
+            .cloned()
+            .ok_or_else(|| {
+                UniFiError::Validation(format!(
+                    "statistics target {} is not an installed UniFi device",
+                    device_id.as_str()
+                ))
+            })?;
+        let entity_id = EntityId::trusted(format!("{}:statistics", device_id.as_str()));
+        if !device.entity_ids.contains(&entity_id) {
+            device.entity_ids.push(entity_id.clone());
+        }
+        let entity = Entity {
+            entity_id: entity_id.clone(),
+            device_id: device_id.clone(),
+            kind: EntityKind::NetworkDiagnostic,
+            name: format!("{} live statistics", device.name),
+            capabilities: vec![Capability::new(
+                CapabilityId::trusted("network.device_statistics"),
+                CapabilityMode::Observe,
+                ValueKind::Object,
+            )],
+            state: Some(StateSnapshot {
+                entity_id: entity_id.clone(),
+                value: device_statistics_value(reading),
+                source: StateSource::Poll,
+                observed_at_ms,
+                received_at_ms: observed_at_ms,
+                expires_at_ms: Some(expires_at_ms),
+                confidence: StateConfidence::Confirmed,
+            }),
+            metadata: vec![
+                Metadata::new("unifi.protocol", PROTOCOL_ID),
+                Metadata::new("unifi.statistics_retention", "bounded_two_minutes"),
+            ],
+        };
+        prepared.push((device, entity));
+    }
+    let mut installed = Vec::with_capacity(prepared.len());
+    for (device, entity) in prepared {
+        installed.push(entity.entity_id.clone());
+        runtime.upsert_device(device)?;
+        runtime.upsert_entity(entity)?;
+    }
+    Ok(installed)
+}
+
+fn normalized_device_id(target: &UniFiStatisticsTarget) -> Result<DeviceId, UniFiError> {
+    let site_id = stable_component(&target.site_id);
+    let device_id = stable_component(&target.device_id);
+    if site_id.is_empty() || device_id.is_empty() {
+        return Err(UniFiError::Validation(
+            "statistics target IDs must have stable components".to_string(),
+        ));
+    }
+    Ok(DeviceId::trusted(format!("unifi:{site_id}:{device_id}")))
+}
+
+fn validate_statistics_targets_installed(
+    runtime: &SmartHomeRuntime,
+    config: &UniFiConfig,
+    targets: &[UniFiStatisticsTarget],
+) -> Result<(), UniFiError> {
+    for target in targets {
+        let device_id = normalized_device_id(target)?;
+        if !runtime
+            .registry()
+            .device(&device_id)
+            .is_some_and(|device| device.bridge_id == config.bridge_id)
+        {
+            return Err(UniFiError::Validation(format!(
+                "statistics target {} is not an installed UniFi device",
+                device_id.as_str()
+            )));
+        }
+    }
+    Ok(())
+}
+
 fn authorize_read(
     runtime: &mut SmartHomeRuntime,
     principal_id: AgentId,
@@ -895,6 +1115,32 @@ fn authorize_client_inspection(
         }
     }
     Ok(())
+}
+
+fn authorize_statistics_inspection(
+    policy: &DataGovernancePolicy,
+    principal_id: &AgentId,
+    config: &UniFiConfig,
+    now_ms: u64,
+) -> Result<(), UniFiError> {
+    let resource_id = format!(
+        "unifi:{}:device-statistics",
+        stable_component(config.bridge_id.as_str())
+    );
+    match policy.decide(&DataUseRequest {
+        principal_id,
+        resource_id: &resource_id,
+        category: DataCategory::OperationalTelemetry,
+        operation: DataOperation::Inspect,
+        destination: DataDestination::LocalDevice,
+        retention: DataRetention::Bounded {
+            maximum_age_ms: STATISTICS_RETENTION_MS,
+        },
+        now_ms,
+    }) {
+        DataGovernanceDecision::Allow(_) => Ok(()),
+        DataGovernanceDecision::Deny(reason) => Err(UniFiError::DataGovernanceDenied(reason)),
+    }
 }
 
 #[derive(Debug)]
@@ -1055,6 +1301,148 @@ fn parse_client_access(
         })?),
     };
     Ok((access_type, authorized))
+}
+
+fn parse_device_statistics(
+    value: &JsonValue,
+    target: &UniFiStatisticsTarget,
+) -> Result<UniFiDeviceStatistics, UniFiError> {
+    let object = value
+        .as_object()
+        .ok_or(UniFiError::MissingField("device statistics object"))?;
+    let uplink = optional_object(object, "uplink")?;
+    let interfaces = object
+        .get("interfaces")
+        .and_then(JsonValue::as_object)
+        .ok_or(UniFiError::MissingField("device statistics interfaces"))?;
+    let radios = match interfaces.get("radios") {
+        None | Some(JsonValue::Null) => Vec::new(),
+        Some(JsonValue::Array(values)) => {
+            if values.len() > MAX_STATISTICS_RADIOS {
+                return Err(UniFiError::Validation(format!(
+                    "device statistics exceed {MAX_STATISTICS_RADIOS} radios"
+                )));
+            }
+            values
+                .iter()
+                .map(|value| {
+                    let radio = value
+                        .as_object()
+                        .ok_or(UniFiError::MissingField("device statistics radio"))?;
+                    Ok(UniFiRadioStatistics {
+                        frequency_ghz: required_number_or_text(radio, "frequencyGHz", 0.1, 100.0)?,
+                        tx_retries_pct: required_number(radio, "txRetriesPct", 0.0, 100.0)?,
+                    })
+                })
+                .collect::<Result<Vec<_>, UniFiError>>()?
+        }
+        Some(_) => {
+            return Err(UniFiError::Validation(
+                "device statistics radios must be an array".to_string(),
+            ))
+        }
+    };
+    Ok(UniFiDeviceStatistics {
+        target: target.clone(),
+        uptime_sec: required_u64(object, "uptimeSec")?,
+        load_average_1_min: required_number(object, "loadAverage1Min", 0.0, 1_000_000.0)?,
+        load_average_5_min: required_number(object, "loadAverage5Min", 0.0, 1_000_000.0)?,
+        load_average_15_min: required_number(object, "loadAverage15Min", 0.0, 1_000_000.0)?,
+        cpu_utilization_pct: required_number(object, "cpuUtilizationPct", 0.0, 100.0)?,
+        memory_utilization_pct: required_number(object, "memoryUtilizationPct", 0.0, 100.0)?,
+        uplink_tx_rate_bps: optional_u64(uplink, "txRateBps")?,
+        uplink_rx_rate_bps: optional_u64(uplink, "rxRateBps")?,
+        radios,
+    })
+}
+
+fn optional_object<'a>(
+    object: &'a JsonMap<String, JsonValue>,
+    field: &'static str,
+) -> Result<Option<&'a JsonMap<String, JsonValue>>, UniFiError> {
+    match object.get(field) {
+        None | Some(JsonValue::Null) => Ok(None),
+        Some(JsonValue::Object(value)) => Ok(Some(value)),
+        Some(_) => Err(UniFiError::Validation(format!(
+            "device statistics {field} must be an object or null"
+        ))),
+    }
+}
+
+fn required_u64(
+    object: &JsonMap<String, JsonValue>,
+    field: &'static str,
+) -> Result<u64, UniFiError> {
+    object
+        .get(field)
+        .and_then(JsonValue::as_u64)
+        .filter(|value| *value <= i64::MAX as u64)
+        .ok_or(UniFiError::MissingField(field))
+}
+
+fn optional_u64(
+    object: Option<&JsonMap<String, JsonValue>>,
+    field: &'static str,
+) -> Result<Option<u64>, UniFiError> {
+    let Some(object) = object else {
+        return Ok(None);
+    };
+    match object.get(field) {
+        None | Some(JsonValue::Null) => Ok(None),
+        Some(value) => value
+            .as_u64()
+            .filter(|number| *number <= i64::MAX as u64)
+            .map(Some)
+            .ok_or_else(|| {
+                UniFiError::Validation(format!(
+                    "device statistics {field} must be a non-negative 64-bit integer"
+                ))
+            }),
+    }
+}
+
+fn required_number(
+    object: &JsonMap<String, JsonValue>,
+    field: &'static str,
+    minimum: f64,
+    maximum: f64,
+) -> Result<f64, UniFiError> {
+    let value = object
+        .get(field)
+        .and_then(JsonValue::as_f64)
+        .ok_or(UniFiError::MissingField(field))?;
+    validate_number(field, value, minimum, maximum)
+}
+
+fn required_number_or_text(
+    object: &JsonMap<String, JsonValue>,
+    field: &'static str,
+    minimum: f64,
+    maximum: f64,
+) -> Result<f64, UniFiError> {
+    let value = object.get(field).ok_or(UniFiError::MissingField(field))?;
+    let number = match value {
+        JsonValue::Number(_) => value.as_f64(),
+        JsonValue::String(text) => text.parse::<f64>().ok(),
+        _ => None,
+    }
+    .ok_or(UniFiError::MissingField(field))?;
+    validate_number(field, number, minimum, maximum)
+}
+
+fn validate_number(
+    field: &'static str,
+    value: f64,
+    minimum: f64,
+    maximum: f64,
+) -> Result<f64, UniFiError> {
+    if value.is_finite() && value >= minimum && value <= maximum {
+        Ok(value)
+    } else {
+        Err(UniFiError::Validation(format!(
+            "device statistics {field} is outside the supported range"
+        )))
+    }
 }
 
 fn connected_client_pseudonym(
@@ -1296,6 +1684,96 @@ fn validate_client_snapshot(clients: &[UniFiConnectedClient]) -> Result<(), UniF
     validate_client_uniqueness(clients)
 }
 
+fn validate_statistics_targets(targets: &[UniFiStatisticsTarget]) -> Result<(), UniFiError> {
+    if targets.is_empty() || targets.len() > MAX_STATISTICS_TARGETS_PER_POLL {
+        return Err(UniFiError::Validation(format!(
+            "statistics poll must contain 1 to {MAX_STATISTICS_TARGETS_PER_POLL} targets"
+        )));
+    }
+    let mut unique = BTreeSet::new();
+    for target in targets {
+        safe_path_id(&target.site_id)?;
+        safe_path_id(&target.device_id)?;
+        if !unique.insert((target.site_id.as_str(), target.device_id.as_str())) {
+            return Err(UniFiError::Validation(
+                "statistics targets must be unique".to_string(),
+            ));
+        }
+    }
+    Ok(())
+}
+
+fn validate_statistics_batch(statistics: &[UniFiDeviceStatistics]) -> Result<(), UniFiError> {
+    let targets = statistics
+        .iter()
+        .map(|reading| reading.target.clone())
+        .collect::<Vec<_>>();
+    validate_statistics_targets(&targets)?;
+    for reading in statistics {
+        if reading.uptime_sec > i64::MAX as u64
+            || reading
+                .uplink_tx_rate_bps
+                .is_some_and(|value| value > i64::MAX as u64)
+            || reading
+                .uplink_rx_rate_bps
+                .is_some_and(|value| value > i64::MAX as u64)
+            || reading.radios.len() > MAX_STATISTICS_RADIOS
+        {
+            return Err(UniFiError::Validation(
+                "device statistics exceed normalized state bounds".to_string(),
+            ));
+        }
+        validate_number(
+            "loadAverage1Min",
+            reading.load_average_1_min,
+            0.0,
+            1_000_000.0,
+        )?;
+        validate_number(
+            "loadAverage5Min",
+            reading.load_average_5_min,
+            0.0,
+            1_000_000.0,
+        )?;
+        validate_number(
+            "loadAverage15Min",
+            reading.load_average_15_min,
+            0.0,
+            1_000_000.0,
+        )?;
+        validate_number("cpuUtilizationPct", reading.cpu_utilization_pct, 0.0, 100.0)?;
+        validate_number(
+            "memoryUtilizationPct",
+            reading.memory_utilization_pct,
+            0.0,
+            100.0,
+        )?;
+        for radio in &reading.radios {
+            validate_number("frequencyGHz", radio.frequency_ghz, 0.1, 100.0)?;
+            validate_number("txRetriesPct", radio.tx_retries_pct, 0.0, 100.0)?;
+        }
+    }
+    Ok(())
+}
+
+fn validate_statistics_response(
+    targets: &[UniFiStatisticsTarget],
+    statistics: &[UniFiDeviceStatistics],
+) -> Result<(), UniFiError> {
+    validate_statistics_batch(statistics)?;
+    if targets.len() != statistics.len()
+        || targets
+            .iter()
+            .zip(statistics)
+            .any(|(target, reading)| target != &reading.target)
+    {
+        return Err(UniFiError::Validation(
+            "statistics response does not match the requested targets".to_string(),
+        ));
+    }
+    Ok(())
+}
+
 fn safe_path_id(value: &str) -> Result<&str, UniFiError> {
     if value.is_empty()
         || value.len() > 128
@@ -1373,6 +1851,69 @@ fn connected_client_value(client: &UniFiConnectedClient) -> Value {
     if let Some(authorized) = client.access_authorized {
         fields.push(("access_authorized".to_string(), Value::Bool(authorized)));
     }
+    Value::Object(fields)
+}
+
+fn device_statistics_value(statistics: &UniFiDeviceStatistics) -> Value {
+    let mut fields = vec![
+        (
+            "uptime_sec".to_string(),
+            Value::Integer(statistics.uptime_sec as i64),
+        ),
+        (
+            "load_average_1_min".to_string(),
+            Value::Number(statistics.load_average_1_min),
+        ),
+        (
+            "load_average_5_min".to_string(),
+            Value::Number(statistics.load_average_5_min),
+        ),
+        (
+            "load_average_15_min".to_string(),
+            Value::Number(statistics.load_average_15_min),
+        ),
+        (
+            "cpu_utilization_pct".to_string(),
+            Value::Number(statistics.cpu_utilization_pct),
+        ),
+        (
+            "memory_utilization_pct".to_string(),
+            Value::Number(statistics.memory_utilization_pct),
+        ),
+    ];
+    if let Some(value) = statistics.uplink_tx_rate_bps {
+        fields.push((
+            "uplink_tx_rate_bps".to_string(),
+            Value::Integer(value as i64),
+        ));
+    }
+    if let Some(value) = statistics.uplink_rx_rate_bps {
+        fields.push((
+            "uplink_rx_rate_bps".to_string(),
+            Value::Integer(value as i64),
+        ));
+    }
+    fields.push((
+        "radios".to_string(),
+        Value::Array(
+            statistics
+                .radios
+                .iter()
+                .map(|radio| {
+                    Value::Object(vec![
+                        (
+                            "frequency_ghz".to_string(),
+                            Value::Number(radio.frequency_ghz),
+                        ),
+                        (
+                            "tx_retries_pct".to_string(),
+                            Value::Number(radio.tx_retries_pct),
+                        ),
+                    ])
+                })
+                .collect(),
+        ),
+    ));
     Value::Object(fields)
 }
 
@@ -1725,6 +2266,45 @@ mod tests {
         })
     }
 
+    fn statistics_target() -> UniFiStatisticsTarget {
+        UniFiStatisticsTarget::new("site-1", "device-ap").unwrap()
+    }
+
+    fn statistics_reading() -> UniFiDeviceStatistics {
+        UniFiDeviceStatistics {
+            target: statistics_target(),
+            uptime_sec: 86_400,
+            load_average_1_min: 0.5,
+            load_average_5_min: 0.4,
+            load_average_15_min: 0.3,
+            cpu_utilization_pct: 23.5,
+            memory_utilization_pct: 61.25,
+            uplink_tx_rate_bps: Some(1_024),
+            uplink_rx_rate_bps: Some(2_048),
+            radios: vec![UniFiRadioStatistics {
+                frequency_ghz: 5.0,
+                tx_retries_pct: 1.5,
+            }],
+        }
+    }
+
+    fn statistics_json() -> JsonValue {
+        serde_json::json!({
+            "uptimeSec": 86400,
+            "lastHeartbeatAt": "2026-08-09T10:00:00Z",
+            "nextHeartbeatAt": "2026-08-09T10:01:00Z",
+            "loadAverage1Min": 0.5,
+            "loadAverage5Min": 0.4,
+            "loadAverage15Min": 0.3,
+            "cpuUtilizationPct": 23.5,
+            "memoryUtilizationPct": 61.25,
+            "uplink": {"txRateBps": 1024, "rxRateBps": 2048},
+            "interfaces": {
+                "radios": [{"frequencyGHz": "5", "txRetriesPct": 1.5}]
+            }
+        })
+    }
+
     #[derive(Debug)]
     struct FixedTransport {
         snapshot: UniFiSnapshot,
@@ -1739,6 +2319,32 @@ mod tests {
         ) -> Result<UniFiSnapshot, UniFiError> {
             self.calls.fetch_add(1, Ordering::SeqCst);
             Ok(self.snapshot.clone())
+        }
+    }
+
+    #[derive(Debug)]
+    struct StatisticsTransport {
+        readings: Vec<UniFiDeviceStatistics>,
+        calls: Arc<AtomicUsize>,
+    }
+
+    impl UniFiTransport for StatisticsTransport {
+        fn inspect(
+            &mut self,
+            _plans: &UniFiRequestPlans,
+            _api_key: &UniFiApiKey,
+        ) -> Result<UniFiSnapshot, UniFiError> {
+            panic!("statistics tests must not run aggregate inspection")
+        }
+
+        fn inspect_device_statistics(
+            &mut self,
+            _plans: &UniFiRequestPlans,
+            _api_key: &UniFiApiKey,
+            _targets: &[UniFiStatisticsTarget],
+        ) -> Result<Vec<UniFiDeviceStatistics>, UniFiError> {
+            self.calls.fetch_add(1, Ordering::SeqCst);
+            Ok(self.readings.clone())
         }
     }
 
@@ -1791,6 +2397,30 @@ mod tests {
                 )
                 .unwrap();
         }
+        policy
+    }
+
+    fn statistics_policy(principal: &AgentId) -> DataGovernancePolicy {
+        let mut policy = DataGovernancePolicy::default();
+        policy
+            .add_grant(
+                DataUseGrant::new(
+                    principal.clone(),
+                    "unifi:unifi-test:device-statistics",
+                    DataCategory::OperationalTelemetry,
+                    DataOperation::Inspect,
+                    DataDestination::LocalDevice,
+                    DataPurpose::new("inspect short-lived network device health metrics").unwrap(),
+                    ConsentReceiptRef::new("consent://unifi/device-statistics-1").unwrap(),
+                    DataRetention::Bounded {
+                        maximum_age_ms: STATISTICS_RETENTION_MS,
+                    },
+                    1_000,
+                    200_000,
+                )
+                .unwrap(),
+            )
+            .unwrap();
         policy
     }
 
@@ -1888,6 +2518,37 @@ mod tests {
         authorize(&mut runtime, principal.clone());
         assert!(matches!(
             integration.inspect_clients_and_install_authorized(&mut runtime, principal, 2_000),
+            Err(UniFiError::DataGovernanceDenied(
+                DataGovernanceDenial::NoMatchingConsent
+            ))
+        ));
+        assert_eq!(calls.load(Ordering::SeqCst), 0);
+    }
+
+    #[test]
+    fn statistics_without_exact_data_consent_reaches_no_transport() {
+        let calls = Arc::new(AtomicUsize::new(0));
+        let client = UniFiClient::new(
+            config(443),
+            api_key(),
+            StatisticsTransport {
+                readings: vec![statistics_reading()],
+                calls: Arc::clone(&calls),
+            },
+        )
+        .unwrap();
+        let mut integration = UniFiRuntimeIntegration::new(client);
+        let mut runtime = SmartHomeRuntime::new();
+        install_snapshot(&mut runtime, &config(443), &snapshot(), 1_000).unwrap();
+        let principal = AgentId::trusted("agent:statistics-denied");
+        authorize(&mut runtime, principal.clone());
+        assert!(matches!(
+            integration.inspect_statistics_and_install_authorized(
+                &mut runtime,
+                principal,
+                &[statistics_target()],
+                2_000,
+            ),
             Err(UniFiError::DataGovernanceDenied(
                 DataGovernanceDenial::NoMatchingConsent
             ))
@@ -1995,6 +2656,82 @@ mod tests {
             }]
         });
         assert!(parse_device_page(&bad_state, 0, &sites.data[0]).is_err());
+    }
+
+    #[test]
+    fn statistics_parser_is_bounded_and_ignores_heartbeat_timestamps() {
+        let reading = parse_device_statistics(&statistics_json(), &statistics_target()).unwrap();
+        assert_eq!(reading, statistics_reading());
+        assert!(validate_statistics_response(
+            &[statistics_target()],
+            std::slice::from_ref(&reading)
+        )
+        .is_ok());
+        let mut wrong_target = reading.clone();
+        wrong_target.target = UniFiStatisticsTarget::new("site-1", "device-switch").unwrap();
+        assert!(validate_statistics_response(&[statistics_target()], &[wrong_target]).is_err());
+        let debug = format!("{reading:?}");
+        assert!(!debug.contains("2026-08-09"));
+
+        let mut invalid_percentage = statistics_json();
+        invalid_percentage["cpuUtilizationPct"] = serde_json::json!(100.1);
+        assert!(parse_device_statistics(&invalid_percentage, &statistics_target()).is_err());
+
+        let mut too_many_radios = statistics_json();
+        too_many_radios["interfaces"]["radios"] = JsonValue::Array(
+            (0..=MAX_STATISTICS_RADIOS)
+                .map(|_| serde_json::json!({"frequencyGHz": 5, "txRetriesPct": 1}))
+                .collect(),
+        );
+        assert!(parse_device_statistics(&too_many_radios, &statistics_target()).is_err());
+    }
+
+    #[test]
+    fn governed_statistics_install_expires_and_rate_limits_before_io() {
+        let calls = Arc::new(AtomicUsize::new(0));
+        let client = UniFiClient::new(
+            config(443),
+            api_key(),
+            StatisticsTransport {
+                readings: vec![statistics_reading()],
+                calls: Arc::clone(&calls),
+            },
+        )
+        .unwrap();
+        let mut runtime = SmartHomeRuntime::new();
+        install_snapshot(&mut runtime, &config(443), &snapshot(), 1_000).unwrap();
+        let principal = AgentId::trusted("agent:statistics-allowed");
+        authorize(&mut runtime, principal.clone());
+        let mut integration = UniFiRuntimeIntegration::new(client)
+            .with_data_governance(statistics_policy(&principal));
+
+        let installed = integration
+            .inspect_statistics_and_install_authorized(
+                &mut runtime,
+                principal.clone(),
+                &[statistics_target()],
+                5_000,
+            )
+            .unwrap();
+        assert_eq!(calls.load(Ordering::SeqCst), 1);
+        assert_eq!(installed.len(), 1);
+        let entity = runtime.registry().entity(&installed[0]).unwrap();
+        assert_eq!(
+            entity.state.as_ref().unwrap().expires_at_ms,
+            Some(5_000 + STATISTICS_RETENTION_MS)
+        );
+        assert!(format!("{entity:?}").contains("cpu_utilization_pct"));
+
+        assert!(matches!(
+            integration.inspect_statistics_and_install_authorized(
+                &mut runtime,
+                principal,
+                &[statistics_target()],
+                5_000 + STATISTICS_MIN_POLL_INTERVAL_MS - 1,
+            ),
+            Err(UniFiError::PollRateLimited { .. })
+        ));
+        assert_eq!(calls.load(Ordering::SeqCst), 1);
     }
 
     #[test]
@@ -2109,6 +2846,50 @@ mod tests {
         assert!(requests
             .iter()
             .all(|head| !head.contains("vault://unifi/test")));
+    }
+
+    #[test]
+    fn loopback_statistics_transport_uses_exact_single_device_path() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let port = listener.local_addr().unwrap().port();
+        let request_head = Arc::new(Mutex::new(String::new()));
+        let server_head = Arc::clone(&request_head);
+        let handle = thread::spawn(move || {
+            let (stream, _) = listener.accept().unwrap();
+            let mut reader = BufReader::new(stream);
+            loop {
+                let mut line = String::new();
+                reader.read_line(&mut line).unwrap();
+                if line == "\r\n" {
+                    break;
+                }
+                server_head.lock().unwrap().push_str(&line);
+            }
+            let body = serde_json::to_vec(&statistics_json()).unwrap();
+            let response_head = format!(
+                "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+                body.len()
+            );
+            reader
+                .get_mut()
+                .write_all(response_head.as_bytes())
+                .unwrap();
+            reader.get_mut().write_all(&body).unwrap();
+        });
+
+        let mut client =
+            UniFiClient::new(config(port), api_key(), UniFiLanTransport::default()).unwrap();
+        let readings = client
+            .inspect_device_statistics(&[statistics_target()])
+            .unwrap();
+        handle.join().unwrap();
+        assert_eq!(readings, vec![statistics_reading()]);
+        let request_head = request_head.lock().unwrap();
+        assert!(request_head.starts_with(
+            "GET /proxy/network/integration/v1/sites/site-1/devices/device-ap/statistics/latest HTTP/1.1"
+        ));
+        assert!(request_head.contains("X-API-Key: secret-api-key"));
+        assert!(!request_head.contains("vault://unifi/test"));
     }
 
     #[test]

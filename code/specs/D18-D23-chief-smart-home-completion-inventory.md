@@ -1063,6 +1063,31 @@ official connected-client API without retaining native client identity:
   consent denial before transport, raw-field exclusion, and bounded state
   expiry.
 
+## Current UniFi Live Device Statistics Slice
+
+This slice closes bounded live health metrics for explicitly selected adopted
+devices over Ubiquiti's official local latest-statistics endpoint:
+
+- The authenticated local host calls only
+  `GET /v1/sites/{siteId}/devices/{deviceId}/statistics/latest` for an explicit
+  set of already-installed devices. Site/device path segments, target
+  uniqueness, response count, and target correspondence are validated before
+  runtime mutation.
+- D23 read authorization and an exact local operational-telemetry grant with
+  two-minute retention both succeed before credentials or network I/O. The
+  reusable governance contract remains deny-by-default for retention
+  near-matches.
+- Each poll is capped at 64 unique targets and an integration instance refuses
+  another statistics poll for one minute. Rate-limit, authorization, target,
+  and consent failures all occur before statistics transport I/O.
+- Confirmed network-diagnostic statistics expose bounded CPU and memory
+  utilization, load averages, uptime, optional uplink rates, and at most 64
+  radio frequency/retry readings. State expires after two minutes; native last
+  and next heartbeat timestamps are deliberately discarded.
+- Real loopback coverage proves the exact single-device path and API-key
+  header. Focused tests prove numeric/radio bounds, exact consent, installed-
+  target enforcement, expiration, and pre-I/O rate limiting.
+
 ## Current Enphase IQ Gateway Inspection Slice
 
 This slice promotes the cataloged Enphase Envoy entry to an authenticated local
@@ -1253,8 +1278,11 @@ and then by prerequisite readiness:
    can atomically migrate retained entity identifiers without duplicates or
    orphaned history; current presence intentionally excludes names, native IDs,
    MACs, IPs, and connection timestamps.
-14. Add UniFi Network latest device statistics only after metrics schema,
-   retention, and bounded polling-load policy are concrete.
+14. Add UniFi historical device statistics, heartbeat-time correlation, or
+   broader fleet polling only after durable time-series schema, query access,
+   clock semantics, and retention/deletion policy are concrete; current live
+   statistics are explicit-target, 64-device bounded, one-minute rate-limited,
+   and expire after two minutes.
 15. Add remote UniFi Site Manager inspection only after telemetry-egress,
    destination, and operator-consent policy are concrete; keep the current host
    local-only.

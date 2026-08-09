@@ -1,5 +1,8 @@
 # Changelog
 
+- Record UniFi Network's exact-consent, target-bounded, rate-limited live device
+  statistics and two-minute normalized retention boundary.
+
 - Record UniFi Network's consent-gated, pseudonymous, five-minute connected
   client presence inspection and raw-identity exclusion boundary.
 
