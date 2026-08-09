@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Normalize the `PJFET` model type alias to canonical `PJF` cards.
 - Normalize the `NJ` model type alias to canonical `NJF` cards.
 - Normalize the `NJFET` model type alias to canonical `NJF` cards.
 - Normalize the `DIODE` model type alias to canonical `D` cards.
