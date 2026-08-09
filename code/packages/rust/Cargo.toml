@@ -954,6 +954,7 @@ members = [
     "smart-home-lifx-lan-integration",
     "smart-home-kasa-lan-integration",
     "smart-home-reolink-integration",
+    "smart-home-reolink-snapshot-host",
     "smart-home-axis-vapix-integration",
     "smart-home-axis-snapshot-host",
     "smart-home-blue-iris-integration",

@@ -1460,25 +1460,55 @@ camera-media policy and pinned native HTTPS executor:
   responsibility. Event streams, source enumeration, recordings, playback,
   exports, and broader media transfer remain prerequisite-gated.
 
+## Current Reolink HTTPS Snapshot Host Slice
+
+This slice composes the exact installed Reolink physical-channel identity with
+the completed camera-media policy and pinned native HTTPS executor:
+
+- Authenticated Reolink inspection advertises `camera.snapshot` only for an
+  awake, online `RLC-*` channel. NVR, battery-camera, logical-channel, and
+  unsupported-family snapshot claims remain excluded.
+- `smart-home-reolink-snapshot-host` performs exact Human Approval preflight
+  before Vault access, endpoint registration, or media I/O. The target must be
+  the exact camera entity installed by the reviewed bridge, remain online and
+  awake, and retain its exact physical-channel metadata and capability.
+- One bounded, versioned sealed-Vault credential envelope is decoded into
+  zeroizing process-local state. The host percent-encodes the credentials into
+  the documented `/cgi-bin/api.cgi?cmd=Snap` HTTPS request and registers that
+  endpoint only against the reviewed canonical host and pinned socket.
+- The credential envelope is disposed before delivery and the complete
+  token-bearing endpoint is removed after success, lease failure, executor
+  failure, or registration failure. It never enters normalized state, errors,
+  audit records, or debug output.
+- Tests cover denial before Vault, exact installed-target correspondence,
+  malformed credential redaction, repeated sealed-record use, cleanup after
+  failure, and a strict pinned-TLS JPEG request with percent-encoded query
+  credentials.
+- Automated credential provisioning remains an explicit pairing-flow
+  responsibility. Streams, recordings, playback, NVR channels, logical
+  channels, and broader media transfer remain prerequisite-gated.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
 and then by prerequisite readiness:
 
-The strongest next executable candidate is bounded Blue Iris snapshot delivery:
-the production integration already has an explicit local HTTPS origin, exact
-camera identities, isolated challenge-response sessions, and explicit logout.
-A fresh post-merge audit must verify the documented native image request,
-prove exact camera correspondence and snapshot permission, and define the
-process-local session-bearing endpoint lifetime before implementation. Frigate
-snapshot delivery remains blocked on a cookie-capable media authentication
-boundary; broader streams, recordings, export, and playback remain
-prerequisite-gated.
+No additional camera snapshot slice is currently executable without a concrete
+authentication prerequisite. Blue Iris documents `/image/{camera}` and secure
+JSON sessions independently, but does not document how a secure session binds
+to that image request; the only documented direct URL credentials require
+disabling secure sessions and are rejected. Frigate snapshot delivery remains
+blocked on a cookie-capable media authentication boundary. The strongest next
+post-merge audit is the explicit sealed-Vault camera credential pairing flow,
+which must prove D23 pairing authorization, versioned envelope creation, opaque
+reference installation, replacement semantics, and failure cleanup before any
+host becomes an implicit credential writer.
 
-1. Add automated ONVIF credential provisioning only through an explicit pairing
-   flow that writes the versioned envelope into the dedicated sealed-Vault
-   namespace and installs only its opaque reference. Snapshot delivery itself is
-   complete and must not become an implicit credential writer.
+1. Add automated ONVIF, ZoneMinder, Axis, and Reolink credential provisioning
+   only through explicit D23 pairing flows that write each host's versioned
+   envelope into its dedicated sealed-Vault namespace and install only opaque
+   references. Snapshot delivery itself is complete and must not become an
+   implicit credential writer.
 2. Add authenticated AirGradient MQTT only after official firmware removes
    plaintext credential logging and one-shot Vault-leased credential injection
    can be proven without request-plan or normalized-state exposure.
@@ -1550,10 +1580,11 @@ prerequisite-gated.
 24. Add Frigate commands or configuration mutations only with operation-specific
    D23 contracts, least-privilege role checks, and readable postcondition
    verification.
-25. Add bounded Blue Iris snapshots through the completed camera-media HTTPS
-    executor after process-local endpoint registration and credential lifetime
-    are wired; alert/clip search, export, and playback still require a concrete
-    supervised resource executor.
+25. Add bounded Blue Iris snapshots only after an official interface documents
+    how an isolated secure JSON session authenticates `/image/{camera}`, or a
+    concrete cookie/session-bound media executor exists. Never disable secure
+    sessions or place reusable Blue Iris credentials in a URL. Alert/clip
+    search, export, and playback still require a supervised resource executor.
 26. Add broader Blue Iris `camconfig` or administrative mutations only with
    operation-specific D23 contracts, least-privilege permissions, and readable
    postcondition verification; do not persist the license value returned at
@@ -1571,29 +1602,25 @@ prerequisite-gated.
     capability-probed VAPIX camera 1 boundary.
 31. Add Axis absolute/relative zoom, guard-tour, or advanced preset management
     only when each operation has a specific capability probe and readable state.
-32. Add bounded Reolink snapshots through the completed camera-media HTTPS
-    executor after process-local endpoint registration and credential lifetime
-    are wired; recording search/download and playback still require a concrete
-    supervised resource executor.
-33. Add Reolink current-position, zoom, guard-point, or patrol controls only when
+32. Add Reolink current-position, zoom, guard-point, or patrol controls only when
     each operation has a capability-specific probe and the firmware exposes the
     native state needed to avoid invented orientation claims.
-34. Add Reolink push events only after a concrete webhook or event-stream host
+33. Add Reolink push events only after a concrete webhook or event-stream host
     and subscription lifecycle exist.
-35. Add authenticated KLAP/Tapo devices and other broader-device families only
+34. Add authenticated KLAP/Tapo devices and other broader-device families only
     after their authentication and session prerequisites are concrete.
-36. Add ONVIF PullPoint events once a concrete event host and subscription
+35. Add ONVIF PullPoint events once a concrete event host and subscription
     lifecycle exist.
-37. Add RTSP media transfer and recording once concrete media transfer and
+36. Add RTSP media transfer and recording once concrete media transfer and
     recorder host primitives exist.
-38. Add a production Matter commissioning, secure-session, and network host only
+37. Add a production Matter commissioning, secure-session, and network host only
     after certificate, fabric, Interaction Model encoding, subscription, and
     transport prerequisites exist.
-39. Add a Thread border-router host only after an actual host transport exists.
-40. Add a production Zigbee coordinator, join, and security host only after
+38. Add a Thread border-router host only after an actual host transport exists.
+39. Add a production Zigbee coordinator, join, and security host only after
     concrete coordinator transport and security primitives exist.
-41. Add production Z-Wave inclusion and S2 only after concrete host transport
-   and security primitives exist.
+40. Add production Z-Wave inclusion and S2 only after concrete host transport
+    and security primitives exist.
 
 ## End-To-End Definition
 

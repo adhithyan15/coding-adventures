@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0
+
+- Advertise the documented JPEG snapshot capability only for awake, online
+  `RLC-*` physical camera channels so the bounded snapshot host can require an
+  exact installed-device proof.
+
 ## 0.3.0
 
 - Added capability-probed `GetPtzPreset` support, authorized preset recall, and
