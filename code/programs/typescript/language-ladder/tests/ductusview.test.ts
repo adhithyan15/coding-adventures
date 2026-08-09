@@ -78,6 +78,8 @@ const PERSIAN_ALEF = DUCTUS["ا"];
 const persianAlefOutline = naskhOutline("ا");
 const PERSIAN_BEH = DUCTUS["ب"];
 const persianBehOutline = naskhOutline("ب");
+const PERSIAN_TEH = DUCTUS["ت"];
+const persianTehOutline = naskhOutline("ت");
 
 /** Walk a node tree, collecting every node the predicate accepts. */
 function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = []): SvgNode[] {
@@ -89,7 +91,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds all eleven authored Tamil letters and Persian ا and ب", () => {
+  it("finds all eleven authored Tamil letters and Persian ا, ب, and ت", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -103,11 +105,12 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("ந")?.glyph).toBe("ந");
     expect(ductusFor("ا")?.glyph).toBe("ا");
     expect(ductusFor("ب")?.glyph).toBe("ب");
+    expect(ductusFor("ت")?.glyph).toBe("ت");
   });
 
   it("returns undefined for a letter nobody has authored a stroke order for", () => {
-    // Persian پ still has prose part order but no authored pen path. It must
-    // come back empty rather than borrow ب's or Tamil ம's.
+    // Persian پ is deferred inventory work, not a starter entry or authored
+    // pen path. It must come back empty rather than borrow ب's or Tamil ம's.
     expect(ductusFor("پ")).toBeUndefined();
     expect(ductusFor("A")).toBeUndefined();
     expect(ductusFor("")).toBeUndefined();
@@ -622,6 +625,45 @@ describe("Persian ب — a right-to-left bowl followed by its dot", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(PERSIAN_BEH.strokes[1], 1),
+    );
+  });
+});
+
+describe("Persian ت — the shared bowl followed by two separate dots", () => {
+  const steps = ductusSteps(PERSIAN_TEH);
+  const strip = ductusFilmstrip(PERSIAN_TEH, persianTehOutline);
+
+  it("keeps the bowl in one run, then preserves both sourced dot lifts", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep the shallow bowl from right to left",
+      "lift, then place the left dot above",
+      "lift again and place the right dot",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2]);
+    const bowl = PERSIAN_TEH.strokes[0].segments[0].path;
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+    expect(PERSIAN_TEH.strokes[1].segments[0].path[0].x).toBeLessThan(
+      PERSIAN_TEH.strokes[2].segments[0].path[0].x,
+    );
+  });
+
+  it("reports three movements separated by two pen lifts", () => {
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 3 movements");
+  });
+
+  it("retains the bowl and left dot while the right dot is placed", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      persianTehOutline.path,
+    );
+    expect(
+      paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d),
+    ).toEqual([penPathD(PERSIAN_TEH.strokes[0], 1), penPathD(PERSIAN_TEH.strokes[1], 1)]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(PERSIAN_TEH.strokes[2], 1),
     );
   });
 });

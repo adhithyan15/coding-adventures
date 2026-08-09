@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Persian bowl-and-two-dots ductus (HL-C09M)
+
+- Add Persian ت from UT Austin Persian Online's 00:22–00:27 demonstration: its
+  isolated Naskh bowl sweeps right-to-left, then separate runs place the left
+  and right dots above in the source's order.
+- Pin two lifts, three movements, Noto Naskh geometry, and a real three-frame
+  filmstrip; record the intervening پ row as deferred inventory work.
+
 ### Added — cited Persian bowl-and-dot ductus (HL-C09L)
 
 - Add Persian ب from UT Austin Persian Online's adjacent freehand demonstration:

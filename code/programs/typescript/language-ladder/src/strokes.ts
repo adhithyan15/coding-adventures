@@ -197,6 +197,8 @@ const clamp01 = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n);
 // alphabet right-to-left, while this isolated non-connector remains one stroke.
 // The adjacent ب starts at the bowl's right lip, sweeps right-to-left through
 // its shallow dip, then lifts once before placing the separate dot below.
+// After the intervening Persian-added پ row, ت repeats the same bowl, lifts to
+// place the left dot above, then lifts again to place the right dot.
 // அ is Frame 4's first row: movements 1-4 remain on the connected body, then
 // the hand lifts once before movement 5 draws the separate right upright. ஆ is
 // the next row: it repeats movements 1-5, then continues from that upright into
@@ -299,6 +301,67 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       url: "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
       variation:
         "The cited freehand lesson demonstrates isolated ب as a shallow right-to-left Naskh bowl, followed by one pen lift and the separate dot below. Contextual joins reshape the bowl in connected text; this isolated learner path fits the vendored Noto Naskh outline.",
+    },
+  },
+  "ت": {
+    glyph: "ت",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep the shallow bowl from right to left",
+            path: [
+              { x: 678, y: 382 },
+              { x: 663, y: 345 },
+              { x: 650, y: 305 },
+              { x: 654, y: 260 },
+              { x: 672, y: 215 },
+              { x: 688, y: 170 },
+              { x: 686, y: 126 },
+              { x: 620, y: 94 },
+              { x: 530, y: 65 },
+              { x: 430, y: 42 },
+              { x: 335, y: 38 },
+              { x: 245, y: 51 },
+              { x: 170, y: 83 },
+              { x: 120, y: 135 },
+              { x: 96, y: 205 },
+              { x: 100, y: 255 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then place the left dot above",
+            path: [
+              { x: 247, y: 374 },
+              { x: 284, y: 412 },
+              { x: 319, y: 379 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again and place the right dot",
+            path: [
+              { x: 395, y: 389 },
+              { x: 434, y: 430 },
+              { x: 470, y: 395 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: {
+      citation:
+        "Persian Online, How to Write Persian Characters, ت demonstration at 00:22–00:27 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+      url: "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+      variation:
+        "The cited freehand lesson demonstrates isolated ت as a shallow right-to-left Naskh bowl, followed by one lift to the left dot above and another lift to the right dot. The intervening پ row is not in this starter inventory. Contextual joins reshape the bowl; this isolated learner path fits the vendored Noto Naskh outline.",
     },
   },
   அ: {
