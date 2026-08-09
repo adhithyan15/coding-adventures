@@ -189,6 +189,9 @@ After traversal:
   parent of another discovered verified commit;
 - duplicate identical announcements and commits collapse by content ID;
 - different commits at one device counter return `DeviceEquivocation`;
+- a commit whose counter is not strictly greater than every same-device commit
+  on its verified ancestry returns `DeviceEquivocation`, including when another
+  device's commit lies between them;
 - a cycle returns `GraphCycle` even though content addressing makes an honest
   cycle infeasible;
 - a missing referenced object returns `ProviderWithholding`;
@@ -199,6 +202,14 @@ After traversal:
 
 The open report exposes counts, verified heads, and the fresh-device flag. Its
 `Debug` omits identifiers. Callers must explicitly request the head set.
+
+After open, `read_commit(id)` repeats bounded ancestry and reference
+verification and returns a redacted commit view with explicit getters for the
+catalog root, tombstone root, certificate, added objects, parents, device
+counter, and advisory time. `read_object(id)` repeats exact frame decoding and
+hash verification and returns a redacted wrapper around the encrypted frame.
+The caller must explicitly borrow or consume the frame before authenticated
+decryption; ordinary diagnostics never render its bytes.
 
 ## 8. Heads and history
 
