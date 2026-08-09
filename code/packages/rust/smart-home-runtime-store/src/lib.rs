@@ -3,7 +3,10 @@
 #![forbid(unsafe_code)]
 
 use serde::{Deserialize, Serialize};
-use smart_home_runtime::{RuntimeDurableSnapshot, RuntimeError, SmartHomeRuntime};
+use smart_home_runtime::{
+    RuntimeDurableSnapshot, RuntimeError, RuntimeRetainedIdentityMigration,
+    RuntimeRetainedIdentityMigrationReport, SmartHomeRuntime,
+};
 use std::fmt;
 use storage_core::{Revision, StorageBackend, StorageError, StorageMetadata, StoragePutInput};
 
@@ -188,6 +191,62 @@ impl<B: StorageBackend> SmartHomeRuntimeStore<B> {
         Ok(self.backend.put(input)?.revision)
     }
 
+    /// Migrates a live runtime and its durable snapshot as one revision-guarded
+    /// operation.
+    ///
+    /// The candidate runtime is validated and migrated first, then persisted
+    /// only if `expected_revision` still owns the stored record. The caller's
+    /// live runtime is replaced only after that durable write succeeds.
+    pub fn migrate_retained_identities(
+        &self,
+        runtime: &mut SmartHomeRuntime,
+        migration: &RuntimeRetainedIdentityMigration,
+        automation_definitions: &[DurableAutomationDefinition],
+        automation_state: Option<serde_json::Value>,
+        saved_at_ms: u64,
+        expected_revision: Revision,
+    ) -> Result<(RuntimeRetainedIdentityMigrationReport, Revision), RuntimeStoreError> {
+        validate_automation_definitions(automation_definitions)?;
+        if automation_state
+            .as_ref()
+            .is_some_and(|state| !state.is_object())
+        {
+            return Err(RuntimeStoreError::Validation {
+                field: "automation_state",
+                message: "must be a JSON object".to_string(),
+            });
+        }
+        validate_automation_identity_references(
+            migration,
+            automation_definitions,
+            automation_state.as_ref(),
+        )?;
+
+        let mut candidate = runtime.clone();
+        let report = candidate.migrate_retained_identities(migration)?;
+        let envelope = RuntimeStoreEnvelope {
+            schema_version: SCHEMA_VERSION,
+            saved_at_ms,
+            runtime: candidate.durable_snapshot(),
+            automation_definitions: automation_definitions.to_vec(),
+            automation_state,
+        };
+        let body = serde_json::to_vec(&envelope)
+            .map_err(|error| RuntimeStoreError::Encode(error.to_string()))?;
+        self.backend.initialize()?;
+        let input = StoragePutInput::new(
+            self.namespace.clone(),
+            self.key.clone(),
+            CONTENT_TYPE,
+            StorageMetadata::Object(Default::default()),
+            body,
+        )?
+        .with_if_revision(Some(expected_revision));
+        let revision = self.backend.put(input)?.revision;
+        *runtime = candidate;
+        Ok((report, revision))
+    }
+
     pub fn load(&self) -> Result<Option<RestoredSmartHomeRuntime>, RuntimeStoreError> {
         self.backend.initialize()?;
         let Some(record) = self.backend.get(&self.namespace, &self.key)? else {
@@ -235,6 +294,56 @@ fn validate_automation_definitions(
     Ok(())
 }
 
+fn validate_automation_identity_references(
+    migration: &RuntimeRetainedIdentityMigration,
+    definitions: &[DurableAutomationDefinition],
+    state: Option<&serde_json::Value>,
+) -> Result<(), RuntimeStoreError> {
+    let source_ids = migration
+        .source_device_ids()
+        .map(|device_id| device_id.as_str())
+        .chain(
+            migration
+                .source_entity_ids()
+                .map(|entity_id| entity_id.as_str()),
+        )
+        .collect::<std::collections::BTreeSet<_>>();
+    if definitions
+        .iter()
+        .any(|definition| json_references_any(&definition.definition, &source_ids))
+    {
+        return Err(RuntimeStoreError::Validation {
+            field: "automation_definitions",
+            message: "must not retain a source device or entity identity".to_string(),
+        });
+    }
+    if state.is_some_and(|state| json_references_any(state, &source_ids)) {
+        return Err(RuntimeStoreError::Validation {
+            field: "automation_state",
+            message: "must not retain a source device or entity identity".to_string(),
+        });
+    }
+    Ok(())
+}
+
+fn json_references_any(
+    value: &serde_json::Value,
+    source_ids: &std::collections::BTreeSet<&str>,
+) -> bool {
+    match value {
+        serde_json::Value::String(value) => source_ids.contains(value.as_str()),
+        serde_json::Value::Array(values) => values
+            .iter()
+            .any(|value| json_references_any(value, source_ids)),
+        serde_json::Value::Object(fields) => fields.iter().any(|(key, value)| {
+            source_ids.contains(key.as_str()) || json_references_any(value, source_ids)
+        }),
+        serde_json::Value::Null
+        | serde_json::Value::Bool(_)
+        | serde_json::Value::Number(_) => false,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -244,8 +353,10 @@ mod tests {
         DeviceId, Entity, EntityId, EntityKind, EventId, Health, IntegrationId, StateDelta, Value,
     };
     use smart_home_runtime::{
-        DesiredEntityState, DesiredStateQuery, RuntimeCommandResultQuery, RuntimeEvent,
+        DesiredEntityState, DesiredStateQuery, RetainedDeviceIdentityReplacement,
+        RetainedEntityIdentityReplacement, RuntimeCommandResultQuery, RuntimeEvent,
         RuntimePairingSession, RuntimePairingSessionId, RuntimePairingSessionQuery,
+        RuntimeRetainedIdentityMigration,
     };
     use std::fs;
     use std::path::PathBuf;
@@ -353,6 +464,33 @@ mod tests {
         runtime
     }
 
+    fn identity_migration(runtime: &SmartHomeRuntime) -> RuntimeRetainedIdentityMigration {
+        let mut device = runtime
+            .registry()
+            .device(&DeviceId::trusted("device-1"))
+            .unwrap()
+            .clone();
+        device.device_id = DeviceId::trusted("device-rotated");
+        device.entity_ids = vec![EntityId::trusted("entity-rotated")];
+        let mut entity = runtime
+            .registry()
+            .entity(&EntityId::trusted("entity-1"))
+            .unwrap()
+            .clone();
+        entity.entity_id = EntityId::trusted("entity-rotated");
+        entity.device_id = DeviceId::trusted("device-rotated");
+        entity.state = None;
+
+        RuntimeRetainedIdentityMigration::new(vec![RetainedDeviceIdentityReplacement::new(
+            DeviceId::trusted("device-1"),
+            device,
+            vec![RetainedEntityIdentityReplacement::new(
+                EntityId::trusted("entity-1"),
+                entity,
+            )],
+        )])
+    }
+
     #[test]
     fn local_folder_restart_restores_runtime_and_automation_definitions() {
         let root = temp_root("restart");
@@ -418,6 +556,118 @@ mod tests {
                 .len(),
             1
         );
+
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn retained_identity_migration_persists_before_swapping_the_live_runtime() {
+        let root = temp_root("identity-migration");
+        let mut runtime = runtime_fixture();
+        let migration = identity_migration(&runtime);
+        let store = SmartHomeRuntimeStore::new(LocalFolderStorageBackend::new(root.clone()));
+        let initial_revision = store.save(&runtime, &[], 500).unwrap();
+
+        let (report, migrated_revision) = store
+            .migrate_retained_identities(&mut runtime, &migration, &[], None, 600, initial_revision)
+            .unwrap();
+
+        assert_eq!(report.migrated_devices, 1);
+        assert_ne!(migrated_revision.as_str(), "");
+        assert!(runtime
+            .registry()
+            .device(&DeviceId::trusted("device-1"))
+            .is_none());
+        assert!(runtime
+            .registry()
+            .state(&EntityId::trusted("entity-rotated"))
+            .is_some());
+        let restored = store.load().unwrap().unwrap();
+        assert_eq!(restored.saved_at_ms, 600);
+        assert_eq!(restored.revision, migrated_revision);
+        assert!(restored
+            .runtime
+            .registry()
+            .device(&DeviceId::trusted("device-1"))
+            .is_none());
+        assert!(restored
+            .runtime
+            .registry()
+            .state(&EntityId::trusted("entity-rotated"))
+            .is_some());
+
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn retained_identity_migration_storage_conflict_keeps_live_runtime_unchanged() {
+        let root = temp_root("identity-conflict");
+        let mut runtime = runtime_fixture();
+        let migration = identity_migration(&runtime);
+        let store = SmartHomeRuntimeStore::new(LocalFolderStorageBackend::new(root.clone()));
+        let stale_revision = store.save(&runtime, &[], 500).unwrap();
+        let current_revision = store.save(&runtime, &[], 550).unwrap();
+        let before = runtime.durable_snapshot();
+
+        let error = store
+            .migrate_retained_identities(&mut runtime, &migration, &[], None, 600, stale_revision)
+            .unwrap_err();
+
+        assert!(matches!(error, RuntimeStoreError::Storage(_)));
+        assert_eq!(runtime.durable_snapshot(), before);
+        let restored = store.load().unwrap().unwrap();
+        assert_eq!(restored.revision, current_revision);
+        assert!(restored
+            .runtime
+            .registry()
+            .device(&DeviceId::trusted("device-1"))
+            .is_some());
+        assert!(restored
+            .runtime
+            .registry()
+            .device(&DeviceId::trusted("device-rotated"))
+            .is_none());
+
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn retained_identity_migration_rejects_stale_automation_identity_references() {
+        let root = temp_root("identity-automation-reference");
+        let mut runtime = runtime_fixture();
+        let migration = identity_migration(&runtime);
+        let automation = DurableAutomationDefinition::new(
+            "automation-1",
+            true,
+            serde_json::json!({"action": {"entity_id": "entity-1"}}),
+        )
+        .unwrap();
+        let store = SmartHomeRuntimeStore::new(LocalFolderStorageBackend::new(root.clone()));
+        let revision = store
+            .save(&runtime, std::slice::from_ref(&automation), 500)
+            .unwrap();
+        let before = runtime.durable_snapshot();
+
+        let error = store
+            .migrate_retained_identities(
+                &mut runtime,
+                &migration,
+                std::slice::from_ref(&automation),
+                None,
+                600,
+                revision.clone(),
+            )
+            .unwrap_err();
+
+        assert!(matches!(
+            error,
+            RuntimeStoreError::Validation {
+                field: "automation_definitions",
+                ..
+            }
+        ));
+        assert_eq!(runtime.durable_snapshot(), before);
+        assert_eq!(store.load().unwrap().unwrap().revision, revision);
 
         fs::remove_dir_all(root).unwrap();
     }

@@ -10,6 +10,12 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Add validated whole-device retained identity migration with all-child
+  coverage, destination collision checks, capability-shape preservation, and
+  atomic replacement only after every retained and live reference is rebuilt.
+- Rewrite current and optimistic state, scenes, device/runtime history,
+  entity-scoped grants, authorization decisions, desired state, subscription
+  filters, and queued deliveries during migration.
 - Keep MQTT-broker and custom-HTTP-domain configuration commands non-optimistic
   until a native integration confirms exact device readback.
 - Keep country and cloud-upload configuration commands non-optimistic until a

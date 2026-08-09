@@ -1,6 +1,6 @@
 [package]
 name = "smart-home-runtime-store"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Restart-safe persistence for normalized smart-home runtime state"
 license = "MIT"
