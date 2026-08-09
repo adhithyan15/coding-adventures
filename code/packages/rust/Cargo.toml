@@ -765,6 +765,7 @@ members = [
     "chief-of-staff-channel-endpoints",
     "chief-of-staff-secure-host-channel",
     "chief-of-staff-host-control-protocol",
+    "chief-of-staff-host-data-plane",
     "chief-of-staff-service-registry",
     "chief-of-staff-pipeline-bindings",
     "chief-of-staff-service-reconciler",

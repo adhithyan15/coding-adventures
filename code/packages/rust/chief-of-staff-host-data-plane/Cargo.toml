@@ -1,0 +1,16 @@
+[package]
+name = "chief-of-staff-host-data-plane"
+version = "0.1.0"
+edition = "2021"
+description = "Durably authorized host data-plane dispatch for D18 Chief"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-host-control-protocol = { path = "../chief-of-staff-host-control-protocol" }
+chief-of-staff-pipeline-bindings = { path = "../chief-of-staff-pipeline-bindings" }
+chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
+storage-core = { path = "../storage-core" }
+
+[dev-dependencies]
+chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
+chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }

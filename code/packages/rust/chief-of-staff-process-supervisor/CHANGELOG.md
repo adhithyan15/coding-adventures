@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Accept an optional authenticated data-plane dispatcher, retain the exact host
+  registration for each owned child, and automatically send validated responses
+  without exposing request payloads to the orchestration core.
+- Exercise automatic receive, publish, acknowledge, and completion dispatch
+  through a real signed-package child process and encrypted cross-platform pipes.
 - Add a production durable launch-binding provider backed by the pipeline
   binding store; every launch revalidates registration, channel claims,
   lifecycle, and directional membership before process creation.

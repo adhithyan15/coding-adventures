@@ -20,6 +20,7 @@ chief-of-staff-daemon-credential = { path = "../chief-of-staff-daemon-credential
 chief-of-staff-daemon-keyring = { path = "../chief-of-staff-daemon-keyring" }
 chief-of-staff-daemon-policy = { path = "../chief-of-staff-daemon-policy" }
 chief-of-staff-daemon-runtime = { path = "../chief-of-staff-daemon-runtime" }
+chief-of-staff-host-data-plane = { path = "../chief-of-staff-host-data-plane" }
 chief-of-staff-orchestrator-core = { path = "../chief-of-staff-orchestrator-core" }
 chief-of-staff-process-supervisor = { path = "../chief-of-staff-process-supervisor" }
 chief-of-staff-service-reconciler = { path = "../chief-of-staff-service-reconciler" }

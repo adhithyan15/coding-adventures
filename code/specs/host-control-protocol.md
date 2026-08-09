@@ -69,6 +69,12 @@ successful response kind must match the pending operation; a redacted `Failed`
 response may complete any operation. Duplicate, skipped, unsolicited, or
 cross-operation responses close the peer endpoint. This deliberately serial
 contract matches the Level 1 runtime and avoids an unbounded correlation table.
+Correlation is not authorization. Before service execution, the parent-side
+dispatcher reloads the complete current durable pipeline binding. Receive and
+acknowledge require the requested UUID to have read access, publish requires write
+access, and completion requires the exact authorized model selector, temperature,
+and token cap. A service response must preserve the request ID and successful
+operation kind; drift is returned only as a redacted stable failure.
 
 ## Lifecycle
 

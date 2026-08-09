@@ -2,6 +2,7 @@ use chief_of_staff_host_control_protocol::{
     ChannelBinding, ChannelBindingAccess, DataPlaneFailure, DataPlaneRequest, DataPlaneResponse,
     LaunchBindings, LevelOneModelBinding, RequestId,
 };
+use chief_of_staff_host_data_plane::HostDataPlaneDispatcher;
 use chief_of_staff_host_runtime::{
     AgentPackageRuntime, DenoLaunchPlan, PackageKeyType, PackageKeyring, TrustedPackageKey,
 };
@@ -20,7 +21,7 @@ use coding_adventures_x3dh::generate_identity_keypair;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicU64, Ordering};
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
@@ -394,6 +395,94 @@ fn real_child_exchanges_all_authenticated_data_plane_operations() {
     );
     supervisor.stop(&host_name).unwrap();
     assert_eq!(supervisor.pending_data_plane_request(&host_name), Ok(None));
+}
+
+#[derive(Default)]
+struct TestDataPlaneDispatcher {
+    operations: Mutex<Vec<&'static str>>,
+}
+
+impl HostDataPlaneDispatcher for TestDataPlaneDispatcher {
+    fn dispatch(
+        &self,
+        _registration: &HostRegistration,
+        request: &DataPlaneRequest,
+    ) -> DataPlaneResponse {
+        match request {
+            DataPlaneRequest::Receive { id, .. } => {
+                self.operations.lock().unwrap().push("receive");
+                DataPlaneResponse::Received {
+                    id: *id,
+                    messages: Vec::new(),
+                }
+            }
+            DataPlaneRequest::Publish { id, .. } => {
+                self.operations.lock().unwrap().push("publish");
+                DataPlaneResponse::Published {
+                    id: *id,
+                    message_id: uuid_v7(4),
+                    sequence: 1,
+                    timestamp_ns: 10,
+                }
+            }
+            DataPlaneRequest::Acknowledge { id, .. } => {
+                self.operations.lock().unwrap().push("acknowledge");
+                DataPlaneResponse::Acknowledged {
+                    id: *id,
+                    sequence: 2,
+                }
+            }
+            DataPlaneRequest::Complete { id, .. } => {
+                self.operations.lock().unwrap().push("complete");
+                DataPlaneResponse::Failed {
+                    id: *id,
+                    failure: DataPlaneFailure::Unavailable,
+                }
+            }
+        }
+    }
+}
+
+#[test]
+fn injected_dispatcher_answers_authenticated_requests_automatically() {
+    let package = TestPackage::new("automatic-data-plane", Some("DATA_PLANE"));
+    let registration = package.registration("automatic-data-plane-host");
+    let dispatcher = Arc::new(TestDataPlaneDispatcher::default());
+    let mut supervisor = new_supervisor(
+        Arc::new(keyring()),
+        Arc::new(generate_identity_keypair()),
+        Duration::from_secs(2),
+        Duration::from_secs(2),
+    )
+    .with_data_plane_dispatcher(dispatcher.clone());
+    supervisor.start(&registration).unwrap();
+
+    let deadline = Instant::now() + Duration::from_secs(5);
+    loop {
+        supervisor.inspect(&registration).unwrap();
+        if dispatcher.operations.lock().unwrap().len() == 4 {
+            break;
+        }
+        assert!(Instant::now() < deadline, "timed out waiting for dispatch");
+        thread::sleep(Duration::from_millis(10));
+    }
+    assert_eq!(
+        *dispatcher.operations.lock().unwrap(),
+        ["receive", "publish", "acknowledge", "complete"]
+    );
+    assert_eq!(
+        supervisor
+            .pending_data_plane_request(registration.host_name())
+            .unwrap(),
+        None
+    );
+    supervisor.stop(registration.host_name()).unwrap();
+    let exited = await_phase(
+        &mut supervisor,
+        &registration,
+        SupervisorPhase::Exited { exit_code: Some(0) },
+    );
+    assert_eq!(exited.process_id(), None);
 }
 
 #[test]

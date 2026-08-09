@@ -12,6 +12,7 @@ use chief_of_staff_host_control_protocol::{
     ChildControl, ChildEvent, CompletionCall, DataPlaneRequest, DataPlaneResponse, LaunchBindings,
     OrchestratorControl, OrchestratorEvent, PackageTrust, PackageTrustType,
 };
+use chief_of_staff_host_data_plane::HostDataPlaneDispatcher;
 use chief_of_staff_host_runtime::{
     verify_agent_package, AgentPackageRuntime, PackageKeyType, PackageKeyring, TrustedPackageKey,
 };
@@ -302,6 +303,7 @@ enum InstancePhase {
 }
 
 struct OwnedInstance {
+    registration: HostRegistration,
     package_hash: [u8; 32],
     child: Option<Child>,
     stdin: Option<BufWriter<ChildStdin>>,
@@ -358,7 +360,10 @@ impl OwnedInstance {
         Ok(())
     }
 
-    fn refresh(&mut self) -> Result<(), ProcessSupervisorError> {
+    fn refresh(
+        &mut self,
+        dispatcher: Option<&dyn HostDataPlaneDispatcher>,
+    ) -> Result<(), ProcessSupervisorError> {
         if matches!(self.phase, InstancePhase::Exited { .. }) {
             return Ok(());
         }
@@ -381,7 +386,14 @@ impl OwnedInstance {
                             self.last_heartbeat_ns = Some(received_at_ns);
                         }
                         Ok(ChildEvent::Request(request)) => {
-                            self.pending_data_plane_request = Some(request);
+                            self.pending_data_plane_request = Some(request.clone());
+                            if let Some(dispatcher) = dispatcher {
+                                let response = dispatcher.dispatch(&self.registration, &request);
+                                if let Err(error) = self.send_data_plane_response(response) {
+                                    let _ = self.hard_kill_and_reap();
+                                    return Err(error);
+                                }
+                            }
                         }
                         Err(error) => {
                             let _ = self.hard_kill_and_reap();
@@ -405,6 +417,25 @@ impl OwnedInstance {
                 self.finish_exit(status);
             }
         }
+        Ok(())
+    }
+
+    fn send_data_plane_response(
+        &mut self,
+        response: DataPlaneResponse,
+    ) -> Result<(), ProcessSupervisorError> {
+        let frame = self
+            .control
+            .as_mut()
+            .ok_or(ProcessSupervisorError::Control)?
+            .respond(response)
+            .map_err(|_| ProcessSupervisorError::Control)?;
+        let stdin = self
+            .stdin
+            .as_mut()
+            .ok_or(ProcessSupervisorError::ProcessIo)?;
+        write_record(stdin, &frame)?;
+        self.pending_data_plane_request = None;
         Ok(())
     }
 
@@ -451,6 +482,7 @@ pub struct ProcessHostSupervisor {
     identity: Arc<IdentityKeyPair>,
     clock: Arc<dyn MonotonicClock>,
     sessions: Box<dyn SessionIdSource>,
+    data_plane_dispatcher: Option<Arc<dyn HostDataPlaneDispatcher>>,
     instances: BTreeMap<String, OwnedInstance>,
 }
 
@@ -471,8 +503,18 @@ impl ProcessHostSupervisor {
             identity,
             clock,
             sessions,
+            data_plane_dispatcher: None,
             instances: BTreeMap::new(),
         }
+    }
+
+    /// Automatically answer authenticated child requests through one injected dispatcher.
+    pub fn with_data_plane_dispatcher(
+        mut self,
+        dispatcher: Arc<dyn HostDataPlaneDispatcher>,
+    ) -> Self {
+        self.data_plane_dispatcher = Some(dispatcher);
+        self
     }
 
     fn spawn_verified(
@@ -593,6 +635,7 @@ impl ProcessHostSupervisor {
 
         match startup {
             Ok(control) => Ok(OwnedInstance {
+                registration: registration.clone(),
                 package_hash: *registration.package_hash(),
                 child: Some(child),
                 stdin: Some(stdin),
@@ -633,11 +676,12 @@ impl ProcessHostSupervisor {
         &mut self,
         host_name: &HostName,
     ) -> Result<Option<DataPlaneRequest>, ProcessSupervisorError> {
+        let dispatcher = self.data_plane_dispatcher.as_deref();
         let instance = self
             .instances
             .get_mut(host_name.as_str())
             .ok_or(ProcessSupervisorError::HostNotFound)?;
-        instance.refresh()?;
+        instance.refresh(dispatcher)?;
         Ok(instance.pending_data_plane_request.clone())
     }
 
@@ -647,27 +691,16 @@ impl ProcessHostSupervisor {
         host_name: &HostName,
         response: DataPlaneResponse,
     ) -> Result<(), ProcessSupervisorError> {
+        let dispatcher = self.data_plane_dispatcher.as_deref();
         let instance = self
             .instances
             .get_mut(host_name.as_str())
             .ok_or(ProcessSupervisorError::HostNotFound)?;
-        instance.refresh()?;
-        let frame = instance
-            .control
-            .as_mut()
-            .ok_or(ProcessSupervisorError::Control)?
-            .respond(response)
-            .map_err(|_| ProcessSupervisorError::Control)?;
-        let result = instance
-            .stdin
-            .as_mut()
-            .ok_or(ProcessSupervisorError::ProcessIo)
-            .and_then(|stdin| write_record(stdin, &frame));
-        if let Err(error) = result {
+        instance.refresh(dispatcher)?;
+        if let Err(error) = instance.send_data_plane_response(response) {
             let _ = instance.hard_kill_and_reap();
             return Err(error);
         }
-        instance.pending_data_plane_request = None;
         Ok(())
     }
 }
@@ -679,16 +712,18 @@ impl HostSupervisor for ProcessHostSupervisor {
         &mut self,
         registration: &HostRegistration,
     ) -> Result<SupervisorObservation, Self::Error> {
+        let dispatcher = self.data_plane_dispatcher.as_deref();
         let Some(instance) = self.instances.get_mut(registration.host_name().as_str()) else {
             return Ok(SupervisorObservation::absent());
         };
-        instance.refresh()?;
+        instance.refresh(dispatcher)?;
         instance.observation()
     }
 
     fn start(&mut self, registration: &HostRegistration) -> Result<(), Self::Error> {
+        let dispatcher = self.data_plane_dispatcher.as_deref();
         if let Some(instance) = self.instances.get_mut(registration.host_name().as_str()) {
-            instance.refresh()?;
+            instance.refresh(dispatcher)?;
             if instance.is_active() {
                 return if instance.package_hash == *registration.package_hash() {
                     Ok(())
@@ -704,10 +739,11 @@ impl HostSupervisor for ProcessHostSupervisor {
     }
 
     fn stop(&mut self, host_name: &HostName) -> Result<(), Self::Error> {
+        let dispatcher = self.data_plane_dispatcher.as_deref();
         let Some(instance) = self.instances.get_mut(host_name.as_str()) else {
             return Ok(());
         };
-        instance.refresh()?;
+        instance.refresh(dispatcher)?;
         if matches!(
             instance.phase,
             InstancePhase::Stopping | InstancePhase::Exited { .. }

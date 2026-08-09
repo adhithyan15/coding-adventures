@@ -282,11 +282,11 @@ impl<'a> PipelineBindingStore<'a> {
         }
     }
 
-    /// Revalidate and return exact launch authority for one durable registration.
-    pub fn resolve_launch(
+    /// Revalidate and return the complete launch authority for one durable registration.
+    pub fn resolve_launch_binding(
         &self,
         registration: &HostRegistration,
-    ) -> Result<LaunchBindings, PipelineBindingError> {
+    ) -> Result<HostPipelineBinding, PipelineBindingError> {
         let loaded = self
             .load(registration.host_name())?
             .ok_or(PipelineBindingError::HostNotRegistered)?;
@@ -296,7 +296,16 @@ impl<'a> PipelineBindingStore<'a> {
         self.require_registration(&loaded.binding)?;
         self.require_claims(&loaded.binding)?;
         self.require_authorized_channels(&loaded.binding)?;
-        Ok(loaded.binding.launch_bindings.clone())
+        Ok(loaded.binding)
+    }
+
+    /// Revalidate and return the child-visible launch bindings for one registration.
+    pub fn resolve_launch(
+        &self,
+        registration: &HostRegistration,
+    ) -> Result<LaunchBindings, PipelineBindingError> {
+        self.resolve_launch_binding(registration)
+            .map(|binding| binding.launch_bindings)
     }
 
     fn require_registration(
@@ -814,6 +823,10 @@ mod tests {
         assert_eq!(
             store.resolve_launch(&registration).unwrap(),
             expected.launch_bindings
+        );
+        assert_eq!(
+            store.resolve_launch_binding(&registration).unwrap(),
+            expected
         );
         assert!(!first.revision().as_str().is_empty());
     }

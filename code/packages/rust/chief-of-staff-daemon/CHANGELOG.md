@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Compose durable per-request host data-plane authorization with a fail-closed
+  unavailable service until channel-key custody and model providers are injected.
 - Compose the storage-backed durable pipeline launch-binding provider. Host
   starts now require an exact registered package plus current immutable channel
   claims, active membership, and bounded persisted model settings.

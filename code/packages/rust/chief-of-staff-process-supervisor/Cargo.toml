@@ -8,6 +8,7 @@ license = "MIT"
 [dependencies]
 chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
 chief-of-staff-host-control-protocol = { path = "../chief-of-staff-host-control-protocol" }
+chief-of-staff-host-data-plane = { path = "../chief-of-staff-host-data-plane" }
 chief-of-staff-host-runtime = { path = "../chief-of-staff-host-runtime" }
 chief-of-staff-pipeline-bindings = { path = "../chief-of-staff-pipeline-bindings" }
 chief-of-staff-secure-host-channel = { path = "../chief-of-staff-secure-host-channel" }
