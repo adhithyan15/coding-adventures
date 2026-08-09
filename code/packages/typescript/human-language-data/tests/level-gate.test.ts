@@ -66,12 +66,12 @@ describe("the gate that would have caught the A2 claim", () => {
     expect(spanish.blockers.map((b) => b.criterion)).toContain("reinforcement");
 
     // The criterion counts vocabulary AT OR BELOW the level, not the whole track.
-    // Spanish teaches 113 headwords in total but only 44 at or below pre-A1, so the
-    // shortfall is 256, not 187. Measuring the whole track against a per-level target
+    // Spanish teaches 136 headwords in total but only 46 at or below pre-A1, so the
+    // shortfall is 254. Measuring the whole track against a per-level target
     // was the first version of this module committing the very error it exists to
     // catch — a number meaning "everything taught" published against one meaning
     // "by the end of pre-A1".
-    expect(vocab.shortfall).toBe(256);
+    expect(vocab.shortfall).toBe(254);
     expect(spanish.vocabulary).toBe(136);
     expect(vocab.shortfall).toBeGreaterThan(LEVEL_VOCABULARY["pre-A1"] - spanish.vocabulary);
   });
@@ -136,12 +136,12 @@ describe("etymology is a hook, not a skill", () => {
     // versions of this assertion did not: `shortfall < shortfall + waived` is true of
     // any number, and comparing against a whole-track count could not fail because the
     // gate scopes to pre-A1. Both passed with the waiver deleted. So pin the figure:
-    // Chapter 8 places two more non-etymology atoms on the A1 path and reinforces
-    // them, so the pre-A1 shortfall falls from 51 to 49 without changing the visible
-    // etymology waiver. Delete the waiver and the shortfall still rises by the hooks
-    // that are intentionally read once rather than drilled.
-    expect(reinforcement.shortfall).toBe(49);
-    expect(reinforcement.detail).toContain("36 etymology hook(s) waived");
+    // Chapter 9 revisits its origin atoms in both the location contrast and terminal
+    // checkpoint, so the pre-A1 shortfall falls from 49 to 48. Its newly mapped de
+    // etymon increases the visible waiver by one; delete the waiver and the shortfall
+    // still rises by hooks that are intentionally read once rather than drilled.
+    expect(reinforcement.shortfall).toBe(48);
+    expect(reinforcement.detail).toContain("37 etymology hook(s) waived");
   });
 
   it("leaves continuity's own numbers alone", () => {

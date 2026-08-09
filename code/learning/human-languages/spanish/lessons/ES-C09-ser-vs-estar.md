@@ -1,76 +1,83 @@
 ---
+schema_version: 2
 id: ES-C09-ser-vs-estar
-chapter: 9
+spine_node: SPINE-CHECK-WELLBEING
 sequence: 840
+chapter: 9
 type: phrase
 headword: ser vs estar
-gloss: the two "to be" verbs, contrasted — essence vs state
+gloss: identify with ser; describe a current state or location with estar
 concept_tag: ES-SER-VS-ESTAR
-prerequisites: [ES-C09-ser, ES-C04-estar]
+prerequisites: [ES-C09-ser, ES-C04-practice]
 sounds: [r-tap, st-no-e]
 roots: [esse-latin, stare-latin]
-etymology_hook: "the split is baked into the roots: ser ← esse (essence, what a thing IS) vs estar ← stāre (to stand, how it stands right now)"
-est_minutes: 4
-reviews_of: [ES-C09-ser, ES-C04-estar, ES-C04-como-esta]
+etymology_hook: "ser recalls esse and essence; estar recalls stare 'to stand' and state — a useful first contrast, not a complete permanent-versus-temporary rule"
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-ETYMON-ESSE-SEDERE, ES-LEX-ESTAR, ES-GRAMMAR-ESTAR-ESTA-ESTAS, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-ETYMON-STARE, ES-LEX-BIEN, ES-LEX-USTED]
+introduces:
+  knowledge: [ES-GRAMMAR-SER-IDENTITY, ES-GRAMMAR-SER-ESTAR-CONTRAST]
+practises:
+  knowledge: [ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-ETYMON-ESSE-SEDERE, ES-LEX-ESTAR, ES-GRAMMAR-ESTAR-ESTA-ESTAS, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-ETYMON-STARE, ES-LEX-BIEN, ES-LEX-USTED, ES-GRAMMAR-SER-IDENTITY, ES-GRAMMAR-SER-ESTAR-CONTRAST]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: contrastive-formal-informal
+variety: general
+reviews_of: [ES-C09-ser, ES-C04-estar-estado, ES-C04-como-esta]
 ---
 
-# ser vs estar — essence vs state
+# ser vs estar — identity or current state?
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-LEX-ESTAR, ES-GRAMMAR-ESTAR-ESTA-ESTAS, ES-GRAMMAR-STATE-LOCATION-ESTAR] -->
 
-[PAUSE 2s] This is the lesson every Spanish learner waits for and dreads. Two
-verbs, one English word ("to be"). But the choice isn't arbitrary — it's written
-into the **etymology** you already learned. Get the roots, and the rule follows.
+[PAUSE 2s] You now have two small sets: **soy, eres, es** and **estás, está**.
+Do not memorize a long rule list. Make one contrast: **ser identifies**; **estar
+places someone in a current state or location**.
 
-## The rule, from the roots
+## Grammar Lens: the first contrast, from known material
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-SER-IDENTITY, ES-GRAMMAR-SER-ESTAR-CONTRAST]; assesses=[ES-LEX-BIEN, ES-LEX-USTED] -->
 
-You met both verbs by their Latin sources. That's the whole key:
+| question | what it asks | verb |
+|---|---|---|
+| **¿Es usted Ana?** — “Are you Ana?” | identity | **ser** |
+| **¿Está usted bien?** — “Are you well?” | current state | **estar** |
 
-| verb | root | picture | used for |
-|---|---|---|---|
-| **ser** | *esse* → **essence** | what a thing **is** | identity, origin, profession, nationality, what something is *made of*, the time |
-| **estar** | *stāre* → **to stand / state** | how a thing **stands** *right now* | mood, condition, location, the temporary |
+Only the verb and the job change. The first question identifies the person; the
+second checks how that person is now. Both **Ana**, **usted**, and **bien** are
+already part of your course, so the contrast adds no hidden vocabulary.
 
-The mnemonic writes itself: **ser = essence, estar = estado** (Spanish for
-"state," the very word *estar* built). Permanent, defining truth → *ser*.
-Passing state or where-you-are → *estar*.
+## Grammar Lens: a memory hook, not a law
+<!-- hl-knowledge: introduces=[]; assesses=[ES-ETYMON-ESSE-SEDERE, ES-ETYMON-STARE, ES-GRAMMAR-SER-IDENTITY, ES-GRAMMAR-SER-ESTAR-CONTRAST] -->
 
-- **Soy alto.** — "I am tall." (a defining trait → *ser*)
-- **Estoy cansado.** — "I am tired." (a passing state → *estar*)
-- **Es médico.** — "She is a doctor." (identity → *ser*)
-- **Está en casa.** — "She is at home." (location → *estar*, **always**)
+- **ser** recalls Latin *esse* and English **essence**: use it here to say who
+  someone **is**.
+- **estar** comes from Latin *stāre*, “to stand,” the family behind **state**:
+  use it for the state or location in which someone stands.
 
-## Grammar Lens: minimal pairs that FLIP the meaning
-
-Here's the proof that the split is *real*, not decoration. Swap *ser* for *estar*
-on the **same adjective** and the meaning changes — because *essence* and *state*
-are genuinely different claims:
-
-| with **ser** (essence) | with **estar** (state) |
-|---|---|
-| **es aburrido** — "he *is* boring" (his nature) | **está aburrido** — "he *is* bored" (right now) |
-| **es listo** — "she *is* clever" (a trait) | **está lista** — "she *is* ready" (this moment) |
-| **es rico** — "he *is* rich" (wealth) | **está rico** — "it *tastes* delicious" (this dish, now) |
-| **es verde** — "it *is* green" (its colour) | **está verde** — "it's *unripe*" (its current state) |
-
-Same adjective, two verbs, two worlds. A boring person *is* (ser) boring; a bored
-person merely *stands* (estar) bored today. This is why Spanish keeps two verbs
-English merged into one — it can say things English needs extra words for.
+“Permanent versus temporary” is only a rough beginner shortcut, not the rule.
+A location may last for centuries and still use *estar*; an identification may
+last one minute and still use *ser*. Ask instead: **am I identifying, or am I
+giving a state or location?**
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-LEX-ESTAR, ES-GRAMMAR-ESTAR-ESTA-ESTAS, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-GRAMMAR-SER-IDENTITY, ES-GRAMMAR-SER-ESTAR-CONTRAST, ES-LEX-BIEN] -->
+<!-- hl-activity: {"id":"ES-C09-ser-vs-estar-identify","kind":"text","assesses":["ES-GRAMMAR-SER-IDENTITY","ES-GRAMMAR-SER-ESTAR-CONTRAST","ES-GRAMMAR-SER-PRESENT-SINGULAR"],"prompt":"Choose es or está: ¿___ usted Ana?","answer":"es","accepted":["¿Es usted Ana?","Es usted Ana?"],"feedback":{"correct":"Right: identity takes ser — ¿Es usted Ana?","incorrect":"The question identifies the person, so use es."},"response_seconds":8} -->
+<!-- hl-activity: {"id":"ES-C09-ser-vs-estar-state","kind":"text","assesses":["ES-GRAMMAR-SER-ESTAR-CONTRAST","ES-GRAMMAR-STATE-LOCATION-ESTAR","ES-GRAMMAR-ESTAR-ESTA-ESTAS","ES-LEX-BIEN"],"prompt":"Choose es or está: ¿___ usted bien?","answer":"está","accepted":["¿Está usted bien?","Esta usted bien?","esta"],"feedback":{"correct":"Right: a current state takes estar — ¿Está usted bien?","incorrect":"The question asks about a current state, so use está."},"response_seconds":8} -->
 
 [PAUSE 1s]
-- [YOU SAY: the mnemonic — "ser = essence, estar = estado (state)"]
-- [YOU SAY: each minimal pair aloud — "es aburrido / está aburrido," and gloss
-  each: "is boring / is bored"]
-- [YOU SAY: sort five quick ones — tall (ser), tired (estar), a doctor (ser), at
-  home (estar), from Spain (ser)]
+- [YOU SAY: “¿Es usted Ana?” — identity, *ser*]
+- [YOU SAY: “¿Está usted bien?” — state, *estar*]
+- [YOU SAY: “identify: ser; state or location: estar”]
 
-[REPEAT x2] "ser = who/what it IS; estar = how/where it IS right now."
+[REPEAT x2] “¿Es usted Ana? ¿Está usted bien?”
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-SER-IDENTITY, ES-GRAMMAR-SER-ESTAR-CONTRAST, ES-GRAMMAR-STATE-LOCATION-ESTAR] -->
 
-[PAUSE 3s] Which verb for a permanent trait, which for a passing state? (*ser* /
-*estar*.) What does *está aburrido* mean vs *es aburrido*? ("is bored" vs "is
-boring.") Give the *estar* reading of *está rico*. ("it tastes delicious.") Next:
-the two workhorses of the split — **soy de…** (origin) and **está en…** (location).
+[PAUSE 3s] Which verb identifies? (*Ser*.) Which gives a current state or
+location? (*Estar*.) Why is “permanent versus temporary” incomplete? (The
+choice follows the kind of claim, not its duration.) Next: use *ser* for one
+specific identity fact — origin.

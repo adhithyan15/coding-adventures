@@ -216,16 +216,28 @@
       "chapter": 9,
       "title": "\\emph{Ser} and \\emph{Estar} --- Two Ways to Be",
       "label": "ch:ser-y-estar",
-      "canDo": "I can choose between ser and estar for simple descriptions, identities, states, and locations.",
+      "canDo": "I can identify someone, state origin, check wellbeing, and give a location by choosing a learned singular form of ser or estar.",
       "spineNodes": [
-        "SPINE-SAY-WHAT-I-DO"
+        "SPINE-SAY-WHAT-I-DO",
+        "SPINE-CHECK-WELLBEING",
+        "SPINE-EXCHANGE-NAMES",
+        "SPINE-ASK-LOCATION"
       ],
       "payoff": {
         "lesson": "ES-C09-practice",
         "kind": "task",
-        "summary": "Complete ES-C09-practice, the canonical closing checkpoint, and demonstrate the chapter promise: choose between ser and estar for simple descriptions, identities, states, and locations.",
-        "assesses": [],
-        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+        "summary": "Identify Ana, state an origin with soy de, check a current state, and locate Ana with está en using only previously introduced vocabulary and singular forms.",
+        "assesses": [
+          "ES-LEX-SER",
+          "ES-GRAMMAR-SER-PRESENT-SINGULAR",
+          "ES-ETYMON-ESSE-SEDERE",
+          "ES-GRAMMAR-SER-IDENTITY",
+          "ES-GRAMMAR-SER-ESTAR-CONTRAST",
+          "ES-LEX-DE",
+          "ES-GRAMMAR-ORIGIN-WITH-SER",
+          "ES-ETYMON-DE",
+          "ES-ETYMON-IN"
+        ]
       }
     },
     {

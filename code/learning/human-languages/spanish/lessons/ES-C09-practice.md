@@ -1,73 +1,96 @@
 ---
+schema_version: 2
 id: ES-C09-practice
-chapter: 9
+spine_node: SPINE-ASK-LOCATION
 sequence: 870
+chapter: 9
 type: practice-mix
 headword: (practice)
-gloss: drilling the ser / estar split
+gloss: identify someone, state origin, check wellbeing, and give a location
 concept_tag: CH9-PRACTICE
 prerequisites: [ES-C09-ser, ES-C09-ser-vs-estar, ES-C09-soy-de, ES-C09-esta-en]
 sounds: []
 roots: []
-est_minutes: 4
-reviews_of: [ES-C09-ser-vs-estar, ES-C09-soy-de, ES-C09-esta-en, ES-C04-estar, ES-C08-practice]
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-ETYMON-ESSE-SEDERE, ES-GRAMMAR-SER-IDENTITY, ES-GRAMMAR-SER-ESTAR-CONTRAST, ES-LEX-DE, ES-GRAMMAR-ORIGIN-WITH-SER, ES-ETYMON-DE, ES-ETYMON-IN, ES-LEX-ESTAR, ES-GRAMMAR-ESTAR-ESTA-ESTAS, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-ETYMON-STARE, ES-LEX-DONDE, ES-LEX-EN, ES-LEX-BIEN, ES-LEX-USTED, ES-ORTHOGRAPHY-PUNCTUATION-SPAN]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-ETYMON-ESSE-SEDERE, ES-GRAMMAR-SER-IDENTITY, ES-GRAMMAR-SER-ESTAR-CONTRAST, ES-LEX-DE, ES-GRAMMAR-ORIGIN-WITH-SER, ES-ETYMON-DE, ES-ETYMON-IN, ES-LEX-ESTAR, ES-GRAMMAR-ESTAR-ESTA-ESTAS, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-ETYMON-STARE, ES-LEX-DONDE, ES-LEX-EN, ES-LEX-BIEN, ES-LEX-USTED]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus, fluency]
+register: contrastive-formal-informal
+variety: general
+reviews_of: [ES-C09-ser, ES-C09-ser-vs-estar, ES-C09-soy-de, ES-C09-esta-en, ES-C04-practice, ES-C08-practice]
 ---
 
-# Practice — ser or estar?
+# Practice — identity, origin, state, and location
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-GRAMMAR-SER-IDENTITY, ES-GRAMMAR-SER-ESTAR-CONTRAST, ES-GRAMMAR-STATE-LOCATION-ESTAR] -->
 
-[PAUSE 2s] The whole chapter comes down to one reflex: **essence → ser, state →
-estar.** Drill it until you don't have to think. Say each form aloud, and for
-every sentence, name *why* the verb is the one it is.
+[PAUSE 2s] This checkpoint adds nothing. Use **ser** for identity and origin;
+use **estar** for a current state or location.
 
-## Conjugate both, out loud
+## Grammar Lens: retrieve the two small form sets
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-LEX-ESTAR, ES-GRAMMAR-ESTAR-ESTA-ESTAS] -->
 
-[PAUSE 1s]
-- **ser** (essence): **soy · eres · es · somos · son** (suppletive — *sum, eris,
-  est, sumus, sunt*).
-- **estar** (state): **estoy · estás · está · estamos · están** (the *-oy* tail,
-  same as *soy/voy/doy*).
+- **ser**: **soy · eres · es**
+- **estar** in the questions used here: **estás · está**
 
-## Sort them — say "ser" or "estar," then the reason
+Plural forms remain deliberately deferred.
 
-[PAUSE 1s]
-- "I'm a doctor." → **ser** (*soy médico* — identity)
-- "I'm tired." → **estar** (*estoy cansado* — passing state)
-- "She's from Peru." → **ser** (*es de Perú* — origin)
-- "The keys are on the table." → **estar** (*están en la mesa* — location)
-- "We're students." → **ser** (*somos estudiantes* — identity)
-- "You're at home." → **estar** (*estás en casa* — location)
+## The word, taken apart — four root hooks
+<!-- hl-knowledge: introduces=[]; assesses=[ES-ETYMON-ESSE-SEDERE, ES-ETYMON-STARE, ES-ETYMON-DE, ES-ETYMON-IN] -->
 
-## The minimal pairs — meaning flips with the verb
+- **ser**: *esse* + *sedēre*.
+- **estar**: *stāre*, “stand.”
+- **de**: Latin *dē*, “from.”
+- **en**: Latin *in*, English *in*.
 
-[PAUSE 1s]
-- **es aburrido** ("is boring") vs **está aburrido** ("is bored")
-- **es listo** ("is clever") vs **está listo** ("is ready")
-- **es rico** ("is rich") vs **está rico** ("tastes delicious")
-- **es verde** ("is green") vs **está verde** ("is unripe")
+## Grammar Lens: sort by the kind of claim
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-SER-IDENTITY, ES-GRAMMAR-SER-ESTAR-CONTRAST, ES-GRAMMAR-ORIGIN-WITH-SER, ES-GRAMMAR-STATE-LOCATION-ESTAR] -->
 
-## Say something real
+| prompt | answer | why |
+|---|---|---|
+| **¿Es usted Ana?** | *ser* | identity |
+| **¿De dónde eres?** | *ser* | origin |
+| **¿Está usted bien?** | *estar* | current state |
+| **¿Dónde está Ana?** | *estar* | location |
 
-> — Hola. ¿**De dónde eres**? — **Soy de** México. ¿Y tú?
-> — **Soy de** España. **Soy** profesor. ¿**Dónde estás** ahora?
-> — **Estoy en** casa. **Estoy** un poco cansado, pero bien.
+## The exchange — only known pieces
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-GRAMMAR-SER-IDENTITY, ES-LEX-DE, ES-GRAMMAR-ORIGIN-WITH-SER, ES-LEX-DONDE, ES-LEX-ESTAR, ES-GRAMMAR-ESTAR-ESTA-ESTAS, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-LEX-EN, ES-LEX-BIEN, ES-LEX-USTED] -->
 
-Two verbs, one conversation: *soy de / soy profesor* (essence → **ser**), *estoy
-en casa / estoy cansado* (state → **estar**).
+> — Hola. ¿**Es usted Ana**?
+> — Sí. **Soy Ana**.
+> — ¿**De dónde es usted**?
+> — **Soy de Madrid**.
+> — ¿**Dónde está Ana**?
+> — **Está en Madrid**.
+> — ¿**Está usted bien**?
+> — **Bien, gracias**.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-GRAMMAR-SER-IDENTITY, ES-GRAMMAR-SER-ESTAR-CONTRAST, ES-LEX-DE, ES-GRAMMAR-ORIGIN-WITH-SER, ES-LEX-ESTAR, ES-GRAMMAR-ESTAR-ESTA-ESTAS, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-LEX-DONDE, ES-LEX-EN, ES-LEX-BIEN, ES-LEX-USTED] -->
+<!-- hl-activity: {"id":"ES-C09-practice-identity","kind":"text","assesses":["ES-GRAMMAR-SER-IDENTITY","ES-GRAMMAR-SER-ESTAR-CONTRAST","ES-GRAMMAR-SER-PRESENT-SINGULAR"],"prompt":"Complete with es or está: ¿___ usted Ana?","answer":"es","accepted":["¿Es usted Ana?","Es usted Ana?"],"feedback":{"correct":"Right: identifying someone uses es.","incorrect":"This is identity, so use the ser form es."},"response_seconds":8} -->
+<!-- hl-activity: {"id":"ES-C09-practice-origin","kind":"text","assesses":["ES-LEX-DE","ES-GRAMMAR-ORIGIN-WITH-SER","ES-GRAMMAR-SER-PRESENT-SINGULAR"],"prompt":"Say 'I am from Madrid' in Spanish.","answer":"Soy de Madrid.","accepted":["Soy de Madrid"],"feedback":{"correct":"Right: Soy de Madrid.","incorrect":"Use soy de for origin: Soy de Madrid."},"response_seconds":8} -->
+<!-- hl-activity: {"id":"ES-C09-practice-location","kind":"text","assesses":["ES-GRAMMAR-STATE-LOCATION-ESTAR","ES-GRAMMAR-ESTAR-ESTA-ESTAS","ES-LEX-EN"],"prompt":"Say 'Ana is in Madrid' in Spanish.","answer":"Ana está en Madrid.","accepted":["Ana está en Madrid","ana esta en madrid","ana esta en madrid."],"feedback":{"correct":"Right: Ana está en Madrid.","incorrect":"Location uses the frame está en: Ana está en Madrid."},"response_seconds":8} -->
+<!-- hl-activity: {"id":"ES-C09-practice-state","kind":"text","assesses":["ES-GRAMMAR-SER-ESTAR-CONTRAST","ES-GRAMMAR-STATE-LOCATION-ESTAR","ES-GRAMMAR-ESTAR-ESTA-ESTAS","ES-LEX-BIEN"],"prompt":"Complete with es or está: ¿___ usted bien?","answer":"está","accepted":["¿Está usted bien?","Esta usted bien?","esta"],"feedback":{"correct":"Right: a current state uses está.","incorrect":"This asks about a current state, so use está."},"response_seconds":8} -->
 
 [PAUSE 1s]
-- [YOU SAY: conjugate *ser* and *estar* fully, back to back]
-- [YOU SAY: the four minimal pairs, glossing each meaning]
-- [YOU SAY: run the dialogue — introduce where you're from and where you are now]
+- [YOU SAY: “soy, eres, es”]
+- [YOU SAY: the four questions, naming each job]
+- [YOU SAY: the exchange once]
 
-[REPEAT x2] "¿De dónde eres? — Soy de … . ¿Dónde estás? — Estoy en … ."
+[REPEAT x2] “¿Es usted Ana? ¿Está usted bien?”
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-GRAMMAR-SER-IDENTITY, ES-GRAMMAR-SER-ESTAR-CONTRAST, ES-LEX-DE, ES-GRAMMAR-ORIGIN-WITH-SER, ES-GRAMMAR-STATE-LOCATION-ESTAR] -->
 
-[PAUSE 3s] Name the rule in three words. (*Essence → ser; state → estar*.) Give the
-five forms of *ser*. (*Soy, eres, es, somos, son*.) What flips between *es rico*
-and *está rico*? ("is rich" → "tastes delicious.") Next chapter: the **near
-future** — *ir a* + infinitive, "going to…" — and possessives.
+[PAUSE 3s] Give the three learned forms of *ser*. (*Soy, eres, es*.) Which
+verb identifies and states origin? (*Ser*.) Which gives a state or location?
+(*Estar*.) Ask where one friend is from, then locate Ana in Madrid. Next:
+**ir**, “to go,” introduced in the same small-step frame.

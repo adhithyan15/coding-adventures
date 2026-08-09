@@ -1,76 +1,87 @@
 ---
+schema_version: 2
 id: ES-C09-ser
-chapter: 9
+spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 830
+chapter: 9
 type: word
 headword: ser
-gloss: to be (identity — permanent, essential)
+gloss: to be — the verb used here to identify someone or say what someone is
 concept_tag: VERB-BE
-prerequisites: [ES-C04-estar, ES-C08-tener]
+prerequisites: [ES-C04-estar, ES-C04-estar-estado, ES-C08-practice]
 sounds: [vowel-e, r-tap]
 roots: [esse-latin, sedere-latin]
-etymology_hook: "ser ← Latin esse 'to be' (+ sedēre 'to sit'); its forms are suppletive — soy/es/son are cousins of English am/is/are"
-est_minutes: 4
-reviews_of: [ES-C04-estar, ES-C08-tener]
+etymology_hook: "ser grew from a merger of Latin esse 'to be' and sedere 'to sit'; essence preserves the esse family"
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-ESTAR, ES-GRAMMAR-STATE-LOCATION-ESTAR]
+introduces:
+  knowledge: [ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-ETYMON-ESSE-SEDERE]
+practises:
+  knowledge: [ES-LEX-ESTAR, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-ETYMON-ESSE-SEDERE]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C04-estar, ES-C04-estar-estado, ES-C08-practice]
 ---
 
-# ser — "to be," the *essential* kind
+# ser — another way to say “to be”
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ESTAR, ES-GRAMMAR-STATE-LOCATION-ESTAR] -->
 
-[PAUSE 2s] Back in Chapter 4 you met **estar** — the *temporary* to-be (← *stāre*,
-"to stand"): how you *are right now*, and *where*. It always came with a promise:
-Spanish has **two** be-verbs, and here's the other. **ser** is the *permanent*
-one — what a thing essentially **is**. It's also your second irregular verb, and
-its irregularity is spectacular.
+[PAUSE 2s] You already use **estar** for a current state or location. Spanish
+also has **ser**. This chapter adds one job at a time; today, learn the verb and
+the three singular forms that match the person frame you already know.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-- `r-tap` — *ser* ends in one soft tap of the tongue: *SER*.
-- No propping *e* here (unlike *es-tar*): *ser* already starts with its own vowel.
+- `vowel-e` — **ser** begins with the clear vowel in *mesa*.
+- `r-tap` — the final **r** is one light tap: *SER*.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-SER, ES-ETYMON-ESSE-SEDERE]; assesses=[] -->
 
-**ser** comes from Latin **esse**, *"to be"* — the plainest, oldest verb there is.
-(Vulgar Latin actually rebuilt the infinitive as *\*essere*, and even folded in a
-second verb, **sedēre** "to sit," which is why a few forms look like they wandered
-in from elsewhere.) That root **es-** reaches deep into English:
+Modern **ser** grew from a historical merger. Latin **esse** meant “to be,”
+while **sedēre** meant “to sit.” The infinitive and the present forms do not all
+come down the same path, so the modern verb cannot be predicted from one neat
+stem.
 
-- **essence**, **essential**, **entity**, **is**, **am**, **are** — all the way
-  down, this is the PIE root ***h₁es-*** "to be." When you say *es*, you are
-  saying a cousin of English **is**.
-- with prefixes: **present** (*prae-esse*, "to be before/at hand"), **absent**
-  (*ab-esse*, "to be away"), **interest** (*inter-esse*, "to be between").
+The **esse** family is still visible in English **essence**, **essential**,
+**entity**, **present**, and **absent**. That makes *essence* a useful memory hook
+for one major use of *ser*: identifying what someone or something **is**.
 
-So *ser* isn't just a word to memorize — it's the same ancient "be" that English
-carries in *is / am / are*.
+## Grammar Lens: only three forms today
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-SER-PRESENT-SINGULAR]; assesses=[ES-LEX-SER, ES-ETYMON-ESSE-SEDERE] -->
 
-## Grammar Lens: the most irregular verb in Spanish
-
-*ser* is **suppletive** — its forms come from *different* Latin words fused into
-one verb, so you can't derive them from the infinitive. You simply learn them:
-
-| person | form | Latin source |
+| person | form | a small identifying frame |
 |---|---|---|
-| yo | **soy** | ← *sum* ("I am"); the *-y* is the same odd tail as in *estoy/voy/doy* |
-| tú | **eres** | ← *eris* ("you will be" — a future form drafted into the present!) |
-| él/ella/usted | **es** | ← *est* — literally **cognate with English *is*** |
-| nosotros | **somos** | ← *sumus* |
-| ellos/ustedes | **son** | ← *sunt* — **cognate with English are-in-plural** |
+| yo | **soy** | **Soy Ana.** — “I am Ana.” |
+| tú | **eres** | **Eres Ana.** — “You are Ana.” |
+| él / ella / usted | **es** | **Usted es Ana.** — “You are Ana.” |
 
-Say them as a set: **soy · eres · es · somos · son.** Notice how *es* and *son*
-sit right next to English *is* and (Latin) *sunt* — you already half-knew this verb.
+Say the set as **soy · eres · es**. These forms are **irregular**: do not try to
+remove *-er* and attach the regular endings from *comer*. A later lesson will
+build the plural-person frame.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-ETYMON-ESSE-SEDERE] -->
+<!-- hl-activity: {"id":"ES-C09-ser-singular-forms","kind":"text","assesses":["ES-LEX-SER","ES-GRAMMAR-SER-PRESENT-SINGULAR"],"prompt":"Give the three learned singular forms of ser: yo, tú, then él/ella/usted.","answer":"soy, eres, es","accepted":["soy eres es","soy / eres / es"],"feedback":{"correct":"Right: soy, eres, es.","incorrect":"Use the three irregular forms: soy, eres, es."},"response_seconds":10} -->
+<!-- hl-activity: {"id":"ES-C09-ser-identity","kind":"text","assesses":["ES-LEX-SER","ES-GRAMMAR-SER-PRESENT-SINGULAR"],"prompt":"Complete the identification for formal you: Usted ___ Ana.","answer":"es","accepted":["Usted es Ana.","usted es ana"],"feedback":{"correct":"Right: Usted es Ana uses es.","incorrect":"Usted takes the él/ella form: es."},"response_seconds":8} -->
 
 [PAUSE 1s]
-- [YOU SAY: "ser" — *SER*, one tap]
-- [YOU SAY: "soy, eres, es, somos, son" — the whole suppletive set, twice]
-- [YOU SAY: "es" then English "is"; "son" then Latin "sunt" — hear the family]
+- [YOU SAY: “ser — soy, eres, es”]
+- [YOU SAY: “Soy Ana. Eres Ana. Usted es Ana.”]
+- [YOU SAY: “esse — essence — ser”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-ETYMON-ESSE-SEDERE] -->
 
-[PAUSE 3s] What Latin verb is *ser* from, and one English cousin? (*esse* — essence
-/ essential / present.) Why can't you predict its forms? (It's **suppletive** —
-built from *sum, eris, est, sumus, sunt*.) Give all five present forms. (*Soy,
-eres, es, somos, son*.) Next: the big one — **when to use *ser* and when *estar*.**
+[PAUSE 3s] Which two Latin verbs fed *ser*? (*Esse* and *sedēre*.) Give the
+three forms learned today. (*Soy, eres, es*.) Why not predict them from the
+infinitive? (The verb is historically mixed and irregular.) Next: set *ser*
+beside *estar* using only identity and state frames you already have.

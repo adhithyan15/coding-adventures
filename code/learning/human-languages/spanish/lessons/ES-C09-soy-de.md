@@ -1,70 +1,81 @@
 ---
+schema_version: 2
 id: ES-C09-soy-de
-chapter: 9
+spine_node: SPINE-EXCHANGE-NAMES
 sequence: 850
+chapter: 9
 type: phrase
 headword: soy de…
-gloss: "I'm from…" — origin and identity take ser
+gloss: I am from… — use ser with de to state origin
 concept_tag: ES-ORIGIN-SER
-prerequisites: [ES-C09-ser, ES-C06-espanol]
+prerequisites: [ES-C09-ser-vs-estar, ES-C07-donde]
 sounds: [vowel-e, r-tap]
 roots: [esse-latin, de-latin]
-etymology_hook: "soy de… — origin is an essence, so it takes ser; de ← Latin dē 'from, of' → English de- (deduct, depart)"
-est_minutes: 4
-reviews_of: [ES-C09-ser, ES-C06-espanol]
+etymology_hook: "de comes from Latin de 'down from, away from'; English de- keeps the same direction in depart and descend"
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-GRAMMAR-SER-IDENTITY, ES-GRAMMAR-SER-ESTAR-CONTRAST, ES-LEX-DONDE, ES-ETYMON-DE-UNDE, ES-ORTHOGRAPHY-PUNCTUATION-SPAN]
+introduces:
+  knowledge: [ES-LEX-DE, ES-GRAMMAR-ORIGIN-WITH-SER, ES-ETYMON-DE]
+practises:
+  knowledge: [ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-GRAMMAR-SER-IDENTITY, ES-GRAMMAR-SER-ESTAR-CONTRAST, ES-LEX-DONDE, ES-ETYMON-DE-UNDE, ES-ORTHOGRAPHY-PUNCTUATION-SPAN, ES-LEX-DE, ES-GRAMMAR-ORIGIN-WITH-SER, ES-ETYMON-DE]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C09-ser, ES-C09-ser-vs-estar, ES-C07-donde]
 ---
 
-# soy de… — saying where you're from
+# soy de… — saying where you are from
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-GRAMMAR-SER-IDENTITY, ES-GRAMMAR-SER-ESTAR-CONTRAST, ES-LEX-DONDE] -->
 
-[PAUSE 2s] You have *ser*. Now aim it. **Where you're from** and **what you do**
-are treated as *essence* in Spanish — they define you — so both take **ser**, not
-*estar*. This is where the split starts paying rent.
+[PAUSE 2s] You can identify yourself with **Soy Ana**. Add one short word and
+you can state another identity fact: **Soy de…**, “I am from…”.
 
-## The little word: de
+## The word, taken apart — de
+<!-- hl-knowledge: introduces=[ES-LEX-DE, ES-ETYMON-DE]; assesses=[ES-ETYMON-DE-UNDE] -->
 
-**de** = "from / of," straight from Latin **dē** ("down from, about"). It's one of
-the most common words in Spanish, and its English children are everywhere as the
-prefix **de-**: **de**duct, **de**part, **de**scend, **de**scribe — all carry the
-"from / down-from" of *dē*.
+**de** means “from” or “of.” It comes from Latin **dē**, “down from, away
+from.” English keeps that direction in **de**part and **de**scend.
 
-## The pattern: soy de + place
+You already learned that *dónde* grew from Latin *de unde*, “from where.”
+Spanish can put the still-living word **de** before **dónde** to ask explicitly
+about origin.
 
-Origin is a permanent fact about you, so it's **ser + de**:
+## Grammar Lens: ser + de for origin
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-ORIGIN-WITH-SER]; assesses=[ES-LEX-DE, ES-LEX-DONDE, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-ORTHOGRAPHY-PUNCTUATION-SPAN] -->
 
-> **Soy de** México. — "I'm from Mexico."
-> **Eres de** España. — "You're from Spain."
-> **Es de** Colombia. — "She's from Colombia."
+> **¿De dónde eres?** — “Where are you from?”
+> **Soy de Madrid.** — “I am from Madrid.”
 
-And to ask it, Spanish fronts the *de*:
+The place name **Madrid** already appeared with *vivir*. Here, the new piece is
+the frame around it. Use **ser**, because this sentence states origin; it does
+not say where someone is located now.
 
-> **¿De dónde eres?** — literally "From where are-you?" (*dónde*, "where," you met
-> in Ch.7; here it rides with *de* to mean *from where*.)
+Keep the two known questions separate:
 
-Note it is **eres**, not *estás* — even though *dónde* usually pairs with *estar*
-for location. Origin isn't *where you are standing*; it's *what you are*. Essence
-→ *ser*.
-
-## Same verb, your identity: profession and nationality
-
-Because these define you, they're **ser** too — and they take **no article**:
-
-> **Soy profesor.** — "I'm a teacher." (no *un* — Spanish drops it with bare
-> professions)
-> **Soy español.** — "I'm Spanish." (there's *español* again, from Ch.6, ← *Hispania*)
-> **Somos estudiantes.** — "We're students."
+| question | asks about |
+|---|---|
+| **¿De dónde eres?** | origin — where you are from |
+| **¿Dónde vives?** | residence — where you live |
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-DE, ES-GRAMMAR-ORIGIN-WITH-SER, ES-ETYMON-DE, ES-LEX-DONDE, ES-GRAMMAR-SER-PRESENT-SINGULAR] -->
+<!-- hl-activity: {"id":"ES-C09-soy-de-ask-origin","kind":"text","assesses":["ES-LEX-DE","ES-GRAMMAR-ORIGIN-WITH-SER","ES-LEX-DONDE","ES-GRAMMAR-SER-PRESENT-SINGULAR"],"prompt":"Ask one friend 'Where are you from?' in Spanish.","answer":"¿De dónde eres?","accepted":["De dónde eres?","¿De dónde eres","De donde eres?"],"feedback":{"correct":"Right: ¿De dónde eres?","incorrect":"Use de dónde plus the tú form eres: ¿De dónde eres?"},"response_seconds":9} -->
+<!-- hl-activity: {"id":"ES-C09-soy-de-madrid","kind":"text","assesses":["ES-LEX-DE","ES-GRAMMAR-ORIGIN-WITH-SER","ES-GRAMMAR-SER-PRESENT-SINGULAR"],"prompt":"Answer 'I am from Madrid' in Spanish.","answer":"Soy de Madrid.","accepted":["Soy de Madrid"],"feedback":{"correct":"Right: Soy de Madrid.","incorrect":"Use the origin frame soy de: Soy de Madrid."},"response_seconds":8} -->
 
 [PAUSE 1s]
-- [YOU SAY: "Soy de…" + your city — *soy deh …*]
-- [YOU SAY: ask and answer — "¿De dónde eres? — Soy de México."]
-- [YOU SAY: identity with ser — "Soy profesor," "Soy español" (no *un*/*una*)]
+- [YOU SAY: “¿De dónde eres?”]
+- [YOU SAY: “Soy de Madrid.”]
+- [YOU SAY: “de — depart — descend”: the shared direction is *from*]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-DE, ES-GRAMMAR-ORIGIN-WITH-SER, ES-ETYMON-DE, ES-LEX-DONDE] -->
 
-[PAUSE 3s] Which be-verb for where you're *from*, and why? (*ser* — origin is an
-essence, not a location you stand in.) What does *de* mean, and one English cousin?
-("from/of"; *depart*/*deduct*.) How do you ask "where are you from"? (*¿De dónde
-eres?*) Next: the other workhorse — **está en…**, location, which is pure *estar*.
+[PAUSE 3s] What does *de* mean? (“From” or “of.”) Ask where one friend is
+from. (*¿De dónde eres?*) Answer with Madrid. (*Soy de Madrid.*) Next: reuse
+*dónde* and *en* to say where someone is located now.

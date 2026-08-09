@@ -371,10 +371,11 @@ describe("the real corpus", () => {
     // +5: TA-W08-read-en introduces 2, TA-W09-read-peyar 3. They teach எ, ப, ய and the
     // ெ sign — the glyphs Tamil chapter 2 was still explaining inside its own speaking
     // lessons because the writing strand had never covered them.
-    // Chapters 7 and 8 each add exactly their configured chapter budget of 12 atoms.
-    // Both terminal practice lessons revisit their whole chapter, so Chapter 8 grows
-    // measurable teaching without increasing the corpus orphan count.
-    expect(report.summary.atomsTaught).toBe(2531);
+    // Chapters 7 and 8 each add their configured 12-atom budget. Chapter 9 adds nine
+    // smaller atoms across identity, origin, state/location contrast, and etymology.
+    // Every terminal practice lesson revisits its chapter, so measurable teaching
+    // grows without increasing the corpus orphan count.
+    expect(report.summary.atomsTaught).toBe(2540);
     // +2, and it goes UP, which is worth stating plainly. Three of the five new atoms
     // are TA-W09's and nothing follows TA-W09, so they are orphans by construction:
     // PA-YA-01, E-SIGN-02, READ-PEYAR-03. TA-W08's two are revisited by TA-W09.
@@ -439,7 +440,9 @@ describe("the real corpus", () => {
     // -1, same cause.
     // Removing pan/agua and the rest of the later café vocabulary closes six leaks.
     // Chapter 8 closes six more by deferring sixteen-through-twenty-one to Chapter 31.
-    expect(report.summary.forwardReferences).toBe(456);
+    // Chapter 9 removes five more leaks by replacing untaught adjective pairs and
+    // plural verb forms with identity/state examples built from known words.
+    expect(report.summary.forwardReferences).toBe(451);
 
     // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
     // day as 766 -> 749. The absolute figures drift as main lands lessons; what the
@@ -494,9 +497,9 @@ describe("the real corpus", () => {
     // window, so practising INDEPENDENT-VOWEL-I-01, LA-AI-SIGN-02 and CA-ONE-LETTER-01
     // there reinforces them at a distance R1 could never reach. Measured: all three go
     // from missing R1/R2/R3 to missing only R1/R3.
-    // The new atoms also make eleven additional R2 windows measurable; the local
-    // practice lesson cannot fill a 5-15-lesson window inside a five-lesson chapter.
-    expect(report.summary.missedByWindow.R2).toBe(1736);
+    // Chapter 9 makes six more R2 windows measurable while its deliberately local
+    // five-lesson reinforcement still lands before R2's 5-15-lesson span.
+    expect(report.summary.missedByWindow.R2).toBe(1742);
   });
 
   it("shows what a declared reading order was worth", () => {
@@ -525,7 +528,8 @@ describe("the real corpus", () => {
       lessonCount: 177,
       lessonsWithoutSequence: 0,
       forwardPrerequisites: 0,
-      atomsTaught: 284,
+      // Chapter 9 adds nine atoms while its terminal checkpoint revisits all nine.
+      atomsTaught: 293,
       atomsNeverRevisited: 68,
     });
   });

@@ -1,75 +1,81 @@
 ---
+schema_version: 2
 id: ES-C09-esta-en
-chapter: 9
+spine_node: SPINE-ASK-LOCATION
 sequence: 860
+chapter: 9
 type: phrase
 headword: está en…
-gloss: "is in/at…" — location always takes estar
+gloss: is in or at… — locate someone with estar and the already-known en
 concept_tag: ES-LOCATION-ESTAR
-prerequisites: [ES-C04-estar, ES-C09-ser-vs-estar]
+prerequisites: [ES-C09-soy-de, ES-C04-estar-estado, ES-C07-donde]
 sounds: [st-no-e, vowel-e]
 roots: [stare-latin, in-latin]
-etymology_hook: "está en… — location is where a thing STANDS, so it takes estar; en ← Latin in 'in, on' → English in"
-est_minutes: 4
-reviews_of: [ES-C04-estar, ES-C09-ser-vs-estar, ES-C07-donde]
+etymology_hook: "en comes from Latin in and is a cognate of English in; location uses estar, from stare 'to stand'"
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-ESTAR, ES-GRAMMAR-ESTAR-ESTA-ESTAS, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-ETYMON-STARE, ES-LEX-DONDE, ES-LEX-EN, ES-ETYMON-DE-UNDE, ES-GRAMMAR-SER-ESTAR-CONTRAST, ES-LEX-DE, ES-GRAMMAR-ORIGIN-WITH-SER, ES-ETYMON-DE, ES-LEX-USTED, ES-ORTHOGRAPHY-PUNCTUATION-SPAN]
+introduces:
+  knowledge: [ES-ETYMON-IN]
+practises:
+  knowledge: [ES-LEX-ESTAR, ES-GRAMMAR-ESTAR-ESTA-ESTAS, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-ETYMON-STARE, ES-LEX-DONDE, ES-LEX-EN, ES-GRAMMAR-SER-ESTAR-CONTRAST, ES-LEX-DE, ES-GRAMMAR-ORIGIN-WITH-SER, ES-LEX-USTED, ES-ORTHOGRAPHY-PUNCTUATION-SPAN, ES-ETYMON-IN]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C04-estar-estado, ES-C07-donde, ES-C09-ser-vs-estar, ES-C09-soy-de]
 ---
 
-# está en… — saying where something is
+# está en… — saying where someone is
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ESTAR, ES-GRAMMAR-ESTAR-ESTA-ESTAS, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-LEX-DONDE, ES-LEX-EN] -->
 
-[PAUSE 2s] The mirror image of the last lesson. Origin was *ser* (essence). But
-**location** — where a thing physically **stands** right now — is the home turf of
-**estar** (← *stāre*, "to stand"). The root tells you: to be *located* is to
-*stand* somewhere.
+[PAUSE 2s] In Chapter 7, **¿Dónde vives? — Vivo en Madrid** asked about where
+someone lives. Now use the same **dónde** and **en** with *estar* to ask about a
+current location.
 
-## The little word: en
+## The word, taken apart — en
+<!-- hl-knowledge: introduces=[ES-ETYMON-IN]; assesses=[ES-LEX-EN, ES-ETYMON-STARE] -->
 
-**en** = "in / on / at," from Latin **in** — and it *is* English **in**, barely
-changed in two thousand years. (Latin *in* → Spanish *en*, English *in*; the same
-word runs through *interior*, *include*, *invade* — "in-" everywhere.) One word,
-three English prepositions: *en casa* = "**at** home," *en la mesa* = "**on** the
-table," *en Madrid* = "**in** Madrid."
+**en** already means “in,” “on,” or “at.” It descends from Latin **in** and is
+a cognate of English **in**. No new preposition is needed; only the surrounding
+verb changes.
 
-## The pattern: estar + en + place
+## Grammar Lens: dónde + estar, then estar + en
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-ESTAR-ESTA-ESTAS, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-LEX-DONDE, ES-LEX-EN, ES-LEX-DE, ES-GRAMMAR-ORIGIN-WITH-SER, ES-LEX-USTED, ES-ORTHOGRAPHY-PUNCTUATION-SPAN] -->
 
-Location is always **estar** — never *ser*, no exceptions for physical place:
+> **¿Dónde está usted?** — “Where are you?” (formal)
+> **Usted está en Madrid.** — “You are in Madrid.”
+> **Ana está en Madrid.** — “Ana is in Madrid.”
 
-> **Estoy en** casa. — "I'm at home."
-> **Estás en** Madrid. — "You're in Madrid."
-> **Está en** la mesa. — "It's on the table."
+The form **está** is already familiar from *¿Cómo está usted?* The phrase
+**está en…** simply gives that form a place. Location uses *estar* even when a
+place seems stable; the choice marks the kind of claim, not how long it lasts.
 
-And to ask it, pair *dónde* with **estar**:
+Compare origin and location without adding any new form:
 
-> **¿Dónde estás?** — "Where are you?" (*dónde* from Ch.7, now with *estás*)
-> — **Estoy en casa.** — "I'm at home."
-
-## Grammar Lens: the clean contrast
-
-Put the two questions side by side and the whole chapter snaps into focus:
-
-| question | verb | why |
+| sentence | meaning | verb |
 |---|---|---|
-| **¿De dónde eres?** — "Where are you *from*?" | **ser** (*eres*) | origin = essence |
-| **¿Dónde estás?** — "Where are you *at*?" | **estar** (*estás*) | location = state |
-
-Same word *dónde*, two different be-verbs — and each is locked in by meaning.
-*From* where → what you **are** (ser). *At* where → where you **stand** (estar).
-Even a permanent-seeming place stays *estar*: **Madrid está en España** — cities
-don't move, but *being located* is still *estar*.
+| **Ana es de Madrid.** | origin | *ser* |
+| **Ana está en Madrid.** | location | *estar* |
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-ETYMON-IN, ES-GRAMMAR-ESTAR-ESTA-ESTAS, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-LEX-DONDE, ES-LEX-EN, ES-GRAMMAR-SER-ESTAR-CONTRAST, ES-LEX-DE, ES-GRAMMAR-ORIGIN-WITH-SER, ES-LEX-USTED] -->
+<!-- hl-activity: {"id":"ES-C09-esta-en-ask-formal","kind":"text","assesses":["ES-GRAMMAR-ESTAR-ESTA-ESTAS","ES-GRAMMAR-STATE-LOCATION-ESTAR","ES-LEX-DONDE","ES-LEX-USTED"],"prompt":"Ask formal you 'Where are you?' in Spanish.","answer":"¿Dónde está usted?","accepted":["Dónde está usted?","¿Dónde está usted","Donde esta usted?"],"feedback":{"correct":"Right: ¿Dónde está usted?","incorrect":"Use dónde, the formal form está, and usted."},"response_seconds":9} -->
+<!-- hl-activity: {"id":"ES-C09-esta-en-ana","kind":"text","assesses":["ES-GRAMMAR-ESTAR-ESTA-ESTAS","ES-GRAMMAR-STATE-LOCATION-ESTAR","ES-LEX-EN"],"prompt":"Say 'Ana is in Madrid' in Spanish.","answer":"Ana está en Madrid.","accepted":["Ana está en Madrid","ana esta en madrid","ana esta en madrid."],"feedback":{"correct":"Right: Ana está en Madrid.","incorrect":"Use the location frame está en: Ana está en Madrid."},"response_seconds":8} -->
 
 [PAUSE 1s]
-- [YOU SAY: "Estoy en casa" — *es-TOY en KA-sa*]
-- [YOU SAY: ask and answer location — "¿Dónde estás? — Estoy en Madrid."]
-- [YOU SAY: the pair back-to-back — "¿De dónde eres?" (ser) then "¿Dónde estás?"
-  (estar), and feel the split]
+- [YOU SAY: “¿Dónde está usted?”]
+- [YOU SAY: “Ana está en Madrid.”]
+- [YOU SAY: “en / in” — two cognates]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-ETYMON-IN, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-GRAMMAR-SER-ESTAR-CONTRAST, ES-LEX-DE, ES-GRAMMAR-ORIGIN-WITH-SER] -->
 
-[PAUSE 3s] Which be-verb for physical location, and its Latin root's picture?
-(*estar* — *stāre*, "to stand": where a thing *stands*.) What does *en* mean, and
-its English twin? ("in/on/at"; English *in*.) Contrast *¿De dónde eres?* with
-*¿Dónde estás?* (origin/ser vs location/estar.) Next: **practice** — drill the
-whole split.
+[PAUSE 3s] Which verb locates someone? (*Estar*.) What already-known word
+introduces the place? (*En*.) Ask formal “Where are you?” (*¿Dónde está
+usted?*) Next: combine identity, origin, state, and location without adding
+another word or verb form.

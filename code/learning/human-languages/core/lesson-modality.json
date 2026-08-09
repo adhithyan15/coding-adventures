@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:c3ff02c7152b20ec",
+  "sourceHash": "fnv1a64:7e20b52b9eb7b75e",
   "summary": {
     "totalLessons": 1669,
-    "voice": 1079,
-    "sight": 532,
+    "voice": 1082,
+    "sight": 529,
     "pen": 58,
-    "drivableLessons": 1079,
+    "drivableLessons": 1082,
     "drivablePercent": 65,
     "trackCount": 22,
     "chapterCount": 513,
-    "drivablePrefixTotal": 877,
-    "fullyDrivableChapters": 321,
+    "drivablePrefixTotal": 881,
+    "fullyDrivableChapters": 322,
     "unstartableChapters": 142,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -6755,11 +6755,11 @@
     {
       "language": "spanish",
       "lessonCount": 177,
-      "voice": 152,
-      "sight": 18,
+      "voice": 155,
+      "sight": 15,
       "pen": 7,
-      "drivablePercent": 86,
-      "drivablePrefixTotal": 121,
+      "drivablePercent": 88,
+      "drivablePrefixTotal": 125,
       "modalities": [
         "voice",
         "sight",
@@ -6936,18 +6936,21 @@
         {
           "chapter": 9,
           "lessonCount": 5,
-          "voice": 2,
-          "sight": 3,
+          "voice": 5,
+          "sight": 0,
           "pen": 0,
           "modalities": [
-            "voice",
-            "sight"
+            "voice"
           ],
-          "drivablePrefix": 1,
-          "firstNonVoiceLesson": "ES-C09-ser-vs-estar",
-          "drivable": false,
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
           "drivableLessonIds": [
-            "ES-C09-ser"
+            "ES-C09-ser",
+            "ES-C09-ser-vs-estar",
+            "ES-C09-soy-de",
+            "ES-C09-esta-en",
+            "ES-C09-practice"
           ]
         },
         {
@@ -33907,25 +33910,25 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f6c1102f99e48dfb"
+      "sourceHash": "fnv1a64:9aa278d1af4407f2"
     },
     {
       "id": "ES-C09-ser-vs-estar",
       "language": "spanish",
       "chapter": 9,
       "sequence": 840,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:079927285e2d7c12"
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9a2e819491bd91ba"
     },
     {
       "id": "ES-C09-soy-de",
@@ -33943,43 +33946,43 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7d7dc85d231765fe"
+      "sourceHash": "fnv1a64:6ef90fa81f2b62f2"
     },
     {
       "id": "ES-C09-esta-en",
       "language": "spanish",
       "chapter": 9,
       "sequence": 860,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:e1ee931ddaf78a6d"
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d88336f3e0e9f123"
     },
     {
       "id": "ES-C09-practice",
       "language": "spanish",
       "chapter": 9,
       "sequence": 870,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:1a1ac8d5f28b64da"
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a1b67b076d8ebd3b"
     },
     {
       "id": "ES-C10-ir",
