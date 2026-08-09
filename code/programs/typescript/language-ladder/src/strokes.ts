@@ -184,6 +184,11 @@ function truncateToFraction(pts: Point[], fraction: number): Point[] {
 
 const clamp01 = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n);
 
+const PERSIAN_ALPHABET_URL =
+  "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet";
+const persianAlphabetCitation = (detail: string) =>
+  `Persian Online, How to Write Persian Characters, ${detail} (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)`;
+
 // ---------------------------------------------------------------------------
 // The authored letters.
 //
@@ -199,6 +204,8 @@ const clamp01 = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n);
 // its shallow dip, then lifts once before placing the separate dot below.
 // After the intervening Persian-added پ row, ت repeats the same bowl, lifts to
 // place the left dot above, then lifts again to place the right dot.
+// The later س row stays pen-down: it shapes all three teeth right-to-left and
+// flows directly into the final bowl as one continuous Naskh stroke.
 // அ is Frame 4's first row: movements 1-4 remain on the connected body, then
 // the hand lifts once before movement 5 draws the separate right upright. ஆ is
 // the next row: it repeats movements 1-5, then continues from that upright into
@@ -247,9 +254,8 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: {
-      citation:
-        "Persian Online, How to Write Persian Characters, opening ا demonstration at 00:08–00:11 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
-      url: "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+      citation: persianAlphabetCitation("opening ا demonstration at 00:08–00:11"),
+      url: PERSIAN_ALPHABET_URL,
       variation:
         "The cited freehand lesson demonstrates isolated ا as one top-to-bottom Naskh stroke while presenting the alphabet right-to-left. Contextual joins change neighbouring ink, but the isolated non-connector remains the same one-stroke stem; this path fits the vendored Noto Naskh outline.",
     },
@@ -296,9 +302,8 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: {
-      citation:
-        "Persian Online, How to Write Persian Characters, opening ب demonstration at 00:11–00:15 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
-      url: "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+      citation: persianAlphabetCitation("opening ب demonstration at 00:11–00:15"),
+      url: PERSIAN_ALPHABET_URL,
       variation:
         "The cited freehand lesson demonstrates isolated ب as a shallow right-to-left Naskh bowl, followed by one pen lift and the separate dot below. Contextual joins reshape the bowl in connected text; this isolated learner path fits the vendored Noto Naskh outline.",
     },
@@ -357,11 +362,55 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: {
-      citation:
-        "Persian Online, How to Write Persian Characters, ت demonstration at 00:22–00:27 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
-      url: "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+      citation: persianAlphabetCitation("ت demonstration at 00:22–00:27"),
+      url: PERSIAN_ALPHABET_URL,
       variation:
         "The cited freehand lesson demonstrates isolated ت as a shallow right-to-left Naskh bowl, followed by one lift to the left dot above and another lift to the right dot. The intervening پ row is not in this starter inventory. Contextual joins reshape the bowl; this isolated learner path fits the vendored Noto Naskh outline.",
+    },
+  },
+  "س": {
+    glyph: "س",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "form the three teeth from right to left",
+            path: [
+              { x: 923, y: 310 },
+              { x: 935, y: 120 },
+              { x: 925, y: 70 },
+              { x: 870, y: 45 },
+              { x: 770, y: 75 },
+              { x: 748, y: 110 },
+              { x: 748, y: 230 },
+              { x: 690, y: 65 },
+              { x: 640, y: 45 },
+              { x: 540, y: 55 },
+              { x: 478, y: 190 },
+              { x: 515, y: 20 },
+            ],
+          },
+          {
+            label: "flow into the final bowl without lifting",
+            path: [
+              { x: 515, y: 20 },
+              { x: 515, y: -25 },
+              { x: 470, y: -125 },
+              { x: 370, y: -205 },
+              { x: 250, y: -230 },
+              { x: 145, y: -180 },
+              { x: 92, y: -95 },
+              { x: 110, y: 35 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: {
+      citation: persianAlphabetCitation("س demonstration at 01:29–01:35"),
+      url: PERSIAN_ALPHABET_URL,
+      variation:
+        "The cited freehand lesson demonstrates isolated س as one continuous right-to-left Naskh movement: three teeth flow directly into the final bowl with no pen lift. Contextual joins shorten the final bowl before following letters; this isolated learner path fits the vendored Noto Naskh outline.",
     },
   },
   அ: {

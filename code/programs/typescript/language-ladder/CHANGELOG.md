@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Persian teeth-and-bowl ductus (HL-C09N)
+
+- Add Persian س from UT Austin Persian Online's 01:29–01:35 demonstration: one
+  continuous right-to-left Naskh stroke forms all three teeth and flows into
+  the final bowl without lifting.
+- Pin zero lifts, two learner movements, Noto Naskh geometry, and a real
+  two-frame filmstrip that keeps both movements in the same pen-down run.
+
 ### Added — cited Persian bowl-and-two-dots ductus (HL-C09M)
 
 - Add Persian ت from UT Austin Persian Online's 00:22–00:27 demonstration: its

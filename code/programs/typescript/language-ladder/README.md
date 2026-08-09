@@ -166,7 +166,7 @@ in font units, and `ductusview.ts` flips them together with exactly **one**
 sitting upside down on a correct letter.
 
 **All eleven starter Tamil letters — அ, ஆ, இ, க, ம, வ, ல, ற, ன, ண, and ந —
-and Persian ا, ب, and ت have authored pen paths today.** `DUCTUS` admits no letter without
+and Persian ا, ب, ت, and س have authored pen paths today.** `DUCTUS` admits no letter without
 a citation
 for its stroke order, and hand-drawing a letter is forbidden
 outright (a subtly wrong Tamil ண looks perfect to exactly the audience that
@@ -196,7 +196,9 @@ its shallow bowl in one right-to-left run, then shows the sourced lift before
 the dot while retaining the completed bowl. The later ت filmstrip reuses that
 bowl, then retains it through separate left-dot and right-dot runs with two
 lifts. Its source note records the intervening Persian-added پ demonstration as
-deferred inventory work. Unverified letters still fall back to the numbered
+deferred inventory work. The later س filmstrip keeps its three teeth and final
+bowl in one continuous right-to-left run, so its two learner movements show no
+lift or completed-stroke overlay. Unverified letters still fall back to the numbered
 prose list, unchanged. Extending the coverage is HL-C09,
 and it needs a cited source per letter.
 
