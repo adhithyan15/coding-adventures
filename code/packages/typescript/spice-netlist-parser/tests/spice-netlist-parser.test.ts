@@ -1722,6 +1722,27 @@ Q1 col base emit fast
     );
   });
 
+  it.each([
+    ["0.5", 0.5],
+    ["2", 2.0],
+  ])("parses BJT base-emitter leakage emission coefficient NE=%s", (value, expected) => {
+    const parsed = parseNetlist(`.model fast NPN(NE=${value})\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      baseEmitterLeakageEmissionCoefficient: expected,
+    });
+  });
+
+  it.each(["0", "-0.1", "1e999"])(
+    "rejects invalid BJT base-emitter leakage emission coefficient NE=%s",
+    (value) => {
+      expect(() => parseNetlist(`.model fast NPN(NE=${value})`)).toThrow(
+        "BJT NE must be finite and positive",
+      );
+    },
+  );
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)

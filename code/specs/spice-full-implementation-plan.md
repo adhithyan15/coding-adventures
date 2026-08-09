@@ -4599,10 +4599,15 @@ the Rust, Python, and TypeScript surfaces together.
      forward-beta-roll-off-current field.
 
 453. Python and TypeScript Berkeley SPICE BJT base-emitter-leakage parity.
-   - Status: implemented in this BJT ISE parity slice.
+   - Status: completed in PR 10118.
    - Both parser facades validate finite, non-negative `ISE` currents and `C2`
      ratios, prefer canonical `ISE`, preserve the engine's `C2 * IS` fallback,
      and reject non-finite derived currents before lowering.
+
+454. Python and TypeScript Berkeley SPICE BJT base-emitter-leakage-emission parity.
+   - Status: implemented in this BJT NE parity slice.
+   - Both parser facades validate positive finite `NE` values and lower them
+     into the shared engine base-emitter-leakage-emission-coefficient field.
 
 ## Backlog
 
