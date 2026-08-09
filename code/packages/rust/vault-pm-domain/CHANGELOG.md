@@ -22,3 +22,5 @@ All notable changes to this package are documented here.
 - Operation-ID collisions and dangling removal tombstones are rejected.
 - Tombstone compaction requires an explicit repository causal-stability
   predicate and preserves concurrent or later adds.
+- Lossless persistence iterators expose retained add and removal observations;
+  present-only projections no longer tempt codecs to discard tombstones.

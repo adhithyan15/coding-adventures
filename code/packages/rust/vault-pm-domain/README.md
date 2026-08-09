@@ -24,6 +24,11 @@ pairs remain until a repository supplies causal-stability proof to
 `compact_stable_removals`; elapsed time or observation by one head is not
 sufficient proof.
 
+Persistent codecs must enumerate `retained_values` and each value's retained
+add and removal operations. The present-only `values` projection deliberately
+cannot be used for lossless persistence because it would discard tombstones
+and could resurrect removed membership after a merge.
+
 ## Development
 
 ```bash
@@ -31,5 +36,5 @@ bash BUILD
 cargo clippy -p coding_adventures_vault_pm_domain --all-targets -- -D warnings
 ```
 
-The Phase 0 suite contains 29 unit tests and covers 527/532 executable crate
-lines (99.06%) under Tarpaulin's LLVM engine.
+The Phase 0 suite contains 30 unit tests and covers 537/542 executable crate
+lines (99.08%) under Tarpaulin's LLVM engine.

@@ -1262,6 +1262,9 @@ changelog, focused build, and downstream validation.
 7. `vault-pm-repository`: publication, verification, local heads, history, GC
    plan, using the bounded fail-closed contract in
    `VLT-PM04-repository.md`.
+7a. `vault-pm-domain` lossless persistence projection: retained values, add
+    operations, and removal tombstones must be enumerable before the
+    application codec persists observed sets.
 8. `vault-pm-application`: init/open/item/search/history/export/audit workflows.
 9. `vault-pm-cli` + real executable and pseudo-terminal E2E suite.
 10. Crash/fault matrix and local restore drill.
