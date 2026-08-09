@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.4.0
+
+- Add host-owned connected-client pseudonym-key rotation for an explicit UniFi
+  site using one bounded authenticated client response and two atomically
+  consumed one-shot 32-byte key leases.
+- Require exact correspondence with the installed pseudonymous client set,
+  preserve each client's existing five-minute presence expiry, and dispose
+  native identifiers and both keys before runtime migration.
+- Persist all client device/entity replacements through expected-revision
+  runtime-store CAS and reject stale automation identity references before live
+  state changes.
+
 ## 0.3.0
 
 - Add official per-device latest-statistics inspection for explicitly selected,

@@ -1,12 +1,13 @@
 [package]
 name = "smart-home-unifi-network-integration"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = "Authenticated local UniFi Network health, bounded live statistics, and pseudonymous client inspection"
 license = "MIT"
 
 [dependencies]
 coding_adventures_sha256 = { path = "../sha256" }
+coding_adventures_vault_leases = { path = "../vault-leases" }
 coding_adventures_zeroize = { path = "../zeroize" }
 http-core = { path = "../http-core" }
 http1 = { path = "../http1" }
@@ -16,5 +17,10 @@ smart-home-data-governance = { path = "../smart-home-data-governance" }
 smart-home-discovery = { path = "../smart-home-discovery" }
 smart-home-local-http = { path = "../smart-home-local-http" }
 smart-home-runtime = { path = "../smart-home-runtime" }
+smart-home-runtime-store = { path = "../smart-home-runtime-store" }
+storage-core = { path = "../storage-core" }
 tls-platform = { path = "../tls-platform" }
 url-parser = { path = "../url-parser" }
+
+[dev-dependencies]
+storage-local-folder = { path = "../storage-local-folder" }
