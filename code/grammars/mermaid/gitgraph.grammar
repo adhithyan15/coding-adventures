@@ -1,0 +1,18 @@
+# @version 1
+#
+# Mermaid 11.16.1 GitGraph parser grammar.
+
+document = { NEWLINE } HEADER [ DIRECTION [ COLON ] ] { NEWLINE | statement } EOF ;
+statement = commit_stmt | branch_stmt | merge_stmt | checkout_stmt | cherry_pick_stmt ;
+
+commit_stmt = "commit" { commit_attr } ;
+commit_attr = ID_ATTR STRING | [ MSG_ATTR ] STRING | TAG_ATTR STRING | TYPE_ATTR COMMIT_TYPE ;
+
+branch_stmt = "branch" reference [ ORDER_ATTR INT ] ;
+merge_stmt = "merge" reference { merge_attr } ;
+merge_attr = ID_ATTR STRING | TAG_ATTR STRING | TYPE_ATTR COMMIT_TYPE ;
+checkout_stmt = ( "checkout" | "switch" ) reference ;
+cherry_pick_stmt = CHERRY_PICK { cherry_pick_attr } ;
+cherry_pick_attr = ID_ATTR STRING | TAG_ATTR STRING | PARENT_ATTR STRING ;
+
+reference = REFERENCE | STRING ;

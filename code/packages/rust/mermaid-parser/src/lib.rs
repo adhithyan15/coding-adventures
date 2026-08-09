@@ -1,4 +1,4 @@
-//! Grammar-driven parser for a focused Mermaid flowchart subset.
+//! Grammar-driven parser and compatibility dispatcher for Mermaid diagrams.
 
 // This file hand-parses many `starts_with(...)` / slice-index prefix strips
 // where the prefix and the stripped remainder need slightly different handling;
@@ -6,7 +6,8 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
+pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
 
@@ -15,10 +16,19 @@ use diagram_ir::{
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
-use mermaid_lexer::tokenize_mermaid;
+use mermaid_lexer::{
+    tokenize_mermaid, tokenize_mermaid_er, tokenize_mermaid_gitgraph, tokenize_mermaid_pie,
+    tokenize_mermaid_sankey,
+};
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
 const PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/mermaid.grammar");
+const PIE_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/pie.grammar");
+const SANKEY_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/sankey.grammar");
+const GITGRAPH_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/gitgraph.grammar");
+const ER_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/er.grammar");
 
 /// Recursion-depth cap for the Mermaid [`GrammarParser`] — see
 /// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
@@ -168,6 +178,54 @@ pub fn create_mermaid_parser(source: &str) -> GrammarParser {
 
 pub fn parse_mermaid_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
     let mut parser = create_mermaid_parser(source);
+    parser.parse().map_err(|e| ParseError {
+        message: e.message,
+        line: e.token.line,
+        col: e.token.column,
+    })
+}
+
+pub fn parse_mermaid_pie_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
+    let tokens = tokenize_mermaid_pie(source);
+    let grammar = parse_parser_grammar(PIE_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|e| panic!("Failed to parse pie.grammar: {e}"));
+    let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
+    parser.parse().map_err(|e| ParseError {
+        message: e.message,
+        line: e.token.line,
+        col: e.token.column,
+    })
+}
+
+pub fn parse_mermaid_sankey_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
+    let tokens = tokenize_mermaid_sankey(source);
+    let grammar = parse_parser_grammar(SANKEY_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|e| panic!("Failed to parse sankey.grammar: {e}"));
+    let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
+    parser.parse().map_err(|e| ParseError {
+        message: e.message,
+        line: e.token.line,
+        col: e.token.column,
+    })
+}
+
+pub fn parse_mermaid_gitgraph_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
+    let tokens = tokenize_mermaid_gitgraph(source);
+    let grammar = parse_parser_grammar(GITGRAPH_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|e| panic!("Failed to parse gitgraph.grammar: {e}"));
+    let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
+    parser.parse().map_err(|e| ParseError {
+        message: e.message,
+        line: e.token.line,
+        col: e.token.column,
+    })
+}
+
+pub fn parse_mermaid_er_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
+    let tokens = tokenize_mermaid_er(source);
+    let grammar = parse_parser_grammar(ER_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|e| panic!("Failed to parse er.grammar: {e}"));
+    let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
     parser.parse().map_err(|e| ParseError {
         message: e.message,
         line: e.token.line,
@@ -332,31 +390,124 @@ fn is_edge_operator(token: &Token) -> bool {
 }
 
 fn token_name(token: &Token) -> &str {
-    token
-        .type_name
-        .as_deref()
-        .unwrap_or(match token.type_ {
-            TokenType::Name => "NAME",
-            TokenType::Keyword => "KEYWORD",
-            TokenType::Newline => "NEWLINE",
-            TokenType::Semicolon => "SEMICOLON",
-            TokenType::Eof => "EOF",
-            _ => "TOKEN",
-        })
+    token.type_name.as_deref().unwrap_or(match token.type_ {
+        TokenType::Name => "NAME",
+        TokenType::Number => "NUMBER",
+        TokenType::String => "STRING",
+        TokenType::Keyword => "KEYWORD",
+        TokenType::Colon => "COLON",
+        TokenType::Comma => "COMMA",
+        TokenType::LBrace => "LBRACE",
+        TokenType::RBrace => "RBRACE",
+        TokenType::LBracket => "LBRACKET",
+        TokenType::RBracket => "RBRACKET",
+        TokenType::Newline => "NEWLINE",
+        TokenType::Semicolon => "SEMICOLON",
+        TokenType::Eof => "EOF",
+        _ => "TOKEN",
+    })
 }
-
 
 // ============================================================================
 // DG04 — Extended Mermaid parsers for Chart, Structural, and Temporal families
 // ============================================================================
 
 use diagram_ir::{
-    Axis, AxisKind, ChartDiagram, ChartKind, ChartOrientation, ChartSeries,
-    Compartment, CompartmentKind, GanttDiagram, GanttSection, GanttTask, RelKind,
-    SeriesKind, StructuralDiagram, StructuralKind, StructuralNode,
-    StructuralNodeKind, StructuralRelationship, TaskStart, TaskStatus,
-    TemporalBody, TemporalDiagram, TemporalKind,
+    Axis, AxisKind, ChartDiagram, ChartKind, ChartOrientation, ChartSeries, Compartment,
+    CompartmentKind, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType, GitDiagram,
+    GitEvent, PieSlice, RelKind, SankeyFlow, SankeyNode, SeriesKind, StructuralDiagram,
+    StructuralKind, StructuralNode, StructuralNodeKind, StructuralRelationship, TaskStart,
+    TaskStatus, TemporalBody, TemporalDiagram, TemporalKind,
 };
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum MermaidDiagramType {
+    Flowchart,
+    Sequence,
+    Class,
+    State,
+    Er,
+    Journey,
+    Gantt,
+    Pie,
+    Quadrant,
+    Requirement,
+    GitGraph,
+    C4,
+    Mindmap,
+    Timeline,
+    Sankey,
+    XyChart,
+    Block,
+    Packet,
+    Kanban,
+    Architecture,
+    Radar,
+    EventModeling,
+    Treemap,
+    Venn,
+    Ishikawa,
+    Wardley,
+    Cynefin,
+    TreeView,
+    Swimlane,
+    Railroad,
+    Info,
+    ZenUml,
+}
+
+impl MermaidDiagramType {
+    pub fn canonical_id(self) -> &'static str {
+        match self {
+            Self::Flowchart => "flowchart",
+            Self::Sequence => "sequence",
+            Self::Class => "class",
+            Self::State => "state",
+            Self::Er => "er",
+            Self::Journey => "journey",
+            Self::Gantt => "gantt",
+            Self::Pie => "pie",
+            Self::Quadrant => "quadrant",
+            Self::Requirement => "requirement",
+            Self::GitGraph => "gitgraph",
+            Self::C4 => "c4",
+            Self::Mindmap => "mindmap",
+            Self::Timeline => "timeline",
+            Self::Sankey => "sankey",
+            Self::XyChart => "xychart",
+            Self::Block => "block",
+            Self::Packet => "packet",
+            Self::Kanban => "kanban",
+            Self::Architecture => "architecture",
+            Self::Radar => "radar",
+            Self::EventModeling => "eventmodeling",
+            Self::Treemap => "treemap",
+            Self::Venn => "venn",
+            Self::Ishikawa => "ishikawa",
+            Self::Wardley => "wardley",
+            Self::Cynefin => "cynefin",
+            Self::TreeView => "treeview",
+            Self::Swimlane => "swimlane",
+            Self::Railroad => "railroad",
+            Self::Info => "info",
+            Self::ZenUml => "zenuml",
+        }
+    }
+
+    pub fn has_native_pipeline(self) -> bool {
+        matches!(
+            self,
+            Self::Flowchart
+                | Self::Class
+                | Self::Er
+                | Self::Gantt
+                | Self::GitGraph
+                | Self::Pie
+                | Self::Sankey
+                | Self::XyChart
+        )
+    }
+}
 
 /// Union of all Mermaid diagram variants that `parse_any_mermaid` can return.
 pub enum MermaidDiagram {
@@ -366,33 +517,142 @@ pub enum MermaidDiagram {
     Temporal(TemporalDiagram),
 }
 
-/// Dispatch to the correct sub-parser based on the first keyword line.
+/// Detect a Mermaid 11.16.1 diagram family from its header.
 ///
-/// Supported diagram types:
-/// - `flowchart`/`graph` → `GraphDiagram`
-/// - `classDiagram` → `StructuralDiagram`
-/// - `xychart-beta`/`xychart` → `ChartDiagram`
-/// - `gantt` → `TemporalDiagram` (Gantt body)
-pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
+/// Detection also skips leading YAML front matter, Mermaid directives,
+/// comments, and blank lines. A recognized family may still be reported as
+/// unsupported by [`parse_any_mermaid`] while its semantic IR is implemented.
+pub fn detect_mermaid_type(source: &str) -> Result<MermaidDiagramType, ParseError> {
     let first = first_keyword(source);
-    match first.as_str() {
-        "flowchart" | "graph" => parse_to_diagram(source).map(MermaidDiagram::Graph),
-        "classDiagram" => parse_class_diagram(source).map(MermaidDiagram::Structural),
-        "xychart-beta" | "xychart" => parse_xychart(source).map(MermaidDiagram::Chart),
-        "gantt" => parse_gantt(source).map(|g| MermaidDiagram::Temporal(TemporalDiagram {
-            kind: TemporalKind::Gantt,
-            title: None,
-            body: TemporalBody::Gantt(g),
-        })),
-        other => Err(ParseError { message: format!("Unknown diagram type: {other:?}"), line: 0, col: 0 }),
+    let diagram_type = match first.as_str() {
+        "flowchart" | "graph" | "flowchart-elk" => MermaidDiagramType::Flowchart,
+        "sequenceDiagram" => MermaidDiagramType::Sequence,
+        "classDiagram" | "classDiagram-v2" => MermaidDiagramType::Class,
+        "stateDiagram" | "stateDiagram-v2" => MermaidDiagramType::State,
+        "erDiagram" => MermaidDiagramType::Er,
+        "journey" => MermaidDiagramType::Journey,
+        "gantt" => MermaidDiagramType::Gantt,
+        "pie" => MermaidDiagramType::Pie,
+        "quadrantChart" => MermaidDiagramType::Quadrant,
+        "requirement" | "requirementDiagram" => MermaidDiagramType::Requirement,
+        "gitGraph" => MermaidDiagramType::GitGraph,
+        "C4Context" | "C4Container" | "C4Component" | "C4Dynamic" | "C4Deployment" => {
+            MermaidDiagramType::C4
+        }
+        "mindmap" => MermaidDiagramType::Mindmap,
+        "timeline" => MermaidDiagramType::Timeline,
+        "sankey" | "sankey-beta" => MermaidDiagramType::Sankey,
+        "xychart" | "xychart-beta" => MermaidDiagramType::XyChart,
+        "block" | "block-beta" => MermaidDiagramType::Block,
+        "packet" | "packet-beta" => MermaidDiagramType::Packet,
+        "kanban" => MermaidDiagramType::Kanban,
+        "architecture" | "architecture-beta" => MermaidDiagramType::Architecture,
+        "radar-beta" => MermaidDiagramType::Radar,
+        "eventmodeling" => MermaidDiagramType::EventModeling,
+        "treemap" => MermaidDiagramType::Treemap,
+        "venn-beta" => MermaidDiagramType::Venn,
+        "ishikawa" | "ishikawa-beta" => MermaidDiagramType::Ishikawa,
+        "wardley-beta" => MermaidDiagramType::Wardley,
+        "cynefin-beta" => MermaidDiagramType::Cynefin,
+        "treeView-beta" => MermaidDiagramType::TreeView,
+        "swimlane-beta" => MermaidDiagramType::Swimlane,
+        "railroad-beta" | "railroad-ebnf-beta" | "railroad-abnf-beta" | "railroad-peg-beta" => {
+            MermaidDiagramType::Railroad
+        }
+        "info" => MermaidDiagramType::Info,
+        "zenuml" => MermaidDiagramType::ZenUml,
+        other => {
+            return Err(ParseError {
+                message: format!("Unknown Mermaid diagram type: {other:?}"),
+                line: 1,
+                col: 1,
+            });
+        }
+    };
+
+    Ok(diagram_type)
+}
+
+/// Dispatch a recognized Mermaid family to its semantic parser.
+pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
+    let diagram_type = detect_mermaid_type(source)?;
+    match diagram_type {
+        MermaidDiagramType::Flowchart => parse_to_diagram(source).map(MermaidDiagram::Graph),
+        MermaidDiagramType::Class => parse_class_diagram(source).map(MermaidDiagram::Structural),
+        MermaidDiagramType::Er => parse_er_diagram(source).map(MermaidDiagram::Structural),
+        MermaidDiagramType::XyChart => parse_xychart(source).map(MermaidDiagram::Chart),
+        MermaidDiagramType::Pie => parse_pie(source).map(MermaidDiagram::Chart),
+        MermaidDiagramType::Sankey => parse_sankey(source).map(MermaidDiagram::Chart),
+        MermaidDiagramType::GitGraph => parse_gitgraph(source).map(|git| {
+            MermaidDiagram::Temporal(TemporalDiagram {
+                kind: TemporalKind::Git,
+                title: None,
+                body: TemporalBody::Git(git),
+            })
+        }),
+        MermaidDiagramType::Gantt => parse_gantt(source).map(|g| {
+            MermaidDiagram::Temporal(TemporalDiagram {
+                kind: TemporalKind::Gantt,
+                title: None,
+                body: TemporalBody::Gantt(g),
+            })
+        }),
+        unsupported => Err(ParseError {
+            message: format!(
+                "Mermaid {} diagram family {:?} is recognized but not implemented",
+                MERMAID_COMPATIBILITY_BASELINE,
+                unsupported.canonical_id()
+            ),
+            line: 1,
+            col: 1,
+        }),
     }
 }
 
 fn first_keyword(source: &str) -> String {
+    let mut in_front_matter = false;
+    let mut can_start_front_matter = true;
+    let mut in_directive = false;
+
     for line in source.lines() {
         let trimmed = line.trim();
-        if trimmed.is_empty() || trimmed.starts_with("%%") { continue; }
-        return trimmed.split_whitespace().next().unwrap_or("").to_string();
+
+        if can_start_front_matter && trimmed.is_empty() {
+            continue;
+        }
+        if can_start_front_matter && trimmed == "---" {
+            in_front_matter = true;
+            can_start_front_matter = false;
+            continue;
+        }
+        if in_front_matter {
+            if trimmed == "---" {
+                in_front_matter = false;
+            }
+            continue;
+        }
+
+        can_start_front_matter = false;
+        if in_directive {
+            if trimmed.contains("}%%") {
+                in_directive = false;
+            }
+            continue;
+        }
+        if trimmed.starts_with("%%{") {
+            in_directive = !trimmed.contains("}%%");
+            continue;
+        }
+        if trimmed.is_empty() || trimmed.starts_with("%%") {
+            continue;
+        }
+
+        return trimmed
+            .split_whitespace()
+            .next()
+            .unwrap_or("")
+            .trim_end_matches(':')
+            .to_string();
     }
     String::new()
 }
@@ -418,8 +678,12 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
     // Skip the `classDiagram` header line.
     for line in lines.by_ref() {
         let t = line.trim();
-        if t == "classDiagram" { break; }
-        if t.starts_with("%%") || t.is_empty() { continue; }
+        if t == "classDiagram" {
+            break;
+        }
+        if t.starts_with("%%") || t.is_empty() {
+            continue;
+        }
         if t.starts_with("title") {
             title = Some(t.trim_start_matches("title").trim().to_string());
         }
@@ -427,12 +691,17 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
 
     for line in lines {
         let t = line.trim();
-        if t.is_empty() || t.starts_with("%%") { continue; }
+        if t.is_empty() || t.starts_with("%%") {
+            continue;
+        }
 
         if t.starts_with("class ") {
             let rest = t[6..].trim();
             let (id_str, body_str): (String, Option<String>) = if let Some(pos) = rest.find('{') {
-                (rest[..pos].trim().to_string(), Some(rest[pos+1..].trim_end_matches('}').to_string()))
+                (
+                    rest[..pos].trim().to_string(),
+                    Some(rest[pos + 1..].trim_end_matches('}').to_string()),
+                )
             } else {
                 (rest.to_string(), None)
             };
@@ -440,35 +709,47 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
 
             let mut compartments: Vec<Compartment> = Vec::new();
             if let Some(body) = body_str.as_deref() {
-                let entries: Vec<String> = body.split(';')
+                let entries: Vec<String> = body
+                    .split(';')
                     .map(|e| e.trim().to_string())
                     .filter(|e| !e.is_empty())
                     .collect();
                 if !entries.is_empty() {
                     // Heuristic: entries with `()` are methods, otherwise fields.
-                    let fields: Vec<String> = entries.iter()
+                    let fields: Vec<String> = entries
+                        .iter()
                         .filter(|e| !e.contains('('))
                         .map(|e| strip_visibility(e))
                         .collect();
-                    let methods: Vec<String> = entries.iter()
+                    let methods: Vec<String> = entries
+                        .iter()
                         .filter(|e| e.contains('('))
                         .map(|e| strip_visibility(e))
                         .collect();
                     if !fields.is_empty() {
-                        compartments.push(Compartment { kind: CompartmentKind::Fields, entries: fields });
+                        compartments.push(Compartment {
+                            kind: CompartmentKind::Fields,
+                            entries: fields,
+                        });
                     }
                     if !methods.is_empty() {
-                        compartments.push(Compartment { kind: CompartmentKind::Methods, entries: methods });
+                        compartments.push(Compartment {
+                            kind: CompartmentKind::Methods,
+                            entries: methods,
+                        });
                     }
                 }
             }
 
             // Update existing node or create a new one.
             if let Some(existing) = nodes.iter_mut().find(|n| n.id == id) {
-                if !compartments.is_empty() { existing.compartments = compartments; }
+                if !compartments.is_empty() {
+                    existing.compartments = compartments;
+                }
             } else {
                 nodes.push(StructuralNode {
-                    id: id.clone(), label: id,
+                    id: id.clone(),
+                    label: id,
                     stereotype: None,
                     node_kind: StructuralNodeKind::Class,
                     compartments,
@@ -479,7 +760,8 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
             for id in [&rel.from, &rel.to] {
                 if !nodes.iter().any(|n| &n.id == id) {
                     nodes.push(StructuralNode {
-                        id: id.clone(), label: id.clone(),
+                        id: id.clone(),
+                        label: id.clone(),
                         stereotype: None,
                         node_kind: StructuralNodeKind::Class,
                         compartments: vec![],
@@ -490,7 +772,12 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
         }
     }
 
-    Ok(StructuralDiagram { kind: StructuralKind::Class, title, nodes, relationships })
+    Ok(StructuralDiagram {
+        kind: StructuralKind::Class,
+        title,
+        nodes,
+        relationships,
+    })
 }
 
 fn strip_visibility(s: &str) -> String {
@@ -514,25 +801,32 @@ fn parse_class_relationship(line: &str) -> Option<StructuralRelationship> {
     let arrows: &[(&str, RelKind)] = &[
         ("<|--", RelKind::Inheritance),
         ("<|..", RelKind::Realization),
-        ("*--",  RelKind::Composition),
-        ("o--",  RelKind::Aggregation),
-        ("-->",  RelKind::Association),
-        ("..",   RelKind::Dependency),
-        ("--",   RelKind::Link),
+        ("*--", RelKind::Composition),
+        ("o--", RelKind::Aggregation),
+        ("-->", RelKind::Association),
+        ("..", RelKind::Dependency),
+        ("--", RelKind::Link),
     ];
     for (arrow, kind) in arrows {
         if let Some(pos) = line.find(arrow) {
-            let from  = line[..pos].trim().to_string();
+            let from = line[..pos].trim().to_string();
             let after = line[pos + arrow.len()..].trim();
             let (to, label) = if let Some(colon) = after.find(':') {
-                (after[..colon].trim().to_string(), Some(after[colon+1..].trim().to_string()))
+                (
+                    after[..colon].trim().to_string(),
+                    Some(after[colon + 1..].trim().to_string()),
+                )
             } else {
                 (after.to_string(), None)
             };
             if !from.is_empty() && !to.is_empty() {
                 return Some(StructuralRelationship {
-                    from, to, kind: kind.clone(),
-                    from_mult: None, to_mult: None, label,
+                    from,
+                    to,
+                    kind: kind.clone(),
+                    from_mult: None,
+                    to_mult: None,
+                    label,
                 });
             }
         }
@@ -563,9 +857,13 @@ pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
     let mut past_header = false;
     for line in source.lines() {
         let t = line.trim();
-        if t.is_empty() || t.starts_with("%%") { continue; }
+        if t.is_empty() || t.starts_with("%%") {
+            continue;
+        }
         if !past_header {
-            if t.starts_with("xychart") { past_header = true; }
+            if t.starts_with("xychart") {
+                past_header = true;
+            }
             continue;
         }
         if t.starts_with("title") {
@@ -577,34 +875,70 @@ pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
             // Strip optional quoted label before numbers.
             let rest = if rest.starts_with('"') {
                 if let Some(end) = rest[1..].find('"') {
-                    rest[end+2..].trim()
-                } else { rest }
-            } else { rest };
-            let nums: Vec<f64> = rest.split_whitespace()
-                .filter(|s| s.chars().all(|c| c.is_ascii_digit() || c == '-' || c == '.'))
+                    rest[end + 2..].trim()
+                } else {
+                    rest
+                }
+            } else {
+                rest
+            };
+            let nums: Vec<f64> = rest
+                .split_whitespace()
+                .filter(|s| {
+                    s.chars()
+                        .all(|c| c.is_ascii_digit() || c == '-' || c == '.')
+                })
                 .filter_map(|s| s.parse().ok())
                 .collect();
-            if nums.len() >= 2 { y_min = nums[0]; y_max = nums[nums.len()-1]; }
+            if nums.len() >= 2 {
+                y_min = nums[0];
+                y_max = nums[nums.len() - 1];
+            }
         } else if t.starts_with("bar") {
             let data = parse_data_list(&t[3..]);
-            series.push(ChartSeries { kind: SeriesKind::Bar, label: Some("bar".into()), data });
+            series.push(ChartSeries {
+                kind: SeriesKind::Bar,
+                label: Some("bar".into()),
+                data,
+            });
         } else if t.starts_with("line") {
             let data = parse_data_list(&t[4..]);
-            series.push(ChartSeries { kind: SeriesKind::Line, label: Some("line".into()), data });
+            series.push(ChartSeries {
+                kind: SeriesKind::Line,
+                label: Some("line".into()),
+                data,
+            });
         }
     }
 
     let x_axis = if !x_cats.is_empty() {
-        Some(Axis { kind: AxisKind::Categorical, title: None, categories: x_cats, min: 0.0, max: 0.0 })
-    } else { None };
+        Some(Axis {
+            kind: AxisKind::Categorical,
+            title: None,
+            categories: x_cats,
+            min: 0.0,
+            max: 0.0,
+        })
+    } else {
+        None
+    };
     let y_axis = Some(Axis {
-        kind: AxisKind::Numeric, title: None, categories: vec![], min: y_min, max: y_max,
+        kind: AxisKind::Numeric,
+        title: None,
+        categories: vec![],
+        min: y_min,
+        max: y_max,
     });
 
     Ok(ChartDiagram {
-        title, kind: ChartKind::Xy,
-        x_axis, y_axis, series,
-        slices: vec![], sankey_nodes: vec![], flows: vec![],
+        title,
+        kind: ChartKind::Xy,
+        x_axis,
+        y_axis,
+        series,
+        slices: vec![],
+        sankey_nodes: vec![],
+        flows: vec![],
         orientation: ChartOrientation::Vertical,
     })
 }
@@ -612,18 +946,641 @@ pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
 fn parse_bracket_list(s: &str) -> Vec<String> {
     let s = s.trim();
     let inner = if let (Some(l), Some(r)) = (s.find('['), s.rfind(']')) {
-        &s[l+1..r]
-    } else { s };
-    inner.split(',').map(|x| x.trim().trim_matches('"').to_string())
-        .filter(|x| !x.is_empty()).collect()
+        &s[l + 1..r]
+    } else {
+        s
+    };
+    inner
+        .split(',')
+        .map(|x| x.trim().trim_matches('"').to_string())
+        .filter(|x| !x.is_empty())
+        .collect()
 }
 
 fn parse_data_list(s: &str) -> Vec<f64> {
     let s = s.trim();
     let inner = if let (Some(l), Some(r)) = (s.find('['), s.rfind(']')) {
-        &s[l+1..r]
-    } else { s };
-    inner.split(',').filter_map(|x| x.trim().parse().ok()).collect()
+        &s[l + 1..r]
+    } else {
+        s
+    };
+    inner
+        .split(',')
+        .filter_map(|x| x.trim().parse().ok())
+        .collect()
+}
+
+// ── pie parser ───────────────────────────────────────────────────────────
+
+/// Parse the grammar-backed Mermaid `pie` family into a `ChartDiagram`.
+///
+/// The first compatibility slice supports `showData` and quoted numeric
+/// sections, which are the semantic inputs needed by `diagram-layout-chart`.
+pub fn parse_pie(source: &str) -> Result<ChartDiagram, ParseError> {
+    parse_mermaid_pie_ast(source)?;
+
+    let mut cursor = TokenCursor::new(tokenize_mermaid_pie(source));
+    cursor.skip_terminators();
+    cursor.expect_keyword("pie")?;
+
+    if cursor.current().type_ == TokenType::Keyword && cursor.current().value == "showData" {
+        cursor.advance();
+    }
+    cursor.skip_terminators();
+
+    let mut slices = Vec::new();
+    while !cursor.at_eof() {
+        let label_token = cursor
+            .consume_if("STRING")
+            .ok_or_else(|| token_error(cursor.current(), "expected quoted pie slice label"))?;
+        cursor
+            .consume_if("COLON")
+            .ok_or_else(|| token_error(cursor.current(), "expected ':' after pie slice label"))?;
+        let value_token = cursor
+            .consume_if("NUMBER")
+            .ok_or_else(|| token_error(cursor.current(), "expected numeric pie slice value"))?;
+        let value = value_token.value.parse::<f64>().map_err(|_| {
+            token_error(
+                &value_token,
+                format!("invalid pie slice value {:?}", value_token.value),
+            )
+        })?;
+
+        slices.push(PieSlice {
+            label: unquote_mermaid_string(&label_token.value),
+            value,
+        });
+        cursor.skip_terminators();
+    }
+
+    Ok(ChartDiagram {
+        title: None,
+        kind: ChartKind::Pie,
+        x_axis: None,
+        y_axis: None,
+        series: vec![],
+        slices,
+        sankey_nodes: vec![],
+        flows: vec![],
+        orientation: ChartOrientation::Vertical,
+    })
+}
+
+fn unquote_mermaid_string(raw: &str) -> String {
+    let inner = raw
+        .strip_prefix('"')
+        .and_then(|value| value.strip_suffix('"'))
+        .unwrap_or(raw);
+    let mut result = String::with_capacity(inner.len());
+    let mut chars = inner.chars();
+
+    while let Some(ch) = chars.next() {
+        if ch != '\\' {
+            result.push(ch);
+            continue;
+        }
+
+        match chars.next() {
+            Some('n') => result.push('\n'),
+            Some('r') => result.push('\r'),
+            Some('t') => result.push('\t'),
+            Some('"') => result.push('"'),
+            Some('\\') => result.push('\\'),
+            Some(other) => result.push(other),
+            None => result.push('\\'),
+        }
+    }
+
+    result
+}
+
+// ── Sankey parser ─────────────────────────────────────────────────────────
+
+/// Parse Mermaid's three-column Sankey CSV dialect into the shared chart IR.
+pub fn parse_sankey(source: &str) -> Result<ChartDiagram, ParseError> {
+    parse_mermaid_sankey_ast(source)?;
+
+    let mut cursor = TokenCursor::new(tokenize_mermaid_sankey(source));
+    cursor.skip_terminators();
+    cursor
+        .consume_if("HEADER")
+        .ok_or_else(|| token_error(cursor.current(), "expected Sankey header"))?;
+    cursor.skip_terminators();
+
+    let mut nodes: Vec<SankeyNode> = Vec::new();
+    let mut flows: Vec<SankeyFlow> = Vec::new();
+
+    while !cursor.at_eof() {
+        let source_id = parse_sankey_field(&mut cursor)?;
+        cursor
+            .consume_if("COMMA")
+            .ok_or_else(|| token_error(cursor.current(), "expected ',' after Sankey source"))?;
+        let target_id = parse_sankey_field(&mut cursor)?;
+        cursor
+            .consume_if("COMMA")
+            .ok_or_else(|| token_error(cursor.current(), "expected ',' after Sankey target"))?;
+        let weight_token = cursor
+            .consume_if("NUMBER")
+            .ok_or_else(|| token_error(cursor.current(), "expected Sankey flow weight"))?;
+        let weight = weight_token.value.parse::<f64>().map_err(|_| {
+            token_error(
+                &weight_token,
+                format!("invalid Sankey flow weight {:?}", weight_token.value),
+            )
+        })?;
+
+        for id in [&source_id, &target_id] {
+            if !nodes.iter().any(|node| node.id == *id) {
+                nodes.push(SankeyNode {
+                    id: id.clone(),
+                    label: Some(id.clone()),
+                });
+            }
+        }
+        flows.push(SankeyFlow {
+            source: source_id,
+            target: target_id,
+            weight,
+        });
+        cursor.skip_terminators();
+    }
+
+    Ok(ChartDiagram {
+        title: None,
+        kind: ChartKind::Sankey,
+        x_axis: None,
+        y_axis: None,
+        series: vec![],
+        slices: vec![],
+        sankey_nodes: nodes,
+        flows,
+        orientation: ChartOrientation::Horizontal,
+    })
+}
+
+fn parse_sankey_field(cursor: &mut TokenCursor) -> Result<String, ParseError> {
+    let token = cursor.current().clone();
+    if !matches!(token_name(&token), "STRING" | "BARE_FIELD" | "NUMBER") {
+        return Err(token_error(&token, "expected Sankey CSV field"));
+    }
+
+    let value = cursor.advance().value.trim().replace("\"\"", "\"");
+    if value.is_empty() {
+        return Err(token_error(&token, "Sankey CSV fields cannot be empty"));
+    }
+    Ok(value)
+}
+
+// ── GitGraph parser ───────────────────────────────────────────────────────
+
+/// Parse Mermaid GitGraph syntax into the shared temporal IR.
+///
+/// The grammar and temporal IR preserve Mermaid's complete command surface,
+/// including branch order, commit types, and cherry-pick parent metadata.
+pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
+    parse_mermaid_gitgraph_ast(source)?;
+
+    let mut cursor = TokenCursor::new(tokenize_mermaid_gitgraph(source));
+    cursor.skip_terminators();
+    cursor
+        .consume_if("HEADER")
+        .ok_or_else(|| token_error(cursor.current(), "expected GitGraph header"))?;
+
+    let direction = cursor
+        .consume_if("DIRECTION")
+        .map(|token| direction_from_token(&token))
+        .transpose()?
+        .unwrap_or(DiagramDirection::Lr);
+    cursor.consume_if("COLON");
+    cursor.skip_terminators();
+
+    let mut branches = vec![GitBranch {
+        name: "main".to_string(),
+        order: None,
+    }];
+    let mut events = Vec::new();
+    let mut current_branch = "main".to_string();
+
+    while !cursor.at_eof() {
+        let command = cursor.current().clone();
+        match command.value.as_str() {
+            "commit" => {
+                cursor.advance();
+                let mut id = None;
+                let mut message = None;
+                let mut tag = None;
+                let mut type_ = GitCommitType::Normal;
+                while !gitgraph_statement_ended(&cursor) {
+                    match token_name(cursor.current()) {
+                        "ID_ATTR" => {
+                            cursor.advance();
+                            id = Some(parse_gitgraph_string(&mut cursor, "commit id")?);
+                        }
+                        "MSG_ATTR" => {
+                            cursor.advance();
+                            message = Some(parse_gitgraph_string(&mut cursor, "commit message")?);
+                        }
+                        "TAG_ATTR" => {
+                            cursor.advance();
+                            tag = Some(parse_gitgraph_string(&mut cursor, "commit tag")?);
+                        }
+                        "TYPE_ATTR" => {
+                            cursor.advance();
+                            type_ = parse_gitgraph_commit_type(&mut cursor)?;
+                        }
+                        "STRING" => {
+                            message = Some(cursor.advance().value.clone());
+                        }
+                        _ => return Err(token_error(cursor.current(), "invalid commit attribute")),
+                    }
+                }
+                events.push(GitEvent::Commit {
+                    id,
+                    message,
+                    tag,
+                    branch: current_branch.clone(),
+                    type_,
+                });
+            }
+            "branch" => {
+                cursor.advance();
+                let branch = parse_gitgraph_reference(&mut cursor)?;
+                let mut order = None;
+                if cursor.consume_if("ORDER_ATTR").is_some() {
+                    let token = expect_gitgraph_token(&mut cursor, "INT", "branch order")?;
+                    order = Some(token.value.parse::<i64>().map_err(|_| {
+                        token_error(&token, format!("invalid branch order {:?}", token.value))
+                    })?);
+                }
+                if !branches.iter().any(|candidate| candidate.name == branch) {
+                    branches.push(GitBranch {
+                        name: branch,
+                        order,
+                    });
+                }
+            }
+            "checkout" | "switch" => {
+                cursor.advance();
+                let branch = parse_gitgraph_reference(&mut cursor)?;
+                if !branches.iter().any(|candidate| candidate.name == branch) {
+                    return Err(token_error(
+                        &command,
+                        format!("cannot checkout unknown GitGraph branch {branch:?}"),
+                    ));
+                }
+                current_branch = branch.clone();
+                events.push(GitEvent::Checkout { branch });
+            }
+            "merge" => {
+                cursor.advance();
+                let from = parse_gitgraph_reference(&mut cursor)?;
+                let mut id = None;
+                let mut tag = None;
+                let mut type_ = GitCommitType::Normal;
+                while !gitgraph_statement_ended(&cursor) {
+                    match token_name(cursor.current()) {
+                        "ID_ATTR" => {
+                            cursor.advance();
+                            id = Some(parse_gitgraph_string(&mut cursor, "merge id")?);
+                        }
+                        "TAG_ATTR" => {
+                            cursor.advance();
+                            tag = Some(parse_gitgraph_string(&mut cursor, "merge tag")?);
+                        }
+                        "TYPE_ATTR" => {
+                            cursor.advance();
+                            type_ = parse_gitgraph_commit_type(&mut cursor)?;
+                        }
+                        _ => return Err(token_error(cursor.current(), "invalid merge attribute")),
+                    }
+                }
+                events.push(GitEvent::Merge {
+                    from,
+                    id,
+                    tag,
+                    type_,
+                });
+            }
+            "cherry-pick" => {
+                cursor.advance();
+                let mut id = None;
+                let mut tag = None;
+                let mut parent = None;
+                while !gitgraph_statement_ended(&cursor) {
+                    match token_name(cursor.current()) {
+                        "ID_ATTR" => {
+                            cursor.advance();
+                            id = Some(parse_gitgraph_string(&mut cursor, "cherry-pick id")?);
+                        }
+                        "TAG_ATTR" => {
+                            cursor.advance();
+                            tag = Some(parse_gitgraph_string(&mut cursor, "cherry-pick tag")?);
+                        }
+                        "PARENT_ATTR" => {
+                            cursor.advance();
+                            parent =
+                                Some(parse_gitgraph_string(&mut cursor, "cherry-pick parent")?);
+                        }
+                        _ => {
+                            return Err(token_error(
+                                cursor.current(),
+                                "invalid cherry-pick attribute",
+                            ));
+                        }
+                    }
+                }
+                let id = id.ok_or_else(|| {
+                    token_error(&command, "GitGraph cherry-pick requires an id attribute")
+                })?;
+                events.push(GitEvent::CherryPick {
+                    id,
+                    tag,
+                    parent,
+                    branch: current_branch.clone(),
+                });
+            }
+            _ => {
+                return Err(token_error(
+                    &command,
+                    format!("unsupported GitGraph command {:?}", command.value),
+                ));
+            }
+        }
+        cursor.skip_terminators();
+    }
+
+    Ok(GitDiagram {
+        direction,
+        branches,
+        events,
+    })
+}
+
+fn gitgraph_statement_ended(cursor: &TokenCursor) -> bool {
+    cursor.at_eof() || token_name(cursor.current()) == "NEWLINE"
+}
+
+fn parse_gitgraph_reference(cursor: &mut TokenCursor) -> Result<String, ParseError> {
+    let token = cursor.current().clone();
+    if !matches!(token_name(&token), "REFERENCE" | "STRING") {
+        return Err(token_error(&token, "expected GitGraph reference"));
+    }
+    Ok(cursor.advance().value.clone())
+}
+
+fn parse_gitgraph_string(
+    cursor: &mut TokenCursor,
+    description: &str,
+) -> Result<String, ParseError> {
+    Ok(expect_gitgraph_token(cursor, "STRING", description)?.value)
+}
+
+fn parse_gitgraph_commit_type(cursor: &mut TokenCursor) -> Result<GitCommitType, ParseError> {
+    let token = expect_gitgraph_token(cursor, "COMMIT_TYPE", "commit type")?;
+    match token.value.as_str() {
+        "NORMAL" => Ok(GitCommitType::Normal),
+        "REVERSE" => Ok(GitCommitType::Reverse),
+        "HIGHLIGHT" => Ok(GitCommitType::Highlight),
+        _ => Err(token_error(
+            &token,
+            format!("invalid GitGraph commit type {:?}", token.value),
+        )),
+    }
+}
+
+fn expect_gitgraph_token(
+    cursor: &mut TokenCursor,
+    name: &str,
+    description: &str,
+) -> Result<Token, ParseError> {
+    cursor
+        .consume_if(name)
+        .ok_or_else(|| token_error(cursor.current(), format!("expected GitGraph {description}")))
+}
+
+// ── Entity-relationship parser ───────────────────────────────────────────
+
+/// Parse Mermaid ER syntax into the shared structural IR.
+pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
+    parse_mermaid_er_ast(source)?;
+
+    let mut cursor = TokenCursor::new(tokenize_mermaid_er(source));
+    cursor.skip_terminators();
+    cursor
+        .consume_if("HEADER")
+        .ok_or_else(|| token_error(cursor.current(), "expected erDiagram header"))?;
+    cursor.skip_terminators();
+
+    let mut title = None;
+    let mut nodes: Vec<StructuralNode> = Vec::new();
+    let mut node_indices: HashMap<String, usize> = HashMap::new();
+    let mut relationships = Vec::new();
+
+    while !cursor.at_eof() {
+        if cursor.current().type_ == TokenType::Keyword {
+            match cursor.current().value.as_str() {
+                "title" => {
+                    cursor.advance();
+                    title = Some(parse_er_line_text(&mut cursor));
+                }
+                "direction" | "classDef" | "class" | "style" => {
+                    while !cursor.at_eof() && token_name(cursor.current()) != "NEWLINE" {
+                        cursor.advance();
+                    }
+                }
+                _ => return Err(token_error(cursor.current(), "unsupported ER statement")),
+            }
+            cursor.skip_terminators();
+            continue;
+        }
+
+        let entity_id = parse_er_name(&mut cursor)?;
+        let mut entity_label = entity_id.clone();
+        if cursor.consume_if("LBRACKET").is_some() {
+            entity_label = parse_er_name(&mut cursor)?;
+            cursor
+                .consume_if("RBRACKET")
+                .ok_or_else(|| token_error(cursor.current(), "expected ']' after ER alias"))?;
+        }
+        consume_er_class_suffix(&mut cursor)?;
+
+        if is_er_cardinality(cursor.current()) {
+            let from_mult = parse_er_cardinality(&mut cursor)?;
+            let relation_token = cursor.current().clone();
+            if !matches!(
+                token_name(&relation_token),
+                "IDENTIFYING" | "NON_IDENTIFYING"
+            ) {
+                return Err(token_error(&relation_token, "expected ER relationship type"));
+            }
+            cursor.advance();
+            let to_mult = parse_er_cardinality(&mut cursor)?;
+            let target_id = parse_er_name(&mut cursor)?;
+            consume_er_class_suffix(&mut cursor)?;
+            cursor.consume_if("COLON").ok_or_else(|| {
+                token_error(cursor.current(), "expected ':' before ER relationship role")
+            })?;
+            let label = parse_er_line_text(&mut cursor);
+
+            upsert_er_node(
+                &mut nodes,
+                &mut node_indices,
+                entity_id.clone(),
+                entity_label,
+            );
+            upsert_er_node(
+                &mut nodes,
+                &mut node_indices,
+                target_id.clone(),
+                target_id.clone(),
+            );
+            relationships.push(StructuralRelationship {
+                from: entity_id,
+                to: target_id,
+                kind: if token_name(&relation_token) == "IDENTIFYING" {
+                    RelKind::Association
+                } else {
+                    RelKind::Dependency
+                },
+                from_mult: Some(from_mult),
+                to_mult: Some(to_mult),
+                label: (!label.is_empty()).then_some(label),
+            });
+        } else {
+            let mut fields = Vec::new();
+            if cursor.consume_if("LBRACE").is_some() {
+                cursor.skip_terminators();
+                while cursor.consume_if("RBRACE").is_none() {
+                    if cursor.at_eof() {
+                        return Err(token_error(cursor.current(), "unterminated ER attribute block"));
+                    }
+                    let mut attribute_type = parse_er_name(&mut cursor)?;
+                    if cursor.consume_if("LBRACKET").is_some() {
+                        cursor.consume_if("RBRACKET").ok_or_else(|| {
+                            token_error(cursor.current(), "expected ']' in ER attribute type")
+                        })?;
+                        attribute_type.push_str("[]");
+                    }
+                    if cursor.consume_if("QUESTION").is_some() {
+                        attribute_type.push('?');
+                    }
+                    let attribute_name = parse_er_name(&mut cursor)?;
+                    let mut keys = Vec::new();
+                    while token_name(cursor.current()) == "ATTRIBUTE_KEY" {
+                        keys.push(cursor.advance().value.clone());
+                        if cursor.consume_if("COMMA").is_none() {
+                            break;
+                        }
+                    }
+                    let comment = cursor.consume_if("STRING").map(|token| token.value);
+                    let mut field = format!("{attribute_name}: {attribute_type}");
+                    if !keys.is_empty() {
+                        field.push_str(&format!(" [{}]", keys.join(", ")));
+                    }
+                    if let Some(comment) = comment {
+                        field.push_str(&format!(" - {comment}"));
+                    }
+                    fields.push(field);
+                    cursor.skip_terminators();
+                }
+            }
+            let index = upsert_er_node(
+                &mut nodes,
+                &mut node_indices,
+                entity_id,
+                entity_label,
+            );
+            if !fields.is_empty() {
+                nodes[index].compartments.push(Compartment {
+                    kind: CompartmentKind::Fields,
+                    entries: fields,
+                });
+            }
+        }
+        cursor.skip_terminators();
+    }
+
+    Ok(StructuralDiagram {
+        kind: StructuralKind::Er,
+        title,
+        nodes,
+        relationships,
+    })
+}
+
+fn parse_er_name(cursor: &mut TokenCursor) -> Result<String, ParseError> {
+    let token = cursor.current().clone();
+    if !matches!(
+        token_name(&token),
+        "IDENTIFIER" | "NUMBER" | "ATTRIBUTE_KEY" | "MD_PARENT" | "STRING"
+    ) {
+        return Err(token_error(&token, "expected ER name"));
+    }
+    Ok(cursor.advance().value.clone())
+}
+
+fn consume_er_class_suffix(cursor: &mut TokenCursor) -> Result<(), ParseError> {
+    if cursor.consume_if("STYLE_SEPARATOR").is_none() {
+        return Ok(());
+    }
+    parse_er_name(cursor)?;
+    while cursor.consume_if("COMMA").is_some() {
+        parse_er_name(cursor)?;
+    }
+    Ok(())
+}
+
+fn is_er_cardinality(token: &Token) -> bool {
+    matches!(
+        token_name(token),
+        "ZERO_OR_ONE" | "ZERO_OR_MORE" | "ONE_OR_MORE" | "ONLY_ONE" | "MD_PARENT"
+    )
+}
+
+fn parse_er_cardinality(cursor: &mut TokenCursor) -> Result<String, ParseError> {
+    let token = cursor.current().clone();
+    let normalized = match token_name(&token) {
+        "ZERO_OR_ONE" => "0..1",
+        "ZERO_OR_MORE" => "0..*",
+        "ONE_OR_MORE" => "1..*",
+        "ONLY_ONE" => "1",
+        "MD_PARENT" => "parent",
+        _ => return Err(token_error(&token, "expected ER cardinality")),
+    };
+    cursor.advance();
+    Ok(normalized.to_string())
+}
+
+fn parse_er_line_text(cursor: &mut TokenCursor) -> String {
+    let mut words = Vec::new();
+    while !cursor.at_eof() && token_name(cursor.current()) != "NEWLINE" {
+        words.push(cursor.advance().value.clone());
+    }
+    words.join(" ")
+}
+
+fn upsert_er_node(
+    nodes: &mut Vec<StructuralNode>,
+    indices: &mut HashMap<String, usize>,
+    id: String,
+    label: String,
+) -> usize {
+    if let Some(index) = indices.get(&id).copied() {
+        if label != id {
+            nodes[index].label = label;
+        }
+        return index;
+    }
+    let index = nodes.len();
+    indices.insert(id.clone(), index);
+    nodes.push(StructuralNode {
+        id,
+        label,
+        stereotype: Some("entity".to_string()),
+        node_kind: StructuralNodeKind::Entity,
+        compartments: Vec::new(),
+    });
+    index
 }
 
 // ── gantt parser ──────────────────────────────────────────────────────────
@@ -647,9 +1604,13 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
     let mut past_header = false;
     for line in source.lines() {
         let t = line.trim();
-        if t.is_empty() || t.starts_with("%%") { continue; }
+        if t.is_empty() || t.starts_with("%%") {
+            continue;
+        }
         if !past_header {
-            if t == "gantt" { past_header = true; }
+            if t == "gantt" {
+                past_header = true;
+            }
             continue;
         }
         if t.starts_with("title") {
@@ -658,7 +1619,9 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
         } else if t.starts_with("dateFormat") {
             date_format = t[10..].trim().to_string();
         } else if t.starts_with("section") {
-            if let Some(sec) = current_section.take() { sections.push(sec); }
+            if let Some(sec) = current_section.take() {
+                sections.push(sec);
+            }
             current_section = Some(GanttSection {
                 label: Some(t[7..].trim().to_string()),
                 tasks: vec![],
@@ -666,15 +1629,21 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
         } else if t.contains(':') {
             if let Some(task) = parse_gantt_task(t) {
                 let sec = current_section.get_or_insert_with(|| GanttSection {
-                    label: None, tasks: vec![],
+                    label: None,
+                    tasks: vec![],
                 });
                 sec.tasks.push(task);
             }
         }
     }
-    if let Some(sec) = current_section { sections.push(sec); }
+    if let Some(sec) = current_section {
+        sections.push(sec);
+    }
 
-    Ok(GanttDiagram { date_format, sections })
+    Ok(GanttDiagram {
+        date_format,
+        sections,
+    })
 }
 
 /// Parse a single Gantt task line.
@@ -684,10 +1653,12 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
 fn parse_gantt_task(line: &str) -> Option<GanttTask> {
     let colon = line.find(':')?;
     let label = line[..colon].trim().to_string();
-    let rest  = line[colon+1..].trim();
+    let rest = line[colon + 1..].trim();
 
     let parts: Vec<&str> = rest.splitn(4, ',').map(str::trim).collect();
-    if parts.is_empty() { return None; }
+    if parts.is_empty() {
+        return None;
+    }
 
     // Detect status keywords in the first part.
     let status_keywords = ["done", "active", "crit", "milestone"];
@@ -698,8 +1669,10 @@ fn parse_gantt_task(line: &str) -> Option<GanttTask> {
         (TaskStatus::Normal, &parts[..])
     };
 
-    if remaining.is_empty() { return None; }
-    let id    = remaining[0].to_string();
+    if remaining.is_empty() {
+        return None;
+    }
+    let id = remaining[0].to_string();
     let start = if remaining.len() > 1 {
         let s = remaining[1];
         if s.starts_with("after ") {
@@ -712,18 +1685,27 @@ fn parse_gantt_task(line: &str) -> Option<GanttTask> {
     };
     let duration_days = if remaining.len() > 2 {
         parse_duration(remaining[2]).unwrap_or(1.0)
-    } else { 1.0 };
+    } else {
+        1.0
+    };
 
-    Some(GanttTask { id, label, start, duration_days, status, dependencies: vec![] })
+    Some(GanttTask {
+        id,
+        label,
+        start,
+        duration_days,
+        status,
+        dependencies: vec![],
+    })
 }
 
 fn parse_task_status(s: &str) -> TaskStatus {
     match s {
-        "done"      => TaskStatus::Done,
-        "active"    => TaskStatus::Active,
-        "crit"      => TaskStatus::Crit,
+        "done" => TaskStatus::Done,
+        "active" => TaskStatus::Active,
+        "crit" => TaskStatus::Crit,
         "milestone" => TaskStatus::Milestone,
-        _           => TaskStatus::Normal,
+        _ => TaskStatus::Normal,
     }
 }
 
@@ -745,7 +1727,6 @@ fn parse_duration(s: &str) -> Option<f64> {
 #[cfg(test)]
 mod tests_dg04 {
     use super::*;
-    
 
     const CLASS_SRC: &str = "classDiagram
   class Animal { +name: String; +speak() void }
@@ -765,6 +1746,32 @@ mod tests_dg04 {
   section Phase 1
     Design :done, t1, 2026-01-01, 5d
     Build :t2, after t1, 3d";
+
+    const PIE_SRC: &str = "pie showData
+  \"Dogs\" : 60
+  \"Cats\" : 40";
+
+    const SANKEY_SRC: &str = "sankey
+Grid,\"Heating, homes\",113.726
+Grid,Losses,56";
+
+    const GITGRAPH_SRC: &str = "gitGraph LR:
+commit id: \"root\" msg: \"Initial commit\"
+branch develop order: 1
+checkout develop
+commit id: \"feature\" tag: \"v1\"
+checkout main
+merge develop id: \"merge-1\"";
+
+    const ER_SRC: &str = "erDiagram
+CUSTOMER ||--o{ ORDER : places
+CUSTOMER {
+string name PK \"display name\"
+string email UK
+}
+ORDER[Purchase] {
+int id PK
+}";
 
     #[test]
     fn class_diagram_parses_nodes() {
@@ -837,10 +1844,78 @@ mod tests_dg04 {
     }
 
     #[test]
+    fn pie_parses_slices() {
+        let d = parse_pie(PIE_SRC).unwrap();
+        assert_eq!(d.kind, ChartKind::Pie);
+        assert_eq!(d.slices.len(), 2);
+        assert_eq!(d.slices[0].label, "Dogs");
+        assert_eq!(d.slices[0].value, 60.0);
+    }
+
+    #[test]
+    fn sankey_parses_csv_flows_and_nodes() {
+        let d = parse_sankey(SANKEY_SRC).unwrap();
+        assert_eq!(d.kind, ChartKind::Sankey);
+        assert_eq!(d.flows.len(), 2);
+        assert_eq!(d.sankey_nodes.len(), 3);
+        assert_eq!(d.flows[0].target, "Heating, homes");
+        assert_eq!(d.flows[0].weight, 113.726);
+    }
+
+    #[test]
+    fn gitgraph_parses_branch_history() {
+        let d = parse_gitgraph(GITGRAPH_SRC).unwrap();
+        assert_eq!(d.direction, DiagramDirection::Lr);
+        assert_eq!(d.branches.len(), 2);
+        assert_eq!(d.events.len(), 5);
+        assert!(matches!(
+            &d.events[1],
+            GitEvent::Checkout { branch } if branch == "develop"
+        ));
+        assert!(matches!(
+            &d.events[4],
+            GitEvent::Merge { from, id, .. }
+                if from == "develop" && id.as_deref() == Some("merge-1")
+        ));
+    }
+
+    #[test]
+    fn gitgraph_parses_cherry_pick_metadata() {
+        let d = parse_gitgraph(
+            "gitGraph\ncommit id: \"abc123\"\ncherry-pick id: \"abc123\" parent: \"root\"",
+        )
+        .unwrap();
+        assert!(matches!(
+            &d.events[1],
+            GitEvent::CherryPick { id, parent, branch, .. }
+                if id == "abc123"
+                    && parent.as_deref() == Some("root")
+                    && branch == "main"
+        ));
+    }
+
+    #[test]
+    fn er_parses_entities_attributes_and_cardinalities() {
+        let d = parse_er_diagram(ER_SRC).unwrap();
+        assert_eq!(d.kind, StructuralKind::Er);
+        assert_eq!(
+            d.nodes.iter().map(|node| node.id.as_str()).collect::<Vec<_>>(),
+            vec!["CUSTOMER", "ORDER"]
+        );
+        assert_eq!(d.relationships.len(), 1);
+        assert_eq!(d.relationships[0].from_mult.as_deref(), Some("1"));
+        assert_eq!(d.relationships[0].to_mult.as_deref(), Some("0..*"));
+        let customer = d.nodes.iter().find(|node| node.id == "CUSTOMER").unwrap();
+        assert_eq!(customer.compartments[0].entries.len(), 2);
+        let order = d.nodes.iter().find(|node| node.id == "ORDER").unwrap();
+        assert_eq!(order.label, "Purchase");
+    }
+
+    #[test]
     fn dispatch_flowchart() {
         let src = "flowchart LR\n  A --> B";
         match parse_any_mermaid(src).unwrap() {
-            MermaidDiagram::Graph(_) => {},
+            MermaidDiagram::Graph(_) => {}
             _ => panic!("expected Graph"),
         }
     }
@@ -849,7 +1924,7 @@ mod tests_dg04 {
     fn dispatch_class_diagram() {
         let src = "classDiagram\n  class Foo";
         match parse_any_mermaid(src).unwrap() {
-            MermaidDiagram::Structural(_) => {},
+            MermaidDiagram::Structural(_) => {}
             _ => panic!("expected Structural"),
         }
     }
@@ -858,7 +1933,7 @@ mod tests_dg04 {
     fn dispatch_xychart() {
         let src = "xychart-beta\n  bar [1,2,3]";
         match parse_any_mermaid(src).unwrap() {
-            MermaidDiagram::Chart(_) => {},
+            MermaidDiagram::Chart(_) => {}
             _ => panic!("expected Chart"),
         }
     }
@@ -867,8 +1942,40 @@ mod tests_dg04 {
     fn dispatch_gantt() {
         let src = "gantt\n  dateFormat YYYY-MM-DD";
         match parse_any_mermaid(src).unwrap() {
-            MermaidDiagram::Temporal(_) => {},
+            MermaidDiagram::Temporal(_) => {}
             _ => panic!("expected Temporal"),
+        }
+    }
+
+    #[test]
+    fn dispatch_pie() {
+        match parse_any_mermaid(PIE_SRC).unwrap() {
+            MermaidDiagram::Chart(chart) => assert_eq!(chart.kind, ChartKind::Pie),
+            _ => panic!("expected Chart"),
+        }
+    }
+
+    #[test]
+    fn dispatch_sankey() {
+        match parse_any_mermaid(SANKEY_SRC).unwrap() {
+            MermaidDiagram::Chart(chart) => assert_eq!(chart.kind, ChartKind::Sankey),
+            _ => panic!("expected Chart"),
+        }
+    }
+
+    #[test]
+    fn dispatch_gitgraph() {
+        match parse_any_mermaid(GITGRAPH_SRC).unwrap() {
+            MermaidDiagram::Temporal(diagram) => assert_eq!(diagram.kind, TemporalKind::Git),
+            _ => panic!("expected Temporal"),
+        }
+    }
+
+    #[test]
+    fn dispatch_er() {
+        match parse_any_mermaid(ER_SRC).unwrap() {
+            MermaidDiagram::Structural(diagram) => assert_eq!(diagram.kind, StructuralKind::Er),
+            _ => panic!("expected Structural"),
         }
     }
 }
@@ -887,7 +1994,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.2.0");
+        assert_eq!(crate::VERSION, "0.3.0");
     }
 
     #[test]

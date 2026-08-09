@@ -200,13 +200,18 @@ pub struct GanttSection { pub label: Option<String>, pub tasks: Vec<GanttTask> }
 pub struct GanttDiagram { pub date_format: String, pub sections: Vec<GanttSection> }
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct GitBranch { pub name: String }
+pub struct GitBranch { pub name: String, pub order: Option<i64> }
+
+#[derive(Clone, Debug, PartialEq, Default)]
+pub enum GitCommitType { #[default]
+Normal, Reverse, Highlight }
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum GitEvent {
-    Commit { id: Option<String>, message: Option<String>, tag: Option<String>, branch: String },
+    Commit { id: Option<String>, message: Option<String>, tag: Option<String>, branch: String, type_: GitCommitType },
     Checkout { branch: String },
-    Merge { from: String, id: Option<String>, tag: Option<String> },
+    Merge { from: String, id: Option<String>, tag: Option<String>, type_: GitCommitType },
+    CherryPick { id: String, tag: Option<String>, parent: Option<String>, branch: String },
 }
 
 #[derive(Clone, Debug, PartialEq)]

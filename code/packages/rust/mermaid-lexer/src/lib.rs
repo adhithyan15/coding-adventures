@@ -1,17 +1,43 @@
-//! Grammar-driven lexer for a focused Mermaid flowchart subset.
+//! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::Token;
 
 const TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/mermaid.tokens");
+const PIE_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/pie.tokens");
+const SANKEY_TOKEN_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/sankey.tokens");
+const GITGRAPH_TOKEN_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/gitgraph.tokens");
+const ER_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/er.tokens");
+
+fn create_lexer<'a>(source: &'a str, grammar_source: &str, grammar_name: &str) -> GrammarLexer<'a> {
+    let grammar = parse_token_grammar(grammar_source)
+        .unwrap_or_else(|e| panic!("Failed to parse {grammar_name}: {e}"));
+    GrammarLexer::new(source, &grammar)
+}
 
 pub fn create_mermaid_lexer(source: &str) -> GrammarLexer<'_> {
-    let grammar = parse_token_grammar(TOKEN_GRAMMAR_SOURCE)
-        .unwrap_or_else(|e| panic!("Failed to parse mermaid.tokens: {e}"));
-    GrammarLexer::new(source, &grammar)
+    create_lexer(source, TOKEN_GRAMMAR_SOURCE, "mermaid.tokens")
+}
+
+pub fn create_mermaid_pie_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, PIE_TOKEN_GRAMMAR_SOURCE, "pie.tokens")
+}
+
+pub fn create_mermaid_sankey_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, SANKEY_TOKEN_GRAMMAR_SOURCE, "sankey.tokens")
+}
+
+pub fn create_mermaid_gitgraph_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, GITGRAPH_TOKEN_GRAMMAR_SOURCE, "gitgraph.tokens")
+}
+
+pub fn create_mermaid_er_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, ER_TOKEN_GRAMMAR_SOURCE, "er.tokens")
 }
 
 pub fn tokenize_mermaid(source: &str) -> Vec<Token> {
@@ -19,6 +45,34 @@ pub fn tokenize_mermaid(source: &str) -> Vec<Token> {
     lexer
         .tokenize()
         .unwrap_or_else(|e| panic!("Mermaid tokenization failed: {e}"))
+}
+
+pub fn tokenize_mermaid_pie(source: &str) -> Vec<Token> {
+    let mut lexer = create_mermaid_pie_lexer(source);
+    lexer
+        .tokenize()
+        .unwrap_or_else(|e| panic!("Mermaid pie tokenization failed: {e}"))
+}
+
+pub fn tokenize_mermaid_sankey(source: &str) -> Vec<Token> {
+    let mut lexer = create_mermaid_sankey_lexer(source);
+    lexer
+        .tokenize()
+        .unwrap_or_else(|e| panic!("Mermaid Sankey tokenization failed: {e}"))
+}
+
+pub fn tokenize_mermaid_gitgraph(source: &str) -> Vec<Token> {
+    let mut lexer = create_mermaid_gitgraph_lexer(source);
+    lexer
+        .tokenize()
+        .unwrap_or_else(|e| panic!("Mermaid GitGraph tokenization failed: {e}"))
+}
+
+pub fn tokenize_mermaid_er(source: &str) -> Vec<Token> {
+    let mut lexer = create_mermaid_er_lexer(source);
+    lexer
+        .tokenize()
+        .unwrap_or_else(|e| panic!("Mermaid ER tokenization failed: {e}"))
 }
 
 #[cfg(test)]
@@ -32,7 +86,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.1.0");
+        assert_eq!(VERSION, "0.2.0");
     }
 
     #[test]
@@ -95,5 +149,88 @@ mod tests {
         assert!(custom_tokens.contains(&("RECT", "[Rect]")));
         assert!(custom_tokens.contains(&("DIAMOND", "{Decision}")));
         assert_eq!(semicolon_count, 3);
+    }
+
+    #[test]
+    fn tokenizes_pie_sections() {
+        let tokens = tokenize_mermaid_pie("pie showData\n\"Dogs\" : 60\n\"Cats\" : 40.5\n");
+        let values: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_ != TokenType::Eof)
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(
+            values,
+            vec!["pie", "showData", "\\n", "Dogs", ":", "60", "\\n", "Cats", ":", "40.5", "\\n"]
+        );
+    }
+
+    #[test]
+    fn tokenizes_sankey_csv_rows() {
+        let tokens = tokenize_mermaid_sankey(
+            "sankey-beta\nGrid,\"Heating, homes\",113.726\nGrid,Losses,56\n",
+        );
+        let values: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_ != TokenType::Eof)
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(
+            values,
+            vec![
+                "sankey-beta",
+                "\\n",
+                "Grid",
+                ",",
+                "Heating, homes",
+                ",",
+                "113.726",
+                "\\n",
+                "Grid",
+                ",",
+                "Losses",
+                ",",
+                "56",
+                "\\n"
+            ]
+        );
+    }
+
+    #[test]
+    fn tokenizes_gitgraph_commands_and_attributes() {
+        let tokens = tokenize_mermaid_gitgraph(
+            "gitGraph LR:\ncommit id: \"c1\" msg: \"Start\"\nbranch develop\ncheckout develop\n",
+        );
+        let values: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_ != TokenType::Eof)
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(values[0], "gitGraph");
+        assert!(values.contains(&"LR"));
+        assert!(values.contains(&"commit"));
+        assert!(values.contains(&"c1"));
+        assert!(values.contains(&"develop"));
+    }
+
+    #[test]
+    fn tokenizes_er_relationships_and_attributes() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCUSTOMER ||--o{ ORDER : places\nCUSTOMER {\nstring name PK\n}\n",
+        );
+        let values: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_ != TokenType::Eof)
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert!(values.contains(&"erDiagram"));
+        assert!(values.contains(&"||"));
+        assert!(values.contains(&"--"));
+        assert!(values.contains(&"o{"));
+        assert!(values.contains(&"PK"));
     }
 }

@@ -1,0 +1,42 @@
+# @version 1
+#
+# Mermaid 11.16.1 entity-relationship token grammar.
+# Derived from packages/mermaid/src/diagrams/er/parser/erDiagram.jison.
+
+skip:
+  WHITESPACE        = /[ \t]+/
+  COMMENT           = /%%[^\r\n]*/
+
+NEWLINE             = /\r?\n/
+HEADER              = "erDiagram"
+STYLE_SEPARATOR     = ":::"
+LBRACE              = "{"
+RBRACE              = "}"
+LBRACKET            = "["
+RBRACKET            = "]"
+COMMA               = ","
+COLON               = ":"
+QUESTION            = "?"
+STRING              = /"([^"\\]|\\.)*"/
+ZERO_OR_ONE         = /\|o|o\||zero[ \t]+or[ \t]+one|one[ \t]+or[ \t]+zero/
+ZERO_OR_MORE        = /o\{|\}o|0\+|many\(0\)|zero[ \t]+or[ \t]+(?:more|many)|many/
+ONE_OR_MORE         = /\|\{|\}\||1\+|many\(1\)|one[ \t]+or[ \t]+(?:more|many)/
+ONLY_ONE            = /\|\||only[ \t]+one|one/
+MD_PARENT           = "u"
+NON_IDENTIFYING     = /\.\.|\.\-|-\.|optionally[ \t]+to/
+IDENTIFYING         = /--|to/
+ATTRIBUTE_KEY       = /PK|FK|UK/
+NUMBER              = /[0-9]+(?:\.[0-9]+)?/
+IDENTIFIER          = /[\p{L}_*][\p{L}\p{N}_.()*~-]*/
+STYLE_VALUE         = /#[0-9A-Fa-f]+|[0-9]+%|;|-/
+
+keywords:
+  direction
+  title
+  classDef
+  class
+  style
+  TB
+  BT
+  LR
+  RL
