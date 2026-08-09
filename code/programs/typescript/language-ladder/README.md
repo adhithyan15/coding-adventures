@@ -165,7 +165,7 @@ in font units, and `ductusview.ts` flips them together with exactly **one**
 `scale(1,-1)` group — so a mistake cannot leave a plausible-looking stroke
 sitting upside down on a correct letter.
 
-**Tamil அ, ஆ, இ, க, and ம have authored pen paths today.** `DUCTUS` admits no letter
+**Tamil அ, ஆ, இ, க, ம, and வ have authored pen paths today.** `DUCTUS` admits no letter
 without a citation for its stroke order, and hand-drawing a letter is forbidden
 outright (a subtly wrong Tamil ண looks perfect to exactly the audience that
 cannot yet read Tamil, so the error would ship *as the lesson*). அ and ஆ exercise
@@ -173,7 +173,8 @@ real two-stroke paths with one lift; ஆ keeps its upright and long-vowel loop i
 the same pen-down run. இ keeps five inner-and-lower movements together, lifts
 once, then joins its outer-left climb to the final arch; ம remains one unbroken
 stroke. க exercises a real three-stroke path: its upper frame and two lower bowls
-are separated by two verified lifts. Every other
+are separated by two verified lifts. வ joins its spiral body, bottom bar, and
+right upright in one five-movement run with no lift. Every other
 letter falls back to the numbered prose list, unchanged. Extending the coverage
 is HL-C09, and it needs a cited source per letter.
 

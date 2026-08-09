@@ -28,6 +28,12 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
   bowls form three pen-down runs with exactly two lifts, matching the Frame 3
   source and Language Ladder's font-checked path.
 
+### Added - verified Tamil வ handwriting
+
+- Record the cited five-movement order for Tamil வ: its spiral body, bottom bar,
+  and right upright form one unbroken pen-down run with zero lifts, matching the
+  Frame 9 source and Language Ladder's font-checked path.
+
 ### Added - generated lesson figures
 
 - Generate deterministic etymology-route SVGs from the canonical lesson `roots`
