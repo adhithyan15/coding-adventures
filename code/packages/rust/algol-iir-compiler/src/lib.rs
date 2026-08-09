@@ -1993,13 +1993,16 @@ impl Compiler {
         {
             // Name arrays already travel through the ordinary typed descriptor
             // ABI, so a recursive call can re-enter the sibling currently being
-            // compiled. Scalar names instead carry caller expressions and need
-            // a true runtime thunk before recursion is sound.
-            if !has_scalar_name_formal {
+            // compiled. Scalar names carry caller expressions, so only
+            // unchanged forwarding can safely reuse the existing bindings;
+            // other recursive scalar actuals need a true runtime thunk.
+            if !has_scalar_name_formal
+                || self.recursive_scalar_actuals_forward_their_formals(sig, actuals)
+            {
                 return Ok(specialised_name);
             }
             return Err(CompileError::Unsupported(format!(
-                "recursive call-by-name procedure {source_name:?}"
+                "recursive call-by-name procedure {source_name:?} must forward every scalar name formal unchanged"
             )));
         }
 
@@ -2048,6 +2051,28 @@ impl Compiler {
         })();
         self.compiling_by_name_procedures.remove(source_name);
         result
+    }
+
+    /// A recursive direct sibling may reuse its existing scalar name bindings
+    /// only when the recursive call forwards each formal under the same source
+    /// name. That preserves the original caller expression and write target;
+    /// a changed actual such as `f(x - 1)` still needs a dynamic thunk frame.
+    fn recursive_scalar_actuals_forward_their_formals(
+        &self,
+        sig: &ProcSig,
+        actuals: &[&GrammarASTNode],
+    ) -> bool {
+        sig.params.iter().zip(actuals).all(|(param, actual)| {
+            if param.mode != ProcedureParamMode::Name
+                || !matches!(param.ty, ProcedureParamType::Scalar(_))
+            {
+                return true;
+            }
+            let Some(actual_name) = expr_variable_name(actual) else {
+                return false;
+            };
+            actual_name == param.name && self.active_by_name_binding(&actual_name).is_some()
+        })
     }
 
     /// Freeze one name actual in its caller's lexical environment before a
@@ -7480,6 +7505,43 @@ mod tests {
                     .any(|function| function.name.starts_with("__algol_by_name_odd_")),
             "each member of a mutually recursive name-array group needs a sibling"
         );
+    }
+
+    #[test]
+    fn call_by_name_scalar_formals_support_recursive_forwarding() {
+        let src = "begin integer x, result; \
+                   integer procedure count(n, x); value n; integer n, x; \
+                     if n = 0 then count := x \
+                     else begin x := x + 7; count := count(n - 1, x) end; \
+                   x := 21; result := count(3, x) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "call_by_name_scalar_recursion").expect("compiles");
+        let count = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("__algol_by_name_count_"))
+            .expect("a recursive name scalar must lower to a specialised sibling");
+        assert!(
+            count.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first() == Some(&Operand::Var(count.name.clone()))
+            }),
+            "an unchanged scalar name formal must re-enter the current sibling"
+        );
+    }
+
+    #[test]
+    fn call_by_name_scalar_formals_support_mutual_recursive_forwarding() {
+        let src = "begin integer x, result; \
+                   integer procedure even(n, x); value n; integer n, x; \
+                     if n = 0 then even := x \
+                     else begin x := x + 7; even := odd(n - 1, x) end; \
+                   integer procedure odd(n, x); value n; integer n, x; \
+                     if n = 0 then odd := x \
+                     else begin x := x + 7; odd := even(n - 1, x) end; \
+                   x := 21; result := even(3, x) end";
+        assert_eq!(run_i64(src), 42);
     }
 
     #[test]

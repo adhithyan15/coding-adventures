@@ -1540,6 +1540,25 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(60),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — recursive scalar name forwarding. A recursive call that
+    // forwards every scalar name formal under its original spelling may reuse
+    // the existing specialised sibling, keeping the original caller binding.
+    // The odd/even pair each writes through `x`; three increments take x from
+    // 21 to 42 before its base case reads the same caller storage.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer x, result; \
+                  integer procedure even(n, x); value n; integer n, x; \
+                    if n = 0 then even := x \
+                    else begin x := x + 7; even := odd(n - 1, x) end; \
+                  integer procedure odd(n, x); value n; integer n, x; \
+                    if n = 0 then odd := x \
+                    else begin x := x + 7; odd := even(n - 1, x) end; \
+                  x := 21; result := even(3, x) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — direct and forwarded string name formals. The nested
     // `consume` formal shares the outer spelling, so the specialised sibling
     // must retain the original caller string binding through its generated
@@ -6415,6 +6434,37 @@ fn algol_recursive_name_array_formals_run_on_every_available_standard_backend() 
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but recursive name-array execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_recursive_scalar_name_forwarding_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure even(n, x)")
+                && program.src.contains("integer procedure odd(n, x)")
+                && program.src.contains("x := 21; result := even(3, x)")
+        })
+        .expect("the recursive scalar name-forwarding program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but recursive scalar name forwarding did not complete"
             );
             continue;
         };
