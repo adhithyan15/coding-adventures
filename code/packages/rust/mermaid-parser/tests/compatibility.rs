@@ -57,9 +57,9 @@ Alice->>Bob: Hello
 
 #[test]
 fn recognized_but_unimplemented_family_is_not_reported_as_unknown() {
-    let error = parse_any_mermaid("sequenceDiagram\nAlice->>Bob: Hello")
+    let error = parse_any_mermaid("stateDiagram-v2\n[*] --> Ready")
         .err()
-        .expect("sequence support is not implemented yet");
+        .expect("state support is not implemented yet");
     assert!(error.message.contains("recognized but not implemented"));
     assert!(error.message.contains(MERMAID_COMPATIBILITY_BASELINE));
 }

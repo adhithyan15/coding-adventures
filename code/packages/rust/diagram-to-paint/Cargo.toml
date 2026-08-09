@@ -1,6 +1,6 @@
 [package]
 name = "diagram-to-paint"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = "Lowers a LayoutedGraphDiagram (DG00) into a PaintScene (P2D00) for rendering by paint-metal and other backends"
 
@@ -21,5 +21,6 @@ text-native-coretext = { path = "../text-native-coretext" }
 layout-ir = { path = "../layout-ir" }
 diagram-layout-chart = { path = "../diagram-layout-chart" }
 diagram-layout-structural = { path = "../diagram-layout-structural" }
+diagram-layout-sequence = { path = "../diagram-layout-sequence" }
 diagram-layout-temporal = { path = "../diagram-layout-temporal" }
 diagram-layout-geometric = { path = "../diagram-layout-geometric" }

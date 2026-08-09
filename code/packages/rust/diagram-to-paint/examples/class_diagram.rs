@@ -22,19 +22,28 @@ fn main() {
   Shape <|-- Circle
   Shape <|-- Rectangle";
 
-    let diagram  = parse_class_diagram(src).expect("class parse failed");
-    let layout   = layout_structural_diagram(&diagram);
-    let shaper   = CoreTextShaper;
-    let metrics  = CoreTextMetrics;
+    let diagram = parse_class_diagram(src).expect("class parse failed");
+    let layout = layout_structural_diagram(&diagram);
+    let shaper = CoreTextShaper;
+    let metrics = CoreTextMetrics;
     let resolver = CoreTextResolver::new();
 
     let scene = diagram_to_paint_structural(
         &layout,
         &DiagramToPaintOptions {
-            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            background: layout_ir::Color {
+                r: 255,
+                g: 255,
+                b: 255,
+                a: 255,
+            },
             device_pixel_ratio: 2.0,
             label_font: font_spec("Helvetica", 12.0),
-            title_font: { let mut f = font_spec("Helvetica", 14.0); f.weight = 700; f },
+            title_font: {
+                let mut f = font_spec("Helvetica", 14.0);
+                f.weight = 700;
+                f
+            },
             shaper: &shaper,
             metrics: &metrics,
             resolver: &resolver,
@@ -44,9 +53,16 @@ fn main() {
     let path = "/tmp/class_diagram.png";
     write_png(&render(&scene), path).expect("PNG write failed");
     println!("Rendered class diagram to {path}");
-    println!("Scene: {}×{} px, {} nodes, {} relationships",
-        scene.width, scene.height, layout.nodes.len(), layout.relationships.len());
+    println!(
+        "Scene: {}×{} px, {} nodes, {} relationships",
+        scene.width,
+        scene.height,
+        layout.nodes.len(),
+        layout.relationships.len()
+    );
 }
 
 #[cfg(not(target_vendor = "apple"))]
-fn main() { panic!("class_diagram example requires an Apple target (paint-metal)"); }
+fn main() {
+    panic!("class_diagram example requires an Apple target (paint-metal)");
+}

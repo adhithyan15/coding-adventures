@@ -1,5 +1,10 @@
 # Changelog — diagram-ir
 
+## 0.4.0
+
+- Added semantic sequence participants, messages, notes, and activation events.
+- Added layouted participant boxes, lifelines, message routes, notes, and activation bars.
+
 ## 0.1.0
 
 Initial release.

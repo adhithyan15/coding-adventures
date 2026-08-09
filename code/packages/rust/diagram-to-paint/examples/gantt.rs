@@ -27,24 +27,33 @@ fn main() {
     layout-chart  :i2, after i1, 5d
     diagram-paint :i3, after i2, 3d";
 
-    let gantt    = parse_gantt(src).expect("gantt parse failed");
+    let gantt = parse_gantt(src).expect("gantt parse failed");
     let temporal = TemporalDiagram {
         kind: TemporalKind::Gantt,
         title: Some("Diagram Pipeline".into()),
         body: TemporalBody::Gantt(gantt),
     };
-    let layout   = layout_temporal_diagram(&temporal, 900.0);
-    let shaper   = CoreTextShaper;
-    let metrics  = CoreTextMetrics;
+    let layout = layout_temporal_diagram(&temporal, 900.0);
+    let shaper = CoreTextShaper;
+    let metrics = CoreTextMetrics;
     let resolver = CoreTextResolver::new();
 
     let scene = diagram_to_paint_temporal(
         &layout,
         &DiagramToPaintOptions {
-            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            background: layout_ir::Color {
+                r: 255,
+                g: 255,
+                b: 255,
+                a: 255,
+            },
             device_pixel_ratio: 2.0,
             label_font: font_spec("Helvetica", 11.0),
-            title_font: { let mut f = font_spec("Helvetica", 13.0); f.weight = 700; f },
+            title_font: {
+                let mut f = font_spec("Helvetica", 13.0);
+                f.weight = 700;
+                f
+            },
             shaper: &shaper,
             metrics: &metrics,
             resolver: &resolver,
@@ -54,8 +63,15 @@ fn main() {
     let path = "/tmp/gantt.png";
     write_png(&render(&scene), path).expect("PNG write failed");
     println!("Rendered Gantt chart to {path}");
-    println!("Scene: {}×{} px, {} items", scene.width, scene.height, layout.items.len());
+    println!(
+        "Scene: {}×{} px, {} items",
+        scene.width,
+        scene.height,
+        layout.items.len()
+    );
 }
 
 #[cfg(not(target_vendor = "apple"))]
-fn main() { panic!("gantt example requires an Apple target (paint-metal)"); }
+fn main() {
+    panic!("gantt example requires an Apple target (paint-metal)");
+}

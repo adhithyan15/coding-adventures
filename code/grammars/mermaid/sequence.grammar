@@ -1,0 +1,17 @@
+# @version 1
+# Mermaid 11.16.1 sequence diagram parser grammar: initial native subset.
+
+document = { NEWLINE } HEADER { NEWLINE | statement } EOF ;
+statement = participant_stmt | message_stmt | activation_stmt | note_stmt | title_stmt | autonumber_stmt ;
+
+participant_stmt = ( "participant" | "actor" ) identifier [ "as" text ] ;
+message_stmt = identifier message_arrow [ PLUS | MINUS ] identifier COLON [ text ] ;
+activation_stmt = ( "activate" | "deactivate" ) identifier ;
+note_stmt = "note" ( ( "left" | "right" ) "of" identifier | "over" actor_pair ) COLON text ;
+title_stmt = "title" text ;
+autonumber_stmt = "autonumber" [ "off" | identifier [ identifier ] ] ;
+
+actor_pair = identifier [ COMMA identifier ] ;
+message_arrow = SOLID_OPEN_ARROW | DOTTED_OPEN_ARROW | SOLID_FILLED_ARROW | DOTTED_FILLED_ARROW | BIDIRECTIONAL_SOLID | BIDIRECTIONAL_DOTTED | SOLID_CROSS_ARROW | DOTTED_CROSS_ARROW | SOLID_POINT_ARROW | DOTTED_POINT_ARROW ;
+identifier = IDENTIFIER | WORD ;
+text = identifier { identifier } ;
