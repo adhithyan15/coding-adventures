@@ -26,13 +26,24 @@ does not require a consent grant. Both commands still require D23 human
 approval, and every persistent change is verified through `/config` readback.
 Normalized state records only whether a country is configured, never the
 country value.
+Credential-free `mqtt://` and `mqtts://` broker routes require an explicit
+port and an exact environmental-telemetry egress grant. Custom HTTP routing
+accepts only a fully qualified DNS name and requires a grant for the matching
+HTTPS origin. AirGradient firmware applies that domain to telemetry, remote
+configuration, and OTA traffic together, so consent covers the coupled route.
+Both controls require D23 human approval before `PUT /config`, verify exact
+`GET /config` readback, and expose only configured/not-configured state.
+Disabling either route is privacy-protective and does not require a consent
+grant.
 Monitors with `configurationControl=cloud` reject local commands explicitly;
 `configurationControl=both` succeeds with a warning that a later cloud update
 may overwrite the local value.
 
-MQTT broker and custom HTTP destination settings remain excluded because they
-can carry credentials or redirect telemetry and therefore require Vault leases
-and destination policy beyond the exact AirGradient vendor-cloud grant.
+Credential-bearing MQTT command values are rejected. The current upstream
+firmware logs parsed MQTT usernames and passwords, so host-side Vault leasing
+cannot prevent a device-side disclosure; authenticated MQTT remains blocked
+until that firmware behavior is removed and one-shot credential injection can
+be proven without normalized-state or request-plan exposure.
 
 ```bash
 cargo run -p smart-home-airgradient-local-integration -- discover ecda3b1eaaaf

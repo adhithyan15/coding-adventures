@@ -6480,6 +6480,8 @@ fn optimistic_snapshot_for_command(command: &DeviceCommand, now_ms: u64) -> Opti
             | DeviceControlCommandType::SetCorrectionProfile
             | DeviceControlCommandType::SetCountry
             | DeviceControlCommandType::SetCloudUpload
+            | DeviceControlCommandType::SetMqttBroker
+            | DeviceControlCommandType::SetHttpDomain
             | DeviceControlCommandType::SetCameraRecording
             | DeviceControlCommandType::RecallCameraPtzPreset
             | DeviceControlCommandType::MoveCameraPtz,

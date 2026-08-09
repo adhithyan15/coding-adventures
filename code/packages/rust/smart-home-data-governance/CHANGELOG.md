@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0
+
+- Add exact credential-free MQTT broker destinations for telemetry start/stop
+  policy, requiring an explicit port and rejecting userinfo, paths, queries,
+  fragments, and unsupported schemes.
+- Redact MQTT broker identities from policy debug output and preserve
+  privacy-protective shutdown semantics.
+
 ## 0.1.0
 
 - Add a bounded, deny-by-default data-governance policy for coarse-location

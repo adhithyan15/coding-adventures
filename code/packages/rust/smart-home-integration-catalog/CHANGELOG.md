@@ -35,6 +35,8 @@
 
 ## Unreleased
 
+- Record AirGradient's exact-consent, readback-verified credential-free MQTT
+  broker and coupled custom HTTPS-domain controls.
 - Add the reusable data-governance primitive family and require it for
   AirGradient country and vendor-cloud upload controls.
 - Upgraded HEOS runtime coverage with D23-authorized local playback, volume,

@@ -7,6 +7,8 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Add human-approved MQTT-broker and custom-HTTP-domain device configuration
+  commands for integrations that enforce exact host-owned egress consent.
 - Add human-approved country and telemetry-upload device configuration commands
   for integrations that enforce a separate host-owned data-governance policy.
 - Add a reusable `camera.ptz` capability plus typed preset-recall and bounded

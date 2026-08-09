@@ -45564,7 +45564,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         base_entry(
             "airgradient",
             "AirGradient",
-            "Local AirGradient telemetry, indicator/display control, calibration, and typed non-credential configuration.",
+            "Local AirGradient telemetry, indicator/display control, calibration, typed configuration, and consent-bound custom egress.",
             IntegrationCategory::EnergyClimate,
             ConnectivityClass::LocalPolling,
             ImplementationStatus::FirstPartyRuntime,
@@ -45594,7 +45594,8 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             "Cloud-only configuration is rejected locally; dual local/cloud control returns an explicit overwrite warning.",
             "Country and vendor-cloud upload controls require human approval; country and upload enablement also require an exact host-owned consent grant before transport I/O.",
             "Typed local settings validate documented ranges and sensor-specific correction algorithms before transport I/O.",
-            "Credential-bearing MQTT and custom HTTP destinations remain blocked on Vault leasing and destination policy.",
+            "Credential-free MQTT and coupled custom HTTPS destinations require exact consent before transport and native readback after mutation; shutdown remains privacy-protective.",
+            "Credential-bearing MQTT remains blocked because current upstream firmware logs parsed credentials; command input rejects userinfo.",
         ]),
         energy_entry(
             "tesla_powerwall",

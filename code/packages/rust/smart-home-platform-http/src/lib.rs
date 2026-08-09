@@ -10306,6 +10306,12 @@ fn command_type_label(command_type: CommandType) -> &'static str {
         CommandType::DeviceControl(DeviceControlCommandType::SetCloudUpload) => {
             "device_set_cloud_upload"
         }
+        CommandType::DeviceControl(DeviceControlCommandType::SetMqttBroker) => {
+            "device_set_mqtt_broker"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetHttpDomain) => {
+            "device_set_http_domain"
+        }
         CommandType::DeviceControl(DeviceControlCommandType::SetCameraRecording) => {
             "camera_set_recording"
         }
@@ -10374,6 +10380,12 @@ fn command_type_from_label(command_type: &str) -> Result<CommandType, ApiError> 
         )),
         "device_set_cloud_upload" => Ok(CommandType::DeviceControl(
             DeviceControlCommandType::SetCloudUpload,
+        )),
+        "device_set_mqtt_broker" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetMqttBroker,
+        )),
+        "device_set_http_domain" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetHttpDomain,
         )),
         "camera_set_recording" => Ok(CommandType::DeviceControl(
             DeviceControlCommandType::SetCameraRecording,
@@ -13913,6 +13925,14 @@ mod tests {
             (
                 "device_set_cloud_upload",
                 DeviceControlCommandType::SetCloudUpload,
+            ),
+            (
+                "device_set_mqtt_broker",
+                DeviceControlCommandType::SetMqttBroker,
+            ),
+            (
+                "device_set_http_domain",
+                DeviceControlCommandType::SetHttpDomain,
             ),
             (
                 "camera_set_recording",
