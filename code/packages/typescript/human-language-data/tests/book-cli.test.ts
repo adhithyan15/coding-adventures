@@ -33,6 +33,16 @@ function fixture(output = "test/book/chapters/ch01-first.tex"): string {
     })}\n`,
   );
   writeFileSync(
+    join(root, "core", "chapter-policy.json"),
+    `${JSON.stringify({
+      version: 1,
+      payoffRepresentativeness: 0.5,
+      maxNewAtomsPerLesson: 3,
+      maxNewAtomsPerChapter: 12,
+      maxLinearisableTableColumns: 3,
+    })}\n`,
+  );
+  writeFileSync(
     join(root, "test", "chapters.json"),
     `${JSON.stringify({
       version: 1,
@@ -97,8 +107,13 @@ describe("canonical book generator filesystem shell", () => {
     expect(runBookGeneration(["--write"], root)).toBe(0);
     const chapter = join(root, "test", "book", "chapters", "ch01-first.tex");
     const manifest = join(root, "core", "generated-book-hashes.json");
+    const modalities = join(root, "test", "book", "chapter-modalities.tex");
     expect(existsSync(chapter)).toBe(true);
+    expect(existsSync(modalities)).toBe(true);
     expect(readFileSync(manifest, "utf8")).toContain('"algorithm": "fnv1a64"');
+    expect(readFileSync(modalities, "utf8")).toContain(
+      "\\textbf{Hands-free start:} all 1 lesson.",
+    );
     // sourceBaseUrl no longer feeds the book: a repository-relative link keeps
     // its label and loses its destination, while a real citation stays a link.
     const generated = readFileSync(chapter, "utf8");

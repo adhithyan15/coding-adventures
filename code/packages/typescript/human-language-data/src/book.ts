@@ -7,6 +7,7 @@ import type {
   CompiledLessonActivity,
 } from "./types.js";
 import type { ParsedLesson } from "./parse.js";
+import type { ChapterModality } from "./modality.js";
 
 export interface BookGenerationTarget {
   language: string;
@@ -20,6 +21,104 @@ export interface BookGenerationTarget {
   scriptCommand?: string;
   /** Multiple script/font mappings for lessons that compare writing systems inline. */
   inlineScripts?: InlineRenderOptions[];
+}
+
+const BOOK_MODALITY_SIGNS: Readonly<Record<"voice" | "sight" | "pen", string>> = {
+  voice: "\\hlvoicesign{}",
+  sight: "\\hlsightsign{}",
+  pen: "\\hlpensign{}",
+};
+
+/**
+ * Render one track's chapter-modality projection.
+ *
+ * The file is loaded once, immediately after `\\mainmatter`, and every numbered
+ * chapter calls `\\hlchaptermodality` immediately after its title and label. Generated
+ * chapters receive that call from this renderer; protected handwritten chapters keep
+ * the same one-line projection marker beside their authored opening. This avoids
+ * patching LaTeX's heavily wrapped `\\chapter` command or moving learner content.
+ * The tiny signs are TikZ paths instead of Unicode emoji: all 22 preambles already load
+ * tcolorbox/TikZ, while the repository deliberately carries no emoji font and the book
+ * warning gate treats missing glyphs as a regression. The adjacent words remain the
+ * accessible, unambiguous label.
+ */
+export function renderBookChapterModalities(
+  language: string,
+  chapters: readonly ChapterModality[],
+): string {
+  if (chapters.length === 0) throw new Error(`${language}: no chapter modality data`);
+  const seen = new Set<number>();
+  const definitions: string[] = [];
+  for (const chapter of [...chapters].sort((left, right) => left.chapter - right.chapter)) {
+    if (chapter.language !== language) {
+      throw new Error(
+        `${language}: chapter modality belongs to ${chapter.language} chapter ${chapter.chapter}`,
+      );
+    }
+    if (!Number.isInteger(chapter.chapter) || chapter.chapter <= 0 || seen.has(chapter.chapter)) {
+      throw new Error(`${language}: duplicate or invalid chapter modality ${chapter.chapter}`);
+    }
+    seen.add(chapter.chapter);
+    if (chapter.lessonCount <= 0 || chapter.drivablePrefix > chapter.lessonCount) {
+      throw new Error(`${language} chapter ${chapter.chapter}: invalid modality counts`);
+    }
+    const modes = (["voice", "sight", "pen"] as const)
+      .filter((mode) => chapter[mode] > 0)
+      .map((mode) => {
+        const label = mode === "sight" ? "eyes" : mode;
+        return `${BOOK_MODALITY_SIGNS[mode]}~\\textbf{${label}} (${chapter[mode]})`;
+      })
+      .join(" \\quad ");
+    const lessonNoun = chapter.lessonCount === 1 ? "lesson" : "lessons";
+    const prefix =
+      chapter.drivablePrefix === 0
+        ? `none of the ${chapter.lessonCount} ${lessonNoun}`
+        : chapter.drivablePrefix === chapter.lessonCount
+          ? `all ${chapter.lessonCount} ${lessonNoun}`
+          : `first ${chapter.drivablePrefix} of ${chapter.lessonCount} ${lessonNoun}`;
+    definitions.push(
+      `\\expandafter\\def\\csname hlchaptermodality${chapter.chapter}\\endcsname{%`,
+      "  {\\small\\noindent",
+      `    \\textbf{Modes:} ${modes}\\quad`,
+      `    ${BOOK_MODALITY_SIGNS.voice}~\\textbf{Hands-free start:} ${prefix}.%`,
+      "    \\par}\\medskip",
+      "}",
+      "",
+    );
+  }
+  return [
+    "% GENERATED FILE. Edit canonical lessons, then run npm run generate:books.",
+    "% Full modes use the whole printed lesson; the hands-free prefix uses its voice core.",
+    "",
+    "% Font-independent modality signs, drawn from paths so every PDF gets the same glyphs.",
+    "\\newcommand{\\hlvoicesign}{%",
+    "  \\tikz[baseline=-0.55ex,x=0.11em,y=0.11em,line width=0.45pt]{%",
+    "    \\draw[rounded corners=0.5] (0,1) rectangle (8,4);%",
+    "    \\draw (1.5,4) -- (2.7,6) -- (5.8,6) -- (7,4);%",
+    "    \\fill (2,0.7) circle (0.8); \\fill (6,0.7) circle (0.8);%",
+    "  }%",
+    "}",
+    "\\newcommand{\\hlsightsign}{%",
+    "  \\tikz[baseline=-0.55ex,x=0.11em,y=0.11em,line width=0.45pt]{%",
+    "    \\draw (0,3) .. controls (2,6) and (6,6) .. (8,3)%",
+    "      .. controls (6,0) and (2,0) .. cycle;%",
+    "    \\fill (4,3) circle (1.05);%",
+    "  }%",
+    "}",
+    "\\newcommand{\\hlpensign}{%",
+    "  \\tikz[baseline=-0.55ex,x=0.11em,y=0.11em,line width=0.7pt]{%",
+    "    \\draw (1,1) -- (7,7); \\draw (0.5,0.5) -- (2.4,1.1) -- (1.1,2.4) -- cycle;%",
+    "  }%",
+    "}",
+    "",
+    "\\newcommand{\\hlchaptermodality}[1]{%",
+    "  \\ifcsname hlchaptermodality#1\\endcsname",
+    "    \\csname hlchaptermodality#1\\endcsname",
+    "  \\fi",
+    "}",
+    "",
+    ...definitions,
+  ].join("\n");
 }
 
 /** A generated back-matter reference sourced from canonical Markdown. */
@@ -1601,6 +1700,7 @@ export function renderBookChapter(
     "",
     `\\chapter{${renderInlineMarkdown(target.title, renderOptions)}}`,
     `\\label{${target.label}}`,
+    `\\hlchaptermodality{${target.chapter}}`,
     "",
     // The blurb that used to sit here explained how the chapter was PRODUCED
     // ("generated from the canonical micro-lessons...") — true, and of no interest
