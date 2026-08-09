@@ -43,6 +43,11 @@ handle, buffer lifecycle, startup context, event sequence, and JSON updates;
 applications no longer need to rebuild that FFI adapter. Package-owned hosts
 remain a permissive compatibility fallback until the `native-complete` profile
 can reject them.
+SwiftUI package shells likewise install Mosaic's standard Foundation host plus
+a tiny C dynamic-loader target. Set `MOSAIC_APP_LIBRARY` to the application
+`cdylib` path (or package it as `libmosaic_app.dylib`); the generated host owns
+the Rust handle, buffers, sequence, snapshots, and updates before falling back
+to the legacy reflection hook in permissive builds.
 
 Packages may declare optional `[host_assets]` file copies in
 `mosaic-package.toml`. Matching backend assets are copied from package-relative
