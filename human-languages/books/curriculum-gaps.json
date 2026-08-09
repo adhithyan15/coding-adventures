@@ -33,7 +33,7 @@
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 27,
     "chapterGateCleanTracks": 12,
-    "drivableLessons": 1526,
+    "drivableLessons": 1528,
     "drivablePercent": 91,
     "chaptersWithoutDrivablePrefix": 40,
     "unexplainedModalityOverrides": 0
@@ -40073,10 +40073,10 @@
   "modality": {
     "maxLinearisableTableColumns": 3,
     "totalLessons": 1680,
-    "voice": 1098,
-    "sight": 524,
+    "voice": 1100,
+    "sight": 522,
     "pen": 58,
-    "coreVoice": 1526,
+    "coreVoice": 1528,
     "lessonsWithWritingSegments": 0,
     "drivablePercent": 91,
     "tracks": [
@@ -45825,12 +45825,12 @@
       {
         "language": "spanish",
         "lessonCount": 188,
-        "voice": 171,
-        "sight": 10,
+        "voice": 173,
+        "sight": 8,
         "pen": 7,
-        "coreVoice": 171,
-        "drivablePercent": 91,
-        "drivablePrefixTotal": 155,
+        "coreVoice": 173,
+        "drivablePercent": 92,
+        "drivablePrefixTotal": 157,
         "chapters": [
           {
             "language": "spanish",
@@ -46039,31 +46039,29 @@
             "language": "spanish",
             "chapter": 15,
             "lessonCount": 6,
-            "voice": 5,
-            "sight": 1,
+            "voice": 6,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 6,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": "ES-C15-practice"
+            "drivablePrefix": 6,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "spanish",
             "chapter": 16,
             "lessonCount": 8,
-            "voice": 7,
-            "sight": 1,
+            "voice": 8,
+            "sight": 0,
             "pen": 0,
-            "coreVoice": 7,
+            "coreVoice": 8,
             "modalities": [
-              "voice",
-              "sight"
+              "voice"
             ],
-            "drivablePrefix": 7,
-            "firstNonVoiceLesson": "ES-C16-practice"
+            "drivablePrefix": 8,
+            "firstNonVoiceLesson": null
           },
           {
             "language": "spanish",
