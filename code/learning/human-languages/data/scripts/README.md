@@ -161,10 +161,13 @@ again for the right dot. All three authored paths are checked against their
 vendored isolated Noto Naskh outlines. The later **س** row at 01:29–01:35 keeps
 its three right-to-left teeth and final bowl in one unbroken movement; its
 two-part learner path has zero lifts and stays on the vendored isolated Noto
-Naskh outline. The remaining **213** prose part
+Naskh outline. The later **ل** demonstration at 02:29–02:32 descends its tall
+upright and turns directly into the leftward base curve in the same unbroken
+movement; its two-part learner path has zero lifts and remains on the vendored
+isolated Noto Naskh outline. The remaining **212** prose part
 orders across nine scripts (`arabic` 21, `chinese` 24, `cyrillic` 33,
 `devanagari` 28, `gujarati` 33, `hebrew` 22, `japanese` 34,
-`perso-arabic` 5, `urdu-nastaliq` 13) are explicitly **unverified for
+`perso-arabic` 4, `urdu-nastaliq` 13) are explicitly **unverified for
 pen lifts**. The data validator rejects a lift count without a citation (or a
 citation without a count), and Language Ladder's ductus test proves every verified
 claim has the same cited, font-checked path. That closes `HL-C19`; future entries

@@ -2,6 +2,16 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Persian upright-and-base ductus (HL-C09O)
+
+- Add Persian ل from UT Austin Persian Online's 02:29–02:32 demonstration: one
+  continuous Naskh stroke descends the tall upright and turns directly into the
+  leftward base curve without lifting.
+- Pin zero lifts, two learner movements, Noto Naskh geometry, and a real
+  two-frame filmstrip that keeps both movements in the same pen-down run.
+- Reuse each Persian letter's canonical source object from the script data
+  instead of rebundling a second citation and variation copy.
+
 ### Added — cited Persian teeth-and-bowl ductus (HL-C09N)
 
 - Add Persian س from UT Austin Persian Online's 01:29–01:35 demonstration: one
