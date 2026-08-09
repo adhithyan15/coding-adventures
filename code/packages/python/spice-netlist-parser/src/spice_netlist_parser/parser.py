@@ -1345,6 +1345,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
                 nominal_temperature + 273.15 if nominal_temperature is not None else None
             ),
             Kf=model.params.get("KF", 0.0),
+            Af=model.params.get("AF", 1.0),
         )
     if prefix == "J":
         _require_fields(fields, 5, "JFET")
@@ -2257,6 +2258,12 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             or flicker_noise_coefficient < 0.0
         ):
             raise NetlistParseError("BJT KF must be finite and non-negative")
+        flicker_noise_exponent = params.get("AF")
+        if flicker_noise_exponent is not None and (
+            not math.isfinite(flicker_noise_exponent)
+            or flicker_noise_exponent < 0.0
+        ):
+            raise NetlistParseError("BJT AF must be finite and non-negative")
     if kind in {"NJF", "PJF"}:
         gate_source_capacitance = params.get("CGS", params.get("CGS0"))
         if gate_source_capacitance is not None and (

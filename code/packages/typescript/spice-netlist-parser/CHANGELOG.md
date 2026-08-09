@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate and lower BJT model-card `AF` flicker-noise exponent.
 - Validate and lower BJT model-card `KF` flicker-noise coefficient.
 - Validate and lower BJT model-card `TNOM` / `T_NOM` nominal temperature.
 - Validate and lower BJT model-card `IKR` reverse beta roll-off current.

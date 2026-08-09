@@ -1847,6 +1847,23 @@ def test_rejects_invalid_bjt_flicker_noise_coefficient(value: str) -> None:
         parse_netlist(f".model fast NPN(KF={value})")
 
 
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("1.5", 1.5)])
+def test_parse_bjt_flicker_noise_exponent(value: str, expected: float) -> None:
+    parsed = parse_netlist(f".model fast NPN(AF={value})\nQ1 col base emit fast")
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Af == expected
+
+
+@pytest.mark.parametrize("value", ["-0.1", "1e999"])
+def test_rejects_invalid_bjt_flicker_noise_exponent(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="BJT AF must be finite and non-negative"
+    ):
+        parse_netlist(f".model fast NPN(AF={value})")
+
+
 def test_parse_jfet_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
