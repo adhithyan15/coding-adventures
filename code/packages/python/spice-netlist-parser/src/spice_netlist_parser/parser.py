@@ -2663,6 +2663,8 @@ def _build_mosfet_model(model: ModelCard, instance_params: dict[str, float]) -> 
     model_params = dict(model.params)
     if "T_NOM" in model_params:
         model_params.pop("TNOM", None)
+    if "LAMBDA" in model_params:
+        model_params.pop("LAM", None)
     params = {**model_params, **instance_params}
     defaults = Level1Params()
     values = {

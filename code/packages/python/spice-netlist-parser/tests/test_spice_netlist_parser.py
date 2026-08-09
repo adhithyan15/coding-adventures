@@ -3430,6 +3430,16 @@ def test_lowers_finite_mosfet_model_channel_modulation_aliases(alias: str) -> No
     assert mosfet.model.model.params.LAMBDA == -0.02
 
 
+def test_gives_mosfet_lambda_precedence_over_lam() -> None:
+    parsed = parse_netlist(
+        ".model nfast NMOS(LAMBDA=0.02 LAM=0.03)\nM1 d g s b nfast\n"
+    )
+
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert mosfet.model.model.params.LAMBDA == 0.02
+
+
 @pytest.mark.parametrize("body_effect", ["-0.01", "1e999"])
 def test_rejects_invalid_mosfet_model_body_effect(body_effect: str) -> None:
     with pytest.raises(
