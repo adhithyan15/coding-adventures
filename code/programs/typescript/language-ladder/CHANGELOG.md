@@ -2,6 +2,13 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Persian bowl-and-dot ductus (HL-C09Q)
+
+- Add Persian ن from UT Austin Persian Online's 02:37–02:43 demonstration: one
+  continuous right-to-left Naskh bowl, then one lift to place the dot above.
+- Pin one lift, two learner movements, Noto Naskh geometry, and a real two-frame
+  filmstrip that preserves the completed bowl while the dot is placed.
+
 ### Added — cited Persian head-and-tail ductus (HL-C09P)
 
 - Add Persian م from UT Austin Persian Online's 02:33–02:36 demonstration: one

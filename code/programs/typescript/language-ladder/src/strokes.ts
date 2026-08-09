@@ -215,6 +215,7 @@ const persianAlphabetSource = (glyph: string): StrokeSource => {
 // turns directly into the leftward base curve without lifting the chalk.
 // The adjacent م forms its round head first, then continues into the long
 // descending tail in the same pen-down run.
+// The next ن sweeps its bowl right-to-left, then lifts once to place the dot.
 // அ is Frame 4's first row: movements 1-4 remain on the connected body, then
 // the hand lifts once before movement 5 draws the separate right upright. ஆ is
 // the next row: it repeats movements 1-5, then continues from that upright into
@@ -474,6 +475,48 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: persianAlphabetSource("م"),
+  },
+  "ن": {
+    glyph: "ن",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep the bowl from right to left",
+            path: [
+              { x: 495, y: 210 },
+              { x: 475, y: 160 },
+              { x: 480, y: 100 },
+              { x: 500, y: 40 },
+              { x: 510, y: -20 },
+              { x: 485, y: -80 },
+              { x: 430, y: -140 },
+              { x: 360, y: -190 },
+              { x: 280, y: -220 },
+              { x: 210, y: -215 },
+              { x: 150, y: -170 },
+              { x: 105, y: -110 },
+              { x: 90, y: -60 },
+              { x: 95, y: 0 },
+              { x: 105, y: 45 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then place the dot above",
+            path: [
+              { x: 235, y: 305 },
+              { x: 275, y: 345 },
+              { x: 315, y: 305 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: persianAlphabetSource("ن"),
   },
   அ: {
     glyph: "அ",

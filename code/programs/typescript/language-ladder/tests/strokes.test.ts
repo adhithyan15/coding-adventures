@@ -304,6 +304,15 @@ describe("handwriting ductus", () => {
     expect(tail[0].y).toBeGreaterThan(tail.at(-1)!.y);
   });
 
+  it("Persian ن sweeps its bowl right-to-left, then lifts once for the dot", () => {
+    const nun = DUCTUS["ن"];
+    expect(penLifts(nun)).toBe(1);
+    expect(nun.strokes).toHaveLength(2);
+    expect(nun.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1]);
+    const bowl = penPath(nun.strokes[0]);
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+  });
+
   // The PROVENANCE GATE. A stroke's SHAPE is checked against the font above;
   // its ORDER cannot be — so it must trace to a cited source, or it does not
   // ship. This is the counterpart, for hand-authored order, of "facts enter
@@ -455,6 +464,13 @@ describe("handwriting ductus", () => {
     expect(src.url).toContain("laits.utexas.edu/persian_grammar/video");
     expect(src.citation).toMatch(/Persian Online.*م.*02:33–02:36/i);
     expect(src.variation).toMatch(/isolated.*continuous Naskh.*round head.*descending tail.*no pen lift.*Noto Naskh/i);
+  });
+
+  it("Persian ن traces to the adjacent bowl-and-dot demonstration", () => {
+    const src = DUCTUS["ن"].source;
+    expect(src.url).toContain("laits.utexas.edu/persian_grammar/video");
+    expect(src.citation).toMatch(/Persian Online.*ن.*02:37–02:43/i);
+    expect(src.variation).toMatch(/isolated.*right-to-left Naskh bowl.*one lift.*dot above.*Noto Naskh/i);
   });
 });
 
