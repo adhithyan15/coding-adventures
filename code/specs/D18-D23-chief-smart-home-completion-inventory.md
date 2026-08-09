@@ -1316,10 +1316,45 @@ the shared retained-identity migration path:
   atomic two-key consumption, live and restart identity replacement, and raw
   identifier exclusion. Consent denial occurs before leases or transport.
 
+## Current Camera Media HTTPS Snapshot Executor Slice
+
+This slice supplies the concrete native snapshot transport behind the existing
+camera-media lease boundary without moving transport authority into the policy
+broker:
+
+- `smart-home-camera-media-http-executor` accepts endpoints only during trusted
+  lease redemption and requires the broker-retained canonical host plus pinned
+  socket. It connects directly to the reviewed address while preserving that
+  host for HTTP `Host`, TLS SNI, and forced strict certificate verification.
+- Production delivery is HTTPS-only. A separate explicit loopback fixture mode
+  is the only plaintext path; redirects, user information, fragments, origin
+  mismatches, unpinned destinations, and non-snapshot media fail before useful
+  bytes are released.
+- Optional Basic and RFC 7616 Digest credentials remain zeroizing and
+  process-local by camera entity. Delivery probes without credentials, prefers
+  advertised SHA-256 Digest over MD5 and Basic, uses CSPRNG client nonces, and
+  permits one bounded refreshed Digest challenge retry.
+- HTTP response heads, wire bytes, content framing, and decoded payloads are
+  bounded. Ambiguous length/transfer framing, content encoding, redirects,
+  non-image media types, and JPEG/PNG/WebP signature mismatches fail closed.
+- Real loopback coverage proves one public Human Approval-backed camera-media
+  lease reaches exactly one pinned snapshot request and returns bounded
+  zeroizing image bytes without exposing the endpoint through public delivery,
+  audit, error, or debug surfaces.
+- Supervised streams, recording downloads, exports, and playback remain a
+  separate resource-lifecycle prerequisite; this executor deliberately rejects
+  stream delivery rather than inventing teardown or retention semantics.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
 and then by prerequisite readiness:
+
+The strongest next executable slice is to wire the already-registered ONVIF
+snapshot endpoints through the completed HTTPS executor in a concrete host,
+with exact Human Approval authorization and host-owned credential registration
+and removal around delivery. Do not extend that slice to RTSP streams until a
+supervised stream resource host and teardown lifecycle are concrete.
 
 1. Add authenticated AirGradient MQTT only after official firmware removes
    plaintext credential logging and one-shot Vault-leased credential injection
@@ -1347,8 +1382,10 @@ and then by prerequisite readiness:
    concrete; the current isolated inspection drops both tokens after each read.
 9. Add ZoneMinder event push only after a concrete authenticated event host and
     supervised subscription lifecycle exist.
-10. Add ZoneMinder snapshots, streams, recordings, export, and playback only
-    through the camera-media lease and a concrete media executor.
+10. Add bounded ZoneMinder snapshots through the completed camera-media HTTPS
+    executor after process-local endpoint registration and credential lifetime
+    are wired; streams, recordings, export, and playback still require a
+    concrete supervised resource executor.
 11. Add ZoneMinder PTZ, monitor configuration, recording-mode, or administrative
     mutations only with operation-specific D23 contracts, least-privilege user
     checks, bounded semantics, and readable postcondition verification.
@@ -1377,20 +1414,26 @@ and then by prerequisite readiness:
    policy are concrete.
 19. Add Synology Surveillance Station events only after a concrete authenticated
    event host and supervised subscription lifecycle exist.
-20. Add Synology Surveillance Station snapshots, recordings, export, and
-   playback only through the camera-media lease and a concrete executor.
+20. Add bounded Synology Surveillance Station snapshots through the completed
+    camera-media HTTPS executor after process-local endpoint registration and
+    credential lifetime are wired; recordings, export, and playback still
+    require a concrete supervised resource executor.
 21. Add Synology Surveillance Station PTZ, external recording, or configuration
    mutations only with operation-specific D23 contracts, least-privilege API
    checks, bounded semantics, and readable postcondition verification.
 22. Add Frigate event and review push only after a concrete authenticated event
    or WebSocket host and supervised subscription lifecycle exist.
-23. Add Frigate snapshots, recordings, export, and playback only through the
-   camera-media lease and a concrete executor.
+23. Add bounded Frigate snapshots through the completed camera-media HTTPS
+    executor after process-local endpoint registration and credential lifetime
+    are wired; recordings, export, and playback still require a concrete
+    supervised resource executor.
 24. Add Frigate commands or configuration mutations only with operation-specific
    D23 contracts, least-privilege role checks, and readable postcondition
    verification.
-25. Add Blue Iris snapshots, alert/clip search, export, and playback only through
-   the camera-media lease and a concrete media executor.
+25. Add bounded Blue Iris snapshots through the completed camera-media HTTPS
+    executor after process-local endpoint registration and credential lifetime
+    are wired; alert/clip search, export, and playback still require a concrete
+    supervised resource executor.
 26. Add broader Blue Iris `camconfig` or administrative mutations only with
    operation-specific D23 contracts, least-privilege permissions, and readable
    postcondition verification; do not persist the license value returned at
@@ -1404,14 +1447,18 @@ and then by prerequisite readiness:
 29. Add Axis event streaming only after the existing WebSocket protocol core has
    a concrete authenticated host using the completed Digest primitive or a
    short-lived session token, plus subscription supervision.
-30. Add Axis snapshots and media transfer only through the camera-media lease and
-   a concrete media executor.
+30. Add bounded Axis snapshots through the completed camera-media HTTPS executor
+    after process-local endpoint registration and credential lifetime are
+    wired; broader media transfer still requires a concrete supervised resource
+    executor.
 31. Enumerate Axis video sources/channels before extending PTZ beyond the current
    capability-probed VAPIX camera 1 boundary.
 32. Add Axis absolute/relative zoom, guard-tour, or advanced preset management
    only when each operation has a specific capability probe and readable state.
-33. Add Reolink snapshot, recording search/download, and playback operations only
-   through the existing camera-media lease and a concrete media executor.
+33. Add bounded Reolink snapshots through the completed camera-media HTTPS
+    executor after process-local endpoint registration and credential lifetime
+    are wired; recording search/download and playback still require a concrete
+    supervised resource executor.
 34. Add Reolink current-position, zoom, guard-point, or patrol controls only when
    each operation has a capability-specific probe and the firmware exposes the
    native state needed to avoid invented orientation claims.
