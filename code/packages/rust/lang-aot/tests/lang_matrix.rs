@@ -1577,6 +1577,23 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(7),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — direct formal-procedure forwarding. The outer and nested
+    // wrappers receive `square` as a formal procedure, but their specialised
+    // siblings invoke that statically known target without a function-pointer
+    // ABI. The nested handoff proves an active formal can itself be forwarded.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+                  integer procedure square(x); value x; integer x; square := x * x; \
+                  integer procedure dispatch(p, x); value x; procedure p; integer x; \
+                    begin integer procedure forward(p, x); value x; procedure p; integer x; \
+                          forward := p(x); \
+                          dispatch := forward(p, x) end; \
+                  result := dispatch(square, 6) end",
+        expect: Expect::Exit(36),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — direct and forwarded string name formals. The nested
     // `consume` formal shares the outer spelling, so the specialised sibling
     // must retain the original caller string binding through its generated
@@ -6514,6 +6531,37 @@ fn algol_recursive_scalar_name_remapping_runs_on_every_available_standard_backen
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but recursive scalar name remapping did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_direct_formal_procedure_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure dispatch(p, x)")
+                && program.src.contains("integer procedure forward(p, x)")
+                && program.src.contains("result := dispatch(square, 6)")
+        })
+        .expect("the direct formal-procedure ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but direct formal-procedure execution did not complete"
             );
             continue;
         };
