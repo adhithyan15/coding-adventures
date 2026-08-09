@@ -1,0 +1,11 @@
+[package]
+name = "mosaic-app-capi"
+version = "0.1.0"
+edition = "2021"
+description = "Panic-safe C ABI for hosting a Rust Mosaic application runtime."
+license = "MIT"
+
+[dependencies]
+mosaic-app-runtime = { path = "../mosaic-app-runtime" }
+serde = "1"
+serde_json = "1"
