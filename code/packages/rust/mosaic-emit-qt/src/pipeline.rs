@@ -71,7 +71,7 @@
 
 use std::fmt::Write as _;
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
 use mosmodel_compiler::{
@@ -454,6 +454,10 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
 struct EmitCtx<'a> {
     /// The component's declared emits — used to pick signal arities.
     emits: &'a [EmitDecl],
+    /// Stable per-component allocation from MIL emit names to QML member names.
+    /// Reserved words and collisions are escaped once, then every declaration,
+    /// handler, and primitive callback reuses the same allocation.
+    signal_names: &'a HashMap<String, String>,
     /// The inlined part-style map (empty when the `.msl` declares no parts).
     part_styles: &'a PartStyleMap,
     /// camelCased identifier of the host's column-widths slot (e.g.
@@ -1081,6 +1085,7 @@ pub fn from_pipeline(
     }
 
     let name = &interface.component;
+    let signal_names = allocate_qml_signal_names(interface)?;
     let mut out = String::new();
 
     // 2. File header — banner + imports. Both QtQuick 2.15 and
@@ -1149,7 +1154,7 @@ pub fn from_pipeline(
         writeln!(out).unwrap();
     }
     for e in &interface.emits {
-        out.push_str(&emit_signal_declaration(e)?);
+        out.push_str(&emit_signal_declaration(e, &signal_names)?);
     }
     if !interface.emits.is_empty() {
         writeln!(out, "    signal mosaicEvent(var event)").unwrap();
@@ -1159,7 +1164,7 @@ pub fn from_pipeline(
         )
         .unwrap();
         for e in &interface.emits {
-            out.push_str(&emit_mosaic_event_handler(e)?);
+            out.push_str(&emit_mosaic_event_handler(e, &signal_names)?);
         }
     }
 
@@ -1169,6 +1174,7 @@ pub fn from_pipeline(
     let part_styles = build_part_style_map(style);
     let ctx = EmitCtx {
         emits: &interface.emits,
+        signal_names: &signal_names,
         part_styles: &part_styles,
         col_widths_slot: None,
         enclosing_index: None,
@@ -1219,10 +1225,11 @@ fn emit_slot_property(slot: &SlotDecl) -> Result<String, PipelineEmitError> {
 /// Parameterless emits produce `signal foo()`. Emits with a payload
 /// produce one typed parameter per `EmitParam` — kebab-case → camelCase
 /// — with the type chosen from the small `EmitPayloadType` enum.
-fn emit_signal_declaration(emit: &EmitDecl) -> Result<String, PipelineEmitError> {
-    let lowered = strip_on_prefix(&emit.name);
-    let signal_name = to_camel_case_first_lower(&lowered);
-    validate_safe_identifier(&signal_name).map_err(PipelineEmitError::UnsafeEmitName)?;
+fn emit_signal_declaration(
+    emit: &EmitDecl,
+    signal_names: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let signal_name = qml_signal_name(&emit.name, signal_names)?;
 
     let params = if emit.params.is_empty() {
         String::new()
@@ -1244,10 +1251,11 @@ fn emit_signal_declaration(emit: &EmitDecl) -> Result<String, PipelineEmitError>
     Ok(out)
 }
 
-fn emit_mosaic_event_handler(emit: &EmitDecl) -> Result<String, PipelineEmitError> {
-    let lowered = strip_on_prefix(&emit.name);
-    let signal_name = to_camel_case_first_lower(&lowered);
-    validate_safe_identifier(&signal_name).map_err(PipelineEmitError::UnsafeEmitName)?;
+fn emit_mosaic_event_handler(
+    emit: &EmitDecl,
+    signal_names: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let signal_name = qml_signal_name(&emit.name, signal_names)?;
     let handler_name = qml_signal_handler_name(&signal_name);
 
     let mut fields = vec![format!("\"event\": \"{}\"", escape_qml_string(&emit.name))];
@@ -1989,8 +1997,7 @@ fn emit_text_input_qml(
 
     // onTextChanged: e(<arg>)
     if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
-        let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
-        validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+        let camel = qml_signal_name(emit_name, ctx.signal_names)?;
         let arg = pick_signal_arg(emit_name, ctx.emits);
         writeln!(out, "{inner_pad}onTextChanged: {camel}({arg})").unwrap();
     }
@@ -1999,8 +2006,7 @@ fn emit_text_input_qml(
     // single-line controls preserve HostInput's Enter-to-commit contract.
     if !multiline {
         if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
-            let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
-            validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+            let camel = qml_signal_name(emit_name, ctx.signal_names)?;
             let arg = pick_signal_arg(emit_name, ctx.emits);
             writeln!(out, "{inner_pad}onAccepted: {camel}({arg})").unwrap();
         }
@@ -2008,8 +2014,7 @@ fn emit_text_input_qml(
 
     // Keys.onEscapePressed: { e(<arg>); event.accepted = true }
     if let Some(emit_name) = find_emit_ref_prop(node, "onCancel") {
-        let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
-        validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+        let camel = qml_signal_name(emit_name, ctx.signal_names)?;
         let arg = pick_signal_arg(emit_name, ctx.emits);
         writeln!(
             out,
@@ -2138,8 +2143,7 @@ fn emit_host_button_qml(
     if let Some(emit_name) =
         find_emit_ref_prop(node, "onClick").or_else(|| find_emit_ref_prop(node, "onTap"))
     {
-        let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
-        validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+        let camel = qml_signal_name(emit_name, ctx.signal_names)?;
         if let Some(args) = host_button_signal_args(emit_name, ctx) {
             writeln!(out, "{inner_pad}onClicked: {camel}({args})").unwrap();
         } else {
@@ -2269,13 +2273,11 @@ fn emit_host_dialog_qml(
     // Mosaic emits are present-tense (`onClose`/`onOpen`) per
     // UI29-1 §2.2.
     if let Some(emit_name) = find_emit_ref_prop(node, "onClose") {
-        let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
-        validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+        let camel = qml_signal_name(emit_name, ctx.signal_names)?;
         writeln!(out, "{inner_pad}onClosed: {camel}()").unwrap();
     }
     if let Some(emit_name) = find_emit_ref_prop(node, "onOpen") {
-        let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
-        validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+        let camel = qml_signal_name(emit_name, ctx.signal_names)?;
         writeln!(out, "{inner_pad}onOpened: {camel}()").unwrap();
     }
 
@@ -2380,8 +2382,7 @@ fn emit_host_checkbox_qml(
     // gets `x(checked)` since `checked` is the natural payload Qt
     // makes available in the signal-handler scope.
     if let Some(emit_name) = find_emit_ref_prop(node, "onToggle") {
-        let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
-        validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+        let camel = qml_signal_name(emit_name, ctx.signal_names)?;
         let arg = pick_signal_arg_with(emit_name, ctx.emits, "checked");
         writeln!(out, "{inner_pad}onToggled: {camel}({arg})").unwrap();
     }
@@ -2490,8 +2491,7 @@ fn emit_host_radio_qml(
     // invoked as `x()`; a ≥1-arity signal gets the value payload
     // computed above (`value_for_dispatch`).
     if let Some(emit_name) = find_emit_ref_prop(node, "onSelect") {
-        let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
-        validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+        let camel = qml_signal_name(emit_name, ctx.signal_names)?;
         let arity = ctx
             .emits
             .iter()
@@ -2587,14 +2587,12 @@ fn emit_host_link_qml(
             // arity: arity-0 → `e()`; arity ≥1 → `e(link)` (Qt's
             // onLinkActivated handler scope exposes the activated
             // URL as `link`).
-            let camel = to_camel_case_first_lower(&strip_on_prefix(emit));
-            validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+            let camel = qml_signal_name(emit, ctx.signal_names)?;
             let arg = host_link_signal_args(emit, ctx).unwrap_or_default();
             format!("{camel}({arg})")
         }
         (false, Some(emit)) => {
-            let camel = to_camel_case_first_lower(&strip_on_prefix(emit));
-            validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+            let camel = qml_signal_name(emit, ctx.signal_names)?;
             let arg = host_link_signal_args(emit, ctx).unwrap_or_default();
             // Dispatch AND open externally.
             format!("{{ {camel}({arg}); Qt.openUrlExternally(link); }}")
@@ -2785,8 +2783,7 @@ fn emit_host_number_input_qml(
     // onChange -> onTextEdited. Respect signal arity: arity-0 →
     // `e()`; arity ≥1 → `e(nextValue)`.
     if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
-        let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
-        validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+        let camel = qml_signal_name(emit_name, ctx.signal_names)?;
         let arg = pick_signal_arg_with(emit_name, ctx.emits, "nextValue");
         writeln!(out, "{inner}onTextEdited: {{").unwrap();
         writeln!(out, "{validator_inner}const nextValue = Number(text)").unwrap();
@@ -3768,6 +3765,233 @@ fn emit_payload_to_qml(t: &EmitPayloadType) -> &'static str {
 // Name conversion + safety helpers
 // =====================================================================
 
+/// Allocate one QML member name for every MIL emit in a component.
+///
+/// Existing non-conflicting names stay source-compatible (`onSave` remains
+/// `save`). Names that QML reserves (`onDelete`), names already owned by the
+/// generated root (`onMosaicEvent`), names inherited from `Item`, and names
+/// occupied by component slots move into the compiler-owned `mosaicEmit…`
+/// namespace. Safe names are reserved before escaped names are allocated, so
+/// an authored `onMosaicEmitDelete` keeps its spelling and `onDelete` receives
+/// a deterministic numeric suffix rather than stealing it.
+fn allocate_qml_signal_names(
+    interface: &MosmodelComponent,
+) -> Result<HashMap<String, String>, PipelineEmitError> {
+    let mut lowered = Vec::with_capacity(interface.emits.len());
+    let mut frequencies: HashMap<String, usize> = HashMap::new();
+
+    for emit in &interface.emits {
+        let base = lowered_qml_signal_name(&emit.name)?;
+        *frequencies.entry(base.clone()).or_default() += 1;
+        lowered.push((emit.name.clone(), base));
+    }
+
+    let mut occupied: HashSet<String> = [
+        "mosaicRoot",
+        "mosaicHost",
+        "lastHostIntent",
+        "applyMosaicProps",
+        "applyMosaicResponse",
+        "mosaicEvent",
+    ]
+    .into_iter()
+    .map(str::to_string)
+    .collect();
+
+    for slot in &interface.slots {
+        let name = to_camel_case_first_lower(&slot.name);
+        validate_safe_identifier(&name).map_err(PipelineEmitError::UnsafeSlotName)?;
+        occupied.insert(name);
+    }
+
+    let mut allocated = HashMap::with_capacity(lowered.len());
+
+    // Preserve every unique, non-reserved source spelling before allocating
+    // escaped names. This keeps the fix backward-compatible for existing QML
+    // hosts and makes allocation independent of declaration order.
+    for (source, base) in &lowered {
+        if frequencies.get(base) == Some(&1)
+            && !is_qml_reserved_identifier(base)
+            && !is_qml_item_member(base)
+            && !occupied.contains(base)
+        {
+            occupied.insert(base.clone());
+            allocated.insert(source.clone(), base.clone());
+        }
+    }
+
+    for (source, base) in lowered {
+        if allocated.contains_key(&source) {
+            continue;
+        }
+
+        let stem = format!("mosaicEmit{}", upper_first_ascii(&base));
+        let mut candidate = stem.clone();
+        let mut suffix = 2usize;
+        while occupied.contains(&candidate)
+            || is_qml_reserved_identifier(&candidate)
+            || is_qml_item_member(&candidate)
+        {
+            candidate = format!("{stem}{suffix}");
+            suffix += 1;
+        }
+        occupied.insert(candidate.clone());
+        allocated.insert(source, candidate);
+    }
+
+    Ok(allocated)
+}
+
+fn lowered_qml_signal_name(emit_name: &str) -> Result<String, PipelineEmitError> {
+    let lowered = strip_on_prefix(emit_name);
+    let name = to_camel_case_first_lower(&lowered);
+    validate_safe_identifier(&name).map_err(PipelineEmitError::UnsafeEmitName)?;
+    Ok(name)
+}
+
+fn qml_signal_name(
+    emit_name: &str,
+    signal_names: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    signal_names
+        .get(emit_name)
+        .cloned()
+        .ok_or_else(|| PipelineEmitError::UnsafeEmitName(emit_name.to_string()))
+}
+
+fn upper_first_ascii(name: &str) -> String {
+    let mut chars = name.chars();
+    let Some(first) = chars.next() else {
+        return String::new();
+    };
+    let mut out = String::new();
+    out.push(first.to_ascii_uppercase());
+    out.extend(chars);
+    out
+}
+
+/// ECMAScript/QML grammar words that cannot be declared as signal members.
+/// This includes QML declaration modifiers because emitted files are parsed as
+/// QML first and JavaScript second.
+fn is_qml_reserved_identifier(name: &str) -> bool {
+    matches!(
+        name,
+        "alias"
+            | "as"
+            | "break"
+            | "case"
+            | "catch"
+            | "class"
+            | "component"
+            | "const"
+            | "continue"
+            | "debugger"
+            | "default"
+            | "delete"
+            | "do"
+            | "else"
+            | "enum"
+            | "export"
+            | "extends"
+            | "false"
+            | "finally"
+            | "for"
+            | "function"
+            | "id"
+            | "if"
+            | "import"
+            | "in"
+            | "instanceof"
+            | "let"
+            | "new"
+            | "null"
+            | "of"
+            | "on"
+            | "package"
+            | "pragma"
+            | "private"
+            | "property"
+            | "protected"
+            | "public"
+            | "readonly"
+            | "required"
+            | "return"
+            | "signal"
+            | "static"
+            | "super"
+            | "switch"
+            | "this"
+            | "throw"
+            | "true"
+            | "try"
+            | "typeof"
+            | "var"
+            | "void"
+            | "while"
+            | "with"
+            | "yield"
+    )
+}
+
+/// Root `Item` members that a generated component signal must not redeclare.
+/// The list covers the stable Item/QtObject surface used by Mosaic shells;
+/// backend-owned `mosaic…` members are reserved separately by the allocator.
+fn is_qml_item_member(name: &str) -> bool {
+    matches!(
+        name,
+        "activeFocus"
+            | "activeFocusChanged"
+            | "anchors"
+            | "children"
+            | "childrenChanged"
+            | "childrenRect"
+            | "clip"
+            | "clipChanged"
+            | "containmentMask"
+            | "data"
+            | "destroy"
+            | "destroyed"
+            | "enabled"
+            | "enabledChanged"
+            | "focus"
+            | "focusChanged"
+            | "height"
+            | "heightChanged"
+            | "implicitHeight"
+            | "implicitHeightChanged"
+            | "implicitWidth"
+            | "implicitWidthChanged"
+            | "layer"
+            | "objectName"
+            | "objectNameChanged"
+            | "opacity"
+            | "opacityChanged"
+            | "parent"
+            | "parentChanged"
+            | "resources"
+            | "rotation"
+            | "rotationChanged"
+            | "scale"
+            | "scaleChanged"
+            | "state"
+            | "stateChanged"
+            | "states"
+            | "transform"
+            | "transformOrigin"
+            | "transitions"
+            | "visible"
+            | "visibleChanged"
+            | "width"
+            | "widthChanged"
+            | "x"
+            | "xChanged"
+            | "y"
+            | "yChanged"
+            | "z"
+            | "zChanged"
+    )
+}
+
 /// Convert `kebab-case` (and `lowerCamelCase` / `PascalCase`) to
 /// `lowerCamelCase`. The first character of the output is lowered
 /// unconditionally so PascalCase inputs (e.g. an emit name like
@@ -4043,6 +4267,90 @@ mod tests {
             ),
             "missing generic editCommit Mosaic event in:\n{}",
             result.output
+        );
+    }
+
+    #[test]
+    fn reserved_emit_name_is_escaped_consistently_without_changing_event_envelope() {
+        let m = component("Notes", vec![], vec![emit_decl("onDelete", vec![])]);
+        let l = LayoutDef {
+            component_name: "Notes".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "label".to_string(),
+                        value: LayoutPropValue::String("Delete".to_string()),
+                    },
+                    LayoutProp {
+                        name: "onClick".to_string(),
+                        value: LayoutPropValue::EmitRef("onDelete".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+
+        let result = from_pipeline(&m, &l, &empty_style("Notes")).unwrap();
+        assert!(result.output.contains("signal mosaicEmitDelete()"));
+        assert!(result.output.contains(
+            "onMosaicEmitDelete: function() { mosaicEvent({ \"event\": \"onDelete\" }) }"
+        ));
+        assert!(result.output.contains("onClicked: mosaicEmitDelete()"));
+        assert!(!result.output.contains("signal delete()"));
+    }
+
+    #[test]
+    fn escaped_emit_allocation_preserves_existing_safe_signal_name() {
+        let m = component(
+            "Notes",
+            vec![],
+            vec![
+                emit_decl("onDelete", vec![]),
+                emit_decl("onMosaicEmitDelete", vec![]),
+            ],
+        );
+        let result = from_pipeline(&m, &single_box_layout("Notes"), &empty_style("Notes")).unwrap();
+
+        assert!(result.output.contains("signal mosaicEmitDelete2()"));
+        assert!(result.output.contains("signal mosaicEmitDelete()"));
+        assert!(result.output.contains(
+            "onMosaicEmitDelete2: function() { mosaicEvent({ \"event\": \"onDelete\" }) }"
+        ));
+        assert!(result.output.contains(
+            "onMosaicEmitDelete: function() { mosaicEvent({ \"event\": \"onMosaicEmitDelete\" }) }"
+        ));
+    }
+
+    #[test]
+    fn signal_allocation_avoids_slot_generated_and_item_members() {
+        let m = component(
+            "Collisions",
+            vec![slot("save", SlotType::Text, true)],
+            vec![
+                emit_decl("onSave", vec![]),
+                emit_decl("onMosaicEvent", vec![]),
+                emit_decl("onWidth", vec![]),
+            ],
+        );
+        let result = from_pipeline(
+            &m,
+            &single_box_layout("Collisions"),
+            &empty_style("Collisions"),
+        )
+        .unwrap();
+
+        assert!(result.output.contains("signal mosaicEmitSave()"));
+        assert!(result.output.contains("signal mosaicEmitMosaicEvent()"));
+        assert!(result.output.contains("signal mosaicEmitWidth()"));
+        assert!(!result.output.contains("signal save()"));
+        assert_eq!(
+            result
+                .output
+                .matches("signal mosaicEvent(var event)")
+                .count(),
+            1
         );
     }
 

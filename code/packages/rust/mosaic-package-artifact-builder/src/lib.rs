@@ -4588,6 +4588,34 @@ version = "1"
     }
 
     #[test]
+    fn notes_qt_artifact_escapes_reserved_delete_signal() {
+        let package_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .parent()
+            .and_then(Path::parent)
+            .and_then(Path::parent)
+            .expect("derive code root")
+            .join("packages/mosaic/mosaic-pkg-notes");
+        let out = TempDir::new().expect("Notes Qt output dir");
+
+        build_package(&BuildOptions {
+            package_root,
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Qt,
+            emit_project: true,
+            theme: Some("light".to_string()),
+        })
+        .expect("standalone Notes Qt package must emit");
+
+        let artifact = out.path().join("qt/Notes.qml");
+        let source = fs::read_to_string(&artifact)
+            .unwrap_or_else(|error| panic!("read {}: {error}", artifact.display()));
+        assert!(source.contains("signal mosaicEmitDelete()"));
+        assert!(source.contains("onClicked: mosaicEmitDelete()"));
+        assert!(source.contains("\"event\": \"onDelete\""));
+        assert!(!source.contains("signal delete()"));
+    }
+
+    #[test]
     fn flutter_project_shell_installs_standard_rust_runtime_binding() {
         let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
         let out = TempDir::new().unwrap();
