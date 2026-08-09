@@ -2649,6 +2649,23 @@ def test_parse_pch_model_type_alias() -> None:
     assert isclose(mosfet.model.model.params.KP, 120.0e-6)
 
 
+def test_parse_separator_normalized_model_type_aliases() -> None:
+    parsed = parse_netlist(
+        ".model jfast n-jfet(BETA=2m)\n"
+        ".model pfast p_ch(VTO=0.4 KP=120u)\n"
+        "J1 drain gate source jfast\n"
+        "M1 d g s b pfast"
+    )
+
+    assert parsed.models["jfast"].kind == "NJF"
+    assert parsed.models["pfast"].kind == "PMOS"
+    jfet, mosfet = parsed.circuit.elements
+    assert isinstance(jfet, JFET)
+    assert jfet.polarity == "NJF"
+    assert isinstance(mosfet, Mosfet)
+    assert mosfet.model.type == MosfetType.PMOS
+
+
 def test_parse_pmos_mosfet_model() -> None:
     parsed = parse_netlist(
         """

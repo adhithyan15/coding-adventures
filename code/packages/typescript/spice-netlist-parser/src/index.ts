@@ -1140,7 +1140,7 @@ function toComplex(value: SelectedOutputValue): Complex {
 function parseModelCard(fields: readonly string[]): ModelCard {
   requireMinFields(fields, 3, ".model");
   const tail = fields.slice(2).join(" ").trim();
-  const match = /^([A-Za-z][A-Za-z0-9_]*)(?:\s*\((.*)\)|\s+(.*))?$/.exec(tail);
+  const match = /^([A-Za-z][A-Za-z0-9_-]*)(?:\s*\((.*)\)|\s+(.*))?$/.exec(tail);
   if (match === null) {
     throw new NetlistParseError(`invalid .model kind ${JSON.stringify(tail)}`);
   }
@@ -1149,16 +1149,17 @@ function parseModelCard(fields: readonly string[]): ModelCard {
     paramsText = paramsText.slice(1, -1);
   }
   const rawKind = match[1].toUpperCase();
+  const kindKey = rawKind.replace(/[-_]/g, "");
   let kind = rawKind;
-  if (rawKind === "DIODE") {
+  if (kindKey === "DIODE") {
     kind = "D";
-  } else if (rawKind === "NJFET" || rawKind === "NJ") {
+  } else if (kindKey === "NJFET" || kindKey === "NJ") {
     kind = "NJF";
-  } else if (rawKind === "PJFET" || rawKind === "PJ") {
+  } else if (kindKey === "PJFET" || kindKey === "PJ") {
     kind = "PJF";
-  } else if (rawKind === "NCH") {
+  } else if (kindKey === "NCH") {
     kind = "NMOS";
-  } else if (rawKind === "PCH") {
+  } else if (kindKey === "PCH") {
     kind = "PMOS";
   }
   const params = parseModelParams(paramsText);
