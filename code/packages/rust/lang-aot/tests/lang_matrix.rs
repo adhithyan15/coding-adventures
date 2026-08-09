@@ -1611,6 +1611,21 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — recursive forwarding retains a direct procedure actual in
+    // the active specialisation. Each `descend(p, n - 1)` reuses the same
+    // sibling and the base case calls `twice` directly, so no procedure value
+    // or dynamic descriptor crosses the IIR ABI.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+                  integer procedure twice(x); value x; integer x; twice := x * 2; \
+                  integer procedure descend(p, n); value n; procedure p; integer n; \
+                    if n = 0 then descend := p(21) else descend := descend(p, n - 1); \
+                  result := descend(twice, 4) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a `value procedure` formal retains the same direct target as
     // a name-mode procedure formal when the actual is statically known. Both
     // nested wrappers specialise away `p`, so value mode does not require a
@@ -6717,6 +6732,37 @@ fn algol_nested_capturing_formal_procedure_runs_on_every_available_standard_back
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but nested-capturing formal-procedure execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_recursive_formal_procedure_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure descend(p, n)")
+                && program.src.contains("descend := descend(p, n - 1)")
+                && program.src.contains("result := descend(twice, 4)")
+        })
+        .expect("the recursive formal-procedure program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but recursive formal-procedure execution did not complete"
             );
             continue;
         };
