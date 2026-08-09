@@ -90,15 +90,15 @@ pub trait MosaicApp {
     type Error: std::error::Error + Send + Sync + 'static;
 
     fn start(&mut self, context: StartContext)
-        -> Result<Update, Self::Error>;
+        -> Result<AppUpdate, Self::Error>;
 
     fn dispatch(&mut self, event: Event)
-        -> Result<Update, Self::Error>;
+        -> Result<AppUpdate, Self::Error>;
 
     fn snapshot(&self) -> Result<Option<Snapshot>, Self::Error>;
 
     fn restore(&mut self, snapshot: Snapshot)
-        -> Result<Update, Self::Error>;
+        -> Result<AppUpdate, Self::Error>;
 }
 ```
 
@@ -119,6 +119,12 @@ pub struct Event {
     pub payload: serde_json::Value,
 }
 
+pub struct AppUpdate {
+    pub props: serde_json::Value,
+    pub effects: Vec<Effect>,
+    pub announcements: Vec<Announcement>,
+}
+
 pub struct Update {
     pub revision: u64,
     pub props: serde_json::Value,
@@ -131,11 +137,14 @@ pub struct Update {
 Event names and payloads must validate against its exported emits. Named
 records/enums in the model language will make that contract author-friendly, but
 the runtime boundary must not depend on a particular generated host language.
+The application never chooses a transport revision: `mosaic-app-runtime` wraps each
+successful `AppUpdate` in an `Update` and assigns its revision.
 
 ### 4.1 Determinism and ordering
 
 - Events are processed serially by sequence number.
-- Each accepted event produces exactly one monotonically increasing revision.
+- The runtime assigns exactly one monotonically increasing revision to each
+  successful start, restore, or accepted event.
 - A host must finish applying an update before dispatching the next event.
 - Unknown, duplicated, or out-of-order events are protocol errors, not no-ops.
 - The engine does not call into the host while handling an event. Effects are data
