@@ -1256,11 +1256,10 @@ rotation without starting either vendor-specific rotation workflow:
   succeeds. A stale revision leaves both live and durable state unchanged.
   Supplied automation definitions and execution state must already use the
   destination identities; exact source-ID references fail before mutation.
-- Enphase key rotation now uses this path in the completed slice below. UniFi
-  key rotation remains a separate production-integration slice and must derive
-  old and new pseudonyms from one bounded sensitive response while two one-shot
-  keys are leased, dispose native identifiers before returning, and submit the
-  complete migration through this revision-guarded path.
+- Enphase and bounded UniFi connected-client key rotation now use this path in
+  the completed slices below. Multi-site or paginated UniFi rotation remains
+  prerequisite-gated because one-shot keys cannot safely span a partially
+  persisted multi-response operation.
 
 ## Current Enphase Identifier-Key Rotation Slice
 
@@ -1291,49 +1290,72 @@ identity migration path:
   exclusion of native inverter serials from runtime debug state. Consent denial
   occurs before either lease or transport is touched.
 
+## Current UniFi Connected-Client Identifier-Key Rotation Slice
+
+This slice closes bounded UniFi connected-client pseudonym-key rotation over
+the shared retained-identity migration path:
+
+- The host supplies one explicit safe site ID and two distinct one-shot
+  32-byte key leases. D23 read authorization and the exact ephemeral
+  device-identifier plus five-minute presence grants succeed before either
+  lease is consumed or transport is reached.
+- Both leases are consumed atomically. Exactly one authenticated first-page
+  client response must be non-empty, complete, and contain no more than 100
+  clients; hidden pagination fails closed.
+- The zeroizing native response derives exact source/destination pseudonym
+  correspondence under both keys. Raw client IDs and both key objects are
+  disposed before retained-identity migration begins.
+- The response must correspond exactly to the installed pseudonymous client
+  set. Every replacement preserves its existing bounded presence state and
+  expiry while changing the complete client device/entity identity pair.
+- `smart-home-runtime-store` persists the replacements with the caller's
+  expected revision and swaps live state only after durable success. Opaque
+  automation definitions and state must already use destination identities or
+  prove absence of source references.
+- Real loopback coverage proves one API-key-authenticated client request,
+  atomic two-key consumption, live and restart identity replacement, and raw
+  identifier exclusion. Consent denial occurs before leases or transport.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
 and then by prerequisite readiness:
 
-1. Add UniFi connected-client pseudonym-key rotation over the same completed
-   migration path. One bounded authenticated client response must derive exact
-   old/new correspondence under two one-shot Vault-leased keys, preserve the
-   five-minute presence boundary, dispose of native identifiers and keys, and
-   migrate or prove absence of automation references before revision-guarded
-   persistence.
-
-2. Add authenticated AirGradient MQTT only after official firmware removes
+1. Add authenticated AirGradient MQTT only after official firmware removes
    plaintext credential logging and one-shot Vault-leased credential injection
    can be proven without request-plan or normalized-state exposure.
-3. Add independent AirGradient telemetry, remote-configuration, and OTA
+2. Add independent AirGradient telemetry, remote-configuration, and OTA
    destinations only if firmware exposes separate settings; the current
    `httpDomain` contract intentionally governs all three as one HTTPS origin.
-4. Add authenticated HEOS source browsing and queue insertion only after the
+3. Add authenticated HEOS source browsing and queue insertion only after the
    account/session and Vault-leasing prerequisites are concrete.
-5. Automate Enphase access-token acquisition or renewal only after Enphase
+4. Automate Enphase access-token acquisition or renewal only after Enphase
    account authentication, cloud-session handling, operator consent, and
    Vault-leased credential policy are concrete; the current host accepts a
    pre-generated token.
-6. Add automatic Enphase IQ Gateway discovery only if Enphase documents a
+5. Add automatic Enphase IQ Gateway discovery only if Enphase documents a
    stable LAN advertisement; the current production path uses explicit local
    HTTPS endpoint and gateway-serial configuration.
-7. Add Enphase live battery, relay, generator, grid, and system-topology state
+6. Add Enphase live battery, relay, generator, grid, and system-topology state
    only after the normalized energy topology and retention semantics are
    concrete.
-8. Add Enphase relay, grid-services, or configuration controls only with
+7. Add Enphase relay, grid-services, or configuration controls only with
    operation-specific D23 contracts, explicit safety approval, bounded native
    semantics, and readable postcondition verification.
-9. Add expiration-aware ZoneMinder access-token reuse and refresh only after a
+8. Add expiration-aware ZoneMinder access-token reuse and refresh only after a
    supervised session lifecycle and Vault policy for refresh-token residency are
    concrete; the current isolated inspection drops both tokens after each read.
-10. Add ZoneMinder event push only after a concrete authenticated event host and
+9. Add ZoneMinder event push only after a concrete authenticated event host and
     supervised subscription lifecycle exist.
-11. Add ZoneMinder snapshots, streams, recordings, export, and playback only
+10. Add ZoneMinder snapshots, streams, recordings, export, and playback only
     through the camera-media lease and a concrete media executor.
-12. Add ZoneMinder PTZ, monitor configuration, recording-mode, or administrative
+11. Add ZoneMinder PTZ, monitor configuration, recording-mode, or administrative
     mutations only with operation-specific D23 contracts, least-privilege user
     checks, bounded semantics, and readable postcondition verification.
+12. Add UniFi connected-client key rotation across multiple sites or more than
+    one 100-client page only after a resumable protocol can prove exact global
+    correspondence and all-or-none persistence without extending native-ID or
+    one-shot key residency across partial responses.
 13. Add UniFi connected-client native details only after field-specific
    minimization and retention are approved; current presence intentionally
    excludes names, native IDs, MACs, IPs, and connection timestamps.

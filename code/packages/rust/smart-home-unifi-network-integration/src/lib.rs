@@ -3,6 +3,7 @@
 #![forbid(unsafe_code)]
 
 use coding_adventures_sha256::sha256;
+use coding_adventures_vault_leases::{LeaseError, LeaseId, LeaseManager};
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use http1::{parse_response_head, Http1ParseError};
 use http_core::{BodyKind, Header};
@@ -24,16 +25,23 @@ use smart_home_local_http::{
     LocalHttpAuth, LocalHttpEndpoint, LocalHttpError, LocalHttpMethod, LocalHttpRequestPlan,
     LocalHttpRequestTemplate, LocalHttpScheme,
 };
-use smart_home_runtime::{RuntimeError, SmartHomeRuntime};
-use std::collections::BTreeSet;
+use smart_home_runtime::{
+    RetainedDeviceIdentityReplacement, RetainedEntityIdentityReplacement, RuntimeError,
+    RuntimeRetainedIdentityMigration, RuntimeRetainedIdentityMigrationReport, SmartHomeRuntime,
+};
+use smart_home_runtime_store::{
+    DurableAutomationDefinition, RuntimeStoreError, SmartHomeRuntimeStore,
+};
+use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
 use std::io::{self, Read, Write};
 use std::net::{TcpStream, ToSocketAddrs};
 use std::time::Duration;
+use storage_core::{Revision, StorageBackend};
 use tls_platform::{default_connector, TlsConfig, TlsConnector};
 use url_parser::{Url, UrlError};
 
-pub const VERSION: &str = "0.3.0";
+pub const VERSION: &str = "0.4.0";
 pub const INTEGRATION_ID: &str = "unifi";
 pub const PROTOCOL_ID: &str = "unifi_network_integration_api";
 pub const API_BASE_PATH: &str = "/proxy/network/integration";
@@ -78,6 +86,8 @@ pub enum UniFiError {
     },
     DataGovernanceDenied(DataGovernanceDenial),
     Runtime(RuntimeError),
+    RuntimeStore(RuntimeStoreError),
+    Lease(LeaseError),
 }
 
 impl fmt::Display for UniFiError {
@@ -112,6 +122,8 @@ impl fmt::Display for UniFiError {
                 )
             }
             Self::Runtime(error) => error.fmt(formatter),
+            Self::RuntimeStore(error) => error.fmt(formatter),
+            Self::Lease(error) => write!(formatter, "UniFi presence-key lease failed: {error}"),
         }
     }
 }
@@ -139,6 +151,18 @@ impl From<serde_json::Error> for UniFiError {
 impl From<RuntimeError> for UniFiError {
     fn from(error: RuntimeError) -> Self {
         Self::Runtime(error)
+    }
+}
+
+impl From<RuntimeStoreError> for UniFiError {
+    fn from(error: RuntimeStoreError) -> Self {
+        Self::RuntimeStore(error)
+    }
+}
+
+impl From<LeaseError> for UniFiError {
+    fn from(error: LeaseError) -> Self {
+        Self::Lease(error)
     }
 }
 
@@ -305,6 +329,62 @@ pub struct UniFiConnectedClient {
     pub access_authorized: Option<bool>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct UniFiClientIdentityRotation {
+    pub source_pseudonym: String,
+    pub destination_pseudonym: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct UniFiPresenceKeyRotationReport {
+    pub rotated_clients: usize,
+    pub migration: RuntimeRetainedIdentityMigrationReport,
+    pub revision: Revision,
+}
+
+pub struct UniFiPresenceKeyRotationRequest<'a> {
+    pub principal_id: AgentId,
+    pub site_id: String,
+    pub source_key_lease_id: &'a LeaseId,
+    pub destination_key_lease_id: &'a LeaseId,
+    pub automation_definitions: &'a [DurableAutomationDefinition],
+    pub automation_state: Option<JsonValue>,
+    pub observed_at_ms: u64,
+    pub expected_revision: Revision,
+}
+
+impl<'a> UniFiPresenceKeyRotationRequest<'a> {
+    pub fn new(
+        principal_id: AgentId,
+        site_id: impl Into<String>,
+        source_key_lease_id: &'a LeaseId,
+        destination_key_lease_id: &'a LeaseId,
+        observed_at_ms: u64,
+        expected_revision: Revision,
+    ) -> Self {
+        Self {
+            principal_id,
+            site_id: site_id.into(),
+            source_key_lease_id,
+            destination_key_lease_id,
+            automation_definitions: &[],
+            automation_state: None,
+            observed_at_ms,
+            expected_revision,
+        }
+    }
+
+    pub fn with_automation_context(
+        mut self,
+        automation_definitions: &'a [DurableAutomationDefinition],
+        automation_state: Option<JsonValue>,
+    ) -> Self {
+        self.automation_definitions = automation_definitions;
+        self.automation_state = automation_state;
+        self
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct UniFiStatisticsTarget {
     pub site_id: String,
@@ -369,6 +449,19 @@ pub trait UniFiTransport {
     ) -> Result<Vec<UniFiConnectedClient>, UniFiError> {
         Err(UniFiError::Validation(
             "transport does not implement connected-client inspection".to_string(),
+        ))
+    }
+
+    fn inspect_client_identity_rotation(
+        &mut self,
+        _plans: &UniFiRequestPlans,
+        _api_key: &UniFiApiKey,
+        _site_id: &str,
+        _source_key: &UniFiPresenceKey,
+        _destination_key: &UniFiPresenceKey,
+    ) -> Result<Vec<UniFiClientIdentityRotation>, UniFiError> {
+        Err(UniFiError::Validation(
+            "transport does not implement connected-client identity rotation".to_string(),
         ))
     }
 
@@ -591,6 +684,26 @@ impl UniFiTransport for UniFiLanTransport {
         Ok(clients)
     }
 
+    fn inspect_client_identity_rotation(
+        &mut self,
+        plans: &UniFiRequestPlans,
+        api_key: &UniFiApiKey,
+        site_id: &str,
+        source_key: &UniFiPresenceKey,
+        destination_key: &UniFiPresenceKey,
+    ) -> Result<Vec<UniFiClientIdentityRotation>, UniFiError> {
+        let path = format!("/v1/sites/{}/clients", safe_path_id(site_id)?);
+        let plan = paginated_plan(
+            &plans.endpoint,
+            &plans.api_key_ref,
+            &path,
+            0,
+            plans.timeout_ms,
+        )?;
+        let response = self.get_sensitive_json(&plan, api_key, "connected client list")?;
+        parse_client_identity_rotation(&response.0, site_id, source_key, destination_key)
+    }
+
     fn inspect_device_statistics(
         &mut self,
         plans: &UniFiRequestPlans,
@@ -670,6 +783,21 @@ impl<T: UniFiTransport> UniFiClient<T> {
             &snapshot.sites,
         )?;
         Ok(snapshot)
+    }
+
+    fn inspect_client_identity_rotation(
+        &mut self,
+        site_id: &str,
+        source_key: &UniFiPresenceKey,
+        destination_key: &UniFiPresenceKey,
+    ) -> Result<Vec<UniFiClientIdentityRotation>, UniFiError> {
+        self.transport.inspect_client_identity_rotation(
+            &self.plans,
+            &self.api_key,
+            site_id,
+            source_key,
+            destination_key,
+        )
     }
 
     pub fn inspect_device_statistics(
@@ -756,6 +884,85 @@ impl<T: UniFiTransport> UniFiRuntimeIntegration<T> {
         )?;
         let snapshot = self.client.inspect_with_connected_clients()?;
         install_snapshot(runtime, &self.client.config, &snapshot, observed_at_ms)
+    }
+
+    pub fn rotate_client_presence_key_authorized<B, L>(
+        &mut self,
+        runtime: &mut SmartHomeRuntime,
+        store: &SmartHomeRuntimeStore<B>,
+        leases: &L,
+        request: UniFiPresenceKeyRotationRequest<'_>,
+    ) -> Result<UniFiPresenceKeyRotationReport, UniFiError>
+    where
+        B: StorageBackend,
+        L: LeaseManager + ?Sized,
+    {
+        safe_path_id(&request.site_id)?;
+        if request.source_key_lease_id == request.destination_key_lease_id {
+            return Err(UniFiError::Validation(
+                "source and destination presence-key leases must be distinct".to_string(),
+            ));
+        }
+        authorize_read(
+            runtime,
+            request.principal_id.clone(),
+            request.observed_at_ms,
+        )?;
+        authorize_client_inspection(
+            &self.data_governance,
+            &request.principal_id,
+            &self.client.config,
+            request.observed_at_ms,
+        )?;
+
+        let mut payloads = leases.consume_many(&[
+            request.source_key_lease_id.clone(),
+            request.destination_key_lease_id.clone(),
+        ])?;
+        let destination_payload = payloads
+            .pop()
+            .expect("two requested leases return two ordered payloads");
+        let source_payload = payloads
+            .pop()
+            .expect("two requested leases return two ordered payloads");
+        let source_key = UniFiPresenceKey::new(source_payload.as_bytes().to_vec())?;
+        let destination_key = UniFiPresenceKey::new(destination_payload.as_bytes().to_vec())?;
+        drop(source_payload);
+        drop(destination_payload);
+        if source_key.bytes.as_slice() == destination_key.bytes.as_slice() {
+            return Err(UniFiError::Validation(
+                "destination presence key must differ from the source key".to_string(),
+            ));
+        }
+
+        let rotations = self.client.inspect_client_identity_rotation(
+            &request.site_id,
+            &source_key,
+            &destination_key,
+        )?;
+        drop(source_key);
+        drop(destination_key);
+
+        let rotated_clients = rotations.len();
+        let migration = build_client_identity_migration(
+            runtime,
+            &self.client.config,
+            &rotations,
+            request.observed_at_ms,
+        )?;
+        let (migration, revision) = store.migrate_retained_identities(
+            runtime,
+            &migration,
+            request.automation_definitions,
+            request.automation_state,
+            request.observed_at_ms,
+            request.expected_revision,
+        )?;
+        Ok(UniFiPresenceKeyRotationReport {
+            rotated_clients,
+            migration,
+            revision,
+        })
     }
 
     pub fn inspect_statistics_and_install_authorized(
@@ -1281,6 +1488,59 @@ fn parse_client_page(
     })
 }
 
+fn parse_client_identity_rotation(
+    value: &JsonValue,
+    site_id: &str,
+    source_key: &UniFiPresenceKey,
+    destination_key: &UniFiPresenceKey,
+) -> Result<Vec<UniFiClientIdentityRotation>, UniFiError> {
+    safe_path_id(site_id)?;
+    let object = value
+        .as_object()
+        .ok_or(UniFiError::MissingField("client page object"))?;
+    let (offset, count, total_count, data) = page_fields(object, 0)?;
+    if offset != 0 || count == 0 || count != total_count || total_count > PAGE_LIMIT {
+        return Err(UniFiError::Validation(format!(
+            "client rotation requires one complete page containing 1-{PAGE_LIMIT} clients"
+        )));
+    }
+
+    let mut source_pseudonyms = BTreeSet::new();
+    let mut destination_pseudonyms = BTreeSet::new();
+    let mut rotations = Vec::with_capacity(data.len());
+    for item in data {
+        let object = item
+            .as_object()
+            .ok_or(UniFiError::MissingField("client data item"))?;
+        let native_id = Zeroizing::new(required_text(object, "id")?);
+        safe_path_id(native_id.as_str())?;
+        let source_pseudonym = connected_client_pseudonym(source_key, site_id, native_id.as_str());
+        let destination_pseudonym =
+            connected_client_pseudonym(destination_key, site_id, native_id.as_str());
+        if source_pseudonym == destination_pseudonym {
+            return Err(UniFiError::Validation(
+                "presence-key rotation produced an unchanged pseudonym".to_string(),
+            ));
+        }
+        if !source_pseudonyms.insert(source_pseudonym.clone()) {
+            return Err(UniFiError::Validation(
+                "duplicate source connected-client identifier".to_string(),
+            ));
+        }
+        if !destination_pseudonyms.insert(destination_pseudonym.clone()) {
+            return Err(UniFiError::Validation(
+                "duplicate destination connected-client identifier".to_string(),
+            ));
+        }
+        rotations.push(UniFiClientIdentityRotation {
+            source_pseudonym,
+            destination_pseudonym,
+        });
+    }
+    rotations.sort_by(|left, right| left.source_pseudonym.cmp(&right.source_pseudonym));
+    Ok(rotations)
+}
+
 fn parse_client_access(
     value: Option<&JsonValue>,
 ) -> Result<(Option<String>, Option<bool>), UniFiError> {
@@ -1460,6 +1720,165 @@ fn connected_client_pseudonym(
     input.extend_from_slice(native_id.as_bytes());
     let digest = Zeroizing::new(sha256(input.as_slice()));
     lowercase_hex(&digest[..16])
+}
+
+fn build_client_identity_migration(
+    runtime: &SmartHomeRuntime,
+    config: &UniFiConfig,
+    rotations: &[UniFiClientIdentityRotation],
+    observed_at_ms: u64,
+) -> Result<RuntimeRetainedIdentityMigration, UniFiError> {
+    if rotations.is_empty() {
+        return Err(UniFiError::Validation(
+            "presence-key rotation requires at least one connected client".to_string(),
+        ));
+    }
+
+    let mut source_devices = BTreeMap::new();
+    for device in runtime.registry().devices().filter(|device| {
+        device.bridge_id == config.bridge_id
+            && metadata_value(&device.metadata, "unifi.identifier_form") == Some("keyed_pseudonym")
+    }) {
+        let identifiers = device
+            .identifiers
+            .iter()
+            .filter(|identifier| {
+                identifier.family == ProtocolFamily::Vendor(PROTOCOL_ID.to_string())
+                    && identifier.kind == "client_pseudonym"
+            })
+            .collect::<Vec<_>>();
+        let [identifier] = identifiers.as_slice() else {
+            return Err(UniFiError::Validation(format!(
+                "installed client {} must have exactly one governed pseudonym",
+                device.device_id
+            )));
+        };
+        validate_pseudonym(&identifier.value)?;
+        if source_devices
+            .insert(identifier.value.clone(), device)
+            .is_some()
+        {
+            return Err(UniFiError::Validation(
+                "installed connected-client pseudonyms must be unique".to_string(),
+            ));
+        }
+    }
+    if source_devices.len() != rotations.len() {
+        return Err(UniFiError::Validation(
+            "client response does not exactly match the installed pseudonymous client set"
+                .to_string(),
+        ));
+    }
+
+    let mut replacements = Vec::with_capacity(rotations.len());
+    for rotation in rotations {
+        let source_device = source_devices
+            .remove(&rotation.source_pseudonym)
+            .ok_or_else(|| {
+                UniFiError::Validation(
+                    "client response does not correspond to an installed pseudonym".to_string(),
+                )
+            })?;
+        validate_pseudonym(&rotation.destination_pseudonym)?;
+        let [source_entity_id] = source_device.entity_ids.as_slice() else {
+            return Err(UniFiError::Validation(format!(
+                "installed client {} must have exactly one presence entity",
+                source_device.device_id
+            )));
+        };
+        let source_entity = runtime.registry().entity(source_entity_id).ok_or_else(|| {
+            UniFiError::Validation(format!(
+                "installed client references missing entity {source_entity_id}"
+            ))
+        })?;
+        let state = source_entity.state.as_ref().ok_or_else(|| {
+            UniFiError::Validation(format!(
+                "installed client entity {source_entity_id} has no presence state"
+            ))
+        })?;
+        let maximum_expiry = state
+            .observed_at_ms
+            .checked_add(CLIENT_PRESENCE_RETENTION_MS)
+            .ok_or_else(|| {
+                UniFiError::Validation("client presence expiry overflows time".to_string())
+            })?;
+        if state
+            .expires_at_ms
+            .is_none_or(|expiry| expiry <= observed_at_ms || expiry > maximum_expiry)
+        {
+            return Err(UniFiError::Validation(format!(
+                "installed client entity {source_entity_id} is outside the five-minute presence boundary"
+            )));
+        }
+
+        let destination_device_id =
+            DeviceId::trusted(format!("unifi:client:{}", rotation.destination_pseudonym));
+        let destination_entity_id = EntityId::trusted(format!(
+            "unifi:client:{}:presence",
+            rotation.destination_pseudonym
+        ));
+        let mut replacement_entity = source_entity.clone();
+        replacement_entity.entity_id = destination_entity_id.clone();
+        replacement_entity.device_id = destination_device_id.clone();
+        replacement_entity.name = format!(
+            "UniFi client {} presence",
+            &rotation.destination_pseudonym[..8]
+        );
+        replacement_entity.state = None;
+
+        let mut replacement_device = source_device.clone();
+        replacement_device.device_id = destination_device_id;
+        replacement_device.name = format!(
+            "UniFi connected client {}",
+            &rotation.destination_pseudonym[..8]
+        );
+        replacement_device.entity_ids = vec![destination_entity_id];
+        let identifier = replacement_device
+            .identifiers
+            .iter_mut()
+            .find(|identifier| {
+                identifier.family == ProtocolFamily::Vendor(PROTOCOL_ID.to_string())
+                    && identifier.kind == "client_pseudonym"
+            })
+            .expect("validated client pseudonym identifier remains present");
+        identifier.value = rotation.destination_pseudonym.clone();
+        replacements.push(RetainedDeviceIdentityReplacement::new(
+            source_device.device_id.clone(),
+            replacement_device,
+            vec![RetainedEntityIdentityReplacement::new(
+                source_entity_id.clone(),
+                replacement_entity,
+            )],
+        ));
+    }
+    if !source_devices.is_empty() {
+        return Err(UniFiError::Validation(
+            "client response does not exactly match the installed pseudonymous client set"
+                .to_string(),
+        ));
+    }
+    Ok(RuntimeRetainedIdentityMigration::new(replacements))
+}
+
+fn validate_pseudonym(value: &str) -> Result<(), UniFiError> {
+    if value.len() == 32
+        && value
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+    {
+        Ok(())
+    } else {
+        Err(UniFiError::Validation(
+            "connected-client pseudonym must be 128-bit lowercase hexadecimal text".to_string(),
+        ))
+    }
+}
+
+fn metadata_value<'a>(metadata: &'a [Metadata], key: &str) -> Option<&'a str> {
+    metadata
+        .iter()
+        .find(|entry| entry.key == key)
+        .map(|entry| entry.value.as_str())
 }
 
 fn lowercase_hex(bytes: &[u8]) -> String {
@@ -2185,15 +2604,20 @@ fn decode_chunked(input: &[u8], maximum: usize) -> Result<Vec<u8>, UniFiError> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use coding_adventures_vault_leases::{InMemoryLeaseManager, LeasePayload, LeaseStatus};
     use smart_home_core::{CapabilityGrant, CapabilityGrantId, PrivilegeTier};
     use smart_home_data_governance::{ConsentReceiptRef, DataPurpose, DataUseGrant};
     use std::io::{BufRead, BufReader};
     use std::net::TcpListener;
+    use std::path::PathBuf;
     use std::sync::atomic::{AtomicUsize, Ordering};
-    use std::sync::{Arc, Mutex};
+    use std::sync::{mpsc, Arc, Mutex};
     use std::thread;
+    use std::time::{SystemTime, UNIX_EPOCH};
+    use storage_local_folder::LocalFolderStorageBackend;
 
     const PRESENCE_KEY: [u8; 32] = [0x6c; 32];
+    const ROTATED_PRESENCE_KEY: [u8; 32] = [0x7d; 32];
     const CLIENT_ID: &str = "f27a1d16-6f5d-4bd8-a12c-c9ed87f17c14";
     const CLIENT_NAME: &str = "Private Phone";
     const CLIENT_MAC: &str = "aa:bb:cc:dd:ee:ff";
@@ -2204,9 +2628,13 @@ mod tests {
     }
 
     fn config(port: u16) -> UniFiConfig {
+        config_for(&format!("http://127.0.0.1:{port}"))
+    }
+
+    fn config_for(base_url: &str) -> UniFiConfig {
         UniFiConfig::new(
             BridgeId::trusted("unifi.test"),
-            format!("http://127.0.0.1:{port}"),
+            base_url,
             VaultRef::trusted("vault://unifi/test"),
         )
         .unwrap()
@@ -2400,6 +2828,40 @@ mod tests {
         policy
     }
 
+    fn temp_root(name: &str) -> PathBuf {
+        let unique = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        std::env::temp_dir().join(format!(
+            "smart-home-unifi-{name}-{}-{unique}",
+            std::process::id()
+        ))
+    }
+
+    fn installed_client_runtime(
+        base_url: &str,
+    ) -> (SmartHomeRuntime, AgentId, InstalledUniFiNetwork) {
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:presence-rotation");
+        authorize(&mut runtime, principal.clone());
+        let site = snapshot().sites[0].clone();
+        let key = UniFiPresenceKey::new(PRESENCE_KEY.to_vec()).unwrap();
+        let sensitive = SensitiveJson(connected_client_page());
+        let mut installed_snapshot = snapshot();
+        installed_snapshot.connected_clients = parse_client_page(&sensitive.0, 0, &site, &key)
+            .unwrap()
+            .data;
+        let installed = install_snapshot(
+            &mut runtime,
+            &config_for(base_url),
+            &installed_snapshot,
+            4_000,
+        )
+        .unwrap();
+        (runtime, principal, installed)
+    }
+
     fn statistics_policy(principal: &AgentId) -> DataGovernancePolicy {
         let mut policy = DataGovernancePolicy::default();
         policy
@@ -2523,6 +2985,180 @@ mod tests {
             ))
         ));
         assert_eq!(calls.load(Ordering::SeqCst), 0);
+    }
+
+    struct RotationCountingTransport {
+        calls: usize,
+    }
+
+    impl UniFiTransport for RotationCountingTransport {
+        fn inspect(
+            &mut self,
+            _plans: &UniFiRequestPlans,
+            _api_key: &UniFiApiKey,
+        ) -> Result<UniFiSnapshot, UniFiError> {
+            panic!("rotation tests must not run aggregate inspection")
+        }
+
+        fn inspect_client_identity_rotation(
+            &mut self,
+            _plans: &UniFiRequestPlans,
+            _api_key: &UniFiApiKey,
+            site_id: &str,
+            source_key: &UniFiPresenceKey,
+            destination_key: &UniFiPresenceKey,
+        ) -> Result<Vec<UniFiClientIdentityRotation>, UniFiError> {
+            self.calls = self.calls.saturating_add(1);
+            parse_client_identity_rotation(
+                &connected_client_page(),
+                site_id,
+                source_key,
+                destination_key,
+            )
+        }
+    }
+
+    #[test]
+    fn rotation_without_presence_consent_consumes_no_key_and_reaches_no_transport() {
+        let (mut runtime, principal, _) = installed_client_runtime("http://127.0.0.1:1");
+        let root = temp_root("rotation-consent-denial");
+        let store = SmartHomeRuntimeStore::new(LocalFolderStorageBackend::new(root.clone()));
+        let revision = store.save(&runtime, &[], 4_000).unwrap();
+        let leases = InMemoryLeaseManager::new();
+        let source_lease = leases
+            .issue(LeasePayload::new(PRESENCE_KEY.to_vec()), 60_000)
+            .unwrap();
+        let destination_lease = leases
+            .issue(LeasePayload::new(ROTATED_PRESENCE_KEY.to_vec()), 60_000)
+            .unwrap();
+        let client =
+            UniFiClient::new(config(1), api_key(), RotationCountingTransport { calls: 0 }).unwrap();
+        let mut integration = UniFiRuntimeIntegration::new(client);
+
+        assert!(matches!(
+            integration.rotate_client_presence_key_authorized(
+                &mut runtime,
+                &store,
+                &leases,
+                UniFiPresenceKeyRotationRequest::new(
+                    principal,
+                    "site-1",
+                    &source_lease,
+                    &destination_lease,
+                    5_000,
+                    revision,
+                ),
+            ),
+            Err(UniFiError::DataGovernanceDenied(
+                DataGovernanceDenial::NoMatchingConsent
+            ))
+        ));
+        assert_eq!(integration.client.transport.calls, 0);
+        assert_eq!(
+            leases.consume(&source_lease).unwrap().as_bytes(),
+            PRESENCE_KEY
+        );
+        assert_eq!(
+            leases.consume(&destination_lease).unwrap().as_bytes(),
+            ROTATED_PRESENCE_KEY
+        );
+        std::fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn rotation_parser_derives_exact_pseudonyms_and_requires_one_complete_page() {
+        let source_key = UniFiPresenceKey::new(PRESENCE_KEY.to_vec()).unwrap();
+        let destination_key = UniFiPresenceKey::new(ROTATED_PRESENCE_KEY.to_vec()).unwrap();
+        let sensitive = SensitiveJson(connected_client_page());
+        let rotations =
+            parse_client_identity_rotation(&sensitive.0, "site-1", &source_key, &destination_key)
+                .unwrap();
+        assert_eq!(rotations.len(), 1);
+        assert_eq!(rotations[0].source_pseudonym.len(), 32);
+        assert_eq!(rotations[0].destination_pseudonym.len(), 32);
+        assert_ne!(
+            rotations[0].source_pseudonym,
+            rotations[0].destination_pseudonym
+        );
+        for raw in [CLIENT_ID, CLIENT_NAME, CLIENT_MAC, CLIENT_IP] {
+            assert!(!format!("{rotations:?}").contains(raw));
+        }
+
+        let mut partial = connected_client_page();
+        partial["totalCount"] = serde_json::json!(2);
+        assert!(
+            parse_client_identity_rotation(&partial, "site-1", &source_key, &destination_key,)
+                .unwrap_err()
+                .to_string()
+                .contains("one complete page")
+        );
+    }
+
+    #[test]
+    fn rotation_rejects_stale_automation_identity_without_swapping_live_state() {
+        let (mut runtime, principal, installed) = installed_client_runtime("http://127.0.0.1:1");
+        let source_entity_id = installed.connected_client_entity_ids[0].clone();
+        let source_device_id = runtime
+            .registry()
+            .entity(&source_entity_id)
+            .unwrap()
+            .device_id
+            .clone();
+        let root = temp_root("rotation-stale-automation");
+        let store = SmartHomeRuntimeStore::new(LocalFolderStorageBackend::new(root.clone()));
+        let revision = store.save(&runtime, &[], 4_000).unwrap();
+        let leases = InMemoryLeaseManager::new();
+        let source_lease = leases
+            .issue(LeasePayload::new(PRESENCE_KEY.to_vec()), 60_000)
+            .unwrap();
+        let destination_lease = leases
+            .issue(LeasePayload::new(ROTATED_PRESENCE_KEY.to_vec()), 60_000)
+            .unwrap();
+        let definitions = vec![DurableAutomationDefinition::new(
+            "automation:stale-unifi-client",
+            true,
+            serde_json::json!({"entity_id": source_entity_id.to_string()}),
+        )
+        .unwrap()];
+        let client =
+            UniFiClient::new(config(1), api_key(), RotationCountingTransport { calls: 0 }).unwrap();
+        let mut integration =
+            UniFiRuntimeIntegration::new(client).with_data_governance(client_policy(&principal));
+
+        let error = integration
+            .rotate_client_presence_key_authorized(
+                &mut runtime,
+                &store,
+                &leases,
+                UniFiPresenceKeyRotationRequest::new(
+                    principal,
+                    "site-1",
+                    &source_lease,
+                    &destination_lease,
+                    5_000,
+                    revision,
+                )
+                .with_automation_context(&definitions, None),
+            )
+            .unwrap_err();
+
+        assert!(matches!(
+            error,
+            UniFiError::RuntimeStore(RuntimeStoreError::Validation {
+                field: "automation_definitions",
+                ..
+            })
+        ));
+        assert_eq!(integration.client.transport.calls, 1);
+        assert!(runtime.registry().device(&source_device_id).is_some());
+        assert!(runtime.registry().entity(&source_entity_id).is_some());
+        let restored = store.load().unwrap().unwrap();
+        assert!(restored
+            .runtime
+            .registry()
+            .device(&source_device_id)
+            .is_some());
+        std::fs::remove_dir_all(root).unwrap();
     }
 
     #[test]
@@ -2991,6 +3627,135 @@ mod tests {
         for raw in [CLIENT_ID, CLIENT_NAME, CLIENT_MAC, CLIENT_IP] {
             assert!(!debug.contains(raw));
         }
+    }
+
+    #[test]
+    fn governed_rotation_consumes_two_keys_reads_once_and_persists_atomically() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        let base_url = format!("http://{address}");
+        let (sender, receiver) = mpsc::channel();
+        let server = thread::spawn(move || {
+            let (stream, _) = listener.accept().unwrap();
+            let mut reader = BufReader::new(stream);
+            let mut head = String::new();
+            loop {
+                let mut line = String::new();
+                reader.read_line(&mut line).unwrap();
+                if line == "\r\n" {
+                    break;
+                }
+                head.push_str(&line);
+            }
+            sender.send(head).unwrap();
+            let body = serde_json::to_vec(&connected_client_page()).unwrap();
+            let response_head = format!(
+                "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+                body.len()
+            );
+            reader
+                .get_mut()
+                .write_all(response_head.as_bytes())
+                .unwrap();
+            reader.get_mut().write_all(&body).unwrap();
+        });
+
+        let (mut runtime, principal, installed) = installed_client_runtime(&base_url);
+        let source_entity_id = installed.connected_client_entity_ids[0].clone();
+        let source_device_id = runtime
+            .registry()
+            .entity(&source_entity_id)
+            .unwrap()
+            .device_id
+            .clone();
+        let root = temp_root("presence-key-rotation");
+        let store = SmartHomeRuntimeStore::new(LocalFolderStorageBackend::new(root.clone()));
+        let initial_revision = store.save(&runtime, &[], 4_000).unwrap();
+        let leases = InMemoryLeaseManager::new();
+        let source_lease = leases
+            .issue(LeasePayload::new(PRESENCE_KEY.to_vec()), 60_000)
+            .unwrap();
+        let destination_lease = leases
+            .issue(LeasePayload::new(ROTATED_PRESENCE_KEY.to_vec()), 60_000)
+            .unwrap();
+        let expected_pseudonym = connected_client_pseudonym(
+            &UniFiPresenceKey::new(ROTATED_PRESENCE_KEY.to_vec()).unwrap(),
+            "site-1",
+            CLIENT_ID,
+        );
+        let expected_device_id = DeviceId::trusted(format!("unifi:client:{expected_pseudonym}"));
+        let expected_entity_id =
+            EntityId::trusted(format!("unifi:client:{expected_pseudonym}:presence"));
+        let client = UniFiClient::new(
+            config_for(&base_url),
+            api_key(),
+            UniFiLanTransport::default(),
+        )
+        .unwrap();
+        let mut integration =
+            UniFiRuntimeIntegration::new(client).with_data_governance(client_policy(&principal));
+
+        let report = integration
+            .rotate_client_presence_key_authorized(
+                &mut runtime,
+                &store,
+                &leases,
+                UniFiPresenceKeyRotationRequest::new(
+                    principal,
+                    "site-1",
+                    &source_lease,
+                    &destination_lease,
+                    5_000,
+                    initial_revision,
+                ),
+            )
+            .unwrap();
+        server.join().unwrap();
+
+        assert_eq!(report.rotated_clients, 1);
+        assert_eq!(report.migration.migrated_devices, 1);
+        assert_eq!(report.migration.migrated_entities, 1);
+        let requests = receiver.try_iter().collect::<Vec<_>>();
+        assert_eq!(requests.len(), 1);
+        assert!(requests[0].starts_with(
+            "GET /proxy/network/integration/v1/sites/site-1/clients?offset=0&limit=100 HTTP/1.1"
+        ));
+        assert!(requests[0].contains("X-API-Key: secret-api-key\r\n"));
+        assert_eq!(
+            leases.lookup(&source_lease).unwrap().status_at(0),
+            LeaseStatus::Revoked
+        );
+        assert_eq!(
+            leases.lookup(&destination_lease).unwrap().status_at(0),
+            LeaseStatus::Revoked
+        );
+        assert!(runtime.registry().device(&source_device_id).is_none());
+        assert!(runtime.registry().entity(&source_entity_id).is_none());
+        let replacement = runtime.registry().device(&expected_device_id).unwrap();
+        assert_eq!(replacement.entity_ids, vec![expected_entity_id.clone()]);
+        let presence = runtime.registry().entity(&expected_entity_id).unwrap();
+        assert_eq!(
+            presence.state.as_ref().unwrap().expires_at_ms,
+            Some(4_000 + CLIENT_PRESENCE_RETENTION_MS)
+        );
+        let debug = format!("{:?}", runtime.registry());
+        for raw in [CLIENT_ID, CLIENT_NAME, CLIENT_MAC, CLIENT_IP] {
+            assert!(!debug.contains(raw));
+        }
+
+        let restored = store.load().unwrap().unwrap();
+        assert_eq!(restored.revision, report.revision);
+        assert!(restored
+            .runtime
+            .registry()
+            .device(&expected_device_id)
+            .is_some());
+        assert!(restored
+            .runtime
+            .registry()
+            .entity(&expected_entity_id)
+            .is_some());
+        std::fs::remove_dir_all(root).unwrap();
     }
 
     #[test]

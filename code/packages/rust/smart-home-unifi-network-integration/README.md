@@ -25,6 +25,16 @@ runtime identity, state, metadata, errors, or debug output. Pseudonymous client
 state exposes only current presence, connection type, and optional access shape,
 and expires after five minutes.
 
+Host-owned presence-key rotation accepts one explicit safe site ID and two
+distinct one-shot Vault leases containing 32-byte keys. After the same D23 read,
+device-identifier, and five-minute presence grants succeed, the integration
+atomically consumes both leases and makes exactly one bounded request for the
+site's first client page. The page must be complete, non-empty, and contain at
+most 100 clients. It derives exact old/new pseudonym correspondence while the
+native response remains zeroizing, drops both keys before migration, preserves
+the existing five-minute state expiry, rejects stale automation references, and
+persists every client device/entity replacement through expected-revision CAS.
+
 Live adopted-device statistics use the official
 `/v1/sites/{siteId}/devices/{deviceId}/statistics/latest` endpoint only for an
 explicit set of already-installed devices. D23 read authorization and an exact
@@ -36,11 +46,12 @@ readings are validated before installation and expire after two minutes. Native
 heartbeat timestamps are intentionally discarded.
 
 This slice intentionally excludes remote Site Manager access, connected-client
-native details and retained identity migration, historical statistics,
-unbounded fleet polling, event streaming, adoption, guest authorization, port
-actions, and configuration mutations. Those require privacy and
-telemetry-egress policy, supervised event hosts, or operation-specific D23
-contracts and readable verification.
+native details, multi-site or paginated client-key rotation, historical
+statistics, unbounded fleet polling, event streaming, adoption, guest
+authorization, port actions, and configuration mutations. Those require
+privacy and telemetry-egress policy, a resumable atomic rotation protocol,
+supervised event hosts, or operation-specific D23 contracts and readable
+verification.
 
 Protocol references:
 
