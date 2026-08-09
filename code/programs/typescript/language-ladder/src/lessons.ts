@@ -25,7 +25,10 @@ import { parseLesson, type ParsedLesson } from "@coding-adventures/human-languag
 import {
   compileLessonActivities,
 } from "@coding-adventures/human-language-data/src/activity.ts";
-import type { CompiledLessonActivity } from "@coding-adventures/human-language-data/src/types.ts";
+import type {
+  CompiledLessonActivity,
+  LessonPatternSlot,
+} from "@coding-adventures/human-language-data/src/types.ts";
 
 /**
  * Every lesson markdown file, as a lazy raw-text loader keyed by path.
@@ -74,6 +77,8 @@ export interface Lesson {
   body: string;
   /** Typed, block-bound retrieval contracts; never inferred from lesson prose. */
   activities: CompiledLessonActivity[];
+  /** Ordered known fillers for a productive `pattern` lesson. */
+  patternSlots?: LessonPatternSlot[];
   /** Canonical AST fingerprint; generated books combine these in authored order. */
   sourceHash?: string;
   /** Explicit schema-v2 local order. Legacy lessons omit it. */
@@ -143,6 +148,7 @@ export function toLesson(parsed: ParsedLesson): Lesson | null {
     etymologyHook: r.etymologyHook,
     body: parsed.body,
     activities: compileLessonActivities(parsed.blocks),
+    patternSlots: parsed.patternSlots,
     sourceHash: parsed.sourceHash,
     sequence:
       typeof fm.sequence === "string" && Number.isFinite(Number(fm.sequence))

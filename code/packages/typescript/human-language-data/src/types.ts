@@ -336,6 +336,14 @@ export type LessonBlockType =
   | "recall"
   | "unknown";
 
+/** One named substitution point in a productive `pattern` lesson. */
+export interface LessonPatternSlot {
+  /** Author-order is significant: renderers introduce slots in this order. */
+  name: string;
+  /** Knowledge atoms the reader may substitute without learning anything new. */
+  fillers: string[];
+}
+
 /**
  * Knowledge made available or assessed at one lesson-body boundary.
  *

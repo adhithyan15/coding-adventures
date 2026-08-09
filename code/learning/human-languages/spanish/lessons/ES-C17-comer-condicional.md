@@ -15,11 +15,11 @@ etymology_hook: "comería keeps the whole infinitive comer before the same -ía 
 duration:
   max_seconds: 250
 requires:
-  knowledge: [ES-LEX-COMER, ES-GRAMMAR-ER-FUTURE-SINGULAR, ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL, ES-GRAMMAR-AR-CONDITIONAL-SINGULAR, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL]
+  knowledge: [ES-LEX-COMER, ES-PATTERN-ER-FUTURE-SINGULAR, ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL, ES-GRAMMAR-AR-CONDITIONAL-SINGULAR, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL]
 introduces:
   knowledge: [ES-GRAMMAR-ER-CONDITIONAL-SINGULAR]
 practises:
-  knowledge: [ES-LEX-COMER, ES-GRAMMAR-ER-FUTURE-SINGULAR, ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL, ES-GRAMMAR-AR-CONDITIONAL-SINGULAR, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL, ES-GRAMMAR-ER-CONDITIONAL-SINGULAR]
+  knowledge: [ES-LEX-COMER, ES-PATTERN-ER-FUTURE-SINGULAR, ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL, ES-GRAMMAR-AR-CONDITIONAL-SINGULAR, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL, ES-GRAMMAR-ER-CONDITIONAL-SINGULAR]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [ES-C17-condicional, ES-C17-comer-futuro, ES-C07-comer]
 # comería — keep -er before “would”
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMER, ES-GRAMMAR-ER-FUTURE-SINGULAR, ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL, ES-GRAMMAR-AR-CONDITIONAL-SINGULAR] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMER, ES-PATTERN-ER-FUTURE-SINGULAR, ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL, ES-GRAMMAR-AR-CONDITIONAL-SINGULAR] -->
 
 [PAUSE 2s] **Comeré** means “I will eat.” Keep **comer** whole and exchange
 the future ending for **-ía**: **comería** — “I would eat.”
@@ -49,9 +49,9 @@ Say **comería · comerías · comería**. Compare **hablaría / comería**: one
 bounded ending set serves both complete infinitives. Plural persons wait.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMER, ES-GRAMMAR-ER-FUTURE-SINGULAR, ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL, ES-GRAMMAR-AR-CONDITIONAL-SINGULAR, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL, ES-GRAMMAR-ER-CONDITIONAL-SINGULAR] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMER, ES-PATTERN-ER-FUTURE-SINGULAR, ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL, ES-GRAMMAR-AR-CONDITIONAL-SINGULAR, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL, ES-GRAMMAR-ER-CONDITIONAL-SINGULAR] -->
 <!-- hl-activity: {"id":"ES-C17-comer-condicional-singular-forms","kind":"text","assesses":["ES-GRAMMAR-ER-CONDITIONAL-SINGULAR","ES-LEX-COMER"],"prompt":"Give the learned singular conditional forms of comer: yo, tú, then él/ella/usted.","answer":"comería, comerías, comería","accepted":["comería comerías comería","comería / comerías / comería"],"feedback":{"correct":"Right: comería, comerías, comería.","incorrect":"Keep comer whole and add -ía, -ías, -ía."},"response_seconds":9} -->
-<!-- hl-activity: {"id":"ES-C17-comer-condicional-future-pair","kind":"text","assesses":["ES-GRAMMAR-ER-FUTURE-SINGULAR","ES-GRAMMAR-ER-CONDITIONAL-SINGULAR","ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL"],"prompt":"Give the yo pair 'I will eat; I would eat' in Spanish.","answer":"Comeré; comería.","accepted":["Comeré comería","comeré / comería"],"feedback":{"correct":"Right: comeré; comería.","incorrect":"Keep comer and contrast future -é with conditional -ía."},"response_seconds":8} -->
+<!-- hl-activity: {"id":"ES-C17-comer-condicional-future-pair","kind":"text","assesses":["ES-PATTERN-ER-FUTURE-SINGULAR","ES-GRAMMAR-ER-CONDITIONAL-SINGULAR","ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL"],"prompt":"Give the yo pair 'I will eat; I would eat' in Spanish.","answer":"Comeré; comería.","accepted":["Comeré comería","comeré / comería"],"feedback":{"correct":"Right: comeré; comería.","incorrect":"Keep comer and contrast future -é with conditional -ía."},"response_seconds":8} -->
 <!-- hl-activity: {"id":"ES-C17-comer-condicional-shared-endings","kind":"text","assesses":["ES-GRAMMAR-AR-CONDITIONAL-SINGULAR","ES-GRAMMAR-ER-CONDITIONAL-SINGULAR"],"prompt":"Which endings do hablaría and comería share across the learned singular row?","answer":"-ía, -ías, -ía","accepted":["ía ías ía","-ía -ías -ía"],"feedback":{"correct":"Right: -ía, -ías, -ía serve both infinitives.","incorrect":"Read the final pieces: hablaría/comería, hablarías/comerías, hablaría/comería."},"response_seconds":7} -->
 
 [PAUSE 1s]

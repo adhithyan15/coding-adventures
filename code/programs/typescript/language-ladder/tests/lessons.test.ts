@@ -55,6 +55,20 @@ gloss: y
 # body
 `;
 
+const PATTERN = `---
+id: ES-C17-comer-futuro
+chapter: 17
+type: pattern
+headword: comeré
+gloss: singular future
+slots:
+  infinitive: [ES-LEX-COMER, ES-LEX-BEBER]
+  object: [ES-LEX-CAFE]
+---
+
+# body
+`;
+
 describe("languageFromPath", () => {
   it("pulls the track out of a curriculum path", () => {
     expect(
@@ -113,6 +127,15 @@ Recall it.`);
       acceptedResponses: ["future"],
       blockType: "recall",
     });
+  });
+
+  it("carries ordered productive slots into the app lesson", () => {
+    const lesson = toLesson(parseLesson(PATTERN, "spanish"));
+    expect(lesson!.type).toBe("pattern");
+    expect(lesson!.patternSlots).toEqual([
+      { name: "infinitive", fillers: ["ES-LEX-COMER", "ES-LEX-BEBER"] },
+      { name: "object", fillers: ["ES-LEX-CAFE"] },
+    ]);
   });
 });
 

@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:2a50b297f7ee46ea",
+  "sourceHash": "fnv1a64:8a9fe49f3f7f649b",
   "summary": {
     "totalLessons": 1680,
     "voice": 1100,
@@ -34659,7 +34659,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a83b02a31f84419d"
+      "sourceHash": "fnv1a64:364132e4811e693d"
     },
     {
       "id": "ES-C17-vivir-futuro",
@@ -34677,7 +34677,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cfca1a3d5e51f7cc"
+      "sourceHash": "fnv1a64:b2a1acbcf5f86386"
     },
     {
       "id": "ES-C17-condicional",
@@ -34713,7 +34713,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8badac42336cf4f0"
+      "sourceHash": "fnv1a64:cd03a74929d2d356"
     },
     {
       "id": "ES-C17-vivir-condicional",
@@ -34767,7 +34767,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:75975cb2984d8cc7"
+      "sourceHash": "fnv1a64:96921ab1be6b2913"
     },
     {
       "id": "ES-C18-quiero-que",

@@ -337,29 +337,30 @@ export function runChapterGates(input: ChapterGateInput): ChapterGateReport {
 export function runPatternGates(lessons: ParsedLesson[]): ChapterFinding[] {
   const findings: ChapterFinding[] = [];
   for (const lesson of lessons) {
-    const type = (lesson as unknown as { realization?: { type?: string } }).realization?.type;
-    if (type !== "pattern") continue;
+    if (lesson.realization.type !== "pattern") continue;
 
     const atoms = introducedAtoms(lesson);
     const patternAtoms = atoms.filter((atom) => atom.includes("-PATTERN-"));
-    if (patternAtoms.length !== 1) {
+    if (atoms.length !== 1 || patternAtoms.length !== 1) {
       findings.push({
         code: "pattern-multiple-atoms",
         language: lesson.language,
         chapter: lessonChapter(lesson) ?? undefined,
         lessonId: lesson.realization.lessonId,
-        message: `${lesson.realization.lessonId} is a pattern lesson introducing ${patternAtoms.length} *-PATTERN-* atoms; exactly one is required.`,
+        message: `${lesson.realization.lessonId} is a pattern lesson introducing ${atoms.length} atom(s), ${patternAtoms.length} of them *-PATTERN-*; exactly one introduced atom is required and it must be a pattern atom.`,
       });
     }
 
     const blocks = lesson.blocks ?? [];
     const production = blocks.filter((block) => block.type === "guided-production");
-    const instantiations = production.reduce(
-      (sum, block) =>
-        sum +
-        (block.markdown ?? "").split("\n").filter((line: string) => /^\s*[-*\d]/.test(line)).length,
-      0,
-    );
+    const instantiations = new Set(
+      production.flatMap((block) =>
+        block.markdown
+          .split("\n")
+          .filter((line) => /^\s*(?:[-*+]\s+|\d+[.)]\s+)/.test(line))
+          .map((line) => line.trim()),
+      ),
+    ).size;
     if (production.length === 0 || instantiations < 3) {
       findings.push({
         code: "pattern-missing-production",
@@ -371,18 +372,38 @@ export function runPatternGates(lessons: ParsedLesson[]): ChapterFinding[] {
     }
 
     const closure = new Set(frontmatterList(lesson, "requires.knowledge"));
-    for (const block of lesson.blocks ?? []) {
-      for (const atom of block.knowledge?.assesses ?? []) closure.add(atom);
+    const slotEntries = Object.entries(lesson.frontmatter).filter(([key]) =>
+      key.startsWith("slots."),
+    );
+    if (slotEntries.length === 0) {
+      findings.push({
+        code: "pattern-slot-not-closed",
+        language: lesson.language,
+        chapter: lessonChapter(lesson) ?? undefined,
+        lessonId: lesson.realization.lessonId,
+        message: `${lesson.realization.lessonId} is a pattern lesson without a declared slot.`,
+      });
     }
-    for (const atom of atoms) {
-      if (atom.includes("-PATTERN-")) continue;
-      if (!closure.has(atom)) {
+    for (const [key, value] of slotEntries) {
+      const name = key.slice("slots.".length);
+      if (name === "" || !Array.isArray(value) || value.length === 0) {
         findings.push({
           code: "pattern-slot-not-closed",
           language: lesson.language,
           chapter: lessonChapter(lesson) ?? undefined,
           lessonId: lesson.realization.lessonId,
-          message: `${lesson.realization.lessonId} names slot filler "${atom}" that is not in the lesson's declared closure.`,
+          message: `${lesson.realization.lessonId} slot "${name || key}" must declare a non-empty filler list.`,
+        });
+        continue;
+      }
+      for (const filler of value) {
+        if (closure.has(filler)) continue;
+        findings.push({
+          code: "pattern-slot-not-closed",
+          language: lesson.language,
+          chapter: lessonChapter(lesson) ?? undefined,
+          lessonId: lesson.realization.lessonId,
+          message: `${lesson.realization.lessonId} names slot filler "${filler}" that is not in requires.knowledge.`,
         });
       }
     }
