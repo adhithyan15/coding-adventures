@@ -6598,18 +6598,23 @@
     {
       "language": "spanish",
       "chapter": 16,
-      "sourceHash": "fnv1a64:82ec9c67f1912a73",
+      "sourceHash": "fnv1a64:f336eef33d8ddb7d",
       "lessonIds": [
         "ES-C16-imperfecto",
-        "ES-C16-tres-irregulares",
+        "ES-C16-comer-imperfecto",
+        "ES-C16-vivir-imperfecto",
+        "ES-C16-ver",
+        "ES-C16-ser-imperfecto",
+        "ES-C16-ir-imperfecto",
+        "ES-C16-ver-imperfecto",
         "ES-C16-practice"
       ],
-      "voiceLessons": 2,
-      "drivablePrefix": 1,
+      "voiceLessons": 7,
+      "drivablePrefix": 7,
       "text": "spanish/narration/ch16.txt",
       "json": "spanish/narration/ch16.json",
-      "textHash": "fnv1a64:3311f2181b943b81",
-      "jsonHash": "fnv1a64:06f4ec5541138812"
+      "textHash": "fnv1a64:5b2de8931d461eac",
+      "jsonHash": "fnv1a64:0cad95d6a56a928b"
     },
     {
       "language": "spanish",

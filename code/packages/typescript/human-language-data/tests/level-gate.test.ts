@@ -72,7 +72,9 @@ describe("the gate that would have caught the A2 claim", () => {
     // catch — a number meaning "everything taught" published against one meaning
     // "by the end of pre-A1".
     expect(vocab.shortfall).toBe(254);
-    expect(spanish.vocabulary).toBe(135);
+    // Chapter 16 correctly reclassifies two paradigm bundles as grammar and adds
+    // only the genuinely new lexical lesson ver, so the structural count falls one.
+    expect(spanish.vocabulary).toBe(134);
     expect(vocab.shortfall).toBeGreaterThan(LEVEL_VOCABULARY["pre-A1"] - spanish.vocabulary);
   });
 

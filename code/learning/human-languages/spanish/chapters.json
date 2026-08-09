@@ -412,9 +412,22 @@
       "payoff": {
         "lesson": "ES-C16-practice",
         "kind": "task",
-        "summary": "Complete ES-C16-practice, the canonical closing checkpoint, and demonstrate the chapter promise: use the Spanish imperfect for past habits, background, and actions in progress.",
-        "assesses": [],
-        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+        "summary": "Complete ES-C16-practice and retrieve the bounded singular imperfect rows for hablar, comer, vivir, ser, ir, and newly learned ver while contrasting open and completed past viewpoints.",
+        "assesses": [
+          "ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL",
+          "ES-GRAMMAR-AR-IMPERFECT-SINGULAR",
+          "ES-GRAMMAR-ER-IMPERFECT-SINGULAR",
+          "ES-GRAMMAR-IR-IMPERFECT-SINGULAR",
+          "ES-LEX-VER",
+          "ES-GRAMMAR-VER-PRESENT-SINGULAR",
+          "ES-ETYMON-VER-VIDERE",
+          "ES-GRAMMAR-SER-IMPERFECT-SINGULAR",
+          "ES-ETYMON-ERA",
+          "ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR",
+          "ES-ETYMON-IBA",
+          "ES-GRAMMAR-VER-IMPERFECT-SINGULAR"
+        ],
+        "note": "The payoff retrieves all twelve Chapter-16 atoms with mapped activities and deliberately defers every plural form, undeclared time clue, new person, and new setting."
       }
     },
     {

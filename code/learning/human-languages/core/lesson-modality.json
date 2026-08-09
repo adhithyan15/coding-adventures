@@ -7,17 +7,17 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:8bf21d739f6327df",
+  "sourceHash": "fnv1a64:8786187719b5e8f4",
   "summary": {
-    "totalLessons": 1672,
-    "voice": 1089,
+    "totalLessons": 1677,
+    "voice": 1094,
     "sight": 525,
     "pen": 58,
-    "drivableLessons": 1089,
+    "drivableLessons": 1094,
     "drivablePercent": 65,
     "trackCount": 22,
     "chapterCount": 513,
-    "drivablePrefixTotal": 891,
+    "drivablePrefixTotal": 897,
     "fullyDrivableChapters": 324,
     "unstartableChapters": 141,
     "overriddenLessons": 0,
@@ -6754,12 +6754,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 180,
-      "voice": 162,
+      "lessonCount": 185,
+      "voice": 167,
       "sight": 11,
       "pen": 7,
       "drivablePercent": 90,
-      "drivablePrefixTotal": 135,
+      "drivablePrefixTotal": 141,
       "modalities": [
         "voice",
         "sight",
@@ -7070,19 +7070,25 @@
         },
         {
           "chapter": 16,
-          "lessonCount": 3,
-          "voice": 2,
+          "lessonCount": 8,
+          "voice": 7,
           "sight": 1,
           "pen": 0,
           "modalities": [
             "voice",
             "sight"
           ],
-          "drivablePrefix": 1,
-          "firstNonVoiceLesson": "ES-C16-tres-irregulares",
+          "drivablePrefix": 7,
+          "firstNonVoiceLesson": "ES-C16-practice",
           "drivable": false,
           "drivableLessonIds": [
-            "ES-C16-imperfecto"
+            "ES-C16-imperfecto",
+            "ES-C16-comer-imperfecto",
+            "ES-C16-vivir-imperfecto",
+            "ES-C16-ver",
+            "ES-C16-ser-imperfecto",
+            "ES-C16-ir-imperfecto",
+            "ES-C16-ver-imperfecto"
           ]
         },
         {
@@ -34477,28 +34483,82 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e20f599f8e6f29be"
+      "sourceHash": "fnv1a64:050a0598b6719847"
     },
     {
-      "id": "ES-C16-tres-irregulares",
+      "id": "ES-C16-comer-imperfecto",
       "language": "spanish",
       "chapter": 16,
-      "sequence": 1120,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "sequence": 1114,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:9c3bcc2a62e8957e"
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c5319db5681a5707"
     },
     {
-      "id": "ES-C16-practice",
+      "id": "ES-C16-vivir-imperfecto",
+      "language": "spanish",
+      "chapter": 16,
+      "sequence": 1118,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0ff65a92f7ef85ed"
+    },
+    {
+      "id": "ES-C16-ver",
+      "language": "spanish",
+      "chapter": 16,
+      "sequence": 1122,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3aa1ad995224a70e"
+    },
+    {
+      "id": "ES-C16-ser-imperfecto",
+      "language": "spanish",
+      "chapter": 16,
+      "sequence": 1126,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:eef8eab65b8f96db"
+    },
+    {
+      "id": "ES-C16-ir-imperfecto",
       "language": "spanish",
       "chapter": 16,
       "sequence": 1130,
@@ -34513,7 +34573,43 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f180bd5fc945e341"
+      "sourceHash": "fnv1a64:8d8f42db4577a565"
+    },
+    {
+      "id": "ES-C16-ver-imperfecto",
+      "language": "spanish",
+      "chapter": 16,
+      "sequence": 1134,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d53df4d2428149f8"
+    },
+    {
+      "id": "ES-C16-practice",
+      "language": "spanish",
+      "chapter": 16,
+      "sequence": 1138,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "wide-table"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "wide-table"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:0d048b72f73d5c9b"
     },
     {
       "id": "ES-C17-futuro",

@@ -1,85 +1,96 @@
 ---
+schema_version: 2
 id: ES-C16-practice
+spine_node: SPINE-TALK-ABOUT-PAST
+sequence: 1138
 chapter: 16
-sequence: 1130
 type: practice-mix
 headword: (practice)
-gloss: preterite vs imperfect — the distinction English doesn't grammatically make
+gloss: a singular checkpoint for the open past and the completed-past contrast
 concept_tag: CH16-PRACTICE
-prerequisites: [ES-C16-imperfecto, ES-C16-tres-irregulares]
+prerequisites: [ES-C16-imperfecto, ES-C16-comer-imperfecto, ES-C16-vivir-imperfecto, ES-C16-ver, ES-C16-ser-imperfecto, ES-C16-ir-imperfecto, ES-C16-ver-imperfecto]
 sounds: []
 roots: []
-est_minutes: 4
-reviews_of: [ES-C16-imperfecto, ES-C16-tres-irregulares, ES-C15-practice, ES-C14-practice]
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL, ES-GRAMMAR-AR-IMPERFECT-SINGULAR, ES-GRAMMAR-ER-IMPERFECT-SINGULAR, ES-GRAMMAR-IR-IMPERFECT-SINGULAR, ES-LEX-VER, ES-GRAMMAR-VER-PRESENT-SINGULAR, ES-ETYMON-VER-VIDERE, ES-GRAMMAR-SER-IMPERFECT-SINGULAR, ES-ETYMON-ERA, ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR, ES-ETYMON-IBA, ES-GRAMMAR-VER-IMPERFECT-SINGULAR, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-GRAMMAR-ER-PRETERITE-SINGULAR, ES-GRAMMAR-IR-PRETERITE-SINGULAR, ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-LEX-SER, ES-LEX-IR, ES-LEX-EN, ES-LEX-A]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL, ES-GRAMMAR-AR-IMPERFECT-SINGULAR, ES-GRAMMAR-ER-IMPERFECT-SINGULAR, ES-GRAMMAR-IR-IMPERFECT-SINGULAR, ES-LEX-VER, ES-GRAMMAR-VER-PRESENT-SINGULAR, ES-ETYMON-VER-VIDERE, ES-GRAMMAR-SER-IMPERFECT-SINGULAR, ES-ETYMON-ERA, ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR, ES-ETYMON-IBA, ES-GRAMMAR-VER-IMPERFECT-SINGULAR, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-GRAMMAR-ER-PRETERITE-SINGULAR, ES-GRAMMAR-IR-PRETERITE-SINGULAR, ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-LEX-SER, ES-LEX-IR, ES-LEX-EN, ES-LEX-A]
+skills: [listening, speaking, reading, writing]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus, fluency]
+register: neutral
+variety: general
+reviews_of: [ES-C16-imperfecto, ES-C16-comer-imperfecto, ES-C16-vivir-imperfecto, ES-C16-ver, ES-C16-ser-imperfecto, ES-C16-ir-imperfecto, ES-C16-ver-imperfecto, ES-C15-practice]
 ---
 
-# Practice — two pasts, one choice
+# Practice — keep the past open or close it
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-GRAMMAR-ER-PRETERITE-SINGULAR, ES-GRAMMAR-IR-PRETERITE-SINGULAR, ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR] -->
 
-[PAUSE 2s] You now have **both** past tenses. English never marks this whole
-distinction with an ending, so it is a new contrast to think in.
+[PAUSE 2s] This checkpoint adds no vocabulary and no plural persons. Retrieve
+the seven learned singular rows, then choose whether a known sentence presents
+the past as completed or leaves it open as background, progress, or habit.
 
-## The split
+## Grammar Lens: the complete Chapter 16 frame
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-IMPERFECT-SINGULAR, ES-GRAMMAR-ER-IMPERFECT-SINGULAR, ES-GRAMMAR-IR-IMPERFECT-SINGULAR, ES-GRAMMAR-SER-IMPERFECT-SINGULAR, ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR, ES-GRAMMAR-VER-IMPERFECT-SINGULAR] -->
 
-| | preterite | imperfect |
-|---|---|---|
-| what it does | a **completed** event | an **ongoing** or **habitual** state |
-| shape of time | a **point** | a **line** |
-| English | "I ate" | "I **was** eating" / "I **used to** eat" |
-| typical clues | *ayer, una vez, de repente* | *siempre, todos los días, mientras* |
+| person | hablar | comer | vivir | ser | ir | ver |
+|---|---|---|---|---|---|---|
+| yo | hablaba | comía | vivía | era | iba | veía |
+| tú | hablabas | comías | vivías | eras | ibas | veías |
+| él / ella / usted | hablaba | comía | vivía | era | iba | veía |
 
-**Comí** = the meal happened and ended. **Comía** = I was in the middle of it, or
-I did it regularly.
+The first and third forms match in every learned row. **Comer** and **vivir**
+share **-ía, -ías, -ía**. **Ver** keeps **ve-** before that material. Plural
+persons remain outside this checkpoint.
 
-## Background and interruption
+## Grammar Lens: one scene, two frames
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-GRAMMAR-AR-IMPERFECT-SINGULAR, ES-GRAMMAR-IR-PRETERITE-SINGULAR, ES-GRAMMAR-IR-IMPERFECT-SINGULAR, ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR, ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR, ES-LEX-EN, ES-LEX-A] -->
 
-The classic pairing — the imperfect sets the scene, the preterite breaks it:
+- **Hablé español.** — completed event. **Hablaba español.** — open,
+  background, or habitual speaking.
+- **Viví en Madrid.** — completed stretch. **Vivía en Madrid.** — we stand
+  inside that past stretch.
+- **Fui a Madrid.** — completed trip. **Iba a Madrid.** — motion was in
+  progress or habitual.
 
-> **Hablaba** con María cuando **llegó** Juan.
-> *(I was talking to María when Juan arrived.)*
+The tense does not mechanically report how long something lasted. It frames
+the past from a different viewpoint.
 
-The talking is the **line**; the arriving is the **point** that lands on it.
+## The histories, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-IMPERFECT-SINGULAR, ES-GRAMMAR-ER-IMPERFECT-SINGULAR, ES-ETYMON-VER-VIDERE, ES-ETYMON-ERA, ES-ETYMON-IBA] -->
 
-## Verbs that change meaning
-
-With a few verbs the choice doesn't just shift the shape of time — it changes
-**what the word means**:
-
-| verb | imperfect (state) | preterite (the moment it started) |
-|---|---|---|
-| saber | *sabía* — I **knew** | *supe* — I **found out** |
-| conocer | *conocía* — I **knew** (a person) | *conocí* — I **met** |
-| tener | *tenía* — I **had** | *tuve* — I **got, received** |
-| querer | *quería* — I **wanted** | *quise* — I **tried**; *no quise* — I **refused** |
-
-The logic is consistent: the imperfect gives you the state; the preterite gives
-you the **instant the state began**. Knowing → the moment of finding out.
-
-## Drill — which tense?
-
-[PAUSE 2s] Decide before reading the answer.
-
-| sentence | tense |
-|---|---|
-| "Every summer we **went** to Spain." | imperfect (*íbamos*) — habitual |
-| "Yesterday we **went** to Spain." | preterite (*fuimos*) — one event |
-| "She **was** tall." | imperfect (*era*) — a lasting state |
-| "The concert **was** yesterday." | preterite (*fue*) — a bounded event |
+**-aba** continues the Latin **-ābam** family. **-ía** continues material from
+the **-ēbam** family after several Romance changes. **Era** continues **eram**;
+**iba** continues **ībam** from **īre**; and **veía** keeps the **ve-** shape
+also visible in Old Spanish **veer**. These are historical bridges, not recipes
+for generating unlearned forms.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL, ES-GRAMMAR-AR-IMPERFECT-SINGULAR, ES-GRAMMAR-ER-IMPERFECT-SINGULAR, ES-GRAMMAR-IR-IMPERFECT-SINGULAR, ES-LEX-VER, ES-GRAMMAR-VER-PRESENT-SINGULAR, ES-ETYMON-VER-VIDERE, ES-GRAMMAR-SER-IMPERFECT-SINGULAR, ES-ETYMON-ERA, ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR, ES-ETYMON-IBA, ES-GRAMMAR-VER-IMPERFECT-SINGULAR, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-GRAMMAR-ER-PRETERITE-SINGULAR, ES-GRAMMAR-IR-PRETERITE-SINGULAR, ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-LEX-SER, ES-LEX-IR, ES-LEX-EN, ES-LEX-A] -->
+<!-- hl-activity: {"id":"ES-C16-practice-regular-yo-forms","kind":"text","assesses":["ES-GRAMMAR-AR-IMPERFECT-SINGULAR","ES-GRAMMAR-ER-IMPERFECT-SINGULAR","ES-GRAMMAR-IR-IMPERFECT-SINGULAR"],"prompt":"Give the imperfect yo forms of hablar, comer, and vivir, in that order.","answer":"hablaba, comía, vivía","accepted":["hablaba comía vivía","hablaba / comía / vivía"],"feedback":{"correct":"Right: hablaba, comía, vivía.","incorrect":"Retrieve hablaba, then the shared -ía forms comía and vivía."},"response_seconds":9} -->
+<!-- hl-activity: {"id":"ES-C16-practice-short-yo-forms","kind":"text","assesses":["ES-GRAMMAR-SER-IMPERFECT-SINGULAR","ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR","ES-GRAMMAR-VER-IMPERFECT-SINGULAR"],"prompt":"Give the imperfect yo forms of ser, ir, and ver, in that order.","answer":"era, iba, veía","accepted":["era iba veía","era / iba / veía"],"feedback":{"correct":"Right: era, iba, veía.","incorrect":"Retrieve the three learned rows: era, iba, veía."},"response_seconds":9} -->
+<!-- hl-activity: {"id":"ES-C16-practice-hablaba-espanol","kind":"text","assesses":["ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL","ES-GRAMMAR-AR-IMPERFECT-SINGULAR","ES-LEX-HABLAR"],"prompt":"Say 'I was speaking Spanish' in Spanish.","answer":"Hablaba español.","accepted":["Hablaba español"],"feedback":{"correct":"Right: Hablaba español.","incorrect":"Use imperfect hablaba, then known español."},"response_seconds":7} -->
+<!-- hl-activity: {"id":"ES-C16-practice-vivia-madrid","kind":"text","assesses":["ES-GRAMMAR-IR-IMPERFECT-SINGULAR","ES-LEX-VIVIR","ES-LEX-EN"],"prompt":"Say 'I was living in Madrid' in Spanish.","answer":"Vivía en Madrid.","accepted":["Vivía en Madrid"],"feedback":{"correct":"Right: Vivía en Madrid.","incorrect":"Use imperfect vivía, then known en Madrid."},"response_seconds":7} -->
+<!-- hl-activity: {"id":"ES-C16-practice-iba-madrid","kind":"text","assesses":["ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR","ES-LEX-IR","ES-LEX-A"],"prompt":"Say 'I was going to Madrid' in Spanish.","answer":"Iba a Madrid.","accepted":["Iba a Madrid"],"feedback":{"correct":"Right: Iba a Madrid.","incorrect":"Use imperfect iba, then known a Madrid."},"response_seconds":7} -->
+<!-- hl-activity: {"id":"ES-C16-practice-comi-comia","kind":"text","assesses":["ES-GRAMMAR-ER-PRETERITE-SINGULAR","ES-GRAMMAR-ER-IMPERFECT-SINGULAR","ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL"],"prompt":"Choose the open past: comí or comía.","answer":"comía","accepted":[],"feedback":{"correct":"Right: comía leaves the eating open or habitual.","incorrect":"Comí closes the event; comía leaves it open."},"response_seconds":6} -->
+<!-- hl-activity: {"id":"ES-C16-practice-history-match","kind":"text","assesses":["ES-ETYMON-ERA","ES-ETYMON-IBA","ES-ETYMON-VER-VIDERE"],"prompt":"Match the three forms to their historical bridges: era, iba, veía — eram, ībam, veer.","answer":"era—eram; iba—ībam; veía—veer","accepted":["era eram iba ībam veía veer","era-eram, iba-ībam, veía-veer"],"feedback":{"correct":"Right: era—eram, iba—ībam, veía—veer.","incorrect":"Pair the visible shapes: era—eram, iba—ībam, veía—veer."},"response_seconds":10} -->
 
 [PAUSE 1s]
-- [YOU SAY: "Comía cuando llamaste" ("I was eating when you called")]
-- [YOU SAY: the pair — "*sabía* I knew … *supe* I found out"]
-- [YOU SAY: "Cuando era niño, iba a la playa todos los veranos"]
-- [YOU SAY: the test aloud — "**line** → imperfect; **point** → preterite"]
+- [YOU SAY: “hablaba, comía, vivía”]
+- [YOU SAY: “era, iba, veía”]
+- [YOU SAY: “Hablé / hablaba · viví / vivía · fui / iba”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL, ES-GRAMMAR-AR-IMPERFECT-SINGULAR, ES-GRAMMAR-ER-IMPERFECT-SINGULAR, ES-GRAMMAR-IR-IMPERFECT-SINGULAR, ES-GRAMMAR-SER-IMPERFECT-SINGULAR, ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR, ES-GRAMMAR-VER-IMPERFECT-SINGULAR] -->
 
-[PAUSE 3s] Preterite or imperfect for a **habit**? (**Imperfect**.) Which tense
-sets the background, and which interrupts it? (Imperfect **sets**, preterite
-**interrupts**.) What's the difference between *conocía* and *conocí*? ("I
-**knew** someone" vs "I **met** them.") How many irregular imperfects were there?
-(**Three**.) Give the one-word test. ("**Line** or **point**?") Next chapter:
-talking about what **will** happen.
+[PAUSE 3s] Give the six **yo** forms. (*Hablaba, comía, vivía, era, iba,
+veía.*) Which two regular classes share a row? (**-er** and **-ir**.) What is
+the core contrast? (The preterite presents a completed event; the imperfect
+leaves past action open, habitual, in progress, or in the background.) Chapter
+17 can now build on **-ía** without borrowing a plural form here.
