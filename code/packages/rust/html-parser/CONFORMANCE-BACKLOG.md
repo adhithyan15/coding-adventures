@@ -28,8 +28,8 @@ tree-construction cases and all 6,806 html5lib tokenizer cases with zero missing
 signatures and zero normalized skips. DOM output is complete, but diagnostic
 coverage is not:
 the checked 2,637-case tree corpus declares 6,243 errors across 2,183 cases.
-After the select-start-tag recovery diagnostic slice, 2,090 of those cases emit
-at least one lexer or parser diagnostic and 93 remain
+After the template table-mode text diagnostic slice, 2,092 of those cases emit
+at least one lexer or parser diagnostic and 91 remain
 uncovered.
 Another 139 cases emit diagnostics despite having no legacy `#errors` rows.
 These are reviewed rather than automatically removed: 89 are full-document
@@ -66,7 +66,7 @@ open table blocks adoption-agency recovery. Description-list item start tags
 now report when implied-end-tag recovery closes a non-current `dt` or `dd`,
 without flagging adjacent description-list items.
 
-The fresh 93-case residual inventory keeps the next concrete groups in the
+The fresh 91-case residual inventory keeps the next concrete groups in the
 existing priority order: remaining table foster-parenting and table-scope
 boundaries;
 select/template recovery; script-tokenizer EOF recovery; plaintext/frameset
@@ -85,7 +85,9 @@ Prioritized work items:
    table structure now report their required parse error while retaining their
    special in-table insertion behavior. Foster-parented `title` and `meta`
    start tags now report the general in-table parse error. Nested `select` and
-   `input` start tags now report when they force recovery from select mode. The
+   `input` start tags now report when they force recovery from select mode.
+   Non-whitespace text after a template row now reports when it forces recovery
+   from template table mode. The
    remaining fragment EOF inventory includes fostered-anchor `eof-in-table`
    rows and MathML/SVG table-boundary scope recovery.
 3. **Adoption agency and active formatting.** Cover malformed formatting cases

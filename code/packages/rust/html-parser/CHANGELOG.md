@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Non-whitespace text after a template row now reports the required template
+  table-mode parse error, covering 2 previously silent malformed corpus cases
+  without changing DOM recovery or undeclared-diagnostic coverage.
 - Nested `select` and `input` start tags processed with an open `select` now
   report the required select insertion-mode parse error, covering 4 previously
   silent malformed corpus cases without changing DOM recovery or
