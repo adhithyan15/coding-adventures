@@ -777,6 +777,16 @@ Rload out 0 1k
     expect(result.voltage("out")).toBeLessThan(0.7);
   });
 
+  it("parses the DIODE model type alias", () => {
+    const parsed = parseNetlist(".model clamp DIODE(IS=2p)\nD1 in out clamp");
+
+    expect(parsed.models.get("clamp")?.kind).toBe("D");
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      saturationCurrent: 2.0e-12,
+    });
+  });
+
   it("parses the diode JS saturation-current alias", () => {
     const parsed = parseNetlist(`
 .model clamp D(JS=2p)

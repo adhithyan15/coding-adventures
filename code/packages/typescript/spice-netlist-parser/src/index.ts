@@ -1148,7 +1148,8 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   if (paramsText.startsWith("(") && paramsText.endsWith(")")) {
     paramsText = paramsText.slice(1, -1);
   }
-  const kind = match[1].toUpperCase();
+  const rawKind = match[1].toUpperCase();
+  const kind = rawKind === "DIODE" ? "D" : rawKind;
   const params = parseModelParams(paramsText);
   const diodeSaturationCurrent = params.get("IS") ?? params.get("JS");
   if (

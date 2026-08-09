@@ -1986,6 +1986,8 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
         params_text = " ".join(fields[3:]).strip()
         if params_text.startswith("(") and params_text.endswith(")"):
             params_text = params_text[1:-1]
+    if kind == "DIODE":
+        kind = "D"
     params = _parse_model_params(params_text)
     if kind == "D":
         saturation_current = params.get("IS", params.get("JS"))
