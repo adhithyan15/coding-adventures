@@ -2092,6 +2092,23 @@ Q1 col base emit fast
     );
   });
 
+  it.each([
+    ["0", 0.0],
+    ["5u", 5.0e-6],
+  ])("parses BJT base-resistance half-current IRB=%s", (value, expected) => {
+    const parsed = parseNetlist(`.model fast NPN(IRB=${value})\nQ1 col base emit fast`);
+
+    const transistor = parsed.circuit.elements()[0];
+    expect(transistor).toMatchObject({ kind: "bjt" });
+    expect(transistor.baseResistanceHalfCurrent).toBeCloseTo(expected);
+  });
+
+  it.each(["-1u", "1e999"])("rejects invalid BJT IRB=%s", (value) => {
+    expect(() => parseNetlist(`.model fast NPN(IRB=${value})`)).toThrow(
+      "BJT IRB must be finite and non-negative",
+    );
+  });
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)

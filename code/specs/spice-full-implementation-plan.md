@@ -4688,10 +4688,15 @@ the Rust, Python, and TypeScript surfaces together.
      them into the shared engine base-resistance field.
 
 470. Python and TypeScript Berkeley SPICE BJT minimum-base-resistance parity.
-   - Status: implemented in this BJT RBM parity slice.
+   - Status: completed in PR 10144.
    - Both parser facades validate finite, non-negative `RBM` values and lower
      them into the shared engine optional minimum-base-resistance field while
      preserving omitted `None`/`undefined` fallback-to-`RB` semantics.
+
+471. Python and TypeScript Berkeley SPICE BJT base-resistance-half-current parity.
+   - Status: implemented in this BJT IRB parity slice.
+   - Both parser facades validate finite, non-negative `IRB` values and lower
+     them into the shared engine base-resistance-half-current field.
 
 ## Backlog
 
