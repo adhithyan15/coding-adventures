@@ -294,13 +294,32 @@ which the host validates against the glob.
 
 | Method                | Manifest check                | Purpose                          |
 |-----------------------|-------------------------------|----------------------------------|
-| `vault.requestLease`  | `vault:read:secret-name`      | Get a TTL'd lease for a secret    |
+| `vault.requestLease`  | `vault:read:secret-name`      | Get a TTL'd opaque reference      |
 | `vault.requestDirect` | `vault:direct:secret-name`    | Send secret directly to a peer    |
 | `vault.releaseLease`  | (none — own lease)            | Surrender a lease early           |
 
 `vault.requestDirect` does not return the secret to the calling agent;
 the secret is delivered on a separate channel to a third party (e.g., the
-browser host). The calling agent only learns "lease created" or "denied."
+browser host). The calling agent only learns "delivery accepted" or "denied."
+
+The v1 lease parameter and result shapes are normative:
+
+```text
+vault.requestLease({ name: string, ttl_ms: number })
+  -> { vault_ref: string, expires_at_ms: number }
+
+vault.releaseLease({ vault_ref: string })
+  -> null
+```
+
+`ttl_ms` is an integer in `1..=7_776_000_000` (90 days); `expires_at_ms` is Unix
+time in milliseconds and remains within the lossless JSON integer range.
+`vault_ref` is an unguessable bearer capability, not a secret identifier. Agents
+may pass it only to approved host operations that explicitly accept a Vault
+reference. They cannot resolve it into plaintext, ciphertext, or a decryption key.
+The trusted host atomically consumes the reference, uses the zeroizing payload
+inside that operation, and rejects the reference after consumption, release,
+revocation, or expiry. Logs and protocol diagnostics MUST redact `vault_ref`.
 
 ### `channel.*` — corresponds to `channel` capability
 
@@ -593,10 +612,12 @@ forecast = call("network.fetch",
                  "headers": {"User-Agent": "weather-agent/0.1"}})
 body = json.loads(base64.b64decode(forecast["body_b64"]))
 
-# Get email password from vault
+# Request an opaque email-password lease
 lease = call("vault.requestLease",
              {"name": "gmail-app-password", "ttl_ms": 60_000})
-password = base64.b64decode(lease["secret_b64"]).decode()
+# Only an approved host operation may consume this reference. Agent code cannot
+# turn it into password bytes; release it if the operation is abandoned.
+call("vault.releaseLease", {"vault_ref": lease["vault_ref"]})
 ```
 
 ### Tier 1 native (Rust)
@@ -619,6 +640,12 @@ let forecast = host.call(&NetworkFetch {
 let lease = host.call(&VaultRequestLease {
     name:   "gmail-app-password",
     ttl_ms: 60_000,
+})?;
+
+// `lease.vault_ref` is passed only to an approved host operation. It cannot be
+// resolved by this SDK and must be released if the operation is abandoned.
+host.call(&VaultReleaseLease {
+    vault_ref: lease.vault_ref,
 })?;
 ```
 
