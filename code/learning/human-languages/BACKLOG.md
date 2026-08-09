@@ -68,11 +68,11 @@ HL-C77 closes that migration boundary: all 41 Spanish book chapters now generate
 from the same canonical lesson ASTs used by Language Ladder, narration, objective
 activities, and back matter. The twelve former handwritten entries are protected
 generated targets with checked hashes, titles, labels, order, and output. HL-C19
-is already complete; HL-C09A verified Tamil அ in #10222, HL-C09B verified
-Tamil ஆ in #10223, HL-C09C verified Tamil இ in #10226, HL-C09D verified
-Tamil க in #10228, HL-C09E verified Tamil வ in #10230, and HL-C09F verified
-Tamil ல in #10234. HL-C09G is the next bounded stroke-order tranche: verify
-Tamil ற from Frame 10 of the cited primer before widening DUCTUS across scripts.
+is already complete; HL-C09A through HL-C09G verified Tamil அ, ஆ, இ, க, வ, ல,
+and ற in #10222, #10223, #10226, #10228, #10230, #10234, and #10240. HL-C09H
+verifies Tamil ன from Frame 13's first row in #10244. HL-C09I is the next
+bounded stroke-order tranche: verify the adjacent three-loop ண row from the
+same source page before widening DUCTUS across scripts.
 The index audit found **2,075** canonical candidates across the corpus: **1,426**
 word and phrase lessons for English-first lookup, **136** dedicated grammar,
 writing, etymology, culture, and pronunciation lessons, **427** chapter
@@ -232,7 +232,7 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C06 | Complete (#10219) | Add the figure pipeline: SVG generation, `graphicx`, SVG→PDF in CI, and a `--check` hash gate. | A generated figure round-trips from canonical data into a compiled PDF and fails CI on drift, reusing `paint-vm-svg`'s `renderToSvgString`. |
 | HL-C07 | Complete (#9963) | Add the log-scanning warning gate with recorded per-track baselines. | Overfull/underfull boxes, missing glyphs, hyperref warnings, duplicate destinations, and font substitutions are machine-checked by `scan_latex_log_warnings.py` after the `latexmk` loop, against `core/latex-warning-baseline.json`. Baselines ship unseeded — `null` means unmeasured, never zero — so the gate reports today and fails the moment a seeded track regresses. The first CI run on main emits the real counts into the job summary for a human to paste back. |
 | HL-C08 | Complete (#9974) | Render the ductus in Language Ladder. | `penPathD`/`penTip` drive the tested SVG stroke build-up in the app; the currently authored ductus is shared with validation and script practice. |
-| HL-C09 | Queued — 8 of 228 verified | Expand `DUCTUS` to cover the ten scripts with prose stroke-order entries. | Add cited, font-checked ductus and verified pen-lift metadata for the remaining 220 entries measured by HL-C19; each passes the on-ink, join-tolerance, coverage, citation, and source-agreement invariants. |
+| HL-C09 | Queued — 9 of 228 verified | Expand `DUCTUS` to cover the ten scripts with prose stroke-order entries. | Add cited, font-checked ductus and verified pen-lift metadata for the remaining 219 entries measured by HL-C19; each passes the on-ink, join-tolerance, coverage, citation, and source-agreement invariants. |
 | HL-C09A | Complete (#10222) | Verify Tamil அ as the first post-HL-C19 expansion tranche, using the primer already cited for Tamil handwriting. | அ carries a source-aligned two-stroke path with exactly one lift; its five movements, learner prose, source metadata, font-outline geometry, and rendered filmstrip agree. |
 | HL-C09B | Complete (#10223) | Verify Tamil ஆ as the next source-backed expansion tranche from Frame 4 of the same primer. | ஆ carries a font-checked path for the அ body plus its long-vowel right-hand loop; its learner prose states every verified lift, and source, geometry, and filmstrip tests agree. |
 | HL-C09C | Complete (#10226) | Verify Tamil இ as Frame 4's third source-backed vowel tranche. | இ carries a seven-movement, font-checked path whose learner prose states each evidenced lift; the cited order, Noto outline geometry, source metadata, and real filmstrip agree. |
@@ -240,6 +240,8 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C09E | Complete (#10230) | Verify Tamil வ from Frame 9's first source-backed consonant row. | வ carries a five-movement, font-checked unbroken path whose learner prose states the evidenced zero lifts; the cited order, Noto outline geometry, source metadata, and real filmstrip agree. |
 | HL-C09F | Complete (#10234) | Verify Tamil ல from Frame 9's second source-backed consonant row. | ல carries a four-movement, font-checked unbroken path whose learner prose states the evidenced zero lifts; the cited order, Noto outline geometry, source metadata, and real filmstrip agree. |
 | HL-C09G | Complete (#10240) | Verify Tamil ற from the source-adjacent Frame 10 row. | ற carries a five-movement, font-checked three-stroke path whose learner prose states the two evidenced lifts; the cited order, Noto outline geometry, source metadata, and real filmstrip agree. |
+| HL-C09H | Complete (#10244) | Verify Tamil ன from Frame 13's first source-backed nasal row. | ன carries a six-movement, font-checked two-stroke path whose first five movements stay joined before the separate right upright; the cited order, Noto outline geometry, source metadata, and real filmstrip agree. |
+| HL-C09I | Queued — next | Verify Tamil ண from Frame 13's adjacent source-backed three-loop nasal row. | Preserve the cited seven-movement order, verify every lift against an authored Noto-backed path, and keep the learner prose, source metadata, and real filmstrip in agreement. |
 | HL-C10 | Complete (#10010, #10013, #10067) | Complete A1 and add the A2-through-C2 spine tranches with all registered realization ledgers. | All seven declared stages carry nodes; every one of the 22 registered tracks has a non-drifting ledger entry for every node. |
 | HL-C11 | Queued — capability and closure coverage complete | Finish representative chapter payoffs across all 22 tracks. | #10128 brought all 513 chapters to an authored `canDo`, spine mapping, known payoff lesson, and closed assessment. Remediate the remaining 27 payoffs below the 0.5 representativeness floor across ten tracks, then enforce the clean tracks instead of leaving their gates report-only. |
 | HL-C12 | Queued — licensing decided, pipeline outstanding | Add the Class C illustration pipeline with provenance sidecars and a size budget. Licensing is settled and recorded in [`_assets/LICENSE.md`](./_assets/LICENSE.md); the remaining work is the pipeline itself. | Every asset carries `license`, `rightsAsserted`, `generator`, `model`, `prompt`, `date`, and `sha256`; CI fails any asset without a provenance sidecar or a recorded licence, and enforces the per-track size budget. |
@@ -2642,7 +2644,7 @@ problem.
   **61 glyph violations plus five multi-system Japanese openings**. The current
   corpus is 91% core-drivable, not the historical 84% recorded before later work.
 - HL-C19 supersedes HL-C09's old estimate. There are **228** prose stroke-order
-  entries across ten scripts: eight verified ductus paths and 220 entries still needing cited,
+  entries across ten scripts: nine verified ductus paths and 219 entries still needing cited,
   font-checked pen-lift evidence.
 
 ## Findings from HL-C05
