@@ -28,11 +28,13 @@ export {
 } from "./hash.js";
 export {
   renderInlineMarkdown,
+  renderBookAnswerKey,
   renderBookChapter,
   renderBookGlossary,
   renderReferenceAppendix,
   bookVoice,
   bookBlockTitle,
+  type BookAnswerKeyTarget,
   type BookGenerationTarget,
   type BookGlossaryTarget,
   type BookReferenceAppendixTarget,

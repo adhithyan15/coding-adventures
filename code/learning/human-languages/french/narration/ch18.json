@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:52b8d81257884801",
+  "sourceHash": "fnv1a64:ae316f8e0976bf1a",
   "lessons": [
     {
       "id": "FR-C18-oui",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc9c2e7599edddd0",
+      "sourceHash": "fnv1a64:c40bbf179d6212c1",
       "notice": null,
       "blocks": [
         {
@@ -158,6 +158,24 @@
             {
               "kind": "speech",
               "text": "How do you say yes in French? (oui.) What Latin phrase is it worn down from? (hoc ille, \"this is it,\" via oïl.) What were the langue d'oïl and langue d'oc named after? (The two medieval words for yes.) When do you answer si instead of oui? (To contradict a negative — Tu ne viens pas? — Si!)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FR-C18-oui-negative",
+              "prompt": "French has two words for yes. Which one contradicts a negative?",
+              "assesses": [
+                "FR-PRAGMATICS-SI-05"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "si",
+                "si!"
+              ],
+              "feedback": {
+                "correct": "Right: si contradicts a negative; oui answers an ordinary positive question.",
+                "incorrect": "Use si when you insist that a negative statement is wrong."
+              }
             }
           ]
         }

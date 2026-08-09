@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   bookBlockTitle,
   bookVoice,
+  renderBookAnswerKey,
   renderBookChapter,
   renderBookGlossary,
   renderInlineMarkdown,
@@ -200,6 +201,97 @@ A [repository note](../data/script.json) and an [external source](https://exampl
         [lesson],
       ),
     ).toThrow(/require a chapter/);
+  });
+
+  it("renders compiled activities as linked review questions and answers", () => {
+    const withActivity = (
+      id: string,
+      sequence: number,
+      word: string,
+      activityId: string,
+      answer: string,
+    ) =>
+      parseLesson(
+        source(id, sequence, word).replace(
+          `## Wrap-up Recall\n\nSay *${word}*.`,
+          `## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TEST-RECALL] -->
+<!-- hl-activity: {"id":"${activityId}","kind":"text","assesses":["TEST-RECALL"],"prompt":"Type ${word}.","answer":"${answer}","accepted":["${word}-variant"],"feedback":{"correct":"Right.","incorrect":"Try again."},"response_seconds":8} -->
+
+Say *${word}*.`,
+        ),
+        "test",
+      );
+    const later = withActivity("B", 20, "bye", "TEST-bye", "goodbye");
+    const earlier = withActivity("A", 10, "hello", "TEST-hello", "hello");
+    const generated = renderBookAnswerKey(
+      { language: "test", output: "test/book/chapters/appendix-answer-key.tex" },
+      [later, earlier],
+    );
+
+    expect(generated).toContain("% canonical-activities: 2");
+    expect(generated).toContain("\\chapter*{Review Questions}");
+    expect(generated).toContain("\\hypertarget{review-TEST-hello}{\\textbf{1.1}}");
+    expect(generated).toContain("\\hypertarget{review-TEST-bye}{\\textbf{1.2}}");
+    expect(generated.indexOf("Type hello.")).toBeLessThan(generated.indexOf("Type bye."));
+    expect(generated).toContain("\\chapter*{Answer Key}");
+    expect(generated).toContain("\\hyperlink{review-TEST-hello}{\\textbf{1.1}}");
+    expect(generated).toContain("\\textbf{Answer:} hello");
+    expect(generated).toContain("\\textbf{Also accepted:} hello-variant");
+  });
+
+  it("uses the configured book font for target-script prompts and answers", () => {
+    const lesson = parseLesson(
+      source("A", 10, "namaste").replace(
+        "## Wrap-up Recall\n\nSay *namaste*.",
+        `## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TEST-RECALL] -->
+<!-- hl-activity: {"id":"TEST-namaste","kind":"text","assesses":["TEST-RECALL"],"prompt":"Type नमस्ते.","answer":"नमस्ते","accepted":["namaste"],"feedback":{"correct":"Right.","incorrect":"Try again."},"response_seconds":8} -->
+
+Say namaste.`,
+      ),
+      "test",
+      "devanagari",
+    );
+    const generated = renderBookAnswerKey(
+      {
+        language: "test",
+        output: "test/book/chapters/appendix-answer-key.tex",
+        unicodeScript: "Devanagari",
+        scriptCommand: "dv",
+      },
+      [lesson],
+    );
+    expect(generated).toContain("Type \\dv{नमस्ते}.");
+    expect(generated).toContain("\\textbf{Answer:} \\dv{नमस्ते}");
+  });
+
+  it("rejects empty answer keys and duplicate activity ids", () => {
+    const plain = parseLesson(source("A", 10, "hello"), "test");
+    const answerTarget = {
+      language: "test",
+      output: "test/book/chapters/appendix-answer-key.tex",
+    };
+    expect(() => renderBookAnswerKey(answerTarget, [plain])).toThrow(
+      /no compiled lesson activities/,
+    );
+
+    const activity = source("A", 10, "hello").replace(
+      "## Wrap-up Recall\n\nSay *hello*.",
+      `## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TEST-RECALL] -->
+<!-- hl-activity: {"id":"TEST-same","kind":"text","assesses":["TEST-RECALL"],"prompt":"Type hello.","answer":"hello","accepted":[],"feedback":{"correct":"Right.","incorrect":"Try again."},"response_seconds":8} -->
+
+Say hello.`,
+    );
+    const first = parseLesson(activity, "test");
+    const second = parseLesson(
+      activity.replace("id: A", "id: B").replace("sequence: 10", "sequence: 20"),
+      "test",
+    );
+    expect(() => renderBookAnswerKey(answerTarget, [first, second])).toThrow(
+      /duplicate activity id 'TEST-same'/,
+    );
   });
 
   it("keeps indented Markdown quote continuations in one LaTeX quote", () => {

@@ -199,6 +199,50 @@ describe("canonical book generator filesystem shell", () => {
     );
   });
 
+  it("writes and byte-checks configured canonical answer keys", () => {
+    const root = fixture();
+    const lessonPath = join(root, "test", "lessons", "hello.md");
+    writeFileSync(
+      lessonPath,
+      readFileSync(lessonPath, "utf8").replace(
+        "## Wrap-up Recall\n\nRead",
+        `## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TEST-HELLO] -->
+<!-- hl-activity: {"id":"TEST-C01-hello-recall","kind":"text","assesses":["TEST-HELLO"],"prompt":"Type the greeting.","answer":"hello","accepted":["hi"],"feedback":{"correct":"Right.","incorrect":"Try again."},"response_seconds":8} -->
+
+Read`,
+      ),
+    );
+    const configPath = join(root, "core", "book-generation.json");
+    const config = JSON.parse(readFileSync(configPath, "utf8")) as Record<string, unknown>;
+    writeFileSync(
+      configPath,
+      `${JSON.stringify({
+        ...config,
+        answerKeys: [{
+          language: "test",
+          output: "test/book/chapters/appendix-answer-key.tex",
+        }],
+      })}\n`,
+    );
+
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    expect(runBookGeneration(["--write"], root)).toBe(0);
+    const answerKey = join(root, "test", "book", "chapters", "appendix-answer-key.tex");
+    const generated = readFileSync(answerKey, "utf8");
+    expect(generated).toContain("\\chapter*{Review Questions}");
+    expect(generated).toContain("Type the greeting.");
+    expect(generated).toContain("\\textbf{Answer:} hello");
+    expect(runBookGeneration(["--check"], root)).toBe(0);
+
+    writeFileSync(answerKey, "stale\n");
+    expect(runBookGeneration(["--check"], root)).toBe(1);
+    expect(process.stderr.write).toHaveBeenCalledWith(
+      "test/book/chapters/appendix-answer-key.tex: generated output is missing or stale\n",
+    );
+  });
+
   it("rejects reference sources outside the curriculum root", () => {
     const root = fixture();
     const configPath = join(root, "core", "book-generation.json");
@@ -436,6 +480,29 @@ describe("glossary coverage", () => {
       expect(existsSync(join(root, relative)), `${id} glossary`).toBe(true);
       expect(readFileSync(join(root, id, "book", "book.tex"), "utf8"), `${id} book input`).toContain(
         "\\input{chapters/appendix-glossary}",
+      );
+    }
+  });
+});
+
+describe("answer-key coverage", () => {
+  const root = defaultCurriculumRoot();
+
+  it("generates, byte-gates, and includes a nonempty answer key in every registered book", () => {
+    const registry = JSON.parse(
+      readFileSync(join(root, "core", "languages.json"), "utf8"),
+    ) as { languages: Array<{ id: string }> };
+    const outputs = generatedBookOutputs(root);
+    expect(registry.languages.length).toBeGreaterThan(0);
+    for (const { id } of registry.languages) {
+      const relative = `${id}/book/chapters/appendix-answer-key.tex`;
+      expect(outputs.get(relative), relative).toMatch(/^% GENERATED FILE\./);
+      expect(outputs.get(relative), `${id} canonical activities`).toMatch(
+        /% canonical-activities: [1-9]\d*/,
+      );
+      expect(existsSync(join(root, relative)), `${id} answer key`).toBe(true);
+      expect(readFileSync(join(root, id, "book", "book.tex"), "utf8"), `${id} book input`).toContain(
+        "\\input{chapters/appendix-answer-key}",
       );
     }
   });

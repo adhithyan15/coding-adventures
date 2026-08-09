@@ -398,7 +398,7 @@
     {
       "language": "bengali",
       "chapter": 10,
-      "sourceHash": "fnv1a64:f8e481ad0313cbcc",
+      "sourceHash": "fnv1a64:2fba548954e7c642",
       "lessonIds": [
         "BN-C10-cha",
         "BN-C10-jol",
@@ -459,7 +459,7 @@
     {
       "language": "french",
       "chapter": 18,
-      "sourceHash": "fnv1a64:3e08b2ac320671fa",
+      "sourceHash": "fnv1a64:96df1c2c9c56c79a",
       "lessonIds": [
         "FR-C18-oui",
         "FR-C18-non"

@@ -4,6 +4,15 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - generated book review questions and answer keys
+
+- Render every executable `hl-activity` contract as a numbered review question
+  and answer-key entry, preserving the canonical display answer and all authored
+  accepted variants used by Language Ladder.
+- Byte-gate and include the generated back matter in all 22 books. French and
+  Bengali gain their first typed activity contracts so no volume ships an empty
+  key; legacy `[YOU ...]` delivery cues remain deliberately unscored.
+
 ### Added — generated book glossaries
 
 - Derive a compact glossary from every track's canonical word and phrase lessons,
