@@ -37,9 +37,12 @@ package source tree. Typed `node` slots remain in-process host objects rather
 than serialized scalars: the generated shell resolves the matching native
 view, element, widget, composable, or QML/WinUI object through its optional
 `MosaicHost` contract.
-Compose Desktop shells also subscribe to the optional host's prop-change
-callback and include pinned JNA/JSON runtime support, so package-owned native
-adapters can publish live content-surface state back into generated controls.
+Compose Desktop shells install Mosaic's standard JNA runtime binding and try it
+before the legacy optional host hook. The binding owns the Rust application
+handle, buffer lifecycle, startup context, event sequence, and JSON updates;
+applications no longer need to rebuild that FFI adapter. Package-owned hosts
+remain a permissive compatibility fallback until the `native-complete` profile
+can reject them.
 
 Packages may declare optional `[host_assets]` file copies in
 `mosaic-package.toml`. Matching backend assets are copied from package-relative

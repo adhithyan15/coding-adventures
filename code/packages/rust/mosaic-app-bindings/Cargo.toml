@@ -1,0 +1,9 @@
+[package]
+name = "mosaic-app-bindings"
+version = "0.1.0"
+edition = "2021"
+description = "Generated native host bindings for the Mosaic application runtime ABI."
+license = "MIT"
+
+[dependencies]
+mosaic-app-runtime = { path = "../mosaic-app-runtime" }

@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased] - standard Compose Rust runtime binding
+
+- Compose Desktop project shells now install Mosaic's package-independent JNA
+  binding and prefer it over legacy package-owned `MosaicHost` adapters.
+- The generated shell closes its host on disposal, releasing the opaque Rust
+  runtime handle and every returned Rust buffer through the fixed C ABI.
+
 ## [Unreleased] - reactive Compose native host bridge
 
 - Compose Desktop project shells now subscribe to optional host prop-change
