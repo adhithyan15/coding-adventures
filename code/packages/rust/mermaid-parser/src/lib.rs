@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.15.0";
+pub const VERSION: &str = "0.16.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1032,6 +1032,8 @@ pub fn parse_sequence_diagram(source: &str) -> Result<SequenceDiagram, ParseErro
 
     let mut diagram = SequenceDiagram {
         title: None,
+        accessibility_title: None,
+        accessibility_description: None,
         auto_number: false,
         auto_number_start: 1.0,
         auto_number_step: 1.0,
@@ -1084,6 +1086,18 @@ fn parse_sequence_body(
             "link" | "links" => parse_sequence_links(cursor, diagram, participant_indices)?,
             "properties" => parse_sequence_properties(cursor, diagram, participant_indices)?,
             "details" => parse_sequence_details(cursor, diagram, participant_indices)?,
+            "accTitle" | "accDescr" => {
+                let kind = cursor.advance().value.clone();
+                cursor.consume_if("COLON").ok_or_else(|| {
+                    token_error(cursor.current(), "expected ':' before accessibility text")
+                })?;
+                let text = take_sequence_line_text(cursor);
+                if kind == "accTitle" {
+                    diagram.accessibility_title = Some(text);
+                } else {
+                    diagram.accessibility_description = Some(text);
+                }
+            }
             "title" => {
                 cursor.advance();
                 diagram.title = Some(take_sequence_line_text(cursor));
@@ -3272,6 +3286,22 @@ B//-A: reverse stick top
             Some("alice-info")
         );
     }
+
+    #[test]
+    fn sequence_parses_accessibility_title_and_description() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\naccTitle: Transfer flow\naccDescr: Banking interaction\nAlice->>Bob: Hello\n",
+        )
+        .unwrap();
+        assert_eq!(
+            diagram.accessibility_title.as_deref(),
+            Some("Transfer flow")
+        );
+        assert_eq!(
+            diagram.accessibility_description.as_deref(),
+            Some("Banking interaction")
+        );
+    }
 }
 #[cfg(test)]
 mod tests {
@@ -3288,7 +3318,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.15.0");
+        assert_eq!(crate::VERSION, "0.16.0");
     }
 
     #[test]

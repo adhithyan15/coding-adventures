@@ -7,7 +7,7 @@ use diagram_ir::{
     SequenceEvent, SequenceNotePlacement,
 };
 
-pub const VERSION: &str = "0.11.0";
+pub const VERSION: &str = "0.12.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -337,6 +337,8 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
         width,
         height,
         title: diagram.title.clone(),
+        accessibility_title: diagram.accessibility_title.clone(),
+        accessibility_description: diagram.accessibility_description.clone(),
         items,
     }
 }
@@ -383,6 +385,8 @@ mod tests {
     fn lays_out_messages_and_lifelines() {
         let diagram = SequenceDiagram {
             title: None,
+            accessibility_title: None,
+            accessibility_description: None,
             auto_number: true,
             auto_number_start: 10.5,
             auto_number_step: 2.25,
@@ -430,6 +434,8 @@ mod tests {
     fn preserves_half_arrow_semantics() {
         let diagram = SequenceDiagram {
             title: None,
+            accessibility_title: None,
+            accessibility_description: None,
             auto_number: false,
             auto_number_start: 1.0,
             auto_number_step: 1.0,
@@ -463,6 +469,8 @@ mod tests {
     fn closes_activation_on_deactivation_event() {
         let diagram = SequenceDiagram {
             title: None,
+            accessibility_title: None,
+            accessibility_description: None,
             auto_number: false,
             auto_number_start: 1.0,
             auto_number_step: 1.0,
@@ -489,6 +497,8 @@ mod tests {
     fn lays_out_nested_block_frames_and_branch_dividers() {
         let diagram = SequenceDiagram {
             title: None,
+            accessibility_title: None,
+            accessibility_description: None,
             auto_number: false,
             auto_number_start: 1.0,
             auto_number_step: 1.0,
@@ -548,6 +558,8 @@ mod tests {
     fn created_participant_has_bounded_lifeline() {
         let diagram = SequenceDiagram {
             title: None,
+            accessibility_title: None,
+            accessibility_description: None,
             auto_number: false,
             auto_number_start: 1.0,
             auto_number_step: 1.0,
@@ -631,6 +643,8 @@ mod tests {
         bob.group_id = Some("client".into());
         let diagram = SequenceDiagram {
             title: None,
+            accessibility_title: None,
+            accessibility_description: None,
             auto_number: false,
             auto_number_start: 1.0,
             auto_number_step: 1.0,

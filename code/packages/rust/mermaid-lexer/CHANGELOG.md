@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.15.0
+
+- Tokenize sequence `accTitle` and `accDescr` statements.
+
 ## 0.14.0
 
 - Tokenize sequence actor `details` references.

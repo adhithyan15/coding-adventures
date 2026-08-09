@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.15.0";
+pub const VERSION: &str = "0.16.0";
 
 use std::collections::HashMap;
 
@@ -1081,6 +1081,12 @@ where
     let mut text_children = Vec::new();
     let mut central_markers = Vec::new();
     let mut scene_metadata = HashMap::new();
+    if let Some(title) = &diagram.accessibility_title {
+        scene_metadata.insert("accessibility.title".into(), title.clone());
+    }
+    if let Some(description) = &diagram.accessibility_description {
+        scene_metadata.insert("accessibility.description".into(), description.clone());
+    }
     let label_font = options.label_font.clone();
     let text_color = Color {
         r: 30,
@@ -2669,7 +2675,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.15.0");
+        assert_eq!(crate::VERSION, "0.16.0");
     }
 
     #[test]
