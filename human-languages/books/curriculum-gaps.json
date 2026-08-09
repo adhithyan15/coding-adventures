@@ -16,20 +16,20 @@
     "authoredBooks": 22,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
-    "laterChapterLessonsWithoutPrerequisites": 35,
+    "laterChapterLessonsWithoutPrerequisites": 34,
     "tracksWithoutBooks": 0,
     "lessonChaptersWithoutBooks": 0,
     "legacySchemaTracks": 0,
     "mixedSchemaTracks": 19,
     "version2SchemaTracks": 3,
-    "lessonsWithoutLevel": 98,
+    "lessonsWithoutLevel": 96,
     "rampOverBudgetLessons": 40,
     "scriptRampOverBudgetLessons": 61,
     "lessonsOpeningMultipleScripts": 5,
     "lessonsWithoutSequence": 477,
     "forwardReviews": 267,
     "atomsNeverRevisited": 472,
-    "forwardReferences": 462,
+    "forwardReferences": 456,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 27,
     "chapterGateCleanTracks": 12,
@@ -300,11 +300,6 @@
         "chapter": 1
       },
       {
-        "lessonId": "ES-C08-numeros-1-5",
-        "language": "spanish",
-        "chapter": 8
-      },
-      {
         "lessonId": "TA-C01-vanakkam",
         "language": "tamil",
         "chapter": 1
@@ -490,11 +485,6 @@
         "lessonId": "SA-C04-punah",
         "language": "sanskrit",
         "chapter": 4
-      },
-      {
-        "lessonId": "ES-C08-numeros-1-5",
-        "language": "spanish",
-        "chapter": 8
       },
       {
         "lessonId": "TA-C02-peyar",
@@ -1787,8 +1777,8 @@
         "status": "mixed",
         "lessonCount": 177,
         "versions": {
-          "1": 50,
-          "2": 127
+          "1": 45,
+          "2": 132
         }
       },
       {
@@ -2366,14 +2356,14 @@
     "totalLessons": 1669,
     "byLevel": {
       "pre-A1": 866,
-      "A1": 302,
+      "A1": 304,
       "A2": 395,
       "B1": 8,
       "B2": 0,
       "C1": 0,
       "C2": 0
     },
-    "unmapped": 98,
+    "unmapped": 96,
     "mappedPercent": 94,
     "tracks": [
       {
@@ -2651,14 +2641,14 @@
         "lessonCount": 177,
         "byLevel": {
           "pre-A1": 61,
-          "A1": 34,
+          "A1": 36,
           "A2": 62,
           "B1": 8,
           "B2": 0,
           "C1": 0,
           "C2": 0
         },
-        "unmapped": 12,
+        "unmapped": 10,
         "reach": "B1"
       },
       {
@@ -3313,8 +3303,8 @@
       {
         "language": "spanish",
         "lessonCount": 177,
-        "measurable": 120,
-        "unmeasurable": 57,
+        "measurable": 124,
+        "unmeasurable": 53,
         "lessonViolations": 0,
         "chapterViolations": 4
       },
@@ -4320,7 +4310,7 @@
     "summary": {
       "lessonViolations": 40,
       "chapterViolations": 24,
-      "unmeasurableLessons": 568,
+      "unmeasurableLessons": 564,
       "measurablePercent": 66,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
@@ -11884,6 +11874,19 @@
         "revisits": 0
       },
       {
+        "atom": "ES-GRAMMAR-UNO-APOCOPE",
+        "language": "spanish",
+        "introducedBy": "ES-C08-numeros-1-5",
+        "introducedAt": 63,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-HISTORY-AL-ANDALUS-LOANS",
         "language": "spanish",
         "introducedBy": "ES-C05-hasta",
@@ -13088,6 +13091,18 @@
         "revisits": 0
       },
       {
+        "atom": "ES-CULTURE-ROMAN-MONTH-NAMES",
+        "language": "spanish",
+        "introducedBy": "ES-C08-numeros-6-10",
+        "introducedAt": 64,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-ALBUS-05",
         "language": "spanish",
         "introducedBy": "ES-C22-blanco-germanico",
@@ -13164,18 +13179,6 @@
         "language": "spanish",
         "introducedBy": "ES-C07-donde",
         "introducedAt": 61,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "ES-ETYMON-DOUBLE-N",
-        "language": "spanish",
-        "introducedBy": "ES-W02-enye",
-        "introducedAt": 36,
         "missed": [
           "R2",
           "R3",
@@ -13280,6 +13283,30 @@
         "revisits": 0
       },
       {
+        "atom": "ES-ETYMON-NUMBERS-1-5",
+        "language": "spanish",
+        "introducedBy": "ES-C08-numeros-1-5",
+        "introducedAt": 63,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-ETYMON-NUMBERS-6-10",
+        "language": "spanish",
+        "introducedBy": "ES-C08-numeros-6-10",
+        "introducedAt": 64,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-PERDON-04",
         "language": "spanish",
         "introducedBy": "ES-C20-perdon",
@@ -13312,6 +13339,18 @@
           "R1",
           "R2",
           "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-QUANTUS-ANNUS",
+        "language": "spanish",
+        "introducedBy": "ES-C08-cuantos-anos",
+        "introducedAt": 66,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
         ],
         "revisits": 1
       },
@@ -13388,6 +13427,18 @@
         "revisits": 1
       },
       {
+        "atom": "ES-ETYMON-TENERE",
+        "language": "spanish",
+        "introducedBy": "ES-C08-tener",
+        "introducedAt": 65,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-TETE-COMPARISON-03",
         "language": "spanish",
         "introducedBy": "ES-C24-cabeza",
@@ -13448,6 +13499,18 @@
         "revisits": 0
       },
       {
+        "atom": "ES-GRAMMAR-AGE-WITH-TENER",
+        "language": "spanish",
+        "introducedBy": "ES-C08-cuantos-anos",
+        "introducedAt": 66,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL",
         "language": "spanish",
         "introducedBy": "ES-C02-buenas-tardes",
@@ -13468,18 +13531,6 @@
           "R2",
           "R3",
           "R4"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "ES-GRAMMAR-CAFE-MASCULINE",
-        "language": "spanish",
-        "introducedBy": "ES-C06-cafe",
-        "introducedAt": 48,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
         ],
         "revisits": 1
       },
@@ -13577,7 +13628,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "ES-GRAMMAR-REFLEXIVE-FIRST-PERSON",
@@ -13614,6 +13665,18 @@
           "R3"
         ],
         "revisits": 0
+      },
+      {
+        "atom": "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
+        "language": "spanish",
+        "introducedBy": "ES-C08-tener",
+        "introducedAt": 65,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ES-GRAMMAR-WEATHER-05",
@@ -13688,16 +13751,16 @@
         "revisits": 1
       },
       {
-        "atom": "ES-LEX-COMO-SE-LLAMA",
+        "atom": "ES-LEX-CUANTOS-ANOS",
         "language": "spanish",
-        "introducedBy": "ES-C03-como-se-llama",
-        "introducedAt": 22,
+        "introducedBy": "ES-C08-cuantos-anos",
+        "introducedAt": 66,
         "missed": [
           "R2",
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 1
       },
       {
         "atom": "ES-LEX-DIA",
@@ -13880,6 +13943,30 @@
         "revisits": 0
       },
       {
+        "atom": "ES-LEX-NUMBERS-1-5",
+        "language": "spanish",
+        "introducedBy": "ES-C08-numeros-1-5",
+        "introducedAt": 63,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ES-LEX-NUMBERS-6-10",
+        "language": "spanish",
+        "introducedBy": "ES-C08-numeros-6-10",
+        "introducedAt": 64,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-LEX-QUE",
         "language": "spanish",
         "introducedBy": "ES-C07-que",
@@ -13932,6 +14019,18 @@
         "language": "spanish",
         "introducedBy": "ES-C03-se-llama",
         "introducedAt": 21,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-TENER",
+        "language": "spanish",
+        "introducedBy": "ES-C08-tener",
+        "introducedAt": 65,
         "missed": [
           "R2",
           "R3",
@@ -14052,18 +14151,6 @@
         "language": "spanish",
         "introducedBy": "ES-W03-inverted",
         "introducedAt": 38,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "ES-SOUND-ENYE",
-        "language": "spanish",
-        "introducedBy": "ES-W02-enye",
-        "introducedAt": 36,
         "missed": [
           "R2",
           "R3",
@@ -17914,6 +18001,17 @@
         "revisits": 1
       },
       {
+        "atom": "ES-ETYMON-DOUBLE-N",
+        "language": "spanish",
+        "introducedBy": "ES-W02-enye",
+        "introducedAt": 36,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-ETYMON-ESCRIBIR-08",
         "language": "spanish",
         "introducedBy": "ES-C34-escribir",
@@ -18156,6 +18254,17 @@
         "revisits": 2
       },
       {
+        "atom": "ES-GRAMMAR-CAFE-MASCULINE",
+        "language": "spanish",
+        "introducedBy": "ES-C06-cafe",
+        "introducedAt": 48,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-GRAMMAR-ER-PRESENT-SINGULAR",
         "language": "spanish",
         "introducedBy": "ES-C07-comer",
@@ -18164,7 +18273,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ES-GRAMMAR-GUSTAR-INVERSION-09",
@@ -18362,7 +18471,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "ES-LEX-CAMINAR-07",
@@ -18384,7 +18493,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ES-LEX-COMO",
@@ -18418,6 +18527,17 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-COMO-SE-LLAMA",
+        "language": "spanish",
+        "introducedBy": "ES-C03-como-se-llama",
+        "introducedAt": 22,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
       },
       {
         "atom": "ES-LEX-CONTAR-08",
@@ -18816,17 +18936,6 @@
         "revisits": 1
       },
       {
-        "atom": "ES-SCRIPT-ENYE",
-        "language": "spanish",
-        "introducedBy": "ES-W02-enye",
-        "introducedAt": 36,
-        "missed": [
-          "R3",
-          "R4"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "ES-SCRIPT-INVERTED-QUESTION",
         "language": "spanish",
         "introducedBy": "ES-C03-como-acento",
@@ -18835,7 +18944,18 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
+      },
+      {
+        "atom": "ES-SOUND-ENYE",
+        "language": "spanish",
+        "introducedBy": "ES-W02-enye",
+        "introducedAt": 36,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "FA-DIALOGUE-TAKE-LEAVE",
@@ -27184,16 +27304,6 @@
         "revisits": 3
       },
       {
-        "atom": "ES-GRAMMAR-NOUN-GENDER",
-        "language": "spanish",
-        "introducedBy": "ES-C01-genero-gramatical",
-        "introducedAt": 3,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 8
-      },
-      {
         "atom": "ES-GRAMMAR-OIR-Y-03",
         "language": "spanish",
         "introducedBy": "ES-C36-oir",
@@ -27391,7 +27501,7 @@
         "missed": [
           "R1"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "ES-LEX-PERRO-03",
@@ -27458,6 +27568,16 @@
         "language": "spanish",
         "introducedBy": "ES-W01-acento",
         "introducedAt": 34,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ES-SCRIPT-ENYE",
+        "language": "spanish",
+        "introducedBy": "ES-W02-enye",
+        "introducedAt": 36,
         "missed": [
           "R4"
         ],
@@ -34800,44 +34920,12 @@
         "lessonsEarly": 77
       },
       {
-        "lessonId": "ES-C08-cuantos-anos",
-        "language": "spanish",
-        "position": 66,
-        "word": "veinte",
-        "taughtBy": "ES-C31-veinte",
-        "lessonsEarly": 75
-      },
-      {
-        "lessonId": "ES-C08-numeros-6-10",
-        "language": "spanish",
-        "position": 64,
-        "word": "dieciséis",
-        "taughtBy": "ES-C31-dieciseis-diecinueve",
-        "lessonsEarly": 75
-      },
-      {
         "lessonId": "ES-C09-ser-vs-estar",
         "language": "spanish",
         "position": 69,
         "word": "verde",
         "taughtBy": "ES-C33-verde",
         "lessonsEarly": 75
-      },
-      {
-        "lessonId": "ES-C08-practice",
-        "language": "spanish",
-        "position": 67,
-        "word": "dieciséis",
-        "taughtBy": "ES-C31-dieciseis-diecinueve",
-        "lessonsEarly": 72
-      },
-      {
-        "lessonId": "ES-C08-practice",
-        "language": "spanish",
-        "position": 67,
-        "word": "diecinueve",
-        "taughtBy": "ES-C31-dieciseis-diecinueve",
-        "lessonsEarly": 72
       },
       {
         "lessonId": "ES-C09-practice",
@@ -36736,14 +36824,6 @@
         "lessonsEarly": 2
       },
       {
-        "lessonId": "ES-C08-practice",
-        "language": "spanish",
-        "position": 67,
-        "word": "ser vs estar",
-        "taughtBy": "ES-C09-ser-vs-estar",
-        "lessonsEarly": 2
-      },
-      {
         "lessonId": "ES-C09-ser-vs-estar",
         "language": "spanish",
         "position": 69,
@@ -37237,14 +37317,6 @@
         "position": 64,
         "word": "tener",
         "taughtBy": "ES-C08-tener",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "ES-C08-practice",
-        "language": "spanish",
-        "position": 67,
-        "word": "ser",
-        "taughtBy": "ES-C09-ser",
         "lessonsEarly": 1
       },
       {
@@ -38619,9 +38691,9 @@
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 272,
+        "atomsTaught": 284,
         "atomsNeverRevisited": 68,
-        "forwardReferences": 92
+        "forwardReferences": 86
       },
       {
         "language": "tamil",
@@ -38659,16 +38731,16 @@
       "tracksWithUnorderedLessons": 17,
       "forwardPrerequisites": 225,
       "forwardReviews": 267,
-      "atomsTaught": 2519,
+      "atomsTaught": 2531,
       "atomsNeverRevisited": 472,
       "neverRevisitedPercent": 19,
       "missedByWindow": {
-        "R1": 854,
-        "R2": 1725,
-        "R3": 1220,
-        "R4": 146
+        "R1": 855,
+        "R2": 1736,
+        "R3": 1227,
+        "R4": 158
       },
-      "forwardReferences": 462
+      "forwardReferences": 456
     }
   },
   "levelGate": {
@@ -39072,8 +39144,8 @@
           },
           {
             "criterion": "reinforcement",
-            "detail": "51 atom(s) at or below pre-A1 are revisited fewer than twice (36 etymology hook(s) waived)",
-            "shortfall": 51
+            "detail": "49 atom(s) at or below pre-A1 are revisited fewer than twice (36 etymology hook(s) waived)",
+            "shortfall": 49
           }
         ],
         "vocabulary": 136
