@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased] - standard XAML Rust runtime binding
+
+- XAML project shells now install Mosaic's package-independent .NET binding and
+  prefer it over legacy package-owned `MosaicHost` adapters when the Rust DLL is
+  available.
+- The standard host uses `NativeLibrary` and `System.Text.Json` to own startup,
+  successful event sequencing, prop projection, snapshots, buffers, and teardown.
+
 ## [Unreleased] - standard SwiftUI Rust runtime binding
 
 - SwiftUI package shells now install Mosaic's package-independent Foundation/C

@@ -56,6 +56,16 @@ pub fn swift_package_with_runtime_binding(package_swift: &str) -> String {
     )
 }
 
+/// Generate the standard XAML/.NET host binding for the requested C# namespace.
+pub fn xaml_runtime_binding(namespace: &str) -> String {
+    include_str!("../templates/xaml/MosaicRuntimeHost.cs")
+        .replace(
+            "__MOSAIC_PROTOCOL_VERSION__",
+            &mosaic_app_runtime::PROTOCOL_VERSION.to_string(),
+        )
+        .replace("__MOSAIC_NAMESPACE__", namespace)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -158,5 +168,40 @@ mod tests {
         );
         assert!(package.contains("name: \"CMosaicRuntime\""));
         assert!(package.contains("dependencies: [\"CMosaicRuntime\"]"));
+    }
+
+    #[test]
+    fn xaml_binding_owns_the_full_c_abi_lifecycle() {
+        let source = xaml_runtime_binding("Mosaic.Generated");
+        for symbol in [
+            "mosaic_app_create",
+            "mosaic_app_dispatch",
+            "mosaic_app_snapshot",
+            "mosaic_app_restore",
+            "mosaic_buffer_free",
+            "mosaic_app_destroy",
+        ] {
+            assert!(source.contains(symbol), "missing {symbol}");
+        }
+        assert!(source.contains("NativeLibrary.GetExport"));
+        assert!(source.contains("finally { bufferFree(buffer); }"));
+        assert!(source.contains("public void Dispose()"));
+    }
+
+    #[test]
+    fn xaml_binding_uses_shared_protocol_and_successful_sequences() {
+        let source = xaml_runtime_binding("Acme.App");
+        assert!(source.contains("namespace Acme.App;"));
+        assert!(source.contains(&format!(
+            "private const int ProtocolVersion = {};",
+            mosaic_app_runtime::PROTOCOL_VERSION
+        )));
+        assert!(!source.contains("__MOSAIC_PROTOCOL_VERSION__"));
+        let dispatch = source.find("dispatch(app, input, out output)").unwrap();
+        let commit = source.find("sequence = nextSequence").unwrap();
+        assert!(
+            dispatch < commit,
+            "sequence must commit only after dispatch succeeds"
+        );
     }
 }

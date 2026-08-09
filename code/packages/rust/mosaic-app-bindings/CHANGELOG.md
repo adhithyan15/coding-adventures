@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add the package-independent XAML/.NET binding using built-in native loading
+  and JSON support.
 - Add the package-independent SwiftUI/Foundation binding and C dynamic loader.
 - Own Swift application startup, successful event sequencing, snapshots, Rust
   buffers, and teardown through the same fixed C ABI as Compose.
