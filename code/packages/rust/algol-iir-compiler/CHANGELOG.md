@@ -1,13 +1,22 @@
 # Changelog
 
+## 0.72.0 — 2026-08-09 — standard output as direct formal procedures
+
+A direct `procedure` actual may now be the implementation-defined standard
+output procedure `print` or `output`. Specialised wrappers retain that direct
+target and reuse the established statement-only `print_str` lowering at each
+formal call site, including nested forwarding, without inventing an IIR
+procedure signature or runtime function-pointer ABI. Dynamic procedure values
+remain unsupported.
+
 ## 0.71.0 — 2026-08-09 — standard functions as direct formal procedures
 
 A direct `procedure` actual may now be any implemented ALGOL standard function:
 `abs`, `sign`, `entier`, `sqrt`, `sin`, `cos`, `ln`, `exp`, or `arctan`. A
 specialised wrapper retains the function target and reuses its existing inline
 lowering at the formal call site, preserving normal arity/type validation and
-avoiding a function-pointer or closure ABI. Standard output procedures and
-dynamic procedure values remain unsupported.
+avoiding a function-pointer or closure ABI. Dynamic procedure values remain
+unsupported.
 
 ## 0.70.0 — 2026-08-09 — direct formal procedures
 
