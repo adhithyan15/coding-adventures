@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Normalize the `NCH` model type alias to canonical `NMOS` cards.
 - Normalize the `PJ` model type alias to canonical `PJF` cards.
 - Normalize the `PJFET` model type alias to canonical `PJF` cards.
 - Normalize the `NJ` model type alias to canonical `NJF` cards.

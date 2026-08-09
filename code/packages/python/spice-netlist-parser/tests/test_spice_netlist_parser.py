@@ -2623,6 +2623,19 @@ M1 out gate 0 0 nfast W=2u L=180n
     assert 0.0 <= result.node_voltages["out"] < 1.8
 
 
+def test_parse_nch_model_type_alias() -> None:
+    parsed = parse_netlist(
+        ".model nfast NCH(VTO=0.45 KP=200u)\nM1 d g s b nfast"
+    )
+
+    assert parsed.models["nfast"].kind == "NMOS"
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert mosfet.model.type == MosfetType.NMOS
+    assert isinstance(mosfet.model.model, Level1Model)
+    assert isclose(mosfet.model.model.params.KP, 200.0e-6)
+
+
 def test_parse_pmos_mosfet_model() -> None:
     parsed = parse_netlist(
         """

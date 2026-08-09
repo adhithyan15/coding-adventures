@@ -4746,12 +4746,18 @@ the Rust, Python, and TypeScript surfaces together.
      without changing the unresolved `B` parameter policy.
 
 480. Python and TypeScript Berkeley SPICE short P-channel JFET model-type alias parity.
-   - Status: implemented in this PJ model-type normalization slice.
+   - Status: completed in PR 10165.
    - Both parser facades normalize the engine-supported `PJ` model type alias
      to canonical `PJF`, preserving JFET validation and instance lowering
      without changing the unresolved `B` parameter policy.
    - This completes the audited `DIODE`, `NJFET`, `NJ`, `PJFET`, and `PJ`
      model-type alias set.
+
+481. Python and TypeScript Berkeley SPICE N-channel MOS model-type alias parity.
+   - Status: implemented in this NCH model-type normalization slice.
+   - Both parser facades normalize the engine-supported `NCH` model type alias
+     to canonical `NMOS`, preserving MOS Level-1 validation and instance
+     lowering.
 
 ## Backlog
 
