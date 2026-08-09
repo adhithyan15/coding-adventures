@@ -25,9 +25,10 @@ use std::time::Duration;
 use tls_platform::{default_connector, TlsConfig, TlsConnector};
 use url_parser::{Url, UrlError};
 
-pub const VERSION: &str = "0.3.0";
+pub const VERSION: &str = "0.4.0";
 pub const INTEGRATION_ID: &str = "reolink";
 pub const PROTOCOL_ID: &str = "reolink_cgi";
+pub const SNAPSHOT_PATH: &str = "/cgi-bin/api.cgi";
 pub const DEFAULT_MAX_RESPONSE_BYTES: usize = 2 * 1024 * 1024;
 pub const MIN_PTZ_SPEED: u32 = 1;
 pub const MAX_PTZ_SPEED: u32 = 64;
@@ -278,6 +279,10 @@ impl ReolinkPtzDirection {
 pub struct ReolinkSnapshot {
     pub device: ReolinkDeviceInformation,
     pub channels: Vec<ReolinkChannelStatus>,
+}
+
+pub fn supports_documented_jpeg_snapshot(model: &str, channel: &ReolinkChannelStatus) -> bool {
+    model.trim().to_ascii_uppercase().starts_with("RLC-") && channel.online && !channel.sleeping
 }
 
 pub trait ReolinkTransport {
@@ -886,6 +891,13 @@ pub fn install_snapshot(
             CapabilityMode::Observe,
             ValueKind::Object,
         )];
+        if supports_documented_jpeg_snapshot(&snapshot.device.model, channel) {
+            camera_capabilities.push(Capability::new(
+                CapabilityId::trusted("camera.snapshot"),
+                CapabilityMode::Command,
+                ValueKind::Text,
+            ));
+        }
         if channel.recording_enabled.is_some() {
             camera_capabilities.push(Capability::camera_recording());
             installed.recording_entity_ids.push(camera_id.clone());
@@ -1797,5 +1809,29 @@ mod tests {
         assert_eq!(record.confidence, DiscoveryConfidence::Paired);
         assert_eq!(record.pairing_requirement, PairingRequirement::Credentials);
         assert_eq!(record.native_bridge_id, "abc123");
+    }
+
+    #[test]
+    fn documented_snapshot_capability_is_limited_to_awake_online_rlc_channels() {
+        let channel = ReolinkChannelStatus {
+            channel: 0,
+            name: "Porch".to_string(),
+            online: true,
+            sleeping: false,
+            motion: None,
+            recording_enabled: None,
+            ptz_presets: None,
+        };
+        assert!(supports_documented_jpeg_snapshot("RLC-520A", &channel));
+
+        let mut offline = channel.clone();
+        offline.online = false;
+        assert!(!supports_documented_jpeg_snapshot("RLC-520A", &offline));
+
+        let mut sleeping = channel.clone();
+        sleeping.sleeping = true;
+        assert!(!supports_documented_jpeg_snapshot("RLC-520A", &sleeping));
+        assert!(!supports_documented_jpeg_snapshot("RLN8-410", &channel));
+        assert!(!supports_documented_jpeg_snapshot("E1 Pro", &channel));
     }
 }
