@@ -4829,10 +4829,16 @@ the Rust, Python, and TypeScript surfaces together.
      instance parameter overrides.
 
 493. Python and TypeScript Berkeley SPICE MOS channel-modulation alias precedence.
-   - Status: implemented in this MOS channel-modulation precedence slice.
+   - Status: completed in PR 10191.
    - Both parser facades give engine-canonical Level-1 `LAMBDA` precedence over
      the `LAM` alias during lowering, matching validation while preserving
      instance parameter overrides.
+
+494. Python and TypeScript Berkeley SPICE MOS surface-mobility alias precedence.
+   - Status: implemented in this MOS surface-mobility precedence slice.
+   - Both parser facades give engine-canonical Level-1 `U0` precedence over the
+     `UO` alias during lowering and `TOX`-based `KP` derivation, while
+     preserving instance parameter overrides.
 
 ## Backlog
 
