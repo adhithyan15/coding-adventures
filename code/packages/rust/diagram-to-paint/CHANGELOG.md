@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Paint sequence rect blocks with their declared functional colors.
 - Format decimal sequence numbers without redundant trailing zeroes.
 - Added central-connection endpoint circles layered above activation bars.
 - Added normal and reverse filled/stick sequence half-arrow geometry.

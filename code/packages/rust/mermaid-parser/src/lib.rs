@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.11.0";
+pub const VERSION: &str = "0.12.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1314,10 +1314,16 @@ fn parse_sequence_control_block(
             ))
         }
     };
-    let label = take_sequence_line_text(cursor);
+    let block_text = take_sequence_line_text(cursor);
+    let (label, fill) = if kind == SequenceBlockKind::Rect {
+        (String::new(), Some(block_text))
+    } else {
+        (block_text, None)
+    };
     diagram.events.push(SequenceEvent::BlockStart {
         kind: kind.clone(),
         label,
+        fill,
     });
     cursor.skip_terminators();
 
@@ -2905,11 +2911,11 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         .unwrap();
         assert!(matches!(
             &diagram.events[0],
-            SequenceEvent::BlockStart { kind: SequenceBlockKind::Alt, label } if label == "Authorized"
+            SequenceEvent::BlockStart { kind: SequenceBlockKind::Alt, label, .. } if label == "Authorized"
         ));
         assert!(matches!(
             &diagram.events[2],
-            SequenceEvent::BlockStart { kind: SequenceBlockKind::Loop, label } if label == "Retry"
+            SequenceEvent::BlockStart { kind: SequenceBlockKind::Loop, label, .. } if label == "Retry"
         ));
         assert!(matches!(
             &diagram.events[5],
@@ -3086,6 +3092,27 @@ B//-A: reverse stick top
         assert_eq!(diagram.auto_number_start, 10.5);
         assert_eq!(diagram.auto_number_step, 2.25);
     }
+
+    #[test]
+    fn sequence_parses_nested_rect_background_colors() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nrect rgba(0, 0, 255, .1)\nAlice->>Bob: Outer\nrect rgb(200, 150, 255)\nBob->>Alice: Inner\nend\nend\n",
+        )
+        .unwrap();
+        let fills: Vec<_> = diagram
+            .events
+            .iter()
+            .filter_map(|event| match event {
+                SequenceEvent::BlockStart {
+                    kind: SequenceBlockKind::Rect,
+                    fill,
+                    ..
+                } => fill.as_deref(),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(fills, vec!["rgba(0, 0, 255, .1)", "rgb(200, 150, 255)"]);
+    }
 }
 #[cfg(test)]
 mod tests {
@@ -3102,7 +3129,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.11.0");
+        assert_eq!(crate::VERSION, "0.12.0");
     }
 
     #[test]

@@ -45,6 +45,8 @@ Central connection markers before and/or after an arrow preserve source,
 destination, and dual endpoint semantics through layout and Paint.
 `autonumber` supports Mermaid 11.15+ decimal start and increment values with
 up to two decimal places.
+Nested `rect` background highlights preserve their declared `rgb`/`rgba` fills
+instead of being treated as labeled control frames.
 Inline participant configurations support Mermaid's `type` and `alias` fields,
 including boundary, control, entity, database, collections, and queue symbols.
 

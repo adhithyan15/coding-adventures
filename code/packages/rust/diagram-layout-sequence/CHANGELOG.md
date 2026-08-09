@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.0 - 2026-08-09
+
+- Preserve nested rect fills without reserving a control-block label band.
+
 ## 0.7.0 - 2026-08-09
 
 - Generate message numbers from configured decimal starts and increments.

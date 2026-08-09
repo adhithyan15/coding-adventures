@@ -1,6 +1,6 @@
 //! diagram-ir v0.7.0 — DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.11.0";
+pub const VERSION: &str = "0.12.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -262,6 +262,7 @@ pub enum SequenceEvent {
     BlockStart {
         kind: SequenceBlockKind,
         label: String,
+        fill: Option<String>,
     },
     BlockBranch {
         label: String,
@@ -340,6 +341,7 @@ pub enum LayoutedSequenceItem {
     BlockFrame {
         kind: SequenceBlockKind,
         label: String,
+        fill: Option<String>,
         depth: usize,
         x: f64,
         y: f64,
@@ -905,8 +907,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn version_is_0_11_0() {
-        assert_eq!(VERSION, "0.11.0");
+    fn version_is_0_12_0() {
+        assert_eq!(VERSION, "0.12.0");
     }
     #[test]
     fn default_direction_is_tb() {
