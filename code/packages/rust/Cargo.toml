@@ -1027,6 +1027,7 @@ members = [
   "task-core",
   "task-wasm",
   "chief-of-staff-daemon-credential",
+  "chief-of-staff-daemon-secret-file",
   "chief-of-staff-daemon",
   "chief-of-staff-daemon-service-files",
   "chief-of-staff-daemon-installer",

@@ -2184,6 +2184,14 @@ creation supplies a protected DACL with exactly one allow ACE for the current to
 user. Existing Windows credentials must retain that owner and protected one-ACE DACL;
 inherited directory permissions are not sufficient.
 
+Production adapters that load private key material from operator-owned files MUST
+use the same no-link path traversal and current-user-only access policy. Those
+reads are existing-file-only, exact-length, bounded, and returned in zeroizing
+storage; the adapter never creates, repairs, rewrites, or logs secret content.
+Unix non-regular opens MUST be non-blocking so a FIFO or device cannot stall daemon
+startup. Windows reads retain ancestor handles and reject reparse points before
+requiring a protected current-user-only DACL.
+
 The concrete `chief-of-staff-daemon` executable is the composition root for these
 contracts. With no arguments it resolves `~/.chief-of-staff/config.toml` from the
 platform user-home environment; one explicit absolute config path is also accepted.
