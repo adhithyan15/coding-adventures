@@ -51,6 +51,14 @@
 - Check the complete path against the Noto Sans Tamil outline and pin its zero
   lifts in the real four-frame filmstrip and learner prose.
 
+### Added — cited three-stroke ductus for Tamil ற (HL-C09G)
+
+- Add Frame 10's Tamil ற row: two joined movements form the left arch and first
+  middle descent, movement 3 restarts on the adjacent descent, and movements
+  4–5 join the right arch to the below-baseline sweep and descender.
+- Check all five movements against the Noto Sans Tamil outline and pin both
+  lift transitions in the real filmstrip and learner prose.
+
 ### Added — canonical lesson figures
 
 - Preserve standalone Markdown images as typed lesson blocks instead of flattening
