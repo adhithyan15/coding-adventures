@@ -1,6 +1,6 @@
-//! diagram-ir v0.13.0 - DG00/DG04 semantic IR
+//! diagram-ir v0.14.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.13.0";
+pub const VERSION: &str = "0.14.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -174,12 +174,20 @@ pub struct SequenceParticipant {
     pub style: Option<DiagramStyle>,
     pub group_id: Option<String>,
     pub links: Vec<SequenceLink>,
+    pub properties: Vec<SequenceProperty>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct SequenceLink {
     pub label: String,
     pub url: String,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct SequenceProperty {
+    pub name: String,
+    /// Canonical JSON preserves Mermaid's arbitrary property value types.
+    pub value_json: String,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -306,6 +314,7 @@ pub enum LayoutedSequenceItem {
         label: String,
         kind: SequenceParticipantKind,
         links: Vec<SequenceLink>,
+        properties: Vec<SequenceProperty>,
         x: f64,
         y: f64,
         width: f64,
@@ -915,8 +924,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn version_is_0_13_0() {
-        assert_eq!(VERSION, "0.13.0");
+    fn version_is_0_14_0() {
+        assert_eq!(VERSION, "0.14.0");
     }
     #[test]
     fn default_direction_is_tb() {

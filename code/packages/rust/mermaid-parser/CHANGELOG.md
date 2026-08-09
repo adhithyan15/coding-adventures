@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.14.0
+
+- Parse and merge arbitrary JSON-valued sequence actor properties.
+
 ## 0.13.0
 
 - Parse singular and JSON-map sequence actor links into semantic IR.

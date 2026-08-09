@@ -38,7 +38,7 @@ CENTRAL                  = "()"
 COLON                    = ":"
 COLOR                    = /rgba?\([^\)\r\n]*\)/
 CONFIG                   = /@\{[^\}\r\n]*\}/
-JSON_OBJECT              = /\{[^\}\r\n]*\}/
+JSON_OBJECT              = /\{[^\r\n]*\}/
 URL                      = /https?:\/\/[^ \t\r\n]+/
 COMMA                    = ","
 AT                       = "@"
@@ -55,6 +55,7 @@ keywords:
   destroy
   link
   links
+  properties
   box
   as
   activate

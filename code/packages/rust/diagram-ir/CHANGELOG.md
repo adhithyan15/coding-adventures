@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.14.0
+
+- Added arbitrary JSON-valued properties to sequence participants and layout IR.
+
 ## 0.13.0
 
 - Added labeled sequence participant links to semantic and layout IR.
