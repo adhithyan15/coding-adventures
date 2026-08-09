@@ -2119,6 +2119,21 @@ def test_parse_nj_model_type_alias() -> None:
     assert jfet.beta == 2.0e-3
 
 
+def test_parse_jfet_bet_alias_with_canonical_precedence() -> None:
+    parsed = parse_netlist(
+        ".model canonical NJF(BETA=2m BET=1m B=500u)\n"
+        ".model aliased NJF(BET=900u)\n"
+        "J1 drain gate source canonical\n"
+        "J2 drain gate source aliased"
+    )
+
+    canonical, aliased = parsed.circuit.elements
+    assert isinstance(canonical, JFET)
+    assert canonical.beta == 2.0e-3
+    assert isinstance(aliased, JFET)
+    assert aliased.beta == 900.0e-6
+
+
 def test_parse_pjfet_model_type_alias() -> None:
     parsed = parse_netlist(
         ".model fast PJFET(BETA=2m)\nJ1 drain gate source fast"

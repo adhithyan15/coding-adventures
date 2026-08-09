@@ -4774,11 +4774,17 @@ the Rust, Python, and TypeScript surfaces together.
      engine-tested `n-jfet` spelling, while preserving unknown model kinds.
 
 484. Python and TypeScript Berkeley SPICE model-parameter separator normalization parity.
-   - Status: implemented in this model-parameter separator normalization slice.
+   - Status: completed in PR 10172.
    - Both parser facades mirror the engine parameter-key contract by converting
      hyphens to underscores in `.model` parameter names, preserving existing
      validation, alias precedence, and lowering for spellings such as
      `BETA-F` and `T-NOM`.
+
+485. Python and TypeScript Berkeley SPICE JFET `BET` beta-alias parity.
+   - Status: implemented in this JFET `BET` alias slice.
+   - Both parser facades lower the engine-advertised `BET` alias into the JFET
+     transconductance field with canonical `BETA` precedence, while preserving
+     the unresolved legacy `B` beta-alias versus doping-tail policy collision.
 
 ## Backlog
 

@@ -2197,6 +2197,24 @@ J1 drain gate source fast
     });
   });
 
+  it("parses the JFET BET alias with canonical precedence", () => {
+    const parsed = parseNetlist(
+      ".model canonical NJF(BETA=2m BET=1m B=500u)\n" +
+        ".model aliased NJF(BET=900u)\n" +
+        "J1 drain gate source canonical\n" +
+        "J2 drain gate source aliased",
+    );
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      beta: 2.0e-3,
+    });
+    expect(parsed.circuit.elements()[1]).toMatchObject({
+      kind: "jfet",
+      beta: 900.0e-6,
+    });
+  });
+
   it("parses the PJFET model type alias", () => {
     const parsed = parseNetlist(".model fast PJFET(BETA=2m)\nJ1 drain gate source fast");
 
