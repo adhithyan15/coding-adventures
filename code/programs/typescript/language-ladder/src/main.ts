@@ -96,6 +96,7 @@ import {
 } from "./focused.ts";
 import { loadLanguages, saveLanguages } from "./languagestore.ts";
 import { lessonSections } from "./lessonbody.ts";
+import { generatedFigureUrl } from "./figures.ts";
 import { bookHashStatus } from "./bookhashes.ts";
 import { parseFont, boundsOf, type Font } from "./truetype.ts";
 import {
@@ -983,7 +984,7 @@ function renderLanguagePicker(): HTMLElement {
   return details;
 }
 
-/** Render the authored Markdown as text-only sections; no unsafe HTML path. */
+/** Render the authored Markdown through safe DOM nodes; no unsafe HTML path. */
 function renderLessonBody(lesson: (typeof LESSONS)[number], initiallyOpen = false): HTMLElement {
   const details = el("details", "lesson-body") as HTMLDetailsElement;
   details.open = initiallyOpen;
@@ -996,9 +997,22 @@ function renderLessonBody(lesson: (typeof LESSONS)[number], initiallyOpen = fals
     heading.textContent = sectionData.title;
     sectionEl.appendChild(heading);
     for (const block of sectionData.blocks) {
-      const p = el("p", block.startsWith("• ") ? "lesson-body__bullet" : "");
-      p.textContent = block;
-      sectionEl.appendChild(p);
+      if (block.kind === "image") {
+        const figure = el("figure", "lesson-body__figure");
+        const img = document.createElement("img");
+        img.src = generatedFigureUrl(lesson.language, block.source);
+        img.alt = block.alt;
+        img.loading = "lazy";
+        img.decoding = "async";
+        const caption = el("figcaption", "lesson-body__figure-caption");
+        caption.textContent = block.alt;
+        figure.append(img, caption);
+        sectionEl.appendChild(figure);
+      } else {
+        const p = el("p", block.text.startsWith("• ") ? "lesson-body__bullet" : "");
+        p.textContent = block.text;
+        sectionEl.appendChild(p);
+      }
     }
     details.appendChild(sectionEl);
   }

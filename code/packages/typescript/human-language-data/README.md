@@ -446,6 +446,24 @@ npm run generate:books
 npm run check:books
 ```
 
+Generate configured SVG lesson figures, or verify both their canonical inputs and
+committed bytes are current:
+
+```bash
+npm run build
+npm run generate:figures
+npm run check:figures
+```
+
+`core/figure-generation.json` binds each figure to one canonical lesson and a safe
+`<track>/book/figures/*.svg` target. The first figure kind, `etymology-route`, reads
+only the ordered `roots` asserted by that lesson and renders them through
+`paint-vm-svg`. `core/generated-figure-hashes.json` fingerprints the figure-driving
+source subset and the exact SVG separately, so either a stale claim or an edited
+artifact fails `--check`. Generated book chapters rewrite the lesson's `.svg` image
+destination to `.pdf`; the books workflow creates that PDF with `rsvg-convert`
+before XeLaTeX runs.
+
 Regenerate or verify the registry-ordered track table in the top-level Human
 Languages index:
 

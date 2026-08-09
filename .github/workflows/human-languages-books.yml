@@ -108,6 +108,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
       # The log scanner is what enforces the books' zero-warning claim, so it is
       # tested before anything expensive runs: a silently broken gate is worse
       # than no gate, and finding that out after a 20-book XeLaTeX build wastes
@@ -138,8 +143,15 @@ jobs:
       - name: Build curriculum gap report
         working-directory: code/packages/typescript/human-language-data
         run: |
+          (cd ../pixel-container && npm ci --omit=dev --ignore-scripts)
+          (cd ../paint-instructions && npm ci --omit=dev --ignore-scripts)
+          (cd ../paint-vm && npm ci --omit=dev --ignore-scripts)
+          (cd ../paint-vm-svg && npm ci --omit=dev --ignore-scripts)
           npm ci
           npm run build
+          # Class-A/B SVGs are generated views of canonical curriculum data.
+          # A stale vector must fail before it reaches rsvg or XeLaTeX.
+          npm run check:figures
           npm run check:books
           # The top-level track table is a generated view over the registry,
           # curriculum maps, lessons, and book manifest. Keep every registered
@@ -180,7 +192,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             fontconfig latexmk lmodern texlive-fonts-recommended \
-            texlive-lang-arabic texlive-xetex
+            librsvg2-bin texlive-lang-arabic texlive-xetex
 
           setup_seconds=$(($(date +%s) - setup_started_at))
           echo "TeX toolchain setup completed in ${setup_seconds}s"
@@ -190,12 +202,12 @@ jobs:
         run: |
           set -euo pipefail
 
-          for executable in xelatex latexmk kpsewhich fc-match; do
+          for executable in xelatex latexmk kpsewhich fc-match rsvg-convert; do
             command -v "$executable"
           done
 
           for tex_asset in \
-            book.cls fontspec.sty newunicodechar.sty xcolor.sty \
+            book.cls fontspec.sty graphicx.sty newunicodechar.sty xcolor.sty \
             tcolorbox.sty booktabs.sty longtable.sty tabularx.sty array.sty \
             hyperref.sty titlesec.sty polyglossia.sty bidi.sty pzdr.tfm; do
             asset_path=$(kpsewhich "$tex_asset")
@@ -206,6 +218,23 @@ jobs:
           latin_modern_path=$(fc-match -f '%{file}\n' 'Latin Modern Roman' | head -n 1)
           test -f "$latin_modern_path"
           echo "Latin Modern Roman -> $latin_modern_path"
+
+      - name: Convert generated SVG figures to PDF
+        run: |
+          set -euo pipefail
+          figure_count=0
+          while IFS= read -r svg; do
+            pdf="${svg%.svg}.pdf"
+            rsvg-convert --format=pdf --output="$pdf" "$svg"
+            test -s "$pdf"
+            echo "$svg -> $pdf"
+            figure_count=$((figure_count + 1))
+          done < <(
+            find code/learning/human-languages \
+              -path '*/book/figures/*.svg' -type f | sort
+          )
+          test "$figure_count" -gt 0
+          echo "Converted $figure_count generated figure(s)"
 
       - name: Build every book
         run: |

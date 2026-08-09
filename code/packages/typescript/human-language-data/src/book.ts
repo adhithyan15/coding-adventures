@@ -291,6 +291,47 @@ function escapeLatexLinkDestination(destination: string): string {
   return destination.replace(/[\\{}$^~%#_&]/g, (character) => escaped[character] ?? character);
 }
 
+/**
+ * Validate a local image path for a standalone book, then point SVG sources at
+ * the PDF produced by the build's deterministic rsvg-convert step.
+ */
+export function bookImageDestination(destination: string): string {
+  const trimmed = destination.trim().replaceAll("\\", "/");
+  if (
+    trimmed === "" ||
+    trimmed.startsWith("/") ||
+    /^[A-Za-z][A-Za-z0-9+.-]*:/.test(trimmed) ||
+    trimmed.split("/").includes("..") ||
+    !/^[A-Za-z0-9._/-]+\.(?:svg|pdf|png|jpe?g)$/.test(trimmed)
+  ) {
+    throw new Error(`unsafe Markdown image destination '${destination}'`);
+  }
+  return trimmed.endsWith(".svg") ? `${trimmed.slice(0, -4)}.pdf` : trimmed;
+}
+
+/** Image paths are allowlisted above, so detokenize is safe and keeps `_` literal. */
+function escapeLatexImageDestination(destination: string): string {
+  return `\\detokenize{${bookImageDestination(destination)}}`;
+}
+
+function markdownImageAt(markdown: string, cursor: number): {
+  alt: string;
+  destination: string;
+  end: number;
+} | undefined {
+  if (!markdown.startsWith("![", cursor)) return undefined;
+  const altEnd = markdown.indexOf("](", cursor + 2);
+  const destinationEnd = altEnd === -1 ? -1 : markdown.indexOf(")", altEnd + 2);
+  if (altEnd === -1 || destinationEnd === -1) return undefined;
+  const alt = markdown.slice(cursor + 2, altEnd).trim();
+  if (alt === "") throw new Error("Markdown images require non-empty alt text");
+  return {
+    alt,
+    destination: markdown.slice(altEnd + 2, destinationEnd),
+    end: destinationEnd + 1,
+  };
+}
+
 function scriptMatchers(options: InlineRenderOptionsInput | undefined): Array<{
   matcher: RegExp;
   scriptCommand: string;
@@ -730,6 +771,12 @@ export function renderInlineMarkdown(
         continue;
       }
     }
+    const image = markdownImageAt(markdown, cursor);
+    if (image) {
+      output.push(`\\hlinlinefigure{${escapeLatexImageDestination(image.destination)}}`);
+      cursor = image.end;
+      continue;
+    }
     const script = scripts.find((candidate) => candidate.matcher.test(character));
     if (script) {
       const run: string[] = [];
@@ -923,6 +970,18 @@ function renderMarkdown(
       flushQuote();
       closeList();
       flushTable();
+      continue;
+    }
+    const image = markdownImageAt(line.trim(), 0);
+    if (image && image.end === line.trim().length) {
+      flushParagraph();
+      flushQuote();
+      closeList();
+      flushTable();
+      output.push(
+        `\\hlblockfigure{${escapeLatexImageDestination(image.destination)}}{${renderInlineMarkdown(image.alt, options)}}`,
+        "",
+      );
       continue;
     }
     if (/^\s*\|.*\|\s*$/.test(line)) {

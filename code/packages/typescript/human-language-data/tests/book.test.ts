@@ -125,6 +125,37 @@ describe("canonical LaTeX chapter rendering", () => {
     expect(generated.tex).toContain("I & \\textbf{hablo} \\\\");
   });
 
+  it("renders safe block and inline images through the generated PDF view", () => {
+    const lesson = parseLesson(
+      source("A", 10, "café").replace(
+        "## Guided Practice",
+        "![Arabic qahwah to Spanish café](figures/ES-C06-cafe-etymology.svg)\n\nRead ![the route](figures/route.svg) aloud.\n\n## Guided Practice",
+      ),
+      "test",
+    );
+    const generated = renderBookChapter(target, [lesson]);
+    expect(generated.tex).toContain(
+      "\\hlblockfigure{\\detokenize{figures/ES-C06-cafe-etymology.pdf}}{Arabic qahwah to Spanish café}",
+    );
+    expect(generated.tex).toContain(
+      "Read \\hlinlinefigure{\\detokenize{figures/route.pdf}} aloud.",
+    );
+  });
+
+  it("rejects escaping, remote, and uncaptioned Markdown images", () => {
+    for (const image of [
+      "![bad](../escape.svg)",
+      "![bad](https://example.test/figure.svg)",
+      "![](figures/uncaptioned.svg)",
+    ]) {
+      const parsed = parseLesson(
+        source("A", 10, "hello").replace("## Guided Practice", `${image}\n\n## Guided Practice`),
+        "test",
+      );
+      expect(() => renderBookChapter(target, [parsed])).toThrow(/image|alt text/i);
+    }
+  });
+
   it("renders a canonical Markdown reference as structured book back matter", () => {
     const generated = renderReferenceAppendix(
       {

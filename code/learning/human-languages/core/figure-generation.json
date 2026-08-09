@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "targets": [
+    {
+      "kind": "etymology-route",
+      "lessonId": "ES-C06-cafe",
+      "output": "spanish/book/figures/ES-C06-cafe-etymology.svg"
+    }
+  ]
+}

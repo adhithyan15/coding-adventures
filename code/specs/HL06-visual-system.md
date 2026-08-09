@@ -170,6 +170,17 @@ hand-written N-fold families.
 4. **CI** — add `graphicx.sty` to the `kpsewhich` preflight and `librsvg2-bin` to the
    apt closure for SVG→PDF conversion.
 
+### As built (HL-C06)
+
+The first Class-B vertical slice implements all four pipeline steps. A checked
+`figure-generation.json` manifest selects the canonical Spanish *café* lesson;
+`figure-cli` reads its ordered `roots` and uses `paint-vm-svg` to commit a
+deterministic SVG plus separate source/SVG hashes. The generated book chapter and
+Language Ladder both consume that one SVG. The shared `_shared/visual.tex` owns
+`graphicx`, placement, and captions; book rendering rewrites safe `.svg` references
+to `.pdf`; local Spanish build helpers and the unified books workflow convert with
+`rsvg-convert` before XeLaTeX. Unsafe or stale paths fail closed.
+
 **TikZ is explicitly not adopted.** `texlive-pictures` is deliberately excluded from
 the focused CI dependency closure, and pre-rendered vectors are both leaner and more
 deterministic than compile-time drawing. Keep the toolchain lean.

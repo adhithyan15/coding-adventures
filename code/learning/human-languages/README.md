@@ -41,9 +41,19 @@ core/languages.json             complete active-language registry and default mi
 core/spine.json                 ordered, language-independent can-do spine
 core/latex-warning-baseline.json  per-track LaTeX warning debt the book gate holds the line on
 core/lesson-modality.json       generated: per-lesson voice/sight/pen and per-chapter drivable prefix
+core/figure-generation.json     configured canonical-data SVG figures and safe book targets
+core/generated-figure-hashes.json generated: figure source/SVG drift fingerprints
 concepts/taxonomy.json          cross-language semantic join keys
 data/scripts/*.json             writing-system inventories and teaching metadata
 ```
+
+Generated Class-B figures live beside the book that consumes them under
+`<language>/book/figures/`. The data package renders them from canonical lesson
+claims, Language Ladder bundles the same SVG, and the unified books job verifies the
+hash manifest before converting SVG to PDF for XeLaTeX. Run `npm run
+generate:figures` or `npm run check:figures` in
+`code/packages/typescript/human-language-data`; authored image paths are restricted
+to relative `figures/*` targets and cannot escape a track.
 
 Every registered track has one `curriculum.json`. Its ordered path can revisit a
 shared spine node, attaches required/supporting/reference extensions before,

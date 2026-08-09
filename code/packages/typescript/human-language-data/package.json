@@ -8,6 +8,8 @@
     "build": "tsc",
     "generate:books": "node dist/book-cli.js --write",
     "check:books": "node dist/book-cli.js --check",
+    "generate:figures": "node dist/figure-cli.js --write",
+    "check:figures": "node dist/figure-cli.js --check",
     "generate:modality": "node dist/modality-cli.js --write",
     "check:modality": "node dist/modality-cli.js --check",
     "generate:narration": "node dist/narration-cli.js --write",
@@ -21,6 +23,10 @@
   },
   "license": "MIT",
   "author": "Adhithya Rajasekaran",
+  "dependencies": {
+    "@coding-adventures/paint-instructions": "file:../paint-instructions",
+    "@coding-adventures/paint-vm-svg": "file:../paint-vm-svg"
+  },
   "devDependencies": {
     "@types/node": "^22.0.0",
     "typescript": "^5.7.0",

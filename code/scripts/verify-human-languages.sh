@@ -60,6 +60,7 @@ if [ "$MODE" != "books" ]; then
   ( cd "$PKG" && run "vitest" npx vitest run --testTimeout=60000 )
 
   step "drift gates (exactly what CI runs)"
+  ( cd "$PKG" && run "check:figures" npm run check:figures )
   ( cd "$PKG" && run "check:books" npm run check:books )
   ( cd "$PKG" && run "check:modality" npm run check:modality )
   ( cd "$PKG" && run "check:narration" npm run check:narration )
@@ -74,6 +75,21 @@ if [ "$MODE" != "books" ]; then
 fi
 
 if [ "$MODE" != "fast" ]; then
+  step "Generated figures — SVG to PDF"
+  if command -v rsvg-convert >/dev/null 2>&1; then
+    while IFS= read -r svg; do
+      pdf="${svg%.svg}.pdf"
+      if rsvg-convert --format=pdf --output="$pdf" "$svg" >"$RUNLOG" 2>&1 && [ -s "$pdf" ]; then
+        ok "$(basename "$svg")"
+      else
+        bad "$(basename "$svg") SVG-to-PDF conversion"
+        tail -25 "$RUNLOG"
+      fi
+    done < <(find "$BOOKS" -path '*/book/figures/*.svg' -type f | sort)
+  else
+    bad "rsvg-convert (install librsvg2-bin to compile generated book figures)"
+  fi
+
   step "XeLaTeX — every book"
   # The expensive one, and the reason this script exists. -halt-on-error catches hard TeX
   # errors; the warning scan below catches the soft ones (missing glyphs, overfull boxes)
