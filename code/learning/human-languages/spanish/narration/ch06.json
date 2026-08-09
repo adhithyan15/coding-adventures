@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "The First Verbs",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:cf3c661f4c7c99a7",
+  "sourceHash": "fnv1a64:a9b2c0238c754028",
   "lessons": [
     {
       "id": "ES-C06-cafe",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b96d615a4e56676",
+      "sourceHash": "fnv1a64:d9337199d6cd70c4",
       "notice": null,
       "blocks": [
         {
@@ -58,6 +58,10 @@
             {
               "kind": "speech",
               "text": "Spanish café came through Italian caffè and Turkish kahve from Arabic qahwah. English coffee reached the same travelling word by a different European route. The drink and the word both crossed languages."
+            },
+            {
+              "kind": "speech",
+              "text": "The route from Arabic qahwah through Turkish kahve and Italian caffè to Spanish café."
             },
             {
               "kind": "speech",

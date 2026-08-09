@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "algorithm": "fnv1a64",
+  "figures": [
+    {
+      "kind": "etymology-route",
+      "lessonId": "ES-C06-cafe",
+      "sourceHash": "fnv1a64:0a6c7fc405ec2d4d",
+      "svgHash": "fnv1a64:02c8a41905e07c2b",
+      "svg": "spanish/book/figures/ES-C06-cafe-etymology.svg"
+    }
+  ]
+}

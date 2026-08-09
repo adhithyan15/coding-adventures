@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — canonical lesson figures
+
+- Preserve standalone Markdown images as typed lesson blocks instead of flattening
+  them into spoken alt text, and render their captions through safe DOM APIs.
+- Bundle generated per-track SVGs from the same committed figure files the LaTeX
+  books convert to PDF, beginning with Spanish *café*'s etymology route.
+- Resolve only track-local `figures/*.svg` destinations and reject missing,
+  remote, absolute, or traversing figure paths.
+
 ### Added — public Language Ladder
 
 - Carry canonical ordered `patternSlots` from parsed curriculum lessons into the

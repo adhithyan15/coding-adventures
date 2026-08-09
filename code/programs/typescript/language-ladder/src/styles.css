@@ -403,6 +403,20 @@ body {
 .lesson-body__heading { margin: 0 0 5px; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.035em; color: var(--muted); }
 .lesson-body__section p { margin: 5px 0; font-size: 0.9rem; line-height: 1.58; }
 .lesson-body__bullet { padding-left: 10px; }
+.lesson-body__figure { margin: 12px 0; }
+.lesson-body__figure img {
+  display: block;
+  width: min(100%, 760px);
+  height: auto;
+  margin: 0 auto;
+}
+.lesson-body__figure-caption {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  text-align: center;
+}
 /* The threads back to earlier languages — the reason the whole app exists. */
 .step__conn {
   margin: 8px 0 0;

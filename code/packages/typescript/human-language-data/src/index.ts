@@ -27,6 +27,15 @@ export {
   type LessonHashEntry,
 } from "./hash.js";
 export {
+  etymologyRootNode,
+  etymologyFigureSource,
+  renderEtymologyRouteFigure,
+  renderFigure,
+  type FigureKind,
+  type FigureTarget,
+  type GeneratedFigure,
+} from "./figure.js";
+export {
   renderInlineMarkdown,
   renderBookAnswerKey,
   renderBookChapter,
@@ -245,4 +254,11 @@ export {
 export { runValidate } from "./cli.js";
 export { runCurriculumGapReport } from "./report-cli.js";
 export { generatedBookOutputs, runBookGeneration } from "./book-cli.js";
+export {
+  FIGURE_CONFIG_PATH,
+  FIGURE_HASH_MANIFEST_PATH,
+  safeFigureOutput,
+  generatedFigureOutputs,
+  runFigureGeneration,
+} from "./figure-cli.js";
 export { generatedModalityOutputs, runModalityManifest } from "./modality-cli.js";

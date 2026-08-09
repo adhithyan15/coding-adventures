@@ -1,0 +1,19 @@
+% Shared deterministic figure styling for every Human Languages book (HL06).
+% SVG is the committed source; the book build converts it to same-name PDF
+% before XeLaTeX, which keeps TeX Live's dependency closure lean and reproducible.
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+
+\newcommand{\hlblockfigure}[2]{%
+  \par\medskip
+  \begingroup
+    \centering
+    \includegraphics[width=0.92\linewidth,keepaspectratio]{#1}\par
+    \small\itshape #2\par
+  \endgroup
+  \medskip
+}
+
+\newcommand{\hlinlinefigure}[1]{%
+  \raisebox{-0.25ex}{\includegraphics[height=1.4em,keepaspectratio]{#1}}%
+}

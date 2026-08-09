@@ -10,7 +10,7 @@ gloss: coffee / a café — one useful noun before the polite request that follo
 concept_tag: ES-WORD-CAFE
 prerequisites: [ES-C05-practice]
 sounds: [accent-acute, stress-final]
-roots: [qahwah-arabic, kahve-turkish, caffe-italian]
+roots: [qahwah-arabic, kahve-turkish, caffè-italian]
 etymology_hook: "café came through Italian caffè and Turkish kahve from Arabic qahwah; English coffee reached the same family by a different European route"
 duration:
   max_seconds: 180
@@ -49,6 +49,8 @@ syllable, so the acute accent records the unexpected final stress.
 Spanish **café** came through Italian **caffè** and Turkish **kahve** from
 Arabic **qahwah**. English **coffee** reached the same travelling word by a
 different European route. The drink and the word both crossed languages.
+
+![The route from Arabic qahwah through Turkish kahve and Italian caffè to Spanish café](figures/ES-C06-cafe-etymology.svg)
 
 **Café** can name the drink or the place, just as English **coffee** and
 **café** divide those jobs. It is masculine: **el café**.
