@@ -272,10 +272,25 @@ enum ProcedureParamType {
     },
 }
 
-/// A procedure heading read off the AST: `(name, value-params, return-type)`,
-/// where each value parameter is `(name, type)` in declaration order. A missing
-/// return type is an ALGOL proper procedure.
-type ProcedureParts = (String, Vec<(String, ProcedureParamType)>, Option<ScalarType>);
+/// Whether an ALGOL formal receives an eager value or re-evaluates its actual
+/// expression in the caller's lexical environment.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ProcedureParamMode {
+    Value,
+    Name,
+}
+
+/// One named formal from an ALGOL procedure heading.
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct ProcedureParam {
+    name: String,
+    ty: ProcedureParamType,
+    mode: ProcedureParamMode,
+}
+
+/// A procedure heading read off the AST. A missing return type is an ALGOL
+/// proper procedure.
+type ProcedureParts = (String, Vec<ProcedureParam>, Option<ScalarType>);
 
 /// The compile-time signature of a procedure: the ordered types of its
 /// value parameters plus its return type.
@@ -289,15 +304,23 @@ type ProcedureParts = (String, Vec<(String, ProcedureParamType)>, Option<ScalarT
 ///
 /// We model typed procedures (ALGOL "function procedures") as value-producing
 /// calls and proper procedures as void functions usable only in statement
-/// position. Parameters are still restricted to `value` parameters.
+/// position.
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct ProcSig {
-    /// Source-level parameter types in declaration order. Array formals lower
-    /// to a handle plus rank-specific descriptor values, but still consume one
+    /// Source-level parameters in declaration order. Array formals lower to a
+    /// handle plus rank-specific descriptor values, but still consume one
     /// ALGOL actual at a call site.
-    params: Vec<ProcedureParamType>,
+    params: Vec<ProcedureParam>,
     /// The procedure's return type, or `None` for a proper procedure.
     ret: Option<ScalarType>,
+}
+
+/// The caller-side expression and expected scalar type behind a call-by-name
+/// formal while its specialised procedure body is being lowered.
+#[derive(Debug, Clone)]
+struct ByNameBinding {
+    actual: GrammarASTNode,
+    ty: ScalarType,
 }
 
 #[derive(Debug, Clone)]
@@ -323,6 +346,22 @@ struct Compiler {
     /// Procedure name → signature, registered in a pre-pass so a call can be
     /// lowered before the callee's body is (forward references / recursion).
     proc_sigs: HashMap<String, ProcSig>,
+    /// Procedure name → declaration AST. Procedures with name formals are
+    /// compiled at each direct call site so their reads can re-evaluate the
+    /// caller's actual expression.
+    proc_decls: HashMap<String, GrammarASTNode>,
+    /// Active call-by-name formal substitutions while lowering one specialised
+    /// procedure body.
+    by_name_bindings: HashMap<String, ByNameBinding>,
+    /// A temporarily suspended formal resolves its stored actual expression in
+    /// the caller's injected global environment rather than recursively through
+    /// itself (for example `f(x)` where `x` is both formal and actual).
+    suspended_by_name: HashSet<String>,
+    /// Monotonic suffix for specialised sibling IIR function names.
+    by_name_specialization_counter: usize,
+    /// Source procedures currently being specialised. A recursive name call
+    /// needs an environment-aware thunk ABI rather than another direct sibling.
+    compiling_by_name_procedures: HashSet<String>,
     /// Switch name → its ordered designational expressions. A `goto s[i]`
     /// evaluates the selected expression at run time, which permits both
     /// conditional and nested switch-list elements.
@@ -362,6 +401,11 @@ impl Default for Compiler {
             referenced_labels: HashSet::new(),
             functions: Vec::new(),
             proc_sigs: HashMap::new(),
+            proc_decls: HashMap::new(),
+            by_name_bindings: HashMap::new(),
+            suspended_by_name: HashSet::new(),
+            by_name_specialization_counter: 0,
+            compiling_by_name_procedures: HashSet::new(),
             switches: HashMap::new(),
             resolving_switches: HashSet::new(),
             switch_expansion_steps: 0,
@@ -539,6 +583,24 @@ impl Compiler {
         // A procedure declaration is lowered out of line into its own
         // `IIRFunction` (its signature was already registered in pass 0).
         if let Some(proc_decl) = first_direct_node(node, "procedure_decl") {
+            let name = direct_tokens(proc_decl)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.clone())
+                .ok_or_else(|| CompileError::Malformed("procedure_decl missing name".into()))?;
+            let sig = self.proc_sigs.get(&name).ok_or_else(|| {
+                CompileError::Malformed(format!("procedure {name:?} was not registered"))
+            })?;
+            if sig
+                .params
+                .iter()
+                .any(|param| param.mode == ProcedureParamMode::Name)
+            {
+                // A name formal is not an ordinary ABI value. Its direct call
+                // sites create specialised siblings after the actual expression
+                // and caller environment are known.
+                return Ok(());
+            }
             let func = self.compile_procedure(proc_decl)?;
             self.functions.push(func);
             return Ok(());
@@ -1124,7 +1186,8 @@ impl Compiler {
         }
     }
 
-    /// Read a `procedure_decl` node into `(name, value-params, return-type)`.
+    /// Read a `procedure_decl` node into its name, ordered formals, and return
+    /// type.
     ///
     /// The grammar splits a procedure heading across three places:
     ///
@@ -1137,12 +1200,12 @@ impl Compiler {
     /// * `value_part` lists which of them are passed **by value** (a copy).
     /// * each `spec_part` declares the *type* of one or more parameters.
     ///
-    /// On the supported slice every parameter must be a `value` parameter
-    /// (call-by-name / Jensen's device is not modelled), and every parameter
-    /// must be specified exactly once. Scalar formals and integer/real/boolean/string
-    /// array descriptors are supported; an array formal's rank is inferred from
-    /// subscripted uses in its body. A missing heading type is a proper procedure
-    /// and lowers to an IIR `void` function.
+    /// Scalar formals can be passed by value or by name. Name formals are
+    /// specialised at direct call sites so their reads re-evaluate the caller's
+    /// expression and assignments target the caller's lvalue. Array formals
+    /// remain value-only because their descriptor already supplies shared
+    /// storage. A missing heading type is a proper procedure and lowers to an
+    /// IIR `void` function.
     fn procedure_parts(
         &self,
         proc_decl: &GrammarASTNode,
@@ -1182,14 +1245,6 @@ impl Compiler {
                 .collect(),
             None => HashSet::new(),
         };
-        for p in &param_names {
-            if !value_names.contains(p) {
-                return Err(CompileError::Unsupported(format!(
-                    "call-by-name parameter {p:?}: only `value` parameters are supported"
-                )));
-            }
-        }
-
         // Each parameter's type, gathered from the `spec_part` declarations.
         let mut type_of: HashMap<String, ProcedureParamType> = HashMap::new();
         for spec in direct_nodes(proc_decl)
@@ -1218,7 +1273,25 @@ impl Compiler {
                 },
                 ProcedureParamType::Scalar(_) => ty,
             };
-            params.push((p, ty));
+            let mode = if value_names.contains(&p) {
+                ProcedureParamMode::Value
+            } else {
+                ProcedureParamMode::Name
+            };
+            match (mode, ty) {
+                (ProcedureParamMode::Name, ProcedureParamType::Array { .. }) => {
+                    return Err(CompileError::Unsupported(format!(
+                        "call-by-name array parameter {p:?}"
+                    )))
+                }
+                (ProcedureParamMode::Name, ProcedureParamType::Scalar(ScalarType::String)) => {
+                    return Err(CompileError::Unsupported(format!(
+                        "call-by-name string parameter {p:?}"
+                    )))
+                }
+                _ => {}
+            }
+            params.push(ProcedureParam { name: p, ty, mode });
         }
 
         Ok((name, params, ret))
@@ -1234,12 +1307,13 @@ impl Compiler {
             )));
         }
         self.proc_sigs.insert(
-            name,
+            name.clone(),
             ProcSig {
-                params: params.into_iter().map(|(_, ty)| ty).collect(),
+                params,
                 ret,
             },
         );
+        self.proc_decls.insert(name, proc_decl.clone());
         Ok(())
     }
 
@@ -1261,8 +1335,20 @@ impl Compiler {
         &mut self,
         proc_decl: &GrammarASTNode,
     ) -> Result<IIRFunction, CompileError> {
+        self.compile_procedure_with_bindings(proc_decl, None, HashMap::new())
+    }
+
+    /// Lower a procedure body, optionally as a call-site-specialised sibling
+    /// whose name formals are backed by caller expressions.
+    fn compile_procedure_with_bindings(
+        &mut self,
+        proc_decl: &GrammarASTNode,
+        specialised_name: Option<String>,
+        by_name_bindings: HashMap<String, ByNameBinding>,
+    ) -> Result<IIRFunction, CompileError> {
         self.set_loc(proc_decl);
-        let (name, params, ret) = self.procedure_parts(proc_decl)?;
+        let (source_name, params, ret) = self.procedure_parts(proc_decl)?;
+        let function_name = specialised_name.unwrap_or_else(|| source_name.clone());
         let captured_array_formals = array_formals_captured_by_nested_procedures(proc_decl, &params);
         let captured_scalar_formals = scalar_formals_captured_by_nested_procedures(proc_decl, &params);
 
@@ -1277,6 +1363,8 @@ impl Compiler {
         let saved_initialized_string_slots =
             std::mem::take(&mut self.initialized_string_slots);
         let saved_scopes = std::mem::replace(&mut self.scopes, vec![HashMap::new()]);
+        let saved_by_name_bindings =
+            std::mem::replace(&mut self.by_name_bindings, by_name_bindings);
 
         // E6: a procedure body addresses an enclosing block scalar that was
         // materialised as a global (`is_global`).  The fresh scope above hides
@@ -1304,7 +1392,17 @@ impl Compiler {
         // keeps ownership of the backing storage, so element writes in the
         // callee are visible to the actual array.
         let mut param_pairs: Vec<(String, String)> = Vec::with_capacity(params.len() * 4);
-        for (pname, pty) in &params {
+        for param in &params {
+            let pname = &param.name;
+            let pty = &param.ty;
+            if param.mode == ProcedureParamMode::Name {
+                if !self.by_name_bindings.contains_key(pname) {
+                    return Err(CompileError::Malformed(format!(
+                        "call-by-name parameter {pname:?} has no call-site binding"
+                    )));
+                }
+                continue;
+            }
             if injected_global_names.remove(pname) {
                 self.scopes[0].remove(pname);
             }
@@ -1319,7 +1417,7 @@ impl Compiler {
                         self.initialized_string_slots.insert(slot.clone());
                     }
                     if captured_scalar_formals.contains(pname) {
-                        self.promote_scalar_parameter_capture(&name, pname, *pty, &slot)?;
+                        self.promote_scalar_parameter_capture(&function_name, pname, *pty, &slot)?;
                     }
                     param_pairs.push((slot, pty.iir().to_string()));
                 }
@@ -1365,7 +1463,7 @@ impl Compiler {
                     }
                     if captured_array_formals.contains(pname) {
                         self.promote_array_parameter_capture(
-                            &name,
+                            &function_name,
                             pname,
                             *elem_ty,
                             *dimensions,
@@ -1384,13 +1482,13 @@ impl Compiler {
             // body. The result variable belongs to this fresh procedure frame,
             // never to the enclosing block, even if that scan recorded its
             // spelling as a candidate capture.
-            let result_was_captured = self.block_captured.remove(&name);
-            if injected_global_names.remove(&name) {
-                self.scopes[0].remove(&name);
+            let result_was_captured = self.block_captured.remove(&source_name);
+            if injected_global_names.remove(&source_name) {
+                self.scopes[0].remove(&source_name);
             }
-            let declared_result = self.declare_var(&name, ret, false);
+            let declared_result = self.declare_var(&source_name, ret, false);
             if result_was_captured {
-                self.block_captured.insert(name.clone());
+                self.block_captured.insert(source_name.clone());
             }
             let result_slot = declared_result?;
             if ret == ScalarType::String {
@@ -1440,7 +1538,7 @@ impl Compiler {
         for label in &self.referenced_labels {
             if !self.defined_labels.contains(label) {
                 return Err(CompileError::Malformed(format!(
-                    "goto references undefined label {label:?} in procedure {name:?}"
+                    "goto references undefined label {label:?} in procedure {source_name:?}"
                 )));
             }
         }
@@ -1461,7 +1559,7 @@ impl Compiler {
         // ── assemble the function and restore the caller's context ───────
         let body_instrs = std::mem::take(&mut self.instrs);
         let body_len = body_instrs.len();
-        let mut func = IIRFunction::new(name, param_pairs, return_type, body_instrs);
+        let mut func = IIRFunction::new(function_name, param_pairs, return_type, body_instrs);
         func.type_status = FunctionTypeStatus::FullyTyped;
         func.register_count = self.register_names.len().saturating_add(8).max(8);
         let mut sm = std::mem::take(&mut self.source_map);
@@ -1480,6 +1578,7 @@ impl Compiler {
         self.switch_expansion_steps = saved_switch_expansion_steps;
         self.initialized_string_slots = saved_initialized_string_slots;
         self.scopes = saved_scopes;
+        self.by_name_bindings = saved_by_name_bindings;
 
         Ok(func)
     }
@@ -1746,14 +1845,27 @@ impl Compiler {
             )));
         }
 
+        let target_name = if sig
+            .params
+            .iter()
+            .any(|param| param.mode == ProcedureParamMode::Name)
+        {
+            self.compile_by_name_specialization(&name, &sig, &actuals)?
+        } else {
+            name.clone()
+        };
+
         let mut arg_slots = Vec::with_capacity(actuals.len() * 4);
-        for (actual, expected) in actuals.iter().zip(sig.params.iter()) {
-            match expected {
+        for (actual, param) in actuals.iter().zip(sig.params.iter()) {
+            if param.mode == ProcedureParamMode::Name {
+                continue;
+            }
+            match param.ty {
                 ProcedureParamType::Scalar(expected) => {
                     let value = self.emit_expr(actual)?;
                     let value = self.coerce_value(
                         value,
-                        *expected,
+                        expected,
                         &format!("procedure {name:?}: argument"),
                     )?;
                     arg_slots.push(value.slot);
@@ -1773,14 +1885,14 @@ impl Compiler {
                             "procedure {name:?}: argument {actual_name:?} is not an array"
                         ))
                     })?;
-                    if info.elem_ty != *expected_elem_ty {
+                    if info.elem_ty != expected_elem_ty {
                         return Err(CompileError::Type(format!(
                             "procedure {name:?}: array argument {actual_name:?} has {} elements but parameter expects {}",
                             info.elem_ty.name(),
                             expected_elem_ty.name()
                         )));
                     }
-                    if info.dims.len() != *expected_dimensions {
+                    if info.dims.len() != expected_dimensions {
                         return Err(CompileError::Type(format!(
                             "procedure {name:?}: array argument {actual_name:?} is {}-dimensional but the formal is {}-dimensional",
                             info.dims.len(),
@@ -1853,13 +1965,293 @@ impl Compiler {
             None => (None, "void"),
         };
         let mut srcs = Vec::with_capacity(arg_slots.len() + 1);
-        srcs.push(Operand::Var(name));
+        srcs.push(Operand::Var(target_name));
         srcs.extend(arg_slots.into_iter().map(Operand::Var));
         self.emit(IIRInstr::new("call", dest.clone(), srcs, type_hint));
         Ok(match (dest, sig.ret) {
             (Some(slot), Some(ty)) => Some(ExprValue { slot, ty }),
             _ => None,
         })
+    }
+
+    /// Compile one direct call to a procedure with scalar name formals.  The
+    /// portable IIR ABI has no typed closure parameter, so a specialised
+    /// sibling function is a better fit than a runtime thunk: it keeps the
+    /// actual expression in the callee's lowering context, where every formal
+    /// read can re-emit it against the caller bindings published as globals.
+    fn compile_by_name_specialization(
+        &mut self,
+        source_name: &str,
+        sig: &ProcSig,
+        actuals: &[&GrammarASTNode],
+    ) -> Result<String, CompileError> {
+        if !self
+            .compiling_by_name_procedures
+            .insert(source_name.to_string())
+        {
+            return Err(CompileError::Unsupported(format!(
+                "recursive call-by-name procedure {source_name:?}"
+            )));
+        }
+
+        let result = (|| {
+            let proc_decl = self.proc_decls.get(source_name).cloned().ok_or_else(|| {
+                CompileError::Malformed(format!(
+                    "call-by-name procedure {source_name:?} has no declaration AST"
+                ))
+            })?;
+
+            let mut bindings = HashMap::new();
+            for (param, actual) in sig.params.iter().zip(actuals) {
+                if param.mode != ProcedureParamMode::Name {
+                    continue;
+                }
+                let ProcedureParamType::Scalar(ty) = param.ty else {
+                    return Err(CompileError::Unsupported(format!(
+                        "call-by-name array parameter {:?}",
+                        param.name
+                    )));
+                };
+                self.promote_by_name_actual_dependencies(actual)?;
+                bindings.insert(
+                    param.name.clone(),
+                    ByNameBinding {
+                        actual: (*actual).clone(),
+                        ty,
+                    },
+                );
+            }
+
+            if self.by_name_specialization_counter >= MAX_CALL_BY_NAME_SPECIALIZATIONS {
+                return Err(CompileError::Unsupported(format!(
+                    "call-by-name specialisation exceeds {MAX_CALL_BY_NAME_SPECIALIZATIONS} functions"
+                )));
+            }
+            let suffix = self.by_name_specialization_counter;
+            self.by_name_specialization_counter += 1;
+            let specialised_name = format!("__algol_by_name_{source_name}_{suffix}");
+            let function = self.compile_procedure_with_bindings(
+                &proc_decl,
+                Some(specialised_name.clone()),
+                bindings,
+            )?;
+            self.functions.push(function);
+            Ok(specialised_name)
+        })();
+        self.compiling_by_name_procedures.remove(source_name);
+        result
+    }
+
+    /// Make every caller binding named by a stored actual expression visible
+    /// from its specialised sibling function.  Existing E6 capture machinery
+    /// already gives globals the required typed load/store semantics; this
+    /// helper extends that treatment to direct-call dependencies.
+    fn promote_by_name_actual_dependencies(
+        &mut self,
+        actual: &GrammarASTNode,
+    ) -> Result<(), CompileError> {
+        let mut names = HashSet::new();
+        collect_name_tokens_excluding_nested_procedures(actual, &mut names);
+        for name in names {
+            if self.by_name_bindings.contains_key(&name)
+                && !self.suspended_by_name.contains(&name)
+            {
+                return Err(CompileError::Unsupported(format!(
+                    "forwarding call-by-name formal {name:?} is not supported"
+                )));
+            }
+            if let Ok(binding) = self.require_var(&name) {
+                self.promote_by_name_dependency(&name, binding)?;
+            }
+        }
+        Ok(())
+    }
+
+    fn promote_by_name_dependency(
+        &mut self,
+        name: &str,
+        binding: VarBinding,
+    ) -> Result<(), CompileError> {
+        if binding.is_global {
+            return Ok(());
+        }
+
+        let slot = binding.slot.clone();
+        let array = binding.array.clone();
+        let promoted = self
+            .scopes
+            .iter_mut()
+            .rev()
+            .find_map(|scope| scope.get_mut(name))
+            .ok_or_else(|| CompileError::Malformed(format!(
+                "by-name dependency {name:?} disappeared from the active scope"
+            )))?;
+        promoted.is_global = true;
+
+        self.emit(IIRInstr::new(
+            "global_store",
+            None,
+            vec![Operand::Str(slot.clone()), Operand::Var(slot.clone())],
+            "void",
+        ));
+        if let Some(array) = array {
+            for (dim_index, dim) in array.dims.iter().enumerate() {
+                self.emit(IIRInstr::new(
+                    "global_store",
+                    None,
+                    vec![
+                        Operand::Str(array_dim_global_name(&slot, dim_index, "lower")),
+                        Operand::Var(dim.lower_slot.clone()),
+                    ],
+                    "void",
+                ));
+                if let Some(stride) = &dim.stride_slot {
+                    self.emit(IIRInstr::new(
+                        "global_store",
+                        None,
+                        vec![
+                            Operand::Str(array_dim_global_name(&slot, dim_index, "stride")),
+                            Operand::Var(stride.clone()),
+                        ],
+                        "void",
+                    ));
+                }
+            }
+        }
+        Ok(())
+    }
+
+    fn active_by_name_binding(&self, name: &str) -> Option<ByNameBinding> {
+        (!self.suspended_by_name.contains(name))
+            .then(|| self.by_name_bindings.get(name).cloned())
+            .flatten()
+    }
+
+    fn emit_by_name_read(
+        &mut self,
+        formal_name: &str,
+        binding: ByNameBinding,
+    ) -> Result<ExprValue, CompileError> {
+        self.suspended_by_name.insert(formal_name.to_string());
+        let value = self.emit_expr(&binding.actual);
+        self.suspended_by_name.remove(formal_name);
+        let value = value?;
+        self.coerce_value(
+            value,
+            binding.ty,
+            &format!("call-by-name parameter {formal_name:?}"),
+        )
+    }
+
+    fn emit_named_scalar_read(&mut self, name: &str) -> Result<ExprValue, CompileError> {
+        if let Some(binding) = self.active_by_name_binding(name) {
+            return self.emit_by_name_read(name, binding);
+        }
+        let binding = self.require_var(name)?;
+        if binding.array.is_some() {
+            return Err(CompileError::Type(format!(
+                "{name:?} is an array, not a scalar"
+            )));
+        }
+        Ok(self.read_scalar(binding))
+    }
+
+    fn emit_named_scalar_write(
+        &mut self,
+        name: &str,
+        value: ExprValue,
+    ) -> Result<(), CompileError> {
+        if let Some(binding) = self.active_by_name_binding(name) {
+            return self.emit_by_name_write(name, binding, value);
+        }
+        let binding = self.require_var(name)?;
+        if binding.array.is_some() {
+            return Err(CompileError::Type(format!(
+                "{name:?} is an array, not a scalar"
+            )));
+        }
+        let value = self.coerce_value(value, binding.ty, &format!("assignment to {name:?}"))?;
+        if binding.is_global {
+            self.emit(IIRInstr::new(
+                "global_store",
+                None,
+                vec![Operand::Str(binding.slot), Operand::Var(value.slot)],
+                "void",
+            ));
+        } else {
+            self.emit(IIRInstr::new(
+                "mov",
+                Some(binding.slot),
+                vec![Operand::Var(value.slot)],
+                binding.ty.iir(),
+            ));
+        }
+        Ok(())
+    }
+
+    fn emit_by_name_write(
+        &mut self,
+        formal_name: &str,
+        binding: ByNameBinding,
+        value: ExprValue,
+    ) -> Result<(), CompileError> {
+        let target = expr_variable_node(&binding.actual).ok_or_else(|| {
+            CompileError::Type(format!(
+                "call-by-name parameter {formal_name:?} requires an assignable variable actual"
+            ))
+        })?;
+        let value = self.coerce_value(
+            value,
+            binding.ty,
+            &format!("assignment to call-by-name parameter {formal_name:?}"),
+        )?;
+
+        if array_subscripts(target).is_some() {
+            let (array, zero) = self.resolve_array_index(target)?;
+            if array.ty != binding.ty {
+                return Err(CompileError::Type(format!(
+                    "call-by-name parameter {formal_name:?} expects {}, but its array element actual has {} elements",
+                    binding.ty.name(),
+                    array.ty.name()
+                )));
+            }
+            self.emit(IIRInstr::new(
+                "array_set",
+                None,
+                vec![
+                    Operand::Var(array.slot),
+                    Operand::Var(zero),
+                    Operand::Var(value.slot),
+                ],
+                binding.ty.iir(),
+            ));
+            return Ok(());
+        }
+
+        let target_name = self.simple_variable_name(target)?;
+        let target = self.require_var(&target_name)?;
+        if target.array.is_some() || target.ty != binding.ty {
+            return Err(CompileError::Type(format!(
+                "call-by-name parameter {formal_name:?} requires an assignable {} variable actual",
+                binding.ty.name()
+            )));
+        }
+        if target.is_global {
+            self.emit(IIRInstr::new(
+                "global_store",
+                None,
+                vec![Operand::Str(target.slot), Operand::Var(value.slot)],
+                "void",
+            ));
+        } else {
+            self.emit(IIRInstr::new(
+                "mov",
+                Some(target.slot),
+                vec![Operand::Var(value.slot)],
+                binding.ty.iir(),
+            ));
+        }
+        Ok(())
     }
 
     /// Resolve a *standard function* call (ALGOL 60 §3.2.4) by name.  Returns
@@ -2377,8 +2769,13 @@ impl Compiler {
                 return Ok(());
             }
         } else if let Some(src_name) = expr_variable_name(expr) {
-            let src_binding = self.require_var(&src_name)?;
-            if src_binding.ty == ScalarType::String {
+            // A unary boolean wrapper such as `not x` still has one child in
+            // the AST, but is not a bare string variable. More importantly,
+            // an active name formal must be re-evaluated by the general typed
+            // path rather than resolved as a callee-local source variable.
+            if self.active_by_name_binding(&src_name).is_none() {
+                let src_binding = self.require_var(&src_name)?;
+                if src_binding.ty == ScalarType::String {
                 if !src_binding.is_global
                     && !self.initialized_string_slots.contains(&src_binding.slot)
                 {
@@ -2455,8 +2852,9 @@ impl Compiler {
                     }
                     self.initialized_string_slots.insert(target_slot.clone());
                 }
-                if saw_string_target {
-                    return Ok(());
+                    if saw_string_target {
+                        return Ok(());
+                    }
                 }
             }
         }
@@ -2486,6 +2884,10 @@ impl Compiler {
             }
 
             let name = self.simple_variable_name(var_node)?;
+            if self.active_by_name_binding(&name).is_some() {
+                self.emit_named_scalar_write(&name, rhs.clone())?;
+                continue;
+            }
             let binding = self.require_var(&name)?;
             let value =
                 self.coerce_value(rhs.clone(), binding.ty, &format!("assignment to {name:?}"))?;
@@ -2802,8 +3204,11 @@ impl Compiler {
             .find(|t| t.effective_type_name() == "NAME")
             .map(|t| t.value.clone())
             .ok_or_else(|| CompileError::Malformed("for_stmt missing loop variable".into()))?;
-        let var_binding = self.require_var(&var_name)?;
-        if var_binding.ty != ScalarType::Integer {
+        let var_ty = match self.active_by_name_binding(&var_name) {
+            Some(binding) => binding.ty,
+            None => self.require_var(&var_name)?.ty,
+        };
+        if var_ty != ScalarType::Integer {
             return Err(CompileError::Type(format!(
                 "for variable {var_name:?} must be integer"
             )));
@@ -2824,7 +3229,7 @@ impl Compiler {
             .ok_or_else(|| CompileError::Malformed("for_stmt missing body statement".into()))?;
 
         for elem in elems {
-            self.emit_for_element(&var_binding.slot, elem, body)?;
+            self.emit_for_element(&var_name, elem, body)?;
         }
         Ok(())
     }
@@ -2866,12 +3271,7 @@ impl Compiler {
                 "single-value for element must be integer".into(),
             ));
         }
-        self.emit(IIRInstr::new(
-            "mov",
-            Some(var_name.to_string()),
-            vec![Operand::Var(value.slot)],
-            "i64",
-        ));
+        self.emit_named_scalar_write(var_name, value)?;
         self.emit_statement(body)
     }
 
@@ -2902,12 +3302,7 @@ impl Compiler {
                 "for bounds and step must be integer".into(),
             ));
         }
-        self.emit(IIRInstr::new(
-            "mov",
-            Some(var_name.to_string()),
-            vec![Operand::Var(start.slot)],
-            "i64",
-        ));
+        self.emit_named_scalar_write(var_name, start)?;
 
         let zero = self.emit_const(ScalarType::Integer, Operand::Int(0));
         let loop_label = self.fresh_label("for_loop");
@@ -2939,12 +3334,13 @@ impl Compiler {
             "void",
         ));
 
+        let loop_value = self.emit_named_scalar_read(var_name)?;
         let positive_cond = self.fresh_temp();
         self.emit(IIRInstr::new(
             "cmp_le",
             Some(positive_cond.clone()),
             vec![
-                Operand::Var(var_name.to_string()),
+                Operand::Var(loop_value.slot),
                 Operand::Var(limit.slot.clone()),
             ],
             "i64", // operand width (loop var vs limit, both integer) — see above
@@ -2963,12 +3359,13 @@ impl Compiler {
         ));
 
         self.emit_label(&negative_check_label);
+        let loop_value = self.emit_named_scalar_read(var_name)?;
         let negative_cond = self.fresh_temp();
         self.emit(IIRInstr::new(
             "cmp_ge",
             Some(negative_cond.clone()),
             vec![
-                Operand::Var(var_name.to_string()),
+                Operand::Var(loop_value.slot),
                 Operand::Var(limit.slot.clone()),
             ],
             "i64", // operand width (loop var vs limit, both integer) — see above
@@ -2982,19 +3379,21 @@ impl Compiler {
 
         self.emit_label(&body_label);
         self.emit_statement(body)?;
+        let loop_value = self.emit_named_scalar_read(var_name)?;
         let next = self.fresh_temp();
         self.emit(IIRInstr::new(
             "add",
             Some(next.clone()),
-            vec![Operand::Var(var_name.to_string()), Operand::Var(step.slot)],
+            vec![Operand::Var(loop_value.slot), Operand::Var(step.slot)],
             "i64",
         ));
-        self.emit(IIRInstr::new(
-            "mov",
-            Some(var_name.to_string()),
-            vec![Operand::Var(next)],
-            "i64",
-        ));
+        self.emit_named_scalar_write(
+            var_name,
+            ExprValue {
+                slot: next,
+                ty: ScalarType::Integer,
+            },
+        )?;
         self.emit(IIRInstr::new(
             "jmp",
             None,
@@ -3028,12 +3427,7 @@ impl Compiler {
                 "for while value expression must be integer".into(),
             ));
         }
-        self.emit(IIRInstr::new(
-            "mov",
-            Some(var_name.to_string()),
-            vec![Operand::Var(value.slot)],
-            "i64",
-        ));
+        self.emit_named_scalar_write(var_name, value)?;
 
         let cond = self.emit_expr(cond_node)?;
         if cond.ty != ScalarType::Boolean {
@@ -3096,6 +3490,9 @@ impl Compiler {
                     return self.emit_array_read(node);
                 }
                 let name = self.simple_variable_name(node)?;
+                if let Some(binding) = self.active_by_name_binding(&name) {
+                    return self.emit_by_name_read(&name, binding);
+                }
                 let binding = self.require_var(&name)?;
                 if binding.ty == ScalarType::String
                     && !binding.is_global
@@ -3338,11 +3735,7 @@ impl Compiler {
             }
             ("NAME", _) => {
                 let name = token.value.clone();
-                let binding = self.require_var(&name)?;
-                Ok(ExprValue {
-                    slot: binding.slot,
-                    ty: binding.ty,
-                })
+                self.emit_named_scalar_read(&name)
             }
             _ => Err(CompileError::Malformed(format!(
                 "unexpected atom token {} {:?}",
@@ -4172,11 +4565,15 @@ fn collect_array_formal_dimensions(
 /// enclosing formal before its references are collected.
 fn array_formals_captured_by_nested_procedures(
     proc_decl: &GrammarASTNode,
-    params: &[(String, ProcedureParamType)],
+    params: &[ProcedureParam],
 ) -> HashSet<String> {
     let visible: HashSet<String> = params
         .iter()
-        .filter_map(|(name, ty)| matches!(ty, ProcedureParamType::Array { .. }).then_some(name.clone()))
+        .filter_map(|param| {
+            (param.mode == ProcedureParamMode::Value
+                && matches!(param.ty, ProcedureParamType::Array { .. }))
+                .then_some(param.name.clone())
+        })
         .collect();
     formals_captured_by_nested_procedures(proc_decl, &visible)
 }
@@ -4186,11 +4583,15 @@ fn array_formals_captured_by_nested_procedures(
 /// runs, so a nested read or assignment sees the outer invocation's value.
 fn scalar_formals_captured_by_nested_procedures(
     proc_decl: &GrammarASTNode,
-    params: &[(String, ProcedureParamType)],
+    params: &[ProcedureParam],
 ) -> HashSet<String> {
     let visible: HashSet<String> = params
         .iter()
-        .filter_map(|(name, ty)| matches!(ty, ProcedureParamType::Scalar(_)).then_some(name.clone()))
+        .filter_map(|param| {
+            (param.mode == ProcedureParamMode::Value
+                && matches!(param.ty, ProcedureParamType::Scalar(_)))
+                .then_some(param.name.clone())
+        })
         .collect();
     formals_captured_by_nested_procedures(proc_decl, &visible)
 }
@@ -4376,6 +4777,11 @@ const MAX_POW_UNROLL_EXPONENT: u32 = 64;
 /// acyclic graph with repeated fan-out can grow exponentially during inlining.
 const MAX_SWITCH_DESIGNATOR_EXPANSIONS: usize = 16_384;
 
+/// A source-level name call becomes a distinct typed IIR sibling. Bound the
+/// total so a branching procedure graph cannot consume unbounded compiler
+/// memory by repeatedly specialising the same declarations with new actuals.
+const MAX_CALL_BY_NAME_SPECIALIZATIONS: usize = 4_096;
+
 /// If `node` is a **bare nonnegative integer literal** (an `INTEGER_LIT` token,
 /// possibly wrapped in single-child expression nodes) no larger than
 /// [`MAX_POW_UNROLL_EXPONENT`], return its value — the exponents AL-pow unrolls.
@@ -4439,6 +4845,26 @@ fn expr_variable_name(node: &GrammarASTNode) -> Option<String> {
     let child_nodes = direct_nodes(node);
     if child_nodes.len() == 1 {
         return expr_variable_name(child_nodes[0]);
+    }
+
+    None
+}
+
+/// Return the sole variable wrapped by an expression, retaining an optional
+/// subscript list so a call-by-name assignment can distinguish `x` from
+/// `a[i]`. Calls and compound expressions intentionally return `None`: they
+/// are valid read actuals but not assignable name actuals.
+fn expr_variable_node(node: &GrammarASTNode) -> Option<&GrammarASTNode> {
+    if node.rule_name == "variable" {
+        return Some(node);
+    }
+    if node.rule_name == "proc_call" {
+        return None;
+    }
+
+    let child_nodes = direct_nodes(node);
+    if child_nodes.len() == 1 {
+        return expr_variable_node(child_nodes[0]);
     }
 
     None
@@ -6744,13 +7170,89 @@ mod tests {
     }
 
     #[test]
-    fn rejects_call_by_name_parameter() {
+    fn call_by_name_re_evaluates_the_caller_expression() {
+        let src = "begin integer n, result; \
+                   integer procedure observe(x); integer x; \
+                     begin n := n + 1; observe := x + x end; \
+                   n := 20; result := observe(n) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "call_by_name_re_evaluation").expect("compiles");
+        assert!(
+            module
+                .functions
+                .iter()
+                .any(|function| function.name.starts_with("__algol_by_name_observe_")),
+            "a name-formal call must lower to a call-site-specialised function"
+        );
+    }
+
+    #[test]
+    fn call_by_name_supports_jensen_style_loop_variable_and_expression() {
+        let src = "begin integer i, result; \
+                   integer procedure sum(i, limit, term); integer i, limit, term; \
+                     begin integer total; total := 0; \
+                           for i := 1 step 1 until limit do total := total + term; \
+                           sum := total end; \
+                   result := sum(i, 3, i * i) * 3 end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn call_by_name_supports_real_and_boolean_scalar_formals() {
+        let real_src = "begin integer result; \
+                        real procedure twice(x); real x; twice := x + x; \
+                        result := entier(twice(20.5) + 1.0) end";
+        assert_eq!(run_i64(real_src), 42);
+
+        let boolean_src = "begin integer result; \
+                           boolean procedure invert(x); boolean x; invert := not x; \
+                           if invert(false) then result := 42 else result := 0 end";
+        assert_eq!(run_i64(boolean_src), 42);
+    }
+
+    #[test]
+    fn call_by_name_writes_an_array_element_actual() {
+        let src = "begin integer array values[1:1]; integer result; \
+                   procedure set(x); integer x; x := 42; \
+                   set(values[1]); result := values[1] end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn call_by_name_rejects_a_non_assignable_actual_for_a_written_formal() {
         let err = compile_source(
-            "begin integer result; integer procedure f(x); integer x; f := x; result := f(1) end",
-            "bad",
+            "begin integer result; procedure set(x); integer x; x := 1; set(0); result := 42 end",
+            "call_by_name_literal_write",
         )
-        .expect_err("call-by-name parameters are unsupported");
-        assert!(err.to_string().contains("value"));
+        .expect_err("a written name formal needs an lvalue actual");
+        assert!(err
+            .to_string()
+            .contains("requires an assignable variable actual"));
+    }
+
+    #[test]
+    fn call_by_name_rejects_forwarding_and_recursion_without_a_thunk_abi() {
+        let forwarding = compile_source(
+            "begin integer result; \
+             integer procedure outer(x); integer x; \
+               begin integer procedure inner(y); integer y; inner := y; outer := inner(x) end; \
+             result := outer(1) end",
+            "call_by_name_forwarding",
+        )
+        .expect_err("forwarding a name formal requires an environment-aware thunk");
+        assert!(forwarding
+            .to_string()
+            .contains("forwarding call-by-name formal"));
+
+        let recursive = compile_source(
+            "begin integer result; integer procedure loop(x); integer x; loop := loop(1); result := loop(1) end",
+            "call_by_name_recursion",
+        )
+        .expect_err("recursive name calls must fail before unbounded specialisation");
+        assert!(recursive
+            .to_string()
+            .contains("recursive call-by-name procedure"));
     }
 
     #[test]

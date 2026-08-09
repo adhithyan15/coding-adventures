@@ -1467,6 +1467,25 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — direct scalar call-by-name (LANG-FULL AL7). The specialised
+    // `sum` sibling re-evaluates `term` in the caller environment every time
+    // the body reads it, while writes to formal `i` update caller `i`. Thus
+    // `term = i*i` observes 1, 2, and 3 instead of one eagerly evaluated
+    // value: sum = 14 and the final multiply exits 42. This stays entirely in
+    // typed IIR (`global_load`/`global_store` plus ordinary arithmetic/call),
+    // so the same direct-call lowering runs on all seven standard backends.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, result; \
+                  integer procedure sum(i, limit, term); integer i, limit, term; \
+                    begin integer total; total := 0; \
+                          for i := 1 step 1 until limit do total := total + term; \
+                          sum := total end; \
+                  result := sum(i, 3, i * i) * 3 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — scalar string variables on the direct literal fast path. A
     // `string` scalar assigned from a literal emits `str_const` directly to its
     // slot; the preceding row covers a runtime procedure-result copy.
@@ -6201,6 +6220,36 @@ fn algol_nested_procedure_captures_scalar_formal_on_every_available_standard_bac
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but nested scalar-formal capture did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_by_name_jensen_sum_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure sum(i, limit, term)")
+                && program.src.contains("sum(i, 3, i * i) * 3")
+        })
+        .expect("the call-by-name ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but call-by-name execution did not complete"
             );
             continue;
         };

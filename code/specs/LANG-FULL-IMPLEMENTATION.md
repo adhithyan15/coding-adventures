@@ -14,7 +14,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Brainfuck | 1-loop "print A", nested-loop multiply (`"HA"`), two sequential loops (`"OK"`), stdin echo/transform, and canonical cat all run on all 7 backends | all 8 ops are cross-backend-proven by B1/B1-stdin/B1-eof; no current BF subset gap remains beyond adding more regression programs |
 | Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed and chained concat assignment, `PRINT`/`IF` string concat expressions, multi-item string `PRINT` with `;` and `,`, literal-backed scalar string copy, copied-slot string equality, and equality/inequality/lexical-ordering string branches ✅ (BA4/E4); integer-literal `^` ✅ (BA-^); string arrays/input and general runtime-math `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays incl. multi-dimensional `DIM A(m,n)` (BA3/BA7/BA-DIM-2D), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3), logical `!` ✅ (O-!); intrinsics remain |
-| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures including `real` returns and `boolean` results feeding control flow ✅ (AL13, all 7 backends), nested procedures capturing scalar and array value formals ✅, switches including conditional/nested designators, rank-inferred array value parameters ✅ (1-D through N-D, including nested-procedure capture), N-dimensional integer & real arrays ✅ (AL-multidim / AL-multidim-real, all 7 backends), `boolean array` declarations and value formals ✅ (all 7 standard backends), `string array` ✅ (E4d-AL, all 7 standard backends), procedure capture of enclosing arrays with declared bounds ✅, `own` static-lifetime scalars, arrays, and strings ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), right-associative `↑` exponentiation ✅ (AL-pow, all 7 backends), string I/O plus initialized scalar locals carrying string-procedure results through runtime equality and lexical ordering ✅ (AL4/E4d-AL; also executed on BEAM's ASCII character-list subset); no call-by-name |
+| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures including `real` returns and `boolean` results feeding control flow ✅ (AL13, all 7 backends), direct scalar call-by-name including Jensen-style expression thunks ✅ (AL7, all 7 backends), nested procedures capturing scalar and array value formals ✅, switches including conditional/nested designators, rank-inferred array value parameters ✅ (1-D through N-D, including nested-procedure capture), N-dimensional integer & real arrays ✅ (AL-multidim / AL-multidim-real, all 7 backends), `boolean array` declarations and value formals ✅ (all 7 standard backends), `string array` ✅ (E4d-AL, all 7 standard backends), procedure capture of enclosing arrays with declared bounds ✅, `own` static-lifetime scalars, arrays, and strings ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), right-associative `↑` exponentiation ✅ (AL-pow, all 7 backends), string I/O plus initialized scalar locals carrying string-procedure results through runtime equality and lexical ordering ✅ (AL4/E4d-AL; also executed on BEAM's ASCII character-list subset); name-array/string formals, forwarding, and recursive name calls remain explicit limits |
 
 **AL-multidim-bool:** the seven-backend matrix executes a two-dimensional
 boolean array through a rank-aware value formal with two non-unit lower bounds.
@@ -779,8 +779,8 @@ backend immediately) come before the enabler-dependent items.
   across native/LLVM/WASM/JVM/CLR/VM/JIT (`lang-aot` `lang_matrix.rs`). Lowered to a
   sibling `IIRFunction` + IIR `call`; supports forward references + recursion + multi-arg.
   Surfaced & fixed a real `jit-core` constant-propagation bug (reassigned result slot
-  propagated its dead seed → only the JIT returned 0). **Limits (follow-ups):** `value`
-  params only (by-name is AL7); zero-argument calls may use explicit `f()` in
+  propagated its dead seed → only the JIT returned 0). **Limits (follow-ups):** array and
+  string formals use `value`; direct scalar call-by-name is AL7; zero-argument calls may use explicit `f()` in
   value or statement position; procedures may capture enclosing scalar, array,
   array-formal, and scalar-formal declarations through typed globals.
   `boolean procedure` results now also feed compound conditions directly and
@@ -835,8 +835,15 @@ backend immediately) come before the enabler-dependent items.
   accumulates `1 + 2 + 3 = 6` (a non-`own` local gives `3`) on **all 7 backends**.
   (Grammar was patched surgically, not full-regen — the checked-in `algol.grammar`
   has drifted ahead of the compiled grammar in other rules; resync is follow-up.)
-- ☐ **AL7** — ⚠ call-by-name (Jensen-style expression thunks). **Hardest item in the
-  campaign — design pass + user check before implementing.**
+- ✅ **AL7** — direct scalar call-by-name (Jensen-style expression thunks).
+  Each direct call with `integer`, `real`, or `boolean` name formals emits a
+  specialised typed sibling IIR function. Formal reads re-evaluate the stored
+  caller expression; writes target a bare-variable or subscripted array-element
+  actual. Caller dependencies are published through the existing typed globals,
+  so the Jensen proof `sum(i, 3, i*i)` runs on native/LLVM/WASM/JVM/CLR/VM/JIT
+  and returns 42 after observing all three loop values. Name-array/string
+  formals, forwarding a name formal, and recursive name-formal dispatch remain
+  explicitly rejected pending a closure-capable ABI.
 - ✅ **AL8** — standard functions (§3.2.4/§3.2.5). All pure-IIR and transcendental
   functions are done: **`abs` ✅** (algol-iir-compiler 0.8.0), **`sign` ✅** (0.9.0),
   **`entier` ✅** (0.10.0), **`sqrt` ✅** (0.17.0), **`sin`/`cos`/`ln`/`exp` ✅**
@@ -921,8 +928,8 @@ backend immediately) come before the enabler-dependent items.
    and fuller byte-string representations without per-frontend shortcuts.
 2. **E6 dynamic/global value model** — unblock the remaining Twig list/closure/record
    work and any frontend code that still needs shared state across functions.
-4. The hard tails: **AL7 call-by-name**, **O4 8008 intrinsics**,
-   and **MC1 cons/symbol values on the code-gen backends** — explicit user decision points.
+4. The hard tails: **O4 8008 intrinsics** and **MC1 cons/symbol values on the
+   code-gen backends** — explicit user decision points.
 
 This roadmap is the contract; each ☐ becomes a `feat(lang-full): …` PR, checked off here as
 it merges.

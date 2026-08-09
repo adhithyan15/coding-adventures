@@ -15,7 +15,7 @@ The first slice supports scalar `integer`, `real`, and `boolean` programs with
 assignments, integer arithmetic (`+`, `-`, `*`, `div`, `mod`), **real (f64)
 arithmetic** (`+`, `-`, `*`, `/`), comparisons, `if`/`else`, compound
 statements, labels, `goto`, `for i := a step k until b do ...`, **typed
-procedures with `value` parameters**, **switches** (computed goto), and
+procedures with `value` or direct scalar call-by-name parameters**, **switches** (computed goto), and
 literal string output:
 
 ```algol
@@ -132,6 +132,16 @@ Real procedure values compose through the same typed call path:
 `entier(combine(scale(3.0), scale(4.0)))` preserves two `f64` returns as
 arguments to `combine`, then converts its `f64` result only at the boundary.
 
+Direct calls may also use **call-by-name** `integer`, `real`, and `boolean`
+formals. A name formal is compiled as a call-site-specialised sibling function:
+each read re-emits its caller expression in the caller's captured environment,
+and an assignment writes through a bare variable or subscripted array-element
+actual. This makes Jensen-style loops work without a dynamic closure ABI:
+`sum(i, 3, i * i)` re-evaluates `i * i` after each name-bound loop-variable
+update. Array and string **formals** remain value-only; forwarding a name formal
+to another name formal and recursive name-formal dispatch are rejected
+explicitly.
+
 **Arrays** lower and run on **all seven standard backends** (LANG-FULL E5 /
 AL2). `integer array A[1:10]` (and `real`, `boolean`, or `string` arrays) becomes an
 `alloc_array` sized at run time from the bounds (`upper - lower + 1`, so dynamic
@@ -174,5 +184,6 @@ chain. Cyclic switch elements are rejected explicitly because they cannot be
 finitely expanded into portable IIR control flow.
 
 Unsupported ALGOL 60 features — arrays outside the supported integer/real/
-boolean/string element set, dynamic string variables, and by-name (non-`value`)
-parameters — return explicit compiler errors.
+boolean/string element set, dynamic string variables, call-by-name array or
+string formals, forwarding name formals, and recursive name-formal dispatch —
+return explicit compiler errors.

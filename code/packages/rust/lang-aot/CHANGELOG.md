@@ -1,5 +1,12 @@
 # Changelog — `lang-aot`
 
+## 0.220.36 - 2026-08-08 (ALGOL direct call-by-name — seven-backend matrix)
+
+The matrix now runs a Jensen-style ALGOL sum with a name-bound loop variable
+and `i * i` term on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT. The result
+proves writes reach the caller variable and each formal read re-evaluates the
+caller expression through the shared typed IIR path.
+
 ## 0.220.35 - 2026-08-03 (fix `llvm_lambda.rs` undefined GC symbols)
 
 `tests/llvm_lambda.rs` linked only `dynval_runtime.c`, whose `__dyn_cons` calls
