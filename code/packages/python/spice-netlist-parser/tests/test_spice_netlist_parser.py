@@ -2131,6 +2131,16 @@ def test_parse_pjfet_model_type_alias() -> None:
     assert jfet.beta == 2.0e-3
 
 
+def test_parse_pj_model_type_alias() -> None:
+    parsed = parse_netlist(".model fast PJ(BETA=2m)\nJ1 drain gate source fast")
+
+    assert parsed.models["fast"].kind == "PJF"
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert jfet.polarity == "PJF"
+    assert jfet.beta == 2.0e-3
+
+
 @pytest.mark.parametrize("parameter", ["CGS", "CGS0"])
 def test_parse_jfet_gate_source_capacitance_aliases(parameter: str) -> None:
     parsed = parse_netlist(
