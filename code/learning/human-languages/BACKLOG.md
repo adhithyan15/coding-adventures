@@ -88,10 +88,13 @@ upright descends and turns directly into the leftward base curve without a
 lift. HL-C09P verifies the source-adjacent Persian م row at 02:33–02:36: its
 round head flows directly into the descending tail in one unbroken movement.
 HL-C09Q verifies Persian ن at 02:37–02:43: one right-to-left bowl is followed
-by a single lift for the dot above. Its production build also exposes the next
-hard prerequisite: the largest eager chunk is now 499,525 of 500,000 allowed
-bytes. HL-C09R must restore honest headroom without weakening that gate before
-HL-C09S seeks the source-adjacent Persian ه row.
+by a single lift for the dot above. Its production build also exposed the next
+hard prerequisite: the largest eager chunk reached 499,525 of 500,000 allowed
+bytes. HL-C09R moves the handwriting model, renderer, and font parser into one
+required, independently cacheable chunk while keeping the same ceiling and
+synchronous relative-path startup. The largest eager chunk is now 471,927 bytes,
+restoring 28,073 bytes of measured headroom. HL-C09S now seeks the
+source-adjacent Persian ه row.
 The index audit found **2,075** canonical candidates across the corpus: **1,426**
 word and phrase lessons for English-first lookup, **136** dedicated grammar,
 writing, etymology, culture, and pronunciation lessons, **427** chapter
@@ -269,8 +272,8 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C09O | Complete (#10281) | Locate and verify Persian ل in the later row of the same full-alphabet demonstration. | The cited 02:29–02:32 demonstration descends the tall upright directly into the leftward base curve with zero lifts; the two learner movements, isolated Noto outline, metadata, and real two-frame filmstrip agree. |
 | HL-C09P | Complete (#10287) | Locate and verify Persian م in the source-adjacent later row of the same full-alphabet demonstration. | The cited 02:33–02:36 demonstration shapes the round head and flows directly into the descending tail with zero lifts; the two learner movements, isolated Noto outline, metadata, and real two-frame filmstrip agree. |
 | HL-C09Q | Complete (#10292) | Locate and verify Persian ن in the next source-backed row. | The cited 02:37–02:43 demonstration sweeps the isolated bowl right-to-left, then lifts once to place the dot above; the two learner movements, isolated Noto outline, metadata, and real two-frame filmstrip agree. |
-| HL-C09R | Queued — next | Restore Language Ladder's enforced eager-bundle headroom before adding another ductus path. | Keep the 500,000-byte ceiling unchanged, move the handwriting model/renderer into an independently cacheable production chunk, preserve direct-open and GitHub Pages behavior, and pass the standalone build, bundle, and browser gates with meaningful room for later letters. |
-| HL-C09S | Queued — after HL-C09R | Locate and verify Persian ه in the source-adjacent row. | Establish the evidenced looping-body grouping before authoring anything; then keep the source timestamp, learner prose, pen lifts, isolated Noto outline, and real filmstrip in agreement. |
+| HL-C09R | Complete (#10296) | Restore Language Ladder's enforced eager-bundle headroom before adding another ductus path. | The unchanged gate requires the named handwriting chunk and measures every eager chunk; the largest falls from 499,525 to 471,927 bytes while synchronous relative-path startup, direct-open, and GitHub Pages behavior remain intact. |
+| HL-C09S | Queued — next | Locate and verify Persian ه in the source-adjacent row. | Establish the evidenced looping-body grouping before authoring anything; then keep the source timestamp, learner prose, pen lifts, isolated Noto outline, and real filmstrip in agreement. |
 | HL-C10 | Complete (#10010, #10013, #10067) | Complete A1 and add the A2-through-C2 spine tranches with all registered realization ledgers. | All seven declared stages carry nodes; every one of the 22 registered tracks has a non-drifting ledger entry for every node. |
 | HL-C11 | Queued — capability and closure coverage complete | Finish representative chapter payoffs across all 22 tracks. | #10128 brought all 513 chapters to an authored `canDo`, spine mapping, known payoff lesson, and closed assessment. Remediate the remaining 27 payoffs below the 0.5 representativeness floor across ten tracks, then enforce the clean tracks instead of leaving their gates report-only. |
 | HL-C12 | Queued — licensing decided, pipeline outstanding | Add the Class C illustration pipeline with provenance sidecars and a size budget. Licensing is settled and recorded in [`_assets/LICENSE.md`](./_assets/LICENSE.md); the remaining work is the pipeline itself. | Every asset carries `license`, `rightsAsserted`, `generator`, `model`, `prompt`, `date`, and `sha256`; CI fails any asset without a provenance sidecar or a recorded licence, and enforces the per-track size budget. |

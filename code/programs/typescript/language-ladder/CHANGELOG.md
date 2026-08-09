@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Changed — restore handwriting bundle headroom (HL-C09R)
+
+- Split the handwriting model, SVG renderer, and font parser into one named,
+  independently cacheable production chunk while keeping the app's synchronous
+  startup and relative asset URLs.
+- Require that chunk in the bundle gate and apply the unchanged 500,000-byte
+  eager limit to it, so a missing split cannot hide inside a passing build.
+
 ### Added — cited Persian bowl-and-dot ductus (HL-C09Q)
 
 - Add Persian ن from UT Austin Persian Online's 02:37–02:43 demonstration: one

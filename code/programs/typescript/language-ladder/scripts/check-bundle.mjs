@@ -6,7 +6,10 @@ const names = await readdir(assetsDir);
 const javascript = names.filter((name) => name.endsWith(".js"));
 const lessonBatches = javascript.filter((name) => name.startsWith("lessons-"));
 const eager = javascript.filter((name) =>
-  /^(?:index|script-data|curriculum-plans|book-ledgers)-/.test(name),
+  /^(?:index|script-data|curriculum-plans|book-ledgers|handwriting-tools)-/.test(name),
+);
+const handwritingChunks = javascript.filter((name) =>
+  name.startsWith("handwriting-tools-"),
 );
 
 async function largestBytes(files) {
@@ -21,6 +24,11 @@ const largestEagerChunk = await largestBytes(eager);
 const failures = [];
 
 if (lessonBatches.length === 0) failures.push("no lazy lesson batches were emitted");
+if (handwritingChunks.length !== 1) {
+  failures.push(
+    `expected one handwriting-tools chunk, found ${handwritingChunks.length}`,
+  );
+}
 if (lessonBatches.length >= 400) {
   failures.push(`${lessonBatches.length} lesson requests exceed the 399-request ceiling`);
 }
