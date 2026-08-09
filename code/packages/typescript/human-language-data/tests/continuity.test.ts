@@ -382,7 +382,9 @@ describe("the real corpus", () => {
     // five bounded teaching steps; its terminal checkpoint retrieves all twelve.
     // Chapter 16 adds twelve atoms across seven small teaching steps, then
     // retrieves all twelve in its atom-free terminal checkpoint.
-    expect(report.summary.atomsTaught).toBe(2607);
+    // Chapter 17 repeats that bounded twelve-atom shape across seven teaching
+    // steps and one atom-free terminal checkpoint.
+    expect(report.summary.atomsTaught).toBe(2619);
     // +2, and it goes UP, which is worth stating plainly. Three of the five new atoms
     // are TA-W09's and nothing follows TA-W09, so they are orphans by construction:
     // PA-YA-01, E-SIGN-02, READ-PEYAR-03. TA-W08's two are revisited by TA-W09.
@@ -539,7 +541,9 @@ describe("the real corpus", () => {
     // local; later chapters must provide the five-to-fifteen-lesson reinforcement.
     // Chapter 16 adds five net R2 misses. Its checkpoint is deliberately local;
     // Chapters 17 onward still own the farther reinforcement window.
-    expect(report.summary.missedByWindow.R2).toBe(1787);
+    // Chapter 17 adds seven more: the local checkpoint retrieves every atom,
+    // while later chapters still own the five-to-fifteen-lesson revisit window.
+    expect(report.summary.missedByWindow.R2).toBe(1794);
   });
 
   it("shows what a declared reading order was worth", () => {
@@ -565,8 +569,9 @@ describe("the real corpus", () => {
       // Chapter 38 added four lessons and ten atoms. The two ORDER numbers did not
       // move -- no new unsequenced lesson, no new forward prerequisite -- which is the
       // point of the pin: new content is supposed to leave the walk alone.
-      // Chapter 16 replaces three legacy lessons with eight bounded steps.
-      lessonCount: 185,
+      // Chapter 16 replaces three legacy lessons with eight bounded steps;
+      // Chapter 17 replaces four legacy lessons with eight bounded steps.
+      lessonCount: 189,
       lessonsWithoutSequence: 0,
       forwardPrerequisites: 0,
       // Chapters 9, 10, and 13 each add nine atoms, Chapter 11 adds eleven, and
@@ -574,7 +579,8 @@ describe("the real corpus", () => {
       // Chapter 14 adds six atoms and its checkpoint revives one older atom.
       // Chapter 15 adds twelve atoms across five steps, then revisits all twelve.
       // Chapter 16 adds twelve atoms without adding an unrevisited orphan.
-      atomsTaught: 360,
+      // Chapter 17 does the same across its future and conditional ramp.
+      atomsTaught: 372,
       atomsNeverRevisited: 65,
     });
   });

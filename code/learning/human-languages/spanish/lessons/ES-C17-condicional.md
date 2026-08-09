@@ -1,85 +1,82 @@
 ---
+schema_version: 2
 id: ES-C17-condicional
+spine_node: SPINE-TALK-ABOUT-FUTURE
+sequence: 1152
 chapter: 17
-sequence: 1150
-type: word
+type: grammar
 headword: hablaría
-gloss: the conditional — the same weld, using the imperfect of haber instead
+gloss: the singular conditional of hablar — hablaría, hablarías, hablaría
 concept_tag: ES-CONDITIONAL
-prerequisites: [ES-C17-futuro, ES-C16-imperfecto]
-sounds: [hiatus-ia, accent-acute]
+prerequisites: [ES-C17-vivir-futuro, ES-C16-imperfecto]
+sounds: [accent-acute, hiatus-ia]
 roots: [latin-infinitive-habere]
-etymology_hook: "hablaría = hablar + ía (← the old reduced imperfect avía) — the SAME infinitive weld as the future, but with the IMPERFECT of haber instead of the present, which is why its endings are exactly the -ía endings of Ch.16's imperfect; two tenses, one trick, two tenses of haber"
-est_minutes: 4
-reviews_of: [ES-C17-futuro, ES-C16-imperfecto, ES-C11-querer]
+etymology_hook: "Spanish conditional forms continue an infinitive plus past forms of haber; the resulting -ía row is historically related to, but is not built by attaching, modern había"
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-AR-IMPERFECT-SINGULAR, ES-SOUND-WRITTEN-ACCENT, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL]
+introduces:
+  knowledge: [ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL, ES-GRAMMAR-AR-CONDITIONAL-SINGULAR]
+practises:
+  knowledge: [ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-AR-IMPERFECT-SINGULAR, ES-SOUND-WRITTEN-ACCENT, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL, ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL, ES-GRAMMAR-AR-CONDITIONAL-SINGULAR]
+skills: [listening, speaking, reading, writing]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C17-vivir-futuro, ES-C16-imperfecto, ES-C06-hablar]
 ---
 
-# hablaría — the same weld, one tense over
+# hablaría — the whole infinitive meets -ía
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL]; assesses=[ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-AR-IMPERFECT-SINGULAR] -->
 
-[PAUSE 2s] If you understood the last lesson, this one is nearly free. Same
-machine, one part swapped.
+[PAUSE 2s] **Hablaré español** places speaking in the future. **Hablaría
+español** means “I would speak Spanish” in an imagined or conditional
+situation. Today the situation can remain unstated; learn the form and its core
+“would” meaning first.
 
-## The forms
+## Grammar Lens: three familiar persons
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-AR-CONDITIONAL-SINGULAR]; assesses=[ES-LEX-HABLAR, ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL, ES-SOUND-WRITTEN-ACCENT] -->
 
-Whole infinitive again, new endings:
+Keep **hablar** whole, then add the learned singular conditional endings:
 
-| | |
+| person | conditional |
 |---|---|
 | yo | hablar**ía** |
 | tú | hablar**ías** |
-| él/ella/usted | hablar**ía** |
-| nosotros | hablar**íamos** |
-| ellos/ustedes | hablar**ían** |
+| él / ella / usted | hablar**ía** |
 
-Look hard at those endings. **You already know them.** They are exactly the
-*-er/-ir* **imperfect** endings from Chapter 16: *com**ía**, com**ías**,
-com**íamos**, com**ían***.
+Say **hablaría · hablarías · hablaría**. The first and third forms match. The
+accent keeps **í-a** in separate syllables, just as it did in **comía**. Plural
+persons wait.
 
-## Why they're the same
+## The second weld, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL, ES-GRAMMAR-AR-CONDITIONAL-SINGULAR] -->
 
-Because they **are** the same. The future welded the infinitive to the **present**
-of *haber*; the conditional welds it to the **imperfect** of *haber*:
-
-| tense | infinitive + | result |
-|---|---|---|
-| future | *haber* **present** (*he, has, ha…*) | hablar**é** |
-| conditional | *haber* **imperfect** (*había, habías…*) | hablar**ía** |
-
-(Strictly, what fused was the older, shorter *avía* — which is why you get
-*hablar**ía*** and not *hablarhabía*. The modern *había* is the same word,
-un-worn.)
-
-One trick, two tenses of the same auxiliary. That is the whole chapter.
-
-And the accent does the job Chapter 16 taught: it **breaks the diphthong**, so
-*hablar-í-a* is separate syllables.
-
-## What it's for
-
-| use | example |
-|---|---|
-| **would** — hypothetical | *Hablaría con él.* "I would speak with him." |
-| **politeness** — softening | *¿Podrías ayudarme?* "Could you help me?" |
-| **future-in-the-past** | *Dijo que hablaría.* "He said he would speak." |
-
-That last one is neat: from a point in the past, the conditional is the future.
-Which makes sense if you remember the imperfect is inside it.
+The conditional developed from an infinitive beside past or imperfect forms of
+the same “have” verb that helped form the Romance future. That is why the whole
+infinitive remains visible again and why the endings resemble the **-ía** row.
+The history passes through older Romance forms; modern **hablaría** is not made
+by attaching the complete modern word **había**.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-AR-IMPERFECT-SINGULAR, ES-SOUND-WRITTEN-ACCENT, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL, ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL, ES-GRAMMAR-AR-CONDITIONAL-SINGULAR] -->
+<!-- hl-activity: {"id":"ES-C17-condicional-singular-forms","kind":"text","assesses":["ES-GRAMMAR-AR-CONDITIONAL-SINGULAR","ES-LEX-HABLAR"],"prompt":"Give the learned singular conditional forms of hablar: yo, tú, then él/ella/usted.","answer":"hablaría, hablarías, hablaría","accepted":["hablaría hablarías hablaría","hablaría / hablarías / hablaría"],"feedback":{"correct":"Right: hablaría, hablarías, hablaría.","incorrect":"Keep hablar whole and add -ía, -ías, -ía."},"response_seconds":9} -->
+<!-- hl-activity: {"id":"ES-C17-condicional-hablaria-espanol","kind":"text","assesses":["ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL","ES-GRAMMAR-AR-CONDITIONAL-SINGULAR","ES-LEX-HABLAR","ES-LEX-ESPANOL"],"prompt":"Say 'I would speak Spanish' in Spanish.","answer":"Hablaría español.","accepted":["Hablaría español"],"feedback":{"correct":"Right: Hablaría español.","incorrect":"Use the yo conditional hablaría before known español."},"response_seconds":7} -->
+<!-- hl-activity: {"id":"ES-C17-condicional-syllables","kind":"text","assesses":["ES-GRAMMAR-AR-CONDITIONAL-SINGULAR","ES-SOUND-WRITTEN-ACCENT"],"prompt":"Write hablaría with the final three syllables separated.","answer":"ha-bla-rí-a","accepted":["habla-rí-a","rí-a"],"feedback":{"correct":"Right: the accent keeps rí-a apart.","incorrect":"The accented í stays separate from a: ha-bla-rí-a."},"response_seconds":7} -->
 
 [PAUSE 1s]
-- [YOU SAY: "hablaría, hablarías, hablaría, hablaríamos, hablarían"]
-- [YOU SAY: the echo — "com**ía** … hablar**ía**" — same endings]
-- [YOU SAY: "Me gustaría…" ("I would like…") — the politest thing in Spanish]
-- [YOU SAY: the pair — "hablar + he … hablar + ía"]
+- [YOU SAY: “hablaría, hablarías, hablaría”]
+- [YOU SAY: “Hablaré español. Hablaría español.”]
+- [YOU SAY: “ha-bla-rí-a”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL, ES-GRAMMAR-AR-CONDITIONAL-SINGULAR, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL] -->
 
-[PAUSE 3s] What do the conditional endings attach to? (**The whole infinitive**,
-as in the future.) Where have you seen *-ía/-ías/-íamos* before? (The **Ch.16
-imperfect** of *-er/-ir* verbs.) Why are they identical? (Because the conditional
-is the infinitive + the **imperfect of *haber***.) So what's the one-line summary
-of this chapter? (**Infinitive + *haber*** — present gives the future, imperfect
-gives the conditional.) Next: the nine verbs that bend the infinitive first.
+[PAUSE 3s] Give the three learned forms. (*Hablaría, hablarías, hablaría.*)
+What is the core meaning? (“Would speak.”) Which older construction stands
+behind the row? (An infinitive plus past forms of **haber**.) Next: give
+**comer** the same ending set.

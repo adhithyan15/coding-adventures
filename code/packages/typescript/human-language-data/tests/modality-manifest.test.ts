@@ -877,12 +877,14 @@ describe("corpus regression", () => {
       // steps. All five remain voice-first; only the mapped terminal comparison is
       // sight-dependent, so the split adds three lessons without widening the seam.
       // Chapter 16 replaces three legacy lessons with eight bounded steps.
-      totalLessons: 1677,
+      // Chapter 17 replaces four legacy lessons with eight bounded steps.
+      totalLessons: 1681,
       // Chapters 10 and 13 replace wide legacy tables with small singular-only
       // comparisons, so three more lessons move from sight to voice.
       // All seven Chapter-16 teaching steps are voice-first; only the terminal
       // six-row comparison preserves the chapter's explicit visual seam.
-      voice: 1094,
+      // All eight Chapter-17 lessons remain voice-first.
+      voice: 1098,
       // -3 sight / +3 voice: TA-C02-en, -enna and -peyar dropped their "The letters in
       // this word" sections once TA-W08 and TA-W09 gave those glyphs a home in the
       // strand. Verified against the GENERATED manifest, not the source — all three now
@@ -897,7 +899,7 @@ describe("corpus regression", () => {
       // to this table.
       // +2: both new lessons are writing lessons.
       pen: 58,
-      drivableLessons: 1094,
+      drivableLessons: 1098,
       drivablePercent: 65,
       trackCount: 22,
       chapterCount: 513,
@@ -932,7 +934,8 @@ describe("corpus regression", () => {
       // Spanish Chapter 15 now offers five consecutive voice lessons before its
       // sight checkpoint, raising the useful prefix by four.
       // Chapter 16's reachable voice-first prefix grows by six.
-      drivablePrefixTotal: 897,
+      // Chapter 17's reachable voice-first prefix grows by five.
+      drivablePrefixTotal: 902,
       // -2: chapters 21 and 23 each take a writing lesson and stop being ear-only.
       // Spreading the strand cannot happen without landing a pen lesson somewhere.
       // Spanish Chapters 10 and 13 are now fully drivable from their canonical ASTs.

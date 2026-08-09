@@ -1,176 +1,321 @@
 Spanish, chapter 17: The Future and the Conditional --- One Weld, Twice.
-4 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
+8 lessons. You can do the first 7 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 4.
-hablaré — the future, welded shut.
-
-Warm-up.
-[pause 2 seconds]
-Chapter 10 gave you one future (voy a hablar). Here is the other.
-
-The forms.
-Take the whole infinitive and add the endings:
-[a table of 5 rows, read aloud]
-yo, hablaré.
-tú, hablarás.
-él/ella/usted, hablará.
-nosotros, hablaremos.
-ellos/ustedes, hablarán.
-Notice something odd: you don't drop -ar first. Every other tense you've learned strips the ending off. The future keeps the infinitive whole and builds on top of it — comer becomes comeré, vivir becomes viviré. One set of endings for all three conjugations.
-
-Why the infinitive survives.
-Latin's own future — amābō, "I will love" — died out. Speakers replaced it with a phrase:
-amāre habeō — "I have to love" becomes "I will love".
-Infinitive + the verb habēre, "to have." Exactly the English "I have to go," which also slides toward the future.
-Then the phrase fused. Say hablar he fast enough, often enough, for enough centuries, and it becomes one word:
-[a table of 3 rows, read aloud]
-stage: two words. form: hablar + he.
-stage: squeezed. form: hablar-he.
-stage: welded. form: hablaré.
-So the endings aren't endings at all, historically. They are the present tense of haber worn down to a suffix:
-[a table of 5 rows, read aloud]
-haber (present): he. future ending: -é.
-haber (present): has. future ending: -ás.
-haber (present): ha. future ending: -á.
-haber (present): hemos. future ending: -emos.
-haber (present): han. future ending: -án.
-Line them up and they're the same list. A compound tense that closed up into a simple one — the exact reverse of what French and Italian did with their compound past, which stayed open as two words.
-
-The seam is still visible in Portuguese.
-Portuguese welded its future too (falarei is one word). But in formal European Portuguese a pronoun can still be lodged inside it:
-falá-lo-ei — "I will speak it".
-That -lo- is sitting in the join, between falar and ei. A leftover, not the normal pattern — Brazilian Portuguese doesn't do it, and neither does speech. But it shows the seam Spanish sealed over completely is still faintly open next door.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "hablaré, hablarás, hablará, hablaremos, hablarán"]
-[pause 8 seconds for the answer]
-[your turn — say: "comeré, viviré" — the infinitive stays whole]
-[pause 8 seconds for the answer]
-[your turn — say: the weld — "hablar + he becomes hablaré"]
-[pause 8 seconds for the answer]
-[your turn — say: the two futures — "voy a hablar … hablaré"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What do you add the future endings to? (The whole infinitive — you don't strip it.) What happened to Latin's own future? (It died; Romance replaced it with a phrase.) What was that phrase? (Infinitive + habēre, "I have to speak.") So what are the endings really? (The present of haber, fused on.) Which language still shows the seam? (Portuguese — falá-lo-ei.) Next: the same trick, with a different tense of haber.
-
-
-Lesson 2 of 4.
-hablaría — the same weld, one tense over.
+Lesson 1 of 8.
+hablaré — keep the infinitive, add the future.
 
 Warm-up.
 [pause 2 seconds]
-If you understood the last lesson, this one is nearly free. Same machine, one part swapped.
+Voy a hablar español uses the near-future frame you already know. Spanish also has a one-word future: Hablaré español — “I will speak Spanish.” It can present a future prediction or intention without adding a new subject or object.
 
-The forms.
-Whole infinitive again, new endings:
-[a table of 5 rows, read aloud]
-yo, hablaría.
-tú, hablarías.
-él/ella/usted, hablaría.
-nosotros, hablaríamos.
-ellos/ustedes, hablarían.
-Look hard at those endings. You already know them. They are exactly the -er/-ir imperfect endings from Chapter 16: comía, comías, comíamos, comían.
-
-Why they're the same.
-Because they are the same. The future welded the infinitive to the present of haber; the conditional welds it to the imperfect of haber:
-[a table of 2 rows, read aloud]
-tense: future. infinitive +: haber present (he, has, ha…) result: hablaré.
-tense: conditional. infinitive +: haber imperfect (había, habías…) result: hablaría.
-(Strictly, what fused was the older, shorter avía — which is why you get hablaría and not hablarhabía. The modern había is the same word, un-worn.)
-One trick, two tenses of the same auxiliary. That is the whole chapter.
-And the accent does the job Chapter 16 taught: it breaks the diphthong, so hablar-í-a is separate syllables.
-
-What it's for.
+Grammar Lens: three familiar persons.
+Keep the whole infinitive hablar, then add one ending:
 [a table of 3 rows, read aloud]
-use: would — hypothetical. example: Hablaría con él. "I would speak with him."
-use: politeness — softening. example: ¿Podrías ayudarme? "Could you help me?"
-use: future-in-the-past. example: Dijo que hablaría. "He said he would speak."
-That last one is neat: from a point in the past, the conditional is the future. Which makes sense if you remember the imperfect is inside it.
+person: yo. simple future: hablaré.
+person: tú. simple future: hablarás.
+person: él / ella / usted. simple future: hablará.
+Say hablaré, hablarás, hablará. Each form has final stress, marked by an accent. Plural persons wait.
+
+The weld, taken apart.
+Late Latin and early Romance used more than one way to speak about the future. One influential construction placed an infinitive beside present forms of Latin habēre, “to have.” Through repeated use and sound change, descendants of those pieces became the endings in forms such as hablaré.
+That history explains why the infinitive remains visible. It does not mean that a modern learner should attach the full modern verb haber, and it does not require the claim that every older future vanished at one moment.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "hablaría, hablarías, hablaría, hablaríamos, hablarían"]
+[your turn — say: “hablaré, hablarás, hablará”]
 [pause 8 seconds for the answer]
-[your turn — say: the echo — "comía … hablaría" — same endings]
+[your turn — say: “Voy a hablar español. Hablaré español.”]
 [pause 8 seconds for the answer]
-[your turn — say: "Me gustaría…" ("I would like…") — the politest thing in Spanish]
+[your turn — say: “infinitive plus historical habēre material”]
 [pause 8 seconds for the answer]
-[your turn — say: the pair — "hablar + he … hablar + ía"]
-[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the learned singular future forms of hablar: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Say 'I will speak Spanish' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Which Latin verb meaning 'to have' contributed material to the Romance future endings?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What do the conditional endings attach to? (The whole infinitive, as in the future.) Where have you seen -ía/-ías/-íamos before? (The Ch.16 imperfect of -er/-ir verbs.) Why are they identical? (Because the conditional is the infinitive + the imperfect of haber.) So what's the one-line summary of this chapter? (Infinitive + haber — present gives the future, imperfect gives the conditional.) Next: the nine verbs that bend the infinitive first.
+Give the three learned forms. (Hablaré, hablarás, hablará.) What stays visible? (The whole infinitive.) What older verb contributed to the endings? (Latin habēre.) Next: test the same endings on comer.
 
 
-Lesson 3 of 4.
-Practice — ten stems, two tenses.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for 2 tables that cannot be read aloud. You can listen to everything else now — leave the section called The ten, in three families until you have stopped, and I will say so again when we reach it.
+Lesson 2 of 8.
+comeré — the same endings keep -er.
 
 Warm-up.
 [pause 2 seconds]
-A handful of verbs bend the infinitive before welding. The good news: the same bent stem serves both tenses, so you learn ten shapes once and get twenty conjugations.
+You built hablaré without removing -ar. Keep comer just as intact: comeré — “I will eat.”
 
-The ten, in three families.
-1. Drop the vowel. The infinitive's last vowel just goes:
-There is a table here I cannot read to you — 4 columns and 4 rows, and it has more columns than can be held in the ear at once. Its columns are: verb, stem, future, conditional. Come back and look at it when you have stopped.
-2. Drop the vowel, then wedge in a d. Dropping alone would leave -n'r- or -l'r- right here, and Old Spanish refused to leave it that way — so a d slid in to prop the cluster apart:
-There is a table here I cannot read to you — 4 columns and 4 rows, and it has more columns than can be held in the ear at once. Its columns are: verb, would be, becomes, future. Come back and look at it when you have stopped.
-(Not that modern Spanish can't say those clusters — honra, sonrisa, alrededor are fine. It's that when this particular squeeze happened, the language fixed it. It even tried a second solution first: medieval Spanish also said terné, porné, verné, swapping the consonants around instead. The d-forms won.)
-Recognise those four? Every one is a member of the -go club from Chapters 12–13. The club had six — and the other two, hacer and decir, are sitting in family 3 below. So all six of the -go verbs are irregular here too; they just split into two shapes. The oldest, most-used verbs misbehave in the same places over and over.
-3. Chop hard. Two verbs shorten drastically:
-[a table of 2 rows, read aloud]
-verb: decir. future: diré. conditional: diría.
-verb: hacer. future: haré. conditional: haría.
-
-The test.
-Every irregular here is irregular in the stem only. The endings never change:
-irregular stem + the same -é/-ás/-á… or -ía/-ías…
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the d-group — "tendré, pondré, vendré, saldré"]
-[pause 8 seconds for the answer]
-[your turn — say: the choppers — "diré, haré"]
-[pause 8 seconds for the answer]
-[your turn — say: one verb, both tenses — "tendré … tendría"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Do the irregulars change the endings or the stem? (The stem only.) Why does tener become tendr-? (Dropping the vowel squeezed -n'r- together, and a d wedged in to fix it — medieval Spanish also tried terné.) How do the -go club verbs fare here? (All six are irregular — four take the -dr-, and hacer/decir chop instead.) Which two verbs chop hardest? (Decir becomes diré, hacer becomes haré.) Do irregular stems change the endings? (No.)
-
-
-Lesson 4 of 4.
-serán las tres — future form, present guess.
-
-Guessing now.
-Spanish uses the future to express a present conjecture:
+Grammar Lens: the singular -er row.
 [a table of 3 rows, read aloud]
-Spanish: ¿Dónde estará Juan? natural meaning: Where can Juan be? (now).
-Spanish: Serán las tres. natural meaning: It must be three o'clock.
-Spanish: ¿Quién será? natural meaning: Who could that be?
-The verb's form is future, but the uncertain situation is present.
+person: yo. simple future: comeré.
+person: tú. simple future: comerás.
+person: él / ella / usted. simple future: comerá.
+Say comeré, comerás, comerá. Compare hablaré / comeré: the infinitives differ, but the future endings do not. Plural persons wait.
 
-Guessing about the past.
-The conditional moves the same conjecture backward:
-Serían las tres cuando llegó. — It must have been three when he arrived.
-These tenses grew from constructions with haber, "have." The semantic path from "have to" toward obligation and likelihood helps the guessing use feel less arbitrary.
+The ending, taken apart.
+The historical infinitive-plus-habēre construction helps explain the shared endings: the verb-family vowel remains inside hablar or comer, rather than selecting a different ending set.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "¿Dónde estará?" — where can he be?]
+[your turn — say: “comeré, comerás, comerá”]
 [pause 8 seconds for the answer]
-[your turn — say: "Serán las tres" — it must be three]
+[your turn — say: “Hablaré. Comeré.”]
 [pause 8 seconds for the answer]
-[your turn — say: "Serían las tres" — it must have been three]
+[your turn — say: “Beberé café.”]
 [pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the learned singular future forms of comer: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Use the learned -er future pattern to say 'I will drink coffee' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Which endings do hablaré and comeré share across the learned singular row?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Does serán las tres necessarily refer to later? (No — it can guess the time now.) Which form guesses about the past? (Conditional: serían.) What older meaning helps connect future form to likelihood? (The construction with haber, "have to.")
+Give the three learned forms. (Comeré, comerás, comerá.) Did the -er disappear? (No.) Which endings match hablar? (-é, -ás, -á.) Next: let vivir test the pattern once more.
+
+
+Lesson 3 of 8.
+viviré — one future row for three verb families.
+
+Warm-up.
+[pause 2 seconds]
+Hablaré kept -ar. Comeré kept -er. Predict the yo future of vivir before reading on. It is viviré.
+
+Grammar Lens: the singular -ir row.
+[a table of 3 rows, read aloud]
+person: yo. simple future: viviré.
+person: tú. simple future: vivirás.
+person: él / ella / usted. simple future: vivirá.
+Say viviré, vivirás, vivirá. Now the bounded pattern is complete: hablaré, comeré, viviré. The same three endings attach to all three whole infinitives. Plural persons wait.
+
+Grammar Lens: meaning with known words.
+Viviré en Madrid says “I will live in Madrid.” Every lexical piece was available before this lesson; only the future form is new.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “viviré, vivirás, vivirá”]
+[pause 8 seconds for the answer]
+[your turn — say: “hablaré, comeré, viviré”]
+[pause 8 seconds for the answer]
+[your turn — say: “Viviré en Madrid.”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the learned singular future forms of vivir: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Say 'I will live in Madrid' in Spanish.
+[question — say your answer, then pause 9 seconds]
+Give the future yo forms of hablar, comer, and vivir, in that order.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three vivir forms. (Viviré, vivirás, vivirá.) Which verb families share the learned endings? (All three: -ar, -er, -ir.) Next: reuse the whole-infinitive frame for “would.”
+
+
+Lesson 4 of 8.
+hablaría — the whole infinitive meets -ía.
+
+Warm-up.
+[pause 2 seconds]
+Hablaré español places speaking in the future. Hablaría español means “I would speak Spanish” in an imagined or conditional situation. Today the situation can remain unstated; learn the form and its core “would” meaning first.
+
+Grammar Lens: three familiar persons.
+Keep hablar whole, then add the learned singular conditional endings:
+[a table of 3 rows, read aloud]
+person: yo. conditional: hablaría.
+person: tú. conditional: hablarías.
+person: él / ella / usted. conditional: hablaría.
+Say hablaría, hablarías, hablaría. The first and third forms match. The accent keeps í-a in separate syllables, just as it did in comía. Plural persons wait.
+
+The second weld, taken apart.
+The conditional developed from an infinitive beside past or imperfect forms of the same “have” verb that helped form the Romance future. That is why the whole infinitive remains visible again and why the endings resemble the -ía row. The history passes through older Romance forms; modern hablaría is not made by attaching the complete modern word había.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “hablaría, hablarías, hablaría”]
+[pause 8 seconds for the answer]
+[your turn — say: “Hablaré español. Hablaría español.”]
+[pause 8 seconds for the answer]
+[your turn — say: “ha-bla-rí-a”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the learned singular conditional forms of hablar: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Say 'I would speak Spanish' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Write hablaría with the final three syllables separated.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three learned forms. (Hablaría, hablarías, hablaría.) What is the core meaning? (“Would speak.”) Which older construction stands behind the row? (An infinitive plus past forms of haber.) Next: give comer the same ending set.
+
+
+Lesson 5 of 8.
+comería — keep -er before “would”.
+
+Warm-up.
+[pause 2 seconds]
+Comeré means “I will eat.” Keep comer whole and exchange the future ending for -ía: comería — “I would eat.”
+
+Grammar Lens: the singular -er row.
+[a table of 3 rows, read aloud]
+person: yo. conditional: comería.
+person: tú. conditional: comerías.
+person: él / ella / usted. conditional: comería.
+Say comería, comerías, comería. Compare hablaría / comería: one bounded ending set serves both complete infinitives. Plural persons wait.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “comería, comerías, comería”]
+[pause 8 seconds for the answer]
+[your turn — say: “comeré, comería”]
+[pause 8 seconds for the answer]
+[your turn — say: “hablaría, comería”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the learned singular conditional forms of comer: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 8 seconds]
+Give the yo pair 'I will eat; I would eat' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Which endings do hablaría and comería share across the learned singular row?
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three learned forms. (Comería, comerías, comería.) Which piece stays whole? (Comer.) Which endings match hablaría? (-ía, -ías, -ía.) Next: complete the regular pattern with vivir.
+
+
+Lesson 6 of 8.
+viviría — the regular conditional closes its small frame.
+
+Warm-up.
+[pause 2 seconds]
+You can move from comeré to comería. Apply the same move to viviré: viviría — “I would live.”
+
+Grammar Lens: the singular -ir row.
+[a table of 3 rows, read aloud]
+person: yo. conditional: viviría.
+person: tú. conditional: vivirías.
+person: él / ella / usted. conditional: viviría.
+Say viviría, vivirías, viviría. The complete regular frame is now hablaría, comería, viviría. Plural persons wait.
+
+Grammar Lens: meaning with known words.
+Viviría en Madrid says “I would live in Madrid.” The lesson adds no new place or preposition.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “viviría, vivirías, viviría”]
+[pause 8 seconds for the answer]
+[your turn — say: “hablaría, comería, viviría”]
+[pause 8 seconds for the answer]
+[your turn — say: “Viviría en Madrid.”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the learned singular conditional forms of vivir: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Say 'I would live in Madrid' in Spanish.
+[question — say your answer, then pause 9 seconds]
+Give the conditional yo forms of hablar, comer, and vivir, in that order.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three vivir forms. (Viviría, vivirías, viviría.) Which regular verb families share the ending row? (All three.) Next: three already-known verbs change the stem but keep both sets of endings.
+
+
+Lesson 7 of 8.
+haré, tendré, podré — three stems, two ending sets.
+
+Warm-up.
+[pause 2 seconds]
+Regular verbs keep the whole infinitive. Three common verbs you already know use a shorter or reshaped stem. Learn only these three today. In each row, the same stem serves the future and the conditional.
+
+Grammar Lens: hacer becomes har-.
+[a table of 3 rows, read aloud]
+person: yo. future: haré. conditional: haría.
+person: tú. future: harás. conditional: harías.
+person: él / ella / usted. future: hará. conditional: haría.
+Use the known noun in Haré café — “I will make coffee” — and Haría café — “I would make coffee.”
+
+Grammar Lens: tener becomes tendr-.
+[a table of 3 rows, read aloud]
+person: yo. future: tendré. conditional: tendría.
+person: tú. future: tendrás. conditional: tendrías.
+person: él / ella / usted. future: tendrá. conditional: tendría.
+The d in tendr- arose during the history of the compact future and conditional. Treat tendr- as the learned stem, not as permission to insert d into a new verb.
+
+Grammar Lens: poder becomes podr-.
+[a table of 3 rows, read aloud]
+person: yo. future: podré. conditional: podría.
+person: tú. future: podrás. conditional: podrías.
+person: él / ella / usted. future: podrá. conditional: podría.
+Podré hablar español says “I will be able to speak Spanish.” Podría hablar español says “I could / would be able to speak Spanish.”
+These stems reflect inherited reductions and sound changes. The useful modern fact is bounded: har-, tendr-, podr-, each followed by the same endings you already learned.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “haré, haría”]
+[pause 8 seconds for the answer]
+[your turn — say: “tendré, tendría”]
+[pause 8 seconds for the answer]
+[your turn — say: “podré, podría”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the pair 'I will make coffee; I would make coffee' in Spanish.
+[question — say your answer, then pause 8 seconds]
+Give the future and conditional yo forms of tener, in that order.
+[question — say your answer, then pause 10 seconds]
+Give the pair 'I will be able to speak Spanish; I could speak Spanish' in Spanish.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three learned stems. (Har-, tendr-, podr-.) Does each verb need separate future and conditional stems? (No; one stem serves both.) Do the endings change? (No.) Next: retrieve the complete twelve-atom chapter.
+
+
+Lesson 8 of 8.
+Practice — one infinitive frame, two futures of thought.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for 2 tables that cannot be read aloud. You can listen to everything else now — leave the sections called Grammar Lens: the regular frame and Grammar Lens: three learned stems until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+This checkpoint adds no vocabulary and no plural persons. Retrieve the six regular singular rows, then the three learned irregular stems. Use the future for “will” and the conditional for the bounded core meaning “would.”
+
+Grammar Lens: the regular frame.
+There is a table here I cannot read to you — 4 columns and 6 rows, and it has more columns than can be held in the ear at once. Its columns are: person, hablar, comer, vivir. Come back and look at it when you have stopped.
+All three regular infinitives remain whole. Future endings are -é, -ás, -á; conditional endings are -ía, -ías, -ía. Plural persons wait.
+
+Grammar Lens: three learned stems.
+There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: verb, learned stem, future yo, conditional yo. Come back and look at it when you have stopped.
+The stems change; the ending sets do not. Other irregular stems remain outside this chapter.
+
+The ending, taken apart.
+Romance future and conditional forms grew from constructions pairing an infinitive with forms of Latin habēre. Present material contributed to the future; past or imperfect material contributed to the conditional. Many paths and competing forms existed during the change, so this is a bridge for memory, not a one-step story or a recipe using modern haber.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “hablaré, comeré, viviré”]
+[pause 8 seconds for the answer]
+[your turn — say: “hablaría, comería, viviría”]
+[pause 8 seconds for the answer]
+[your turn — say: “haré/haría, tendré/tendría, podré/podría”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the future yo forms of hablar, comer, and vivir, in that order.
+[question — say your answer, then pause 9 seconds]
+Give the conditional yo forms of hablar, comer, and vivir, in that order.
+[question — say your answer, then pause 7 seconds]
+Say 'I will speak Spanish' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Say 'I would live in Madrid' in Spanish.
+[question — say your answer, then pause 9 seconds]
+Give the pair 'I will make coffee; I would make coffee' in Spanish.
+[question — say your answer, then pause 8 seconds]
+Give the learned stems for hacer, tener, and poder, in that order.
+[question — say your answer, then pause 7 seconds]
+Which Latin 'have' verb contributed material to both Romance constructions?
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three regular future yo forms. (Hablaré, comeré, viviré.) Give the three regular conditional yo forms. (Hablaría, comería, viviría.) Which three learned stems replace a whole infinitive? (Har-, tendr-, podr-.) What is the careful historical bridge? (Infinitive plus forms of Latin habēre, reshaped through Romance.) Chapter 18 can now begin without borrowing plural persons, new auxiliaries, or clock-time vocabulary.

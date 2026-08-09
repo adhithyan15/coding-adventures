@@ -6619,24 +6619,28 @@
     {
       "language": "spanish",
       "chapter": 17,
-      "sourceHash": "fnv1a64:987d104372c450ad",
+      "sourceHash": "fnv1a64:fd5a428019978292",
       "lessonIds": [
         "ES-C17-futuro",
+        "ES-C17-comer-futuro",
+        "ES-C17-vivir-futuro",
         "ES-C17-condicional",
-        "ES-C17-practice",
-        "ES-C17-future-guessing"
+        "ES-C17-comer-condicional",
+        "ES-C17-vivir-condicional",
+        "ES-C17-irregulares",
+        "ES-C17-practice"
       ],
-      "voiceLessons": 3,
-      "drivablePrefix": 2,
+      "voiceLessons": 7,
+      "drivablePrefix": 7,
       "text": "spanish/narration/ch17.txt",
       "json": "spanish/narration/ch17.json",
-      "textHash": "fnv1a64:fe0c352e8a1fffd1",
-      "jsonHash": "fnv1a64:44107b161c5920c9"
+      "textHash": "fnv1a64:68d2fa06cbbd115f",
+      "jsonHash": "fnv1a64:6ec7ea1687f501de"
     },
     {
       "language": "spanish",
       "chapter": 18,
-      "sourceHash": "fnv1a64:611f103a3f18023d",
+      "sourceHash": "fnv1a64:feab749898cc6963",
       "lessonIds": [
         "ES-C18-subjuntivo",
         "ES-C18-inherited-subjunctive-stems",
@@ -6653,8 +6657,8 @@
       "drivablePrefix": 0,
       "text": "spanish/narration/ch18.txt",
       "json": "spanish/narration/ch18.json",
-      "textHash": "fnv1a64:5bc4ef4684295d63",
-      "jsonHash": "fnv1a64:e0f01109fd77bb2d"
+      "textHash": "fnv1a64:0dbd8a206ed46237",
+      "jsonHash": "fnv1a64:30c53edbe9f17208"
     },
     {
       "language": "spanish",
