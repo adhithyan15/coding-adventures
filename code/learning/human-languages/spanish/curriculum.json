@@ -294,10 +294,57 @@
       "after": []
     },
     {
+      "id": "ES-PATH-030-SER",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C09-ser"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-011-SER-ESTAR",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ES-C09-ser-vs-estar"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-011-SER-ESTAR"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-007-ORIGIN",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ES-C09-soy-de"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-007-ORIGIN"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-015-LOCATION",
+      "spine_node": "SPINE-ASK-LOCATION",
+      "lessons": [
+        "ES-C09-esta-en",
+        "ES-C09-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-015-LOCATION",
+        "ES-EXT-015-SER-ESTAR-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-030",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "ES-C09-ser",
         "ES-C10-ir",
         "ES-C11-querer",
         "ES-C11-poder",
@@ -678,6 +725,7 @@
         "ES-PATH-007",
         "ES-PATH-009",
         "ES-PATH-014",
+        "ES-PATH-007-ORIGIN",
         "ES-PATH-021"
       ],
       "omits": [
@@ -693,6 +741,7 @@
         "ES-PATH-002",
         "ES-PATH-008",
         "ES-PATH-011",
+        "ES-PATH-011-SER-ESTAR",
         "ES-PATH-022"
       ],
       "omits": [
@@ -738,7 +787,8 @@
     },
     "SPINE-ASK-LOCATION": {
       "segments": [
-        "ES-PATH-015"
+        "ES-PATH-015",
+        "ES-PATH-015-LOCATION"
       ],
       "omits": [],
       "relocates": {}
@@ -766,6 +816,7 @@
         "ES-PATH-028",
         "ES-PATH-029",
         "ES-PATH-030-TENER",
+        "ES-PATH-030-SER",
         "ES-PATH-030",
         "ES-PATH-031",
         "ES-PATH-032",
@@ -1275,6 +1326,50 @@
       "prerequisites": [],
       "lessons": [
         "ES-C08-practice"
+      ]
+    },
+    {
+      "id": "ES-EXT-011-SER-ESTAR",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can distinguish Spanish identity claims from current-state claims with ser and estar.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C09-ser-vs-estar"
+      ]
+    },
+    {
+      "id": "ES-EXT-007-ORIGIN",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can ask and state where someone is from with ser and de.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C09-soy-de"
+      ]
+    },
+    {
+      "id": "ES-EXT-015-LOCATION",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can locate someone with estar and en.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C09-esta-en"
+      ]
+    },
+    {
+      "id": "ES-EXT-015-SER-ESTAR-CONSOLIDATION",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can combine Spanish identity, origin, state, and location frames without adding new forms.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C09-practice"
       ]
     },
     {

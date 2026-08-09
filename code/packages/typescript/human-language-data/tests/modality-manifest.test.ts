@@ -874,13 +874,13 @@ describe("corpus regression", () => {
       // the whole-lesson share dips 66% -> 65% even though every one of these blocks
       // is detachable and `coreDrivable` again loses nothing.
       totalLessons: 1669,
-      voice: 1079,
+      voice: 1082,
       // -3 sight / +3 voice: TA-C02-en, -enna and -peyar dropped their "The letters in
       // this word" sections once TA-W08 and TA-W09 gave those glyphs a home in the
       // strand. Verified against the GENERATED manifest, not the source — all three now
       // record reasons ["no-visual-dependency"], so the script teaching genuinely left
       // the lesson rather than a heading being renamed out from under the classifier.
-      sight: 532,
+      sight: 529,
       // +3 pen: the Tamil ch1 writing lessons. Rule 1 in src/modality.ts derives
       // this from the lesson TYPE alone — it says outright that it does not look at
       // the body — so all three record reasons ["writing-type","script-block"], and
@@ -889,7 +889,7 @@ describe("corpus regression", () => {
       // to this table.
       // +2: both new lessons are writing lessons.
       pen: 58,
-      drivableLessons: 1079,
+      drivableLessons: 1082,
       drivablePercent: 65,
       trackCount: 22,
       chapterCount: 513,
@@ -917,10 +917,12 @@ describe("corpus regression", () => {
       // without adding to any prefix.
       // Chapter 7's real order begins with comer's four-column comparison rather
       // than the old alphabetical fallback's ear-only beber lesson.
-      drivablePrefixTotal: 877,
+      // Chapter 9 replaces three wide-table sight lessons with voice-first
+      // micro-lessons and extends the Spanish chapter prefix through all five steps.
+      drivablePrefixTotal: 881,
       // -2: chapters 21 and 23 each take a writing lesson and stop being ear-only.
       // Spreading the strand cannot happen without landing a pen lesson somewhere.
-      fullyDrivableChapters: 321,
+      fullyDrivableChapters: 322,
       // -1: Tamil chapter 2 can now be started by ear.
       unstartableChapters: 142,
       overriddenLessons: 0,

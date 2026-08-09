@@ -6476,7 +6476,7 @@
     {
       "language": "spanish",
       "chapter": 9,
-      "sourceHash": "fnv1a64:31ecfffb1213f2bb",
+      "sourceHash": "fnv1a64:0d5111b733667b75",
       "lessonIds": [
         "ES-C09-ser",
         "ES-C09-ser-vs-estar",
@@ -6484,12 +6484,12 @@
         "ES-C09-esta-en",
         "ES-C09-practice"
       ],
-      "voiceLessons": 2,
-      "drivablePrefix": 1,
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
       "text": "spanish/narration/ch09.txt",
       "json": "spanish/narration/ch09.json",
-      "textHash": "fnv1a64:87339f23ab01f15d",
-      "jsonHash": "fnv1a64:1e7a3bf85373fd5d"
+      "textHash": "fnv1a64:ed562b7d8a7c11ef",
+      "jsonHash": "fnv1a64:4083df0087decf80"
     },
     {
       "language": "spanish",
