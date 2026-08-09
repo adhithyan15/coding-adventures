@@ -4593,10 +4593,16 @@ the Rust, Python, and TypeScript surfaces together.
      them into the shared engine forward-bias-depletion-coefficient field.
 
 452. Python and TypeScript Berkeley SPICE BJT forward-beta-roll-off parity.
-   - Status: implemented in this BJT IKF parity slice.
+   - Status: completed in PR 10117.
    - Both parser facades validate finite, non-negative `IKF` / `IK` values,
      prefer canonical `IKF`, and lower the result into the shared engine
      forward-beta-roll-off-current field.
+
+453. Python and TypeScript Berkeley SPICE BJT base-emitter-leakage parity.
+   - Status: implemented in this BJT ISE parity slice.
+   - Both parser facades validate finite, non-negative `ISE` currents and `C2`
+     ratios, prefer canonical `ISE`, preserve the engine's `C2 * IS` fallback,
+     and reject non-finite derived currents before lowering.
 
 ## Backlog
 

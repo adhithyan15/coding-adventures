@@ -1684,6 +1684,44 @@ Q1 col base emit fast
     );
   });
 
+  it.each([
+    ["ISE", "3p", 3.0e-12],
+    ["C2", "2", 2.0e-14],
+  ])("parses BJT base-emitter leakage parameter %s=%s", (parameter, value, expected) => {
+    const parsed = parseNetlist(`.model fast NPN(${parameter}=${value})\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      baseEmitterLeakageSaturationCurrent: expected,
+    });
+  });
+
+  it("gives BJT ISE precedence over C2", () => {
+    const parsed = parseNetlist(`.model fast NPN(IS=2p C2=-1 ISE=4p)\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      baseEmitterLeakageSaturationCurrent: 4.0e-12,
+    });
+  });
+
+  it.each([
+    ["ISE", "-1p"],
+    ["ISE", "1e999"],
+    ["C2", "-1"],
+    ["C2", "1e999"],
+  ])("rejects invalid BJT base-emitter leakage parameter %s=%s", (parameter, value) => {
+    expect(() => parseNetlist(`.model fast NPN(${parameter}=${value})`)).toThrow(
+      `BJT ${parameter} must be finite and non-negative`,
+    );
+  });
+
+  it("rejects a non-finite BJT C2-derived leakage current", () => {
+    expect(() => parseNetlist(`.model fast NPN(IS=1e308 C2=2)`)).toThrow(
+      "BJT ISE must be finite and non-negative",
+    );
+  });
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)

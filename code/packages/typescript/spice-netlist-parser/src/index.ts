@@ -1431,6 +1431,27 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("BJT IKF must be finite and non-negative");
   }
+  const bjtBaseEmitterLeakageRatio = params.get("C2");
+  const explicitBjtBaseEmitterLeakageCurrent = params.get("ISE");
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    explicitBjtBaseEmitterLeakageCurrent === undefined &&
+    bjtBaseEmitterLeakageRatio !== undefined &&
+    (!Number.isFinite(bjtBaseEmitterLeakageRatio) || bjtBaseEmitterLeakageRatio < 0.0)
+  ) {
+    throw new NetlistParseError("BJT C2 must be finite and non-negative");
+  }
+  const bjtBaseEmitterLeakageCurrent = explicitBjtBaseEmitterLeakageCurrent ??
+    (bjtBaseEmitterLeakageRatio === undefined
+      ? undefined
+      : bjtBaseEmitterLeakageRatio * (params.get("IS") ?? 1.0e-14));
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtBaseEmitterLeakageCurrent !== undefined &&
+    (!Number.isFinite(bjtBaseEmitterLeakageCurrent) || bjtBaseEmitterLeakageCurrent < 0.0)
+  ) {
+    throw new NetlistParseError("BJT ISE must be finite and non-negative");
+  }
   const gateSourceCapacitance = params.get("CGS") ?? params.get("CGS0");
   if (
     (kind === "NJF" || kind === "PJF") &&
@@ -2119,13 +2140,16 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
         `model ${JSON.stringify(model.name)} has kind ${JSON.stringify(model.kind)}, expected "NPN" or "PNP"`,
       );
     }
+    const saturationCurrent = model.params.get("IS") ?? 1.0e-14;
+    const baseEmitterLeakageCurrent = model.params.get("ISE") ??
+      (model.params.get("C2") ?? 0.0) * saturationCurrent;
     return bjt(
       name,
       fields[1],
       fields[2],
       fields[3],
       model.kind,
-      model.params.get("IS") ?? 1.0e-14,
+      saturationCurrent,
       model.params.get("BF") ??
         model.params.get("BETA") ??
         model.params.get("BETA_F") ??
@@ -2154,6 +2178,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("FC") ?? 0.5,
       model.params.get("VAR") ?? model.params.get("VB") ?? 0.0,
       model.params.get("IKF") ?? model.params.get("IK") ?? 0.0,
+      baseEmitterLeakageCurrent,
     );
   }
   if (prefix === "J") {
