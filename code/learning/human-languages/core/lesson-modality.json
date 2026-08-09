@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:7e20b52b9eb7b75e",
+  "sourceHash": "fnv1a64:4884bf27a839c259",
   "summary": {
     "totalLessons": 1669,
-    "voice": 1082,
-    "sight": 529,
+    "voice": 1083,
+    "sight": 528,
     "pen": 58,
-    "drivableLessons": 1082,
+    "drivableLessons": 1083,
     "drivablePercent": 65,
     "trackCount": 22,
     "chapterCount": 513,
-    "drivablePrefixTotal": 881,
-    "fullyDrivableChapters": 322,
+    "drivablePrefixTotal": 883,
+    "fullyDrivableChapters": 323,
     "unstartableChapters": 142,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -6755,11 +6755,11 @@
     {
       "language": "spanish",
       "lessonCount": 177,
-      "voice": 155,
-      "sight": 15,
+      "voice": 156,
+      "sight": 14,
       "pen": 7,
       "drivablePercent": 88,
-      "drivablePrefixTotal": 125,
+      "drivablePrefixTotal": 127,
       "modalities": [
         "voice",
         "sight",
@@ -6956,19 +6956,20 @@
         {
           "chapter": 10,
           "lessonCount": 4,
-          "voice": 3,
-          "sight": 1,
+          "voice": 4,
+          "sight": 0,
           "pen": 0,
           "modalities": [
-            "voice",
-            "sight"
+            "voice"
           ],
-          "drivablePrefix": 2,
-          "firstNonVoiceLesson": "ES-C10-mi-tu-su",
-          "drivable": false,
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
           "drivableLessonIds": [
             "ES-C10-ir",
-            "ES-C10-ir-a-futuro"
+            "ES-C10-ir-a-futuro",
+            "ES-C10-mi-tu-su",
+            "ES-C10-practice"
           ]
         },
         {
@@ -34000,7 +34001,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:97e7c19bbe741eda"
+      "sourceHash": "fnv1a64:e4fa3390809549f7"
     },
     {
       "id": "ES-C10-ir-a-futuro",
@@ -34018,25 +34019,25 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2efae4f60d605d59"
+      "sourceHash": "fnv1a64:dfe5a6bf08c4baf2"
     },
     {
       "id": "ES-C10-mi-tu-su",
       "language": "spanish",
       "chapter": 10,
       "sequence": 900,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:c16ec47331e0c841"
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:57f79e4665d0f93b"
     },
     {
       "id": "ES-C10-practice",
@@ -34054,7 +34055,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ebec5ae13a78d2af"
+      "sourceHash": "fnv1a64:d00e9396b191d69c"
     },
     {
       "id": "ES-C11-querer",

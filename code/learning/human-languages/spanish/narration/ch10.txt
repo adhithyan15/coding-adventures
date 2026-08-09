@@ -1,157 +1,161 @@
 Spanish, chapter 10: Going, and the Future You Can Already Say.
-4 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
+4 lessons. All 4 can be done entirely by ear.
 
 
 Lesson 1 of 4.
-ir — "to go," stitched from three verbs.
+ir — “to go,” from more than one historical stem.
 
 Warm-up.
 [pause 2 seconds]
-You've met two suppletive verbs now — ser (soy/eres/es…) and, in a way, estar. ir, "to go," is the extreme case: its forms come from three different Latin verbs fused into one. English does the very same thing with go / went, so the idea is already familiar.
+You already match different verb forms with tú and usted, and you can ask ¿Dónde…?, “Where…?” Today, add one new verb and only its three singular-person forms.
 
 Sounds you'll need.
-vowel-i — the infinitive ir is just eer, two letters, one of the shortest verbs in Spanish.
-diphthong-oy — voy = boy (a b/v sound + "oy"), sharing the -oy tail of soy, estoy, doy.
+vowel-i — ir is one clear syllable, like ear without a glide.
+diphthong-oy — voy ends with the sound in English boy.
 
-The word, taken apart — suppletion, in the extreme.
-Three Latin verbs meaning "go" collapsed into Spanish ir:
+The word, taken apart.
+ir means “to go.” Its infinitive descends from Latin īre, also “to go.” The present forms below followed a different Latin verb, vādere, “to go forward” or “advance.” English invade and evade preserve that vad- family.
+One modern verb built from historically different stems is called suppletive. English does the same thing when go changes to went, an old form borrowed from wend.
+
+Grammar Lens: only three forms today.
 [a table of 3 rows, read aloud]
-where it shows up: the infinitive ir. from Latin: īre "to go". note: gives English exit (ex-īre "go out"), transit, ambition.
-where it shows up: the present voy, vas, va, vamos, van. from Latin: vādere "to advance, rush". note: gives English invade, evade, wade.
-where it shows up: the past fui (later). from Latin: esse/fuī "to be". note: the same fu- as ser's past.
-So the present tense doesn't come from ir at all — it comes from vādere:
-[a table of 5 rows, read aloud]
-yo, voy, (the -oy, like soy/estoy/doy).
-tú, vas, blank.
-él/ella/usted, va, blank.
-nosotros, vamos, (this is also "let's go!")
-ellos/ustedes, van, blank.
-This is suppletion — the exact phenomenon behind English go (present) vs went (past, borrowed from an old verb wend). Spanish just does it inside a single tense.
-
-Grammar Lens: voy a + place (going somewhere).
-Point ir at a destination with a ("to," from Latin ad):
-Voy a Madrid. — "I'm going to Madrid." Vamos a casa. — "We're going home / Let's go home."
-a + el contracts to al: voy al café ("to the café"). Next lesson, this same voy a… becomes a way to talk about the future.
+person: yo. present of ir: voy.
+person: tú. present of ir: vas.
+person: él / ella / usted. present of ir: va.
+Say the small set as voy, vas, va. The plural forms are deliberately left for a later lesson.
+The known question word now gives you a useful prompt:
+¿Dónde va usted? — “Where are you going?”
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ir" then the present set — "voy, vas, va, vamos, van"]
+[your turn — say: “ir — voy, vas, va”]
 [pause 8 seconds for the answer]
-[your turn — say: "voy" / English "invade", "evade" — the vādere family]
+[your turn — say: “¿Dónde va usted?”]
 [pause 8 seconds for the answer]
-[your turn — say: "Voy a Madrid," "Vamos a casa" — ir a + a place]
+[your turn — say: “īre gives ir; vādere gives the present set”]
 [pause 8 seconds for the answer]
+[question — say your answer, then pause 10 seconds]
+Give the three learned singular present forms of ir: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 8 seconds]
+Complete the formal question: ¿Dónde ___ usted?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What three Latin verbs feed Spanish ir? (īre — infinitive; vādere — the present voy/vas…; esse/fuī — the past.) What English pair shows the same suppletion? (go / went.) Give the present of ir. (Voy, vas, va, vamos, van.) Next: turn voy a… into the future.
+What does ir mean? (“To go.”) Give the three forms learned today. (Voy, vas, va.) Why do they look unlike ir? (The infinitive and present set come through different Latin stems.) Next: place a and a known infinitive after this small set to talk about what is coming.
 
 
 Lesson 2 of 4.
-voy a + infinitive — the "going-to" future.
+voy a + infinitive — moving toward the near future.
 
 Warm-up.
 [pause 2 seconds]
-Here's a gift: Spanish builds its everyday future exactly like English. English says "I'm going to speak"; Spanish says "voy a hablar." Same metaphor — the verb to go, aimed at what's coming — so you already know how to think it. You get a whole tense for almost free.
+You know voy, vas, va and the infinitives hablar, comer, vivir. This lesson joins those owned pieces with one short new word.
 
-The pattern.
-Take the present of ir, add a, add any infinitive (the dictionary form of a verb — hablar, comer, vivir, all of which you own):
-voy a + infinitive becomes voy a hablar = "I'm going to speak."
-[a table of 5 rows, read aloud]
-yo, voy a hablar, "I'm going to speak".
-tú, vas a comer, "you're going to eat".
-él/ella/usted, va a estudiar, "she's going to study".
-nosotros, vamos a vivir, "we're going to live".
-ellos/ustedes, van a trabajar, "they're going to work".
-Only ir changes; the second verb stays a bare infinitive, never conjugated — just as English keeps "to speak" unchanged after "going to."
+The word, taken apart — a.
+Spanish a means “to” or “toward.” It descends from Latin ad, “toward,” which English keeps in words such as advance.
+Movement toward a place easily becomes movement toward a future event. English uses the same picture in “I am going to speak.” Spanish keeps a visible: voy a hablar.
 
-Grammar Lens: why "go" becomes "future" (in both languages).
-It's one of the most natural metaphors in human language: movement toward something becomes time approaching it. If you're going to a place, you haven't arrived — it's ahead of you; so "going to (do)" comes to mean "about to, soon." French does it too (je vais parler), and English, and Spanish — three languages, the same picture. Spanish even keeps the little a ("to," from ad) that English drops in speech ("gonna").
+Grammar Lens: ir + a + an unchanged infinitive.
+[a table of 3 rows, read aloud]
+person: yo. near-future frame: voy a hablar. meaning: I am going to speak.
+person: tú. near-future frame: vas a comer. meaning: you are going to eat.
+person: usted. near-future frame: va a vivir. meaning: you are going to live.
+Only ir changes for the person. The second verb stays in its known dictionary form: hablar, comer, or vivir. No new plural person or infinitive is hidden in the pattern.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "voy a hablar, vas a comer, va a estudiar" — ir + a + infinitive]
+[your turn — say: “voy a hablar”]
 [pause 8 seconds for the answer]
-[your turn — say: build three about your day — "Voy a trabajar," "Voy a comer," "Vamos a casa"]
+[your turn — say: “vas a comer”]
 [pause 8 seconds for the answer]
-[your turn — say: English "I'm going to…" then Spanish "voy a…" — feel the identical metaphor]
+[your turn — say: “va a vivir”]
 [pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Say 'I am going to speak' in Spanish.
+[question — say your answer, then pause 8 seconds]
+Say 'You are going to eat' to one friend in Spanish.
 
 Wrap-up Recall.
 [pause 3 seconds]
-How does Spanish form the near future? (ir in the present + a + an infinitive: voy a hablar.) Does the second verb change? (No — it stays an infinitive.) What English construction is it a mirror of? ("Going to" + verb.) Next: whose things are they — the possessives mi/tu/su.
+What is the frame? (Ir in the present + a + an infinitive.) Does the second verb change for the person? (No.) What idea connects physical going with future time? (Motion toward a destination becomes motion toward an event.) Next: say whose already-known café it is.
 
 
 Lesson 3 of 4.
-mi, tu, su — my, your, his/her.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The words, taken apart until you have stopped, and I will say so again when we reach it.
+mi, tu, su — whose café?
 
 Warm-up.
 [pause 2 seconds]
-To say whose something is, Spanish puts a small word before the noun: mi casa "my house," tu café "your coffee." These come straight from Latin and line up neatly with the pronouns you already know.
+You already know café, and you distinguish informal tú from formal usted. Now put one small ownership word before that one known noun.
 
 The words, taken apart.
-There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, means, English cousin. Come back and look at it when you have stopped.
-Two things to notice:
-tu vs tú. The possessive tu ("your") has no accent; the pronoun tú ("you") does. Same split you met in the writing chapter (el/él, si/sí) — the accent (tilde diacrítica) separates two look-alike words.
-su does a lot of work. Because it covers his, her, its, your-formal, and their all at once, context tells you which. Su casa = "his/her/your/their house"; if it's genuinely unclear, Spanish adds de él, de ella… ("of him, of her").
-
-Grammar Lens: they agree in NUMBER, not gender.
-Unlike most Spanish modifiers, mi/tu/su don't change for masculine/feminine — mi casa (fem.) and mi café (masc.) both use mi. They only change for number: add -s for a plural noun.
 [a table of 3 rows, read aloud]
-singular: mi libro becomes mis libros. plural: "my book becomes my books".
-singular: tu casa becomes tus casas. plural: "your house becomes your houses".
-singular: su amigo becomes sus amigos. plural: "his friend becomes his friends".
-(nuestro/nuestra "our," from noster, is the one that does flex for gender — you'll meet it fully later.)
+Spanish: mi. Latin source: meus. meaning in today's frame: my.
+Spanish: tu. Latin source: tuus. meaning in today's frame: your, to one informal tú.
+Spanish: su. Latin source: suus. meaning in today's frame: your, to formal usted; also his or her.
+English my helps recall mi. Older English thy, “your,” helps recall Latin tuus and Spanish tu. The ownership word tu has no written accent; the person word tú that you already know keeps its accent.
+
+Grammar Lens: put the ownership word before the noun.
+[a table of 3 rows, read aloud]
+mi café means my coffee.
+tu café means your coffee, informal.
+su café means your coffee, formal; or his or her coffee.
+The situation tells you which person su points to. Every noun phrase in this lesson is singular. Forms used before plural things are left for a later step, so there is no new number pattern to learn here.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "mi, tu, su" — my / your / his-her]
+[your turn — say: “mi café”]
 [pause 8 seconds for the answer]
-[your turn — say: "mi casa, tu café, su amigo" — before a noun, no gender change]
+[your turn — say: “tu café” to tú]
 [pause 8 seconds for the answer]
-[your turn — say: pluralize — "mis libros, tus casas, sus amigos" — the -s for number]
+[your turn — say: “su café” to usted]
 [pause 8 seconds for the answer]
+[question — say your answer, then pause 7 seconds]
+Say 'my coffee' in Spanish.
+[question — say your answer, then pause 8 seconds]
+Addressing usted, say 'your coffee' in Spanish.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give "my / your / his," and one Latin source. (Mi/tu/su, from meus/ tuus/suus.) What's the difference between tu and tú? (No accent = "your"; accent = "you.") Do possessives agree in gender or number? (Number only — add -s: mis/tus/sus.) Next: practice the whole chapter.
+Give the three ownership words. (Mi, tu, su.) Where do they go? (Before the noun.) Which one addresses usted? (Su.) Which Latin sources sit behind them? (Meus, tuus, suus.) Next: retrieve the chapter without adding a new word, form, or noun.
 
 
 Lesson 4 of 4.
-Practice — ir, the near future, and possessives.
+Practice — going, approaching events, and ownership.
 
 Warm-up.
 [pause 2 seconds]
-Three new powers this chapter: you can go places, talk about the future, and say whose things are whose. Drill the irregular ir until voy/vas/va/vamos/van is automatic, because the whole future rides on it.
+This checkpoint adds nothing. Retrieve voy, vas, va; build the near future with a and a known infinitive; then put mi, tu, or su before the known noun café.
 
-Conjugate and build.
-[pause 1 second]
-ir, present: voy, vas, va, vamos, van (from vādere — the -oy of voy, like soy/estoy/doy).
-the near future: ir + a + infinitive — voy a hablar, vas a comer, va a estudiar ("I'm/you're/she's going to…").
-possessives: mi, tu, su (+ plural mis, tus, sus) — agree in number, not gender.
+Grammar Lens: the complete small chapter frame.
+ir, singular: voy, vas, va.
+near future: voy a hablar, vas a comer, va a vivir.
+ownership before one singular known noun: mi café, tu café, su café.
+Plural person forms of ir and possessives before plural nouns remain deferred.
 
-Say something real.
-— ¿Qué vas a hacer hoy? — Voy a estudiar en mi casa, y luego voy a trabajar. ¿Y tú? — Voy a comer con mis amigos. Vamos a un café.
-Two chapters working together: voy a estudiar / voy a comer (near future becomes ir), mi casa / mis amigos (possessives), vamos a un café (ir a + place).
-
-What you've built this chapter.
-ir — "to go," the most suppletive Spanish verb (infinitive from īre; present voy/vas/va/vamos/van from vādere becomes invade/evade), the same go/went trick English plays.
-the near future — ir a + infinitive (voy a hablar = "I'm going to speak"), Spanish building tomorrow out of the verb "to go," exactly as English and French do.
-mi/tu/su ( from meus/tuus/suus becomes my/thy) — possessives that agree in number (mis/tus/sus), not gender; and tu "your" vs tú "you" (the accent again).
+The word, taken apart — retrieve the history.
+ir continues Latin īre, while voy, vas, va continue vādere.
+a continues Latin ad, “toward”; motion toward a goal became motion toward a coming event.
+mi, tu, su continue Latin meus, tuus, suus.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: conjugate ir fully — "voy, vas, va, vamos, van"]
+[your turn — say: “voy, vas, va”]
 [pause 8 seconds for the answer]
-[your turn — say: three near-future plans — "Voy a … " with hablar / comer / trabajar]
+[your turn — say: “voy a hablar, vas a comer, va a vivir”]
 [pause 8 seconds for the answer]
-[your turn — say: "mi casa, mis amigos, tu café, su libro" — possessives + number]
+[your turn — say: “mi café, tu café, su café”]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"¿Qué vas a hacer? — Voy a … con mis amigos."
+“Voy a hablar. Su café.”
+[question — say your answer, then pause 9 seconds]
+Give the learned singular forms of ir: yo, tú, then usted.
+[question — say your answer, then pause 9 seconds]
+Ask formal you 'Where are you going?' in Spanish.
+[question — say your answer, then pause 8 seconds]
+Say 'I am going to speak' in Spanish.
+[question — say your answer, then pause 8 seconds]
+Addressing usted, say 'your coffee' in Spanish.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the present of ir. (Voy, vas, va, vamos, van.) Build "we're going to eat." (Vamos a comer.) How do mi/tu/su change for a plural noun, and do they change for gender? (Add -s becomes mis/tus/sus; no gender change.) Next chapter takes these rules further — this book now runs on grammar, not phrases.
+Give the singular ir set. (Voy, vas, va.) Build “You are going to eat” for one friend. (Vas a comer.) Say “my coffee” and formal “your coffee.” (Mi café; su café.) Chapter 11 can now extend the grammar from this small, closed frontier.

@@ -1,65 +1,78 @@
 ---
+schema_version: 2
 id: ES-C10-ir-a-futuro
-chapter: 10
+spine_node: SPINE-TALK-ABOUT-FUTURE
 sequence: 890
+chapter: 10
 type: phrase
 headword: voy a + infinitive
-gloss: the near future — "I'm going to…"
+gloss: I am going to… — the near future with ir, a, and a known infinitive
 concept_tag: ES-NEAR-FUTURE
-prerequisites: [ES-C10-ir, ES-C06-hablar]
+prerequisites: [ES-C10-ir, ES-C06-hablar, ES-C07-comer, ES-C07-vivir]
 sounds: [diphthong-oy]
 roots: [ire-vadere-latin, ad-latin]
-etymology_hook: "ir a + infinitive = 'going to' — Spanish builds the future exactly as English does, out of the verb 'to go' (voy a hablar = I'm going to speak)"
-est_minutes: 4
-reviews_of: [ES-C10-ir, ES-C06-hablar, ES-C07-comer]
+etymology_hook: "a descends from Latin ad 'toward'; physical motion toward a goal became the familiar motion-toward-the-future metaphor in voy a hablar"
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-IR, ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR, ES-ETYMON-IRE-VADERE, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR]
+introduces:
+  knowledge: [ES-LEX-A, ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE, ES-SEMANTIC-MOTION-TOWARD-FUTURE]
+practises:
+  knowledge: [ES-LEX-IR, ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-LEX-A, ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE, ES-SEMANTIC-MOTION-TOWARD-FUTURE]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C10-ir, ES-C06-hablar, ES-C07-comer, ES-C07-vivir]
 ---
 
-# voy a + infinitive — the "going-to" future
+# voy a + infinitive — moving toward the near future
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-IR, ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR] -->
 
-[PAUSE 2s] Here's a gift: Spanish builds its everyday future **exactly like
-English**. English says "I'm **going to** speak"; Spanish says "**voy a** hablar."
-Same metaphor — the verb *to go*, aimed at what's coming — so you already know how
-to think it. You get a whole tense for almost free.
+[PAUSE 2s] You know **voy, vas, va** and the infinitives **hablar, comer, vivir**.
+This lesson joins those owned pieces with one short new word.
 
-## The pattern
+## The word, taken apart — a
+<!-- hl-knowledge: introduces=[ES-LEX-A, ES-SEMANTIC-MOTION-TOWARD-FUTURE]; assesses=[ES-LEX-IR] -->
 
-Take the present of *ir*, add **a**, add any **infinitive** (the dictionary form
-of a verb — *hablar*, *comer*, *vivir*, all of which you own):
+Spanish **a** means “to” or “toward.” It descends from Latin **ad**, “toward,”
+which English keeps in words such as **advance**.
 
-> **voy a** + infinitive → **voy a hablar** = "I'm going to speak."
+Movement toward a place easily becomes movement toward a future event. English
+uses the same picture in “I am **going to** speak.” Spanish keeps **a** visible:
+**voy a hablar**.
 
-| yo | **voy a** hablar | "I'm going to speak" |
-| tú | **vas a** comer | "you're going to eat" |
-| él/ella/usted | **va a** estudiar | "she's going to study" |
-| nosotros | **vamos a** vivir | "we're going to live" |
-| ellos/ustedes | **van a** trabajar | "they're going to work" |
+## Grammar Lens: ir + a + an unchanged infinitive
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE]; assesses=[ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR, ES-LEX-A, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-SEMANTIC-MOTION-TOWARD-FUTURE] -->
 
-Only *ir* changes; the second verb stays a bare **infinitive**, never conjugated —
-just as English keeps "to speak" unchanged after "going to."
+| person | near-future frame | meaning |
+|---|---|---|
+| yo | **voy a hablar** | I am going to speak |
+| tú | **vas a comer** | you are going to eat |
+| usted | **va a vivir** | you are going to live |
 
-## Grammar Lens: why "go" becomes "future" (in both languages)
-
-It's one of the most natural metaphors in human language: *movement toward*
-something becomes *time approaching* it. If you're **going to** a place, you
-haven't arrived — it's ahead of you; so "going to (do)" comes to mean "about to,
-soon." French does it too (*je vais parler*), and English, and Spanish — three
-languages, the same picture. Spanish even keeps the little **a** ("to," ← *ad*)
-that English drops in speech ("gonna").
+Only **ir** changes for the person. The second verb stays in its known dictionary
+form: **hablar**, **comer**, or **vivir**. No new plural person or infinitive is
+hidden in the pattern.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-IR, ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR, ES-LEX-A, ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE, ES-SEMANTIC-MOTION-TOWARD-FUTURE, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR] -->
+<!-- hl-activity: {"id":"ES-C10-ir-a-futuro-voy-hablar","kind":"text","assesses":["ES-LEX-A","ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE","ES-LEX-HABLAR"],"prompt":"Say 'I am going to speak' in Spanish.","answer":"Voy a hablar.","accepted":["Voy a hablar"],"feedback":{"correct":"Right: Voy a hablar.","incorrect":"Use voy + a + the unchanged infinitive hablar."},"response_seconds":8} -->
+<!-- hl-activity: {"id":"ES-C10-ir-a-futuro-vas-comer","kind":"text","assesses":["ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR","ES-LEX-A","ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE","ES-LEX-COMER"],"prompt":"Say 'You are going to eat' to one friend in Spanish.","answer":"Vas a comer.","accepted":["Vas a comer"],"feedback":{"correct":"Right: Vas a comer.","incorrect":"Use the tú form vas, then a, then comer."},"response_seconds":8} -->
 
 [PAUSE 1s]
-- [YOU SAY: "voy a hablar, vas a comer, va a estudiar" — *ir* + a + infinitive]
-- [YOU SAY: build three about your day — "Voy a trabajar," "Voy a comer," "Vamos a
-  casa"]
-- [YOU SAY: English "I'm going to…" then Spanish "voy a…" — feel the identical
-  metaphor]
+- [YOU SAY: “voy a hablar”]
+- [YOU SAY: “vas a comer”]
+- [YOU SAY: “va a vivir”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-A, ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE, ES-SEMANTIC-MOTION-TOWARD-FUTURE] -->
 
-[PAUSE 3s] How does Spanish form the near future? (*ir* in the present + **a** +
-an **infinitive**: *voy a hablar*.) Does the second verb change? (No — it stays an
-infinitive.) What English construction is it a mirror of? ("Going to" + verb.)
-Next: whose things are they — the **possessives** *mi/tu/su*.
+[PAUSE 3s] What is the frame? (*Ir* in the present + **a** + an infinitive.)
+Does the second verb change for the person? (No.) What idea connects physical
+going with future time? (Motion toward a destination becomes motion toward an
+event.) Next: say whose already-known **café** it is.

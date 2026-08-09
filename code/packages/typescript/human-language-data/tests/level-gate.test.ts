@@ -137,10 +137,10 @@ describe("etymology is a hook, not a skill", () => {
     // any number, and comparing against a whole-track count could not fail because the
     // gate scopes to pre-A1. Both passed with the waiver deleted. So pin the figure:
     // Chapter 9 revisits its origin atoms in both the location contrast and terminal
-    // checkpoint, so the pre-A1 shortfall falls from 49 to 48. Its newly mapped de
-    // etymon increases the visible waiver by one; delete the waiver and the shortfall
-    // still rises by hooks that are intentionally read once rather than drilled.
-    expect(reinforcement.shortfall).toBe(48);
+    // checkpoint, so the pre-A1 shortfall falls from 49 to 48. Chapter 10 revisits
+    // another older atom and lowers the shortfall again. Its etymon atoms sit above
+    // pre-A1, so this level-specific waiver count correctly stays unchanged.
+    expect(reinforcement.shortfall).toBe(47);
     expect(reinforcement.detail).toContain("37 etymology hook(s) waived");
   });
 

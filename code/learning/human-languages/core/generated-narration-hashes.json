@@ -6494,19 +6494,19 @@
     {
       "language": "spanish",
       "chapter": 10,
-      "sourceHash": "fnv1a64:ea6580c734b4662b",
+      "sourceHash": "fnv1a64:8f2029488988ce30",
       "lessonIds": [
         "ES-C10-ir",
         "ES-C10-ir-a-futuro",
         "ES-C10-mi-tu-su",
         "ES-C10-practice"
       ],
-      "voiceLessons": 3,
-      "drivablePrefix": 2,
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
       "text": "spanish/narration/ch10.txt",
       "json": "spanish/narration/ch10.json",
-      "textHash": "fnv1a64:3a5b0d329f2f8ea8",
-      "jsonHash": "fnv1a64:fbcbe6812617370a"
+      "textHash": "fnv1a64:bc9de9641cbedb06",
+      "jsonHash": "fnv1a64:3b1f84cd4a9bd69c"
     },
     {
       "language": "spanish",
