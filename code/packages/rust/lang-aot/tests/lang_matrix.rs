@@ -1594,6 +1594,23 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(36),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a `value procedure` formal retains the same direct target as
+    // a name-mode procedure formal when the actual is statically known. Both
+    // nested wrappers specialise away `p`, so value mode does not require a
+    // function-pointer or descriptor ABI for this direct slice.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+                  integer procedure square(x); value x; integer x; square := x * x; \
+                  integer procedure dispatch(p, x); value p, x; procedure p; integer x; \
+                    begin integer procedure forward(p, x); value p, x; procedure p; integer x; \
+                          forward := p(x); \
+                          dispatch := forward(p, x) end; \
+                  result := dispatch(square, 6) end",
+        expect: Expect::Exit(36),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — formal procedure bound to a standard function. `abs` travels
     // through the same nested wrapper shape as a declared procedure, but its
     // call reuses the compiler's existing inline standard-function lowering.
@@ -6623,6 +6640,36 @@ fn algol_standard_function_formal_procedure_runs_on_every_available_standard_bac
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but standard-function formal-procedure execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_value_formal_procedure_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("value p, x; procedure p")
+                && program.src.contains("result := dispatch(square, 6)")
+        })
+        .expect("the value-mode formal-procedure program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but value-mode formal-procedure execution did not complete"
             );
             continue;
         };

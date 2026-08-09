@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.73.0 — 2026-08-09 — direct value-mode formal procedures
+
+`value procedure p` now accepts the same direct, statically resolvable actuals
+as a name-mode formal. Specialisation retains the direct target rather than
+materialising a procedure value in the IIR ABI, including when a value-mode
+formal is forwarded into another direct wrapper. Dynamic procedure values
+remain unsupported.
+
 ## 0.72.0 — 2026-08-09 — standard output as direct formal procedures
 
 A direct `procedure` actual may now be the implementation-defined standard
