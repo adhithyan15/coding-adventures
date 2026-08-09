@@ -4793,10 +4793,16 @@ the Rust, Python, and TypeScript surfaces together.
      without changing the unresolved `B` parameter policy.
 
 487. Python and TypeScript Berkeley SPICE JFET `LAM` alias parity.
-   - Status: implemented in this JFET `LAM` alias slice.
+   - Status: completed in PR 10178.
    - Both parser facades lower the engine-advertised `LAM` alias into the JFET
      channel-length-modulation field with canonical `LAMBDA` precedence,
      without changing the unresolved `B` parameter policy.
+
+488. Python and TypeScript Berkeley SPICE JFET transconductance validation parity.
+   - Status: implemented in this JFET transconductance-validation slice.
+   - Both parser facades reject non-finite or non-positive `BETA` and `BET`
+     values with canonical `BETA` precedence, without changing the unresolved
+     `B` parameter policy.
 
 ## Backlog
 

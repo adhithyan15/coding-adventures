@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate positive, finite JFET `BETA` and `BET` model-card values.
 - Lower the JFET `LAM` alias with canonical `LAMBDA` precedence.
 - Lower the JFET `VT0` and `VTH` threshold aliases with canonical `VTO` precedence.
 - Lower the JFET `BET` transconductance alias with canonical `BETA` precedence.

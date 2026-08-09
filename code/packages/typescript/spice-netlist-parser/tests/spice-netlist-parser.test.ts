@@ -2215,6 +2215,19 @@ J1 drain gate source fast
     });
   });
 
+  it.each([
+    ["BETA", "0"],
+    ["BETA", "-1m"],
+    ["BETA", "1e999"],
+    ["BET", "0"],
+    ["BET", "-1m"],
+    ["BET", "1e999"],
+  ])("rejects invalid JFET transconductance %s=%s", (parameter, value) => {
+    expect(() => parseNetlist(`.model fast NJF(${parameter}=${value})`)).toThrow(
+      "JFET BETA must be finite and positive",
+    );
+  });
+
   it("parses JFET threshold aliases with canonical precedence", () => {
     const parsed = parseNetlist(
       ".model canonical NJF(VTO=-3 VT0=-2 VTH=-1)\n" +
