@@ -9,3 +9,6 @@
   documented ZoneMinder API.
 - Add normalized bridge, camera device, entity, capability, and confirmed state
   installation with an exact loopback protocol proof.
+- Bound username and password inputs, expose a redacted one-shot access-token
+  result from the existing native login transport, and declare the
+  Human Approval `camera.snapshot` capability for the dedicated snapshot host.

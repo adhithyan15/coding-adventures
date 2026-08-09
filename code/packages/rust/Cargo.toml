@@ -937,6 +937,7 @@ members = [
     "smart-home-matter-integration",
     "smart-home-onvif-integration",
     "smart-home-onvif-snapshot-host",
+    "smart-home-zoneminder-snapshot-host",
     "smart-home-shelly-integration",
     "smart-home-wled-integration",
     "smart-home-nanoleaf-local-integration",
