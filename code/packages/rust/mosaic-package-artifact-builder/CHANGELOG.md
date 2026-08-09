@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased] - standard Flutter Rust runtime binding
+
+- Flutter project shells now install Mosaic's package-independent Dart FFI
+  binding instead of the no-op default host.
+- The standard host owns startup, successful event sequencing, snapshots,
+  buffers, prop updates, and teardown while preserving injectable custom hosts.
+
 ## [Unreleased] - standard XAML Rust runtime binding
 
 - XAML project shells now install Mosaic's package-independent .NET binding and

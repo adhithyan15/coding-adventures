@@ -945,10 +945,17 @@ fn emit_project_shell(
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
             if let Some(proj) = r.project {
-                let flat: [(&str, &str); 2] = [
-                    ("pubspec.yaml", &proj.pubspec_yaml),
-                    ("README.md", &proj.readme),
-                ];
+                let pubspec =
+                    mosaic_app_bindings::flutter_pubspec_with_runtime_binding(&proj.pubspec_yaml);
+                let readme = format!(
+                    "{}\n## Rust application runtime\n\nThis project includes Mosaic's standard Dart FFI binding. Set \
+                     `MOSAIC_APP_LIBRARY` to the Rust application library path, or package \
+                     the conventional `mosaic_app` library for the target platform. The \
+                     generated host owns the application handle, event sequence, snapshots, \
+                     returned buffers, and teardown.\n",
+                    proj.readme
+                );
+                let flat: [(&str, &str); 2] = [("pubspec.yaml", &pubspec), ("README.md", &readme)];
                 for (rel, body) in flat {
                     let p = backend_dir.join(rel);
                     write_file(&p, body.as_bytes())?;
@@ -969,12 +976,13 @@ fn emit_project_shell(
                 let component_copy = backend_dir.join(format!("lib/{component}.dart"));
                 write_file(&component_copy, component_source.as_bytes())?;
                 written.push(component_copy);
-                let host_stub = backend_dir.join("lib/mosaic_host.dart");
-                if let Some(parent) = host_stub.parent() {
+                let host = backend_dir.join("lib/mosaic_host.dart");
+                if let Some(parent) = host.parent() {
                     create_dir_all(parent)?;
                 }
-                write_file(&host_stub, proj.mosaic_host_dart.as_bytes())?;
-                written.push(host_stub);
+                let runtime_binding = mosaic_app_bindings::flutter_runtime_binding();
+                write_file(&host, runtime_binding.as_bytes())?;
+                written.push(host);
             }
         }
         Backend::Compose => {
@@ -4561,7 +4569,7 @@ version = "1"
     }
 
     #[test]
-    fn flutter_project_shell_exposes_mosaic_host_hook() {
+    fn flutter_project_shell_installs_standard_rust_runtime_binding() {
         let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
         let out = TempDir::new().unwrap();
         build_package(&BuildOptions {
@@ -4585,8 +4593,17 @@ version = "1"
 
         let host = fs::read_to_string(dir.join("lib/mosaic_host.dart")).expect("mosaic_host.dart");
         assert!(host.contains("class MosaicHost"));
-        assert!(host.contains("static MosaicHost? load() => null;"));
+        assert!(host.contains("DynamicLibrary.open"));
+        assert!(host.contains("mosaic_app_create"));
+        assert!(host.contains("mosaic_app_dispatch"));
+        assert!(host.contains("_bufferFree(buffer)"));
+        assert!(host.contains("_destroy(_app)"));
         assert!(host.contains("FutureOr<Map<String, Object?>?> handleEvent"));
+        let pubspec = fs::read_to_string(dir.join("pubspec.yaml")).expect("pubspec.yaml");
+        assert!(pubspec.contains("ffi: '>=2.1.0 <3.0.0'"));
+        let readme = fs::read_to_string(dir.join("README.md")).expect("README.md");
+        assert!(readme.contains("MOSAIC_APP_LIBRARY"));
+        assert!(readme.contains("owns the application handle"));
     }
 
     #[test]

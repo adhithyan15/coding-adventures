@@ -52,6 +52,10 @@ XAML project shells install a standard .NET host that uses built-in native
 loading and JSON APIs. The generated window prefers that runtime when its DLL is
 available, then retains the app-owned reflection host only as a permissive
 compatibility fallback.
+Flutter project shells replace the no-op host stub with the standard Dart FFI
+runtime while preserving `MosaicApp(mosaicHost: ...)` injection. Set
+`MOSAIC_APP_LIBRARY` to the Rust application library, or package it under the
+target platform's conventional `mosaic_app` name.
 
 Packages may declare optional `[host_assets]` file copies in
 `mosaic-package.toml`. Matching backend assets are copied from package-relative
