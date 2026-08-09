@@ -359,6 +359,9 @@ struct Compiler {
     suspended_by_name: HashSet<String>,
     /// Monotonic suffix for specialised sibling IIR function names.
     by_name_specialization_counter: usize,
+    /// Monotonic suffix for generated lexical aliases used while a name actual
+    /// is forwarded through another specialised sibling.
+    by_name_capture_counter: usize,
     /// Source procedures currently being specialised. A recursive name call
     /// needs an environment-aware thunk ABI rather than another direct sibling.
     compiling_by_name_procedures: HashSet<String>,
@@ -405,6 +408,7 @@ impl Default for Compiler {
             by_name_bindings: HashMap::new(),
             suspended_by_name: HashSet::new(),
             by_name_specialization_counter: 0,
+            by_name_capture_counter: 0,
             compiling_by_name_procedures: HashSet::new(),
             switches: HashMap::new(),
             resolving_switches: HashSet::new(),
@@ -2012,11 +2016,11 @@ impl Compiler {
                         param.name
                     )));
                 };
-                self.promote_by_name_actual_dependencies(actual)?;
+                let actual = self.prepare_by_name_actual(actual)?;
                 bindings.insert(
                     param.name.clone(),
                     ByNameBinding {
-                        actual: (*actual).clone(),
+                        actual,
                         ty,
                     },
                 );
@@ -2042,29 +2046,82 @@ impl Compiler {
         result
     }
 
-    /// Make every caller binding named by a stored actual expression visible
-    /// from its specialised sibling function.  Existing E6 capture machinery
-    /// already gives globals the required typed load/store semantics; this
-    /// helper extends that treatment to direct-call dependencies.
-    fn promote_by_name_actual_dependencies(
+    /// Freeze one name actual in its caller's lexical environment before a
+    /// specialised sibling lowers it. A forwarded formal is first substituted
+    /// with its stored actual, then every concrete caller binding is published
+    /// through a generated global alias. The aliases avoid accidental capture
+    /// when the next callee uses the same source spelling for one of its locals
+    /// or formals.
+    fn prepare_by_name_actual(
         &mut self,
         actual: &GrammarASTNode,
-    ) -> Result<(), CompileError> {
+    ) -> Result<GrammarASTNode, CompileError> {
+        let mut forwarding = HashSet::new();
+        let mut actual = self.expand_forwarded_by_name_actual(actual, &mut forwarding)?;
         let mut names = HashSet::new();
-        collect_name_tokens_excluding_nested_procedures(actual, &mut names);
+        collect_name_tokens_excluding_nested_procedures(&actual, &mut names);
+        let mut aliases = HashMap::new();
         for name in names {
-            if self.by_name_bindings.contains_key(&name)
-                && !self.suspended_by_name.contains(&name)
-            {
-                return Err(CompileError::Unsupported(format!(
-                    "forwarding call-by-name formal {name:?} is not supported"
-                )));
-            }
             if let Ok(binding) = self.require_var(&name) {
                 self.promote_by_name_dependency(&name, binding)?;
+                let alias = self.capture_by_name_dependency(&name)?;
+                aliases.insert(name, alias);
             }
         }
-        Ok(())
+        rename_name_tokens(&mut actual, &aliases);
+        Ok(actual)
+    }
+
+    /// Replace a scalar name formal in a forwarding actual with the expression
+    /// captured at its direct caller. Every stored actual has already passed
+    /// through [`Self::prepare_by_name_actual`], so recursive expansion reaches
+    /// generated aliases rather than depending on a callee's lexical names.
+    fn expand_forwarded_by_name_actual(
+        &self,
+        actual: &GrammarASTNode,
+        forwarding: &mut HashSet<String>,
+    ) -> Result<GrammarASTNode, CompileError> {
+        if let Some(name) = bare_scalar_variable_name(actual) {
+            if let Some(binding) = self.active_by_name_binding(&name) {
+                if !forwarding.insert(name.clone()) {
+                    return Err(CompileError::Unsupported(format!(
+                        "cyclic forwarding of call-by-name formal {name:?}"
+                    )));
+                }
+                let expanded = self.expand_forwarded_by_name_actual(&binding.actual, forwarding);
+                forwarding.remove(&name);
+                return expanded;
+            }
+        }
+
+        let mut expanded = actual.clone();
+        for child in &mut expanded.children {
+            if let ASTNodeOrToken::Node(node) = child {
+                *node = self.expand_forwarded_by_name_actual(node, forwarding)?;
+            }
+        }
+        Ok(expanded)
+    }
+
+    /// Bind a compiler-generated source name to an already-promoted caller
+    /// global. The alias is inserted into the same lexical scope as the source
+    /// binding so `compile_procedure_with_bindings` carries it into the fresh
+    /// specialised sibling along with the other globals.
+    fn capture_by_name_dependency(&mut self, name: &str) -> Result<String, CompileError> {
+        let binding = self.require_var(name)?;
+        debug_assert!(binding.is_global);
+        let alias = format!("__algol_by_name_capture_{}", self.by_name_capture_counter);
+        self.by_name_capture_counter += 1;
+        let scope = self
+            .scopes
+            .iter_mut()
+            .rev()
+            .find(|scope| scope.contains_key(name))
+            .ok_or_else(|| CompileError::Malformed(format!(
+                "by-name dependency {name:?} disappeared from the active scope"
+            )))?;
+        scope.insert(alias.clone(), binding);
+        Ok(alias)
     }
 
     fn promote_by_name_dependency(
@@ -4850,6 +4907,36 @@ fn expr_variable_name(node: &GrammarASTNode) -> Option<String> {
     None
 }
 
+/// Return the name of a bare scalar variable node. Array elements are kept
+/// intact because their subscripts can contain independently forwarded scalar
+/// formals that need recursive substitution.
+fn bare_scalar_variable_name(node: &GrammarASTNode) -> Option<String> {
+    (node.rule_name == "variable" && array_subscripts(node).is_none())
+        .then(|| {
+            direct_tokens(node)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.clone())
+        })
+        .flatten()
+}
+
+/// Rewrite NAME tokens in a stored call-by-name actual to compiler-generated
+/// aliases that identify the caller's already-promoted global bindings.
+fn rename_name_tokens(node: &mut GrammarASTNode, aliases: &HashMap<String, String>) {
+    for child in &mut node.children {
+        match child {
+            ASTNodeOrToken::Token(token) if token.effective_type_name() == "NAME" => {
+                if let Some(alias) = aliases.get(&token.value) {
+                    token.value = alias.clone();
+                }
+            }
+            ASTNodeOrToken::Node(node) => rename_name_tokens(node, aliases),
+            ASTNodeOrToken::Token(_) => {}
+        }
+    }
+}
+
 /// Return the sole variable wrapped by an expression, retaining an optional
 /// subscript list so a call-by-name assignment can distinguish `x` from
 /// `a[i]`. Calls and compound expressions intentionally return `None`: they
@@ -7232,18 +7319,24 @@ mod tests {
     }
 
     #[test]
-    fn call_by_name_rejects_forwarding_and_recursion_without_a_thunk_abi() {
-        let forwarding = compile_source(
-            "begin integer result; \
-             integer procedure outer(x); integer x; \
-               begin integer procedure inner(y); integer y; inner := y; outer := inner(x) end; \
-             result := outer(1) end",
-            "call_by_name_forwarding",
-        )
-        .expect_err("forwarding a name formal requires an environment-aware thunk");
-        assert!(forwarding
-            .to_string()
-            .contains("forwarding call-by-name formal"));
+    fn call_by_name_forwards_scalar_actuals_through_nested_procedures() {
+        let src = "begin integer n, result; \
+                   integer procedure forward(x); integer x; \
+                     begin integer procedure consume(x); integer x; \
+                           consume := x * 2; \
+                           x := x + 1; forward := consume(x) end; \
+                   n := 20; result := forward(n) end";
+        assert_eq!(run_i64(src), 42);
+
+        let expression_src = "begin integer n, result; \
+                              integer procedure consume(y); integer y; consume := y * 2; \
+                              integer procedure forward(x); integer x; forward := consume(x + 1); \
+                              n := 20; result := forward(n) end";
+        assert_eq!(run_i64(expression_src), 42);
+    }
+
+    #[test]
+    fn call_by_name_rejects_recursion_without_a_thunk_abi() {
 
         let recursive = compile_source(
             "begin integer result; integer procedure loop(x); integer x; loop := loop(1); result := loop(1) end",
