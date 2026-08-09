@@ -1753,6 +1753,34 @@ def test_rejects_non_finite_bjt_forward_beta_temperature_exponent() -> None:
         parse_netlist(".model fast NPN(XTB=1e999)")
 
 
+@pytest.mark.parametrize("alias", ["BR", "BETA_R"])
+def test_parse_bjt_reverse_beta(alias: str) -> None:
+    parsed = parse_netlist(
+        f".model fast NPN({alias}=25)\nQ1 col base emit fast"
+    )
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.beta_r == 25.0
+
+
+def test_bjt_br_takes_precedence_over_beta_r() -> None:
+    parsed = parse_netlist(
+        ".model fast NPN(BETA_R=-1 BR=30)\nQ1 col base emit fast"
+    )
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.beta_r == 30.0
+
+
+@pytest.mark.parametrize("alias", ["BR", "BETA_R"])
+@pytest.mark.parametrize("value", ["0", "-1", "1e999"])
+def test_rejects_invalid_bjt_reverse_beta(alias: str, value: str) -> None:
+    with pytest.raises(NetlistParseError, match="BJT BR must be finite and positive"):
+        parse_netlist(f".model fast NPN({alias}={value})")
+
+
 def test_parse_jfet_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
