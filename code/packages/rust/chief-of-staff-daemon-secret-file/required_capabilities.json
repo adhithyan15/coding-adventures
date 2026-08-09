@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/chief-of-staff-daemon-secret-file",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "configured operator-owned secret paths",
+      "justification": "Loads bounded private material only after rejecting linked objects, foreign ownership, and broad access controls."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "libc openat/fstat and Windows file/token/security APIs",
+      "justification": "Uses handle-relative no-follow file operations and native ownership/access-control inspection unavailable through portable Rust filesystem APIs."
+    }
+  ],
+  "justification": "Reusable OS trust-boundary adapter for exact-length owner-only secret reads into zeroizing storage."
+}
