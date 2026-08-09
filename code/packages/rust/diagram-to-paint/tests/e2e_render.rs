@@ -9,7 +9,7 @@
 
 #[cfg(target_vendor = "apple")]
 mod apple {
-    use diagram_ir::{SequenceBlockKind, SequenceEvent};
+    use diagram_ir::{SequenceBlockKind, SequenceEvent, SequenceLink};
     use diagram_layout_chart::layout_chart_diagram;
     use diagram_layout_graph::layout_graph_diagram;
     use diagram_layout_sequence::layout_sequence_diagram;
@@ -365,6 +365,10 @@ mod apple {
         diagram.events.push(SequenceEvent::BlockEnd {
             kind: SequenceBlockKind::Rect,
         });
+        diagram.participants[0].links.push(SequenceLink {
+            label: "Dashboard".into(),
+            url: "https://example.com/dashboard".into(),
+        });
         let layout = layout_sequence_diagram(&diagram);
 
         let shaper = CoreTextShaper;
@@ -396,6 +400,14 @@ mod apple {
             instruction,
             paint_instructions::PaintInstruction::Path(path) if path.stroke_dash.is_some()
         )));
+        assert_eq!(
+            scene
+                .metadata
+                .as_ref()
+                .and_then(|metadata| metadata.get("sequence.participant.User.link.Dashboard"))
+                .map(String::as_str),
+            Some("https://example.com/dashboard")
+        );
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
             paint_instructions::PaintInstruction::Path(path)

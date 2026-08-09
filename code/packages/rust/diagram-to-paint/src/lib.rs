@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.12.0";
+pub const VERSION: &str = "0.13.0";
 
 use std::collections::HashMap;
 
@@ -1080,6 +1080,7 @@ where
     let mut instructions = Vec::new();
     let mut text_children = Vec::new();
     let mut central_markers = Vec::new();
+    let mut scene_metadata = HashMap::new();
     let label_font = options.label_font.clone();
     let text_color = Color {
         r: 30,
@@ -1424,14 +1425,22 @@ where
                 ));
             }
             LayoutedSequenceItem::ParticipantBox {
+                id,
                 label,
                 kind,
+                links,
                 x,
                 y,
                 width,
                 height,
                 ..
             } => {
+                for link in links {
+                    scene_metadata.insert(
+                        format!("sequence.participant.{id}.link.{}", link.label),
+                        link.url.clone(),
+                    );
+                }
                 let specialized = !matches!(
                     kind,
                     SequenceParticipantKind::Participant | SequenceParticipantKind::Actor
@@ -1545,7 +1554,7 @@ where
         background: format!("rgb({},{},{})", background.r, background.g, background.b),
         instructions,
         id: None,
-        metadata: None,
+        metadata: (!scene_metadata.is_empty()).then_some(scene_metadata),
     }
 }
 
@@ -2646,7 +2655,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.12.0");
+        assert_eq!(crate::VERSION, "0.13.0");
     }
 
     #[test]

@@ -38,7 +38,9 @@ and dotted message arrows, bidirectional/cross/point arrowheads, notes,
 activations, titles, automatic numbering, and nested control blocks with branch
 separators. Participant creation and destruction are lifecycle events consumed
 by layout. Participant `box` declarations preserve group labels, fills, and
-membership. Actor-menu links, properties, and details remain explicit compatibility gaps.
+membership. Singular and JSON-map actor-menu links survive as PaintScene
+metadata for interactive backends. Properties and details remain explicit
+compatibility gaps.
 All Mermaid 11.16.1 solid/dotted, normal/reverse filled and stick half-arrow
 forms preserve their line style, half orientation, and endpoint through Paint.
 Central connection markers before and/or after an arrow preserve source,

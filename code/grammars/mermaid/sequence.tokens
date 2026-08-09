@@ -38,7 +38,10 @@ CENTRAL                  = "()"
 COLON                    = ":"
 COLOR                    = /rgba?\([^\)\r\n]*\)/
 CONFIG                   = /@\{[^\}\r\n]*\}/
+JSON_OBJECT              = /\{[^\}\r\n]*\}/
+URL                      = /https?:\/\/[^ \t\r\n]+/
 COMMA                    = ","
+AT                       = "@"
 PLUS                     = "+"
 MINUS                    = "-"
 NUMBER                   = /(?:[0-9]+(?:\.[0-9]{1,2})?|\.[0-9]{1,2})/
@@ -50,6 +53,8 @@ keywords:
   actor
   create
   destroy
+  link
+  links
   box
   as
   activate

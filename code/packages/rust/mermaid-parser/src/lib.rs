@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.12.0";
+pub const VERSION: &str = "0.13.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -448,7 +448,7 @@ use diagram_ir::{
     Axis, AxisKind, ChartDiagram, ChartKind, ChartOrientation, ChartSeries, Compartment,
     CompartmentKind, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType, GitDiagram,
     GitEvent, PieSlice, RelKind, SankeyFlow, SankeyNode, SequenceArrowhead, SequenceBlockKind,
-    SequenceCentralConnection, SequenceDiagram, SequenceEvent, SequenceLineStyle,
+    SequenceCentralConnection, SequenceDiagram, SequenceEvent, SequenceLineStyle, SequenceLink,
     SequenceNotePlacement, SequenceParticipant, SequenceParticipantGroup, SequenceParticipantKind,
     SeriesKind, StructuralDiagram, StructuralGroup, StructuralKind, StructuralNode,
     StructuralNodeKind, StructuralRelationship, TaskStart, TaskStatus, TemporalBody,
@@ -1081,6 +1081,7 @@ fn parse_sequence_body(
                 });
             }
             "note" => parse_sequence_note(cursor, diagram, participant_indices)?,
+            "link" | "links" => parse_sequence_links(cursor, diagram, participant_indices)?,
             "title" => {
                 cursor.advance();
                 diagram.title = Some(take_sequence_line_text(cursor));
@@ -1122,6 +1123,48 @@ fn take_sequence_number(cursor: &mut TokenCursor) -> Result<Option<f64>, ParseEr
         ));
     }
     Ok(Some(value))
+}
+
+fn parse_sequence_links(
+    cursor: &mut TokenCursor,
+    diagram: &mut SequenceDiagram,
+    participant_indices: &mut HashMap<String, usize>,
+) -> Result<(), ParseError> {
+    let plural = cursor.advance().value == "links";
+    let participant = take_sequence_identifier(cursor)?;
+    ensure_sequence_participant(diagram, participant_indices, &participant);
+    cursor
+        .consume_if("COLON")
+        .ok_or_else(|| token_error(cursor.current(), "expected ':' before actor links"))?;
+    let links = if plural {
+        let token = cursor.advance().clone();
+        if token_name(&token) != "JSON_OBJECT" {
+            return Err(token_error(&token, "expected a JSON object of actor links"));
+        }
+        serde_json::from_str::<HashMap<String, String>>(&token.value)
+            .map_err(|error| token_error(&token, format!("invalid actor links JSON: {error}")))?
+            .into_iter()
+            .map(|(label, url)| SequenceLink { label, url })
+            .collect()
+    } else {
+        let mut label = Vec::new();
+        while !cursor.at_eof() && token_name(cursor.current()) != "AT" {
+            label.push(cursor.advance().value.clone());
+        }
+        cursor
+            .consume_if("AT")
+            .ok_or_else(|| token_error(cursor.current(), "expected '@' before actor link URL"))?;
+        let url = cursor
+            .consume_if("URL")
+            .ok_or_else(|| token_error(cursor.current(), "expected an http(s) actor link URL"))?;
+        vec![SequenceLink {
+            label: label.join(" "),
+            url: url.value,
+        }]
+    };
+    let index = participant_indices[&participant];
+    diagram.participants[index].links.extend(links);
+    Ok(())
 }
 
 fn parse_sequence_participant(
@@ -1607,6 +1650,7 @@ fn upsert_sequence_participant(
         kind,
         style: None,
         group_id: None,
+        links: Vec::new(),
     });
 }
 
@@ -3113,6 +3157,21 @@ B//-A: reverse stick top
             .collect();
         assert_eq!(fills, vec!["rgba(0, 0, 255, .1)", "rgb(200, 150, 255)"]);
     }
+
+    #[test]
+    fn sequence_parses_simple_and_json_actor_links() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nparticipant Alice\nlink Alice: Health Dashboard @ https://example.com/health\nlinks Alice: {\"Wiki\": \"https://example.com/wiki\", \"Repo\": \"https://example.com/repo\"}\n",
+        )
+        .unwrap();
+        let alice = &diagram.participants[0];
+        assert_eq!(alice.links.len(), 3);
+        assert!(alice.links.iter().any(
+            |link| link.label == "Health Dashboard" && link.url == "https://example.com/health"
+        ));
+        assert!(alice.links.iter().any(|link| link.label == "Wiki"));
+        assert!(alice.links.iter().any(|link| link.label == "Repo"));
+    }
 }
 #[cfg(test)]
 mod tests {
@@ -3129,7 +3188,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.12.0");
+        assert_eq!(crate::VERSION, "0.13.0");
     }
 
     #[test]

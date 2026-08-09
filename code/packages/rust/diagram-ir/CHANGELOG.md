@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.13.0
+
+- Added labeled sequence participant links to semantic and layout IR.
+
 ## 0.12.0
 
 - Added optional sequence block fills for background highlights.

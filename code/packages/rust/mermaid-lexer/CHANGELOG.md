@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.12.0
+
+- Tokenize sequence actor-link URLs and JSON link maps.
+
 ## 0.11.0
 
 - Reuse functional color tokens for sequence `rect` highlights.

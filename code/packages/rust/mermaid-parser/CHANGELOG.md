@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.13.0
+
+- Parse singular and JSON-map sequence actor links into semantic IR.
+
 ## 0.12.0
 
 - Parse nested `rect` blocks with required `rgb` or `rgba` fills.

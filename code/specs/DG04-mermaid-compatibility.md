@@ -118,8 +118,9 @@ block events. Sequence layout resolves those events into nested frames and
 branch dividers before existing PaintInstructions render them. Participant
 `create` and `destroy` statements lower into lifecycle events; layout uses them
 to place dynamic participant headers, bound lifelines, and emit destruction
-markers. Actor-menu links, properties, and details
-remain compatibility work. Participant `box` declarations now lower into
+markers. Singular and JSON-map actor-menu links lower through semantic IR and
+layout into PaintScene metadata. Properties and details remain compatibility
+work. Participant `box` declarations now lower into
 semantic groups, lane-enclosing layout geometry, and backend-neutral Paint
 rectangles and labels, including the supported named and `rgb`/`rgba` color
 forms. The family remains partial until those forms and the
