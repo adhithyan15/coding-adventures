@@ -1993,6 +1993,24 @@ Q1 col base emit fast
     );
   });
 
+  it.each([
+    ["0", 0.0],
+    ["600m", 0.6],
+  ])("parses BJT forward transit-time voltage VTF=%s", (value, expected) => {
+    const parsed = parseNetlist(`.model fast NPN(VTF=${value})\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      forwardTransitTimeVoltage: expected,
+    });
+  });
+
+  it.each(["-1m", "1e999"])("rejects invalid BJT VTF=%s", (value) => {
+    expect(() => parseNetlist(`.model fast NPN(VTF=${value})`)).toThrow(
+      "BJT VTF must be finite and non-negative",
+    );
+  });
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)
