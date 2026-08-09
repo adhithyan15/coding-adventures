@@ -130,7 +130,7 @@ and given the same citation.
 4. Where no ductus exists, do not invent lifts — keep the steps as part order and
    leave `penLifts` out.
 
-Tamil **அ**, **ஆ**, **இ**, **க**, **வ**, **ல**, **ற**, **ன**, and **ண** now join **ம** with authored ductus paths. The primer's
+Tamil **அ**, **ஆ**, **இ**, **க**, **வ**, **ல**, **ற**, **ன**, **ண**, and **ந** now join **ம** with authored ductus paths. The primer's
 Frame 4 shows four connected movements for their shared curl-and-loop body,
 followed by one lift and the separate right upright; ஆ then continues without
 another lift into its long-vowel loop. Frame 4's next row gives இ five joined
@@ -146,11 +146,13 @@ the below-baseline sweep and descender: five movements, three runs, and two
 lifts. Frame 13's first row joins ன's left spiral, single inner arch, and top
 bar as five movements, then lifts once before the separate right upright. Its
 next row keeps the analogous ண path joined through an extra inner arch and the
-top bar for six movements before the same one lift and separate upright. The
-remaining **218** prose part
-orders across ten scripts (`arabic` 21, `chinese` 24, `cyrillic` 33,
+top bar for six movements before the same one lift and separate upright. Frame
+12 gives ந three joined opening movements, one lift before its joined rising
+middle stem and top bar, then a second lift before the right-hand descent. The
+Tamil starter inventory is now fully verified. The remaining **217** prose part
+orders across nine scripts (`arabic` 21, `chinese` 24, `cyrillic` 33,
 `devanagari` 28, `gujarati` 33, `hebrew` 22, `japanese` 34,
-`perso-arabic` 9, `tamil` 1, `urdu-nastaliq` 13) are explicitly **unverified for
+`perso-arabic` 9, `urdu-nastaliq` 13) are explicitly **unverified for
 pen lifts**. The data validator rejects a lift count without a citation (or a
 citation without a count), and Language Ladder's ductus test proves every verified
 claim has the same cited, font-checked path. That closes `HL-C19`; future entries

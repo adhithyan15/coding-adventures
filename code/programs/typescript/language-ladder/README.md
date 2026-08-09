@@ -165,8 +165,9 @@ in font units, and `ductusview.ts` flips them together with exactly **one**
 `scale(1,-1)` group — so a mistake cannot leave a plausible-looking stroke
 sitting upside down on a correct letter.
 
-**Tamil அ, ஆ, இ, க, ம, வ, ல, ற, ன, and ண have authored pen paths today.** `DUCTUS` admits no letter
-without a citation for its stroke order, and hand-drawing a letter is forbidden
+**All eleven starter Tamil letters — அ, ஆ, இ, க, ம, வ, ல, ற, ன, ண, and ந —
+have authored pen paths today.** `DUCTUS` admits no letter without a citation
+for its stroke order, and hand-drawing a letter is forbidden
 outright (a subtly wrong Tamil ண looks perfect to exactly the audience that
 cannot yet read Tamil, so the error would ship *as the lesson*). அ and ஆ exercise
 real two-stroke paths with one lift; ஆ keeps its upright and long-vowel loop in
@@ -182,9 +183,13 @@ second lift precedes the right arch's joined sweep and descender. ன joins its
 left spiral, single inner arch, and top bar through five movements before one
 lift precedes its separate right upright. ண follows the same two-run pattern,
 keeping its extra inner arch joined to the rest of the body and top bar before
-the sole lift.
-Every other letter falls back to the numbered prose list, unchanged. Extending
-the coverage is HL-C09, and it needs a cited source per letter.
+the sole lift. ந uses three runs: its opening three movements stay joined, the
+middle rise joins the top bar after one lift, and a second lift precedes its
+right-hand descent and tail. Frame 12's looped handwritten form differs from
+Noto's straighter typographic form, so the source records that adaptation while
+the mechanical gates keep every authored point on the actual font. Every other
+script still falls back to the numbered prose list, unchanged. Extending the
+coverage is HL-C09, and it needs a cited source per letter.
 
 ## Where it fits
 
