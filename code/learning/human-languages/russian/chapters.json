@@ -1,8 +1,27 @@
 {
   "version": 1,
   "language": "russian",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Only chapter 2 is authorable today. Chapter 1 is entirely schema-v1 (no introduces/practises knowledge atoms), so it has no assessable payoff to point at and is deliberately absent rather than stubbed — its absence is real, measurable debt. Chapter 2 has no core/book-generation.json target either; its title and label are taken from russian/book/chapters/ch02-introducing-yourself.tex, the only other place they are written down. The payoff points at RU-C02-practice, the chapter's consolidation lesson, which HL-C32 migrated to schema v2 for exactly this reason; before that migration the only schema-v2 candidate was the cross-language etymology lesson RU-C02-kak-cross-language, whose three atoms gave a representativeness of 0.20 against a 0.50 floor. Chapters 4 and 5 (HL-C44) are authorable from the start: both are schema-v2 throughout and each closes on a payoff that assesses every atom its own chapter introduced. Chapter 3 is still absent for a different reason from chapter 1 — it is schema v2, but it has no consolidation lesson, so the only candidate payoff (RU-C03-idti) covers 5 of the chapter's 19 atoms, a representativeness of 0.26 against the 0.50 floor. Its ledger entry is withheld rather than written to fail, and it now shows up as a book chapter without an HL05 capability, which is the honest shape of that debt.",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Every declared book chapter now has an authored capability. Legacy schema-v1 entries anchor their payoff to real canonical lesson content but intentionally keep assesses empty until typed knowledge atoms exist, preserving measurable debt without inventing atoms. Chapter generation status remains independently controlled by core/book-generation.json.",
   "chapters": [
+    {
+      "chapter": 1,
+      "title": "Greetings and courtesy",
+      "label": "ch:russian-greetings",
+      "canDo": "I can greet someone in Russian, respond courteously, and close the exchange naturally.",
+      "spineNodes": [
+        "SPINE-MEET-GREET",
+        "SPINE-COURTESY-THANK",
+        "SPINE-POLITE-REQUEST-REPAIR",
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "RU-C01-practice",
+        "kind": "task",
+        "summary": "Complete RU-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in Russian, respond courteously, and close the exchange naturally.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
     {
       "chapter": 2,
       "title": "Introducing yourself",

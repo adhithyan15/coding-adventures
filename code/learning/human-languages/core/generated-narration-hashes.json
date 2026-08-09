@@ -27,8 +27,8 @@
       "drivablePrefix": 0,
       "text": "arabic/narration/ch01.txt",
       "json": "arabic/narration/ch01.json",
-      "textHash": "fnv1a64:37835c10448c2a89",
-      "jsonHash": "fnv1a64:cb3b1950ed04bfa5"
+      "textHash": "fnv1a64:1229c7fcf26749db",
+      "jsonHash": "fnv1a64:3d151ecd6de5dccf"
     },
     {
       "language": "arabic",
@@ -52,8 +52,8 @@
       "drivablePrefix": 0,
       "text": "arabic/narration/ch02.txt",
       "json": "arabic/narration/ch02.json",
-      "textHash": "fnv1a64:eee465a78e2aa46e",
-      "jsonHash": "fnv1a64:0710899da140f119"
+      "textHash": "fnv1a64:bc53263f2913748e",
+      "jsonHash": "fnv1a64:e20d10d131cd4921"
     },
     {
       "language": "arabic",
@@ -587,8 +587,8 @@
       "drivablePrefix": 0,
       "text": "bengali/narration/ch01.txt",
       "json": "bengali/narration/ch01.json",
-      "textHash": "fnv1a64:b143d3c7b94c3829",
-      "jsonHash": "fnv1a64:e71005bba0a07e06"
+      "textHash": "fnv1a64:9aa5edafb30d9023",
+      "jsonHash": "fnv1a64:aaf07ba1e4f957f0"
     },
     {
       "language": "bengali",
@@ -608,8 +608,8 @@
       "drivablePrefix": 0,
       "text": "bengali/narration/ch02.txt",
       "json": "bengali/narration/ch02.json",
-      "textHash": "fnv1a64:2167b6feaadbd20d",
-      "jsonHash": "fnv1a64:f9a1c8e1930a908b"
+      "textHash": "fnv1a64:47013f15d37ee7ad",
+      "jsonHash": "fnv1a64:bafad7bfd0865b6b"
     },
     {
       "language": "bengali",
@@ -627,8 +627,8 @@
       "drivablePrefix": 0,
       "text": "bengali/narration/ch03.txt",
       "json": "bengali/narration/ch03.json",
-      "textHash": "fnv1a64:1c9e27f3a7145dc4",
-      "jsonHash": "fnv1a64:4e3b7141ca534b73"
+      "textHash": "fnv1a64:22cdfc2bfe05ea3a",
+      "jsonHash": "fnv1a64:a5dd43bdbc01ecd1"
     },
     {
       "language": "bengali",
@@ -645,8 +645,8 @@
       "drivablePrefix": 0,
       "text": "bengali/narration/ch04.txt",
       "json": "bengali/narration/ch04.json",
-      "textHash": "fnv1a64:820011f601dcb4a5",
-      "jsonHash": "fnv1a64:1b719b7c55665791"
+      "textHash": "fnv1a64:894c1e0cd24a4cb9",
+      "jsonHash": "fnv1a64:0fc4eb4732eafb4d"
     },
     {
       "language": "bengali",
@@ -663,8 +663,8 @@
       "drivablePrefix": 0,
       "text": "bengali/narration/ch05.txt",
       "json": "bengali/narration/ch05.json",
-      "textHash": "fnv1a64:6c63213edab024f5",
-      "jsonHash": "fnv1a64:4bf4c1e5b386d26c"
+      "textHash": "fnv1a64:385884742aefda7e",
+      "jsonHash": "fnv1a64:ca63ba0db928462f"
     },
     {
       "language": "bengali",
@@ -825,8 +825,8 @@
       "drivablePrefix": 7,
       "text": "french/narration/ch01.txt",
       "json": "french/narration/ch01.json",
-      "textHash": "fnv1a64:383e4b458a3c4195",
-      "jsonHash": "fnv1a64:2113a092fa9d46d9"
+      "textHash": "fnv1a64:7634ef9e32d05a0f",
+      "jsonHash": "fnv1a64:d220ace98be4c407"
     },
     {
       "language": "french",
@@ -847,8 +847,8 @@
       "drivablePrefix": 4,
       "text": "french/narration/ch02.txt",
       "json": "french/narration/ch02.json",
-      "textHash": "fnv1a64:0f308a3eea52897c",
-      "jsonHash": "fnv1a64:4cc5e17ee7a0df52"
+      "textHash": "fnv1a64:ebe80ac9567ace54",
+      "jsonHash": "fnv1a64:3b242daf063ad4ba"
     },
     {
       "language": "french",
@@ -867,8 +867,8 @@
       "drivablePrefix": 0,
       "text": "french/narration/ch03.txt",
       "json": "french/narration/ch03.json",
-      "textHash": "fnv1a64:d9d1aac98698224d",
-      "jsonHash": "fnv1a64:fa6ddcbae07f11a0"
+      "textHash": "fnv1a64:b1786bfb7f1c1667",
+      "jsonHash": "fnv1a64:983995d8d295d216"
     },
     {
       "language": "french",
@@ -888,8 +888,8 @@
       "drivablePrefix": 5,
       "text": "french/narration/ch04.txt",
       "json": "french/narration/ch04.json",
-      "textHash": "fnv1a64:5617c3684584e134",
-      "jsonHash": "fnv1a64:2553dad4623b131d"
+      "textHash": "fnv1a64:b7aab45591b81e48",
+      "jsonHash": "fnv1a64:7a310938e7e933d1"
     },
     {
       "language": "french",
@@ -906,8 +906,8 @@
       "drivablePrefix": 2,
       "text": "french/narration/ch05.txt",
       "json": "french/narration/ch05.json",
-      "textHash": "fnv1a64:1593c8b35c764439",
-      "jsonHash": "fnv1a64:39a85f17fd2c0aee"
+      "textHash": "fnv1a64:51f91084fe1f94d4",
+      "jsonHash": "fnv1a64:70785937d63a9f35"
     },
     {
       "language": "french",
@@ -921,8 +921,8 @@
       "drivablePrefix": 0,
       "text": "french/narration/ch06.txt",
       "json": "french/narration/ch06.json",
-      "textHash": "fnv1a64:6c5bf2528e360745",
-      "jsonHash": "fnv1a64:e6d7526a9e0772ad"
+      "textHash": "fnv1a64:55dd85d4f40913cc",
+      "jsonHash": "fnv1a64:15073b5791b4c34c"
     },
     {
       "language": "french",
@@ -936,8 +936,8 @@
       "drivablePrefix": 0,
       "text": "french/narration/ch07.txt",
       "json": "french/narration/ch07.json",
-      "textHash": "fnv1a64:0a1a3535e52bf777",
-      "jsonHash": "fnv1a64:8edb914f0d19c1ea"
+      "textHash": "fnv1a64:9e5a5270e9d9b801",
+      "jsonHash": "fnv1a64:23a95c61dec4bb74"
     },
     {
       "language": "french",
@@ -951,8 +951,8 @@
       "drivablePrefix": 2,
       "text": "french/narration/ch08.txt",
       "json": "french/narration/ch08.json",
-      "textHash": "fnv1a64:127baf754f4b3465",
-      "jsonHash": "fnv1a64:a1577a6c4e864d00"
+      "textHash": "fnv1a64:abb25242190f022f",
+      "jsonHash": "fnv1a64:dd9552e5f9d0a93a"
     },
     {
       "language": "french",
@@ -966,8 +966,8 @@
       "drivablePrefix": 2,
       "text": "french/narration/ch09.txt",
       "json": "french/narration/ch09.json",
-      "textHash": "fnv1a64:ac2900787fbd9497",
-      "jsonHash": "fnv1a64:8eabc55ef7428bd9"
+      "textHash": "fnv1a64:554d3cc3486706e3",
+      "jsonHash": "fnv1a64:db7ee143271fd9ad"
     },
     {
       "language": "french",
@@ -981,8 +981,8 @@
       "drivablePrefix": 2,
       "text": "french/narration/ch10.txt",
       "json": "french/narration/ch10.json",
-      "textHash": "fnv1a64:e28168362c9b7f6f",
-      "jsonHash": "fnv1a64:8efd7be14a2448a1"
+      "textHash": "fnv1a64:6a36d292e653e74d",
+      "jsonHash": "fnv1a64:c464c1297a575673"
     },
     {
       "language": "french",
@@ -996,8 +996,8 @@
       "drivablePrefix": 2,
       "text": "french/narration/ch11.txt",
       "json": "french/narration/ch11.json",
-      "textHash": "fnv1a64:356706b756fa20c4",
-      "jsonHash": "fnv1a64:2a35f000d3d262c4"
+      "textHash": "fnv1a64:77054f8bf6cbf8d7",
+      "jsonHash": "fnv1a64:a8a178e4429fa8bf"
     },
     {
       "language": "french",
@@ -1011,8 +1011,8 @@
       "drivablePrefix": 0,
       "text": "french/narration/ch12.txt",
       "json": "french/narration/ch12.json",
-      "textHash": "fnv1a64:a4014bb80df089de",
-      "jsonHash": "fnv1a64:1a141b462d7567e0"
+      "textHash": "fnv1a64:ba25cd8c811e667f",
+      "jsonHash": "fnv1a64:5d780500d40b39d7"
     },
     {
       "language": "french",
@@ -1026,8 +1026,8 @@
       "drivablePrefix": 2,
       "text": "french/narration/ch13.txt",
       "json": "french/narration/ch13.json",
-      "textHash": "fnv1a64:f9e04908d1da7de2",
-      "jsonHash": "fnv1a64:40259c96b3ea7659"
+      "textHash": "fnv1a64:d1689b83301e3678",
+      "jsonHash": "fnv1a64:dd810a1420bacae7"
     },
     {
       "language": "french",
@@ -1041,8 +1041,8 @@
       "drivablePrefix": 1,
       "text": "french/narration/ch14.txt",
       "json": "french/narration/ch14.json",
-      "textHash": "fnv1a64:c9ff51f24ddbbef0",
-      "jsonHash": "fnv1a64:44af7bbdb01e0f60"
+      "textHash": "fnv1a64:5f21133dbb676f2a",
+      "jsonHash": "fnv1a64:1eb920adfa33ad72"
     },
     {
       "language": "french",
@@ -1056,8 +1056,8 @@
       "drivablePrefix": 2,
       "text": "french/narration/ch15.txt",
       "json": "french/narration/ch15.json",
-      "textHash": "fnv1a64:ec15a0f126814c51",
-      "jsonHash": "fnv1a64:9d81fc2aeed0a1f9"
+      "textHash": "fnv1a64:d4e5a0c4a5a468ee",
+      "jsonHash": "fnv1a64:65cb84df7dc43392"
     },
     {
       "language": "french",
@@ -1073,8 +1073,8 @@
       "drivablePrefix": 4,
       "text": "french/narration/ch16.txt",
       "json": "french/narration/ch16.json",
-      "textHash": "fnv1a64:71ce25815506d603",
-      "jsonHash": "fnv1a64:4be9f083d6aa429c"
+      "textHash": "fnv1a64:13b47fb3a41c58d7",
+      "jsonHash": "fnv1a64:f2b3f1b830e60f90"
     },
     {
       "language": "french",
@@ -1334,8 +1334,8 @@
       "drivablePrefix": 6,
       "text": "german/narration/ch01.txt",
       "json": "german/narration/ch01.json",
-      "textHash": "fnv1a64:392afbb0702f9ce7",
-      "jsonHash": "fnv1a64:3372d1eac3989093"
+      "textHash": "fnv1a64:5589d3f2cb04026d",
+      "jsonHash": "fnv1a64:a63f0611061a6369"
     },
     {
       "language": "german",
@@ -1355,8 +1355,8 @@
       "drivablePrefix": 8,
       "text": "german/narration/ch02.txt",
       "json": "german/narration/ch02.json",
-      "textHash": "fnv1a64:701c88484ef7b167",
-      "jsonHash": "fnv1a64:35cbc9fe49464b39"
+      "textHash": "fnv1a64:eed5280ec22719df",
+      "jsonHash": "fnv1a64:fcbeb1aab28b1359"
     },
     {
       "language": "german",
@@ -1376,8 +1376,8 @@
       "drivablePrefix": 8,
       "text": "german/narration/ch03.txt",
       "json": "german/narration/ch03.json",
-      "textHash": "fnv1a64:a42137aea498ce7f",
-      "jsonHash": "fnv1a64:cf42b33ece08daa6"
+      "textHash": "fnv1a64:2830b5913f72a8fd",
+      "jsonHash": "fnv1a64:9a77cd803bcd5dd8"
     },
     {
       "language": "german",
@@ -1398,8 +1398,8 @@
       "drivablePrefix": 6,
       "text": "german/narration/ch04.txt",
       "json": "german/narration/ch04.json",
-      "textHash": "fnv1a64:a5c90daad58f70f0",
-      "jsonHash": "fnv1a64:7ca600e0e6e19fba"
+      "textHash": "fnv1a64:fb452c2cccc4b0fc",
+      "jsonHash": "fnv1a64:b37c5fbc2f515e7e"
     },
     {
       "language": "german",
@@ -1416,8 +1416,8 @@
       "drivablePrefix": 5,
       "text": "german/narration/ch05.txt",
       "json": "german/narration/ch05.json",
-      "textHash": "fnv1a64:ad10bc73a7f1fd68",
-      "jsonHash": "fnv1a64:6e97996fa3f9e4dc"
+      "textHash": "fnv1a64:90354236a83d9fbf",
+      "jsonHash": "fnv1a64:437388c6cf3dcdb7"
     },
     {
       "language": "german",
@@ -1431,8 +1431,8 @@
       "drivablePrefix": 0,
       "text": "german/narration/ch06.txt",
       "json": "german/narration/ch06.json",
-      "textHash": "fnv1a64:d4ccd11644ad0ed9",
-      "jsonHash": "fnv1a64:e7a2e18f342224fe"
+      "textHash": "fnv1a64:44ef522197d162f6",
+      "jsonHash": "fnv1a64:17abfdc8a93461f3"
     },
     {
       "language": "german",
@@ -1446,8 +1446,8 @@
       "drivablePrefix": 0,
       "text": "german/narration/ch07.txt",
       "json": "german/narration/ch07.json",
-      "textHash": "fnv1a64:6d1554ef08c046f8",
-      "jsonHash": "fnv1a64:6b727b56728d2e85"
+      "textHash": "fnv1a64:7c84327897fedd56",
+      "jsonHash": "fnv1a64:05da2007496f62ab"
     },
     {
       "language": "german",
@@ -1461,8 +1461,8 @@
       "drivablePrefix": 2,
       "text": "german/narration/ch08.txt",
       "json": "german/narration/ch08.json",
-      "textHash": "fnv1a64:5c3c63af96513668",
-      "jsonHash": "fnv1a64:ab97df8574f61566"
+      "textHash": "fnv1a64:0508806296a72456",
+      "jsonHash": "fnv1a64:d63c1b00d34e81e0"
     },
     {
       "language": "german",
@@ -1476,8 +1476,8 @@
       "drivablePrefix": 2,
       "text": "german/narration/ch09.txt",
       "json": "german/narration/ch09.json",
-      "textHash": "fnv1a64:c0520eddc0c2b771",
-      "jsonHash": "fnv1a64:53fe7b675ba9d5c0"
+      "textHash": "fnv1a64:790bd373f40b877d",
+      "jsonHash": "fnv1a64:a4b9351676778aec"
     },
     {
       "language": "german",
@@ -1491,8 +1491,8 @@
       "drivablePrefix": 2,
       "text": "german/narration/ch10.txt",
       "json": "german/narration/ch10.json",
-      "textHash": "fnv1a64:3b174dbfef11d81e",
-      "jsonHash": "fnv1a64:eb314e44a063fe2a"
+      "textHash": "fnv1a64:ad4198d51fe8049c",
+      "jsonHash": "fnv1a64:e8d1ebf2aae28e58"
     },
     {
       "language": "german",
@@ -1506,8 +1506,8 @@
       "drivablePrefix": 2,
       "text": "german/narration/ch11.txt",
       "json": "german/narration/ch11.json",
-      "textHash": "fnv1a64:a6956d8e2c207762",
-      "jsonHash": "fnv1a64:f3a324792de2853b"
+      "textHash": "fnv1a64:2f185347f13e9e41",
+      "jsonHash": "fnv1a64:a6fe5d5fd0726d9c"
     },
     {
       "language": "german",
@@ -1521,8 +1521,8 @@
       "drivablePrefix": 1,
       "text": "german/narration/ch12.txt",
       "json": "german/narration/ch12.json",
-      "textHash": "fnv1a64:3b1db63d11b7103c",
-      "jsonHash": "fnv1a64:f1ecf54ad60c51e4"
+      "textHash": "fnv1a64:ad93e46ef5dcda71",
+      "jsonHash": "fnv1a64:8e9c54f77c48993f"
     },
     {
       "language": "german",
@@ -1536,8 +1536,8 @@
       "drivablePrefix": 2,
       "text": "german/narration/ch13.txt",
       "json": "german/narration/ch13.json",
-      "textHash": "fnv1a64:52c4579e591d935a",
-      "jsonHash": "fnv1a64:02eae8c8d50a086f"
+      "textHash": "fnv1a64:13c3a91f666144ec",
+      "jsonHash": "fnv1a64:79191328a0916669"
     },
     {
       "language": "german",
@@ -1551,8 +1551,8 @@
       "drivablePrefix": 1,
       "text": "german/narration/ch14.txt",
       "json": "german/narration/ch14.json",
-      "textHash": "fnv1a64:c34f17faca0df62b",
-      "jsonHash": "fnv1a64:7a565d3d6288daea"
+      "textHash": "fnv1a64:d01cdf8101898e8d",
+      "jsonHash": "fnv1a64:b2e8b1500f401e4c"
     },
     {
       "language": "german",
@@ -1567,8 +1567,8 @@
       "drivablePrefix": 3,
       "text": "german/narration/ch15.txt",
       "json": "german/narration/ch15.json",
-      "textHash": "fnv1a64:6c1e0e841c6f4a75",
-      "jsonHash": "fnv1a64:0c1b00f0f7032ff2"
+      "textHash": "fnv1a64:64dd876a3ef08855",
+      "jsonHash": "fnv1a64:4ea969dc78a5a59e"
     },
     {
       "language": "german",
@@ -1583,8 +1583,8 @@
       "drivablePrefix": 2,
       "text": "german/narration/ch16.txt",
       "json": "german/narration/ch16.json",
-      "textHash": "fnv1a64:1b80ab6302fd25f7",
-      "jsonHash": "fnv1a64:0d4c53726c5d82e4"
+      "textHash": "fnv1a64:edefce3b7e316e23",
+      "jsonHash": "fnv1a64:283bd2ed7a6148e8"
     },
     {
       "language": "german",
@@ -1837,8 +1837,8 @@
       "drivablePrefix": 0,
       "text": "gujarati/narration/ch01.txt",
       "json": "gujarati/narration/ch01.json",
-      "textHash": "fnv1a64:0686ef65a8cb5ed7",
-      "jsonHash": "fnv1a64:c64fa78feceb63b4"
+      "textHash": "fnv1a64:11eeebe50b2b4871",
+      "jsonHash": "fnv1a64:3b084a58ef790bae"
     },
     {
       "language": "gujarati",
@@ -1859,8 +1859,8 @@
       "drivablePrefix": 0,
       "text": "gujarati/narration/ch02.txt",
       "json": "gujarati/narration/ch02.json",
-      "textHash": "fnv1a64:7e44531359f0154f",
-      "jsonHash": "fnv1a64:5e97674043dc6a4b"
+      "textHash": "fnv1a64:d26a9d8a6bfb2ca1",
+      "jsonHash": "fnv1a64:63e667473fe07be1"
     },
     {
       "language": "gujarati",
@@ -1878,8 +1878,8 @@
       "drivablePrefix": 0,
       "text": "gujarati/narration/ch03.txt",
       "json": "gujarati/narration/ch03.json",
-      "textHash": "fnv1a64:f8d37af0dc391627",
-      "jsonHash": "fnv1a64:3665369c829b462e"
+      "textHash": "fnv1a64:8ed231e80843803b",
+      "jsonHash": "fnv1a64:4bbb9340a3330ba6"
     },
     {
       "language": "gujarati",
@@ -1896,8 +1896,8 @@
       "drivablePrefix": 0,
       "text": "gujarati/narration/ch04.txt",
       "json": "gujarati/narration/ch04.json",
-      "textHash": "fnv1a64:e9eaa5d1fbca8eb2",
-      "jsonHash": "fnv1a64:b4c1a5c208550fff"
+      "textHash": "fnv1a64:86d513f5209fb31e",
+      "jsonHash": "fnv1a64:20345aac0ac86963"
     },
     {
       "language": "gujarati",
@@ -1914,8 +1914,8 @@
       "drivablePrefix": 0,
       "text": "gujarati/narration/ch05.txt",
       "json": "gujarati/narration/ch05.json",
-      "textHash": "fnv1a64:cc87d04fdb1f32f0",
-      "jsonHash": "fnv1a64:b0592938137ca239"
+      "textHash": "fnv1a64:a13e2b30c7c79bc9",
+      "jsonHash": "fnv1a64:c5e89c796ee37c62"
     },
     {
       "language": "gujarati",
@@ -2105,8 +2105,8 @@
       "drivablePrefix": 0,
       "text": "hindi/narration/ch03.txt",
       "json": "hindi/narration/ch03.json",
-      "textHash": "fnv1a64:803330c192a25015",
-      "jsonHash": "fnv1a64:4bd43ac154c6f105"
+      "textHash": "fnv1a64:71ca3e6d4fb54a87",
+      "jsonHash": "fnv1a64:42ea86775f79643f"
     },
     {
       "language": "hindi",
@@ -2124,8 +2124,8 @@
       "drivablePrefix": 0,
       "text": "hindi/narration/ch04.txt",
       "json": "hindi/narration/ch04.json",
-      "textHash": "fnv1a64:b0ecb8645ea480c2",
-      "jsonHash": "fnv1a64:6ebb1c7e35e21b1e"
+      "textHash": "fnv1a64:56c36706455460f6",
+      "jsonHash": "fnv1a64:f82d5971a6ea56a2"
     },
     {
       "language": "hindi",
@@ -2143,8 +2143,8 @@
       "drivablePrefix": 0,
       "text": "hindi/narration/ch05.txt",
       "json": "hindi/narration/ch05.json",
-      "textHash": "fnv1a64:c2eb01af7a2b59a0",
-      "jsonHash": "fnv1a64:ce7962c9228078a9"
+      "textHash": "fnv1a64:5e7eda22c5fd612b",
+      "jsonHash": "fnv1a64:5201643b92776ea4"
     },
     {
       "language": "hindi",
@@ -2671,8 +2671,8 @@
       "drivablePrefix": 6,
       "text": "italian/narration/ch01.txt",
       "json": "italian/narration/ch01.json",
-      "textHash": "fnv1a64:90492dfb57bbfe30",
-      "jsonHash": "fnv1a64:78caf0610e2a4c64"
+      "textHash": "fnv1a64:24a5f6350baebaf6",
+      "jsonHash": "fnv1a64:b943cd38ac54e50e"
     },
     {
       "language": "italian",
@@ -3102,8 +3102,8 @@
       "drivablePrefix": 0,
       "text": "kannada/narration/ch01.txt",
       "json": "kannada/narration/ch01.json",
-      "textHash": "fnv1a64:684d0316f036aa55",
-      "jsonHash": "fnv1a64:cd3608bba7deaf90"
+      "textHash": "fnv1a64:a1d053c33720e8bf",
+      "jsonHash": "fnv1a64:98c2fb0364247702"
     },
     {
       "language": "kannada",
@@ -3123,8 +3123,8 @@
       "drivablePrefix": 0,
       "text": "kannada/narration/ch02.txt",
       "json": "kannada/narration/ch02.json",
-      "textHash": "fnv1a64:7a269a9597177b7b",
-      "jsonHash": "fnv1a64:ceb9a56ef9b33c90"
+      "textHash": "fnv1a64:6da1898ea821443b",
+      "jsonHash": "fnv1a64:1b247366d2f9b730"
     },
     {
       "language": "kannada",
@@ -3142,8 +3142,8 @@
       "drivablePrefix": 0,
       "text": "kannada/narration/ch03.txt",
       "json": "kannada/narration/ch03.json",
-      "textHash": "fnv1a64:5325f64d955b958e",
-      "jsonHash": "fnv1a64:c51c8e63e746d68a"
+      "textHash": "fnv1a64:6fd66d6af67847b4",
+      "jsonHash": "fnv1a64:3cc6696307a08708"
     },
     {
       "language": "kannada",
@@ -3160,8 +3160,8 @@
       "drivablePrefix": 0,
       "text": "kannada/narration/ch04.txt",
       "json": "kannada/narration/ch04.json",
-      "textHash": "fnv1a64:ecfeb15eabc11fea",
-      "jsonHash": "fnv1a64:ea56172059a2e047"
+      "textHash": "fnv1a64:ae24b81ba9e035b6",
+      "jsonHash": "fnv1a64:ae4b14f3dc6a587b"
     },
     {
       "language": "kannada",
@@ -3178,8 +3178,8 @@
       "drivablePrefix": 0,
       "text": "kannada/narration/ch05.txt",
       "json": "kannada/narration/ch05.json",
-      "textHash": "fnv1a64:31c113e0e09b6d34",
-      "jsonHash": "fnv1a64:74346b3f73558e04"
+      "textHash": "fnv1a64:da255a4908bf4f59",
+      "jsonHash": "fnv1a64:91a40e98bb2ebe91"
     },
     {
       "language": "kannada",
@@ -4357,8 +4357,8 @@
       "drivablePrefix": 0,
       "text": "malayalam/narration/ch01.txt",
       "json": "malayalam/narration/ch01.json",
-      "textHash": "fnv1a64:5dbfca2ca18343e9",
-      "jsonHash": "fnv1a64:79eb1cbac161ec25"
+      "textHash": "fnv1a64:a643b6d92f12030f",
+      "jsonHash": "fnv1a64:b536392e530ab05f"
     },
     {
       "language": "malayalam",
@@ -4379,8 +4379,8 @@
       "drivablePrefix": 0,
       "text": "malayalam/narration/ch02.txt",
       "json": "malayalam/narration/ch02.json",
-      "textHash": "fnv1a64:a763fd2681c81ae2",
-      "jsonHash": "fnv1a64:b7b021556ead3fda"
+      "textHash": "fnv1a64:5659c1b5e9d6f374",
+      "jsonHash": "fnv1a64:4d1633db14f461f8"
     },
     {
       "language": "malayalam",
@@ -4398,8 +4398,8 @@
       "drivablePrefix": 0,
       "text": "malayalam/narration/ch03.txt",
       "json": "malayalam/narration/ch03.json",
-      "textHash": "fnv1a64:21bfdb993efccf41",
-      "jsonHash": "fnv1a64:7406581d718632e9"
+      "textHash": "fnv1a64:173afc8b9620ad19",
+      "jsonHash": "fnv1a64:e122ae9f5b683e95"
     },
     {
       "language": "malayalam",
@@ -4416,8 +4416,8 @@
       "drivablePrefix": 0,
       "text": "malayalam/narration/ch04.txt",
       "json": "malayalam/narration/ch04.json",
-      "textHash": "fnv1a64:72dd8f6f768ab094",
-      "jsonHash": "fnv1a64:1c024b5b6534e475"
+      "textHash": "fnv1a64:897d0ba59fc97e10",
+      "jsonHash": "fnv1a64:e08fb026a3d046d1"
     },
     {
       "language": "malayalam",
@@ -4434,8 +4434,8 @@
       "drivablePrefix": 0,
       "text": "malayalam/narration/ch05.txt",
       "json": "malayalam/narration/ch05.json",
-      "textHash": "fnv1a64:b5872e69e79d7819",
-      "jsonHash": "fnv1a64:1fd09d83af2da8ac"
+      "textHash": "fnv1a64:cd37929eeb9cdaae",
+      "jsonHash": "fnv1a64:10fe5762387e0afb"
     },
     {
       "language": "malayalam",
@@ -4878,8 +4878,8 @@
       "drivablePrefix": 0,
       "text": "marathi/narration/ch01.txt",
       "json": "marathi/narration/ch01.json",
-      "textHash": "fnv1a64:49f0cb079d15c5b1",
-      "jsonHash": "fnv1a64:70ba4fd397e7104b"
+      "textHash": "fnv1a64:9476e91360aac283",
+      "jsonHash": "fnv1a64:da1cf780ed95e451"
     },
     {
       "language": "marathi",
@@ -4900,8 +4900,8 @@
       "drivablePrefix": 0,
       "text": "marathi/narration/ch02.txt",
       "json": "marathi/narration/ch02.json",
-      "textHash": "fnv1a64:997f52a3ec21ea1e",
-      "jsonHash": "fnv1a64:f3c421e9870c7e9d"
+      "textHash": "fnv1a64:08018d4e9bd10e1e",
+      "jsonHash": "fnv1a64:25cc1db27e3617dd"
     },
     {
       "language": "marathi",
@@ -4919,8 +4919,8 @@
       "drivablePrefix": 1,
       "text": "marathi/narration/ch03.txt",
       "json": "marathi/narration/ch03.json",
-      "textHash": "fnv1a64:b3924db40016bddf",
-      "jsonHash": "fnv1a64:dd3baa3f168ccbab"
+      "textHash": "fnv1a64:cbc91fa67dbc5d81",
+      "jsonHash": "fnv1a64:126295a7b9159325"
     },
     {
       "language": "marathi",
@@ -4938,8 +4938,8 @@
       "drivablePrefix": 0,
       "text": "marathi/narration/ch04.txt",
       "json": "marathi/narration/ch04.json",
-      "textHash": "fnv1a64:aa70c216d026b9c3",
-      "jsonHash": "fnv1a64:9039a6a2b6096a25"
+      "textHash": "fnv1a64:243a6bf3be8eb0df",
+      "jsonHash": "fnv1a64:7330b409ed42ae39"
     },
     {
       "language": "marathi",
@@ -4956,8 +4956,8 @@
       "drivablePrefix": 0,
       "text": "marathi/narration/ch05.txt",
       "json": "marathi/narration/ch05.json",
-      "textHash": "fnv1a64:02fa10401fbe1fbb",
-      "jsonHash": "fnv1a64:7f0704071b792bb0"
+      "textHash": "fnv1a64:a0c31a7d46cfe4b0",
+      "jsonHash": "fnv1a64:80b8a75cfe0cd05f"
     },
     {
       "language": "marathi",
@@ -5106,8 +5106,8 @@
       "drivablePrefix": 4,
       "text": "persian/narration/ch01.txt",
       "json": "persian/narration/ch01.json",
-      "textHash": "fnv1a64:e0d6d4d4adb7a6ed",
-      "jsonHash": "fnv1a64:fc201b83cde92eb7"
+      "textHash": "fnv1a64:2ab896ea64610c90",
+      "jsonHash": "fnv1a64:f9b79a6243393058"
     },
     {
       "language": "persian",
@@ -5248,8 +5248,8 @@
       "drivablePrefix": 3,
       "text": "portuguese/narration/ch01.txt",
       "json": "portuguese/narration/ch01.json",
-      "textHash": "fnv1a64:9ad4e1111e02e003",
-      "jsonHash": "fnv1a64:111b501f138054fd"
+      "textHash": "fnv1a64:652565ec968b9a75",
+      "jsonHash": "fnv1a64:8d2ea3bbf1df7637"
     },
     {
       "language": "portuguese",
@@ -5679,8 +5679,8 @@
       "drivablePrefix": 0,
       "text": "punjabi/narration/ch01.txt",
       "json": "punjabi/narration/ch01.json",
-      "textHash": "fnv1a64:ca04bdb476231635",
-      "jsonHash": "fnv1a64:06bec4dc9f7d757a"
+      "textHash": "fnv1a64:94e5319d5b71b1c7",
+      "jsonHash": "fnv1a64:282ee8756e122f80"
     },
     {
       "language": "punjabi",
@@ -5701,8 +5701,8 @@
       "drivablePrefix": 0,
       "text": "punjabi/narration/ch02.txt",
       "json": "punjabi/narration/ch02.json",
-      "textHash": "fnv1a64:9ca222c6683223de",
-      "jsonHash": "fnv1a64:775483b872a02354"
+      "textHash": "fnv1a64:6330cfc194f24614",
+      "jsonHash": "fnv1a64:46ed7ee2aebacc82"
     },
     {
       "language": "punjabi",
@@ -5720,8 +5720,8 @@
       "drivablePrefix": 0,
       "text": "punjabi/narration/ch03.txt",
       "json": "punjabi/narration/ch03.json",
-      "textHash": "fnv1a64:e7f2a6e1df2ff084",
-      "jsonHash": "fnv1a64:6d4f79d9202f6d79"
+      "textHash": "fnv1a64:ff9062c543f1735c",
+      "jsonHash": "fnv1a64:1320848cba23d07d"
     },
     {
       "language": "punjabi",
@@ -5738,8 +5738,8 @@
       "drivablePrefix": 0,
       "text": "punjabi/narration/ch04.txt",
       "json": "punjabi/narration/ch04.json",
-      "textHash": "fnv1a64:53d46cf108b37c8e",
-      "jsonHash": "fnv1a64:ddafe0e9978ca1ec"
+      "textHash": "fnv1a64:2bb728a28c79d9d2",
+      "jsonHash": "fnv1a64:0d522268748bd870"
     },
     {
       "language": "punjabi",
@@ -5756,8 +5756,8 @@
       "drivablePrefix": 0,
       "text": "punjabi/narration/ch05.txt",
       "json": "punjabi/narration/ch05.json",
-      "textHash": "fnv1a64:879875ffd9f259ce",
-      "jsonHash": "fnv1a64:00f7fb68488dd023"
+      "textHash": "fnv1a64:e53129825bed02cb",
+      "jsonHash": "fnv1a64:f68149eaf0637766"
     },
     {
       "language": "punjabi",
@@ -5915,8 +5915,8 @@
       "drivablePrefix": 0,
       "text": "russian/narration/ch01.txt",
       "json": "russian/narration/ch01.json",
-      "textHash": "fnv1a64:48b836859ea2b1c0",
-      "jsonHash": "fnv1a64:c186e34a4c1dcac4"
+      "textHash": "fnv1a64:4d22cd074e8b4cb3",
+      "jsonHash": "fnv1a64:1cae78d2bee09d23"
     },
     {
       "language": "russian",
@@ -6089,8 +6089,8 @@
       "drivablePrefix": 0,
       "text": "sanskrit/narration/ch01.txt",
       "json": "sanskrit/narration/ch01.json",
-      "textHash": "fnv1a64:2500e0daf1b1caf8",
-      "jsonHash": "fnv1a64:71da3568320a6e16"
+      "textHash": "fnv1a64:271709c733eb5d06",
+      "jsonHash": "fnv1a64:84e617a68c1e2c28"
     },
     {
       "language": "sanskrit",
@@ -6110,8 +6110,8 @@
       "drivablePrefix": 0,
       "text": "sanskrit/narration/ch02.txt",
       "json": "sanskrit/narration/ch02.json",
-      "textHash": "fnv1a64:e2a1835d5ba8f515",
-      "jsonHash": "fnv1a64:a10b16c718be4dfe"
+      "textHash": "fnv1a64:d880705182bceafb",
+      "jsonHash": "fnv1a64:e7cea384b797a2a8"
     },
     {
       "language": "sanskrit",
@@ -6129,8 +6129,8 @@
       "drivablePrefix": 0,
       "text": "sanskrit/narration/ch03.txt",
       "json": "sanskrit/narration/ch03.json",
-      "textHash": "fnv1a64:4da71758ebc41fd6",
-      "jsonHash": "fnv1a64:f8f50ab61a926054"
+      "textHash": "fnv1a64:c509a4aaae88753a",
+      "jsonHash": "fnv1a64:bdad0e51dcbec2cc"
     },
     {
       "language": "sanskrit",
@@ -6147,8 +6147,8 @@
       "drivablePrefix": 0,
       "text": "sanskrit/narration/ch04.txt",
       "json": "sanskrit/narration/ch04.json",
-      "textHash": "fnv1a64:cb447311705e58b3",
-      "jsonHash": "fnv1a64:cbaf16911820298c"
+      "textHash": "fnv1a64:7faef6222baf27cf",
+      "jsonHash": "fnv1a64:fbdd1d12c072a7c8"
     },
     {
       "language": "sanskrit",
@@ -6165,8 +6165,8 @@
       "drivablePrefix": 0,
       "text": "sanskrit/narration/ch05.txt",
       "json": "sanskrit/narration/ch05.json",
-      "textHash": "fnv1a64:fa29930d26e809d9",
-      "jsonHash": "fnv1a64:44ef6007c7bd840d"
+      "textHash": "fnv1a64:4e9663137ffcabfe",
+      "jsonHash": "fnv1a64:019be05334898ab6"
     },
     {
       "language": "sanskrit",
@@ -6452,8 +6452,8 @@
       "drivablePrefix": 1,
       "text": "spanish/narration/ch07.txt",
       "json": "spanish/narration/ch07.json",
-      "textHash": "fnv1a64:1aeca19c2dfb0dfa",
-      "jsonHash": "fnv1a64:1a9142822ddfe851"
+      "textHash": "fnv1a64:83d9f545f7c1d05e",
+      "jsonHash": "fnv1a64:77f829dbacddb53b"
     },
     {
       "language": "spanish",
@@ -6470,8 +6470,8 @@
       "drivablePrefix": 5,
       "text": "spanish/narration/ch08.txt",
       "json": "spanish/narration/ch08.json",
-      "textHash": "fnv1a64:ece3418c7e272d33",
-      "jsonHash": "fnv1a64:5001c1540a854594"
+      "textHash": "fnv1a64:3dce48d5bca7202f",
+      "jsonHash": "fnv1a64:8c48c706fa1706d4"
     },
     {
       "language": "spanish",
@@ -6488,8 +6488,8 @@
       "drivablePrefix": 1,
       "text": "spanish/narration/ch09.txt",
       "json": "spanish/narration/ch09.json",
-      "textHash": "fnv1a64:04f0dba79a2d6484",
-      "jsonHash": "fnv1a64:4cd102dabf9ae5c8"
+      "textHash": "fnv1a64:87339f23ab01f15d",
+      "jsonHash": "fnv1a64:1e7a3bf85373fd5d"
     },
     {
       "language": "spanish",
@@ -6505,8 +6505,8 @@
       "drivablePrefix": 2,
       "text": "spanish/narration/ch10.txt",
       "json": "spanish/narration/ch10.json",
-      "textHash": "fnv1a64:854da3840e0ff935",
-      "jsonHash": "fnv1a64:811b7682e6660b2f"
+      "textHash": "fnv1a64:3a5b0d329f2f8ea8",
+      "jsonHash": "fnv1a64:fbcbe6812617370a"
     },
     {
       "language": "spanish",
@@ -6523,8 +6523,8 @@
       "drivablePrefix": 5,
       "text": "spanish/narration/ch11.txt",
       "json": "spanish/narration/ch11.json",
-      "textHash": "fnv1a64:07885328e44c13a2",
-      "jsonHash": "fnv1a64:b97317b34fd0651f"
+      "textHash": "fnv1a64:4e84a2e1e26f118c",
+      "jsonHash": "fnv1a64:a06be9aaf44e4b6d"
     },
     {
       "language": "spanish",
@@ -6540,8 +6540,8 @@
       "drivablePrefix": 2,
       "text": "spanish/narration/ch12.txt",
       "json": "spanish/narration/ch12.json",
-      "textHash": "fnv1a64:a5d51f2b6d65e588",
-      "jsonHash": "fnv1a64:7095f6c76900e946"
+      "textHash": "fnv1a64:a42b135aad54fbf6",
+      "jsonHash": "fnv1a64:6d4545dddf731948"
     },
     {
       "language": "spanish",
@@ -6557,8 +6557,8 @@
       "drivablePrefix": 0,
       "text": "spanish/narration/ch13.txt",
       "json": "spanish/narration/ch13.json",
-      "textHash": "fnv1a64:06cdf215fd3994c6",
-      "jsonHash": "fnv1a64:7f2cfcef656d8694"
+      "textHash": "fnv1a64:1338be47b159cfbd",
+      "jsonHash": "fnv1a64:d15d6e67c2d879bf"
     },
     {
       "language": "spanish",
@@ -6573,8 +6573,8 @@
       "drivablePrefix": 3,
       "text": "spanish/narration/ch14.txt",
       "json": "spanish/narration/ch14.json",
-      "textHash": "fnv1a64:3802e2dbe99973ae",
-      "jsonHash": "fnv1a64:3766b4c736751669"
+      "textHash": "fnv1a64:6e9633a2986b8c1c",
+      "jsonHash": "fnv1a64:3de52a74c7509a9f"
     },
     {
       "language": "spanish",
@@ -6589,8 +6589,8 @@
       "drivablePrefix": 1,
       "text": "spanish/narration/ch15.txt",
       "json": "spanish/narration/ch15.json",
-      "textHash": "fnv1a64:5cb5f5dcfab199e1",
-      "jsonHash": "fnv1a64:638a91584525e000"
+      "textHash": "fnv1a64:de3802a0f97ee1d8",
+      "jsonHash": "fnv1a64:1c22ab0a156ae489"
     },
     {
       "language": "spanish",
@@ -6605,8 +6605,8 @@
       "drivablePrefix": 1,
       "text": "spanish/narration/ch16.txt",
       "json": "spanish/narration/ch16.json",
-      "textHash": "fnv1a64:1aff743d44d8e988",
-      "jsonHash": "fnv1a64:8d75afe5fb51fb7f"
+      "textHash": "fnv1a64:3311f2181b943b81",
+      "jsonHash": "fnv1a64:06f4ec5541138812"
     },
     {
       "language": "spanish",
@@ -6622,8 +6622,8 @@
       "drivablePrefix": 2,
       "text": "spanish/narration/ch17.txt",
       "json": "spanish/narration/ch17.json",
-      "textHash": "fnv1a64:892ec53d74d0c99f",
-      "jsonHash": "fnv1a64:413aa32d9b925357"
+      "textHash": "fnv1a64:fe0c352e8a1fffd1",
+      "jsonHash": "fnv1a64:44107b161c5920c9"
     },
     {
       "language": "spanish",
@@ -6645,8 +6645,8 @@
       "drivablePrefix": 0,
       "text": "spanish/narration/ch18.txt",
       "json": "spanish/narration/ch18.json",
-      "textHash": "fnv1a64:03ab81aeb4513484",
-      "jsonHash": "fnv1a64:b0408cff584385b6"
+      "textHash": "fnv1a64:5bc4ef4684295d63",
+      "jsonHash": "fnv1a64:e0f01109fd77bb2d"
     },
     {
       "language": "spanish",
@@ -7051,8 +7051,8 @@
       "drivablePrefix": 2,
       "text": "tamil/narration/ch02.txt",
       "json": "tamil/narration/ch02.json",
-      "textHash": "fnv1a64:15a4ea890299aca6",
-      "jsonHash": "fnv1a64:5102266a57d3d2f9"
+      "textHash": "fnv1a64:244586946331121c",
+      "jsonHash": "fnv1a64:7f95b059a49e4b1f"
     },
     {
       "language": "tamil",
@@ -7070,8 +7070,8 @@
       "drivablePrefix": 0,
       "text": "tamil/narration/ch03.txt",
       "json": "tamil/narration/ch03.json",
-      "textHash": "fnv1a64:ea7853c6d4277b9a",
-      "jsonHash": "fnv1a64:5da5d3c37a951d6d"
+      "textHash": "fnv1a64:20361f0a27ab7832",
+      "jsonHash": "fnv1a64:2ec39197c5e28e81"
     },
     {
       "language": "tamil",
@@ -7089,8 +7089,8 @@
       "drivablePrefix": 0,
       "text": "tamil/narration/ch04.txt",
       "json": "tamil/narration/ch04.json",
-      "textHash": "fnv1a64:1b171aacaedb487f",
-      "jsonHash": "fnv1a64:48f48916a78ef3be"
+      "textHash": "fnv1a64:e5095270ae59ea43",
+      "jsonHash": "fnv1a64:4fdf4e9833823a52"
     },
     {
       "language": "tamil",
@@ -7108,8 +7108,8 @@
       "drivablePrefix": 0,
       "text": "tamil/narration/ch05.txt",
       "json": "tamil/narration/ch05.json",
-      "textHash": "fnv1a64:2ead7f41ba4f39f3",
-      "jsonHash": "fnv1a64:b1f272e50a261bd1"
+      "textHash": "fnv1a64:75cb0e6472b4e312",
+      "jsonHash": "fnv1a64:d069e67cf6116dd0"
     },
     {
       "language": "tamil",
@@ -7639,8 +7639,8 @@
       "drivablePrefix": 0,
       "text": "telugu/narration/ch01.txt",
       "json": "telugu/narration/ch01.json",
-      "textHash": "fnv1a64:6d31db1827067185",
-      "jsonHash": "fnv1a64:a64ba2a32e9ae899"
+      "textHash": "fnv1a64:c8695a7c8a61485f",
+      "jsonHash": "fnv1a64:365ddbcba951be9f"
     },
     {
       "language": "telugu",
@@ -7660,8 +7660,8 @@
       "drivablePrefix": 0,
       "text": "telugu/narration/ch02.txt",
       "json": "telugu/narration/ch02.json",
-      "textHash": "fnv1a64:4047544b5bf36dc6",
-      "jsonHash": "fnv1a64:dc1a241df86c0bc5"
+      "textHash": "fnv1a64:448792033c5c8446",
+      "jsonHash": "fnv1a64:a2b65907261c92bd"
     },
     {
       "language": "telugu",
@@ -7679,8 +7679,8 @@
       "drivablePrefix": 0,
       "text": "telugu/narration/ch03.txt",
       "json": "telugu/narration/ch03.json",
-      "textHash": "fnv1a64:19d5b8b6c39cbb04",
-      "jsonHash": "fnv1a64:1ac00673abdf1166"
+      "textHash": "fnv1a64:e5d42ff71eb0a026",
+      "jsonHash": "fnv1a64:73d91b01c8eab1b8"
     },
     {
       "language": "telugu",
@@ -7697,8 +7697,8 @@
       "drivablePrefix": 0,
       "text": "telugu/narration/ch04.txt",
       "json": "telugu/narration/ch04.json",
-      "textHash": "fnv1a64:bf3dfbc4ec5455af",
-      "jsonHash": "fnv1a64:a6377b88277ba168"
+      "textHash": "fnv1a64:3af99b7a49675223",
+      "jsonHash": "fnv1a64:e13b198aa1cfeb34"
     },
     {
       "language": "telugu",
@@ -7715,8 +7715,8 @@
       "drivablePrefix": 0,
       "text": "telugu/narration/ch05.txt",
       "json": "telugu/narration/ch05.json",
-      "textHash": "fnv1a64:832b54fc12af5997",
-      "jsonHash": "fnv1a64:42cc5d3cd8309241"
+      "textHash": "fnv1a64:c9468e54c71868ea",
+      "jsonHash": "fnv1a64:8cca837f3474fd26"
     },
     {
       "language": "telugu",
@@ -8153,8 +8153,8 @@
       "drivablePrefix": 4,
       "text": "urdu/narration/ch01.txt",
       "json": "urdu/narration/ch01.json",
-      "textHash": "fnv1a64:ec99ebef94e2242e",
-      "jsonHash": "fnv1a64:6d03bbc173e2cf37"
+      "textHash": "fnv1a64:1eb4183348befa5d",
+      "jsonHash": "fnv1a64:2403ebd0c5fbf756"
     },
     {
       "language": "urdu",

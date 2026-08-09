@@ -5,12 +5,22 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-08, after HL-C50D entered #10124. With all 22
-downloadable books now carrying pronunciation, glossary, review-question,
-answer-key, and English-first index back matter, HL-C50 is complete. HL-C63 is
-the next priority: fill the capability ledger for the 98 handwritten chapters
-the index audit found outside `chapters.json` without changing which chapters
-remain protected from generation.
+Last prioritized: 2026-08-08, after HL-C63 and HL-C64 entered #10128.
+With all 22 downloadable books now carrying pronunciation, glossary,
+review-question, answer-key, and English-first index back matter, HL-C50 is
+complete. The HL-C63 audit confirmed that all 98 missing handwritten chapters
+already have canonical lesson sources; 47 lessons across 11 of those chapters
+were additionally absent from their shared-spine paths. Validation then exposed
+two more Spanish prerequisite lessons and showed that each added segment needed
+an explicit language-local extension classification. HL-C63 is therefore one
+coherent tranche: author every missing capability, place the 49 lessons in
+prerequisite-safe paths, classify local support, keep legacy schema-v1 `assesses`
+lists honestly empty until atom migration, and leave handwritten/generation
+status unchanged. HL-C64 was discovered and fixed inside that tranche because
+the nested-brace parser made title agreement impossible for four Spanish chapters.
+HL-C10 is next: capability coverage is complete, while the shared spine remains
+the binding structural ceiling on the owner's pre-A1-to-C2 direction. Its first
+slice must update the now-22-track realization contract before adding breadth.
 The index audit found **2,070** canonical candidates across the corpus: **1,430**
 word and phrase lessons for English-first lookup, **127** dedicated grammar,
 writing, etymology, culture, and pronunciation lessons, **415** chapter
@@ -18,7 +28,7 @@ capabilities, and **98** additional handwritten chapter declarations. Practice
 drills stay out of the index; the checked title/label manifest provides durable
 navigation even where the authored capability ledger is still missing.
 Current generated baseline: **22** registered tracks, **1,669** canonical lessons,
-**1,521** mapped lessons, and **22** downloadable LaTeX books spanning **513**
+**1,570** mapped lessons, and **22** downloadable LaTeX books spanning **513**
 chapters, **408** of them generated from the canonical lesson AST. Twenty-five mapped
 non-lexical lessons across 18 tracks now carry
 compiled objective activities; 94 mapped non-lexical lessons remain explicit
@@ -190,7 +200,8 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C50B | Complete (#10116) | Generate a compact glossary for every book from canonical word and phrase lessons. | All 22 books carry byte-gated glossary back matter with headword, non-redundant romanization, gloss, and introduction chapter; duplicate realizations merge without losing distinct senses, every script uses the book's configured font, and all PDFs compile without warning regressions. |
 | HL-C50C | Complete (#10120) | Generate review questions and an answer key for every book from the same compiled `hl-activity` contracts Language Ladder scores. Backfill one schema-v2 activity in French and Bengali, the two tracks with zero contracts; never infer an answer from a legacy `[YOU ...]` cue. | Every track has nonempty, byte-gated review-question and answer-key back matter; each entry identifies its source chapter and lesson and resolves to the authored canonical answer plus accepted variants from the typed AST; all 22 PDFs compile without warning regressions. |
 | HL-C50D | Complete (#10124) | Generate a compact subject index for every book from English meanings, dedicated topic lessons, and the checked generated/handwritten chapter manifest; exclude practice drills and never scrape prose for guessed keywords. | All 22 books carry nonempty, byte-gated index back matter; entries are alphabetized, target-script forms use each book's configured font, facets identify explicitly typed grammar/script/etymology/culture/pronunciation coverage, and every reference links to a checked chapter label and page without PDF warning regressions. |
-| HL-C63 | Queued | Author capability-ledger entries for the 98 handwritten chapters that the index audit found outside `chapters.json`; keep chapter generation status independent from capability coverage. | All 513 declared chapters have an authored `canDo`, spine-node mapping, and representative payoff in their track's `chapters.json`; the 98 handwritten `.tex` files remain protected from generation, and the capability and book manifests agree on chapter number, title, and label. |
+| HL-C63 | Complete (#10128) | Author capability-ledger entries for the 98 handwritten chapters that the index audit found outside `chapters.json`; map the 47 canonical lessons across 11 of those chapters plus two required Spanish prerequisites, classify each new language-local segment, and keep chapter generation status independent from capability coverage. | All 513 declared chapters have an authored `canDo`, spine-node mapping, and representative payoff in their track's `chapters.json`; legacy schema-v1 payoffs name no invented atoms, all 49 newly placed lessons are reachable through prerequisite-safe `curriculum.json` paths and explicit extensions, the 98 handwritten `.tex` files remain protected from generation, and the capability and book manifests agree on chapter number, title, and label. |
+| HL-C64 | Complete (#10128) | Parse nested LaTeX commands inside `\\chapter{...}` titles without truncating at the first formatting brace. | `loadBookCorpus` returns the complete title for chapters containing nested `\\emph{...}` commands, a focused regression test pins the behavior, and chapter-title drift remains zero after handwritten capabilities become checkable. |
 | HL-C19 | Queued | Verify every prose `strokeOrder` against an authored ductus, so no letter's step list implies a pen lift nothing has checked. | All 190 prose stroke orders across the nine scripts (`arabic` 21, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 29, `hebrew` 22, `perso-arabic` 9, `tamil` 10, `urdu-nastaliq` 13) either carry a font-checked pen path with `penLifts` + `strokeOrderSource`, or are worded so they claim part order only. Today exactly one letter — Tamil ம — is verified; the audit that found it is written up in [`data/scripts/README.md`](data/scripts/README.md). Follows HL-C09, which authors the paths this check consumes. |
 | HL-C30 | Closed — no move is both legal and useful | Recover Arabic's drivable prefix by moving the writing lessons that open Chapters 3 and 4 later in their chapters. | Measured and answered: zero. Both chapters are prefix-0 under **every** legal ordering because neither has a `voice` lesson without an in-chapter prerequisite, and all 18 of Arabic's `sight` lessons are tables, not script. Corpus-wide only 2 chapters (`portuguese ch2`, `italian ch2`, +4 lessons) can be improved by reordering at all; 116 of the 123 zero-prefix chapters are table-blocked at the root and belong to HL-C17. See *Findings from HL-C30*. |
 | HL-C24 | Complete (#9979) | Pilot real chapter payoff lessons on the weakest Latin chapters. | Latin chapters 19, 21, 33, and 36 each own a dedicated terminal consolidation lesson built only from already-taught material, and `chapters.json` points their `payoff.lesson` at it. |
@@ -2501,11 +2512,35 @@ problem.
   generated review questions and answer keys are recorded complete in #10120,
   and HL-C50D's generated subject indexes are recorded complete in #10124.
   Together with the five merged link and cross-volume cleanup slices, those
-  artifacts complete HL-C50. HL-C63 is next: author capability-ledger entries
-  for the 98 handwritten chapters the index audit exposed.
+  artifacts complete HL-C50. HL-C63 and its blocking parser repair, HL-C64, enter
+  #10128; HL-C10 is next because the shared spine remains the structural ceiling.
 - A completed row must name at least one merge PR, an ID may occur only once,
   and `this PR` is not a durable status. HL-I06 was kept `In progress` until its
   own PR number existed so the repair did not violate the rule while making it.
+
+## Findings from HL-C63
+
+- The 98 missing capability entries were not missing lessons: every handwritten
+  chapter already had canonical lesson sources. Authoring their ledgers therefore
+  closes chapter intent without changing the 98-file handwritten protection list.
+- Schema-v1 chapters still declare no typed knowledge atoms. Their payoffs point to
+  real canonical closing lessons and keep `assesses: []`; the representativeness
+  gate remains intentionally unscored rather than being made green with invented ids.
+- Forty-seven lessons across eleven chapters were absent from the shared path.
+  Executable placement also required two earlier Spanish prerequisites and explicit
+  local-extension classification, taking mapped coverage from 1,521 to 1,570 lessons.
+- The narration export is capability-driven. Closing the ledger gap consequently
+  brings all 98 handwritten chapters into the checked app/audio projection while
+  leaving book generation ownership unchanged.
+
+## Findings from HL-C64
+
+- The original `\\chapter` regex stopped at the first closing brace, so four Spanish
+  titles containing nested `\\emph{...}` commands became newly visible title-drift
+  failures as soon as HL-C63 authored their capability entries.
+- A balanced-brace reader now returns the complete outer argument, preserves escaped
+  literal braces, and falls back to the filename slug when the command is malformed.
+  The focused regression test and the 513-chapter gate both pin the repair.
 
 ## Completed foundations
 

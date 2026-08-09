@@ -1,7 +1,7 @@
 {
   "version": 1,
   "language": "spanish",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapters 1-6 and 19-39 are authored here — every Spanish chapter that owns a core/book-generation.json target. Chapters 7-18 are deliberately absent: their lessons are still schema_version 1 with no practises.knowledge, so no payoff can be claimed for them honestly. That absence is real, measurable debt and must not be papered over with placeholders. Chapters 1-6 end in a terminal practice-mix; chapters 19-39 have none, so their payoff is the chapter's last lesson by sequence, which is where the recombination and wrap-up recall actually live.",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Every declared book chapter now has an authored capability. Legacy schema-v1 entries anchor their payoff to real canonical lesson content but intentionally keep assesses empty until typed knowledge atoms exist, preserving measurable debt without inventing atoms. Chapter generation status remains independently controlled by core/book-generation.json.",
   "chapters": [
     {
       "chapter": 1,
@@ -151,6 +151,201 @@
           "ES-LEX-GRACIAS",
           "ES-LEX-DE-NADA"
         ]
+      }
+    },
+    {
+      "chapter": 7,
+      "title": "Eating, Drinking, Living --- the \\emph{-er} and \\emph{-ir} Verbs",
+      "label": "ch:er-ir-verbs",
+      "canDo": "I can conjugate regular Spanish -er and -ir verbs and say what I eat, drink, and where I live.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO",
+        "SPINE-EXCHANGE-NAMES",
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C07-practice",
+        "kind": "task",
+        "summary": "Complete ES-C07-practice, the canonical closing checkpoint, and demonstrate the chapter promise: conjugate regular Spanish -er and -ir verbs and say what I eat, drink, and where I live.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 8,
+      "title": "Numbers, and How Old You Are",
+      "label": "ch:numbers-and-age",
+      "canDo": "I can use Spanish numbers in context and say how old I am.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY",
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C08-practice",
+        "kind": "task",
+        "summary": "Complete ES-C08-practice, the canonical closing checkpoint, and demonstrate the chapter promise: use Spanish numbers in context and say how old I am.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 9,
+      "title": "\\emph{Ser} and \\emph{Estar} --- Two Ways to Be",
+      "label": "ch:ser-y-estar",
+      "canDo": "I can choose between ser and estar for simple descriptions, identities, states, and locations.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C09-practice",
+        "kind": "task",
+        "summary": "Complete ES-C09-practice, the canonical closing checkpoint, and demonstrate the chapter promise: choose between ser and estar for simple descriptions, identities, states, and locations.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 10,
+      "title": "Going, and the Future You Can Already Say",
+      "label": "ch:ir-y-futuro",
+      "canDo": "I can use ir to say where I am going and what I am going to do.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C10-practice",
+        "kind": "task",
+        "summary": "Complete ES-C10-practice, the canonical closing checkpoint, and demonstrate the chapter promise: use ir to say where I am going and what I am going to do.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 11,
+      "title": "Verbs That Break in the Middle --- the Stem Changers",
+      "label": "ch:stem-changes",
+      "canDo": "I can recognize and conjugate common Spanish stem-changing verbs in the present tense.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C11-practice",
+        "kind": "task",
+        "summary": "Complete ES-C11-practice, the canonical closing checkpoint, and demonstrate the chapter promise: recognize and conjugate common Spanish stem-changing verbs in the present tense.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 12,
+      "title": "\\emph{Hacer}, \\emph{Decir}, and the \\emph{-go} Verb Club",
+      "label": "ch:yo-go-verbs",
+      "canDo": "I can use hacer and decir and recognize the first members of the Spanish -go verb pattern.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C12-practice",
+        "kind": "task",
+        "summary": "Complete ES-C12-practice, the canonical closing checkpoint, and demonstrate the chapter promise: use hacer and decir and recognize the first members of the Spanish -go verb pattern.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 13,
+      "title": "\\emph{Poner}, \\emph{Salir}, \\emph{Venir} --- Completing the \\emph{-go} Club",
+      "label": "ch:completing-go-club",
+      "canDo": "I can use poner, salir, and venir and complete the practical Spanish -go verb family.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C13-practice",
+        "kind": "task",
+        "summary": "Complete ES-C13-practice, the canonical closing checkpoint, and demonstrate the chapter promise: use poner, salir, and venir and complete the practical Spanish -go verb family.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 14,
+      "title": "The Preterite --- Your First Past Tense",
+      "label": "ch:preterite",
+      "canDo": "I can form the regular Spanish preterite and say what happened in a completed past event.",
+      "spineNodes": [
+        "SPINE-TALK-ABOUT-PAST"
+      ],
+      "payoff": {
+        "lesson": "ES-C14-practice",
+        "kind": "task",
+        "summary": "Complete ES-C14-practice, the canonical closing checkpoint, and demonstrate the chapter promise: form the regular Spanish preterite and say what happened in a completed past event.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 15,
+      "title": "Completing the Preterite --- Three Families, One Question",
+      "label": "ch:completing-preterite",
+      "canDo": "I can choose and form the principal irregular Spanish preterite families.",
+      "spineNodes": [
+        "SPINE-TALK-ABOUT-PAST"
+      ],
+      "payoff": {
+        "lesson": "ES-C15-practice",
+        "kind": "task",
+        "summary": "Complete ES-C15-practice, the canonical closing checkpoint, and demonstrate the chapter promise: choose and form the principal irregular Spanish preterite families.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 16,
+      "title": "The Imperfect --- the Past That Kept Going",
+      "label": "ch:imperfect",
+      "canDo": "I can use the Spanish imperfect for past habits, background, and actions in progress.",
+      "spineNodes": [
+        "SPINE-TALK-ABOUT-PAST"
+      ],
+      "payoff": {
+        "lesson": "ES-C16-practice",
+        "kind": "task",
+        "summary": "Complete ES-C16-practice, the canonical closing checkpoint, and demonstrate the chapter promise: use the Spanish imperfect for past habits, background, and actions in progress.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 17,
+      "title": "The Future and the Conditional --- One Weld, Twice",
+      "label": "ch:future-conditional",
+      "canDo": "I can form the Spanish future and conditional from the infinitive and use each for its core meaning.",
+      "spineNodes": [
+        "SPINE-TALK-ABOUT-FUTURE"
+      ],
+      "payoff": {
+        "lesson": "ES-C17-practice",
+        "kind": "task",
+        "summary": "Complete ES-C17-practice, the canonical closing checkpoint, and demonstrate the chapter promise: form the Spanish future and conditional from the infinitive and use each for its core meaning.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 18,
+      "title": "The Subjunctive --- the Mood of the Not-Yet-Real",
+      "label": "ch:subjunctive",
+      "canDo": "I can form the present Spanish subjunctive and use it after a small set of wishes, doubts, and not-yet-real prompts.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-WANT"
+      ],
+      "payoff": {
+        "lesson": "ES-C18-practice-mood",
+        "kind": "task",
+        "summary": "Complete ES-C18-practice-mood, the canonical closing checkpoint, and demonstrate the chapter promise: form the present Spanish subjunctive and use it after a small set of wishes, doubts, and not-yet-real prompts.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
       }
     },
     {

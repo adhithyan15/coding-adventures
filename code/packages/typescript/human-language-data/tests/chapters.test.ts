@@ -5,7 +5,12 @@
 // always fires". The corpus block at the bottom pins the first published snapshot.
 
 import { describe, expect, it } from "vitest";
-import { loadChapterPolicy, loadEverything, loadTrackChapters } from "../src/loader.js";
+import {
+  chapterTitleFromTex,
+  loadChapterPolicy,
+  loadEverything,
+  loadTrackChapters,
+} from "../src/loader.js";
 import { CHAPTER_GATE_CODES, runChapterGates } from "../src/chapters.js";
 import { parseLesson } from "../src/parse.js";
 import type { BookCorpus, ChapterPolicy, TrackChapters } from "../src/types.js";
@@ -17,6 +22,11 @@ const POLICY: ChapterPolicy = {
   maxNewAtomsPerChapter: 12,
   maxLinearisableTableColumns: 3,
 };
+
+it("reads complete LaTeX chapter titles that contain nested formatting commands", () => {
+  expect(chapterTitleFromTex("\\chapter{\\emph{Ser} and \\emph{Estar} --- Two Ways to Be}", "fallback"))
+    .toBe("\\emph{Ser} and \\emph{Estar} --- Two Ways to Be");
+});
 
 /** A lesson that introduces the given atoms via its block directive. */
 function lesson(id: string, chapter: number, introduces: string[] = []) {
@@ -220,17 +230,14 @@ describe("corpus snapshot", () => {
       trackChapters: loadTrackChapters(),
       policy: loadChapterPolicy(),
     });
-    // Vocabulary wave 4 (Marathi, Punjabi, Sanskrit, Urdu) added 16 new chapters, four
-    // per track, and every one shipped with its own capability ledger entry and payoff,
-    // so bookChapters and declaredChapters both move by 16 and the debt count does not:
-    // 497 -> 513, 399 -> 415, chaptersWithoutCapability holds at 98. A new chapter that
-    // shipped without a `canDo`/`payoff` would have pushed the debt past 98, which is
-    // exactly what this trio is here to catch.
+    // HL-C63 authored the 98 capabilities that had lagged behind already published,
+    // handwritten chapters. The book total therefore stays at 513 while the declared
+    // capability total catches up from 415 to 513 and the missing-capability debt falls
+    // from 98 to zero. A future chapter without a `canDo`/`payoff` will move these totals
+    // apart again, which is exactly what this trio is here to catch.
     expect(report.summary.bookChapters).toBe(513); // +16: vocabulary wave 4, 4 tracks x 4 chapters
-    // Declared chapters keep pace with book chapters this wave -- every new chapter
-    // shipped a capability entry, unlike russian chapter 3 which lagged by one earlier.
-    expect(report.summary.declaredChapters).toBe(415); // +16: vocabulary wave 4
-    expect(report.summary.chaptersWithoutCapability).toBe(98);
+    expect(report.summary.declaredChapters).toBe(513); // +98: handwritten capability closure
+    expect(report.summary.chaptersWithoutCapability).toBe(0);
     expect(report.summary.payoffsNotClosed).toBe(0);
     expect(report.summary.unknownPayoffLessons).toBe(0);
     expect(report.summary.titleDrift).toBe(0);
@@ -245,7 +252,9 @@ describe("corpus snapshot", () => {
     // entirely rather than passing it), and tamil:13 joined at 1/4 — it gained
     // TA-W04-i-sign-write-nandri when the writing strand was spread out and its payoff
     // was not widened. Both are recorded in tamil/chapters.json's own notes.
-    expect(report.summary.payoffsNotRepresentative).toBe(25);
+    // Empty `assesses` lists on schema-v1 chapters remain unscored rather than pretending
+    // to pass. The current typed-atom corpus still exposes 27 genuinely thin payoffs.
+    expect(report.summary.payoffsNotRepresentative).toBe(27);
   });
 
   it("names the tracks whose chapter debt is already zero", () => {
@@ -256,11 +265,21 @@ describe("corpus snapshot", () => {
       trackChapters: loadTrackChapters(),
       policy: loadChapterPolicy(),
     });
-    // These three may flip to hard errors today; the rest flip as their debt clears.
+    // Capability closure makes nine more tracks clean. Tracks omitted from this list
+    // still carry typed-atom payoff debt, even though none lacks a chapter capability.
     expect(report.tracks.filter((t) => t.clean).map((t) => t.language).sort()).toEqual([
+      "bengali",
       "chinese",
+      "french",
+      "gujarati",
+      "italian",
       "japanese",
+      "kannada",
       "latin",
+      "marathi",
+      "portuguese",
+      "punjabi",
+      "telugu",
     ]);
   });
 

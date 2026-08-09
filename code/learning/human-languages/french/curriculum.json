@@ -185,6 +185,19 @@
       "after": []
     },
     {
+      "id": "FR-PATH-029",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "FR-C08-heure",
+        "FR-C08-midi-minuit"
+      ],
+      "before": [],
+      "inline": [
+        "FR-EXT-029-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
       "id": "FR-PATH-016",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
@@ -446,6 +459,7 @@
         "FR-PATH-004",
         "FR-PATH-006",
         "FR-PATH-015",
+        "FR-PATH-029",
         "FR-PATH-021"
       ],
       "omits": [
@@ -844,6 +858,18 @@
         "FR-C30-beurre",
         "FR-C30-sel",
         "FR-C30-oeuf"
+      ]
+    },
+    {
+      "id": "FR-EXT-029-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the French-specific vocabulary and grammar that support this shared ability.",
+      "prerequisites": [],
+      "lessons": [
+        "FR-C08-heure",
+        "FR-C08-midi-minuit"
       ]
     },
     {

@@ -108,10 +108,10 @@ enter cross-language review only after focused retrieval.
 <!-- BEGIN GENERATED TRACK PROGRESS -->
 | Language | Family / script | Canonical lessons | Mapped lessons | Book progress |
 |---|---|---:|---:|---|
-| [Spanish](./spanish/README.md) | Romance / Latin | 177 | 139 | 41 chapters; through Ch. 41; 29 generated |
+| [Spanish](./spanish/README.md) | Romance / Latin | 177 | 164 | 41 chapters; through Ch. 41; 29 generated |
 | [Latin](./latin/README.md) | Italic / Latin | 88 | 88 | 43 chapters; through Ch. 43; 42 generated |
-| [French](./french/README.md) | Romance / Latin | 105 | 89 | 31 chapters; through Ch. 31; 15 generated |
-| [German](./german/README.md) | Germanic / Latin | 106 | 89 | 31 chapters; through Ch. 31; 15 generated |
+| [French](./french/README.md) | Romance / Latin | 105 | 91 | 31 chapters; through Ch. 31; 15 generated |
+| [German](./german/README.md) | Germanic / Latin | 106 | 91 | 31 chapters; through Ch. 31; 15 generated |
 | [Arabic](./arabic/README.md) | Semitic / Arabic | 100 | 98 | 36 chapters; through Ch. 36; 34 generated |
 | [Hindi](./hindi/README.md) | Indo-Aryan / Devanagari | 109 | 103 | 39 chapters; through Ch. 39; 34 generated |
 | [Tamil](./tamil/README.md) | Dravidian / Tamil | 118 | 114 | 38 chapters; through Ch. 38; 33 generated |
@@ -120,12 +120,12 @@ enter cross-language review only after focused retrieval.
 | [Malayalam](./malayalam/README.md) | Dravidian / Malayalam | 78 | 74 | 34 chapters; through Ch. 34; 29 generated |
 | [Italian](./italian/README.md) | Romance / Latin | 88 | 87 | 25 chapters; through Ch. 25; 24 generated |
 | [Portuguese](./portuguese/README.md) | Romance / Latin | 96 | 95 | 26 chapters; through Ch. 26; 25 generated |
-| [Marathi](./marathi/README.md) | Indo-Aryan / Devanagari | 62 | 52 | 13 chapters; through Ch. 13; 8 generated |
+| [Marathi](./marathi/README.md) | Indo-Aryan / Devanagari | 62 | 57 | 13 chapters; through Ch. 13; 8 generated |
 | [Punjabi](./punjabi/README.md) | Indo-Aryan / Gurmukhi | 61 | 54 | 13 chapters; through Ch. 13; 8 generated |
-| [Bengali](./bengali/README.md) | Indo-Aryan / Bengali | 57 | 48 | 12 chapters; through Ch. 12; 7 generated |
-| [Gujarati](./gujarati/README.md) | Indo-Aryan / Gujarati | 59 | 50 | 12 chapters; through Ch. 12; 7 generated |
+| [Bengali](./bengali/README.md) | Indo-Aryan / Bengali | 57 | 53 | 12 chapters; through Ch. 12; 7 generated |
+| [Gujarati](./gujarati/README.md) | Indo-Aryan / Gujarati | 59 | 55 | 12 chapters; through Ch. 12; 7 generated |
 | [Russian](./russian/README.md) | Slavic / Cyrillic | 50 | 42 | 10 chapters; through Ch. 10; 8 generated |
-| [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari | 59 | 51 | 13 chapters; through Ch. 13; 8 generated |
+| [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari | 59 | 56 | 13 chapters; through Ch. 13; 8 generated |
 | [Persian](./persian/README.md) | Iranian / Perso-Arabic | 33 | 33 | 8 chapters; through Ch. 8; 6 generated |
 | [Urdu](./urdu/README.md) | Indo-Aryan / Urdu-Nastaliq | 46 | 46 | 12 chapters; through Ch. 12; 10 generated |
 | [Mandarin Chinese](./chinese/README.md) | Sinitic / Chinese | 7 | 7 | 1 chapter; through Ch. 1; 1 generated |

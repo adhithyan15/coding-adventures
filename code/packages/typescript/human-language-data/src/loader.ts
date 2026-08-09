@@ -123,6 +123,24 @@ export function loadChapterPolicy(root = defaultCurriculumRoot()): ChapterPolicy
   return policy;
 }
 
+/** Read a braced LaTeX command argument without truncating nested formatting commands. */
+export function chapterTitleFromTex(tex: string, fallback: string): string {
+  const command = /\\chapter(?:\s*\[[^\]]*\])?\s*\{/.exec(tex);
+  if (!command) return fallback;
+  const openingBrace = command.index + command[0].lastIndexOf("{");
+  let depth = 1;
+  for (let index = openingBrace + 1; index < tex.length; index += 1) {
+    const character = tex[index];
+    const escaped = index > 0 && tex[index - 1] === "\\";
+    if (!escaped && character === "{") depth += 1;
+    if (!escaped && character === "}") {
+      depth -= 1;
+      if (depth === 0) return tex.slice(openingBrace + 1, index);
+    }
+  }
+  return fallback;
+}
+
 /**
  * Load the existing authored LaTeX books losslessly. The short Markdown lessons
  * remain the smallest teaching units; chapters are the narrative and sequencing
@@ -143,7 +161,7 @@ export function loadBookCorpus(root = defaultCurriculumRoot()): BookCorpus {
       const match = /^ch(\d+)-(.+)\.tex$/.exec(file);
       if (!match) continue;
       const tex = readFileSync(join(chaptersDir, file), "utf8");
-      const title = /\\chapter(?:\[[^\]]*\])?\{([^}]*)\}/.exec(tex)?.[1] ?? match[2];
+      const title = chapterTitleFromTex(tex, match[2]);
       chapters.push({
         language: track.name,
         chapter: Number(match[1]),

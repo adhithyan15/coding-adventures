@@ -1,8 +1,29 @@
 {
   "version": 1,
   "language": "italian",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Chapters 2-19 are authored here. Chapter 1 is deliberately absent: its lessons are still schema_version 1 with no practises.knowledge, so no payoff can be claimed for it honestly, and it owns no core/book-generation.json target either. Chapters 2-5 have a terminal practice-mix; chapters 6-19 have none, so their payoff is the chapter's last lesson by sequence, which is where the recombination and wrap-up recall actually live. Chapters 18 and 19 additionally assess atoms from EARLIER chapters (HL09 section 7): 18 reaches back to parlare, the passato prossimo, the -ct- to -tt- law of the numbers, and mano; 19 reaches back to piacere and mi chiamo from Chapter 3, the seasons, the wine, and Chapter 18 itself.",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Every declared book chapter now has an authored capability. Legacy schema-v1 entries anchor their payoff to real canonical lesson content but intentionally keep assesses empty until typed knowledge atoms exist, preserving measurable debt without inventing atoms. Chapter generation status remains independently controlled by core/book-generation.json.",
   "chapters": [
+    {
+      "chapter": 1,
+      "title": "Greetings",
+      "label": "ch:greetings",
+      "canDo": "I can greet someone in Italian, recognize the reply, and choose an appropriate response.",
+      "spineNodes": [
+        "SPINE-MEET-GREET",
+        "SPINE-CHECK-WELLBEING",
+        "SPINE-COURTESY-THANK",
+        "SPINE-DEFINITE-REFERENCE",
+        "SPINE-TIME-OF-DAY",
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "IT-C01-practice",
+        "kind": "task",
+        "summary": "Complete IT-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in Italian, recognize the reply, and choose an appropriate response.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
     {
       "chapter": 2,
       "title": "How Are You?",

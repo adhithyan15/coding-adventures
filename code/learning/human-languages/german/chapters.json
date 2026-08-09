@@ -1,8 +1,272 @@
 {
   "version": 1,
   "language": "german",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Only Chapters 17-25 are authored — they are the nine German chapters whose lessons have been migrated to schema version 2 and therefore declare real knowledge atoms. Chapters 1-16 are still schema v1: their lessons carry no practises.knowledge, so any payoff written for them would assess invented atoms. Their absence here is real, measurable debt and must not be papered over with placeholders. Chapter 17 is the one authored chapter that FAILS the 0.5 representativeness floor (4 of 12 introduced atoms, 0.33): it is three word lessons deep with no terminal consolidation lesson, so its payoff can only reach the last of the three. That is recorded here rather than hidden by padding assesses — the fix is a real Kopf/Haupt/Hand practice lesson, not a longer list. Chapters 24 and 25 follow HL09 section 7: each payoff closes over all of its own chapter's atoms AND names atoms from earlier chapters it genuinely re-practises, so the reach-back is measurable rather than decorative.",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Every declared book chapter now has an authored capability. Legacy schema-v1 entries anchor their payoff to real canonical lesson content but intentionally keep assesses empty until typed knowledge atoms exist, preserving measurable debt without inventing atoms. Chapter generation status remains independently controlled by core/book-generation.json.",
   "chapters": [
+    {
+      "chapter": 1,
+      "title": "Greetings",
+      "label": "ch:greetings",
+      "canDo": "I can greet someone in German, recognize the reply, and choose an appropriate response.",
+      "spineNodes": [
+        "SPINE-MEET-GREET",
+        "SPINE-CHECK-WELLBEING",
+        "SPINE-DEFINITE-REFERENCE",
+        "SPINE-TIME-OF-DAY",
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "GE-C01-practice",
+        "kind": "task",
+        "summary": "Complete GE-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in German, recognize the reply, and choose an appropriate response.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 2,
+      "title": "Introducing Yourself",
+      "label": "ch:introductions",
+      "canDo": "I can introduce myself in German, give my name, and understand the other person's name.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES",
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "GE-C02-practice",
+        "kind": "task",
+        "summary": "Complete GE-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in German, give my name, and understand the other person's name.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 3,
+      "title": "How Are You?",
+      "label": "ch:how-are-you",
+      "canDo": "I can ask how someone is in German, answer naturally, and return the question.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK",
+        "SPINE-SAY-WHAT-I-DO",
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "GE-C03-formal-practice",
+        "kind": "task",
+        "summary": "Complete GE-C03-formal-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in German, answer naturally, and return the question.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 4,
+      "title": "Farewells",
+      "label": "ch:farewells",
+      "canDo": "I can end a German conversation politely and choose a farewell that fits the situation.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "GE-C04-practice",
+        "kind": "task",
+        "summary": "Complete GE-C04-practice, the canonical closing checkpoint, and demonstrate the chapter promise: end a German conversation politely and choose a farewell that fits the situation.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 5,
+      "title": "The First Verbs",
+      "label": "ch:first-verbs",
+      "canDo": "I can build short present-tense German sentences with the chapter's first verbs.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "GE-C05-practice",
+        "kind": "task",
+        "summary": "Complete GE-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense German sentences with the chapter's first verbs.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 6,
+      "title": "Numbers One to Ten",
+      "label": "ch:numbers-1-10",
+      "canDo": "I can count from one to ten in German and use the numbers in a short exchange.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "GE-C06-zahlen-6-10",
+        "kind": "task",
+        "summary": "Complete GE-C06-zahlen-6-10, the canonical closing checkpoint, and demonstrate the chapter promise: count from one to ten in German and use the numbers in a short exchange.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 7,
+      "title": "The Days of the Week",
+      "label": "ch:days",
+      "canDo": "I can name the days of the week in German and use them in simple plans.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "GE-C07-wochentage-2",
+        "kind": "task",
+        "summary": "Complete GE-C07-wochentage-2, the canonical closing checkpoint, and demonstrate the chapter promise: name the days of the week in German and use them in simple plans.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 8,
+      "title": "Telling the Time",
+      "label": "ch:time",
+      "canDo": "I can ask for and tell the time in German.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "GE-C08-mittag-mitternacht",
+        "kind": "task",
+        "summary": "Complete GE-C08-mittag-mitternacht, the canonical closing checkpoint, and demonstrate the chapter promise: ask for and tell the time in German.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 9,
+      "title": "Months and Seasons",
+      "label": "ch:months-seasons",
+      "canDo": "I can name the months and seasons in German and say when something happens.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "GE-C09-jahreszeiten",
+        "kind": "task",
+        "summary": "Complete GE-C09-jahreszeiten, the canonical closing checkpoint, and demonstrate the chapter promise: name the months and seasons in German and say when something happens.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 10,
+      "title": "Family",
+      "label": "ch:family",
+      "canDo": "I can identify close family members in German and say who someone is.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "GE-C10-geschwister",
+        "kind": "task",
+        "summary": "Complete GE-C10-geschwister, the canonical closing checkpoint, and demonstrate the chapter promise: identify close family members in German and say who someone is.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 11,
+      "title": "Bread, Water, Wine",
+      "label": "ch:food",
+      "canDo": "I can name and request bread, water, and wine in German.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "GE-C11-wasser-wein",
+        "kind": "task",
+        "summary": "Complete GE-C11-wasser-wein, the canonical closing checkpoint, and demonstrate the chapter promise: name and request bread, water, and wine in German.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 12,
+      "title": "Numbers Eleven to Twenty",
+      "label": "ch:numbers-11-20",
+      "canDo": "I can count from eleven to twenty in German and recognize how the number forms are built.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "GE-C12-zahlen-13-20",
+        "kind": "task",
+        "summary": "Complete GE-C12-zahlen-13-20, the canonical closing checkpoint, and demonstrate the chapter promise: count from eleven to twenty in German and recognize how the number forms are built.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 13,
+      "title": "Colours",
+      "label": "ch:colours",
+      "canDo": "I can name basic colours in German and use them to describe something.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "GE-C13-rot-blau",
+        "kind": "task",
+        "summary": "Complete GE-C13-rot-blau, the canonical closing checkpoint, and demonstrate the chapter promise: name basic colours in German and use them to describe something.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 14,
+      "title": "To Have, and How Old You Are",
+      "label": "ch:haben-alter",
+      "canDo": "I can use the German verb for “to have” to talk about possession and age.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO",
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "GE-C14-alter",
+        "kind": "task",
+        "summary": "Complete GE-C14-alter, the canonical closing checkpoint, and demonstrate the chapter promise: use the German verb for “to have” to talk about possession and age.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 15,
+      "title": "The Two Past Tenses",
+      "label": "ch:perfekt",
+      "canDo": "I can build the chapter's conversational past tense in German and say what happened.",
+      "spineNodes": [
+        "SPINE-TALK-ABOUT-PAST"
+      ],
+      "payoff": {
+        "lesson": "GE-C15-praeteritum-map",
+        "kind": "task",
+        "summary": "Complete GE-C15-praeteritum-map, the canonical closing checkpoint, and demonstrate the chapter promise: build the chapter's conversational past tense in German and say what happened.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
+    {
+      "chapter": 16,
+      "title": "To Be, and the Past That Takes It",
+      "label": "ch:sein",
+      "canDo": "I can use the German verb for “to be” and form the past of verbs that select it.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "GE-C16-perfekt-sein-agreement",
+        "kind": "task",
+        "summary": "Complete GE-C16-perfekt-sein-agreement, the canonical closing checkpoint, and demonstrate the chapter promise: use the German verb for “to be” and form the past of verbs that select it.",
+        "assesses": [],
+        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+      }
+    },
     {
       "chapter": 17,
       "title": "Head and Hand",

@@ -109,6 +109,22 @@
       "after": []
     },
     {
+      "id": "BN-PATH-017",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "BN-C05-bola",
+        "BN-C05-ami-bangla-boli",
+        "BN-C05-kaj-kora",
+        "BN-C05-thaka",
+        "BN-C05-practice"
+      ],
+      "before": [],
+      "inline": [
+        "BN-EXT-017-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
       "id": "BN-PATH-010",
       "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
       "lessons": [
@@ -330,6 +346,7 @@
     },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
+        "BN-PATH-017",
         "BN-PATH-011",
         "BN-PATH-012",
         "BN-PATH-013"
@@ -671,6 +688,21 @@
         "BN-C11-poribar",
         "BN-C11-bhai",
         "BN-C11-bon"
+      ]
+    },
+    {
+      "id": "BN-EXT-017-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the Bengali-specific vocabulary and grammar that support this shared ability.",
+      "prerequisites": [],
+      "lessons": [
+        "BN-C05-bola",
+        "BN-C05-ami-bangla-boli",
+        "BN-C05-kaj-kora",
+        "BN-C05-thaka",
+        "BN-C05-practice"
       ]
     },
     {

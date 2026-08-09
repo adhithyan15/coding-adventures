@@ -219,8 +219,8 @@ describe("corpus snapshot", () => {
 
     // +2: TA-W08-read-en and TA-W09-read-peyar.
     expect(summary.byLevel["pre-A1"]).toBe(866); // +52: vocabulary wave 4 (marathi/punjabi/sanskrit/urdu)
-    expect(summary.byLevel.A1).toBe(297);
-    expect(summary.byLevel.A2).toBe(350);
+    expect(summary.byLevel.A1).toBe(301); // +4: French/German time and weekday chapters
+    expect(summary.byLevel.A2).toBe(395); // +25: Spanish chapters 14-18 plus prerequisite closure
     // 8, not 0: Spanish chapters 38 and 41 realize SPINE-NARRATE-EVENTS and
     // SPINE-GIVE-REASONS, four lessons each — the only B1 nodes any track has touched.
     // B2-C2 remain authored-but-unrealized, in every track.
@@ -229,10 +229,10 @@ describe("corpus snapshot", () => {
     expect(summary.byLevel.C1).toBe(0);
     expect(summary.byLevel.C2).toBe(0);
 
-    // 170 lessons sit in no realization-path segment, all of them schema-v1. They are the
-    // reason `mappedPercent` is not 100, and mapping them is migration work, not a gate.
-    expect(summary.unmapped).toBe(148);
-    expect(summary.mappedPercent).toBe(91);
+    // HL-C63 places 47 orphan chapter lessons and two Spanish prerequisites. The
+    // remaining 99 unmapped lessons are still explicit migration debt, not hidden data.
+    expect(summary.unmapped).toBe(99);
+    expect(summary.mappedPercent).toBe(94);
   });
 
   it("shows twenty tracks have reached A2, and only two have not reached A1", () => {
@@ -280,7 +280,7 @@ describe("corpus snapshot", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const ramp = lessonsUpToLevel(lessons, paths, spine, "A1");
     // The whole point: this is a FILTER over the one corpus, not a second corpus.
-    expect(ramp).toHaveLength(1163); // +52: vocabulary wave 4, all of it pre-A1
+    expect(ramp).toHaveLength(1167); // +4: mapped French/German A1 lessons
     expect(ramp.length).toBeLessThan(lessons.length);
   });
 });
