@@ -4799,10 +4799,16 @@ the Rust, Python, and TypeScript surfaces together.
      without changing the unresolved `B` parameter policy.
 
 488. Python and TypeScript Berkeley SPICE JFET transconductance validation parity.
-   - Status: implemented in this JFET transconductance-validation slice.
+   - Status: completed in PR 10181.
    - Both parser facades reject non-finite or non-positive `BETA` and `BET`
      values with canonical `BETA` precedence, without changing the unresolved
      `B` parameter policy.
+
+489. Python and TypeScript Berkeley SPICE JFET threshold-voltage validation parity.
+   - Status: implemented in this JFET threshold-validation slice.
+   - Both parser facades reject non-finite `VTO`, `VT0`, and `VTH` values
+     with canonical `VTO` precedence, without changing the unresolved `B`
+     parameter policy.
 
 ## Backlog
 
