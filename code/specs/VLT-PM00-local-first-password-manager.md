@@ -1260,7 +1260,8 @@ changelog, focused build, and downstream validation.
    persistent locator binding, immutable-race handling, cursor format, closed
    error translation, and acceptance gates in VLT-PM02 section 12.
 7. `vault-pm-repository`: publication, verification, local heads, history, GC
-   plan.
+   plan, using the bounded fail-closed contract in
+   `VLT-PM04-repository.md`.
 8. `vault-pm-application`: init/open/item/search/history/export/audit workflows.
 9. `vault-pm-cli` + real executable and pseudo-terminal E2E suite.
 10. Crash/fault matrix and local restore drill.
@@ -1317,8 +1318,9 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
 - `VLT09-vault-audit-log.md` — audit chain.
 - `VLT10-vault-sync-engine.md` — version vectors and conflict semantics.
 - `VLT11-transports.md` — current CLI transport contract.
-- `VLT-PM01-format.md`, `VLT-PM02-storage.md`, and `VLT-PM03-domain.md` —
-  product repository wire, object-store, and domain contracts.
+- `VLT-PM01-format.md`, `VLT-PM02-storage.md`, `VLT-PM03-domain.md`, and
+  `VLT-PM04-repository.md` — product repository wire, object-store, domain,
+  and verified-DAG contracts.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.
