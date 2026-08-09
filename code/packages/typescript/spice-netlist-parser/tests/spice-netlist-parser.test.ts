@@ -1939,6 +1939,24 @@ Q1 col base emit fast
     );
   });
 
+  it.each([
+    ["0", 0.0],
+    ["45", 45.0],
+  ])("parses BJT forward excess phase PTF=%s", (value, expected) => {
+    const parsed = parseNetlist(`.model fast NPN(PTF=${value})\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      forwardExcessPhaseDegrees: expected,
+    });
+  });
+
+  it.each(["-0.1", "1e999"])("rejects invalid BJT PTF=%s", (value) => {
+    expect(() => parseNetlist(`.model fast NPN(PTF=${value})`)).toThrow(
+      "BJT PTF must be finite and non-negative",
+    );
+  });
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)

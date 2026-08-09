@@ -4648,9 +4648,14 @@ the Rust, Python, and TypeScript surfaces together.
      them into the shared engine flicker-noise-coefficient field.
 
 462. Python and TypeScript Berkeley SPICE BJT flicker-noise-exponent parity.
-   - Status: implemented in this BJT AF parity slice.
+   - Status: completed in PR 10130.
    - Both parser facades validate finite, non-negative `AF` values and lower
      them into the shared engine flicker-noise-exponent field.
+
+463. Python and TypeScript Berkeley SPICE BJT forward-excess-phase parity.
+   - Status: implemented in this BJT PTF parity slice.
+   - Both parser facades validate finite, non-negative `PTF` values and lower
+     them into the shared engine forward-excess-phase field in degrees.
 
 ## Backlog
 
