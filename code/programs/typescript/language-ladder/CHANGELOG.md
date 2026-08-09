@@ -28,6 +28,14 @@
   real filmstrip's sole lift so its numbered parts cannot be mistaken for seven
   separate strokes.
 
+### Added — cited three-stroke ductus for Tamil க (HL-C09D)
+
+- Add Frame 3's final row, Tamil க: three joined movements form its upper frame,
+  two joined movements form the lower-left bowl, and a final movement forms the
+  lower-right bowl, with exactly two verified lifts between those runs.
+- Check all six movements against the full Noto Sans Tamil outline and pin both
+  lift transitions in the real filmstrip and learner prose.
+
 ### Added — canonical lesson figures
 
 - Preserve standalone Markdown images as typed lesson blocks instead of flattening
