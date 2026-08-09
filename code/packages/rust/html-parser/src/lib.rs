@@ -5689,6 +5689,18 @@ impl HtmlParser {
             return;
         }
 
+        if self.has_open_element("template")
+            && !self.has_open_element("table")
+            && self.current_element_is("template")
+            && self.current_has_child_element("tr")
+            && !is_html_whitespace_text(&text)
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-character-in-template-table-mode",
+                "non-whitespace character data forced recovery from template table mode",
+            ));
+        }
+
         if self.open_elements.is_empty()
             && is_html_whitespace_text(&text)
             && !self.has_document_element()
@@ -33495,6 +33507,31 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "unexpected-start-tag-in-select"));
+    }
+
+    #[test]
+    fn reports_non_whitespace_text_that_leaves_template_table_mode() {
+        let output = parse_html_with_diagnostics(
+            "<!DOCTYPE HTML><template><tr><td>cell</td></tr>a</template>",
+        )
+        .unwrap();
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-character-in-template-table-mode",
+                "non-whitespace character data forced recovery from template table mode"
+            )]
+        );
+
+        for source in [
+            "<!doctype html><template>text</template>",
+            "<!doctype html><template><tr><td>cell</td></tr> </template>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-character-in-template-table-mode"
+            }));
+        }
     }
 
     #[test]
