@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate finite, non-negative MOS Level-1 model-card `CGBO` values.
 - Validate finite, non-negative MOS Level-1 model-card `CGDO` values.
 - Validate finite, non-negative MOS Level-1 model-card `CGSO` values.
 - Validate and lower BJT model-card `XCJC` base-collector capacitance fraction.
