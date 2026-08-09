@@ -11,6 +11,10 @@ use smart_home_core::{
     EntityKind, Health, IntegrationId, Metadata, ProtocolFamily, ProtocolIdentifier, SmartHomeTool,
     StateConfidence, StateSnapshot, StateSource, Value, ValueKind,
 };
+use smart_home_data_governance::{
+    DataCategory, DataDestination, DataGovernanceDecision, DataGovernanceDenial,
+    DataGovernancePolicy, DataOperation, DataUseRequest,
+};
 use smart_home_discovery::{
     DiscoveryConfidence, DiscoveryRecord, DiscoverySource, PairingRequirement,
 };
@@ -33,6 +37,25 @@ pub const MEASUREMENT_PATH: &str = "/measures/current";
 pub const CONFIGURATION_PATH: &str = "/config";
 pub const DEFAULT_PORT: u16 = 80;
 pub const DEFAULT_MAX_RESPONSE_BYTES: usize = 2 * 1024 * 1024;
+pub const AIRGRADIENT_CLOUD_ORIGIN: &str = "https://api.airgradient.com";
+const ISO_3166_ALPHA_2_CODES: &[&str] = &[
+    "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AO", "AQ", "AR", "AS", "AT", "AU", "AW", "AX", "AZ",
+    "BA", "BB", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BL", "BM", "BN", "BO", "BQ", "BR", "BS",
+    "BT", "BV", "BW", "BY", "BZ", "CA", "CC", "CD", "CF", "CG", "CH", "CI", "CK", "CL", "CM", "CN",
+    "CO", "CR", "CU", "CV", "CW", "CX", "CY", "CZ", "DE", "DJ", "DK", "DM", "DO", "DZ", "EC", "EE",
+    "EG", "EH", "ER", "ES", "ET", "FI", "FJ", "FK", "FM", "FO", "FR", "GA", "GB", "GD", "GE", "GF",
+    "GG", "GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GS", "GT", "GU", "GW", "GY", "HK", "HM",
+    "HN", "HR", "HT", "HU", "ID", "IE", "IL", "IM", "IN", "IO", "IQ", "IR", "IS", "IT", "JE", "JM",
+    "JO", "JP", "KE", "KG", "KH", "KI", "KM", "KN", "KP", "KR", "KW", "KY", "KZ", "LA", "LB", "LC",
+    "LI", "LK", "LR", "LS", "LT", "LU", "LV", "LY", "MA", "MC", "MD", "ME", "MF", "MG", "MH", "MK",
+    "ML", "MM", "MN", "MO", "MP", "MQ", "MR", "MS", "MT", "MU", "MV", "MW", "MX", "MY", "MZ", "NA",
+    "NC", "NE", "NF", "NG", "NI", "NL", "NO", "NP", "NR", "NU", "NZ", "OM", "PA", "PE", "PF", "PG",
+    "PH", "PK", "PL", "PM", "PN", "PR", "PS", "PT", "PW", "PY", "QA", "RE", "RO", "RS", "RU", "RW",
+    "SA", "SB", "SC", "SD", "SE", "SG", "SH", "SI", "SJ", "SK", "SL", "SM", "SN", "SO", "SR", "SS",
+    "ST", "SV", "SX", "SY", "SZ", "TC", "TD", "TF", "TG", "TH", "TJ", "TK", "TL", "TM", "TN", "TO",
+    "TR", "TT", "TV", "TW", "TZ", "UA", "UG", "UM", "US", "UY", "UZ", "VA", "VC", "VE", "VG", "VI",
+    "VN", "VU", "WF", "WS", "YE", "YT", "ZA", "ZM", "ZW",
+];
 
 #[derive(Debug)]
 pub enum AirGradientError {
@@ -59,6 +82,7 @@ pub enum AirGradientError {
         expected: &'static str,
     },
     CloudConfigurationConflict,
+    DataGovernanceDenied(DataGovernanceDenial),
     VerificationFailed(&'static str),
     Runtime(RuntimeError),
 }
@@ -106,6 +130,9 @@ impl fmt::Display for AirGradientError {
             Self::CloudConfigurationConflict => formatter.write_str(
                 "AirGradient configurationControl=cloud rejects local configuration; changing it to local requires a factory reset"
             ),
+            Self::DataGovernanceDenied(reason) => {
+                write!(formatter, "AirGradient data-governance policy denied the request: {reason:?}")
+            }
             Self::VerificationFailed(field) => {
                 write!(formatter, "AirGradient did not confirm updated {field}")
             }
@@ -292,6 +319,8 @@ pub struct AirGradientCorrectionProfile {
 #[derive(Debug, Clone, PartialEq)]
 pub struct AirGradientConfiguration {
     pub control: AirGradientConfigurationControl,
+    pub country: Option<AirGradientCountryCode>,
+    pub post_data_to_airgradient: Option<bool>,
     pub led_bar_mode: String,
     pub led_bar_brightness: u8,
     pub display_brightness: u8,
@@ -302,6 +331,34 @@ pub struct AirGradientConfiguration {
     pub nox_learning_offset: Option<u16>,
     pub monitor_display_compensated_values: Option<bool>,
     pub corrections: BTreeMap<String, AirGradientCorrectionProfile>,
+}
+
+#[derive(Clone, PartialEq, Eq)]
+pub struct AirGradientCountryCode(String);
+
+impl AirGradientCountryCode {
+    pub fn new(value: impl Into<String>) -> Result<Self, AirGradientError> {
+        let value = value.into().to_ascii_uppercase();
+        if ISO_3166_ALPHA_2_CODES
+            .binary_search(&value.as_str())
+            .is_err()
+        {
+            return Err(AirGradientError::Validation(
+                "country must be a two-letter ISO alpha-2 code".to_string(),
+            ));
+        }
+        Ok(Self(value))
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+}
+
+impl fmt::Debug for AirGradientCountryCode {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("AirGradientCountryCode([REDACTED])")
+    }
 }
 
 pub fn discovery_record(
@@ -467,6 +524,7 @@ pub struct InstalledAirGradientDevice {
 pub struct AirGradientRuntimeIntegration<T> {
     client: AirGradientClient<T>,
     command_targets: BTreeMap<EntityId, AirGradientCommandTarget>,
+    data_governance: DataGovernancePolicy,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -481,7 +539,13 @@ impl<T: AirGradientTransport> AirGradientRuntimeIntegration<T> {
         Self {
             client,
             command_targets: BTreeMap::new(),
+            data_governance: DataGovernancePolicy::default(),
         }
+    }
+
+    pub fn with_data_governance(mut self, data_governance: DataGovernancePolicy) -> Self {
+        self.data_governance = data_governance;
+        self
     }
 
     pub fn transport(&self) -> &T {
@@ -701,7 +765,16 @@ impl<T: AirGradientTransport> AirGradientRuntimeIntegration<T> {
     ) -> Result<CommandResult, AirGradientError> {
         let plan = airgradient_command_plan(&self.command_targets, &request)?;
         let target_entity_id = request.entity_id.clone();
-        let command = runtime.authorize_command_tool(principal_id, request, now_ms)?;
+        let command = runtime.authorize_command_tool(principal_id.clone(), request, now_ms)?;
+        if let Some(operation) = plan.governance {
+            authorize_data_use(
+                &self.data_governance,
+                &principal_id,
+                &target_entity_id,
+                operation,
+                now_ms,
+            )?;
+        }
         let configuration = self.client.configuration()?;
         if configuration.control == AirGradientConfigurationControl::Cloud {
             return Err(AirGradientError::CloudConfigurationConflict);
@@ -740,6 +813,13 @@ impl<T: AirGradientTransport> AirGradientRuntimeIntegration<T> {
 struct AirGradientCommandPlan {
     update: JsonValue,
     expected: Option<ExpectedConfiguration>,
+    governance: Option<GovernedAirGradientOperation>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum GovernedAirGradientOperation {
+    ConfigureCountry,
+    SetCloudUpload(bool),
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -759,6 +839,8 @@ enum ExpectedConfiguration {
         sensor: String,
         profile: AirGradientCorrectionProfile,
     },
+    Country(AirGradientCountryCode),
+    CloudUpload(bool),
 }
 
 impl ExpectedConfiguration {
@@ -800,6 +882,13 @@ impl ExpectedConfiguration {
                 configuration.corrections.get(sensor) == Some(profile),
                 "corrections",
             ),
+            Self::Country(expected) => {
+                (configuration.country.as_ref() == Some(expected), "country")
+            }
+            Self::CloudUpload(expected) => (
+                configuration.post_data_to_airgradient == Some(*expected),
+                "postDataToAirGradient",
+            ),
         };
         if matches {
             Ok(())
@@ -837,6 +926,7 @@ fn airgradient_command_plan(
             Ok(AirGradientCommandPlan {
                 update: configuration_update("ledBarMode", JsonValue::String(mode.clone())),
                 expected: Some(ExpectedConfiguration::IndicatorMode(mode)),
+                governance: None,
             })
         }
         CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorBrightness)
@@ -848,6 +938,7 @@ fn airgradient_command_plan(
             Ok(AirGradientCommandPlan {
                 update: configuration_update("ledBarBrightness", JsonValue::from(brightness)),
                 expected: Some(ExpectedConfiguration::IndicatorBrightness(brightness)),
+                governance: None,
             })
         }
         CommandType::DeviceControl(DeviceControlCommandType::SetDisplayBrightness)
@@ -859,6 +950,7 @@ fn airgradient_command_plan(
             Ok(AirGradientCommandPlan {
                 update: configuration_update("displayBrightness", JsonValue::from(brightness)),
                 expected: Some(ExpectedConfiguration::DisplayBrightness(brightness)),
+                governance: None,
             })
         }
         CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor)
@@ -870,6 +962,7 @@ fn airgradient_command_plan(
             Ok(AirGradientCommandPlan {
                 update: configuration_update("co2CalibrationRequested", JsonValue::Bool(true)),
                 expected: None,
+                governance: None,
             })
         }
         CommandType::DeviceControl(DeviceControlCommandType::SetTemperatureUnit)
@@ -889,6 +982,7 @@ fn airgradient_command_plan(
                     JsonValue::String(unit.as_str().to_string()),
                 ),
                 expected: Some(ExpectedConfiguration::TemperatureUnit(unit)),
+                governance: None,
             })
         }
         CommandType::DeviceControl(DeviceControlCommandType::SetParticulateDisplayStandard)
@@ -908,6 +1002,7 @@ fn airgradient_command_plan(
                     JsonValue::String(standard.as_str().to_string()),
                 ),
                 expected: Some(ExpectedConfiguration::ParticulateDisplayStandard(standard)),
+                governance: None,
             })
         }
         CommandType::DeviceControl(DeviceControlCommandType::SetAutomaticCo2BaselineDays)
@@ -922,6 +1017,7 @@ fn airgradient_command_plan(
             Ok(AirGradientCommandPlan {
                 update: configuration_update("abcDays", JsonValue::from(days)),
                 expected: Some(ExpectedConfiguration::AutomaticCo2BaselineDays(days)),
+                governance: None,
             })
         }
         CommandType::DeviceControl(DeviceControlCommandType::SetGasLearningOffsets)
@@ -951,6 +1047,7 @@ fn airgradient_command_plan(
             Ok(AirGradientCommandPlan {
                 update: JsonValue::Object(update),
                 expected: Some(ExpectedConfiguration::GasLearningOffsets { tvoc, nox }),
+                governance: None,
             })
         }
         CommandType::DeviceControl(DeviceControlCommandType::SetCompensatedDisplay)
@@ -965,6 +1062,7 @@ fn airgradient_command_plan(
                     JsonValue::Bool(enabled),
                 ),
                 expected: Some(ExpectedConfiguration::CompensatedDisplay(enabled)),
+                governance: None,
             })
         }
         CommandType::DeviceControl(DeviceControlCommandType::TestIndicator)
@@ -976,6 +1074,7 @@ fn airgradient_command_plan(
             Ok(AirGradientCommandPlan {
                 update: configuration_update("ledBarTestRequested", JsonValue::Bool(true)),
                 expected: None,
+                governance: None,
             })
         }
         CommandType::DeviceControl(DeviceControlCommandType::SetCorrectionProfile)
@@ -985,6 +1084,38 @@ fn airgradient_command_plan(
             Ok(AirGradientCommandPlan {
                 update,
                 expected: Some(ExpectedConfiguration::CorrectionProfile { sensor, profile }),
+                governance: None,
+            })
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetCountry)
+            if target == AirGradientCommandTarget::Configuration =>
+        {
+            let Value::Text(country) = &request.arguments else {
+                return invalid_command_arguments(
+                    request.command_type,
+                    "a two-letter ISO alpha-2 country code",
+                );
+            };
+            let country = AirGradientCountryCode::new(country)?;
+            Ok(AirGradientCommandPlan {
+                update: configuration_update(
+                    "country",
+                    JsonValue::String(country.as_str().to_string()),
+                ),
+                expected: Some(ExpectedConfiguration::Country(country)),
+                governance: Some(GovernedAirGradientOperation::ConfigureCountry),
+            })
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetCloudUpload)
+            if target == AirGradientCommandTarget::Configuration =>
+        {
+            let Value::Bool(enabled) = request.arguments else {
+                return invalid_command_arguments(request.command_type, "a boolean");
+            };
+            Ok(AirGradientCommandPlan {
+                update: configuration_update("postDataToAirGradient", JsonValue::Bool(enabled)),
+                expected: Some(ExpectedConfiguration::CloudUpload(enabled)),
+                governance: Some(GovernedAirGradientOperation::SetCloudUpload(enabled)),
             })
         }
         CommandType::DeviceControl(_) => invalid_command_arguments(
@@ -1003,6 +1134,47 @@ fn invalid_command_arguments<T>(
         command_type,
         expected,
     })
+}
+
+fn authorize_data_use(
+    policy: &DataGovernancePolicy,
+    principal_id: &AgentId,
+    entity_id: &EntityId,
+    operation: GovernedAirGradientOperation,
+    now_ms: u64,
+) -> Result<(), AirGradientError> {
+    let (category, operation, destination) = match operation {
+        GovernedAirGradientOperation::ConfigureCountry => (
+            DataCategory::CoarseLocation,
+            DataOperation::Configure,
+            DataDestination::LocalDevice,
+        ),
+        GovernedAirGradientOperation::SetCloudUpload(true) => (
+            DataCategory::EnvironmentalTelemetry,
+            DataOperation::StartEgress,
+            DataDestination::https_origin(AIRGRADIENT_CLOUD_ORIGIN).map_err(|error| {
+                AirGradientError::Validation(format!("invalid AirGradient cloud origin: {error}"))
+            })?,
+        ),
+        GovernedAirGradientOperation::SetCloudUpload(false) => (
+            DataCategory::EnvironmentalTelemetry,
+            DataOperation::StopEgress,
+            DataDestination::https_origin(AIRGRADIENT_CLOUD_ORIGIN).map_err(|error| {
+                AirGradientError::Validation(format!("invalid AirGradient cloud origin: {error}"))
+            })?,
+        ),
+    };
+    match policy.decide(&DataUseRequest {
+        principal_id,
+        resource_id: entity_id.as_str(),
+        category,
+        operation,
+        destination,
+        now_ms,
+    }) {
+        DataGovernanceDecision::Allow(_) => Ok(()),
+        DataGovernanceDecision::Deny(reason) => Err(AirGradientError::DataGovernanceDenied(reason)),
+    }
 }
 
 fn value_object(value: &Value) -> Option<&[(String, Value)]> {
@@ -1177,6 +1349,12 @@ fn configuration_value(configuration: &AirGradientConfiguration) -> Value {
             Value::Text(unit.as_str().to_string()),
         ));
     }
+    if let Some(enabled) = configuration.post_data_to_airgradient {
+        fields.push(("cloud_upload_enabled".to_string(), Value::Bool(enabled)));
+    }
+    if configuration.country.is_some() {
+        fields.push(("country_configured".to_string(), Value::Bool(true)));
+    }
     if let Some(standard) = configuration.particulate_display_standard {
         fields.push((
             "particulate_display_standard".to_string(),
@@ -1279,6 +1457,8 @@ fn parse_configuration(data: &JsonValue) -> Result<AirGradientConfiguration, Air
     };
     Ok(AirGradientConfiguration {
         control,
+        country: optional_country(data)?,
+        post_data_to_airgradient: optional_bool(data, "postDataToAirGradient")?,
         led_bar_mode: required_string(data, "ledBarMode")?.to_ascii_lowercase(),
         led_bar_brightness: required_percentage(data, "ledBarBrightness")?,
         display_brightness: required_percentage(data, "displayBrightness")?,
@@ -1290,6 +1470,21 @@ fn parse_configuration(data: &JsonValue) -> Result<AirGradientConfiguration, Air
         monitor_display_compensated_values: optional_bool(data, "monitorDisplayCompensatedValues")?,
         corrections: parse_corrections(data)?,
     })
+}
+
+fn optional_country(
+    data: &JsonMap<String, JsonValue>,
+) -> Result<Option<AirGradientCountryCode>, AirGradientError> {
+    let Some(value) = data.get("country") else {
+        return Ok(None);
+    };
+    if value.is_null() {
+        return Ok(None);
+    }
+    let value = value
+        .as_str()
+        .ok_or_else(|| AirGradientError::Validation("country must be text".to_string()))?;
+    AirGradientCountryCode::new(value).map(Some)
 }
 
 fn optional_temperature_unit(
@@ -1765,6 +1960,7 @@ fn decode_chunked(input: &[u8], maximum: usize) -> Result<Vec<u8>, AirGradientEr
 mod tests {
     use super::*;
     use smart_home_core::{CapabilityGrant, CapabilityGrantId, PrivilegeTier};
+    use smart_home_data_governance::{ConsentReceiptRef, DataPurpose, DataUseGrant};
     use std::net::TcpListener;
     use std::sync::atomic::{AtomicUsize, Ordering};
     use std::sync::{Arc, Mutex};
@@ -1776,6 +1972,9 @@ mod tests {
     const CONFIG_MODE_PM: &str = r#"{"configurationControl":"both","ledBarMode":"pm","ledBarBrightness":80,"displayBrightness":70}"#;
     const CONFIG_LED_35: &str = r#"{"configurationControl":"both","ledBarMode":"pm","ledBarBrightness":35,"displayBrightness":70}"#;
     const CONFIG_DISPLAY_25: &str = r#"{"configurationControl":"both","ledBarMode":"pm","ledBarBrightness":35,"displayBrightness":25}"#;
+    const CONFIG_GOVERNED_INITIAL: &str = r#"{"configurationControl":"both","country":"US","postDataToAirGradient":false,"ledBarMode":"co2","ledBarBrightness":80,"displayBrightness":70}"#;
+    const CONFIG_COUNTRY_CA: &str = r#"{"configurationControl":"both","country":"CA","postDataToAirGradient":false,"ledBarMode":"co2","ledBarBrightness":80,"displayBrightness":70}"#;
+    const CONFIG_UPLOAD_ENABLED: &str = r#"{"configurationControl":"both","country":"CA","postDataToAirGradient":true,"ledBarMode":"co2","ledBarBrightness":80,"displayBrightness":70}"#;
 
     fn advanced_config(
         temperature_unit: &str,
@@ -1866,6 +2065,43 @@ mod tests {
             )
             .with_expiry(20_000),
         );
+    }
+
+    fn governed_policy(principal: &AgentId, entity_id: &EntityId) -> DataGovernancePolicy {
+        let mut policy = DataGovernancePolicy::default();
+        policy
+            .add_grant(
+                DataUseGrant::new(
+                    principal.clone(),
+                    entity_id.as_str(),
+                    DataCategory::CoarseLocation,
+                    DataOperation::Configure,
+                    DataDestination::LocalDevice,
+                    DataPurpose::new("operator-selected monitor country").unwrap(),
+                    ConsentReceiptRef::new("consent://airgradient/country-1").unwrap(),
+                    1_000,
+                    20_000,
+                )
+                .unwrap(),
+            )
+            .unwrap();
+        policy
+            .add_grant(
+                DataUseGrant::new(
+                    principal.clone(),
+                    entity_id.as_str(),
+                    DataCategory::EnvironmentalTelemetry,
+                    DataOperation::StartEgress,
+                    DataDestination::https_origin(AIRGRADIENT_CLOUD_ORIGIN).unwrap(),
+                    DataPurpose::new("operator-selected AirGradient dashboard upload").unwrap(),
+                    ConsentReceiptRef::new("consent://airgradient/cloud-1").unwrap(),
+                    1_000,
+                    20_000,
+                )
+                .unwrap(),
+            )
+            .unwrap();
+        policy
     }
 
     #[test]
@@ -2080,6 +2316,170 @@ mod tests {
             Err(AirGradientError::Runtime(_))
         ));
         assert_eq!(integration.transport().calls, 2);
+    }
+
+    #[test]
+    fn governed_controls_without_consent_reach_no_additional_transport() {
+        let client = AirGradientClient::new(
+            AirGradientConfig::new(
+                BridgeId::trusted("airgradient.governance-denied"),
+                "http://127.0.0.1",
+            )
+            .unwrap(),
+            SequenceTransport::new(&[MEASUREMENTS, CONFIG_GOVERNED_INITIAL]),
+        )
+        .unwrap();
+        let mut integration = AirGradientRuntimeIntegration::new(client);
+        let principal = AgentId::trusted("agent:airgradient-governance-denied");
+        let mut runtime = SmartHomeRuntime::new();
+        grant(&mut runtime, &principal);
+        integration
+            .inspect_and_install_authorized(&mut runtime, principal.clone(), 5_000)
+            .unwrap();
+        for (command_type, arguments) in [
+            (
+                DeviceControlCommandType::SetCountry,
+                Value::Text("CA".to_string()),
+            ),
+            (DeviceControlCommandType::SetCloudUpload, Value::Bool(true)),
+        ] {
+            let request = RuntimeCommandToolRequest::new(
+                EntityId::trusted("airgradient:ecda3b1eaaaf:configuration"),
+                CommandType::DeviceControl(command_type),
+                arguments,
+            );
+            assert!(matches!(
+                integration.dispatch_command_authorized(
+                    &mut runtime,
+                    principal.clone(),
+                    request,
+                    6_000,
+                ),
+                Err(AirGradientError::DataGovernanceDenied(
+                    DataGovernanceDenial::NoMatchingConsent
+                ))
+            ));
+            assert_eq!(integration.transport().calls, 2);
+            assert_eq!(runtime.optimistic_state_count(), 0);
+        }
+    }
+
+    #[test]
+    fn governed_country_and_cloud_upload_controls_are_verified_over_real_tcp() {
+        let payloads = [
+            MEASUREMENTS,
+            CONFIG_GOVERNED_INITIAL,
+            CONFIG_GOVERNED_INITIAL,
+            "{}",
+            CONFIG_COUNTRY_CA,
+            CONFIG_COUNTRY_CA,
+            "{}",
+            CONFIG_UPLOAD_ENABLED,
+        ]
+        .into_iter()
+        .map(response)
+        .collect();
+        let (port, requests, handle) = start_server(payloads);
+        let client =
+            AirGradientClient::new(config(port), AirGradientLanTransport::default()).unwrap();
+        let principal = AgentId::trusted("agent:airgradient-governed");
+        let configuration = EntityId::trusted("airgradient:ecda3b1eaaaf:configuration");
+        let mut integration = AirGradientRuntimeIntegration::new(client)
+            .with_data_governance(governed_policy(&principal, &configuration));
+        let mut runtime = SmartHomeRuntime::new();
+        grant(&mut runtime, &principal);
+        integration
+            .inspect_and_install_authorized(&mut runtime, principal.clone(), 5_000)
+            .unwrap();
+
+        for (command_type, arguments) in [
+            (
+                DeviceControlCommandType::SetCountry,
+                Value::Text("ca".to_string()),
+            ),
+            (DeviceControlCommandType::SetCloudUpload, Value::Bool(true)),
+        ] {
+            integration
+                .dispatch_command_authorized(
+                    &mut runtime,
+                    principal.clone(),
+                    RuntimeCommandToolRequest::new(
+                        configuration.clone(),
+                        CommandType::DeviceControl(command_type),
+                        arguments,
+                    ),
+                    6_000,
+                )
+                .unwrap();
+        }
+
+        handle.join().unwrap();
+        let requests = requests.lock().unwrap();
+        assert_eq!(requests.len(), 8);
+        let put_requests = requests
+            .iter()
+            .filter(|request| request.starts_with(&format!("PUT {CONFIGURATION_PATH}")))
+            .collect::<Vec<_>>();
+        assert_eq!(put_requests.len(), 2);
+        assert!(put_requests[0].contains(r#"{"country":"CA"}"#));
+        assert!(put_requests[1].contains(r#"{"postDataToAirGradient":true}"#));
+        let state = runtime
+            .registry()
+            .entity(&configuration)
+            .unwrap()
+            .state
+            .as_ref()
+            .unwrap();
+        assert!(matches!(
+            &state.value,
+            Value::Object(fields)
+                if fields.contains(&("country_configured".to_string(), Value::Bool(true)))
+                    && fields.contains(&("cloud_upload_enabled".to_string(), Value::Bool(true)))
+                    && !format!("{fields:?}").contains("CA")
+        ));
+    }
+
+    #[test]
+    fn cloud_upload_shutdown_is_privacy_protective_without_a_consent_grant() {
+        let initial = CONFIG_UPLOAD_ENABLED.replace("\"country\":\"CA\"", "\"country\":\"US\"");
+        let disabled = CONFIG_GOVERNED_INITIAL;
+        let payloads = [
+            MEASUREMENTS.to_string(),
+            initial.clone(),
+            initial,
+            "{}".to_string(),
+            disabled.to_string(),
+        ]
+        .iter()
+        .map(|body| response(body))
+        .collect();
+        let (port, requests, handle) = start_server(payloads);
+        let client =
+            AirGradientClient::new(config(port), AirGradientLanTransport::default()).unwrap();
+        let mut integration = AirGradientRuntimeIntegration::new(client);
+        let principal = AgentId::trusted("agent:airgradient-disable-upload");
+        let mut runtime = SmartHomeRuntime::new();
+        grant(&mut runtime, &principal);
+        integration
+            .inspect_and_install_authorized(&mut runtime, principal.clone(), 5_000)
+            .unwrap();
+        integration
+            .dispatch_command_authorized(
+                &mut runtime,
+                principal,
+                RuntimeCommandToolRequest::new(
+                    EntityId::trusted("airgradient:ecda3b1eaaaf:configuration"),
+                    CommandType::DeviceControl(DeviceControlCommandType::SetCloudUpload),
+                    Value::Bool(false),
+                ),
+                6_000,
+            )
+            .unwrap();
+
+        handle.join().unwrap();
+        let requests = requests.lock().unwrap();
+        assert_eq!(requests.len(), 5);
+        assert!(requests[3].contains(r#"{"postDataToAirGradient":false}"#));
     }
 
     #[test]
@@ -2399,6 +2799,23 @@ mod tests {
         assert_eq!(configuration.led_bar_mode, "co2");
         assert_eq!(configuration.led_bar_brightness, 80);
         assert_eq!(configuration.display_brightness, 70);
+
+        let governed =
+            parse_configuration(&serde_json::from_str(CONFIG_UPLOAD_ENABLED).unwrap()).unwrap();
+        assert_eq!(
+            governed
+                .country
+                .as_ref()
+                .map(AirGradientCountryCode::as_str),
+            Some("CA")
+        );
+        assert_eq!(governed.post_data_to_airgradient, Some(true));
+        assert!(!format!("{governed:?}").contains("CA"));
+        assert!(AirGradientCountryCode::new("ZZ").is_err());
+        assert_eq!(ISO_3166_ALPHA_2_CODES.len(), 249);
+        assert!(ISO_3166_ALPHA_2_CODES
+            .windows(2)
+            .all(|pair| pair[0] < pair[1]));
 
         let advanced = advanced_config(
             "f",

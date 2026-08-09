@@ -42,6 +42,8 @@ Current scope:
   command-capability and policy-tier mappings
 - typed non-credential device configuration operations for display standards,
   learning settings, self-tests, and correction profiles
+- typed country and telemetry-upload configuration operations with a human-
+  approval tier for integrations that enforce data-governance policy
 - typed camera recording control with an explicit human-approval boundary
 - typed camera PTZ preset and bounded-movement control with an explicit
   human-approval boundary

@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.0
+
+- Add human-approved, readback-verified country and AirGradient cloud-upload
+  controls over the documented local `/config` contract.
+- Require exact host-owned data-use grants before country configuration or
+  vendor-cloud upload enablement can perform transport I/O; permit upload
+  shutdown without a consent grant.
+- Validate assigned ISO 3166 alpha-2 codes and keep the selected country out of
+  normalized state and debug output.
+
 ## 0.3.0
 
 - Add typed local temperature/PM display settings, ABC days, gas learning

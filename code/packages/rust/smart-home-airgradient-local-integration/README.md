@@ -18,13 +18,21 @@ US AQI display, 0-200 day automatic CO2 baseline calibration, 0-720 hour VOC
 and NOx learning offsets, compensated display values, LED self-test, and
 sensor-specific correction profiles. Persistent settings are read back and
 verified against the monitor's native response.
+Country configuration accepts assigned ISO 3166 alpha-2 codes and requires an
+exact host-owned coarse-location consent grant. Enabling AirGradient vendor
+cloud upload requires a separate environmental-telemetry egress grant bound to
+`https://api.airgradient.com`; disabling upload remains privacy-protective and
+does not require a consent grant. Both commands still require D23 human
+approval, and every persistent change is verified through `/config` readback.
+Normalized state records only whether a country is configured, never the
+country value.
 Monitors with `configurationControl=cloud` reject local commands explicitly;
 `configurationControl=both` succeeds with a warning that a later cloud update
 may overwrite the local value.
 
 MQTT broker and custom HTTP destination settings remain excluded because they
 can carry credentials or redirect telemetry and therefore require Vault leases
-and destination policy.
+and destination policy beyond the exact AirGradient vendor-cloud grant.
 
 ```bash
 cargo run -p smart-home-airgradient-local-integration -- discover ecda3b1eaaaf

@@ -657,7 +657,7 @@ impl LocalHttpRequestTemplate {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq)]
 pub struct LocalHttpRequestPlan {
     pub integration_id: IntegrationId,
     pub bridge_id: BridgeId,
@@ -670,6 +670,25 @@ pub struct LocalHttpRequestPlan {
     pub retry_policy: LocalHttpRetryPolicy,
     pub auth: LocalHttpAuth,
     pub metadata: Vec<Metadata>,
+}
+
+impl fmt::Debug for LocalHttpRequestPlan {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("LocalHttpRequestPlan")
+            .field("integration_id", &self.integration_id)
+            .field("bridge_id", &self.bridge_id)
+            .field("method", &self.method)
+            .field("url", &self.url)
+            .field("headers", &self.headers)
+            .field("body_bytes", &self.body.len())
+            .field("timeout_ms", &self.timeout_ms)
+            .field("idempotent", &self.idempotent)
+            .field("retry_policy", &self.retry_policy)
+            .field("auth", &self.auth)
+            .field("metadata", &self.metadata)
+            .finish()
+    }
 }
 
 impl LocalHttpRequestPlan {
@@ -1243,6 +1262,9 @@ mod tests {
         assert!(plan
             .metadata
             .contains(&Metadata::new("operation", "set-light-on")));
+        let debug = format!("{plan:?}");
+        assert!(debug.contains(&format!("body_bytes: {}", plan.body.len())));
+        assert!(!debug.contains(&format!("{:?}", plan.body)));
     }
 
     #[test]

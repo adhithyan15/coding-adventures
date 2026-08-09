@@ -1339,6 +1339,8 @@ pub enum DeviceControlCommandType {
     SetCompensatedDisplay,
     TestIndicator,
     SetCorrectionProfile,
+    SetCountry,
+    SetCloudUpload,
     SetCameraRecording,
     RecallCameraPtzPreset,
     MoveCameraPtz,
@@ -1390,7 +1392,9 @@ impl DeviceControlCommandType {
             | Self::SetAutomaticCo2BaselineDays
             | Self::SetGasLearningOffsets
             | Self::SetCompensatedDisplay
-            | Self::SetCorrectionProfile => CapabilityId::trusted("device.configuration"),
+            | Self::SetCorrectionProfile
+            | Self::SetCountry
+            | Self::SetCloudUpload => CapabilityId::trusted("device.configuration"),
             Self::SetCameraRecording => CapabilityId::trusted("camera.recording"),
             Self::RecallCameraPtzPreset | Self::MoveCameraPtz => {
                 CapabilityId::trusted("camera.ptz")
@@ -1456,6 +1460,8 @@ pub fn tier_for_command(command_type: CommandType) -> PrivilegeTier {
         | CommandType::DeviceControl(DeviceControlCommandType::SetAutomaticCo2BaselineDays)
         | CommandType::DeviceControl(DeviceControlCommandType::SetGasLearningOffsets)
         | CommandType::DeviceControl(DeviceControlCommandType::SetCorrectionProfile)
+        | CommandType::DeviceControl(DeviceControlCommandType::SetCountry)
+        | CommandType::DeviceControl(DeviceControlCommandType::SetCloudUpload)
         | CommandType::DeviceControl(DeviceControlCommandType::SetCameraRecording)
         | CommandType::DeviceControl(DeviceControlCommandType::RecallCameraPtzPreset)
         | CommandType::DeviceControl(DeviceControlCommandType::MoveCameraPtz) => {
@@ -4387,14 +4393,14 @@ mod tests {
             CommandType::DeviceControl(DeviceControlCommandType::SetDisplayBrightness),
             CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor),
             CommandType::DeviceControl(DeviceControlCommandType::SetTemperatureUnit),
-            CommandType::DeviceControl(
-                DeviceControlCommandType::SetParticulateDisplayStandard,
-            ),
+            CommandType::DeviceControl(DeviceControlCommandType::SetParticulateDisplayStandard),
             CommandType::DeviceControl(DeviceControlCommandType::SetAutomaticCo2BaselineDays),
             CommandType::DeviceControl(DeviceControlCommandType::SetGasLearningOffsets),
             CommandType::DeviceControl(DeviceControlCommandType::SetCompensatedDisplay),
             CommandType::DeviceControl(DeviceControlCommandType::TestIndicator),
             CommandType::DeviceControl(DeviceControlCommandType::SetCorrectionProfile),
+            CommandType::DeviceControl(DeviceControlCommandType::SetCountry),
+            CommandType::DeviceControl(DeviceControlCommandType::SetCloudUpload),
             CommandType::DeviceControl(DeviceControlCommandType::SetCameraRecording),
             CommandType::DeviceControl(DeviceControlCommandType::RecallCameraPtzPreset),
             CommandType::DeviceControl(DeviceControlCommandType::MoveCameraPtz),
