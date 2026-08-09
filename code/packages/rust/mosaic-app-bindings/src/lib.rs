@@ -84,6 +84,25 @@ pub fn flutter_pubspec_with_runtime_binding(pubspec_yaml: &str) -> String {
     )
 }
 
+/// Files that expose the fixed Mosaic application C ABI as a QML host object.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct QtRuntimeBinding {
+    pub header: String,
+    pub source: String,
+}
+
+/// Generate the standard Qt/QML host using Qt Core's dynamic loading and JSON
+/// APIs, with no application-specific C++ adapter.
+pub fn qt_runtime_binding() -> QtRuntimeBinding {
+    QtRuntimeBinding {
+        header: include_str!("../templates/qt/MosaicHost.h").replace(
+            "__MOSAIC_PROTOCOL_VERSION__",
+            &mosaic_app_runtime::PROTOCOL_VERSION.to_string(),
+        ),
+        source: include_str!("../templates/qt/MosaicHost.cpp").to_string(),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -264,5 +283,45 @@ mod tests {
             flutter_pubspec_with_runtime_binding("dependencies:\n  flutter:\n    sdk: flutter\n");
         assert!(pubspec.contains("ffi: '>=2.1.0 <3.0.0'"));
         assert!(pubspec.contains("flutter:\n    sdk: flutter"));
+    }
+
+    #[test]
+    fn qt_binding_owns_the_full_c_abi_lifecycle() {
+        let binding = qt_runtime_binding();
+        for symbol in [
+            "mosaic_app_create",
+            "mosaic_app_dispatch",
+            "mosaic_app_snapshot",
+            "mosaic_app_restore",
+            "mosaic_buffer_free",
+            "mosaic_app_destroy",
+        ] {
+            assert!(binding.source.contains(symbol), "missing {symbol}");
+        }
+        assert!(binding
+            .header
+            .contains("Q_INVOKABLE QVariantMap handleEvent"));
+        assert!(binding.header.contains("~MosaicHost() override"));
+        assert!(binding.source.contains("bufferFree_(buffer)"));
+        assert!(binding.source.contains("destroy_(app_)"));
+    }
+
+    #[test]
+    fn qt_binding_uses_shared_protocol_and_successful_sequences() {
+        let binding = qt_runtime_binding();
+        assert!(binding.header.contains(&format!(
+            "static constexpr quint32 ProtocolVersion = {};",
+            mosaic_app_runtime::PROTOCOL_VERSION
+        )));
+        assert!(!binding.header.contains("__MOSAIC_PROTOCOL_VERSION__"));
+        let dispatch = binding
+            .source
+            .find("dispatch_(app_, input, &output)")
+            .unwrap();
+        let commit = binding.source.find("sequence_ = nextSequence").unwrap();
+        assert!(
+            dispatch < commit,
+            "sequence must commit only after dispatch succeeds"
+        );
     }
 }

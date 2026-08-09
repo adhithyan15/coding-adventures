@@ -1041,15 +1041,27 @@ fn emit_project_shell(
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
             if let Some(proj) = r.project {
+                let runtime_binding = mosaic_app_bindings::qt_runtime_binding();
+                let readme = format!(
+                    "{}\n## Rust application runtime\n\nThis project includes Mosaic's standard \
+                     Qt binding. Set `MOSAIC_APP_LIBRARY` to the Rust application library \
+                     path, or package it under the conventional `mosaic_app` name. The \
+                     generated host owns the application handle, event sequence, snapshots, \
+                     returned buffers, and teardown. Explicit package host assets may replace \
+                     `MosaicHost.h/.cpp` when specialized platform integration is required.\n",
+                    proj.readme
+                );
                 // Qt's qmldir shell file would conflict with the
                 // step-5 qmldir (the module descriptor). The shell's
                 // qmldir is the same shape as the index path — UI32
                 // §3.4 says --emit-project's shell IS the qmldir.
-                let flat: [(&str, &str); 4] = [
+                let flat: [(&str, &str); 6] = [
                     ("CMakeLists.txt", &proj.cmake_lists),
                     ("main.cpp", &proj.main_cpp),
                     ("qmldir", &proj.qmldir),
-                    ("README.md", &proj.readme),
+                    ("README.md", &readme),
+                    ("MosaicHost.h", &runtime_binding.header),
+                    ("MosaicHost.cpp", &runtime_binding.source),
                 ];
                 for (rel, body) in flat {
                     let p = backend_dir.join(rel);
@@ -4378,7 +4390,14 @@ version = "1"
             ),
             (
                 Backend::Qt,
-                vec!["CMakeLists.txt", "main.cpp", "qmldir", "README.md"],
+                vec![
+                    "CMakeLists.txt",
+                    "main.cpp",
+                    "qmldir",
+                    "README.md",
+                    "MosaicHost.h",
+                    "MosaicHost.cpp",
+                ],
             ),
             (
                 Backend::SwiftUI,
@@ -4601,6 +4620,36 @@ version = "1"
         assert!(host.contains("FutureOr<Map<String, Object?>?> handleEvent"));
         let pubspec = fs::read_to_string(dir.join("pubspec.yaml")).expect("pubspec.yaml");
         assert!(pubspec.contains("ffi: '>=2.1.0 <3.0.0'"));
+        let readme = fs::read_to_string(dir.join("README.md")).expect("README.md");
+        assert!(readme.contains("MOSAIC_APP_LIBRARY"));
+        assert!(readme.contains("owns the application handle"));
+    }
+
+    #[test]
+    fn qt_project_shell_installs_standard_rust_runtime_binding() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Qt,
+            emit_project: true,
+            theme: None,
+        })
+        .expect("Qt package build");
+
+        let dir = out.path().join("qt");
+        let main = fs::read_to_string(dir.join("main.cpp")).expect("main.cpp");
+        assert!(main.contains("MosaicHost mosaicHost"));
+        assert!(main.contains("mosaicHost.attach(root)"));
+        let header = fs::read_to_string(dir.join("MosaicHost.h")).expect("MosaicHost.h");
+        assert!(header.contains("Q_INVOKABLE QVariantMap handleEvent"));
+        let source = fs::read_to_string(dir.join("MosaicHost.cpp")).expect("MosaicHost.cpp");
+        assert!(source.contains("QLibrary"));
+        assert!(source.contains("mosaic_app_create"));
+        assert!(source.contains("mosaic_app_dispatch"));
+        assert!(source.contains("bufferFree_(buffer)"));
+        assert!(source.contains("destroy_(app_)"));
         let readme = fs::read_to_string(dir.join("README.md")).expect("README.md");
         assert!(readme.contains("MOSAIC_APP_LIBRARY"));
         assert!(readme.contains("owns the application handle"));

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add the package-independent Qt/QML binding using Qt Core dynamic loading,
+  JSON, variants, and QObject invocation.
 - Add the package-independent Flutter/Dart FFI binding and preserve the public
   injectable `MosaicHost` contract for tests and specialized packages.
 - Add the package-independent XAML/.NET binding using built-in native loading

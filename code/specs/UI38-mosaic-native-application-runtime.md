@@ -293,12 +293,12 @@ unblocks multiple downstream targets; never count source generation as completio
 - [x] Implement `mosaic-app-runtime` contract types and deterministic engine tests.
 - [x] Implement the panic-safe native C ABI with buffer-ownership tests.
 - [ ] Implement WebAssembly exports over the same JSON envelopes.
-- [ ] Generate package-independent bindings for the five native backend families.
+- [x] Generate package-independent bindings for the five native backend families.
   - [x] Compose/JVM through the standard JNA binding.
   - [x] SwiftUI through the standard Foundation/C dynamic binding.
   - [x] XAML through the standard .NET native binding.
   - [x] Flutter through the standard Dart FFI binding.
-  - [ ] Qt/QML.
+  - [x] Qt/QML through the standard Qt Core binding.
 - [ ] Generate standard effect hosts, beginning with storage and lifecycle.
 - [ ] Add `native-complete` capability/degradation analysis to the compiler.
 - [ ] Add launch-and-dispatch conformance fixtures for every native backend.
@@ -308,7 +308,8 @@ unblocks multiple downstream targets; never count source generation as completio
 - [ ] Type-check the complete generated Trestle application on every target, not
   only focused fixtures; SwiftUI still needs type-correct truthiness lowering and
   collision-safe generated member names, while Flutter still needs boolean
-  truthiness lowering and required input values before that gate can pass.
+  truthiness lowering and required input values, and Qt still needs plain `Input`
+  lowering before that gate can pass.
 
 ### P1 — reusable application vocabulary
 

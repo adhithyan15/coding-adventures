@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased] - standard Qt Rust runtime binding
+
+- Qt project shells now install Mosaic's package-independent QObject binding
+  and connect it through the existing QML host seam.
+- Explicit package host assets retain precedence for specialized integrations.
+
 ## [Unreleased] - standard Flutter Rust runtime binding
 
 - Flutter project shells now install Mosaic's package-independent Dart FFI
