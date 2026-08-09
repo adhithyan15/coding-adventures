@@ -480,6 +480,15 @@ describe("dcOp", () => {
     expectClose(mosModel.params.AF, 1.4);
   });
 
+  it("gives canonical model-card parameters precedence during normalization", () => {
+    const diodeCard = normalizeModelCard("Dfast", "diode", {
+      IS: 2.0e-14,
+      JS: 4.0e-14,
+    });
+
+    expectClose(diodeCard.parameters.IS, 2.0e-14);
+  });
+
   it("derives MOS KP from surface mobility with explicit-KP precedence", () => {
     const defaultMobility = mosfetFromModelCard(
       "M1",

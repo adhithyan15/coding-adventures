@@ -4859,10 +4859,16 @@ the Rust, Python, and TypeScript surfaces together.
      instance parameter overrides.
 
 498. Python and TypeScript Berkeley SPICE MOS drain-junction capacitance alias precedence.
-   - Status: implemented in this MOS drain-junction capacitance precedence slice.
+   - Status: completed in PR 10206.
    - Both parser facades give engine-canonical Level-1 `CBD` precedence over
      the `CJD` alias during lowering, matching validation while preserving
      instance parameter overrides.
+
+499. Python and TypeScript model-card engine canonical alias precedence.
+   - Status: implemented in this engine normalization precedence slice.
+   - Both engine normalizers give explicitly supplied canonical parameter names
+     precedence over aliases regardless of source order, matching parser-facade
+     validation and lowering while leaving the unresolved JFET `B` policy unchanged.
 
 ## Backlog
 

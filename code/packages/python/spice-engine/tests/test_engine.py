@@ -815,6 +815,14 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert pytest.approx(1.4) == mos_model.model.model.params.AF
 
 
+def test_model_card_normalization_gives_canonical_parameters_precedence() -> None:
+    diode_card = normalize_model_card(
+        "Dfast", "diode", {"IS": 2.0e-14, "JS": 4.0e-14}
+    )
+
+    assert diode_card.parameters["IS"] == pytest.approx(2.0e-14)
+
+
 def test_mos_model_card_surface_mobility_derives_kp_with_explicit_precedence() -> None:
     default_mobility = mosfet_from_model_card(
         "M1",
