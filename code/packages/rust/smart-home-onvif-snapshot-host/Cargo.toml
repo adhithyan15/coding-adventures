@@ -1,0 +1,23 @@
+[package]
+name = "smart-home-onvif-snapshot-host"
+version = "0.1.0"
+edition = "2021"
+description = "Authorized ONVIF snapshot delivery host for the smart-home runtime"
+license = "MIT"
+
+[dependencies]
+coding_adventures_csprng = { path = "../csprng" }
+coding_adventures_vault_leases = { path = "../vault-leases" }
+coding_adventures_vault_sealed_store = { path = "../vault-sealed-store" }
+coding_adventures_zeroize = { path = "../zeroize" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+smart-home-camera-media = { path = "../smart-home-camera-media" }
+smart-home-camera-media-http-executor = { path = "../smart-home-camera-media-http-executor" }
+smart-home-core = { path = "../smart-home-core" }
+smart-home-onvif-integration = { path = "../smart-home-onvif-integration" }
+smart-home-runtime = { path = "../smart-home-runtime" }
+tls-platform = { path = "../tls-platform" }
+
+[dev-dependencies]
+storage-core = { path = "../storage-core" }

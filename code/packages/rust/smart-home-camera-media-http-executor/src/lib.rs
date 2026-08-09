@@ -10,8 +10,8 @@ use http1::parse_response_head;
 use http_core::{find_header, BodyKind, Header};
 use http_digest_auth::{DigestAlgorithm, DigestChallenge};
 use smart_home_camera_media::{
-    CameraMediaExecution, CameraMediaExecutionError, CameraMediaExecutionResult,
-    CameraMediaExecutor, CameraMediaKind,
+    CameraMediaCredentialRegistry, CameraMediaExecution, CameraMediaExecutionError,
+    CameraMediaExecutionResult, CameraMediaExecutor, CameraMediaKind,
 };
 use smart_home_core::EntityId;
 use std::collections::BTreeMap;
@@ -81,6 +81,7 @@ impl fmt::Debug for CameraMediaHttpCredentials {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CameraMediaHttpCredentialError {
     CredentialQuotaExceeded { maximum: usize },
+    CredentialAlreadyRegistered,
 }
 
 impl fmt::Display for CameraMediaHttpCredentialError {
@@ -91,6 +92,9 @@ impl fmt::Display for CameraMediaHttpCredentialError {
                     formatter,
                     "camera media credential quota of {maximum} is exhausted"
                 )
+            }
+            Self::CredentialAlreadyRegistered => {
+                formatter.write_str("camera media credentials are already registered")
             }
         }
     }
@@ -148,9 +152,10 @@ impl CameraMediaHttpExecutor {
         entity_id: EntityId,
         credentials: CameraMediaHttpCredentials,
     ) -> Result<(), CameraMediaHttpCredentialError> {
-        if !self.credentials.contains_key(&entity_id)
-            && self.credentials.len() >= self.policy.max_credentials
-        {
+        if self.credentials.contains_key(&entity_id) {
+            return Err(CameraMediaHttpCredentialError::CredentialAlreadyRegistered);
+        }
+        if self.credentials.len() >= self.policy.max_credentials {
             return Err(CameraMediaHttpCredentialError::CredentialQuotaExceeded {
                 maximum: self.policy.max_credentials,
             });
@@ -282,6 +287,23 @@ impl CameraMediaExecutor for CameraMediaHttpExecutor {
         _stream: &mut Self::Stream,
     ) -> Result<(), CameraMediaExecutionError> {
         Err(CameraMediaExecutionError::Rejected)
+    }
+}
+
+impl CameraMediaCredentialRegistry for CameraMediaHttpExecutor {
+    type Credentials = CameraMediaHttpCredentials;
+    type Error = CameraMediaHttpCredentialError;
+
+    fn register_credentials(
+        &mut self,
+        entity_id: EntityId,
+        credentials: Self::Credentials,
+    ) -> Result<(), Self::Error> {
+        CameraMediaHttpExecutor::register_credentials(self, entity_id, credentials)
+    }
+
+    fn unregister_credentials(&mut self, entity_id: &EntityId) -> bool {
+        CameraMediaHttpExecutor::unregister_credentials(self, entity_id)
     }
 }
 
@@ -927,6 +949,32 @@ mod tests {
         let debug = format!("{executor:?}");
         assert!(!debug.contains("operator"));
         assert!(!debug.contains("secret"));
+    }
+
+    #[test]
+    fn credential_registration_requires_explicit_removal_before_replacement() {
+        let entity_id = EntityId::trusted("camera.one");
+        let mut executor = fixture_executor();
+        executor
+            .register_credentials(
+                entity_id.clone(),
+                CameraMediaHttpCredentials::new("operator", "first-secret").unwrap(),
+            )
+            .unwrap();
+        assert_eq!(
+            executor.register_credentials(
+                entity_id.clone(),
+                CameraMediaHttpCredentials::new("operator", "second-secret").unwrap(),
+            ),
+            Err(CameraMediaHttpCredentialError::CredentialAlreadyRegistered)
+        );
+        assert!(executor.unregister_credentials(&entity_id));
+        executor
+            .register_credentials(
+                entity_id,
+                CameraMediaHttpCredentials::new("operator", "second-secret").unwrap(),
+            )
+            .unwrap();
     }
 
     #[test]

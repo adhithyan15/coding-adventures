@@ -456,6 +456,24 @@ pub trait CameraMediaExecutor {
     fn close_stream(&mut self, stream: &mut Self::Stream) -> Result<(), CameraMediaExecutionError>;
 }
 
+/// Process-local credential storage owned by a concrete media executor.
+///
+/// The service exposes this narrow contract so a trusted host can install
+/// credentials only around one authorized delivery without gaining access to
+/// endpoint URIs or the executor's other transport state.
+pub trait CameraMediaCredentialRegistry {
+    type Credentials;
+    type Error;
+
+    fn register_credentials(
+        &mut self,
+        entity_id: EntityId,
+        credentials: Self::Credentials,
+    ) -> Result<(), Self::Error>;
+
+    fn unregister_credentials(&mut self, entity_id: &EntityId) -> bool;
+}
+
 /// Authenticated identity source installed once by the native host.
 pub trait CameraMediaPrincipalSource {
     fn current_principal(&self) -> Option<AgentId>;
@@ -778,6 +796,27 @@ where
             .unregister_endpoint_at(self.clock.now_ms(), entity_id, kind)
     }
 
+    /// Validate current host identity and the exact D23 media grant without
+    /// requiring a registered endpoint or issuing a bearer lease.
+    pub fn authorize_access(
+        &self,
+        runtime: &SmartHomeRuntime,
+        entity_id: &EntityId,
+        kind: CameraMediaKind,
+    ) -> Result<(), CameraMediaError> {
+        let principal_id = self.authenticated_principal()?;
+        authorize_camera_access(runtime, &principal_id, entity_id, kind, self.clock.now_ms())
+            .map(|_| ())
+    }
+
+    /// Report whether this host currently owns an endpoint without revealing
+    /// its URI or reviewed connection target.
+    pub fn has_endpoint(&self, entity_id: &EntityId, kind: CameraMediaKind) -> bool {
+        self.broker
+            .endpoints
+            .contains_key(&(entity_id.clone(), kind))
+    }
+
     pub fn issue_lease(
         &mut self,
         runtime: &SmartHomeRuntime,
@@ -1011,6 +1050,26 @@ where
         self.principal_source
             .current_principal()
             .ok_or(CameraMediaError::Unauthenticated)
+    }
+}
+
+impl<Clock, Nonce, Principals, Executor> CameraMediaService<Clock, Nonce, Principals, Executor>
+where
+    Clock: CameraMediaClock,
+    Nonce: CameraMediaNonceSource,
+    Principals: CameraMediaPrincipalSource,
+    Executor: CameraMediaExecutor + CameraMediaCredentialRegistry,
+{
+    pub fn register_executor_credentials(
+        &mut self,
+        entity_id: EntityId,
+        credentials: Executor::Credentials,
+    ) -> Result<(), Executor::Error> {
+        self.executor.register_credentials(entity_id, credentials)
+    }
+
+    pub fn unregister_executor_credentials(&mut self, entity_id: &EntityId) -> bool {
+        self.executor.unregister_credentials(entity_id)
     }
 }
 
