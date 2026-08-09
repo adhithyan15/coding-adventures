@@ -74,7 +74,8 @@ describe("the gate that would have caught the A2 claim", () => {
     expect(vocab.shortfall).toBe(254);
     // Chapter 16 reclassifies two paradigm bundles as grammar and adds ver;
     // Chapter 17 correctly reclassifies its two tense bundles as grammar.
-    expect(spanish.vocabulary).toBe(132);
+    // Chapter 18 likewise replaces two word/phrase bundles with typed grammar.
+    expect(spanish.vocabulary).toBe(130);
     expect(vocab.shortfall).toBeGreaterThan(LEVEL_VOCABULARY["pre-A1"] - spanish.vocabulary);
   });
 

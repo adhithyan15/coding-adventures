@@ -6640,25 +6640,24 @@
     {
       "language": "spanish",
       "chapter": 18,
-      "sourceHash": "fnv1a64:feab749898cc6963",
+      "sourceHash": "fnv1a64:b8cc7964a7642317",
       "lessonIds": [
-        "ES-C18-subjuntivo",
-        "ES-C18-inherited-subjunctive-stems",
-        "ES-C18-subjunctive-outliers",
-        "ES-C18-subjunctive-name",
         "ES-C18-quiero-que",
-        "ES-C18-wanting-clause-trap",
+        "ES-C18-subjuntivo",
+        "ES-C18-comer-subjuntivo",
+        "ES-C18-vivir-subjuntivo",
+        "ES-C18-querer-subjuntivo",
+        "ES-C18-poder-subjuntivo",
+        "ES-C18-hacer-subjuntivo",
         "ES-C18-ojala",
-        "ES-C18-practice",
-        "ES-C18-practice-subjects",
-        "ES-C18-practice-mood"
+        "ES-C18-practice"
       ],
       "voiceLessons": 9,
-      "drivablePrefix": 0,
+      "drivablePrefix": 9,
       "text": "spanish/narration/ch18.txt",
       "json": "spanish/narration/ch18.json",
-      "textHash": "fnv1a64:0dbd8a206ed46237",
-      "jsonHash": "fnv1a64:30c53edbe9f17208"
+      "textHash": "fnv1a64:cc8acaf9215af24e",
+      "jsonHash": "fnv1a64:648458b90b2466a2"
     },
     {
       "language": "spanish",
