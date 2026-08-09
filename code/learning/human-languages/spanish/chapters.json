@@ -187,17 +187,29 @@
       "chapter": 8,
       "title": "Numbers, and How Old You Are",
       "label": "ch:numbers-and-age",
-      "canDo": "I can use Spanish numbers in context and say how old I am.",
+      "canDo": "I can count from one through ten and use singular forms of tener to ask and answer age with a number I know.",
       "spineNodes": [
-        "SPINE-TIME-OF-DAY",
+        "SPINE-COUNT-ONE-TO-FIVE",
         "SPINE-SAY-WHAT-I-DO"
       ],
       "payoff": {
         "lesson": "ES-C08-practice",
         "kind": "task",
-        "summary": "Complete ES-C08-practice, the canonical closing checkpoint, and demonstrate the chapter promise: use Spanish numbers in context and say how old I am.",
-        "assesses": [],
-        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+        "summary": "Count from one through ten, move among tengo, tienes, and tiene, then ask and answer age with the number frame taught in the chapter.",
+        "assesses": [
+          "ES-LEX-NUMBERS-1-5",
+          "ES-GRAMMAR-UNO-APOCOPE",
+          "ES-ETYMON-NUMBERS-1-5",
+          "ES-LEX-NUMBERS-6-10",
+          "ES-ETYMON-NUMBERS-6-10",
+          "ES-CULTURE-ROMAN-MONTH-NAMES",
+          "ES-LEX-TENER",
+          "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
+          "ES-ETYMON-TENERE",
+          "ES-LEX-CUANTOS-ANOS",
+          "ES-GRAMMAR-AGE-WITH-TENER",
+          "ES-ETYMON-QUANTUS-ANNUS"
+        ]
       }
     },
     {

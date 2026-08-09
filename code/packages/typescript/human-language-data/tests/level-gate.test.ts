@@ -136,11 +136,11 @@ describe("etymology is a hook, not a skill", () => {
     // versions of this assertion did not: `shortfall < shortfall + waived` is true of
     // any number, and comparing against a whole-track count could not fail because the
     // gate scopes to pre-A1. Both passed with the waiver deleted. So pin the figure:
-    // Spanish has 87 under-reinforced atoms at or below pre-A1; 34 of them are
-    // etymology hooks. Delete the waiver and this reads 87. (The detail says 35
-    // waived, not 34, because `waived` counts every etymology atom in scope — one of
-    // them is already revisited twice and was never in the shortfall.)
-    expect(reinforcement.shortfall).toBe(51);
+    // Chapter 8 places two more non-etymology atoms on the A1 path and reinforces
+    // them, so the pre-A1 shortfall falls from 51 to 49 without changing the visible
+    // etymology waiver. Delete the waiver and the shortfall still rises by the hooks
+    // that are intentionally read once rather than drilled.
+    expect(reinforcement.shortfall).toBe(49);
     expect(reinforcement.detail).toContain("36 etymology hook(s) waived");
   });
 

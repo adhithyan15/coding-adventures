@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Numbers, and How Old You Are",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:04ed5b71dcd6ef10",
+  "sourceHash": "fnv1a64:d7028d0f4b911e2d",
   "lessons": [
     {
       "id": "ES-C08-numeros-1-5",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b46d43b715b1eab9",
+      "sourceHash": "fnv1a64:f5af97e332184118",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Numbers are the most reused words in any language — and Spanish counts almost exactly like Latin, which means you already half-know them from English. Here are 1 to 5, each with the English words it planted."
+              "text": "Numbers are among the most reusable words in any language. Spanish keeps them close enough to Latin that English cousins can help you remember them. This lesson asks for only five: uno, dos, tres, cuatro, cinco."
             }
           ]
         },
@@ -46,11 +46,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "diphthong-ue — cuatro = KWA-tro (the cu- is a kw glide)."
+              "text": "diphthong-ue — cuatro begins KWA-."
             },
             {
               "kind": "speech",
-              "text": "r-tap — soft taps in tres, cuatro."
+              "text": "r-tap — give tres and cuatro one light tap, not an English r."
             }
           ]
         },
@@ -63,33 +63,45 @@
               "kind": "table",
               "headers": [
                 "Spanish",
-                "from Latin",
-                "English cousins"
+                "Latin source",
+                "English memory hook"
               ],
               "columns": 3,
               "rowCount": 5,
               "utterances": [
-                "Spanish: uno (1). from Latin: ūnus. English cousins: unit, union, unique, unanimous, universe (and a/an, one).",
-                "Spanish: dos (2). from Latin: duo. English cousins: duo, dual, duet, double, duplex.",
-                "Spanish: tres (3). from Latin: trēs. English cousins: trio, triple, trinity, trident, triangle.",
-                "Spanish: cuatro (4). from Latin: quattuor. English cousins: quart, quarter, quadrant, square (Latin qu- becomes Spanish cu-).",
-                "Spanish: cinco (5). from Latin: quīnque. English cousins: quintet, quintessence, quintuplet (Latin qu- becomes Spanish c-)."
+                "Spanish: uno (1). Latin source: ūnus. English memory hook: unit, unique.",
+                "Spanish: dos (2). Latin source: duo. English memory hook: duo, dual.",
+                "Spanish: tres (3). Latin source: trēs. English memory hook: trio, triple.",
+                "Spanish: cuatro (4). Latin source: quattuor. English memory hook: quart, quarter.",
+                "Spanish: cinco (5). Latin source: quīnque. English memory hook: quintet, quintuplet."
               ]
             },
             {
               "kind": "speech",
-              "text": "So cinco and quintet are the same number — Latin quīnque just softened its qu- to a Spanish c-. Count the family on your fingers: unit, duo, trio, quart, quint."
+              "text": "The spellings changed, but the family resemblance remains. Cinco and quintet both descend from quīnque; Spanish changed the opening sound while English borrowed a more visibly Latin form."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: uno becomes un / una",
+          "title": "Grammar Lens: uno becomes un or una",
           "segments": [
             {
               "kind": "speech",
-              "text": "uno shrinks before a noun: un (masc.) / una (fem.) — and these double as \"a/an\" (Spanish makes no difference between \"one\" and \"a\"): un café = \"a coffee / one coffee.\" The others (dos, tres…) don't change."
+              "text": "When uno stands alone, it means “one.” Before a noun it shortens:"
+            },
+            {
+              "kind": "speech",
+              "text": "un before a masculine noun: un café — one coffee / a coffee."
+            },
+            {
+              "kind": "speech",
+              "text": "una before a feminine noun: una noche — one night / a night."
+            },
+            {
+              "kind": "speech",
+              "text": "This shortening is called apocope: the end drops away. Spanish uses the same forms for “one” and “a/an”; context supplies the difference."
             }
           ]
         },
@@ -107,29 +119,67 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"uno, dos, tres, cuatro, cinco\" — count up",
+              "instruction": "“uno, dos, tres, cuatro, cinco” — once up, once down",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"uno, dos, tres, cuatro, cinco\" — count up]"
+              "source": "[YOU SAY: “uno, dos, tres, cuatro, cinco” — once up, once down]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "each with its English cousin — \"uno/unit, dos/duo, tres/trio, cuatro/ quart, cinco/quint\"",
+              "instruction": "“uno/unit, dos/duo, tres/trio, cuatro/quart, cinco/quintet”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: each with its English cousin — \"uno/unit, dos/duo, tres/trio, cuatro/ quart, cinco/quint\"]"
+              "source": "[YOU SAY: “uno/unit, dos/duo, tres/trio, cuatro/quart, cinco/quintet”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"un café, una cerveza\" — uno becomes un/una before a noun",
+              "instruction": "“un café, una noche” — hear uno shorten",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"un café, una cerveza\" — *uno* → un/una before a noun]"
+              "source": "[YOU SAY: “un café, una noche” — hear *uno* shorten]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C08-numeros-1-5-count",
+              "prompt": "Write the Spanish numbers 1 through 5 in order.",
+              "assesses": [
+                "ES-LEX-NUMBERS-1-5"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "uno, dos, tres, cuatro, cinco",
+                "uno dos tres cuatro cinco"
+              ],
+              "feedback": {
+                "correct": "Right: uno, dos, tres, cuatro, cinco.",
+                "incorrect": "Count in order: uno, dos, tres, cuatro, cinco."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C08-numeros-1-5-coffee",
+              "prompt": "Say 'one coffee' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-UNO-APOCOPE",
+                "ES-LEX-CAFE",
+                "ES-GRAMMAR-CAFE-MASCULINE"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "un café",
+                "un cafe"
+              ],
+              "feedback": {
+                "correct": "Right: uno shortens to un before the masculine noun café.",
+                "incorrect": "Shorten uno to un: un café."
+              }
             }
           ]
         },
@@ -146,7 +196,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give 1–5 in Spanish. (Uno, dos, tres, cuatro, cinco.) What English word is cinco the cousin of, and why does it look different? (Quintet — Latin quīnque's qu- became Spanish c-.) What two things does un/una mean? (\"One\" and \"a/an.\") Next: 6–10."
+              "text": "Give 1–5 in Spanish. (Uno, dos, tres, cuatro, cinco.) Which English word helps you remember cinco? (Quintet, through Latin quīnque.) What happens to uno before a noun? (It becomes un or una.) Next: six through ten."
             }
           ]
         }
@@ -155,17 +205,17 @@
     {
       "id": "ES-C08-numeros-6-10",
       "sequence": 790,
-      "title": "seis, siete, ocho, nueve, diez — and the calendar's secret",
+      "title": "seis, siete, ocho, nueve, diez — and the calendar's old count",
       "headword": "seis, siete, ocho, nueve, diez",
       "romanization": "seis, siete, ocho, nueve, diez",
-      "gloss": "the numbers 6–10 (and the months hidden in them)",
+      "gloss": "the numbers 6–10 and the old counting hidden in month names",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed0886a860ddd794",
+      "sourceHash": "fnv1a64:069521116cafc722",
       "notice": null,
       "blocks": [
         {
@@ -181,7 +231,7 @@
             },
             {
               "kind": "speech",
-              "text": "The rest of the way to ten — and these four hide a fact that explains the English calendar: September through December are just Latin for 7, 8, 9, 10."
+              "text": "You can count to five. Add one small set and you reach ten: seis, siete, ocho, nueve, diez. Four English month names will help hold the last four in memory."
             }
           ]
         },
@@ -192,7 +242,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "diphthong-ie — siete = SYE-teh, nueve = NWE-veh (the ie/ue glide, a Spanish signature)."
+              "text": "diphthong-ie — siete begins SYE-."
+            },
+            {
+              "kind": "speech",
+              "text": "diphthong-ue — nueve begins NWE-."
             }
           ]
         },
@@ -205,45 +259,41 @@
               "kind": "table",
               "headers": [
                 "Spanish",
-                "from Latin",
-                "English cousins"
+                "Latin source",
+                "English memory hook"
               ],
               "columns": 3,
               "rowCount": 5,
               "utterances": [
-                "Spanish: seis (6). from Latin: sex. English cousins: sextet, sextant, semester (six months).",
-                "Spanish: siete (7). from Latin: septem. English cousins: September (the 7th month!), septet, septuagenarian.",
-                "Spanish: ocho (8). from Latin: octō. English cousins: October (8th), octopus, octave, octagon.",
-                "Spanish: nueve (9). from Latin: novem. English cousins: November (9th), novena.",
-                "Spanish: diez (10). from Latin: decem. English cousins: December (10th), decimal, decade, dime, decimate."
+                "Spanish: seis (6). Latin source: sex. English memory hook: sextet.",
+                "Spanish: siete (7). Latin source: septem. English memory hook: September, septet.",
+                "Spanish: ocho (8). Latin source: octō. English memory hook: October, octave.",
+                "Spanish: nueve (9). Latin source: novem. English memory hook: November.",
+                "Spanish: diez (10). Latin source: decem. English memory hook: December, decimal."
               ]
             },
             {
               "kind": "speech",
-              "text": "Why are the \"7th–10th\" months numbered 7–10 when they sit at 9–12? Because the old Roman year began in March — so September really was the 7th month. Julius and Augustus later inserted July and August (named for themselves), shoving the counting-months out of place, but the Latin numbers stuck. Every time you say December, you're saying Roman \"ten.\""
+              "text": "Say the chain aloud: siete–September, ocho–October, nueve–November, diez–December. It is a memory path, not a second list to memorize."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: building the teens (a fusion)",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: why September says “seven”",
           "segments": [
             {
               "kind": "speech",
-              "text": "Past ten, Spanish fuses \"ten and X\" into one word:"
+              "text": "The month names preserve an old Roman count in which March was first: September through December occupied positions seven through ten. When January and February stood before March, those names shifted to positions nine through twelve but kept their old numbers."
             },
             {
               "kind": "speech",
-              "text": "diez y seis (\"ten and six\") becomes dieciséis (16)."
+              "text": "One tempting story is wrong: July and August were not new months inserted into the middle. The existing months Quintilis and Sextilis were later renamed for Julius Caesar and Augustus. The calendar moved; the numbered names stayed."
             },
             {
               "kind": "speech",
-              "text": "diez y siete becomes diecisiete (17), and so on to 19."
-            },
-            {
-              "kind": "speech",
-              "text": "English did the identical thing: six + ten becomes sixteen. So dieciséis and sixteen are built the same way, from the same two numbers."
+              "text": "Numbers above ten belong to a later chapter. For now, stop cleanly at diez."
             }
           ]
         },
@@ -261,29 +311,59 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"seis, siete, ocho, nueve, diez\" — finish the count",
+              "instruction": "count from uno through diez",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"seis, siete, ocho, nueve, diez\" — finish the count]"
+              "source": "[YOU SAY: count from *uno* through *diez*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"siete/September, ocho/October, nueve/November, diez/December\"",
+              "instruction": "“siete/September, ocho/October, nueve/November, diez/December”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"siete/September, ocho/October, nueve/November, diez/December\"]"
+              "source": "[YOU SAY: “siete/September, ocho/October, nueve/November, diez/December”]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"diez y seis becomes dieciséis\" — the fusion, like sixteen",
-              "spoken": true,
-              "scored": false,
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C08-numeros-6-10-count",
+              "prompt": "Write the Spanish numbers 6 through 10 in order.",
+              "assesses": [
+                "ES-LEX-NUMBERS-6-10"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "seis, siete, ocho, nueve, diez",
+                "seis siete ocho nueve diez"
+              ],
+              "feedback": {
+                "correct": "Right: seis, siete, ocho, nueve, diez.",
+                "incorrect": "Count in order: seis, siete, ocho, nueve, diez."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C08-numeros-6-10-month-change",
+              "prompt": "Were July and August inserted into the Roman calendar or were older months renamed?",
+              "assesses": [
+                "ES-CULTURE-ROMAN-MONTH-NAMES",
+                "ES-ETYMON-NUMBERS-6-10"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"diez y seis → dieciséis\" — the fusion, like *sixteen*]"
+              "acceptedResponses": [
+                "older months were renamed",
+                "renamed",
+                "they were renamed",
+                "the older months were renamed"
+              ],
+              "feedback": {
+                "correct": "Right: Quintilis and Sextilis were renamed; they were not inserted.",
+                "incorrect": "They were existing months renamed for Julius Caesar and Augustus."
+              }
             }
           ]
         },
@@ -300,7 +380,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give 6–10. (Seis, siete, ocho, nueve, diez.) Why is December Latin for \"ten\"? (The Roman year started in March, so the 10th month was December.) How do you make 16, and what English word matches? (diez y seis becomes dieciséis; sixteen.) Next: the verb for having — tener."
+              "text": "Give 6–10. (Seis, siete, ocho, nueve, diez.) Why does December carry the old word for ten? (The month names preserve a March-first count.) What happened to Quintilis and Sextilis? (They were renamed July and August.) Next: the verb tener, “to have.”"
             }
           ]
         }
@@ -309,17 +389,17 @@
     {
       "id": "ES-C08-tener",
       "sequence": 800,
-      "title": "tener — \"to have,\" your first irregular verb",
+      "title": "tener — “to have,” with two visible changes",
       "headword": "tener",
       "romanization": "tener",
-      "gloss": "to have (your first irregular / stem-changing verb)",
+      "gloss": "to have — a common verb with two visible changes",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41443319609fc232",
+      "sourceHash": "fnv1a64:e34b6f58ff7022fb",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +415,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every verb so far has been regular — hablo, como, vivo, all tidy. tener (\"to have\") is your first irregular one, and it breaks the rule in the two ways Spanish verbs most often do. Meet the exceptions now; you'll see them again and again."
+              "text": "Regular comer gave you como, comes, come. The common verb tener, “to have,” belongs to the same -er family, but its three singular forms change in two places. Learn only those three today."
             }
           ]
         },
@@ -346,7 +426,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "diphthong-ie — the stem grows a -ie-: tienes = TYE-nes."
+              "text": "diphthong-ie — tienes begins TYE-."
+            },
+            {
+              "kind": "speech",
+              "text": "r-tap — one light tap at the end of tener."
             }
           ]
         },
@@ -357,51 +441,57 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "tener comes from Latin tenēre, \"to hold, to keep, to grasp.\" Having is, at root, holding. That root has a firm grip on English:"
+              "text": "tener descends from Latin tenēre, “to hold or keep.” Having is, at root, holding. English borrowed the same root many times:"
             },
             {
               "kind": "speech",
-              "text": "tenant (one who holds land), tenure, tenacious (holding on), tenable, tenet (a held belief)."
+              "text": "tenant, tenure, tenacious — holding land, office, or position."
             },
             {
               "kind": "speech",
-              "text": "with prefixes: contain (\"hold together\"), retain (\"hold back\"), maintain (\"hold in hand\"), sustain (\"hold up\"), detain, obtain."
+              "text": "contain, retain, maintain, sustain — holding together, back, in hand, or up."
+            },
+            {
+              "kind": "speech",
+              "text": "When you see -tain in English, think of Spanish tener."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: the two irregularities",
+          "title": "Grammar Lens: the three singular forms",
           "segments": [
             {
-              "kind": "speech",
-              "text": "tener misbehaves in exactly the two classic Spanish ways:"
-            },
-            {
-              "kind": "speech",
-              "text": "The yo form is odd: not \"teno\" but tengo (a -g- appears). Several common verbs do this (hago, pongo, salgo, vengo)."
-            },
-            {
-              "kind": "speech",
-              "text": "The stem vowel breaks e becomes ie in the stressed forms — a stem-changer:"
-            },
-            {
               "kind": "table",
-              "headers": [],
+              "headers": [
+                "person",
+                "regular comer",
+                "irregular tener"
+              ],
               "columns": 3,
-              "rowCount": 5,
+              "rowCount": 3,
               "utterances": [
-                "yo, tengo, (the -go form).",
-                "tú, tienes, (e becomes ie).",
-                "él/ella/usted, tiene, (e becomes ie).",
-                "nosotros, tenemos, (back to e — unstressed).",
-                "ellos/ustedes, tienen, (e becomes ie)."
+                "person: yo. regular comer: como. irregular tener: tengo.",
+                "person: tú. regular comer: comes. irregular tener: tienes.",
+                "person: él / ella / usted. regular comer: come. irregular tener: tiene."
               ]
             },
             {
               "kind": "speech",
-              "text": "Notice tenemos keeps the plain e — the vowel only cracks to ie when it's stressed. That \"boot\" pattern (all forms but nosotros/vosotros) is the single most common irregularity in Spanish; tener is your model for it."
+              "text": "Two small changes do all the work:"
+            },
+            {
+              "kind": "speech",
+              "text": "yo adds g: tengo, not teno."
+            },
+            {
+              "kind": "speech",
+              "text": "The other two singular forms change e becomes ie: tienes, tiene."
+            },
+            {
+              "kind": "speech",
+              "text": "Later chapters will expand both patterns. For now, hold only tengo, tienes, tiene — the same three-person frame you already use for regular verbs."
             }
           ]
         },
@@ -419,29 +509,49 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"tener\" — te-NER",
+              "instruction": "“tener — tengo, tienes, tiene”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"tener\" — *te-NER*]"
+              "source": "[YOU SAY: “tener — tengo, tienes, tiene”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"tengo, tienes, tiene, tenemos, tienen\" — hear the ie crack in, and drop out for tenemos",
+              "instruction": "“tener / tenant / retain” — the shared idea is hold",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"tengo, tienes, tiene, tenemos, tienen\" — hear the *ie* crack in, and drop out for *tenemos*]"
+              "source": "[YOU SAY: “tener / tenant / retain” — the shared idea is *hold*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"tener\" then English \"tenant, retain, contain\" — the hold family",
+              "instruction": "compare “como, comes, come” with “tengo, tienes, tiene”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"tener\" then English \"tenant, retain, contain\" — the *hold* family]"
+              "source": "[YOU SAY: compare “como, comes, come” with “tengo, tienes, tiene”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C08-tener-singular-forms",
+              "prompt": "Give the yo, tú, and él/ella forms of tener, in that order.",
+              "assesses": [
+                "ES-LEX-TENER",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "tengo, tienes, tiene",
+                "tengo tienes tiene",
+                "tengo / tienes / tiene"
+              ],
+              "feedback": {
+                "correct": "Right: tengo, tienes, tiene.",
+                "incorrect": "Use the -g yo form, then the two e becomes ie forms: tengo, tienes, tiene."
+              }
             }
           ]
         },
@@ -458,7 +568,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin verb is tener from, and its English cousins? (tenēre, \"to hold\" — tenant, retain, contain.) Its two irregularities? (The -go yo-form tengo; the e becomes ie stem-change tienes/tiene/tienen.) Which form keeps the plain e? (tenemos — it's unstressed.) Next: use it to give your age."
+              "text": "What did Latin tenēre mean? (“To hold.”) Give the three singular forms. (Tengo, tienes, tiene.) What are the two changes? (g appears in tengo; e becomes ie in tienes/tiene.) Next: use them to ask and answer about age."
             }
           ]
         }
@@ -467,17 +577,17 @@
     {
       "id": "ES-C08-cuantos-anos",
       "sequence": 810,
-      "title": "¿Cuántos años tienes? — \"how old are you?\"",
+      "title": "¿Cuántos años tienes? — asking age",
       "headword": "¿Cuántos años tienes?",
       "romanization": "¿Cuántos años tienes?",
-      "gloss": "how old are you? (literally \"how many years do you have?\")",
+      "gloss": "how old are you? — literally, how many years do you have?",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8e8c4495c46b9fb",
+      "sourceHash": "fnv1a64:c1e1e3e31a2e0110",
       "notice": null,
       "blocks": [
         {
@@ -493,7 +603,7 @@
             },
             {
               "kind": "speech",
-              "text": "With tener and your numbers, you can ask and give age — and Spanish does it in a way English doesn't: you don't be a number of years old, you have them."
+              "text": "You now have tengo, tienes, tiene and the numbers one through ten. Put them together and you can ask or answer age. Spanish frames age as something you have."
             }
           ]
         },
@@ -504,40 +614,47 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "¿Cuántos años tienes? = \"How old are you?\" literally: \"How many years do you have?\""
+              "text": "¿Cuántos años tienes? “How old are you?” — literally, “How many years do you have?”"
             },
             {
               "kind": "speech",
-              "text": "cuántos = \"how many,\" from Latin quantus, \"how much/great\" becomes English quantity, quantum, quantify. (It's the qu- question family — qué, cómo, dónde, cuántos.) It agrees: cuántos años (masc. pl.)."
+              "text": "cuántos means “how many.” Latin quantus, “how much,” also gives English quantity, quantum, quantify."
             },
             {
               "kind": "speech",
-              "text": "años = \"years,\" from Latin annus — and look, the ñ is back (the doubled-nn of annus becomes añ, your writing lesson). annus also gives English annual, anniversary, biennial."
+              "text": "años means “years.” Latin annus also gives annual and anniversary. Its doubled nn became Spanish ñ, exactly as your script lesson showed."
             },
             {
               "kind": "speech",
-              "text": "tienes = \"you have\" (the tener you just learned)."
+              "text": "tienes is the tú form of tener."
             },
             {
               "kind": "speech",
-              "text": "Age is had, not been."
-            },
-            {
-              "kind": "speech",
-              "text": "This is a real difference to internalize: Spanish counts age with tener (\"have\"), not ser/estar (\"be\")."
-            },
-            {
-              "kind": "speech",
-              "text": "— ¿Cuántos años tienes? — Tengo veinte años. (\"I have twenty years.\")"
-            },
-            {
-              "kind": "speech",
-              "text": "Saying \"soy veinte\" (\"I am twenty\") is simply wrong in Spanish. You possess your years; you don't equal them. (French and Italian do the same — j'ai vingt ans, ho vent'anni, all \"I have.\")"
+              "text": "Keep the marks visible: opening ¿, the accent in cuántos, and the letter ñ in años each carries information."
             }
           ]
         },
         {
           "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: Spanish “has” years",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English says “I am ten years old.” Spanish says:"
+            },
+            {
+              "kind": "speech",
+              "text": "— ¿Cuántos años tienes? — Tengo diez años."
+            },
+            {
+              "kind": "speech",
+              "text": "The reusable frame is Tengo + number + años. Use a number you already know: Tengo ocho años, Tengo nueve años, Tengo diez años. Larger numbers wait until their own lesson; the grammar does not change."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -550,34 +667,69 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"¿Cuántos años tienes?\" — KWAN-tos AN-yos TYE-nes",
+              "instruction": "“¿Cuántos años tienes?”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿Cuántos años tienes?\" — *KWAN-tos AN-yos TYE-nes*]"
+              "source": "[YOU SAY: “¿Cuántos años tienes?”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "answer — \"Tengo ___ años\" with your own number",
+              "instruction": "“Tengo ocho años. Tengo nueve años. Tengo diez años.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: answer — \"Tengo ___ años\" with your own number]"
+              "source": "[YOU SAY: “Tengo ocho años. Tengo nueve años. Tengo diez años.”]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "never \"soy ___\"; always \"tengo ___ años\" — age is had",
-              "spoken": true,
-              "scored": false,
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C08-cuantos-anos-ask",
+              "prompt": "Ask one friend 'How old are you?' in Spanish.",
+              "assesses": [
+                "ES-LEX-CUANTOS-ANOS",
+                "ES-GRAMMAR-AGE-WITH-TENER",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "¿cuántos años tienes?",
+                "cuántos años tienes?",
+                "¿cuántos años tienes",
+                "cuantos anos tienes?"
+              ],
+              "feedback": {
+                "correct": "Right: ¿Cuántos años tienes?",
+                "incorrect": "Use cuántos años plus the tú form tienes: ¿Cuántos años tienes?"
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C08-cuantos-anos-eight",
+              "prompt": "Answer 'I am eight years old' using the Spanish age frame.",
+              "assesses": [
+                "ES-GRAMMAR-AGE-WITH-TENER",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
+                "ES-LEX-NUMBERS-6-10"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: never \"soy ___\"; always \"tengo ___ años\" — age is *had*]"
+              "acceptedResponses": [
+                "tengo ocho años.",
+                "tengo ocho años",
+                "tengo ocho anos",
+                "tengo ocho anos."
+              ],
+              "feedback": {
+                "correct": "Right: Spanish has years — Tengo ocho años.",
+                "incorrect": "Use tengo plus the number and años: Tengo ocho años."
+              }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -589,7 +741,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does ¿Cuántos años tienes? literally ask? (\"How many years do you have?\") Which verb gives age in Spanish — ser or tener? (tener — you have your years.) What letter does años bring back, and from what? (The ñ, from Latin annus's doubled nn.) Next: put counting and age together in practice."
+              "text": "What does the question literally ask? (“How many years do you have?”) Which verb carries age? (Tener.) How do cuántos and años connect to English? (Quantus becomes quantity; annus becomes annual.) Next: combine counting, tener, and age in one short exchange."
             }
           ]
         }
@@ -598,17 +750,17 @@
     {
       "id": "ES-C08-practice",
       "sequence": 820,
-      "title": "Practice — numbers, having, and age",
+      "title": "Practice — counting, having, and age",
       "headword": "(practice)",
       "romanization": "(practice)",
-      "gloss": "counting, having, and telling your age",
+      "gloss": "counting, having, and asking or answering age",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:933eafd23ceb4124",
+      "sourceHash": "fnv1a64:dedf495565a1811f",
       "notice": null,
       "blocks": [
         {
@@ -624,39 +776,45 @@
             },
             {
               "kind": "speech",
-              "text": "Two new powers this chapter: you can count and you can talk about what you have (including your years). Drill the numbers and the irregular tener until both are automatic."
+              "text": "This checkpoint asks for three small moves: count to ten, choose the right singular form of tener, and use the age frame. Everything here has already appeared."
             }
           ]
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Count and conjugate",
+          "type": "grammar",
+          "title": "Grammar Lens: count and conjugate",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
+              "kind": "speech",
+              "text": "Count: uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve, diez."
             },
             {
               "kind": "speech",
-              "text": "Count up: uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve, diez."
+              "text": "Change person: tengo, tienes, tiene."
             },
             {
               "kind": "speech",
-              "text": "tener, all forms: tengo, tienes, tiene, tenemos, tienen (mind the tengo and the e becomes ie crack)."
+              "text": "Remember the roots: quīnque helps with cinco; decem helps with diez; tenēre, “hold,” helps with tener."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the calendar correction: July and August were renamed, not inserted."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "Say something real",
+          "type": "input",
+          "title": "The exchange — use only what you know",
           "segments": [
             {
               "kind": "speech",
-              "text": "— Hola. ¿Cómo te llamas? — Me llamo Ana. ¿Y cuántos años tienes? — Tengo veintiuno. ¿Y tú? — Tengo diecinueve. — Un café, por favor. ¿Cuánto es? — Dos euros."
+              "text": "— Hola. ¿Cómo te llamas? — Me llamo Ana. ¿Cuántos años tienes? — Tengo diez años. ¿Y tú? — Tengo nueve años."
+            },
+            {
+              "kind": "speech",
+              "text": "The exchange reuses the name question you already know, then adds exactly one new capability: age with tener."
             }
           ]
         },
@@ -667,15 +825,23 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "numbers 1–10 ( from ūnus … decem; cinco/quintet, diez/December), and the teen fusion diez y seis becomes dieciséis (= sixteen)."
+              "text": "uno through diez, with Latin and English hooks instead of an isolated list."
             },
             {
               "kind": "speech",
-              "text": "tener — \"to have\" ( from tenēre \"hold\"; tenant/retain/contain), your first irregular / stem-changing verb: tengo, and e becomes ie (tienes)."
+              "text": "un / una before a noun, where standalone uno shortens."
             },
             {
               "kind": "speech",
-              "text": "¿Cuántos años tienes? — age with tener (\"have your years,\" not \"be\"); años from annus (the ñ)."
+              "text": "tengo, tienes, tiene, the three singular forms of tener."
+            },
+            {
+              "kind": "speech",
+              "text": "¿Cuántos años tienes? — Tengo … años, with quantus/quantity and annus/annual showing where the words came from."
+            },
+            {
+              "kind": "speech",
+              "text": "Numbers above ten and the plural forms of tener remain deliberately deferred."
             }
           ]
         },
@@ -693,38 +859,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "count 1–10 up and back down",
+              "instruction": "count 1–10 up, then down",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: count 1–10 up and back down]"
+              "source": "[YOU SAY: count 1–10 up, then down]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "conjugate tener through all five forms",
+              "instruction": "“tengo, tienes, tiene”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: conjugate *tener* through all five forms]"
+              "source": "[YOU SAY: “tengo, tienes, tiene”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ask and answer age about yourself and a friend — \"Tengo … años\"",
+              "instruction": "ask and answer age with a number from 1–10",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: ask and answer age about yourself and a friend — \"Tengo … años\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "order \"dos cafés, por favor\" and ask \"¿Cuánto es?\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: order \"dos cafés, por favor\" and ask \"¿Cuánto es?\"]"
+              "source": "[YOU SAY: ask and answer age with a number from 1–10]"
             },
             {
               "kind": "repeat",
@@ -733,7 +890,68 @@
             },
             {
               "kind": "speech",
-              "text": "\"¿Cuántos años tienes? — Tengo … años.\""
+              "text": "“¿Cuántos años tienes? — Tengo nueve años.”"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C08-practice-count-ten",
+              "prompt": "Write the Spanish numbers 1 through 10 in order.",
+              "assesses": [
+                "ES-LEX-NUMBERS-1-5",
+                "ES-LEX-NUMBERS-6-10"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve, diez",
+                "uno dos tres cuatro cinco seis siete ocho nueve diez"
+              ],
+              "feedback": {
+                "correct": "Right: you counted from uno through diez.",
+                "incorrect": "Build the two learned sets: uno–cinco, then seis–diez."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C08-practice-tener-singular",
+              "prompt": "Give the three learned singular forms of tener: yo, tú, then él/ella.",
+              "assesses": [
+                "ES-LEX-TENER",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "tengo, tienes, tiene",
+                "tengo tienes tiene",
+                "tengo / tienes / tiene"
+              ],
+              "feedback": {
+                "correct": "Right: tengo, tienes, tiene.",
+                "incorrect": "Recall the g in tengo and e becomes ie in tienes/tiene."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C08-practice-age-nine",
+              "prompt": "Answer ¿Cuántos años tienes? with nine years.",
+              "assesses": [
+                "ES-LEX-CUANTOS-ANOS",
+                "ES-GRAMMAR-AGE-WITH-TENER",
+                "ES-LEX-NUMBERS-6-10"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "tengo nueve años.",
+                "tengo nueve años",
+                "tengo nueve anos",
+                "tengo nueve anos."
+              ],
+              "feedback": {
+                "correct": "Right: Tengo nueve años.",
+                "incorrect": "Use tengo + number + años: Tengo nueve años."
+              }
             }
           ]
         },
@@ -750,7 +968,7 @@
             },
             {
               "kind": "speech",
-              "text": "Count to five. (Uno … cinco.) Give the yo and tú of tener, and name its two irregularities. (Tengo / tienes; the -go yo-form and the e becomes ie stem-change.) How does Spanish give age? (With tener — \"I have X years.\") Next chapter: ser vs estar head-on — the two \"to be\" verbs, sorted for good."
+              "text": "Count to ten. Give the three singular forms of tener. Ask “How old are you?” and answer with a number you learned. You can now move from a name exchange into one concrete personal detail. Next: the two Spanish ways to say “to be,” introduced one contrast at a time."
             }
           ]
         }

@@ -6458,7 +6458,7 @@
     {
       "language": "spanish",
       "chapter": 8,
-      "sourceHash": "fnv1a64:04ed5b71dcd6ef10",
+      "sourceHash": "fnv1a64:d7028d0f4b911e2d",
       "lessonIds": [
         "ES-C08-numeros-1-5",
         "ES-C08-numeros-6-10",
@@ -6470,8 +6470,8 @@
       "drivablePrefix": 5,
       "text": "spanish/narration/ch08.txt",
       "json": "spanish/narration/ch08.json",
-      "textHash": "fnv1a64:3dce48d5bca7202f",
-      "jsonHash": "fnv1a64:8c48c706fa1706d4"
+      "textHash": "fnv1a64:d5563b4bf4ba909d",
+      "jsonHash": "fnv1a64:5f695388f689bc15"
     },
     {
       "language": "spanish",
