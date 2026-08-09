@@ -1233,7 +1233,7 @@ changelog, focused build, and downstream validation.
 1. `vault-pm-format`: bootstrap, object frame, device certificate, commit, and
    signed announcement canonical structures and vectors.
 2. `vault-pm-storage`: semantic contract, capability report, conformance and
-   fault-injection backend.
+   fault-injection backend, specified by `VLT-PM02-storage.md`.
 3. Extend VLT01/custody seam to accept an injected random root KEK.
 4. `vault-pm-domain`: product IDs, documents, conflicts, redacted views.
 5. Security review of format/key hierarchy before persistent user data exists.
@@ -1299,6 +1299,8 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
 - `VLT09-vault-audit-log.md` — audit chain.
 - `VLT10-vault-sync-engine.md` — version vectors and conflict semantics.
 - `VLT11-transports.md` — current CLI transport contract.
+- `VLT-PM01-format.md` and `VLT-PM02-storage.md` — product repository wire and
+  object-store contracts.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.
