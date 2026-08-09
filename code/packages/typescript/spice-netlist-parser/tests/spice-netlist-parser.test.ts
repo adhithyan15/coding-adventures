@@ -1820,6 +1820,37 @@ Q1 col base emit fast
     );
   });
 
+  it.each(["BR", "BETA_R"])("parses BJT reverse beta %s", (alias) => {
+    const parsed = parseNetlist(`.model fast NPN(${alias}=25)\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      reverseBeta: 25.0,
+    });
+  });
+
+  it("gives BJT BR precedence over BETA_R", () => {
+    const parsed = parseNetlist(`.model fast NPN(BETA_R=-1 BR=30)\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      reverseBeta: 30.0,
+    });
+  });
+
+  it.each([
+    ["BR", "0"],
+    ["BR", "-1"],
+    ["BR", "1e999"],
+    ["BETA_R", "0"],
+    ["BETA_R", "-1"],
+    ["BETA_R", "1e999"],
+  ])("rejects invalid BJT reverse beta %s=%s", (alias, value) => {
+    expect(() => parseNetlist(`.model fast NPN(${alias}=${value})`)).toThrow(
+      "BJT BR must be finite and positive",
+    );
+  });
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)

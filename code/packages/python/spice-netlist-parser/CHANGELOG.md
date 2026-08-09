@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate and lower BJT model-card `BR` / `BETA_R` reverse beta.
 - Validate and lower BJT model-card `XTB` forward-beta temperature exponent.
 - Validate and lower BJT model-card `NC` base-collector leakage emission
   coefficient.

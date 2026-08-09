@@ -1499,6 +1499,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("BJT XTB must be finite");
   }
+  const bjtReverseBeta = params.get("BR") ?? params.get("BETA_R");
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtReverseBeta !== undefined &&
+    (!Number.isFinite(bjtReverseBeta) || bjtReverseBeta <= 0.0)
+  ) {
+    throw new NetlistParseError("BJT BR must be finite and positive");
+  }
   const gateSourceCapacitance = params.get("CGS") ?? params.get("CGS0");
   if (
     (kind === "NJF" || kind === "PJF") &&
@@ -2232,6 +2240,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       baseCollectorLeakageCurrent,
       model.params.get("NC") ?? 2.0,
       model.params.get("XTB") ?? 0.0,
+      model.params.get("BR") ?? model.params.get("BETA_R") ?? 1.0,
     );
   }
   if (prefix === "J") {
