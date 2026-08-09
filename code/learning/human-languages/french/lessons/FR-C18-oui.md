@@ -83,6 +83,7 @@ only for this contradicting move.)
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-OUI-02, FR-ETYMON-OUI-03, FR-CULTURE-OUI-04, FR-PRAGMATICS-SI-05] -->
+<!-- hl-activity: {"id":"FR-C18-oui-negative","kind":"text","assesses":["FR-PRAGMATICS-SI-05"],"prompt":"French has two words for yes. Which one contradicts a negative?","answer":"si","accepted":["si!"],"feedback":{"correct":"Right: si contradicts a negative; oui answers an ordinary positive question.","incorrect":"Use si when you insist that a negative statement is wrong."},"response_seconds":8} -->
 
 [PAUSE 3s] How do you say yes in French? (**oui**.) What Latin phrase is it worn
 down from? (**hoc ille**, "this is it," via *oïl*.) What were the *langue d'oïl*

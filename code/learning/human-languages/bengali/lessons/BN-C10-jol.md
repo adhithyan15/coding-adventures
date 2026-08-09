@@ -78,6 +78,7 @@ thing, one of disputed origin and one you can trace all the way home.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C10-JOL-01, BN-LEX-C10-CHA-01, BN-GRAMMAR-C10-KHAN-REQUEST-02] -->
+<!-- hl-activity: {"id":"BN-C10-jol-water","kind":"text","assesses":["BN-LEX-C10-JOL-01"],"prompt":"Type the Bengali word jôl, meaning 'water'.","answer":"জল","accepted":["jôl","jol"],"feedback":{"correct":"Right: জল is jôl, water.","incorrect":"The word is জল - jôl."},"response_seconds":8} -->
 
 [PAUSE 3s] What did Chapter 7 already say with জল, without teaching it as a
 word? (**জল খাওয়া**, "to drink water.") Is জল's root secure? (**No** —

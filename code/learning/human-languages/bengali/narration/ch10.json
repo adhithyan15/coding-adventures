@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Tea, Water, Milk, and Rice",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:80e992cd9bd7e18c",
+  "sourceHash": "fnv1a64:522e9ad053b71b7f",
   "lessons": [
     {
       "id": "BN-C10-cha",
@@ -190,7 +190,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3688d07268864e2c",
+      "sourceHash": "fnv1a64:a824d2e918679d3f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -323,6 +323,25 @@
             {
               "kind": "speech",
               "text": "What did Chapter 7 already say with জল (jôl), without teaching it as a word? (জল (jôl) খাওয়া, \"to drink water.\") Is জল (jôl)'s root secure? (No — genuinely disputed.) Which everyday synonym for water traces cleanly to \"drinkable,\" from the root behind potion? (পানি.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "BN-C10-jol-water",
+              "prompt": "Type the Bengali word jôl, meaning 'water'.",
+              "assesses": [
+                "BN-LEX-C10-JOL-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "জল",
+                "jôl",
+                "jol"
+              ],
+              "feedback": {
+                "correct": "Right: জল is jôl, water.",
+                "incorrect": "The word is জল - jôl."
+              }
             }
           ]
         }

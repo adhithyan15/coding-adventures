@@ -1,6 +1,11 @@
 import { canonicalChapterHash } from "./hash.js";
 import { CONTENT_TYPES, hasOwn } from "./constants.js";
-import type { LessonBodyBlock, ChapterCapability } from "./types.js";
+import { compileLessonActivities } from "./activity.js";
+import type {
+  LessonBodyBlock,
+  ChapterCapability,
+  CompiledLessonActivity,
+} from "./types.js";
 import type { ParsedLesson } from "./parse.js";
 
 export interface BookGenerationTarget {
@@ -33,6 +38,18 @@ export interface BookReferenceAppendixTarget {
 
 /** A generated book glossary derived from canonical word and phrase lessons. */
 export interface BookGlossaryTarget {
+  language: string;
+  output: string;
+  /** Unicode Script property whose runs need the book's dedicated font command. */
+  unicodeScript?: string;
+  /** LaTeX command name, without the leading backslash, used for those runs. */
+  scriptCommand?: string;
+  /** Multiple script/font mappings for entries that compare writing systems inline. */
+  inlineScripts?: InlineRenderOptions[];
+}
+
+/** Generated review questions and answers sourced from executable lesson activities. */
+export interface BookAnswerKeyTarget {
   language: string;
   output: string;
   /** Unicode Script property whose runs need the book's dedicated font command. */
@@ -1118,6 +1135,126 @@ export function renderBookGlossary(
       `\\textbf{${headword}}${romanization}\\par`,
       `\\small ${gloss}\\par`,
       `\\footnotesize Introduced in ${chapterList(entry.chapters.sort((a, b) => a - b))}.`,
+      "\\end{minipage}\\par\\medskip",
+      "",
+    );
+  }
+  return `${output.join("\n").trimEnd()}\n`;
+}
+
+interface BookAnswerKeyEntry {
+  activity: CompiledLessonActivity;
+  chapter: number;
+  number: string;
+  lessonTitle: string;
+}
+
+/**
+ * Render the same executable retrieval contracts used by Language Ladder as
+ * printable end-of-book review questions and a separate answer key.
+ *
+ * The prompt is repeated in the review section because some canonical lessons
+ * still sit inside handwritten LaTeX chapters. Scraping those chapters or the
+ * legacy `[YOU ...]` delivery cues would create a second, untyped definition of
+ * correctness. Compiled activities are the only answer-bearing source.
+ */
+export function renderBookAnswerKey(
+  target: BookAnswerKeyTarget,
+  allLessons: ParsedLesson[],
+): string {
+  const renderOptions = targetRenderOptions(target, `${target.language} answer key`);
+  const lessons = allLessons
+    .filter((lesson) => lesson.language === target.language)
+    .sort(
+      (left, right) =>
+        left.realization.chapter - right.realization.chapter ||
+        lessonSequence(left) - lessonSequence(right) ||
+        left.realization.lessonId.localeCompare(right.realization.lessonId),
+    );
+  const chapterCounts = new Map<number, number>();
+  const activityIds = new Set<string>();
+  const entries: BookAnswerKeyEntry[] = [];
+
+  for (const lesson of lessons) {
+    const chapter = lesson.realization.chapter;
+    if (!Number.isInteger(chapter) || chapter < 1) {
+      throw new Error(`${lesson.realization.lessonId}: answer-key entries require a chapter`);
+    }
+    for (const activity of compileLessonActivities(lesson.blocks)) {
+      if (activityIds.has(activity.id)) {
+        throw new Error(`${target.language} answer key: duplicate activity id '${activity.id}'`);
+      }
+      activityIds.add(activity.id);
+      const inChapter = (chapterCounts.get(chapter) ?? 0) + 1;
+      chapterCounts.set(chapter, inChapter);
+      entries.push({
+        activity,
+        chapter,
+        number: `${chapter}.${inChapter}`,
+        lessonTitle: lessonTitle(lesson),
+      });
+    }
+  }
+  if (entries.length === 0) {
+    throw new Error(`${target.language} answer key: no compiled lesson activities`);
+  }
+
+  const output = [
+    "% GENERATED FILE. Edit canonical hl-activity contracts, then run npm run generate:books.",
+    `% canonical-activities: ${entries.length}`,
+    "",
+    "\\chapter*{Review Questions}",
+    "\\addcontentsline{toc}{chapter}{Review Questions}",
+    "\\markboth{Review Questions}{Review Questions}",
+    "",
+    "Try these without looking ahead. Every prompt comes from the same canonical lesson data as its chapter. Answers begin in the next section.",
+    "",
+  ];
+  let currentChapter: number | undefined;
+  for (const entry of entries) {
+    if (entry.chapter !== currentChapter) {
+      currentChapter = entry.chapter;
+      output.push(`\\section*{Chapter ${entry.chapter}}`, "");
+    }
+    const prompt = renderInlineMarkdown(entry.activity.prompt, renderOptions);
+    const title = renderInlineMarkdown(entry.lessonTitle, renderOptions);
+    output.push(
+      "\\noindent\\begin{minipage}[t]{\\linewidth}",
+      "\\raggedright",
+      `\\hypertarget{review-${entry.activity.id}}{\\textbf{${entry.number}}} \\emph{${title}}\\par`,
+      `\\small ${prompt}`,
+      "\\end{minipage}\\par\\medskip",
+      "",
+    );
+  }
+
+  output.push(
+    "\\chapter*{Answer Key}",
+    "\\addcontentsline{toc}{chapter}{Answer Key}",
+    "\\markboth{Answer Key}{Answer Key}",
+    "",
+    "The first response is the canonical display answer. When a question accepts other authored forms, they appear underneath.",
+    "",
+  );
+  currentChapter = undefined;
+  for (const entry of entries) {
+    if (entry.chapter !== currentChapter) {
+      currentChapter = entry.chapter;
+      output.push(`\\section*{Chapter ${entry.chapter}}`, "");
+    }
+    const answer = renderInlineMarkdown(entry.activity.answer, renderOptions);
+    const title = renderInlineMarkdown(entry.lessonTitle, renderOptions);
+    const accepted = entry.activity.accepted.map((variant) =>
+      renderInlineMarkdown(variant, renderOptions),
+    );
+    output.push(
+      "\\noindent\\begin{minipage}[t]{\\linewidth}",
+      "\\raggedright",
+      `\\hyperlink{review-${entry.activity.id}}{\\textbf{${entry.number}}} \\emph{${title}}\\par`,
+      `\\small \\textbf{Answer:} ${answer}\\par`,
+      ...(accepted.length > 0
+        ? [`\\footnotesize \\textbf{Also accepted:} ${accepted.join("; ")}`]
+        : []),
       "\\end{minipage}\\par\\medskip",
       "",
     );

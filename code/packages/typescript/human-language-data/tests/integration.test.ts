@@ -166,6 +166,7 @@ describe("real curriculum", () => {
     const activities = lessons.flatMap((lesson) => compileLessonActivities(lesson.blocks));
     expect(activities.map((activity) => activity.id).sort()).toEqual([
       "AR-W07-hook-family-ha-kha-dot-position",
+      "BN-C10-jol-water",
       "ES-C01-genero-gramatical-class-count",
       "ES-C01-practice-buenos-agreement",
       "ES-W03-question-span-roberto-outside",
@@ -198,6 +199,7 @@ describe("real curriculum", () => {
       "FA-C08-gereftan-stem",
       "FA-C08-komak-kardan-verb",
       "FA-C08-porsidan-stem",
+      "FR-C18-oui-negative",
       "GE-C17-kopf-haupt-compound-word",
       "GU-C06-number-histories-be-source",
       "HI-W01-shirorekha-na-ma-drawing-order",

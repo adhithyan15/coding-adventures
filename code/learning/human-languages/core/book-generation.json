@@ -305,6 +305,125 @@
       "scriptCommand": "ur"
     }
   ],
+  "answerKeys": [
+    {
+      "language": "arabic",
+      "output": "arabic/book/chapters/appendix-answer-key.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "bengali",
+      "output": "bengali/book/chapters/appendix-answer-key.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "chinese",
+      "output": "chinese/book/chapters/appendix-answer-key.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
+    },
+    {
+      "language": "french",
+      "output": "french/book/chapters/appendix-answer-key.tex"
+    },
+    {
+      "language": "german",
+      "output": "german/book/chapters/appendix-answer-key.tex"
+    },
+    {
+      "language": "gujarati",
+      "output": "gujarati/book/chapters/appendix-answer-key.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
+      "language": "hindi",
+      "output": "hindi/book/chapters/appendix-answer-key.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "italian",
+      "output": "italian/book/chapters/appendix-answer-key.tex"
+    },
+    {
+      "language": "japanese",
+      "output": "japanese/book/chapters/appendix-answer-key.tex",
+      "scriptSet": "japanese-main"
+    },
+    {
+      "language": "kannada",
+      "output": "kannada/book/chapters/appendix-answer-key.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "latin",
+      "output": "latin/book/chapters/appendix-answer-key.tex"
+    },
+    {
+      "language": "malayalam",
+      "output": "malayalam/book/chapters/appendix-answer-key.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "marathi",
+      "output": "marathi/book/chapters/appendix-answer-key.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
+      "language": "persian",
+      "output": "persian/book/chapters/appendix-answer-key.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
+    },
+    {
+      "language": "portuguese",
+      "output": "portuguese/book/chapters/appendix-answer-key.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ptar"
+    },
+    {
+      "language": "punjabi",
+      "output": "punjabi/book/chapters/appendix-answer-key.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "russian",
+      "output": "russian/book/chapters/appendix-answer-key.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "sanskrit",
+      "output": "sanskrit/book/chapters/appendix-answer-key.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "spanish",
+      "output": "spanish/book/chapters/appendix-answer-key.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "esar"
+    },
+    {
+      "language": "tamil",
+      "output": "tamil/book/chapters/appendix-answer-key.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "telugu",
+      "output": "telugu/book/chapters/appendix-answer-key.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "urdu",
+      "output": "urdu/book/chapters/appendix-answer-key.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    }
+  ],
   "targets": [
     {
       "language": "arabic",

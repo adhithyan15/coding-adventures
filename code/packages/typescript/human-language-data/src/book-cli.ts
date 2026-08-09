@@ -2,9 +2,11 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, normalize, relative as pathRelative, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
+  renderBookAnswerKey,
   renderBookChapter,
   renderBookGlossary,
   renderReferenceAppendix,
+  type BookAnswerKeyTarget,
   type BookGenerationTarget,
   type BookGlossaryTarget,
   type BookReferenceAppendixTarget,
@@ -23,6 +25,11 @@ interface ConfiguredReferenceAppendixTarget extends BookReferenceAppendixTarget 
 }
 
 interface ConfiguredBookGlossaryTarget extends BookGlossaryTarget {
+  /** Named reusable mapping from the config's scriptSets table. */
+  scriptSet?: string;
+}
+
+interface ConfiguredBookAnswerKeyTarget extends BookAnswerKeyTarget {
   /** Named reusable mapping from the config's scriptSets table. */
   scriptSet?: string;
 }
@@ -64,6 +71,8 @@ interface BookGenerationConfig {
   referenceAppendices?: ConfiguredReferenceAppendixTarget[];
   /** Canonical word and phrase lessons rendered into book glossaries. */
   glossaries?: ConfiguredBookGlossaryTarget[];
+  /** Executable lesson activities rendered as review questions and answer keys. */
+  answerKeys?: ConfiguredBookAnswerKeyTarget[];
   /** Never rendered. See {@link HandwrittenBookChapter}. */
   handwritten?: HandwrittenBookChapter[];
 }
@@ -251,6 +260,31 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
       throw new Error(`${glossary.output}: duplicate generated book output`);
     }
     outputs.set(glossary.output, renderBookGlossary(glossary, lessons));
+  }
+  for (const configuredAnswerKey of config.answerKeys ?? []) {
+    const { scriptSet, ...plainAnswerKey } = configuredAnswerKey;
+    let answerKey: BookAnswerKeyTarget = { ...plainAnswerKey };
+    if (scriptSet !== undefined) {
+      if (
+        answerKey.inlineScripts !== undefined ||
+        answerKey.unicodeScript !== undefined ||
+        answerKey.scriptCommand !== undefined
+      ) {
+        throw new Error(
+          `${answerKey.language} answer key: scriptSet cannot be combined with inline script options`,
+        );
+      }
+      const inlineScripts = config.scriptSets?.[scriptSet];
+      if (!inlineScripts) {
+        throw new Error(`${answerKey.language} answer key: unknown scriptSet '${scriptSet}'`);
+      }
+      answerKey = { ...answerKey, inlineScripts };
+    }
+    safeOutput(root, answerKey.output);
+    if (outputs.has(answerKey.output)) {
+      throw new Error(`${answerKey.output}: duplicate generated book output`);
+    }
+    outputs.set(answerKey.output, renderBookAnswerKey(answerKey, lessons));
   }
   manifest.chapters.sort(
     (left, right) => left.language.localeCompare(right.language) || left.chapter - right.chapter,
