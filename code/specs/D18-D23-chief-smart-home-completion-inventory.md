@@ -1038,6 +1038,31 @@ local health host over Ubiquiti's official integration API:
   requests, bounded pagination, API-key header materialization, and the absence
   of Vault references from wire traffic.
 
+## Current UniFi Connected-Client Presence Slice
+
+This slice closes the safely governable current-presence portion of Ubiquiti's
+official connected-client API without retaining native client identity:
+
+- The local authenticated host adds bounded pagination over the documented
+  `GET /v1/sites/{siteId}/clients` endpoint after application, site, and adopted
+  device inspection.
+- D23 read authorization, an exact ephemeral device-identifier grant, and a
+  separate exact five-minute presence grant all succeed before credentials or
+  network I/O. Both grants bind the principal, bridge client resource, local
+  destination, declared purpose, consent receipt, retention, and validity
+  window.
+- A distinct Vault-leased 32-byte key derives domain-separated 128-bit
+  host-scoped client pseudonyms. Native client IDs, names, MAC addresses, IP
+  addresses, and connection timestamps live only in zeroizing response storage
+  and never enter runtime identity, state, metadata, errors, or debug output.
+- Confirmed client entities expose only pseudonymous current presence,
+  connection type, and optional access type/authorization. Their state expires
+  five minutes after observation instead of making an indefinite presence
+  claim.
+- Real loopback coverage proves the exact client path and API-key header,
+  consent denial before transport, raw-field exclusion, and bounded state
+  expiry.
+
 ## Current Enphase IQ Gateway Inspection Slice
 
 This slice promotes the cataloged Enphase Envoy entry to an authenticated local
@@ -1223,8 +1248,11 @@ and then by prerequisite readiness:
 12. Add ZoneMinder PTZ, monitor configuration, recording-mode, or administrative
     mutations only with operation-specific D23 contracts, least-privilege user
     checks, bounded semantics, and readable postcondition verification.
-13. Add UniFi Network connected-client inspection only after privacy, presence,
-   identifier-retention, and operator-purpose policy are concrete.
+13. Add UniFi connected-client native details or pseudonym-key rotation only
+   after field-specific minimization and retention are approved and the runtime
+   can atomically migrate retained entity identifiers without duplicates or
+   orphaned history; current presence intentionally excludes names, native IDs,
+   MACs, IPs, and connection timestamps.
 14. Add UniFi Network latest device statistics only after metrics schema,
    retention, and bounded polling-load policy are concrete.
 15. Add remote UniFi Site Manager inspection only after telemetry-egress,

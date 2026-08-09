@@ -2,6 +2,7 @@
 
 #![forbid(unsafe_code)]
 
+use coding_adventures_sha256::sha256;
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use http1::{parse_response_head, Http1ParseError};
 use http_core::{BodyKind, Header};
@@ -11,6 +12,10 @@ use smart_home_core::{
     DeviceId, Entity, EntityId, EntityKind, Health, IntegrationId, Metadata, ProtocolFamily,
     ProtocolIdentifier, SmartHomeTool, StateConfidence, StateSnapshot, StateSource, Value,
     ValueKind, VaultRef,
+};
+use smart_home_data_governance::{
+    DataCategory, DataDestination, DataGovernanceDecision, DataGovernanceDenial,
+    DataGovernancePolicy, DataOperation, DataRetention, DataUseRequest,
 };
 use smart_home_discovery::{
     DiscoveryConfidence, DiscoveryRecord, DiscoverySource, PairingRequirement,
@@ -28,7 +33,7 @@ use std::time::Duration;
 use tls_platform::{default_connector, TlsConfig, TlsConnector};
 use url_parser::{Url, UrlError};
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 pub const INTEGRATION_ID: &str = "unifi";
 pub const PROTOCOL_ID: &str = "unifi_network_integration_api";
 pub const API_BASE_PATH: &str = "/proxy/network/integration";
@@ -38,6 +43,8 @@ pub const DEFAULT_MAX_RESPONSE_BYTES: usize = 2 * 1024 * 1024;
 pub const PAGE_LIMIT: usize = 100;
 pub const MAX_SITES: usize = 128;
 pub const MAX_DEVICES: usize = 2_048;
+pub const MAX_CONNECTED_CLIENTS: usize = 8_192;
+pub const CLIENT_PRESENCE_RETENTION_MS: u64 = 5 * 60 * 1_000;
 const MAX_SECRET_BYTES: usize = 8 * 1024;
 const MAX_TEXT_BYTES: usize = 1_024;
 
@@ -62,6 +69,7 @@ pub enum UniFiError {
     },
     Json(serde_json::Error),
     MissingField(&'static str),
+    DataGovernanceDenied(DataGovernanceDenial),
     Runtime(RuntimeError),
 }
 
@@ -86,6 +94,12 @@ impl fmt::Display for UniFiError {
             ),
             Self::Json(error) => write!(formatter, "invalid UniFi JSON: {error}"),
             Self::MissingField(field) => write!(formatter, "UniFi response is missing {field}"),
+            Self::DataGovernanceDenied(reason) => {
+                write!(
+                    formatter,
+                    "UniFi data-governance policy denied the request: {reason:?}"
+                )
+            }
             Self::Runtime(error) => error.fmt(formatter),
         }
     }
@@ -141,6 +155,30 @@ impl UniFiApiKey {
 impl fmt::Debug for UniFiApiKey {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("UniFiApiKey([REDACTED])")
+    }
+}
+
+pub struct UniFiPresenceKey {
+    bytes: Zeroizing<Vec<u8>>,
+}
+
+impl UniFiPresenceKey {
+    pub fn new(bytes: impl Into<Vec<u8>>) -> Result<Self, UniFiError> {
+        let bytes = bytes.into();
+        if bytes.len() != 32 {
+            return Err(UniFiError::Validation(
+                "client pseudonymization key must contain exactly 32 bytes".to_string(),
+            ));
+        }
+        Ok(Self {
+            bytes: Zeroizing::new(bytes),
+        })
+    }
+}
+
+impl fmt::Debug for UniFiPresenceKey {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("UniFiPresenceKey([REDACTED])")
     }
 }
 
@@ -245,6 +283,15 @@ pub struct UniFiSnapshot {
     pub application_version: String,
     pub sites: Vec<UniFiSite>,
     pub devices: Vec<UniFiDevice>,
+    pub connected_clients: Vec<UniFiConnectedClient>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct UniFiConnectedClient {
+    pub pseudonym: String,
+    pub client_type: String,
+    pub access_type: Option<String>,
+    pub access_authorized: Option<bool>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -262,6 +309,18 @@ pub trait UniFiTransport {
         plans: &UniFiRequestPlans,
         api_key: &UniFiApiKey,
     ) -> Result<UniFiSnapshot, UniFiError>;
+
+    fn inspect_connected_clients(
+        &mut self,
+        _plans: &UniFiRequestPlans,
+        _api_key: &UniFiApiKey,
+        _presence_key: &UniFiPresenceKey,
+        _sites: &[UniFiSite],
+    ) -> Result<Vec<UniFiConnectedClient>, UniFiError> {
+        Err(UniFiError::Validation(
+            "transport does not implement connected-client inspection".to_string(),
+        ))
+    }
 }
 
 pub struct UniFiLanTransport {
@@ -351,6 +410,22 @@ impl UniFiLanTransport {
         }
         Ok(serde_json::from_slice(&response.body)?)
     }
+
+    fn get_sensitive_json(
+        &mut self,
+        plan: &LocalHttpRequestPlan,
+        api_key: &UniFiApiKey,
+        operation: &'static str,
+    ) -> Result<SensitiveJson, UniFiError> {
+        let response = self.request(plan, api_key)?;
+        if response.status != 200 {
+            return Err(UniFiError::HttpStatus {
+                operation,
+                status: response.status,
+            });
+        }
+        Ok(SensitiveJson(serde_json::from_slice(&response.body)?))
+    }
 }
 
 impl UniFiTransport for UniFiLanTransport {
@@ -416,7 +491,43 @@ impl UniFiTransport for UniFiLanTransport {
             application_version,
             sites,
             devices,
+            connected_clients: Vec::new(),
         })
+    }
+
+    fn inspect_connected_clients(
+        &mut self,
+        plans: &UniFiRequestPlans,
+        api_key: &UniFiApiKey,
+        presence_key: &UniFiPresenceKey,
+        sites: &[UniFiSite],
+    ) -> Result<Vec<UniFiConnectedClient>, UniFiError> {
+        let mut clients = Vec::new();
+        for site in sites {
+            let mut site_clients = Vec::new();
+            let mut offset = 0usize;
+            loop {
+                let path = format!("/v1/sites/{}/clients", safe_path_id(&site.id)?);
+                let plan = paginated_plan(
+                    &plans.endpoint,
+                    &plans.api_key_ref,
+                    &path,
+                    offset,
+                    plans.timeout_ms,
+                )?;
+                let response = self.get_sensitive_json(&plan, api_key, "connected client list")?;
+                let page = parse_client_page(&response.0, offset, site, presence_key)?;
+                let remaining = MAX_CONNECTED_CLIENTS.saturating_sub(clients.len());
+                let finished = append_page(&mut site_clients, page, remaining, "clients")?;
+                if finished {
+                    break;
+                }
+                offset = site_clients.len();
+            }
+            clients.extend(site_clients);
+        }
+        validate_client_uniqueness(&clients)?;
+        Ok(clients)
     }
 }
 
@@ -425,6 +536,7 @@ pub struct UniFiClient<T> {
     api_key: UniFiApiKey,
     transport: T,
     plans: UniFiRequestPlans,
+    presence_key: Option<UniFiPresenceKey>,
 }
 
 impl<T: UniFiTransport> UniFiClient<T> {
@@ -449,11 +561,33 @@ impl<T: UniFiTransport> UniFiClient<T> {
             api_key,
             transport,
             plans,
+            presence_key: None,
         })
+    }
+
+    pub fn with_presence_key(mut self, presence_key: UniFiPresenceKey) -> Self {
+        self.presence_key = Some(presence_key);
+        self
     }
 
     pub fn inspect(&mut self) -> Result<UniFiSnapshot, UniFiError> {
         self.transport.inspect(&self.plans, &self.api_key)
+    }
+
+    pub fn inspect_with_connected_clients(&mut self) -> Result<UniFiSnapshot, UniFiError> {
+        let presence_key = self.presence_key.as_ref().ok_or_else(|| {
+            UniFiError::Validation(
+                "connected-client inspection requires a Vault-leased presence key".to_string(),
+            )
+        })?;
+        let mut snapshot = self.transport.inspect(&self.plans, &self.api_key)?;
+        snapshot.connected_clients = self.transport.inspect_connected_clients(
+            &self.plans,
+            &self.api_key,
+            presence_key,
+            &snapshot.sites,
+        )?;
+        Ok(snapshot)
     }
 }
 
@@ -463,6 +597,10 @@ impl<T> fmt::Debug for UniFiClient<T> {
             .debug_struct("UniFiClient")
             .field("config", &self.config)
             .field("api_key", &"[REDACTED]")
+            .field(
+                "presence_key",
+                &self.presence_key.as_ref().map(|_| "[REDACTED]"),
+            )
             .field("plans", &self.plans)
             .finish_non_exhaustive()
     }
@@ -478,15 +616,25 @@ pub struct InstalledUniFiDevice {
 pub struct InstalledUniFiNetwork {
     pub bridge_id: BridgeId,
     pub devices: Vec<InstalledUniFiDevice>,
+    pub connected_client_entity_ids: Vec<EntityId>,
 }
 
 pub struct UniFiRuntimeIntegration<T> {
     client: UniFiClient<T>,
+    data_governance: DataGovernancePolicy,
 }
 
 impl<T: UniFiTransport> UniFiRuntimeIntegration<T> {
     pub fn new(client: UniFiClient<T>) -> Self {
-        Self { client }
+        Self {
+            client,
+            data_governance: DataGovernancePolicy::default(),
+        }
+    }
+
+    pub fn with_data_governance(mut self, data_governance: DataGovernancePolicy) -> Self {
+        self.data_governance = data_governance;
+        self
     }
 
     pub fn inspect_and_install_authorized(
@@ -497,6 +645,23 @@ impl<T: UniFiTransport> UniFiRuntimeIntegration<T> {
     ) -> Result<InstalledUniFiNetwork, UniFiError> {
         authorize_read(runtime, principal_id, observed_at_ms)?;
         let snapshot = self.client.inspect()?;
+        install_snapshot(runtime, &self.client.config, &snapshot, observed_at_ms)
+    }
+
+    pub fn inspect_clients_and_install_authorized(
+        &mut self,
+        runtime: &mut SmartHomeRuntime,
+        principal_id: AgentId,
+        observed_at_ms: u64,
+    ) -> Result<InstalledUniFiNetwork, UniFiError> {
+        authorize_read(runtime, principal_id.clone(), observed_at_ms)?;
+        authorize_client_inspection(
+            &self.data_governance,
+            &principal_id,
+            &self.client.config,
+            observed_at_ms,
+        )?;
+        let snapshot = self.client.inspect_with_connected_clients()?;
         install_snapshot(runtime, &self.client.config, &snapshot, observed_at_ms)
     }
 }
@@ -532,6 +697,18 @@ pub fn install_snapshot(
     snapshot: &UniFiSnapshot,
     observed_at_ms: u64,
 ) -> Result<InstalledUniFiNetwork, UniFiError> {
+    validate_client_snapshot(&snapshot.connected_clients)?;
+    let presence_expires_at_ms = if snapshot.connected_clients.is_empty() {
+        None
+    } else {
+        Some(
+            observed_at_ms
+                .checked_add(CLIENT_PRESENCE_RETENTION_MS)
+                .ok_or_else(|| {
+                    UniFiError::Validation("client presence expiry overflows time".to_string())
+                })?,
+        )
+    };
     let mut bridge = Bridge::new(
         config.bridge_id.clone(),
         IntegrationId::trusted(INTEGRATION_ID),
@@ -548,6 +725,10 @@ pub fn install_snapshot(
         Metadata::new("unifi.transport", "local_api_key"),
         Metadata::new("unifi.site_count", snapshot.sites.len().to_string()),
         Metadata::new("unifi.device_count", snapshot.devices.len().to_string()),
+        Metadata::new(
+            "unifi.pseudonymous_client_count",
+            snapshot.connected_clients.len().to_string(),
+        ),
     ];
     runtime.upsert_bridge(bridge)?;
 
@@ -610,9 +791,54 @@ pub fn install_snapshot(
             network_entity_id,
         });
     }
+    let mut connected_client_entity_ids = Vec::with_capacity(snapshot.connected_clients.len());
+    for client in &snapshot.connected_clients {
+        let device_id = DeviceId::trusted(format!("unifi:client:{}", client.pseudonym));
+        let entity_id = EntityId::trusted(format!("unifi:client:{}:presence", client.pseudonym));
+        runtime.upsert_device(Device {
+            device_id: device_id.clone(),
+            bridge_id: config.bridge_id.clone(),
+            manufacturer: "Unknown".to_string(),
+            model: client.client_type.clone(),
+            name: format!("UniFi connected client {}", &client.pseudonym[..8]),
+            serial: None,
+            firmware_version: None,
+            room_id: None,
+            entity_ids: vec![entity_id.clone()],
+            identifiers: vec![protocol_identifier("client_pseudonym", &client.pseudonym)?],
+            health: Health::Online,
+            metadata: vec![Metadata::new("unifi.identifier_form", "keyed_pseudonym")],
+        })?;
+        runtime.upsert_entity(Entity {
+            entity_id: entity_id.clone(),
+            device_id,
+            kind: EntityKind::NetworkDiagnostic,
+            name: format!("UniFi client {} presence", &client.pseudonym[..8]),
+            capabilities: vec![Capability::new(
+                CapabilityId::trusted("network.client_presence"),
+                CapabilityMode::Observe,
+                ValueKind::Object,
+            )],
+            state: Some(StateSnapshot {
+                entity_id: entity_id.clone(),
+                value: connected_client_value(client),
+                source: StateSource::Poll,
+                observed_at_ms,
+                received_at_ms: observed_at_ms,
+                expires_at_ms: presence_expires_at_ms,
+                confidence: StateConfidence::Confirmed,
+            }),
+            metadata: vec![
+                Metadata::new("unifi.protocol", PROTOCOL_ID),
+                Metadata::new("unifi.identifier_form", "keyed_pseudonym"),
+            ],
+        })?;
+        connected_client_entity_ids.push(entity_id);
+    }
     Ok(InstalledUniFiNetwork {
         bridge_id: config.bridge_id.clone(),
         devices: installed,
+        connected_client_entity_ids,
     })
 }
 
@@ -632,6 +858,43 @@ fn authorize_read(
             missing_capabilities: decision.missing_capabilities,
         }))
     }
+}
+
+fn authorize_client_inspection(
+    policy: &DataGovernancePolicy,
+    principal_id: &AgentId,
+    config: &UniFiConfig,
+    now_ms: u64,
+) -> Result<(), UniFiError> {
+    let resource_id = format!(
+        "unifi:{}:connected-clients",
+        stable_component(config.bridge_id.as_str())
+    );
+    for (category, retention) in [
+        (DataCategory::DeviceIdentifier, DataRetention::Ephemeral),
+        (
+            DataCategory::Presence,
+            DataRetention::Bounded {
+                maximum_age_ms: CLIENT_PRESENCE_RETENTION_MS,
+            },
+        ),
+    ] {
+        match policy.decide(&DataUseRequest {
+            principal_id,
+            resource_id: &resource_id,
+            category,
+            operation: DataOperation::Inspect,
+            destination: DataDestination::LocalDevice,
+            retention,
+            now_ms,
+        }) {
+            DataGovernanceDecision::Allow(_) => {}
+            DataGovernanceDecision::Deny(reason) => {
+                return Err(UniFiError::DataGovernanceDenied(reason))
+            }
+        }
+    }
+    Ok(())
 }
 
 #[derive(Debug)]
@@ -713,6 +976,112 @@ fn parse_device_page(
         total_count,
         data: devices,
     })
+}
+
+struct SensitiveJson(JsonValue);
+
+impl Drop for SensitiveJson {
+    fn drop(&mut self) {
+        zeroize_json_strings(&mut self.0);
+    }
+}
+
+fn zeroize_json_strings(value: &mut JsonValue) {
+    match value {
+        JsonValue::String(text) => text.zeroize(),
+        JsonValue::Array(values) => {
+            for value in values {
+                zeroize_json_strings(value);
+            }
+        }
+        JsonValue::Object(values) => {
+            for value in values.values_mut() {
+                zeroize_json_strings(value);
+            }
+        }
+        JsonValue::Null | JsonValue::Bool(_) | JsonValue::Number(_) => {}
+    }
+}
+
+fn parse_client_page(
+    value: &JsonValue,
+    expected_offset: usize,
+    site: &UniFiSite,
+    presence_key: &UniFiPresenceKey,
+) -> Result<Page<UniFiConnectedClient>, UniFiError> {
+    let object = value
+        .as_object()
+        .ok_or(UniFiError::MissingField("client page object"))?;
+    let (offset, _count, total_count, data) = page_fields(object, expected_offset)?;
+    let mut clients = Vec::with_capacity(data.len());
+    for item in data {
+        let object = item
+            .as_object()
+            .ok_or(UniFiError::MissingField("client data item"))?;
+        let native_id = Zeroizing::new(required_text(object, "id")?);
+        safe_path_id(native_id.as_str())?;
+        let (access_type, access_authorized) = parse_client_access(object.get("access"))?;
+        clients.push(UniFiConnectedClient {
+            pseudonym: connected_client_pseudonym(presence_key, &site.id, native_id.as_str()),
+            client_type: required_text(object, "type")?,
+            access_type,
+            access_authorized,
+        });
+    }
+    Ok(Page {
+        offset,
+        total_count,
+        data: clients,
+    })
+}
+
+fn parse_client_access(
+    value: Option<&JsonValue>,
+) -> Result<(Option<String>, Option<bool>), UniFiError> {
+    let Some(value) = value else {
+        return Ok((None, None));
+    };
+    if value.is_null() {
+        return Ok((None, None));
+    }
+    let object = value.as_object().ok_or_else(|| {
+        UniFiError::Validation("client access must be an object or null".to_string())
+    })?;
+    let access_type = optional_text(object, "type")?;
+    let authorized = match object.get("authorized") {
+        None | Some(JsonValue::Null) => None,
+        Some(value) => Some(value.as_bool().ok_or_else(|| {
+            UniFiError::Validation("client access authorization must be boolean".to_string())
+        })?),
+    };
+    Ok((access_type, authorized))
+}
+
+fn connected_client_pseudonym(
+    presence_key: &UniFiPresenceKey,
+    site_id: &str,
+    native_id: &str,
+) -> String {
+    let mut input = Zeroizing::new(Vec::with_capacity(
+        presence_key.bytes.len() + site_id.len() + native_id.len() + 24,
+    ));
+    input.extend_from_slice(presence_key.bytes.as_slice());
+    input.extend_from_slice(b"unifi-client-v1\0");
+    input.extend_from_slice(site_id.as_bytes());
+    input.push(0);
+    input.extend_from_slice(native_id.as_bytes());
+    let digest = Zeroizing::new(sha256(input.as_slice()));
+    lowercase_hex(&digest[..16])
+}
+
+fn lowercase_hex(bytes: &[u8]) -> String {
+    const HEX: &[u8; 16] = b"0123456789abcdef";
+    let mut output = String::with_capacity(bytes.len() * 2);
+    for byte in bytes {
+        output.push(HEX[(byte >> 4) as usize] as char);
+        output.push(HEX[(byte & 0x0f) as usize] as char);
+    }
+    output
 }
 
 fn page_fields(
@@ -890,6 +1259,43 @@ fn validate_snapshot_uniqueness(
     Ok(())
 }
 
+fn validate_client_uniqueness(clients: &[UniFiConnectedClient]) -> Result<(), UniFiError> {
+    let mut pseudonyms = BTreeSet::new();
+    for client in clients {
+        if !pseudonyms.insert(client.pseudonym.as_str()) {
+            return Err(UniFiError::Validation(
+                "connected-client identities must be unique".to_string(),
+            ));
+        }
+    }
+    Ok(())
+}
+
+fn validate_client_snapshot(clients: &[UniFiConnectedClient]) -> Result<(), UniFiError> {
+    if clients.len() > MAX_CONNECTED_CLIENTS {
+        return Err(UniFiError::Validation(format!(
+            "connected clients exceed {MAX_CONNECTED_CLIENTS} entries"
+        )));
+    }
+    for client in clients {
+        if client.pseudonym.len() != 32
+            || !client
+                .pseudonym
+                .bytes()
+                .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+        {
+            return Err(UniFiError::Validation(
+                "connected-client pseudonym must be 128-bit lowercase hexadecimal text".to_string(),
+            ));
+        }
+        validate_text("client type", &client.client_type)?;
+        if let Some(access_type) = &client.access_type {
+            validate_text("client access type", access_type)?;
+        }
+    }
+    validate_client_uniqueness(clients)
+}
+
 fn safe_path_id(value: &str) -> Result<&str, UniFiError> {
     if value.is_empty()
         || value.len() > 128
@@ -951,6 +1357,23 @@ fn device_value(device: &UniFiDevice) -> Value {
             Value::Array(device.features.iter().cloned().map(Value::Text).collect()),
         ),
     ])
+}
+
+fn connected_client_value(client: &UniFiConnectedClient) -> Value {
+    let mut fields = vec![
+        ("present".to_string(), Value::Bool(true)),
+        (
+            "connection_type".to_string(),
+            Value::Text(client.client_type.clone()),
+        ),
+    ];
+    if let Some(access_type) = &client.access_type {
+        fields.push(("access_type".to_string(), Value::Text(access_type.clone())));
+    }
+    if let Some(authorized) = client.access_authorized {
+        fields.push(("access_authorized".to_string(), Value::Bool(authorized)));
+    }
+    Value::Object(fields)
 }
 
 fn protocol_identifier(kind: &str, value: &str) -> Result<ProtocolIdentifier, UniFiError> {
@@ -1222,11 +1645,18 @@ fn decode_chunked(input: &[u8], maximum: usize) -> Result<Vec<u8>, UniFiError> {
 mod tests {
     use super::*;
     use smart_home_core::{CapabilityGrant, CapabilityGrantId, PrivilegeTier};
+    use smart_home_data_governance::{ConsentReceiptRef, DataPurpose, DataUseGrant};
     use std::io::{BufRead, BufReader};
     use std::net::TcpListener;
     use std::sync::atomic::{AtomicUsize, Ordering};
     use std::sync::{Arc, Mutex};
     use std::thread;
+
+    const PRESENCE_KEY: [u8; 32] = [0x6c; 32];
+    const CLIENT_ID: &str = "f27a1d16-6f5d-4bd8-a12c-c9ed87f17c14";
+    const CLIENT_NAME: &str = "Private Phone";
+    const CLIENT_MAC: &str = "aa:bb:cc:dd:ee:ff";
+    const CLIENT_IP: &str = "192.0.2.99";
 
     fn api_key() -> UniFiApiKey {
         UniFiApiKey::new("secret-api-key").unwrap()
@@ -1273,7 +1703,26 @@ mod tests {
                     features: vec!["switching".to_string()],
                 },
             ],
+            connected_clients: Vec::new(),
         }
+    }
+
+    fn connected_client_page() -> JsonValue {
+        serde_json::json!({
+            "offset": 0,
+            "limit": 100,
+            "count": 1,
+            "totalCount": 1,
+            "data": [{
+                "type": "WIRELESS",
+                "id": CLIENT_ID,
+                "name": CLIENT_NAME,
+                "connectedAt": "2026-08-09T09:00:00Z",
+                "macAddress": CLIENT_MAC,
+                "ipAddress": CLIENT_IP,
+                "access": {"type": "STANDARD", "authorized": true}
+            }]
+        })
     }
 
     #[derive(Debug)]
@@ -1304,6 +1753,45 @@ mod tests {
             )
             .with_expiry(20_000),
         );
+    }
+
+    fn client_policy(principal: &AgentId) -> DataGovernancePolicy {
+        let mut policy = DataGovernancePolicy::default();
+        for (category, retention, purpose, receipt) in [
+            (
+                DataCategory::DeviceIdentifier,
+                DataRetention::Ephemeral,
+                "derive private connected-client identities",
+                "consent://unifi/client-identifiers-1",
+            ),
+            (
+                DataCategory::Presence,
+                DataRetention::Bounded {
+                    maximum_age_ms: CLIENT_PRESENCE_RETENTION_MS,
+                },
+                "show current home-network presence",
+                "consent://unifi/client-presence-1",
+            ),
+        ] {
+            policy
+                .add_grant(
+                    DataUseGrant::new(
+                        principal.clone(),
+                        "unifi:unifi-test:connected-clients",
+                        category,
+                        DataOperation::Inspect,
+                        DataDestination::LocalDevice,
+                        DataPurpose::new(purpose).unwrap(),
+                        ConsentReceiptRef::new(receipt).unwrap(),
+                        retention,
+                        1_000,
+                        20_000,
+                    )
+                    .unwrap(),
+                )
+                .unwrap();
+        }
+        policy
     }
 
     #[test]
@@ -1352,6 +1840,13 @@ mod tests {
     }
 
     #[test]
+    fn presence_keys_are_strict_and_redacted() {
+        assert!(UniFiPresenceKey::new(vec![0x6c; 31]).is_err());
+        let key = UniFiPresenceKey::new(PRESENCE_KEY.to_vec()).unwrap();
+        assert_eq!(format!("{key:?}"), "UniFiPresenceKey([REDACTED])");
+    }
+
+    #[test]
     fn denied_read_reaches_no_transport() {
         let calls = Arc::new(AtomicUsize::new(0));
         let client = UniFiClient::new(
@@ -1371,6 +1866,32 @@ mod tests {
                 2_000,
             )
             .is_err());
+        assert_eq!(calls.load(Ordering::SeqCst), 0);
+    }
+
+    #[test]
+    fn connected_client_inspection_without_data_consent_reaches_no_transport() {
+        let calls = Arc::new(AtomicUsize::new(0));
+        let client = UniFiClient::new(
+            config(443),
+            api_key(),
+            FixedTransport {
+                snapshot: snapshot(),
+                calls: Arc::clone(&calls),
+            },
+        )
+        .unwrap()
+        .with_presence_key(UniFiPresenceKey::new(PRESENCE_KEY.to_vec()).unwrap());
+        let mut integration = UniFiRuntimeIntegration::new(client);
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:presence-denied");
+        authorize(&mut runtime, principal.clone());
+        assert!(matches!(
+            integration.inspect_clients_and_install_authorized(&mut runtime, principal, 2_000),
+            Err(UniFiError::DataGovernanceDenied(
+                DataGovernanceDenial::NoMatchingConsent
+            ))
+        ));
         assert_eq!(calls.load(Ordering::SeqCst), 0);
     }
 
@@ -1477,6 +1998,57 @@ mod tests {
     }
 
     #[test]
+    fn client_parser_keeps_only_pseudonymous_presence_fields() {
+        let site = UniFiSite {
+            id: "site-1".to_string(),
+            name: "Home".to_string(),
+            internal_reference: None,
+        };
+        let key = UniFiPresenceKey::new(PRESENCE_KEY.to_vec()).unwrap();
+        let sensitive = SensitiveJson(connected_client_page());
+        let page = parse_client_page(&sensitive.0, 0, &site, &key).unwrap();
+        assert_eq!(page.data.len(), 1);
+        let client = &page.data[0];
+        assert_eq!(client.pseudonym.len(), 32);
+        assert_eq!(client.client_type, "WIRELESS");
+        assert_eq!(client.access_type.as_deref(), Some("STANDARD"));
+        assert_eq!(client.access_authorized, Some(true));
+        let debug = format!("{client:?}");
+        for raw in [CLIENT_ID, CLIENT_NAME, CLIENT_MAC, CLIENT_IP] {
+            assert!(!debug.contains(raw));
+        }
+
+        let duplicate = Page {
+            offset: 0,
+            total_count: 2,
+            data: vec![client.clone(), client.clone()],
+        };
+        assert!(validate_client_uniqueness(&duplicate.data).is_err());
+    }
+
+    #[test]
+    fn install_rejects_bad_client_pseudonyms_before_runtime_mutation() {
+        let mut snapshot = snapshot();
+        snapshot.connected_clients.push(UniFiConnectedClient {
+            pseudonym: "short".to_string(),
+            client_type: "WIRELESS".to_string(),
+            access_type: None,
+            access_authorized: None,
+        });
+        let mut runtime = SmartHomeRuntime::new();
+        assert!(
+            install_snapshot(&mut runtime, &config(443), &snapshot, 2_000)
+                .unwrap_err()
+                .to_string()
+                .contains("pseudonym")
+        );
+        assert!(runtime
+            .registry()
+            .bridge(&BridgeId::trusted("unifi.test"))
+            .is_none());
+    }
+
+    #[test]
     fn loopback_transport_uses_exact_paths_and_private_api_key_header() {
         let listener = TcpListener::bind("127.0.0.1:0").unwrap();
         let port = listener.local_addr().unwrap().port();
@@ -1537,6 +2109,107 @@ mod tests {
         assert!(requests
             .iter()
             .all(|head| !head.contains("vault://unifi/test")));
+    }
+
+    #[test]
+    fn governed_loopback_client_presence_excludes_native_identity_and_expires() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let port = listener.local_addr().unwrap().port();
+        let requests = Arc::new(Mutex::new(Vec::new()));
+        let server_requests = Arc::clone(&requests);
+        let responses = vec![
+            serde_json::json!({"applicationVersion": "10.4.57"}),
+            serde_json::json!({
+                "offset": 0,
+                "limit": 100,
+                "count": 1,
+                "totalCount": 1,
+                "data": [{"id": "site-1", "internalReference": "default", "name": "Home"}]
+            }),
+            serde_json::json!({
+                "offset": 0,
+                "limit": 100,
+                "count": 1,
+                "totalCount": 1,
+                "data": [{
+                    "id": "device-ap",
+                    "name": "Upstairs AP",
+                    "model": "U7 Pro",
+                    "macAddress": "00:11:22:33:44:55",
+                    "ipAddress": "192.0.2.10",
+                    "state": "ONLINE",
+                    "features": ["accessPoint"]
+                }]
+            }),
+            connected_client_page(),
+        ];
+        let handle = thread::spawn(move || {
+            for response in responses {
+                let (stream, _) = listener.accept().unwrap();
+                let mut reader = BufReader::new(stream);
+                let mut head = String::new();
+                loop {
+                    let mut line = String::new();
+                    reader.read_line(&mut line).unwrap();
+                    if line == "\r\n" {
+                        break;
+                    }
+                    head.push_str(&line);
+                }
+                server_requests.lock().unwrap().push(head);
+                let body = serde_json::to_vec(&response).unwrap();
+                let response_head = format!(
+                    "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+                    body.len()
+                );
+                reader
+                    .get_mut()
+                    .write_all(response_head.as_bytes())
+                    .unwrap();
+                reader.get_mut().write_all(&body).unwrap();
+            }
+        });
+
+        let client = UniFiClient::new(config(port), api_key(), UniFiLanTransport::default())
+            .unwrap()
+            .with_presence_key(UniFiPresenceKey::new(PRESENCE_KEY.to_vec()).unwrap());
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:presence-allowed");
+        authorize(&mut runtime, principal.clone());
+        let mut integration =
+            UniFiRuntimeIntegration::new(client).with_data_governance(client_policy(&principal));
+        let installed = integration
+            .inspect_clients_and_install_authorized(&mut runtime, principal, 5_000)
+            .unwrap();
+        handle.join().unwrap();
+
+        let requests = requests.lock().unwrap();
+        assert_eq!(requests.len(), 4);
+        assert!(requests[3].starts_with(
+            "GET /proxy/network/integration/v1/sites/site-1/clients?offset=0&limit=100 HTTP/1.1"
+        ));
+        assert!(requests
+            .iter()
+            .all(|head| head.contains("X-API-Key: secret-api-key")));
+        for raw in [CLIENT_ID, CLIENT_NAME, CLIENT_MAC, CLIENT_IP] {
+            assert!(requests.iter().all(|head| !head.contains(raw)));
+        }
+
+        assert_eq!(installed.connected_client_entity_ids.len(), 1);
+        let entity = runtime
+            .registry()
+            .entity(&installed.connected_client_entity_ids[0])
+            .unwrap();
+        assert_eq!(
+            entity.state.as_ref().unwrap().expires_at_ms,
+            Some(5_000 + CLIENT_PRESENCE_RETENTION_MS)
+        );
+        let debug = format!("{entity:?}");
+        assert!(debug.contains("keyed_pseudonym"));
+        assert!(debug.contains("WIRELESS"));
+        for raw in [CLIENT_ID, CLIENT_NAME, CLIENT_MAC, CLIENT_IP] {
+            assert!(!debug.contains(raw));
+        }
     }
 
     #[test]

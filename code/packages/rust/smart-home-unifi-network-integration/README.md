@@ -1,6 +1,7 @@
 # smart-home-unifi-network-integration
 
-Production-facing read-only UniFi Network inspection for D23.
+Production-facing read-only UniFi Network and connected-client presence
+inspection for D23.
 
 The integration accepts a manually configured local UniFi OS HTTPS origin and
 a Vault API-key reference. After D23 authorizes smart_home.read, the transport
@@ -14,11 +15,21 @@ Adopted devices become confirmed network-diagnostic entities. Native online,
 transitional, and unavailable states map to online, degraded, and offline
 health without inventing topology or reachability.
 
+Connected-client inspection additionally calls the official bounded paginated
+`/v1/sites/{siteId}/clients` endpoint. D23 read authorization, an ephemeral
+device-identifier grant, and a separate five-minute presence grant must all
+succeed before credentials or network I/O. A distinct Vault-leased 32-byte key
+derives stable 128-bit host-scoped pseudonyms. Raw client IDs, names, MACs, IPs,
+and connection timestamps remain in zeroizing response storage and never enter
+runtime identity, state, metadata, errors, or debug output. Pseudonymous client
+state exposes only current presence, connection type, and optional access shape,
+and expires after five minutes.
+
 This slice intentionally excludes remote Site Manager access, connected-client
-inspection, detailed statistics, event streaming, adoption, guest
-authorization, port actions, and configuration mutations. Those require
-privacy and telemetry-egress policy, supervised event hosts, or
-operation-specific D23 contracts and readable verification.
+native details and retained identity migration, detailed statistics, event
+streaming, adoption, guest authorization, port actions, and configuration
+mutations. Those require privacy and telemetry-egress policy, supervised event
+hosts, or operation-specific D23 contracts and readable verification.
 
 Protocol references:
 

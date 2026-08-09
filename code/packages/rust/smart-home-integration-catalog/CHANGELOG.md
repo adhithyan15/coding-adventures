@@ -1,5 +1,8 @@
 # Changelog
 
+- Record UniFi Network's consent-gated, pseudonymous, five-minute connected
+  client presence inspection and raw-identity exclusion boundary.
+
 - Record Enphase's governed pseudonymous per-inverter production inspection and
   its explicit identifier-purpose, consent, and ephemeral-retention boundary.
 

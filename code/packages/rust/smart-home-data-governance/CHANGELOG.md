@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.0
+
+- Add a host-owned presence category that can be bound to explicit ephemeral or
+  bounded retention before a local integration performs inspection.
+
 ## 0.3.0
 
 - Add exact device-identifier inspection policy with explicit ephemeral or
