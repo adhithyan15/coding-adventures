@@ -195,6 +195,8 @@ const clamp01 = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n);
 // Persian ا opens UT Austin's freehand alphabet demonstration: one vertical
 // movement travels from the top to the baseline. The lesson presents the
 // alphabet right-to-left, while this isolated non-connector remains one stroke.
+// The adjacent ب starts at the bowl's right lip, sweeps right-to-left through
+// its shallow dip, then lifts once before placing the separate dot below.
 // அ is Frame 4's first row: movements 1-4 remain on the connected body, then
 // the hand lifts once before movement 5 draws the separate right upright. ஆ is
 // the next row: it repeats movements 1-5, then continues from that upright into
@@ -248,6 +250,55 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       url: "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
       variation:
         "The cited freehand lesson demonstrates isolated ا as one top-to-bottom Naskh stroke while presenting the alphabet right-to-left. Contextual joins change neighbouring ink, but the isolated non-connector remains the same one-stroke stem; this path fits the vendored Noto Naskh outline.",
+    },
+  },
+  "ب": {
+    glyph: "ب",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep the shallow bowl from right to left",
+            path: [
+              { x: 678, y: 382 },
+              { x: 663, y: 345 },
+              { x: 650, y: 305 },
+              { x: 654, y: 260 },
+              { x: 672, y: 215 },
+              { x: 688, y: 170 },
+              { x: 686, y: 126 },
+              { x: 620, y: 94 },
+              { x: 530, y: 65 },
+              { x: 430, y: 42 },
+              { x: 335, y: 38 },
+              { x: 245, y: 51 },
+              { x: 170, y: 83 },
+              { x: 120, y: 135 },
+              { x: 96, y: 205 },
+              { x: 100, y: 255 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then place the dot below",
+            path: [
+              { x: 412, y: -137 },
+              { x: 379, y: -101 },
+              { x: 344, y: -137 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: {
+      citation:
+        "Persian Online, How to Write Persian Characters, opening ب demonstration at 00:11–00:15 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+      url: "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+      variation:
+        "The cited freehand lesson demonstrates isolated ب as a shallow right-to-left Naskh bowl, followed by one pen lift and the separate dot below. Contextual joins reshape the bowl in connected text; this isolated learner path fits the vendored Noto Naskh outline.",
     },
   },
   அ: {
