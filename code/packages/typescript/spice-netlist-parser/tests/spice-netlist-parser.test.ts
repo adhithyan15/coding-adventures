@@ -2065,6 +2065,33 @@ Q1 col base emit fast
     );
   });
 
+  it.each([
+    ["0", 0.0],
+    ["2.5", 2.5],
+  ])("parses BJT minimum base resistance RBM=%s", (value, expected) => {
+    const parsed = parseNetlist(`.model fast NPN(RBM=${value})\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      minimumBaseResistance: expected,
+    });
+  });
+
+  it("preserves the fallback when BJT RBM is omitted", () => {
+    const parsed = parseNetlist(".model fast NPN(RB=14)\nQ1 col base emit fast");
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      minimumBaseResistance: undefined,
+    });
+  });
+
+  it.each(["-1", "1e999"])("rejects invalid BJT RBM=%s", (value) => {
+    expect(() => parseNetlist(`.model fast NPN(RBM=${value})`)).toThrow(
+      "BJT RBM must be finite and non-negative",
+    );
+  });
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)

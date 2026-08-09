@@ -1991,6 +1991,31 @@ def test_rejects_invalid_bjt_base_resistance(value: str) -> None:
         parse_netlist(f".model fast NPN(RB={value})")
 
 
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("2.5", 2.5)])
+def test_parse_bjt_minimum_base_resistance(value: str, expected: float) -> None:
+    parsed = parse_netlist(f".model fast NPN(RBM={value})\nQ1 col base emit fast")
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Rbm == expected
+
+
+def test_bjt_omitted_minimum_base_resistance_preserves_fallback() -> None:
+    parsed = parse_netlist(".model fast NPN(RB=14)\nQ1 col base emit fast")
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Rbm is None
+
+
+@pytest.mark.parametrize("value", ["-1", "1e999"])
+def test_rejects_invalid_bjt_minimum_base_resistance(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="BJT RBM must be finite and non-negative"
+    ):
+        parse_netlist(f".model fast NPN(RBM={value})")
+
+
 def test_parse_jfet_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
