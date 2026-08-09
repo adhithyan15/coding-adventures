@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Persian head-and-tail ductus (HL-C09P)
+
+- Add Persian م from UT Austin Persian Online's 02:33–02:36 demonstration: one
+  continuous Naskh stroke shapes the round head and flows directly into the
+  descending tail without lifting.
+- Pin zero lifts, two learner movements, Noto Naskh geometry, and a real
+  two-frame filmstrip that keeps both movements in the same pen-down run.
+
 ### Added — cited Persian upright-and-base ductus (HL-C09O)
 
 - Add Persian ل from UT Austin Persian Online's 02:29–02:32 demonstration: one
