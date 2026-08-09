@@ -23,7 +23,7 @@
     {
       "id": "sequence",
       "headers": ["sequenceDiagram"],
-      "status": "detected",
+      "status": "partial",
       "ir": "sequence",
       "smoke_source": "sequenceDiagram\nAlice->>Bob: Hello"
     },

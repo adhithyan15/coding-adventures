@@ -1,7 +1,8 @@
 # diagram-to-paint
 
-DG03 — Converts a `LayoutedGraphDiagram` into a `PaintScene` for rendering by
-`paint-metal` and other backends. Text rendering is **delegated to `layout-to-paint`**
+DG03 — Converts layouted graph, chart, structural, temporal, sequence, and
+geometric diagrams into a `PaintScene` for rendering by `paint-metal` and other
+backends. Text rendering is **delegated to `layout-to-paint`**
 so every paint backend receives real glyph IDs from the TXT00 shaping pipeline.
 
 ## Usage
@@ -49,6 +50,8 @@ println!("Scene: {}×{} with {} instructions",
 | Arrowhead        | `PaintPath` (filled triangle)                    |
 | Edge label       | `PaintGlyphRun` (real glyph IDs via TXT00)       |
 | Diagram title    | `PaintGlyphRun` (real glyph IDs via TXT00)       |
+| Sequence lifeline/message | `PaintPath` (solid or dashed)             |
+| Sequence note/activation  | `PaintRect`                               |
 
 ## Painter's algorithm order
 

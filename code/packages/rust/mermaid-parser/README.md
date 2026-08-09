@@ -11,8 +11,13 @@ The current native pipeline supports documented subsets of:
 
 - `flowchart` / `graph`
 - `classDiagram`
+- `sequenceDiagram`
+- `erDiagram`
+- `C4Context` / `C4Container` / `C4Component` / `C4Dynamic` / `C4Deployment`
 - `gantt`
+- `gitGraph`
 - `pie`
+- `sankey`
 - `xychart`
 
 Each supported family lowers into the shared Diagram IR and can continue
@@ -27,6 +32,11 @@ Mermaid
   -> PaintScene
   -> Metal / SVG / Direct2D / other Paint VM backends
 ```
+
+The sequence subset includes participants and actors, aliases, standard solid
+and dotted message arrows, bidirectional/cross/point arrowheads, notes,
+activations, titles, and automatic numbering. Control blocks and advanced
+participant metadata remain explicit compatibility gaps.
 
 All other Mermaid 11.16.1 family headers are recognized and return an explicit
 `recognized but not implemented` error until their grammar, lowering, layout,

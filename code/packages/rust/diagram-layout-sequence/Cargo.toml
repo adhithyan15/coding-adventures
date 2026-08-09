@@ -1,0 +1,8 @@
+[package]
+name = "diagram-layout-sequence"
+version = "0.1.0"
+edition = "2021"
+description = "Participant, lifeline, message, note, and activation layout for sequence diagrams"
+
+[dependencies]
+diagram-ir = { path = "../diagram-ir" }

@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -14,6 +14,8 @@ const GITGRAPH_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/gitgraph.tokens");
 const ER_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/er.tokens");
 const C4_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/c4.tokens");
+const SEQUENCE_TOKEN_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/sequence.tokens");
 
 fn create_lexer<'a>(source: &'a str, grammar_source: &str, grammar_name: &str) -> GrammarLexer<'a> {
     let grammar = parse_token_grammar(grammar_source)
@@ -43,6 +45,10 @@ pub fn create_mermaid_er_lexer(source: &str) -> GrammarLexer<'_> {
 
 pub fn create_mermaid_c4_lexer(source: &str) -> GrammarLexer<'_> {
     create_lexer(source, C4_TOKEN_GRAMMAR_SOURCE, "c4.tokens")
+}
+
+pub fn create_mermaid_sequence_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, SEQUENCE_TOKEN_GRAMMAR_SOURCE, "sequence.tokens")
 }
 
 pub fn tokenize_mermaid(source: &str) -> Vec<Token> {
@@ -87,6 +93,13 @@ pub fn tokenize_mermaid_c4(source: &str) -> Vec<Token> {
         .unwrap_or_else(|e| panic!("Mermaid C4 tokenization failed: {e}"))
 }
 
+pub fn tokenize_mermaid_sequence(source: &str) -> Vec<Token> {
+    let mut lexer = create_mermaid_sequence_lexer(source);
+    lexer
+        .tokenize()
+        .unwrap_or_else(|e| panic!("Mermaid sequence tokenization failed: {e}"))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -98,7 +111,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.2.0");
+        assert_eq!(VERSION, "0.3.0");
     }
 
     #[test]
@@ -261,5 +274,23 @@ mod tests {
         assert!(values.contains(&"Person"));
         assert!(values.contains(&"$sprite"));
         assert!(values.contains(&"Rel"));
+    }
+
+    #[test]
+    fn tokenizes_sequence_participants_messages_and_notes() {
+        let tokens = tokenize_mermaid_sequence(
+            "sequenceDiagram\nparticipant A as Alice\nA->>+Bob: Hello Bob\nnote right of Bob: Ready\n",
+        );
+        let values: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_ != TokenType::Eof)
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert!(values.contains(&"sequenceDiagram"));
+        assert!(values.contains(&"->>"));
+        assert!(values.contains(&"+"));
+        assert!(values.contains(&"note"));
+        assert!(values.contains(&"Ready"));
     }
 }

@@ -4,6 +4,8 @@
 
 - Added a Mermaid Pie -> chart layout -> PaintScene -> Metal PNG example and
   Apple end-to-end test.
+- Added sequence lowering for participant headers, lifelines, messages,
+  arrowheads, notes, activation bars, and shaped labels, plus a Metal PNG test.
 
 ## 0.1.2 — Fix text coordinate-space mismatch (text now inside nodes)
 

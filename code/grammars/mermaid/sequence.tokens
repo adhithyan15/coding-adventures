@@ -1,0 +1,41 @@
+# @version 1
+# Mermaid 11.16.1 sequence diagram token grammar.
+# Derived from packages/mermaid/src/diagrams/sequence/parser/sequenceDiagram.jison.
+
+skip:
+  WHITESPACE            = /[ \t]+/
+  COMMENT               = /%%[^\r\n]*/
+
+NEWLINE                  = /\r?\n/
+HEADER                   = "sequenceDiagram"
+BIDIRECTIONAL_SOLID      = "<<->>"
+BIDIRECTIONAL_DOTTED     = "<<-->>"
+DOTTED_FILLED_ARROW      = "-->>"
+DOTTED_OPEN_ARROW        = "-->"
+DOTTED_CROSS_ARROW       = "--x"
+DOTTED_POINT_ARROW       = "--)"
+SOLID_FILLED_ARROW       = "->>"
+SOLID_OPEN_ARROW         = "->"
+SOLID_CROSS_ARROW        = "-x"
+SOLID_POINT_ARROW        = "-)"
+COLON                    = ":"
+COMMA                    = ","
+PLUS                     = "+"
+MINUS                    = "-"
+IDENTIFIER               = /[A-Za-z0-9_.$@]+/
+WORD                     = /[^ \t\r\n:,+-]+/
+
+keywords:
+  participant
+  actor
+  as
+  activate
+  deactivate
+  note
+  left
+  right
+  of
+  over
+  title
+  autonumber
+  off

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0
+
+- Added a portable Mermaid 11.16.1 sequence token grammar and lexer entrypoint.
+
 ## 0.2.0
 
 - Added the shared Mermaid 11.16.0 pie-chart token grammar and lexer entrypoint.

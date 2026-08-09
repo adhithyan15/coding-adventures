@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0
+
+- Added grammar-backed sequence parsing for participants, actors, aliases,
+  messages, notes, activations, titles, and automatic numbering.
+- Added sequence dispatch into the shared semantic IR and marked the family partial.
+
 ## 0.3.0
 
 - Pinned the compatibility target to Mermaid 11.16.1.

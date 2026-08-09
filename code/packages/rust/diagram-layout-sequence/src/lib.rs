@@ -1,0 +1,286 @@
+//! Backend-neutral sequence diagram layout.
+
+use std::collections::HashMap;
+
+use diagram_ir::{
+    LayoutedSequenceDiagram, LayoutedSequenceItem, SequenceDiagram, SequenceEvent,
+    SequenceNotePlacement,
+};
+
+pub const VERSION: &str = "0.1.0";
+
+const MARGIN: f64 = 28.0;
+const HEADER_Y: f64 = 42.0;
+const HEADER_H: f64 = 44.0;
+const MIN_LANE_W: f64 = 150.0;
+const EVENT_H: f64 = 58.0;
+const NOTE_H: f64 = 38.0;
+const ACTIVATION_W: f64 = 12.0;
+
+/// Lay out an ordered sequence diagram. Participant order is semantic and is
+/// therefore retained exactly rather than optimized by the layout engine.
+pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDiagram {
+    let lane_widths: Vec<f64> = diagram
+        .participants
+        .iter()
+        .map(|participant| {
+            ((participant.label.text.chars().count() as f64 * 8.0) + 36.0).max(MIN_LANE_W)
+        })
+        .collect();
+    let width = lane_widths.iter().sum::<f64>() + MARGIN * 2.0;
+    let mut centers = HashMap::new();
+    let mut items = Vec::new();
+    let mut x = MARGIN;
+
+    for (participant, lane_width) in diagram.participants.iter().zip(&lane_widths) {
+        let box_width = (*lane_width - 24.0).max(100.0);
+        let center = x + *lane_width / 2.0;
+        centers.insert(participant.id.clone(), center);
+        items.push(LayoutedSequenceItem::ParticipantBox {
+            id: participant.id.clone(),
+            label: participant.label.text.clone(),
+            kind: participant.kind.clone(),
+            x: center - box_width / 2.0,
+            y: HEADER_Y,
+            width: box_width,
+            height: HEADER_H,
+        });
+        x += *lane_width;
+    }
+
+    let event_start = HEADER_Y + HEADER_H + 36.0;
+    let mut y = event_start;
+    let mut activation_starts: HashMap<String, Vec<f64>> = HashMap::new();
+    let mut message_number = 0usize;
+
+    for event in &diagram.events {
+        match event {
+            SequenceEvent::Message {
+                from,
+                to,
+                label,
+                line_style,
+                arrowhead,
+                bidirectional,
+                activate,
+                deactivate,
+            } => {
+                let Some(&from_x) = centers.get(from) else {
+                    continue;
+                };
+                let Some(&to_x) = centers.get(to) else {
+                    continue;
+                };
+                message_number += 1;
+                items.push(LayoutedSequenceItem::Message {
+                    from_x,
+                    to_x,
+                    y,
+                    label: label.clone(),
+                    line_style: line_style.clone(),
+                    arrowhead: arrowhead.clone(),
+                    bidirectional: *bidirectional,
+                    number: diagram.auto_number.then_some(message_number),
+                });
+                if *activate {
+                    activation_starts.entry(to.clone()).or_default().push(y);
+                }
+                if *deactivate {
+                    close_activation(&mut items, &mut activation_starts, from, from_x, y);
+                }
+                y += EVENT_H;
+            }
+            SequenceEvent::Activation {
+                participant,
+                active,
+            } => {
+                let Some(&participant_x) = centers.get(participant) else {
+                    continue;
+                };
+                if *active {
+                    activation_starts
+                        .entry(participant.clone())
+                        .or_default()
+                        .push(y);
+                } else {
+                    close_activation(
+                        &mut items,
+                        &mut activation_starts,
+                        participant,
+                        participant_x,
+                        y,
+                    );
+                }
+                y += EVENT_H / 2.0;
+            }
+            SequenceEvent::Note {
+                participants,
+                placement,
+                text,
+            } => {
+                let participant_centers: Vec<f64> = participants
+                    .iter()
+                    .filter_map(|id| centers.get(id).copied())
+                    .collect();
+                if participant_centers.is_empty() {
+                    continue;
+                }
+                let min_x = participant_centers
+                    .iter()
+                    .copied()
+                    .fold(f64::INFINITY, f64::min);
+                let max_x = participant_centers
+                    .iter()
+                    .copied()
+                    .fold(f64::NEG_INFINITY, f64::max);
+                let note_width = ((text.chars().count() as f64 * 7.5) + 28.0)
+                    .max(100.0)
+                    .min((width - MARGIN * 2.0).max(100.0));
+                let note_x = match placement {
+                    SequenceNotePlacement::LeftOf => min_x - note_width - 14.0,
+                    SequenceNotePlacement::RightOf => max_x + 14.0,
+                    SequenceNotePlacement::Over => (min_x + max_x - note_width) / 2.0,
+                }
+                .clamp(MARGIN, (width - MARGIN - note_width).max(MARGIN));
+                items.push(LayoutedSequenceItem::Note {
+                    x: note_x,
+                    y: y - 10.0,
+                    width: note_width,
+                    height: NOTE_H,
+                    text: text.clone(),
+                });
+                y += NOTE_H + 20.0;
+            }
+        }
+    }
+
+    let height = (y + 36.0).max(180.0);
+    for participant in &diagram.participants {
+        if let Some(&center) = centers.get(&participant.id) {
+            items.push(LayoutedSequenceItem::Lifeline {
+                participant: participant.id.clone(),
+                x: center,
+                y1: HEADER_Y + HEADER_H,
+                y2: height - 20.0,
+            });
+            if let Some(starts) = activation_starts.remove(&participant.id) {
+                for start in starts {
+                    items.push(LayoutedSequenceItem::Activation {
+                        participant: participant.id.clone(),
+                        x: center - ACTIVATION_W / 2.0,
+                        y1: start,
+                        y2: height - 20.0,
+                    });
+                }
+            }
+        }
+    }
+
+    LayoutedSequenceDiagram {
+        width,
+        height,
+        title: diagram.title.clone(),
+        items,
+    }
+}
+
+fn close_activation(
+    items: &mut Vec<LayoutedSequenceItem>,
+    starts: &mut HashMap<String, Vec<f64>>,
+    participant: &str,
+    center: f64,
+    y: f64,
+) {
+    if let Some(start) = starts.get_mut(participant).and_then(Vec::pop) {
+        items.push(LayoutedSequenceItem::Activation {
+            participant: participant.to_string(),
+            x: center - ACTIVATION_W / 2.0,
+            y1: start,
+            y2: y,
+        });
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use diagram_ir::{
+        DiagramLabel, SequenceArrowhead, SequenceLineStyle, SequenceParticipant,
+        SequenceParticipantKind,
+    };
+
+    fn participant(id: &str) -> SequenceParticipant {
+        SequenceParticipant {
+            id: id.into(),
+            label: DiagramLabel::new(id),
+            kind: SequenceParticipantKind::Participant,
+            style: None,
+        }
+    }
+
+    #[test]
+    fn lays_out_messages_and_lifelines() {
+        let diagram = SequenceDiagram {
+            title: None,
+            auto_number: true,
+            participants: vec![participant("Alice"), participant("Bob")],
+            events: vec![SequenceEvent::Message {
+                from: "Alice".into(),
+                to: "Bob".into(),
+                label: "Hello".into(),
+                line_style: SequenceLineStyle::Solid,
+                arrowhead: SequenceArrowhead::Filled,
+                bidirectional: false,
+                activate: false,
+                deactivate: false,
+            }],
+        };
+        let layout = layout_sequence_diagram(&diagram);
+        assert_eq!(
+            layout
+                .items
+                .iter()
+                .filter(|item| matches!(item, LayoutedSequenceItem::ParticipantBox { .. }))
+                .count(),
+            2
+        );
+        assert_eq!(
+            layout
+                .items
+                .iter()
+                .filter(|item| matches!(item, LayoutedSequenceItem::Lifeline { .. }))
+                .count(),
+            2
+        );
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedSequenceItem::Message {
+                number: Some(1),
+                ..
+            }
+        )));
+    }
+
+    #[test]
+    fn closes_activation_on_deactivation_event() {
+        let diagram = SequenceDiagram {
+            title: None,
+            auto_number: false,
+            participants: vec![participant("Bob")],
+            events: vec![
+                SequenceEvent::Activation {
+                    participant: "Bob".into(),
+                    active: true,
+                },
+                SequenceEvent::Activation {
+                    participant: "Bob".into(),
+                    active: false,
+                },
+            ],
+        };
+        let layout = layout_sequence_diagram(&diagram);
+        assert!(layout.items.iter().any(
+            |item| matches!(item, LayoutedSequenceItem::Activation { y1, y2, .. } if y2 > y1)
+        ));
+    }
+}

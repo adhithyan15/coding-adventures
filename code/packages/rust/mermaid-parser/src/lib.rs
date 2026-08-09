@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.3.0";
+pub const VERSION: &str = "0.4.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -18,7 +18,7 @@ use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
 use mermaid_lexer::{
     tokenize_mermaid, tokenize_mermaid_c4, tokenize_mermaid_er, tokenize_mermaid_gitgraph,
-    tokenize_mermaid_pie, tokenize_mermaid_sankey,
+    tokenize_mermaid_pie, tokenize_mermaid_sankey, tokenize_mermaid_sequence,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -30,6 +30,8 @@ const GITGRAPH_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/gitgraph.grammar");
 const ER_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/er.grammar");
 const C4_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/c4.grammar");
+const SEQUENCE_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/sequence.grammar");
 
 /// Recursion-depth cap for the Mermaid [`GrammarParser`] — see
 /// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
@@ -246,6 +248,18 @@ pub fn parse_mermaid_c4_ast(source: &str) -> Result<GrammarASTNode, ParseError> 
     })
 }
 
+pub fn parse_mermaid_sequence_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
+    let tokens = tokenize_mermaid_sequence(source);
+    let grammar = parse_parser_grammar(SEQUENCE_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|e| panic!("Failed to parse sequence.grammar: {e}"));
+    let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
+    parser.parse().map_err(|e| ParseError {
+        message: e.message,
+        line: e.token.line,
+        col: e.token.column,
+    })
+}
+
 pub fn parse_to_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
     let mut cursor = TokenCursor::new(tokenize_mermaid(source));
     cursor.skip_terminators();
@@ -408,6 +422,8 @@ fn token_name(token: &Token) -> &str {
         TokenType::Number => "NUMBER",
         TokenType::String => "STRING",
         TokenType::Keyword => "KEYWORD",
+        TokenType::Plus => "PLUS",
+        TokenType::Minus => "MINUS",
         TokenType::Colon => "COLON",
         TokenType::Comma => "COMMA",
         TokenType::Equals => "EQUALS",
@@ -431,9 +447,11 @@ fn token_name(token: &Token) -> &str {
 use diagram_ir::{
     Axis, AxisKind, ChartDiagram, ChartKind, ChartOrientation, ChartSeries, Compartment,
     CompartmentKind, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType, GitDiagram,
-    GitEvent, PieSlice, RelKind, SankeyFlow, SankeyNode, SeriesKind, StructuralDiagram,
-    StructuralGroup, StructuralKind, StructuralNode, StructuralNodeKind, StructuralRelationship,
-    TaskStart, TaskStatus, TemporalBody, TemporalDiagram, TemporalKind,
+    GitEvent, PieSlice, RelKind, SankeyFlow, SankeyNode, SequenceArrowhead, SequenceDiagram,
+    SequenceEvent, SequenceLineStyle, SequenceNotePlacement, SequenceParticipant,
+    SequenceParticipantKind, SeriesKind, StructuralDiagram, StructuralGroup, StructuralKind,
+    StructuralNode, StructuralNodeKind, StructuralRelationship, TaskStart, TaskStatus,
+    TemporalBody, TemporalDiagram, TemporalKind,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -520,6 +538,7 @@ impl MermaidDiagramType {
                 | Self::Gantt
                 | Self::GitGraph
                 | Self::Pie
+                | Self::Sequence
                 | Self::Sankey
                 | Self::XyChart
         )
@@ -530,6 +549,7 @@ impl MermaidDiagramType {
 pub enum MermaidDiagram {
     Graph(GraphDiagram),
     Chart(ChartDiagram),
+    Sequence(SequenceDiagram),
     Structural(StructuralDiagram),
     Temporal(TemporalDiagram),
 }
@@ -600,6 +620,9 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
         MermaidDiagramType::Er => parse_er_diagram(source).map(MermaidDiagram::Structural),
         MermaidDiagramType::XyChart => parse_xychart(source).map(MermaidDiagram::Chart),
         MermaidDiagramType::Pie => parse_pie(source).map(MermaidDiagram::Chart),
+        MermaidDiagramType::Sequence => {
+            parse_sequence_diagram(source).map(MermaidDiagram::Sequence)
+        }
         MermaidDiagramType::Sankey => parse_sankey(source).map(MermaidDiagram::Chart),
         MermaidDiagramType::GitGraph => parse_gitgraph(source).map(|git| {
             MermaidDiagram::Temporal(TemporalDiagram {
@@ -989,6 +1012,243 @@ fn parse_data_list(s: &str) -> Vec<f64> {
         .split(',')
         .filter_map(|x| x.trim().parse().ok())
         .collect()
+}
+
+// ── sequence parser ──────────────────────────────────────────────────────
+
+/// Parse the grammar-backed core of Mermaid sequence diagrams into the
+/// shared sequence IR. Unsupported control blocks fail grammar validation
+/// instead of being silently discarded.
+pub fn parse_sequence_diagram(source: &str) -> Result<SequenceDiagram, ParseError> {
+    parse_mermaid_sequence_ast(source)?;
+
+    let mut cursor = TokenCursor::new(tokenize_mermaid_sequence(source));
+    cursor.skip_terminators();
+    cursor
+        .consume_if("HEADER")
+        .ok_or_else(|| token_error(cursor.current(), "expected sequenceDiagram header"))?;
+    cursor.skip_terminators();
+
+    let mut diagram = SequenceDiagram {
+        title: None,
+        auto_number: false,
+        participants: Vec::new(),
+        events: Vec::new(),
+    };
+    let mut participant_indices: HashMap<String, usize> = HashMap::new();
+
+    while !cursor.at_eof() {
+        match cursor.current().value.as_str() {
+            "participant" | "actor" => {
+                let kind = if cursor.advance().value == "actor" {
+                    SequenceParticipantKind::Actor
+                } else {
+                    SequenceParticipantKind::Participant
+                };
+                let id = take_sequence_identifier(&mut cursor)?;
+                let label = if cursor.current().value == "as" {
+                    cursor.advance();
+                    take_sequence_line_text(&mut cursor)
+                } else {
+                    id.clone()
+                };
+                upsert_sequence_participant(
+                    &mut diagram,
+                    &mut participant_indices,
+                    id,
+                    label,
+                    kind,
+                );
+            }
+            "activate" | "deactivate" => {
+                let active = cursor.advance().value == "activate";
+                let participant = take_sequence_identifier(&mut cursor)?;
+                ensure_sequence_participant(&mut diagram, &mut participant_indices, &participant);
+                diagram.events.push(SequenceEvent::Activation {
+                    participant,
+                    active,
+                });
+            }
+            "note" => parse_sequence_note(&mut cursor, &mut diagram, &mut participant_indices)?,
+            "title" => {
+                cursor.advance();
+                diagram.title = Some(take_sequence_line_text(&mut cursor));
+            }
+            "autonumber" => {
+                cursor.advance();
+                diagram.auto_number = cursor.current().value != "off";
+                while !cursor.at_eof() && token_name(cursor.current()) != "NEWLINE" {
+                    cursor.advance();
+                }
+            }
+            _ => parse_sequence_message(&mut cursor, &mut diagram, &mut participant_indices)?,
+        }
+        cursor.skip_terminators();
+    }
+
+    Ok(diagram)
+}
+
+fn parse_sequence_message(
+    cursor: &mut TokenCursor,
+    diagram: &mut SequenceDiagram,
+    participant_indices: &mut HashMap<String, usize>,
+) -> Result<(), ParseError> {
+    let from = take_sequence_identifier(cursor)?;
+    let arrow = cursor.advance().clone();
+    let (line_style, arrowhead, bidirectional) = match token_name(&arrow) {
+        "SOLID_OPEN_ARROW" => (SequenceLineStyle::Solid, SequenceArrowhead::Open, false),
+        "DOTTED_OPEN_ARROW" => (SequenceLineStyle::Dotted, SequenceArrowhead::Open, false),
+        "SOLID_FILLED_ARROW" => (SequenceLineStyle::Solid, SequenceArrowhead::Filled, false),
+        "DOTTED_FILLED_ARROW" => (SequenceLineStyle::Dotted, SequenceArrowhead::Filled, false),
+        "BIDIRECTIONAL_SOLID" => (SequenceLineStyle::Solid, SequenceArrowhead::Filled, true),
+        "BIDIRECTIONAL_DOTTED" => (SequenceLineStyle::Dotted, SequenceArrowhead::Filled, true),
+        "SOLID_CROSS_ARROW" => (SequenceLineStyle::Solid, SequenceArrowhead::Cross, false),
+        "DOTTED_CROSS_ARROW" => (SequenceLineStyle::Dotted, SequenceArrowhead::Cross, false),
+        "SOLID_POINT_ARROW" => (SequenceLineStyle::Solid, SequenceArrowhead::Point, false),
+        "DOTTED_POINT_ARROW" => (SequenceLineStyle::Dotted, SequenceArrowhead::Point, false),
+        other => {
+            return Err(token_error(
+                &arrow,
+                format!("unsupported sequence arrow {other}"),
+            ))
+        }
+    };
+    let activate = cursor.consume_if("PLUS").is_some();
+    let deactivate = if activate {
+        false
+    } else {
+        cursor.consume_if("MINUS").is_some()
+    };
+    let to = take_sequence_identifier(cursor)?;
+    cursor
+        .consume_if("COLON")
+        .ok_or_else(|| token_error(cursor.current(), "expected ':' before sequence message"))?;
+    let label = take_sequence_line_text(cursor);
+    ensure_sequence_participant(diagram, participant_indices, &from);
+    ensure_sequence_participant(diagram, participant_indices, &to);
+    diagram.events.push(SequenceEvent::Message {
+        from,
+        to,
+        label,
+        line_style,
+        arrowhead,
+        bidirectional,
+        activate,
+        deactivate,
+    });
+    Ok(())
+}
+
+fn parse_sequence_note(
+    cursor: &mut TokenCursor,
+    diagram: &mut SequenceDiagram,
+    participant_indices: &mut HashMap<String, usize>,
+) -> Result<(), ParseError> {
+    cursor.advance();
+    let placement_token = cursor.advance().clone();
+    let placement = match placement_token.value.as_str() {
+        "left" => {
+            consume_sequence_word(cursor, "of")?;
+            SequenceNotePlacement::LeftOf
+        }
+        "right" => {
+            consume_sequence_word(cursor, "of")?;
+            SequenceNotePlacement::RightOf
+        }
+        "over" => SequenceNotePlacement::Over,
+        other => {
+            return Err(token_error(
+                &placement_token,
+                format!("invalid note placement {other:?}"),
+            ))
+        }
+    };
+    let mut participants = vec![take_sequence_identifier(cursor)?];
+    if cursor.consume_if("COMMA").is_some() {
+        participants.push(take_sequence_identifier(cursor)?);
+    }
+    cursor
+        .consume_if("COLON")
+        .ok_or_else(|| token_error(cursor.current(), "expected ':' before note text"))?;
+    let text = take_sequence_line_text(cursor);
+    for participant in &participants {
+        ensure_sequence_participant(diagram, participant_indices, participant);
+    }
+    diagram.events.push(SequenceEvent::Note {
+        participants,
+        placement,
+        text,
+    });
+    Ok(())
+}
+
+fn consume_sequence_word(cursor: &mut TokenCursor, expected: &str) -> Result<(), ParseError> {
+    if cursor.current().value == expected {
+        cursor.advance();
+        Ok(())
+    } else {
+        Err(token_error(
+            cursor.current(),
+            format!("expected sequence word {expected:?}"),
+        ))
+    }
+}
+
+fn take_sequence_identifier(cursor: &mut TokenCursor) -> Result<String, ParseError> {
+    if matches!(token_name(cursor.current()), "IDENTIFIER" | "WORD") {
+        Ok(cursor.advance().value.clone())
+    } else {
+        Err(token_error(
+            cursor.current(),
+            "expected sequence participant identifier",
+        ))
+    }
+}
+
+fn take_sequence_line_text(cursor: &mut TokenCursor) -> String {
+    let mut words = Vec::new();
+    while !cursor.at_eof() && token_name(cursor.current()) != "NEWLINE" {
+        words.push(cursor.advance().value.clone());
+    }
+    words.join(" ")
+}
+
+fn ensure_sequence_participant(
+    diagram: &mut SequenceDiagram,
+    participant_indices: &mut HashMap<String, usize>,
+    id: &str,
+) {
+    if !participant_indices.contains_key(id) {
+        upsert_sequence_participant(
+            diagram,
+            participant_indices,
+            id.to_string(),
+            id.to_string(),
+            SequenceParticipantKind::Participant,
+        );
+    }
+}
+
+fn upsert_sequence_participant(
+    diagram: &mut SequenceDiagram,
+    participant_indices: &mut HashMap<String, usize>,
+    id: String,
+    label: String,
+    kind: SequenceParticipantKind,
+) {
+    if let Some(&index) = participant_indices.get(&id) {
+        diagram.participants[index].label = DiagramLabel::new(label);
+        diagram.participants[index].kind = kind;
+        return;
+    }
+    participant_indices.insert(id.clone(), diagram.participants.len());
+    diagram.participants.push(SequenceParticipant {
+        id,
+        label: DiagramLabel::new(label),
+        kind,
+        style: None,
+    });
 }
 
 // ── pie parser ───────────────────────────────────────────────────────────
@@ -2248,6 +2508,41 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
             _ => panic!("expected Structural"),
         }
     }
+
+    #[test]
+    fn sequence_parses_core_events_and_implicit_participants() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nautonumber\nparticipant A as Alice\nA->>+Bob: Hello Bob\nnote right of Bob: Ready\ndeactivate Bob\n",
+        )
+        .unwrap();
+        assert!(diagram.auto_number);
+        assert_eq!(diagram.participants.len(), 2);
+        assert_eq!(diagram.participants[0].label.text, "Alice");
+        assert!(matches!(
+            &diagram.events[0],
+            SequenceEvent::Message { from, to, activate: true, .. }
+                if from == "A" && to == "Bob"
+        ));
+        assert!(matches!(
+            &diagram.events[1],
+            SequenceEvent::Note {
+                placement: SequenceNotePlacement::RightOf,
+                ..
+            }
+        ));
+        assert!(matches!(
+            &diagram.events[2],
+            SequenceEvent::Activation { participant, active: false } if participant == "Bob"
+        ));
+    }
+
+    #[test]
+    fn dispatch_sequence() {
+        match parse_any_mermaid("sequenceDiagram\nAlice-->>Bob: Hello").unwrap() {
+            MermaidDiagram::Sequence(diagram) => assert_eq!(diagram.events.len(), 1),
+            _ => panic!("expected Sequence"),
+        }
+    }
 }
 #[cfg(test)]
 mod tests {
@@ -2264,7 +2559,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.3.0");
+        assert_eq!(crate::VERSION, "0.4.0");
     }
 
     #[test]
