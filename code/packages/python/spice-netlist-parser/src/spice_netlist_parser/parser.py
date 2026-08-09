@@ -1299,7 +1299,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
         base_collector_leakage_current = model.params.get(
             "ISC", model.params.get("C4", 0.0) * saturation_current
         )
-        nominal_temperature = model.params.get("T_NOM", model.params.get("TNOM"))
+        nominal_temperature = model.params.get("TNOM", model.params.get("T_NOM"))
         return BJT(
             name,
             fields[1],
@@ -1366,7 +1366,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             raise NetlistParseError(
                 f"model {model.name!r} has kind {model.kind!r}, expected 'NJF' or 'PJF'"
             )
-        nominal_temperature = model.params.get("T_NOM", model.params.get("TNOM"))
+        nominal_temperature = model.params.get("TNOM", model.params.get("T_NOM"))
         return JFET(
             name,
             fields[1],
@@ -2275,7 +2275,7 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             or reverse_beta_rolloff_current < 0.0
         ):
             raise NetlistParseError("BJT IKR must be finite and non-negative")
-        nominal_temperature = params.get("T_NOM", params.get("TNOM"))
+        nominal_temperature = params.get("TNOM", params.get("T_NOM"))
         if nominal_temperature is not None and (
             not math.isfinite(nominal_temperature) or nominal_temperature <= 0.0
         ):
@@ -2453,7 +2453,7 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             )
         ):
             raise NetlistParseError("JFET VTOTC must be finite")
-        nominal_temperature = params.get("T_NOM", params.get("TNOM"))
+        nominal_temperature = params.get("TNOM", params.get("T_NOM"))
         if nominal_temperature is not None and (
             not math.isfinite(nominal_temperature) or nominal_temperature <= 0.0
         ):

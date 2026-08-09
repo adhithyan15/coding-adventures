@@ -4811,10 +4811,16 @@ the Rust, Python, and TypeScript surfaces together.
      parameter policy.
 
 490. Python and TypeScript Berkeley SPICE JFET channel-length-modulation validation parity.
-   - Status: implemented in this JFET channel-length-modulation validation slice.
+   - Status: completed in PR 10185.
    - Both parser facades reject non-finite `LAMBDA` and `LAM` values with
      canonical `LAMBDA` precedence, without changing the unresolved `B`
      parameter policy.
+
+491. Python and TypeScript Berkeley SPICE BJT/JFET nominal-temperature alias precedence.
+   - Status: implemented in this nominal-temperature precedence slice.
+   - Both parser facades give engine-canonical `TNOM` precedence over the
+     `T_NOM` alias for BJT and JFET validation and lowering, without changing
+     the unresolved JFET `B` parameter policy.
 
 ## Backlog
 

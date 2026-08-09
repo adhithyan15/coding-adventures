@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Give canonical BJT and JFET `TNOM` precedence over the `T_NOM` alias.
 - Validate finite JFET `LAMBDA` and `LAM` model-card values.
 - Validate finite JFET `VTO`, `VT0`, and `VTH` model-card values.
 - Validate positive, finite JFET `BETA` and `BET` model-card values.

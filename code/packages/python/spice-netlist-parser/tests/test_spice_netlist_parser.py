@@ -1820,14 +1820,14 @@ def test_parse_bjt_nominal_temperature(alias: str, value: str) -> None:
     assert transistor.Tnom == pytest.approx(float(value) + 273.15)
 
 
-def test_bjt_t_nom_takes_precedence_over_tnom() -> None:
+def test_bjt_tnom_takes_precedence_over_t_nom() -> None:
     parsed = parse_netlist(
-        ".model fast NPN(TNOM=-1 T_NOM=50)\nQ1 col base emit fast"
+        ".model fast NPN(TNOM=25 T_NOM=50)\nQ1 col base emit fast"
     )
 
     transistor = parsed.circuit.elements[0]
     assert isinstance(transistor, BJT)
-    assert transistor.Tnom == pytest.approx(323.15)
+    assert transistor.Tnom == pytest.approx(298.15)
 
 
 @pytest.mark.parametrize("alias", ["TNOM", "T_NOM"])
@@ -2561,7 +2561,7 @@ J1 drain gate source fast
     assert jfet.Tnom == pytest.approx(float(value) + 273.15)
 
 
-def test_jfet_t_nom_takes_precedence_over_tnom() -> None:
+def test_jfet_tnom_takes_precedence_over_t_nom() -> None:
     parsed = parse_netlist(
         """
 .model fast NJF(TNOM=25 T_NOM=50)
@@ -2571,7 +2571,7 @@ J1 drain gate source fast
 
     jfet = parsed.circuit.elements[0]
     assert isinstance(jfet, JFET)
-    assert jfet.Tnom == pytest.approx(323.15)
+    assert jfet.Tnom == pytest.approx(298.15)
 
 
 @pytest.mark.parametrize("alias", ["TNOM", "T_NOM"])

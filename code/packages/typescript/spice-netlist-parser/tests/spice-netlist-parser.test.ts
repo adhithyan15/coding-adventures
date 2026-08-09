@@ -1891,12 +1891,12 @@ Q1 col base emit fast
     });
   });
 
-  it("gives BJT T_NOM precedence over TNOM", () => {
-    const parsed = parseNetlist(`.model fast NPN(TNOM=-1 T_NOM=50)\nQ1 col base emit fast`);
+  it("gives BJT TNOM precedence over T_NOM", () => {
+    const parsed = parseNetlist(`.model fast NPN(TNOM=25 T_NOM=50)\nQ1 col base emit fast`);
 
     expect(parsed.circuit.elements()[0]).toMatchObject({
       kind: "bjt",
-      nominalTemperatureKelvin: 323.15,
+      nominalTemperatureKelvin: 298.15,
     });
   });
 
@@ -2671,7 +2671,7 @@ J1 drain gate source fast
     });
   });
 
-  it("gives JFET T_NOM precedence over TNOM", () => {
+  it("gives JFET TNOM precedence over T_NOM", () => {
     const parsed = parseNetlist(`
 .model fast NJF(TNOM=25 T_NOM=50)
 J1 drain gate source fast
@@ -2679,7 +2679,7 @@ J1 drain gate source fast
 
     expect(parsed.circuit.elements()[0]).toMatchObject({
       kind: "jfet",
-      nominalTemperatureKelvin: 323.15,
+      nominalTemperatureKelvin: 298.15,
     });
   });
 

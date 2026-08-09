@@ -1528,7 +1528,7 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("BJT IKR must be finite and non-negative");
   }
-  const bjtNominalTemperature = params.get("T_NOM") ?? params.get("TNOM");
+  const bjtNominalTemperature = params.get("TNOM") ?? params.get("T_NOM");
   if (
     (kind === "NPN" || kind === "PNP") &&
     bjtNominalTemperature !== undefined &&
@@ -1787,7 +1787,7 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("JFET VTOTC must be finite");
   }
-  const jfetNominalTemperature = params.get("T_NOM") ?? params.get("TNOM");
+  const jfetNominalTemperature = params.get("TNOM") ?? params.get("T_NOM");
   if (
     (kind === "NJF" || kind === "PJF") &&
     jfetNominalTemperature !== undefined &&
@@ -2377,7 +2377,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       (model.params.get("C2") ?? 0.0) * saturationCurrent;
     const baseCollectorLeakageCurrent = model.params.get("ISC") ??
       (model.params.get("C4") ?? 0.0) * saturationCurrent;
-    const nominalTemperature = model.params.get("T_NOM") ?? model.params.get("TNOM");
+    const nominalTemperature = model.params.get("TNOM") ?? model.params.get("T_NOM");
     return bjt(
       name,
       fields[1],
@@ -2449,7 +2449,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       );
     }
     const polarity = model.kind as JfetPolarity;
-    const nominalTemperature = model.params.get("T_NOM") ?? model.params.get("TNOM");
+    const nominalTemperature = model.params.get("TNOM") ?? model.params.get("T_NOM");
     return jfet(
       name,
       fields[1],
