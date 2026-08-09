@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Lower the JFET `VT0` and `VTH` threshold aliases with canonical `VTO` precedence.
 - Lower the JFET `BET` transconductance alias with canonical `BETA` precedence.
 - Normalize hyphens in supported model-card parameter aliases.
 - Normalize hyphen and underscore separators in supported model type aliases.

@@ -4781,10 +4781,16 @@ the Rust, Python, and TypeScript surfaces together.
      `BETA-F` and `T-NOM`.
 
 485. Python and TypeScript Berkeley SPICE JFET `BET` beta-alias parity.
-   - Status: implemented in this JFET `BET` alias slice.
+   - Status: completed in PR 10174.
    - Both parser facades lower the engine-advertised `BET` alias into the JFET
      transconductance field with canonical `BETA` precedence, while preserving
      the unresolved legacy `B` beta-alias versus doping-tail policy collision.
+
+486. Python and TypeScript Berkeley SPICE JFET threshold-alias parity.
+   - Status: implemented in this JFET threshold-alias slice.
+   - Both parser facades lower the engine-advertised `VT0` and `VTH` aliases
+     into the JFET threshold-voltage field with canonical `VTO` precedence,
+     without changing the unresolved `B` parameter policy.
 
 ## Backlog
 
