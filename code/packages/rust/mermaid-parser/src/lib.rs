@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.7.0";
+pub const VERSION: &str = "0.8.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1106,7 +1106,7 @@ fn parse_sequence_participant(
     created: bool,
 ) -> Result<String, ParseError> {
     let declaration = cursor.advance().clone();
-    let kind = match declaration.value.as_str() {
+    let mut kind = match declaration.value.as_str() {
         "actor" => SequenceParticipantKind::Actor,
         "participant" => SequenceParticipantKind::Participant,
         other => {
@@ -1117,11 +1117,20 @@ fn parse_sequence_participant(
         }
     };
     let id = take_sequence_identifier(cursor)?;
+    let mut inline_alias = None;
+    if token_name(cursor.current()) == "CONFIG" {
+        let config = cursor.advance().clone();
+        let parsed = parse_sequence_participant_config(&config)?;
+        if let Some(config_kind) = parsed.0 {
+            kind = config_kind;
+        }
+        inline_alias = parsed.1;
+    }
     let label = if cursor.current().value == "as" {
         cursor.advance();
         take_sequence_line_text(cursor)
     } else {
-        id.clone()
+        inline_alias.unwrap_or_else(|| id.clone())
     };
     upsert_sequence_participant(diagram, participant_indices, id.clone(), label, kind);
     if created {
@@ -1130,6 +1139,58 @@ fn parse_sequence_participant(
         });
     }
     Ok(id)
+}
+
+fn parse_sequence_participant_config(
+    token: &Token,
+) -> Result<(Option<SequenceParticipantKind>, Option<String>), ParseError> {
+    let inner = token
+        .value
+        .strip_prefix("@{")
+        .and_then(|value| value.strip_suffix('}'))
+        .ok_or_else(|| token_error(token, "invalid sequence participant configuration"))?;
+    let mut kind = None;
+    let mut alias = None;
+    for field in inner.split(',') {
+        let field = field.trim();
+        if field.is_empty() {
+            continue;
+        }
+        let (key, value) = field.split_once(':').ok_or_else(|| {
+            token_error(token, "participant configuration fields require key: value")
+        })?;
+        let key = trim_sequence_config_string(key);
+        let value = trim_sequence_config_string(value);
+        match key {
+            "type" => {
+                kind = Some(match value.to_ascii_lowercase().as_str() {
+                    "participant" => SequenceParticipantKind::Participant,
+                    "actor" => SequenceParticipantKind::Actor,
+                    "boundary" => SequenceParticipantKind::Boundary,
+                    "control" => SequenceParticipantKind::Control,
+                    "entity" => SequenceParticipantKind::Entity,
+                    "database" => SequenceParticipantKind::Database,
+                    "collections" => SequenceParticipantKind::Collections,
+                    "queue" => SequenceParticipantKind::Queue,
+                    other => {
+                        return Err(token_error(
+                            token,
+                            format!("unsupported sequence participant type {other:?}"),
+                        ))
+                    }
+                });
+            }
+            "alias" => alias = Some(value.to_string()),
+            _ => {}
+        }
+    }
+    Ok((kind, alias))
+}
+
+fn trim_sequence_config_string(value: &str) -> &str {
+    value
+        .trim()
+        .trim_matches(|character| matches!(character, '\'' | '"'))
 }
 
 fn parse_sequence_participant_box(
@@ -2812,6 +2873,37 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         .expect_err("box bodies only allow participant declarations");
         assert!(!error.message.is_empty());
     }
+
+    #[test]
+    fn sequence_parses_participant_stereotypes_and_alias_precedence() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nparticipant API@{ \"type\": \"boundary\", \"alias\": \"Internal\" } as Public API\nparticipant C@{ type: control }\nparticipant E@{ type: entity }\nparticipant DB@{ type: 'database', alias: 'Ledger' }\nparticipant L@{ type: collections }\nparticipant Q@{ type: queue }\n",
+        )
+        .unwrap();
+        assert_eq!(
+            diagram.participants[0].kind,
+            SequenceParticipantKind::Boundary
+        );
+        assert_eq!(diagram.participants[0].label.text, "Public API");
+        assert_eq!(
+            diagram.participants[1].kind,
+            SequenceParticipantKind::Control
+        );
+        assert_eq!(
+            diagram.participants[2].kind,
+            SequenceParticipantKind::Entity
+        );
+        assert_eq!(
+            diagram.participants[3].kind,
+            SequenceParticipantKind::Database
+        );
+        assert_eq!(diagram.participants[3].label.text, "Ledger");
+        assert_eq!(
+            diagram.participants[4].kind,
+            SequenceParticipantKind::Collections
+        );
+        assert_eq!(diagram.participants[5].kind, SequenceParticipantKind::Queue);
+    }
 }
 #[cfg(test)]
 mod tests {
@@ -2828,7 +2920,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.7.0");
+        assert_eq!(crate::VERSION, "0.8.0");
     }
 
     #[test]

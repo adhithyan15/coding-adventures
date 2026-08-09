@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.0
+
+- Parse participant `type` and `alias` configuration with external-alias precedence.
+
 ## 0.7.0
 
 - Parse Mermaid sequence `box` declarations into participant-group IR.

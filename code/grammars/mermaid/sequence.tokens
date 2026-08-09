@@ -20,11 +20,12 @@ SOLID_CROSS_ARROW        = "-x"
 SOLID_POINT_ARROW        = "-)"
 COLON                    = ":"
 COLOR                    = /rgba?\([^\)\r\n]*\)/
+CONFIG                   = /@\{[^\}\r\n]*\}/
 COMMA                    = ","
 PLUS                     = "+"
 MINUS                    = "-"
-IDENTIFIER               = /[A-Za-z0-9_.$@]+/
-WORD                     = /[^ \t\r\n:,+-]+/
+IDENTIFIER               = /[A-Za-z0-9_.$]+/
+WORD                     = /[^ \t\r\n:,+-@]+/
 
 keywords:
   participant

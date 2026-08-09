@@ -6,7 +6,7 @@ body = { NEWLINE | statement } ;
 statement = participant_stmt | participant_box | destroy_stmt | message_stmt | activation_stmt | note_stmt | title_stmt | autonumber_stmt | control_block ;
 
 participant_stmt = [ "create" ] participant_decl ;
-participant_decl = ( "participant" | "actor" ) identifier [ "as" text ] ;
+participant_decl = ( "participant" | "actor" ) identifier [ CONFIG ] [ "as" text ] ;
 participant_box = "box" [ text ] NEWLINE { NEWLINE | participant_decl } "end" ;
 destroy_stmt = "destroy" identifier ;
 message_stmt = identifier message_arrow [ PLUS | MINUS ] identifier COLON [ text ] ;

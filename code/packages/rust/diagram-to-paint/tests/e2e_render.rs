@@ -348,7 +348,7 @@ mod apple {
     #[test]
     fn render_mermaid_sequence_to_png() {
         let diagram = parse_sequence_diagram(
-            "sequenceDiagram\ntitle Native Mermaid sequence\nautonumber\nbox aqua Client tier\nactor User\nparticipant API as Banking API\nend\nbox Services\nparticipant DB as Ledger\nend\nalt Transfer accepted\nUser->>+API: Submit transfer\ncreate participant Worker as Audit Worker\nAPI->>Worker: Start audit\nWorker-->>API: Audit complete\ndestroy Worker\nloop Persist until committed\nAPI->>DB: Record transaction\nDB-->>API: Committed\nend\nnote right of API: Metal paints this scene\nAPI-->>-User: Transfer complete\nelse Transfer rejected\nAPI-->>User: Validation failed\nend",
+            "sequenceDiagram\ntitle Native Mermaid sequence\nautonumber\nbox aqua Client tier\nactor User\nparticipant API@{ \"type\": \"boundary\" } as Banking API\nend\nbox Services\nparticipant DB@{ \"type\": \"database\", \"alias\": \"Ledger\" }\nend\nalt Transfer accepted\nUser->>+API: Submit transfer\ncreate participant Worker as Audit Worker\nAPI->>Worker: Start audit\nWorker-->>API: Audit complete\ndestroy Worker\nloop Persist until committed\nAPI->>DB: Record transaction\nDB-->>API: Committed\nend\nnote right of API: Metal paints this scene\nAPI-->>-User: Transfer complete\nelse Transfer rejected\nAPI-->>User: Validation failed\nend",
         )
         .expect("Mermaid sequence parse failed");
         let layout = layout_sequence_diagram(&diagram);

@@ -1,6 +1,6 @@
 //! diagram-ir v0.7.0 — DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.7.0";
+pub const VERSION: &str = "0.8.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -158,6 +158,12 @@ pub struct LayoutedGraphDiagram {
 pub enum SequenceParticipantKind {
     Participant,
     Actor,
+    Boundary,
+    Control,
+    Entity,
+    Database,
+    Collections,
+    Queue,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -879,8 +885,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn version_is_0_7_0() {
-        assert_eq!(VERSION, "0.7.0");
+    fn version_is_0_8_0() {
+        assert_eq!(VERSION, "0.8.0");
     }
     #[test]
     fn default_direction_is_tb() {
