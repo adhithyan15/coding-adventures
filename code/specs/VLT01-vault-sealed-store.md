@@ -443,6 +443,11 @@ At minimum, the test suite must cover:
 
 Coverage target: ≥95%.
 
+Phase 0 evidence (Tarpaulin LLVM, 2026-08-09): 773 of 797 coverable lines,
+96.99%. The 38-test suite includes focused rejection cases for malformed KEK
+manifests, sealed-record metadata, bounded numeric fields, fixed-width hex,
+and every public error-formatting branch.
+
 ## Out of scope
 
 - Any notion of a *lease key* (response encryption TTL) — that is VLT02.
