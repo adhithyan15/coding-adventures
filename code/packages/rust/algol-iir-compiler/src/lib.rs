@@ -7767,6 +7767,39 @@ mod tests {
     }
 
     #[test]
+    fn formal_procedure_forwards_through_mutual_recursion() {
+        let src = "begin integer result; \
+                   integer procedure twice(x); value x; integer x; twice := x * 2; \
+                   integer procedure even(p, n); value n; procedure p; integer n; \
+                     if n = 0 then even := p(21) else even := odd(p, n - 1); \
+                   integer procedure odd(p, n); value n; procedure p; integer n; \
+                     if n = 0 then odd := p(21) else odd := even(p, n - 1); \
+                   result := even(twice, 4) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "formal_procedure_mutual_recursive_forwarding")
+            .expect("compiles");
+        let even = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("__algol_by_name_even_"))
+            .expect("mutual formal forwarding needs an even specialised sibling");
+        let odd = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("__algol_by_name_odd_"))
+            .expect("mutual formal forwarding needs an odd specialised sibling");
+        assert!(
+            even.instructions.iter().any(|instr| {
+                instr.op == "call" && instr.srcs.first() == Some(&Operand::Var(odd.name.clone()))
+            }) && odd.instructions.iter().any(|instr| {
+                instr.op == "call" && instr.srcs.first() == Some(&Operand::Var(even.name.clone()))
+            }),
+            "mutual recursion must close over the active specialised sibling pair"
+        );
+    }
+
+    #[test]
     fn call_by_name_re_evaluates_the_caller_expression() {
         let src = "begin integer n, result; \
                    integer procedure observe(x); integer x; \
