@@ -119,7 +119,10 @@ branch dividers before existing PaintInstructions render them. Participant
 `create` and `destroy` statements lower into lifecycle events; layout uses them
 to place dynamic participant headers, bound lifelines, and emit destruction
 markers. Participant configuration metadata, links, and advanced arrow variants
-remain compatibility work. The family remains partial until those forms and the
+remain compatibility work. Participant `box` declarations now lower into
+semantic groups, lane-enclosing layout geometry, and backend-neutral Paint
+rectangles and labels, including the supported named and `rgb`/`rgba` color
+forms. The family remains partial until those forms and the
 pinned upstream corpus pass; unsupported forms must fail grammar validation
 rather than degrade silently.
 

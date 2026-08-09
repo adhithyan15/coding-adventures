@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.7.0
+
+- Added semantic and layout IR primitives for sequence participant groups.
+
 ## 0.6.0
 
 - Added sequence participant creation/destruction events and destruction geometry.

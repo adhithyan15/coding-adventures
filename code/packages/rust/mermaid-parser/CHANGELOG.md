@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0
+
+- Parse Mermaid sequence `box` declarations into participant-group IR.
+
 ## 0.6.0
 
 - Added grammar-backed `create participant`, `create actor`, and `destroy` lowering.

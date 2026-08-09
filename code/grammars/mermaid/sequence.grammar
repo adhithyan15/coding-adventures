@@ -3,9 +3,11 @@
 
 document = { NEWLINE } HEADER body EOF ;
 body = { NEWLINE | statement } ;
-statement = participant_stmt | destroy_stmt | message_stmt | activation_stmt | note_stmt | title_stmt | autonumber_stmt | control_block ;
+statement = participant_stmt | participant_box | destroy_stmt | message_stmt | activation_stmt | note_stmt | title_stmt | autonumber_stmt | control_block ;
 
-participant_stmt = [ "create" ] ( "participant" | "actor" ) identifier [ "as" text ] ;
+participant_stmt = [ "create" ] participant_decl ;
+participant_decl = ( "participant" | "actor" ) identifier [ "as" text ] ;
+participant_box = "box" [ text ] NEWLINE { NEWLINE | participant_decl } "end" ;
 destroy_stmt = "destroy" identifier ;
 message_stmt = identifier message_arrow [ PLUS | MINUS ] identifier COLON [ text ] ;
 activation_stmt = ( "activate" | "deactivate" ) identifier ;
@@ -21,5 +23,5 @@ critical_block = "critical" [ text ] NEWLINE body { "option" [ text ] NEWLINE bo
 
 actor_pair = identifier [ COMMA identifier ] ;
 message_arrow = SOLID_OPEN_ARROW | DOTTED_OPEN_ARROW | SOLID_FILLED_ARROW | DOTTED_FILLED_ARROW | BIDIRECTIONAL_SOLID | BIDIRECTIONAL_DOTTED | SOLID_CROSS_ARROW | DOTTED_CROSS_ARROW | SOLID_POINT_ARROW | DOTTED_POINT_ARROW ;
-identifier = IDENTIFIER | WORD ;
+identifier = IDENTIFIER | WORD | COLOR ;
 text = identifier { identifier } ;

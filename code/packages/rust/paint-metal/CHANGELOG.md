@@ -1,5 +1,9 @@
 # Changelog — paint-metal
 
+## 0.3.0 — 2026-08-09
+
+- Added CSS named-color support for backend-neutral PaintInstructions.
+
 ## 0.2.0 — 2026-04-23
 
 ### Added

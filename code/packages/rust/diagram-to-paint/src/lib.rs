@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.6.0";
+pub const VERSION: &str = "0.7.0";
 
 use std::collections::HashMap;
 
@@ -1087,6 +1087,45 @@ where
         a: 255,
     };
 
+    // Participant groups form the rear-most layer around their member lanes.
+    for item in &diagram.items {
+        if let LayoutedSequenceItem::ParticipantGroup {
+            label,
+            fill,
+            x,
+            y,
+            width,
+            height,
+            ..
+        } = item
+        {
+            instructions.push(PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(),
+                x: *x,
+                y: *y,
+                width: *width,
+                height: *height,
+                fill: fill.clone(),
+                stroke: Some("#94a3b8".into()),
+                stroke_width: Some(1.25),
+                corner_radius: Some(6.0),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }));
+            if let Some(label) = label {
+                text_children.push(text_node(
+                    label,
+                    *x + 8.0,
+                    *y + 6.0,
+                    *width - 16.0,
+                    20.0,
+                    label_font.clone(),
+                    text_color,
+                ));
+            }
+        }
+    }
+
     // Block frames are backgrounds. Paint outer frames before nested frames
     // regardless of the order in which their closing events were laid out.
     let mut frames: Vec<&LayoutedSequenceItem> = diagram
@@ -1476,7 +1515,7 @@ fn sequence_block_colors(kind: &SequenceBlockKind) -> (&'static str, &'static st
         SequenceBlockKind::Break => ("#fff1f2", "#e11d48"),
         SequenceBlockKind::Critical => ("#fefce8", "#ca8a04"),
         SequenceBlockKind::Par | SequenceBlockKind::ParOver => ("#f0fdfa", "#0f766e"),
-        _ => ("#f8fafc", "#64748b"),
+        _ => ("transparent", "#64748b"),
     }
 }
 
@@ -2376,7 +2415,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.6.0");
+        assert_eq!(crate::VERSION, "0.7.0");
     }
 
     #[test]

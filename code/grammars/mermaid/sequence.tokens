@@ -19,6 +19,7 @@ SOLID_OPEN_ARROW         = "->"
 SOLID_CROSS_ARROW        = "-x"
 SOLID_POINT_ARROW        = "-)"
 COLON                    = ":"
+COLOR                    = /rgba?\([^\)\r\n]*\)/
 COMMA                    = ","
 PLUS                     = "+"
 MINUS                    = "-"
@@ -30,6 +31,7 @@ keywords:
   actor
   create
   destroy
+  box
   as
   activate
   deactivate

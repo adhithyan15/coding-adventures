@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.6.0";
+pub const VERSION: &str = "0.7.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -449,9 +449,9 @@ use diagram_ir::{
     CompartmentKind, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType, GitDiagram,
     GitEvent, PieSlice, RelKind, SankeyFlow, SankeyNode, SequenceArrowhead, SequenceBlockKind,
     SequenceDiagram, SequenceEvent, SequenceLineStyle, SequenceNotePlacement, SequenceParticipant,
-    SequenceParticipantKind, SeriesKind, StructuralDiagram, StructuralGroup, StructuralKind,
-    StructuralNode, StructuralNodeKind, StructuralRelationship, TaskStart, TaskStatus,
-    TemporalBody, TemporalDiagram, TemporalKind,
+    SequenceParticipantGroup, SequenceParticipantKind, SeriesKind, StructuralDiagram,
+    StructuralGroup, StructuralKind, StructuralNode, StructuralNodeKind, StructuralRelationship,
+    TaskStart, TaskStatus, TemporalBody, TemporalDiagram, TemporalKind,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -1033,6 +1033,7 @@ pub fn parse_sequence_diagram(source: &str) -> Result<SequenceDiagram, ParseErro
         title: None,
         auto_number: false,
         participants: Vec::new(),
+        participant_groups: Vec::new(),
         events: Vec::new(),
     };
     let mut participant_indices: HashMap<String, usize> = HashMap::new();
@@ -1052,12 +1053,13 @@ fn parse_sequence_body(
     while !cursor.at_eof() && !terminators.contains(&cursor.current().value.as_str()) {
         match cursor.current().value.as_str() {
             "participant" | "actor" => {
-                parse_sequence_participant(cursor, diagram, participant_indices, false)?
+                parse_sequence_participant(cursor, diagram, participant_indices, false)?;
             }
             "create" => {
                 cursor.advance();
                 parse_sequence_participant(cursor, diagram, participant_indices, true)?;
             }
+            "box" => parse_sequence_participant_box(cursor, diagram, participant_indices)?,
             "destroy" => {
                 cursor.advance();
                 let participant = take_sequence_identifier(cursor)?;
@@ -1102,7 +1104,7 @@ fn parse_sequence_participant(
     diagram: &mut SequenceDiagram,
     participant_indices: &mut HashMap<String, usize>,
     created: bool,
-) -> Result<(), ParseError> {
+) -> Result<String, ParseError> {
     let declaration = cursor.advance().clone();
     let kind = match declaration.value.as_str() {
         "actor" => SequenceParticipantKind::Actor,
@@ -1123,11 +1125,85 @@ fn parse_sequence_participant(
     };
     upsert_sequence_participant(diagram, participant_indices, id.clone(), label, kind);
     if created {
-        diagram
-            .events
-            .push(SequenceEvent::ParticipantCreated { participant: id });
+        diagram.events.push(SequenceEvent::ParticipantCreated {
+            participant: id.clone(),
+        });
     }
+    Ok(id)
+}
+
+fn parse_sequence_participant_box(
+    cursor: &mut TokenCursor,
+    diagram: &mut SequenceDiagram,
+    participant_indices: &mut HashMap<String, usize>,
+) -> Result<(), ParseError> {
+    cursor.advance();
+    let (fill, label) = parse_sequence_box_header(&take_sequence_line_text(cursor));
+    let group_id = format!("box-{}", diagram.participant_groups.len() + 1);
+    diagram.participant_groups.push(SequenceParticipantGroup {
+        id: group_id.clone(),
+        label,
+        fill,
+    });
+    cursor.skip_terminators();
+    while !cursor.at_eof() && cursor.current().value != "end" {
+        if !matches!(cursor.current().value.as_str(), "participant" | "actor") {
+            return Err(token_error(
+                cursor.current(),
+                "sequence box may only contain participant declarations",
+            ));
+        }
+        let id = parse_sequence_participant(cursor, diagram, participant_indices, false)?;
+        let index = participant_indices[&id];
+        diagram.participants[index].group_id = Some(group_id.clone());
+        cursor.skip_terminators();
+    }
+    if cursor.at_eof() {
+        return Err(token_error(cursor.current(), "unterminated sequence box"));
+    }
+    cursor.advance();
     Ok(())
+}
+
+fn parse_sequence_box_header(raw: &str) -> (Option<String>, Option<String>) {
+    let raw = raw.trim();
+    if raw.is_empty() {
+        return (None, None);
+    }
+    let split = raw.find(char::is_whitespace).unwrap_or(raw.len());
+    let first = &raw[..split];
+    let is_function_color = ["rgb(", "rgba("]
+        .iter()
+        .any(|prefix| first.to_ascii_lowercase().starts_with(prefix));
+    let is_named_color = matches!(
+        first.to_ascii_lowercase().as_str(),
+        "aqua"
+            | "black"
+            | "blue"
+            | "fuchsia"
+            | "gray"
+            | "grey"
+            | "green"
+            | "lime"
+            | "maroon"
+            | "navy"
+            | "olive"
+            | "orange"
+            | "purple"
+            | "red"
+            | "silver"
+            | "teal"
+            | "transparent"
+            | "white"
+            | "yellow"
+    );
+    if is_function_color || is_named_color {
+        let label = raw[split..].trim();
+        let fill = (!first.eq_ignore_ascii_case("transparent")).then(|| first.to_string());
+        (fill, (!label.is_empty()).then(|| label.to_string()))
+    } else {
+        (None, Some(raw.to_string()))
+    }
 }
 
 fn parse_sequence_control_block(
@@ -1350,6 +1426,7 @@ fn upsert_sequence_participant(
         label: DiagramLabel::new(label),
         kind,
         style: None,
+        group_id: None,
     });
 }
 
@@ -2702,6 +2779,39 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
             SequenceEvent::ParticipantDestroyed { participant } if participant == "Worker"
         )));
     }
+
+    #[test]
+    fn sequence_parses_participant_boxes() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nbox Purple Client tier\nactor User\nparticipant API as Banking API\nend\nbox Services\nparticipant DB\nend\n",
+        )
+        .unwrap();
+        assert_eq!(diagram.participant_groups.len(), 2);
+        assert_eq!(
+            diagram.participant_groups[0].fill.as_deref(),
+            Some("Purple")
+        );
+        assert_eq!(
+            diagram.participant_groups[0].label.as_deref(),
+            Some("Client tier")
+        );
+        assert_eq!(diagram.participant_groups[1].fill, None);
+        assert_eq!(
+            diagram.participant_groups[1].label.as_deref(),
+            Some("Services")
+        );
+        assert_eq!(diagram.participants[0].group_id.as_deref(), Some("box-1"));
+        assert_eq!(diagram.participants[2].group_id.as_deref(), Some("box-2"));
+    }
+
+    #[test]
+    fn sequence_rejects_messages_inside_participant_boxes() {
+        let error = parse_sequence_diagram(
+            "sequenceDiagram\nbox Services\nparticipant API\nAPI->>DB: Query\nend\n",
+        )
+        .expect_err("box bodies only allow participant declarations");
+        assert!(!error.message.is_empty());
+    }
 }
 #[cfg(test)]
 mod tests {
@@ -2718,7 +2828,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.6.0");
+        assert_eq!(crate::VERSION, "0.7.0");
     }
 
     #[test]

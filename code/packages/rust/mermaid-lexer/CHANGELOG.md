@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0
+
+- Tokenize sequence participant boxes and CSS functional colors.
+
 ## 0.5.0
 
 - Added Mermaid sequence participant lifecycle tokens.
