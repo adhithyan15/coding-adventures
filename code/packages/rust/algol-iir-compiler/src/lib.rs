@@ -7717,6 +7717,32 @@ mod tests {
     }
 
     #[test]
+    fn formal_procedure_accepts_a_nested_capturing_actual() {
+        let src = "begin integer result; \
+                   integer procedure dispatch(p, x); value x; procedure p; integer x; \
+                     dispatch := p(x); \
+                   integer procedure outer(seed); value seed; integer seed; \
+                     begin integer procedure add(x); value x; integer x; add := seed + x; \
+                           outer := dispatch(add, 2) end; \
+                   result := outer(40) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "formal_procedure_nested_capture").expect("compiles");
+        let dispatch = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("__algol_by_name_dispatch_"))
+            .expect("direct nested actual needs a specialised dispatch sibling");
+        assert!(
+            dispatch.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first() == Some(&Operand::Var("add".to_string()))
+            }),
+            "the formal call must target the nested capturing procedure directly"
+        );
+    }
+
+    #[test]
     fn call_by_name_re_evaluates_the_caller_expression() {
         let src = "begin integer n, result; \
                    integer procedure observe(x); integer x; \

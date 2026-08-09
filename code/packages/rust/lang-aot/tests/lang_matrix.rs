@@ -1594,6 +1594,23 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(36),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a direct nested procedure actual may capture its enclosing
+    // value formal before travelling through `dispatch`. The specialised
+    // wrapper calls `add` directly, while the existing capture substrate keeps
+    // `seed` visible to that nested sibling without a closure descriptor.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+                  integer procedure dispatch(p, x); value x; procedure p; integer x; \
+                    dispatch := p(x); \
+                  integer procedure outer(seed); value seed; integer seed; \
+                    begin integer procedure add(x); value x; integer x; add := seed + x; \
+                          outer := dispatch(add, 2) end; \
+                  result := outer(40) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a `value procedure` formal retains the same direct target as
     // a name-mode procedure formal when the actual is statically known. Both
     // nested wrappers specialise away `p`, so value mode does not require a
@@ -6670,6 +6687,36 @@ fn algol_value_formal_procedure_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but value-mode formal-procedure execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nested_capturing_formal_procedure_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("outer := dispatch(add, 2)")
+                && program.src.contains("add := seed + x")
+        })
+        .expect("the nested-capturing formal-procedure program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but nested-capturing formal-procedure execution did not complete"
             );
             continue;
         };
