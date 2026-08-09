@@ -1503,6 +1503,24 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — direct name-array forwarding. Name arrays retain the existing
+    // typed descriptor ABI because the only supported actual is a bare array
+    // variable. The nested formal shadows its caller and writes through both
+    // dimensions, proving the original storage, lower bounds, and outer stride
+    // survive direct specialisation on every standard backend.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer array values[-1:0, 4:5]; integer result; \
+                  integer procedure forward(a); integer array a; \
+                          begin integer procedure mutate(a); integer array a; \
+                                begin a[-1,4] := 40; a[0,5] := 2; \
+                                      mutate := a[-1,4] + a[0,5] end; \
+                          forward := mutate(a) + a[-1,4] - 40 end; \
+                  result := forward(values) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — direct and forwarded string name formals. The nested
     // `consume` formal shares the outer spelling, so the specialised sibling
     // must retain the original caller string binding through its generated
@@ -6316,6 +6334,37 @@ fn algol_call_by_name_forwarding_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but call-by-name forwarding did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_by_name_array_forwarding_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure forward(a); integer array a")
+                && program.src.contains("integer procedure mutate(a); integer array a")
+                && program.src.contains("result := forward(values)")
+        })
+        .expect("the name-array ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but name-array forwarding did not complete"
             );
             continue;
         };
