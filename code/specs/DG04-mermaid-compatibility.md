@@ -135,6 +135,8 @@ survive layout and lower to backend-neutral Paint paths.
 Central connection syntax (`()->>`, `->>()`, and `()->>()`) lowers to explicit
 source/destination endpoint semantics and Paint ellipse markers layered above
 activation bars.
+Automatic numbering preserves Mermaid 11.15+ decimal start and increment
+values through semantic IR, layout, and shaped Paint labels.
 
 ### Structural Groups
 

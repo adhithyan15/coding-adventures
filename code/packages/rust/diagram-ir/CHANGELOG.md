@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.11.0
+
+- Added decimal sequence-number start and increment values.
+
 ## 0.10.0
 
 - Added source, destination, and dual central-connection semantics.

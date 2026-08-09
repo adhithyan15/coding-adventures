@@ -7,7 +7,7 @@ use diagram_ir::{
     SequenceEvent, SequenceNotePlacement,
 };
 
-pub const VERSION: &str = "0.6.0";
+pub const VERSION: &str = "0.7.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -86,7 +86,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
     let event_start = header_y + HEADER_H + 36.0;
     let mut y = event_start;
     let mut activation_starts: HashMap<String, Vec<f64>> = HashMap::new();
-    let mut message_number = 0usize;
+    let mut message_number = diagram.auto_number_start;
     let mut block_stack: Vec<BlockFrameState> = Vec::new();
 
     for event in &diagram.events {
@@ -108,7 +108,6 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 let Some(&to_x) = centers.get(to) else {
                     continue;
                 };
-                message_number += 1;
                 items.push(LayoutedSequenceItem::Message {
                     from_x,
                     to_x,
@@ -120,6 +119,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     central_connection: central_connection.clone(),
                     number: diagram.auto_number.then_some(message_number),
                 });
+                message_number += diagram.auto_number_step;
                 if *activate {
                     activation_starts.entry(to.clone()).or_default().push(y);
                 }
@@ -370,6 +370,8 @@ mod tests {
         let diagram = SequenceDiagram {
             title: None,
             auto_number: true,
+            auto_number_start: 10.5,
+            auto_number_step: 2.25,
             participants: vec![participant("Alice"), participant("Bob")],
             participant_groups: vec![],
             events: vec![SequenceEvent::Message {
@@ -404,7 +406,7 @@ mod tests {
         assert!(layout.items.iter().any(|item| matches!(
             item,
             LayoutedSequenceItem::Message {
-                number: Some(1),
+                number: Some(10.5),
                 ..
             }
         )));
@@ -415,6 +417,8 @@ mod tests {
         let diagram = SequenceDiagram {
             title: None,
             auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
             participants: vec![participant("Alice"), participant("Bob")],
             participant_groups: vec![],
             events: vec![SequenceEvent::Message {
@@ -446,6 +450,8 @@ mod tests {
         let diagram = SequenceDiagram {
             title: None,
             auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
             participants: vec![participant("Bob")],
             participant_groups: vec![],
             events: vec![
@@ -470,6 +476,8 @@ mod tests {
         let diagram = SequenceDiagram {
             title: None,
             auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
             participants: vec![participant("Alice"), participant("Bob")],
             participant_groups: vec![],
             events: vec![
@@ -525,6 +533,8 @@ mod tests {
         let diagram = SequenceDiagram {
             title: None,
             auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
             participants: vec![participant("Alice"), participant("Worker")],
             participant_groups: vec![],
             events: vec![
@@ -606,6 +616,8 @@ mod tests {
         let diagram = SequenceDiagram {
             title: None,
             auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
             participants: vec![alice, bob, participant("Database")],
             participant_groups: vec![diagram_ir::SequenceParticipantGroup {
                 id: "client".into(),

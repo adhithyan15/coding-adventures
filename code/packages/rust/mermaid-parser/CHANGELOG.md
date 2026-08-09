@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.11.0
+
+- Parse Mermaid 11.15+ autonumber start and increment values.
+
 ## 0.10.0
 
 - Parse source, destination, and dual sequence central connections.

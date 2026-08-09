@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.10.0";
+pub const VERSION: &str = "0.11.0";
 
 use std::collections::HashMap;
 
@@ -1325,7 +1325,7 @@ where
                     central_markers.push(point);
                 }
                 let rendered_label = match number {
-                    Some(number) => format!("{number}. {label}"),
+                    Some(number) => format!("{}. {label}", format_sequence_number(*number)),
                     None => label.clone(),
                 };
                 text_children.push(text_node(
@@ -1544,6 +1544,14 @@ where
         id: None,
         metadata: None,
     }
+}
+
+fn format_sequence_number(number: f64) -> String {
+    let formatted = format!("{number:.2}");
+    formatted
+        .trim_end_matches('0')
+        .trim_end_matches('.')
+        .to_string()
 }
 
 fn sequence_block_name(kind: &SequenceBlockKind) -> &'static str {
@@ -2635,7 +2643,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.10.0");
+        assert_eq!(crate::VERSION, "0.11.0");
     }
 
     #[test]
@@ -2673,6 +2681,13 @@ mod tests {
                 [PaintInstruction::Path(_)]
             ));
         }
+    }
+
+    #[test]
+    fn formats_decimal_sequence_numbers_without_trailing_zeroes() {
+        assert_eq!(format_sequence_number(10.0), "10");
+        assert_eq!(format_sequence_number(10.5), "10.5");
+        assert_eq!(format_sequence_number(12.75), "12.75");
     }
 
     #[test]
