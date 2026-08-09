@@ -371,9 +371,10 @@ describe("the real corpus", () => {
     // +5: TA-W08-read-en introduces 2, TA-W09-read-peyar 3. They teach எ, ப, ய and the
     // ெ sign — the glyphs Tamil chapter 2 was still explaining inside its own speaking
     // lessons because the writing strand had never covered them.
-    // Chapter 7 adds exactly its configured chapter budget of 12 atoms. Its terminal
-    // practice revisits the whole chapter and also rescues two older Spanish atoms.
-    expect(report.summary.atomsTaught).toBe(2519);
+    // Chapters 7 and 8 each add exactly their configured chapter budget of 12 atoms.
+    // Both terminal practice lessons revisit their whole chapter, so Chapter 8 grows
+    // measurable teaching without increasing the corpus orphan count.
+    expect(report.summary.atomsTaught).toBe(2531);
     // +2, and it goes UP, which is worth stating plainly. Three of the five new atoms
     // are TA-W09's and nothing follows TA-W09, so they are orphans by construction:
     // PA-YA-01, E-SIGN-02, READ-PEYAR-03. TA-W08's two are revisited by TA-W09.
@@ -437,7 +438,8 @@ describe("the real corpus", () => {
     // stopped counting because chapter 1 now declares its order.
     // -1, same cause.
     // Removing pan/agua and the rest of the later café vocabulary closes six leaks.
-    expect(report.summary.forwardReferences).toBe(462);
+    // Chapter 8 closes six more by deferring sixteen-through-twenty-one to Chapter 31.
+    expect(report.summary.forwardReferences).toBe(456);
 
     // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
     // day as 766 -> 749. The absolute figures drift as main lands lessons; what the
@@ -483,14 +485,18 @@ describe("the real corpus", () => {
     // +5, exactly the five new atoms and no offsets. The strand's cadence puts
     // consecutive script lessons 4-5 apart and R1 is a 1-3 window, so an atom a script
     // lesson introduces cannot be reinforced inside R1 by the next one.
-    expect(report.summary.missedByWindow.R1).toBe(854);
+    // Chapter 8's tightly spaced lessons revisit eleven of its twelve atoms inside R1;
+    // the last cultural atom is practised later in the same chapter, for a net +1.
+    expect(report.summary.missedByWindow.R1).toBe(855);
     // +2 net, and the composition is the interesting part: all FIVE new atoms miss R2
     // as well, offset by THREE pre-existing atoms that TA-W09 pulls back into it.
     // TA-W09 sits 12 lessons after TA-W06 and 8 after TA-W07, both inside R2's 5-15
     // window, so practising INDEPENDENT-VOWEL-I-01, LA-AI-SIGN-02 and CA-ONE-LETTER-01
     // there reinforces them at a distance R1 could never reach. Measured: all three go
     // from missing R1/R2/R3 to missing only R1/R3.
-    expect(report.summary.missedByWindow.R2).toBe(1725);
+    // The new atoms also make eleven additional R2 windows measurable; the local
+    // practice lesson cannot fill a 5-15-lesson window inside a five-lesson chapter.
+    expect(report.summary.missedByWindow.R2).toBe(1736);
   });
 
   it("shows what a declared reading order was worth", () => {
@@ -519,7 +525,7 @@ describe("the real corpus", () => {
       lessonCount: 177,
       lessonsWithoutSequence: 0,
       forwardPrerequisites: 0,
-      atomsTaught: 272,
+      atomsTaught: 284,
       atomsNeverRevisited: 68,
     });
   });
@@ -542,7 +548,7 @@ describe("the real corpus", () => {
     ]);
   });
 
-  it("keeps the later forward-reference debt without Chapter 7's vocabulary leak", () => {
+  it("keeps the later forward-reference debt without Chapters 7-8 vocabulary leaks", () => {
     const { lessons } = loadEverything();
     const found = measureContinuity(lessons).forwardReferences;
     const of = (word: string) => found.find((f) => f.language === "spanish" && f.word === word);
@@ -551,8 +557,10 @@ describe("the real corpus", () => {
     // agua no longer has any early use in Spanish.
     expect(of("pan")).toMatchObject({ lessonId: "ES-C14-practice", taughtBy: "ES-C26-pan" });
     expect(of("agua")).toBeUndefined();
-    // A chapter that taught 1-10 drilling a chapter-31 number.
-    expect(of("diecinueve")?.lessonId).toBe("ES-C08-practice");
+    // Chapter 8 now stops at ten; Chapter 31 owns the teens and twenty.
+    expect(of("diecinueve")).toBeUndefined();
+    expect(of("veintiuno")).toBeUndefined();
+    expect(of("veinte")).toBeUndefined();
   });
 
   it("keeps the windows expanding, which is the whole point", () => {

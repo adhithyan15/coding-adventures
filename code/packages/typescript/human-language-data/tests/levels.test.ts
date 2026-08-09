@@ -219,7 +219,8 @@ describe("corpus snapshot", () => {
 
     // +2: TA-W08-read-en and TA-W09-read-peyar.
     expect(summary.byLevel["pre-A1"]).toBe(866); // +52: vocabulary wave 4 (marathi/punjabi/sanskrit/urdu)
-    expect(summary.byLevel.A1).toBe(302); // +1: Spanish Chapter-7 practice joins its shared path
+    // +2: Spanish Chapter 8 now realizes NUMBER-ONE-TO-FIVE and maps its payoff.
+    expect(summary.byLevel.A1).toBe(304);
     expect(summary.byLevel.A2).toBe(395); // +25: Spanish chapters 14-18 plus prerequisite closure
     // 8, not 0: Spanish chapters 38 and 41 realize SPINE-NARRATE-EVENTS and
     // SPINE-GIVE-REASONS, four lessons each — the only B1 nodes any track has touched.
@@ -229,9 +230,9 @@ describe("corpus snapshot", () => {
     expect(summary.byLevel.C1).toBe(0);
     expect(summary.byLevel.C2).toBe(0);
 
-    // HL-C63 places 47 orphan chapter lessons and two Spanish prerequisites. The
-    // remaining 98 unmapped lessons are still explicit migration debt, not hidden data.
-    expect(summary.unmapped).toBe(98);
+    // HL-C63 places 47 orphan chapter lessons and two Spanish prerequisites. Chapters
+    // 7-8 then map their two terminal practices, leaving 96 explicit migration gaps.
+    expect(summary.unmapped).toBe(96);
     expect(summary.mappedPercent).toBe(94);
   });
 
@@ -280,7 +281,7 @@ describe("corpus snapshot", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const ramp = lessonsUpToLevel(lessons, paths, spine, "A1");
     // The whole point: this is a FILTER over the one corpus, not a second corpus.
-    expect(ramp).toHaveLength(1168); // +1: mapped Spanish Chapter-7 practice
+    expect(ramp).toHaveLength(1170); // +2: Chapter-8 numbers and payoff join the A1 edition
     expect(ramp.length).toBeLessThan(lessons.length);
   });
 });

@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:00f5377ef1b5d41d",
+  "sourceHash": "fnv1a64:c3ff02c7152b20ec",
   "summary": {
     "totalLessons": 1669,
     "voice": 1079,
@@ -33817,7 +33817,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b46d43b715b1eab9"
+      "sourceHash": "fnv1a64:f5af97e332184118"
     },
     {
       "id": "ES-C08-numeros-6-10",
@@ -33835,7 +33835,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ed0886a860ddd794"
+      "sourceHash": "fnv1a64:069521116cafc722"
     },
     {
       "id": "ES-C08-tener",
@@ -33853,7 +33853,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:41443319609fc232"
+      "sourceHash": "fnv1a64:e34b6f58ff7022fb"
     },
     {
       "id": "ES-C08-cuantos-anos",
@@ -33871,7 +33871,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c8e8c4495c46b9fb"
+      "sourceHash": "fnv1a64:c1e1e3e31a2e0110"
     },
     {
       "id": "ES-C08-practice",
@@ -33889,7 +33889,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:933eafd23ceb4124"
+      "sourceHash": "fnv1a64:dedf495565a1811f"
     },
     {
       "id": "ES-C09-ser",

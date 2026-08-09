@@ -1,61 +1,89 @@
 ---
+schema_version: 2
 id: ES-C08-practice
-chapter: 8
+spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 820
+chapter: 8
 type: practice-mix
 headword: (practice)
-gloss: counting, having, and telling your age
+gloss: counting, having, and asking or answering age
 concept_tag: CH8-PRACTICE
-prerequisites: [ES-C08-numeros-1-5, ES-C08-numeros-6-10, ES-C08-tener, ES-C08-cuantos-anos]
+prerequisites: [ES-C08-cuantos-anos, ES-C08-tener, ES-C08-numeros-6-10, ES-C07-practice]
 sounds: []
 roots: []
-est_minutes: 4
-reviews_of: [ES-C08-tener, ES-C08-cuantos-anos, ES-C08-numeros-6-10, ES-C07-practice]
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-NUMBERS-1-5, ES-GRAMMAR-UNO-APOCOPE, ES-ETYMON-NUMBERS-1-5, ES-LEX-NUMBERS-6-10, ES-ETYMON-NUMBERS-6-10, ES-CULTURE-ROMAN-MONTH-NAMES, ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-ETYMON-TENERE, ES-LEX-CUANTOS-ANOS, ES-GRAMMAR-AGE-WITH-TENER, ES-ETYMON-QUANTUS-ANNUS, ES-LEX-COMO-SE-LLAMA, ES-LEX-ME-LLAMO]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ES-LEX-NUMBERS-1-5, ES-GRAMMAR-UNO-APOCOPE, ES-ETYMON-NUMBERS-1-5, ES-LEX-NUMBERS-6-10, ES-ETYMON-NUMBERS-6-10, ES-CULTURE-ROMAN-MONTH-NAMES, ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-ETYMON-TENERE, ES-LEX-CUANTOS-ANOS, ES-GRAMMAR-AGE-WITH-TENER, ES-ETYMON-QUANTUS-ANNUS, ES-LEX-COMO-SE-LLAMA, ES-LEX-ME-LLAMO]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus, fluency]
+register: neutral
+variety: general
+reviews_of: [ES-C08-numeros-1-5, ES-C08-numeros-6-10, ES-C08-tener, ES-C08-cuantos-anos, ES-C07-practice]
 ---
 
-# Practice — numbers, having, and age
+# Practice — counting, having, and age
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NUMBERS-1-5, ES-LEX-NUMBERS-6-10, ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR] -->
 
-[PAUSE 2s] Two new powers this chapter: you can **count** and you can talk about
-what you **have** (including your years). Drill the numbers and the irregular
-*tener* until both are automatic.
+[PAUSE 2s] This checkpoint asks for three small moves: count to ten, choose the
+right singular form of *tener*, and use the age frame. Everything here has
+already appeared.
 
-## Count and conjugate
+## Grammar Lens: count and conjugate
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NUMBERS-1-5, ES-GRAMMAR-UNO-APOCOPE, ES-ETYMON-NUMBERS-1-5, ES-LEX-NUMBERS-6-10, ES-ETYMON-NUMBERS-6-10, ES-CULTURE-ROMAN-MONTH-NAMES, ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-ETYMON-TENERE] -->
 
-[PAUSE 1s]
-- Count up: **uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve, diez.**
-- *tener*, all forms: **tengo · tienes · tiene · tenemos · tienen** (mind the
-  *tengo* and the *e→ie* crack).
+- Count: **uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve, diez**.
+- Change person: **tengo · tienes · tiene**.
+- Remember the roots: *quīnque* helps with *cinco*; *decem* helps with *diez*;
+  *tenēre*, “hold,” helps with *tener*.
+- Keep the calendar correction: July and August were **renamed**, not inserted.
 
-## Say something real
+## The exchange — use only what you know
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-CUANTOS-ANOS, ES-GRAMMAR-AGE-WITH-TENER, ES-ETYMON-QUANTUS-ANNUS, ES-LEX-NUMBERS-6-10, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-COMO-SE-LLAMA, ES-LEX-ME-LLAMO] -->
 
-> — Hola. ¿Cómo te llamas? — Me llamo Ana. ¿Y **cuántos años tienes**?
-> — **Tengo** veintiuno. ¿Y tú?
-> — **Tengo** diecinueve. — Un café, **por favor**. ¿Cuánto es? — **Dos** euros.
+> — Hola. ¿Cómo te llamas?
+> — Me llamo Ana. ¿Cuántos años tienes?
+> — Tengo diez años. ¿Y tú?
+> — Tengo nueve años.
+
+The exchange reuses the name question you already know, then adds exactly one
+new capability: age with **tener**.
 
 ## What you've built this chapter
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NUMBERS-1-5, ES-GRAMMAR-UNO-APOCOPE, ES-ETYMON-NUMBERS-1-5, ES-LEX-NUMBERS-6-10, ES-ETYMON-NUMBERS-6-10, ES-CULTURE-ROMAN-MONTH-NAMES, ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-ETYMON-TENERE, ES-LEX-CUANTOS-ANOS, ES-GRAMMAR-AGE-WITH-TENER, ES-ETYMON-QUANTUS-ANNUS] -->
 
-- **numbers 1–10** (← *ūnus … decem*; *cinco/quintet*, *diez/December*), and the
-  **teen fusion** *diez y seis → dieciséis* (= *sixteen*).
-- **tener** — "to have" (← *tenēre* "hold"; tenant/retain/contain), your first
-  **irregular / stem-changing** verb: *tengo*, and *e→ie* (*tienes*).
-- **¿Cuántos años tienes?** — age with *tener* ("have your years," not "be"); *años*
-  ← *annus* (the *ñ*).
+- **uno through diez**, with Latin and English hooks instead of an isolated list.
+- **un / una** before a noun, where standalone *uno* shortens.
+- **tengo, tienes, tiene**, the three singular forms of **tener**.
+- **¿Cuántos años tienes? — Tengo … años**, with *quantus/quantity* and
+  *annus/annual* showing where the words came from.
+
+Numbers above ten and the plural forms of *tener* remain deliberately deferred.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NUMBERS-1-5, ES-GRAMMAR-UNO-APOCOPE, ES-ETYMON-NUMBERS-1-5, ES-LEX-NUMBERS-6-10, ES-ETYMON-NUMBERS-6-10, ES-CULTURE-ROMAN-MONTH-NAMES, ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-ETYMON-TENERE, ES-LEX-CUANTOS-ANOS, ES-GRAMMAR-AGE-WITH-TENER, ES-ETYMON-QUANTUS-ANNUS] -->
+<!-- hl-activity: {"id":"ES-C08-practice-count-ten","kind":"text","assesses":["ES-LEX-NUMBERS-1-5","ES-LEX-NUMBERS-6-10"],"prompt":"Write the Spanish numbers 1 through 10 in order.","answer":"uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve, diez","accepted":["uno dos tres cuatro cinco seis siete ocho nueve diez"],"feedback":{"correct":"Right: you counted from uno through diez.","incorrect":"Build the two learned sets: uno–cinco, then seis–diez."},"response_seconds":15} -->
+<!-- hl-activity: {"id":"ES-C08-practice-tener-singular","kind":"text","assesses":["ES-LEX-TENER","ES-GRAMMAR-TENER-PRESENT-SINGULAR"],"prompt":"Give the three learned singular forms of tener: yo, tú, then él/ella.","answer":"tengo, tienes, tiene","accepted":["tengo tienes tiene","tengo / tienes / tiene"],"feedback":{"correct":"Right: tengo, tienes, tiene.","incorrect":"Recall the g in tengo and e→ie in tienes/tiene."},"response_seconds":10} -->
+<!-- hl-activity: {"id":"ES-C08-practice-age-nine","kind":"text","assesses":["ES-LEX-CUANTOS-ANOS","ES-GRAMMAR-AGE-WITH-TENER","ES-LEX-NUMBERS-6-10"],"prompt":"Answer ¿Cuántos años tienes? with nine years.","answer":"Tengo nueve años.","accepted":["Tengo nueve años","tengo nueve anos","tengo nueve anos."],"feedback":{"correct":"Right: Tengo nueve años.","incorrect":"Use tengo + number + años: Tengo nueve años."},"response_seconds":8} -->
 
 [PAUSE 1s]
-- [YOU SAY: count 1–10 up and back down]
-- [YOU SAY: conjugate *tener* through all five forms]
-- [YOU SAY: ask and answer age about yourself and a friend — "Tengo … años"]
-- [YOU SAY: order "dos cafés, por favor" and ask "¿Cuánto es?"]
+- [YOU SAY: count 1–10 up, then down]
+- [YOU SAY: “tengo, tienes, tiene”]
+- [YOU SAY: ask and answer age with a number from 1–10]
 
-[REPEAT x2] "¿Cuántos años tienes? — Tengo … años."
+[REPEAT x2] “¿Cuántos años tienes? — Tengo nueve años.”
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NUMBERS-1-5, ES-GRAMMAR-UNO-APOCOPE, ES-ETYMON-NUMBERS-1-5, ES-LEX-NUMBERS-6-10, ES-ETYMON-NUMBERS-6-10, ES-CULTURE-ROMAN-MONTH-NAMES, ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-ETYMON-TENERE, ES-LEX-CUANTOS-ANOS, ES-GRAMMAR-AGE-WITH-TENER, ES-ETYMON-QUANTUS-ANNUS] -->
 
-[PAUSE 3s] Count to five. (*Uno … cinco*.) Give the *yo* and *tú* of *tener*, and
-name its two irregularities. (*Tengo / tienes*; the *-go* yo-form and the *e→ie*
-stem-change.) How does Spanish give age? (With *tener* — "I *have* X years.")
-Next chapter: **ser vs estar** head-on — the two "to be" verbs, sorted for good.
+[PAUSE 3s] Count to ten. Give the three singular forms of *tener*. Ask “How
+old are you?” and answer with a number you learned. You can now move from a name
+exchange into one concrete personal detail. Next: the two Spanish ways to say
+“to be,” introduced one contrast at a time.

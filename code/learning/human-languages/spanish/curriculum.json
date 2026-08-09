@@ -258,7 +258,7 @@
     },
     {
       "id": "ES-PATH-016",
-      "spine_node": "SPINE-TIME-OF-DAY",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
       "lessons": [
         "ES-C08-numeros-1-5",
         "ES-C08-numeros-6-10"
@@ -270,10 +270,33 @@
       "after": []
     },
     {
+      "id": "ES-PATH-030-TENER",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C08-tener"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-016-AGE",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "ES-C08-cuantos-anos",
+        "ES-C08-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-016-AGE-LANGUAGE-SPECIFIC",
+        "ES-EXT-016-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-030",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "ES-C08-tener",
         "ES-C09-ser",
         "ES-C10-ir",
         "ES-C11-querer",
@@ -701,7 +724,6 @@
       "segments": [
         "ES-PATH-004",
         "ES-PATH-006",
-        "ES-PATH-016",
         "ES-PATH-019",
         "ES-PATH-023",
         "ES-PATH-025"
@@ -732,17 +754,18 @@
     },
     "SPINE-COUNT-ONE-TO-FIVE": {
       "segments": [
+        "ES-PATH-016",
+        "ES-PATH-016-AGE",
         "ES-PATH-026"
       ],
-      "omits": [
-        "NUMBER-ONE-TO-FIVE"
-      ],
+      "omits": [],
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "ES-PATH-028",
         "ES-PATH-029",
+        "ES-PATH-030-TENER",
         "ES-PATH-030",
         "ES-PATH-031",
         "ES-PATH-032",
@@ -1229,8 +1252,29 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C08-numeros-1-5",
         "ES-C08-numeros-6-10"
+      ]
+    },
+    {
+      "id": "ES-EXT-016-AGE-LANGUAGE-SPECIFIC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C08-cuantos-anos"
+      ]
+    },
+    {
+      "id": "ES-EXT-016-CONSOLIDATION",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C08-practice"
       ]
     },
     {
