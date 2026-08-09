@@ -67,6 +67,14 @@
 - Check all six movements against the Noto Sans Tamil outline and pin the sole
   lift transition in the real filmstrip and learner prose.
 
+### Added — cited two-stroke ductus for Tamil ண (HL-C09I)
+
+- Add Frame 13's adjacent Tamil nasal row, ண: six joined movements carry its
+  left spiral through both inner arches and the top bar, then one verified lift
+  precedes the separate right upright.
+- Check all seven movements against the Noto Sans Tamil outline and pin the sole
+  lift transition in the real filmstrip and learner prose.
+
 ### Added — canonical lesson figures
 
 - Preserve standalone Markdown images as typed lesson blocks instead of flattening
