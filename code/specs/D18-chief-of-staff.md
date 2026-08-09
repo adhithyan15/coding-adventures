@@ -541,8 +541,14 @@ model settings. It rejects unknown or wrong-direction channel UUIDs and any mode
 setting drift before invoking the separately injected channel/LLM service, then
 validates response identity and operation shape before returning it. The
 payload-blind orchestration core receives no request body. Until concrete channel
-key custody and model providers are composed, the production daemon uses the same
-authorization boundary with a redacted unavailable service.
+key custody and model providers are provisioned, the production daemon uses the
+same authorization boundary with a redacted unavailable service. The reusable
+authority-backed service now executes against the real encrypted durable channel
+endpoints, retains a bounded delivery-to-acknowledgement ledger, provisions sealed
+receiver grants before publication, and resolves only exact model selectors. Key
+release and provider construction remain separately injected authorities so the
+orchestration core stays payload- and secret-blind; production configuration must
+make those authorities explicit before replacing the unavailable adapter.
 
 ```
 ┌────────────────────────────────────────────────────────────────┐

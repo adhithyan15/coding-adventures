@@ -14,10 +14,10 @@ mod data_plane;
 mod launch;
 
 pub use data_plane::{
-    CompletionCall, CompletionFinishReason, CompletionProvider, CompletionResult, CompletionUsage,
-    DataPlaneFailure, DataPlaneMessage, DataPlaneOperation, DataPlaneRequest, DataPlaneResponse,
-    PromptMessage, PromptRole, RequestId, MAX_DATA_PLANE_MESSAGES, MAX_DATA_PLANE_PAYLOAD_BYTES,
-    MAX_DATA_PLANE_RECORD_BYTES,
+    validate_data_plane_response, CompletionCall, CompletionFinishReason, CompletionProvider,
+    CompletionResult, CompletionUsage, DataPlaneFailure, DataPlaneMessage, DataPlaneOperation,
+    DataPlaneRequest, DataPlaneResponse, PromptMessage, PromptRole, RequestId,
+    MAX_DATA_PLANE_MESSAGES, MAX_DATA_PLANE_PAYLOAD_BYTES, MAX_DATA_PLANE_RECORD_BYTES,
 };
 use data_plane::{DataRecord, ACKNOWLEDGED_RESPONSE_TAG, ACKNOWLEDGE_REQUEST_TAG};
 use data_plane::{
