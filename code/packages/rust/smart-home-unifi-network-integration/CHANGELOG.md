@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.0
+
+- Add official per-device latest-statistics inspection for explicitly selected,
+  already-installed UniFi devices.
+- Require D23 read authorization and an exact two-minute local operational-
+  telemetry grant before transport I/O.
+- Cap each poll at 64 unique targets, enforce a one-minute integration-level
+  poll interval before I/O, and expire normalized metrics after two minutes.
+- Validate CPU, memory, load, uptime, uplink-rate, frequency, and radio-retry
+  bounds while excluding native heartbeat timestamps from runtime state.
+
 ## 0.2.0
 
 - Add bounded official connected-client inspection behind D23 read,

@@ -45111,7 +45111,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         base_entry(
             "unifi",
             "UniFi Network",
-            "Authenticated local UniFi Network device health and pseudonymous connected-client presence inspection.",
+            "Authenticated local UniFi Network health, bounded live device statistics, and pseudonymous client presence inspection.",
             IntegrationCategory::LocalHub,
             ConnectivityClass::LocalPolling,
             ImplementationStatus::FirstPartyRuntime,
@@ -45137,7 +45137,8 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             "Production inspection uses the official local /proxy/network/integration/v1 API over HTTPS; plain HTTP is loopback-test-only.",
             "The Vault-backed API key is materialized only as X-API-Key inside the bounded transport and never enters normalized state or request-plan debug output.",
             "Connected clients require separate ephemeral identifier and five-minute presence grants; native IDs, names, MACs, IPs, and connection timestamps are replaced by host-scoped keyed pseudonyms before runtime install.",
-            "Remote Site Manager, retained client identity migration, detailed statistics, events, adoption, guest authorization, port actions, and configuration remain separate policy- or command-specific work.",
+            "Explicit device-statistics polls require a two-minute operational-telemetry grant, at most 64 targets, and a one-minute minimum interval; normalized live metrics expire after two minutes.",
+            "Remote Site Manager, retained client identity migration, historical statistics, events, adoption, guest authorization, port actions, and configuration remain separate policy- or command-specific work.",
         ]),
         base_entry(
             "sonos",
@@ -81139,6 +81140,14 @@ mod tests {
             .notes
             .iter()
             .any(|note| note.contains("host-scoped keyed pseudonyms")));
+        assert!(unifi
+            .notes
+            .iter()
+            .any(|note| note.contains("one-minute minimum interval")));
+        assert!(unifi
+            .notes
+            .iter()
+            .any(|note| note.contains("expire after two minutes")));
     }
 
     #[test]
