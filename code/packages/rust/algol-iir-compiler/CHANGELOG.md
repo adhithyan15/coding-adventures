@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.75.0 — 2026-08-09 — recursive direct procedure formals
+
+Regression coverage now proves that a recursive direct `procedure` formal
+reuses its active specialised sibling at each recursive call. Its static target
+survives to the base case without a function-pointer, closure, or descriptor
+value in the IIR ABI.
+
 ## 0.74.0 — 2026-08-09 — nested capturing direct procedure actuals
 
 Regression coverage now proves that a direct nested procedure may capture an
