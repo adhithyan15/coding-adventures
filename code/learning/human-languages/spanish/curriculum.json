@@ -390,11 +390,69 @@
       "after": []
     },
     {
+      "id": "ES-PATH-042-WANT-CH11",
+      "spine_node": "SPINE-SAY-WHAT-I-WANT",
+      "lessons": [
+        "ES-C11-querer"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-042-WANT-CH11"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-030-ABILITY-CH11",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C11-poder"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-030-ABILITY-CH11"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-042-STEM-CONTRAST-CH11",
+      "spine_node": "SPINE-SAY-WHAT-I-WANT",
+      "lessons": [
+        "ES-C11-stem-changes"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-042-STEM-CONTRAST-CH11"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-003-OUR",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C11-nuestro"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-003-OUR"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-042-CONSOLIDATION-CH11",
+      "spine_node": "SPINE-SAY-WHAT-I-WANT",
+      "lessons": [
+        "ES-C11-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-042-CONSOLIDATION-CH11"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-030",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "ES-C11-querer",
-        "ES-C11-poder",
         "ES-C12-hacer",
         "ES-C12-decir",
         "ES-C12-yo-go",
@@ -469,7 +527,6 @@
       "id": "ES-PATH-042",
       "spine_node": "SPINE-SAY-WHAT-I-WANT",
       "lessons": [
-        "ES-C11-stem-changes",
         "ES-C18-subjuntivo",
         "ES-C18-inherited-subjunctive-stems",
         "ES-C18-subjunctive-outliers",
@@ -844,6 +901,7 @@
       "segments": [
         "ES-PATH-003",
         "ES-PATH-003-POSSESSIVE",
+        "ES-PATH-003-OUR",
         "ES-PATH-020",
         "ES-PATH-027"
       ],
@@ -865,6 +923,7 @@
         "ES-PATH-029",
         "ES-PATH-030-TENER",
         "ES-PATH-030-SER",
+        "ES-PATH-030-ABILITY-CH11",
         "ES-PATH-030",
         "ES-PATH-031",
         "ES-PATH-032",
@@ -896,11 +955,12 @@
     },
     "SPINE-SAY-WHAT-I-WANT": {
       "segments": [
+        "ES-PATH-042-WANT-CH11",
+        "ES-PATH-042-STEM-CONTRAST-CH11",
+        "ES-PATH-042-CONSOLIDATION-CH11",
         "ES-PATH-042"
       ],
-      "omits": [
-        "VERB-WANT"
-      ],
+      "omits": [],
       "relocates": {}
     },
     "SPINE-TALK-ABOUT-PAST": {
@@ -1468,6 +1528,61 @@
       ]
     },
     {
+      "id": "ES-EXT-042-WANT-CH11",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can express singular wanting with querer before a known infinitive.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C11-querer"
+      ]
+    },
+    {
+      "id": "ES-EXT-030-ABILITY-CH11",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the three learned singular forms of poder before a known infinitive.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C11-poder"
+      ]
+    },
+    {
+      "id": "ES-EXT-042-STEM-CONTRAST-CH11",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can compare the learned Spanish e-to-ie and o-to-ue singular verb forms without extending the person paradigm.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C11-stem-changes"
+      ]
+    },
+    {
+      "id": "ES-EXT-003-OUR",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can choose nuestro or nuestra before a known singular noun.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C11-nuestro"
+      ]
+    },
+    {
+      "id": "ES-EXT-042-CONSOLIDATION-CH11",
+      "stage": "A2",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve singular wanting, ability, vowel-change comparison, and our with known nouns together.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C11-practice"
+      ]
+    },
+    {
       "id": "ES-EXT-018-LANGUAGE-SPECIFIC",
       "stage": "A1",
       "kind": "required",
@@ -1658,7 +1773,6 @@
       "canDo": "I can use the Spanish-specific vocabulary and grammar that support this shared ability.",
       "prerequisites": [],
       "lessons": [
-        "ES-C11-stem-changes",
         "ES-C18-subjuntivo",
         "ES-C18-inherited-subjunctive-stems",
         "ES-C18-subjunctive-outliers",
@@ -1679,7 +1793,6 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C11-querer",
         "ES-C12-yo-go",
         "ES-C13-salir"
       ]

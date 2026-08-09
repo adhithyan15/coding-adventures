@@ -6511,7 +6511,7 @@
     {
       "language": "spanish",
       "chapter": 11,
-      "sourceHash": "fnv1a64:68f9ddd8f459cb18",
+      "sourceHash": "fnv1a64:2d9dfe7d6bbcb269",
       "lessonIds": [
         "ES-C11-querer",
         "ES-C11-poder",
@@ -6523,8 +6523,8 @@
       "drivablePrefix": 5,
       "text": "spanish/narration/ch11.txt",
       "json": "spanish/narration/ch11.json",
-      "textHash": "fnv1a64:4e84a2e1e26f118c",
-      "jsonHash": "fnv1a64:a06be9aaf44e4b6d"
+      "textHash": "fnv1a64:315843f8fcce7f01",
+      "jsonHash": "fnv1a64:a19a57392c292aba"
     },
     {
       "language": "spanish",

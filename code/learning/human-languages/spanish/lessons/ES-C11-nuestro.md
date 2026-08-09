@@ -1,64 +1,80 @@
 ---
+schema_version: 2
 id: ES-C11-nuestro
-chapter: 11
+spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 950
+chapter: 11
 type: word
-headword: nuestro
-gloss: our (and vuestro, "your"-plural) — the possessive that agrees fully
+headword: nuestro, nuestra
+gloss: our — matching a known masculine or feminine singular noun
 concept_tag: ES-POSSESSIVE-OUR
-prerequisites: [ES-C10-mi-tu-su]
+prerequisites: [ES-C11-stem-changes, ES-C10-mi-tu-su, ES-C01-dia, ES-C02-noche]
 sounds: [diphthong-ue]
 roots: [noster-latin]
-etymology_hook: "nuestro ← Latin noster 'our' (paternoster = 'our father'); vuestro ← voster; unlike mi/tu/su these agree in BOTH gender and number"
-est_minutes: 4
-reviews_of: [ES-C10-mi-tu-su, ES-C11-poder]
+etymology_hook: "nuestro and nuestra descend from Latin noster 'our'; Paternoster means 'Our Father', and nostrum literally meant 'our thing'"
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-POSSESSIVES-MI-TU-SU, ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN, ES-LEX-DIA, ES-LEX-NOCHE, ES-GRAMMAR-NOUN-GENDER, ES-HISTORY-LATIN-STRESSED-VOWEL-BREAKING]
+introduces:
+  knowledge: [ES-LEX-POSSESSIVES-NUESTRO-NUESTRA, ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR, ES-ETYMON-NOSTER]
+practises:
+  knowledge: [ES-LEX-POSSESSIVES-MI-TU-SU, ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN, ES-LEX-DIA, ES-LEX-NOCHE, ES-GRAMMAR-NOUN-GENDER, ES-HISTORY-LATIN-STRESSED-VOWEL-BREAKING, ES-LEX-POSSESSIVES-NUESTRO-NUESTRA, ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR, ES-ETYMON-NOSTER]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C11-stem-changes, ES-C10-mi-tu-su, ES-C01-dia, ES-C02-noche]
 ---
 
-# nuestro — "our," the possessive that agrees fully
+# nuestro, nuestra — “our” with singular gender agreement
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-POSSESSIVES-MI-TU-SU, ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN, ES-LEX-DIA, ES-LEX-NOCHE, ES-GRAMMAR-NOUN-GENDER] -->
 
-[PAUSE 2s] In Chapter 10 you met *mi/tu/su* — possessives that change only for
-**number** (*mis, tus, sus*). **nuestro** ("our") is different: it agrees in **both
-gender and number**, like an ordinary *-o/-a* adjective. It's the fullest-flexing
-of the possessives.
+[PAUSE 2s] You put **mi, tu,** or **su** before the known noun **café**.
+Now add “our” and let it match one contrast you learned much earlier:
+masculine **día** beside feminine **noche**.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-POSSESSIVES-NUESTRO-NUESTRA, ES-ETYMON-NOSTER]; assesses=[ES-HISTORY-LATIN-STRESSED-VOWEL-BREAKING] -->
 
-**nuestro** comes from Latin **noster**, *"our."* You've heard it without knowing:
-the **Paternoster** is the "**Our** Father," and a **nostrum** is literally "**our**
-thing" (a quack's secret remedy). Its partner **vuestro** ("your," to a group) is
-from **voster/vester**.
+**nuestro** and **nuestra** mean “our.” They descend from Latin **noster**,
+also “our.” **Paternoster** means “Our Father,” and English **nostrum**
+originally meant “our thing.”
 
-Notice the stem-change fossil: *noster → nuestro* shows the same **o→ue** break you
-just learned (short stressed *o* → *ue*). The possessive cracks exactly like
-*puerta* and *puedo*.
+The change from *noster* to **nuestro** also displays the historical **o → ue**
+opening you just used to organize **poder**.
 
-## Grammar Lens: four forms, agreeing like -o/-a
+## Grammar Lens: match singular gender
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR]; assesses=[ES-LEX-POSSESSIVES-NUESTRO-NUESTRA, ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN, ES-LEX-DIA, ES-LEX-NOCHE, ES-GRAMMAR-NOUN-GENDER] -->
 
-Where *mi* had two forms (*mi/mis*), **nuestro** has **four** — masculine/feminine
-× singular/plural:
+| known noun | “our” phrase |
+|---|---|
+| **el día**, masculine | **nuestro día** |
+| **la noche**, feminine | **nuestra noche** |
 
-| | singular | plural |
-|---|---|---|
-| **masc.** | **nuestro** libro | **nuestros** libros |
-| **fem.** | **nuestra** casa | **nuestras** casas |
+Like **mi, tu,** and **su**, the new word goes before the noun. Unlike those
+earlier forms, it shows the noun's gender: **nuestro** before a masculine
+singular noun, **nuestra** before a feminine singular noun.
 
-So it's *nuestro coche* ("our car," masc.) but *nuestra casa* ("our house," fem.) —
-you match the noun in both gender and number, just like *bueno/buena/buenos/buenas*.
-*vuestro* does the same (*vuestro/vuestra/vuestros/vuestras*).
+Only these two singular forms belong to this lesson. Plural agreement and the
+separate word for “your” to a group wait.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-POSSESSIVES-NUESTRO-NUESTRA, ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR, ES-ETYMON-NOSTER, ES-LEX-DIA, ES-LEX-NOCHE] -->
+<!-- hl-activity: {"id":"ES-C11-nuestro-our-day","kind":"text","assesses":["ES-LEX-POSSESSIVES-NUESTRO-NUESTRA","ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR","ES-LEX-DIA"],"prompt":"Say 'our day' in Spanish.","answer":"nuestro día","accepted":["nuestro dia"],"feedback":{"correct":"Right: masculine día takes nuestro.","incorrect":"Use the masculine singular form nuestro before día."},"response_seconds":7} -->
+<!-- hl-activity: {"id":"ES-C11-nuestro-our-night","kind":"text","assesses":["ES-LEX-POSSESSIVES-NUESTRO-NUESTRA","ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR","ES-LEX-NOCHE"],"prompt":"Say 'our night' in Spanish.","answer":"nuestra noche","accepted":["nuestra noche."],"feedback":{"correct":"Right: feminine noche takes nuestra.","incorrect":"Use the feminine singular form nuestra before noche."},"response_seconds":7} -->
 
 [PAUSE 1s]
-- [YOU SAY: "nuestro, nuestra, nuestros, nuestras" — the full set]
-- [YOU SAY: match a noun — "nuestro coche, nuestra casa, nuestros amigos"]
-- [YOU SAY: "nuestro" then "Paternoster / nostrum" — the *noster* "our" family]
+- [YOU SAY: “nuestro día”]
+- [YOU SAY: “nuestra noche”]
+- [YOU SAY: “noster — nuestro — Paternoster”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-POSSESSIVES-NUESTRO-NUESTRA, ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR, ES-ETYMON-NOSTER] -->
 
-[PAUSE 3s] What Latin word is *nuestro* from, and one English echo? (*noster* "our";
-*Paternoster* / *nostrum*.) How does *nuestro* differ from *mi/tu/su*? (It agrees in
-**gender and number** — four forms — not just number.) Give "our house" and "our
-car." (*Nuestra casa*; *nuestro coche*.) Next: **practice** — pull the chapter
-together.
+[PAUSE 3s] Which form goes before masculine *día*? (*Nuestro.*) Before
+feminine *noche*? (*Nuestra.*) What Latin source explains the pair?
+(*Noster*, “our.”) Next: retrieve the whole chapter without adding a form.

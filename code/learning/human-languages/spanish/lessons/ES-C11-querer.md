@@ -1,74 +1,93 @@
 ---
+schema_version: 2
 id: ES-C11-querer
-chapter: 11
+spine_node: SPINE-SAY-WHAT-I-WANT
 sequence: 920
+chapter: 11
 type: word
 headword: querer
-gloss: to want (and to love) — a stem-changing verb, e→ie
-concept_tag: ES-VERB-QUERER
-prerequisites: [ES-C08-tener, ES-C06-hablar]
+gloss: to want — with the singular present forms quiero, quieres, and quiere
+concept_tag: VERB-WANT
+prerequisites: [ES-C10-practice, ES-C08-tener, ES-C06-hablar, ES-C07-comer, ES-C07-vivir]
 sounds: [diphthong-ie, r-tap]
 roots: [quaerere-latin]
-etymology_hook: "querer ← Latin quaerere 'to seek, ask' → query, quest, question, inquire, require, conquer; the stressed e breaks to ie (quiero) — the same crack you met in tener"
-est_minutes: 4
-reviews_of: [ES-C08-tener, ES-C10-practice]
+etymology_hook: "querer descends from Latin quaerere 'to seek or ask'; English query, quest, inquire, and require preserve the same seeking family"
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR]
+introduces:
+  knowledge: [ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-ETYMON-QUAERERE]
+practises:
+  knowledge: [ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-ETYMON-QUAERERE]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C10-practice, ES-C08-tener, ES-C06-hablar, ES-C07-comer, ES-C07-vivir]
 ---
 
-# querer — "to want," and the e→ie crack again
+# querer — wanting with one familiar vowel change
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR] -->
 
-[PAUSE 2s] Back in Chapter 8, *tener* cracked its stem: *tienes*, with the vowel
-breaking *e → ie*. That wasn't a one-off — it's a whole **class** of Spanish verbs.
-Here's the most useful of them: **querer**, "to want" (and, of a person, "to
-love").
+[PAUSE 2s] You already say **tienes** and **tiene**, where the middle **e**
+opens into **ie**. Today, reuse that visible change in one useful verb and keep
+the same three-person frame you already own.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-- `diphthong-ie` — the stem breaks to **-ie-** under stress: **quiero** = *KYE-ro*.
+- diphthong-ie — begin **quiero** with one smooth *kye-* syllable.
+- r-tap — end the infinitive **querer** with one light tap.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-QUERER, ES-ETYMON-QUAERERE]; assesses=[] -->
 
-**querer** comes from Latin **quaerere**, *"to seek, to ask, to want."* Seeking and
-wanting are the same impulse at the root — and that root is a treasure-house of
-English:
+**querer** means “to want.” With a person as its object, it can also express
+love, but wanting is the meaning used in this lesson.
 
-- **query, quest, question** — a seeking.
-- with prefixes: **inquire** (*in-* "into"), **require** (*re-* "back"), **acquire**
-  (*ad-* "toward"), **conquer** (*con-* "thoroughly seek/win"), **exquisite**
-  ("sought out"), **quorum** ("of whom" the seeking needs enough).
+It descends from Latin **quaerere**, “to seek or ask.” English keeps the same
+searching idea in **query**, **quest**, **inquire**, and **require**. Wanting
+something begins as seeking it.
 
-So when you say *quiero*, you're using the same "seek" root as *question* and
-*conquer*.
+## Grammar Lens: only the three singular forms
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-QUERER-PRESENT-SINGULAR]; assesses=[ES-LEX-QUERER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-ETYMON-QUAERERE] -->
 
-## Grammar Lens: the e→ie stem-change (the "boot")
+| person | present of **querer** |
+|---|---|
+| yo | **quiero** |
+| tú | **quieres** |
+| él / ella / usted | **quiere** |
 
-*querer* is a **stem-changing verb**: when the stem vowel *e* is **stressed**, it
-breaks to **ie** — exactly the pattern *tener* showed you.
+Say the small set as **quiero · quieres · quiere**. The **e → ie** that you saw
+in **tienes, tiene** is visible again. The plural persons are deliberately left
+for a later step.
 
-| yo | **quiero** | (e → ie) |
-| tú | **quieres** | (e → ie) |
-| él/ella/usted | **quiere** | (e → ie) |
-| nosotros | **queremos** | (plain *e* — unstressed) |
-| ellos/ustedes | **quieren** | (e → ie) |
+Place one known infinitive after the form of **querer**:
 
-Only *queremos* keeps the plain *e*, because there the stress falls on the ending,
-not the stem. Shade in the forms that change — yo/tú/él…/ellos — and they draw a
-**boot** shape around the *nosotros/vosotros* gap. That "boot" is the signature of
-every stem-changer.
+- **Quiero hablar.** — “I want to speak.”
+- **Quieres comer.** — “You want to eat.”
+- **Quiere vivir.** — “He, she, or formal you wants to live.”
+
+The second verb stays in its known infinitive form.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-ETYMON-QUAERERE, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR] -->
+<!-- hl-activity: {"id":"ES-C11-querer-singular-forms","kind":"text","assesses":["ES-LEX-QUERER","ES-GRAMMAR-QUERER-PRESENT-SINGULAR"],"prompt":"Give the learned singular present forms of querer: yo, tú, then él/ella/usted.","answer":"quiero, quieres, quiere","accepted":["quiero quieres quiere","quiero / quieres / quiere"],"feedback":{"correct":"Right: quiero, quieres, quiere.","incorrect":"Keep the e→ie stem and use the three singular endings: quiero, quieres, quiere."},"response_seconds":10} -->
+<!-- hl-activity: {"id":"ES-C11-querer-want-to-speak","kind":"text","assesses":["ES-LEX-QUERER","ES-GRAMMAR-QUERER-PRESENT-SINGULAR","ES-LEX-HABLAR"],"prompt":"Say 'I want to speak' in Spanish.","answer":"Quiero hablar.","accepted":["Quiero hablar"],"feedback":{"correct":"Right: Quiero hablar.","incorrect":"Use quiero followed by the unchanged infinitive hablar."},"response_seconds":8} -->
 
 [PAUSE 1s]
-- [YOU SAY: "querer" then the set — "quiero, quieres, quiere, queremos, quieren" —
-  hear the *ie* crack in, and drop out for *queremos*]
-- [YOU SAY: "Quiero un café" ("I want a coffee"); "Quiero café, por favor"]
-- [YOU SAY: "querer" then English "query, quest, conquer" — the seek-family]
+- [YOU SAY: “querer — quiero, quieres, quiere”]
+- [YOU SAY: “Quiero hablar”]
+- [YOU SAY: “quaerere — query — querer”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-ETYMON-QUAERERE] -->
 
-[PAUSE 3s] What Latin verb is *querer* from, and two English cousins? (*quaerere*
-"to seek"; query/quest/conquer.) Give its five present forms. (*Quiero, quieres,
-quiere, queremos, quieren*.) Which form keeps the plain *e*, and why? (*Queremos* —
-the stress is on the ending, not the stem.) Next: **poder**, with a *different*
-crack, o→ue.
+[PAUSE 3s] What does *querer* mean? (“To want.”) Give the three learned forms.
+(*Quiero, quieres, quiere.*) Which Latin verb and English cousin help explain
+it? (*Quaerere*, “seek”; *query* or *quest*.) Next: add the other singular
+vowel change with **poder**.
