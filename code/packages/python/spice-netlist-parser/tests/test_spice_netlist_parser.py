@@ -3554,6 +3554,15 @@ def test_lowers_positive_mosfet_model_nominal_temperature(alias: str) -> None:
     assert mosfet.model.model.params.T_NOM == 325.0
 
 
+def test_gives_mosfet_t_nom_precedence_over_tnom() -> None:
+    parsed = parse_netlist(
+        ".model nfast NMOS(T_NOM=325 TNOM=350)\nM1 d g s b nfast\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert mosfet.model.model.params.T_NOM == 325.0
+
+
 @pytest.mark.parametrize("drain_resistance", ["-1", "1e999"])
 def test_rejects_invalid_mosfet_model_drain_resistance(
     drain_resistance: str,

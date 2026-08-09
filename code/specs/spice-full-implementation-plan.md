@@ -4817,10 +4817,16 @@ the Rust, Python, and TypeScript surfaces together.
      parameter policy.
 
 491. Python and TypeScript Berkeley SPICE BJT/JFET nominal-temperature alias precedence.
-   - Status: implemented in this nominal-temperature precedence slice.
+   - Status: completed in PR 10187.
    - Both parser facades give engine-canonical `TNOM` precedence over the
      `T_NOM` alias for BJT and JFET validation and lowering, without changing
      the unresolved JFET `B` parameter policy.
+
+492. Python and TypeScript Berkeley SPICE MOS nominal-temperature alias precedence.
+   - Status: implemented in this MOS nominal-temperature precedence slice.
+   - Both parser facades give engine-canonical Level-1 `T_NOM` precedence over
+     the `TNOM` alias during lowering, matching validation while preserving
+     instance parameter overrides.
 
 ## Backlog
 

@@ -2660,7 +2660,10 @@ _LEVEL1_PARAM_ALIASES = {
 
 
 def _build_mosfet_model(model: ModelCard, instance_params: dict[str, float]) -> MOSFET:
-    params = {**model.params, **instance_params}
+    model_params = dict(model.params)
+    if "T_NOM" in model_params:
+        model_params.pop("TNOM", None)
+    params = {**model_params, **instance_params}
     defaults = Level1Params()
     values = {
         field.name: getattr(defaults, field.name)
@@ -2672,8 +2675,8 @@ def _build_mosfet_model(model: ModelCard, instance_params: dict[str, float]) -> 
         if param_name in values and not isinstance(values[param_name], bool):
             values[param_name] = value
     canonical_params = {_LEVEL1_PARAM_ALIASES.get(name, name) for name in params}
-    if "TOX" in model.params:
-        derivation_params = dict(model.params)
+    if "TOX" in model_params:
+        derivation_params = dict(model_params)
         derivation_params["U0"] = values["U0"]
         normalized = normalize_model_card(model.name, model.kind, derivation_params)
         derived = mosfet_from_model_card("M", "d", "g", "s", "b", normalized)
