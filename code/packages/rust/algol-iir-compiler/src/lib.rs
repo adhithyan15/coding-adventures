@@ -1204,12 +1204,12 @@ impl Compiler {
     /// * `value_part` lists which of them are passed **by value** (a copy).
     /// * each `spec_part` declares the *type* of one or more parameters.
     ///
-    /// Scalar formals can be passed by value or by name. Name formals are
+    /// Scalar formals can be passed by value or by name. Name scalars are
     /// specialised at direct call sites so their reads re-evaluate the caller's
-    /// expression and assignments target the caller's lvalue. Array formals
-    /// remain value-only because their descriptor already supplies shared
-    /// storage. A missing heading type is a proper procedure and lowers to an
-    /// IIR `void` function.
+    /// expression and assignments target the caller's lvalue. A name array has
+    /// no expression thunk: a bare array actual travels through the existing
+    /// typed descriptor ABI, which already preserves shared storage. A missing
+    /// heading type is a proper procedure and lowers to an IIR `void` function.
     fn procedure_parts(
         &self,
         proc_decl: &GrammarASTNode,
@@ -1282,14 +1282,6 @@ impl Compiler {
             } else {
                 ProcedureParamMode::Name
             };
-            if matches!(
-                (mode, ty),
-                (ProcedureParamMode::Name, ProcedureParamType::Array { .. })
-            ) {
-                return Err(CompileError::Unsupported(format!(
-                    "call-by-name array parameter {p:?}"
-                )));
-            }
             params.push(ProcedureParam { name: p, ty, mode });
         }
 
@@ -1394,7 +1386,9 @@ impl Compiler {
         for param in &params {
             let pname = &param.name;
             let pty = &param.ty;
-            if param.mode == ProcedureParamMode::Name {
+            if param.mode == ProcedureParamMode::Name
+                && matches!(*pty, ProcedureParamType::Scalar(_))
+            {
                 if !self.by_name_bindings.contains_key(pname) {
                     return Err(CompileError::Malformed(format!(
                         "call-by-name parameter {pname:?} has no call-site binding"
@@ -1856,7 +1850,9 @@ impl Compiler {
 
         let mut arg_slots = Vec::with_capacity(actuals.len() * 4);
         for (actual, param) in actuals.iter().zip(sig.params.iter()) {
-            if param.mode == ProcedureParamMode::Name {
+            if param.mode == ProcedureParamMode::Name
+                && matches!(param.ty, ProcedureParamType::Scalar(_))
+            {
                 continue;
             }
             match param.ty {
@@ -1973,11 +1969,12 @@ impl Compiler {
         })
     }
 
-    /// Compile one direct call to a procedure with scalar name formals.  The
-    /// portable IIR ABI has no typed closure parameter, so a specialised
-    /// sibling function is a better fit than a runtime thunk: it keeps the
-    /// actual expression in the callee's lowering context, where every formal
-    /// read can re-emit it against the caller bindings published as globals.
+    /// Compile one direct call to a procedure with name formals. The portable
+    /// IIR ABI has no typed closure parameter, so name scalars use a specialised
+    /// sibling: it keeps each actual expression in the callee's lowering
+    /// context, where reads can re-emit it against caller bindings published as
+    /// globals. Name arrays retain the ordinary typed descriptor ABI because a
+    /// bare array actual already supplies shared caller storage.
     fn compile_by_name_specialization(
         &mut self,
         source_name: &str,
@@ -2006,10 +2003,7 @@ impl Compiler {
                     continue;
                 }
                 let ProcedureParamType::Scalar(ty) = param.ty else {
-                    return Err(CompileError::Unsupported(format!(
-                        "call-by-name array parameter {:?}",
-                        param.name
-                    )));
+                    continue;
                 };
                 let actual = self.prepare_by_name_actual(actual)?;
                 bindings.insert(
@@ -7391,6 +7385,35 @@ mod tests {
                    procedure set(x); integer x; x := 42; \
                    set(values[1]); result := values[1] end";
         assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn call_by_name_forwards_multidimensional_array_formals() {
+        let src = "begin integer array values[-1:0, 4:5]; integer result; \
+                   integer procedure forward(a); integer array a; \
+                           begin integer procedure mutate(a); integer array a; \
+                                 begin a[-1,4] := 40; a[0,5] := 2; \
+                                       mutate := a[-1,4] + a[0,5] end; \
+                           forward := mutate(a) + a[-1,4] - 40 end; \
+                   result := forward(values) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "call_by_name_array_forwarding").expect("compiles");
+        let forward = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("__algol_by_name_forward_"))
+            .expect("a name-array call must lower to a specialised sibling");
+        assert_eq!(
+            forward.params,
+            vec![
+                ("a".to_string(), "array<i64>".to_string()),
+                (array_param_lower_slot("a"), "i64".to_string()),
+                (array_param_stride_slot("a", 0), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 1), "i64".to_string()),
+            ],
+            "a name array retains the complete ordinary descriptor ABI"
+        );
     }
 
     #[test]
