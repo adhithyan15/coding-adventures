@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- The Unix and Windows standalone BUILD recipes now install the transitive
+  `coding-adventures-heap` rock before `coding-adventures-huffman-tree`.
+
 ## 0.1.0 — 2026-04-12
 
 ### Added

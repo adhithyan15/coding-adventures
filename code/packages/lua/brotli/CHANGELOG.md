@@ -3,6 +3,13 @@
 All notable changes to the Lua Brotli package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Fixed
+
+- The Unix and Windows standalone BUILD recipes now install the transitive
+  `coding-adventures-heap` rock before `coding-adventures-huffman-tree`.
+
 ## [0.1.0] — 2026-04-13
 
 ### Added

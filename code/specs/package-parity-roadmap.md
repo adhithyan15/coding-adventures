@@ -1084,6 +1084,58 @@ observations. All three additions are either portable backlog work or excluded
 native reviews; none displaces the completed Lua tranche, which still closes four
 verified fresh-tree failures and unlocks six classified follow-ups.
 
+Ready-for-review PR #10216 merged externally as `a4f5360112` on 2026-08-09.
+The post-merge collision-checked schema-3 inventory contains 1,271 established
+identities and 4,427 package slots across 15 lanes, with 173 high-consensus
+packages and 269 missing slots, 821 singletons and 11,494 missing slots, 625
+Rust singletons, zero canonical collisions, and zero unknown buckets. The sole
+new identity since `cbe099305e` is Rust
+`smart-home-camera-media-http-executor` from PR #10225. It is a concrete pinned
+TCP/TLS, credential, CSPRNG, timeout, and bounded-media transport without a
+package-local capability manifest, so a dependency-blocked native-authority
+review owns it instead of manufacturing all-language executors. Deterministic
+camera grant, lease, endpoint, authentication-choice, framing, image-signature,
+bound, error, and redaction behavior remains in portable fixture owners.
+
+The same ownership pass classifies every intervening package contract. PR
+#10213 receives a portable atomic retained-identity migration owner over
+injected storage. PRs #10214 and #10217 expand the existing Chief provisioning,
+daemon, host-data-plane, and Level 1 child-host owners with production authority
+injection and real receive-complete-publish-acknowledge evidence. PRs #10218 and
+#10221 make the Enphase and UniFi owners depend on the retained-identity and
+Vault lease contracts; deterministic correspondence and all-or-nothing plans
+remain portable while entropy, clock, credentials, transport, and runtime CAS
+remain native. PRs #10220, #10224, and #10227 surface separately owned Vault
+lease, model-facing tool API, Vault runtime, host-profile and routing, native
+host-runtime, SDK binding, and injected skill-store contracts. PRs #10201,
+#10215, #10219, #10222, #10223, #10226, and #10228 add no implementation
+identity or unowned package gap.
+
+The dependency/leverage pass selects
+`build-file-lua-huffman-heap-transitive-closure` next. It is the smallest
+unblocked foundational item among the six audited Lua follow-ups: installing
+the shared `heap` rock before `huffman-tree` closes clean-tree execution for
+`brotli`, `deflate`, and `huffman-compression` in one coherent Unix/Windows
+metadata tranche. The parser, data-store, JSON value, Lattice, and WASM runtime
+closures remain pending as independent successors.
+
+Before publication, the branch was rebased without conflict through
+`94414638fd`. The collision-checked schema-3 inventory there contains 1,272
+established identities and 4,428 package slots across 15 lanes, with 173
+high-consensus packages and 269 missing slots, 822 singletons and 11,508
+missing slots, 626 Rust singletons, zero canonical collisions, and zero unknown
+buckets. PRs #10230 and #10234 change only Tamil human-language material. PRs
+#10232, #10233, and #10235 expand existing ALGOL and diagram package surfaces
+without adding an identity or changing their prior classification. PR #10229
+adds the sole new identity, Rust `smart-home-onvif-snapshot-host`: a concrete
+SystemTime, OS-CSPRNG, sealed-Vault, transient-credential, camera-media, and
+pinned TCP/TLS composition host without a capability manifest. Its
+dependency-blocked native-authority review owns that exception while the
+camera-media and ONVIF portable owners retain deterministic authorization,
+credential-envelope, reference-grammar, request-ordering, cleanup, and
+redaction fixtures. This excluded native addition does not displace the
+selected Huffman/heap closure.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
