@@ -213,6 +213,8 @@ const persianAlphabetSource = (glyph: string): StrokeSource => {
 // flows directly into the final bowl as one continuous Naskh stroke.
 // Near the end of the same demonstration, ل descends its tall upright and
 // turns directly into the leftward base curve without lifting the chalk.
+// The adjacent م forms its round head first, then continues into the long
+// descending tail in the same pen-down run.
 // அ is Frame 4's first row: movements 1-4 remain on the connected body, then
 // the hand lifts once before movement 5 draws the separate right upright. ஆ is
 // the next row: it repeats movements 1-5, then continues from that upright into
@@ -432,6 +434,46 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: persianAlphabetSource("ل"),
+  },
+  "م": {
+    glyph: "م",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "shape the round head",
+            path: [
+              { x: 120, y: 210 },
+              { x: 150, y: 250 },
+              { x: 200, y: 300 },
+              { x: 245, y: 315 },
+              { x: 285, y: 300 },
+              { x: 330, y: 260 },
+              { x: 365, y: 215 },
+              { x: 400, y: 175 },
+              { x: 430, y: 150 },
+            ],
+          },
+          {
+            label: "continue down the tail without lifting",
+            path: [
+              { x: 430, y: 150 },
+              { x: 390, y: 110 },
+              { x: 330, y: 95 },
+              { x: 260, y: 80 },
+              { x: 180, y: 65 },
+              { x: 100, y: 35 },
+              { x: 90, y: -20 },
+              { x: 100, y: -90 },
+              { x: 110, y: -160 },
+              { x: 120, y: -240 },
+              { x: 105, y: -285 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: persianAlphabetSource("م"),
   },
   அ: {
     glyph: "அ",

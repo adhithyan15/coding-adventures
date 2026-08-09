@@ -293,6 +293,17 @@ describe("handwriting ductus", () => {
     expect(path[0].x).toBeGreaterThan(path.at(-1)!.x);
   });
 
+  it("Persian م joins its round head directly to the descending tail", () => {
+    const mim = DUCTUS["م"];
+    expect(penLifts(mim)).toBe(0);
+    expect(mim.strokes).toHaveLength(1);
+    expect(mim.strokes[0].segments).toHaveLength(2);
+    const head = mim.strokes[0].segments[0].path;
+    const tail = mim.strokes[0].segments[1].path;
+    expect(head[0].x).toBeLessThan(head.at(-1)!.x);
+    expect(tail[0].y).toBeGreaterThan(tail.at(-1)!.y);
+  });
+
   // The PROVENANCE GATE. A stroke's SHAPE is checked against the font above;
   // its ORDER cannot be — so it must trace to a cited source, or it does not
   // ship. This is the counterpart, for hand-authored order, of "facts enter
@@ -437,6 +448,13 @@ describe("handwriting ductus", () => {
     expect(src.url).toContain("laits.utexas.edu/persian_grammar/video");
     expect(src.citation).toMatch(/Persian Online.*ل.*02:29–02:32/i);
     expect(src.variation).toMatch(/isolated.*continuous Naskh.*upright descends.*base curve.*no pen lift.*Noto Naskh/i);
+  });
+
+  it("Persian م traces to the adjacent continuous head-and-tail demonstration", () => {
+    const src = DUCTUS["م"].source;
+    expect(src.url).toContain("laits.utexas.edu/persian_grammar/video");
+    expect(src.citation).toMatch(/Persian Online.*م.*02:33–02:36/i);
+    expect(src.variation).toMatch(/isolated.*continuous Naskh.*round head.*descending tail.*no pen lift.*Noto Naskh/i);
   });
 });
 
