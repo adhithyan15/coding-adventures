@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate finite, non-negative MOS Level-1 model-card `CGSO` values.
 - Validate and lower BJT model-card `XCJC` base-collector capacitance fraction.
 - Validate and lower BJT model-card `IRB` base-resistance half-current.
 - Validate and lower optional BJT model-card `RBM` minimum base resistance.

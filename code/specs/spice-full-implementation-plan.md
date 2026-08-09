@@ -4699,10 +4699,16 @@ the Rust, Python, and TypeScript surfaces together.
      them into the shared engine base-resistance-half-current field.
 
 472. Python and TypeScript Berkeley SPICE BJT base-collector-capacitance-fraction parity.
-   - Status: implemented in this BJT XCJC parity slice.
+   - Status: completed in PR 10148.
    - Both parser facades validate finite `XCJC` values in the closed interval
      `[0, 1]` and lower them into the shared engine base-collector capacitance
      fraction field while preserving the engine default of `1.0` when omitted.
+   - This completes the audited direct BJT engine-field lowering set.
+
+473. Python and TypeScript Berkeley SPICE MOS Level-1 gate-source-overlap validation parity.
+   - Status: implemented in this MOS CGSO validation parity slice.
+   - Both parser facades validate finite, non-negative `CGSO` values before
+     lowering them into the existing MOS Level-1 gate-source overlap field.
 
 ## Backlog
 
