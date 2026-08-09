@@ -1351,6 +1351,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             Itf=model.params.get("ITF", 0.0),
             Vtf=model.params.get("VTF", 0.0),
             Re=model.params.get("RE", 0.0),
+            Rc=model.params.get("RC", 0.0),
         )
     if prefix == "J":
         _require_fields(fields, 5, "JFET")
@@ -2297,6 +2298,11 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             not math.isfinite(emitter_resistance) or emitter_resistance < 0.0
         ):
             raise NetlistParseError("BJT RE must be finite and non-negative")
+        collector_resistance = params.get("RC")
+        if collector_resistance is not None and (
+            not math.isfinite(collector_resistance) or collector_resistance < 0.0
+        ):
+            raise NetlistParseError("BJT RC must be finite and non-negative")
     if kind in {"NJF", "PJF"}:
         gate_source_capacitance = params.get("CGS", params.get("CGS0"))
         if gate_source_capacitance is not None and (
