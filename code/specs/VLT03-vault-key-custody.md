@@ -113,6 +113,25 @@ blob to its label; TPM: persistent handle; Cloud KMS: CMK ARN).
 `Key` is `Zeroizing<[u8; 32]>` — wrapped at the type level so it
 wipes on every drop, including early returns.
 
+## VLT01 composition: random root KEK
+
+Applications MUST keep the vault root KEK independent of the user's
+password or platform unlock credential:
+
+1. On first initialization, call `fresh_random_key()` exactly once.
+2. Persist `custodian.wrap(vault_label, &root_kek)` in the repository's
+   public bootstrap metadata.
+3. Pass the same key to `SealedStore::init_with_kek`.
+4. On later unlocks, use the selected custodian to unwrap the stored blob,
+   pass the result to `SealedStore::unseal_with_kek`, then drop the caller's
+   copy immediately.
+
+Changing a password or platform credential re-wraps the same random root
+KEK at the custody layer; it does not re-encrypt vault records. Neither the
+raw key nor a human credential may be persisted. `vault-sealed-store` does
+not depend on this crate: its injected API accepts `&[u8; 32]`, which a
+`Key` provides through dereference, keeping the layer boundary acyclic.
+
 ## `PassphraseCustodian` (the software baseline)
 
 The first concrete implementation. Used by:
