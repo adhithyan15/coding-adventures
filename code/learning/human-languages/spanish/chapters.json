@@ -353,16 +353,23 @@
       "chapter": 14,
       "title": "The Preterite --- Your First Past Tense",
       "label": "ch:preterite",
-      "canDo": "I can form the regular Spanish preterite and say what happened in a completed past event.",
+      "canDo": "I can use the singular completed past of ser or ir and the known regular -ar verb hablar.",
       "spineNodes": [
         "SPINE-TALK-ABOUT-PAST"
       ],
       "payoff": {
         "lesson": "ES-C14-practice",
         "kind": "task",
-        "summary": "Complete ES-C14-practice, the canonical closing checkpoint, and demonstrate the chapter promise: form the regular Spanish preterite and say what happened in a completed past event.",
-        "assesses": [],
-        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+        "summary": "Complete ES-C14-practice and distinguish fui/fuiste/fue from hablé/hablaste/habló using known words, context, and written stress.",
+        "assesses": [
+          "ES-LEX-FUI-SER-IR",
+          "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR",
+          "ES-ETYMON-FUI",
+          "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
+          "ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS",
+          "ES-HISTORY-AR-PRETERITE-LATIN-PERFECT"
+        ],
+        "note": "The payoff retrieves all six Chapter-14 atoms with mapped activities and deliberately defers plural persons, other past-tense verb classes, and new time, place, or person vocabulary."
       }
     },
     {

@@ -1,73 +1,97 @@
 ---
+schema_version: 2
 id: ES-C14-hablar-preterite
-chapter: 14
+spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 1060
-type: word
+chapter: 14
+type: grammar
 headword: hablé
-gloss: the regular -ar preterite — hablé, hablaste, habló — and why the accent matters
+gloss: the regular singular -ar preterite — hablé, hablaste, habló
 concept_tag: ES-PRETERITE-AR
-prerequisites: [ES-C14-ser-ir-preterite, ES-C06-hablar]
+prerequisites: [ES-C14-ser-ir-preterite, ES-C06-hablar, ES-C06-ar-presente, ES-C06-hablo-espanol]
 sounds: [stress-final, accent-acute]
 roots: [latin-perfect-avi]
-etymology_hook: "the -ar preterite endings -é/-aste/-ó/-amos/-aron ← Latin perfect -āvī/-āvistī/-āvit (amāvī → amé); the written accent on hablé/habló marks the stress Latin put on that final vowel"
-est_minutes: 4
-reviews_of: [ES-C14-ser-ir-preterite, ES-C06-hablar]
+etymology_hook: "the regular -ar preterite continues Latin first-conjugation perfect material, reshaped by sound change and analogy into Spanish -é, -aste, and -ó"
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-LEX-ESPANOL, ES-SOUND-WRITTEN-ACCENT]
+introduces:
+  knowledge: [ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS, ES-HISTORY-AR-PRETERITE-LATIN-PERFECT]
+practises:
+  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-LEX-ESPANOL, ES-SOUND-WRITTEN-ACCENT, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS, ES-HISTORY-AR-PRETERITE-LATIN-PERFECT]
+skills: [listening, speaking, reading, writing]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C14-ser-ir-preterite, ES-C06-hablar, ES-C06-ar-presente, ES-C06-hablo-espanol]
 ---
 
-# hablé — the regular past, built on an accent
+# hablé — a regular singular past from a known verb
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-LEX-ESPANOL, ES-SOUND-WRITTEN-ACCENT] -->
 
-[PAUSE 2s] *Fui* was irregular; now the **pattern** that covers thousands of verbs.
-Take any regular **-ar** verb, drop the *-ar*, and add the **preterite endings**.
-The whole tense hangs on one small mark: the **accent**.
+[PAUSE 2s] You know **hablar** and its present singular **hablo, hablas,
+habla**. To say that the speaking was completed, keep **habl-** and learn three
+new endings: **hablé, hablaste, habló**.
 
-## Sounds you'll need
+## Grammar Lens: present beside completed past
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-AR-PRETERITE-SINGULAR]; assesses=[ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR] -->
 
-- `accent-acute` — the written **´** marks the **stressed** vowel: **habl-É**,
-  **habl-Ó**. Say the stress at the very end and the past tense announces itself.
+| person | present | completed past |
+|---|---|---|
+| yo | **hablo** | **hablé** |
+| tú | **hablas** | **hablaste** |
+| él / ella / usted | **habla** | **habló** |
 
-## The regular -ar preterite
+Say **hablé · hablaste · habló**. This is a complete singular pattern, not a
+preview of plural forms. Notice the exact changes:
 
-Drop *-ar* from **hablar** ("to speak") and add:
+- **hablo → hablé** changes the final vowel and moves stress to the end.
+- **hablas → hablaste** adds the past ending **-aste**.
+- **habla → habló** changes the final vowel and moves stress to the end.
 
-| yo | **hablé** | (accent on é) |
-| tú | **hablaste** | |
-| él/ella/usted | **habló** | (accent on ó) |
-| nosotros | **hablamos** | (no accent) |
-| ellos/ustedes | **hablaron** | |
+## Grammar Lens: two accents, one natural stress pattern
+<!-- hl-knowledge: introduces=[ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS]; assesses=[ES-SOUND-WRITTEN-ACCENT, ES-GRAMMAR-AR-PRETERITE-SINGULAR] -->
 
-Compare it with the **present** you learned in Chapter 6 — *hablo, hablas, habla*
-— and the difference is almost entirely **where the stress lands**: *HABlo* (I
-speak, now) vs *hablÉ* (I spoke, done). The accent is not decoration; it **carries
-the tense**.
+The written accents in **hablé** and **habló** show final stress. Without those
+marks, words ending in a vowel normally stress the next-to-last syllable.
+**Hablaste** already follows that ordinary pattern — **blas** is next to last —
+so it needs no written accent. The mark records the stress; it is not the only
+change that makes a form past.
 
-## Where the endings come from
+Now reuse known words:
 
-These endings are worn-down Latin **perfect** forms. Latin *amāvī* ("I loved")
-→ *amé*; *amāvistī* → *amaste*; *amāvit* → *amó*. The *-āv-* dissolved and left the
-**stressed final vowel** that Spanish now crowns with an accent. So *hablé* is
-*(fabulāvī)* with the middle chewed away — the same erosion you've watched all
-along, applied to a whole tense.
+- **Hablé español.** — “I spoke Spanish.”
+- **¿Hablaste español?** — “Did you speak Spanish?”
+- **Habló español.** — “He, she, or you-formal spoke Spanish.”
 
-## One trap — hablamos
+## The endings, taken apart
+<!-- hl-knowledge: introduces=[ES-HISTORY-AR-PRETERITE-LATIN-PERFECT]; assesses=[ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS] -->
 
-**hablamos** is the **same** in present and preterite ("we speak" / "we spoke").
-Only **context** — or a time-word like *ayer* ("yesterday") — tells them apart:
-*hablamos ayer* = "we spoke yesterday."
+The regular **-ar** past continues material from the Latin first-conjugation
+perfect, visible in forms such as **amāvī, amāvistī, amāvit**. Centuries of
+sound change and analogy produced the Spanish family **-é, -aste, -ó**. The
+history explains a family resemblance; it is not one tidy letter-by-letter
+erosion for every modern ending.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS, ES-HISTORY-AR-PRETERITE-LATIN-PERFECT, ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR] -->
+<!-- hl-activity: {"id":"ES-C14-hablar-preterite-singular-forms","kind":"text","assesses":["ES-LEX-HABLAR","ES-GRAMMAR-AR-PRETERITE-SINGULAR"],"prompt":"Give the singular completed-past forms of hablar: yo, tú, then él/ella/usted.","answer":"hablé, hablaste, habló","accepted":["hablé hablaste habló","hablé / hablaste / habló"],"feedback":{"correct":"Right: hablé, hablaste, habló.","incorrect":"Keep habl- and retrieve -é, -aste, -ó."},"response_seconds":10} -->
+<!-- hl-activity: {"id":"ES-C14-hablar-preterite-hable-espanol","kind":"text","assesses":["ES-LEX-HABLAR","ES-GRAMMAR-AR-PRETERITE-SINGULAR","ES-LEX-ESPANOL","ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS"],"prompt":"Say 'I spoke Spanish' in Spanish.","answer":"Hablé español.","accepted":["Hablé español"],"feedback":{"correct":"Right: Hablé español.","incorrect":"Use hablé with its final written accent, then known español."},"response_seconds":8} -->
+<!-- hl-activity: {"id":"ES-C14-hablar-preterite-present-past","kind":"text","assesses":["ES-GRAMMAR-AR-PRESENT-SINGULAR","ES-GRAMMAR-AR-PRETERITE-SINGULAR","ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS"],"prompt":"Which form means 'I spoke' as a completed event: hablo or hablé?","answer":"hablé","accepted":[],"feedback":{"correct":"Right: hablé is the completed-past yo form.","incorrect":"Hablo is present; hablé is the completed-past form."},"response_seconds":6} -->
 
 [PAUSE 1s]
-- [YOU SAY: the set — "hablé, hablaste, habló, hablamos, hablaron" — hit the end]
-- [YOU SAY: present vs past — "hablo / hablé", "habla / habló" — the accent flips it]
-- [YOU SAY: "Ayer hablé con María" ("Yesterday I spoke with María")]
+- [YOU SAY: “hablé, hablaste, habló”]
+- [YOU SAY: “Hablo español. Hablé español.”]
+- [YOU SAY: “hablé and habló carry written accents; hablaste does not”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS, ES-HISTORY-AR-PRETERITE-LATIN-PERFECT] -->
 
-[PAUSE 3s] Give the *-ar* preterite of *hablar*. (*Hablé, hablaste, habló,
-hablamos, hablaron*.) What single feature separates *hablo* (present) from *habló*
-(preterite)? (The **accent** — where the **stress** falls.) Which form is
-identical in present and preterite, and what disambiguates it? (*Hablamos* —
-**context** / a time-word like *ayer*.) Next: **practice** — past vs present, side
-by side.
+[PAUSE 3s] Give the three learned past forms. (*Hablé, hablaste, habló.*) Which
+two carry written accents, and why? (*Hablé* and *habló*; the marks show final
+stress.) What older family lies behind the endings? (The Latin first-conjugation
+perfect.) Next: choose between the two past patterns using only known words.

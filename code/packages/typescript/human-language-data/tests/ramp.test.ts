@@ -117,7 +117,9 @@ describe("corpus snapshot", () => {
     // Chapters 12 and 13 each migrate three teaching lessons.
     // Their terminal practices remain correctly atom-free, so only teaching lessons
     // leave the blind spot.
-    expect(report.summary.unmeasurableLessons).toBe(547);
+    // Chapter 14 migrates two teaching lessons; its terminal practice correctly
+    // remains atom-free, so two more lessons leave the blind spot.
+    expect(report.summary.unmeasurableLessons).toBe(545);
     // 65 -> 66: vocabulary wave 4 added 52 schema-v2 lessons. Chapter 10's three
     // newly measurable teaching lessons now carry the corpus across the next point.
     expect(report.summary.measurablePercent).toBe(67);

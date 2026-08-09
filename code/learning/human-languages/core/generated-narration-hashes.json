@@ -6563,7 +6563,7 @@
     {
       "language": "spanish",
       "chapter": 14,
-      "sourceHash": "fnv1a64:f23019fb92985626",
+      "sourceHash": "fnv1a64:8355b5c240fbea88",
       "lessonIds": [
         "ES-C14-ser-ir-preterite",
         "ES-C14-hablar-preterite",
@@ -6573,8 +6573,8 @@
       "drivablePrefix": 3,
       "text": "spanish/narration/ch14.txt",
       "json": "spanish/narration/ch14.json",
-      "textHash": "fnv1a64:6e9633a2986b8c1c",
-      "jsonHash": "fnv1a64:3de52a74c7509a9f"
+      "textHash": "fnv1a64:e2ba968ecf06e969",
+      "jsonHash": "fnv1a64:e2b0858e6d31a71e"
     },
     {
       "language": "spanish",

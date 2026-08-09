@@ -546,16 +546,38 @@
       "after": []
     },
     {
-      "id": "ES-PATH-038",
+      "id": "ES-PATH-038-SER-IR-PRETERITE-CH14",
       "spine_node": "SPINE-TALK-ABOUT-PAST",
       "lessons": [
-        "ES-C14-ser-ir-preterite",
-        "ES-C14-hablar-preterite",
+        "ES-C14-ser-ir-preterite"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-038-SER-IR-PRETERITE-CH14"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-038-AR-PRETERITE-CH14",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C14-hablar-preterite"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-038-AR-PRETERITE-CH14"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-038-CONSOLIDATION-CH14",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
         "ES-C14-practice"
       ],
       "before": [],
       "inline": [
-        "ES-EXT-038-LANGUAGE-SPECIFIC"
+        "ES-EXT-038-CONSOLIDATION-CH14"
       ],
       "after": []
     },
@@ -1051,7 +1073,9 @@
     },
     "SPINE-TALK-ABOUT-PAST": {
       "segments": [
-        "ES-PATH-038",
+        "ES-PATH-038-SER-IR-PRETERITE-CH14",
+        "ES-PATH-038-AR-PRETERITE-CH14",
+        "ES-PATH-038-CONSOLIDATION-CH14",
         "ES-PATH-039",
         "ES-PATH-040"
       ],
@@ -1799,15 +1823,35 @@
       ]
     },
     {
-      "id": "ES-EXT-038-LANGUAGE-SPECIFIC",
+      "id": "ES-EXT-038-SER-IR-PRETERITE-CH14",
       "stage": "A2",
       "kind": "required",
       "category": "language-specific",
-      "canDo": "I can use the Spanish-specific vocabulary and grammar that support this shared ability.",
+      "canDo": "I can use fui, fuiste, and fue for the completed past of ser or ir and let context decide the verb.",
       "prerequisites": [],
       "lessons": [
-        "ES-C14-ser-ir-preterite",
-        "ES-C14-hablar-preterite",
+        "ES-C14-ser-ir-preterite"
+      ]
+    },
+    {
+      "id": "ES-EXT-038-AR-PRETERITE-CH14",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can form the singular completed past of the known regular -ar verb hablar.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C14-hablar-preterite"
+      ]
+    },
+    {
+      "id": "ES-EXT-038-CONSOLIDATION-CH14",
+      "stage": "A2",
+      "kind": "supporting",
+      "category": "language-specific",
+      "canDo": "I can distinguish and retrieve the two singular completed-past patterns without new vocabulary.",
+      "prerequisites": [],
+      "lessons": [
         "ES-C14-practice"
       ]
     },

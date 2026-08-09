@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:af6953ebb55e048b",
+  "sourceHash": "fnv1a64:a857c8d4885d9247",
   "summary": {
     "totalLessons": 1669,
     "voice": 1085,
@@ -34311,7 +34311,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4f976b4d96ae28b3"
+      "sourceHash": "fnv1a64:9972a5a5d60a1796"
     },
     {
       "id": "ES-C14-hablar-preterite",
@@ -34329,7 +34329,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cd3da96c84d6e042"
+      "sourceHash": "fnv1a64:ffe1d91d615359ce"
     },
     {
       "id": "ES-C14-practice",
@@ -34347,7 +34347,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d01138d7cc6e199d"
+      "sourceHash": "fnv1a64:6add1b7975e3eb47"
     },
     {
       "id": "ES-C15-comer-vivir-preterite",
