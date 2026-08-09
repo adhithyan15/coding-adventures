@@ -1432,19 +1432,47 @@ camera-media policy and pinned native HTTPS executor:
   events, streams, recordings, export, playback, PTZ, and configuration
   mutations remain prerequisite-gated.
 
+## Current Axis VAPIX Snapshot Host Slice
+
+This slice composes the installed Axis camera-1 identity with the completed
+camera-media policy and pinned native HTTPS executor:
+
+- Authenticated Axis inspection now probes the bounded VAPIX image parameter
+  inventory and advertises `camera.snapshot` only when camera 1 is enabled,
+  VAPIX HTTP version 3 is present, and JPEG is supported.
+- `smart-home-axis-snapshot-host` performs exact Human Approval preflight
+  before Vault access, endpoint registration, credential registration, or
+  media I/O. The target must be the exact camera entity installed by the
+  reviewed Axis bridge and carry the probed camera-1 metadata and capability.
+- One bounded, versioned sealed-Vault credential envelope is decoded into
+  zeroizing process-local state. The host registers the documented
+  `/axis-cgi/jpg/image.cgi?camera=1` endpoint against the reviewed canonical
+  host and pinned socket, then registers only temporary Basic or Digest
+  credentials for one bounded delivery.
+- Credentials and the endpoint are removed after success, lease failure,
+  executor failure, and registration failure. Neither credential material nor
+  the authenticated endpoint enters runtime state, errors, audit records, or
+  debug output.
+- Tests cover denial before Vault, exact installed-target correspondence,
+  malformed credential redaction, repeated sealed-record use, cleanup after
+  failure, and a strict pinned-TLS Basic challenge-to-JPEG exchange.
+- Automated credential provisioning remains an explicit pairing-flow
+  responsibility. Event streams, source enumeration, recordings, playback,
+  exports, and broader media transfer remain prerequisite-gated.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
 and then by prerequisite readiness:
 
-The strongest next executable candidate is bounded Axis camera-1 snapshot
-delivery: the production integration already has explicit local HTTPS intake,
-an installed camera-1 identity, sealed credential references, and completed
-Basic/SHA-256 Digest support, while the camera-media executor supports the same
-authentication schemes. A fresh post-merge audit must verify the official VAPIX
-JPEG endpoint, prove exact camera-1 correspondence and native capability, and
-wire host-owned credential registration/removal before implementation. Broader
-video-source enumeration, streams, recordings, and playback remain
+The strongest next executable candidate is bounded Blue Iris snapshot delivery:
+the production integration already has an explicit local HTTPS origin, exact
+camera identities, isolated challenge-response sessions, and explicit logout.
+A fresh post-merge audit must verify the documented native image request,
+prove exact camera correspondence and snapshot permission, and define the
+process-local session-bearing endpoint lifetime before implementation. Frigate
+snapshot delivery remains blocked on a cookie-capable media authentication
+boundary; broader streams, recordings, export, and playback remain
 prerequisite-gated.
 
 1. Add automated ONVIF credential provisioning only through an explicit pairing
@@ -1539,36 +1567,32 @@ prerequisite-gated.
 29. Add Axis event streaming only after the existing WebSocket protocol core has
    a concrete authenticated host using the completed Digest primitive or a
    short-lived session token, plus subscription supervision.
-30. Add bounded Axis snapshots through the completed camera-media HTTPS executor
-    after process-local endpoint registration and credential lifetime are
-    wired; broader media transfer still requires a concrete supervised resource
-    executor.
-31. Enumerate Axis video sources/channels before extending PTZ beyond the current
-   capability-probed VAPIX camera 1 boundary.
-32. Add Axis absolute/relative zoom, guard-tour, or advanced preset management
-   only when each operation has a specific capability probe and readable state.
-33. Add bounded Reolink snapshots through the completed camera-media HTTPS
+30. Enumerate Axis video sources/channels before extending PTZ beyond the current
+    capability-probed VAPIX camera 1 boundary.
+31. Add Axis absolute/relative zoom, guard-tour, or advanced preset management
+    only when each operation has a specific capability probe and readable state.
+32. Add bounded Reolink snapshots through the completed camera-media HTTPS
     executor after process-local endpoint registration and credential lifetime
     are wired; recording search/download and playback still require a concrete
     supervised resource executor.
-34. Add Reolink current-position, zoom, guard-point, or patrol controls only when
-   each operation has a capability-specific probe and the firmware exposes the
-   native state needed to avoid invented orientation claims.
-35. Add Reolink push events only after a concrete webhook or event-stream host
-   and subscription lifecycle exist.
-36. Add authenticated KLAP/Tapo devices and other broader-device families only
-   after their authentication and session prerequisites are concrete.
-37. Add ONVIF PullPoint events once a concrete event host and subscription
-   lifecycle exist.
-38. Add RTSP media transfer and recording once concrete media transfer and
-   recorder host primitives exist.
-39. Add a production Matter commissioning, secure-session, and network host only
-   after certificate, fabric, Interaction Model encoding, subscription, and
-   transport prerequisites exist.
-40. Add a Thread border-router host only after an actual host transport exists.
-41. Add a production Zigbee coordinator, join, and security host only after
-   concrete coordinator transport and security primitives exist.
-42. Add production Z-Wave inclusion and S2 only after concrete host transport
+33. Add Reolink current-position, zoom, guard-point, or patrol controls only when
+    each operation has a capability-specific probe and the firmware exposes the
+    native state needed to avoid invented orientation claims.
+34. Add Reolink push events only after a concrete webhook or event-stream host
+    and subscription lifecycle exist.
+35. Add authenticated KLAP/Tapo devices and other broader-device families only
+    after their authentication and session prerequisites are concrete.
+36. Add ONVIF PullPoint events once a concrete event host and subscription
+    lifecycle exist.
+37. Add RTSP media transfer and recording once concrete media transfer and
+    recorder host primitives exist.
+38. Add a production Matter commissioning, secure-session, and network host only
+    after certificate, fabric, Interaction Model encoding, subscription, and
+    transport prerequisites exist.
+39. Add a Thread border-router host only after an actual host transport exists.
+40. Add a production Zigbee coordinator, join, and security host only after
+    concrete coordinator transport and security primitives exist.
+41. Add production Z-Wave inclusion and S2 only after concrete host transport
    and security primitives exist.
 
 ## End-To-End Definition

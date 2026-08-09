@@ -17,6 +17,9 @@ The package:
 - materializes Basic and Digest authorization values only inside the bounded
   transport, with credentials and derived response values in zeroizing memory;
 - calls the authenticated Basic Device Information and API Discovery JSON CGIs;
+- probes the documented image parameter inventory for VAPIX HTTP version 3,
+  JPEG support, camera-1 availability, and camera-1 enablement before
+  advertising `camera.snapshot`;
 - probes the documented PTZ command inventory, current position, server presets,
   native speed control, and `CtlQueueing` mode before advertising `camera.ptz`;
 - recalls only probed presets and bounds continuous directional movement to five
@@ -27,14 +30,14 @@ The package:
 - normalizes Axis identity, firmware, product type, and the supported VAPIX API
   list into one confirmed camera entity; and
 - authorizes D23 reads and human-approved PTZ commands before credentials or
-  transport are touched; and
+  transport are touched;
 - preserves confirmed position from inspection instead of inventing optimistic
   orientation after movement.
 
-The production path intentionally targets VAPIX camera 1. Event
-streaming, snapshots, media transfer, multi-channel enumeration, and advanced
-zoom/guard-tour control remain separate slices with additional host or
-capability prerequisites.
+The production path intentionally targets VAPIX camera 1. Snapshot execution
+is composed by `smart-home-axis-snapshot-host`; event streaming, broader media
+transfer, multi-channel enumeration, and advanced zoom/guard-tour control
+remain separate slices with additional host or capability prerequisites.
 
 Protocol references:
 
@@ -43,3 +46,5 @@ Protocol references:
 - [Axis API Discovery](https://developer.axis.com/vapix/network-video/api-discovery-service/)
 - [Axis mDNS-SD](https://developer.axis.com/vapix/network-video/mdns-sd-api/)
 - [Axis PTZ API](https://developer.axis.com/vapix/network-video/pantiltzoom-api/)
+- [Axis video streaming API](https://developer.axis.com/vapix/network-video/video-streaming/)
+- [Axis image parameters](https://developer.axis.com/vapix/network-video/parameter-management/image-api/)

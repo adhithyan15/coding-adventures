@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0
+
+- Probe the bounded VAPIX image parameter inventory during authenticated
+  inspection.
+- Advertise `camera.snapshot` only for an enabled camera-1 channel with VAPIX
+  HTTP version 3 and native JPEG support.
+
 ## 0.3.0
 
 - Probe Axis endpoints without credentials and select advertised Basic or

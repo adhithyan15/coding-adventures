@@ -954,6 +954,7 @@ members = [
     "smart-home-kasa-lan-integration",
     "smart-home-reolink-integration",
     "smart-home-axis-vapix-integration",
+    "smart-home-axis-snapshot-host",
     "smart-home-blue-iris-integration",
     "smart-home-frigate-integration",
     "smart-home-synology-surveillance-integration",
