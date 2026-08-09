@@ -1650,6 +1650,40 @@ Q1 col base emit fast
     },
   );
 
+  it.each([
+    ["IKF", "0", 0.0],
+    ["IK", "0", 0.0],
+    ["IKF", "2m", 2.0e-3],
+    ["IK", "2m", 2.0e-3],
+  ])("parses BJT forward beta roll-off current %s=%s", (alias, value, expected) => {
+    const parsed = parseNetlist(`.model fast NPN(${alias}=${value})\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      forwardBetaRolloffCurrent: expected,
+    });
+  });
+
+  it("gives BJT IKF precedence over IK", () => {
+    const parsed = parseNetlist(`.model fast NPN(IK=1m IKF=2m)\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      forwardBetaRolloffCurrent: 2.0e-3,
+    });
+  });
+
+  it.each([
+    ["IKF", "-1m"],
+    ["IK", "-1m"],
+    ["IKF", "1e999"],
+    ["IK", "1e999"],
+  ])("rejects invalid BJT forward beta roll-off current %s=%s", (alias, value) => {
+    expect(() => parseNetlist(`.model fast NPN(${alias}=${value})`)).toThrow(
+      "BJT IKF must be finite and non-negative",
+    );
+  });
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)

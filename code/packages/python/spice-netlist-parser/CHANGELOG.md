@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Validate and lower BJT model-card `IKF` / `IK` forward beta roll-off
+  current.
 - Validate and lower BJT model-card `FC` forward-bias depletion coefficient.
 - Validate and lower BJT model-card `MJC` / `MC` base-collector grading
   coefficient.

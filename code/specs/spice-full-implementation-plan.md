@@ -4588,9 +4588,15 @@ the Rust, Python, and TypeScript surfaces together.
      base-collector-grading-coefficient field.
 
 451. Python and TypeScript Berkeley SPICE BJT forward-bias-depletion parity.
-   - Status: implemented in this BJT FC parity slice.
+   - Status: completed in PR 10115.
    - Both parser facades validate finite `FC` values in `[0, 1)` and lower
      them into the shared engine forward-bias-depletion-coefficient field.
+
+452. Python and TypeScript Berkeley SPICE BJT forward-beta-roll-off parity.
+   - Status: implemented in this BJT IKF parity slice.
+   - Both parser facades validate finite, non-negative `IKF` / `IK` values,
+     prefer canonical `IKF`, and lower the result into the shared engine
+     forward-beta-roll-off-current field.
 
 ## Backlog
 

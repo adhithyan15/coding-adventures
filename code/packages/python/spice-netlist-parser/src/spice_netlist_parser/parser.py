@@ -1325,6 +1325,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             Mjc=model.params.get("MJC", model.params.get("MC", 0.33)),
             Fc=model.params.get("FC", 0.5),
             Var=model.params.get("VAR", model.params.get("VB", 0.0)),
+            Ikf=model.params.get("IKF", model.params.get("IK", 0.0)),
         )
     if prefix == "J":
         _require_fields(fields, 5, "JFET")
@@ -2153,6 +2154,12 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             or forward_bias_depletion_coefficient >= 1.0
         ):
             raise NetlistParseError("BJT FC must be finite and in [0, 1)")
+        forward_beta_rolloff_current = params.get("IKF", params.get("IK"))
+        if forward_beta_rolloff_current is not None and (
+            not math.isfinite(forward_beta_rolloff_current)
+            or forward_beta_rolloff_current < 0.0
+        ):
+            raise NetlistParseError("BJT IKF must be finite and non-negative")
     if kind in {"NJF", "PJF"}:
         gate_source_capacitance = params.get("CGS", params.get("CGS0"))
         if gate_source_capacitance is not None and (
