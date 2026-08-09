@@ -35,6 +35,30 @@ describe("the capability in the chapter fingerprint", () => {
     expect(after).not.toBe(before);
   });
 
+  it("changes the hash when the canonical title or label changes", () => {
+    const lessons = loadLessons().filter(
+      (l) => l.language === "spanish" && l.realization.chapter === 1,
+    );
+    const canonical = canonicalChapterHash(lessons, {
+      title: "Greetings",
+      label: "ch:greetings",
+      canDo: "A",
+      payoff: { summary: "S" },
+    });
+    expect(canonicalChapterHash(lessons, {
+      title: "First Greetings",
+      label: "ch:greetings",
+      canDo: "A",
+      payoff: { summary: "S" },
+    })).not.toBe(canonical);
+    expect(canonicalChapterHash(lessons, {
+      title: "Greetings",
+      label: "ch:first-greetings",
+      canDo: "A",
+      payoff: { summary: "S" },
+    })).not.toBe(canonical);
+  });
+
   it("ignores capability fields the book does not print", () => {
     // `payoff.note` is deliberately non-printed tooling prose. Hashing it would churn
     // every chapter that carries one, for nothing a reader could see. A fingerprint

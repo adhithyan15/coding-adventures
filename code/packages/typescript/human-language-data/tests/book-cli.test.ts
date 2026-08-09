@@ -29,7 +29,27 @@ function fixture(output = "test/book/chapters/ch01-first.tex"): string {
     `${JSON.stringify({
       version: 1,
       sourceBaseUrl: "https://example.test/curriculum",
-      targets: [{ language: "test", chapter: 1, title: "Hello", label: "ch:hello", output }],
+      targets: [{ language: "test", chapter: 1, output }],
+    })}\n`,
+  );
+  writeFileSync(
+    join(root, "test", "chapters.json"),
+    `${JSON.stringify({
+      version: 1,
+      language: "test",
+      chapters: [{
+        chapter: 1,
+        title: "Hello",
+        label: "ch:hello",
+        canDo: "I can say hello.",
+        spineNodes: ["HELLO"],
+        payoff: {
+          lesson: "TEST-C01-hello",
+          kind: "task",
+          summary: "Say hello.",
+          assesses: [],
+        },
+      }],
     })}\n`,
   );
   writeFileSync(
@@ -82,6 +102,8 @@ describe("canonical book generator filesystem shell", () => {
     // sourceBaseUrl no longer feeds the book: a repository-relative link keeps
     // its label and loses its destination, while a real citation stays a link.
     const generated = readFileSync(chapter, "utf8");
+    expect(generated).toContain("\\chapter{Hello}");
+    expect(generated).toContain("\\label{ch:hello}");
     expect(generated).not.toContain("example.test/curriculum");
     expect(generated).toContain("Read the curriculum guide and the");
     expect(generated).toContain(
@@ -119,8 +141,6 @@ describe("canonical book generator filesystem shell", () => {
         targets: [{
           language: "test",
           chapter: 1,
-          title: "Hello",
-          label: "ch:hello",
           output: "test/book/chapters/ch01-first.tex",
           scriptSet: "comparisons",
         }],
@@ -351,6 +371,29 @@ Read`,
     );
     expect(() => generatedBookOutputs(root)).toThrow(/must declare an HTTP\(S\) sourceBaseUrl/);
   });
+
+  it("rejects legacy title or label ownership in the generation config", () => {
+    const root = fixture();
+    const config = join(root, "core", "book-generation.json");
+    writeFileSync(
+      config,
+      readFileSync(config, "utf8").replace(
+        '"chapter":1',
+        '"chapter":1,"title":"Duplicate"',
+      ),
+    );
+    expect(() => generatedBookOutputs(root)).toThrow(
+      /must derive title and label from chapters\.json/,
+    );
+  });
+
+  it("fails closed when a declared chapter has no canonical metadata", () => {
+    const root = fixture();
+    rmSync(join(root, "test", "chapters.json"));
+    expect(() => generatedBookOutputs(root)).toThrow(
+      /book-generation\.json declaration has no chapters\.json capability/,
+    );
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -436,8 +479,6 @@ describe("hand-written chapters", () => {
           {
             language: "test",
             chapter: 9,
-            title: "Escape",
-            label: "ch:escape",
             output: "../../../etc/passwd.tex",
           },
         ],
@@ -455,15 +496,25 @@ describe("hand-written chapters", () => {
     }
   });
 
-  it("records the title and label the .tex actually declares", () => {
-    // Transcribed, not invented: re-read the file and compare. This is what makes the
-    // ledger cross-check in chapters.test.ts mean anything.
+  it("derives the title and label that the .tex actually declares", () => {
+    // The capability ledger owns both fields: re-read the file and compare. This is what
+    // makes the ledger cross-check in chapters.test.ts mean anything.
     for (const entry of handwritten) {
       const path = join(root, entry.output);
       expect(existsSync(path), `${entry.output} is missing`).toBe(true);
       const tex = readFileSync(path, "utf8");
       expect(chapterTitle(tex), `${entry.output} title`).toBe(entry.title);
       expect(tex, `${entry.output} label`).toContain(`\\label{${entry.label}}`);
+    }
+  });
+
+  it("keeps title and label ownership out of every manifest chapter declaration", () => {
+    const raw = JSON.parse(
+      readFileSync(join(root, "core", "book-generation.json"), "utf8"),
+    ) as { targets: Record<string, unknown>[]; handwritten?: Record<string, unknown>[] };
+    for (const entry of [...raw.targets, ...(raw.handwritten ?? [])]) {
+      expect(entry).not.toHaveProperty("title");
+      expect(entry).not.toHaveProperty("label");
     }
   });
 

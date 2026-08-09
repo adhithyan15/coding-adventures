@@ -60,7 +60,7 @@ export function combineLessonHashes(entries: LessonHashEntry[]): string {
  * without one and its hashes are unaffected — a capability edit must not churn 789
  * narration files that cannot have changed.
  *
- * Only the two fields the book actually prints are hashed. Hashing the whole
+ * Only the four fields the book actually prints are hashed. Hashing the whole
  * capability would make `payoff.note` — deliberately non-printed tooling prose —
  * regenerate every chapter that carries one, which is churn with no reader-visible
  * cause. The rule: a fingerprint covers what the artifact SHOWS, no more.
@@ -72,7 +72,12 @@ export function combineLessonHashes(entries: LessonHashEntry[]): string {
  */
 export function canonicalChapterHash(
   lessons: ParsedLesson[],
-  capability?: { canDo?: string; payoff?: { summary?: string } },
+  capability?: {
+    title?: string;
+    label?: string;
+    canDo?: string;
+    payoff?: { summary?: string };
+  },
 ): string {
   return combineChapterHash(
     lessons.map((lesson) => ({
@@ -97,16 +102,23 @@ export function canonicalChapterHash(
  */
 export function combineChapterHash(
   entries: LessonHashEntry[],
-  capability?: { canDo?: string; payoff?: { summary?: string } },
+  capability?: {
+    title?: string;
+    label?: string;
+    canDo?: string;
+    payoff?: { summary?: string };
+  },
 ): string {
   const lessonPart = combineLessonHashes(entries);
-  // Gated on `canDo`, matching `chapterIntro`'s own condition exactly: a capability
-  // with no `canDo` prints NOTHING, so it must hash as though it were absent. The
-  // fingerprint tracks what the artifact shows.
-  const printed = capability?.canDo
-    ? { canDo: capability.canDo, payoff: capability.payoff?.summary ?? "" }
+  const printed = capability
+    ? {
+        title: capability.title ?? "",
+        label: capability.label ?? "",
+        canDo: capability.canDo ?? "",
+        payoff: capability.canDo ? capability.payoff?.summary ?? "" : "",
+      }
     : null;
-  // A chapter with no printed opening hashes exactly as it did before, so adding the
-  // opening did not renumber the fingerprints of chapters that have no opening.
+  // A caller with no chapter capability â€” narration is the intentional one â€” hashes
+  // exactly as before, so book-only metadata cannot churn an audio artifact.
   return printed === null ? lessonPart : fnv1a64(JSON.stringify({ lessonPart, printed }));
 }

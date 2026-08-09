@@ -424,14 +424,18 @@ npm run generate:progress
 npm run check:progress
 ```
 
-`core/book-generation.json` declares each generated chapter. The generator
-orders schema-v2 lessons by `sequence`, writes the LaTeX chapter, and records a
-stable FNV-1a fingerprint in `core/generated-book-hashes.json`. The fingerprint
-covers the chapter's lessons **and the two capability fields the book prints**
-(`canDo`, `payoff.summary`), so an edit to `chapters.json` moves it. It does not
-cover `payoff.note`, which the book deliberately does not print — a fingerprint
-covers what the artifact SHOWS. It detects drift between book and app inputs; it
-is not a security hash.
+`core/book-generation.json` declares each generated chapter's language, number,
+output path, and script-rendering options. Its title and label come only from that
+track's `chapters.json` capability ledger; the config is rejected if it tries to
+repeat either field, and a declaration without canonical chapter metadata fails
+closed. The generator orders schema-v2 lessons by `sequence`, writes the LaTeX
+chapter, and records a stable FNV-1a fingerprint in
+`core/generated-book-hashes.json`. The fingerprint covers the chapter's lessons
+**and the capability fields the book prints** (`title`, `label`, `canDo`, and
+`payoff.summary`), so an
+edit to `chapters.json` moves it. It does not cover `payoff.note`, which the book
+deliberately does not print — a fingerprint covers what the artifact SHOWS. It
+detects drift between book and app inputs; it is not a security hash.
 The config's `sourceBaseUrl` gives every lesson a stable canonical URL, so
 absolute citations and relative prerequisite/reference links remain live after
 the generated PDF is downloaded.
