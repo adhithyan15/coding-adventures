@@ -84,6 +84,11 @@ the set of add-operation IDs observed at removal time.
 - Tombstones are retained. Only a future repository GC operation with proof
   that every retained head observed the removal may discard them.
 
+The in-memory V1 document bounds present values. Before a repository decoder
+accepts persistent observed sets, the Phase 0 security review must fix total
+wire bounds for retained values, tombstones, and operation IDs plus the proof
+required for safe compaction.
+
 `OperationId` uniqueness is a caller invariant. A future repository can derive
 it from a signed device/counter operation or a domain-separated commit value.
 
