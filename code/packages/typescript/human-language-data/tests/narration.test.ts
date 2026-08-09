@@ -649,8 +649,9 @@ describe("the whole corpus", () => {
     // them out of existence, Chapter 9 replaces another wide conjugation table, and
     // Chapter 10 replaces a four-column possessive table with singular known-noun
     // frames. Chapter 15 replaces its two wide teaching tables with voice-first
-    // singular comparisons; only the mapped terminal table still needs sight.
-    // Chapter 18 removes its remaining refused wide table.
-    expect(refusals).toBe(65);
+    // singular comparisons. Publishing Chapters 7-18 from the canonical AST
+    // also replaces the Chapter-15 and Chapter-16 terminal recap tables with
+    // speakable person rows. Chapter 18 removes its remaining refused wide table.
+    expect(refusals).toBe(63);
   });
 });

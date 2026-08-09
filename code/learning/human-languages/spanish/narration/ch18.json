@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "The Subjunctive --- the Mood of the Not-Yet-Real",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:b8cc7964a7642317",
+  "sourceHash": "fnv1a64:8968e9f613a3e5e5",
   "lessons": [
     {
       "id": "ES-C18-quiero-que",
@@ -518,7 +518,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9dd8c39c3ff960c",
+      "sourceHash": "fnv1a64:a4e9b82c9dbd5314",
       "notice": null,
       "blocks": [
         {
@@ -552,7 +552,19 @@
             },
             {
               "kind": "speech",
-              "text": "Regular -er and -ir match in this singular row: coma/comas/coma and viva/vivas/viva. Plural differences wait."
+              "text": "Regular -er and -ir match in this singular row:"
+            },
+            {
+              "kind": "speech",
+              "text": "comer: coma, comas, coma."
+            },
+            {
+              "kind": "speech",
+              "text": "vivir: viva, vivas, viva."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural differences wait."
             }
           ]
         },

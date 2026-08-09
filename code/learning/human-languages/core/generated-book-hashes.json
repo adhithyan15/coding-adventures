@@ -3351,6 +3351,169 @@
     },
     {
       "language": "spanish",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:24226311821d9b79",
+      "lessonIds": [
+        "ES-C07-comer",
+        "ES-C07-vivir",
+        "ES-C07-beber",
+        "ES-C07-que",
+        "ES-C07-donde",
+        "ES-C07-practice"
+      ],
+      "tex": "spanish/book/chapters/ch07-er-ir-verbs.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:6267b34e830cdeee",
+      "lessonIds": [
+        "ES-C08-numeros-1-5",
+        "ES-C08-numeros-6-10",
+        "ES-C08-tener",
+        "ES-C08-cuantos-anos",
+        "ES-C08-practice"
+      ],
+      "tex": "spanish/book/chapters/ch08-numbers-and-age.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:2e4d86c98581e833",
+      "lessonIds": [
+        "ES-C09-ser",
+        "ES-C09-ser-vs-estar",
+        "ES-C09-soy-de",
+        "ES-C09-esta-en",
+        "ES-C09-practice"
+      ],
+      "tex": "spanish/book/chapters/ch09-ser-y-estar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:499d1c8a3eec4e08",
+      "lessonIds": [
+        "ES-C10-ir",
+        "ES-C10-ir-a-futuro",
+        "ES-C10-mi-tu-su",
+        "ES-C10-practice"
+      ],
+      "tex": "spanish/book/chapters/ch10-ir-y-futuro.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:512c9adbf2b44d30",
+      "lessonIds": [
+        "ES-C11-querer",
+        "ES-C11-poder",
+        "ES-C11-stem-changes",
+        "ES-C11-nuestro",
+        "ES-C11-practice"
+      ],
+      "tex": "spanish/book/chapters/ch11-stem-changes.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:fe595351667052dd",
+      "lessonIds": [
+        "ES-C12-hacer",
+        "ES-C12-decir",
+        "ES-C12-yo-go",
+        "ES-C12-practice"
+      ],
+      "tex": "spanish/book/chapters/ch12-yo-go-verbs.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:98b01c27658e8b2e",
+      "lessonIds": [
+        "ES-C13-poner",
+        "ES-C13-salir",
+        "ES-C13-venir",
+        "ES-C13-practice"
+      ],
+      "tex": "spanish/book/chapters/ch13-completing-go-club.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:cbacfae7782c7084",
+      "lessonIds": [
+        "ES-C14-ser-ir-preterite",
+        "ES-C14-hablar-preterite",
+        "ES-C14-practice"
+      ],
+      "tex": "spanish/book/chapters/ch14-preterite.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:d32b7aa189fbeb4f",
+      "lessonIds": [
+        "ES-C15-comer-preterite",
+        "ES-C15-comer-vivir-preterite",
+        "ES-C15-tener-preterite",
+        "ES-C15-hacer-preterite",
+        "ES-C15-preterite-fuertes",
+        "ES-C15-practice"
+      ],
+      "tex": "spanish/book/chapters/ch15-completing-preterite.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:6f416c746f616488",
+      "lessonIds": [
+        "ES-C16-imperfecto",
+        "ES-C16-comer-imperfecto",
+        "ES-C16-vivir-imperfecto",
+        "ES-C16-ver",
+        "ES-C16-ser-imperfecto",
+        "ES-C16-ir-imperfecto",
+        "ES-C16-ver-imperfecto",
+        "ES-C16-practice"
+      ],
+      "tex": "spanish/book/chapters/ch16-imperfect.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:c23ee2ee5a7f41e0",
+      "lessonIds": [
+        "ES-C17-futuro",
+        "ES-C17-comer-futuro",
+        "ES-C17-vivir-futuro",
+        "ES-C17-condicional",
+        "ES-C17-comer-condicional",
+        "ES-C17-vivir-condicional",
+        "ES-C17-irregulares",
+        "ES-C17-practice"
+      ],
+      "tex": "spanish/book/chapters/ch17-future-conditional.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:0664a1c1e2b106c6",
+      "lessonIds": [
+        "ES-C18-quiero-que",
+        "ES-C18-subjuntivo",
+        "ES-C18-comer-subjuntivo",
+        "ES-C18-vivir-subjuntivo",
+        "ES-C18-querer-subjuntivo",
+        "ES-C18-poder-subjuntivo",
+        "ES-C18-hacer-subjuntivo",
+        "ES-C18-ojala",
+        "ES-C18-practice"
+      ],
+      "tex": "spanish/book/chapters/ch18-subjunctive.tex"
+    },
+    {
+      "language": "spanish",
       "chapter": 19,
       "sourceHash": "fnv1a64:117be7de3910e010",
       "lessonIds": [

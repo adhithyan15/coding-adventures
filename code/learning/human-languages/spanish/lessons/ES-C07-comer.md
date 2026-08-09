@@ -68,7 +68,7 @@ So the **yo** form is identical (**-o**), and *tú*/*él* just trade *a* for *e*
 *hablas/habla* → *comes/come*. Those are the only three forms this lesson asks
 you to hold.
 
-> ⚠️ Watch the false friend: **como** means "I eat" **and** "like/as" (*como tú*,
+> **Watch the false friend:** **como** means "I eat" **and** "like/as" (*como tú*,
 > "like you") **and**, with an accent, **cómo** = "how?". Same four letters,
 > three jobs — the accent and context sort them out.
 

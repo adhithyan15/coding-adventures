@@ -39,11 +39,17 @@ known.
 ## Grammar Lens: the complete Chapter 15 frame
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-GRAMMAR-ER-PRETERITE-SINGULAR, ES-GRAMMAR-IR-PRETERITE-SINGULAR, ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE, ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN, ES-GRAMMAR-TENER-PRETERITE-SINGULAR, ES-GRAMMAR-HACER-PRETERITE-SINGULAR, ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR] -->
 
-| person | **hablar** | **comer** | **vivir** | **tener** | **hacer** | **estar** |
-|---|---|---|---|---|---|---|
-| yo | hablé | comí | viví | tuve | hice | estuve |
-| tú | hablaste | comiste | viviste | tuviste | hiciste | estuviste |
-| él / ella / usted | habló | comió | vivió | tuvo | hizo | estuvo |
+Regular rows:
+
+- **yo:** **hablé · comí · viví**.
+- **tú:** **hablaste · comiste · viviste**.
+- **él / ella / usted:** **habló · comió · vivió**.
+
+Strong rows:
+
+- **yo:** **tuve · hice · estuve**.
+- **tú:** **tuviste · hiciste · estuviste**.
+- **él / ella / usted:** **tuvo · hizo · estuvo**.
 
 The **-er** and **-ir** rows share **-í, -iste, -ió**. The three strong rows
 share **-e, -iste, -o**, but their stems must be learned: **tuv-, hic-/hiz-,

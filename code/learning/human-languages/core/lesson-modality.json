@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:3f35da278eb89b64",
+  "sourceHash": "fnv1a64:2a50b297f7ee46ea",
   "summary": {
     "totalLessons": 1680,
-    "voice": 1098,
-    "sight": 524,
+    "voice": 1100,
+    "sight": 522,
     "pen": 58,
-    "drivableLessons": 1098,
+    "drivableLessons": 1100,
     "drivablePercent": 65,
     "trackCount": 22,
     "chapterCount": 513,
-    "drivablePrefixTotal": 911,
-    "fullyDrivableChapters": 325,
+    "drivablePrefixTotal": 913,
+    "fullyDrivableChapters": 327,
     "unstartableChapters": 140,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -6755,11 +6755,11 @@
     {
       "language": "spanish",
       "lessonCount": 188,
-      "voice": 171,
-      "sight": 10,
+      "voice": 173,
+      "sight": 8,
       "pen": 7,
-      "drivablePercent": 91,
-      "drivablePrefixTotal": 155,
+      "drivablePercent": 92,
+      "drivablePrefixTotal": 157,
       "modalities": [
         "voice",
         "sight",
@@ -7050,37 +7050,36 @@
         {
           "chapter": 15,
           "lessonCount": 6,
-          "voice": 5,
-          "sight": 1,
+          "voice": 6,
+          "sight": 0,
           "pen": 0,
           "modalities": [
-            "voice",
-            "sight"
+            "voice"
           ],
-          "drivablePrefix": 5,
-          "firstNonVoiceLesson": "ES-C15-practice",
-          "drivable": false,
+          "drivablePrefix": 6,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
           "drivableLessonIds": [
             "ES-C15-comer-preterite",
             "ES-C15-comer-vivir-preterite",
             "ES-C15-tener-preterite",
             "ES-C15-hacer-preterite",
-            "ES-C15-preterite-fuertes"
+            "ES-C15-preterite-fuertes",
+            "ES-C15-practice"
           ]
         },
         {
           "chapter": 16,
           "lessonCount": 8,
-          "voice": 7,
-          "sight": 1,
+          "voice": 8,
+          "sight": 0,
           "pen": 0,
           "modalities": [
-            "voice",
-            "sight"
+            "voice"
           ],
-          "drivablePrefix": 7,
-          "firstNonVoiceLesson": "ES-C16-practice",
-          "drivable": false,
+          "drivablePrefix": 8,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
           "drivableLessonIds": [
             "ES-C16-imperfecto",
             "ES-C16-comer-imperfecto",
@@ -7088,7 +7087,8 @@
             "ES-C16-ver",
             "ES-C16-ser-imperfecto",
             "ES-C16-ir-imperfecto",
-            "ES-C16-ver-imperfecto"
+            "ES-C16-ver-imperfecto",
+            "ES-C16-practice"
           ]
         },
         {
@@ -33741,7 +33741,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:eea7e121dcd3f143"
+      "sourceHash": "fnv1a64:985b7657ba51ab9b"
     },
     {
       "id": "ES-C07-vivir",
@@ -34468,18 +34468,18 @@
       "language": "spanish",
       "chapter": 15,
       "sequence": 1105,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:315adda575013637"
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:dc8bd53395c89179"
     },
     {
       "id": "ES-C16-imperfecto",
@@ -34612,18 +34612,18 @@
       "language": "spanish",
       "chapter": 16,
       "sequence": 1138,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:0d048b72f73d5c9b"
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8c2be174a7b3d36f"
     },
     {
       "id": "ES-C17-futuro",
@@ -34839,7 +34839,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d9dd8c39c3ff960c"
+      "sourceHash": "fnv1a64:a4e9b82c9dbd5314"
     },
     {
       "id": "ES-C18-querer-subjuntivo",

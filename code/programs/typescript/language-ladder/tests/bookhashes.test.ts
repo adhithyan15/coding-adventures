@@ -305,6 +305,6 @@ describe("generated book source hashes", () => {
       lesson.id === "ES-C01-hola" ? { ...lesson, sourceHash: "fnv1a64:changed" } : lesson,
     );
     expect(bookHashStatus(changed, "spanish", 1)).toBe("stale");
-    expect(bookHashStatus(lessons, "spanish", 7)).toBe("not-generated");
+    expect(bookHashStatus(lessons, "spanish", 42)).toBe("not-generated");
   });
 });

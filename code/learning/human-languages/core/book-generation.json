@@ -2978,6 +2978,90 @@
     },
     {
       "language": "spanish",
+      "chapter": 7,
+      "title": "Eating, Drinking, Living --- the -er and -ir Verbs",
+      "label": "ch:er-ir-verbs",
+      "output": "spanish/book/chapters/ch07-er-ir-verbs.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 8,
+      "title": "Numbers, and How Old You Are",
+      "label": "ch:numbers-and-age",
+      "output": "spanish/book/chapters/ch08-numbers-and-age.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 9,
+      "title": "Ser and Estar --- Two Ways to Be",
+      "label": "ch:ser-y-estar",
+      "output": "spanish/book/chapters/ch09-ser-y-estar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 10,
+      "title": "Going, and the Future You Can Already Say",
+      "label": "ch:ir-y-futuro",
+      "output": "spanish/book/chapters/ch10-ir-y-futuro.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 11,
+      "title": "Verbs That Break in the Middle --- the Stem Changers",
+      "label": "ch:stem-changes",
+      "output": "spanish/book/chapters/ch11-stem-changes.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 12,
+      "title": "Hacer, Decir, and the -go Verb Club",
+      "label": "ch:yo-go-verbs",
+      "output": "spanish/book/chapters/ch12-yo-go-verbs.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 13,
+      "title": "Poner, Salir, Venir --- Completing the -go Club",
+      "label": "ch:completing-go-club",
+      "output": "spanish/book/chapters/ch13-completing-go-club.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 14,
+      "title": "The Preterite --- Your First Past Tense",
+      "label": "ch:preterite",
+      "output": "spanish/book/chapters/ch14-preterite.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 15,
+      "title": "Completing the Preterite --- Three Families, One Question",
+      "label": "ch:completing-preterite",
+      "output": "spanish/book/chapters/ch15-completing-preterite.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 16,
+      "title": "The Imperfect --- the Past That Kept Going",
+      "label": "ch:imperfect",
+      "output": "spanish/book/chapters/ch16-imperfect.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 17,
+      "title": "The Future and the Conditional --- One Weld, Twice",
+      "label": "ch:future-conditional",
+      "output": "spanish/book/chapters/ch17-future-conditional.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 18,
+      "title": "The Subjunctive --- the Mood of the Not-Yet-Real",
+      "label": "ch:subjunctive",
+      "output": "spanish/book/chapters/ch18-subjunctive.tex"
+    },
+    {
+      "language": "spanish",
       "chapter": 19,
       "title": "Yes and No",
       "label": "ch:spanish-basic-responses",
@@ -4293,90 +4377,6 @@
       "title": "The First Verbs",
       "label": "ch:first-verbs",
       "output": "sanskrit/book/chapters/ch05-first-verbs.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 7,
-      "title": "Eating, Drinking, Living --- the \\emph{-er} and \\emph{-ir} Verbs",
-      "label": "ch:er-ir-verbs",
-      "output": "spanish/book/chapters/ch07-er-ir-verbs.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 8,
-      "title": "Numbers, and How Old You Are",
-      "label": "ch:numbers-and-age",
-      "output": "spanish/book/chapters/ch08-numbers-and-age.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 9,
-      "title": "\\emph{Ser} and \\emph{Estar} --- Two Ways to Be",
-      "label": "ch:ser-y-estar",
-      "output": "spanish/book/chapters/ch09-ser-y-estar.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 10,
-      "title": "Going, and the Future You Can Already Say",
-      "label": "ch:ir-y-futuro",
-      "output": "spanish/book/chapters/ch10-ir-y-futuro.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 11,
-      "title": "Verbs That Break in the Middle --- the Stem Changers",
-      "label": "ch:stem-changes",
-      "output": "spanish/book/chapters/ch11-stem-changes.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 12,
-      "title": "\\emph{Hacer}, \\emph{Decir}, and the \\emph{-go} Verb Club",
-      "label": "ch:yo-go-verbs",
-      "output": "spanish/book/chapters/ch12-yo-go-verbs.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 13,
-      "title": "\\emph{Poner}, \\emph{Salir}, \\emph{Venir} --- Completing the \\emph{-go} Club",
-      "label": "ch:completing-go-club",
-      "output": "spanish/book/chapters/ch13-completing-go-club.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 14,
-      "title": "The Preterite --- Your First Past Tense",
-      "label": "ch:preterite",
-      "output": "spanish/book/chapters/ch14-preterite.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 15,
-      "title": "Completing the Preterite --- Three Families, One Question",
-      "label": "ch:completing-preterite",
-      "output": "spanish/book/chapters/ch15-completing-preterite.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 16,
-      "title": "The Imperfect --- the Past That Kept Going",
-      "label": "ch:imperfect",
-      "output": "spanish/book/chapters/ch16-imperfect.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 17,
-      "title": "The Future and the Conditional --- One Weld, Twice",
-      "label": "ch:future-conditional",
-      "output": "spanish/book/chapters/ch17-future-conditional.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 18,
-      "title": "The Subjunctive --- the Mood of the Not-Yet-Real",
-      "label": "ch:subjunctive",
-      "output": "spanish/book/chapters/ch18-subjunctive.tex"
     },
     {
       "language": "tamil",

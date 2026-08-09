@@ -2,9 +2,9 @@
   "version": 1,
   "language": "spanish",
   "chapter": 7,
-  "title": "Eating, Drinking, Living --- the \\emph{-er} and \\emph{-ir} Verbs",
+  "title": "Eating, Drinking, Living --- the -er and -ir Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a68b0d451345acb7",
+  "sourceHash": "fnv1a64:f5a1cd8b7c0023c0",
   "lessons": [
     {
       "id": "ES-C07-comer",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:eea7e121dcd3f143",
+      "sourceHash": "fnv1a64:985b7657ba51ab9b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "⚠️ Watch the false friend: como means \"I eat\" and \"like/as\" (como tú, \"like you\") and, with an accent, cómo = \"how?\". Same four letters, three jobs — the accent and context sort them out."
+              "text": "Watch the false friend: como means \"I eat\" and \"like/as\" (como tú, \"like you\") and, with an accent, cómo = \"how?\". Same four letters, three jobs — the accent and context sort them out."
             }
           ]
         },
