@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0 - 2026-08-09
+
+- Lay out sequence participant groups around their member lanes.
+
 ## 0.3.0 - 2026-08-09
 
 - Place created participant headers at their event and bound lifelines at destruction.

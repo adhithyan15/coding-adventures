@@ -76,7 +76,7 @@
 // Platform-conditional: code for the non-native platform is intentionally inactive; allow the resulting dead_code/unused lints only where it does not compile in.
 #![cfg_attr(not(target_vendor = "apple"), allow(dead_code, unused_imports))]
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 
 pub use paint_instructions::PixelContainer;
 
@@ -172,6 +172,9 @@ fn parse_hex_color(s: &str) -> (f64, f64, f64, f64) {
     if s == "transparent" {
         return (0.0, 0.0, 0.0, 0.0);
     }
+    if let Some(hex) = css_named_color(s) {
+        return parse_hex_color(hex);
+    }
     // CSS rgb()/rgba() support — layout-to-paint emits these.
     if let Some(inner) = s.strip_prefix("rgba(").and_then(|t| t.strip_suffix(')')) {
         return parse_rgb_components(inner, true);
@@ -202,6 +205,29 @@ fn parse_hex_color(s: &str) -> (f64, f64, f64, f64) {
         1.0
     };
     (r, g, b, a)
+}
+
+fn css_named_color(name: &str) -> Option<&'static str> {
+    Some(match name.to_ascii_lowercase().as_str() {
+        "aqua" => "#00ffff",
+        "black" => "#000000",
+        "blue" => "#0000ff",
+        "fuchsia" => "#ff00ff",
+        "gray" | "grey" => "#808080",
+        "green" => "#008000",
+        "lime" => "#00ff00",
+        "maroon" => "#800000",
+        "navy" => "#000080",
+        "olive" => "#808000",
+        "orange" => "#ffa500",
+        "purple" => "#800080",
+        "red" => "#ff0000",
+        "silver" => "#c0c0c0",
+        "teal" => "#008080",
+        "white" => "#ffffff",
+        "yellow" => "#ffff00",
+        _ => return None,
+    })
 }
 
 /// Parse the comma-separated r,g,b(,a) components from inside an
@@ -351,8 +377,14 @@ fn add_rect_vertices(rect: &PaintRect, positions: &mut Vec<f32>, colors: &mut Ve
 /// Emit a filled axis-aligned rectangle as two triangles (helper).
 #[allow(clippy::too_many_arguments)] // geometry + color + buffers; signature kept as-is
 fn emit_filled_rect(
-    x: f32, y: f32, w: f32, h: f32,
-    r: f32, g: f32, b: f32, a: f32,
+    x: f32,
+    y: f32,
+    w: f32,
+    h: f32,
+    r: f32,
+    g: f32,
+    b: f32,
+    a: f32,
     positions: &mut Vec<f32>,
     colors: &mut Vec<f32>,
 ) {
@@ -395,10 +427,14 @@ fn add_line_vertices(line: &PaintLine, positions: &mut Vec<f32>, colors: &mut Ve
     let nx = -dy / len * half_w;
     let ny = dx / len * half_w;
 
-    let p0x = x1 + nx; let p0y = y1 + ny;
-    let p1x = x1 - nx; let p1y = y1 - ny;
-    let p2x = x2 + nx; let p2y = y2 + ny;
-    let p3x = x2 - nx; let p3y = y2 - ny;
+    let p0x = x1 + nx;
+    let p0y = y1 + ny;
+    let p1x = x1 - nx;
+    let p1y = y1 - ny;
+    let p2x = x2 + nx;
+    let p2y = y2 + ny;
+    let p3x = x2 - nx;
+    let p3y = y2 - ny;
 
     positions.extend_from_slice(&[p0x, p0y, p2x, p2y, p1x, p1y]);
     colors.extend_from_slice(&[r, g, b, a, r, g, b, a, r, g, b, a]);
@@ -442,10 +478,7 @@ fn add_ellipse_vertices(ellipse: &PaintEllipse, positions: &mut Vec<f32>, colors
     let mut pts: Vec<(f32, f32)> = Vec::with_capacity(ELLIPSE_SEGMENTS);
     for i in 0..ELLIPSE_SEGMENTS {
         let angle = (i as f64 / ELLIPSE_SEGMENTS as f64) * TAU;
-        pts.push((
-            cx + rx * angle.cos() as f32,
-            cy + ry * angle.sin() as f32,
-        ));
+        pts.push((cx + rx * angle.cos() as f32, cy + ry * angle.sin() as f32));
     }
 
     // Fill: fan from centre
@@ -552,11 +585,19 @@ fn add_path_vertices(path: &PaintPath, positions: &mut Vec<f32>, colors: &mut Ve
                 cy = *y as f32;
                 current.push((cx, cy));
             }
-            PathCommand::QuadTo { cx: qcx, cy: qcy, x, y } => {
+            PathCommand::QuadTo {
+                cx: qcx,
+                cy: qcy,
+                x,
+                y,
+            } => {
                 // De Casteljau — 8 linear segments
-                let p0x = cx; let p0y = cy;
-                let p1x = *qcx as f32; let p1y = *qcy as f32;
-                let p2x = *x as f32;   let p2y = *y as f32;
+                let p0x = cx;
+                let p0y = cy;
+                let p1x = *qcx as f32;
+                let p1y = *qcy as f32;
+                let p2x = *x as f32;
+                let p2y = *y as f32;
                 for k in 1..=8u32 {
                     let t = k as f32 / 8.0;
                     let u = 1.0 - t;
@@ -564,22 +605,41 @@ fn add_path_vertices(path: &PaintPath, positions: &mut Vec<f32>, colors: &mut Ve
                     let qy = u * u * p0y + 2.0 * u * t * p1y + t * t * p2y;
                     current.push((qx, qy));
                 }
-                cx = p2x; cy = p2y;
+                cx = p2x;
+                cy = p2y;
             }
-            PathCommand::CubicTo { cx1, cy1, cx2, cy2, x, y } => {
+            PathCommand::CubicTo {
+                cx1,
+                cy1,
+                cx2,
+                cy2,
+                x,
+                y,
+            } => {
                 // De Casteljau — 8 linear segments
-                let p0x = cx; let p0y = cy;
-                let p1x = *cx1 as f32; let p1y = *cy1 as f32;
-                let p2x = *cx2 as f32; let p2y = *cy2 as f32;
-                let p3x = *x as f32;   let p3y = *y as f32;
+                let p0x = cx;
+                let p0y = cy;
+                let p1x = *cx1 as f32;
+                let p1y = *cy1 as f32;
+                let p2x = *cx2 as f32;
+                let p2y = *cy2 as f32;
+                let p3x = *x as f32;
+                let p3y = *y as f32;
                 for k in 1..=8u32 {
                     let t = k as f32 / 8.0;
                     let u = 1.0 - t;
-                    let qx = u*u*u*p0x + 3.0*u*u*t*p1x + 3.0*u*t*t*p2x + t*t*t*p3x;
-                    let qy = u*u*u*p0y + 3.0*u*u*t*p1y + 3.0*u*t*t*p2y + t*t*t*p3y;
+                    let qx = u * u * u * p0x
+                        + 3.0 * u * u * t * p1x
+                        + 3.0 * u * t * t * p2x
+                        + t * t * t * p3x;
+                    let qy = u * u * u * p0y
+                        + 3.0 * u * u * t * p1y
+                        + 3.0 * u * t * t * p2y
+                        + t * t * t * p3y;
                     current.push((qx, qy));
                 }
-                cx = p3x; cy = p3y;
+                cx = p3x;
+                cy = p3y;
             }
             PathCommand::ArcTo { .. } => {
                 // ArcTo: not tessellated yet — skip. Diagrams don't use arcs.
@@ -728,17 +788,34 @@ unsafe fn render_unsafe(scene: &PaintScene) -> PixelContainer {
     let (cr, cg, cb, ca) = parse_hex_color(&scene.background);
 
     msg!(attachment0, "setTexture:", texture);
-    msg!(attachment0, "setLoadAction:", MTL_LOAD_ACTION_CLEAR as usize);
-    msg!(attachment0, "setStoreAction:", MTL_STORE_ACTION_STORE as usize);
+    msg!(
+        attachment0,
+        "setLoadAction:",
+        MTL_LOAD_ACTION_CLEAR as usize
+    );
+    msg!(
+        attachment0,
+        "setStoreAction:",
+        MTL_STORE_ACTION_STORE as usize
+    );
 
     // MTLClearColor is 4 doubles — passed as HFA in d0-d3 on arm64
-    let clear_color = MTLClearColor { red: cr, green: cg, blue: cb, alpha: ca };
+    let clear_color = MTLClearColor {
+        red: cr,
+        green: cg,
+        blue: cb,
+        alpha: ca,
+    };
     let set_clear_color: unsafe extern "C" fn(Id, Sel, MTLClearColor) =
         std::mem::transmute(objc_msgSend as *const ());
     set_clear_color(attachment0, sel("setClearColor:"), clear_color);
 
     let command_buffer = msg_send_id(command_queue, "commandBuffer");
-    let encoder: Id = msg!(command_buffer, "renderCommandEncoderWithDescriptor:", pass_desc);
+    let encoder: Id = msg!(
+        command_buffer,
+        "renderCommandEncoderWithDescriptor:",
+        pass_desc
+    );
 
     let viewport_size: [f32; 2] = [width as f32, height as f32];
 
@@ -750,14 +827,37 @@ unsafe fn render_unsafe(scene: &PaintScene) -> PixelContainer {
         let color_buffer = create_buffer(device, &colors);
 
         msg!(encoder, "setRenderPipelineState:", rect_pipeline);
-        msg!(encoder, "setVertexBuffer:offset:atIndex:", pos_buffer, 0usize, 0usize);
-        msg!(encoder, "setVertexBuffer:offset:atIndex:", color_buffer, 0usize, 1usize);
+        msg!(
+            encoder,
+            "setVertexBuffer:offset:atIndex:",
+            pos_buffer,
+            0usize,
+            0usize
+        );
+        msg!(
+            encoder,
+            "setVertexBuffer:offset:atIndex:",
+            color_buffer,
+            0usize,
+            1usize
+        );
 
         let vp_ptr = viewport_size.as_ptr() as *const std::ffi::c_void as Id;
-        msg!(encoder, "setVertexBytes:length:atIndex:", vp_ptr, 8usize, 2usize);
+        msg!(
+            encoder,
+            "setVertexBytes:length:atIndex:",
+            vp_ptr,
+            8usize,
+            2usize
+        );
 
-        msg!(encoder, "drawPrimitives:vertexStart:vertexCount:",
-            MTL_PRIMITIVE_TYPE_TRIANGLE as usize, 0usize, vertex_count);
+        msg!(
+            encoder,
+            "drawPrimitives:vertexStart:vertexCount:",
+            MTL_PRIMITIVE_TYPE_TRIANGLE as usize,
+            0usize,
+            vertex_count
+        );
 
         release(pos_buffer);
         release(color_buffer);
@@ -788,7 +888,11 @@ unsafe fn create_offscreen_texture(device: Id, width: u32, height: u32) -> Id {
     let desc = alloc_init("MTLTextureDescriptor");
 
     // MTLPixelFormatRGBA8Unorm = 70
-    msg!(desc, "setPixelFormat:", MTL_PIXEL_FORMAT_RGBA8_UNORM as usize);
+    msg!(
+        desc,
+        "setPixelFormat:",
+        MTL_PIXEL_FORMAT_RGBA8_UNORM as usize
+    );
     msg!(desc, "setWidth:", width as usize);
     msg!(desc, "setHeight:", height as usize);
     // MTLTextureType2D = 2
@@ -809,8 +913,11 @@ unsafe fn compile_shader_library(device: Id, source: &str) -> Id {
     let options: Id = ptr::null_mut();
     let mut error: Id = ptr::null_mut();
     let library: Id = msg!(
-        device, "newLibraryWithSource:options:error:",
-        source_ns, options, &mut error as *mut Id
+        device,
+        "newLibraryWithSource:options:error:",
+        source_ns,
+        options,
+        &mut error as *mut Id
     );
     CFRelease(source_ns);
 
@@ -842,8 +949,10 @@ unsafe fn create_rect_pipeline(device: Id) -> Id {
 
     let mut error: Id = ptr::null_mut();
     let pipeline: Id = msg!(
-        device, "newRenderPipelineStateWithDescriptor:error:",
-        desc, &mut error as *mut Id
+        device,
+        "newRenderPipelineStateWithDescriptor:error:",
+        desc,
+        &mut error as *mut Id
     );
 
     release(vertex_fn);
@@ -851,7 +960,10 @@ unsafe fn create_rect_pipeline(device: Id) -> Id {
     release(library);
     release(desc);
 
-    assert!(!pipeline.is_null(), "Failed to create rect render pipeline state");
+    assert!(
+        !pipeline.is_null(),
+        "Failed to create rect render pipeline state"
+    );
     pipeline
 }
 
@@ -859,14 +971,18 @@ unsafe fn create_rect_pipeline(device: Id) -> Id {
 unsafe fn setup_pipeline_color_attachment(desc: Id) {
     let attachments = msg_send_id(desc, "colorAttachments");
     let att0: Id = msg!(attachments, "objectAtIndexedSubscript:", 0usize);
-    msg!(att0, "setPixelFormat:", MTL_PIXEL_FORMAT_RGBA8_UNORM as usize);
+    msg!(
+        att0,
+        "setPixelFormat:",
+        MTL_PIXEL_FORMAT_RGBA8_UNORM as usize
+    );
 
     // Enable standard src-over alpha blending so transparent pixels composite correctly.
     // The formula is:  dst = src.rgb * src.a + dst.rgb * (1 - src.a)
     msg!(att0, "setBlendingEnabled:", 1usize);
-    msg!(att0, "setSourceRGBBlendFactor:", 4usize);        // sourceAlpha
-    msg!(att0, "setDestinationRGBBlendFactor:", 5usize);   // oneMinusSourceAlpha
-    msg!(att0, "setSourceAlphaBlendFactor:", 1usize);       // one
+    msg!(att0, "setSourceRGBBlendFactor:", 4usize); // sourceAlpha
+    msg!(att0, "setDestinationRGBBlendFactor:", 5usize); // oneMinusSourceAlpha
+    msg!(att0, "setSourceAlphaBlendFactor:", 1usize); // one
     msg!(att0, "setDestinationAlphaBlendFactor:", 5usize); // oneMinusSourceAlpha
 }
 
@@ -875,8 +991,11 @@ unsafe fn create_buffer(device: Id, data: &[f32]) -> Id {
     let byte_len = std::mem::size_of_val(data);
     // MTLResourceStorageModeShared = 0
     let buffer: Id = msg!(
-        device, "newBufferWithBytes:length:options:",
-        data.as_ptr() as Id, byte_len, 0usize
+        device,
+        "newBufferWithBytes:length:options:",
+        data.as_ptr() as Id,
+        byte_len,
+        0usize
     );
     assert!(!buffer.is_null(), "Failed to create Metal buffer");
     buffer
@@ -901,21 +1020,24 @@ unsafe fn read_back_pixels(texture: Id, width: u32, height: u32) -> PixelContain
     // MTLRegion is 48 bytes, so we use a typed function pointer that lets the
     // compiler generate the correct ABI (pass by value triggers indirect passing).
     let get_bytes: unsafe extern "C" fn(
-        Id, Sel,
+        Id,
+        Sel,
         *mut u8,   // bytes pointer
         usize,     // bytesPerRow
         MTLRegion, // region (compiler passes indirectly on arm64)
         usize,     // mipmapLevel
     ) = std::mem::transmute(objc_msgSend as *const ());
     get_bytes(
-        texture, sel("getBytes:bytesPerRow:fromRegion:mipmapLevel:"),
-        data.as_mut_ptr(), bytes_per_row,
-        region, 0,
+        texture,
+        sel("getBytes:bytesPerRow:fromRegion:mipmapLevel:"),
+        data.as_mut_ptr(),
+        bytes_per_row,
+        region,
+        0,
     );
 
     PixelContainer::from_data(width, height, data)
 }
-
 
 // ---------------------------------------------------------------------------
 // CoreText glyph-run overlay (Apple only)
@@ -936,15 +1058,13 @@ unsafe fn read_back_pixels(texture: Id, width: u32, height: u32) -> PixelContain
 mod glyph_run_overlay {
     use objc_bridge::{
         cfstring_checked, CFRelease, CGAffineTransform, CGBitmapContextCreate,
-        CGColorSpaceCreateDeviceRGB, CGColorSpaceRelease, CGContextRelease,
+        CGColorSpaceCreateDeviceRGB, CGColorSpaceRelease, CGContextRef, CGContextRelease,
         CGContextRestoreGState, CGContextSaveGState, CGContextSetRGBFillColor,
         CGContextSetShouldAntialias, CGContextSetShouldSmoothFonts, CGContextSetTextMatrix,
-        CGPoint, CTFontCreateWithName, CTFontDrawGlyphs, CGContextRef, Id,
-        K_CG_IMAGE_ALPHA_PREMULTIPLIED_FIRST, K_CG_BITMAP_BYTE_ORDER_32_LITTLE, NIL,
+        CGPoint, CTFontCreateWithName, CTFontDrawGlyphs, Id, K_CG_BITMAP_BYTE_ORDER_32_LITTLE,
+        K_CG_IMAGE_ALPHA_PREMULTIPLIED_FIRST, NIL,
     };
-    use paint_instructions::{
-        PaintGlyphRun, PaintInstruction, PaintScene, PixelContainer,
-    };
+    use paint_instructions::{PaintGlyphRun, PaintInstruction, PaintScene, PixelContainer};
 
     pub(super) unsafe fn overlay_coretext_glyph_runs(
         scene: &PaintScene,
@@ -998,20 +1118,13 @@ mod glyph_run_overlay {
         CGContextRelease(ctx);
     }
 
-    fn collect_coretext_runs(
-        instructions: &[PaintInstruction],
-    ) -> Vec<&PaintGlyphRun> {
+    fn collect_coretext_runs(instructions: &[PaintInstruction]) -> Vec<&PaintGlyphRun> {
         let mut out: Vec<&PaintGlyphRun> = Vec::new();
-        fn walk<'a>(
-            ins: &'a [PaintInstruction],
-            out: &mut Vec<&'a PaintGlyphRun>,
-        ) {
+        fn walk<'a>(ins: &'a [PaintInstruction], out: &mut Vec<&'a PaintGlyphRun>) {
             for i in ins {
                 match i {
-                    PaintInstruction::GlyphRun(g) => {
-                        if g.font_ref.starts_with("coretext:") {
-                            out.push(g);
-                        }
+                    PaintInstruction::GlyphRun(g) if g.font_ref.starts_with("coretext:") => {
+                        out.push(g);
                     }
                     PaintInstruction::Group(grp) => walk(&grp.children, out),
                     PaintInstruction::Clip(c) => walk(&c.children, out),
@@ -1078,13 +1191,14 @@ mod glyph_run_overlay {
     /// Parse a subset of CSS colours into (r, g, b, a) in 0..=1.
     fn parse_css_color(s: &str) -> (f64, f64, f64, f64) {
         let s = s.trim();
-        let (inner, has_alpha) = if let Some(i) = s.strip_prefix("rgba(").and_then(|x| x.strip_suffix(")")) {
-            (i, true)
-        } else if let Some(i) = s.strip_prefix("rgb(").and_then(|x| x.strip_suffix(")")) {
-            (i, false)
-        } else {
-            return (0.0, 0.0, 0.0, 1.0);
-        };
+        let (inner, has_alpha) =
+            if let Some(i) = s.strip_prefix("rgba(").and_then(|x| x.strip_suffix(")")) {
+                (i, true)
+            } else if let Some(i) = s.strip_prefix("rgb(").and_then(|x| x.strip_suffix(")")) {
+                (i, false)
+            } else {
+                return (0.0, 0.0, 0.0, 1.0);
+            };
         let parts: Vec<&str> = inner.split(',').map(|p| p.trim()).collect();
         if parts.len() < 3 {
             return (0.0, 0.0, 0.0, 1.0);
@@ -1097,7 +1211,12 @@ mod glyph_run_overlay {
         } else {
             1.0
         };
-        (r.clamp(0.0, 1.0), g.clamp(0.0, 1.0), b.clamp(0.0, 1.0), a.clamp(0.0, 1.0))
+        (
+            r.clamp(0.0, 1.0),
+            g.clamp(0.0, 1.0),
+            b.clamp(0.0, 1.0),
+            a.clamp(0.0, 1.0),
+        )
     }
 
     #[cfg(test)]
@@ -1192,10 +1311,7 @@ impl std::error::Error for PaintMetalError {}
 
 #[cfg(target_vendor = "apple")]
 mod live_present {
-    use objc_bridge::{
-        msg, MTLOrigin, MTLRegion, MTLSize,
-        Id, NIL,
-    };
+    use objc_bridge::{msg, Id, MTLOrigin, MTLRegion, MTLSize, NIL};
     use paint_instructions::PixelContainer;
 
     use super::PaintMetalError;
@@ -1287,13 +1403,12 @@ mod live_present {
 mod tests {
     use super::*;
     use paint_instructions::{
-        PaintBase, PaintEllipse, PaintInstruction, PaintPath, PaintRect, PaintScene,
-        PathCommand,
+        PaintBase, PaintEllipse, PaintInstruction, PaintPath, PaintRect, PaintScene, PathCommand,
     };
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.2.0");
+        assert_eq!(VERSION, "0.3.0");
     }
 
     // ─── Color parser tests ──────────────────────────────────────────────────
@@ -1332,6 +1447,12 @@ mod tests {
         assert_eq!(b, 0.0);
     }
 
+    #[test]
+    fn parse_css_named_color() {
+        let (r, g, b, a) = parse_hex_color("Aqua");
+        assert_eq!((r, g, b, a), (0.0, 1.0, 1.0, 1.0));
+    }
+
     // ─── Vertex generation tests ─────────────────────────────────────────────
 
     #[test]
@@ -1352,7 +1473,10 @@ mod tests {
         let mut positions = Vec::new();
         let mut colors = Vec::new();
         collect_geometry(&[rect], &mut positions, &mut colors, 0);
-        assert!(positions.is_empty(), "transparent rect should produce no vertices");
+        assert!(
+            positions.is_empty(),
+            "transparent rect should produce no vertices"
+        );
     }
 
     #[test]
@@ -1416,7 +1540,11 @@ mod tests {
         collect_geometry(&[ellipse], &mut positions, &mut colors, 0);
         // fill: 64 * 3 verts, stroke ring: 64 quads * 2 tris * 3 verts = 384
         let expected = (ELLIPSE_SEGMENTS * 3 + ELLIPSE_SEGMENTS * 2 * 3) * 2; // × 2 for x,y
-        assert_eq!(positions.len(), expected, "ellipse fill+stroke vertex count");
+        assert_eq!(
+            positions.len(),
+            expected,
+            "ellipse fill+stroke vertex count"
+        );
     }
 
     #[test]
@@ -1425,10 +1553,10 @@ mod tests {
         let diamond = PaintInstruction::Path(PaintPath {
             base: PaintBase::default(),
             commands: vec![
-                PathCommand::MoveTo { x: 50.0, y: 10.0 },  // top
-                PathCommand::LineTo { x: 90.0, y: 50.0 },  // right
-                PathCommand::LineTo { x: 50.0, y: 90.0 },  // bottom
-                PathCommand::LineTo { x: 10.0, y: 50.0 },  // left
+                PathCommand::MoveTo { x: 50.0, y: 10.0 }, // top
+                PathCommand::LineTo { x: 90.0, y: 50.0 }, // right
+                PathCommand::LineTo { x: 50.0, y: 90.0 }, // bottom
+                PathCommand::LineTo { x: 10.0, y: 50.0 }, // left
                 PathCommand::Close,
             ],
             fill: Some("#ffff00".to_string()),
@@ -1446,7 +1574,10 @@ mod tests {
         // Subpath has 5 points (top, right, bottom, left, top-again from close).
         // Fan: pivot=pts[0], triangles for i in 1..4 → 3 triangles
         // Each triangle: 3 vertices × 2 floats = 6 floats → 18 total
-        assert!(positions.len() >= 18, "diamond fill should have at least 3 triangles");
+        assert!(
+            positions.len() >= 18,
+            "diamond fill should have at least 3 triangles"
+        );
     }
 
     #[test]
@@ -1465,8 +1596,14 @@ mod tests {
         let mut positions = Vec::new();
         let mut colors = Vec::new();
         collect_geometry(&[text_instr], &mut positions, &mut colors, 0);
-        assert!(positions.is_empty(), "PaintText should not generate triangle vertices");
-        assert!(colors.is_empty(), "PaintText should not generate color vertices");
+        assert!(
+            positions.is_empty(),
+            "PaintText should not generate triangle vertices"
+        );
+        assert!(
+            colors.is_empty(),
+            "PaintText should not generate color vertices"
+        );
     }
 
     #[test]
@@ -1482,9 +1619,11 @@ mod tests {
     #[test]
     fn render_red_rect_on_white() {
         let mut scene = PaintScene::new(100.0, 100.0);
-        scene.instructions.push(PaintInstruction::Rect(
-            PaintRect::filled(10.0, 10.0, 80.0, 80.0, "#ff0000"),
-        ));
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                10.0, 10.0, 80.0, 80.0, "#ff0000",
+            )));
 
         let pixels = render(&scene);
         assert_eq!(pixels.width, 100);
@@ -1493,8 +1632,8 @@ mod tests {
         // Centre of the red rectangle should be red
         let (r, g, b, a) = pixels.pixel_at(50, 50);
         assert_eq!(r, 255, "red channel at centre");
-        assert_eq!(g, 0,   "green channel at centre");
-        assert_eq!(b, 0,   "blue channel at centre");
+        assert_eq!(g, 0, "green channel at centre");
+        assert_eq!(b, 0, "blue channel at centre");
         assert_eq!(a, 255, "alpha at centre");
 
         // Top-left corner is outside the rect → white background
@@ -1509,25 +1648,27 @@ mod tests {
     #[test]
     fn render_blue_ellipse() {
         let mut scene = PaintScene::new(100.0, 100.0);
-        scene.instructions.push(PaintInstruction::Ellipse(PaintEllipse {
-            base: PaintBase::default(),
-            cx: 50.0,
-            cy: 50.0,
-            rx: 30.0,
-            ry: 30.0,
-            fill: Some("#0000ff".to_string()),
-            stroke: None,
-            stroke_width: None,
-            stroke_dash: None,
-            stroke_dash_offset: None,
-        }));
+        scene
+            .instructions
+            .push(PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(),
+                cx: 50.0,
+                cy: 50.0,
+                rx: 30.0,
+                ry: 30.0,
+                fill: Some("#0000ff".to_string()),
+                stroke: None,
+                stroke_width: None,
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }));
 
         let pixels = render(&scene);
 
         // Centre of the ellipse should be blue
         let (r, g, b, _a) = pixels.pixel_at(50, 50);
-        assert_eq!(r, 0,   "red channel at ellipse centre should be 0");
-        assert_eq!(g, 0,   "green channel at ellipse centre should be 0");
+        assert_eq!(r, 0, "red channel at ellipse centre should be 0");
+        assert_eq!(g, 0, "green channel at ellipse centre should be 0");
         assert_eq!(b, 255, "blue channel at ellipse centre should be 255");
 
         // Pixel well outside the ellipse should be white background
@@ -1544,10 +1685,10 @@ mod tests {
         scene.instructions.push(PaintInstruction::Path(PaintPath {
             base: PaintBase::default(),
             commands: vec![
-                PathCommand::MoveTo { x: 50.0, y: 10.0 },  // top
-                PathCommand::LineTo { x: 90.0, y: 50.0 },  // right
-                PathCommand::LineTo { x: 50.0, y: 90.0 },  // bottom
-                PathCommand::LineTo { x: 10.0, y: 50.0 },  // left
+                PathCommand::MoveTo { x: 50.0, y: 10.0 }, // top
+                PathCommand::LineTo { x: 90.0, y: 50.0 }, // right
+                PathCommand::LineTo { x: 50.0, y: 90.0 }, // bottom
+                PathCommand::LineTo { x: 10.0, y: 50.0 }, // left
                 PathCommand::Close,
             ],
             fill: Some("#ffff00".to_string()),
@@ -1566,7 +1707,7 @@ mod tests {
         let (r, g, b, _a) = pixels.pixel_at(50, 50);
         assert_eq!(r, 255, "yellow: r=255 at diamond centre");
         assert_eq!(g, 255, "yellow: g=255 at diamond centre");
-        assert_eq!(b, 0,   "yellow: b=0 at diamond centre");
+        assert_eq!(b, 0, "yellow: b=0 at diamond centre");
 
         // Corner (2, 2) is well outside the diamond → white
         let (r, g, b, _a) = pixels.pixel_at(2, 2);
@@ -1584,13 +1725,15 @@ mod tests {
         for row in 0..4u32 {
             for col in 0..4u32 {
                 if (row + col) % 2 == 0 {
-                    scene.instructions.push(PaintInstruction::Rect(PaintRect::filled(
-                        col as f64 * module_size,
-                        row as f64 * module_size,
-                        module_size,
-                        module_size,
-                        "#000000",
-                    )));
+                    scene
+                        .instructions
+                        .push(PaintInstruction::Rect(PaintRect::filled(
+                            col as f64 * module_size,
+                            row as f64 * module_size,
+                            module_size,
+                            module_size,
+                            "#000000",
+                        )));
                 }
             }
         }

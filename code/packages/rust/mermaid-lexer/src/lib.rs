@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.5.0";
+pub const VERSION: &str = "0.6.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -111,7 +111,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.5.0");
+        assert_eq!(VERSION, "0.6.0");
     }
 
     #[test]
@@ -323,5 +323,15 @@ mod tests {
         assert!(values.contains(&"create"));
         assert!(values.contains(&"destroy"));
         assert!(values.contains(&"Worker"));
+    }
+
+    #[test]
+    fn tokenizes_sequence_box_color_as_one_token() {
+        let tokens = tokenize_mermaid_sequence(
+            "sequenceDiagram\nbox rgba(33,66,99,0.5) Services\nparticipant API\nend\n",
+        );
+        assert!(tokens
+            .iter()
+            .any(|token| token.value == "rgba(33,66,99,0.5)"));
     }
 }

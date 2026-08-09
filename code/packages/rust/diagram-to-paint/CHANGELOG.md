@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added sequence participant-group backgrounds and labels.
 - Added a Mermaid Pie -> chart layout -> PaintScene -> Metal PNG example and
   Apple end-to-end test.
 - Added sequence lowering for participant headers, lifelines, messages,
