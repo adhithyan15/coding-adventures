@@ -138,8 +138,10 @@ each read re-emits its caller expression in the caller's captured environment,
 and an assignment writes through a bare variable or subscripted array-element
 actual. This makes Jensen-style loops work without a dynamic closure ABI:
 `sum(i, 3, i * i)` re-evaluates `i * i` after each name-bound loop-variable
-update. Array and string **formals** remain value-only; forwarding a name formal
-to another name formal and recursive name-formal dispatch are rejected
+update. Forwarding a scalar name formal to another direct name call preserves
+the original caller expression through compiler-generated lexical aliases, even
+when the nested callee reuses the same parameter spelling. Array and string
+**formals** remain value-only, and recursive name-formal dispatch is rejected
 explicitly.
 
 **Arrays** lower and run on **all seven standard backends** (LANG-FULL E5 /
@@ -185,5 +187,5 @@ finitely expanded into portable IIR control flow.
 
 Unsupported ALGOL 60 features — arrays outside the supported integer/real/
 boolean/string element set, dynamic string variables, call-by-name array or
-string formals, forwarding name formals, and recursive name-formal dispatch —
-return explicit compiler errors.
+string formals, and recursive name-formal dispatch — return explicit compiler
+errors.

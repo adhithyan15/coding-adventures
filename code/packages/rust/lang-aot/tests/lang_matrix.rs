@@ -1486,6 +1486,23 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — forwarding a scalar name formal. `forward` writes `x`, then
+    // passes it to a nested `consume` procedure whose formal deliberately uses
+    // the same source spelling. The specialised siblings retain the original
+    // caller binding through generated typed-global aliases, so `n` becomes 21
+    // and `consume(x)` returns 42 on every standard backend.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer n, result; \
+                  integer procedure forward(x); integer x; \
+                    begin integer procedure consume(x); integer x; \
+                          consume := x * 2; \
+                          x := x + 1; forward := consume(x) end; \
+                  n := 20; result := forward(n) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — scalar string variables on the direct literal fast path. A
     // `string` scalar assigned from a literal emits `str_const` directly to its
     // slot; the preceding row covers a runtime procedure-result copy.
@@ -6250,6 +6267,37 @@ fn algol_call_by_name_jensen_sum_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but call-by-name execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_by_name_forwarding_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure forward(x)")
+                && program.src.contains("integer procedure consume(x)")
+                && program.src.contains("result := forward(n)")
+        })
+        .expect("the forwarded call-by-name ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but call-by-name forwarding did not complete"
             );
             continue;
         };
