@@ -1347,6 +1347,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             Kf=model.params.get("KF", 0.0),
             Af=model.params.get("AF", 1.0),
             Ptf=model.params.get("PTF", 0.0),
+            Xtf=model.params.get("XTF", 0.0),
         )
     if prefix == "J":
         _require_fields(fields, 5, "JFET")
@@ -2270,6 +2271,12 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             not math.isfinite(forward_excess_phase) or forward_excess_phase < 0.0
         ):
             raise NetlistParseError("BJT PTF must be finite and non-negative")
+        forward_transit_time_bias_coefficient = params.get("XTF")
+        if forward_transit_time_bias_coefficient is not None and (
+            not math.isfinite(forward_transit_time_bias_coefficient)
+            or forward_transit_time_bias_coefficient < 0.0
+        ):
+            raise NetlistParseError("BJT XTF must be finite and non-negative")
     if kind in {"NJF", "PJF"}:
         gate_source_capacitance = params.get("CGS", params.get("CGS0"))
         if gate_source_capacitance is not None and (

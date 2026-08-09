@@ -1881,6 +1881,27 @@ def test_rejects_invalid_bjt_forward_excess_phase(value: str) -> None:
         parse_netlist(f".model fast NPN(PTF={value})")
 
 
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("2.5", 2.5)])
+def test_parse_bjt_forward_transit_time_bias_coefficient(
+    value: str, expected: float
+) -> None:
+    parsed = parse_netlist(f".model fast NPN(XTF={value})\nQ1 col base emit fast")
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Xtf == expected
+
+
+@pytest.mark.parametrize("value", ["-0.1", "1e999"])
+def test_rejects_invalid_bjt_forward_transit_time_bias_coefficient(
+    value: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError, match="BJT XTF must be finite and non-negative"
+    ):
+        parse_netlist(f".model fast NPN(XTF={value})")
+
+
 def test_parse_jfet_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
