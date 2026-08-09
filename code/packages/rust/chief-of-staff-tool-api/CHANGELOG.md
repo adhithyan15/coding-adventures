@@ -8,6 +8,8 @@ All notable changes to this package will be documented in this file.
 
 - Added the canonical Tier-2 `vault.request_lease` built-in with strict opaque
   receipt schemas and the D18D `vault:lease` policy capability.
+- Added the canonical Tier-2 `vault.request_direct` built-in with strict
+  consumer targeting, a null acknowledgment, and no secret return channel.
 - Added canonical approval challenges and explicit-consent, biometric, and
   hardware-key assurance levels. Tier-aware policy can now require approval at
   a privilege threshold, and Tier 2+ grants must match the active challenge
