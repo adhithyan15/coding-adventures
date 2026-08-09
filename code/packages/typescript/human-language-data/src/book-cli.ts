@@ -15,8 +15,9 @@ import {
   type InlineRenderOptions,
 } from "./book.js";
 import { defaultCurriculumRoot, loadLessons, loadTrackChapters } from "./loader.js";
+import type { ChapterCapability } from "./types.js";
 
-interface ConfiguredBookGenerationTarget extends BookGenerationTarget {
+interface ConfiguredBookGenerationTarget extends Omit<BookGenerationTarget, "title" | "label"> {
   /** Named reusable mapping from the config's scriptSets table. */
   scriptSet?: string;
 }
@@ -54,19 +55,24 @@ interface ConfiguredBookIndexTarget extends BookIndexTarget {
  * than destroy it.  The safe failure mode is the whole point.
  *
  * These chapters predate the manifest and are mostly schema-v1, so there are no canonical
- * lessons to render them from anyway.  `title` and `label` are transcribed from what the
- * `.tex` actually declares, never invented, and the tests below re-read the files to prove
- * it.  Note that labels follow three different historical conventions (a bare `ch:greetings`
- * slug, an ISO-code `ch:fa-`/`ch:la-` prefix, and a language-name `ch:persian-` prefix);
- * they are recorded as-is, because rewriting a `\label` would break existing `\hyperref`
- * cross-references.
+ * lessons to render them from anyway. Their output path stays here, while `title` and
+ * `label` resolve from `chapters.json`, the same authored capability ledger used by the
+ * generated chapters. Tests re-read every committed `.tex` file to prove that canonical
+ * metadata still agrees with the historical chapter command and label. Note that labels
+ * follow three different historical conventions (a bare `ch:greetings` slug, an ISO-code
+ * `ch:fa-`/`ch:la-` prefix, and a language-name `ch:persian-` prefix); the ledgers preserve
+ * those values because rewriting a `\label` would break existing `\hyperref` references.
  */
-export interface HandwrittenBookChapter {
+interface ConfiguredHandwrittenBookChapter {
   language: string;
   chapter: number;
+  output: string;
+}
+
+/** A handwritten declaration resolved against its canonical chapter capability. */
+export interface HandwrittenBookChapter extends ConfiguredHandwrittenBookChapter {
   title: string;
   label: string;
-  output: string;
 }
 
 interface BookGenerationConfig {
@@ -83,7 +89,7 @@ interface BookGenerationConfig {
   /** Canonical meanings, topic lessons, and chapter capabilities rendered as indexes. */
   indexes?: ConfiguredBookIndexTarget[];
   /** Never rendered. See {@link HandwrittenBookChapter}. */
-  handwritten?: HandwrittenBookChapter[];
+  handwritten?: ConfiguredHandwrittenBookChapter[];
 }
 
 interface GeneratedBookHashManifest {
@@ -101,9 +107,46 @@ interface GeneratedBookHashManifest {
 const MANIFEST_PATH = "core/generated-book-hashes.json";
 
 function loadConfig(root: string): BookGenerationConfig {
-  return JSON.parse(
+  const config = JSON.parse(
     readFileSync(join(root, "core", "book-generation.json"), "utf8"),
   ) as BookGenerationConfig;
+  for (const [kind, entries] of [
+    ["target", config.targets ?? []],
+    ["handwritten chapter", config.handwritten ?? []],
+  ] as const) {
+    for (const entry of entries) {
+      if ("title" in entry || "label" in entry) {
+        throw new Error(
+          `book-generation.json ${kind} ${entry.language} chapter ${entry.chapter} must derive title and label from chapters.json`,
+        );
+      }
+    }
+  }
+  return config;
+}
+
+function chapterCapabilityIndex(root: string): Map<string, ChapterCapability> {
+  const index = new Map<string, ChapterCapability>();
+  for (const track of loadTrackChapters(root)) {
+    for (const chapter of track.chapters) {
+      index.set(`${track.language}#${chapter.chapter}`, chapter);
+    }
+  }
+  return index;
+}
+
+function requireChapterCapability(
+  index: ReadonlyMap<string, ChapterCapability>,
+  language: string,
+  chapter: number,
+): ChapterCapability {
+  const capability = index.get(`${language}#${chapter}`);
+  if (!capability) {
+    throw new Error(
+      `${language} chapter ${chapter}: book-generation.json declaration has no chapters.json capability`,
+    );
+  }
+  return capability;
 }
 
 function safeOutput(root: string, relative: string): string {
@@ -142,21 +185,25 @@ export function handwrittenBookChapters(
   root = defaultCurriculumRoot(),
 ): HandwrittenBookChapter[] {
   const handwritten = loadConfig(root).handwritten ?? [];
+  const capabilities = chapterCapabilityIndex(root);
   // Nothing here is written today, only read — but `output` is still a path, and the
   // containment rule it has to satisfy is exactly the one `targets[]` already obeys.
   // Checking at the boundary means a later caller that *does* open one of these cannot
   // inherit a traversal hole from a malformed manifest, rather than each caller having
   // to remember the check for itself.
   for (const entry of handwritten) safeOutput(root, entry.output);
-  return handwritten;
+  return handwritten.map((entry) => {
+    const capability = requireChapterCapability(
+      capabilities,
+      entry.language,
+      entry.chapter,
+    );
+    return { ...entry, title: capability.title, label: capability.label };
+  });
 }
 
 export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string, string> {
-  const trackChapters = loadTrackChapters(root);
-  const capabilityFor = (language: string, chapter: number) =>
-    trackChapters
-      .find((track) => track.language === language)
-      ?.chapters.find((entry) => entry.chapter === chapter);
+  const capabilities = chapterCapabilityIndex(root);
   const config = loadConfig(root);
   if (config.version !== 1 || config.targets.length === 0) {
     throw new Error("book-generation.json must declare version 1 and at least one target");
@@ -179,7 +226,16 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
   const manifest: GeneratedBookHashManifest = { version: 1, algorithm: "fnv1a64", chapters: [] };
   for (const configuredTarget of config.targets) {
     const { scriptSet, ...plainTarget } = configuredTarget;
-    let target: BookGenerationTarget = { ...plainTarget };
+    const capability = requireChapterCapability(
+      capabilities,
+      plainTarget.language,
+      plainTarget.chapter,
+    );
+    let target: BookGenerationTarget = {
+      ...plainTarget,
+      title: capability.title,
+      label: capability.label,
+    };
     if (scriptSet !== undefined) {
       if (
         target.inlineScripts !== undefined ||
@@ -201,7 +257,6 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
     // HL09 §8: a chapter opens by saying what the reader will be able to do. The
     // capability is looked up rather than authored, so the intro cannot drift from
     // the ledger the gap report measures.
-    const capability = capabilityFor(target.language, target.chapter);
     const generated = renderBookChapter(target, lessons, capability);
     safeOutput(root, target.output);
     outputs.set(target.output, generated.tex);
@@ -318,9 +373,20 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
     if (outputs.has(index.output)) {
       throw new Error(`${index.output}: duplicate generated book output`);
     }
-    const chapters = [...config.targets, ...(config.handwritten ?? [])].filter(
-      (chapter) => chapter.language === index.language,
-    );
+    const chapters = [...config.targets, ...(config.handwritten ?? [])]
+      .filter((chapter) => chapter.language === index.language)
+      .map((chapter) => {
+        const capability = requireChapterCapability(
+          capabilities,
+          chapter.language,
+          chapter.chapter,
+        );
+        return {
+          chapter: chapter.chapter,
+          title: capability.title,
+          label: capability.label,
+        };
+      });
     outputs.set(index.output, renderBookIndex(index, lessons, chapters));
   }
   manifest.chapters.sort(

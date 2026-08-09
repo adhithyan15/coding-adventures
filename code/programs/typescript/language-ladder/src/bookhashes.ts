@@ -15,7 +15,7 @@ const ENTRIES = manifestJson.chapters as BookHashEntry[];
 /**
  * The HL05 capability ledgers, loaded the same way lessons are.
  *
- * The chapter fingerprint covers the two capability fields the book PRINTS, so
+ * The chapter fingerprint covers the four capability fields the book PRINTS, so
  * reproducing it needs them. Globbed rather than read through the package loader,
  * which is Node-only — `lessons.ts` makes the same call for the same reason.
  */
@@ -26,6 +26,8 @@ const CHAPTER_LEDGERS = import.meta.glob(
 
 interface ChapterCapabilityEntry {
   chapter: number;
+  title?: string;
+  label?: string;
   canDo?: string;
   payoff?: { summary?: string };
 }

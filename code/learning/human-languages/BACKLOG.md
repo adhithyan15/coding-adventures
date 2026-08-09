@@ -219,7 +219,7 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C01 | Complete (#9942) | Specify the chapter capability layer, the visual system, and spine expansion to B1. | HL05, HL06 and HL07 are committed before any implementation, per repo policy. |
 | HL-C02 | Complete (#9957) | Add the `chapters.json` schema, loader, and `core/chapter-policy.json`. | `ChapterCapability`, `TrackChapters`, and `ChapterPolicy`, `loadTrackChapters` beside `loadLanguageCurricula`, all 22 track ledgers, and the policy loader and round-trip tests are shipped. |
 | HL-C03 | Complete (#9994) | Land the nine HL05 gates as report-only output and publish the first chapter snapshot. | All nine stable `CHAPTER_GATE_CODES` run through the gap report; the live snapshot now measures all 513 chapters and keeps recorded debt report-only. |
-| HL-C04 | Queued next — drift gate complete, authority migration remains | Derive book chapter titles and labels from `chapters.json`. | Remove the 420 duplicated `title`/`label` pairs from `core/book-generation.json` and derive them from the capability ledgers; retain the already-shipped `chapter-title-drift` transition gate, which currently reports zero drift. |
+| HL-C04 | In progress | Derive book chapter titles and labels from `chapters.json`. | Remove the duplicated `title`/`label` pairs from all 513 generated and handwritten declarations in `core/book-generation.json` and derive them from the capability ledgers; retain the already-shipped `chapter-title-drift` transition gate, which currently reports zero drift. |
 | HL-C05 | Queued — gates complete, lesson type unused | Add the `pattern` lesson type and its first canonical realization. | The three gates already shipped in #9994 and report zero findings because no lesson is typed `pattern`; add a canonical `pattern` lesson that introduces one `*-PATTERN-*` atom, declares only in-closure slot fillers, and instantiates at least three in a `guided-production` block. |
 | HL-C06 | Queued | Add the figure pipeline: SVG generation, `graphicx`, SVG→PDF in CI, and a `--check` hash gate. | A generated figure round-trips from canonical data into a compiled PDF and fails CI on drift, reusing `paint-vm-svg`'s `renderToSvgString`. |
 | HL-C07 | Complete (#9963) | Add the log-scanning warning gate with recorded per-track baselines. | Overfull/underfull boxes, missing glyphs, hyperref warnings, duplicate destinations, and font substitutions are machine-checked by `scan_latex_log_warnings.py` after the `latexmk` loop, against `core/latex-warning-baseline.json`. Baselines ship unseeded — `null` means unmeasured, never zero — so the gate reports today and fails the moment a seeded track regresses. The first CI run on main emits the real counts into the job summary for a human to paste back. |
@@ -2629,6 +2629,23 @@ problem.
 - HL-C19 supersedes HL-C09's old estimate. There are **228** prose stroke-order
   entries across ten scripts: one verified ductus and 227 entries still needing cited,
   font-checked pen-lift evidence.
+
+## Findings from HL-C04
+
+- `core/book-generation.json` carried a second title and label authority for all
+  **513** declared chapters: 420 generated targets and 93 handwritten declarations.
+  Removing those 1,026 keys leaves each declaration responsible only for its
+  coordinates, output path, and rendering mode.
+- The book loader now resolves both generated and handwritten metadata through the
+  matching `chapters.json` capability. It rejects legacy `title`/`label` fields and
+  fails closed when a declaration has no capability entry, while the existing
+  title-drift gate still compares the resolved title against committed LaTeX.
+- Title and label now participate in the canonical book fingerprint alongside the
+  printed capability and payoff summary. The regenerated 420 chapter files therefore
+  change only their hash comment, and Language Ladder reproduces the same fingerprint.
+- Handwritten books remain protected from generation. Their declarations still
+  locate the source file, and the drift tests re-read that file against the one
+  canonical title and label from the capability ledger.
 
 ## Completed foundations
 
