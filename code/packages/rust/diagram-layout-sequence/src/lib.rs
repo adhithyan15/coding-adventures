@@ -1,13 +1,13 @@
 //! Backend-neutral sequence diagram layout.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use diagram_ir::{
     LayoutedSequenceDiagram, LayoutedSequenceItem, SequenceBlockKind, SequenceDiagram,
     SequenceEvent, SequenceNotePlacement,
 };
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -42,7 +42,17 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
         })
         .collect();
     let width = lane_widths.iter().sum::<f64>() + MARGIN * 2.0;
+    let created_participants: HashSet<&str> = diagram
+        .events
+        .iter()
+        .filter_map(|event| match event {
+            SequenceEvent::ParticipantCreated { participant } => Some(participant.as_str()),
+            _ => None,
+        })
+        .collect();
     let mut centers = HashMap::new();
+    let mut lifeline_starts = HashMap::new();
+    let mut lifeline_ends = HashMap::new();
     let mut items = Vec::new();
     let mut x = MARGIN;
 
@@ -50,15 +60,18 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
         let box_width = (*lane_width - 24.0).max(100.0);
         let center = x + *lane_width / 2.0;
         centers.insert(participant.id.clone(), center);
-        items.push(LayoutedSequenceItem::ParticipantBox {
-            id: participant.id.clone(),
-            label: participant.label.text.clone(),
-            kind: participant.kind.clone(),
-            x: center - box_width / 2.0,
-            y: HEADER_Y,
-            width: box_width,
-            height: HEADER_H,
-        });
+        if !created_participants.contains(participant.id.as_str()) {
+            items.push(LayoutedSequenceItem::ParticipantBox {
+                id: participant.id.clone(),
+                label: participant.label.text.clone(),
+                kind: participant.kind.clone(),
+                x: center - box_width / 2.0,
+                y: HEADER_Y,
+                width: box_width,
+                height: HEADER_H,
+            });
+            lifeline_starts.insert(participant.id.clone(), HEADER_Y + HEADER_H);
+        }
         x += *lane_width;
     }
 
@@ -125,6 +138,44 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                         participant_x,
                         y,
                     );
+                }
+                y += EVENT_H / 2.0;
+            }
+            SequenceEvent::ParticipantCreated { participant } => {
+                if let (Some(&center), Some(definition)) = (
+                    centers.get(participant),
+                    diagram
+                        .participants
+                        .iter()
+                        .find(|item| item.id == *participant),
+                ) {
+                    let lane_index = diagram
+                        .participants
+                        .iter()
+                        .position(|item| item.id == *participant)
+                        .unwrap_or(0);
+                    let box_width = (lane_widths[lane_index] - 24.0).max(100.0);
+                    items.push(LayoutedSequenceItem::ParticipantBox {
+                        id: definition.id.clone(),
+                        label: definition.label.text.clone(),
+                        kind: definition.kind.clone(),
+                        x: center - box_width / 2.0,
+                        y,
+                        width: box_width,
+                        height: HEADER_H,
+                    });
+                    lifeline_starts.insert(participant.clone(), y + HEADER_H);
+                }
+                y += EVENT_H;
+            }
+            SequenceEvent::ParticipantDestroyed { participant } => {
+                if let Some(&center) = centers.get(participant) {
+                    items.push(LayoutedSequenceItem::Destruction {
+                        participant: participant.clone(),
+                        x: center,
+                        y,
+                    });
+                    lifeline_ends.insert(participant.clone(), y);
                 }
                 y += EVENT_H / 2.0;
             }
@@ -216,8 +267,14 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
             items.push(LayoutedSequenceItem::Lifeline {
                 participant: participant.id.clone(),
                 x: center,
-                y1: HEADER_Y + HEADER_H,
-                y2: height - 20.0,
+                y1: lifeline_starts
+                    .get(&participant.id)
+                    .copied()
+                    .unwrap_or(HEADER_Y + HEADER_H),
+                y2: lifeline_ends
+                    .get(&participant.id)
+                    .copied()
+                    .unwrap_or(height - 20.0),
             });
             if let Some(starts) = activation_starts.remove(&participant.id) {
                 for start in starts {
@@ -391,5 +448,79 @@ mod tests {
         assert!(frames.iter().any(|(depth, _, _)| *depth == 1));
         assert!(frames.iter().all(|(_, _, height)| *height > BLOCK_HEADER_H));
         assert!(layout.items.iter().any(|item| matches!(item, LayoutedSequenceItem::BlockDivider { label, .. } if label == "Fallback")));
+    }
+
+    #[test]
+    fn created_participant_has_bounded_lifeline() {
+        let diagram = SequenceDiagram {
+            title: None,
+            auto_number: false,
+            participants: vec![participant("Alice"), participant("Worker")],
+            events: vec![
+                SequenceEvent::Message {
+                    from: "Alice".into(),
+                    to: "Alice".into(),
+                    label: "Start".into(),
+                    line_style: SequenceLineStyle::Solid,
+                    arrowhead: SequenceArrowhead::Filled,
+                    bidirectional: false,
+                    activate: false,
+                    deactivate: false,
+                },
+                SequenceEvent::ParticipantCreated {
+                    participant: "Worker".into(),
+                },
+                SequenceEvent::Message {
+                    from: "Alice".into(),
+                    to: "Worker".into(),
+                    label: "Work".into(),
+                    line_style: SequenceLineStyle::Solid,
+                    arrowhead: SequenceArrowhead::Filled,
+                    bidirectional: false,
+                    activate: false,
+                    deactivate: false,
+                },
+                SequenceEvent::ParticipantDestroyed {
+                    participant: "Worker".into(),
+                },
+            ],
+        };
+        let layout = layout_sequence_diagram(&diagram);
+        let worker_box_y = layout
+            .items
+            .iter()
+            .find_map(|item| match item {
+                LayoutedSequenceItem::ParticipantBox { id, y, .. } if id == "Worker" => Some(*y),
+                _ => None,
+            })
+            .unwrap();
+        let (lifeline_y1, lifeline_y2) = layout
+            .items
+            .iter()
+            .find_map(|item| match item {
+                LayoutedSequenceItem::Lifeline {
+                    participant,
+                    y1,
+                    y2,
+                    ..
+                } if participant == "Worker" => Some((*y1, *y2)),
+                _ => None,
+            })
+            .unwrap();
+        let destruction_y = layout
+            .items
+            .iter()
+            .find_map(|item| match item {
+                LayoutedSequenceItem::Destruction { participant, y, .. }
+                    if participant == "Worker" =>
+                {
+                    Some(*y)
+                }
+                _ => None,
+            })
+            .unwrap();
+        assert_eq!(lifeline_y1, worker_box_y + HEADER_H);
+        assert_eq!(lifeline_y2, destruction_y);
+        assert!(worker_box_y > HEADER_Y);
     }
 }

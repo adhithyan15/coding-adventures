@@ -3,9 +3,10 @@
 
 document = { NEWLINE } HEADER body EOF ;
 body = { NEWLINE | statement } ;
-statement = participant_stmt | message_stmt | activation_stmt | note_stmt | title_stmt | autonumber_stmt | control_block ;
+statement = participant_stmt | destroy_stmt | message_stmt | activation_stmt | note_stmt | title_stmt | autonumber_stmt | control_block ;
 
-participant_stmt = ( "participant" | "actor" ) identifier [ "as" text ] ;
+participant_stmt = [ "create" ] ( "participant" | "actor" ) identifier [ "as" text ] ;
+destroy_stmt = "destroy" identifier ;
 message_stmt = identifier message_arrow [ PLUS | MINUS ] identifier COLON [ text ] ;
 activation_stmt = ( "activate" | "deactivate" ) identifier ;
 note_stmt = "note" ( ( "left" | "right" ) "of" identifier | "over" actor_pair ) COLON text ;

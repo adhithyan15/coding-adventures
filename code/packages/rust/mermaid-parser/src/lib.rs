@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.5.0";
+pub const VERSION: &str = "0.6.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1052,19 +1052,19 @@ fn parse_sequence_body(
     while !cursor.at_eof() && !terminators.contains(&cursor.current().value.as_str()) {
         match cursor.current().value.as_str() {
             "participant" | "actor" => {
-                let kind = if cursor.advance().value == "actor" {
-                    SequenceParticipantKind::Actor
-                } else {
-                    SequenceParticipantKind::Participant
-                };
-                let id = take_sequence_identifier(cursor)?;
-                let label = if cursor.current().value == "as" {
-                    cursor.advance();
-                    take_sequence_line_text(cursor)
-                } else {
-                    id.clone()
-                };
-                upsert_sequence_participant(diagram, participant_indices, id, label, kind);
+                parse_sequence_participant(cursor, diagram, participant_indices, false)?
+            }
+            "create" => {
+                cursor.advance();
+                parse_sequence_participant(cursor, diagram, participant_indices, true)?;
+            }
+            "destroy" => {
+                cursor.advance();
+                let participant = take_sequence_identifier(cursor)?;
+                ensure_sequence_participant(diagram, participant_indices, &participant);
+                diagram
+                    .events
+                    .push(SequenceEvent::ParticipantDestroyed { participant });
             }
             "activate" | "deactivate" => {
                 let active = cursor.advance().value == "activate";
@@ -1093,6 +1093,39 @@ fn parse_sequence_body(
             _ => parse_sequence_message(cursor, diagram, participant_indices)?,
         }
         cursor.skip_terminators();
+    }
+    Ok(())
+}
+
+fn parse_sequence_participant(
+    cursor: &mut TokenCursor,
+    diagram: &mut SequenceDiagram,
+    participant_indices: &mut HashMap<String, usize>,
+    created: bool,
+) -> Result<(), ParseError> {
+    let declaration = cursor.advance().clone();
+    let kind = match declaration.value.as_str() {
+        "actor" => SequenceParticipantKind::Actor,
+        "participant" => SequenceParticipantKind::Participant,
+        other => {
+            return Err(token_error(
+                &declaration,
+                format!("expected participant or actor after create, got {other:?}"),
+            ))
+        }
+    };
+    let id = take_sequence_identifier(cursor)?;
+    let label = if cursor.current().value == "as" {
+        cursor.advance();
+        take_sequence_line_text(cursor)
+    } else {
+        id.clone()
+    };
+    upsert_sequence_participant(diagram, participant_indices, id.clone(), label, kind);
+    if created {
+        diagram
+            .events
+            .push(SequenceEvent::ParticipantCreated { participant: id });
     }
     Ok(())
 }
@@ -2646,6 +2679,29 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert!(!error.message.is_empty());
         assert!(error.line >= 2);
     }
+
+    #[test]
+    fn sequence_parses_participant_lifecycle_events() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nparticipant A as Alice\nA->>B: Start\ncreate actor Worker as Background Worker\nB->>Worker: Run\ndestroy Worker\n",
+        )
+        .unwrap();
+        let worker = diagram
+            .participants
+            .iter()
+            .find(|p| p.id == "Worker")
+            .unwrap();
+        assert_eq!(worker.kind, SequenceParticipantKind::Actor);
+        assert_eq!(worker.label.text, "Background Worker");
+        assert!(diagram.events.iter().any(|event| matches!(
+            event,
+            SequenceEvent::ParticipantCreated { participant } if participant == "Worker"
+        )));
+        assert!(diagram.events.iter().any(|event| matches!(
+            event,
+            SequenceEvent::ParticipantDestroyed { participant } if participant == "Worker"
+        )));
+    }
 }
 #[cfg(test)]
 mod tests {
@@ -2662,7 +2718,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.5.0");
+        assert_eq!(crate::VERSION, "0.6.0");
     }
 
     #[test]
