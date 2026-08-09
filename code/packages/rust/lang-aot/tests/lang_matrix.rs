@@ -1559,6 +1559,24 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — recursive scalar name remapping. Each recursive step swaps
+    // `x` and `y`, so the compiler must retain two specialised siblings rather
+    // than binding both calls to the original formal map. Writes through both
+    // names remain visible in `left` and `right`; the base case returns 7.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer left, right, result; \
+                  integer procedure swapcount(n, x, y); value n; integer n, x, y; \
+                    if n = 0 then swapcount := x - y \
+                    else begin \
+                      x := x + 1; y := y + 2; \
+                      swapcount := swapcount(n - 1, y, x) \
+                    end; \
+                  left := 10; right := 3; result := swapcount(2, left, right) end",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — direct and forwarded string name formals. The nested
     // `consume` formal shares the outer spelling, so the specialised sibling
     // must retain the original caller string binding through its generated
@@ -6465,6 +6483,37 @@ fn algol_recursive_scalar_name_forwarding_runs_on_every_available_standard_backe
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but recursive scalar name forwarding did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_recursive_scalar_name_remapping_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure swapcount(n, x, y)")
+                && program.src.contains("swapcount := swapcount(n - 1, y, x)")
+                && program.src.contains("result := swapcount(2, left, right)")
+        })
+        .expect("the recursive scalar name-remapping program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but recursive scalar name remapping did not complete"
             );
             continue;
         };

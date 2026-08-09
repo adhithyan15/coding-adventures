@@ -321,6 +321,19 @@ struct ProcSig {
 struct ByNameBinding {
     actual: GrammarASTNode,
     ty: ScalarType,
+    /// Stable representation of the actual after forwarded formals resolve to
+    /// their captured caller storage. This identifies a finite recursive
+    /// remapping even when each lexical use receives a fresh local alias.
+    key: String,
+}
+
+/// One direct sibling currently being lowered for a procedure with scalar
+/// call-by-name formals. Several siblings can coexist while a recursive call
+/// remaps its formals, for example `flip(n, y, x)`.
+#[derive(Debug, Clone)]
+struct InFlightByNameSpecialization {
+    scalar_binding_key: String,
+    function_name: String,
 }
 
 #[derive(Debug, Clone)]
@@ -362,10 +375,11 @@ struct Compiler {
     /// Monotonic suffix for generated lexical aliases used while a name actual
     /// is forwarded through another specialised sibling.
     by_name_capture_counter: usize,
-    /// Source procedures currently being specialised and their direct sibling
-    /// names. Name-array-only recursion can reuse this descriptor ABI; scalar
-    /// name recursion still needs an environment-aware thunk ABI.
-    compiling_by_name_procedures: HashMap<String, String>,
+    /// Source procedures currently being specialised and their direct siblings.
+    /// Name arrays reuse the descriptor ABI directly; scalar names can also
+    /// reuse a sibling whose captured binding map matches exactly. Changed
+    /// scalar expressions still need an environment-aware thunk ABI.
+    compiling_by_name_procedures: HashMap<String, Vec<InFlightByNameSpecialization>>,
     /// Switch name → its ordered designational expressions. A `goto s[i]`
     /// evaluates the selected expression at run time, which permits both
     /// conditional and nested switch-list elements.
@@ -1986,24 +2000,50 @@ impl Compiler {
             param.mode == ProcedureParamMode::Name
                 && matches!(param.ty, ProcedureParamType::Scalar(_))
         });
-        if let Some(specialised_name) = self
-            .compiling_by_name_procedures
-            .get(source_name)
-            .cloned()
-        {
+        let in_flight = self.compiling_by_name_procedures.get(source_name).cloned();
+        if let Some(in_flight) = &in_flight {
             // Name arrays already travel through the ordinary typed descriptor
-            // ABI, so a recursive call can re-enter the sibling currently being
-            // compiled. Scalar names carry caller expressions, so only
-            // unchanged forwarding can safely reuse the existing bindings;
-            // other recursive scalar actuals need a true runtime thunk.
-            if !has_scalar_name_formal
-                || self.recursive_scalar_actuals_forward_their_formals(sig, actuals)
-            {
-                return Ok(specialised_name);
+            // ABI, so a recursive call can re-enter the active sibling. Scalar
+            // names may also form a finite remapping graph, but every recursive
+            // actual must still be a direct active formal: a changed expression
+            // needs a runtime thunk frame.
+            if !has_scalar_name_formal {
+                return in_flight
+                    .last()
+                    .map(|entry| entry.function_name.clone())
+                    .ok_or_else(|| {
+                        CompileError::Malformed(format!(
+                            "call-by-name procedure {source_name:?} has no active sibling"
+                        ))
+                    });
             }
-            return Err(CompileError::Unsupported(format!(
-                "recursive call-by-name procedure {source_name:?} must forward every scalar name formal unchanged"
-            )));
+            if !self.recursive_scalar_actuals_forward_active_formals(sig, actuals) {
+                return Err(CompileError::Unsupported(format!(
+                    "recursive call-by-name procedure {source_name:?} must pass every scalar name formal directly from an active scalar formal"
+                )));
+            }
+        }
+
+        let mut bindings = HashMap::new();
+        for (param, actual) in sig.params.iter().zip(actuals) {
+            if param.mode != ProcedureParamMode::Name {
+                continue;
+            }
+            let ProcedureParamType::Scalar(ty) = param.ty else {
+                continue;
+            };
+            let (actual, key) = self.prepare_by_name_actual(actual)?;
+            bindings.insert(param.name.clone(), ByNameBinding { actual, ty, key });
+        }
+        let scalar_binding_key = self.scalar_by_name_binding_key(sig, &bindings);
+
+        if let Some(in_flight) = &in_flight {
+            if let Some(entry) = in_flight
+                .iter()
+                .find(|entry| entry.scalar_binding_key == scalar_binding_key)
+            {
+                return Ok(entry.function_name.clone());
+            }
         }
 
         let result = (|| {
@@ -2012,24 +2052,6 @@ impl Compiler {
                     "call-by-name procedure {source_name:?} has no declaration AST"
                 ))
             })?;
-
-            let mut bindings = HashMap::new();
-            for (param, actual) in sig.params.iter().zip(actuals) {
-                if param.mode != ProcedureParamMode::Name {
-                    continue;
-                }
-                let ProcedureParamType::Scalar(ty) = param.ty else {
-                    continue;
-                };
-                let actual = self.prepare_by_name_actual(actual)?;
-                bindings.insert(
-                    param.name.clone(),
-                    ByNameBinding {
-                        actual,
-                        ty,
-                    },
-                );
-            }
 
             if self.by_name_specialization_counter >= MAX_CALL_BY_NAME_SPECIALIZATIONS {
                 return Err(CompileError::Unsupported(format!(
@@ -2040,7 +2062,12 @@ impl Compiler {
             self.by_name_specialization_counter += 1;
             let specialised_name = format!("__algol_by_name_{source_name}_{suffix}");
             self.compiling_by_name_procedures
-                .insert(source_name.to_string(), specialised_name.clone());
+                .entry(source_name.to_string())
+                .or_default()
+                .push(InFlightByNameSpecialization {
+                    scalar_binding_key,
+                    function_name: specialised_name.clone(),
+                });
             let function = self.compile_procedure_with_bindings(
                 &proc_decl,
                 Some(specialised_name.clone()),
@@ -2049,30 +2076,61 @@ impl Compiler {
             self.functions.push(function);
             Ok(specialised_name)
         })();
-        self.compiling_by_name_procedures.remove(source_name);
+        if let Some(entries) = self.compiling_by_name_procedures.get_mut(source_name) {
+            entries.pop();
+            if entries.is_empty() {
+                self.compiling_by_name_procedures.remove(source_name);
+            }
+        }
         result
     }
 
-    /// A recursive direct sibling may reuse its existing scalar name bindings
-    /// only when the recursive call forwards each formal under the same source
-    /// name. That preserves the original caller expression and write target;
-    /// a changed actual such as `f(x - 1)` still needs a dynamic thunk frame.
-    fn recursive_scalar_actuals_forward_their_formals(
+    /// A recursive scalar call is statically safe when every scalar name actual
+    /// is itself an active scalar formal of the required type. Such calls only
+    /// remap existing caller expressions and write targets; an expression such
+    /// as `f(x - 1)` instead needs a dynamic thunk frame.
+    fn recursive_scalar_actuals_forward_active_formals(
         &self,
         sig: &ProcSig,
         actuals: &[&GrammarASTNode],
     ) -> bool {
         sig.params.iter().zip(actuals).all(|(param, actual)| {
-            if param.mode != ProcedureParamMode::Name
-                || !matches!(param.ty, ProcedureParamType::Scalar(_))
-            {
+            let ProcedureParamType::Scalar(expected) = param.ty else {
+                return true;
+            };
+            if param.mode != ProcedureParamMode::Name {
                 return true;
             }
             let Some(actual_name) = expr_variable_name(actual) else {
                 return false;
             };
-            actual_name == param.name && self.active_by_name_binding(&actual_name).is_some()
+            self.active_by_name_binding(&actual_name)
+                .is_some_and(|binding| binding.ty == expected)
         })
+    }
+
+    /// Serialize scalar name bindings in formal order. Stored actual keys
+    /// resolve temporary aliases to captured storage, so recursive remappings
+    /// can identify a previously compiled sibling.
+    fn scalar_by_name_binding_key(
+        &self,
+        sig: &ProcSig,
+        bindings: &HashMap<String, ByNameBinding>,
+    ) -> String {
+        sig.params
+            .iter()
+            .filter(|param| {
+                param.mode == ProcedureParamMode::Name
+                    && matches!(param.ty, ProcedureParamType::Scalar(_))
+            })
+            .map(|param| {
+                let binding = bindings
+                    .get(&param.name)
+                    .expect("scalar name formal must have a prepared binding");
+                format!("{}={}", param.name, binding.key)
+            })
+            .collect::<Vec<_>>()
+            .join("|")
     }
 
     /// Freeze one name actual in its caller's lexical environment before a
@@ -2084,9 +2142,13 @@ impl Compiler {
     fn prepare_by_name_actual(
         &mut self,
         actual: &GrammarASTNode,
-    ) -> Result<GrammarASTNode, CompileError> {
+    ) -> Result<(GrammarASTNode, String), CompileError> {
+        let forwarded_key = expr_variable_name(actual)
+            .and_then(|name| self.active_by_name_binding(&name))
+            .map(|binding| binding.key);
         let mut forwarding = HashSet::new();
         let mut actual = self.expand_forwarded_by_name_actual(actual, &mut forwarding)?;
+        let key = forwarded_key.unwrap_or_else(|| self.by_name_actual_key(&actual));
         let mut names = HashSet::new();
         collect_name_tokens_excluding_nested_procedures(&actual, &mut names);
         let mut aliases = HashMap::new();
@@ -2098,7 +2160,44 @@ impl Compiler {
             }
         }
         rename_name_tokens(&mut actual, &aliases);
-        Ok(actual)
+        Ok((actual, key))
+    }
+
+    /// Produce an AST-shaped key for a stored name actual. Resolvable variable
+    /// tokens use their captured storage slot rather than their fresh lexical
+    /// alias, while unknown names retain their source spelling for diagnostics.
+    fn by_name_actual_key(&self, node: &GrammarASTNode) -> String {
+        fn append(compiler: &Compiler, node: &GrammarASTNode, output: &mut String) {
+            output.push('(');
+            output.push_str(&node.rule_name);
+            for child in &node.children {
+                match child {
+                    ASTNodeOrToken::Node(child) => append(compiler, child, output),
+                    ASTNodeOrToken::Token(token) => {
+                        output.push('[');
+                        output.push_str(token.effective_type_name());
+                        output.push(':');
+                        if token.effective_type_name() == "NAME" {
+                            match compiler.require_var(&token.value) {
+                                Ok(binding) => {
+                                    output.push('@');
+                                    output.push_str(&binding.slot);
+                                }
+                                Err(_) => output.push_str(&token.value),
+                            }
+                        } else {
+                            output.push_str(&token.value);
+                        }
+                        output.push(']');
+                    }
+                }
+            }
+            output.push(')');
+        }
+
+        let mut key = String::new();
+        append(self, node, &mut key);
+        key
     }
 
     /// Replace a scalar name formal in a forwarding actual with the expression
@@ -7542,6 +7641,53 @@ mod tests {
                      else begin x := x + 7; odd := even(n - 1, x) end; \
                    x := 21; result := even(3, x) end";
         assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn call_by_name_scalar_formals_support_recursive_remapping() {
+        let src = "begin integer left, right, result; \
+                   integer procedure swapcount(n, x, y); value n; integer n, x, y; \
+                     if n = 0 then swapcount := x - y \
+                     else begin \
+                       x := x + 1; y := y + 2; \
+                       swapcount := swapcount(n - 1, y, x) \
+                     end; \
+                   left := 10; right := 3; result := swapcount(2, left, right) end";
+        assert_eq!(run_i64(src), 7);
+
+        let module = compile_source(src, "call_by_name_scalar_remapping").expect("compiles");
+        let siblings: Vec<_> = module
+            .functions
+            .iter()
+            .filter(|function| function.name.starts_with("__algol_by_name_swapcount_"))
+            .collect();
+        assert_eq!(siblings.len(), 2, "the swapped bindings need two siblings");
+        assert!(siblings.iter().all(|function| {
+            function.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().is_some_and(|callee| {
+                        matches!(callee, Operand::Var(name)
+                            if name.starts_with("__algol_by_name_swapcount_"))
+                    })
+            })
+        }));
+    }
+
+    #[test]
+    fn call_by_name_scalar_formals_support_mutual_recursive_remapping() {
+        let src = "begin integer left, right, result; \
+                   integer procedure even(n, x, y); value n; integer n, x, y; \
+                     if n = 0 then even := x - y \
+                     else begin \
+                       x := x + 1; y := y + 2; even := odd(n - 1, y, x) \
+                     end; \
+                   integer procedure odd(n, x, y); value n; integer n, x, y; \
+                     if n = 0 then odd := x - y \
+                     else begin \
+                       x := x + 1; y := y + 2; odd := even(n - 1, y, x) \
+                     end; \
+                   left := 10; right := 3; result := even(3, left, right) end";
+        assert_eq!(run_i64(src), -6);
     }
 
     #[test]
