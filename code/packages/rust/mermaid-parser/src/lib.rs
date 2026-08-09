@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.16.0";
+pub const VERSION: &str = "0.17.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1056,6 +1056,14 @@ fn parse_sequence_body(
 ) -> Result<(), ParseError> {
     cursor.skip_terminators();
     while !cursor.at_eof() && !terminators.contains(&cursor.current().value.as_str()) {
+        if token_name(cursor.current()) == "ACC_DESCR_BLOCK" {
+            let token = cursor.advance().clone();
+            let open = token.value.find('{').expect("token grammar requires '{'");
+            let close = token.value.rfind('}').expect("token grammar requires '}'");
+            diagram.accessibility_description = Some(token.value[open + 1..close].trim().into());
+            cursor.skip_terminators();
+            continue;
+        }
         match cursor.current().value.as_str() {
             "participant" | "actor" => {
                 parse_sequence_participant(cursor, diagram, participant_indices, false)?;
@@ -3302,6 +3310,18 @@ B//-A: reverse stick top
             Some("Banking interaction")
         );
     }
+
+    #[test]
+    fn sequence_parses_multiline_accessibility_description() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\naccDescr {\n  Transfers funds\n  between accounts\n}\nAlice->>Bob: Hello\n",
+        )
+        .unwrap();
+        assert_eq!(
+            diagram.accessibility_description.as_deref(),
+            Some("Transfers funds\n  between accounts")
+        );
+    }
 }
 #[cfg(test)]
 mod tests {
@@ -3318,7 +3338,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.16.0");
+        assert_eq!(crate::VERSION, "0.17.0");
     }
 
     #[test]

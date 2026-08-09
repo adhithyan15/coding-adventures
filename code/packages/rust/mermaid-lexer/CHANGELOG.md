@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.16.0
+
+- Tokenize multiline sequence accessibility-description blocks atomically.
+
 ## 0.15.0
 
 - Tokenize sequence `accTitle` and `accDescr` statements.

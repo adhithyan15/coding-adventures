@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Export sequence accessibility title and description as PaintScene metadata.
+- Preserve multiline accessibility descriptions in that scene metadata.
 - Export sequence actor details references as PaintScene metadata.
 - Export JSON-valued sequence actor properties as PaintScene metadata.
 - Export sequence actor links as PaintScene hit-test metadata.

@@ -129,9 +129,8 @@ forms. The family remains partial until those forms and the
 pinned upstream corpus pass; unsupported forms must fail grammar validation
 rather than degrade silently.
 
-Single-line sequence `accTitle` and `accDescr` statements preserve accessibility
-semantics in PaintScene metadata. Mermaid's multiline accessibility-description
-form remains compatibility work.
+Sequence `accTitle`, single-line `accDescr`, and multiline `accDescr` blocks
+preserve accessibility semantics in PaintScene metadata.
 
 Inline participant configuration now carries `type` and `alias` into semantic
 IR. Boundary, control, entity, database, collections, and queue kinds lower to

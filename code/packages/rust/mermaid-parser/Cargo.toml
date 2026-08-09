@@ -1,6 +1,6 @@
 [package]
 name = "mermaid-parser"
-version = "0.16.0"
+version = "0.17.0"
 edition = "2021"
 description = "Versioned Mermaid compatibility dispatcher and grammar-driven diagram parsers"
 

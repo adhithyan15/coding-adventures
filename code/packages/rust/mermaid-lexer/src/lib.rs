@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.15.0";
+pub const VERSION: &str = "0.16.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -111,7 +111,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.15.0");
+        assert_eq!(VERSION, "0.16.0");
     }
 
     #[test]
@@ -435,5 +435,16 @@ A\\-B: reverse stick bottom
         );
         assert!(tokens.iter().any(|token| token.value == "accTitle"));
         assert!(tokens.iter().any(|token| token.value == "accDescr"));
+    }
+
+    #[test]
+    fn tokenizes_multiline_sequence_accessibility_description() {
+        let tokens = tokenize_mermaid_sequence(
+            "sequenceDiagram\naccDescr {\n  Transfers funds\n  between accounts\n}\n",
+        );
+        assert!(tokens.iter().any(|token| {
+            token.type_name.as_deref() == Some("ACC_DESCR_BLOCK")
+                && token.value.contains("between accounts")
+        }));
     }
 }
