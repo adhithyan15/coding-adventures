@@ -2636,6 +2636,19 @@ def test_parse_nch_model_type_alias() -> None:
     assert isclose(mosfet.model.model.params.KP, 200.0e-6)
 
 
+def test_parse_pch_model_type_alias() -> None:
+    parsed = parse_netlist(
+        ".model pfast PCH(VTO=0.4 KP=120u)\nM1 d g s b pfast"
+    )
+
+    assert parsed.models["pfast"].kind == "PMOS"
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert mosfet.model.type == MosfetType.PMOS
+    assert isinstance(mosfet.model.model, Level1Model)
+    assert isclose(mosfet.model.model.params.KP, 120.0e-6)
+
+
 def test_parse_pmos_mosfet_model() -> None:
     parsed = parse_netlist(
         """
