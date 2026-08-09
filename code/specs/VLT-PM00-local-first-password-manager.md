@@ -434,13 +434,17 @@ pub struct ItemDocument {
     pub schema: ContentType,
     pub created_at_ms: u64,
     pub updated_at_ms: u64,
-    pub favorite: bool,
-    pub collection_ids: Vec<CollectionId>,
-    pub tags: OrSet<String>,
+    pub favorite: LwwRegister<bool>,
+    pub collection_ids: ObservedSet<CollectionId>,
+    pub tags: ObservedSet<String>,
     pub payload: AnyRecord,
-    pub attachments: Vec<AttachmentRef>,
+    pub attachments: ObservedSet<AttachmentId>,
 }
 ```
+
+The product-domain names, bounds, merge behavior, and redacted projections are
+specified by `VLT-PM03-domain.md`. Operation IDs are supplied by the repository
+or application layer; the pure domain package owns no entropy or device keys.
 
 The encrypted catalog maps item IDs to current candidate revisions, conflict
 revisions, tombstones, and attachment roots. Search is a rebuildable projection
@@ -1301,8 +1305,8 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
 - `VLT09-vault-audit-log.md` — audit chain.
 - `VLT10-vault-sync-engine.md` — version vectors and conflict semantics.
 - `VLT11-transports.md` — current CLI transport contract.
-- `VLT-PM01-format.md` and `VLT-PM02-storage.md` — product repository wire and
-  object-store contracts.
+- `VLT-PM01-format.md`, `VLT-PM02-storage.md`, and `VLT-PM03-domain.md` —
+  product repository wire, object-store, and domain contracts.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.
