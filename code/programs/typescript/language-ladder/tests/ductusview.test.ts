@@ -76,6 +76,8 @@ const DENTAL_NA = DUCTUS["ந"];
 const dentalNaOutline = tamilOutline("ந");
 const PERSIAN_ALEF = DUCTUS["ا"];
 const persianAlefOutline = naskhOutline("ا");
+const URDU_ALEF = ductusFor("ا", "urdu-nastaliq")!;
+const urduAlefOutline = naskhOutline("ا");
 const PERSIAN_BEH = DUCTUS["ب"];
 const persianBehOutline = naskhOutline("ب");
 const PERSIAN_TEH = DUCTUS["ت"];
@@ -103,7 +105,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds all eleven authored Tamil letters and all nine Persian starter letters", () => {
+  it("finds all eleven authored Tamil letters, nine Persian letters, and Urdu ا", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -124,6 +126,16 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("ن")?.glyph).toBe("ن");
     expect(ductusFor("و")?.glyph).toBe("و");
     expect(ductusFor("ه")?.glyph).toBe("ه");
+    expect(ductusFor("ا", "urdu-nastaliq")?.glyph).toBe("ا");
+  });
+
+  it("keeps the shared Persian and Urdu ا independently addressable", () => {
+    const persian = ductusFor("ا", "perso-arabic");
+    const urdu = ductusFor("ا", "urdu-nastaliq");
+    expect(persian?.script).toBe("perso-arabic");
+    expect(urdu?.script).toBe("urdu-nastaliq");
+    expect(persian?.source.url).not.toBe(urdu?.source.url);
+    expect(ductusFor("ا", "arabic")).toBeUndefined();
   });
 
   it("returns undefined for a letter nobody has authored a stroke order for", () => {
@@ -587,7 +599,7 @@ describe("Persian ا — the first cited right-to-left-script filmstrip", () => 
 
   it("keeps the source's top-to-bottom stem in one pen-down run", () => {
     expect(steps).toHaveLength(1);
-    expect(steps[0].label).toBe("draw the tall stem downward");
+    expect(steps[0].label).toBe("down");
     expect(steps[0].startsAfterLift).toBe(false);
     expect(steps[0].strokeIndex).toBe(0);
     const path = PERSIAN_ALEF.strokes[0].segments[0].path;
@@ -607,6 +619,32 @@ describe("Persian ا — the first cited right-to-left-script filmstrip", () => 
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(PERSIAN_ALEF.strokes[0], 1),
+    );
+  });
+});
+
+describe("Urdu ا — an independent, source-specific filmstrip", () => {
+  const steps = ductusSteps(URDU_ALEF);
+  const strip = ductusFilmstrip(URDU_ALEF, urduAlefOutline);
+
+  it("shows one downward movement with no lift", () => {
+    expect(steps.map((step) => step.label)).toEqual(["down"]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false]);
+    expect(URDU_ALEF.strokes[0].segments[0].path[0].y).toBeGreaterThan(
+      URDU_ALEF.strokes[0].segments[0].path.at(-1)!.y,
+    );
+    expect(strip.frames).toHaveLength(1);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 1 movement");
+  });
+
+  it("uses the vendored Noto Naskh fallback outline", () => {
+    const paths = byTag(strip.frames[0], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      urduAlefOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(URDU_ALEF.strokes[0], 1),
     );
   });
 });
@@ -895,6 +933,7 @@ describe("Persian ه — its isolated looping body stays in one pen-down run", (
 // ---------------------------------------------------------------------------
 describe("a letter written in more than one stroke", () => {
   const twoStroke: LetterDuctus = {
+    script: "test",
     glyph: "✚",
     strokes: [
       { segments: [{ label: "the upright", path: [{ x: 100, y: 0 }, { x: 100, y: 400 }] }] },
@@ -935,6 +974,7 @@ describe("a letter written in more than one stroke", () => {
     const strip = (n: number) =>
       ductusFilmstrip(
         {
+          script: "test",
           glyph: "?",
           strokes: Array.from({ length: n }, (_, i) => ({
             segments: [{ label: `part ${i}`, path: [{ x: 0, y: 0 }, { x: 10, y: 0 }] }],
@@ -967,6 +1007,7 @@ describe("a letter written in more than one stroke", () => {
 
   it("draws nothing rather than an empty path when a part has no points", () => {
     const hollow: LetterDuctus = {
+      script: "test",
       glyph: "␀",
       strokes: [{ segments: [{ label: "nothing at all", path: [] }] }],
       source: twoStroke.source,
@@ -980,7 +1021,7 @@ describe("a letter written in more than one stroke", () => {
   });
 
   it("survives degenerate input rather than emitting a zero-size picture", () => {
-    const empty: LetterDuctus = { glyph: "␣", strokes: [], source: twoStroke.source };
+    const empty: LetterDuctus = { script: "test", glyph: "␣", strokes: [], source: twoStroke.source };
     const nowhere: GlyphOutline = { path: "", bounds: { x0: 0, y0: 0, x1: 0, y1: 0 } };
     const strip = ductusFilmstrip(empty, nowhere);
     expect(strip.frames).toHaveLength(0);
@@ -1014,6 +1055,7 @@ describe("serialising to markup", () => {
     // A label is authored today, but escaping is a property of the writer, not
     // of the data. Feed it markup and check none survives as markup.
     const nasty: LetterDuctus = {
+      script: "test",
       glyph: "x",
       strokes: [
         {

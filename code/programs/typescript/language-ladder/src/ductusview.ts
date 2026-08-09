@@ -58,6 +58,7 @@
 
 import {
   DUCTUS,
+  ductusKey,
   penLifts,
   penPathD,
   penTip,
@@ -410,8 +411,15 @@ function summarise(lifts: number, movements: number): string {
  * must handle `undefined` and fall back to the prose stroke order rather than
  * showing an empty figure or, worse, an invented one.
  */
-export function ductusFor(glyph: string): LetterDuctus | undefined {
-  return Object.prototype.hasOwnProperty.call(DUCTUS, glyph) ? DUCTUS[glyph] : undefined;
+export function ductusFor(glyph: string, script?: string): LetterDuctus | undefined {
+  if (script) {
+    const scopedKey = ductusKey(script, glyph);
+    if (Object.prototype.hasOwnProperty.call(DUCTUS, scopedKey)) return DUCTUS[scopedKey];
+  }
+
+  if (!Object.prototype.hasOwnProperty.call(DUCTUS, glyph)) return undefined;
+  const legacy = DUCTUS[glyph];
+  return !script || legacy.script === script ? legacy : undefined;
 }
 
 // ---------------------------------------------------------------------------

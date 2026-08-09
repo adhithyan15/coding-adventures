@@ -8,6 +8,7 @@
 // where (if ever) it lifts.
 
 import persoArabic from "../../../../learning/human-languages/data/scripts/perso-arabic.json";
+import urduNastaliq from "../../../../learning/human-languages/data/scripts/urdu-nastaliq.json";
 //
 // The model, in one breath
 // ------------------------
@@ -89,6 +90,8 @@ export interface StrokeSource {
 
 /** A letter's handwriting: the character and the strokes that form it. */
 export interface LetterDuctus {
+  /** Canonical script id. Glyphs shared by multiple scripts need distinct identities. */
+  script: string;
   glyph: string;
   /** In writing order. `strokes.length - 1` is the number of pen lifts. */
   strokes: Stroke[];
@@ -194,6 +197,17 @@ const persianAlphabetSource = (glyph: string): StrokeSource => {
   return letter.strokeOrderSource;
 };
 
+const urduAlphabetSource = (glyph: string): StrokeSource => {
+  const letter = urduNastaliq.letters.find((candidate) => candidate.glyph === glyph);
+  if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
+    throw new Error(`Urdu ${glyph} has no verified source`);
+  }
+  return letter.strokeOrderSource;
+};
+
+/** Collision-safe key for a glyph whose Unicode character is shared by scripts. */
+export const ductusKey = (script: string, glyph: string): string => `${script}:${glyph}`;
+
 // ---------------------------------------------------------------------------
 // The authored letters.
 //
@@ -205,6 +219,9 @@ const persianAlphabetSource = (glyph: string): StrokeSource => {
 // Persian ا opens UT Austin's freehand alphabet demonstration: one vertical
 // movement travels from the top to the baseline. The lesson presents the
 // alphabet right-to-left, while this isolated non-connector remains one stroke.
+// Urdu ا has the same fallback-font geometry but a distinct source and identity:
+// Zer o Zabar's independent animation travels top-to-bottom in one continuous
+// stroke, explicitly unlike the bottom-to-top final-form animation beside it.
 // The adjacent ب starts at the bowl's right lip, sweeps right-to-left through
 // its shallow dip, then lifts once before placing the separate dot below.
 // After the intervening Persian-added پ row, ت repeats the same bowl, lifts to
@@ -248,12 +265,13 @@ const persianAlphabetSource = (glyph: string): StrokeSource => {
 
 export const DUCTUS: Record<string, LetterDuctus> = {
   "ا": {
+    script: "perso-arabic",
     glyph: "ا",
     strokes: [
       {
         segments: [
           {
-            label: "draw the tall stem downward",
+            label: "down",
             path: [
               { x: 120, y: 640 },
               { x: 120, y: 580 },
@@ -269,7 +287,31 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: persianAlphabetSource("ا"),
   },
+  [ductusKey("urdu-nastaliq", "ا")]: {
+    script: "urdu-nastaliq",
+    glyph: "ا",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "down",
+            path: [
+              { x: 120, y: 640 },
+              { x: 120, y: 580 },
+              { x: 119, y: 500 },
+              { x: 124, y: 400 },
+              { x: 128, y: 250 },
+              { x: 129, y: 100 },
+              { x: 127, y: 10 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: urduAlphabetSource("ا"),
+  },
   "ب": {
+    script: "perso-arabic",
     glyph: "ب",
     strokes: [
       {
@@ -313,6 +355,7 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     source: persianAlphabetSource("ب"),
   },
   "ت": {
+    script: "perso-arabic",
     glyph: "ت",
     strokes: [
       {
@@ -368,6 +411,7 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     source: persianAlphabetSource("ت"),
   },
   "س": {
+    script: "perso-arabic",
     glyph: "س",
     strokes: [
       {
@@ -408,6 +452,7 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     source: persianAlphabetSource("س"),
   },
   "ل": {
+    script: "perso-arabic",
     glyph: "ل",
     strokes: [
       {
@@ -441,6 +486,7 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     source: persianAlphabetSource("ل"),
   },
   "م": {
+    script: "perso-arabic",
     glyph: "م",
     strokes: [
       {
@@ -481,6 +527,7 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     source: persianAlphabetSource("م"),
   },
   "ن": {
+    script: "perso-arabic",
     glyph: "ن",
     strokes: [
       {
@@ -523,6 +570,7 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     source: persianAlphabetSource("ن"),
   },
   "و": {
+    script: "perso-arabic",
     glyph: "و",
     strokes: [
       {
@@ -573,6 +621,7 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     source: persianAlphabetSource("و"),
   },
   "ه": {
+    script: "perso-arabic",
     glyph: "ه",
     strokes: [
       {
@@ -627,6 +676,7 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     source: persianAlphabetSource("ه"),
   },
   அ: {
+    script: "tamil",
     glyph: "அ",
     strokes: [
       {
@@ -714,6 +764,7 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     },
   },
   ஆ: {
+    script: "tamil",
     glyph: "ஆ",
     strokes: [
       {
@@ -824,6 +875,7 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     },
   },
   இ: {
+    script: "tamil",
     glyph: "இ",
     strokes: [
       {
@@ -954,6 +1006,7 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     },
   },
   க: {
+    script: "tamil",
     glyph: "க",
     strokes: [
       {
@@ -1047,6 +1100,7 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     },
   },
   வ: {
+    script: "tamil",
     glyph: "வ",
     strokes: [
       {
@@ -1131,6 +1185,7 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     },
   },
   ல: {
+    script: "tamil",
     glyph: "ல",
     strokes: [
       {
@@ -1210,6 +1265,7 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     },
   },
   ற: {
+    script: "tamil",
     glyph: "ற",
     strokes: [
       {
@@ -1295,6 +1351,7 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     },
   },
   ந: {
+    script: "tamil",
     glyph: "ந",
     strokes: [
       {
@@ -1397,6 +1454,7 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     },
   },
   ன: {
+    script: "tamil",
     glyph: "ன",
     strokes: [
       {
@@ -1501,6 +1559,7 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     },
   },
   ண: {
+    script: "tamil",
     glyph: "ண",
     strokes: [
       {
@@ -1631,6 +1690,7 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     },
   },
   ம: {
+    script: "tamil",
     glyph: "ம",
     strokes: [
       {

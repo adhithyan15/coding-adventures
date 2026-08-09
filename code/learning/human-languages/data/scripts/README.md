@@ -172,16 +172,20 @@ demonstration at 02:37–02:43 supplies
 one right-to-left bowl, then one lift for the dot above, with both strokes on
 the isolated Noto Naskh outline. A source-sequence check then corrects the old
 queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the small
-head and flows directly into the leftward curving tail in one unbroken stroke;
-its two-part learner path has zero lifts and stays on the isolated Noto Naskh
-outline. The remaining **209** prose part
-outline. The later **ه** demonstration at 02:47–02:50 closes one simple
-handwritten loop without lifting. Its one-movement learner path preserves that
-single pen-down run while fitting the wider two-counter isolated Noto Naskh
-form and its leftward baseline finish, completing the Persian starter
-inventory. The remaining **208** prose part orders across eight scripts
+  head and flows directly into the leftward curving tail in one unbroken stroke;
+  its two-part learner path has zero lifts and stays on the isolated Noto Naskh
+  outline. The later **ه** demonstration at 02:47–02:50 closes one simple
+  handwritten loop without lifting. Its one-movement learner path preserves
+  that single pen-down run while fitting the wider two-counter isolated Noto
+  Naskh form and its leftward baseline finish, completing the Persian starter
+  inventory. Urdu **ا** is independently verified from Northwestern's *Zer o
+  Zabar*: its independent form travels top-to-bottom in one continuous stroke,
+  explicitly unlike the bottom-to-top final form. Script-aware ductus identity
+  prevents that Urdu source from colliding with Persian **ا** while both paths
+  are checked against their canonical data files' Noto Naskh fallback. The
+  remaining **207** prose part orders across eight scripts
 (`arabic` 21, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33,
-`hebrew` 22, `japanese` 34, `urdu-nastaliq` 13) are explicitly **unverified for
+`hebrew` 22, `japanese` 34, `urdu-nastaliq` 12) are explicitly **unverified for
 pen lifts**. The data validator rejects a lift count without a citation (or a
 citation without a count), and Language Ladder's ductus test proves every verified
 claim has the same cited, font-checked path. That closes `HL-C19`; future entries
