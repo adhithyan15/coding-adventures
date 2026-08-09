@@ -7,8 +7,8 @@ use chief_of_staff_channel_crypto::{
     ChannelId, ChannelMasterKey, OriginatorSigningKey, ReceiverKeyPair, Sequence,
 };
 use chief_of_staff_channel_endpoints::{
-    ChannelDefinitionStore, ChannelEndpointError, DurableOriginator, DurableReceiver, MessageId,
-    MessageMetadataSource, Originator, Receiver,
+    AgentId as ChannelAgentId, ChannelDefinitionStore, ChannelEndpointError, DurableOriginator,
+    DurableReceiver, MessageId, MessageMetadataSource, Originator, Receiver,
 };
 use chief_of_staff_channel_store::ChannelStore;
 use chief_of_staff_host_control_protocol::{
@@ -17,9 +17,10 @@ use chief_of_staff_host_control_protocol::{
     DataPlaneResponse, PromptRole, MAX_DATA_PLANE_MESSAGES, MAX_DATA_PLANE_PAYLOAD_BYTES,
 };
 use chief_of_staff_pipeline_bindings::{
-    HostPipelineBinding, PipelineBindingError, PipelineBindingStore,
+    HostPipelineBinding, PipelineBindingError, PipelineBindingStore, PipelineId,
 };
 use chief_of_staff_service_registry::HostRegistration;
+use coding_adventures_zeroize::Zeroizing;
 use llm_gateway::{CompletionRequest, FinishReason, LlmClient, Message, MessageContent, Role};
 use std::collections::{BTreeMap, HashMap};
 use std::sync::{Arc, Mutex};
@@ -130,6 +131,184 @@ pub trait ChannelKeyAuthority: Send + Sync {
         binding: &HostPipelineBinding,
         channel_id: ChannelId,
     ) -> Result<OriginatorChannelKeys, ChannelKeyAuthorityError>;
+}
+
+/// Stable failure while provisioning an exact channel-key authority.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ChannelKeyRegistrationError {
+    /// A retained secret was an all-zero placeholder rather than provisioned key material.
+    InvalidSecret,
+    /// The exact pipeline, agent, and channel already has a read or write key binding.
+    Duplicate,
+}
+
+impl core::fmt::Display for ChannelKeyRegistrationError {
+    fn fmt(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        formatter.write_str(match self {
+            Self::InvalidSecret => "channel key registration contains an invalid secret",
+            Self::Duplicate => "channel key registration already exists",
+        })
+    }
+}
+
+impl std::error::Error for ChannelKeyRegistrationError {}
+
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+struct ChannelAuthorityKey {
+    pipeline_id: [u8; 16],
+    agent_id: Vec<u8>,
+    channel_id: [u8; 16],
+}
+
+impl ChannelAuthorityKey {
+    fn new(pipeline_id: PipelineId, agent_id: &ChannelAgentId, channel_id: ChannelId) -> Self {
+        Self {
+            pipeline_id: *pipeline_id.as_bytes(),
+            agent_id: agent_id.as_bytes().to_vec(),
+            channel_id: channel_id.0,
+        }
+    }
+
+    fn from_binding(binding: &HostPipelineBinding, channel_id: ChannelId) -> Self {
+        Self::new(binding.pipeline_id(), binding.agent_id(), channel_id)
+    }
+}
+
+struct StoredOriginatorKeys {
+    signing_seed: Zeroizing<[u8; 32]>,
+    channel_key: Zeroizing<[u8; 32]>,
+}
+
+/// Immutable exact pipeline/agent/channel authority for already-provisioned keys.
+///
+/// Secret inputs must already be held in zeroizing wrappers. The registry retains
+/// them in the same form, exposes no secret getters or formatting implementation,
+/// rejects cross-direction duplicates, and reconstructs short-lived cryptographic
+/// key owners only for an exact current durable binding.
+#[derive(Default)]
+pub struct ExactChannelKeyAuthority {
+    receivers: BTreeMap<ChannelAuthorityKey, Zeroizing<[u8; 32]>>,
+    originators: BTreeMap<ChannelAuthorityKey, StoredOriginatorKeys>,
+}
+
+impl ExactChannelKeyAuthority {
+    /// Create an empty authority that denies every key release.
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Register one exact read-channel receiver private key before sharing the authority.
+    pub fn register_receiver(
+        &mut self,
+        pipeline_id: PipelineId,
+        agent_id: &ChannelAgentId,
+        channel_id: ChannelId,
+        private_key: Zeroizing<[u8; 32]>,
+    ) -> Result<(), ChannelKeyRegistrationError> {
+        if secret_is_zero(&private_key) {
+            return Err(ChannelKeyRegistrationError::InvalidSecret);
+        }
+        let key = ChannelAuthorityKey::new(pipeline_id, agent_id, channel_id);
+        if self.receivers.contains_key(&key) || self.originators.contains_key(&key) {
+            return Err(ChannelKeyRegistrationError::Duplicate);
+        }
+        self.receivers.insert(key, private_key);
+        Ok(())
+    }
+
+    /// Register one exact write-channel signing seed and current-epoch channel key.
+    pub fn register_originator(
+        &mut self,
+        pipeline_id: PipelineId,
+        agent_id: &ChannelAgentId,
+        channel_id: ChannelId,
+        signing_seed: Zeroizing<[u8; 32]>,
+        channel_key: Zeroizing<[u8; 32]>,
+    ) -> Result<(), ChannelKeyRegistrationError> {
+        if secret_is_zero(&signing_seed) || secret_is_zero(&channel_key) {
+            return Err(ChannelKeyRegistrationError::InvalidSecret);
+        }
+        let key = ChannelAuthorityKey::new(pipeline_id, agent_id, channel_id);
+        if self.receivers.contains_key(&key) || self.originators.contains_key(&key) {
+            return Err(ChannelKeyRegistrationError::Duplicate);
+        }
+        self.originators.insert(
+            key,
+            StoredOriginatorKeys {
+                signing_seed,
+                channel_key,
+            },
+        );
+        Ok(())
+    }
+
+    /// Return the number of exact directional key bindings retained by this authority.
+    pub fn len(&self) -> usize {
+        self.receivers.len() + self.originators.len()
+    }
+
+    /// Return whether this authority denies every key release.
+    pub fn is_empty(&self) -> bool {
+        self.receivers.is_empty() && self.originators.is_empty()
+    }
+}
+
+impl ChannelKeyAuthority for ExactChannelKeyAuthority {
+    fn receiver_key(
+        &self,
+        binding: &HostPipelineBinding,
+        channel_id: ChannelId,
+    ) -> Result<ReceiverKeyPair, ChannelKeyAuthorityError> {
+        if !binding_allows_channel(binding, channel_id, ChannelBindingAccess::Read) {
+            return Err(ChannelKeyAuthorityError::Unauthorized);
+        }
+        let private_key = self
+            .receivers
+            .get(&ChannelAuthorityKey::from_binding(binding, channel_id))
+            .ok_or(ChannelKeyAuthorityError::Unauthorized)?;
+        ReceiverKeyPair::from_private_key(copy_secret(private_key).into_inner())
+            .map_err(|_| ChannelKeyAuthorityError::Unavailable)
+    }
+
+    fn originator_keys(
+        &self,
+        binding: &HostPipelineBinding,
+        channel_id: ChannelId,
+    ) -> Result<OriginatorChannelKeys, ChannelKeyAuthorityError> {
+        if !binding_allows_channel(binding, channel_id, ChannelBindingAccess::Write) {
+            return Err(ChannelKeyAuthorityError::Unauthorized);
+        }
+        let keys = self
+            .originators
+            .get(&ChannelAuthorityKey::from_binding(binding, channel_id))
+            .ok_or(ChannelKeyAuthorityError::Unauthorized)?;
+        Ok(OriginatorChannelKeys::new(
+            OriginatorSigningKey::from_seed(copy_secret(&keys.signing_seed).into_inner()),
+            ChannelMasterKey::from_bytes(copy_secret(&keys.channel_key).into_inner()),
+        ))
+    }
+}
+
+fn secret_is_zero(secret: &Zeroizing<[u8; 32]>) -> bool {
+    secret.iter().all(|byte| *byte == 0)
+}
+
+fn copy_secret(secret: &Zeroizing<[u8; 32]>) -> Zeroizing<[u8; 32]> {
+    let mut copy = Zeroizing::new([0; 32]);
+    copy.copy_from_slice(secret.as_slice());
+    copy
+}
+
+fn binding_allows_channel(
+    binding: &HostPipelineBinding,
+    channel_id: ChannelId,
+    access: ChannelBindingAccess,
+) -> bool {
+    binding
+        .launch_bindings()
+        .channels()
+        .iter()
+        .any(|candidate| candidate.channel_id() == channel_id.0 && candidate.access() == access)
 }
 
 /// Stable exact-model provider lookup failure.
@@ -752,36 +931,6 @@ mod tests {
         }
     }
 
-    struct FixedKeyAuthority;
-
-    impl ChannelKeyAuthority for FixedKeyAuthority {
-        fn receiver_key(
-            &self,
-            binding: &HostPipelineBinding,
-            channel_id: ChannelId,
-        ) -> Result<ReceiverKeyPair, ChannelKeyAuthorityError> {
-            if binding.agent_id().as_bytes() != b"weather-agent" || channel_id.0 != uuid_v7(1) {
-                return Err(ChannelKeyAuthorityError::Unauthorized);
-            }
-            ReceiverKeyPair::from_private_key([0x13; 32])
-                .map_err(|_| ChannelKeyAuthorityError::Unavailable)
-        }
-
-        fn originator_keys(
-            &self,
-            binding: &HostPipelineBinding,
-            channel_id: ChannelId,
-        ) -> Result<OriginatorChannelKeys, ChannelKeyAuthorityError> {
-            if binding.agent_id().as_bytes() != b"weather-agent" || channel_id.0 != uuid_v7(2) {
-                return Err(ChannelKeyAuthorityError::Unauthorized);
-            }
-            Ok(OriginatorChannelKeys::new(
-                OriginatorSigningKey::from_seed([0x21; 32]),
-                ChannelMasterKey::from_bytes([0x22; 32]),
-            ))
-        }
-    }
-
     fn install_real_binding(backend: &dyn StorageBackend) -> HostPipelineBinding {
         let registration = registration();
         ServiceRegistry::new(backend)
@@ -866,6 +1015,26 @@ mod tests {
         input.grant_receiver(&agent("weather-agent")).unwrap();
         input.publish(b"Seattle", "text/plain").unwrap();
         binding
+    }
+
+    fn exact_keys(binding: &HostPipelineBinding) -> ExactChannelKeyAuthority {
+        let mut keys = ExactChannelKeyAuthority::new();
+        keys.register_receiver(
+            binding.pipeline_id(),
+            binding.agent_id(),
+            ChannelId(uuid_v7(1)),
+            Zeroizing::new([0x13; 32]),
+        )
+        .unwrap();
+        keys.register_originator(
+            binding.pipeline_id(),
+            binding.agent_id(),
+            ChannelId(uuid_v7(2)),
+            Zeroizing::new([0x21; 32]),
+            Zeroizing::new([0x22; 32]),
+        )
+        .unwrap();
+        keys
     }
 
     fn request_id(value: u64) -> RequestId {
@@ -1081,6 +1250,147 @@ mod tests {
     }
 
     #[test]
+    fn exact_channel_key_authority_is_zeroizing_directional_and_identity_scoped() {
+        let backend = InMemoryStorageBackend::new();
+        let binding = install_real_binding(&backend);
+        let mut keys = ExactChannelKeyAuthority::new();
+        assert!(keys.is_empty());
+        assert_eq!(
+            keys.register_receiver(
+                binding.pipeline_id(),
+                binding.agent_id(),
+                ChannelId(uuid_v7(1)),
+                Zeroizing::new([0; 32]),
+            ),
+            Err(ChannelKeyRegistrationError::InvalidSecret)
+        );
+        keys.register_receiver(
+            binding.pipeline_id(),
+            binding.agent_id(),
+            ChannelId(uuid_v7(1)),
+            Zeroizing::new([0x13; 32]),
+        )
+        .unwrap();
+        assert_eq!(
+            keys.register_receiver(
+                binding.pipeline_id(),
+                binding.agent_id(),
+                ChannelId(uuid_v7(1)),
+                Zeroizing::new([0x14; 32]),
+            ),
+            Err(ChannelKeyRegistrationError::Duplicate)
+        );
+        assert_eq!(
+            keys.register_originator(
+                binding.pipeline_id(),
+                binding.agent_id(),
+                ChannelId(uuid_v7(1)),
+                Zeroizing::new([0x21; 32]),
+                Zeroizing::new([0x22; 32]),
+            ),
+            Err(ChannelKeyRegistrationError::Duplicate)
+        );
+        assert_eq!(
+            keys.register_originator(
+                binding.pipeline_id(),
+                binding.agent_id(),
+                ChannelId(uuid_v7(2)),
+                Zeroizing::new([0x21; 32]),
+                Zeroizing::new([0; 32]),
+            ),
+            Err(ChannelKeyRegistrationError::InvalidSecret)
+        );
+        keys.register_originator(
+            binding.pipeline_id(),
+            binding.agent_id(),
+            ChannelId(uuid_v7(2)),
+            Zeroizing::new([0x21; 32]),
+            Zeroizing::new([0x22; 32]),
+        )
+        .unwrap();
+        assert_eq!(keys.len(), 2);
+
+        assert_eq!(
+            keys.receiver_key(&binding, ChannelId(uuid_v7(1)))
+                .unwrap()
+                .public_key(),
+            ReceiverKeyPair::from_private_key([0x13; 32])
+                .unwrap()
+                .public_key()
+        );
+        let originator = keys
+            .originator_keys(&binding, ChannelId(uuid_v7(2)))
+            .unwrap();
+        assert_eq!(
+            originator.signing_key.public_key(),
+            OriginatorSigningKey::from_seed([0x21; 32]).public_key()
+        );
+        assert_eq!(originator.channel_key.as_bytes(), &[0x22; 32]);
+
+        assert!(matches!(
+            keys.originator_keys(&binding, ChannelId(uuid_v7(1))),
+            Err(ChannelKeyAuthorityError::Unauthorized)
+        ));
+        assert!(matches!(
+            keys.receiver_key(&binding, ChannelId(uuid_v7(2))),
+            Err(ChannelKeyAuthorityError::Unauthorized)
+        ));
+        assert!(matches!(
+            keys.receiver_key(&binding, ChannelId(uuid_v7(8))),
+            Err(ChannelKeyAuthorityError::Unauthorized)
+        ));
+
+        let wrong_pipeline = HostPipelineBinding::new(
+            PipelineId::new(uuid_v7(8)).unwrap(),
+            binding.registration().clone(),
+            binding.agent_id().clone(),
+            binding.launch_bindings().clone(),
+        );
+        assert!(matches!(
+            keys.receiver_key(&wrong_pipeline, ChannelId(uuid_v7(1))),
+            Err(ChannelKeyAuthorityError::Unauthorized)
+        ));
+        let wrong_agent = HostPipelineBinding::new(
+            binding.pipeline_id(),
+            binding.registration().clone(),
+            agent("other-agent"),
+            binding.launch_bindings().clone(),
+        );
+        assert!(matches!(
+            keys.receiver_key(&wrong_agent, ChannelId(uuid_v7(1))),
+            Err(ChannelKeyAuthorityError::Unauthorized)
+        ));
+
+        let wrong_directions = HostPipelineBinding::new(
+            binding.pipeline_id(),
+            binding.registration().clone(),
+            binding.agent_id().clone(),
+            chief_of_staff_host_control_protocol::LaunchBindings::new(
+                vec![
+                    ChannelBinding::new(
+                        "weather-requests",
+                        ChannelBindingAccess::Write,
+                        uuid_v7(1),
+                    )
+                    .unwrap(),
+                    ChannelBinding::new("weather-reports", ChannelBindingAccess::Read, uuid_v7(2))
+                        .unwrap(),
+                ],
+                binding.launch_bindings().level_one_model().cloned(),
+            )
+            .unwrap(),
+        );
+        assert!(matches!(
+            keys.receiver_key(&wrong_directions, ChannelId(uuid_v7(1))),
+            Err(ChannelKeyAuthorityError::Unauthorized)
+        ));
+        assert!(matches!(
+            keys.originator_keys(&wrong_directions, ChannelId(uuid_v7(2))),
+            Err(ChannelKeyAuthorityError::Unauthorized)
+        ));
+    }
+
+    #[test]
     fn authority_backed_service_executes_real_encrypted_turn() {
         let backend: Arc<dyn StorageBackend> = Arc::new(InMemoryStorageBackend::new());
         let binding = install_real_binding(backend.as_ref());
@@ -1102,7 +1412,7 @@ mod tests {
             .unwrap();
         let service = AuthorityBackedHostDataPlaneService::new(
             Arc::clone(&backend),
-            Arc::new(FixedKeyAuthority),
+            Arc::new(exact_keys(&binding)),
             Arc::new(models),
             Arc::new(FixedMetadata {
                 message_id: uuid_v7(5),
@@ -1212,7 +1522,7 @@ mod tests {
         assert!(models.resolve(&binding, "other-model").is_err());
         let service = AuthorityBackedHostDataPlaneService::new(
             backend,
-            Arc::new(FixedKeyAuthority),
+            Arc::new(exact_keys(&binding)),
             Arc::new(models),
             Arc::new(FixedMetadata {
                 message_id: uuid_v7(5),

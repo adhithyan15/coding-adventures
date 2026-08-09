@@ -549,6 +549,10 @@ receiver grants before publication, and resolves only exact model selectors. Key
 release and provider construction remain separately injected authorities so the
 orchestration core stays payload- and secret-blind; production configuration must
 make those authorities explicit before replacing the unavailable adapter.
+The concrete pre-composition key registry owns only zeroizing secret buffers, binds
+each directional key to an exact pipeline, agent, and channel, and releases a new
+short-lived crypto owner only after all three identities match the reloaded durable
+binding. Filesystem and Vault formats remain separate provisioning adapters.
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
