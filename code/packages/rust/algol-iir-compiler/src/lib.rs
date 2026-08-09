@@ -1876,10 +1876,8 @@ impl Compiler {
         let sig = match self.proc_sigs.get(&target_source_name).cloned() {
             Some(sig) => sig,
             None => {
-                if target_source_name == name {
-                    if let Some(result) = self.try_emit_standard_function(&name, node)? {
-                        return Ok(Some(result));
-                    }
+                if let Some(result) = self.try_emit_standard_function(&target_source_name, node)? {
+                    return Ok(Some(result));
                 }
                 return Err(CompileError::Type(format!(
                     "call to undeclared procedure {name:?}"
@@ -2228,8 +2226,13 @@ impl Compiler {
                 source_name: actual_name,
             });
         }
+        if is_supported_standard_function(&actual_name) {
+            return Ok(ProcedureBinding {
+                source_name: actual_name,
+            });
+        }
         Err(CompileError::Type(format!(
-            "procedure {caller_name:?}: formal procedure {formal_name:?} requires a declared procedure, got {actual_name:?}"
+            "procedure {caller_name:?}: formal procedure {formal_name:?} requires a declared procedure or supported standard function, got {actual_name:?}"
         )))
     }
 
@@ -5097,6 +5100,15 @@ fn first_direct_node<'a>(node: &'a GrammarASTNode, rule: &str) -> Option<&'a Gra
     })
 }
 
+/// Standard functions that the direct formal-procedure slice may substitute.
+/// Each remains lowered by the established inline path at the formal call site.
+fn is_supported_standard_function(name: &str) -> bool {
+    matches!(
+        name,
+        "abs" | "sign" | "entier" | "sqrt" | "sin" | "cos" | "ln" | "exp" | "arctan"
+    )
+}
+
 /// Collect the `NAME` tokens of an `ident_list` (`NAME { COMMA NAME }`) in
 /// order — used to read a procedure's formal parameters, `value` list, and
 /// `spec_part` identifier groups.
@@ -7593,6 +7605,30 @@ mod tests {
     }
 
     #[test]
+    fn formal_procedure_forwards_a_standard_function() {
+        let src = "begin integer result; \
+                   integer procedure dispatch(p, x); value x; procedure p; integer x; \
+                     begin integer procedure forward(p, x); value x; procedure p; integer x; \
+                           forward := p(x); \
+                           dispatch := forward(p, x) end; \
+                   result := dispatch(abs, 0 - 42) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "formal_procedure_standard_function").expect("compiles");
+        assert!(
+            module
+                .functions
+                .iter()
+                .filter(|function| function.name.starts_with("__algol_by_name_"))
+                .all(|function| function.instructions.iter().all(|instr| {
+                    !(instr.op == "call"
+                        && instr.srcs.first() == Some(&Operand::Var("abs".to_string())))
+                })),
+            "a standard-function actual must reuse its inline lowering"
+        );
+    }
+
+    #[test]
     fn formal_procedure_rejects_non_procedure_actuals() {
         let err = compile_source(
             "begin integer scalar, result; \
@@ -7603,7 +7639,7 @@ mod tests {
         .expect_err("a scalar is not a direct procedure actual");
         assert!(err
             .to_string()
-            .contains("requires a declared procedure"));
+            .contains("requires a declared procedure or supported standard function"));
     }
 
     #[test]
