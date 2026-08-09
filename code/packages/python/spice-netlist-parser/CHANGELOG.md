@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Validate and lower BJT model-card `VJC` / `PC` base-collector junction
+  potential.
 - Validate and lower BJT model-card `MJE` / `ME` base-emitter grading
   coefficient.
 - Validate and lower BJT model-card `VJE` / `PE` base-emitter junction
