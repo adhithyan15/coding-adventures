@@ -6,6 +6,10 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Nested `select` and `input` start tags processed with an open `select` now
+  report the required select insertion-mode parse error, covering 4 previously
+  silent malformed corpus cases without changing DOM recovery or
+  undeclared-diagnostic coverage.
 - `title` and `meta` start tags foster-parented out of table structure now
   report the required in-table parse error, covering 2 previously silent
   malformed corpus cases without changing DOM recovery or

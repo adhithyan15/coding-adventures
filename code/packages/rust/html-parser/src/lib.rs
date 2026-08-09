@@ -7371,6 +7371,11 @@ impl HtmlParser {
             return false;
         }
 
+        self.diagnostics.push(ParserDiagnostic::new(
+            "unexpected-start-tag-in-select",
+            format!("start tag `<{incoming_name}>` forced recovery from an open select element"),
+        ));
+
         if incoming_name == "input" && self.current_element_is_marked_fragment_context("select") {
             return true;
         }
@@ -33447,6 +33452,49 @@ mod tests {
 
         let matching = parse_html_with_diagnostics("<!doctype html><menuitem></menuitem>").unwrap();
         assert!(matching.parser_diagnostics.is_empty());
+    }
+
+    #[test]
+    fn reports_start_tags_that_force_recovery_from_selects() {
+        for (source, name) in [
+            ("<!doctype html><select><input>X", "input"),
+            ("<!doctype html><select><select>X", "select"),
+            (
+                "<!doctype html><select><optgroup><option></optgroup><option><select><option>",
+                "select",
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic
+                        == &ParserDiagnostic::new(
+                            "unexpected-start-tag-in-select",
+                            format!(
+                                "start tag `<{name}>` forced recovery from an open select element"
+                            ),
+                        )
+                }),
+                "source {source:?}"
+            );
+        }
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<input><option>", "select")
+                .unwrap();
+        assert_eq!(
+            fragment.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-start-tag-in-select",
+                "start tag `<input>` forced recovery from an open select element"
+            )]
+        );
+
+        let outside = parse_html_with_diagnostics("<!doctype html><input><select>").unwrap();
+        assert!(outside
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-start-tag-in-select"));
     }
 
     #[test]
