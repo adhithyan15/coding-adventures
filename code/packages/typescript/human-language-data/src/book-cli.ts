@@ -4,6 +4,7 @@ import { pathToFileURL } from "node:url";
 import {
   renderBookAnswerKey,
   renderBookChapter,
+  renderBookChapterModalities,
   renderBookGlossary,
   renderBookIndex,
   renderReferenceAppendix,
@@ -14,7 +15,13 @@ import {
   type BookReferenceAppendixTarget,
   type InlineRenderOptions,
 } from "./book.js";
-import { defaultCurriculumRoot, loadLessons, loadTrackChapters } from "./loader.js";
+import {
+  defaultCurriculumRoot,
+  loadChapterPolicy,
+  loadLessons,
+  loadTrackChapters,
+} from "./loader.js";
+import { summarizeModality } from "./modality.js";
 import type { ChapterCapability } from "./types.js";
 
 interface ConfiguredBookGenerationTarget extends Omit<BookGenerationTarget, "title" | "label"> {
@@ -50,9 +57,11 @@ interface ConfiguredBookIndexTarget extends BookIndexTarget {
  * two options fail in opposite directions.  Everything in `targets[]` is rendered and
  * then *written over* the file at `output` by `--write`; a flag would put hand-authored
  * prose one forgotten `if` away from being overwritten by generated text.  A separate
- * array cannot suffer that: `generatedBookOutputs` only ever walks `config.targets`, so
- * the worst a mistake here can do is leave a chapter unchecked — the status quo — rather
- * than destroy it.  The safe failure mode is the whole point.
+ * array cannot suffer that: the renderer only sends `config.targets` through
+ * `renderBookChapter`, so no handwritten output path can be overwritten. HL-C15 reads
+ * this list only to put the chapter number in the book-wide generated modality projection;
+ * the authored chapter body remains outside the output map. The safe failure mode is
+ * the whole point.
  *
  * These chapters predate the manifest and are mostly schema-v1, so there are no canonical
  * lessons to render them from anyway. Their output path stays here, while `title` and
@@ -88,7 +97,7 @@ interface BookGenerationConfig {
   answerKeys?: ConfiguredBookAnswerKeyTarget[];
   /** Canonical meanings, topic lessons, and chapter capabilities rendered as indexes. */
   indexes?: ConfiguredBookIndexTarget[];
-  /** Never rendered. See {@link HandwrittenBookChapter}. */
+  /** Chapter bodies are never rendered; coordinates feed shared derived book metadata. */
   handwritten?: ConfiguredHandwrittenBookChapter[];
 }
 
@@ -222,6 +231,10 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
     throw new Error("book-generation.json must declare an HTTP(S) sourceBaseUrl");
   }
   const lessons = loadLessons(root);
+  const policy = loadChapterPolicy(root);
+  const modality = summarizeModality(lessons, {
+    maxLinearisableTableColumns: policy.maxLinearisableTableColumns,
+  });
   const outputs = new Map<string, string>();
   const manifest: GeneratedBookHashManifest = { version: 1, algorithm: "fnv1a64", chapters: [] };
   for (const configuredTarget of config.targets) {
@@ -267,6 +280,33 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
       lessonIds: generated.lessonIds,
       tex: target.output,
     });
+  }
+
+  // HL-C15: one generated definition file per book projects the same modality model into
+  // every numbered chapter, including protected handwritten chapters. Derive the
+  // declared set from both config arrays, then fail closed if any declaration lacks a
+  // modality rollup rather than printing a reassuring empty sign.
+  const declaredByLanguage = new Map<string, Set<number>>();
+  for (const entry of [...config.targets, ...(config.handwritten ?? [])]) {
+    const chapters = declaredByLanguage.get(entry.language);
+    if (chapters) chapters.add(entry.chapter);
+    else declaredByLanguage.set(entry.language, new Set([entry.chapter]));
+  }
+  for (const [language, declared] of [...declaredByLanguage].sort(([left], [right]) =>
+    left.localeCompare(right),
+  )) {
+    const track = modality.tracks.find((entry) => entry.language === language);
+    if (!track) throw new Error(`${language}: declared book has no modality data`);
+    const chapters = [...declared]
+      .sort((left, right) => left - right)
+      .map((chapter) => {
+        const entry = track.chapters.find((candidate) => candidate.chapter === chapter);
+        if (!entry) throw new Error(`${language} chapter ${chapter}: no modality data`);
+        return entry;
+      });
+    const relative = `${language}/book/chapter-modalities.tex`;
+    safeOutput(root, relative);
+    outputs.set(relative, renderBookChapterModalities(language, chapters));
   }
   for (const configuredAppendix of config.referenceAppendices ?? []) {
     const { scriptSet, ...plainAppendix } = configuredAppendix;

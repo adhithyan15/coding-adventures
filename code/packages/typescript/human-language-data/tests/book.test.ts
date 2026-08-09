@@ -98,7 +98,9 @@ describe("canonical LaTeX chapter rendering", () => {
     const generated = renderBookChapter(target, [parseLesson(source("A", 10, "hello"), "test")]);
     expect(generated.tex).not.toContain("canonical micro-lessons");
     expect(generated.tex).not.toContain("Language Ladder");
-    expect(generated.tex).toContain("\\label{ch:first}\n\n\\section[hello]");
+    expect(generated.tex).toContain(
+      "\\label{ch:first}\n\\hlchaptermodality{1}\n\n\\section[hello]",
+    );
   });
 
   it("keeps arrows out of the PDF bookmark and running-header title", () => {

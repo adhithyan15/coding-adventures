@@ -235,6 +235,13 @@ order, have a `voice` core before the first that does not — deliberately not "
 voice lessons does it contain", because chapters are prerequisite-ordered and a voice
 lesson sitting behind a sight one is not reachable in the car.
 
+Every downloadable book projects that same result at the start of each chapter.
+`generate:books` writes one byte-gated `chapter-modalities.tex` file per track with
+font-independent car, eye, and pen signs, full printed-lesson counts, and the
+core-based hands-free prefix. Generated and protected handwritten chapters both call
+the projection immediately after their title and label, so a reader sees the requirement
+before the first lesson and the book cannot drift from the app or narration model.
+
 #### One lesson, two modalities (HL-C41)
 
 The three rules above give a lesson one answer, which is right for the **book** — it

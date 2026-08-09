@@ -5,8 +5,9 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-09, after publishing #10207 for HL-C04. HL-C15 is the
-next bounded book/app projection item because its modality data is already complete.
+Last prioritized: 2026-08-09, after merging #10207 for HL-C04. HL-C15 is in
+progress as the next bounded book/app projection item because its modality data is
+already complete; reprioritize again after that PR merges.
 With all 22 downloadable books now carrying pronunciation, glossary,
 review-question, answer-key, and English-first index back matter, HL-C50 is
 complete. The HL-C63 audit confirmed that all 98 missing handwritten chapters
@@ -230,7 +231,7 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C12 | Queued — licensing decided, pipeline outstanding | Add the Class C illustration pipeline with provenance sidecars and a size budget. Licensing is settled and recorded in [`_assets/LICENSE.md`](./_assets/LICENSE.md); the remaining work is the pipeline itself. | Every asset carries `license`, `rightsAsserted`, `generator`, `model`, `prompt`, `date`, and `sha256`; CI fails any asset without a provenance sidecar or a recorded licence, and enforces the per-track size budget. |
 | HL-C13 | Complete in #10102 | Deploy Language Ladder to GitHub Pages. | The validated relative-path build publishes to `/coding-adventures/language-ladder/` after every app, data-package, or human-language content change, preserving the repository's other Pages subdirectories. |
 | HL-C14 | Complete (#9981) | Derive modality (`voice`/`sight`/`pen`) for every lesson and each chapter's drivable prefix. | The gap report publishes per-track modality counts and the corpus-wide drivable percentage; overrides without a recorded reason are reported. |
-| HL-C15 | Queued next | Print modality signs and the drivable prefix at every chapter opening. | The book shows 🚗/👁/✍ beside the HL05 capability, so a reader knows before starting whether a chapter needs eyes or a pen. |
+| HL-C15 | In progress | Print modality signs and the drivable prefix at every chapter opening. | The book shows font-independent car/eye/pen signs beside the HL05 capability, so a reader knows before starting whether a chapter needs eyes or a pen. |
 | HL-C16 | Complete (#9981) | Build the narration export (`narration-cli`) with `--write`/`--check`. | Done. `src/speech.ts` + `src/narration.ts` + `src/narration-cli.ts` emit `<track>/narration/chNN.txt` and `.json` for all 375 chapters, hash-gated by `core/generated-narration-hashes.json` and checked byte-for-byte in CI. `[PAUSE Ns]`, `[REPEAT xN]` and `[YOU …: …]` survive as typed directives; a spoken answer is scored only against a compiled `hl-activity` contract, never against a cue. Tables linearise up to **3 columns** (371 of 442 tables, 272 of 340 table-bearing files); a refused table is *spoken* — size, headings, and reason — and marks its lesson `sight`. `maxLinearisableTableColumns` moved 0 → 3 in `core/chapter-policy.json`, taking the corpus from **63% to 84% drivable** (694 → 925 lessons). This is the audio-script output HL04 named and nothing had ever built. |
 | HL-C17 | Queued — correctness complete, 61 lesson files remain | Linearise or reclassify the wide-table lessons. | HL-C16 discharged the correctness invariant: every table either reads aloud or is spoken as a refusal that marks its lesson `sight`. The current manifest measures **61 lessons** with a table wider than three columns; 45 need eyes for that reason alone. Reshaping those 45 tables would move the corpus from 91% to about 94% core-drivable without weakening the three-column narration policy. |
 | HL-C18 | Queued — Spanish slice complete, 40 remain | Burn down the lessons that exceed the gentle-ramp budget. | No lesson introduces more than `maxNewAtomsPerLesson`; the current gap report measures 40 violations across 17 non-Spanish tracks, with six atoms in each of `SA-C06-number-cognates`, `PA-C06-panj-convergence`, and `BN-C06-numbers-1-5` as the current maximum. |
@@ -2646,6 +2647,23 @@ problem.
 - Handwritten books remain protected from generation. Their declarations still
   locate the source file, and the drift tests re-read that file against the one
   canonical title and label from the capability ledger.
+
+## Findings from HL-C15
+
+- The projection covers all **513** numbered chapters in all **22** downloadable
+  books: **420** generated chapter bodies and **93** protected handwritten bodies.
+  Handwritten prose remains authored; a single stable macro call beside each chapter
+  label selects its generated modality record.
+- Full `voice`/`sight`/`pen` counts describe everything the printed chapter contains.
+  The separate hands-free prefix continues to use core modality in authored lesson
+  order, so a later detachable writing segment does not hide an honestly drivable start.
+- The signs use tiny TikZ paths instead of Unicode emoji. The repository carries no
+  emoji font, and the LaTeX warning gate correctly treats a missing sign glyph as a
+  regression; path signs render identically across the 22 existing font stacks.
+- Book generation fails closed when a declared chapter has no modality rollup and
+  `check:books` byte-gates every per-track projection. Focused Spanish and handwritten
+  French builds render the opening cleanly with no missing-glyph, overfull, LaTeX,
+  package, or font warning regression.
 
 ## Completed foundations
 
