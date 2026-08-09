@@ -33,7 +33,7 @@ use std::time::Duration;
 use tls_platform::{default_connector, TlsConfig, TlsConnector};
 use url_parser::{Url, UrlError};
 
-pub const VERSION: &str = "0.3.0";
+pub const VERSION: &str = "0.4.0";
 pub const INTEGRATION_ID: &str = "axis_vapix";
 pub const PROTOCOL_ID: &str = "axis_vapix";
 pub const VIDEO_MDNS_SERVICE_TYPE: &str = "_axis-video._tcp.local";
@@ -43,8 +43,11 @@ pub const API_DISCOVERY_PATH: &str = "/axis-cgi/apidiscovery.cgi";
 pub const PTZ_CONTROL_PATH: &str = "/axis-cgi/com/ptz.cgi";
 pub const PTZ_QUEUE_PATH: &str = "/axis-cgi/com/ptzqueue.cgi";
 pub const PARAM_PATH: &str = "/axis-cgi/param.cgi";
+pub const JPEG_SNAPSHOT_PATH: &str = "/axis-cgi/jpg/image.cgi?camera=1";
+pub const VIDEO_CAPABILITY_PATH: &str = "/axis-cgi/param.cgi?action=list&responseformat=rfc&group=Properties.API.HTTP.Version,Properties.Image.Format,Image.NbrOfConfigs,Image.I0.Enabled";
 pub const DEFAULT_MAX_DISCOVERY_RESPONSES: usize = 128;
 pub const DEFAULT_MAX_RESPONSE_BYTES: usize = 2 * 1024 * 1024;
+pub const MAX_CREDENTIAL_FIELD_BYTES: usize = 1_024;
 pub const MIN_PTZ_SPEED: u32 = 1;
 pub const MAX_PTZ_SPEED: u32 = 100;
 pub const MAX_PTZ_DURATION_MS: u64 = 5_000;
@@ -175,9 +178,13 @@ impl AxisCredentials {
     ) -> Result<Self, AxisError> {
         let username = username.into();
         let password = password.into();
-        if username.trim().is_empty() || password.is_empty() {
+        if username.trim().is_empty()
+            || password.is_empty()
+            || username.len() > MAX_CREDENTIAL_FIELD_BYTES
+            || password.len() > MAX_CREDENTIAL_FIELD_BYTES
+        {
             return Err(AxisError::Validation(
-                "username and password must not be empty".to_string(),
+                "username and password must be non-empty and bounded".to_string(),
             ));
         }
         if has_unsafe_http_text(&username) || has_unsafe_http_text(&password) {
@@ -291,7 +298,30 @@ pub struct AxisApi {
 pub struct AxisSnapshot {
     pub device: AxisDeviceInformation,
     pub apis: Vec<AxisApi>,
+    pub video: Option<AxisVideoSnapshot>,
     pub ptz: Option<AxisPtzSnapshot>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AxisVideoSnapshot {
+    pub channel: u32,
+    pub http_api_version: String,
+    pub formats: Vec<String>,
+    pub channel_count: u32,
+    pub enabled: bool,
+}
+
+impl AxisVideoSnapshot {
+    pub fn supports_jpeg_snapshot(&self) -> bool {
+        self.channel == 1
+            && self.http_api_version == "3"
+            && self.channel_count >= self.channel
+            && self.enabled
+            && self
+                .formats
+                .iter()
+                .any(|format| format.eq_ignore_ascii_case("jpeg"))
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -670,10 +700,16 @@ impl<T: AxisTransport> AxisClient<T> {
             &json!({"apiVersion":"1.0","context":"smart-home","method":"getApiList"}),
         )?;
         let mut snapshot = parse_snapshot(&properties, &apis)?;
+        snapshot.video = self.inspect_video()?;
         if snapshot.apis.iter().any(|api| api.id == "ptz-control") {
             snapshot.ptz = Some(self.inspect_ptz(PTZ_CAMERA)?);
         }
         Ok(snapshot)
+    }
+
+    fn inspect_video(&mut self) -> Result<Option<AxisVideoSnapshot>, AxisError> {
+        let response = self.get_text(VIDEO_CAPABILITY_PATH, None)?;
+        parse_video_snapshot(response_text(&response.body)?)
     }
 
     fn post_json(&mut self, path: &str, body: &JsonValue) -> Result<JsonValue, AxisError> {
@@ -1089,6 +1125,17 @@ pub fn install_snapshot(
         ValueKind::Object,
     )];
     if snapshot
+        .video
+        .as_ref()
+        .is_some_and(AxisVideoSnapshot::supports_jpeg_snapshot)
+    {
+        capabilities.push(Capability::new(
+            CapabilityId::trusted("camera.snapshot"),
+            CapabilityMode::Command,
+            ValueKind::Text,
+        ));
+    }
+    if snapshot
         .ptz
         .as_ref()
         .is_some_and(AxisPtzSnapshot::commandable)
@@ -1110,7 +1157,10 @@ pub fn install_snapshot(
             expires_at_ms: None,
             confidence: StateConfidence::Confirmed,
         }),
-        metadata: vec![Metadata::new("axis.protocol", PROTOCOL_ID)],
+        metadata: vec![
+            Metadata::new("axis.protocol", PROTOCOL_ID),
+            Metadata::new("axis.video_channel", PTZ_CAMERA.to_string()),
+        ],
     })?;
 
     Ok(InstalledAxisDevice {
@@ -1174,8 +1224,58 @@ fn parse_snapshot(properties: &JsonValue, apis: &JsonValue) -> Result<AxisSnapsh
     Ok(AxisSnapshot {
         device,
         apis: parsed_apis,
+        video: None,
         ptz: None,
     })
+}
+
+fn parse_video_snapshot(text: &str) -> Result<Option<AxisVideoSnapshot>, AxisError> {
+    let values = parse_key_values(text);
+    let value = |name: &str| {
+        values.get(name).copied().or_else(|| {
+            values.iter().find_map(|(key, value)| {
+                key.strip_prefix("root.")
+                    .is_some_and(|key| key == name)
+                    .then_some(*value)
+            })
+        })
+    };
+    let Some(http_api_version) = value("Properties.API.HTTP.Version") else {
+        return Ok(None);
+    };
+    let Some(formats) = value("Properties.Image.Format") else {
+        return Ok(None);
+    };
+    let Some(channel_count) = value("Image.NbrOfConfigs") else {
+        return Ok(None);
+    };
+    let Some(enabled) = value("Image.I0.Enabled") else {
+        return Ok(None);
+    };
+    let channel_count = channel_count.parse::<u32>().map_err(|_| {
+        AxisError::Validation("Axis video channel count is not an integer".to_string())
+    })?;
+    let enabled = match enabled.to_ascii_lowercase().as_str() {
+        "yes" | "true" | "1" => true,
+        "no" | "false" | "0" => false,
+        _ => {
+            return Err(AxisError::Validation(
+                "Axis video channel enabled state is invalid".to_string(),
+            ))
+        }
+    };
+    Ok(Some(AxisVideoSnapshot {
+        channel: 1,
+        http_api_version: http_api_version.to_string(),
+        formats: formats
+            .split(',')
+            .map(str::trim)
+            .filter(|format| !format.is_empty())
+            .map(str::to_string)
+            .collect(),
+        channel_count,
+        enabled,
+    }))
 }
 
 fn required_string(
@@ -1227,6 +1327,21 @@ fn snapshot_value(snapshot: &AxisSnapshot) -> Value {
     ];
     if let Some(ptz) = &snapshot.ptz {
         fields.push(("ptz".to_string(), ptz_value(ptz)));
+    }
+    if let Some(video) = &snapshot.video {
+        fields.push((
+            "video".to_string(),
+            Value::Object(vec![
+                (
+                    "channel".to_string(),
+                    Value::Integer(i64::from(video.channel)),
+                ),
+                (
+                    "jpeg_snapshot".to_string(),
+                    Value::Bool(video.supports_jpeg_snapshot()),
+                ),
+            ]),
+        ));
     }
     Value::Object(fields)
 }
@@ -1798,6 +1913,7 @@ mod tests {
     const DEVICE_INFO: &str = r#"{"apiVersion":"1.0","context":"smart-home","data":{"propertyList":{"Brand":"AXIS","ProdFullName":"AXIS Q1785-LE Network Camera","ProdNbr":"Q1785-LE","ProdType":"Network Camera","SerialNumber":"ACCC8EAF8C30","Version":"12.1.0"}}}"#;
     const API_LIST: &str = r#"{"apiVersion":"1.0","context":"smart-home","data":{"apiList":[{"id":"systemready","version":"1.0","status":"released"},{"id":"basic-device-info","version":"1.2","status":"released"}]}}"#;
     const PTZ_API_LIST: &str = r#"{"apiVersion":"1.0","context":"smart-home","data":{"apiList":[{"id":"ptz-control","version":"1.0","status":"released"},{"id":"basic-device-info","version":"1.2","status":"released"}]}}"#;
+    const VIDEO_CAPABILITY: &str = "root.Properties.API.HTTP.Version=3\nroot.Properties.Image.Format=jpeg,mjpeg,h264\nroot.Image.NbrOfConfigs=1\nroot.Image.I0.Enabled=yes\n";
 
     fn response(body: &str) -> Vec<u8> {
         format!("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}", body.len()).into_bytes()
@@ -2037,6 +2153,7 @@ mod tests {
             response(DEVICE_INFO),
             auth_challenge(stale_digest_value),
             response(API_LIST),
+            text_response(VIDEO_CAPABILITY),
         ]);
         let client =
             AxisClient::new(config(port), credentials(), AxisLanTransport::default()).unwrap();
@@ -2062,6 +2179,13 @@ mod tests {
             camera.state.as_ref().unwrap().confidence,
             StateConfidence::Confirmed
         );
+        assert!(
+            camera
+                .capabilities
+                .iter()
+                .any(|capability| capability.capability_id
+                    == CapabilityId::trusted("camera.snapshot"))
+        );
         let bridge = runtime.registry().bridge(&installed.bridge_id).unwrap();
         assert_eq!(
             bridge.auth_ref.as_ref().unwrap().as_str(),
@@ -2069,12 +2193,13 @@ mod tests {
         );
 
         let requests = requests.lock().unwrap();
-        assert_eq!(requests.len(), 4);
+        assert_eq!(requests.len(), 5);
         assert!(requests[0].contains(&format!("POST {BASIC_DEVICE_INFO_PATH} HTTP/1.1")));
         assert!(request_header(&requests[0], "Authorization").is_none());
         assert!(requests[1].contains(&format!("POST {BASIC_DEVICE_INFO_PATH} HTTP/1.1")));
         assert!(requests[2].contains(&format!("POST {API_DISCOVERY_PATH} HTTP/1.1")));
         assert!(requests[3].contains(&format!("POST {API_DISCOVERY_PATH} HTTP/1.1")));
+        assert!(requests[4].contains(&format!("GET {VIDEO_CAPABILITY_PATH} HTTP/1.1")));
         let challenge = DigestChallenge::parse(digest_value).unwrap();
         for (request, uri, nonce_count) in [
             (&requests[1], BASIC_DEVICE_INFO_PATH, 1),
@@ -2101,6 +2226,19 @@ mod tests {
             )
             .unwrap();
         assert_eq!(authorization, expected.as_str());
+        let authorization = request_header(&requests[4], "Authorization").unwrap();
+        let client_nonce = quoted_directive(authorization, "cnonce").unwrap();
+        let expected = stale_challenge
+            .authorization(
+                "root",
+                "secret",
+                "GET",
+                VIDEO_CAPABILITY_PATH,
+                client_nonce,
+                2,
+            )
+            .unwrap();
+        assert_eq!(authorization, expected.as_str());
         assert!(requests.iter().all(|request| !request.contains("vault://")));
         assert!(requests.iter().all(|request| !request.contains("secret")));
     }
@@ -2112,6 +2250,7 @@ mod tests {
             auth_challenge(r#"Basic realm="AXIS""#),
             response(DEVICE_INFO),
             response(PTZ_API_LIST),
+            text_response(VIDEO_CAPABILITY),
             text_response("continuouspantiltmove=-100..100,-100..100\ngotoserverpresetno=integer\nspeed=integer\nquery=position\n"),
             text_response("pan=12.5\ntilt=-3.0\nzoom=2200\n"),
             text_response("Preset Positions for camera 1\npresetposno1=Home\npresetposno3=Driveway\n"),
@@ -2220,17 +2359,18 @@ mod tests {
             .as_deref()
             .is_some_and(|message| message.contains("bounded PTZ left")));
         let requests = requests.lock().unwrap();
-        assert_eq!(requests.len(), 14);
+        assert_eq!(requests.len(), 15);
         assert!(request_header(&requests[0], "Authorization").is_none());
-        assert!(requests[3].starts_with(&format!("GET {PTZ_CONTROL_PATH}?info=1&camera=1 ")));
-        assert!(requests[6].contains("group=PTZ.Various.V1.CtlQueueing"));
-        assert!(requests[7].contains("control=request&camera=1"));
-        assert!(requests[8].contains("gotoserverpresetno=3&speed=50&camera=1"));
-        assert!(requests[8].contains("Cookie: ptz=lease-token"));
-        assert!(requests[9].contains("control=drop&camera=1"));
-        assert!(requests[11].contains("continuouspantiltmove=-25,0&camera=1"));
-        assert!(requests[12].contains("continuouspantiltmove=0,0&camera=1"));
-        assert!(requests[13].contains("control=drop&camera=1"));
+        assert!(requests[3].contains(&format!("GET {VIDEO_CAPABILITY_PATH} HTTP/1.1")));
+        assert!(requests[4].starts_with(&format!("GET {PTZ_CONTROL_PATH}?info=1&camera=1 ")));
+        assert!(requests[7].contains("group=PTZ.Various.V1.CtlQueueing"));
+        assert!(requests[8].contains("control=request&camera=1"));
+        assert!(requests[9].contains("gotoserverpresetno=3&speed=50&camera=1"));
+        assert!(requests[9].contains("Cookie: ptz=lease-token"));
+        assert!(requests[10].contains("control=drop&camera=1"));
+        assert!(requests[12].contains("continuouspantiltmove=-25,0&camera=1"));
+        assert!(requests[13].contains("continuouspantiltmove=0,0&camera=1"));
+        assert!(requests[14].contains("control=drop&camera=1"));
         assert!(requests
             .iter()
             .skip(1)
@@ -2287,6 +2427,22 @@ mod tests {
         assert_eq!(snapshot.device.product_number, "Q1785-LE");
         assert_eq!(snapshot.apis[0].id, "basic-device-info");
         assert_eq!(snapshot.apis[1].id, "systemready");
+    }
+
+    #[test]
+    fn video_probe_requires_http_v3_jpeg_and_enabled_channel_one() {
+        let supported = parse_video_snapshot(VIDEO_CAPABILITY).unwrap().unwrap();
+        assert!(supported.supports_jpeg_snapshot());
+
+        let disabled = parse_video_snapshot(
+            "Properties.API.HTTP.Version=3\nProperties.Image.Format=jpeg\nImage.NbrOfConfigs=1\nImage.I0.Enabled=no\n",
+        )
+        .unwrap()
+        .unwrap();
+        assert!(!disabled.supports_jpeg_snapshot());
+        assert!(parse_video_snapshot("Properties.API.HTTP.Version=3\n")
+            .unwrap()
+            .is_none());
     }
 
     #[test]
