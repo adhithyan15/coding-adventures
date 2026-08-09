@@ -5085,6 +5085,12 @@ impl HtmlParser {
             self.close_fostered_formatting_before_table_context(&name);
             self.pop_fostered_content_before_table_context(&name);
             if self.fragment_context_ignores_table_start_tag(&name) {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-table-start-tag-in-fragment",
+                    format!(
+                        "start tag `<{name}>` was ignored by the seeded table fragment context"
+                    ),
+                ));
                 return;
             }
             if self.has_open_element("select")
@@ -6747,10 +6753,13 @@ impl HtmlParser {
             self.append_text_to_current("</script>".to_string());
             return;
         }
-        if name != "html" && self.current_element_is_marked_fragment_context(name) {
-            return;
-        }
-        if self.open_marked_fragment_shell_element_matches(name) {
+        if (name != "html" && self.current_element_is_marked_fragment_context(name))
+            || self.open_marked_fragment_shell_element_matches(name)
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-fragment-context-end-tag",
+                format!("end tag `</{name}>` targeted a seeded fragment context element"),
+            ));
             return;
         }
         if self.has_open_svg_html_integration_point()
@@ -33491,6 +33500,66 @@ mod tests {
                 diagnostic.code != "unexpected-formatting-start-tag-in-table"
             }));
         }
+    }
+
+    #[test]
+    fn reports_start_tags_ignored_by_seeded_table_fragment_contexts() {
+        for (source, context, name) in [
+            ("<table><tr>", "table", "table"),
+            ("<caption><td>", "tr", "caption"),
+            ("<tbody><td>", "tr", "tbody"),
+        ] {
+            let output = parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic
+                        == &ParserDiagnostic::new(
+                            "unexpected-table-start-tag-in-fragment",
+                            format!(
+                                "start tag `<{name}>` was ignored by the seeded table fragment context"
+                            ),
+                        )
+                }),
+                "source {source:?} in context {context:?}"
+            );
+        }
+
+        let valid = parse_html_fragment_for_context_with_diagnostics("<tr><td>x", "table").unwrap();
+        assert!(valid
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-table-start-tag-in-fragment"));
+    }
+
+    #[test]
+    fn reports_end_tags_targeting_seeded_fragment_shells() {
+        for (source, context, name) in [
+            ("</table><tr>", "table", "table"),
+            ("</tr><td>", "tr", "tr"),
+            ("</table><tr>", "tbody", "table"),
+            ("</select><option>", "select", "select"),
+            ("</svg>x", "svg svg", "svg"),
+        ] {
+            let output = parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic
+                        == &ParserDiagnostic::new(
+                            "unexpected-fragment-context-end-tag",
+                            format!(
+                                "end tag `</{name}>` targeted a seeded fragment context element"
+                            ),
+                        )
+                }),
+                "source {source:?} in context {context:?}"
+            );
+        }
+
+        let valid = parse_html_fragment_for_context_with_diagnostics("<td>x", "tr").unwrap();
+        assert!(valid
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-fragment-context-end-tag"));
     }
 
     #[test]

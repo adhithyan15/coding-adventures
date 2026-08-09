@@ -28,8 +28,8 @@ tree-construction cases and all 6,806 html5lib tokenizer cases with zero missing
 signatures and zero normalized skips. DOM output is complete, but diagnostic
 coverage is not:
 the checked 2,637-case tree corpus declares 6,243 errors across 2,183 cases.
-After the foster-parented formatting start-tag diagnostic slice, 2,108 of those
-cases emit at least one lexer or parser diagnostic and 75 remain
+After the seeded fragment-context boundary diagnostic slice, 2,145 of those
+cases emit at least one lexer or parser diagnostic and 38 remain
 uncovered.
 Another 139 cases emit diagnostics despite having no legacy `#errors` rows.
 These are reviewed rather than automatically removed: 89 are full-document
@@ -66,16 +66,25 @@ open table blocks adoption-agency recovery. Description-list item start tags
 now report when implied-end-tag recovery closes a non-current `dt` or `dd`,
 without flagging adjacent description-list items.
 
-The fresh 75-case residual inventory keeps the next concrete groups in this
-priority order: remaining table fragment scope and shell boundaries;
-script-tokenizer EOF recovery; plaintext/frameset and document-tail boundaries;
-and foreign-fragment stray tags plus MathML/SVG table integration. The current
-corpus no longer has a silent formatting-only or general in-body group.
+The fresh 38-case residual inventory keeps the next concrete groups in this
+priority order: script-tokenizer EOF recovery; plaintext/frameset and
+document-tail boundaries; and the final fragment-context rows for colgroup
+text, an after-body token, and an HTML start tag in a seeded SVG context. The
+current corpus no longer has a silent table-shell, foreign end-tag,
+formatting-only, or general in-body group.
 
 Prioritized work items:
 
-1. **Table, select, and template insertion modes.** Cover the remaining foster
-   parenting, table scopes, select recovery, and template mode-stack errors.
+1. **Script-tokenizer EOF recovery.** Cover malformed script end tags that
+   reach EOF while the lexer is still assembling the tag.
+2. **Plaintext, frameset, and document-tail boundaries.** Cover EOF and stray
+   content diagnostics after plaintext and frameset transitions.
+3. **Fragment-context parsing.** Cover the final colgroup text, after-body, and
+   foreign HTML start-tag rows. Invalid start and end tags targeting seeded
+   fragment-context elements now report without mutating their synthetic
+   shells.
+4. **Table, select, and template insertion modes.** Continue the algorithm
+   audit beyond the currently exercised diagnostic corpus.
    Non-whitespace table text now reports when it is foster-parented. The
    specialized SVG and MathML start-tag path now reports when table insertion
    mode foster-parents foreign content, and table-context end tags now report
@@ -87,17 +96,9 @@ Prioritized work items:
    Non-whitespace text after a template row now reports when it forces recovery
    from template table mode. Formatting start tags now report when table
    structure foster-parents them, covering the remaining silent fostered-anchor
-   starts. The
-   remaining fragment EOF inventory includes fostered-anchor `eof-in-table`
-   rows and MathML/SVG table-boundary scope recovery.
-2. **Script-tokenizer EOF recovery.** Cover malformed script end tags that
-   reach EOF while the lexer is still assembling the tag.
-3. **Plaintext, frameset, and document-tail boundaries.** Cover EOF and stray
-   content diagnostics after plaintext and frameset transitions.
-4. **Foreign content and fragment parsing.** Cover SVG/MathML integration
-   boundaries and context-sensitive fragment errors. HTML start tags that force
-   recovery from foreign content now report their parse error; remaining work
-   includes foreign end-tag and fragment-shell recovery.
+   starts. Seeded table and foreign fragment-shell boundaries now report their
+   required parse errors. The only silent table fragment row is non-whitespace
+   text in a seeded `colgroup` context.
 5. **Adoption agency and active formatting.** Cover malformed formatting cases
    without changing their now-conforming DOM output.
 6. **Diagnostic positions and error taxonomy.** Carry source positions into
