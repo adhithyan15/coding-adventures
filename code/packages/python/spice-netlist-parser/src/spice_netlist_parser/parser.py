@@ -1994,6 +1994,8 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
         kind = "PJF"
     elif kind == "NCH":
         kind = "NMOS"
+    elif kind == "PCH":
+        kind = "PMOS"
     params = _parse_model_params(params_text)
     if kind == "D":
         saturation_current = params.get("IS", params.get("JS"))

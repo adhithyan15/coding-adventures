@@ -2747,6 +2747,22 @@ M1 out gate 0 0 nfast W=2u L=180n
     expect(element.params.KP).toBeCloseTo(200.0e-6, 12);
   });
 
+  it("parses the PCH model type alias", () => {
+    const parsed = parseNetlist(".model pfast PCH(VTO=0.4 KP=120u)\nM1 d g s b pfast");
+
+    expect(parsed.models.get("pfast")?.kind).toBe("PMOS");
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "mosfet",
+      type: "PMOS",
+    });
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") {
+      throw new Error("unexpected element kind");
+    }
+    expect(element.params.KP).toBeCloseTo(120.0e-6, 12);
+  });
+
   it("parses PMOS MOSFET aliases", () => {
     const parsed = parseNetlist(`
 .model pfast PMOS(VTO=0.4 KP=120u NSUB=1.2)
