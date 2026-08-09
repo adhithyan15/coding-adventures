@@ -4694,9 +4694,15 @@ the Rust, Python, and TypeScript surfaces together.
      preserving omitted `None`/`undefined` fallback-to-`RB` semantics.
 
 471. Python and TypeScript Berkeley SPICE BJT base-resistance-half-current parity.
-   - Status: implemented in this BJT IRB parity slice.
+   - Status: completed in PR 10147.
    - Both parser facades validate finite, non-negative `IRB` values and lower
      them into the shared engine base-resistance-half-current field.
+
+472. Python and TypeScript Berkeley SPICE BJT base-collector-capacitance-fraction parity.
+   - Status: implemented in this BJT XCJC parity slice.
+   - Both parser facades validate finite `XCJC` values in the closed interval
+     `[0, 1]` and lower them into the shared engine base-collector capacitance
+     fraction field while preserving the engine default of `1.0` when omitted.
 
 ## Backlog
 

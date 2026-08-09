@@ -2109,6 +2109,34 @@ Q1 col base emit fast
     );
   });
 
+  it.each([
+    ["0", 0.0],
+    ["0.4", 0.4],
+    ["1", 1.0],
+  ])("parses BJT base-collector capacitance fraction XCJC=%s", (value, expected) => {
+    const parsed = parseNetlist(`.model fast NPN(XCJC=${value})\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      baseCollectorCapacitanceFraction: expected,
+    });
+  });
+
+  it("defaults omitted BJT XCJC to one", () => {
+    const parsed = parseNetlist(".model fast NPN\nQ1 col base emit fast");
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      baseCollectorCapacitanceFraction: 1.0,
+    });
+  });
+
+  it.each(["-0.1", "1.1", "1e999"])("rejects invalid BJT XCJC=%s", (value) => {
+    expect(() => parseNetlist(`.model fast NPN(XCJC=${value})`)).toThrow(
+      "BJT XCJC must be finite and between zero and one",
+    );
+  });
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)
