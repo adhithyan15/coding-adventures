@@ -1612,6 +1612,48 @@ def test_rejects_invalid_bjt_forward_beta_rolloff_current(
         parse_netlist(f".model fast NPN({alias}={value})")
 
 
+@pytest.mark.parametrize(("parameter", "value", "expected"), [("ISE", "3p", 3e-12), ("C2", "2", 2e-14)])
+def test_parse_bjt_base_emitter_leakage_current(
+    parameter: str, value: str, expected: float
+) -> None:
+    parsed = parse_netlist(
+        f".model fast NPN({parameter}={value})\nQ1 col base emit fast"
+    )
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Ise == expected
+
+
+def test_bjt_ise_takes_precedence_over_c2() -> None:
+    parsed = parse_netlist(
+        ".model fast NPN(IS=2p C2=-1 ISE=4p)\nQ1 col base emit fast"
+    )
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Ise == 4e-12
+
+
+@pytest.mark.parametrize("parameter", ["ISE", "C2"])
+@pytest.mark.parametrize("value", ["-1p", "1e999"])
+def test_rejects_invalid_bjt_base_emitter_leakage_parameter(
+    parameter: str, value: str
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match=f"BJT {parameter} must be finite and non-negative",
+    ):
+        parse_netlist(f".model fast NPN({parameter}={value})")
+
+
+def test_rejects_non_finite_bjt_c2_derived_leakage_current() -> None:
+    with pytest.raises(
+        NetlistParseError, match="BJT ISE must be finite and non-negative"
+    ):
+        parse_netlist(".model fast NPN(IS=1e308 C2=2)")
+
+
 def test_parse_jfet_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """

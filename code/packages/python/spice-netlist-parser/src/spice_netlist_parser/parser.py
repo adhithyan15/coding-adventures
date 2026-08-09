@@ -1292,13 +1292,17 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             raise NetlistParseError(
                 f"model {model.name!r} has kind {model.kind!r}, expected 'NPN' or 'PNP'"
             )
+        saturation_current = model.params.get("IS", 1e-14)
+        base_emitter_leakage_current = model.params.get(
+            "ISE", model.params.get("C2", 0.0) * saturation_current
+        )
         return BJT(
             name,
             fields[1],
             fields[2],
             fields[3],
             polarity=model.kind,
-            Is=model.params.get("IS", 1e-14),
+            Is=saturation_current,
             beta_f=model.params.get(
                 "BF",
                 model.params.get(
@@ -1326,6 +1330,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             Fc=model.params.get("FC", 0.5),
             Var=model.params.get("VAR", model.params.get("VB", 0.0)),
             Ikf=model.params.get("IKF", model.params.get("IK", 0.0)),
+            Ise=base_emitter_leakage_current,
         )
     if prefix == "J":
         _require_fields(fields, 5, "JFET")
@@ -2160,6 +2165,22 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             or forward_beta_rolloff_current < 0.0
         ):
             raise NetlistParseError("BJT IKF must be finite and non-negative")
+        base_emitter_leakage_ratio = params.get("C2")
+        base_emitter_leakage_current = params.get("ISE")
+        if base_emitter_leakage_current is None and base_emitter_leakage_ratio is not None and (
+            not math.isfinite(base_emitter_leakage_ratio)
+            or base_emitter_leakage_ratio < 0.0
+        ):
+            raise NetlistParseError("BJT C2 must be finite and non-negative")
+        if base_emitter_leakage_current is None and base_emitter_leakage_ratio is not None:
+            base_emitter_leakage_current = base_emitter_leakage_ratio * params.get(
+                "IS", 1e-14
+            )
+        if base_emitter_leakage_current is not None and (
+            not math.isfinite(base_emitter_leakage_current)
+            or base_emitter_leakage_current < 0.0
+        ):
+            raise NetlistParseError("BJT ISE must be finite and non-negative")
     if kind in {"NJF", "PJF"}:
         gate_source_capacitance = params.get("CGS", params.get("CGS0"))
         if gate_source_capacitance is not None and (
