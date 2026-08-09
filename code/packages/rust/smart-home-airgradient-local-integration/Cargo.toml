@@ -1,6 +1,6 @@
 [package]
 name = "smart-home-airgradient-local-integration"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = "AirGradient local monitor telemetry and typed configuration integration for the smart-home runtime"
 license = "MIT"
@@ -10,6 +10,7 @@ http-core = { path = "../http-core" }
 http1 = { path = "../http1" }
 serde_json = "1"
 smart-home-core = { path = "../smart-home-core" }
+smart-home-data-governance = { path = "../smart-home-data-governance" }
 smart-home-discovery = { path = "../smart-home-discovery" }
 smart-home-local-http = { path = "../smart-home-local-http" }
 smart-home-runtime = { path = "../smart-home-runtime" }

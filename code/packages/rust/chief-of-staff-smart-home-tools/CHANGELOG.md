@@ -10,6 +10,8 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Expose stable country and cloud-upload command labels plus the reusable data
+  governance primitive label.
 - Expose the `camera_set_recording` D23 command label.
 - Expose labels for typed non-credential device-configuration commands.
 

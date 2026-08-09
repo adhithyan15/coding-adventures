@@ -921,6 +921,7 @@ members = [
     "smart-home-capability-cage",
     "smart-home-discovery",
     "smart-home-discovery-service",
+    "smart-home-data-governance",
     "smart-home-event-streams",
     "smart-home-hue-pairing-service",
     "smart-home-local-http",

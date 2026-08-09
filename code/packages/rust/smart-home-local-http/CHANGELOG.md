@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+### Changed
+
+- Redact request body bytes from `LocalHttpRequestPlan` debug output while
+  retaining the body length needed for diagnostics.
+
 ### Added
 
 - Deterministic retry policies with bounded backoff, transient status matching,

@@ -143,6 +143,7 @@ pub enum PrimitiveFamily {
     CalculatedState,
     CommandMapping,
     CapabilityPolicy,
+    DataGovernance,
     VaultLease,
     Supervision,
     TestSimulator,
@@ -184,6 +185,7 @@ impl PrimitiveFamily {
             Self::CalculatedState => "calculated_state",
             Self::CommandMapping => "command_mapping",
             Self::CapabilityPolicy => "capability_policy",
+            Self::DataGovernance => "data_governance",
             Self::VaultLease => "vault_lease",
             Self::Supervision => "supervision",
             Self::TestSimulator => "test_simulator",
@@ -44778,6 +44780,10 @@ pub fn describe_primitive_family(primitive: PrimitiveFamily) -> PrimitiveFamilyD
             "Capability Policy",
             "Capability, privilege, and approval rules for tool execution.",
         ),
+        PrimitiveFamily::DataGovernance => (
+            "Data Governance",
+            "Purpose, consent, privacy, and exact-destination rules for data use and egress.",
+        ),
         PrimitiveFamily::VaultLease => ("Vault Lease", "Time-bounded secret access for workers."),
         PrimitiveFamily::Supervision => (
             "Supervision",
@@ -44831,6 +44837,7 @@ pub fn all_primitive_families() -> &'static [PrimitiveFamily] {
         PrimitiveFamily::CalculatedState,
         PrimitiveFamily::CommandMapping,
         PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::DataGovernance,
         PrimitiveFamily::VaultLease,
         PrimitiveFamily::Supervision,
         PrimitiveFamily::TestSimulator,
@@ -45579,11 +45586,13 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             PrimitiveFamily::EnvironmentalTelemetry,
             PrimitiveFamily::CommandMapping,
             PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::DataGovernance,
             PrimitiveFamily::Supervision,
             PrimitiveFamily::TestSimulator,
         ])
         .with_notes(&[
             "Cloud-only configuration is rejected locally; dual local/cloud control returns an explicit overwrite warning.",
+            "Country and vendor-cloud upload controls require human approval; country and upload enablement also require an exact host-owned consent grant before transport I/O.",
             "Typed local settings validate documented ranges and sensor-specific correction algorithms before transport I/O.",
             "Credential-bearing MQTT and custom HTTP destinations remain blocked on Vault leasing and destination policy.",
         ]),
@@ -81683,6 +81692,7 @@ mod tests {
             PrimitiveFamily::EnvironmentalTelemetry,
             PrimitiveFamily::CommandMapping,
             PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::DataGovernance,
             PrimitiveFamily::TestSimulator,
         ] {
             assert!(airgradient.required_primitives.contains(&primitive));

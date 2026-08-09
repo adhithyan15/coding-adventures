@@ -601,6 +601,7 @@ These should be implemented before most vendor-specific adapters:
 | `smart-home-usb-serial` | Zigbee, Z-Wave, Thread, Modbus RTU |
 | `smart-home-camera-media` | ONVIF, RTSP, snapshots, privacy-sensitive state |
 | `smart-home-cloud-account` | OAuth/API-key cloud integrations and webhook registration |
+| `smart-home-data-governance` | purpose-bound consent, coarse-location configuration, and exact-destination telemetry egress |
 | `smart-home-testkit` | fake bridges, fake brokers, fake event streams, replay fixtures |
 
 ### Wave 2 - Standards
@@ -710,6 +711,18 @@ radio adapters, cloud APIs, webhook receivers, and sidecar processes into the
 generic `capability-cage` manifest taxonomy. It keeps D23 smart-home read and
 command capability hints separate from OS-level permissions so runtime hosts can
 review both before launching workers.
+
+### `smart-home-data-governance`
+
+Pure Rust host-owned privacy, consent, and data-egress policy.
+
+**Initial Rust implementation:** `code/packages/rust/smart-home-data-governance`
+now provides bounded, deny-by-default grants that bind one authenticated
+principal and governed resource to a data category, operation, exact local or
+HTTPS destination, declared purpose, consent receipt, and validity window.
+Privacy-protective egress shutdown remains grant-free, while D23 command policy
+continues to own human approval for the underlying device mutation. Sensitive
+grant fields and exact origins are redacted from debug output.
 
 ### `smart-home-integration-importer`
 

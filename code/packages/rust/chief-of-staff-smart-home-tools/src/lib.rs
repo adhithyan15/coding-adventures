@@ -90181,6 +90181,12 @@ fn parse_command_type(label: &str) -> Result<CommandType, ToolCallError> {
         "device_set_correction_profile" => Ok(CommandType::DeviceControl(
             DeviceControlCommandType::SetCorrectionProfile,
         )),
+        "device_set_country" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetCountry,
+        )),
+        "device_set_cloud_upload" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetCloudUpload,
+        )),
         "camera_set_recording" => Ok(CommandType::DeviceControl(
             DeviceControlCommandType::SetCameraRecording,
         )),
@@ -90423,6 +90429,7 @@ fn parse_primitive_family(label: &str) -> Result<PrimitiveFamily, ToolCallError>
         "calculated_state" => Ok(PrimitiveFamily::CalculatedState),
         "command_mapping" => Ok(PrimitiveFamily::CommandMapping),
         "capability_policy" => Ok(PrimitiveFamily::CapabilityPolicy),
+        "data_governance" => Ok(PrimitiveFamily::DataGovernance),
         "vault_lease" => Ok(PrimitiveFamily::VaultLease),
         "supervision" => Ok(PrimitiveFamily::Supervision),
         "test_simulator" => Ok(PrimitiveFamily::TestSimulator),
@@ -92598,6 +92605,10 @@ fn command_type_label(command_type: CommandType) -> &'static str {
         }
         CommandType::DeviceControl(DeviceControlCommandType::SetCorrectionProfile) => {
             "device_set_correction_profile"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetCountry) => "device_set_country",
+        CommandType::DeviceControl(DeviceControlCommandType::SetCloudUpload) => {
+            "device_set_cloud_upload"
         }
         CommandType::DeviceControl(DeviceControlCommandType::SetCameraRecording) => {
             "camera_set_recording"
@@ -121555,6 +121566,11 @@ mod tests {
             (
                 "device_set_correction_profile",
                 DeviceControlCommandType::SetCorrectionProfile,
+            ),
+            ("device_set_country", DeviceControlCommandType::SetCountry),
+            (
+                "device_set_cloud_upload",
+                DeviceControlCommandType::SetCloudUpload,
             ),
             (
                 "camera_set_recording",

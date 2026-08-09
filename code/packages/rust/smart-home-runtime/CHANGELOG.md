@@ -10,6 +10,8 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Keep country and cloud-upload configuration commands non-optimistic until a
+  native integration confirms device readback.
 - Keep camera recording changes non-optimistic until a native integration
   confirms device readback.
 - Keep typed device-configuration and self-test commands non-optimistic until

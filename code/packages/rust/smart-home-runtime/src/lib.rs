@@ -808,8 +808,7 @@ impl RuntimeEventDeliverySummary {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[derive(Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum RuntimeEventSort {
     #[default]
     SequenceAsc,
@@ -1807,7 +1806,8 @@ impl RuntimeSupervisor {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub struct RuntimeSupervisorSnapshot {
     pub generated_at_ms: u64,
     pub worker_count: usize,
@@ -6478,6 +6478,8 @@ fn optimistic_snapshot_for_command(command: &DeviceCommand, now_ms: u64) -> Opti
             | DeviceControlCommandType::SetCompensatedDisplay
             | DeviceControlCommandType::TestIndicator
             | DeviceControlCommandType::SetCorrectionProfile
+            | DeviceControlCommandType::SetCountry
+            | DeviceControlCommandType::SetCloudUpload
             | DeviceControlCommandType::SetCameraRecording
             | DeviceControlCommandType::RecallCameraPtzPreset
             | DeviceControlCommandType::MoveCameraPtz,

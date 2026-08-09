@@ -35,6 +35,8 @@
 
 ## Unreleased
 
+- Add the reusable data-governance primitive family and require it for
+  AirGradient country and vendor-cloud upload controls.
 - Upgraded HEOS runtime coverage with D23-authorized local playback, volume,
   grouping, and queue controls over the existing TCP command host.
 - Upgraded HEOS CLI runtime coverage from polling-only inspection to local
