@@ -196,7 +196,11 @@ and output channel endpoints. For each verified UTF-8 message it sends the full
 skill body as model instructions, sends the message as the user turn, publishes
 the non-empty text response, and only then acknowledges the input. Model and
 publication failures leave the channel cursor unchanged so recovery can replay
-the message.
+the message. Before readiness, the host receives a bounded authenticated launch
+record from manifest-blind pipeline wiring. It requires the exact signed channel
+name and read/write sets, resolves them to canonical UUID-v7 endpoints, and binds
+the supplied model selector, temperature, and token cap. Missing, extra,
+wrong-direction, or runtime-incompatible bindings fail closed.
 
 ### Level 4 any-language stdio contract
 
@@ -491,11 +495,14 @@ by the security escort (host process), not the Chief of Staff.
 4. Orchestrator records: host PID, agent name, "starting" status
 5. Orchestrator sends the exact relevant public package trust over the fresh
    authenticated child session.
-6. Host independently re-reads and verifies the package with that trust and sends
+6. Orchestrator sends authorized named-channel UUID mappings and bounded Level 1
+   model settings from pipeline wiring without reading the package manifest.
+7. Host independently re-reads and verifies the package, matches the bindings to
+   its signed policy, and sends
    authenticated Ready(package_hash) over its per-spawn control channel.
-7. Orchestrator marks Running only when that hash matches the registration.
-8. Orchestrator monitors authenticated heartbeats using trusted receipt time.
-9. Done. Orchestrator does NOT:
+8. Orchestrator marks Running only when that hash matches the registration.
+9. Orchestrator monitors authenticated heartbeats using trusted receipt time.
+10. Done. Orchestrator does NOT:
    • read manifest.json
    • know what capabilities the agent has
    • know what Deno flags are used

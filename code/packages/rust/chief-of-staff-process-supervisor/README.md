@@ -4,8 +4,9 @@
 D18 Chief hosts. It re-verifies a registered signed package immediately before
 each spawn, owns and reaps the child, bootstraps a fresh UUID-v7 secure channel,
 delivers the exact relevant public package trust over that authenticated channel,
-and reports readiness and heartbeat only after the child independently verifies
-the package with that trust.
+obtains launch bindings from an injected manifest-blind pipeline authority, and
+reports readiness and heartbeat only after the child receives both inputs and
+independently verifies the package with that trust.
 The single configured host executable receives a final reserved
 `--package-runtime deno|skill` pair derived from that verified package snapshot,
 giving the production host a fail-closed runtime-dispatch seam without ambient
@@ -25,7 +26,9 @@ threaded control plane without copying secret key material.
 The crate implements the dependency-light service reconciler's
 `HostSupervisor` interface. It deliberately leaves durable restart policy,
 scheduling, backoff, and registry updates to the reconciler and runnable
-orchestrator. Channel endpoint and LLM service implementations remain injected by
+orchestrator. A fail-closed binding provider is available to compositions that do
+not yet have durable pipeline wiring; such a composition cannot launch a host.
+Channel endpoint and LLM service implementations remain injected by
 the concrete host/daemon composition rather than entering this process-authority
 crate.
 

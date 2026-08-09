@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Require an injected manifest-blind launch-binding provider, authenticate its
+  channel UUID and Level 1 model bindings before readiness, and fail closed when
+  bindings are unavailable or incompatible with the verified package runtime.
 - Deliver the exact relevant public package key, trust class, and tier over the
   fresh child session, removing the test child's hard-coded verification key.
 - Pass the authenticated package runtime to the single configured host program

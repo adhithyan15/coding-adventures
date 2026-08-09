@@ -4,14 +4,17 @@
 bounded data-plane conversation between the D18 orchestrator and one spawned
 host. After the secure handshake, the orchestrator authenticates the exact
 relevant public package key, trust class, and tier to the child. The child builds
-its own verification keyring, independently verifies its signed package, sends
-`Ready(package_hash)`, then sends heartbeats and serialized channel or
+its own verification keyring and independently verifies its signed package. The
+orchestrator then authenticates pipeline-authorized signed-name-to-UUID channel
+bindings and, for Level 1, bounded model settings. Only after matching those
+bindings to signed policy does the child send `Ready(package_hash)`, heartbeats,
+and serialized channel or
 provider-neutral completion requests. The orchestrator sends exact correlated
 responses or `Terminate`.
 
 The wrapper runs over `chief-of-staff-secure-host-channel`, enforces role and
 lifecycle ordering, and fails closed after malformed, unauthenticated,
-wrong-direction, replayed, duplicate/missing package trust, or package-mismatched
+wrong-direction, replayed, duplicate/missing package trust or launch bindings, or package-mismatched
 peer input. Heartbeats carry no child-selected timestamp: the orchestrator attaches
 its trusted monotonic receive time after authentication. The data plane permits one
 request in flight, uses

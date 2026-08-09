@@ -52,9 +52,12 @@ After spawning, the parent writes one `BootstrapOffer` and waits for one
 secure channel is wrapped in `OrchestratorControl`. Subsequent framed records
 are encrypted host-control frames. Before accepting readiness, the parent sends
 the exact relevant package-signing public trust selected by its verified package
-snapshot. The child-side helper performs the inverse bootstrap over any `Read`
-and `Write`, receives that authenticated trust, then exposes readiness, heartbeat,
-termination, and data-plane operations.
+snapshot. It then asks an injected manifest-blind `HostLaunchBindingProvider` for
+the exact registered host/package/runtime identity and sends the returned channel
+UUID and optional Level 1 model bindings. A provider failure or runtime/model
+mismatch fails before process creation. The child-side helper performs the inverse
+bootstrap over any `Read` and `Write`, receives both authenticated inputs, then
+exposes readiness, heartbeat, termination, and data-plane operations.
 
 ## Package and Identity Safety
 
@@ -131,6 +134,8 @@ The package exposes:
 
 - validated `ProcessSupervisorConfig` and `HostProgram` values;
 - `MonotonicClock` and `SessionIdSource` interfaces plus production adapters;
+- `HostLaunchBindingProvider` plus a fail-closed provider for compositions that
+  have not connected durable pipeline wiring;
 - owned, movable `ProcessHostSupervisor`, implementing the reconciler
   `HostSupervisor` trait;
 - `ChildProcessControl<R, W>` for lifecycle plus serialized authenticated

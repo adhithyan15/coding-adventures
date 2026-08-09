@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Compose a fail-closed host launch-binding provider until durable pipeline
+  wiring is connected; hosts cannot start with ambient or invented bindings.
+
 ## 0.1.0 - 2026-08-03
 
 - Add the concrete cross-platform Chief daemon executable.

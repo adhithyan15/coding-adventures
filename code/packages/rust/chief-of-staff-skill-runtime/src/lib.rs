@@ -3,12 +3,15 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use std::fmt::{self, Display, Formatter};
 
 use chief_of_staff_channel_crypto::Sequence;
 use chief_of_staff_channel_endpoints::{
     ChannelEndpointError, MessageId, Originator, PublishedMessage, Receiver,
+};
+use chief_of_staff_host_control_protocol::{
+    ChannelBindingAccess, LaunchBindings, LevelOneModelBinding,
 };
 use chief_of_staff_host_runtime::VerifiedAgentPackage;
 use chief_of_staff_skill_package::{load_verified_skill, SkillPackageError};
@@ -40,6 +43,21 @@ impl LevelOneRuntimeConfig {
             temperature: 0.0,
             max_tokens: 1_024,
         }
+    }
+
+    /// Return the provider-specific model selector.
+    pub fn model(&self) -> &str {
+        &self.model
+    }
+
+    /// Return the finite sampling temperature.
+    pub fn temperature(&self) -> f32 {
+        self.temperature
+    }
+
+    /// Return the non-zero output-token cap.
+    pub fn max_tokens(&self) -> usize {
+        self.max_tokens
     }
 
     fn validate(&self) -> Result<(), LevelOneRuntimeError> {
@@ -102,6 +120,8 @@ pub enum LevelOneRunOutcome {
 pub enum LevelOneRuntimeError {
     /// Static runtime settings are outside the bounded Level 1 contract.
     InvalidConfig(&'static str),
+    /// Authorized launch bindings do not exactly match the signed Level 1 manifest.
+    InvalidLaunchBindings,
     /// A verified channel payload was not UTF-8 text.
     NonUtf8Input,
     /// The provider returned an empty or whitespace-only response.
@@ -118,6 +138,9 @@ impl Display for LevelOneRuntimeError {
     fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
         match self {
             Self::InvalidConfig(message) => write!(formatter, "invalid Level 1 runtime: {message}"),
+            Self::InvalidLaunchBindings => {
+                formatter.write_str("Level 1 launch bindings do not match signed policy")
+            }
             Self::NonUtf8Input => formatter.write_str("Level 1 input payload is not UTF-8 text"),
             Self::EmptyResponse => formatter.write_str("Level 1 model response is empty"),
             Self::Llm(error) => write!(formatter, "Level 1 model call failed: {error}"),
@@ -145,6 +168,113 @@ impl From<SkillPackageError> for LevelOneRuntimeError {
     fn from(error: SkillPackageError) -> Self {
         Self::Package(Box::new(error))
     }
+}
+
+/// Independently verified Level 1 policy bound to pipeline-authorized runtime inputs.
+#[derive(Clone, Debug, PartialEq)]
+pub struct LevelOneLaunchPlan {
+    skill: ParsedSkill,
+    config: LevelOneRuntimeConfig,
+    read_channels: BTreeMap<String, [u8; 16]>,
+    write_channels: BTreeMap<String, [u8; 16]>,
+}
+
+impl LevelOneLaunchPlan {
+    /// Require exact channel names, directions, and model settings for a signed package.
+    pub fn from_verified_package(
+        package: &VerifiedAgentPackage,
+        bindings: &LaunchBindings,
+    ) -> Result<Self, LevelOneRuntimeError> {
+        let skill = load_verified_skill(package)?;
+        let model = bindings
+            .level_one_model()
+            .ok_or(LevelOneRuntimeError::InvalidLaunchBindings)?;
+        let config = runtime_config(model)?;
+        let mut read_channels = BTreeMap::new();
+        let mut write_channels = BTreeMap::new();
+        for binding in bindings.channels() {
+            let target = match binding.access() {
+                ChannelBindingAccess::Read => &mut read_channels,
+                ChannelBindingAccess::Write => &mut write_channels,
+            };
+            if target
+                .insert(binding.name().to_string(), binding.channel_id())
+                .is_some()
+            {
+                return Err(LevelOneRuntimeError::InvalidLaunchBindings);
+            }
+        }
+        if read_channels.keys().map(String::as_str).collect::<Vec<_>>()
+            != skill
+                .manifest
+                .channels
+                .reads
+                .iter()
+                .map(String::as_str)
+                .collect::<Vec<_>>()
+            || write_channels
+                .keys()
+                .map(String::as_str)
+                .collect::<Vec<_>>()
+                != skill
+                    .manifest
+                    .channels
+                    .writes
+                    .iter()
+                    .map(String::as_str)
+                    .collect::<Vec<_>>()
+        {
+            return Err(LevelOneRuntimeError::InvalidLaunchBindings);
+        }
+        Ok(Self {
+            skill,
+            config,
+            read_channels,
+            write_channels,
+        })
+    }
+
+    /// Borrow the authenticated parsed skill.
+    pub fn skill(&self) -> &ParsedSkill {
+        &self.skill
+    }
+
+    /// Borrow the bounded model settings delivered for this launch.
+    pub fn config(&self) -> &LevelOneRuntimeConfig {
+        &self.config
+    }
+
+    /// Resolve one signed read-channel name to its authorized UUID.
+    pub fn read_channel_id(&self, name: &str) -> Option<[u8; 16]> {
+        self.read_channels.get(name).copied()
+    }
+
+    /// Resolve one signed write-channel name to its authorized UUID.
+    pub fn write_channel_id(&self, name: &str) -> Option<[u8; 16]> {
+        self.write_channels.get(name).copied()
+    }
+
+    /// Bind this verified plan to one provider-neutral model client.
+    pub fn runtime<'a>(
+        &self,
+        client: &'a dyn LlmClient,
+    ) -> Result<LevelOneSkillRuntime<'a>, LevelOneRuntimeError> {
+        LevelOneSkillRuntime::new(self.skill.clone(), client, self.config.clone())
+    }
+}
+
+fn runtime_config(
+    model: &LevelOneModelBinding,
+) -> Result<LevelOneRuntimeConfig, LevelOneRuntimeError> {
+    let max_tokens = usize::try_from(model.max_tokens())
+        .map_err(|_| LevelOneRuntimeError::InvalidLaunchBindings)?;
+    let config = LevelOneRuntimeConfig {
+        model: model.model().to_string(),
+        temperature: model.temperature(),
+        max_tokens,
+    };
+    config.validate()?;
+    Ok(config)
 }
 
 /// Parsed Level 1 skill bound to one injected LLM provider.
@@ -258,6 +388,7 @@ mod tests {
     use super::*;
     use chief_of_staff_channel_crypto::{ChannelId, Sequence};
     use chief_of_staff_channel_endpoints::{AgentId, ReceivedMessage};
+    use chief_of_staff_host_control_protocol::ChannelBinding;
     use chief_of_staff_host_runtime::{
         verify_agent_package, PackageKeyType, PackageKeyring, TrustedPackageKey,
     };
@@ -271,6 +402,7 @@ mod tests {
     use std::time::{SystemTime, UNIX_EPOCH};
 
     const SKILL: &str = "# Weather Reporter\n\nYou are a friendly weather reporting agent.\n\n## Capabilities needed\n- none\n\n## Output format\nKeep the forecast brief.\n";
+    const WIRED_SKILL: &str = "---\nagent: weather-reporter\ndescription: Reports friendly forecasts for requested cities.\nprivilege_tier: 0\nreads: [weather-requests]\nwrites: [weather-reports]\nmessage_schema_versions: [weather-requests=1, weather-reports=1]\n---\n# Weather Reporter\n\nYou are a friendly weather reporting agent.\n\n## Capabilities needed\n- none\n";
     const MODEL: &str = "test-model";
 
     fn message_id(byte: u8) -> MessageId {
@@ -278,6 +410,27 @@ mod tests {
         bytes[6] = 0x70;
         bytes[8] = 0x80;
         MessageId::from_uuid_v7(bytes).unwrap()
+    }
+
+    fn uuid_v7(byte: u8) -> [u8; 16] {
+        let mut bytes = [0; 16];
+        bytes[6] = 0x70;
+        bytes[8] = 0x80;
+        bytes[15] = byte;
+        bytes
+    }
+
+    fn wired_bindings() -> LaunchBindings {
+        LaunchBindings::new(
+            vec![
+                ChannelBinding::new("weather-requests", ChannelBindingAccess::Read, uuid_v7(1))
+                    .unwrap(),
+                ChannelBinding::new("weather-reports", ChannelBindingAccess::Write, uuid_v7(2))
+                    .unwrap(),
+            ],
+            Some(LevelOneModelBinding::new(MODEL, 0.25, 256).unwrap()),
+        )
+        .unwrap()
     }
 
     fn response_provider() -> ProviderIdentity {
@@ -466,6 +619,52 @@ mod tests {
             runtime.respond("Seattle", "text/plain").unwrap().text,
             "Clear skies."
         );
+        std::fs::remove_dir_all(path).unwrap();
+    }
+
+    #[test]
+    fn verified_launch_plan_requires_exact_signed_channels_and_model_settings() {
+        let path = package_dir("wired-launch");
+        let (public_key, secret_key) = generate_keypair(&[63; 32]);
+        build_signed_skill_package(&path, WIRED_SKILL, "dev-wired", &secret_key).unwrap();
+        let mut keyring = PackageKeyring::new();
+        keyring
+            .trust(
+                TrustedPackageKey::new(
+                    "dev-wired",
+                    PackageKeyType::Developer,
+                    public_key,
+                    PrivilegeTier::Tier1,
+                )
+                .unwrap(),
+            )
+            .unwrap();
+        let package = verify_agent_package(&path, &keyring).unwrap();
+        let bindings = wired_bindings();
+        let plan = LevelOneLaunchPlan::from_verified_package(&package, &bindings).unwrap();
+        assert_eq!(plan.read_channel_id("weather-requests"), Some(uuid_v7(1)));
+        assert_eq!(plan.write_channel_id("weather-reports"), Some(uuid_v7(2)));
+        assert_eq!(plan.config().model(), MODEL);
+        assert_eq!(plan.config().temperature(), 0.25);
+        assert_eq!(plan.config().max_tokens(), 256);
+
+        let missing = LaunchBindings::new(
+            vec![
+                ChannelBinding::new("weather-requests", ChannelBindingAccess::Read, uuid_v7(1))
+                    .unwrap(),
+            ],
+            Some(LevelOneModelBinding::new(MODEL, 0.0, 128).unwrap()),
+        )
+        .unwrap();
+        assert!(matches!(
+            LevelOneLaunchPlan::from_verified_package(&package, &missing),
+            Err(LevelOneRuntimeError::InvalidLaunchBindings)
+        ));
+        let no_model = LaunchBindings::new(bindings.channels().to_vec(), None).unwrap();
+        assert!(matches!(
+            LevelOneLaunchPlan::from_verified_package(&package, &no_model),
+            Err(LevelOneRuntimeError::InvalidLaunchBindings)
+        ));
         std::fs::remove_dir_all(path).unwrap();
     }
 

@@ -1,12 +1,14 @@
 use chief_of_staff_host_control_protocol::{
-    DataPlaneFailure, DataPlaneRequest, DataPlaneResponse, RequestId,
+    ChannelBinding, ChannelBindingAccess, DataPlaneFailure, DataPlaneRequest, DataPlaneResponse,
+    LaunchBindings, LevelOneModelBinding, RequestId,
 };
 use chief_of_staff_host_runtime::{
-    DenoLaunchPlan, PackageKeyType, PackageKeyring, TrustedPackageKey,
+    AgentPackageRuntime, DenoLaunchPlan, PackageKeyType, PackageKeyring, TrustedPackageKey,
 };
 use chief_of_staff_process_supervisor::{
-    HostProgram, MonotonicClock, ProcessHostSupervisor, ProcessSupervisorConfig,
-    ProcessSupervisorError, SessionIdSource,
+    DenyHostLaunchBindings, HostLaunchBindingProvider, HostProgram, LaunchBindingProviderError,
+    MonotonicClock, ProcessHostSupervisor, ProcessSupervisorConfig, ProcessSupervisorError,
+    SessionIdSource,
 };
 use chief_of_staff_secure_host_channel::SessionId;
 use chief_of_staff_service_reconciler::{HostSupervisor, SupervisorObservation, SupervisorPhase};
@@ -199,8 +201,48 @@ impl SessionIdSource for TestSessions {
     }
 }
 
+struct TestLaunchBindings;
+
+impl HostLaunchBindingProvider for TestLaunchBindings {
+    fn launch_bindings(
+        &self,
+        _registration: &HostRegistration,
+        runtime: AgentPackageRuntime,
+    ) -> Result<LaunchBindings, LaunchBindingProviderError> {
+        let channels = vec![
+            ChannelBinding::new("weather-requests", ChannelBindingAccess::Read, uuid_v7(1))
+                .unwrap(),
+            ChannelBinding::new("weather-reports", ChannelBindingAccess::Write, uuid_v7(2))
+                .unwrap(),
+        ];
+        let model = match runtime {
+            AgentPackageRuntime::Skill => {
+                Some(LevelOneModelBinding::new("test-model", 0.0, 128).unwrap())
+            }
+            AgentPackageRuntime::Deno => None,
+        };
+        LaunchBindings::new(channels, model).map_err(|_| LaunchBindingProviderError)
+    }
+}
+
 fn new_supervisor(
     keyring: Arc<PackageKeyring>,
+    identity: Arc<coding_adventures_x3dh::IdentityKeyPair>,
+    bootstrap_timeout: Duration,
+    graceful_timeout: Duration,
+) -> ProcessHostSupervisor {
+    new_supervisor_with_bindings(
+        keyring,
+        Arc::new(TestLaunchBindings),
+        identity,
+        bootstrap_timeout,
+        graceful_timeout,
+    )
+}
+
+fn new_supervisor_with_bindings(
+    keyring: Arc<PackageKeyring>,
+    launch_bindings: Arc<dyn HostLaunchBindingProvider>,
     identity: Arc<coding_adventures_x3dh::IdentityKeyPair>,
     bootstrap_timeout: Duration,
     graceful_timeout: Duration,
@@ -215,6 +257,7 @@ fn new_supervisor(
     ProcessHostSupervisor::new(
         config,
         keyring,
+        launch_bindings,
         identity,
         Arc::new(TestClock::default()),
         Box::new(TestSessions(0)),
@@ -548,5 +591,26 @@ fn invalid_package_fails_before_process_creation() {
     assert_eq!(
         supervisor.start(&registration),
         Err(ProcessSupervisorError::PackageVerification)
+    );
+}
+
+#[test]
+fn unavailable_launch_bindings_fail_before_process_creation() {
+    let package = TestPackage::new("missing-bindings", None);
+    let registration = package.registration("unbound-host");
+    let mut supervisor = new_supervisor_with_bindings(
+        Arc::new(keyring()),
+        Arc::new(DenyHostLaunchBindings),
+        Arc::new(generate_identity_keypair()),
+        Duration::from_secs(1),
+        Duration::from_secs(1),
+    );
+    assert_eq!(
+        supervisor.start(&registration),
+        Err(ProcessSupervisorError::LaunchBindings)
+    );
+    assert_eq!(
+        supervisor.inspect(&registration),
+        Ok(SupervisorObservation::Absent)
     );
 }
