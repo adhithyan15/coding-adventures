@@ -2,6 +2,17 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Persian loop-and-tail ductus (HL-C09S)
+
+- Correct the source-adjacent queue after confirming that و appears between ن
+  and ه in UT Austin Persian Online's full-alphabet lesson.
+- Add its 02:43–02:45 demonstration as one unbroken two-movement filmstrip: the
+  small head loops, then flows directly into the leftward curving tail.
+- Pin zero lifts, Noto Naskh geometry, and source/data/rendering agreement.
+- Route each authored path to its owning script font at runtime; Persian paths
+  now load Noto Naskh instead of silently retaining the prose fallback after a
+  failed Tamil-font glyph lookup.
+
 ### Changed — restore handwriting bundle headroom (HL-C09R)
 
 - Split the handwriting model, SVG renderer, and font parser into one named,

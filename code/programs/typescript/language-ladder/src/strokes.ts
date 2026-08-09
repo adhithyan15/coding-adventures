@@ -216,6 +216,8 @@ const persianAlphabetSource = (glyph: string): StrokeSource => {
 // The adjacent م forms its round head first, then continues into the long
 // descending tail in the same pen-down run.
 // The next ن sweeps its bowl right-to-left, then lifts once to place the dot.
+// Contrary to the old queue, the source then demonstrates و before ه: its
+// small head loops and flows into the leftward curving tail without a lift.
 // அ is Frame 4's first row: movements 1-4 remain on the connected body, then
 // the hand lifts once before movement 5 draws the separate right upright. ஆ is
 // the next row: it repeats movements 1-5, then continues from that upright into
@@ -517,6 +519,56 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: persianAlphabetSource("ن"),
+  },
+  "و": {
+    glyph: "و",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "shape the small head loop",
+            path: [
+              { x: 220, y: 300 },
+              { x: 265, y: 315 },
+              { x: 315, y: 285 },
+              { x: 355, y: 235 },
+              { x: 385, y: 170 },
+              { x: 393, y: 115 },
+              { x: 380, y: 70 },
+              { x: 340, y: 45 },
+              { x: 285, y: 40 },
+              { x: 225, y: 45 },
+              { x: 175, y: 80 },
+              { x: 145, y: 125 },
+              { x: 145, y: 165 },
+              { x: 170, y: 215 },
+              { x: 210, y: 260 },
+              { x: 250, y: 285 },
+              { x: 300, y: 285 },
+              { x: 345, y: 245 },
+              { x: 375, y: 185 },
+              { x: 390, y: 115 },
+              { x: 390, y: 60 },
+            ],
+          },
+          {
+            label: "flow into the leftward tail without lifting",
+            path: [
+              { x: 390, y: 60 },
+              { x: 370, y: -5 },
+              { x: 340, y: -70 },
+              { x: 300, y: -120 },
+              { x: 250, y: -160 },
+              { x: 195, y: -170 },
+              { x: 135, y: -160 },
+              { x: 80, y: -140 },
+              { x: 45, y: -120 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: persianAlphabetSource("و"),
   },
   அ: {
     glyph: "அ",

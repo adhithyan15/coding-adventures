@@ -88,6 +88,8 @@ const PERSIAN_MIM = DUCTUS["م"];
 const persianMimOutline = naskhOutline("م");
 const PERSIAN_NUN = DUCTUS["ن"];
 const persianNunOutline = naskhOutline("ن");
+const PERSIAN_WAW = DUCTUS["و"];
+const persianWawOutline = naskhOutline("و");
 
 /** Walk a node tree, collecting every node the predicate accepts. */
 function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = []): SvgNode[] {
@@ -99,7 +101,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds all eleven authored Tamil letters and Persian ا, ب, ت, س, ل, م, and ن", () => {
+  it("finds all eleven authored Tamil letters and Persian ا, ب, ت, س, ل, م, ن, and و", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -118,6 +120,7 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("ل")?.glyph).toBe("ل");
     expect(ductusFor("م")?.glyph).toBe("م");
     expect(ductusFor("ن")?.glyph).toBe("ن");
+    expect(ductusFor("و")?.glyph).toBe("و");
   });
 
   it("returns undefined for a letter nobody has authored a stroke order for", () => {
@@ -815,6 +818,39 @@ describe("Persian ن — its bowl is followed by a separately placed dot", () =>
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(PERSIAN_NUN.strokes[1], 1),
+    );
+  });
+});
+
+describe("Persian و — its small head flows into one leftward tail", () => {
+  const steps = ductusSteps(PERSIAN_WAW);
+  const strip = ductusFilmstrip(PERSIAN_WAW, persianWawOutline);
+
+  it("keeps both sourced movements in one pen-down run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "shape the small head loop",
+      "flow into the leftward tail without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    const tail = PERSIAN_WAW.strokes[0].segments[1].path;
+    expect(tail[0].x).toBeGreaterThan(tail.at(-1)!.x);
+  });
+
+  it("reports two movements in one unbroken stroke", () => {
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("finishes the Noto Naskh path without a completed-stroke overlay", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      persianWawOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(PERSIAN_WAW.strokes[0], 1),
     );
   });
 });

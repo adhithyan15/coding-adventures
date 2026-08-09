@@ -7,7 +7,7 @@
 // core.ts / drill.ts (and is unit-tested there); the ONLY randomness lives here,
 // in the UI, so the pure modules stay deterministic and testable.
 
-import { SCRIPTS } from "./data.ts";
+import { SCRIPTS, verifiedLetterFont } from "./data.ts";
 import {
   buildScriptView,
   scriptSummary,
@@ -106,6 +106,7 @@ import {
   type SvgNode,
 } from "./ductusview.ts";
 import tamilFontUrl from "../../../../learning/human-languages/_fonts/NotoSansTamil-Static.ttf?url";
+import naskhFontUrl from "../../../../learning/human-languages/_fonts/NotoNaskhArabic-Static.ttf?url";
 import taxonomyJson from "../../../../learning/human-languages/concepts/taxonomy.json";
 import type { Taxonomy } from "@coding-adventures/human-language-data/src/types.ts";
 import {
@@ -676,10 +677,10 @@ function renderDetail(v: LetterView, siblings: Sibling[] = []): HTMLElement {
   // are recognition-only (their ductus is a separate, paused effort), so showing
   // an empty "Write it" section would imply data we don't have.
   // A handful of letters go further: an authored, font-validated PEN PATH, so
-  // the section becomes a stroke-by-stroke build-up instead of a list. Only ம
-  // has one today (`DUCTUS` admits no letter without a cited source), and every
-  // other letter falls back to a prose PART list. Its heading explicitly says
-  // that numbering does not claim separate strokes or any particular lifts.
+  // the section becomes a stroke-by-stroke build-up instead of a list.
+  // (`DUCTUS` admits no letter without a cited source.) Every other letter falls
+  // back to a prose PART list whose heading explicitly says that numbering does
+  // not claim separate strokes or any particular lifts.
   if (ductusFor(v.glyph)) {
     d.appendChild(section(handwritingHeading(v, true), renderDuctusSection(v)));
   } else if (v.strokeOrder.length > 0) {
@@ -1991,21 +1992,32 @@ function svgElement(node: SvgNode): SVGElement {
   return element;
 }
 
-// The glyph outline must come from the FONT — never a hand-drawn shape, because
-// a subtly wrong letter looks perfect to precisely the audience that cannot yet
-// read the script (see truetype.ts). The font is a few hundred KB, so it is
-// fetched once, lazily, and only when a letter with authored ductus is opened.
-// Any failure resolves to null and the caller keeps the prose list.
-let tamilFontPromise: Promise<Font | null> | null = null;
+// The glyph outline must come from the owning script's FONT — never a
+// hand-drawn shape, because a subtly wrong letter looks perfect to precisely
+// the audience that cannot yet read the script (see truetype.ts). Each font is
+// fetched once, lazily, and only when one of its authored letters is opened.
+// Any unavailable or unknown font keeps the prose fallback intact.
+const DUCTUS_FONT_URLS = new Map<string, string>([
+  ["_fonts/NotoSansTamil-Static.ttf", tamilFontUrl],
+  ["_fonts/NotoNaskhArabic-Static.ttf", naskhFontUrl],
+]);
+const ductusFontPromises = new Map<string, Promise<Font | null>>();
 
-function tamilFont(): Promise<Font | null> {
-  if (!tamilFontPromise) {
-    tamilFontPromise = fetch(tamilFontUrl)
+function ductusFont(glyph: string): Promise<Font | null> {
+  const letter = ductusFor(glyph);
+  const fontPath = letter && verifiedLetterFont(glyph, letter.source.url);
+  const url = fontPath && DUCTUS_FONT_URLS.get(fontPath);
+  if (!url) return Promise.resolve(null);
+
+  let promise = ductusFontPromises.get(url);
+  if (!promise) {
+    promise = fetch(url)
       .then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error(`font ${r.status}`))))
       .then((bytes) => parseFont(bytes))
       .catch(() => null);
+    ductusFontPromises.set(url, promise);
   }
-  return tamilFontPromise;
+  return promise;
 }
 
 /**
@@ -2021,7 +2033,7 @@ function renderDuctusSection(v: LetterView): HTMLElement {
   const holder = el("div", "ductus");
   holder.appendChild(orderedListOf(v.strokeOrder));
 
-  void tamilFont().then((font) => {
+  void ductusFont(letter.glyph).then((font) => {
     const glyph = font?.glyphFor(letter.glyph);
     if (!glyph || glyph.contours.length === 0) return; // keep the prose
     const strip = ductusFilmstrip(letter, { path: glyph.path, bounds: boundsOf(glyph.contours) });
