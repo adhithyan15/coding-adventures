@@ -1,0 +1,242 @@
+{
+  "schema_version": 1,
+  "upstream": {
+    "package": "mermaid",
+    "version": "11.16.1",
+    "tag": "mermaid@11.16.1",
+    "commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+    "syntax_reference": "https://mermaid.js.org/intro/syntax-reference.html"
+  },
+  "levels": {
+    "detected": "The diagram header is recognized and reported by family.",
+    "partial": "A documented subset parses, lowers, lays out, and renders through PaintScene.",
+    "full": "The family passes the pinned upstream syntax corpus and native render fixtures."
+  },
+  "families": [
+    {
+      "id": "flowchart",
+      "headers": ["flowchart", "graph", "flowchart-elk"],
+      "status": "partial",
+      "ir": "graph",
+      "smoke_source": "flowchart LR\nA[Start] --> B{Done?}"
+    },
+    {
+      "id": "sequence",
+      "headers": ["sequenceDiagram"],
+      "status": "detected",
+      "ir": "sequence",
+      "smoke_source": "sequenceDiagram\nAlice->>Bob: Hello"
+    },
+    {
+      "id": "class",
+      "headers": ["classDiagram", "classDiagram-v2"],
+      "status": "partial",
+      "ir": "structural",
+      "smoke_source": "classDiagram\nclass Animal\nclass Dog\nAnimal <|-- Dog"
+    },
+    {
+      "id": "state",
+      "headers": ["stateDiagram", "stateDiagram-v2"],
+      "status": "detected",
+      "ir": "state",
+      "smoke_source": "stateDiagram-v2\n[*] --> Ready"
+    },
+    {
+      "id": "er",
+      "headers": ["erDiagram"],
+      "status": "detected",
+      "ir": "structural",
+      "smoke_source": "erDiagram\nCUSTOMER ||--o{ ORDER : places"
+    },
+    {
+      "id": "journey",
+      "headers": ["journey"],
+      "status": "detected",
+      "ir": "journey",
+      "smoke_source": "journey\ntitle My day\nsection Work\nTask: 5: Me"
+    },
+    {
+      "id": "gantt",
+      "headers": ["gantt"],
+      "status": "partial",
+      "ir": "temporal",
+      "smoke_source": "gantt\ndateFormat YYYY-MM-DD\nsection Build\nTask :t1, 2026-01-01, 1d"
+    },
+    {
+      "id": "pie",
+      "headers": ["pie"],
+      "status": "partial",
+      "ir": "chart",
+      "smoke_source": "pie showData\n\"Dogs\" : 60\n\"Cats\" : 40"
+    },
+    {
+      "id": "quadrant",
+      "headers": ["quadrantChart"],
+      "status": "detected",
+      "ir": "chart",
+      "smoke_source": "quadrantChart\nx-axis Low --> High\ny-axis Low --> High\nA: [0.5, 0.5]"
+    },
+    {
+      "id": "requirement",
+      "headers": ["requirement", "requirementDiagram"],
+      "status": "detected",
+      "ir": "structural",
+      "smoke_source": "requirementDiagram\nrequirement test_req {\nid: 1\ntext: Test\nrisk: low\nverifymethod: test\n}"
+    },
+    {
+      "id": "gitgraph",
+      "headers": ["gitGraph", "gitGraph:"],
+      "status": "detected",
+      "ir": "temporal",
+      "smoke_source": "gitGraph\ncommit\nbranch develop\ncheckout develop\ncommit"
+    },
+    {
+      "id": "c4",
+      "headers": ["C4Context", "C4Container", "C4Component", "C4Dynamic", "C4Deployment"],
+      "status": "detected",
+      "ir": "structural",
+      "smoke_source": "C4Context\nPerson(user, \"User\")"
+    },
+    {
+      "id": "mindmap",
+      "headers": ["mindmap"],
+      "status": "detected",
+      "ir": "tree",
+      "smoke_source": "mindmap\nroot((mindmap))\n  Topic"
+    },
+    {
+      "id": "timeline",
+      "headers": ["timeline"],
+      "status": "detected",
+      "ir": "temporal",
+      "smoke_source": "timeline\n2026 : Started"
+    },
+    {
+      "id": "sankey",
+      "headers": ["sankey", "sankey-beta"],
+      "status": "detected",
+      "ir": "chart",
+      "smoke_source": "sankey\nA,B,10"
+    },
+    {
+      "id": "xychart",
+      "headers": ["xychart", "xychart-beta"],
+      "status": "partial",
+      "ir": "chart",
+      "smoke_source": "xychart-beta\nx-axis [A, B]\ny-axis 0 --> 10\nbar [3, 7]"
+    },
+    {
+      "id": "block",
+      "headers": ["block", "block-beta"],
+      "status": "detected",
+      "ir": "grid",
+      "smoke_source": "block-beta\ncolumns 2\nA B"
+    },
+    {
+      "id": "packet",
+      "headers": ["packet", "packet-beta"],
+      "status": "detected",
+      "ir": "packet",
+      "smoke_source": "packet-beta\n0-7: \"Header\""
+    },
+    {
+      "id": "kanban",
+      "headers": ["kanban"],
+      "status": "detected",
+      "ir": "board",
+      "smoke_source": "kanban\nTodo\n  task1[Task]"
+    },
+    {
+      "id": "architecture",
+      "headers": ["architecture", "architecture-beta"],
+      "status": "detected",
+      "ir": "architecture",
+      "smoke_source": "architecture-beta\nservice api(server)[API]"
+    },
+    {
+      "id": "radar",
+      "headers": ["radar-beta"],
+      "status": "detected",
+      "ir": "chart",
+      "smoke_source": "radar-beta\naxis A, B, C\ncurve x{1, 2, 3}"
+    },
+    {
+      "id": "eventmodeling",
+      "headers": ["eventmodeling"],
+      "status": "detected",
+      "ir": "event-model",
+      "smoke_source": "eventmodeling\nCustomer : actor"
+    },
+    {
+      "id": "treemap",
+      "headers": ["treemap"],
+      "status": "detected",
+      "ir": "hierarchy",
+      "smoke_source": "treemap\n\"Root\"\n  \"Child\": 10"
+    },
+    {
+      "id": "venn",
+      "headers": ["venn-beta"],
+      "status": "detected",
+      "ir": "set",
+      "smoke_source": "venn-beta\nset A\nset B"
+    },
+    {
+      "id": "ishikawa",
+      "headers": ["ishikawa", "ishikawa-beta"],
+      "status": "detected",
+      "ir": "causal",
+      "smoke_source": "ishikawa-beta\nProblem\n  Cause"
+    },
+    {
+      "id": "wardley",
+      "headers": ["wardley-beta"],
+      "status": "detected",
+      "ir": "wardley",
+      "smoke_source": "wardley-beta\ncomponent User [0.9, 0.5]"
+    },
+    {
+      "id": "cynefin",
+      "headers": ["cynefin-beta"],
+      "status": "detected",
+      "ir": "domain-map",
+      "smoke_source": "cynefin-beta\nClear:\n  Practice"
+    },
+    {
+      "id": "treeview",
+      "headers": ["treeView-beta"],
+      "status": "detected",
+      "ir": "tree",
+      "smoke_source": "treeView-beta\nroot\n  child"
+    },
+    {
+      "id": "swimlane",
+      "headers": ["swimlane-beta"],
+      "status": "detected",
+      "ir": "swimlane",
+      "smoke_source": "swimlane-beta\nlane A\n  Task"
+    },
+    {
+      "id": "railroad",
+      "headers": ["railroad-beta", "railroad-ebnf-beta", "railroad-abnf-beta", "railroad-peg-beta"],
+      "status": "detected",
+      "ir": "railroad",
+      "smoke_source": "railroad-beta\nexpression ::= term"
+    },
+    {
+      "id": "info",
+      "headers": ["info"],
+      "status": "detected",
+      "ir": "info",
+      "smoke_source": "info"
+    },
+    {
+      "id": "zenuml",
+      "headers": ["zenuml"],
+      "status": "detected",
+      "ir": "sequence",
+      "external": true,
+      "smoke_source": "zenuml\nAlice->Bob: Hello"
+    }
+  ]
+}

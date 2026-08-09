@@ -1,5 +1,10 @@
 # Changelog — diagram-to-paint
 
+## Unreleased
+
+- Added a Mermaid Pie -> chart layout -> PaintScene -> Metal PNG example and
+  Apple end-to-end test.
+
 ## 0.1.2 — Fix text coordinate-space mismatch (text now inside nodes)
 
 ### Fixed

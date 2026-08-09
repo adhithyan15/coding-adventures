@@ -9,11 +9,12 @@
 
 #[cfg(target_vendor = "apple")]
 mod apple {
+    use diagram_layout_chart::layout_chart_diagram;
     use diagram_layout_graph::layout_graph_diagram;
-    use diagram_to_paint::{diagram_to_paint, DiagramToPaintOptions};
+    use diagram_to_paint::{diagram_to_paint, diagram_to_paint_chart, DiagramToPaintOptions};
     use dot_parser::parse_to_diagram;
     use layout_ir::font_spec;
-    use mermaid_parser::parse_to_diagram as parse_mermaid_to_diagram;
+    use mermaid_parser::{parse_pie, parse_to_diagram as parse_mermaid_to_diagram};
     use paint_codec_png::write_png;
     use paint_metal::render;
     use text_native_coretext::{CoreTextMetrics, CoreTextResolver, CoreTextShaper};
@@ -140,5 +141,44 @@ mod apple {
             glyph_runs > 0,
             "expected at least one PaintGlyphRun from shaping pipeline"
         );
+    }
+
+    #[test]
+    fn render_mermaid_pie_to_png() {
+        let diagram = parse_pie(
+            r#"pie showData
+                "Graph" : 50
+                "Chart" : 30
+                "Temporal" : 20"#,
+        )
+        .expect("Mermaid pie parse failed");
+        let layout = layout_chart_diagram(&diagram, 640.0, 480.0);
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let opts = DiagramToPaintOptions {
+            background: layout_ir::Color {
+                r: 255,
+                g: 255,
+                b: 255,
+                a: 255,
+            },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 12.0),
+            title_font: font_spec("Helvetica", 16.0),
+            shaper: &shaper,
+            metrics: &metrics,
+            resolver: &resolver,
+        };
+
+        let scene = diagram_to_paint_chart(&layout, &opts);
+        let pixels = render(&scene);
+        let path = "/tmp/mermaid_pie_e2e.png";
+        write_png(&pixels, path).expect("PNG write failed");
+
+        assert!(pixels.width > 0);
+        assert!(pixels.height > 0);
+        assert!(!scene.instructions.is_empty());
     }
 }

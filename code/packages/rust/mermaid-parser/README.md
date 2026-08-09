@@ -1,22 +1,33 @@
 # mermaid-parser
 
-Grammar-driven Rust parser for the shared Mermaid flowchart grammar.
+Versioned Mermaid compatibility dispatcher and grammar-driven Rust parsers.
 
-The parser reads `code/grammars/mermaid.tokens` and
-`code/grammars/mermaid.grammar`, validates the source with the generic lexer
-and parser infrastructure, then lowers the result into `diagram-ir::GraphDiagram`.
+Compatibility is pinned to Mermaid 11.16.1 in
+`code/grammars/mermaid/compatibility.json`. The manifest distinguishes family
+detection from syntax and native-render compatibility so progress can be
+measured without treating a recognized header as a completed implementation.
 
-The first supported subset is intentionally small but useful:
+The current native pipeline supports documented subsets of:
 
 - `flowchart` / `graph`
-- directions: `TB`, `TD`, `BT`, `LR`, `RL`
-- node declarations
-- edge chains
-- edge labels
-- inline Mermaid node shapes: `[]`, `()`, `(())`, `{}`
+- `classDiagram`
+- `gantt`
+- `pie`
+- `xychart`
 
-That is enough to prove:
+Each supported family lowers into the shared Diagram IR and can continue
+through its family layout package:
 
 ```text
-Mermaid -> GraphDiagram -> diagram-layout-graph -> diagram-to-paint -> paint-metal -> PNG
+Mermaid
+  -> family grammar and parser
+  -> Diagram IR
+  -> family layout
+  -> diagram-to-paint
+  -> PaintScene
+  -> Metal / SVG / Direct2D / other Paint VM backends
 ```
+
+All other Mermaid 11.16.1 family headers are recognized and return an explicit
+`recognized but not implemented` error until their grammar, lowering, layout,
+and native render fixtures are complete.

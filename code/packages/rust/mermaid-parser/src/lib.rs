@@ -1,4 +1,4 @@
-//! Grammar-driven parser for a focused Mermaid flowchart subset.
+//! Grammar-driven parser and compatibility dispatcher for Mermaid diagrams.
 
 // This file hand-parses many `starts_with(...)` / slice-index prefix strips
 // where the prefix and the stripped remainder need slightly different handling;
@@ -6,7 +6,8 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
+pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
 
@@ -15,10 +16,11 @@ use diagram_ir::{
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
-use mermaid_lexer::tokenize_mermaid;
+use mermaid_lexer::{tokenize_mermaid, tokenize_mermaid_pie};
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
 const PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/mermaid.grammar");
+const PIE_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/pie.grammar");
 
 /// Recursion-depth cap for the Mermaid [`GrammarParser`] — see
 /// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
@@ -168,6 +170,18 @@ pub fn create_mermaid_parser(source: &str) -> GrammarParser {
 
 pub fn parse_mermaid_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
     let mut parser = create_mermaid_parser(source);
+    parser.parse().map_err(|e| ParseError {
+        message: e.message,
+        line: e.token.line,
+        col: e.token.column,
+    })
+}
+
+pub fn parse_mermaid_pie_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
+    let tokens = tokenize_mermaid_pie(source);
+    let grammar = parse_parser_grammar(PIE_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|e| panic!("Failed to parse pie.grammar: {e}"));
+    let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
     parser.parse().map_err(|e| ParseError {
         message: e.message,
         line: e.token.line,
@@ -332,31 +346,111 @@ fn is_edge_operator(token: &Token) -> bool {
 }
 
 fn token_name(token: &Token) -> &str {
-    token
-        .type_name
-        .as_deref()
-        .unwrap_or(match token.type_ {
-            TokenType::Name => "NAME",
-            TokenType::Keyword => "KEYWORD",
-            TokenType::Newline => "NEWLINE",
-            TokenType::Semicolon => "SEMICOLON",
-            TokenType::Eof => "EOF",
-            _ => "TOKEN",
-        })
+    token.type_name.as_deref().unwrap_or(match token.type_ {
+        TokenType::Name => "NAME",
+        TokenType::Number => "NUMBER",
+        TokenType::String => "STRING",
+        TokenType::Keyword => "KEYWORD",
+        TokenType::Colon => "COLON",
+        TokenType::Newline => "NEWLINE",
+        TokenType::Semicolon => "SEMICOLON",
+        TokenType::Eof => "EOF",
+        _ => "TOKEN",
+    })
 }
-
 
 // ============================================================================
 // DG04 — Extended Mermaid parsers for Chart, Structural, and Temporal families
 // ============================================================================
 
 use diagram_ir::{
-    Axis, AxisKind, ChartDiagram, ChartKind, ChartOrientation, ChartSeries,
-    Compartment, CompartmentKind, GanttDiagram, GanttSection, GanttTask, RelKind,
-    SeriesKind, StructuralDiagram, StructuralKind, StructuralNode,
-    StructuralNodeKind, StructuralRelationship, TaskStart, TaskStatus,
-    TemporalBody, TemporalDiagram, TemporalKind,
+    Axis, AxisKind, ChartDiagram, ChartKind, ChartOrientation, ChartSeries, Compartment,
+    CompartmentKind, GanttDiagram, GanttSection, GanttTask, PieSlice, RelKind, SeriesKind,
+    StructuralDiagram, StructuralKind, StructuralNode, StructuralNodeKind, StructuralRelationship,
+    TaskStart, TaskStatus, TemporalBody, TemporalDiagram, TemporalKind,
 };
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum MermaidDiagramType {
+    Flowchart,
+    Sequence,
+    Class,
+    State,
+    Er,
+    Journey,
+    Gantt,
+    Pie,
+    Quadrant,
+    Requirement,
+    GitGraph,
+    C4,
+    Mindmap,
+    Timeline,
+    Sankey,
+    XyChart,
+    Block,
+    Packet,
+    Kanban,
+    Architecture,
+    Radar,
+    EventModeling,
+    Treemap,
+    Venn,
+    Ishikawa,
+    Wardley,
+    Cynefin,
+    TreeView,
+    Swimlane,
+    Railroad,
+    Info,
+    ZenUml,
+}
+
+impl MermaidDiagramType {
+    pub fn canonical_id(self) -> &'static str {
+        match self {
+            Self::Flowchart => "flowchart",
+            Self::Sequence => "sequence",
+            Self::Class => "class",
+            Self::State => "state",
+            Self::Er => "er",
+            Self::Journey => "journey",
+            Self::Gantt => "gantt",
+            Self::Pie => "pie",
+            Self::Quadrant => "quadrant",
+            Self::Requirement => "requirement",
+            Self::GitGraph => "gitgraph",
+            Self::C4 => "c4",
+            Self::Mindmap => "mindmap",
+            Self::Timeline => "timeline",
+            Self::Sankey => "sankey",
+            Self::XyChart => "xychart",
+            Self::Block => "block",
+            Self::Packet => "packet",
+            Self::Kanban => "kanban",
+            Self::Architecture => "architecture",
+            Self::Radar => "radar",
+            Self::EventModeling => "eventmodeling",
+            Self::Treemap => "treemap",
+            Self::Venn => "venn",
+            Self::Ishikawa => "ishikawa",
+            Self::Wardley => "wardley",
+            Self::Cynefin => "cynefin",
+            Self::TreeView => "treeview",
+            Self::Swimlane => "swimlane",
+            Self::Railroad => "railroad",
+            Self::Info => "info",
+            Self::ZenUml => "zenuml",
+        }
+    }
+
+    pub fn has_native_pipeline(self) -> bool {
+        matches!(
+            self,
+            Self::Flowchart | Self::Class | Self::Gantt | Self::Pie | Self::XyChart
+        )
+    }
+}
 
 /// Union of all Mermaid diagram variants that `parse_any_mermaid` can return.
 pub enum MermaidDiagram {
@@ -366,33 +460,133 @@ pub enum MermaidDiagram {
     Temporal(TemporalDiagram),
 }
 
-/// Dispatch to the correct sub-parser based on the first keyword line.
+/// Detect a Mermaid 11.16.1 diagram family from its header.
 ///
-/// Supported diagram types:
-/// - `flowchart`/`graph` → `GraphDiagram`
-/// - `classDiagram` → `StructuralDiagram`
-/// - `xychart-beta`/`xychart` → `ChartDiagram`
-/// - `gantt` → `TemporalDiagram` (Gantt body)
-pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
+/// Detection also skips leading YAML front matter, Mermaid directives,
+/// comments, and blank lines. A recognized family may still be reported as
+/// unsupported by [`parse_any_mermaid`] while its semantic IR is implemented.
+pub fn detect_mermaid_type(source: &str) -> Result<MermaidDiagramType, ParseError> {
     let first = first_keyword(source);
-    match first.as_str() {
-        "flowchart" | "graph" => parse_to_diagram(source).map(MermaidDiagram::Graph),
-        "classDiagram" => parse_class_diagram(source).map(MermaidDiagram::Structural),
-        "xychart-beta" | "xychart" => parse_xychart(source).map(MermaidDiagram::Chart),
-        "gantt" => parse_gantt(source).map(|g| MermaidDiagram::Temporal(TemporalDiagram {
-            kind: TemporalKind::Gantt,
-            title: None,
-            body: TemporalBody::Gantt(g),
-        })),
-        other => Err(ParseError { message: format!("Unknown diagram type: {other:?}"), line: 0, col: 0 }),
+    let diagram_type = match first.as_str() {
+        "flowchart" | "graph" | "flowchart-elk" => MermaidDiagramType::Flowchart,
+        "sequenceDiagram" => MermaidDiagramType::Sequence,
+        "classDiagram" | "classDiagram-v2" => MermaidDiagramType::Class,
+        "stateDiagram" | "stateDiagram-v2" => MermaidDiagramType::State,
+        "erDiagram" => MermaidDiagramType::Er,
+        "journey" => MermaidDiagramType::Journey,
+        "gantt" => MermaidDiagramType::Gantt,
+        "pie" => MermaidDiagramType::Pie,
+        "quadrantChart" => MermaidDiagramType::Quadrant,
+        "requirement" | "requirementDiagram" => MermaidDiagramType::Requirement,
+        "gitGraph" => MermaidDiagramType::GitGraph,
+        "C4Context" | "C4Container" | "C4Component" | "C4Dynamic" | "C4Deployment" => {
+            MermaidDiagramType::C4
+        }
+        "mindmap" => MermaidDiagramType::Mindmap,
+        "timeline" => MermaidDiagramType::Timeline,
+        "sankey" | "sankey-beta" => MermaidDiagramType::Sankey,
+        "xychart" | "xychart-beta" => MermaidDiagramType::XyChart,
+        "block" | "block-beta" => MermaidDiagramType::Block,
+        "packet" | "packet-beta" => MermaidDiagramType::Packet,
+        "kanban" => MermaidDiagramType::Kanban,
+        "architecture" | "architecture-beta" => MermaidDiagramType::Architecture,
+        "radar-beta" => MermaidDiagramType::Radar,
+        "eventmodeling" => MermaidDiagramType::EventModeling,
+        "treemap" => MermaidDiagramType::Treemap,
+        "venn-beta" => MermaidDiagramType::Venn,
+        "ishikawa" | "ishikawa-beta" => MermaidDiagramType::Ishikawa,
+        "wardley-beta" => MermaidDiagramType::Wardley,
+        "cynefin-beta" => MermaidDiagramType::Cynefin,
+        "treeView-beta" => MermaidDiagramType::TreeView,
+        "swimlane-beta" => MermaidDiagramType::Swimlane,
+        "railroad-beta" | "railroad-ebnf-beta" | "railroad-abnf-beta" | "railroad-peg-beta" => {
+            MermaidDiagramType::Railroad
+        }
+        "info" => MermaidDiagramType::Info,
+        "zenuml" => MermaidDiagramType::ZenUml,
+        other => {
+            return Err(ParseError {
+                message: format!("Unknown Mermaid diagram type: {other:?}"),
+                line: 1,
+                col: 1,
+            });
+        }
+    };
+
+    Ok(diagram_type)
+}
+
+/// Dispatch a recognized Mermaid family to its semantic parser.
+pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
+    let diagram_type = detect_mermaid_type(source)?;
+    match diagram_type {
+        MermaidDiagramType::Flowchart => parse_to_diagram(source).map(MermaidDiagram::Graph),
+        MermaidDiagramType::Class => parse_class_diagram(source).map(MermaidDiagram::Structural),
+        MermaidDiagramType::XyChart => parse_xychart(source).map(MermaidDiagram::Chart),
+        MermaidDiagramType::Pie => parse_pie(source).map(MermaidDiagram::Chart),
+        MermaidDiagramType::Gantt => parse_gantt(source).map(|g| {
+            MermaidDiagram::Temporal(TemporalDiagram {
+                kind: TemporalKind::Gantt,
+                title: None,
+                body: TemporalBody::Gantt(g),
+            })
+        }),
+        unsupported => Err(ParseError {
+            message: format!(
+                "Mermaid {} diagram family {:?} is recognized but not implemented",
+                MERMAID_COMPATIBILITY_BASELINE,
+                unsupported.canonical_id()
+            ),
+            line: 1,
+            col: 1,
+        }),
     }
 }
 
 fn first_keyword(source: &str) -> String {
+    let mut in_front_matter = false;
+    let mut can_start_front_matter = true;
+    let mut in_directive = false;
+
     for line in source.lines() {
         let trimmed = line.trim();
-        if trimmed.is_empty() || trimmed.starts_with("%%") { continue; }
-        return trimmed.split_whitespace().next().unwrap_or("").to_string();
+
+        if can_start_front_matter && trimmed.is_empty() {
+            continue;
+        }
+        if can_start_front_matter && trimmed == "---" {
+            in_front_matter = true;
+            can_start_front_matter = false;
+            continue;
+        }
+        if in_front_matter {
+            if trimmed == "---" {
+                in_front_matter = false;
+            }
+            continue;
+        }
+
+        can_start_front_matter = false;
+        if in_directive {
+            if trimmed.contains("}%%") {
+                in_directive = false;
+            }
+            continue;
+        }
+        if trimmed.starts_with("%%{") {
+            in_directive = !trimmed.contains("}%%");
+            continue;
+        }
+        if trimmed.is_empty() || trimmed.starts_with("%%") {
+            continue;
+        }
+
+        return trimmed
+            .split_whitespace()
+            .next()
+            .unwrap_or("")
+            .trim_end_matches(':')
+            .to_string();
     }
     String::new()
 }
@@ -418,8 +612,12 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
     // Skip the `classDiagram` header line.
     for line in lines.by_ref() {
         let t = line.trim();
-        if t == "classDiagram" { break; }
-        if t.starts_with("%%") || t.is_empty() { continue; }
+        if t == "classDiagram" {
+            break;
+        }
+        if t.starts_with("%%") || t.is_empty() {
+            continue;
+        }
         if t.starts_with("title") {
             title = Some(t.trim_start_matches("title").trim().to_string());
         }
@@ -427,12 +625,17 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
 
     for line in lines {
         let t = line.trim();
-        if t.is_empty() || t.starts_with("%%") { continue; }
+        if t.is_empty() || t.starts_with("%%") {
+            continue;
+        }
 
         if t.starts_with("class ") {
             let rest = t[6..].trim();
             let (id_str, body_str): (String, Option<String>) = if let Some(pos) = rest.find('{') {
-                (rest[..pos].trim().to_string(), Some(rest[pos+1..].trim_end_matches('}').to_string()))
+                (
+                    rest[..pos].trim().to_string(),
+                    Some(rest[pos + 1..].trim_end_matches('}').to_string()),
+                )
             } else {
                 (rest.to_string(), None)
             };
@@ -440,35 +643,47 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
 
             let mut compartments: Vec<Compartment> = Vec::new();
             if let Some(body) = body_str.as_deref() {
-                let entries: Vec<String> = body.split(';')
+                let entries: Vec<String> = body
+                    .split(';')
                     .map(|e| e.trim().to_string())
                     .filter(|e| !e.is_empty())
                     .collect();
                 if !entries.is_empty() {
                     // Heuristic: entries with `()` are methods, otherwise fields.
-                    let fields: Vec<String> = entries.iter()
+                    let fields: Vec<String> = entries
+                        .iter()
                         .filter(|e| !e.contains('('))
                         .map(|e| strip_visibility(e))
                         .collect();
-                    let methods: Vec<String> = entries.iter()
+                    let methods: Vec<String> = entries
+                        .iter()
                         .filter(|e| e.contains('('))
                         .map(|e| strip_visibility(e))
                         .collect();
                     if !fields.is_empty() {
-                        compartments.push(Compartment { kind: CompartmentKind::Fields, entries: fields });
+                        compartments.push(Compartment {
+                            kind: CompartmentKind::Fields,
+                            entries: fields,
+                        });
                     }
                     if !methods.is_empty() {
-                        compartments.push(Compartment { kind: CompartmentKind::Methods, entries: methods });
+                        compartments.push(Compartment {
+                            kind: CompartmentKind::Methods,
+                            entries: methods,
+                        });
                     }
                 }
             }
 
             // Update existing node or create a new one.
             if let Some(existing) = nodes.iter_mut().find(|n| n.id == id) {
-                if !compartments.is_empty() { existing.compartments = compartments; }
+                if !compartments.is_empty() {
+                    existing.compartments = compartments;
+                }
             } else {
                 nodes.push(StructuralNode {
-                    id: id.clone(), label: id,
+                    id: id.clone(),
+                    label: id,
                     stereotype: None,
                     node_kind: StructuralNodeKind::Class,
                     compartments,
@@ -479,7 +694,8 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
             for id in [&rel.from, &rel.to] {
                 if !nodes.iter().any(|n| &n.id == id) {
                     nodes.push(StructuralNode {
-                        id: id.clone(), label: id.clone(),
+                        id: id.clone(),
+                        label: id.clone(),
                         stereotype: None,
                         node_kind: StructuralNodeKind::Class,
                         compartments: vec![],
@@ -490,7 +706,12 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
         }
     }
 
-    Ok(StructuralDiagram { kind: StructuralKind::Class, title, nodes, relationships })
+    Ok(StructuralDiagram {
+        kind: StructuralKind::Class,
+        title,
+        nodes,
+        relationships,
+    })
 }
 
 fn strip_visibility(s: &str) -> String {
@@ -514,25 +735,32 @@ fn parse_class_relationship(line: &str) -> Option<StructuralRelationship> {
     let arrows: &[(&str, RelKind)] = &[
         ("<|--", RelKind::Inheritance),
         ("<|..", RelKind::Realization),
-        ("*--",  RelKind::Composition),
-        ("o--",  RelKind::Aggregation),
-        ("-->",  RelKind::Association),
-        ("..",   RelKind::Dependency),
-        ("--",   RelKind::Link),
+        ("*--", RelKind::Composition),
+        ("o--", RelKind::Aggregation),
+        ("-->", RelKind::Association),
+        ("..", RelKind::Dependency),
+        ("--", RelKind::Link),
     ];
     for (arrow, kind) in arrows {
         if let Some(pos) = line.find(arrow) {
-            let from  = line[..pos].trim().to_string();
+            let from = line[..pos].trim().to_string();
             let after = line[pos + arrow.len()..].trim();
             let (to, label) = if let Some(colon) = after.find(':') {
-                (after[..colon].trim().to_string(), Some(after[colon+1..].trim().to_string()))
+                (
+                    after[..colon].trim().to_string(),
+                    Some(after[colon + 1..].trim().to_string()),
+                )
             } else {
                 (after.to_string(), None)
             };
             if !from.is_empty() && !to.is_empty() {
                 return Some(StructuralRelationship {
-                    from, to, kind: kind.clone(),
-                    from_mult: None, to_mult: None, label,
+                    from,
+                    to,
+                    kind: kind.clone(),
+                    from_mult: None,
+                    to_mult: None,
+                    label,
                 });
             }
         }
@@ -563,9 +791,13 @@ pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
     let mut past_header = false;
     for line in source.lines() {
         let t = line.trim();
-        if t.is_empty() || t.starts_with("%%") { continue; }
+        if t.is_empty() || t.starts_with("%%") {
+            continue;
+        }
         if !past_header {
-            if t.starts_with("xychart") { past_header = true; }
+            if t.starts_with("xychart") {
+                past_header = true;
+            }
             continue;
         }
         if t.starts_with("title") {
@@ -577,34 +809,70 @@ pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
             // Strip optional quoted label before numbers.
             let rest = if rest.starts_with('"') {
                 if let Some(end) = rest[1..].find('"') {
-                    rest[end+2..].trim()
-                } else { rest }
-            } else { rest };
-            let nums: Vec<f64> = rest.split_whitespace()
-                .filter(|s| s.chars().all(|c| c.is_ascii_digit() || c == '-' || c == '.'))
+                    rest[end + 2..].trim()
+                } else {
+                    rest
+                }
+            } else {
+                rest
+            };
+            let nums: Vec<f64> = rest
+                .split_whitespace()
+                .filter(|s| {
+                    s.chars()
+                        .all(|c| c.is_ascii_digit() || c == '-' || c == '.')
+                })
                 .filter_map(|s| s.parse().ok())
                 .collect();
-            if nums.len() >= 2 { y_min = nums[0]; y_max = nums[nums.len()-1]; }
+            if nums.len() >= 2 {
+                y_min = nums[0];
+                y_max = nums[nums.len() - 1];
+            }
         } else if t.starts_with("bar") {
             let data = parse_data_list(&t[3..]);
-            series.push(ChartSeries { kind: SeriesKind::Bar, label: Some("bar".into()), data });
+            series.push(ChartSeries {
+                kind: SeriesKind::Bar,
+                label: Some("bar".into()),
+                data,
+            });
         } else if t.starts_with("line") {
             let data = parse_data_list(&t[4..]);
-            series.push(ChartSeries { kind: SeriesKind::Line, label: Some("line".into()), data });
+            series.push(ChartSeries {
+                kind: SeriesKind::Line,
+                label: Some("line".into()),
+                data,
+            });
         }
     }
 
     let x_axis = if !x_cats.is_empty() {
-        Some(Axis { kind: AxisKind::Categorical, title: None, categories: x_cats, min: 0.0, max: 0.0 })
-    } else { None };
+        Some(Axis {
+            kind: AxisKind::Categorical,
+            title: None,
+            categories: x_cats,
+            min: 0.0,
+            max: 0.0,
+        })
+    } else {
+        None
+    };
     let y_axis = Some(Axis {
-        kind: AxisKind::Numeric, title: None, categories: vec![], min: y_min, max: y_max,
+        kind: AxisKind::Numeric,
+        title: None,
+        categories: vec![],
+        min: y_min,
+        max: y_max,
     });
 
     Ok(ChartDiagram {
-        title, kind: ChartKind::Xy,
-        x_axis, y_axis, series,
-        slices: vec![], sankey_nodes: vec![], flows: vec![],
+        title,
+        kind: ChartKind::Xy,
+        x_axis,
+        y_axis,
+        series,
+        slices: vec![],
+        sankey_nodes: vec![],
+        flows: vec![],
         orientation: ChartOrientation::Vertical,
     })
 }
@@ -612,18 +880,112 @@ pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
 fn parse_bracket_list(s: &str) -> Vec<String> {
     let s = s.trim();
     let inner = if let (Some(l), Some(r)) = (s.find('['), s.rfind(']')) {
-        &s[l+1..r]
-    } else { s };
-    inner.split(',').map(|x| x.trim().trim_matches('"').to_string())
-        .filter(|x| !x.is_empty()).collect()
+        &s[l + 1..r]
+    } else {
+        s
+    };
+    inner
+        .split(',')
+        .map(|x| x.trim().trim_matches('"').to_string())
+        .filter(|x| !x.is_empty())
+        .collect()
 }
 
 fn parse_data_list(s: &str) -> Vec<f64> {
     let s = s.trim();
     let inner = if let (Some(l), Some(r)) = (s.find('['), s.rfind(']')) {
-        &s[l+1..r]
-    } else { s };
-    inner.split(',').filter_map(|x| x.trim().parse().ok()).collect()
+        &s[l + 1..r]
+    } else {
+        s
+    };
+    inner
+        .split(',')
+        .filter_map(|x| x.trim().parse().ok())
+        .collect()
+}
+
+// ── pie parser ───────────────────────────────────────────────────────────
+
+/// Parse the grammar-backed Mermaid `pie` family into a `ChartDiagram`.
+///
+/// The first compatibility slice supports `showData` and quoted numeric
+/// sections, which are the semantic inputs needed by `diagram-layout-chart`.
+pub fn parse_pie(source: &str) -> Result<ChartDiagram, ParseError> {
+    parse_mermaid_pie_ast(source)?;
+
+    let mut cursor = TokenCursor::new(tokenize_mermaid_pie(source));
+    cursor.skip_terminators();
+    cursor.expect_keyword("pie")?;
+
+    if cursor.current().type_ == TokenType::Keyword && cursor.current().value == "showData" {
+        cursor.advance();
+    }
+    cursor.skip_terminators();
+
+    let mut slices = Vec::new();
+    while !cursor.at_eof() {
+        let label_token = cursor
+            .consume_if("STRING")
+            .ok_or_else(|| token_error(cursor.current(), "expected quoted pie slice label"))?;
+        cursor
+            .consume_if("COLON")
+            .ok_or_else(|| token_error(cursor.current(), "expected ':' after pie slice label"))?;
+        let value_token = cursor
+            .consume_if("NUMBER")
+            .ok_or_else(|| token_error(cursor.current(), "expected numeric pie slice value"))?;
+        let value = value_token.value.parse::<f64>().map_err(|_| {
+            token_error(
+                &value_token,
+                format!("invalid pie slice value {:?}", value_token.value),
+            )
+        })?;
+
+        slices.push(PieSlice {
+            label: unquote_mermaid_string(&label_token.value),
+            value,
+        });
+        cursor.skip_terminators();
+    }
+
+    Ok(ChartDiagram {
+        title: None,
+        kind: ChartKind::Pie,
+        x_axis: None,
+        y_axis: None,
+        series: vec![],
+        slices,
+        sankey_nodes: vec![],
+        flows: vec![],
+        orientation: ChartOrientation::Vertical,
+    })
+}
+
+fn unquote_mermaid_string(raw: &str) -> String {
+    let inner = raw
+        .strip_prefix('"')
+        .and_then(|value| value.strip_suffix('"'))
+        .unwrap_or(raw);
+    let mut result = String::with_capacity(inner.len());
+    let mut chars = inner.chars();
+
+    while let Some(ch) = chars.next() {
+        if ch != '\\' {
+            result.push(ch);
+            continue;
+        }
+
+        match chars.next() {
+            Some('n') => result.push('\n'),
+            Some('r') => result.push('\r'),
+            Some('t') => result.push('\t'),
+            Some('"') => result.push('"'),
+            Some('\\') => result.push('\\'),
+            Some(other) => result.push(other),
+            None => result.push('\\'),
+        }
+    }
+
+    result
 }
 
 // ── gantt parser ──────────────────────────────────────────────────────────
@@ -647,9 +1009,13 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
     let mut past_header = false;
     for line in source.lines() {
         let t = line.trim();
-        if t.is_empty() || t.starts_with("%%") { continue; }
+        if t.is_empty() || t.starts_with("%%") {
+            continue;
+        }
         if !past_header {
-            if t == "gantt" { past_header = true; }
+            if t == "gantt" {
+                past_header = true;
+            }
             continue;
         }
         if t.starts_with("title") {
@@ -658,7 +1024,9 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
         } else if t.starts_with("dateFormat") {
             date_format = t[10..].trim().to_string();
         } else if t.starts_with("section") {
-            if let Some(sec) = current_section.take() { sections.push(sec); }
+            if let Some(sec) = current_section.take() {
+                sections.push(sec);
+            }
             current_section = Some(GanttSection {
                 label: Some(t[7..].trim().to_string()),
                 tasks: vec![],
@@ -666,15 +1034,21 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
         } else if t.contains(':') {
             if let Some(task) = parse_gantt_task(t) {
                 let sec = current_section.get_or_insert_with(|| GanttSection {
-                    label: None, tasks: vec![],
+                    label: None,
+                    tasks: vec![],
                 });
                 sec.tasks.push(task);
             }
         }
     }
-    if let Some(sec) = current_section { sections.push(sec); }
+    if let Some(sec) = current_section {
+        sections.push(sec);
+    }
 
-    Ok(GanttDiagram { date_format, sections })
+    Ok(GanttDiagram {
+        date_format,
+        sections,
+    })
 }
 
 /// Parse a single Gantt task line.
@@ -684,10 +1058,12 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
 fn parse_gantt_task(line: &str) -> Option<GanttTask> {
     let colon = line.find(':')?;
     let label = line[..colon].trim().to_string();
-    let rest  = line[colon+1..].trim();
+    let rest = line[colon + 1..].trim();
 
     let parts: Vec<&str> = rest.splitn(4, ',').map(str::trim).collect();
-    if parts.is_empty() { return None; }
+    if parts.is_empty() {
+        return None;
+    }
 
     // Detect status keywords in the first part.
     let status_keywords = ["done", "active", "crit", "milestone"];
@@ -698,8 +1074,10 @@ fn parse_gantt_task(line: &str) -> Option<GanttTask> {
         (TaskStatus::Normal, &parts[..])
     };
 
-    if remaining.is_empty() { return None; }
-    let id    = remaining[0].to_string();
+    if remaining.is_empty() {
+        return None;
+    }
+    let id = remaining[0].to_string();
     let start = if remaining.len() > 1 {
         let s = remaining[1];
         if s.starts_with("after ") {
@@ -712,18 +1090,27 @@ fn parse_gantt_task(line: &str) -> Option<GanttTask> {
     };
     let duration_days = if remaining.len() > 2 {
         parse_duration(remaining[2]).unwrap_or(1.0)
-    } else { 1.0 };
+    } else {
+        1.0
+    };
 
-    Some(GanttTask { id, label, start, duration_days, status, dependencies: vec![] })
+    Some(GanttTask {
+        id,
+        label,
+        start,
+        duration_days,
+        status,
+        dependencies: vec![],
+    })
 }
 
 fn parse_task_status(s: &str) -> TaskStatus {
     match s {
-        "done"      => TaskStatus::Done,
-        "active"    => TaskStatus::Active,
-        "crit"      => TaskStatus::Crit,
+        "done" => TaskStatus::Done,
+        "active" => TaskStatus::Active,
+        "crit" => TaskStatus::Crit,
         "milestone" => TaskStatus::Milestone,
-        _           => TaskStatus::Normal,
+        _ => TaskStatus::Normal,
     }
 }
 
@@ -745,7 +1132,6 @@ fn parse_duration(s: &str) -> Option<f64> {
 #[cfg(test)]
 mod tests_dg04 {
     use super::*;
-    
 
     const CLASS_SRC: &str = "classDiagram
   class Animal { +name: String; +speak() void }
@@ -765,6 +1151,10 @@ mod tests_dg04 {
   section Phase 1
     Design :done, t1, 2026-01-01, 5d
     Build :t2, after t1, 3d";
+
+    const PIE_SRC: &str = "pie showData
+  \"Dogs\" : 60
+  \"Cats\" : 40";
 
     #[test]
     fn class_diagram_parses_nodes() {
@@ -837,10 +1227,19 @@ mod tests_dg04 {
     }
 
     #[test]
+    fn pie_parses_slices() {
+        let d = parse_pie(PIE_SRC).unwrap();
+        assert_eq!(d.kind, ChartKind::Pie);
+        assert_eq!(d.slices.len(), 2);
+        assert_eq!(d.slices[0].label, "Dogs");
+        assert_eq!(d.slices[0].value, 60.0);
+    }
+
+    #[test]
     fn dispatch_flowchart() {
         let src = "flowchart LR\n  A --> B";
         match parse_any_mermaid(src).unwrap() {
-            MermaidDiagram::Graph(_) => {},
+            MermaidDiagram::Graph(_) => {}
             _ => panic!("expected Graph"),
         }
     }
@@ -849,7 +1248,7 @@ mod tests_dg04 {
     fn dispatch_class_diagram() {
         let src = "classDiagram\n  class Foo";
         match parse_any_mermaid(src).unwrap() {
-            MermaidDiagram::Structural(_) => {},
+            MermaidDiagram::Structural(_) => {}
             _ => panic!("expected Structural"),
         }
     }
@@ -858,7 +1257,7 @@ mod tests_dg04 {
     fn dispatch_xychart() {
         let src = "xychart-beta\n  bar [1,2,3]";
         match parse_any_mermaid(src).unwrap() {
-            MermaidDiagram::Chart(_) => {},
+            MermaidDiagram::Chart(_) => {}
             _ => panic!("expected Chart"),
         }
     }
@@ -867,8 +1266,16 @@ mod tests_dg04 {
     fn dispatch_gantt() {
         let src = "gantt\n  dateFormat YYYY-MM-DD";
         match parse_any_mermaid(src).unwrap() {
-            MermaidDiagram::Temporal(_) => {},
+            MermaidDiagram::Temporal(_) => {}
             _ => panic!("expected Temporal"),
+        }
+    }
+
+    #[test]
+    fn dispatch_pie() {
+        match parse_any_mermaid(PIE_SRC).unwrap() {
+            MermaidDiagram::Chart(chart) => assert_eq!(chart.kind, ChartKind::Pie),
+            _ => panic!("expected Chart"),
         }
     }
 }
@@ -887,7 +1294,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.2.0");
+        assert_eq!(crate::VERSION, "0.3.0");
     }
 
     #[test]

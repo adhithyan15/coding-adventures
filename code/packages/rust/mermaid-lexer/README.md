@@ -1,19 +1,19 @@
 # mermaid-lexer
 
-Grammar-driven Rust lexer for the shared `code/grammars/mermaid.tokens`
-definition.
+Grammar-driven Rust lexers for the shared Mermaid family grammars under
+`code/grammars/mermaid/`.
 
-This package tokenizes a focused Mermaid flowchart subset that is meant to feed
-the native diagram pipeline:
+The current entrypoints tokenize flowchart and Pie syntax for the native
+diagram pipeline:
 
 ```text
 Mermaid source
   -> mermaid-lexer
   -> mermaid-parser
-  -> GraphDiagram
+  -> family Diagram IR
 ```
 
-Supported lexical constructs in v1:
+The flowchart lexer supports:
 
 - `flowchart` / `graph`
 - directions: `TB`, `TD`, `BT`, `LR`, `RL`
@@ -22,4 +22,11 @@ Supported lexical constructs in v1:
 - edge operators: `-->`, `---`
 - edge labels: `|label|`
 - statement separators: newline or `;`
+- `%%` comments
+
+The Pie lexer supports:
+
+- `pie` and `showData`
+- quoted labels
+- numeric slice values
 - `%%` comments

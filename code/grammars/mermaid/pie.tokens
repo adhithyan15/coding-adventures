@@ -1,0 +1,20 @@
+# @version 1
+#
+# Mermaid 11.16.1 pie-chart token grammar.
+#
+# Upstream grammar:
+# https://github.com/mermaid-js/mermaid/blob/mermaid%4011.16.1/packages/parser/src/language/pie/pie.langium
+
+skip:
+  WHITESPACE      = /[ \t]+/
+  COMMENT         = /%%[^\r\n]*/
+
+NEWLINE           = /\r?\n/
+COLON             = ":"
+NUMBER            = /-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?/
+STRING            = /"([^"\\]|\\.)*"/
+NAME              = /[A-Za-z_][A-Za-z0-9_]*/
+
+keywords:
+  pie
+  showData
