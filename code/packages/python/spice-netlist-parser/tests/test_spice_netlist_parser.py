@@ -2134,6 +2134,15 @@ def test_parse_jfet_bet_alias_with_canonical_precedence() -> None:
     assert aliased.beta == 900.0e-6
 
 
+@pytest.mark.parametrize("parameter", ["BETA", "BET"])
+@pytest.mark.parametrize("value", ["0", "-1m", "1e999"])
+def test_rejects_invalid_jfet_transconductance(parameter: str, value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="JFET BETA must be finite and positive"
+    ):
+        parse_netlist(f".model fast NJF({parameter}={value})")
+
+
 def test_parse_jfet_threshold_aliases_with_canonical_precedence() -> None:
     parsed = parse_netlist(
         ".model canonical NJF(VTO=-3 VT0=-2 VTH=-1)\n"

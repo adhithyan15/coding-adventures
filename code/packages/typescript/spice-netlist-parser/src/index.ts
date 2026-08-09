@@ -1635,6 +1635,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("BJT XCJC must be finite and between zero and one");
   }
+  const jfetTransconductance = params.get("BETA") ?? params.get("BET");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetTransconductance !== undefined &&
+    (!Number.isFinite(jfetTransconductance) || jfetTransconductance <= 0.0)
+  ) {
+    throw new NetlistParseError("JFET BETA must be finite and positive");
+  }
   const gateSourceCapacitance = params.get("CGS") ?? params.get("CGS0");
   if (
     (kind === "NJF" || kind === "PJF") &&

@@ -2349,6 +2349,11 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
         ):
             raise NetlistParseError("BJT XCJC must be finite and between zero and one")
     if kind in {"NJF", "PJF"}:
+        transconductance = params.get("BETA", params.get("BET"))
+        if transconductance is not None and (
+            not math.isfinite(transconductance) or transconductance <= 0.0
+        ):
+            raise NetlistParseError("JFET BETA must be finite and positive")
         gate_source_capacitance = params.get("CGS", params.get("CGS0"))
         if gate_source_capacitance is not None and (
             not math.isfinite(gate_source_capacitance)
