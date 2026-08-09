@@ -47,6 +47,11 @@ const tamilOutline = (character: string): GlyphOutline => {
   return { path: g.path, bounds: boundsOf(g.contours) };
 };
 
+const naskhOutline = (character: string): GlyphOutline => {
+  const g = parseFont(load("NotoNaskhArabic-Static.ttf")).glyphFor(character)!;
+  return { path: g.path, bounds: boundsOf(g.contours) };
+};
+
 const MA = DUCTUS["ம"];
 const outline = tamilOutline("ம");
 const A = DUCTUS["அ"];
@@ -69,6 +74,8 @@ const RETROFLEX_NNA = DUCTUS["ண"];
 const retroflexNnaOutline = tamilOutline("ண");
 const DENTAL_NA = DUCTUS["ந"];
 const dentalNaOutline = tamilOutline("ந");
+const PERSIAN_ALEF = DUCTUS["ا"];
+const persianAlefOutline = naskhOutline("ا");
 
 /** Walk a node tree, collecting every node the predicate accepts. */
 function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = []): SvgNode[] {
@@ -80,7 +87,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds all eleven authored Tamil letters", () => {
+  it("finds all eleven authored Tamil letters and Persian ا", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -92,12 +99,13 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("ன")?.glyph).toBe("ன");
     expect(ductusFor("ண")?.glyph).toBe("ண");
     expect(ductusFor("ந")?.glyph).toBe("ந");
+    expect(ductusFor("ا")?.glyph).toBe("ا");
   });
 
   it("returns undefined for a letter nobody has authored a stroke order for", () => {
-    // Persian ا has prose stroke order in the curriculum but no authored pen
-    // path yet. It must come back empty rather than borrow Tamil ம's.
-    expect(ductusFor("ا")).toBeUndefined();
+    // Persian ب still has prose part order but no authored pen path. It must
+    // come back empty rather than borrow ا's or Tamil ம's.
+    expect(ductusFor("ب")).toBeUndefined();
     expect(ductusFor("A")).toBeUndefined();
     expect(ductusFor("")).toBeUndefined();
   });
@@ -546,6 +554,36 @@ describe("ந — a real cited three-stroke six-movement filmstrip", () => {
       penPathD(DENTAL_NA.strokes[1], 1),
     ]);
     expect(pen.attrs.d).toBe(penPathD(DENTAL_NA.strokes[2], 1));
+  });
+});
+
+describe("Persian ا — the first cited right-to-left-script filmstrip", () => {
+  const steps = ductusSteps(PERSIAN_ALEF);
+  const strip = ductusFilmstrip(PERSIAN_ALEF, persianAlefOutline);
+
+  it("keeps the source's top-to-bottom stem in one pen-down run", () => {
+    expect(steps).toHaveLength(1);
+    expect(steps[0].label).toBe("draw the tall stem downward");
+    expect(steps[0].startsAfterLift).toBe(false);
+    expect(steps[0].strokeIndex).toBe(0);
+    const path = PERSIAN_ALEF.strokes[0].segments[0].path;
+    expect(path[0].y).toBeGreaterThan(path.at(-1)!.y);
+  });
+
+  it("reports one movement with no pen lift", () => {
+    expect(strip.frames).toHaveLength(1);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 1 movement");
+  });
+
+  it("draws the vendored Noto Naskh outline behind the complete path", () => {
+    const paths = byTag(strip.frames[0], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      persianAlefOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(PERSIAN_ALEF.strokes[0], 1),
+    );
   });
 });
 

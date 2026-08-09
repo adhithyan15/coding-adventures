@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — first cited Persian ductus (HL-C09K)
+
+- Add Persian ا from UT Austin Persian Online's opening freehand demonstration:
+  one top-to-bottom movement forms the isolated Naskh stem without a pen lift.
+- Resolve each verified glyph against its owning script font, check the complete
+  path against the vendored Noto Naskh outline, and pin the source timestamp,
+  downward motion, zero lifts, and real one-frame filmstrip.
+
 ### Added — first multi-stroke cited ductus (HL-C09A)
 
 - Add Tamil அ from Radhakrishnan's *Tamil Script Learners Manual*, Frame 4:
