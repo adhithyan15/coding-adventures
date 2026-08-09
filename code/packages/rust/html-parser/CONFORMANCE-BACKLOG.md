@@ -1,6 +1,6 @@
 # HTML Parser Conformance Backlog
 
-Last audited: 2026-08-03
+Last audited: 2026-08-09
 
 ## Completion Boundary
 
@@ -21,15 +21,15 @@ exact upstream commits used for the latest completed audit.
 
 ## Prioritized Queue
 
-The 2026-08-03 upstream audit at WPT
-`82c3d9069cf2e93e5528a1f428fa122bd9af651d` and html5lib-tests
+The 2026-08-09 upstream audit at WPT
+`54f8f933629e7c010ae98a246729af01f8abcda5` and html5lib-tests
 `224991ec10db04f056a89eed8b0bd8695fd2950e` covered all 1,934 WPT
 tree-construction cases and all 6,806 html5lib tokenizer cases with zero missing
 signatures and zero normalized skips. DOM output is complete, but diagnostic
 coverage is not:
 the checked 2,637-case tree corpus declares 6,243 errors across 2,183 cases.
-After the foreign-content table-end-tag breakout diagnostic slice, 2,074 of
-those cases emit at least one lexer or parser diagnostic and 109 remain
+After the non-current description-list item start-tag diagnostic slice, 2,075
+of those cases emit at least one lexer or parser diagnostic and 108 remain
 uncovered.
 Another 139 cases emit diagnostics despite having no legacy `#errors` rows.
 These are reviewed rather than automatically removed: 89 are full-document
@@ -61,9 +61,11 @@ the specialized parse error when no heading is in scope or the current heading
 does not match the token. A `li` start tag reports when its implied-end-tag
 recovery closes a non-current list item, and a paragraph end tag reports when it
 breaks out of MathML foreign content. A formatting end tag also reports when an
-open table blocks adoption-agency recovery.
+open table blocks adoption-agency recovery. Description-list item start tags
+now report when implied-end-tag recovery closes a non-current `dt` or `dd`,
+without flagging adjacent description-list items.
 
-The fresh 109-case residual inventory keeps the next concrete groups in the
+The fresh 108-case residual inventory keeps the next concrete groups in the
 existing priority order: remaining table foster-parenting and table-scope
 boundaries;
 select/template recovery; script-tokenizer EOF recovery; plaintext/frameset

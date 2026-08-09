@@ -7236,6 +7236,21 @@ impl HtmlParser {
         } else if incoming_name == "dt" || incoming_name == "dd" {
             if !self.current_parent_has_element_ancestor("button") {
                 self.close_open_element_if(|name| name == "p");
+                if !self.current_element_is("dt")
+                    && !self.current_element_is("dd")
+                    && !self.current_element_is("optgroup")
+                    && self.open_elements.iter().any(|path| {
+                        element_at_path(&self.document, path)
+                            .is_some_and(|name| name == "dt" || name == "dd")
+                    })
+                {
+                    self.diagnostics.push(ParserDiagnostic::new(
+                        "unexpected-description-list-item-start-tag",
+                        format!(
+                            "start tag `<{incoming_name}>` implied the end of a non-current description-list item"
+                        ),
+                    ));
+                }
                 self.close_open_element_if(|name| name == "dt" || name == "dd");
             }
         } else if incoming_name == "option"
@@ -33308,6 +33323,29 @@ mod tests {
             .parser_diagnostics
             .iter()
             .any(|diagnostic| diagnostic.code == "unexpected-li-start-tag"));
+    }
+
+    #[test]
+    fn reports_description_list_item_start_tags_that_close_non_current_items() {
+        let output = parse_html_with_diagnostics("<!DOCTYPE html><dt><div><dd>").unwrap();
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-description-list-item-start-tag",
+                "start tag `<dd>` implied the end of a non-current description-list item"
+            )]
+        );
+
+        for source in [
+            "<!doctype html><dl><dt>term<dd>description",
+            "<!doctype html><dl><dd>description<dt>term",
+            "<!doctype html><dd><optgroup><dd>",
+        ] {
+            let adjacent = parse_html_with_diagnostics(source).unwrap();
+            assert!(adjacent.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-description-list-item-start-tag"
+            }));
+        }
     }
 
     #[test]

@@ -6,6 +6,10 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- A `dt` or `dd` start tag now reports the in-body parse error when
+  implied-end-tag recovery closes a non-current description-list item,
+  covering the remaining silent in-body list case without changing DOM
+  recovery or adjacent description-list diagnostics.
 - Table-context end tags that force recovery from SVG or MathML foreign
   content now report the foreign-content parse error, covering 4 previously
   silent malformed corpus cases without changing DOM recovery or
