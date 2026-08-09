@@ -5,7 +5,7 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-08, after merging #10153 and publishing HL-C71 in #10159.
+Last prioritized: 2026-08-08, after merging #10159 and publishing HL-C72 in #10164.
 With all 22 downloadable books now carrying pronunciation, glossary,
 review-question, answer-key, and English-first index back matter, HL-C50 is
 complete. The HL-C63 audit confirmed that all 98 missing handwritten chapters
@@ -33,10 +33,13 @@ Spanish Chapter 12 in #10153: `hacer`, `decir`, and the first `yo`-go comparison
 stay away from later club members and untaught weather or homework vocabulary.
 HL-C71 completes the next bounded step in #10159: Chapter 13 introduces `poner`, `salir`,
 and `venir` one singular set at a time, and only the terminal checkpoint widens
-the learned yo-go comparison. Its audit queued HL-C72 because Chapter 14's first
-past-tense lesson currently restores five-person paradigms and imports teacher,
-house, happiness, school, yesterday, market, and dinner-adjacent vocabulary
-before those words have entered the frontier.
+the learned yo-go comparison. HL-C72 continues that boundary through Chapter 14:
+`fui`/`fuiste`/`fue` and `hablé`/`hablaste`/`habló` arrive in two three-atom
+steps, followed by a known-word checkpoint. Its audit queued HL-C73 because
+Chapter 15 currently restores five-person tables, combines two regular
+conjugations and three strong verbs in only two teaching lessons, and imports
+`ayer`, paella, house, mother, food, and market vocabulary before those words
+have entered the frontier.
 The index audit found **2,070** canonical candidates across the corpus: **1,430**
 word and phrase lessons for English-first lookup, **127** dedicated grammar,
 writing, etymology, culture, and pronunciation lessons, **415** chapter
@@ -45,7 +48,7 @@ drills stay out of the index; the checked title/label manifest provides durable
 navigation even where the authored capability ledger is still missing.
 Current generated baseline: **22** registered tracks, **1,669** canonical lessons,
 **1,583** mapped lessons, and **22** downloadable LaTeX books spanning **513**
-chapters, **408** of them generated from the canonical lesson AST. Twenty-nine
+chapters, **408** of them generated from the canonical lesson AST. Thirty
 mapped non-lexical lessons across 18 tracks now carry compiled objective
 activities; 93 mapped non-lexical lessons remain explicit activity-coverage
 debt, including 16 legacy lessons that first need schema-v2
@@ -225,7 +228,8 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C69 | Complete (#10150) | Continue the schema migration through Spanish Chapter 11, introducing singular `querer` and `poder`, then singular `nuestro`/`nuestra`, from the Chapter-10 frontier without restoring full boot tables or undeclared noun paradigms. | All five Chapter-11 lessons declare unique sequence, duration, shared-spine placement, typed knowledge closure, and objective practice where appropriate; `querer` extends the already-known singular `tener` stem change, `poder` adds only the singular `o`→`ue` pattern, the comparison lesson generalizes no form it has not taught, `nuestro`/`nuestra` reuse known masculine and feminine singular nouns while plural agreement waits, the terminal practice is mapped and representative, and all derived outputs remain current. |
 | HL-C70 | Complete (#10153) | Continue the schema migration through Spanish Chapter 12, introducing singular `hacer` and `decir`, then comparing only the learned `tengo`/`hago`/`digo` yo-go forms from the Chapter-11 frontier. | All four Chapter-12 lessons declare unique sequence, duration, shared-spine placement, typed knowledge closure, and objective practice where appropriate; `hacer` stays on `hago`/`haces`/`hace` with known objects rather than untaught weather nouns, `decir` adds only `digo`/`dices`/`dice` and a known `cómo` frame, the yo-go comparison does not preview `poner`/`salir`/`venir`, the terminal practice is mapped and representative, and all derived outputs remain current. |
 | HL-C71 | Complete (#10159) | Continue the schema migration through Spanish Chapter 13, introducing singular `poner`, `salir`, and `venir` one verb at a time from the Chapter-12 frontier. | All four Chapter-13 lessons declare unique sequence, duration, shared-spine placement, typed knowledge closure, and objective practice where appropriate; each verb stays inside its learned singular set and known words, the comparison grows only after all three verbs are taught, no full person table or undeclared place/time vocabulary appears, the terminal practice is mapped and representative, and all derived outputs remain current. |
-| HL-C72 | Queued | Continue the schema migration through Spanish Chapter 14, introducing the shared `ser`/`ir` preterite and regular `-ar` preterite inside the established singular-person and known-word frontier. | All three Chapter-14 lessons declare unique sequence, duration, shared-spine placement, typed knowledge closure, and objective practice where appropriate; `fui`/`fuiste`/`fue` precede any plural form, regular `hablé`/`hablaste`/`habló` reuse known `hablar`, context disambiguates `ser` from `ir` using only known words, no undeclared time/place/person vocabulary appears, the terminal practice is mapped and representative, and all derived outputs remain current. |
+| HL-C72 | Complete (#10164) | Continue the schema migration through Spanish Chapter 14, introducing the shared `ser`/`ir` preterite and regular `-ar` preterite inside the established singular-person and known-word frontier. | All three Chapter-14 lessons declare unique sequence, duration, shared-spine placement, typed knowledge closure, and objective practice where appropriate; `fui`/`fuiste`/`fue` precede any plural form, regular `hablé`/`hablaste`/`habló` reuse known `hablar`, context disambiguates `ser` from `ir` using only known words, no undeclared time/place/person vocabulary appears, the terminal practice is mapped and representative, and all derived outputs remain current. |
+| HL-C73 | Queued | Redesign and migrate Spanish Chapter 15 so regular `-er`/`-ir` preterites and strong preterites advance one bounded singular pattern at a time from the Chapter-14 frontier. | Schema-v2 lessons first establish singular `comí`/`comiste`/`comió` and `viví`/`viviste`/`vivió` with known verbs, then introduce the singular strong preterites of known `tener`, `hacer`, and `estar` without combining several unlearned paradigms in one step; split or add lessons wherever the three-atom and five-minute budgets require it, defer every plural form, use only declared vocabulary and contexts, correct overly tidy Latin-history claims, map a representative terminal checkpoint, and regenerate all app, narration, and book outputs. |
 | HL-C19 | Queued | Verify every prose `strokeOrder` against an authored ductus, so no letter's step list implies a pen lift nothing has checked. | All 190 prose stroke orders across the nine scripts (`arabic` 21, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 29, `hebrew` 22, `perso-arabic` 9, `tamil` 10, `urdu-nastaliq` 13) either carry a font-checked pen path with `penLifts` + `strokeOrderSource`, or are worded so they claim part order only. Today exactly one letter — Tamil ம — is verified; the audit that found it is written up in [`data/scripts/README.md`](data/scripts/README.md). Follows HL-C09, which authors the paths this check consumes. |
 | HL-C30 | Closed — no move is both legal and useful | Recover Arabic's drivable prefix by moving the writing lessons that open Chapters 3 and 4 later in their chapters. | Measured and answered: zero. Both chapters are prefix-0 under **every** legal ordering because neither has a `voice` lesson without an in-chapter prerequisite, and all 18 of Arabic's `sight` lessons are tables, not script. Corpus-wide only 2 chapters (`portuguese ch2`, `italian ch2`, +4 lessons) can be improved by reordering at all; 116 of the 123 zero-prefix chapters are table-blocked at the root and belong to HL-C17. See *Findings from HL-C30*. |
 | HL-C24 | Complete (#9979) | Pilot real chapter payoff lessons on the weakest Latin chapters. | Latin chapters 19, 21, 33, and 36 each own a dedicated terminal consolidation lesson built only from already-taught material, and `chapters.json` points their `payoff.lesson` at it. |

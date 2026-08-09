@@ -1,74 +1,85 @@
 ---
+schema_version: 2
 id: ES-C14-ser-ir-preterite
-chapter: 14
+spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 1050
+chapter: 14
 type: word
 headword: fui
-gloss: the preterite (past) — and the astonishing fact that "I was" and "I went" are the same word
+gloss: the shared singular preterite of ser and ir — fui, fuiste, fue
 concept_tag: ES-PRETERITE-SER-IR
-prerequisites: [ES-C13-venir, ES-C09-ser, ES-C10-ir]
-sounds: [diphthong-ui, stress-final]
+prerequisites: [ES-C13-practice, ES-C09-ser, ES-C10-ir, ES-C10-ir-a-futuro]
+sounds: [diphthong-ui]
 roots: [fui-latin]
-etymology_hook: "fui ← Latin fuī 'I have been' (perfect of a second 'be' root — cousin of English BE, future, physics); ser AND ir share this ONE preterite, so fui = 'I was' AND 'I went', context deciding"
-est_minutes: 4
-reviews_of: [ES-C13-venir, ES-C09-ser, ES-C10-ir]
+etymology_hook: "fui continues the Latin perfect family of 'be'; Spanish reshaped that inherited family and let ser and ir share it, so context distinguishes 'was' from 'went'"
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-LEX-IR, ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR, ES-LEX-A]
+introduces:
+  knowledge: [ES-LEX-FUI-SER-IR, ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR, ES-ETYMON-FUI]
+practises:
+  knowledge: [ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-LEX-IR, ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR, ES-LEX-A, ES-LEX-FUI-SER-IR, ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR, ES-ETYMON-FUI]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C13-practice, ES-C09-ser, ES-C10-ir, ES-C10-ir-a-futuro]
 ---
 
-# fui — the past tense arrives, and two verbs become one
+# fui — one past set shared by ser and ir
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-LEX-IR, ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR, ES-LEX-A] -->
 
-[PAUSE 2s] A big moment: your **first past tense**. Spanish's everyday past is the
-**preterite** — "I spoke, I went, I was." And it opens with the strangest, most
-memorable fact in the whole language: the verbs **ser** ("to be") and **ir** ("to
-go") have the **exact same preterite**. *Fui* means both "**I was**" *and* "**I
-went**."
+[PAUSE 2s] You already use **ser** for identity and **ir** for going. Spanish
+now gives both verbs one completed-past set. This lesson keeps the same three
+singular persons you know: **fui, fuiste, fue**.
 
-## Sounds you'll need
+## Grammar Lens: three singular forms, two verbs
+<!-- hl-knowledge: introduces=[ES-LEX-FUI-SER-IR, ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR]; assesses=[ES-LEX-SER, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-LEX-IR, ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR, ES-LEX-A] -->
 
-- `stress-final` — the preterite loves the **final** syllable: *fui*, *fue*
-  (one-syllable), then *fuiste*, *fuimos*, *fueron*.
-
-## The shared forms
-
-| | ser / ir (same!) |
+| person | completed past of **ser** or **ir** |
 |---|---|
 | yo | **fui** |
 | tú | **fuiste** |
-| él/ella/usted | **fue** |
-| nosotros | **fuimos** |
-| ellos/ustedes | **fueron** |
+| él / ella / usted | **fue** |
 
-One set of forms, **two verbs**. There is no separate past for "to go" — Spanish
-just reuses "to be."
+Say **fui · fuiste · fue**. Each form can belong to either verb. The surrounding
+words decide which meaning is possible:
 
-## Why? A tale of two "be" verbs
+- **Fui a Madrid.** — “I went to Madrid.” The known **a** plus a destination
+  points to **ir**.
+- **Fue Roberto.** — “It was Roberto.” Identification points to **ser**.
 
-**fui** comes from Latin **fuī**, "I have been" — but here is the twist: Latin had
-*two* roots for "to be." The present *sum/es/est* (→ *soy/eres/es*) came from PIE
-**\*es-**; the perfect **fuī** came from a *different* root, PIE **\*bʰuH-**, "to
-grow, become" — the very root of English **be**, **been**, and (through Greek and
-Latin) **future** and **physics**. Spanish stitched the two roots into one verb —
-that's **suppletion**, like English *go/went*.
+**Fui** and **fue** are one-syllable words, so standard Spanish spelling gives
+them no written accent. Plural forms wait until a later lesson.
 
-Then *ir* ("to go") borrowed *fuī* too, because Latin's own past of *īre* had
-worn away. So **"to be" and "to go" merged in the past** — and only **context**
-tells them apart:
+## The form, taken apart
+<!-- hl-knowledge: introduces=[ES-ETYMON-FUI]; assesses=[ES-LEX-FUI-SER-IR, ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR] -->
 
-- **Fui a Madrid.** — "I **went** to Madrid." (movement → *ir*)
-- **Fui profesor.** — "I **was** a teacher." (state → *ser*)
+The shared set continues the Latin perfect family of “be,” including Latin
+**fuī**, “I have been.” Sound change and analogy reshaped the inherited forms.
+Spanish **ir** then came to share this past family with **ser**: a case of
+**suppletion**, where one verb draws forms from more than one historical root.
+English **go / went** uses the same broad strategy, although not the same words.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-FUI-SER-IR, ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR, ES-ETYMON-FUI, ES-LEX-A] -->
+<!-- hl-activity: {"id":"ES-C14-ser-ir-preterite-singular-forms","kind":"text","assesses":["ES-LEX-FUI-SER-IR","ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR"],"prompt":"Give the shared singular preterite forms of ser and ir: yo, tú, then él/ella/usted.","answer":"fui, fuiste, fue","accepted":["fui fuiste fue","fui / fuiste / fue"],"feedback":{"correct":"Right: fui, fuiste, fue.","incorrect":"Retrieve only the three learned singular forms: fui, fuiste, fue."},"response_seconds":9} -->
+<!-- hl-activity: {"id":"ES-C14-ser-ir-preterite-fui-madrid","kind":"text","assesses":["ES-LEX-FUI-SER-IR","ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR","ES-LEX-A"],"prompt":"Say 'I went to Madrid' in Spanish.","answer":"Fui a Madrid.","accepted":["Fui a Madrid"],"feedback":{"correct":"Right: Fui a Madrid.","incorrect":"Use the shared yo form fui, then known a plus Madrid."},"response_seconds":8} -->
+<!-- hl-activity: {"id":"ES-C14-ser-ir-preterite-context","kind":"text","assesses":["ES-LEX-FUI-SER-IR","ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR"],"prompt":"In 'Fue Roberto', which verb does fue express?","answer":"ser","accepted":[],"feedback":{"correct":"Right: identifying Roberto points to ser.","incorrect":"This sentence identifies who it was, so fue expresses ser."},"response_seconds":6} -->
 
 [PAUSE 1s]
-- [YOU SAY: the set — "fui, fuiste, fue, fuimos, fueron" — stress the end]
-- [YOU SAY: the two meanings — "Fui a casa" (I went) vs "Fui feliz" (I was happy)]
-- [YOU SAY: "same form, context decides — ser and ir share one past"]
+- [YOU SAY: “fui, fuiste, fue”]
+- [YOU SAY: “Fui a Madrid.”]
+- [YOU SAY: “Fue Roberto — identification, so ser.”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-FUI-SER-IR, ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR, ES-ETYMON-FUI] -->
 
-[PAUSE 3s] What tense is *fui*, and which **two** verbs does it belong to? (The
-**preterite** — both **ser** and **ir**.) Give all five forms. (*Fui, fuiste, fue,
-fuimos, fueron*.) In "**Fui a España**," is it *ser* or *ir*, and how do you know?
-(*Ir* — "I **went**"; the *a* + place signals movement.) Next: the **regular** -ar
-preterite — *hablé, hablaste*.
+[PAUSE 3s] Give the three shared forms. (*Fui, fuiste, fue.*) Which two verbs
+share them? (*Ser* and *ir*.) What decides the meaning? (Context.) What older
+family supplied the forms? (The Latin perfect family of “be.”) Next, reuse the
+known verb **hablar** to build a regular singular past.

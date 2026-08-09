@@ -1,65 +1,80 @@
 ---
+schema_version: 2
 id: ES-C14-practice
-chapter: 14
+spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 1070
+chapter: 14
 type: practice-mix
 headword: (practice)
-gloss: past vs present — fui, hablé, and the forms that look the same
+gloss: a singular checkpoint for fui/fuiste/fue and hablé/hablaste/habló
 concept_tag: CH14-PRACTICE
 prerequisites: [ES-C14-ser-ir-preterite, ES-C14-hablar-preterite]
 sounds: []
 roots: []
-est_minutes: 4
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-LEX-FUI-SER-IR, ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR, ES-ETYMON-FUI, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS, ES-HISTORY-AR-PRETERITE-LATIN-PERFECT, ES-LEX-SER, ES-LEX-IR, ES-LEX-A, ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-LEX-ESPANOL, ES-SOUND-WRITTEN-ACCENT]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ES-LEX-FUI-SER-IR, ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR, ES-ETYMON-FUI, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS, ES-HISTORY-AR-PRETERITE-LATIN-PERFECT, ES-LEX-SER, ES-LEX-IR, ES-LEX-A, ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-LEX-ESPANOL, ES-SOUND-WRITTEN-ACCENT]
+skills: [listening, speaking, reading, writing]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus, fluency]
+register: neutral
+variety: general
 reviews_of: [ES-C14-ser-ir-preterite, ES-C14-hablar-preterite, ES-C13-practice]
 ---
 
-# Practice — the preterite, past against present
+# Practice — two singular ways to talk about a completed past
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-FUI-SER-IR, ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR, ES-GRAMMAR-AR-PRETERITE-SINGULAR] -->
 
-[PAUSE 2s] This chapter gave you the **past**: the shared *ser/ir* preterite
-(*fui*) and the regular *-ar* pattern (*hablé*). Time to switch between now and
-then without stumbling.
+[PAUSE 2s] This checkpoint adds nothing. Retrieve the shared singular set and
+the regular **hablar** set, then use context and spelling to keep them apart.
 
-## Drill 1 — say the two paradigms
+## Grammar Lens: the complete Chapter 14 frame
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-FUI-SER-IR, ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS, ES-LEX-A, ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-LEX-ESPANOL] -->
+
+- shared past of **ser** and **ir**: **fui · fuiste · fue**.
+- regular past of **hablar**: **hablé · hablaste · habló**.
+- context: **Fui a Madrid** expresses **ir**; **Fue Roberto** expresses **ser**.
+- time contrast: **Hablo español** is present; **Hablé español** is completed
+  past.
+- spelling: **hablé** and **habló** show final stress with a written accent;
+  **hablaste** needs none.
+
+Plural persons, additional past-tense verb classes, new time words, and new
+place or person vocabulary wait for later lessons.
+
+## The two histories, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[ES-ETYMON-FUI, ES-HISTORY-AR-PRETERITE-LATIN-PERFECT] -->
+
+The **fui** family continues Latin perfect “be” material and became shared by
+**ser** and **ir**. The regular **-ar** endings continue Latin
+first-conjugation perfect material, reshaped by sound change and analogy.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-FUI-SER-IR, ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR, ES-ETYMON-FUI, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS, ES-HISTORY-AR-PRETERITE-LATIN-PERFECT, ES-LEX-SER, ES-LEX-IR, ES-LEX-A, ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-LEX-ESPANOL, ES-SOUND-WRITTEN-ACCENT] -->
+<!-- hl-activity: {"id":"ES-C14-practice-ser-ir-forms","kind":"text","assesses":["ES-LEX-FUI-SER-IR","ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR"],"prompt":"Give the three learned forms shared by ser and ir.","answer":"fui, fuiste, fue","accepted":["fui fuiste fue","fui / fuiste / fue"],"feedback":{"correct":"Right: fui, fuiste, fue.","incorrect":"Retrieve the singular set: fui, fuiste, fue."},"response_seconds":8} -->
+<!-- hl-activity: {"id":"ES-C14-practice-ar-forms","kind":"text","assesses":["ES-LEX-HABLAR","ES-GRAMMAR-AR-PRETERITE-SINGULAR"],"prompt":"Give the three learned completed-past forms of hablar.","answer":"hablé, hablaste, habló","accepted":["hablé hablaste habló","hablé / hablaste / habló"],"feedback":{"correct":"Right: hablé, hablaste, habló.","incorrect":"Retrieve the singular set: hablé, hablaste, habló."},"response_seconds":9} -->
+<!-- hl-activity: {"id":"ES-C14-practice-context-ser-ir","kind":"text","assesses":["ES-LEX-FUI-SER-IR","ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR","ES-LEX-A"],"prompt":"Which sentence uses the shared form as ir, 'to go': Fui a Madrid or Fue Roberto?","answer":"Fui a Madrid.","accepted":["Fui a Madrid"],"feedback":{"correct":"Right: a plus Madrid supplies a destination, so fui expresses ir.","incorrect":"The destination phrase a Madrid makes Fui a Madrid the ir sentence."},"response_seconds":7} -->
+<!-- hl-activity: {"id":"ES-C14-practice-present-past","kind":"text","assesses":["ES-LEX-HABLAR","ES-GRAMMAR-AR-PRESENT-SINGULAR","ES-GRAMMAR-AR-PRETERITE-SINGULAR","ES-LEX-ESPANOL"],"prompt":"Give 'I speak Spanish' and then 'I spoke Spanish.'","answer":"Hablo español. Hablé español.","accepted":["Hablo español; hablé español","Hablo español. Hablé español","hablo español hablé español"],"feedback":{"correct":"Right: Hablo español; Hablé español.","incorrect":"Use present hablo first, then completed-past hablé."},"response_seconds":10} -->
+<!-- hl-activity: {"id":"ES-C14-practice-written-accents","kind":"text","assesses":["ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS","ES-SOUND-WRITTEN-ACCENT","ES-GRAMMAR-AR-PRETERITE-SINGULAR"],"prompt":"Which two of hablé, hablaste, habló carry written accents?","answer":"hablé and habló","accepted":["hablé habló","hablé y habló","hablé / habló"],"feedback":{"correct":"Right: hablé and habló mark final stress.","incorrect":"The final-stressed forms are hablé and habló."},"response_seconds":7} -->
 
 [PAUSE 1s]
-- **fui** (ser/ir): fui · fuiste · fue · fuimos · fueron.
-- **hablé** (regular -ar): hablé · hablaste · habló · hablamos · hablaron.
-
-## Drill 2 — the accent flips the tense
-
-[PAUSE 1s] Say each **present** form, then its **preterite** twin — the stress
-jumps to the end:
-
-- **hablo** (I speak) → **hablé** (I spoke)
-- **habla** (s/he speaks) → **habló** (s/he spoke)
-- **trabajo** (I work) → **trabajé** (I worked)
-
-[PAUSE 2s] What one thing changed? (The **accent** — the stressed syllable moved
-to the **end**.)
-
-## Drill 3 — ser or ir? (context decides)
-
-[PAUSE 1s] For each *fui/fue*, say whether it's "to be" or "to go":
-
-- "**Fui** a la escuela." → ? (**ir** — "I **went**.")
-- "**Fui** estudiante." → ? (**ser** — "I **was** a student.")
-- "Ella **fue** muy amable." → ? (**ser** — "She **was** very kind.")
-- "Ellos **fueron** a España." → ? (**ir** — "They **went**.")
-
-## Drill 4 — put it to use
-
-[PAUSE 1s] Say each out loud:
-
-- "**Ayer hablé con mi madre.**" — "Yesterday I spoke with my mother."
-- "**Fui al mercado y compré pan.**" — "I went to the market and bought bread."
-- "**Fuimos amigos.**" — "We were friends."
+- [YOU SAY: “fui, fuiste, fue”]
+- [YOU SAY: “hablé, hablaste, habló”]
+- [YOU SAY: “Fui a Madrid. Fue Roberto.”]
+- [YOU SAY: “Hablo español. Hablé español.”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-FUI-SER-IR, ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR, ES-ETYMON-FUI, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS, ES-HISTORY-AR-PRETERITE-LATIN-PERFECT] -->
 
-[PAUSE 3s] Which two verbs share the preterite *fui/fue*? (**ser** and **ir**.)
-How does the accent change *hablo* into *habló*? (It moves the **stress to the
-end** — present → preterite.) In "**Fui a casa**," be/go? (**Go** — *ir*.) You can
-now speak in the **past** — this book has crossed from "what is" to "what
-happened."
+[PAUSE 3s] Give both singular sets. (*Fui, fuiste, fue; hablé, hablaste,
+habló.*) How does context separate **ser** from **ir**? (A destination points to
+going; identification points to being.) Which regular forms carry written
+accents? (*Hablé* and *habló*.) Chapter 15 can add another past family without
+borrowing plural forms or unseen vocabulary from this checkpoint.

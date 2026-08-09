@@ -253,6 +253,20 @@ describe("real curriculum", () => {
       "ES-C13-venir-come-from-madrid",
       "ES-C13-venir-singular-forms",
       "ES-C13-venir-tener-contrast",
+      // Chapter 14 introduces two completed-past patterns inside the same
+      // singular-person and known-word frontier, then mixes them without
+      // smuggling in time, place, or person vocabulary.
+      "ES-C14-hablar-preterite-hable-espanol",
+      "ES-C14-hablar-preterite-present-past",
+      "ES-C14-hablar-preterite-singular-forms",
+      "ES-C14-practice-ar-forms",
+      "ES-C14-practice-context-ser-ir",
+      "ES-C14-practice-present-past",
+      "ES-C14-practice-ser-ir-forms",
+      "ES-C14-practice-written-accents",
+      "ES-C14-ser-ir-preterite-context",
+      "ES-C14-ser-ir-preterite-fui-madrid",
+      "ES-C14-ser-ir-preterite-singular-forms",
       "ES-W03-question-span-roberto-outside",
       "FA-C02-esm-e-man-sara",
       "FA-C03-chist-fusion",

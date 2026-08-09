@@ -66,13 +66,13 @@ describe("the gate that would have caught the A2 claim", () => {
     expect(spanish.blockers.map((b) => b.criterion)).toContain("reinforcement");
 
     // The criterion counts vocabulary AT OR BELOW the level, not the whole track.
-    // Spanish teaches 136 headwords in total but only 46 at or below pre-A1, so the
+    // Spanish teaches 135 headwords in total but only 46 at or below pre-A1, so the
     // shortfall is 254. Measuring the whole track against a per-level target
     // was the first version of this module committing the very error it exists to
     // catch — a number meaning "everything taught" published against one meaning
     // "by the end of pre-A1".
     expect(vocab.shortfall).toBe(254);
-    expect(spanish.vocabulary).toBe(136);
+    expect(spanish.vocabulary).toBe(135);
     expect(vocab.shortfall).toBeGreaterThan(LEVEL_VOCABULARY["pre-A1"] - spanish.vocabulary);
   });
 

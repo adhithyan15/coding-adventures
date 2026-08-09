@@ -377,7 +377,9 @@ describe("the real corpus", () => {
     // singular frame.
     // Every terminal practice lesson revisits its chapter, so measurable teaching
     // grows while the corpus orphan count can still fall.
-    expect(report.summary.atomsTaught).toBe(2577);
+    // Chapter 14 adds six atoms in two three-atom teaching steps, then retrieves all
+    // six in its atom-free terminal checkpoint.
+    expect(report.summary.atomsTaught).toBe(2583);
     // +2, and it goes UP, which is worth stating plainly. Three of the five new atoms
     // are TA-W09's and nothing follows TA-W09, so they are orphans by construction:
     // PA-YA-01, E-SIGN-02, READ-PEYAR-03. TA-W08's two are revisited by TA-W09.
@@ -387,7 +389,9 @@ describe("the real corpus", () => {
     // Chapters 10-12 revisit every atom they introduce in their terminal
     // checkpoints. Chapter 12 also gives the older silent-h atom another genuine use,
     // pulling one pre-existing atom out of the orphan set.
-    expect(report.summary.atomsNeverRevisited).toBe(470);
+    // The Chapter-14 checkpoint also revives one older item, so the corpus orphan
+    // count falls by one while none of the six new atoms becomes an orphan.
+    expect(report.summary.atomsNeverRevisited).toBe(469);
     expect(report.summary.neverRevisitedPercent).toBe(18);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
@@ -454,7 +458,9 @@ describe("the real corpus", () => {
     // Chapter 12 removes seven more: weather and homework nouns, a window prompt,
     // plural forms, and the three Chapter-13 verbs no longer appear early. Chapter 13
     // removes one net leak by deferring its own plural tables and undeclared contexts.
-    expect(report.summary.forwardReferences).toBe(430);
+    // Chapter 14 removes the pan leak and two other undeclared contexts by staying
+    // inside known Madrid, Roberto, español, and the singular-person frontier.
+    expect(report.summary.forwardReferences).toBe(427);
 
     // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
     // day as 766 -> 749. The absolute figures drift as main lands lessons; what the
@@ -518,7 +524,9 @@ describe("the real corpus", () => {
     // can reach the 5-15 lesson R2 span. Chapter 12 makes eight more. Chapter 13 adds
     // three net misses: all nine atoms get local retrieval, but that checkpoint remains
     // deliberately too close to count as far-window reinforcement.
-    expect(report.summary.missedByWindow.R2).toBe(1769);
+    // Chapter 14's six atoms receive local retrieval, but its three-lesson footprint
+    // cannot reach the far R2 window yet.
+    expect(report.summary.missedByWindow.R2).toBe(1775);
   });
 
   it("shows what a declared reading order was worth", () => {
@@ -549,8 +557,9 @@ describe("the real corpus", () => {
       forwardPrerequisites: 0,
       // Chapters 9, 10, and 13 each add nine atoms, Chapter 11 adds eleven, and
       // Chapter 12 adds eight; every terminal checkpoint revisits its full typed chapter.
-      atomsTaught: 330,
-      atomsNeverRevisited: 66,
+      // Chapter 14 adds six atoms and its checkpoint revives one older atom.
+      atomsTaught: 336,
+      atomsNeverRevisited: 65,
     });
   });
 
@@ -579,7 +588,8 @@ describe("the real corpus", () => {
 
     // Chapter 7 now builds with previously learned café. Pan still leaks elsewhere;
     // agua no longer has any early use in Spanish.
-    expect(of("pan")).toMatchObject({ lessonId: "ES-C14-practice", taughtBy: "ES-C26-pan" });
+    // Chapter 14 no longer borrows pan from Chapter 26.
+    expect(of("pan")).toBeUndefined();
     expect(of("agua")).toBeUndefined();
     // Chapter 8 now stops at ten; Chapter 31 owns the teens and twenty.
     expect(of("diecinueve")).toBeUndefined();
