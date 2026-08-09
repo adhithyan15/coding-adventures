@@ -1802,6 +1802,24 @@ Q1 col base emit fast
     },
   );
 
+  it.each([
+    ["-1", -1.0],
+    ["2", 2.0],
+  ])("parses BJT forward-beta temperature exponent XTB=%s", (value, expected) => {
+    const parsed = parseNetlist(`.model fast NPN(XTB=${value})\nQ1 col base emit fast`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      forwardBetaTemperatureExponent: expected,
+    });
+  });
+
+  it("rejects a non-finite BJT forward-beta temperature exponent", () => {
+    expect(() => parseNetlist(`.model fast NPN(XTB=1e999)`)).toThrow(
+      "BJT XTB must be finite",
+    );
+  });
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)
