@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - duplicate fixed wrapper dimensions
+
+Painted or padded `Row` and `Column` wrappers no longer emit a second,
+content-derived `implicitWidth` or `implicitHeight` when MSL already provides a
+fixed dimension. Complete generated applications therefore remain valid QML
+when a styled native layout combines width or height with paint or padding.
+
 ### Added - native multiline legacy Input lowering
 
 The still-supported UI25 `Input ( multiline: true )` primitive now lowers to
