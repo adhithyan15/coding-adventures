@@ -51,6 +51,8 @@ const MA = DUCTUS["ம"];
 const outline = tamilOutline("ம");
 const A = DUCTUS["அ"];
 const aOutline = tamilOutline("அ");
+const AA = DUCTUS["ஆ"];
+const aaOutline = tamilOutline("ஆ");
 
 /** Walk a node tree, collecting every node the predicate accepts. */
 function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = []): SvgNode[] {
@@ -62,9 +64,10 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds both authored Tamil letters", () => {
+  it("finds all three authored Tamil letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
+    expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
   });
 
   it("returns undefined for a letter nobody has authored a stroke order for", () => {
@@ -293,6 +296,31 @@ describe("அ — a real cited two-stroke filmstrip", () => {
     expect(done).toHaveLength(1);
     expect(done[0].attrs.d).toBe(penPathD(A.strokes[0], 1));
     expect(pen.attrs.d).toBe(penPathD(A.strokes[1], 1));
+  });
+});
+
+describe("ஆ — the upright and long-vowel loop stay connected", () => {
+  const steps = ductusSteps(AA);
+  const strip = ductusFilmstrip(AA, aaOutline);
+
+  it("places one lift before the upright and none before its loop", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, false, true, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0, 1, 1]);
+  });
+
+  it("reports six movements in two strokes with one lift", () => {
+    expect(strip.frames).toHaveLength(6);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 6 movements");
+  });
+
+  it("finishes the connected upright-and-loop stroke in the last frame", () => {
+    const last = strip.frames[5];
+    const done = byTag(last, "path").filter((path) => path.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
+    expect(done).toHaveLength(1);
+    expect(done[0].attrs.d).toBe(penPathD(AA.strokes[0], 1));
+    expect(pen.attrs.d).toBe(penPathD(AA.strokes[1], 1));
   });
 });
 
