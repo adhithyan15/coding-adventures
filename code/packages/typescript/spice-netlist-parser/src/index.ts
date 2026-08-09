@@ -1572,6 +1572,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("BJT VTF must be finite and non-negative");
   }
+  const bjtEmitterResistance = params.get("RE");
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtEmitterResistance !== undefined &&
+    (!Number.isFinite(bjtEmitterResistance) || bjtEmitterResistance < 0.0)
+  ) {
+    throw new NetlistParseError("BJT RE must be finite and non-negative");
+  }
   const gateSourceCapacitance = params.get("CGS") ?? params.get("CGS0");
   if (
     (kind === "NJF" || kind === "PJF") &&
@@ -2315,6 +2323,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("XTF") ?? 0.0,
       model.params.get("ITF") ?? 0.0,
       model.params.get("VTF") ?? 0.0,
+      model.params.get("RE") ?? 0.0,
     );
   }
   if (prefix === "J") {

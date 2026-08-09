@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate and lower BJT model-card `RE` emitter resistance.
 - Validate and lower BJT model-card `VTF` forward transit-time voltage scale.
 - Validate and lower BJT model-card `ITF` forward transit-time current.
 - Validate and lower BJT model-card `XTF` forward transit-time bias

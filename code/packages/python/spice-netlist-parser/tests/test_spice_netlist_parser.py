@@ -1940,6 +1940,23 @@ def test_rejects_invalid_bjt_forward_transit_time_voltage(value: str) -> None:
         parse_netlist(f".model fast NPN(VTF={value})")
 
 
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("12.5", 12.5)])
+def test_parse_bjt_emitter_resistance(value: str, expected: float) -> None:
+    parsed = parse_netlist(f".model fast NPN(RE={value})\nQ1 col base emit fast")
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Re == expected
+
+
+@pytest.mark.parametrize("value", ["-1", "1e999"])
+def test_rejects_invalid_bjt_emitter_resistance(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="BJT RE must be finite and non-negative"
+    ):
+        parse_netlist(f".model fast NPN(RE={value})")
+
+
 def test_parse_jfet_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
