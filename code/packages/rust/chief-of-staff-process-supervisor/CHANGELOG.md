@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Surface an authenticated `Terminate` received during a child data-plane
+  exchange as a distinct graceful-termination condition.
 - Accept an optional authenticated data-plane dispatcher, retain the exact host
   registration for each owned child, and automatically send validated responses
   without exposing request payloads to the orchestration core.

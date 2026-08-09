@@ -106,6 +106,10 @@ The child endpoint begins in `AwaitingReady`:
 6. It accepts only correlated responses or `Terminate` from the orchestrator and
    enters `Terminating` on the latter.
 
+A stream-owning child adapter must preserve that distinction while blocked on an
+exchange: `Terminate` is a normal shutdown outcome, whereas an unexpected trust or
+launch record, malformed frame, or wrong response shape remains terminal failure.
+
 Duplicate readiness, heartbeat-before-ready, child-sent terminate,
 orchestrator-sent ready/heartbeat/request, child-sent response/terminate, invalid
 correlation, and messages after termination are protocol violations.
@@ -232,6 +236,8 @@ and authenticates requests but does not authorize or execute them. Length-prefix
 framing, pipe ownership, process launch/reap, heartbeat scheduling, time sampling,
 service dispatch, and hard-kill fallback belong to adapters specified in
 [`process-host-supervisor.md`](process-host-supervisor.md).
+The production Level 1 consumer is specified in
+[`level-one-host.md`](level-one-host.md).
 
 ## Required Tests
 

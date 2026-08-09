@@ -1,0 +1,28 @@
+[package]
+name = "chief-of-staff-host"
+version = "0.1.0"
+edition = "2021"
+description = "Concrete authenticated host executable for Chief agent packages"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-host-control-protocol = { path = "../chief-of-staff-host-control-protocol" }
+chief-of-staff-host-runtime = { path = "../chief-of-staff-host-runtime" }
+chief-of-staff-process-supervisor = { path = "../chief-of-staff-process-supervisor" }
+chief-of-staff-skill-runtime = { path = "../chief-of-staff-skill-runtime" }
+llm-gateway = { path = "../llm-gateway" }
+
+[dev-dependencies]
+chief-of-staff-host-data-plane = { path = "../chief-of-staff-host-data-plane" }
+chief-of-staff-secure-host-channel = { path = "../chief-of-staff-secure-host-channel" }
+chief-of-staff-service-reconciler = { path = "../chief-of-staff-service-reconciler" }
+chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
+chief-of-staff-skill-package = { path = "../chief-of-staff-skill-package" }
+chief-of-staff-tool-api = { path = "../chief-of-staff-tool-api" }
+coding_adventures_ed25519 = { path = "../ed25519" }
+coding_adventures_x3dh = { path = "../x3dh" }
+
+[[bin]]
+name = "chief-of-staff-host"
+path = "src/main.rs"
+test = false

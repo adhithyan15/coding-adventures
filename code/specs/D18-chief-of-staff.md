@@ -201,6 +201,16 @@ record from manifest-blind pipeline wiring. It requires the exact signed channel
 name and read/write sets, resolves them to canonical UUID-v7 endpoints, and binds
 the supplied model selector, temperature, and token cap. Missing, extra,
 wrong-direction, or runtime-incompatible bindings fail closed.
+The concrete `chief-of-staff-host` independently performs that verification and
+executes the first production Level 1 loop over the authenticated host data plane.
+V1 intentionally requires exactly one signed read channel and one signed write
+channel; packages declaring broader topology remain valid and discoverable but
+cannot reach readiness in this host until deterministic multi-channel routing is
+specified. The host performs receive, completion, publish, then acknowledge,
+sleeps between empty or read-service-unavailable polls, emits authenticated
+heartbeats, and treats an authenticated termination received during any exchange
+as a successful shutdown. Failures after input delivery remain terminal rather
+than risking duplicate model or publication effects.
 Pipeline wiring persists this authority as a bounded versioned record tied to
 the exact durable host registration and package hash. Every channel UUID receives
 an immutable create-if-absent pipeline claim. Wiring and each later launch both
@@ -519,6 +529,8 @@ by the security escort (host process), not the Chief of Staff.
 
 The strict readiness, heartbeat, and termination state machine is specified in
 [`host-control-protocol.md`](host-control-protocol.md).
+The concrete Level 1 child composition is specified in
+[`level-one-host.md`](level-one-host.md).
 That same authenticated session carries a serialized, bounded channel and
 provider-neutral completion data plane after readiness. The protocol permits one
 request in flight with exact monotonic correlation; the orchestrator-side adapter
