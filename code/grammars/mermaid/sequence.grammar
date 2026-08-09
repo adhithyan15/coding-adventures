@@ -3,7 +3,7 @@
 
 document = { NEWLINE } HEADER body EOF ;
 body = { NEWLINE | statement } ;
-statement = participant_stmt | participant_box | destroy_stmt | message_stmt | activation_stmt | note_stmt | link_stmt | links_stmt | properties_stmt | title_stmt | autonumber_stmt | control_block ;
+statement = participant_stmt | participant_box | destroy_stmt | message_stmt | activation_stmt | note_stmt | link_stmt | links_stmt | properties_stmt | details_stmt | title_stmt | autonumber_stmt | control_block ;
 
 participant_stmt = [ "create" ] participant_decl ;
 participant_decl = ( "participant" | "actor" ) identifier [ CONFIG ] [ "as" text ] ;
@@ -15,6 +15,8 @@ note_stmt = "note" ( ( "left" | "right" ) "of" identifier | "over" actor_pair ) 
 link_stmt = "link" identifier COLON text AT URL ;
 links_stmt = "links" identifier COLON JSON_OBJECT ;
 properties_stmt = "properties" identifier COLON JSON_OBJECT ;
+details_stmt = "details" identifier COLON details_reference ;
+details_reference = identifier { identifier | MINUS } ;
 title_stmt = "title" text ;
 autonumber_stmt = "autonumber" [ "off" | NUMBER [ NUMBER ] ] ;
 

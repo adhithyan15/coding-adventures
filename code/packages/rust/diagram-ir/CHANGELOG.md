@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.15.0
+
+- Added host document details references to sequence participant and layout IR.
+
 ## 0.14.0
 
 - Added arbitrary JSON-valued properties to sequence participants and layout IR.

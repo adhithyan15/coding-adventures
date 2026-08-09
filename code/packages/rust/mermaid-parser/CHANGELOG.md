@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.15.0
+
+- Parse sequence actor `details` element IDs into semantic IR.
+
 ## 0.14.0
 
 - Parse and merge arbitrary JSON-valued sequence actor properties.
