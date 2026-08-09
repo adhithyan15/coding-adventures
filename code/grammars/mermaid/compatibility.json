@@ -44,7 +44,7 @@
     {
       "id": "er",
       "headers": ["erDiagram"],
-      "status": "detected",
+      "status": "partial",
       "ir": "structural",
       "smoke_source": "erDiagram\nCUSTOMER ||--o{ ORDER : places"
     },

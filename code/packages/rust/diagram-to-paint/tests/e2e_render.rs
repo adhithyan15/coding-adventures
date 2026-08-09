@@ -11,14 +11,17 @@
 mod apple {
     use diagram_layout_chart::layout_chart_diagram;
     use diagram_layout_graph::layout_graph_diagram;
+    use diagram_layout_structural::layout_structural_diagram;
     use diagram_layout_temporal::layout_temporal_diagram;
     use diagram_to_paint::{
-        diagram_to_paint, diagram_to_paint_chart, diagram_to_paint_temporal, DiagramToPaintOptions,
+        diagram_to_paint, diagram_to_paint_chart, diagram_to_paint_structural,
+        diagram_to_paint_temporal, DiagramToPaintOptions,
     };
     use dot_parser::parse_to_diagram;
     use layout_ir::font_spec;
     use mermaid_parser::{
-        parse_gitgraph, parse_pie, parse_sankey, parse_to_diagram as parse_mermaid_to_diagram,
+        parse_er_diagram, parse_gitgraph, parse_pie, parse_sankey,
+        parse_to_diagram as parse_mermaid_to_diagram,
     };
     use paint_codec_png::write_png;
     use paint_metal::render;
@@ -259,6 +262,42 @@ mod apple {
 
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_gitgraph_e2e.png").expect("PNG write failed");
+        assert!(pixels.width > 0);
+        assert!(pixels.height > 0);
+        assert!(!scene.instructions.is_empty());
+    }
+
+    #[test]
+    fn render_mermaid_er_to_png() {
+        let diagram = parse_er_diagram(
+            "erDiagram\nCUSTOMER ||--o{ ORDER : places\nCUSTOMER {\nstring name PK\nstring email UK\n}\nORDER {\nint id PK\n}",
+        )
+        .expect("Mermaid ER parse failed");
+        let layout = layout_structural_diagram(&diagram);
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color {
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                    a: 255,
+                },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_er_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0);
         assert!(pixels.height > 0);
         assert!(!scene.instructions.is_empty());

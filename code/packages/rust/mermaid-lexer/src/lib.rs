@@ -12,6 +12,7 @@ const SANKEY_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/sankey.tokens");
 const GITGRAPH_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/gitgraph.tokens");
+const ER_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/er.tokens");
 
 fn create_lexer<'a>(source: &'a str, grammar_source: &str, grammar_name: &str) -> GrammarLexer<'a> {
     let grammar = parse_token_grammar(grammar_source)
@@ -33,6 +34,10 @@ pub fn create_mermaid_sankey_lexer(source: &str) -> GrammarLexer<'_> {
 
 pub fn create_mermaid_gitgraph_lexer(source: &str) -> GrammarLexer<'_> {
     create_lexer(source, GITGRAPH_TOKEN_GRAMMAR_SOURCE, "gitgraph.tokens")
+}
+
+pub fn create_mermaid_er_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, ER_TOKEN_GRAMMAR_SOURCE, "er.tokens")
 }
 
 pub fn tokenize_mermaid(source: &str) -> Vec<Token> {
@@ -61,6 +66,13 @@ pub fn tokenize_mermaid_gitgraph(source: &str) -> Vec<Token> {
     lexer
         .tokenize()
         .unwrap_or_else(|e| panic!("Mermaid GitGraph tokenization failed: {e}"))
+}
+
+pub fn tokenize_mermaid_er(source: &str) -> Vec<Token> {
+    let mut lexer = create_mermaid_er_lexer(source);
+    lexer
+        .tokenize()
+        .unwrap_or_else(|e| panic!("Mermaid ER tokenization failed: {e}"))
 }
 
 #[cfg(test)]
@@ -202,5 +214,23 @@ mod tests {
         assert!(values.contains(&"commit"));
         assert!(values.contains(&"c1"));
         assert!(values.contains(&"develop"));
+    }
+
+    #[test]
+    fn tokenizes_er_relationships_and_attributes() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCUSTOMER ||--o{ ORDER : places\nCUSTOMER {\nstring name PK\n}\n",
+        );
+        let values: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_ != TokenType::Eof)
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert!(values.contains(&"erDiagram"));
+        assert!(values.contains(&"||"));
+        assert!(values.contains(&"--"));
+        assert!(values.contains(&"o{"));
+        assert!(values.contains(&"PK"));
     }
 }

@@ -1,0 +1,30 @@
+# @version 1
+#
+# Mermaid 11.16.1 entity-relationship parser grammar.
+
+document = { NEWLINE } HEADER { NEWLINE | statement } EOF ;
+statement = relationship | entity_decl | direction_stmt | title_stmt | classdef_stmt | class_stmt | style_stmt ;
+
+relationship = entity_name [ class_suffix ] cardinality relation_type cardinality entity_name [ class_suffix ] COLON role ;
+entity_decl = entity_name [ alias ] [ class_suffix ] [ attribute_block ] ;
+alias = LBRACKET entity_name RBRACKET ;
+class_suffix = STYLE_SEPARATOR id_list ;
+
+attribute_block = LBRACE { NEWLINE } { attribute { NEWLINE } } RBRACE ;
+attribute = attribute_type attribute_name [ key_list ] [ STRING ] ;
+attribute_type = entity_name [ LBRACKET RBRACKET ] [ QUESTION ] ;
+attribute_name = entity_name ;
+key_list = ATTRIBUTE_KEY { COMMA ATTRIBUTE_KEY } ;
+
+cardinality = ZERO_OR_ONE | ZERO_OR_MORE | ONE_OR_MORE | ONLY_ONE | MD_PARENT ;
+relation_type = NON_IDENTIFYING | IDENTIFYING ;
+role = STRING | entity_name { entity_name } ;
+entity_name = IDENTIFIER | NUMBER | ATTRIBUTE_KEY | MD_PARENT ;
+
+direction_stmt = "direction" ( "TB" | "BT" | "LR" | "RL" ) ;
+title_stmt = "title" role ;
+classdef_stmt = "classDef" id_list { style_atom } ;
+class_stmt = "class" id_list id_list ;
+style_stmt = "style" id_list { style_atom } ;
+id_list = entity_name { COMMA entity_name } ;
+style_atom = entity_name | NUMBER | COLON | COMMA | STYLE_VALUE ;

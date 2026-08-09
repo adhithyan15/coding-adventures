@@ -629,6 +629,27 @@ where
                 lf.clone(), Color { r: 55, g: 65, b: 81, a: 255 },
             ));
         }
+        if rel.points.len() >= 2 {
+            let start = &rel.points[0];
+            let end = &rel.points[rel.points.len() - 1];
+            let dx = end.x - start.x;
+            let dy = end.y - start.y;
+            let len = (dx * dx + dy * dy).sqrt().max(1.0);
+            let ux = dx / len;
+            let uy = dy / len;
+            if let Some(ref multiplicity) = rel.from_mult {
+                text_children.push(text_node(
+                    multiplicity, start.x + ux * 18.0 - 20.0, start.y + uy * 18.0 + 4.0,
+                    40.0, ls * 1.2, lf.clone(), Color { r: 55, g: 65, b: 81, a: 255 },
+                ));
+            }
+            if let Some(ref multiplicity) = rel.to_mult {
+                text_children.push(text_node(
+                    multiplicity, end.x - ux * 18.0 - 20.0, end.y - uy * 18.0 + 4.0,
+                    40.0, ls * 1.2, lf.clone(), Color { r: 55, g: 65, b: 81, a: 255 },
+                ));
+            }
+        }
     }
 
     // ── Node boxes ───────────────────────────────────────────────────────────

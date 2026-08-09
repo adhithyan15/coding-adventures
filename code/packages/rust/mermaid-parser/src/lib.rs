@@ -17,7 +17,8 @@ use diagram_ir::{
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
 use mermaid_lexer::{
-    tokenize_mermaid, tokenize_mermaid_gitgraph, tokenize_mermaid_pie, tokenize_mermaid_sankey,
+    tokenize_mermaid, tokenize_mermaid_er, tokenize_mermaid_gitgraph, tokenize_mermaid_pie,
+    tokenize_mermaid_sankey,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -27,6 +28,7 @@ const SANKEY_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/sankey.grammar");
 const GITGRAPH_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/gitgraph.grammar");
+const ER_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/er.grammar");
 
 /// Recursion-depth cap for the Mermaid [`GrammarParser`] — see
 /// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
@@ -219,6 +221,18 @@ pub fn parse_mermaid_gitgraph_ast(source: &str) -> Result<GrammarASTNode, ParseE
     })
 }
 
+pub fn parse_mermaid_er_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
+    let tokens = tokenize_mermaid_er(source);
+    let grammar = parse_parser_grammar(ER_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|e| panic!("Failed to parse er.grammar: {e}"));
+    let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
+    parser.parse().map_err(|e| ParseError {
+        message: e.message,
+        line: e.token.line,
+        col: e.token.column,
+    })
+}
+
 pub fn parse_to_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
     let mut cursor = TokenCursor::new(tokenize_mermaid(source));
     cursor.skip_terminators();
@@ -383,6 +397,10 @@ fn token_name(token: &Token) -> &str {
         TokenType::Keyword => "KEYWORD",
         TokenType::Colon => "COLON",
         TokenType::Comma => "COMMA",
+        TokenType::LBrace => "LBRACE",
+        TokenType::RBrace => "RBRACE",
+        TokenType::LBracket => "LBRACKET",
+        TokenType::RBracket => "RBRACKET",
         TokenType::Newline => "NEWLINE",
         TokenType::Semicolon => "SEMICOLON",
         TokenType::Eof => "EOF",
@@ -481,6 +499,7 @@ impl MermaidDiagramType {
             self,
             Self::Flowchart
                 | Self::Class
+                | Self::Er
                 | Self::Gantt
                 | Self::GitGraph
                 | Self::Pie
@@ -560,6 +579,7 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
     match diagram_type {
         MermaidDiagramType::Flowchart => parse_to_diagram(source).map(MermaidDiagram::Graph),
         MermaidDiagramType::Class => parse_class_diagram(source).map(MermaidDiagram::Structural),
+        MermaidDiagramType::Er => parse_er_diagram(source).map(MermaidDiagram::Structural),
         MermaidDiagramType::XyChart => parse_xychart(source).map(MermaidDiagram::Chart),
         MermaidDiagramType::Pie => parse_pie(source).map(MermaidDiagram::Chart),
         MermaidDiagramType::Sankey => parse_sankey(source).map(MermaidDiagram::Chart),
@@ -1338,6 +1358,231 @@ fn expect_gitgraph_token(
         .ok_or_else(|| token_error(cursor.current(), format!("expected GitGraph {description}")))
 }
 
+// ── Entity-relationship parser ───────────────────────────────────────────
+
+/// Parse Mermaid ER syntax into the shared structural IR.
+pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
+    parse_mermaid_er_ast(source)?;
+
+    let mut cursor = TokenCursor::new(tokenize_mermaid_er(source));
+    cursor.skip_terminators();
+    cursor
+        .consume_if("HEADER")
+        .ok_or_else(|| token_error(cursor.current(), "expected erDiagram header"))?;
+    cursor.skip_terminators();
+
+    let mut title = None;
+    let mut nodes: Vec<StructuralNode> = Vec::new();
+    let mut node_indices: HashMap<String, usize> = HashMap::new();
+    let mut relationships = Vec::new();
+
+    while !cursor.at_eof() {
+        if cursor.current().type_ == TokenType::Keyword {
+            match cursor.current().value.as_str() {
+                "title" => {
+                    cursor.advance();
+                    title = Some(parse_er_line_text(&mut cursor));
+                }
+                "direction" | "classDef" | "class" | "style" => {
+                    while !cursor.at_eof() && token_name(cursor.current()) != "NEWLINE" {
+                        cursor.advance();
+                    }
+                }
+                _ => return Err(token_error(cursor.current(), "unsupported ER statement")),
+            }
+            cursor.skip_terminators();
+            continue;
+        }
+
+        let entity_id = parse_er_name(&mut cursor)?;
+        let mut entity_label = entity_id.clone();
+        if cursor.consume_if("LBRACKET").is_some() {
+            entity_label = parse_er_name(&mut cursor)?;
+            cursor
+                .consume_if("RBRACKET")
+                .ok_or_else(|| token_error(cursor.current(), "expected ']' after ER alias"))?;
+        }
+        consume_er_class_suffix(&mut cursor)?;
+
+        if is_er_cardinality(cursor.current()) {
+            let from_mult = parse_er_cardinality(&mut cursor)?;
+            let relation_token = cursor.current().clone();
+            if !matches!(
+                token_name(&relation_token),
+                "IDENTIFYING" | "NON_IDENTIFYING"
+            ) {
+                return Err(token_error(&relation_token, "expected ER relationship type"));
+            }
+            cursor.advance();
+            let to_mult = parse_er_cardinality(&mut cursor)?;
+            let target_id = parse_er_name(&mut cursor)?;
+            consume_er_class_suffix(&mut cursor)?;
+            cursor.consume_if("COLON").ok_or_else(|| {
+                token_error(cursor.current(), "expected ':' before ER relationship role")
+            })?;
+            let label = parse_er_line_text(&mut cursor);
+
+            upsert_er_node(
+                &mut nodes,
+                &mut node_indices,
+                entity_id.clone(),
+                entity_label,
+            );
+            upsert_er_node(
+                &mut nodes,
+                &mut node_indices,
+                target_id.clone(),
+                target_id.clone(),
+            );
+            relationships.push(StructuralRelationship {
+                from: entity_id,
+                to: target_id,
+                kind: if token_name(&relation_token) == "IDENTIFYING" {
+                    RelKind::Association
+                } else {
+                    RelKind::Dependency
+                },
+                from_mult: Some(from_mult),
+                to_mult: Some(to_mult),
+                label: (!label.is_empty()).then_some(label),
+            });
+        } else {
+            let mut fields = Vec::new();
+            if cursor.consume_if("LBRACE").is_some() {
+                cursor.skip_terminators();
+                while cursor.consume_if("RBRACE").is_none() {
+                    if cursor.at_eof() {
+                        return Err(token_error(cursor.current(), "unterminated ER attribute block"));
+                    }
+                    let mut attribute_type = parse_er_name(&mut cursor)?;
+                    if cursor.consume_if("LBRACKET").is_some() {
+                        cursor.consume_if("RBRACKET").ok_or_else(|| {
+                            token_error(cursor.current(), "expected ']' in ER attribute type")
+                        })?;
+                        attribute_type.push_str("[]");
+                    }
+                    if cursor.consume_if("QUESTION").is_some() {
+                        attribute_type.push('?');
+                    }
+                    let attribute_name = parse_er_name(&mut cursor)?;
+                    let mut keys = Vec::new();
+                    while token_name(cursor.current()) == "ATTRIBUTE_KEY" {
+                        keys.push(cursor.advance().value.clone());
+                        if cursor.consume_if("COMMA").is_none() {
+                            break;
+                        }
+                    }
+                    let comment = cursor.consume_if("STRING").map(|token| token.value);
+                    let mut field = format!("{attribute_name}: {attribute_type}");
+                    if !keys.is_empty() {
+                        field.push_str(&format!(" [{}]", keys.join(", ")));
+                    }
+                    if let Some(comment) = comment {
+                        field.push_str(&format!(" - {comment}"));
+                    }
+                    fields.push(field);
+                    cursor.skip_terminators();
+                }
+            }
+            let index = upsert_er_node(
+                &mut nodes,
+                &mut node_indices,
+                entity_id,
+                entity_label,
+            );
+            if !fields.is_empty() {
+                nodes[index].compartments.push(Compartment {
+                    kind: CompartmentKind::Fields,
+                    entries: fields,
+                });
+            }
+        }
+        cursor.skip_terminators();
+    }
+
+    Ok(StructuralDiagram {
+        kind: StructuralKind::Er,
+        title,
+        nodes,
+        relationships,
+    })
+}
+
+fn parse_er_name(cursor: &mut TokenCursor) -> Result<String, ParseError> {
+    let token = cursor.current().clone();
+    if !matches!(
+        token_name(&token),
+        "IDENTIFIER" | "NUMBER" | "ATTRIBUTE_KEY" | "MD_PARENT" | "STRING"
+    ) {
+        return Err(token_error(&token, "expected ER name"));
+    }
+    Ok(cursor.advance().value.clone())
+}
+
+fn consume_er_class_suffix(cursor: &mut TokenCursor) -> Result<(), ParseError> {
+    if cursor.consume_if("STYLE_SEPARATOR").is_none() {
+        return Ok(());
+    }
+    parse_er_name(cursor)?;
+    while cursor.consume_if("COMMA").is_some() {
+        parse_er_name(cursor)?;
+    }
+    Ok(())
+}
+
+fn is_er_cardinality(token: &Token) -> bool {
+    matches!(
+        token_name(token),
+        "ZERO_OR_ONE" | "ZERO_OR_MORE" | "ONE_OR_MORE" | "ONLY_ONE" | "MD_PARENT"
+    )
+}
+
+fn parse_er_cardinality(cursor: &mut TokenCursor) -> Result<String, ParseError> {
+    let token = cursor.current().clone();
+    let normalized = match token_name(&token) {
+        "ZERO_OR_ONE" => "0..1",
+        "ZERO_OR_MORE" => "0..*",
+        "ONE_OR_MORE" => "1..*",
+        "ONLY_ONE" => "1",
+        "MD_PARENT" => "parent",
+        _ => return Err(token_error(&token, "expected ER cardinality")),
+    };
+    cursor.advance();
+    Ok(normalized.to_string())
+}
+
+fn parse_er_line_text(cursor: &mut TokenCursor) -> String {
+    let mut words = Vec::new();
+    while !cursor.at_eof() && token_name(cursor.current()) != "NEWLINE" {
+        words.push(cursor.advance().value.clone());
+    }
+    words.join(" ")
+}
+
+fn upsert_er_node(
+    nodes: &mut Vec<StructuralNode>,
+    indices: &mut HashMap<String, usize>,
+    id: String,
+    label: String,
+) -> usize {
+    if let Some(index) = indices.get(&id).copied() {
+        if label != id {
+            nodes[index].label = label;
+        }
+        return index;
+    }
+    let index = nodes.len();
+    indices.insert(id.clone(), index);
+    nodes.push(StructuralNode {
+        id,
+        label,
+        stereotype: Some("entity".to_string()),
+        node_kind: StructuralNodeKind::Entity,
+        compartments: Vec::new(),
+    });
+    index
+}
+
 // ── gantt parser ──────────────────────────────────────────────────────────
 
 /// Parse a Mermaid `gantt` block into a `GanttDiagram`.
@@ -1518,6 +1763,16 @@ commit id: \"feature\" tag: \"v1\"
 checkout main
 merge develop id: \"merge-1\"";
 
+    const ER_SRC: &str = "erDiagram
+CUSTOMER ||--o{ ORDER : places
+CUSTOMER {
+string name PK \"display name\"
+string email UK
+}
+ORDER[Purchase] {
+int id PK
+}";
+
     #[test]
     fn class_diagram_parses_nodes() {
         let d = parse_class_diagram(CLASS_SRC).unwrap();
@@ -1640,6 +1895,23 @@ merge develop id: \"merge-1\"";
     }
 
     #[test]
+    fn er_parses_entities_attributes_and_cardinalities() {
+        let d = parse_er_diagram(ER_SRC).unwrap();
+        assert_eq!(d.kind, StructuralKind::Er);
+        assert_eq!(
+            d.nodes.iter().map(|node| node.id.as_str()).collect::<Vec<_>>(),
+            vec!["CUSTOMER", "ORDER"]
+        );
+        assert_eq!(d.relationships.len(), 1);
+        assert_eq!(d.relationships[0].from_mult.as_deref(), Some("1"));
+        assert_eq!(d.relationships[0].to_mult.as_deref(), Some("0..*"));
+        let customer = d.nodes.iter().find(|node| node.id == "CUSTOMER").unwrap();
+        assert_eq!(customer.compartments[0].entries.len(), 2);
+        let order = d.nodes.iter().find(|node| node.id == "ORDER").unwrap();
+        assert_eq!(order.label, "Purchase");
+    }
+
+    #[test]
     fn dispatch_flowchart() {
         let src = "flowchart LR\n  A --> B";
         match parse_any_mermaid(src).unwrap() {
@@ -1696,6 +1968,14 @@ merge develop id: \"merge-1\"";
         match parse_any_mermaid(GITGRAPH_SRC).unwrap() {
             MermaidDiagram::Temporal(diagram) => assert_eq!(diagram.kind, TemporalKind::Git),
             _ => panic!("expected Temporal"),
+        }
+    }
+
+    #[test]
+    fn dispatch_er() {
+        match parse_any_mermaid(ER_SRC).unwrap() {
+            MermaidDiagram::Structural(diagram) => assert_eq!(diagram.kind, StructuralKind::Er),
+            _ => panic!("expected Structural"),
         }
     }
 }
