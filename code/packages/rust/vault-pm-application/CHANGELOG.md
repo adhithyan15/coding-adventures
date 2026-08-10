@@ -2,6 +2,27 @@
 
 All notable changes to this package are documented here.
 
+## [0.5.0] - 2026-08-09
+
+### Added
+
+- Pure deterministic generation-zero preparation from an owned zeroizing
+  passphrase, bounded KDF policy, advisory timestamp, and caller-filled CSPRNG
+  block.
+- Exact construction of the signed bootstrap, encrypted certificate and empty
+  catalog, initial commit and announcement, repository address, recovery
+  journal, intended active state, and authority-anchored verifier.
+
+### Security
+
+- Root wrapping uses Argon2id and XChaCha20-Poly1305 with exact AAD binding to
+  the suite and vault ID.
+- The passphrase, VRK, KEK, authority/device seeds and signing keys, X25519
+  secret, local-secret plaintext, object randomness, and source CSPRNG block
+  are held in wipe-on-drop containers.
+- Preparation performs no external writes, so the complete exact
+  `PreparedInit` journal can be atomically persisted before any remote effect.
+
 ## [0.4.0] - 2026-08-09
 
 ### Added

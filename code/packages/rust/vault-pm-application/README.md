@@ -15,9 +15,16 @@ an unlocked authority-anchored verifier at connection time, consumes exact
 publication batches by value, and translates storage and integrity failures to
 a closed payload-free application error surface.
 
+Generation-zero preparation is also complete as a pure no-write boundary. It
+consumes an owned zeroizing passphrase, bounded KDF policy, advisory time, and
+one caller-filled CSPRNG block, then returns the exact `PreparedInit` state,
+bootstrap locator, repository address, and mandatory verifier. All root,
+signing, device, passphrase, and randomness material is held in wipe-on-drop
+containers.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
-credential store, or entropy source. Generation-zero preparation and session
+credential store, or entropy source. Crash-resumable side effects and session
 workflows land in the next slices. There is no unchecked repository
 verification path: construction decrypts and
 authority-verifies the exact locally pinned certificate frame and object ID,
@@ -26,7 +33,7 @@ and Ed25519 key.
 
 ## Verification
 
-The package has 34 tests covering exact canonical and cryptographic vectors,
+The package has 37 tests covering exact canonical and cryptographic vectors,
 lossless removed-value persistence, live and tombstone revisions, catalog
 bounds and ordering, cross-kind and cross-vault rejection, AEAD tampering,
 authority/device/certificate binding, Ed25519 signature rejection, closed
@@ -34,7 +41,8 @@ parser failures, crash-state relationship checks, diagnostic redaction, and
 explicit key wiping. Repository tests additionally exercise initialization,
 publication, verified open/read/history, every injected provider operation,
 constructor paths, and complete error translation. The exact Tarpaulin result
-under its LLVM engine is 1,020 of 1,052 production lines (96.96%).
+under its LLVM engine is 1,246 of 1,278 production lines (97.50%); the new
+generation-zero module covers 226 of 226 lines.
 
 ## Development
 

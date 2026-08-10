@@ -9,6 +9,7 @@
 
 mod codec;
 mod crypto;
+mod initialize;
 mod repository;
 mod state;
 mod verifier;
@@ -21,6 +22,10 @@ pub use codec::{
 pub use crypto::{
     open_local_secret, open_object, seal_local_secret, seal_object, LocalSecretRandomness,
     ObjectKind, ObjectRandomness, V1Keys,
+};
+pub use initialize::{
+    prepare_generation_zero, GenerationZeroPolicyV1, GenerationZeroRandomness,
+    PreparedGenerationZero, GENERATION_ZERO_RANDOM_BYTES,
 };
 pub use repository::{
     ApplicationRepository, ApplicationRepositoryError, ApplicationRepositoryFactory,
