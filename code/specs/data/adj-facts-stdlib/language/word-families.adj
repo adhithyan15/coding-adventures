@@ -1,0 +1,72 @@
+% ============================================================================
+% word-families — which words share a rime (word family), and which pairs of
+% words RHYME because they share one, DERIVED (not just looked up)
+% (adj-facts-stdlib, LANGUAGE). CCSS RF.K.2.a "Recognize and produce rhyming
+% words."
+% ============================================================================
+% The first LITERACY library in this loop's curriculum sweep (ADJ-STDLIB-
+% COVERAGE.md §5.1's Literacy row: alphabet/vowels/opposites/Morse/Greek
+% already ship; phonemic awareness and phonics are the still-missing majors).
+% A WORD FAMILY (also called a "rime") is the shared spelling-and-sound
+% pattern at the end of a set of words — "pan", "fan", and "ran" all end in
+% "-an". Two words that belong to the SAME family necessarily rhyme with each
+% other; that composition (family membership → rhyme) is exactly the kind of
+% DERIVED fact `shape-composition.adj` already established a pattern for in
+% this library — no single source states "pan rhymes with fan" as a citable
+% sentence, but the general word-family principle IS citable, and the specific
+% family membership IS citable, so the rhyme relation is built from both:
+%
+%   1. `word_family($Word, $Family)` — the table below, listing each of the
+%      "-an" family's core CVC (consonant-vowel-consonant) members as named,
+%      verbatim, by Reading Rockets (a WETA/PBS literacy education nonprofit).
+%   2. The general word-family PRINCIPLE, quoted verbatim from the same page
+%      in the rule's own `source` below: words in the same family "look alike
+%      at the end" because they "sound alike at the end."
+%
+% The RULE's `source` states the general principle; the TABLE's `source`
+% states which specific words the cited page names as belonging to the "-an"
+% family — so a query's `steps` trail shows BOTH citations, and a human can
+% independently check each link. `trust consensus`, not `authoritative`:
+% Reading Rockets is a respected literacy-education secondary reference, not a
+% primary/official standards body (the same tier `alphabet.adj`'s Wikipedia
+% citation and `shape-composition.adj`'s MathWorld-derived rule already use).
+%
+%     import "word-families.adj"
+%     ? word_family(pan, $F)        % an        (which family "pan" belongs to)
+%     ? rhymes_with(pan, $W)        % fan, ran, man, tan, van, pan (itself too)
+%
+% Deliberately scoped to ONE family ("-an") with its SIX simple three-letter
+% CVC members, not the full 37-family phonics inventory a complete phonics
+% curriculum would need (Reading Rockets' own page also lists longer blended
+% and multi-syllable "-an" words — "plan", "scan", "bran", "began" — and this
+% library deliberately ships only the plain three-letter core, matching
+% kindergarten-level CVC scope; the blends and longer words are left for a
+% later pass, the same "keep the first slice small and citable" discipline
+% every prior curriculum item in this loop has used). `rhymes_with` includes
+% a trivial self-pair (a word "rhymes with" itself, since it shares its own
+% family) — logically consistent, left unfiltered rather than adding
+% unverified exclusion logic for a case no worked example below relies on.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table word_family {
+    columns word, family
+
+    row (pan, an)
+    row (fan, an)
+    row (ran, an)
+    row (man, an)
+    row (tan, an)
+    row (van, an)
+
+    source "pan, fan, ran, man, tan, van, plan, scan, bran, began"
+    locator "https://www.readingrockets.org/topics/activities/articles/meet-word-families"
+    trust consensus
+}
+
+rule { head: rhymes_with($Word1, $Word2)
+       when: word_family($Word1, $Family), word_family($Word2, $Family)
+       source "Students will see how words look alike at the end if they sound alike at the end — a valuable discovery about our alphabetic writing system."
+       locator "https://www.readingrockets.org/topics/activities/articles/meet-word-families"
+       trust consensus }
