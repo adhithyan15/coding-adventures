@@ -1265,9 +1265,14 @@ changelog, focused build, and downstream validation.
 7a. `vault-pm-domain` lossless persistence projection: retained values, add
     operations, and removal tombstones must be enumerable before the
     application codec persists observed sets.
-8. `vault-pm-application`: init/open/item/search/history/export/audit workflows,
-   using the crash-resumable, storage-agnostic contract in
-   `VLT-PM05-application.md`.
+8. `vault-pm-application`, using the crash-resumable, storage-agnostic contract
+   in `VLT-PM05-application.md`:
+   1. canonical local-secret, item-revision, and catalog persistence codecs,
+      plus domain-separated encrypted object framing;
+   2. bootstrap, local-state, repository-verifier, init/open, and publication
+      recovery workflows; and
+   3. item mutation, redacted views, search, history, export, audit, status,
+      and doctor workflows.
 9. `vault-pm-cli` + real executable and pseudo-terminal E2E suite.
 10. Crash/fault matrix and local restore drill.
 
