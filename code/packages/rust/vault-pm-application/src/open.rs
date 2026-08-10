@@ -1,4 +1,4 @@
-use crate::initialize::unlock_active_material;
+use crate::initialize::{unlock_active_material, UnlockedActiveMaterial};
 use crate::{
     ActiveStateV1, ApplicationError, ApplicationRepository, ApplicationRepositoryError,
     ApplicationRepositoryFactory, BootstrapLocator, BootstrapStore, BootstrapStoreError,
@@ -105,6 +105,72 @@ pub fn open_active_vault(
     })
 }
 
+/// Replay one exact durable `PendingPublication` and atomically advance it to
+/// `Active` only after the repository returns the journal's expected pins.
+///
+/// Provider ambiguity leaves the exact journal untouched for another retry.
+/// A concurrent local writer is accepted only when it installed the identical
+/// intended `Active` bytes; every other winner fails closed.
+pub fn recover_pending_publication(
+    passphrase: Zeroizing<Vec<u8>>,
+    locator: BootstrapLocator,
+    local_state_store: &dyn LocalStateStore,
+    bootstrap_store: &dyn BootstrapStore,
+    repository_factory: &dyn ApplicationRepositoryFactory,
+) -> Result<ActiveStateV1, ApplicationError> {
+    let exact_pending = local_state_store
+        .load(locator)
+        .map_err(map_local_state_store)?
+        .ok_or(ApplicationError::NotInitialized)?;
+    let LocalVaultStateV1::PendingPublication {
+        active,
+        publication,
+    } = LocalVaultStateV1::decode(&exact_pending)?
+    else {
+        return Err(ApplicationError::InvalidInput);
+    };
+    if active.bootstrap_locator() != locator {
+        return Err(ApplicationError::IntegrityFailure);
+    }
+
+    let exact_bootstrap = bootstrap_store
+        .load_latest(locator)
+        .map_err(map_bootstrap_store)?
+        .ok_or(ApplicationError::IntegrityFailure)?;
+    let UnlockedActiveMaterial {
+        repository_address,
+        keys: _keys,
+        local_secret: _local_secret,
+        verifier,
+    } = unlock_active_material(passphrase, &active, &exact_bootstrap)?;
+    let repository = repository_factory
+        .connect(repository_address, Box::new(verifier))
+        .map_err(map_repository)?;
+    repository.initialize().map_err(map_repository)?;
+    let receipt = repository
+        .publish(publication.publication(), publication.base_heads())
+        .map_err(map_repository)?;
+    if receipt.heads() != publication.expected_heads() {
+        return Err(ApplicationError::IntegrityFailure);
+    }
+
+    let intended_active = active.after_publication(&publication)?;
+    let exact_active = LocalVaultStateV1::Active(intended_active.clone()).encode()?;
+    match local_state_store.compare_exchange(locator, Some(&exact_pending), &exact_active) {
+        Ok(()) => Ok(intended_active),
+        Err(LocalStateStoreError::ConcurrentHost) => {
+            match local_state_store
+                .load(locator)
+                .map_err(map_local_state_store)?
+            {
+                Some(observed) if observed == exact_active => Ok(intended_active),
+                _ => Err(ApplicationError::ConcurrentHost),
+            }
+        }
+        Err(error) => Err(map_local_state_store(error)),
+    }
+}
+
 fn map_bootstrap_store(error: BootstrapStoreError) -> ApplicationError {
     match error {
         BootstrapStoreError::Unavailable => ApplicationError::StorageUnavailable,
@@ -136,15 +202,44 @@ fn map_repository(error: ApplicationRepositoryError) -> ApplicationError {
 mod tests {
     use super::*;
     use crate::{
-        complete_generation_zero, prepare_generation_zero, GenerationZeroPolicyV1,
-        GenerationZeroRandomness, V1ApplicationRepositoryFactory, GENERATION_ZERO_RANDOM_BYTES,
+        complete_generation_zero, encode_signed_commit, prepare_generation_zero, seal_object,
+        CatalogV1, GenerationZeroPolicyV1, GenerationZeroRandomness, ObjectKind, ObjectRandomness,
+        PublicationJournalV1, V1ApplicationRepositoryFactory, V1Keys, GENERATION_ZERO_RANDOM_BYTES,
     };
-    use coding_adventures_vault_pm_format::BootstrapId;
-    use coding_adventures_vault_pm_storage::InMemoryObjectStore;
-    use std::sync::{Arc, Mutex};
+    use coding_adventures_ed25519::{generate_keypair, sign};
+    use coding_adventures_vault_pm_format::{AnnouncementV1, BootstrapId, CommitV1, Signature};
+    use coding_adventures_vault_pm_storage::{
+        FaultAction, FaultEffect, FaultInjectingObjectStore, InMemoryObjectStore, StoreOperation,
+    };
+    use std::sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc, Mutex,
+    };
 
     #[derive(Default)]
-    struct MemoryLocalStateStore(Mutex<Option<Vec<u8>>>);
+    struct MemoryLocalStateStore(
+        Mutex<Option<Vec<u8>>>,
+        AtomicBool,
+        Mutex<Option<LocalStateStoreError>>,
+    );
+
+    impl MemoryLocalStateStore {
+        fn with_state(state: Vec<u8>) -> Self {
+            Self(
+                Mutex::new(Some(state)),
+                AtomicBool::new(false),
+                Mutex::new(None),
+            )
+        }
+
+        fn concurrent_winner_on_next_compare(&self) {
+            self.1.store(true, Ordering::SeqCst);
+        }
+
+        fn fail_next_compare(&self, error: LocalStateStoreError) {
+            *self.2.lock().unwrap() = Some(error);
+        }
+    }
 
     impl LocalStateStore for MemoryLocalStateStore {
         fn load(
@@ -162,6 +257,13 @@ mod tests {
         ) -> Result<(), LocalStateStoreError> {
             let mut state = self.0.lock().unwrap();
             if state.as_deref() != expected {
+                return Err(LocalStateStoreError::ConcurrentHost);
+            }
+            if let Some(error) = self.2.lock().unwrap().take() {
+                return Err(error);
+            }
+            if self.1.swap(false, Ordering::SeqCst) {
+                *state = Some(replacement.to_vec());
                 return Err(LocalStateStoreError::ConcurrentHost);
             }
             *state = Some(replacement.to_vec());
@@ -201,12 +303,16 @@ mod tests {
         }
     }
 
-    fn randomness() -> GenerationZeroRandomness {
+    fn generation_zero_bytes() -> [u8; GENERATION_ZERO_RANDOM_BYTES] {
         let mut bytes = [0; GENERATION_ZERO_RANDOM_BYTES];
         for (index, byte) in bytes.iter_mut().enumerate() {
             *byte = (index as u8).wrapping_mul(29).wrapping_add(7);
         }
-        GenerationZeroRandomness::new(bytes)
+        bytes
+    }
+
+    fn randomness() -> GenerationZeroRandomness {
+        GenerationZeroRandomness::new(generation_zero_bytes())
     }
 
     fn initialized() -> (
@@ -229,6 +335,80 @@ mod tests {
         let factory = V1ApplicationRepositoryFactory::from_shared(backend);
         complete_generation_zero(prepared, &local, &bootstrap, &factory).unwrap();
         (locator, local, bootstrap, factory)
+    }
+
+    fn pending_publication(active: &ActiveStateV1) -> PublicationJournalV1 {
+        let fixture = generation_zero_bytes();
+        let root_key: [u8; 32] = fixture[48..80].try_into().unwrap();
+        let signing_seed: [u8; 32] = fixture[168..200].try_into().unwrap();
+        let (_, signing_secret) = generate_keypair(&signing_seed);
+        let keys = V1Keys::derive(active.vault_id(), &root_key).unwrap();
+        let catalog_frame = seal_object(
+            &keys,
+            ObjectKind::Catalog,
+            &CatalogV1::empty().encode().unwrap(),
+            &ObjectRandomness::new([0xd1; 32], [0xd2; 24], [0xd3; 24]),
+        )
+        .unwrap();
+        let catalog_id = catalog_frame.id().unwrap();
+        let parents = active.pinned_heads().iter().copied().collect::<Vec<_>>();
+        let commit = CommitV1 {
+            vault_id: active.vault_id(),
+            device_id: active.device_id(),
+            device_counter: active.last_device_counter() + 1,
+            parents,
+            catalog_root: catalog_id,
+            added_objects: vec![catalog_id],
+            tombstone_root: None,
+            wall_time_ms: 20,
+            device_certificate: active.device_certificate_id(),
+            signature: Signature::new([0; 64]),
+        };
+        let commit_preimage = commit.signing_preimage().unwrap();
+        let commit = commit.with_signature(Signature::new(sign(&commit_preimage, &signing_secret)));
+        let commit_frame = seal_object(
+            &keys,
+            ObjectKind::Commit,
+            &encode_signed_commit(&commit).unwrap(),
+            &ObjectRandomness::new([0xe1; 32], [0xe2; 24], [0xe3; 24]),
+        )
+        .unwrap();
+        let commit_id = commit_frame.id().unwrap();
+        let announcement = AnnouncementV1 {
+            vault_id: active.vault_id(),
+            device_id: active.device_id(),
+            device_counter: commit.device_counter,
+            commit_id,
+            device_certificate: active.device_certificate_id(),
+            signature: Signature::new([0; 64]),
+        };
+        let announcement_preimage = announcement.signing_preimage().unwrap();
+        let announcement = announcement.with_signature(Signature::new(sign(
+            &announcement_preimage,
+            &signing_secret,
+        )));
+        PublicationJournalV1::new(
+            vec![catalog_frame],
+            commit_frame,
+            announcement.encode().unwrap(),
+            active.pinned_heads().clone(),
+            PinnedHeads::new([commit_id]).unwrap(),
+            commit.device_counter,
+            catalog_id,
+        )
+        .unwrap()
+    }
+
+    fn install_pending(local: &MemoryLocalStateStore) -> PublicationJournalV1 {
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let publication = pending_publication(&active);
+        let pending = LocalVaultStateV1::pending_publication(active, publication.clone()).unwrap();
+        *local.0.lock().unwrap() = Some(pending.encode().unwrap());
+        publication
     }
 
     #[test]
@@ -320,8 +500,7 @@ mod tests {
         )
         .unwrap();
         let locator = prepared.bootstrap_locator();
-        let local =
-            MemoryLocalStateStore(Mutex::new(Some(prepared.owner_state().encode().unwrap())));
+        let local = MemoryLocalStateStore::with_state(prepared.owner_state().encode().unwrap());
         let bootstrap = MemoryBootstrapStore::default();
         let factory = V1ApplicationRepositoryFactory::new(InMemoryObjectStore::new());
 
@@ -336,5 +515,167 @@ mod tests {
             .err(),
             Some(ApplicationError::InvalidInput)
         );
+    }
+
+    #[test]
+    fn pending_publication_replays_exactly_and_advances_active_state() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let publication = install_pending(&local);
+
+        let active = recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(active.pinned_heads(), publication.expected_heads());
+        assert_eq!(active.last_device_counter(), 2);
+        assert_eq!(active.catalog_root(), publication.catalog_root());
+        assert!(matches!(
+            LocalVaultStateV1::decode(&local.0.lock().unwrap().clone().unwrap()).unwrap(),
+            LocalVaultStateV1::Active(_)
+        ));
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(session.open_report().commit_count(), 2);
+        assert_eq!(session.open_report().heads(), publication.expected_heads());
+    }
+
+    #[test]
+    fn pending_recovery_retains_exact_journal_across_ambiguous_provider_failure() {
+        let passphrase = b"active passphrase";
+        let prepared = prepare_generation_zero(
+            Zeroizing::new(passphrase.to_vec()),
+            GenerationZeroPolicyV1::new(8 * 1024, 1, 1, 10).unwrap(),
+            randomness(),
+        )
+        .unwrap();
+        let locator = prepared.bootstrap_locator();
+        let local = MemoryLocalStateStore::default();
+        let bootstrap = MemoryBootstrapStore::default();
+        let backend = Arc::new(FaultInjectingObjectStore::new(InMemoryObjectStore::new()));
+        let factory = V1ApplicationRepositoryFactory::from_shared(Arc::clone(&backend));
+        complete_generation_zero(prepared, &local, &bootstrap, &factory).unwrap();
+        let publication = install_pending(&local);
+        let exact_pending = local.0.lock().unwrap().clone().unwrap();
+        backend
+            .enqueue(FaultAction {
+                operation: StoreOperation::PutImmutable,
+                effect: FaultEffect::CommitPutThenNetwork,
+            })
+            .unwrap();
+
+        assert_eq!(
+            recover_pending_publication(
+                Zeroizing::new(passphrase.to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .err(),
+            Some(ApplicationError::StorageUnavailable)
+        );
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_pending.as_slice())
+        );
+
+        let active = recover_pending_publication(
+            Zeroizing::new(passphrase.to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(active.pinned_heads(), publication.expected_heads());
+        assert_eq!(backend.pending_faults().unwrap(), 0);
+    }
+
+    #[test]
+    fn pending_recovery_authenticates_before_any_repository_effect() {
+        let (locator, local, bootstrap, factory) = initialized();
+        install_pending(&local);
+        let exact_pending = local.0.lock().unwrap().clone().unwrap();
+
+        assert_eq!(
+            recover_pending_publication(
+                Zeroizing::new(b"wrong".to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .err(),
+            Some(ApplicationError::AuthenticationFailed)
+        );
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_pending.as_slice())
+        );
+    }
+
+    #[test]
+    fn pending_recovery_accepts_only_an_identical_concurrent_active_winner() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let publication = install_pending(&local);
+        local.concurrent_winner_on_next_compare();
+
+        let active = recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(active.pinned_heads(), publication.expected_heads());
+        assert!(matches!(
+            LocalVaultStateV1::decode(&local.0.lock().unwrap().clone().unwrap()).unwrap(),
+            LocalVaultStateV1::Active(_)
+        ));
+    }
+
+    #[test]
+    fn pending_recovery_retains_journal_when_final_local_commit_fails() {
+        let (locator, local, bootstrap, factory) = initialized();
+        install_pending(&local);
+        let exact_pending = local.0.lock().unwrap().clone().unwrap();
+        local.fail_next_compare(LocalStateStoreError::Unavailable);
+
+        assert_eq!(
+            recover_pending_publication(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .err(),
+            Some(ApplicationError::StorageUnavailable)
+        );
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_pending.as_slice())
+        );
+
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
     }
 }

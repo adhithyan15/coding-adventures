@@ -29,7 +29,7 @@ pub use initialize::{
     GenerationZeroPolicyV1, GenerationZeroRandomness, PreparedGenerationZero,
     GENERATION_ZERO_RANDOM_BYTES,
 };
-pub use open::{open_active_vault, UnlockedVaultV1};
+pub use open::{open_active_vault, recover_pending_publication, UnlockedVaultV1};
 pub use repository::{
     ApplicationRepository, ApplicationRepositoryError, ApplicationRepositoryFactory,
     V1ApplicationRepositoryFactory,

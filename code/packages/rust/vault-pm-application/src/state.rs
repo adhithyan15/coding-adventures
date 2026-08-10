@@ -300,6 +300,26 @@ impl ActiveStateV1 {
         self.catalog_root
     }
 
+    pub(crate) fn after_publication(
+        &self,
+        publication: &PublicationJournalV1,
+    ) -> Result<Self, ApplicationError> {
+        validate_pending(self, publication)?;
+        Self::new(
+            self.bootstrap_locator,
+            self.vault_id,
+            self.bootstrap_id,
+            self.authority_fingerprint,
+            self.device_id,
+            self.device_certificate_id,
+            self.device_certificate_frame.clone(),
+            self.local_secret.clone(),
+            publication.expected_heads.clone(),
+            publication.device_counter,
+            publication.catalog_root,
+        )
+    }
+
     fn validate(&self) -> Result<(), ApplicationError> {
         if self.last_device_counter == 0 || self.pinned_heads.is_empty() {
             return Err(ApplicationError::InvalidInput);

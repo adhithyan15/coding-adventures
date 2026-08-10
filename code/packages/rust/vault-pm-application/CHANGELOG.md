@@ -2,6 +2,23 @@
 
 All notable changes to this package are documented here.
 
+## [0.9.0] - 2026-08-09
+
+### Added
+
+- Add exact `PendingPublication` replay through authenticated repository
+  composition and durable advancement to the journal's intended active pins,
+  counter, and catalog root.
+- Accept only the identical intended active bytes when a concurrent local
+  writer wins the final compare-exchange.
+
+### Security
+
+- Preserve the exact already-randomized and signed journal across unavailable
+  and ambiguous provider failures, preventing counter reuse or self-equivocation.
+- Require the exact expected repository receipt before committing new durable
+  local pins.
+
 ## [0.8.0] - 2026-08-09
 
 ### Added
