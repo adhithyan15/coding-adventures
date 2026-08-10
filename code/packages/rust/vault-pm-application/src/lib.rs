@@ -24,8 +24,8 @@ pub use crypto::{
     ObjectKind, ObjectRandomness, V1Keys,
 };
 pub use initialize::{
-    prepare_generation_zero, GenerationZeroPolicyV1, GenerationZeroRandomness,
-    PreparedGenerationZero, GENERATION_ZERO_RANDOM_BYTES,
+    prepare_generation_zero, rehydrate_prepared_init, GenerationZeroPolicyV1,
+    GenerationZeroRandomness, PreparedGenerationZero, GENERATION_ZERO_RANDOM_BYTES,
 };
 pub use repository::{
     ApplicationRepository, ApplicationRepositoryError, ApplicationRepositoryFactory,
@@ -46,6 +46,8 @@ pub enum ApplicationError {
     NotInitialized,
     /// Owner state already exists and cannot be replaced by initialization.
     AlreadyInitialized,
+    /// Passphrase authentication or its indistinguishable root-wrap check failed.
+    AuthenticationFailed,
     /// Caller input violates a V1 precondition.
     InvalidInput,
     /// A fixed parser or collection bound would be exceeded.
@@ -67,6 +69,7 @@ impl ApplicationError {
         match self {
             Self::NotInitialized => "NotInitialized",
             Self::AlreadyInitialized => "AlreadyInitialized",
+            Self::AuthenticationFailed => "AuthenticationFailed",
             Self::InvalidInput => "InvalidInput",
             Self::BoundExceeded => "BoundExceeded",
             Self::ConcurrentHost => "ConcurrentHost",

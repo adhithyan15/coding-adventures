@@ -1,11 +1,14 @@
 use crate::{
-    encode_device_certificate, encode_signed_commit, seal_local_secret, seal_object, ActiveStateV1,
-    ApplicationError, AuthorityFingerprint, BootstrapLocator, CatalogV1, LocalSecretRandomness,
-    LocalSecretV1, LocalVaultStateV1, ObjectKind, ObjectRandomness, PreparedInitV1,
-    PublicationJournalV1, V1Keys, V1SingleDeviceVerifier,
+    decode_device_certificate, encode_device_certificate, encode_signed_commit, open_local_secret,
+    open_object, seal_local_secret, seal_object, ActiveStateV1, ApplicationError,
+    AuthorityFingerprint, BootstrapLocator, CatalogV1, LocalSecretRandomness, LocalSecretV1,
+    LocalVaultStateV1, ObjectKind, ObjectRandomness, PreparedInitV1, PublicationJournalV1, V1Keys,
+    V1SingleDeviceVerifier,
 };
 use coding_adventures_argon2id::{argon2id, Options as Argon2idOptions};
-use coding_adventures_chacha20_poly1305::xchacha20_poly1305_aead_encrypt;
+use coding_adventures_chacha20_poly1305::{
+    xchacha20_poly1305_aead_decrypt, xchacha20_poly1305_aead_encrypt,
+};
 use coding_adventures_ed25519::{generate_keypair, sign};
 use coding_adventures_vault_pm_format::{
     AeadEnvelopeV1, AnnouncementV1, Argon2idParametersV1, BootstrapV1, CommitV1,
@@ -376,6 +379,77 @@ pub fn prepare_generation_zero(
     })
 }
 
+/// Reconstruct the generation-zero repository authority from a durable
+/// `PreparedInit` journal after process loss, without performing external
+/// writes.
+///
+/// A wrong passphrase and an unauthenticatable passphrase root wrap share the
+/// same closed failure. All other persisted identity or signature mismatches
+/// are integrity failures.
+pub fn rehydrate_prepared_init(
+    passphrase: Zeroizing<Vec<u8>>,
+    owner_state: LocalVaultStateV1,
+) -> Result<PreparedGenerationZero, ApplicationError> {
+    let LocalVaultStateV1::PreparedInit(prepared) = &owner_state else {
+        return Err(ApplicationError::InvalidInput);
+    };
+    let active = prepared.intended_active();
+    let bootstrap = BootstrapV1::decode(prepared.bootstrap())
+        .map_err(|_| ApplicationError::IntegrityFailure)?;
+    let vault_root_key = unwrap_root_key(&passphrase, &bootstrap)?;
+    let keys = V1Keys::derive(bootstrap.vault_id, &vault_root_key)?;
+    let repository_address = RepositoryAddress::derive(keys.locator_key());
+    let local_secret = open_local_secret(&keys, active.local_secret())?;
+
+    if local_secret.vault_id() != active.vault_id()
+        || local_secret.device_id() != active.device_id()
+    {
+        return Err(ApplicationError::IntegrityFailure);
+    }
+
+    let (authority_public, authority_secret) = generate_keypair(local_secret.authority_seed());
+    let mut authority_secret = Zeroizing::new(authority_secret);
+    authority_secret.zeroize();
+    let authority_public = PublicKey::new(authority_public);
+    let (device_signing_public, device_signing_secret) =
+        generate_keypair(local_secret.device_signing_seed());
+    let mut device_signing_secret = Zeroizing::new(device_signing_secret);
+    device_signing_secret.zeroize();
+    let device_wrapping_public = PublicKey::new(
+        generate_x25519_public_key(local_secret.device_x25519_secret())
+            .map_err(|_| ApplicationError::IntegrityFailure)?,
+    );
+    let certificate_plaintext = open_object(
+        &keys,
+        ObjectKind::DeviceCertificate,
+        active.device_certificate_frame(),
+    )?;
+    let certificate = decode_device_certificate(&certificate_plaintext)?;
+
+    if authority_public != bootstrap.authority_public_key
+        || certificate.vault_id != active.vault_id()
+        || certificate.device_id != active.device_id()
+        || certificate.signing_public_key != PublicKey::new(device_signing_public)
+        || certificate.wrapping_public_key != device_wrapping_public
+    {
+        return Err(ApplicationError::IntegrityFailure);
+    }
+
+    let verifier = V1SingleDeviceVerifier::authorize(
+        keys,
+        authority_public,
+        active.device_certificate_id(),
+        active.device_certificate_frame(),
+    )?;
+
+    Ok(PreparedGenerationZero {
+        bootstrap_locator: active.bootstrap_locator(),
+        owner_state,
+        repository_address,
+        verifier,
+    })
+}
+
 fn wrap_root_key(
     passphrase: &[u8],
     kdf: &Argon2idParametersV1,
@@ -406,6 +480,49 @@ fn wrap_root_key(
         ciphertext,
         tag,
     })
+}
+
+fn unwrap_root_key(
+    passphrase: &[u8],
+    bootstrap: &BootstrapV1,
+) -> Result<Zeroizing<[u8; 32]>, ApplicationError> {
+    bootstrap
+        .kdf
+        .validate()
+        .map_err(|_| ApplicationError::IntegrityFailure)?;
+    let root_wrap = &bootstrap.passphrase_root_wrap;
+    if root_wrap.suite != CRYPTO_SUITE_V1 || root_wrap.validate().is_err() {
+        return Err(ApplicationError::AuthenticationFailed);
+    }
+    let derived = Zeroizing::new(
+        argon2id(
+            passphrase,
+            &bootstrap.kdf.salt,
+            bootstrap.kdf.iterations,
+            bootstrap.kdf.memory_kib,
+            bootstrap.kdf.lanes.into(),
+            32,
+            &Argon2idOptions::default(),
+        )
+        .map_err(|_| ApplicationError::IntegrityFailure)?,
+    );
+    let mut kek = Zeroizing::new([0; 32]);
+    kek.copy_from_slice(&derived);
+    let opened = xchacha20_poly1305_aead_decrypt(
+        &root_wrap.ciphertext,
+        &kek,
+        &root_wrap.nonce,
+        &root_wrap_aad(bootstrap.vault_id),
+        &root_wrap.tag,
+    )
+    .ok_or(ApplicationError::AuthenticationFailed)?;
+    let opened = Zeroizing::new(opened);
+    let mut vault_root_key = Zeroizing::new([0; 32]);
+    if opened.len() != vault_root_key.len() {
+        return Err(ApplicationError::AuthenticationFailed);
+    }
+    vault_root_key.copy_from_slice(&opened);
+    Ok(vault_root_key)
 }
 
 fn root_wrap_aad(vault_id: VaultId) -> Vec<u8> {
@@ -590,6 +707,133 @@ mod tests {
         assert_eq!(
             first.owner_state().encode().unwrap(),
             second.owner_state().encode().unwrap()
+        );
+    }
+
+    #[test]
+    fn persisted_preparation_rehydrates_after_process_loss_and_publishes() {
+        let prepared = prepare_generation_zero(
+            Zeroizing::new(b"restart-safe passphrase".to_vec()),
+            policy(),
+            fixture_randomness(),
+        )
+        .unwrap();
+        let locator = prepared.bootstrap_locator();
+        let address = prepared.repository_address();
+        let exact_state = prepared.owner_state().encode().unwrap();
+        drop(prepared);
+
+        let recovered = rehydrate_prepared_init(
+            Zeroizing::new(b"restart-safe passphrase".to_vec()),
+            LocalVaultStateV1::decode(&exact_state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(recovered.bootstrap_locator(), locator);
+        assert_eq!(recovered.repository_address(), address);
+        assert_eq!(recovered.owner_state().encode().unwrap(), exact_state);
+
+        let (_, state, recovered_address, verifier) = recovered.into_parts();
+        let LocalVaultStateV1::PreparedInit(journal) = state else {
+            panic!("rehydration must retain the prepared journal")
+        };
+        let factory = V1ApplicationRepositoryFactory::new(InMemoryObjectStore::new());
+        let repository = factory
+            .connect(recovered_address, Box::new(verifier))
+            .unwrap();
+        repository.initialize().unwrap();
+        let receipt = repository
+            .publish(
+                journal.publication().publication(),
+                journal.publication().base_heads(),
+            )
+            .unwrap();
+        assert_eq!(receipt.heads(), journal.publication().expected_heads());
+    }
+
+    #[test]
+    fn rehydration_closes_authentication_and_state_failures() {
+        let prepared = prepare_generation_zero(
+            Zeroizing::new(b"correct passphrase".to_vec()),
+            policy(),
+            fixture_randomness(),
+        )
+        .unwrap();
+        let state = LocalVaultStateV1::decode(&prepared.owner_state().encode().unwrap()).unwrap();
+        let active = match &state {
+            LocalVaultStateV1::PreparedInit(journal) => journal.intended_active().clone(),
+            _ => panic!("generation zero must be prepared"),
+        };
+
+        assert_eq!(
+            rehydrate_prepared_init(Zeroizing::new(b"wrong passphrase".to_vec()), state).err(),
+            Some(ApplicationError::AuthenticationFailed)
+        );
+        assert_eq!(
+            rehydrate_prepared_init(
+                Zeroizing::new(b"correct passphrase".to_vec()),
+                LocalVaultStateV1::Active(active),
+            )
+            .err(),
+            Some(ApplicationError::InvalidInput)
+        );
+    }
+
+    #[test]
+    fn rehydration_rejects_local_private_seeds_that_do_not_match_public_identity() {
+        let passphrase = b"identity-bound passphrase";
+        let prepared = prepare_generation_zero(
+            Zeroizing::new(passphrase.to_vec()),
+            policy(),
+            fixture_randomness(),
+        )
+        .unwrap();
+        let (_, state, _, _) = prepared.into_parts();
+        let LocalVaultStateV1::PreparedInit(journal) = state else {
+            panic!("generation zero must be prepared")
+        };
+        let bootstrap = BootstrapV1::decode(journal.bootstrap()).unwrap();
+        let root_key = unwrap_root_key(passphrase, &bootstrap).unwrap();
+        let keys = V1Keys::derive(bootstrap.vault_id, &root_key).unwrap();
+        let active = journal.intended_active();
+        let mismatched_secret = LocalSecretV1::new(
+            active.vault_id(),
+            active.device_id(),
+            [0xa1; 32],
+            [0xb2; 32],
+            [0xc3; 32],
+        );
+        let mismatched_envelope = seal_local_secret(
+            &keys,
+            &mismatched_secret,
+            &LocalSecretRandomness::new([0xd4; 24]),
+        )
+        .unwrap();
+        let mismatched_active = ActiveStateV1::new(
+            active.bootstrap_locator(),
+            active.vault_id(),
+            active.bootstrap_id(),
+            active.authority_fingerprint(),
+            active.device_id(),
+            active.device_certificate_id(),
+            active.device_certificate_frame().clone(),
+            mismatched_envelope,
+            active.pinned_heads().clone(),
+            active.last_device_counter(),
+            active.catalog_root(),
+        )
+        .unwrap();
+        let mismatched_state = LocalVaultStateV1::PreparedInit(
+            PreparedInitV1::new(
+                journal.bootstrap().to_vec(),
+                mismatched_active,
+                journal.publication().clone(),
+            )
+            .unwrap(),
+        );
+
+        assert_eq!(
+            rehydrate_prepared_init(Zeroizing::new(passphrase.to_vec()), mismatched_state).err(),
+            Some(ApplicationError::IntegrityFailure)
         );
     }
 

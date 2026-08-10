@@ -1279,6 +1279,9 @@ changelog, focused build, and downstream validation.
    5. deterministic generation-zero preparation, producing the exact bootstrap,
       initial encrypted objects, signed commit/announcement, repository
       address, verifier, and `PreparedInit` journal without external writes;
+   5a. passphrase-authenticated `PreparedInit` rehydration after process loss,
+       re-deriving the same repository address and proving local private seeds
+       reproduce every pinned bootstrap/certificate public identity;
    6. crash-resumable initialization side effects, open/unlock, and pending
       publication recovery; and
    7. item mutation, redacted views, search, history, export, audit, status,
