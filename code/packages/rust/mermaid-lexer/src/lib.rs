@@ -510,4 +510,14 @@ A\\-B: reverse stick bottom
             .collect();
         assert_eq!(directives, vec!["wrap:", "nowrap:"]);
     }
+
+    #[test]
+    fn tokenizes_multiword_sequence_actor_references() {
+        let tokens = tokenize_mermaid_sequence(
+            "sequenceDiagram\nparticipant Customer Portal\nCustomer Portal->>Order Service: Submit\n",
+        );
+        let values: Vec<_> = tokens.iter().map(|token| token.value.as_str()).collect();
+        assert!(values.windows(2).any(|pair| pair == ["Customer", "Portal"]));
+        assert!(values.windows(2).any(|pair| pair == ["Order", "Service"]));
+    }
 }

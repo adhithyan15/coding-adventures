@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.23.0";
+pub const VERSION: &str = "0.24.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1075,7 +1075,7 @@ fn parse_sequence_body(
             "box" => parse_sequence_participant_box(cursor, diagram, participant_indices)?,
             "destroy" => {
                 cursor.advance();
-                let participant = take_sequence_identifier(cursor)?;
+                let participant = take_sequence_actor_ref(cursor)?;
                 ensure_sequence_participant(diagram, participant_indices, &participant);
                 diagram
                     .events
@@ -1083,7 +1083,7 @@ fn parse_sequence_body(
             }
             "activate" | "deactivate" => {
                 let active = cursor.advance().value == "activate";
-                let participant = take_sequence_identifier(cursor)?;
+                let participant = take_sequence_actor_ref(cursor)?;
                 ensure_sequence_participant(diagram, participant_indices, &participant);
                 diagram.events.push(SequenceEvent::Activation {
                     participant,
@@ -1156,7 +1156,7 @@ fn parse_sequence_links(
     participant_indices: &mut HashMap<String, usize>,
 ) -> Result<(), ParseError> {
     let plural = cursor.advance().value == "links";
-    let participant = take_sequence_identifier(cursor)?;
+    let participant = take_sequence_actor_ref(cursor)?;
     ensure_sequence_participant(diagram, participant_indices, &participant);
     cursor
         .consume_if("COLON")
@@ -1198,7 +1198,7 @@ fn parse_sequence_properties(
     participant_indices: &mut HashMap<String, usize>,
 ) -> Result<(), ParseError> {
     cursor.advance();
-    let participant = take_sequence_identifier(cursor)?;
+    let participant = take_sequence_actor_ref(cursor)?;
     ensure_sequence_participant(diagram, participant_indices, &participant);
     cursor
         .consume_if("COLON")
@@ -1238,7 +1238,7 @@ fn parse_sequence_details(
     participant_indices: &mut HashMap<String, usize>,
 ) -> Result<(), ParseError> {
     cursor.advance();
-    let participant = take_sequence_identifier(cursor)?;
+    let participant = take_sequence_actor_ref(cursor)?;
     ensure_sequence_participant(diagram, participant_indices, &participant);
     cursor
         .consume_if("COLON")
@@ -1274,7 +1274,7 @@ fn parse_sequence_participant(
             ))
         }
     };
-    let id = take_sequence_identifier(cursor)?;
+    let id = take_sequence_actor_ref(cursor)?;
     let mut inline_alias = None;
     if token_name(cursor.current()) == "CONFIG" {
         let config = cursor.advance().clone();
@@ -1574,7 +1574,7 @@ fn parse_sequence_message(
     diagram: &mut SequenceDiagram,
     participant_indices: &mut HashMap<String, usize>,
 ) -> Result<(), ParseError> {
-    let from = take_sequence_identifier(cursor)?;
+    let from = take_sequence_actor_ref(cursor)?;
     let central_source = cursor.consume_if("CENTRAL").is_some();
     let arrow = cursor.advance().clone();
     let (line_style, arrowhead, bidirectional) = match token_name(&arrow) {
@@ -1684,7 +1684,7 @@ fn parse_sequence_message(
     } else {
         cursor.consume_if("MINUS").is_some()
     };
-    let to = take_sequence_identifier(cursor)?;
+    let to = take_sequence_actor_ref(cursor)?;
     cursor
         .consume_if("COLON")
         .ok_or_else(|| token_error(cursor.current(), "expected ':' before sequence message"))?;
@@ -1730,9 +1730,9 @@ fn parse_sequence_note(
             ))
         }
     };
-    let mut participants = vec![take_sequence_identifier(cursor)?];
+    let mut participants = vec![take_sequence_actor_ref(cursor)?];
     if cursor.consume_if("COMMA").is_some() {
-        participants.push(take_sequence_identifier(cursor)?);
+        participants.push(take_sequence_actor_ref(cursor)?);
     }
     cursor
         .consume_if("COLON")
@@ -1762,18 +1762,23 @@ fn consume_sequence_word(cursor: &mut TokenCursor, expected: &str) -> Result<(),
     }
 }
 
-fn take_sequence_identifier(cursor: &mut TokenCursor) -> Result<String, ParseError> {
-    if matches!(
+fn take_sequence_actor_ref(cursor: &mut TokenCursor) -> Result<String, ParseError> {
+    let start = cursor.current().clone();
+    let mut parts = Vec::new();
+    while matches!(
         token_name(cursor.current()),
         "IDENTIFIER" | "WORD" | "NUMBER"
-    ) {
-        Ok(cursor.advance().value.clone())
-    } else {
-        Err(token_error(
-            cursor.current(),
-            "expected sequence participant identifier",
-        ))
+    ) && cursor.current().value != "as"
+    {
+        parts.push(cursor.advance().value.clone());
     }
+    if parts.is_empty() {
+        return Err(token_error(
+            &start,
+            "expected sequence participant identifier",
+        ));
+    }
+    Ok(parts.join(" "))
 }
 
 fn take_sequence_line_text(cursor: &mut TokenCursor) -> String {
@@ -3482,6 +3487,27 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn sequence_preserves_multiword_actor_identifiers() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nparticipant Customer Portal as Customer\nparticipant Order Service\nCustomer Portal->>Order Service: Submit\nnote over Customer Portal,Order Service: Accepted\nactivate Order Service\ndeactivate Order Service\n",
+        )
+        .unwrap();
+        assert_eq!(diagram.participants[0].id, "Customer Portal");
+        assert_eq!(diagram.participants[0].label.text, "Customer");
+        assert_eq!(diagram.participants[1].id, "Order Service");
+        assert!(matches!(
+            &diagram.events[0],
+            SequenceEvent::Message { from, to, .. }
+                if from == "Customer Portal" && to == "Order Service"
+        ));
+        assert!(matches!(
+            &diagram.events[1],
+            SequenceEvent::Note { participants, .. }
+                if participants == &["Customer Portal", "Order Service"]
+        ));
+    }
+
+    #[test]
     fn sequence_parses_multiline_accessibility_description() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\naccDescr {\n  Transfers funds\n  between accounts\n}\nAlice->>Bob: Hello\n",
@@ -3525,7 +3551,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.23.0");
+        assert_eq!(crate::VERSION, "0.24.0");
     }
 
     #[test]
