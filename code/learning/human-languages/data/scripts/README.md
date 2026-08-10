@@ -218,10 +218,15 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   Urdu **ہ** returns to Chapter 4: both independent animations start at the
   upper right and close the oval-or-teardrop body as one counterclockwise loop
   with no lift. The learner path keeps the source's distinct initial/medial
-  divot-and-mark forms and final up-and-down squiggle explicit.
-  The remaining **198** prose part orders across eight scripts (`arabic` 21,
+  divot-and-mark forms and final up-and-down squiggle explicit. Urdu **ی** then
+  follows in that chapter: both independent chhoṭī ye animations start at the
+  upper right and keep the dotless S-shaped body and below-baseline bowl in one
+  continuous sweep to the rising left tip. The learner path preserves the
+  source's two dots as an initial/medial feature rather than inventing lifted
+  marks on the independent form.
+  The remaining **197** prose part orders across eight scripts (`arabic` 21,
   `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 22,
-  `japanese` 34, `urdu-nastaliq` 3) are explicitly **unverified for pen lifts**.
+  `japanese` 34, `urdu-nastaliq` 2) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
   verified claim has the same cited, font-checked path. That closes `HL-C19`;

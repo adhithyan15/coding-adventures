@@ -34,6 +34,7 @@ const URDU_LAM = DUCTUS[ductusKey("urdu-nastaliq", "ل")];
 const URDU_MIM = DUCTUS[ductusKey("urdu-nastaliq", "م")];
 const URDU_NUN = DUCTUS[ductusKey("urdu-nastaliq", "ن")];
 const URDU_HE = DUCTUS[ductusKey("urdu-nastaliq", "ہ")];
+const URDU_YE = DUCTUS[ductusKey("urdu-nastaliq", "ی")];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
@@ -394,6 +395,21 @@ describe("handwriting ductus", () => {
     expect(loop.at(-1)!.y).toBeGreaterThan(loop[0].y);
   });
 
+  it("Urdu independent ی keeps its dotless S and bowl in one unbroken stroke", () => {
+    expect(URDU_YE.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_YE)).toBe(0);
+    expect(URDU_YE.strokes).toHaveLength(1);
+    expect(URDU_YE.strokes[0].segments).toHaveLength(2);
+    const upper = URDU_YE.strokes[0].segments[0].path;
+    const bowl = URDU_YE.strokes[0].segments[1].path;
+    expect(upper.at(-1)).toEqual(bowl[0]);
+    expect(Math.min(...upper.map((point) => point.x))).toBeLessThan(upper[0].x);
+    expect(upper[0].y).toBeGreaterThan(upper.at(-1)!.y);
+    expect(Math.min(...bowl.map((point) => point.y))).toBeLessThan(-200);
+    expect(bowl.at(-1)!.x).toBeLessThan(bowl[0].x);
+    expect(bowl.at(-1)!.y).toBeGreaterThan(bowl[0].y);
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -739,6 +755,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /one uninterrupted counterclockwise loop.*upper right.*down and left.*around the base.*return up the right side.*cross at the top.*without lifting.*independent form.*oval or teardrop.*initial and medial.*small divot.*number-6-like mark.*final form.*up and then down.*Noto Naskh.*Nastaliq/i,
+    );
+  });
+
+  it("Urdu independent ی traces to Zer o Zabar's dotless S-shaped animations", () => {
+    const src = URDU_YE.source;
+    expect(src.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/chhoti-he-do-chashmi-he-chhoti-ye-bari-ye/",
+    );
+    expect(src.citation).toMatch(
+      /Zer o Zabar.*independent ی.*calligraphic and handwriting animations.*Chhoṭī ye instructions.*Northwestern/i,
+    );
+    expect(src.variation).toMatch(
+      /one uninterrupted dotless S-shaped body.*upper right.*descend through the upper curve.*sweep left around the below-baseline bowl.*rising tip.*without lifting.*independent and final chhoṭī ye.*ī sound.*initial and medial.*be-series tooth.*two dots below.*do not belong to the independent form.*Noto Naskh.*Nastaliq/i,
     );
   });
 
