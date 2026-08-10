@@ -9,10 +9,11 @@ design thesis this gap measures against.
 
 ## What ships in this slice
 
-- **A day-grid** under the bars: one column per calendar day in the
-  visible span, weekends shaded, today's column highlighted. Replaces
-  the current bare `tl-scale` text label (which stays, as a caption
-  above the grid).
+- **A day-grid ruler**: one column per calendar day in the visible
+  span, weekends shaded, today's column highlighted — placed once
+  between the existing `tl-scale` caption and the row list, not
+  composited behind each bar (see the kernel-limitation note under
+  "Day-grid feasibility" below).
 - **Percent-complete fill**: a darker overlay inside each bar, sized to
   `Task.percent_complete` — data the engine's `gantt()` projection
   already returns (`GanttBar.percent_complete`) but the host never
@@ -90,9 +91,15 @@ not a reason to withhold the grid now.
   so no existing `t[n]` reference shifts. The legend is static copy
   (its swatches and labels never vary per render), so it's written
   directly in `.mll`/`.msl` rather than threaded through a slot.
-- `TaskApp.mll`: the day-grid renders as a `For` over `timeline-grid`
-  behind the existing bars (absolutely stacked via the track's existing
-  `Row`/`Box` composition, not a new positioning primitive); each bar
+- `TaskApp.mll`: the day-grid renders as a `For` over `timeline-grid` —
+  **a ruler strip above the bars, not a true per-row background
+  overlay**. The kernel has no z-index/absolute-positioning primitive
+  (`Row`/`Column`/`Box` compose by normal flow only), so compositing a
+  grid literally *behind* every task row — the design mock's picture —
+  isn't expressible without a new capability. A ruler strip is the
+  honest, DSL-native version of the same information (day-by-day scale,
+  weekend shading, a today marker), positioned once between `tl-scale`
+  and the row list rather than repeated behind each bar. Each bar
   gains a `HostTooltip` wrapper and, for milestones, a diamond variant
   swapped in via `If (when: (t[5]))` (the kind cell) ahead of the
   existing critical/non-critical branch; a percent-complete overlay

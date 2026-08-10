@@ -48,13 +48,28 @@ component TaskApp {
 
   // Timeline (Gantt). `timeline-mode` is non-empty when the timeline is showing instead
   // of the task list, and `view-toggle-label` names the view you'd switch TO.
+  // See code/specs/task-app-richer-gantt-v1.md for the day-grid/milestone/tooltip
+  // richness this view gained beyond the original plain proportional-bar chart.
   //
-  // Each timeline row is [ name, pad-width, bar-width, window, critical-marker ].
-  // `pad-width` and `bar-width` are CSS percentages of the shared track (e.g. "18%"),
-  // so every bar sits on one date scale — they reach the layout through UI36
-  // data-driven sizing (`width: ( t[n] )`). `timeline-scale` is the matching date
-  // ruler, and a non-empty `critical-marker` means the row is on the critical path.
+  // Each timeline row is
+  // [ name, pad-width, bar-width, window, critical-marker, milestone-marker,
+  //   percent-complete, tooltip-text ]. `pad-width` and `bar-width` are CSS
+  // percentages of the shared track (e.g. "18%"), so every bar sits on one date
+  // scale — they reach the layout through UI36 data-driven sizing
+  // (`width: ( t[n] )`). `timeline-scale` is the matching date ruler. A non-empty
+  // `critical-marker` means the row is on the critical path; a non-empty
+  // `milestone-marker` means the layout renders a diamond instead of the usual
+  // bar (a zero-duration `TaskKind::Milestone` task). `percent-complete` is a
+  // CSS-ready percentage ("40%") for a darker fill inside the bar — meaningless
+  // for a milestone row, so the layout only reads it in the non-milestone
+  // branch. `tooltip-text` wraps the bar in the kernel's `HostTooltip`.
+  //
+  // `timeline-grid` is the day-grid BEHIND the bars: one row per calendar day
+  // in the visible span, [ width-pct, weekend-marker, today-marker ]. Both
+  // markers are non-empty/empty the same way `critical-marker` is — the layout
+  // picks a styled variant per branch, not a bound colour.
   slot timeline-mode     : text ;
+  slot timeline-grid     : list<list<text>> ;
 
   // Board (kanban). `board-mode` is non-empty when the board is showing.
   //

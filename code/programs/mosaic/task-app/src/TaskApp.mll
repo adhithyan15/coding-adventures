@@ -147,20 +147,77 @@ layout TaskApp {
         If ( when: slot: timeline-mode ) {
           Column [ timeline-card ] {
             Text [ tl-scale ] ( content : slot: timeline-scale )
+            // The day-grid ruler — see code/specs/task-app-richer-gantt-v1.md's
+            // "Day-grid feasibility note" for why this is a strip above the
+            // bars rather than a per-row background (the kernel has no
+            // z-index/absolute-positioning primitive to composite one).
+            Row [ tl-grid ] {
+              For ( each: slot: timeline-grid , as: g , index: gi ) {
+                If ( when: ( g[2] ) ) {
+                  Box [ tl-grid-today ] ( width : ( g[0] ) )
+                }
+                Else {
+                  If ( when: ( g[1] ) ) {
+                    Box [ tl-grid-weekend ] ( width : ( g[0] ) )
+                  }
+                  Else {
+                    Box [ tl-grid-day ] ( width : ( g[0] ) )
+                  }
+                }
+              }
+            }
+            // The legend — static copy, not data-bound (see TaskApp.mil's doc
+            // comment on why this isn't a slot).
+            Row [ tl-legend ] {
+              Row [ tl-legend-item ] {
+                Box [ tl-legend-swatch ] { }
+                Text [ tl-legend-label ] ( content : "On track" )
+              }
+              Row [ tl-legend-item2 ] {
+                Box [ tl-legend-swatch-crit ] { }
+                Text [ tl-legend-label2 ] ( content : "Critical path" )
+              }
+              Row [ tl-legend-item3 ] {
+                Box [ tl-legend-swatch-milestone ] { }
+                Text [ tl-legend-label3 ] ( content : "Milestone" )
+              }
+              Row [ tl-legend-item4 ] {
+                Box [ tl-legend-swatch-today ] { }
+                Text [ tl-legend-label4 ] ( content : "Today" )
+              }
+            }
             For ( each: slot: timeline-rows , as: t , index: ti ) {
               Row [ timeline-row ] {
                 Text [ tl-name ] ( content : ( t[0] ) )
                 // A real proportional bar: the leading pad and the bar take their
                 // widths from the row's data (UI36 data-driven sizing), both as
                 // percentages of the shared track, so every bar sits on one date
-                // scale. A critical bar differs only in colour — geometry is equal.
+                // scale. A milestone (t[5]) renders as a diamond instead of the
+                // usual bar; a non-milestone bar carries a percent-complete fill
+                // (t[6]) inside it. Every bar is wrapped in HostTooltip (t[7])
+                // for the hover detail the design calls for.
                 Row [ tl-track ] {
                   Box [ tl-pad ] ( width : ( t[1] ) )
-                  If ( when: ( t[4] ) ) {
-                    Box [ tl-bar-crit ] ( width : ( t[2] ) )
+                  If ( when: ( t[5] ) ) {
+                    HostTooltip ( text : ( t[7] ) ) {
+                      Box [ tl-bar-milestone ] ( width : ( t[2] ) )
+                    }
                   }
                   Else {
-                    Box [ tl-bar ] ( width : ( t[2] ) )
+                    If ( when: ( t[4] ) ) {
+                      HostTooltip ( text : ( t[7] ) ) {
+                        Column [ tl-bar-crit ] ( width : ( t[2] ) ) {
+                          Box [ tl-bar-fill-crit ] ( width : ( t[6] ) )
+                        }
+                      }
+                    }
+                    Else {
+                      HostTooltip ( text : ( t[7] ) ) {
+                        Column [ tl-bar ] ( width : ( t[2] ) ) {
+                          Box [ tl-bar-fill ] ( width : ( t[6] ) )
+                        }
+                      }
+                    }
                   }
                 }
                 Text [ tl-window ] ( content : ( t[3] ) )
