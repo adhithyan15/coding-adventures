@@ -1,5 +1,53 @@
 # Changelog — gc-core
 
+## 0.32.0 — 2026-08-10 — fix: interior pointers in precise ref slots/root slots escaped relocation fixup — live use-after-free in `collect_compacting`
+
+**Security fix, found by adversarial review of an unrelated in-progress PR (AOT00-T9 PR-3), confirmed
+live and exploitable against already-shipped code, fixed and regression-tested here.**
+
+- **The bug:** `find_header(addr)` matches any address inside `[payload, payload+size)` — it accepts
+  **interior** pointers (an offset into an object's payload), not just base (payload-start) pointers.
+  `push_candidates` (correctly permissive for conservative/pinning-wave sources, where anything found
+  gets pinned regardless) was also being used, via `find_header`'s permissiveness, to seed the
+  **precise** wave — from `root_slots` entries directly, and from declared reference fields via
+  `precise_children`. But `forwarded()`, which rewrites pointers during relocation, only ever rewrites
+  **base**-or-tagged-base keys in its forwarding map — it has no way to find or rewrite an interior
+  pointer. So an interior pointer at a `root_slots` entry or in a declared ref field could reach an
+  object, make it eligible for `movable`, and — once relocated — leave the interior pointer naming it
+  **never rewritten**: a real dangling read into freed from-space memory once the original was swept.
+  Confirmed live end-to-end against the already-shipped `collect_compacting` before the fix landed.
+- **The fix:** `FlatHeap::classify_precise_word(&self, word, out, pin_out)` — tries the raw word, then
+  its tag-stripped form, for an **exact** base-pointer match (in that order, both before concluding
+  "interior"); an exact match joins `out` (the precise wave), and anything reached only via interior
+  overlap is routed to `pin_out` (the pinning wave) instead — exactly like an edge from a
+  non-precisely-traced object: never movable, so `forwarded()`'s inability to rewrite it is never
+  exercised. `precise_children` and both `root_slots` seeding loops (`classify_mobility`,
+  `classify_mobility_minor_sets`) now route through this predicate instead of the permissive
+  `push_candidates`. Mathematically proven lossless versus checking each candidate reading
+  independently (the try-both-before-concluding-interior structure is required precisely because every
+  payload address is provably 16-byte aligned, by both the malloc-backed `alloc` path and the
+  arena-backed `Arena::bump` path — see the function's own doc for the full argument).
+- **A companion correction:** an existing `#[cfg(debug_assertions)]` sanity check in `fixup_ref_fields`
+  used to unconditionally flag ANY interior pointer in a precise ref slot as an error — too strict once
+  interior pointers are handled safely by pinning rather than forbidden. Narrowed to fire only if an
+  interior pointer's resolved object is ALSO a `forward` key (i.e. actually got moved) — which the fix
+  above guarantees is impossible; if it ever fires now, it means the fix itself has a bug, not that
+  routine (if unusual) frontend data was encountered.
+- 4 new regression tests, covering both the declared-ref-field and root-slot halves of the bug, each
+  with both a direct classification check (verifying `pinned`, not just `movable`'s absence) and an
+  end-to-end `collect_compacting` differential proving no dangling pointer survives a real collection.
+  Each was **empirically verified** by reverting the fix and confirming it fails with exactly the
+  predicted dangling-read symptom (a corrupted sentinel read through a stale interior pointer).
+- Adversarial security review confirmed the fix mathematically (the 16-byte-alignment argument above)
+  and empirically (11 additional probe scenarios: interior-and-tagged combined, dual base+interior edges
+  to the same target, misaligned interior fields, ref-array-tail interior elements, and interior
+  pointers through both halves of the minor-GC remembered-set/root-slot paths this session's other
+  recent PRs added) — all passing, no findings. Two pre-existing, unrelated behaviors were noted as
+  informational, not defects: a first-3-bytes interior pointer is indistinguishable from (and safely
+  treated as) a tagged base pointer by design, and a one-past-the-end pointer is invisible to both the
+  precise and liveness-marking waves alike (confirmed as pre-existing on `collect_mixed` too, not a
+  regression from this fix).
+
 ## 0.31.0 — 2026-08-10 — `FlatHeap::plan_compaction_minor` / `evacuate_and_fixup_minor` — moving-minor evacuate + fixup, dry-run only (AOT00-T9 PR-3)
 
 - **`FlatHeap::plan_compaction_minor`** (returns `(Arena, HashMap<usize, usize>, HashSet<usize>)` — the

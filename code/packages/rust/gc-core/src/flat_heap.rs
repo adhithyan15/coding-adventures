@@ -1784,6 +1784,74 @@ impl FlatHeap {
         }
     }
 
+    /// Classify a single word from a **precise** source (a `root_slots` entry, or a
+    /// declared reference field via [`Self::precise_children`]) — push the block it
+    /// names into `out` if `word` is a genuine **base** (or tagged-base) pointer, or
+    /// into `pin_out` instead if `word` resolves to a live block only via an
+    /// **interior** address.
+    ///
+    /// **Security-review finding, fixed here:** [`Self::find_header`] matches any
+    /// address inside `[payload, payload+size)`, so it accepts interior pointers —
+    /// [`Self::push_candidates`] (used for conservative/pinning-wave sources, where
+    /// this is correct: anything a conservative scan finds gets pinned regardless)
+    /// shares that permissiveness. But a *precise* source is supposed to hold an
+    /// actual reference, and [`Self::forwarded`]'s fixup only ever rewrites
+    /// **base**-or-tagged-base keys in the forwarding map — it has no way to find or
+    /// rewrite an interior pointer. Before this fix, an interior pointer at a
+    /// `root_slots` entry or a declared ref field silently reached its target via
+    /// `push_candidates`'s permissive match, making that target eligible for
+    /// `movable` — and if it relocated, the interior pointer naming it was **never
+    /// rewritten**, a real dangling read once the from-space original was freed
+    /// (confirmed live against already-shipped `collect_compacting` in a
+    /// security-review round on an unrelated PR). Routing an interior hit to
+    /// `pin_out` instead makes it join the pinning wave, exactly like an edge from a
+    /// non-precisely-traced object — never movable, so `forwarded()`'s inability to
+    /// rewrite it is never exercised. A word that resolves to nothing (a non-pointer
+    /// look-alike) is ignored, matching `push_candidates`'s existing behavior for
+    /// that case.
+    fn classify_precise_word(
+        &self,
+        word: usize,
+        out: &mut Vec<*mut FlatHeader>,
+        pin_out: &mut Vec<*mut FlatHeader>,
+    ) {
+        if word == 0 {
+            return;
+        }
+        // Try both candidate readings for an EXACT base match first — untagged raw
+        // word, then tag-stripped — before concluding either is merely interior.
+        // Checking base-ness per-candidate independently (as an earlier version of
+        // this function did) is wrong: a genuinely tagged base pointer numerically
+        // lands inside its own object's payload range when read raw (untagged), so
+        // `find_header(word)` matches it via interior-inclusion before the
+        // tag-stripped check ever runs — misclassifying a valid tagged reference as
+        // interior-and-must-pin. Both forms must be tried for an exact match before
+        // either is treated as interior.
+        let tag = word & 0x7;
+        let stripped = word & !0x7usize;
+
+        let h_raw = self.find_header(word);
+        if !h_raw.is_null() && h_raw as usize + HEADER_SIZE == word {
+            out.push(h_raw);
+            return;
+        }
+
+        let h_tagged = if tag != 0 { self.find_header(stripped) } else { ptr::null_mut() };
+        if !h_tagged.is_null() && h_tagged as usize + HEADER_SIZE == stripped {
+            out.push(h_tagged);
+            return;
+        }
+
+        // Neither the raw word nor its tag-stripped form is a genuine base pointer.
+        // Anything either still resolved to (via interior overlap) must be pinned.
+        if !h_raw.is_null() {
+            pin_out.push(h_raw);
+        }
+        if !h_tagged.is_null() {
+            pin_out.push(h_tagged);
+        }
+    }
+
     /// Whether `h` is actually traced through [`Self::for_each_ref_slot`]'s precise
     /// path — the **exact** condition under which [`Self::scan_payload`] (liveness)
     /// takes the field-map branch instead of its conservative fallback.
@@ -1810,19 +1878,28 @@ impl FlatHeap {
     }
 
     /// Append `h`'s **precise** children — the blocks its *registered-kind reference
-    /// fields* point at. An object [`Self::is_precisely_traced`] finds `false`
-    /// contributes **nothing** here: its out-edges are conservative and must be
+    /// fields* point at — into `out`, or into `pin_out` instead for a child reached
+    /// only through a declared ref field holding an **interior** pointer (see
+    /// [`Self::classify_precise_word`], which this delegates to for the base/interior
+    /// split — that predicate, not `push_candidates`'s permissive match, is what a
+    /// precise source must use). An object [`Self::is_precisely_traced`] finds `false`
+    /// contributes **nothing** to either: its out-edges are conservative and must be
     /// handled by the pinning wave (via [`Self::is_precisely_traced`] at the call
     /// site, not a bare `kind == 0` test — see that method's doc for why).
     ///
     /// # Safety
     /// `h` is a live block owned by this heap.
-    unsafe fn precise_children(&self, h: *mut FlatHeader, out: &mut Vec<*mut FlatHeader>) {
+    unsafe fn precise_children(
+        &self,
+        h: *mut FlatHeader,
+        out: &mut Vec<*mut FlatHeader>,
+        pin_out: &mut Vec<*mut FlatHeader>,
+    ) {
         // A `kind == 0` / unregistered object contributes no *precise* children (its out-edges
         // are conservative and handled by the pinning wave), so ignore the returned flag.
         self.for_each_ref_slot(h, |slot| {
             let word = ptr::read_unaligned(slot);
-            self.push_candidates(word, out);
+            self.classify_precise_word(word, out, pin_out);
         });
     }
 
@@ -1885,13 +1962,18 @@ impl FlatHeap {
         // ── Precise wave ───────────────────────────────────────────────────────
         // From each precise slot's word, follow ONLY registered-kind reference
         // edges. A kind==0 object reached is precise-reachable but its (conservative)
-        // out-edges are left for the pinning wave.
+        // out-edges are left for the pinning wave. `cwork` (the pinning wave's own
+        // worklist) is declared here, ahead of its own section below, so a
+        // `root_slots` entry OR a declared ref field that turns out to hold an
+        // INTERIOR pointer (see `classify_precise_word`'s doc — a security-review
+        // finding) can be routed there directly rather than wrongly joining `precise`.
         let mut precise: HashSet<usize> = HashSet::new();
         let mut work: Vec<*mut FlatHeader> = Vec::new();
         let mut tmp: Vec<*mut FlatHeader> = Vec::new();
+        let mut cwork: Vec<*mut FlatHeader> = Vec::new();
         for &slot in root_slots {
             let word = ptr::read_unaligned(slot as *const usize);
-            self.push_candidates(word, &mut tmp);
+            self.classify_precise_word(word, &mut tmp, &mut cwork);
         }
         for h in tmp.drain(..) {
             if precise.insert(h as usize) {
@@ -1899,7 +1981,7 @@ impl FlatHeap {
             }
         }
         while let Some(h) = work.pop() {
-            self.precise_children(h, &mut tmp);
+            self.precise_children(h, &mut tmp, &mut cwork);
             for c in tmp.drain(..) {
                 if precise.insert(c as usize) {
                     work.push(c);
@@ -1908,12 +1990,13 @@ impl FlatHeap {
         }
 
         // ── Pinning (conservative) wave ────────────────────────────────────────
-        // Seeds: every conservative-region candidate, plus every precise-reachable
-        // object that is NOT actually precisely traced (`!is_precisely_traced` —
-        // kind==0, or an unregistered kind id; see that method's doc for why this must
-        // not be a bare `kind == 0` test). Its conservative out-edges make its children
-        // unmovable, and it is itself unmovable. Then trace conservatively — every
-        // reached object is pinned, and every candidate it holds pins its target.
+        // Seeds: `cwork` above (root/precise interior-pointer hits), every
+        // conservative-region candidate, plus every precise-reachable object that is
+        // NOT actually precisely traced (`!is_precisely_traced` — kind==0, or an
+        // unregistered kind id; see that method's doc for why this must not be a bare
+        // `kind == 0` test). Its conservative out-edges make its children unmovable,
+        // and it is itself unmovable. Then trace conservatively — every reached
+        // object is pinned, and every candidate it holds pins its target.
         //
         // Security-review finding (fixed here): `conservative_children` only visits
         // **8-aligned** words, but `for_each_ref_slot`'s declared ref fields (what
@@ -1929,7 +2012,6 @@ impl FlatHeap {
         // every kind whose declared offsets are already 8-aligned (the only kind of
         // layout any in-tree registrant produces today), since `precise_children`'s
         // slots are then already a subset of what `conservative_children` visits.
-        let mut cwork: Vec<*mut FlatHeader> = Vec::new();
         for &(base, len) in regions {
             let mut off = 0usize;
             while off + 8 <= len {
@@ -1944,14 +2026,21 @@ impl FlatHeap {
                 cwork.push(h);
             }
         }
+        let mut tmp2: Vec<*mut FlatHeader> = Vec::new();
         while let Some(h) = cwork.pop() {
             if (*h).pinned {
                 continue;
             }
             (*h).pinned = true;
             self.conservative_children(h, &mut tmp);
-            self.precise_children(h, &mut tmp); // dominate sub-8-aligned ref fields too
+            // dominate sub-8-aligned ref fields too; base/interior split doesn't
+            // matter here — `h` is already pinned, so every child it names (via a
+            // genuine reference or an interior pointer alike) must be pinned too.
+            self.precise_children(h, &mut tmp, &mut tmp2);
             for c in tmp.drain(..) {
+                cwork.push(c);
+            }
+            for c in tmp2.drain(..) {
                 cwork.push(c);
             }
         }
@@ -2121,12 +2210,18 @@ impl FlatHeap {
         }
 
         // ── Precise wave seeds ───────────────────────────────────────────────────
+        // `cwork` (the pinning wave's own worklist) is declared here, ahead of its
+        // own section below — same reorder as `classify_mobility`, needed so a
+        // `root_slots` entry that turns out to hold an INTERIOR pointer (see
+        // `classify_precise_word`'s doc — a security-review finding) can be routed
+        // there directly rather than wrongly joining `precise`.
         let mut precise: HashSet<usize> = HashSet::new();
         let mut work: Vec<*mut FlatHeader> = Vec::new();
         let mut tmp: Vec<*mut FlatHeader> = Vec::new();
+        let mut cwork: Vec<*mut FlatHeader> = Vec::new();
         for &slot in root_slots {
             let word = ptr::read_unaligned(slot as *const usize);
-            self.push_candidates(word, &mut tmp);
+            self.classify_precise_word(word, &mut tmp, &mut cwork);
         }
 
         // ── Pinning (conservative) wave seeds ────────────────────────────────────
@@ -2135,7 +2230,6 @@ impl FlatHeap {
         // deferred until after the precise wave fully resolves, exactly as
         // `classify_mobility`'s own ordering — this is a code-sharing reorder, not a
         // semantic one.
-        let mut cwork: Vec<*mut FlatHeader> = Vec::new();
         for &(base, len) in regions {
             let mut off = 0usize;
             while off + 8 <= len {
@@ -2154,7 +2248,7 @@ impl FlatHeap {
         for parent in remembered {
             let h = (parent - HEADER_SIZE) as *mut FlatHeader;
             if self.is_precisely_traced(h) {
-                self.precise_children(h, &mut tmp);
+                self.precise_children(h, &mut tmp, &mut cwork);
             } else {
                 self.conservative_children(h, &mut cwork);
             }
@@ -2167,7 +2261,7 @@ impl FlatHeap {
             }
         }
         while let Some(h) = work.pop() {
-            self.precise_children(h, &mut tmp);
+            self.precise_children(h, &mut tmp, &mut cwork);
             for c in tmp.drain(..) {
                 if precise.insert(c as usize) {
                     work.push(c);
@@ -2182,14 +2276,21 @@ impl FlatHeap {
                 cwork.push(h);
             }
         }
+        let mut tmp2: Vec<*mut FlatHeader> = Vec::new();
         while let Some(h) = cwork.pop() {
             if (*h).pinned {
                 continue;
             }
             (*h).pinned = true;
             self.conservative_children(h, &mut tmp);
-            self.precise_children(h, &mut tmp); // dominate sub-8-aligned ref fields too
+            // dominate sub-8-aligned ref fields too; base/interior split doesn't
+            // matter here — `h` is already pinned, so every child it names (via a
+            // genuine reference or an interior pointer alike) must be pinned too.
+            self.precise_children(h, &mut tmp, &mut tmp2);
             for c in tmp.drain(..) {
+                cwork.push(c);
+            }
+            for c in tmp2.drain(..) {
                 cwork.push(c);
             }
         }
@@ -2309,25 +2410,37 @@ impl FlatHeap {
         // reference word (fixed field or array-tail element) that names a moved object.
         self.for_each_ref_slot(h, |slot| {
             let w = ptr::read_unaligned(slot);
-            // PR-3b reviewer follow-up: a *precise* reference word holds a reference —
-            // a **base** pointer (payload start, low-3 NaN-box tag permitted) or null —
-            // never an *interior* pointer. `forwarded` only rewrites base keys, so an
-            // interior pointer in a ref word would silently escape relocation and dangle
-            // once its target's from-space block is freed. This catches a frontend that
-            // declared a ref slot holding an interior/derived pointer (a genuine
-            // non-pointer datum belongs in a non-ref field, scanned conservatively, not at
-            // a registered ref offset or in a ref tail). Compiled out of release builds;
+            // Security-review correction: a *precise* reference word holding a genuine
+            // **interior** pointer (not a base/tagged-base one) is no longer treated as
+            // a frontend contract violation — `classify_precise_word` routes such an
+            // edge's target into the pinning wave instead of the precise wave (see its
+            // doc), so that target is GUARANTEED never movable, never a `forward` key.
+            // `forwarded()` correctly leaves the interior word untouched either way
+            // (it only ever rewrites base keys), which is exactly right for a pinned
+            // target — nothing needs rewriting since nothing moved. This assert now
+            // checks that guarantee itself, not "is this an interior pointer" (a
+            // legitimate pattern this session's own security review found silently
+            // mishandled, not forbidden — see `classify_precise_word`'s doc for the
+            // full history): if an interior pointer's resolved object is EVER also a
+            // `forward` key, the classification fix has a bug and this is a real
+            // use-after-free, not routine data. Compiled out of release builds;
             // exercised under tests + Miri. `find_header` is a live read (from-space is
             // still intact during fixup, before any sweep).
             #[cfg(debug_assertions)]
             {
                 let cand = w & !0x7usize;
                 let bh = self.find_header(cand);
-                debug_assert!(
-                    bh.is_null() || bh as usize + HEADER_SIZE == cand,
-                    "precise ref slot holds an interior pointer \
-                     (0x{cand:x}); precise ref slots must hold base/tagged-base pointers",
-                );
+                if !bh.is_null() {
+                    let base = bh as usize + HEADER_SIZE;
+                    if base != cand {
+                        debug_assert!(
+                            !forward.contains_key(&base),
+                            "interior pointer (0x{cand:x}) in a precise ref slot names a \
+                             MOVED object (0x{base:x}) — classify_precise_word's \
+                             interior-pointer-must-pin guarantee was violated",
+                        );
+                    }
+                }
             }
             if let Some(nw) = self.forwarded(w, forward) {
                 ptr::write_unaligned(slot, nw);
@@ -5925,6 +6038,155 @@ mod tests {
         let a_field = unsafe { *(na as *const usize) };
         assert_eq!(a_field, nb | tag, "tagged pointer fixed up, tag preserved");
         drop(arena);
+    }
+
+    // ── `classify_precise_word` interior-pointer / genuinely-tagged-base-pointer
+    //    disambiguation, and interior-pointer-must-pin fix (security review) ─────
+    //
+    // A security review of an unrelated PR found that a declared ref field OR a
+    // root_slots entry holding a genuine INTERIOR pointer (an offset into an object's
+    // payload, e.g. `b + 8`, not `b` itself) was silently accepted by the permissive
+    // `find_header`-based lookup the precise wave used, making that object eligible
+    // for `movable` -- but `forwarded()`'s fixup only ever rewrites BASE (or
+    // tagged-base) keys, so the interior pointer naming it was never rewritten on
+    // relocation: a real dangling read once the from-space original was freed,
+    // confirmed live against already-shipped `collect_compacting`. Fixed by having a
+    // precise source classify each word via `classify_precise_word`: an exact base (or
+    // tagged-base) match still joins the precise wave; anything reached only via
+    // interior overlap is routed to the pinning wave instead.
+    //
+    // `evacuate_fixes_tagged_interior_pointer_preserving_tag` above is NOT the bug
+    // case despite its name -- `b | tag` is a genuinely tagged BASE pointer (`b` is
+    // itself `b`'s payload address), and the fix's own first version briefly broke it
+    // (a raw, untagged `find_header` check on a tagged word numerically lands inside
+    // the target's own payload range, indistinguishable from a real interior pointer
+    // until the tag-stripped form is also tried) -- caught immediately by that
+    // existing test failing, before this PR's own regression tests below were added.
+
+    /// The load-bearing regression this fix exists to prove: a child reachable
+    /// **only** through a parent's declared ref field holding a genuine interior
+    /// pointer (`b + 8`, not `b`) is pinned -- found, safely retained -- not silently
+    /// classified movable. Verified directly against the header's `pinned` bit (not
+    /// just `movable`'s absence), matching this session's established
+    /// pinned-not-invisible test pattern.
+    #[test]
+    fn classify_mobility_pins_a_child_reached_only_via_an_interior_pointer_in_a_ref_field() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]); // one ref field at offset 0
+        let parent = heap.alloc(16, k) as usize;
+        let child = heap.alloc(16, k) as usize;
+        unsafe {
+            *(child as *mut usize) = 0; // child is a leaf
+            *(parent as *mut usize) = child + 8; // INTERIOR pointer, not child's base
+        }
+
+        let slot_word = parent;
+        let slots = [&slot_word as *const usize as usize];
+        let movable = unsafe { heap.classify_mobility(&slots, &[]) };
+        assert!(!movable.contains(&child), "a child reached only via an interior pointer must not be movable");
+        let child_header = heap.find_header(child);
+        assert!(!child_header.is_null(), "the child must still be found, not silently dropped");
+        assert!(
+            unsafe { (*child_header).pinned },
+            "...and must actually be pinned, not silently absent from both sets"
+        );
+    }
+
+    /// End-to-end: `collect_compacting` over the exact shape above produces no
+    /// dangling pointer. `parent` is deliberately left otherwise-unpinned (precise-
+    /// reachable only, no conservative in-edge) so it is free to relocate itself --
+    /// isolating the interior-*edge*-pins-its-*target* behavior under test from the
+    /// unrelated "is `parent` itself movable" question. Before the fix, `child` was
+    /// wrongly movable and relocated too, while the interior pointer naming it --
+    /// never a `forward` key, since `forwarded()` only rewrites base/tagged-base keys
+    /// -- kept naming the from-space original, which was then swept as (wrongly)
+    /// unreachable garbage: a live use-after-free through the parent's stale interior
+    /// field (empirically confirmed: this exact test fails without the fix, reading a
+    /// sentinel of `0` instead of the true value, through a dangling read).
+    #[test]
+    fn collect_compacting_interior_pointer_in_ref_field_does_not_dangle() {
+        let mut heap = FlatHeap::new();
+        // Two ref fields so the pointer (field0) and a verifiable sentinel (field1)
+        // can coexist without one overwriting the other.
+        let k = heap.register_kind(&[0, 8]);
+        let parent = heap.alloc(16, k) as usize;
+        let child = heap.alloc(16, k) as usize;
+        unsafe {
+            *(child as *mut usize) = 0; // child.field0: leaf
+            *((child + 8) as *mut usize) = 0xC0FF_EE00_usize; // child.field1: sentinel
+            *(parent as *mut usize) = child + 8; // parent.field0: INTERIOR pointer into child's own field1 offset
+        }
+
+        let mut root = parent; // no conservative pin on parent -- it may relocate
+        let slots = [&mut root as *mut usize as usize];
+        let stats = unsafe { heap.collect_compacting(&slots, &[]) };
+
+        assert_eq!(stats.freed, 0, "nothing is garbage -- parent and child are both reachable");
+        assert_eq!(stats.survived, 2, "both survive (parent possibly relocated, child pinned in place)");
+        // Read through the (possibly-updated) root slot, not the stale `parent`
+        // variable -- if parent itself relocated, its from-space original is freed.
+        let interior_ptr_after = unsafe { *(root as *const usize) };
+        assert_eq!(
+            interior_ptr_after,
+            child + 8,
+            "the interior pointer is unchanged (child never moved, so nothing needed fixing up)"
+        );
+        assert_eq!(
+            unsafe { *((child + 8) as *const usize) },
+            0xC0FF_EE00,
+            "reading through the (unmoved) child recovers the sentinel -- no dangling pointer"
+        );
+    }
+
+    /// The root-slot half of the same fix: a `root_slots` entry holding a genuine
+    /// interior pointer must pin its target too, not just a declared ref field's
+    /// interior pointer -- `evacuate_and_fixup`'s own root-slot fixup (step (a)) is
+    /// exactly as base-pointer-only as `fixup_ref_fields`, via the same `forwarded()`.
+    #[test]
+    fn classify_mobility_pins_an_object_reached_only_via_an_interior_root_pointer() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let a = heap.alloc(16, k) as usize;
+        unsafe { *(a as *mut usize) = 0 };
+
+        let slot_word = a + 8; // INTERIOR pointer, not a's base
+        let slots = [&slot_word as *const usize as usize];
+        let movable = unsafe { heap.classify_mobility(&slots, &[]) };
+        assert!(!movable.contains(&a), "an object reached only via an interior root pointer must not be movable");
+        let a_header = heap.find_header(a);
+        assert!(!a_header.is_null(), "the object must still be found, not silently dropped");
+        assert!(
+            unsafe { (*a_header).pinned },
+            "...and must actually be pinned, not silently absent from both sets"
+        );
+    }
+
+    /// End-to-end: `collect_compacting` with an interior root pointer as the only
+    /// reference to an object produces no dangling pointer -- the object stays in
+    /// place (pinned), and the interior root slot, untouched by `evacuate_and_fixup`'s
+    /// base-only root fixup, still correctly names it (since it never moved).
+    #[test]
+    fn collect_compacting_interior_root_pointer_does_not_dangle() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0, 8]);
+        let a = heap.alloc(16, k) as usize;
+        unsafe {
+            *(a as *mut usize) = 0;
+            *((a + 8) as *mut usize) = 0xFEED_FACE_usize; // sentinel
+        }
+
+        let mut root = a + 8; // INTERIOR pointer at the object's own field1 offset
+        let slots = [&mut root as *mut usize as usize];
+        let stats = unsafe { heap.collect_compacting(&slots, &[]) };
+
+        assert_eq!(stats.freed, 0, "the object is reachable (conservatively, via the interior root)");
+        assert_eq!(stats.survived, 1, "it survives in place -- pinned, never movable");
+        assert_eq!(root, a + 8, "the interior root slot is untouched (no relocation happened)");
+        assert_eq!(
+            unsafe { *((a + 8) as *const usize) },
+            0xFEED_FACE,
+            "reading through the (unmoved) object recovers the sentinel -- no dangling pointer"
+        );
     }
 
     // ── Moving collector — arena provenance safety (AOT00-T3 PR-3c-1) ──
