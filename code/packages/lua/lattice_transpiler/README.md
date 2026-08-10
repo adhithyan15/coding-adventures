@@ -69,3 +69,13 @@ Lattice source
     ▼  lattice_ast_to_css.compile()
   CSS text
 ```
+
+## Standalone build contract
+
+Both build front doors work from an empty LuaRocks tree by installing the exact
+checked-in chain `directed_graph -> state_machine -> grammar_tools -> lexer ->
+lattice_lexer -> parser -> lattice_parser -> lattice_ast_to_css ->
+lattice_transpiler`. Dependency fetching is disabled at every step, which makes
+the end-to-end package independent of ambient rocks and remote repositories.
+The build then transpiles a real Lattice rule using only the installed tree,
+which proves the deployed grammar-data boundary as well as module loading.

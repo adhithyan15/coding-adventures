@@ -89,3 +89,17 @@ luarocks make --local coding-adventures-lattice-parser-0.1.0-1.rockspec
 ```bash
 cd tests && busted . --verbose --pattern=test_
 ```
+
+## Standalone build contract
+
+`BUILD` and `BUILD_windows` are valid from an empty LuaRocks tree. They install
+the exact checked-in `directed_graph -> state_machine -> grammar_tools -> lexer
+-> lattice_lexer -> parser -> lattice_parser` closure in leaf-to-root order,
+with dependency fetching disabled for every rock. This keeps a developer's
+ambient rock tree or a remote name match from deciding which parser stack is
+tested.
+
+The rockspec also installs a generated Lua payload of canonical
+`code/grammars/lattice/lattice.grammar` data. Byte-for-byte drift coverage keeps
+the deployed payload aligned with the language-neutral fixture, and each build
+front door runs an installed-runtime smoke without monorepo source paths.

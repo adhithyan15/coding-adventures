@@ -11,18 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 10264,
+  "active_pr": 10317,
   "last_inventory": {
-    "revision": "5e1304f0648c43cf516d72a38657aba6ab08563b",
+    "revision": "61cdb3ef1465c6c652d0d734d3c862b669b3adfb",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1278,
-    "implementation_package_slots": 4434,
+    "implementation_identities": 1286,
+    "implementation_package_slots": 4442,
     "high_consensus_packages": 173,
     "high_consensus_missing_slots": 269,
-    "singleton_packages": 828,
-    "singleton_missing_slots": 11592,
-    "rust_singletons": 632,
+    "singleton_packages": 836,
+    "singleton_missing_slots": 11704,
+    "rust_singletons": 640,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -394,19 +394,21 @@
     {
       "id": "build-file-lua-parser-lexer-transitive-closure",
       "title": "Install lexer before Lua parser dependents",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-file-standalone-integrity-lua"],
       "branch": "codex/lua-parser-lexer-transitive-closure",
       "pr_number": 10264,
       "selection_revision": "6e0a40b7a680d4dbe0d253024f8da4ef70a920ff",
       "selection_notes": "Selected after PR #10238 merged and the collision-checked ownership refresh. The shared lexer prerequisite repairs both Dartmouth BASIC and JSON parser recipes and unlocks the remaining JSON and Lattice closure wave.",
-      "notes": "Discovered by the complete canonical Lua sibling-bootstrap audit for the selected Unix closure tranche. dartmouth_basic_parser and json_parser install their language lexer plus parser but omit the shared lexer rock required transitively on a clean LuaRocks tree. Repair the common lexer prerequisite as a separate dependency-shaped metadata item. Selected at 6e0a40b7a6 after recording five newly discovered Rust identities and retaining their portable or dependency-blocked native owners; this is the smallest unblocked shared parser prerequisite and has downstream leverage into the remaining JSON and Lattice closure wave. The clean Windows red baseline fails exactly when dartmouth_basic_lexer cannot resolve unpublished coding-adventures-lexer. Independent clean LuaRocks trees now pass both canonical Unix and Windows recipes with 66 Dartmouth BASIC parser tests and 42 JSON parser tests per platform, plus installed-runtime smoke for each parser and the shared lexer. The direct json_value downstream passes 91 tests and installed-runtime smoke. Focused LuaCov reports 86.30% production coverage for dartmouth_basic_parser, 86.54% for json_parser, 92.55% for dartmouth_basic_lexer, and 89.58% for json_lexer; the broad shared lexer and parser engines record 43.55%-61.01% under these two focused consumer suites and retain their separately owned full-suite coverage. The Python build tool passes 353 tests at 85.26% coverage; the Lua build tool passes 61 tests; the Go build tool passes its full test, vet, and build gates; and parity reporter tests pass 10 cases. Full validation discovers 4,840 packages and reproduces only the exact unrelated 17-diagnostic Perl, Python, and Swift baseline with zero Lua findings after the two Unix self-installs were hardened against remote dependency resolution. Collision, inventory, state-graph, JSON, BUILD ordering, diff, and added-line credential/network-fetch checks pass. Existing unrelated Python build-tool debt remains 86 Ruff findings, four mypy errors, and nine Bandit findings because this tranche changes no Python source. The collision-checked 1c5ed9c1e9 refresh retains 1,277 identities, 4,433 slots, 827 singletons, 631 Rust singletons, and zero collisions or unknown buckets; merged PRs #10256, #10258, and #10259 add no identity or Lua overlap. Pre-push security review found no blocking issue; the new shared-lexer steps were strengthened to rebuild the exact checked-in 0.1.0-1 sibling locally with dependency fetching disabled, and fresh isolated Windows homes re-pass 66 Dartmouth and 42 JSON tests. A final 5e1304f064 refresh classifies the new authority-free Rust vault-pm-format identity without displacing this selected Lua prerequisite. Ready-for-review PR #10264 opened from validated implementation commit 841863bc41 after confirming no other parity PR was active and exact-head security review found no blocking issue."
+      "merged_at": "2026-08-09T22:57:56Z",
+      "merge_revision": "c12372bc87848013a25b49dbea21e9eac28d8d23",
+      "notes": "Discovered by the complete canonical Lua sibling-bootstrap audit for the selected Unix closure tranche. dartmouth_basic_parser and json_parser install their language lexer plus parser but omit the shared lexer rock required transitively on a clean LuaRocks tree. Repair the common lexer prerequisite as a separate dependency-shaped metadata item. Selected at 6e0a40b7a6 after recording five newly discovered Rust identities and retaining their portable or dependency-blocked native owners; this is the smallest unblocked shared parser prerequisite and has downstream leverage into the remaining JSON and Lattice closure wave. The clean Windows red baseline fails exactly when dartmouth_basic_lexer cannot resolve unpublished coding-adventures-lexer. Independent clean LuaRocks trees now pass both canonical Unix and Windows recipes with 66 Dartmouth BASIC parser tests and 42 JSON parser tests per platform, plus installed-runtime smoke for each parser and the shared lexer. The direct json_value downstream passes 91 tests and installed-runtime smoke. Focused LuaCov reports 86.30% production coverage for dartmouth_basic_parser, 86.54% for json_parser, 92.55% for dartmouth_basic_lexer, and 89.58% for json_lexer; the broad shared lexer and parser engines record 43.55%-61.01% under these two focused consumer suites and retain their separately owned full-suite coverage. The Python build tool passes 353 tests at 85.26% coverage; the Lua build tool passes 61 tests; the Go build tool passes its full test, vet, and build gates; and parity reporter tests pass 10 cases. Full validation discovers 4,840 packages and reproduces only the exact unrelated 17-diagnostic Perl, Python, and Swift baseline with zero Lua findings after the two Unix self-installs were hardened against remote dependency resolution. Collision, inventory, state-graph, JSON, BUILD ordering, diff, and added-line credential/network-fetch checks pass. Existing unrelated Python build-tool debt remains 86 Ruff findings, four mypy errors, and nine Bandit findings because this tranche changes no Python source. The collision-checked 1c5ed9c1e9 refresh retains 1,277 identities, 4,433 slots, 827 singletons, 631 Rust singletons, and zero collisions or unknown buckets; merged PRs #10256, #10258, and #10259 add no identity or Lua overlap. Pre-push security review found no blocking issue; the new shared-lexer steps were strengthened to rebuild the exact checked-in 0.1.0-1 sibling locally with dependency fetching disabled, and fresh isolated Windows homes re-pass 66 Dartmouth and 42 JSON tests. A final 5e1304f064 refresh classifies the new authority-free Rust vault-pm-format identity without displacing this selected Lua prerequisite. Ready-for-review PR #10264 opened from validated implementation commit 841863bc41 after confirming no other parity PR was active and exact-head security review found no blocking issue. External review merged PR #10264 as c12372bc87848013a25b49dbea21e9eac28d8d23 on 2026-08-09 with all 19 checks successful or skipped."
     },
     {
       "id": "build-file-lua-data-store-hyperloglog-transitive-closure",
       "title": "Install HyperLogLog before Lua data-store engine",
       "status": "pending",
-      "depends_on": ["build-file-standalone-integrity-lua"],
+      "depends_on": ["build-file-standalone-integrity-lua", "lua-in-memory-data-store-engine-clock-authority-truthfulness"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the complete canonical Lua sibling-bootstrap audit for the selected Unix closure tranche. in-memory-data-store installs in-memory-data-store-engine but omits that engine's unpublished local hyperloglog prerequisite on a clean LuaRocks tree."
@@ -423,11 +425,13 @@
     {
       "id": "build-file-lua-lattice-transitive-closure",
       "title": "Close the Lua Lattice parser and transpiler prerequisites",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-file-standalone-integrity-lua"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Discovered by the complete canonical Lua sibling-bootstrap audit for the selected Unix closure tranche. lattice_parser, lattice_ast_to_css, and lattice_transpiler omit shared directed-graph, state-machine, lexer, lattice-lexer, parser, and lattice-parser prerequisites at successive points in one dependency chain."
+      "branch": "codex/lua-lattice-transitive-closure",
+      "pr_number": 10317,
+      "selection_revision": "c12372bc87848013a25b49dbea21e9eac28d8d23",
+      "selection_notes": "Selected after PR #10264 merged and the collision-checked ownership refresh. One coherent Lattice chain repairs three successive packages and six Unix/Windows front doors, the largest actual fanout among the remaining audited Lua closures.",
+      "notes": "Discovered by the complete canonical Lua sibling-bootstrap audit for the selected Unix closure tranche. lattice_parser, lattice_ast_to_css, and lattice_transpiler omit shared directed-graph, state-machine, lexer, lattice-lexer, parser, and lattice-parser prerequisites at successive points in one dependency chain. Selected at c12372bc8784 after recording six new Rust singleton identities and their portable or dependency-blocked wrapper/native owners. The three-package Lattice chain closes six standalone build front doors, while JSON value remains a one-package follow-up behind the now-merged parser/lexer prerequisite and data-store remains blocked on its newly recorded clock-authority mismatch. Clean-tree red baselines across all six recipes failed at their first omitted unpublished prerequisite. The implementation installs every exact sibling rock leaf-to-root with dependency fetching disabled. A neutral-directory smoke then exposed that the installed lexer and parser still searched outside the LuaRocks tree for repository grammar files; generated Lua payloads now project the canonical lattice.tokens and lattice.grammar bytes into the deployed rocks, byte-for-byte drift tests keep those projections aligned, and both package capability profiles are empty because runtime grammar loading is authority-free. Final local validation passed all six fresh-tree build front doors with 95 Busted cases per platform and neutral-directory installed-runtime smokes, plus 84 lexer and 46 parser source cases. LuaCov measured lexer 96.55%, parser 90.32%, AST-to-CSS 76.77%, and transpiler 91.67%; generated single-return payload artifacts are byte-locked rather than behavior branches. Build-tool validation passed Python 353 tests at 85.26% coverage, Lua 61 tests at 73.95% weighted production coverage, and Go test, vet, module verification, and trimpath build. Reporter tests passed 10 cases, capability taxonomy passed 7, collision reporting stayed clean, and the full 4,847-package validator retained exactly 17 known non-Lua diagnostics with zero Lua diagnostics. The final security pass added the transpiler's directly imported parser to its declared dependencies. After rebasing, a brand-new isolated tree rebuilt all nine rocks with dependency fetching disabled, the deployed transpiler passed 16 cases plus its end-to-end smoke, Lua resolver/discovery UTF-8 planning passed 37 focused cases, and the Python and Go build-tool gates remained green. Final base 61cdb3ef14 retained the collision-clean 1,286-identity inventory. Ready-for-review PR #10317 opened with the complete validation summary; this item legally transitioned from in-progress to pr-open and is now the sole active parity PR."
     },
     {
       "id": "build-file-lua-wasm-runtime-execution-transitive-closure",
@@ -1426,7 +1430,7 @@
       "depends_on": ["smart-home-camera-media-security-boundary-hardening"],
       "branch": null,
       "pr_number": null,
-      "notes": "Extract and fixture deterministic grant decisions, generation-bound lease state, TTLs, quotas, audit projection, and error classification behind injected authenticated context, time, nonce, and media transport. Expand only this authority-free core through established lanes; keep native media I/O and session hosting outside the denominator. Merged PR #10225 preserves this portable policy boundary by injecting one native media executor; endpoint validation, grant and lease state, bounds, authentication choice, response classification, image-signature checks, and redaction remain fixture-owned here while transport stays native. Merged PR #10229 adds fixtures for authorization before Vault resolution or network I/O, entity, purpose, TTL, and endpoint validation, lease issue and redemption, and credential cleanup on every return path. Merged PRs #10237 and #10248 add deterministic ZoneMinder and Synology evidence for exact grant-before-Vault-and-network ordering, generation-bound camera-media lease issuance and redemption, reviewed endpoint registration, bounded snapshot delivery, and cleanup on every result."
+      "notes": "Extract and fixture deterministic grant decisions, generation-bound lease state, TTLs, quotas, audit projection, and error classification behind injected authenticated context, time, nonce, and media transport. Expand only this authority-free core through established lanes; keep native media I/O and session hosting outside the denominator. Merged PR #10225 preserves this portable policy boundary by injecting one native media executor; endpoint validation, grant and lease state, bounds, authentication choice, response classification, image-signature checks, and redaction remain fixture-owned here while transport stays native. Merged PR #10229 adds fixtures for authorization before Vault resolution or network I/O, entity, purpose, TTL, and endpoint validation, lease issue and redemption, and credential cleanup on every return path. Merged PRs #10237, #10248, #10255, and #10267 add deterministic ZoneMinder, Synology, Axis, and Reolink evidence for exact grant-before-Vault-and-network ordering, installed-entity and endpoint validation, generation-bound camera-media lease issuance and redemption, bounded snapshot delivery, and cleanup on every result."
     },
     {
       "id": "smart-home-onvif-portable-core-conformance",
@@ -1816,7 +1820,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Share CGI DTO validation, bounded response parsing, device/channel/motion projection, stable identities, and stable errors. DNS/TCP/TLS, Vault, trusted time, and runtime authority are excluded."
+      "notes": "Share CGI DTO validation, bounded response parsing, device/channel/motion projection, stable identities, and stable errors. Merged PR #10267 adds portable fixtures for exact physical-channel and supported-model validation, installed online and awake entity checks, canonical Snap request planning, approval-before-effect ordering, bounded JPEG classification, cleanup, and redaction. DNS/TCP/TLS, Vault, trusted time, and runtime authority are excluded."
     },
     {
       "id": "smart-home-roku-ecp-portable-core-extraction-and-conformance",
@@ -2035,7 +2039,7 @@
       "depends_on": ["rust-network-substrate-capability-truthfulness", "smart-home-lan-http-native-executor-consolidation"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-clean 479ba6d7 inventory after smart-home-axis-vapix-integration landed as a Rust-only production adapter. The crate performs mDNS discovery, credential-referenced authenticated HTTPS, TLS, endpoint policy, runtime authorization, and concrete network effects, so the package is not an all-language portable target. Review truthful DNS/discovery/connect/TLS/Vault-derived authority and platform evidence; keep bounded VAPIX response validation, identity normalization, stable projection, and request planning in shared portable contracts where reusable; and record the residual adapter as a native-runtime exception. This review is excluded from autonomous delivery selection by parity policy."
+      "notes": "Discovered in the collision-clean 479ba6d7 inventory after smart-home-axis-vapix-integration landed as a Rust-only production adapter. The crate performs mDNS discovery, credential-referenced authenticated HTTPS, TLS, endpoint policy, runtime authorization, and concrete network effects, so the package is not an all-language portable target. Merged PR #10255 adds the first bounded production snapshot host using the same installed entity, reviewed origin, pinned socket, sealed credential, and VAPIX JPEG capability seam. Review truthful DNS/discovery/connect/TLS/Vault-derived authority and platform evidence; keep bounded VAPIX response validation, identity normalization, stable projection, exact endpoint planning, and authorization ordering in shared portable contracts where reusable; and record the residual adapter as a native-runtime exception. This review is excluded from autonomous delivery selection by parity policy."
     },
     {
       "id": "smart-home-blue-iris-native-authority-review",
@@ -2371,7 +2375,7 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Review the existing Rust vault-leases package's concrete CSPRNG, SystemTime, and zeroizing in-memory secret-store authority after its deterministic lifecycle is extracted. Require a truthful structured capability profile in place of the legacy string manifest, stable redacted failures, bounded storage, and evidence for one-shot atomic consumption. This native-runtime review is excluded from autonomous parity selection."
+      "notes": "Review the existing Rust vault-leases package's concrete CSPRNG, SystemTime, and zeroizing in-memory secret-store authority after its deterministic lifecycle is extracted. Merged PRs #10255 and #10267 add Axis and Reolink snapshot-host evidence for approval-before-secret ordering, bounded sealed credential resolution, short-lived media leases, and cleanup on every result. Require a truthful structured capability profile in place of the legacy string manifest, stable redacted failures, bounded storage, and evidence for one-shot atomic consumption. This native-runtime review is excluded from autonomous parity selection."
     },
     {
       "id": "chief-tool-api-portable-conformance",
@@ -2428,7 +2432,7 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Discovered in the collision-checked a4f5360112 inventory after merged PR #10225 added the sole new identity, Rust smart-home-camera-media-http-executor. The package directly owns pinned TCP and TLS transport, strict certificate and SNI verification, socket timeouts, CSPRNG Digest nonces, zeroizing Basic or Digest credentials, and bounded HTTP and image delivery, but lacks required_capabilities.json. Merged PR #10229 adds the first concrete production consumer with a broker-retained pinned endpoint, bounded explicit process-local credential registration and removal on every return path, and replace-before-remove rejection. Merged PRs #10237 and #10248 add ZoneMinder and Synology consumers whose credential, token, session, and snapshot endpoints exist only in transient process-local state and are removed on every success or failure path. Review the minimum truthful network, TLS, entropy, credential, time, and memory authority and retain deterministic endpoint, authentication, framing, media-signature, bound, credential-lifecycle, and redaction fixtures in portable dependencies. This native-runtime review is excluded from autonomous parity selection."
+      "notes": "Discovered in the collision-checked a4f5360112 inventory after merged PR #10225 added the sole new identity, Rust smart-home-camera-media-http-executor. The package directly owns pinned TCP and TLS transport, strict certificate and SNI verification, socket timeouts, CSPRNG Digest nonces, zeroizing Basic or Digest credentials, and bounded HTTP and image delivery, but lacks required_capabilities.json. Merged PR #10229 adds the first concrete production consumer with a broker-retained pinned endpoint, bounded explicit process-local credential registration and removal on every return path, and replace-before-remove rejection. Merged PRs #10237, #10248, #10255, and #10267 add ZoneMinder, Synology, Axis, and Reolink consumers whose credentials, tokens, sessions, and snapshot endpoints exist only in transient process-local state and are removed on every success or failure path. Review the minimum truthful network, TLS, entropy, credential, time, and memory authority and retain deterministic endpoint, authentication, framing, media-signature, bound, credential-lifecycle, and redaction fixtures in portable dependencies. This native-runtime review is excluded from autonomous parity selection."
     },
     {
       "id": "smart-home-onvif-snapshot-host-native-authority-review",
@@ -2444,10 +2448,10 @@
       "id": "html-frontend-portable-conformance",
       "title": "Fixture and port the deterministic HTML frontend",
       "status": "pending",
-      "depends_on": [],
+      "depends_on": ["state-machine-tokenizer-and-markup-portable-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered during the collision-checked 1c5ed9c1e9 pre-publication audit after merged PR #10258 extended the existing Rust html-parser without adding a package identity. The empty-capability frontend is deterministic over html-lexer and dom-core but had no explicit parity owner. Define language-neutral fixtures and established-lane implementations for tokenizer handoff, tree construction and recovery, exact stable diagnostics including unexpected-description-list-item-start-tag, document and fragment projections, html5lib conformance, hostile-input handling, and explicit resource bounds. Rendering, networking, and browser-host authority remain outside this portable contract."
+      "notes": "Discovered during the collision-checked 1c5ed9c1e9 pre-publication audit after merged PR #10258 extended the existing Rust html-parser without adding a package identity. The empty-capability frontend is deterministic over html-lexer and dom-core but had no explicit parity owner. Merged PRs #10262, #10268, #10273, #10278, #10283, #10291, and #10295 expand exact post-head, table hidden-input, head-content, select, template-text, fostered-formatting, and seeded fragment-context recovery diagnostics without adding identities. Merged PR #10302 extends the tokenizer/markup seam with exact script end-tag EOF diagnostics and remains owned here through the explicit state-machine tokenizer dependency; merged PR #10311 adds exact plaintext insertion diagnostics without adding an identity. Define language-neutral fixtures and established-lane implementations for tokenizer handoff, tree construction and recovery, exact stable diagnostics, document and fragment projections, html5lib conformance, hostile-input handling, and explicit resource bounds. Rendering, networking, and browser-host authority remain outside this portable contract."
     },
     {
       "id": "vault-pm-format-portable-conformance",
@@ -2465,7 +2469,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-checked 6e0a40b7a6 inventory after merged PRs #10236, #10242, #10247, and #10253 materialized Rust diagram-layout-sequence as a new authority-free identity without a capability manifest. Merged PR #10259 extends the same Mermaid lexer/parser, diagram-IR, layout, and diagram-to-paint seam with participant stereotypes without adding another identity. Define language-neutral fixtures and established-lane implementations for deterministic participant headers, stereotypes and groups, lifelines, messages, notes, activation bars, nested control frames and branches, explicit create/destroy lifecycles, ordering, geometry, and stable validation failures. Paint backends and rendering remain separate consumers."
+      "notes": "Discovered in the collision-checked 6e0a40b7a6 inventory after merged PRs #10236, #10242, #10247, and #10253 materialized Rust diagram-layout-sequence as a new authority-free identity without a capability manifest. Merged PRs #10259, #10263, #10269, #10274, #10280, #10286, #10293, and #10298 extend the same Mermaid lexer/parser, diagram-IR, layout, and diagram-to-paint seam with participant stereotypes, half arrows, central connections, autonumber ranges, rect colors, actor links, actor properties, and details references without adding identities. Merged PRs #10305 and #10310 add accessibility title and description metadata, including multiline parsing and paint projection, through that same deterministic parse, IR, layout, and paint seam. Define language-neutral fixtures and established-lane implementations for deterministic participant headers, stereotypes and groups, lifelines, messages and links, notes, activation bars, nested control frames and branches, explicit create/destroy lifecycles, numbering, styling, ordering, geometry, accessibility metadata, and stable validation failures. Paint backends and rendering remain separate consumers."
     },
     {
       "id": "mosaic-app-runtime-portable-conformance",
@@ -2505,6 +2509,137 @@
       "pr_number": null,
       "selection_blocked": true,
       "notes": "Discovered in the collision-checked 6e0a40b7a6 inventory after merged PR #10248 added Rust smart-home-synology-snapshot-host without a capability manifest. This concrete production composition checks exact Human Approval before effects, resolves a bounded sealed-Vault credential envelope, opens one isolated Surveillance Station session, verifies snapshot permission and the exact installed camera, registers a reviewed pinned snapshot endpoint only in zeroizing process-local state, delivers one bounded image through production SystemTime, OS CSPRNG, TCP, TLS, and the native media executor, and removes the endpoint and logs out on every outcome. Review the minimum Vault, time, entropy, network, TLS, credential, session, broker, and runtime authority, cleanup, redaction, and platform evidence. Keep deterministic discovery, request planning, bounded response validation, authorization order, and cleanup fixtures in portable owners. This native-runtime item is excluded from autonomous parity selection."
+    },
+    {
+      "id": "mosaic-app-bindings-generated-wrapper-review",
+      "title": "Review generated Mosaic native host bindings",
+      "status": "pending",
+      "depends_on": ["mosaic-app-runtime-portable-conformance", "mosaic-app-capi-wrapper-native-abi-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-checked c12372bc8784 inventory after merged PR #10257 added Rust mosaic-app-bindings without a capability manifest. Merged PRs #10270, #10275, #10279, and #10284 extend its generated Compose/JNA, SwiftUI/C-loader, XAML NativeLibrary, Flutter FFI, and Qt QLibrary hosts; #10261, #10290, #10294, and #10299 extend the native emitters and artifact-builder integration. Merged PRs #10304 and #10308 add customizable Qt Controls styling and collision-safe signal-name generation without adding identities. Review opaque runtime-handle and returned-buffer ownership, dynamic-library and environment discovery, event sequencing, JSON decoding, generated-source reproducibility, target build evidence, and truthful capability metadata. Keep the deterministic Mosaic protocol with the portable runtime owner; do not manufacture fifteen reimplementations of generated native wrappers. This wrapper-applicability review is excluded from autonomous parity selection."
+    },
+    {
+      "id": "smart-home-axis-snapshot-host-native-authority-review",
+      "title": "Review the authorized Axis snapshot host native-authority exception",
+      "status": "pending",
+      "depends_on": ["smart-home-camera-media-portable-core-conformance", "smart-home-camera-media-http-executor-native-authority-review", "smart-home-axis-vapix-native-authority-review", "vault-leases-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-checked c12372bc8784 inventory after merged PR #10255 added Rust smart-home-axis-snapshot-host without a capability manifest. The concrete host requires exact Human Approval before Vault or network effects, validates the installed camera and probed JPEG capability, resolves a bounded sealed credential, uses production SystemTime and OS CSPRNG, and transiently custodies Basic or Digest material while executing one reviewed-host, pinned-socket TLS request with cleanup on every outcome. Review the minimum Vault, time, entropy, network, TLS, credential, broker, and runtime authority, origin pinning, cleanup, redaction, and platform evidence. Keep entity, endpoint, authorization-order, bound, image-validation, and stable-error fixtures in portable owners. This native-runtime item is excluded from autonomous parity selection."
+    },
+    {
+      "id": "smart-home-pairing-transaction-portable-conformance",
+      "title": "Fixture and port recoverable smart-home pairing transactions",
+      "status": "pending",
+      "depends_on": ["smart-home-runtime-retained-identity-migration-portable-conformance", "vault-sealed-store-portable-core-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-checked c12372bc8784 inventory after merged PRs #10276 and #10288 added expected-revision pairing completion and the authority-free Rust smart-home-pairing-transaction identity without a capability manifest. Merged PR #10300 migrates the Hue pairing service onto this recoverable transaction contract without adding an identity, exercising prepared-write recovery, exact revision completion, rollback, and cleanup against the concrete native host. Define language-neutral fixtures and established-lane implementations for prepared, Vault-written, runtime-committed, and cleanup-complete recovery; secret-free journals; transaction-bound opaque references; collision-safe writes; exact revision CAS; idempotent completion, rollback, and cleanup; partial-reference retention; and no-mutation failures over injected StorageBackend, SealedStore, and runtime-store seams. Clock, entropy, credential custody, vendor transport, and backend durability remain injected or native."
+    },
+    {
+      "id": "smart-home-reolink-snapshot-host-native-authority-review",
+      "title": "Review the authorized Reolink snapshot host native-authority exception",
+      "status": "pending",
+      "depends_on": ["smart-home-camera-media-portable-core-conformance", "smart-home-camera-media-http-executor-native-authority-review", "smart-home-reolink-portable-core-extraction-and-conformance", "vault-leases-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-checked c12372bc8784 inventory after merged PR #10267 added Rust smart-home-reolink-snapshot-host without a capability manifest. The concrete host requires exact Human Approval before Vault or network effects, validates one installed online and awake physical-channel camera, resolves a bounded credential envelope, uses production SystemTime and OS CSPRNG, and retains percent-encoded credentials and the reviewed pinned HTTPS endpoint only in zeroizing process-local memory with cleanup on every result. Review minimum Vault, time, entropy, network, TLS, credential, broker, and runtime authority, cleanup, redaction, and platform evidence. Keep model, physical-channel, entity, endpoint, ordering, bounds, and stable-error fixtures in portable owners. This native-runtime item is excluded from autonomous parity selection."
+    },
+    {
+      "id": "vault-pm-storage-portable-conformance",
+      "title": "Fixture and port the Vault password-manager storage contract",
+      "status": "pending",
+      "depends_on": ["vault-pm-format-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-checked c12372bc8784 inventory after merged PR #10266 added the empty-capability Rust vault-pm-storage identity and its language-neutral VLT-PM02 fixture. Define established-lane implementations for opaque locators and bounded ciphertext, exact get and stat, immutable put, ordered pagination, optional deletion and change hints, closed redacted errors, deterministic in-memory and fault stores, ambiguous-after-commit, stale and duplicate listing, corrupt-read behavior, and the reusable adapter conformance suite. Provider authentication, filesystem and network effects, native consistency, retries, caching, publication, merge, and garbage collection remain adapter or higher-layer work."
+    },
+    {
+      "id": "vault-pm-domain-portable-conformance",
+      "title": "Fixture and port the Vault password-manager domain model",
+      "status": "pending",
+      "depends_on": ["vault-records-portable-conformance", "vault-pm-format-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-checked c12372bc8784 inventory after merged PR #10282 added the empty-capability Rust vault-pm-domain identity and #10297 bounded its observed-set retention. Merged PR #10312 exposes deterministic retained-value, add-operation, and removal-tombstone iteration so persistent codecs can round-trip losslessly without resurrecting removed membership. Define language-neutral fixtures and established-lane implementations for opaque IDs, validated item documents, bounded observed-remove membership and tombstones, deterministic favorite-register merge, delete/edit and whole-record conflict preservation, lossless persistence state, causal-stability-only compaction, overflow rejection, typed projections, and default views that omit plaintext secrets. Clock, entropy, storage, transport, cryptography, device keys, and repository causality remain caller-supplied or native."
+    },
+    {
+      "id": "vault-records-portable-conformance",
+      "title": "Fixture and port canonical Vault record envelopes",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Newly surfaced while classifying merged PR #10285's redaction hardening of the existing empty-capability Rust vault-records singleton. Define language-neutral fixtures and established-lane implementations for canonical typed record envelopes, exact content-type and version handling, opaque forward compatibility, strict bounded decoding, deterministic canonical-CBOR encoding, value-redacted summaries and diagnostic formatting, secret-field zeroization hooks, and stable attacker-input-free failures. Encryption, storage, credential custody, and host rendering remain outside this pure record contract."
+    },
+    {
+      "id": "vault-sealed-store-portable-core-conformance",
+      "title": "Extract and port the deterministic Vault sealed-store core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Newly surfaced while classifying merged PRs #10272, #10288, and #10289 in the existing mixed vault-sealed-store package. Extract language-neutral fixtures for manifest and envelope validation, source-marked password-derived versus custody-injected KEKs, address-bound AAD, collision-safe conditional writes, key-rotation plans, seal and unseal state transitions, exact revisions, redacted status and envelope summaries, and stable no-mutation failures over injected storage, clock, entropy, and cryptographic operations. Concrete entropy, trusted time, cryptography, key custody, plaintext memory, and backend effects remain separately reviewed native authority."
+    },
+    {
+      "id": "vault-sealed-store-native-authority-review",
+      "title": "Review Vault sealed-store entropy, time, and key-custody authority",
+      "status": "pending",
+      "depends_on": ["vault-sealed-store-portable-core-conformance", "capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Review the existing Rust vault-sealed-store package's OS CSPRNG, SystemTime, plaintext, DEK and KEK custody, zeroization, cryptographic execution, and injected backend effects after its deterministic core is extracted. Merged PR #10272 adds custody-injected root KEKs, while the legacy capability profile declares only os_random despite direct SystemTime reads. Require truthful structured time, entropy, memory, key, and backend authority, bounded redacted failures, and platform evidence. Do not manufacture all-language native custody or entropy hosts; this native-runtime item is excluded from autonomous selection."
+    },
+    {
+      "id": "smart-home-hue-pairing-service-native-authority-review",
+      "title": "Review the Hue pairing-service native-authority exception",
+      "status": "pending",
+      "depends_on": ["smart-home-pairing-transaction-portable-conformance", "vault-sealed-store-native-authority-review", "rust-network-substrate-capability-truthfulness", "smart-home-lan-http-native-executor-consolidation"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Newly surfaced while classifying the existing Rust smart-home-hue-pairing-service singleton and the recoverable transaction work in merged PRs #10276 and #10288. The concrete service owns LAN TCP and TLS, actor-runtime effects, CSPRNG, sealed credential writes, and runtime mutation but lacks a capability manifest. Merged PR #10300 composes the portable recoverable transaction into this host while leaving LAN transport, entropy, credential custody, sealed storage, runtime mutation, and platform authority native. Review physical-presence approval, exact endpoint and origin binding, entropy, credential custody, network, TLS, clock, actor, and runtime authority, cleanup, redaction, and platform evidence. Keep recovery and transaction semantics in the portable pairing owner. This native-runtime item is excluded from autonomous parity selection."
+    },
+    {
+      "id": "state-machine-tokenizer-and-markup-portable-conformance",
+      "title": "Fixture and port state-machine tokenizer and markup contracts",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Newly surfaced during the post-#10264 no-unowned-gap audit of the existing Rust state-machine-tokenizer and state-machine-markup codec family. Merged PR #10302 adds exact script end-tag EOF behavior through this tokenizer/markup seam and the dependent HTML frontend without adding a package identity. Define language-neutral fixtures and established-lane implementations for deterministic tokenizer profiles over injected effectful state machines, typed markup serialization and deserialization, schema and transition validation, exact stable errors, round trips, hostile inputs, and explicit resource bounds. Require empty truthful capability manifests for pure members; runtime effects, files, transport, and native hosts remain injected or separately owned."
+    },
+    {
+      "id": "vault-pm-storage-storage-core-portable-conformance",
+      "title": "Fixture and port the Vault storage-core adapter contract",
+      "status": "pending",
+      "depends_on": ["vault-pm-storage-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-checked d46de7b34e inventory after merged PR #10301 added the empty-capability Rust vault-pm-storage-storage-core identity. Define language-neutral fixtures and established-lane implementations for restart-stable opaque locator binding, lowercase-hex bucket and object mapping, exact immutable create, replay, and corruption classification, bucket-bound fixed-width cursors, ordered pagination, revision-checked physical deletion, ambiguous-after-commit handling, malformed backend responses, and payload-free closed error translation over an injected storage backend. Filesystem, network, provider authentication, native durability, and host retry policy remain adapter-host concerns rather than authority of this pure contract."
+    },
+    {
+      "id": "vault-pm-repository-portable-conformance",
+      "title": "Fixture and port the verified immutable Vault repository",
+      "status": "pending",
+      "depends_on": ["vault-pm-format-portable-conformance", "vault-pm-storage-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-checked d46de7b34e inventory after merged PR #10307 added the empty-capability Rust vault-pm-repository identity and language-neutral VLT-PM04 contract. Define established-lane implementations and fixtures for domain-separated opaque addressing, dependency-ordered immutable publication and read-back, mandatory injected commit and announcement verification, exact object-ID checks, bounded DAG reconstruction, caller-pinned heads, deterministic ancestry history, withholding and device-counter equivocation detection, ambiguous-write retry, and conservative plan-only garbage collection with closed redacted errors. Reuse the portable format and storage contracts plus established pure HMAC-SHA256 and SHA-256 behavior. Filesystem, provider clients, clocks, entropy, device keys, decryption, signature authority, physical deletion, and unlocked-host policy remain injected or native."
+    },
+    {
+      "id": "lua-in-memory-data-store-engine-clock-authority-truthfulness",
+      "title": "Inject clock authority into the Lua data-store engine",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the post-#10264 security audit of the pending Lua HyperLogLog build closure. in_memory_data_store_engine defaults directly to os.time() while its capability manifest is empty, and the facade claims no clock access; tests mask both the missing HyperLogLog rock and the ambient clock through source-path injection. Make time fully caller-injected or declare a truthful structured clock boundary, add deterministic time and neutral installed-runtime fixtures, and only then unblock the standalone HyperLogLog closure. Network, filesystem, process, and credential authority remain absent."
     }
   ]
 }

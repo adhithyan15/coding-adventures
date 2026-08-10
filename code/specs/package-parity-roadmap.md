@@ -1198,6 +1198,117 @@ derivation, encryption, signatures, secret custody, and synchronization stay
 outside the pure format layer. This independent new owner does not displace the
 in-progress shared Lua parser prerequisite.
 
+PR #10264 then merged externally as `c12372bc8784` after all 19 required
+checks completed successfully or were skipped. The collision-checked schema-3
+refresh at that exact revision contains 1,284 established identities and 4,440
+package slots across 15 lanes, with 173 high-consensus packages and 269 missing
+slots, 834 singletons and 11,676 missing singleton slots, 638 Rust singletons,
+zero canonical collisions, and zero unknown buckets. The exact delta from
+`5e1304f064` is six one-slot Rust identities, with no removals or normalization
+collisions:
+
+- `mosaic-app-bindings` is generated native host-wrapper material over the
+  portable Mosaic runtime and C ABI. Its dependency-blocked applicability
+  review owns dynamic library loading, environment discovery, foreign buffer
+  lifetimes, generated source, and Compose, SwiftUI, XAML, Flutter, and Qt
+  platform evidence rather than demanding fifteen wrapper reimplementations.
+- `smart-home-axis-snapshot-host` and
+  `smart-home-reolink-snapshot-host` are exact Human Approval, sealed-Vault,
+  SystemTime, OS-CSPRNG, transient-credential, camera-media, and pinned TCP/TLS
+  composition hosts. Separate dependency-blocked native reviews own their
+  authority and platform evidence while portable owners retain entity,
+  endpoint, authorization-order, request, bound, cleanup, and redaction
+  fixtures.
+- `smart-home-pairing-transaction` is a deterministic recoverable state machine
+  over injected storage, sealed-store, and runtime-store seams. Its portable
+  owner covers secret-free journals, transaction-bound references,
+  expected-revision CAS, idempotent recovery and rollback, collision failures,
+  and no-mutation guarantees.
+- `vault-pm-storage` is the empty-capability VLT-PM02 immutable object-store
+  contract with language-neutral fixtures, deterministic in-memory and fault
+  models, and a reusable adapter suite. Provider authentication, filesystem,
+  and network effects remain outside that portable owner.
+- `vault-pm-domain` is the empty-capability VLT-PM03 merge, conflict,
+  observed-set, tombstone, compaction, and redacted-view model. Its portable
+  owner depends on the pure Vault record and format contracts while clocks,
+  storage, transport, cryptography, and device keys remain injected.
+
+The same refresh assigns identity-neutral changes instead of hiding them:
+Mermaid sequence half arrows, central connections, autonumber ranges, rect
+colors, actor links/properties, and details references extend the sequence
+pipeline owner; seven HTML tree-recovery tranches extend the HTML frontend
+owner; Mosaic native-emitter and artifact-builder changes extend the generated
+wrapper review; and Vault record redaction plus sealed-store custody/coverage
+work gains explicit portable-record, portable sealed-core, and native
+entropy/time/key-custody owners. A separate state-machine tokenizer/markup
+owner records the existing pure family exposed by this no-unowned-gap pass.
+The security audit also records the Lua in-memory data-store engine's ambient
+`os.time()` use despite its empty capability profile, and makes that injection
+or capability-truthfulness repair a prerequisite of the HyperLogLog BUILD
+closure.
+
+The dependency/leverage pass selects
+`build-file-lua-lattice-transitive-closure` at `c12372bc8784`. One coherent
+`lattice_parser -> lattice_ast_to_css -> lattice_transpiler` chain repairs three
+successive packages and six Unix/Windows standalone front doors by installing
+the exact checked-in directed-graph, state-machine, grammar-tools, lexer,
+lattice-lexer, parser, and lattice-parser rocks in leaf-to-root order with
+dependency fetching disabled. JSON value remains the smaller one-package
+follow-up behind the now-merged parser/lexer prerequisite, and data-store stays
+blocked until its clock boundary is truthful.
+
+Clean installed-runtime validation exposed one deeper Lattice boundary that
+source-path Busted tests had hidden: deployed lexer and parser rocks walked out
+of the LuaRocks tree looking for repository grammar files. The same tranche now
+ships generated Lua payloads of the canonical language-neutral token and parser
+grammars, locks them to the canonical bytes with drift tests, removes the two
+runtime filesystem claims, and runs neutral-directory installed smokes after
+all six build front doors. The canonical fixtures remain the specification;
+the payloads are deployable checked-in projections, not a second grammar.
+The final trust-boundary review also made the transpiler's direct parser import
+an explicit rockspec dependency instead of relying on the AST-to-CSS package's
+transitive edge. After rebasing, a brand-new isolated tree rebuilt all nine
+rocks with fetching disabled and passed the installed transpiler suite and
+end-to-end smoke.
+
+Before publication, the collision-checked schema-3 inventory was refreshed
+again at `d46de7b34e`. It contains 1,286 established identities and 4,442
+package slots across the same 15 lanes, with 173 high-consensus packages and
+269 missing slots, 836 singletons and 11,704 missing singleton slots, 640 Rust
+singletons, zero canonical collisions, and zero unknown buckets. The exact
+delta from `c12372bc8784` is two one-slot Rust identities:
+
+- `vault-pm-storage-storage-core` is an empty-capability pure adapter over an
+  injected storage backend. Its portable owner depends on VLT-PM02 storage and
+  covers opaque locator binding, immutable create/replay/corruption outcomes,
+  scoped cursors, pagination, revision deletion, ambiguous commits, and closed
+  errors; filesystem, network, provider, and native durability stay outside.
+- `vault-pm-repository` is the empty-capability VLT-PM04 immutable repository.
+  Its portable owner depends on the format and storage contracts and covers
+  opaque addressing, ordered publication and read-back, injected verification,
+  bounded DAG reconstruction, pinned heads, ancestry, withholding and
+  equivocation detection, retry, and plan-only garbage collection. Keys,
+  clocks, entropy, decryption, signatures, providers, and deletion remain
+  injected or native.
+
+The intervening merges add no other identity: #10300 supplies concrete Hue
+evidence for the portable pairing transaction and its native host review;
+#10302 extends the tokenizer/markup and HTML frontend seam; #10304 and #10308
+extend the Mosaic generated Qt wrapper review; #10305 extends the Mermaid
+sequence accessibility fixtures; and #10303/#10306 change Persian curriculum
+data. None overlaps the Lua files or changes the leverage ranking, so the
+single in-progress Lattice tranche remains selected.
+
+The final branch base advanced through merged PRs #10310, #10312, and #10311
+to `61cdb3ef14`. No package directory was added or removed, and a fresh
+collision-checked report keeps the inventory at 1,286 identities, 4,442 slots,
+836 singletons, 11,704 singleton gaps, 640 Rust singletons, zero collisions,
+and zero unknown buckets. #10310 extends multiline Mermaid accessibility in
+the sequence owner, #10311 extends exact plaintext diagnostics in the HTML
+frontend, and #10312 adds lossless retained observed-set persistence to the
+Vault domain owner. These identity-neutral changes do not alter the selected
+Lua tranche.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
@@ -1205,25 +1316,25 @@ reviewed native-host exceptions and are not selectable parity work. ONVIF is
 excluded from this parity tranche. Mixed smart-home packages enter the backlog
 only through their portable cores and shared language-neutral fixtures.
 
-The August 2 lane audit is:
+The August 9 lane audit at `61cdb3ef14` is:
 
 | Established lane | Packages present | High-consensus gaps | Rust/Python-core coverage |
 |---|---:|---:|---:|
-| C# | 196 | 0 | 47.5% |
-| Dart | 79 | 101 | 18.6% |
+| C# | 197 | 0 | 47.8% |
+| Dart | 80 | 101 | 18.9% |
 | Elixir | 276 | 0 | 69.3% |
-| F# | 195 | 0 | 47.5% |
+| F# | 196 | 0 | 47.8% |
 | Go | 292 | 0 | 72.4% |
-| Haskell | 203 | 2 | 48.8% |
-| Java | 126 | 58 | 31.0% |
-| Kotlin | 125 | 58 | 31.0% |
+| Haskell | 204 | 2 | 49.1% |
+| Java | 128 | 57 | 31.5% |
+| Kotlin | 127 | 57 | 31.5% |
 | Lua | 251 | 0 | 63.3% |
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 989 | 0 | 100% |
+| Rust | 1050 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
-| TypeScript | 439 | 0 | 82.2% |
+| TypeScript | 440 | 0 | 82.2% |
 
 These are structural counts, not conformance claims. The full review queue must
 cover all 15 rows even when a lane has zero gaps in the current

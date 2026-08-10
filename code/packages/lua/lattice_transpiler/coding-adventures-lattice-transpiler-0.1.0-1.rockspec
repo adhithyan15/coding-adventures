@@ -8,6 +8,7 @@ description = {
 }
 dependencies = {
   "lua >= 5.1",
+  "coding-adventures-lattice-parser",
   "coding-adventures-lattice-ast-to-css",
 }
 build = {
