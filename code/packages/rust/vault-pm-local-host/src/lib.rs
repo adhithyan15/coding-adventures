@@ -1,4 +1,4 @@
-//! Secure platform roots and cross-process exclusion for the local vault host.
+//! Secure platform roots, atomic configuration, and process exclusion.
 
 #![deny(missing_docs)]
 
@@ -20,7 +20,9 @@ const APPLICATION_NAME: &str = "vault-pm";
 const STATE_DIRECTORY: &str = "application-state";
 const OBJECT_DIRECTORY: &str = "objects";
 const LOCK_FILE: &str = ".writer.lock";
+const CONFIG_FILE: &str = "vault-pm.toml";
 const MAX_PATH_BYTES: usize = 4096;
+const MAX_CONFIG_BYTES: usize = 64 * 1024;
 
 /// Stable, path-free local-host failure taxonomy.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -41,6 +43,12 @@ pub enum LocalHostError {
     InsecurePermissions,
     /// Another process currently owns the vault writer lock.
     AlreadyLocked,
+    /// A caller attempted to create configuration that already exists.
+    ConfigAlreadyExists,
+    /// Exact expected configuration did not match durable configuration.
+    ConfigConflict,
+    /// Configuration bytes were empty or exceeded the local V1 bound.
+    InvalidConfigBytes,
     /// The current target has no audited local-host implementation.
     UnsupportedPlatform,
 }
@@ -56,6 +64,9 @@ impl Display for LocalHostError {
             Self::InsecureOwner => "vault-pm local host: insecure owner",
             Self::InsecurePermissions => "vault-pm local host: insecure permissions",
             Self::AlreadyLocked => "vault-pm local host: already locked",
+            Self::ConfigAlreadyExists => "vault-pm local host: config already exists",
+            Self::ConfigConflict => "vault-pm local host: config conflict",
+            Self::InvalidConfigBytes => "vault-pm local host: invalid config bytes",
             Self::UnsupportedPlatform => "vault-pm local host: unsupported platform",
         })
     }
@@ -72,6 +83,7 @@ pub struct LocalVaultPaths {
     application_state_root: PathBuf,
     object_root: PathBuf,
     lock_file: PathBuf,
+    config_file: PathBuf,
 }
 
 impl LocalVaultPaths {
@@ -108,7 +120,13 @@ impl LocalVaultPaths {
         let application_state_root = data_root.join(STATE_DIRECTORY);
         let object_root = data_root.join(OBJECT_DIRECTORY);
         let lock_file = data_root.join(LOCK_FILE);
-        for path in [&application_state_root, &object_root, &lock_file] {
+        let config_file = config_root.join(CONFIG_FILE);
+        for path in [
+            &application_state_root,
+            &object_root,
+            &lock_file,
+            &config_file,
+        ] {
             validate_path(path)?;
         }
         Ok(Self {
@@ -118,6 +136,7 @@ impl LocalVaultPaths {
             application_state_root,
             object_root,
             lock_file,
+            config_file,
         })
     }
 
@@ -203,7 +222,10 @@ impl PreparedLocalVault {
         {
             let file = platform::open_private_lock(&self.paths.lock_file)?;
             match file.try_lock() {
-                Ok(()) => Ok(LocalWriterGuard { _file: file }),
+                Ok(()) => Ok(LocalWriterGuard {
+                    _file: file,
+                    config_file: self.paths.config_file.clone(),
+                }),
                 Err(error) => Err(map_lock_error(error)),
             }
         }
@@ -233,6 +255,60 @@ impl Debug for PreparedLocalVault {
 /// RAII ownership of the exclusive local writer lock.
 pub struct LocalWriterGuard {
     _file: File,
+    config_file: PathBuf,
+}
+
+impl LocalWriterGuard {
+    /// Load exact durable configuration bytes, or `None` when uninitialized.
+    ///
+    /// The read is capped at 65,537 bytes and rejects links, non-regular files,
+    /// foreign ownership, and broad permissions before returning bytes.
+    pub fn load_config(&self) -> Result<Option<Vec<u8>>, LocalHostError> {
+        #[cfg(any(unix, windows))]
+        {
+            platform::load_private_config(&self.config_file, MAX_CONFIG_BYTES)
+        }
+        #[cfg(not(any(unix, windows)))]
+        {
+            Err(LocalHostError::UnsupportedPlatform)
+        }
+    }
+
+    /// Atomically create first configuration without replacing an existing file.
+    pub fn create_config(&self, bytes: &[u8]) -> Result<(), LocalHostError> {
+        validate_config_bytes(bytes)?;
+        #[cfg(any(unix, windows))]
+        {
+            platform::create_private_config(&self.config_file, bytes, MAX_CONFIG_BYTES)
+        }
+        #[cfg(not(any(unix, windows)))]
+        {
+            Err(LocalHostError::UnsupportedPlatform)
+        }
+    }
+
+    /// Atomically replace configuration only when exact durable bytes match.
+    pub fn compare_exchange_config(
+        &self,
+        expected: &[u8],
+        replacement: &[u8],
+    ) -> Result<(), LocalHostError> {
+        validate_config_bytes(expected)?;
+        validate_config_bytes(replacement)?;
+        #[cfg(any(unix, windows))]
+        {
+            platform::compare_exchange_private_config(
+                &self.config_file,
+                expected,
+                replacement,
+                MAX_CONFIG_BYTES,
+            )
+        }
+        #[cfg(not(any(unix, windows)))]
+        {
+            Err(LocalHostError::UnsupportedPlatform)
+        }
+    }
 }
 
 impl Debug for LocalWriterGuard {
@@ -258,6 +334,14 @@ fn validate_path(path: &Path) -> Result<(), LocalHostError> {
         return Err(LocalHostError::InvalidPath);
     }
     Ok(())
+}
+
+fn validate_config_bytes(bytes: &[u8]) -> Result<(), LocalHostError> {
+    if bytes.is_empty() || bytes.len() > MAX_CONFIG_BYTES {
+        Err(LocalHostError::InvalidConfigBytes)
+    } else {
+        Ok(())
+    }
 }
 
 #[cfg(test)]
@@ -376,6 +460,104 @@ mod tests {
     }
 
     #[test]
+    fn configuration_create_load_and_compare_exchange_are_exact_and_durable() {
+        let directory = TestDirectory::new("config-roundtrip");
+        let paths = directory.paths();
+        let prepared = paths.prepare().unwrap();
+        let guard = prepared.try_acquire_writer().unwrap();
+        let initial = b"version = 1\nactive_vault = \"personal\"\n";
+        let replacement = b"version = 1\nactive_vault = \"work\"\n";
+
+        assert_eq!(guard.load_config().unwrap(), None);
+        guard.create_config(initial).unwrap();
+        assert_eq!(guard.load_config().unwrap().as_deref(), Some(&initial[..]));
+        assert_eq!(
+            guard.create_config(b"do not replace").unwrap_err(),
+            LocalHostError::ConfigAlreadyExists
+        );
+        assert_eq!(guard.load_config().unwrap().as_deref(), Some(&initial[..]));
+
+        guard.compare_exchange_config(initial, replacement).unwrap();
+        assert_eq!(
+            guard.load_config().unwrap().as_deref(),
+            Some(&replacement[..])
+        );
+        assert_eq!(
+            guard
+                .compare_exchange_config(initial, b"stale replacement")
+                .unwrap_err(),
+            LocalHostError::ConfigConflict
+        );
+        assert_eq!(
+            guard.load_config().unwrap().as_deref(),
+            Some(&replacement[..])
+        );
+        assert!(
+            !fs::read_dir(paths.config_root()).unwrap().any(|entry| entry
+                .unwrap()
+                .file_name()
+                .to_string_lossy()
+                .starts_with(".vault-pm.toml.tmp."))
+        );
+
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            assert_eq!(
+                fs::metadata(&paths.config_file)
+                    .unwrap()
+                    .permissions()
+                    .mode()
+                    & 0o777,
+                0o600
+            );
+        }
+        drop(guard);
+        let reopened = prepared.try_acquire_writer().unwrap();
+        assert_eq!(
+            reopened.load_config().unwrap().as_deref(),
+            Some(&replacement[..])
+        );
+    }
+
+    #[test]
+    fn configuration_rejects_unbounded_or_missing_compare_exchange_inputs() {
+        let directory = TestDirectory::new("config-bounds");
+        let prepared = directory.paths().prepare().unwrap();
+        let guard = prepared.try_acquire_writer().unwrap();
+        let oversized = vec![b'x'; MAX_CONFIG_BYTES + 1];
+
+        assert_eq!(
+            guard.create_config(b"").unwrap_err(),
+            LocalHostError::InvalidConfigBytes
+        );
+        assert_eq!(
+            guard.create_config(&oversized).unwrap_err(),
+            LocalHostError::InvalidConfigBytes
+        );
+        assert_eq!(
+            guard
+                .compare_exchange_config(b"expected", b"replacement")
+                .unwrap_err(),
+            LocalHostError::ConfigConflict
+        );
+        assert_eq!(
+            guard
+                .compare_exchange_config(b"", b"replacement")
+                .unwrap_err(),
+            LocalHostError::InvalidConfigBytes
+        );
+        assert_eq!(
+            guard.compare_exchange_config(b"expected", b"").unwrap_err(),
+            LocalHostError::InvalidConfigBytes
+        );
+        assert_eq!(guard.load_config().unwrap(), None);
+        let maximum = vec![b'x'; MAX_CONFIG_BYTES];
+        guard.create_config(&maximum).unwrap();
+        assert_eq!(guard.load_config().unwrap(), Some(maximum));
+    }
+
+    #[test]
     fn invalid_paths_and_diagnostics_are_closed() {
         assert_eq!(
             LocalVaultPaths::from_roots("relative", "/absolute/data", "/absolute/cache"),
@@ -425,6 +607,18 @@ mod tests {
             (
                 LocalHostError::AlreadyLocked,
                 "vault-pm local host: already locked",
+            ),
+            (
+                LocalHostError::ConfigAlreadyExists,
+                "vault-pm local host: config already exists",
+            ),
+            (
+                LocalHostError::ConfigConflict,
+                "vault-pm local host: config conflict",
+            ),
+            (
+                LocalHostError::InvalidConfigBytes,
+                "vault-pm local host: invalid config bytes",
             ),
             (
                 LocalHostError::UnsupportedPlatform,
@@ -496,5 +690,77 @@ mod tests {
             LocalHostError::UnsafeObjectType
         );
         assert_eq!(fs::read(target).unwrap(), b"target");
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn rejects_unsafe_existing_configuration_without_following_or_replacing_it() {
+        use std::os::unix::fs::{symlink, PermissionsExt};
+
+        let linked = TestDirectory::new("linked-config");
+        let linked_paths = linked.paths();
+        let linked_prepared = linked_paths.prepare().unwrap();
+        let linked_guard = linked_prepared.try_acquire_writer().unwrap();
+        let target = linked.0.join("outside-config");
+        fs::write(&target, b"preserve target").unwrap();
+        symlink(&target, &linked_paths.config_file).unwrap();
+        assert_eq!(
+            linked_guard.load_config().unwrap_err(),
+            LocalHostError::UnsafeObjectType
+        );
+        assert_eq!(
+            linked_guard.create_config(b"replacement").unwrap_err(),
+            LocalHostError::UnsafeObjectType
+        );
+        assert_eq!(fs::read(&target).unwrap(), b"preserve target");
+
+        let broad = TestDirectory::new("broad-config");
+        let broad_paths = broad.paths();
+        let broad_prepared = broad_paths.prepare().unwrap();
+        let broad_guard = broad_prepared.try_acquire_writer().unwrap();
+        fs::write(&broad_paths.config_file, b"preserve config").unwrap();
+        fs::set_permissions(&broad_paths.config_file, fs::Permissions::from_mode(0o640)).unwrap();
+        assert_eq!(
+            broad_guard.load_config().unwrap_err(),
+            LocalHostError::InsecurePermissions
+        );
+        assert_eq!(
+            broad_guard.create_config(b"replacement").unwrap_err(),
+            LocalHostError::InsecurePermissions
+        );
+        assert_eq!(
+            fs::read(&broad_paths.config_file).unwrap(),
+            b"preserve config"
+        );
+
+        let invalid = TestDirectory::new("invalid-config-bytes");
+        let invalid_paths = invalid.paths();
+        let invalid_prepared = invalid_paths.prepare().unwrap();
+        let invalid_guard = invalid_prepared.try_acquire_writer().unwrap();
+        fs::write(&invalid_paths.config_file, b"").unwrap();
+        fs::set_permissions(
+            &invalid_paths.config_file,
+            fs::Permissions::from_mode(0o600),
+        )
+        .unwrap();
+        assert_eq!(
+            invalid_guard.load_config().unwrap_err(),
+            LocalHostError::InvalidConfigBytes
+        );
+        fs::write(&invalid_paths.config_file, vec![b'x'; MAX_CONFIG_BYTES + 1]).unwrap();
+        assert_eq!(
+            invalid_guard.load_config().unwrap_err(),
+            LocalHostError::InvalidConfigBytes
+        );
+
+        let typed = TestDirectory::new("typed-config");
+        let typed_paths = typed.paths();
+        let typed_prepared = typed_paths.prepare().unwrap();
+        let typed_guard = typed_prepared.try_acquire_writer().unwrap();
+        fs::create_dir(&typed_paths.config_file).unwrap();
+        assert_eq!(
+            typed_guard.load_config().unwrap_err(),
+            LocalHostError::UnsafeObjectType
+        );
     }
 }
