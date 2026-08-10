@@ -316,3 +316,18 @@ own review flagged is closed.** `__gc_collect_minor_precise` — the direct entr
 entirely; only `__gc_safepoint`'s automatic dispatch enforced it. Fixed by moving the check to
 `__gc_collect_minor_precise` itself (the one shared entry point every caller goes through), so a
 future direct caller can't add a new bypass by forgetting to check.
+
+**Update (`aarch64-backend` 0.37.0): the aarch64 third of this follow-up is done too.**
+`field_store` emits the barrier call unconditionally, same reasoning as the LLVM third — zero
+register shuffling needed, since `ptr`/`value` already sit in X0/X1 (AAPCS64's own first two
+integer-arg registers) at that point. Verified via unit-level relocation-symbol assertions,
+confirmed load-bearing by reverting the emission. Unlike the LLVM third, **no real compiled-and-
+executed differential exists for this backend** — see `lessons.md` for the empirical
+investigation that found `gc-core-capi`'s `precise_walk.rs` conservatively scans an already-
+returned callee's vacated stack memory by design (`[sp, start_fp)`, "the collector's own
+frames"), making a "make it unreachable in a callee, then collect in the caller" differential
+structurally unreliable on this backend — reproduced identically with the already-shipped
+`__gc_collect_precise`, proving it's a property of the collector's stack walk, not this change.
+`x86_64-backend` remains open, and per the original scoping investigation is likely harder still
+to verify (no real linked-and-run test on this host at all, versus aarch64's weaker-than-LLVM-
+but-still-real unit-level coverage).
