@@ -17,9 +17,9 @@
 % family membership IS citable, so the rhyme relation is built from both:
 %
 %   1. `word_family($Word, $Family)` — the table below, listing each of the
-%      "-an" and "-at" families' core CVC (consonant-vowel-consonant) members
-%      as named, verbatim, by Reading Rockets (a WETA/PBS literacy education
-%      nonprofit).
+%      "-an", "-at", and "-ig" families' core CVC (consonant-vowel-consonant)
+%      members as named, verbatim, by a literacy-education source (Reading
+%      Rockets for "-an"/"-at"; Super Teacher Worksheets for "-ig").
 %   2. The general word-family PRINCIPLE, quoted verbatim from the same page
 %      in the rule's own `source` below: words in the same family "look alike
 %      at the end" because they "sound alike at the end."
@@ -36,8 +36,9 @@
 %     ? word_family(pan, $F)        % an        (which family "pan" belongs to)
 %     ? rhymes_with(pan, $W)        % fan, ran, man, tan, van, pan (itself too)
 %     ? rhymes_with(cat, $W)        % bat, fat, sat, rat, pat, mat, hat, cat
+%     ? rhymes_with(pig, $W)        % big, fig, dig, wig, pig
 %
-% Deliberately scoped to TWO families ("-an", "-at") with their plain
+% Deliberately scoped to THREE families ("-an", "-at", "-ig") with their plain
 % three-letter CVC members only, not the full 37-family phonics inventory a
 % complete phonics curriculum would need (Reading Rockets' own "-an" page also
 % lists longer blended and multi-syllable words — "plan", "scan", "bran",
@@ -56,9 +57,18 @@
 % "Then ask your child to name all the "kids" in the cat family, such as:
 % bat, fat, sat, rat, pat, mat, hat, flat." (https://www.readingrockets.org/
 % literacy-home/reading-101-guide-parents/your-kindergartener/phonological-
-% and-phonemic-awareness). Blends and longer words, and every family beyond
-% these two, are left for a later pass, the same "keep each slice small and
-% citable" discipline every prior curriculum item in this loop has used.
+% and-phonemic-awareness). The "-ig" family's six members are quoted verbatim
+% from a THIRD source, Super Teacher Worksheets (a widely-used K-5 phonics
+% teaching-resource site, the same `consensus` trust tier as the other two —
+% a secondary teaching reference, not a primary/official standards body): "This
+% word family unit words that end with -ig. ... Words include: big, pig, fig,
+% dig, wig and twig." (https://www.superteacherworksheets.com/word-family-ig.
+% html) — this library ships only the FIVE plain three-letter CVC members
+% (big, pig, fig, dig, wig), excluding "twig" (a four-letter consonant-blend
+% word), the same CVC-scope discipline "-an" and "-at" already established.
+% Blends and longer words, and every family beyond these three, are left for a
+% later pass, the same "keep each slice small and citable" discipline every
+% prior curriculum item in this loop has used.
 % `rhymes_with` includes a trivial self-pair (a word "rhymes with" itself,
 % since it shares its own family) — logically consistent, left unfiltered
 % rather than adding unverified exclusion logic for a case no worked example
@@ -84,6 +94,11 @@ table word_family {
     row (pat, at)
     row (mat, at)
     row (hat, at)
+    row (big, ig)
+    row (pig, ig)
+    row (fig, ig)
+    row (dig, ig)
+    row (wig, ig)
 
     source "pan, fan, ran, man, tan, van, plan, scan, bran, began"
     locator "https://www.readingrockets.org/topics/activities/articles/meet-word-families"
