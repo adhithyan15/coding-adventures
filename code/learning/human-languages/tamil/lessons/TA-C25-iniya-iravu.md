@@ -78,4 +78,4 @@ Tamil built its own phrase from its own vocabulary.
 phrase as Hindi, Kannada, Telugu, and Malayalam? (**No** — no such form
 turned up in the sources checked for this lesson; Tamil's standard phrase
 is fully native, breaking the pattern shared by all four other languages.)
-Next: connect that choice back to Chapter 1 and build two native alternatives.
+Next: the ா sign, and reading நான் off the page.

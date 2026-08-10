@@ -42,7 +42,11 @@
         "TA-W06-write-illai",
         "TA-W07-write-sari",
         "TA-W08-read-en",
-        "TA-W09-read-peyar"
+        "TA-W09-read-peyar",
+        "TA-W10-read-naan",
+        "TA-W11-read-niingal",
+        "TA-W12-read-eppadi",
+        "TA-W13-read-irukkirirgal"
       ],
       "before": [],
       "inline": [
@@ -884,7 +888,11 @@
         "TA-W06-write-illai",
         "TA-W07-write-sari",
         "TA-W08-read-en",
-        "TA-W09-read-peyar"
+        "TA-W09-read-peyar",
+        "TA-W10-read-naan",
+        "TA-W11-read-niingal",
+        "TA-W12-read-eppadi",
+        "TA-W13-read-irukkirirgal"
       ]
     },
     {

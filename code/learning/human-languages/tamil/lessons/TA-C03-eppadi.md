@@ -20,11 +20,6 @@ reviews_of: [TA-C02-enna]
 [PAUSE 2s] You met **என்ன** (*eṉṉa*, "what") in Chapter 2. Here is its sibling —
 and, like all of Tamil's question-words, it begins with **e-**.
 
-## The letters in this word
-
-*(Skim if you read Tamil.)* **எ** (*e*) + **ப்ப** (*ppa*, a doubled *p*) + **டி**
-(*ḍi*) → **எப்படி** (*eppaḍi*).
-
 ## The word, taken apart
 
 **எப்படி** (*eppaḍi*, "how") is native Dravidian, built on the interrogative base

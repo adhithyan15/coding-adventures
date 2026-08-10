@@ -20,11 +20,6 @@ reviews_of: [TA-C02-en-peyar]
 [PAUSE 2s] To ask a name you need "you" — and Tamil makes respect the same way
 French does.
 
-## The letters in this word
-
-*(Skim if you read Tamil.)* **நீ**: **ந** (dental *na*) + **ீ** (the long-*ī*
-sign) → *nī*. **நீங்கள்** adds **ங்கள்** (*ṅgaḷ*).
-
 ## The word, taken apart
 
 **நீ** (*nī*, familiar "you") ← Proto-Dravidian **\*nīn** — native, unrelated to

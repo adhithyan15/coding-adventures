@@ -879,14 +879,17 @@ describe("corpus regression", () => {
       // Chapter 16 replaces three legacy lessons with eight bounded steps.
       // Chapter 17 replaces four legacy lessons with eight bounded steps.
       // Chapter 18 replaces ten legacy lessons with nine bounded steps.
-      totalLessons: 1680,
+      // +4: TA-W10-read-naan, TA-W11-read-niingal, TA-W12-read-eppadi and
+      // TA-W13-read-irukkirirgal extend the writing strand over chapters 2-3's glyphs.
+      totalLessons: 1684,
       // Chapters 10 and 13 replace wide legacy tables with small singular-only
       // comparisons, so three more lessons move from sight to voice.
       // All seven Chapter-16 teaching steps are voice-first. Generating the book
       // exposed the terminal Chapter-15 and Chapter-16 recap tables as too wide,
       // so their same person-by-person comparisons now use speakable bullet rows.
       // All eight Chapter-17 lessons remain voice-first.
-      voice: 1100,
+      // +6, and it is the same six lessons that leave `sight` below.
+      voice: 1106,
       // -3 sight / +3 voice: TA-C02-en, -enna and -peyar dropped their "The letters in
       // this word" sections once TA-W08 and TA-W09 gave those glyphs a home in the
       // strand. Verified against the GENERATED manifest, not the source — all three now
@@ -895,7 +898,14 @@ describe("corpus regression", () => {
       // Chapter 18 removes its one remaining sight-only lesson. Publishing
       // Chapters 7-18 from the AST moves the Chapter-15 and Chapter-16 terminal
       // recaps from sight to voice without changing what either checkpoint asks.
-      sight: 522,
+      // -6 sight / +6 voice, the ch02/ch03 repeat of the TA-C02 move above: once
+      // TA-W10..TA-W13 gave chapters 2-3's glyphs a home, TA-C02-nii-niingal and all
+      // five ch3 lessons (eppadi, eppadi-irukkirirgal, naan, nalam, paravayillai)
+      // dropped their "The letters in this word" sections. Verified against the
+      // GENERATED manifest: every one flips reasons ["script-block"] ->
+      // ["no-visual-dependency"] and its detachableSegments list empties, so the
+      // script teaching genuinely left the lesson rather than a heading being renamed.
+      sight: 516,
       // +3 pen: the Tamil ch1 writing lessons. Rule 1 in src/modality.ts derives
       // this from the lesson TYPE alone — it says outright that it does not look at
       // the body — so all three record reasons ["writing-type","script-block"], and
@@ -903,9 +913,12 @@ describe("corpus regression", () => {
       // voice and drivable are unchanged, which is what a writing lesson should do
       // to this table.
       // +2: both new lessons are writing lessons.
-      pen: 58,
-      drivableLessons: 1100,
-      drivablePercent: 65,
+      // +4: TA-W10..TA-W13 are `type: writing` too, so rule 1 makes them pen even
+      // though all four are reading-only and give no stroke order.
+      pen: 62,
+      // +6: exactly the six lessons that moved sight -> voice; no other lesson changes.
+      drivableLessons: 1106,
+      drivablePercent: 66,
       trackCount: 22,
       chapterCount: 513,
       // Prerequisite order still costs a commuter 132 of the 965 ear-only lessons:
@@ -942,15 +955,31 @@ describe("corpus regression", () => {
       // Chapter 17's reachable voice-first prefix grows by five.
       // All nine redesigned Chapter-18 steps are reachable by ear. The terminal
       // Chapter-15 and Chapter-16 recaps now extend both prefixes by one.
-      drivablePrefixTotal: 913,
+      // +5 net, and TWO chapters move, in opposite directions. Tamil chapter 3 gains 6:
+      // its first lesson was sight, so nothing after it counted; with all six now voice
+      // the whole chapter is one ear-only run. Tamil chapter 25 LOSES 1 (2 -> 1), because
+      // the 3:1 cadence puts TA-W10 between its two speaking lessons rather than after
+      // them — the same mid-chapter placement TA-W06 already has in chapter 18. Chapters
+      // 27/29/31 take their writing lesson after the prefix, so they hold at 1/1/2.
+      drivablePrefixTotal: 918,
       // -2: chapters 21 and 23 each take a writing lesson and stop being ear-only.
       // Spreading the strand cannot happen without landing a pen lesson somewhere.
       // Spanish Chapters 10 and 13 are now fully drivable from their canonical ASTs.
       // Spanish Chapter 18 also becomes fully drivable. Replacing the two wide
       // terminal recap tables makes Spanish Chapters 15 and 16 fully drivable too.
-      fullyDrivableChapters: 327,
+      // -3, and it goes the WRONG way, which is worth stating plainly. Four Tamil
+      // chapters (25, 27, 29, 31) each gain one writing lesson and stop being fully
+      // drivable: -4. Tamil chapter 3 becomes fully drivable for the first time: +1.
+      // Net -3. That is the honest cost of paying the script debt where it belongs.
+      // Corpus `coreDrivable` does not move, but NOT because these blocks detach: rule 1
+      // classifies a `type: writing` lesson as pen without reading its body, so all four
+      // record `coreDrivable: false`. It holds because the six lessons that flipped were
+      // already core-drivable and the four new ones were never counted.
+      fullyDrivableChapters: 324,
       // Tamil chapter 2, Spanish chapter 13, and Spanish chapter 18 can now start by ear.
-      unstartableChapters: 140,
+      // -1: Tamil chapter 3 alone. It was unstartable because its first lesson needed
+      // eyes; it now starts by ear. No other chapter moves.
+      unstartableChapters: 139,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
     });

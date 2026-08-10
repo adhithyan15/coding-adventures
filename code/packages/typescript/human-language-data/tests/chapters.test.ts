@@ -328,9 +328,17 @@ describe("corpus snapshot", () => {
     // TA-W04-i-sign-write-nandri when the writing strand was spread out and its payoff
     // was not widened. Both are recorded in tamil/chapters.json's own notes.
     // Empty `assesses` lists on schema-v1 chapters remain unscored rather than pretending
-    // to pass. Chapter 10 now assesses all nine atoms in its terminal checkpoint, so
-    // the current typed-atom corpus still exposes 27 genuinely thin payoffs.
-    expect(report.summary.payoffsNotRepresentative).toBe(27);
+    // to pass. Chapter 10 now assesses all nine atoms in its terminal checkpoint.
+    // 27 -> 29, and both new members are Tamil, both for the chapter-13 reason. Extending
+    // the writing strand to cover chapters 2-3's glyphs dropped a script lesson into four
+    // previously all-speaking chapters, and none of those four payoffs was widened:
+    //   tamil:25 gained TA-W10's two atoms, so its payoff fell from 2/3 to 2/5 (0.40)
+    //   tamil:27 gained TA-W11's three atoms, so its payoff fell from 2/2 to 2/5 (0.40)
+    // tamil:29 and tamil:31 took the same kind of hit and did NOT join: each landed on
+    // exactly 2/4 (0.50), which clears the floor rather than falling below it. So this is
+    // +2 and not +4, and the difference is one atom of arithmetic, not a difference in
+    // kind. Both new members are recorded in tamil/chapters.json's own payoff notes.
+    expect(report.summary.payoffsNotRepresentative).toBe(29);
   });
 
   it("names the tracks whose chapter debt is already zero", () => {

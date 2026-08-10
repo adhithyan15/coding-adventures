@@ -1,8 +1,8 @@
 Tamil, chapter 25: Good Night.
-2 lessons. All 2 can be done entirely by ear.
+3 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
 இனிய இரவு (iṉiya iravu) — "good night," and Tamil breaking the pattern one more time.
 
 Warm-up.
@@ -24,10 +24,54 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does இனிய இரவு literally mean, and what root does இனிய come from? ("Sweet/pleasant night" — Proto-Dravidian in-, "sweet.") Does Tamil's "good night" share the same Sanskrit śubha rātri phrase as Hindi, Kannada, Telugu, and Malayalam? (No — no such form turned up in the sources checked for this lesson; Tamil's standard phrase is fully native, breaking the pattern shared by all four other languages.) Next: connect that choice back to Chapter 1 and build two native alternatives.
+What does இனிய இரவு literally mean, and what root does இனிய come from? ("Sweet/pleasant night" — Proto-Dravidian in-, "sweet.") Does Tamil's "good night" share the same Sanskrit śubha rātri phrase as Hindi, Kannada, Telugu, and Malayalam? (No — no such form turned up in the sources checked for this lesson; Tamil's standard phrase is fully native, breaking the pattern shared by all four other languages.) Next: the ா sign, and reading நான் (nāṉ) off the page.
 
 
-Lesson 2 of 2.
+Lesson 2 of 3.
+நான் (nāṉ) — the sign that stands after.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: the ா sign and Script you'll notice: build the word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Two places a vowel sign has sat so far: ி goes above and to the right, ை and ெ go to the left. Here is the third place, and it is the one you would have guessed first.
+
+Script you'll notice: the ா sign.
+ா is the sign for long ā, and this book's script data describes it plainly: a vertical stroke with a small top hook, written after the consonant.
+ம + ா becomes மா, said mā.
+That pairing is the example the data itself gives, on a letter you can already draw.
+So the three positions, all seen now:
+[a table of 4 rows, read aloud]
+sign: ா. sound: ā. where it sits: after the consonant.
+sign: ி. sound: i. where it sits: above and to the right.
+sign: ை. sound: ai. where it sits: to the left, spoken after.
+sign: ெ. sound: e. where it sits: to the left, spoken after.
+Notice also that ஆ, the independent long ā that opens a word, and ா, the sign, carry the same lengthening. One is a letter standing on its own; the other hangs off a consonant.
+
+Script you'll notice: build the word.
+[a table of 2 rows, read aloud]
+piece: நா, nā — ந with the ா sign after it, ந drawn in நன்றி.
+piece: ன், bare ṉ — ன under a puḷḷi, ன drawn there too, the alveolar n.
+நா, ன் becomes நான் (nāṉ).
+Two pieces and one new mark. நான் is "I," and its possessive is the என் ("my") you read in chapter 21 — so nāṉ and eṉ now both come off the page.
+
+Guided Practice.
+[pause 1 second]
+[your turn — read: மா — then நா — then நான் (nāṉ)]
+[pause 8 seconds for the answer]
+[your turn — say: "nāṉ" — "I"]
+[pause 8 seconds for the answer]
+[your turn — contrast: நா, றி, பெ — a sign after, a sign above-right, a sign before]
+[pause 8 seconds for the answer]
+[your turn — contrast: ஆம் and நான் (nāṉ) — the same long ā, once as a letter and once as a sign]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Read நான் (nāṉ). Where does ா sit relative to its consonant? (After it — a vertical stroke with a small top hook.) Which of Tamil's three n-letters closes the word, and what is the dot doing? (ன, the alveolar one; the puḷḷi removes its built-in a.) Next: good night, out of roots you already own.
+
+
+Lesson 3 of 3.
 நல்ல இரவு and இரவு வணக்கம் — old roots recombined.
 
 Warm-up.

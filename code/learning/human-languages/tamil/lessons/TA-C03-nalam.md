@@ -20,10 +20,6 @@ reviews_of: [TA-C03-naan]
 [PAUSE 2s] The word that answers "how are you?" — and a whole family of Tamil
 "good" grows from it.
 
-## The letters in this word
-
-**ந** (*na*) + **ல** (*la*) + **ம்** (*m*) → **நலம்** (*nalam*).
-
 ## The word, taken apart
 
 **நலம்** (*nalam*, "wellness, good, welfare") is native Dravidian, from the root

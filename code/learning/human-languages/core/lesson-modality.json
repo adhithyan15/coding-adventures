@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:8b3bca2d35966b86",
+  "sourceHash": "fnv1a64:9256ebdf7b2dd5b8",
   "summary": {
-    "totalLessons": 1680,
-    "voice": 1100,
-    "sight": 522,
-    "pen": 58,
-    "drivableLessons": 1100,
-    "drivablePercent": 65,
+    "totalLessons": 1684,
+    "voice": 1106,
+    "sight": 516,
+    "pen": 62,
+    "drivableLessons": 1106,
+    "drivablePercent": 66,
     "trackCount": 22,
     "chapterCount": 513,
-    "drivablePrefixTotal": 913,
-    "fullyDrivableChapters": 327,
-    "unstartableChapters": 140,
+    "drivablePrefixTotal": 918,
+    "fullyDrivableChapters": 324,
+    "unstartableChapters": 139,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -7548,12 +7548,12 @@
     },
     {
       "language": "tamil",
-      "lessonCount": 118,
-      "voice": 62,
-      "sight": 43,
-      "pen": 13,
-      "drivablePercent": 53,
-      "drivablePrefixTotal": 49,
+      "lessonCount": 122,
+      "voice": 68,
+      "sight": 37,
+      "pen": 17,
+      "drivablePercent": 56,
+      "drivablePrefixTotal": 54,
       "modalities": [
         "voice",
         "sight",
@@ -7587,8 +7587,8 @@
         {
           "chapter": 2,
           "lessonCount": 8,
-          "voice": 6,
-          "sight": 2,
+          "voice": 7,
+          "sight": 1,
           "pen": 0,
           "modalities": [
             "voice",
@@ -7605,17 +7605,23 @@
         {
           "chapter": 3,
           "lessonCount": 6,
-          "voice": 1,
-          "sight": 5,
+          "voice": 6,
+          "sight": 0,
           "pen": 0,
           "modalities": [
-            "voice",
-            "sight"
+            "voice"
           ],
-          "drivablePrefix": 0,
-          "firstNonVoiceLesson": "TA-C03-eppadi",
-          "drivable": false,
-          "drivableLessonIds": []
+          "drivablePrefix": 6,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C03-eppadi",
+            "TA-C03-eppadi-irukkirirgal",
+            "TA-C03-naan",
+            "TA-C03-nalam",
+            "TA-C03-paravayillai",
+            "TA-C03-practice"
+          ]
         },
         {
           "chapter": 4,
@@ -7977,19 +7983,20 @@
         },
         {
           "chapter": 25,
-          "lessonCount": 2,
+          "lessonCount": 3,
           "voice": 2,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
-          "drivablePrefix": 2,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "TA-W10-read-naan",
+          "drivable": false,
           "drivableLessonIds": [
-            "TA-C25-iniya-iravu",
-            "TA-C25-goodnight-alternatives"
+            "TA-C25-iniya-iravu"
           ]
         },
         {
@@ -8010,16 +8017,18 @@
         },
         {
           "chapter": 27,
-          "lessonCount": 1,
+          "lessonCount": 2,
           "voice": 1,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "TA-W11-read-niingal",
+          "drivable": false,
           "drivableLessonIds": [
             "TA-C27-maalai"
           ]
@@ -8043,16 +8052,18 @@
         },
         {
           "chapter": 29,
-          "lessonCount": 1,
+          "lessonCount": 2,
           "voice": 1,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "TA-W12-read-eppadi",
+          "drivable": false,
           "drivableLessonIds": [
             "TA-C29-kaalai-vanakkam"
           ]
@@ -8075,16 +8086,18 @@
         },
         {
           "chapter": 31,
-          "lessonCount": 2,
+          "lessonCount": 3,
           "voice": 2,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 2,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "TA-W13-read-irukkirirgal",
+          "drivable": false,
           "drivableLessonIds": [
             "TA-C31-matiya-vanakkam",
             "TA-C31-afternoon-greeting-root"
@@ -36304,21 +36317,18 @@
       "language": "tamil",
       "chapter": 2,
       "sequence": 140,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:88ed443a4d4d2cbc",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
+      "sourceHash": "fnv1a64:3b2dc0902dd010a2"
     },
     {
       "id": "TA-C02-enna",
@@ -36397,105 +36407,90 @@
       "language": "tamil",
       "chapter": 3,
       "sequence": 180,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1d3bf7b5cc442f13",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
+      "sourceHash": "fnv1a64:64342f32f2e5e919"
     },
     {
       "id": "TA-C03-eppadi-irukkirirgal",
       "language": "tamil",
       "chapter": 3,
       "sequence": 190,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0a99d5e4478d95d7",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
+      "sourceHash": "fnv1a64:b0842834ee732703"
     },
     {
       "id": "TA-C03-naan",
       "language": "tamil",
       "chapter": 3,
       "sequence": 200,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:aaef6470e27b2b3d",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
+      "sourceHash": "fnv1a64:048724de9db451e5"
     },
     {
       "id": "TA-C03-nalam",
       "language": "tamil",
       "chapter": 3,
       "sequence": 210,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9e274834464afc76",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
+      "sourceHash": "fnv1a64:45b455e9ad00a5f6"
     },
     {
       "id": "TA-C03-paravayillai",
       "language": "tamil",
       "chapter": 3,
       "sequence": 220,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a7e6694023ebed70",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
+      "sourceHash": "fnv1a64:8a3e39237641211e"
     },
     {
       "id": "TA-C03-practice",
@@ -37651,7 +37646,31 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3874dc4fc0a7afb5"
+      "sourceHash": "fnv1a64:93edd99cbcc26b5f"
+    },
+    {
+      "id": "TA-W10-read-naan",
+      "language": "tamil",
+      "chapter": 25,
+      "sequence": 785,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:4cd4df8950c7367a",
+      "detachableSegments": [
+        "Script you'll notice: the ா sign",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
     },
     {
       "id": "TA-C25-goodnight-alternatives",
@@ -37708,6 +37727,31 @@
       "sourceHash": "fnv1a64:9b58ae9e7d826a6f"
     },
     {
+      "id": "TA-W11-read-niingal",
+      "language": "tamil",
+      "chapter": 27,
+      "sequence": 815,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:32cfc1fb13f08bef",
+      "detachableSegments": [
+        "Script you'll notice: ங and ள",
+        "Script you'll notice: the ீ sign",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "TA-C28-pirpakal",
       "language": "tamil",
       "chapter": 28,
@@ -37762,6 +37806,30 @@
       "sourceHash": "fnv1a64:824054e5b5c328eb"
     },
     {
+      "id": "TA-W12-read-eppadi",
+      "language": "tamil",
+      "chapter": 29,
+      "sequence": 845,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:4f8ae089758b39e5",
+      "detachableSegments": [
+        "Script you'll notice: ட",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "TA-C30-maalai-vanakkam",
       "language": "tamil",
       "chapter": 30,
@@ -37814,6 +37882,30 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:aebc39e8e3bbc929"
+    },
+    {
+      "id": "TA-W13-read-irukkirirgal",
+      "language": "tamil",
+      "chapter": 31,
+      "sequence": 875,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:23241669861ea8d8",
+      "detachableSegments": [
+        "Script you'll notice: the ு sign",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
     },
     {
       "id": "TA-C32-iru",
