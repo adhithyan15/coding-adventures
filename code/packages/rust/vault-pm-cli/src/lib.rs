@@ -7,9 +7,10 @@ use coding_adventures_storage_fs::FsStorageBackend;
 use coding_adventures_vault_pm_application::{
     complete_generation_zero, prepare_generation_zero, rehydrate_prepared_init,
     AddItemRandomnessV1, ApplicationError, AuditVerificationV1, BootstrapLocator,
-    GenerationZeroPolicyV1, GenerationZeroRandomness, LocalStateStore, LocalStateStoreError,
-    LocalVaultStateV1, ReplaceItemRandomnessV1, V1ApplicationRepositoryFactory, VaultAccessV1,
-    VaultDoctorStateV1, VaultStatusStateV1, ADD_ITEM_RANDOM_BYTES, GENERATION_ZERO_RANDOM_BYTES,
+    GenerationZeroPolicyV1, GenerationZeroRandomness, ItemHistoryViewV1, LocalStateStore,
+    LocalStateStoreError, LocalVaultStateV1, ReplaceItemRandomnessV1,
+    V1ApplicationRepositoryFactory, VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1,
+    ADD_ITEM_RANDOM_BYTES, DEFAULT_ITEM_HISTORY_LIMIT, GENERATION_ZERO_RANDOM_BYTES,
     REPLACE_ITEM_RANDOM_BYTES,
 };
 use coding_adventures_vault_pm_application_storage_core::StorageCoreApplicationStore;
@@ -40,7 +41,7 @@ const PRODUCTION_KDF_MEMORY_KIB: u32 = 64 * 1024;
 const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm status [--json]\n  vault-pm audit verify\n  vault-pm doctor [--unlock]\n  vault-pm item add login\n  vault-pm item edit ITEM\n  vault-pm item list\n  vault-pm item show ITEM\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm status [--json]\n  vault-pm audit verify\n  vault-pm doctor [--unlock]\n  vault-pm item add login\n  vault-pm item edit ITEM\n  vault-pm item list\n  vault-pm item show ITEM\n  vault-pm history list ITEM\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -267,6 +268,9 @@ enum Command {
     ItemShow {
         item_id: ItemId,
     },
+    HistoryList {
+        item_id: ItemId,
+    },
     Help,
 }
 
@@ -296,6 +300,16 @@ where
         }
         "doctor" => parse_doctor(&values[1..]),
         "item" => parse_item(&values[1..]),
+        "history" => parse_history(&values[1..]),
+        _ => Err(CliFailure::InvalidCommand),
+    }
+}
+
+fn parse_history(arguments: &[String]) -> Result<Command, CliFailure> {
+    match arguments {
+        [action, item] if action == "list" => Ok(Command::HistoryList {
+            item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
+        }),
         _ => Err(CliFailure::InvalidCommand),
     }
 }
@@ -365,6 +379,7 @@ fn execute(command: Command, host: &dyn CliHost) -> Result<CliOutput, CliFailure
         Command::ItemEdit { item_id } => item_edit_login(host, prepared.paths(), &writer, item_id),
         Command::ItemList => item_list(host, prepared.paths(), &writer),
         Command::ItemShow { item_id } => item_show(host, prepared.paths(), &writer, item_id),
+        Command::HistoryList { item_id } => history_list(host, prepared.paths(), &writer, item_id),
         Command::Help => unreachable!("help returns before host access"),
     }
 }
@@ -549,6 +564,48 @@ fn item_show(
         .map_err(map_application)?
         .ok_or(CliFailure::NotFound)?;
     render_item(item)
+}
+
+fn history_list(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    item_id: ItemId,
+) -> Result<CliOutput, CliFailure> {
+    let (mut access, _) = authenticated_access(host, paths, writer)?;
+    let result = access
+        .as_unlocked()
+        .and_then(|session| session.item_history(item_id, DEFAULT_ITEM_HISTORY_LIMIT));
+    access.lock();
+    let history = result.map_err(map_application)?;
+    if history.is_empty() {
+        return Err(CliFailure::NotFound);
+    }
+    render_history(history)
+}
+
+fn render_history(history: Vec<ItemHistoryViewV1>) -> Result<CliOutput, CliFailure> {
+    let mut output = String::new();
+    for revision in history {
+        output.push_str(&revision.revision_id().to_user_string());
+        if let Some(item) = revision.redacted_item() {
+            output.push_str("\tlive\tparents=");
+            output.push_str(&revision.causal_parent_count().to_string());
+            output.push_str("\tupdated=");
+            output.push_str(&revision.advisory_time_ms().to_string());
+            output.push('\t');
+            output.push_str(item.schema.as_str());
+            output.push('\t');
+            output.push_str(&quoted(record_title(&item.record)));
+        } else {
+            output.push_str("\tdeleted\tparents=");
+            output.push_str(&revision.causal_parent_count().to_string());
+            output.push_str("\tdeleted=");
+            output.push_str(&revision.advisory_time_ms().to_string());
+        }
+        output.push('\n');
+    }
+    Ok(CliOutput::success(output))
 }
 
 fn record_title(record: &RedactedRecordView) -> &str {
@@ -1045,6 +1102,7 @@ fn map_native_local_host(error: LocalHostError) -> HostError {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use coding_adventures_vault_pm_domain::RevisionId;
     use std::collections::VecDeque;
     use std::fs;
     use std::path::PathBuf;
@@ -1216,6 +1274,9 @@ mod tests {
             vec!["item", "edit", "not-an-item-id"],
             vec!["item", "list", "extra"],
             vec!["item", "show", "not-an-item-id"],
+            vec!["history"],
+            vec!["history", "list", "not-an-item-id"],
+            vec!["history", "list", "not-an-item-id", "extra"],
             vec!["unlock"],
         ] {
             let output = run(arguments, &host);
@@ -1240,6 +1301,10 @@ mod tests {
         assert_eq!(
             parse(["item", "edit", canonical.as_str()]),
             Ok(Command::ItemEdit { item_id })
+        );
+        assert_eq!(
+            parse(["history", "list", canonical.as_str()]),
+            Ok(Command::HistoryList { item_id })
         );
     }
 
@@ -1371,6 +1436,25 @@ mod tests {
             .stdout()
             .contains(core::str::from_utf8(&updated_password).unwrap()));
 
+        let history_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let history = run(["history", "list", expected_id.as_str()], &history_host);
+        assert_eq!(history.exit_code(), ExitCode::Success, "{history:?}");
+        let lines = history.stdout().lines().collect::<Vec<_>>();
+        assert_eq!(lines.len(), 2);
+        assert!(lines[0].contains("\tlive\tparents=1\tupdated=1700000000000\t"));
+        assert!(lines[0].ends_with("vault/login/v1\t\"Updated account\""));
+        assert!(lines[1].contains("\tlive\tparents=0\tupdated=1700000000000\t"));
+        assert!(lines[1].ends_with("vault/login/v1\t\"Example account\""));
+        for line in lines {
+            let revision = line.split('\t').next().unwrap();
+            assert!(RevisionId::from_user_string(revision).is_ok());
+        }
+        for secret in [&password, &updated_password] {
+            assert!(!history
+                .stdout()
+                .contains(core::str::from_utf8(secret).unwrap()));
+        }
+
         let audit_host = TestHost::new(paths, [passphrase]);
         let audit = run(["audit", "verify"], &audit_host);
         assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
@@ -1400,6 +1484,11 @@ mod tests {
         assert_eq!(edit.exit_code(), ExitCode::Locked);
         assert!(edit.stdout().is_empty());
 
+        let wrong = TestHost::new(paths.clone(), [b"wrong passphrase".to_vec()]);
+        let history = run(["history", "list", missing_id.as_str()], &wrong);
+        assert_eq!(history.exit_code(), ExitCode::Locked);
+        assert!(history.stdout().is_empty());
+
         let correct = TestHost::new(paths, [b"correct passphrase".to_vec()]);
         let show = run(["item", "show", missing_id.as_str()], &correct);
         assert_eq!(show.exit_code(), ExitCode::NotFound);
@@ -1409,6 +1498,11 @@ mod tests {
         let edit = run(["item", "edit", missing_id.as_str()], &correct);
         assert_eq!(edit.exit_code(), ExitCode::NotFound);
         assert_eq!(edit.stderr(), "vault-pm: not found\n");
+
+        let correct = TestHost::new(root.paths(), [b"correct passphrase".to_vec()]);
+        let history = run(["history", "list", missing_id.as_str()], &correct);
+        assert_eq!(history.exit_code(), ExitCode::NotFound);
+        assert_eq!(history.stderr(), "vault-pm: not found\n");
     }
 
     #[test]

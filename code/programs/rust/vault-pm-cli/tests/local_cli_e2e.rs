@@ -139,6 +139,22 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert!(updated_transcript.contains("URL: none"));
     assert!(!updated_transcript.contains("e2e updated password"));
 
+    let (history_status, history_transcript) = run_unlock_in_pty(
+        &home,
+        &["history", "list", &item_id],
+        b"vault/login/v1\t\"Example account\"",
+    );
+    assert!(
+        history_status.success(),
+        "history list failed: {history_transcript}"
+    );
+    assert!(history_transcript.contains("\tlive\tparents=1\tupdated="));
+    assert!(history_transcript.contains("vault/login/v1\t\"Updated account\""));
+    assert!(history_transcript.contains("\tlive\tparents=0\tupdated="));
+    assert_transcript_excludes_secrets(&history_transcript);
+    assert!(!history_transcript.contains("e2e item password"));
+    assert!(!history_transcript.contains("e2e updated password"));
+
     assert_tree_excludes(&home.0, PASSPHRASE);
     assert_tree_excludes(&home.0, ITEM_PASSWORD);
     assert_tree_excludes(&home.0, UPDATED_ITEM_PASSWORD);
