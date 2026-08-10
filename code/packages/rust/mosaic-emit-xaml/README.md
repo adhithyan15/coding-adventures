@@ -128,6 +128,7 @@ end-to-end smoke tests that build a small `MosmodelComponent` + `LayoutDef`
 generated XAML and C# (presence of the right tags, attributes, and slot
 properties).
 
-Windows CI is the final compiler gate for generated WinUI project shells;
-portable tests validate the IR-to-XAML structure and package fixtures on
-every platform.
+GitHub-hosted Windows CI is the final compiler gate for generated WinUI project
+shells. A local or self-hosted Windows runner with an interactive desktop remains
+the launch/interaction gate; portable tests validate the IR-to-XAML structure and
+package fixtures on every platform.

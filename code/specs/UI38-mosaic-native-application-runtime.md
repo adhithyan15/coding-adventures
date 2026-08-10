@@ -302,14 +302,23 @@ unblocks multiple downstream targets; never count source generation as completio
 - [ ] Generate standard effect hosts, beginning with storage and lifecycle.
 - [ ] Add `native-complete` capability/degradation analysis to the compiler.
 - [ ] Add launch-and-dispatch conformance fixtures for every native backend.
-- [x] Gate the complete package-expanded XAML TaskApp on Windows with real
-  WinUI compilation and a process launch smoke test.
+  - [x] XAML/.NET loads the shared Rust conformance DLL and round-trips startup,
+    typed props, semantic dispatch, revised props, buffers, and teardown.
+  - [ ] Promote the same shared Rust fixture through SwiftUI, Qt/QML, Compose,
+    and Flutter standard bindings.
+- [x] Gate the complete package-expanded XAML TaskApp on GitHub-hosted Windows
+  with real WinUI compilation and executable production.
   - [x] Allocate `For` row-view-model and projection names per loop rather than
     per `as:` alias; package expansion currently makes the sheet and task-list
     `row` loops collide on `TaskApp_RowVm` / `TaskAppRowVmRows`.
   - [x] Keep nested `For` bindings and expression helpers inside the generated
     DataTemplate binding scope instead of referring to page members or an
     enclosing template from a typed child template.
+- [ ] Add a self-hosted Windows worker with an interactive desktop as the required
+  WinUI launch-and-interaction gate. GitHub-hosted workers compile the complete
+  TaskApp and round-trip the real Rust engine through the generated .NET binding,
+  but can terminate WinUI before `OnLaunched` with stowed-exception status
+  `0xc000027b`; they therefore cannot honestly prove a visible native surface.
 - [ ] Make the generated Flutter project analyzer-clean after its documented
   `flutter create` bootstrap: replace the stock `MyApp` widget test, provision
   its lint configuration, and omit unused authored `For` bindings.

@@ -23,6 +23,9 @@ explicit path the loader first checks symbols linked into the process, then trie
 For XAML, set `MOSAIC_APP_LIBRARY` to the application DLL path or place
 `mosaic_app.dll` beside the emitted project. The project copies native DLLs next
 to the unpackaged WinUI executable during its build.
+Windows CI compiles the exact generated binding with the shared
+`mosaic-app-conformance` DLL and verifies real startup, prop projection,
+semantic dispatch, revision application, buffer ownership, and teardown.
 
 For Flutter, set `MOSAIC_APP_LIBRARY` to the application library path. Without
 an explicit path the host checks symbols linked into the process, then the

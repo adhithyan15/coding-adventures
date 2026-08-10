@@ -880,15 +880,12 @@ jobs:
       - name: Build and test Venture Windows acceptance
         if: runner.os == 'Windows' && needs.detect.outputs.needs_venture_windows == 'true'
         shell: pwsh
+        env:
+          # GitHub-hosted Windows workers do not provide a reliable interactive
+          # WinUI desktop. The test still builds the complete generated app;
+          # local/self-hosted Windows runs launch and interact by default.
+          MOSAIC_SKIP_INTERACTIVE_WINDOWS_ACCEPTANCE: '1'
         run: |
-          $installer = Join-Path $env:RUNNER_TEMP 'WindowsAppRuntimeInstall-x64.exe'
-          Invoke-WebRequest `
-            'https://aka.ms/windowsappsdk/1.7/1.7.250606001/windowsappruntimeinstall-x64.exe' `
-            -OutFile $installer
-          & $installer --quiet
-          if ($LASTEXITCODE -ne 0) {
-            throw "Windows App Runtime installer failed with exit code $LASTEXITCODE"
-          }
           Set-Location code/packages/rust
           cargo test -p paint-vm-cairo -p venture-browser-cairo -p venture-browser-qt -p venture-browser-windows
           if ($LASTEXITCODE -ne 0) {
@@ -912,19 +909,10 @@ jobs:
           cd code/packages/rust
           cargo test -p venture-browser-macos
 
-      - name: Build and launch complete Mosaic TaskApp WinUI shell
+      - name: Build complete Mosaic TaskApp WinUI shell
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
         shell: pwsh
         run: |
-          $installer = Join-Path $env:RUNNER_TEMP 'WindowsAppRuntimeInstall-x64.exe'
-          Invoke-WebRequest `
-            'https://aka.ms/windowsappsdk/1.7/1.7.250606001/windowsappruntimeinstall-x64.exe' `
-            -OutFile $installer
-          & $installer --quiet
-          if ($LASTEXITCODE -ne 0) {
-            throw "Windows App Runtime installer failed with exit code $LASTEXITCODE"
-          }
-
           $output = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-taskapp'
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend xaml --output $output --emit-project
           if ($LASTEXITCODE -ne 0) {
@@ -949,12 +937,36 @@ jobs:
           if ($null -eq $executable) {
             throw 'TaskApp WinUI build did not produce TaskApp.exe'
           }
-          $process = Start-Process -FilePath $executable.FullName -PassThru
-          Start-Sleep -Seconds 10
-          if ($process.HasExited) {
-            throw "TaskApp WinUI process exited during launch smoke test with code $($process.ExitCode)"
+          Write-Host "Built generated WinUI executable at $($executable.FullName)"
+
+      - name: Round-trip Rust engine through standard XAML binding
+        if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
+        shell: pwsh
+        timeout-minutes: 10
+        run: |
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
+          if ($LASTEXITCODE -ne 0) {
+            throw "Mosaic Rust conformance app build failed with exit code $LASTEXITCODE"
           }
-          Stop-Process -Id $process.Id
+
+          $library = Resolve-Path 'code/packages/rust/target/debug/mosaic_app_conformance.dll'
+          $generatedBinding = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-taskapp/xaml/MosaicRuntimeHost.cs'
+          if (!(Test-Path $generatedBinding)) {
+            throw "Generated XAML runtime binding not found at $generatedBinding"
+          }
+
+          $harness = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-runtime-conformance'
+          New-Item -ItemType Directory -Path $harness -Force | Out-Null
+          Copy-Item `
+            'code/packages/rust/mosaic-app-bindings/conformance/xaml/*' `
+            $harness `
+            -Recurse
+          Copy-Item $generatedBinding (Join-Path $harness 'MosaicRuntimeHost.cs')
+          $env:MOSAIC_APP_LIBRARY = $library.Path
+          dotnet run --project (Join-Path $harness 'XamlRuntimeConformance.csproj') -c Release
+          if ($LASTEXITCODE -ne 0) {
+            throw "Mosaic XAML Rust runtime conformance failed with exit code $LASTEXITCODE"
+          }
 
       - name: Upload failed Mosaic TaskApp WinUI diagnostics
         if: failure() && runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'

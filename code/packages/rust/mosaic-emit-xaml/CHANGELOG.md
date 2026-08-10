@@ -2,6 +2,14 @@
 
 ## [Unreleased] — VC2-xaml Grid: WinUI value translation + nested-For + per-column widths
 
+### Fixed - Serviced Windows App Runtime
+
+Generated WinUI projects now pin Windows App SDK `1.8.260710003`, its required
+Windows SDK BuildTools `10.0.26100.4654`, and the matching 1.8 framework
+libraries. The Windows App SDK is bundled self-contained, removing the
+system-wide runtime installation prerequisite and insulating generated apps
+from machine runtime registration failures.
+
 ### Fixed - Typed-template helper ownership
 
 Generated `For` row view models now retain their owning component and expose
@@ -487,9 +495,8 @@ WindowsAppSDK refuses AnyCPU), and with `-Run` launches the .exe.
 
 ### Added — Per-project README
 
-Documents file roles, the `winget install
-Microsoft.WindowsAppRuntime.1.7` prerequisite, the expected cosmetic
-MSB4062 error, and the build/run commands.
+Documents file roles, self-contained Windows App SDK deployment, the expected
+cosmetic MSB4062 error, and the build/run commands.
 
 ### CLI
 
@@ -508,12 +515,10 @@ MSB4062 error, and the build/run commands.
   most AppxPackage MSBuild plumbing that requires Visual Studio.
   One cosmetic MSB4062 still fires at the very end of build; the
   .exe + dependencies are produced first.
-- `<WindowsAppSDKSelfContained>false</WindowsAppSDKSelfContained>`
-  (NOT true). The 1.7 NuGet's bundled `Microsoft.UI.Xaml.dll`
-  3.1.7.0 currently crashes with `0xc000027b` on initialization
-  when self-contained — switching to framework-dependent (relying
-  on system-installed runtime) is the only path that actually
-  launches.
+- `<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>` bundles the
+  pinned 1.8 WinUI framework libraries so generated hosts do not depend on a
+  separately registered machine runtime. The .NET runtime remains
+  framework-dependent.
 
 ### End-to-end verification
 
