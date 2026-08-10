@@ -144,10 +144,19 @@ candidate, rewrites history, or asks the host to round-trip plaintext. A later
 slice will add user-authored merged-document resolution after explicit field
 reveal.
 
+An unlocked session can explicitly reveal one exact reachable live revision.
+The application proves reachability through the same bounded verified history
+walk, rejects tombstones and missing revisions, and moves the authenticated
+document into an owned `Zeroizing<ItemDocument>`. That wrapper is neither
+printable nor cloneable and wipes the secret-bearing payload and tags on drop;
+the application never guesses which current, conflicted, or historical
+candidate a host intended.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
-credential store, or entropy source. User-authored conflict merging, explicit
-history reveal, export, audit, and doctor workflows land in the next slices.
+credential store, or entropy source. User-authored conflict merging, host field
+selection/copy policy, export, audit, and doctor workflows land in the next
+slices.
 There is no unchecked
 repository verification path: construction decrypts and
 authority-verifies the exact locally pinned certificate frame and object ID,
@@ -169,8 +178,8 @@ paths, and complete error translation.
 Search tests cover Unicode normalization, short queries, oversized safe-field
 fallback, exact collection filters, deterministic product ordering, every
 record schema's allowlist/denylist, secret exclusion, query/result bounds, and
-conflict closure. The exact Tarpaulin LLVM result is 2,204 of 2,315 production
-lines (95.21%). Add-item tests cover exact entropy partitioning and wiping,
+conflict closure. The exact Tarpaulin LLVM result is 2,213 of 2,324 production
+lines (95.22%). Add-item tests cover exact entropy partitioning and wiping,
 identity validation before local writes, parentless revision and complete
 catalog construction, ambiguous successful compare-exchanges, write-ahead
 publication ordering, ambiguous provider commits, failed final activation,

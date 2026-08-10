@@ -271,6 +271,30 @@ impl UnlockedVaultV1 {
             .collect()
     }
 
+    /// Explicitly reveal one reachable live revision inside an owned
+    /// wipe-on-drop wrapper.
+    ///
+    /// The exact revision must appear in a catalog reachable within the hard
+    /// history bound from a current head. Tombstones return `InvalidInput` and
+    /// unreachable revisions return `NotFound`. The wrapper deliberately has
+    /// no `Debug`, `Display`, or `Clone` implementation.
+    pub fn reveal_item_revision(
+        &self,
+        selected_revision: RevisionId,
+    ) -> Result<Zeroizing<ItemDocument>, ApplicationError> {
+        let selected = find_reachable_historical_candidate(
+            &self._keys,
+            self._repository.as_ref(),
+            &self.report,
+            self.active.vault_id(),
+            selected_revision,
+        )?;
+        let ItemState::Live(document) = selected.state() else {
+            return Err(ApplicationError::InvalidInput);
+        };
+        Ok(Zeroizing::new(document.as_ref().clone()))
+    }
+
     /// Add one new item through the exact crash-resumable publication state
     /// machine and return the resulting durable active owner state.
     ///
@@ -862,6 +886,7 @@ mod tests {
         FaultAction, FaultEffect, FaultInjectingObjectStore, InMemoryObjectStore, StoreOperation,
     };
     use coding_adventures_vault_records::{AnyRecord, Login, LOGIN_V1};
+    use coding_adventures_zeroize::Zeroize;
     use std::sync::{
         atomic::{AtomicBool, AtomicUsize, Ordering},
         Arc, Mutex,
@@ -2910,6 +2935,101 @@ mod tests {
             session.item_history(item_id, MAX_ITEM_HISTORY_LIMIT + 1),
             Err(ApplicationError::BoundExceeded)
         );
+    }
+
+    #[test]
+    fn reveal_item_revision_is_exact_reachable_live_and_zeroizing() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let add_randomness = add_item_randomness(0x92);
+        let item_id = add_randomness.item_id();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .add_item(
+            new_login_document(item_id, "Reveal original", "original-secret"),
+            500,
+            add_randomness,
+            &local,
+        )
+        .unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let original_revision = session.current_catalog.items[&item_id][0].revision_id();
+        session
+            .replace_item(
+                original_revision,
+                new_login_document(item_id, "Reveal current", "current-secret"),
+                501,
+                replace_item_randomness(0x93),
+                &local,
+            )
+            .unwrap();
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let current_revision = session.current_catalog.items[&item_id][0].revision_id();
+        let original = session.reveal_item_revision(original_revision).unwrap();
+        let AnyRecord::Login(login) = original.payload() else {
+            panic!("fixture must reveal a login")
+        };
+        assert_eq!(login.title, "Reveal original");
+        assert_eq!(login.password, "original-secret");
+
+        let mut current = session.reveal_item_revision(current_revision).unwrap();
+        let AnyRecord::Login(login) = current.payload() else {
+            panic!("fixture must reveal a login")
+        };
+        assert_eq!(login.password, "current-secret");
+        current.zeroize();
+        let AnyRecord::Login(login) = current.payload() else {
+            panic!("zeroized fixture must retain its record variant")
+        };
+        assert!(login.password.is_empty());
+        assert!(login.title.is_empty());
+        assert!(matches!(
+            session.reveal_item_revision(RevisionId::new([0x94; 32])),
+            Err(ApplicationError::NotFound)
+        ));
+
+        session
+            .delete_item(
+                current_revision,
+                502,
+                503,
+                delete_item_randomness(0x95),
+                &local,
+            )
+            .unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let tombstone_revision = session.current_catalog.items[&item_id][0].revision_id();
+        assert!(matches!(
+            session.reveal_item_revision(tombstone_revision),
+            Err(ApplicationError::InvalidInput)
+        ));
     }
 
     #[test]
