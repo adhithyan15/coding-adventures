@@ -3043,6 +3043,23 @@ impl FlatHeap {
     /// Return the header of the live block whose payload contains `addr`, or null.
     /// Linear scan of the all-blocks list (matching `twig_gc.c`'s V1; a sorted
     /// interval index is a later optimisation).
+    ///
+    /// **Security-review finding, fixed here:** the upper bound is **inclusive**
+    /// (`addr <= end`, not `addr < end`) so a legitimate one-past-the-end pointer —
+    /// `payload + size`, the value a Rust slice's `.as_ptr_range().end` or a C-style
+    /// `arr + len` loop sentinel actually holds, never a pointer that is itself
+    /// dereferenced — still resolves to the object it bounds. Before this fix such a
+    /// pointer was invisible to every classification path that bottoms out here
+    /// (`mark_word`, `push_candidates`, `classify_precise_word`, and therefore every
+    /// `collect_*` variant), so an object reachable *only* via a one-past-the-end
+    /// pointer could be freed (conservative paths) or relocated without its sole
+    /// reference being rewritten (precise paths via `classify_precise_word`, which
+    /// routes any non-exact-base hit — including this one — to `pin_out`) while
+    /// still live, a use-after-free. This is a safe widening, not a new ambiguity:
+    /// every block is preceded by its own `HEADER_SIZE`-byte header, so block `B`'s
+    /// `payload` start is always `>= HEADER_SIZE` past block `A`'s `payload + size`
+    /// end — `A`'s inclusive upper bound can never collide with `B`'s inclusive
+    /// lower bound.
     fn find_header(&self, addr: usize) -> *mut FlatHeader {
         if addr == 0 {
             return ptr::null_mut();
@@ -3053,7 +3070,7 @@ impl FlatHeap {
             while !h.is_null() {
                 let payload = h.add(1) as usize;
                 let end = payload + (*h).size;
-                if addr >= payload && addr < end {
+                if addr >= payload && addr <= end {
                     return h;
                 }
                 h = (*h).next;
@@ -6412,6 +6429,120 @@ mod tests {
             unsafe { *((a + 8) as *const usize) },
             0xFEED_FACE,
             "reading through the (unmoved) object recovers the sentinel -- no dangling pointer"
+        );
+    }
+
+    // ── `find_header` one-past-the-end pointer fix (security review) ─────────────
+    //
+    // `find_header`'s upper bound was EXCLUSIVE (`addr < payload + size`), so a
+    // legitimate one-past-the-end pointer -- `payload + size` exactly, the value a
+    // Rust slice's `.as_ptr_range().end` or a C-style `arr + len` loop sentinel
+    // actually holds -- was invisible to every classification path built on it
+    // (`mark_word`, `push_candidates`, `classify_precise_word`, and therefore every
+    // `collect_*` variant). An object reachable *only* through such a pointer could
+    // be freed out from under it: a use-after-free. Flagged pre-existing (not a
+    // regression) in the `classify_precise_word` interior-pointer security fix
+    // (gc-core 0.32.0 CHANGELOG) and deferred there as out of scope; fixed here by
+    // making the upper bound inclusive. Safe widening, not a new ambiguity: every
+    // block is preceded by its own `HEADER_SIZE`-byte header, so block B's payload
+    // start is always `>= HEADER_SIZE` past block A's payload-end -- A's inclusive
+    // upper bound can never collide with B's inclusive lower bound.
+
+    /// The load-bearing regression this fix exists to prove, at the primitive level:
+    /// `find_header` resolves the exact one-past-the-end address to the object it
+    /// bounds, not null.
+    #[test]
+    fn find_header_matches_one_past_the_end_address() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[]);
+        let a = heap.alloc(16, k) as usize;
+        let one_past_end = a + 16;
+
+        let h = heap.find_header(one_past_end);
+        assert!(!h.is_null(), "a one-past-the-end pointer must still resolve to the object it bounds");
+        assert_eq!(h as usize + HEADER_SIZE, a, "it resolves to A specifically, not some other block");
+    }
+
+    /// A one-past-the-end address is classified as **interior** (pin, not move) by
+    /// `classify_precise_word`, exactly like the mid-payload interior pointers above --
+    /// it fails the exact-base check (`h + HEADER_SIZE == word`) since it names the
+    /// byte after the payload, not the payload's own start.
+    #[test]
+    fn classify_mobility_pins_an_object_reached_only_via_a_one_past_the_end_root_pointer() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let a = heap.alloc(16, k) as usize;
+        unsafe { *(a as *mut usize) = 0 };
+
+        let slot_word = a + 16; // one-past-the-end, not a's base
+        let slots = [&slot_word as *const usize as usize];
+        let movable = unsafe { heap.classify_mobility(&slots, &[]) };
+        assert!(!movable.contains(&a), "an object reached only via a one-past-the-end root pointer must not be movable");
+        let a_header = heap.find_header(a);
+        assert!(!a_header.is_null(), "the object must still be found, not silently dropped");
+        assert!(
+            unsafe { (*a_header).pinned },
+            "...and must actually be pinned, not silently absent from both sets"
+        );
+    }
+
+    /// End-to-end, conservative path: a one-past-the-end pointer sitting in a scanned
+    /// stack region (not a declared root slot) is exactly what `mark_region`/
+    /// `push_candidates` see for a Rust slice's `.as_ptr_range().end` left live on the
+    /// stack after the base pointer itself has gone dead. Before the fix, `find_header`
+    /// silently returned null for it and the object was freed as unreachable garbage.
+    #[test]
+    fn collect_compacting_one_past_the_end_conservative_pointer_does_not_free_reachable_object() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0, 8]);
+        let a = heap.alloc(16, k) as usize;
+        unsafe {
+            *(a as *mut usize) = 0;
+            *((a + 8) as *mut usize) = 0xFACE_FEED_usize; // sentinel
+        }
+
+        // Only the one-past-the-end address is live in the scanned region -- `a`
+        // itself is nowhere in scanned memory.
+        let mut region_word = a + 16;
+        let region = [(&mut region_word as *mut usize as *const u8, std::mem::size_of::<usize>())];
+        let stats = unsafe { heap.collect_compacting(&[], &region) };
+
+        assert_eq!(stats.freed, 0, "the object is reachable -- conservatively, via the one-past-the-end pointer");
+        assert_eq!(stats.survived, 1, "it survives in place -- pinned, never movable");
+        assert_eq!(
+            unsafe { *((a + 8) as *const usize) },
+            0xFACE_FEED,
+            "reading through the (unmoved, unfreed) object recovers the sentinel -- no use-after-free"
+        );
+    }
+
+    /// End-to-end, **precise** path: a one-past-the-end pointer in a `root_slots`
+    /// entry (not a scanned conservative region) must ALSO not dangle. This is the
+    /// scenario `classify_precise_word` (PR #10390) exists to gate: a precise source
+    /// holding a non-exact-base hit is routed to the pinning wave, never the
+    /// movable-eligible `precise` set, so `evacuate_and_fixup`'s base-only root-slot
+    /// fixup is never asked to rewrite something it structurally cannot rewrite.
+    #[test]
+    fn collect_compacting_one_past_the_end_root_pointer_does_not_dangle() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0, 8]);
+        let a = heap.alloc(16, k) as usize;
+        unsafe {
+            *(a as *mut usize) = 0;
+            *((a + 8) as *mut usize) = 0xBEEF_CAFE_usize; // sentinel
+        }
+
+        let mut root = a + 16; // one-past-the-end ROOT pointer, precise source
+        let slots = [&mut root as *mut usize as usize];
+        let stats = unsafe { heap.collect_compacting(&slots, &[]) };
+
+        assert_eq!(stats.freed, 0, "the object is reachable via the one-past-the-end root pointer");
+        assert_eq!(stats.survived, 1, "it survives in place -- pinned by classify_precise_word, never movable");
+        assert_eq!(root, a + 16, "the root slot is untouched -- the object never moved, so nothing needed fixing up");
+        assert_eq!(
+            unsafe { *((a + 8) as *const usize) },
+            0xBEEF_CAFE,
+            "reading through the (unmoved, unfreed) object recovers the sentinel -- no dangling root pointer"
         );
     }
 
