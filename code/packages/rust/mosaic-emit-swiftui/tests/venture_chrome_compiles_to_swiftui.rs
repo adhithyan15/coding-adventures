@@ -60,7 +60,7 @@ fn venture_chrome_lowers_to_native_swiftui_controls_and_project_shell() {
 
         assert!(result
             .output
-            .contains("Button(action: { dispatch(.back) })"));
+            .contains("_mosaicButton(\"Back\", action: { dispatch(.back) })"));
         assert!(result.output.contains(".disabled(backDisabled)"));
         assert!(result.output.contains(".disabled(forwardDisabled)"));
         assert!(result.output.contains(
@@ -86,10 +86,10 @@ fn venture_chrome_lowers_to_native_swiftui_controls_and_project_shell() {
         );
         assert!(result
             .output
-            .contains("_MosaicPressState { __mosaicPressActive in"));
+            .contains("_MosaicPressState(content: _mosaicPressContent)"));
         assert!(result
             .output
-            .contains("_MosaicFocusState { __mosaicFocusActive in"));
+            .contains("_MosaicFocusState(content: _mosaicFocusContent)"));
 
         let project = result.project.expect("SwiftUI project shell");
         assert!(project.package_swift.contains(".executableTarget("));

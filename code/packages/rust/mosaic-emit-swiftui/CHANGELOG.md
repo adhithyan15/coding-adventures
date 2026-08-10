@@ -4,6 +4,18 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - Complete Task App SwiftUI compilation
+
+Package-expanded applications now lower Mosaic value conditions through
+type-correct truthiness conversion, keep generated helper names collision-safe,
+and introduce concrete `AnyView` and local-function boundaries around native
+controls, state wrappers, and modifier chains. This keeps Swift's constraint
+solver within budget without replacing SwiftUI controls or authored MSL styles.
+`HostInput` commit dispatch also follows the MIL event declaration, carrying the
+current text for a one-text-parameter event while preserving void commits. A
+macOS regression gate builds the complete generated Task App through SwiftPM
+rather than type-checking only focused fixtures.
+
 ### Fixed - Native multiline Input compatibility
 
 The still-supported UI25 `Input` primitive now lowers to an accessible SwiftUI
