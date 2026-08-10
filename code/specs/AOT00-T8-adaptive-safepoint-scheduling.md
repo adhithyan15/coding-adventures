@@ -275,6 +275,12 @@ tracked separately; it is what would let an embedder responsibly call `__gc_set_
   unmodified `origin/main` in `precise_walk::tests::all_unmapped_frames_become_conservative_regions`
   (a Stacked-Borrows violation in a pre-existing synthetic-stack-walk test, `precise_walk.rs:176` —
   a file this PR does not touch). Flagged as a separate follow-up rather than fixed here.
+  **Update (gc-core-capi 0.24.3):** fixed — confirmed a test-authoring exposure-ordering bug (every
+  affected test computed its final synthetic-stack addresses via `.as_ptr()` *before* writing the
+  synthetic frames, invalidating the exposed tag under Stacked/Tree Borrows for the walk's later
+  reads), not a soundness issue in the walk itself. `cargo miri test -p gc-core-capi --lib
+  precise_walk` is now clean, 9/9. The crate's separate `asm!`-based Miri blocker in `stack_scan`
+  (inline assembly is fundamentally unsupported by Miri) is unrelated and remains.
 
 ---
 

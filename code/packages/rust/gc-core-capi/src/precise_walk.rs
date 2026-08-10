@@ -249,6 +249,22 @@ mod tests {
     /// the base address of `stack[0]`. Frame `k` has its frame pointer at index
     /// `2*k + 2`; `[fp]` (that index) holds the next frame pointer and `[fp+8]` (the
     /// next index) holds the return address. The caller fills those in.
+    ///
+    /// **Miri/Tree-Borrows pitfall, fixed across every test below:** each call exposes
+    /// `stack`'s provenance via `.as_ptr() as usize` — required, since the walk under
+    /// test dereferences plain integers, so there is no other way to hand it real
+    /// addresses. A *subsequent* write to `stack` through the owning binding
+    /// (`stack[i] = ...`) invalidates that exposed tag under Stacked/Tree Borrows, so a
+    /// later wildcard read through an address exposed *before* the write sees "no
+    /// exposed tags have suitable permission" — a real Miri failure, confirmed
+    /// reproducible, but a test-authoring bug (wrong exposure ordering), not a
+    /// soundness bug in `build_precise_roots` itself. Every test therefore computes its
+    /// FINAL `sp`/`fp0`/`fp1`/.../`base` values (the ones passed to `build_precise_roots`
+    /// or compared in assertions) via `addr_of` only *after* every `stack[i] = ...`
+    /// write is done. An `addr_of` call used only to compute a value to *write* (not to
+    /// dereference later) is fine at any point — the write doesn't care about its own
+    /// RHS's later tag validity, only about the numeric address value, which doesn't
+    /// change based on when it's computed.
     fn addr_of(stack: &[usize], idx: usize) -> usize {
         stack.as_ptr() as usize + idx * core::mem::size_of::<usize>()
     }
@@ -265,19 +281,19 @@ mod tests {
             //   4:   fp1 → [fp1] = 0 (chain terminates)
             //   5:            [fp1+8] = ret1
             let mut stack = [0usize; 6];
-            let sp = addr_of(&stack, 0);
-            let fp0 = addr_of(&stack, 2);
-            let fp1 = addr_of(&stack, 4);
-            let base = addr_of(&stack, 6); // one past the end
-            stack[2] = fp1; // [fp0] = fp1
+            stack[2] = addr_of(&stack, 4); // [fp0] = fp1
             stack[3] = 0xaaaa; // ret0 (nothing registered → unmapped)
             stack[4] = 0; // [fp1] = 0 → terminate
             stack[5] = 0xbbbb; // ret1
 
+            // Exposed AFTER every write above — see `addr_of`'s own doc for why.
+            let sp = addr_of(&stack, 0);
+            let fp0 = addr_of(&stack, 2);
+            let fp1 = addr_of(&stack, 4);
+            let base = addr_of(&stack, 6); // one past the end
+
             let mut slots = Vec::new();
             let mut regions = Vec::new();
-            // The walk reads the synthetic frames through raw pointers the borrow
-            // checker can't see; black_box keeps every slot write live (and unelided).
             core::hint::black_box(&stack);
             unsafe { build_precise_roots(fp0, sp, base, &mut slots, &mut regions) };
 
@@ -300,14 +316,16 @@ mod tests {
     fn mapped_frame_becomes_precise_slots() {
         with_clean_registry(|| {
             let mut stack = [0usize; 6];
+            stack[2] = addr_of(&stack, 4); // [fp0] = fp1 (caller_fp)
+            stack[3] = 0x1000; // ret0 — will be mapped
+            stack[4] = 0; // terminate
+            stack[5] = 0;
+
+            // Exposed AFTER every write above — see `addr_of`'s own doc for why.
             let sp = addr_of(&stack, 0);
             let fp0 = addr_of(&stack, 2);
             let fp1 = addr_of(&stack, 4);
             let base = addr_of(&stack, 6);
-            stack[2] = fp1; // [fp0] = fp1 (caller_fp)
-            stack[3] = 0x1000; // ret0 — will be mapped
-            stack[4] = 0; // terminate
-            stack[5] = 0;
 
             // Map ret0 = 0x1000 into a function [0x1000, 0x1100) with a safepoint at
             // pc 0 naming two ref slots at offsets 0 and -8 (relative to caller_fp=fp1).
@@ -315,8 +333,6 @@ mod tests {
 
             let mut slots = Vec::new();
             let mut regions = Vec::new();
-            // The walk reads the synthetic frames through raw pointers the borrow
-            // checker can't see; black_box keeps every slot write live (and unelided).
             core::hint::black_box(&stack);
             unsafe { build_precise_roots(fp0, sp, base, &mut slots, &mut regions) };
 
@@ -342,24 +358,24 @@ mod tests {
             // Three frames: fp0 (caller ret0 unmapped), fp1 (caller ret1 mapped), then
             // terminate at fp2.
             let mut stack = [0usize; 8];
+            stack[2] = addr_of(&stack, 4); // [fp0]=fp1
+            stack[3] = 0x2222; // ret0 unmapped
+            stack[4] = addr_of(&stack, 6); // [fp1]=fp2
+            stack[5] = 0x3000; // ret1 mapped
+            stack[6] = 0; // terminate
+            stack[7] = 0;
+
+            // Exposed AFTER every write above — see `addr_of`'s own doc for why.
             let sp = addr_of(&stack, 0);
             let fp0 = addr_of(&stack, 2);
             let fp1 = addr_of(&stack, 4);
             let fp2 = addr_of(&stack, 6);
             let base = addr_of(&stack, 8);
-            stack[2] = fp1; // [fp0]=fp1
-            stack[3] = 0x2222; // ret0 unmapped
-            stack[4] = fp2; // [fp1]=fp2
-            stack[5] = 0x3000; // ret1 mapped
-            stack[6] = 0; // terminate
-            stack[7] = 0;
 
             unsafe { register(0x3000, 0x80, 0, &[16]) }; // slot at fp2 + 16
 
             let mut slots = Vec::new();
             let mut regions = Vec::new();
-            // The walk reads the synthetic frames through raw pointers the borrow
-            // checker can't see; black_box keeps every slot write live (and unelided).
             core::hint::black_box(&stack);
             unsafe { build_precise_roots(fp0, sp, base, &mut slots, &mut regions) };
 
@@ -384,17 +400,17 @@ mod tests {
     fn backward_caller_fp_scans_remainder_and_stops() {
         with_clean_registry(|| {
             let mut stack = [0usize; 6];
-            let sp = addr_of(&stack, 0);
-            let fp0 = addr_of(&stack, 2);
-            let base = addr_of(&stack, 6);
             // [fp0] points BELOW fp0 (backward) — a broken chain. (ret at stack[3] is
             // never read, because the walk breaks on the bad link before resolving it.)
             stack[2] = addr_of(&stack, 1);
 
+            // Exposed AFTER the write above — see `addr_of`'s own doc for why.
+            let sp = addr_of(&stack, 0);
+            let fp0 = addr_of(&stack, 2);
+            let base = addr_of(&stack, 6);
+
             let mut slots = Vec::new();
             let mut regions = Vec::new();
-            // The walk reads the synthetic frames through raw pointers the borrow
-            // checker can't see; black_box keeps every slot write live (and unelided).
             core::hint::black_box(&stack);
             unsafe { build_precise_roots(fp0, sp, base, &mut slots, &mut regions) };
 
@@ -411,15 +427,16 @@ mod tests {
     fn out_of_range_caller_fp_scans_remainder_and_stops() {
         with_clean_registry(|| {
             let mut stack = [0usize; 6];
+            // Planning-only exposure: only the numeric value matters for a write.
+            stack[2] = addr_of(&stack, 6) + 0x1000; // caller_fp beyond the stack base (ret unread)
+
+            // Exposed AFTER the write above — see `addr_of`'s own doc for why.
             let sp = addr_of(&stack, 0);
             let fp0 = addr_of(&stack, 2);
             let base = addr_of(&stack, 6);
-            stack[2] = base + 0x1000; // caller_fp beyond the stack base (ret unread)
 
             let mut slots = Vec::new();
             let mut regions = Vec::new();
-            // The walk reads the synthetic frames through raw pointers the borrow
-            // checker can't see; black_box keeps every slot write live (and unelided).
             core::hint::black_box(&stack);
             unsafe { build_precise_roots(fp0, sp, base, &mut slots, &mut regions) };
 
@@ -478,15 +495,16 @@ mod tests {
     fn frame_budget_exhaustion_scans_remainder() {
         with_clean_registry(|| {
             let mut stack = [0usize; 8];
+            stack[2] = addr_of(&stack, 4); // [fp0]=fp1
+            stack[3] = 0x5555; // ret0 (unmapped)
+            stack[4] = addr_of(&stack, 6); // [fp1]=fp2 — a second frame the budget won't reach
+            stack[5] = 0x6666;
+
+            // Exposed AFTER every write above — see `addr_of`'s own doc for why.
             let sp = addr_of(&stack, 0);
             let fp0 = addr_of(&stack, 2);
             let fp1 = addr_of(&stack, 4);
-            let fp2 = addr_of(&stack, 6);
             let base = addr_of(&stack, 8);
-            stack[2] = fp1; // [fp0]=fp1
-            stack[3] = 0x5555; // ret0 (unmapped)
-            stack[4] = fp2; // [fp1]=fp2 — a second frame the budget won't reach
-            stack[5] = 0x6666;
 
             let mut slots = Vec::new();
             let mut regions = Vec::new();
@@ -535,23 +553,23 @@ mod tests {
             // is NOT scanned conservatively; only the named slot (fp1-16 → `live`) is
             // rooted, so `dead` at fp1-8 is reclaimed.
             let mut stack = [0usize; 8];
-            let sp = addr_of(&stack, 0);
-            let fp0 = addr_of(&stack, 2);
-            let fp1 = addr_of(&stack, 6);
-            let base = addr_of(&stack, 8);
-            stack[2] = fp1; // [fp0] = fp1
+            stack[2] = addr_of(&stack, 6); // [fp0] = fp1
             stack[3] = 0x4000; // ret0 → mapped
             stack[4] = live; // fp1 - 16 : NAMED slot
             stack[5] = dead; // fp1 - 8  : unnamed local
             stack[6] = 0; // [fp1] = 0 → terminate (remainder [fp1, base) is zeros)
             stack[7] = 0;
 
+            // Exposed AFTER every write above — see `addr_of`'s own doc for why.
+            let sp = addr_of(&stack, 0);
+            let fp0 = addr_of(&stack, 2);
+            let fp1 = addr_of(&stack, 6);
+            let base = addr_of(&stack, 8);
+
             unsafe { register(0x4000, 0x80, 0, &[-16]) }; // names only fp1 - 16 (`live`)
 
             let mut slots = Vec::new();
             let mut regions = Vec::new();
-            // The walk reads the synthetic frames through raw pointers the borrow
-            // checker can't see; black_box keeps every slot write live (and unelided).
             core::hint::black_box(&stack);
             unsafe { build_precise_roots(fp0, sp, base, &mut slots, &mut regions) };
 
@@ -589,16 +607,18 @@ mod tests {
             //   2: fp0 → [fp0]=fp1; 3: ret0=0x4000 (mapped); 4: `live` (named fp1-16);
             //   5: `dead` (unnamed fp1-8); 6: fp1 → [fp1]=0 (terminate).
             let mut stack = [0usize; 8];
-            let sp = addr_of(&stack, 0);
-            let fp0 = addr_of(&stack, 2);
-            let fp1 = addr_of(&stack, 6);
-            let base = addr_of(&stack, 8);
-            stack[2] = fp1;
+            stack[2] = addr_of(&stack, 6);
             stack[3] = 0x4000;
             stack[4] = live; // fp1 - 16 : NAMED slot
             stack[5] = dead; // fp1 - 8  : unnamed local
             stack[6] = 0;
             stack[7] = 0;
+
+            // Exposed AFTER every write above — see `addr_of`'s own doc for why.
+            let sp = addr_of(&stack, 0);
+            let fp0 = addr_of(&stack, 2);
+            let fp1 = addr_of(&stack, 6);
+            let base = addr_of(&stack, 8);
 
             unsafe { register(0x4000, 0x80, 0, &[-16]) }; // names only fp1 - 16 (`live`)
 

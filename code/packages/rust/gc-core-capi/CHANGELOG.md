@@ -2,6 +2,54 @@
 
 All notable changes to this crate are documented here.
 
+## 0.24.3 - 2026-08-10 — fix: eliminate `precise_walk`'s Miri Stacked/Tree-Borrows failure
+
+- **Root cause: test-authoring exposure ordering, not a soundness bug in
+  `build_precise_roots`/`build_precise_roots_bounded`.** Every `precise_walk` test
+  builds a synthetic stack in a `[usize; N]` array, using a helper (`addr_of`) that
+  calls `stack.as_ptr() as usize` to hand the walk-under-test real, dereferenceable
+  addresses (`Miri` calls this "exposing" a pointer's provenance — required here,
+  since the walk itself works in plain integers, exactly like real captured
+  registers/stack memory would). Every affected test computed its `sp`/`fp0`/`fp1`/
+  `base` values via `addr_of` calls positioned **before** the `stack[i] = ...` writes
+  that populate the synthetic frames. Under Stacked/Tree Borrows, a write to `stack`
+  through its owning binding invalidates any previously-exposed reborrow tags for
+  that allocation — so a later wildcard pointer read (inside the walk, dereferencing
+  one of those addresses as a real memory access) found "no exposed tags have
+  suitable permission," `precise_walk.rs:176` (`all_unmapped_frames_become_
+  conservative_regions`), reproduced identically under Stacked Borrows, Tree
+  Borrows, and permissive-provenance mode.
+- **Confirmed genuinely a test bug, not a production issue**: the failure is purely
+  an artifact of the synthetic Rust-array test harness's exposure ordering. Real
+  usage walks live captured machine registers and actual stack memory (via `asm!`),
+  which have no analogous "exposed tag invalidated by a later write through a
+  differently-typed Rust binding" concern — there is no competing safe-Rust alias to
+  the same memory doing the invalidating write.
+- **Fix: every affected test (8 of the module's 9 — every test except
+  `degenerate_start_fp_falls_back_to_full_conservative_scan`, the only one that
+  never writes to `stack`) now computes its FINAL `sp`/
+  `fp0`/`fp1`/.../`base` values — the ones passed to `build_precise_roots` or
+  compared in assertions — only *after* every `stack[i] = ...` write is done.** An
+  `addr_of` call used only to compute a value to *write* (not to dereference later)
+  remains fine at any point, since a write doesn't care about its own right-hand
+  side's later tag validity — only the numeric address value matters there, and that
+  doesn't change based on when it's computed. `addr_of` itself gained a doc comment
+  explaining the pitfall for future tests in this style.
+- Verification: `cargo test -p gc-core-capi --lib precise_walk` — 9 passed (was
+  previously untested under Miri at all, since this crate has never been in any
+  Miri CI workflow — informational only, discovered via this session's own local
+  investigation). `cargo +nightly miri test -p gc-core-capi --lib precise_walk` —
+  **9 passed, 0 failed** (previously: 1 confirmed Stacked-Borrows UB failure on the
+  first test, aborting the run before the remaining 8 could even execute). The
+  crate's other Miri blocker (`stack_scan`'s `asm!` register-spill code — Miri
+  fundamentally does not support inline assembly) is unrelated and unaffected;
+  full-crate `cargo +nightly miri test -p gc-core-capi` still cannot run to
+  completion for that separate, pre-existing, already-documented reason.
+- `cargo build`/`test` clean across `gc-core`, `gc-core-capi`, `vm-core` (gc-core-capi
+  41 lib tests, unchanged — this is a test-quality fix with no new test count
+  change, only new pass-under-Miri coverage for the existing 9); `cargo clippy
+  --all-targets -- -D warnings` clean.
+
 ## 0.24.2 - 2026-08-10 — test: `__gc_safepoint` mid-incremental-cycle regression coverage
 
 - New `safepoint_is_a_no_op_during_an_incremental_cycle` test: drives the real
