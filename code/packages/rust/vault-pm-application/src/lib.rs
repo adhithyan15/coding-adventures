@@ -32,7 +32,8 @@ pub use initialize::{
     GENERATION_ZERO_RANDOM_BYTES,
 };
 pub use mutation::{
-    AddItemRandomnessV1, ReplaceItemRandomnessV1, ADD_ITEM_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
+    AddItemRandomnessV1, DeleteItemRandomnessV1, ReplaceItemRandomnessV1, ADD_ITEM_RANDOM_BYTES,
+    DELETE_ITEM_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
 };
 pub use open::{open_active_vault, recover_pending_publication, UnlockedVaultV1};
 pub use repository::{

@@ -2,6 +2,24 @@
 
 All notable changes to this package are documented here.
 
+## [0.15.0] - 2026-08-09
+
+### Added
+
+- Add a session-consuming `delete_item` workflow that locates the caller's
+  expected current live revision and publishes a one-parent tombstone.
+- Accept separate advisory deletion and commit timestamps plus an owned
+  wipe-on-drop entropy block for the three encrypted deletion frames.
+
+### Security
+
+- Reject absent, conflicted, and already-tombstoned targets before the local
+  write-ahead compare-exchange without exposing item identity in errors.
+- Preserve unrelated catalog candidates, make every current repository head a
+  commit parent, and reuse the exact crash-resumable publication journal.
+- Retain tombstones as current causal state while ordinary get/list/search
+  views omit the deleted item and its former secret-bearing document.
+
 ## [0.14.0] - 2026-08-09
 
 ### Added

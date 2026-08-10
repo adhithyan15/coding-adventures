@@ -102,6 +102,17 @@ Replacement uses an owned wipe-on-drop 240-byte entropy block and the same exact
 pending journal, all-head commit parenting, ambiguous-success rules, and
 recovery path as add-item.
 
+Deletion likewise consumes the unlocked session and requires the caller's
+expected revision to be the sole current live candidate. It publishes a new
+tombstone revision whose sole causal parent is that live revision, preserves
+all unrelated catalog candidates, and keeps deletion time separate from the
+commit's advisory wall time. Missing revisions return `NotFound`; conflicts and
+repeat deletion return `ConflictRequired` before any local write. Authenticated
+reopen retains the tombstone for history and restore while ordinary get, list,
+and search views omit the deleted item. The three deletion frames use a
+caller-owned wipe-on-drop 240-byte entropy block and the shared exact pending
+journal/recovery state machine.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
 credential store, or entropy source. Replace, delete, restore, conflict
@@ -127,7 +138,7 @@ paths, and complete error translation.
 Search tests cover Unicode normalization, short queries, oversized safe-field
 fallback, exact collection filters, deterministic product ordering, every
 record schema's allowlist/denylist, secret exclusion, query/result bounds, and
-conflict closure. The exact Tarpaulin LLVM result is 1,953 of 2,043 production
+conflict closure. The exact Tarpaulin LLVM result is 1,996 of 2,088 production
 lines (95.59%). Add-item tests cover exact entropy partitioning and wiping,
 identity validation before local writes, parentless revision and complete
 catalog construction, ambiguous successful compare-exchanges, write-ahead
@@ -135,6 +146,9 @@ publication ordering, ambiguous provider commits, failed final activation,
 and recovery through the exact persisted journal. Replacement tests prove
 one-parent causality, immutable identity fields, complete catalog preservation,
 stale/missing rejection before compare-exchange, and secret/entropy wiping.
+Deletion tests prove one-parent tombstone causality, advisory timestamp
+separation, ordinary-view omission, repeat/missing rejection before
+compare-exchange, and entropy redaction/wiping.
 
 ## Development
 
