@@ -1,0 +1,10 @@
+[package]
+name = "coding_adventures_vault_pm_config"
+version = "0.1.0"
+edition = "2021"
+description = "Strict storage-neutral V1 configuration contract for vault-pm clients"
+license = "MIT"
+
+[dependencies]
+coding-adventures-toml-parser = { path = "../toml-parser" }
+parser = { path = "../parser" }

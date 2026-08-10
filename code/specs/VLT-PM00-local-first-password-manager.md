@@ -807,6 +807,7 @@ code/packages/rust/vault-pm-application  use cases and redacted view models
 code/packages/rust/vault-pm-application-storage-core
                                          durable bootstrap/owner-state adapters
 code/packages/rust/vault-pm-local-host    secure roots and process exclusion
+code/packages/rust/vault-pm-config        strict storage-neutral client config
 code/packages/rust/vault-pm-cli          product parser/driver/renderer
 code/programs/rust/vault-pm-cli          executable composition root
 ```
@@ -1407,6 +1408,10 @@ changelog, focused build, and downstream validation.
     the closed trust-boundary contract in `VLT-PM06-local-host.md`. Existing
     broad roots fail closed; permission repair remains an explicit future CLI
     ceremony rather than an automatic side effect.
+8c. `vault-pm-config`: closed, bounded storage-neutral V1 configuration and
+    deterministic TOML rendering, using `VLT-PM07-config.md`. It persists the
+    opaque bootstrap locator and typed storage selections without receiving
+    passphrases, provider credentials, item metadata, or host capabilities.
 9. `vault-pm-cli` + real executable and pseudo-terminal E2E suite.
 10. Crash/fault matrix and local restore drill.
 

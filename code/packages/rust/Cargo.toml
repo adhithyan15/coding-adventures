@@ -1066,4 +1066,5 @@ members = [
   "vault-pm-application",
   "vault-pm-application-storage-core",
   "vault-pm-local-host",
+  "vault-pm-config",
 ]
