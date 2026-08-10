@@ -765,16 +765,27 @@ mod tests {
         }
     }
 
-    fn first_file(root: &std::path::Path) -> Option<PathBuf> {
+    fn first_storage_record_with_body_magic(
+        root: &std::path::Path,
+        body_magic: &[u8],
+    ) -> Option<PathBuf> {
         for entry in fs::read_dir(root).ok()? {
             let entry = entry.ok()?;
             let path = entry.path();
             if entry.file_type().ok()?.is_dir() {
-                if let Some(found) = first_file(&path) {
+                if let Some(found) = first_storage_record_with_body_magic(&path, body_magic) {
                     return Some(found);
                 }
-            } else {
-                return Some(path);
+            } else if let Ok(bytes) = fs::read(&path) {
+                let meta_len = bytes
+                    .get(5..9)
+                    .and_then(|exact| <[u8; 4]>::try_from(exact).ok())
+                    .map(u32::from_be_bytes)? as usize;
+                let body_start = 9_usize.checked_add(meta_len)?;
+                let magic_end = body_start.checked_add(body_magic.len())?;
+                if bytes.get(body_start..magic_end) == Some(body_magic) {
+                    return Some(path);
+                }
             }
         }
         None
@@ -928,7 +939,8 @@ mod tests {
         let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
         assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
 
-        let object = first_file(paths.object_root()).expect("generation zero repository object");
+        let object = first_storage_record_with_body_magic(paths.object_root(), b"VPO1")
+            .expect("generation zero encrypted repository object");
         let mut bytes = fs::read(&object).unwrap();
         let last = bytes.last_mut().expect("non-empty storage record");
         *last ^= 0x01;
