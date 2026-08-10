@@ -1254,3 +1254,333 @@ from evidence by then rather than guessed now:
 2. **Whether the derived-reach model needs its own gate.** §6.8 reports derived
    reach separately from taught atoms; if it ever starts being cited as coverage,
    it needs the same fail-closed treatment level claims got in HL09 §3.1.
+
+---
+
+## Appendix A — Chapter 1, written out
+
+Every rule in this spec is a constraint on lessons nobody has written yet, which
+makes them easy to agree with and hard to check. So here is the first chapter in
+full, in the canonical format, as the reference implementation of the design.
+
+**This appendix is a sample, not corpus.** It is not loaded by `loadLessons`, it
+generates no book chapter, and it does not replace the published Spanish Chapter
+1. Moving it into `spanish/lessons/` is HL-C85's job and is an editorial
+decision, not a mechanical one.
+
+### What it is demonstrating
+
+| rule | where to look |
+|---|---|
+| The course opens on `gracias`, not `hola` (§6.3) | Lesson 1 |
+| One friend per lesson, English-anchored (§6.7) | every lesson's *taken apart* |
+| ≤3 new atoms (§2.2) | `introduces.knowledge` |
+| **Zero** grammar cells at pre-A1 (§5.4 rung 1) | no lesson declares `teaches_cells` |
+| No metalanguage before §7.5 introduces it | no lesson says *verb*, *noun*, *phrase* |
+| Warm-up closes R1 by construction (§8.1) | every lesson after the first |
+| Voice-first, chapter drivable from lesson 1 (§8.3) | no table, no sight cue, anywhere |
+| Variety declared, never `general` (§4.3) | frontmatter `variety:` |
+| Culture is a strand, not decoration (§7.1) | Lessons 3 and 5 |
+| The payoff uses only what was taught (§9) | Lesson 6 |
+
+### The chapter's shape
+
+Six lessons, ~28 minutes total. Nine new atoms against a chapter budget of
+twelve. The learner leaves able to conduct a complete, polite, real exchange —
+not to recite five words.
+
+---
+
+#### Lesson 1 — `ES-C01-gracias`
+
+```yaml
+schema_version: 2
+id: ES-C01-gracias
+spine_node: SPINE-COURTESY-THANK
+strand: FUNCTION
+sequence: 10
+chapter: 1
+type: vocabulary
+headword: gracias
+gloss: thank you
+prerequisites: []
+sounds: [vowel-a, stress-penultimate, seseo-c]
+roots: [latin-gratia]
+etymology_hook: "gracias comes from Latin gratia, the same root inside English grace, gratitude and gratis"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ES-LEX-GRACIAS, ES-ETYMON-GRATIA]
+practises:
+  knowledge: [ES-LEX-GRACIAS, ES-ETYMON-GRATIA]
+skills: [listening, speaking]
+modes: [interpersonal]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: american-neutral
+```
+
+**Teach.** Your first Spanish word is **gracias**. It means *thank you*.
+
+Say it in two beats: **GRA-thias** in most of Spain, **GRA-sias** across Latin
+America and southern Spain. Both are correct. Both are heard everywhere. You are
+learning the second, and you will understand the first.
+
+**The word, taken apart.** *Gracias* comes from the Latin word **grātia** —
+kindness freely given, a favour nobody owed you.
+
+You already own a piece of that word. English took **grātia** too, and kept it in
+**grace**, in **gratitude**, in **gratis** — something given for free — and in
+**congratulate**. When you say *gracias*, you are saying a word English also
+kept, just worn down differently by eight hundred years of Spanish mouths.
+
+That is not a coincidence you have to memorise. It is the first of many.
+
+**Guided practice.** Say **gracias** three times. Say it to someone who hands you
+something. Say it to a stranger who holds a door.
+
+**Wrap-up.** What is *thank you* in Spanish? *(Gracias.)* What English word hides
+the same root? *(Grace — or gratitude, or gratis.)*
+
+> **Why this word first.** *Gracias* is the highest-value word a beginner can
+> hold: you can thank someone before you can greet them, before you can name
+> yourself, before you can say anything else at all. It also carries eight
+> English relatives, so the course's central move is demonstrated in lesson one
+> rather than promised for later.
+
+---
+
+#### Lesson 2 — `ES-C01-de-nada`
+
+```yaml
+id: ES-C01-de-nada
+spine_node: SPINE-COURTESY-THANK
+sequence: 20
+type: vocabulary
+headword: de nada
+gloss: you're welcome
+prerequisites: [ES-C01-gracias]
+roots: [latin-res-nata]
+etymology_hook: "de nada is literally 'of nothing' — the same modesty English uses in 'not at all'"
+requires:
+  knowledge: [ES-LEX-GRACIAS]
+introduces:
+  knowledge: [ES-LEX-DE-NADA]
+practises:
+  knowledge: [ES-LEX-GRACIAS, ES-LEX-DE-NADA]
+variety: american-neutral
+```
+
+**Warm-up.** *(retrieval, closes R1 for lesson 1)* How do you say *thank you*?
+*(Gracias.)* Say it once, out loud.
+
+**Teach.** When someone thanks you, you answer **de nada**.
+
+**The word, taken apart.** *De nada* means, word for word, *of nothing*. You are
+not saying "you are welcome" — you are saying "it was nothing, don't mention it."
+
+English does the same modest shrug with **not at all** and **don't mention it**.
+Spanish just picked a different way to say the same small kindness.
+
+*Nada* has a strange and lovely history: it comes from Latin **rēs nāta**, "a
+thing born." Over centuries the phrase *no… rēs nāta* — "not a born thing" —
+collapsed, the *rēs* fell away, and the word for *thing born* became the word for
+**nothing**. A word that once meant *something* now means its opposite.
+
+**Guided practice.** Someone says *gracias*. You answer. Say both halves: **—
+Gracias. — De nada.**
+
+**Wrap-up.** What do you answer to *gracias*? *(De nada.)* What does it literally
+mean? *(Of nothing.)*
+
+---
+
+#### Lesson 3 — `ES-C01-por-favor`
+
+```yaml
+id: ES-C01-por-favor
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 30
+headword: por favor
+gloss: please
+prerequisites: [ES-C01-gracias]
+roots: [latin-favor]
+etymology_hook: "por favor is 'as a favour' — English kept favor from the same Latin word"
+requires:
+  knowledge: [ES-LEX-GRACIAS]
+introduces:
+  knowledge: [ES-LEX-POR-FAVOR]
+practises:
+  knowledge: [ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-LEX-POR-FAVOR]
+variety: american-neutral
+```
+
+**Warm-up.** *Gracias* — and the answer? *(De nada.)*
+
+**Teach.** **Por favor** means *please*. You put it at the end of what you ask
+for, and it turns a demand into a request.
+
+**The word, taken apart.** *Favor* is the same word as English **favour**. Both
+come straight from Latin **favor**, goodwill. So *por favor* is "as a favour" —
+you are asking someone to do you a kindness, which is exactly what *please* does
+in English without ever saying so out loud.
+
+**Guided practice.** Say **por favor** on its own. Now say **gracias, por
+favor** — and notice it sounds wrong, because it is. *Por favor* asks. *Gracias*
+thanks. One comes before you get the thing; the other comes after.
+
+**Wrap-up.** Which word asks, and which thanks? *(Por favor asks. Gracias
+thanks.)*
+
+---
+
+#### Lesson 4 — `ES-C01-hola`
+
+```yaml
+id: ES-C01-hola
+spine_node: SPINE-MEET-GREET
+sequence: 40
+headword: hola
+gloss: hello
+prerequisites: [ES-C01-gracias]
+sounds: [silent-h, vowel-o]
+roots: []
+etymology_hook: "hola's origin is genuinely unsettled — and the resemblance to English hello is a false friend"
+requires:
+  knowledge: [ES-LEX-GRACIAS]
+introduces:
+  knowledge: [ES-LEX-HOLA, ES-SOUND-SILENT-H]
+practises:
+  knowledge: [ES-LEX-HOLA, ES-LEX-GRACIAS, ES-LEX-POR-FAVOR]
+variety: american-neutral
+```
+
+**Warm-up.** Two words so far. The one that asks? *(Por favor.)* The one that
+thanks? *(Gracias.)*
+
+**Teach.** **Hola** is *hello*. It is said **OH-la** — the **h** is silent.
+
+Spanish does that with every **h**. It is written and never spoken. You will meet
+it again and again, and it will never once make a sound.
+
+**The word, taken apart.** Here the honest answer is that nobody is sure. *Hola*
+may come from an old call to get someone's attention; the record is thin.
+
+And the resemblance to English **hello** is a false friend — the two look alike
+and are not related. English *hello* grew out of *hallo*, a shout used to hail
+someone across a distance. The likeness is a coincidence.
+
+Most Spanish words have a traceable family, and you will meet those families
+constantly. This one does not, and saying so is better than inventing a story.
+
+**Guided practice.** Say **hola**. Now silence the *h* deliberately: not
+"HO-la" — **OH-la**.
+
+**Wrap-up.** How do you greet someone? *(Hola.)* What does the *h* sound like?
+*(Nothing at all.)*
+
+---
+
+#### Lesson 5 — `ES-C01-adios`
+
+```yaml
+id: ES-C01-adios
+spine_node: SPINE-TAKE-LEAVE
+sequence: 50
+headword: adiós
+gloss: goodbye
+prerequisites: [ES-C01-hola]
+roots: [latin-ad-deum]
+etymology_hook: "adiós is 'to God' — the same farewell inside French adieu and English goodbye"
+requires:
+  knowledge: [ES-LEX-HOLA]
+introduces:
+  knowledge: [ES-LEX-ADIOS, ES-CULTURE-FAREWELL-WEIGHT]
+practises:
+  knowledge: [ES-LEX-ADIOS, ES-LEX-HOLA, ES-LEX-GRACIAS]
+variety: american-neutral
+```
+
+**Warm-up.** Greet someone. *(Hola.)* Thank them. *(Gracias.)*
+
+**Teach.** **Adiós** is *goodbye*.
+
+**The word, taken apart.** *Adiós* is **a Dios** — "to God." It is the short
+remains of an old blessing: *I commend you to God* until we meet again.
+
+The whole of Western Europe said the same thing. French kept **adieu**. Italian
+kept **addio**. And English — this is the good part — English says **goodbye**,
+which was once **God be with ye**, worn down over centuries until nobody could
+hear God in it any more.
+
+So *adiós* and *goodbye* are not related words. They are the *same sentence*,
+said in two languages, both eroded past recognition.
+
+**A note on weight.** In much of the Spanish-speaking world *adiós* is a little
+final — it can carry a hint of *for a long time*, or *for good*. For an ordinary
+"see you later" you will want **hasta luego**, which is coming shortly. Use
+*adiós* when you mean it.
+
+**Wrap-up.** How do you say goodbye? *(Adiós.)* What is hiding inside it? *(A
+Dios — "to God.")* And inside English *goodbye*? *(God be with ye.)*
+
+---
+
+#### Lesson 6 — `ES-C01-payoff` *(chapter payoff)*
+
+```yaml
+id: ES-C01-payoff
+spine_node: SPINE-COURTESY-THANK
+sequence: 60
+type: practice-mix
+headword: (none — this lesson introduces nothing)
+prerequisites: [ES-C01-gracias, ES-C01-de-nada, ES-C01-por-favor, ES-C01-hola, ES-C01-adios]
+requires:
+  knowledge: [ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-LEX-POR-FAVOR, ES-LEX-HOLA, ES-LEX-ADIOS]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-LEX-POR-FAVOR, ES-LEX-HOLA, ES-LEX-ADIOS, ES-ETYMON-GRATIA]
+variety: american-neutral
+```
+
+**Warm-up.** Five words. Say them: *hola, por favor, gracias, de nada, adiós.*
+
+**The payoff.** You can now run a whole exchange. Not a drill — a real one. You
+walk into a shop, you want something, you get it, you leave.
+
+> — **Hola.**
+> — Hola.
+> — … **por favor.**
+> — *(hands it over)*
+> — **Gracias.**
+> — **De nada.**
+> — **Adiós.**
+
+The gap in the middle is the point. You do not yet know the word for the thing
+you want, and you do not need it — you can point. Everything *around* the gap,
+the entire polite frame a stranger expects, you already have.
+
+**Synthesis.** *(a prompt whose answer the course has never shown)* Someone holds
+a door for you and you walk through. Say the right word. *(Gracias.)* They
+answer. What do they say? *(De nada.)*
+
+**Wrap-up.** Which word did you learn first, and what English words share its
+root? *(Gracias — grace, gratitude, gratis.)*
+
+### What this chapter deliberately does not do
+
+- **No grammar.** Not one cell. `hola` is not "an interjection", `gracias` is not
+  "a plural noun". Those are true and they are §7.5's business, many chapters
+  away.
+- **No table.** Not a single one, so the chapter is drivable end to end and the
+  narration export needs no refusal.
+- **No forward reference.** Every word in every example is taught in this chapter.
+  The shop exchange has a hole in it *on purpose* rather than borrowing a noun
+  from Chapter 26 — which is exactly the reach-sideways failure HL09 §4.1
+  diagnosed.
+- **No apology for the language.** Nothing is called easy, simple, or obvious.
+- **No invented etymology.** Lesson 4 says outright that nobody knows where *hola*
+  comes from, and that its likeness to *hello* is a coincidence.
