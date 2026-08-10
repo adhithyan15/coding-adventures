@@ -309,3 +309,10 @@ LLVM's one-line textual `call`; `__gc_set_auto_minor(1)` is still never called b
 so the end-to-end payoff (auto minor GC actually running for AOT-compiled output) is still not
 turned on even for LLVM output — this PR closes the barrier-correctness gap, not the
 attestation/enactment step.
+
+**Update (`gc-core-capi` 0.24.5 / `iir-to-llvm` 0.51.0): the residual attestation gap this PR's
+own review flagged is closed.** `__gc_collect_minor_precise` — the direct entry point the new
+`gc_collect_minor_precise` test seam calls — previously bypassed `auto_minor` attestation
+entirely; only `__gc_safepoint`'s automatic dispatch enforced it. Fixed by moving the check to
+`__gc_collect_minor_precise` itself (the one shared entry point every caller goes through), so a
+future direct caller can't add a new bypass by forgetting to check.

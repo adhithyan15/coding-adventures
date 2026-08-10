@@ -1,5 +1,30 @@
 # Changelog — iir-to-llvm
 
+## 0.51.0 - 2026-08-10 - security-review hardening for the AOT00-T8 test seams
+
+- **New `gc_set_auto_minor` `call_builtin`** (→ `@__twig_gc_set_auto_minor(i64)`,
+  no dest). Companion to `gc-core-capi` 0.24.5's fix: `__gc_collect_minor_precise`
+  now enforces `auto_minor` attestation at that single shared entry point (a
+  security-review finding — the direct entry point previously bypassed the
+  attestation gate `__gc_safepoint`'s automatic path already enforced), so
+  `gc_collect_minor_precise` is a safe no-op without first calling this. Test-only,
+  like its two siblings — not exposed to Twig source.
+- `lang-aot/tests/llvm_gc_write_barrier.rs` updated to attest before its two minor
+  collections; this module's own `field_store` is what makes the attestation
+  genuinely true, not just asserted. Re-verified the real, compiled-and-executed
+  differential (removing the barrier call still fails the test; restoring it still
+  passes) continues to hold with the attestation in place.
+- 2 new unit tests in `test_backend.rs`: `call_builtin_gc_set_auto_minor_emits_
+  extern_call_and_declare`, plus the existing `gc_collect_minor_precise` test's doc
+  comment corrected (it previously said this bypassed the attestation gate
+  entirely — no longer accurate).
+- Fixed the one `gc-core-capi` unit test that called `__gc_collect_minor_precise`
+  directly without attesting (see that crate's own changelog).
+- Verification: `cargo build`/`test` clean across `gc-core`, `gc-core-capi`,
+  `iir-to-llvm`, `lang-aot` (`iir-to-llvm` 115 tests, up from 114; `lang-aot`'s
+  write-barrier test still 1/1 passing); `cargo clippy --all-targets -- -D
+  warnings` clean.
+
 ## 0.50.0 - 2026-08-10 - generational write barrier emission (AOT00-T8 follow-up)
 
 - **`field_store` now also emits a call to `@__twig_gc_write_barrier(i64 parent, i64

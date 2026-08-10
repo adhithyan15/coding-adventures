@@ -33,7 +33,7 @@ use crate::stack_scan::{
 };
 use crate::{
     __gc_alloc, __gc_alloc_kind, __gc_collection_count, __gc_kind_of, __gc_live_bytes,
-    __gc_register_kind, __gc_register_ref_array_kind, __gc_write_barrier,
+    __gc_register_kind, __gc_register_ref_array_kind, __gc_set_auto_minor, __gc_write_barrier,
 };
 use core::sync::atomic::{AtomicI64, Ordering};
 
@@ -198,16 +198,37 @@ pub unsafe extern "C" fn __twig_gc_collect_compacting() -> i64 {
     __gc_collect_compacting()
 }
 
+/// `__twig_gc_set_auto_minor(on)` → [`__gc_set_auto_minor`]. Attest that every
+/// reference store this embedder's compiled output performs is covered by
+/// `__gc_write_barrier` — see that function's own doc for the full soundness
+/// argument, and [`__gc_collect_minor_precise`]'s doc for why this attestation is
+/// now enforced (not just advisory) at every minor-collection entry point, direct or
+/// automatic. Test-only seam for now, added alongside `__twig_gc_collect_minor_precise`
+/// so a hand-built end-to-end test can attest before driving a real minor collection.
+///
+/// # Safety
+///
+/// Do not call with a nonzero `on` unless every heap-reference store this embedder's
+/// compiled output emits is genuinely barrier-covered — see [`__gc_set_auto_minor`].
+#[no_mangle]
+pub extern "C" fn __twig_gc_set_auto_minor(on: i64) {
+    __gc_set_auto_minor(on);
+}
+
 /// `__twig_gc_collect_minor_precise()` → [`__gc_collect_minor_precise`]. A **minor**
 /// (young-generation-only) collection rooted precisely at the caller's stack
 /// (AOT00-T8) — the generational analogue of [`__twig_gc_collect_precise`]. Returns
-/// the freed-object count. Unlike the automatic `should_collect_minor`/`auto_minor`
-/// policy path (`__gc_safepoint`'s three-way dispatch), this direct entry point needs
-/// no attestation — the caller takes on the barrier-correctness obligation by calling
-/// it at all. Test-only seam for now (`iir-to-llvm`'s `gc_collect_minor_precise`
-/// builtin, AOT00-T8 follow-up), added alongside `__twig_gc_write_barrier` to let an
-/// end-to-end test drive an unconditional minor collection and prove the write
-/// barrier keeps a remembered-set edge alive.
+/// the freed-object count.
+///
+/// **Requires [`__gc_set_auto_minor`] attestation, same as the automatic
+/// `should_collect_minor`/`auto_minor` policy path (`__gc_safepoint`'s three-way
+/// dispatch)** — [`__gc_collect_minor_precise`]'s own doc explains why this is
+/// enforced at that single shared entry point rather than left to each caller.
+/// Unattested, this alias is a safe no-op (collects nothing, returns `0`). Test-only
+/// seam for now (`iir-to-llvm`'s `gc_collect_minor_precise` builtin, AOT00-T8
+/// follow-up), added alongside `__twig_gc_write_barrier` to let an end-to-end test
+/// drive a real minor collection (after attesting) and prove the write barrier keeps
+/// a remembered-set edge alive.
 ///
 /// # Safety
 ///
