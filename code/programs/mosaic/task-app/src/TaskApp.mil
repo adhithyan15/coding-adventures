@@ -36,6 +36,25 @@ component TaskApp {
   slot status-label : text ;
   slot status-warn  : text ;
 
+  // The project-progress ring (task-app-icon-assets-v1.md) — the workspace's
+  // overall percent-complete as a circular fill, next to the view switcher.
+  // `ring-gradient` is a host-computed `conic-gradient(...)` CSS string (the
+  // one value in this whole component bound through UI36's `background`
+  // property rather than a size — see the spec's "the one real gap" section);
+  // `ring-percent` is the same number pre-formatted for the caption ("25%").
+  slot ring-gradient : text ;
+  slot ring-percent  : text ;
+
+  // The theme toggle (task-app-icon-assets-v1.md) — moved into the topbar
+  // from a `position: fixed` button main.tsx used to render entirely outside
+  // this component (invisible to mostyle, unreachable by keyboard nav in
+  // document order). `theme-is-dark` follows the same "non-empty slot gates
+  // a branch" idiom as `status-warn`/`allow-timeline` above — non-empty when
+  // the CURRENT theme is dark, so the layout shows a sun (the icon for the
+  // theme you'd switch TO) rather than needing string-equality comparison.
+  slot theme-is-dark : text ;
+  emit onToggleTheme ;
+
   // Per-project complexity toggle (Board ↔ Full CPM) — see
   // code/specs/task-app-complexity-config-v1.md. `complexity-label` names the
   // active project's CURRENT tier ("Board" / "Full CPM"), for a single small
@@ -155,12 +174,16 @@ component TaskApp {
   //                         [ 12 ] detail: dependency list (predecessors/successors,
   //                                each labelled FS/SS/FF/SF), or empty
   //                         [ 13 ] detail: attached notes' body text, or empty
+  //                         [ 14 ] group-count badge (task-app-icon-assets-v1.md) —
+  //                                present ONLY alongside cell 9, same row, same
+  //                                "opens a group" gating; the count of tasks in
+  //                                THIS group, pre-formatted (e.g. "2")
   //
   // Every cell is optional: an empty one (no due date, not overdue, nothing to add)
   // is the empty string and the layout hides it. Cells 6-8 and 12-13 are the
   // progressive-disclosure payload, filled ONLY for the expanded row — so a collapsed
   // list stays a plain to-do list, and the host skips the CPM recompute (and the
-  // dependency/notes lookups) entirely when nothing is open. 10-13 are appended
+  // dependency/notes lookups) entirely when nothing is open. 10-14 are appended
   // rather than inserted between 9 and the old end, so no existing row[n] reference
   // anywhere shifts meaning. Cell 13 was drafted once before and pulled back out
   // because nothing could populate `Note.attached_task` — now that

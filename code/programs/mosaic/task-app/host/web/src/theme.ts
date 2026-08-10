@@ -111,3 +111,24 @@ export function applyThemeGround(theme: Theme): void {
   const root = globalThis.document?.documentElement;
   if (root) root.style.background = GROUND[theme];
 }
+
+/**
+ * The progress ring's fill/track colours (task-app-icon-assets-v1.md). Same
+ * duplication reasoning as `GROUND` above — `ring-fill`'s background is the one
+ * UI36-bound property in the whole component, so the host computes the actual
+ * `conic-gradient(...)` string, and needs the right two colours per theme to do it.
+ */
+const RING_FILL: Record<Theme, string> = {
+  light: "#e0942a",
+  dark: "#eaa63f",
+};
+const RING_TRACK: Record<Theme, string> = {
+  light: "#e6ded3",
+  dark: "#352e25",
+};
+
+/** The ring's `background` value for a percent-complete, 0..100, in the given theme. */
+export function ringGradient(theme: Theme, percent: number): string {
+  const deg = (Math.max(0, Math.min(100, Math.round(percent))) / 100) * 360;
+  return `conic-gradient(${RING_FILL[theme]} ${deg}deg, ${RING_TRACK[theme]} ${deg}deg)`;
+}

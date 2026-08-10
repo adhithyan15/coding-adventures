@@ -11,10 +11,11 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
    didn't match a design token, collapsed-to-uniform spacing, drifted shadow alpha
    values) are closed — see `CHANGELOG.md`'s "re-closed the design-fidelity gap" entry.
    What's left needs either a product decision or real feature work, not a value fix:
-   - Icon/SVG assets: brand mark glyph, segmented-switch icons, a progress ring, a
-     stroked moon icon for the theme toggle (currently a floating unicode-glyph button
-     outside the topbar's flow — also worth moving into the topbar while touching it),
-     the pill status dot, group-count badge, composer "+" icon box.
+   - Icon/SVG assets — mostly shipped (see Resolved below): brand mark, progress
+     ring, real theme-toggle icon (now in the topbar, not a floating button), pill
+     status dot, group-count badge, composer "+" icon box. Segmented-switch icons
+     split out as their own Backlog item below (needs iterating six icons together
+     as a matched family, not a capability gap).
    - Board: a 4th column ("In review" — mock has 4, live has 3), colored top accent bar
      + card-count badge on each column header, critical cards get a colored left border
      instead of a text chip.
@@ -33,6 +34,14 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Backlog (lower priority — Phase 10+, spec explicitly defers these)
 
+- **Segmented-switch icons.** Split out from the icon/SVG-assets item (see
+  Resolved below) — everything else in that item shipped. The six
+  view-switcher buttons (List/Board/Sheet/Calendar/Notes/Timeline) each want
+  a small line icon in the mock. Same construction technique as everything
+  else in that item (small Box/Stack compositions, no new primitive) — not a
+  capability gap, deferred because six icons need to read as one matched
+  family at a glance, which benefits from iterating on the rendered set
+  side-by-side rather than shipping six independent first guesses.
 - **Gantt dependency arrows.** Split out from the richer-Gantt item (see
   Resolved below) — everything else in that item shipped. Curved FS
   connectors between two bars need genuine 2D line-drawing the UI29 kernel
@@ -82,6 +91,29 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Resolved (kept for traceability, not actionable)
 
+- **Icon/SVG assets.** Closes most of the design-fidelity gap's icon line —
+  see `code/specs/task-app-icon-assets-v1.md`. Pill status dot
+  (`currentColor`), group-count badge (a new appended `taskRows` cell),
+  composer "+" icon box (dashed border, two crossed bars), the theme toggle
+  moved into the topbar as a real `HostButton` with a drawn crescent moon /
+  filled sun (`HostButton` can't render children, so the shape is the
+  button's own background/box-shadow, with the accessible label kept but
+  visually hidden), a progress ring (needed a small, disclosed
+  `mosaic-emit-react` change — UI36's bindable-property list gained
+  `background`, its one continuously-data-driven property), and a brand mark
+  (a bridge arc — two posts + a border-only arc — user-chosen from a
+  proposed shortlist). Every shape is built from primitives that already
+  exist (`Stack`'s absolute-positioned children, individual-corner
+  `border-radius`, individual-side `border-*`) — no new SVG-embedding
+  kernel primitive, no image files. Segmented-switch icons are the one
+  piece that didn't ship — split into its own Backlog item above, since
+  it's a design-consistency concern (six icons need to read as one matched
+  family) rather than more of the same construction work. Verified live in
+  both themes via DOM/computed-style inspection (this session's browser
+  pane doesn't compose screenshot frames): the ring's `conic-gradient`
+  recomputing correctly as task-done state changes, the group-count badge
+  tracking group membership, the theme toggle swapping shapes with the
+  correct accessible label; zero console errors.
 - **Richer Gantt.** Closes most of the design-fidelity gap's Timeline
   line — see `code/specs/task-app-richer-gantt-v1.md`. A day-grid ruler
   (weekday/today shading — a strip above the bars, not composited behind

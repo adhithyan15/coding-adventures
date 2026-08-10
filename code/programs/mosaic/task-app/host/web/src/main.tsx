@@ -14,6 +14,7 @@ import { TaskApp as TaskAppDark } from "./TaskApp.dark";
 import {
   applyThemeGround,
   resolveTheme,
+  ringGradient as computeRingGradient,
   storeTheme,
   watchSystemTheme,
   type Theme,
@@ -702,6 +703,15 @@ function makeController(engine: any, init: ControllerInit = {}) {
       };
       let lastGroup = "";
 
+      // Sizes for the group-count badge (task-app-icon-assets-v1.md) — tallied up
+      // front so the heading row (the only one that prints a count) can look its
+      // group's total up instead of the loop below tracking a running total.
+      const groupSizes = new Map<string, number>();
+      for (const id of displayIds()) {
+        const g = groupOf(id);
+        groupSizes.set(g, (groupSizes.get(g) ?? 0) + 1);
+      }
+
       // displayIds() is the ONE ordering: the rows are drawn from it and every click
       // index is resolved through it. Deriving them separately is how this app got a
       // row-index desync before — a click landed on whatever task happened to sit at
@@ -749,6 +759,9 @@ function makeController(engine: any, init: ControllerInit = {}) {
           // and same progressive-disclosure gating as d1-d3: empty unless open.
           isOpen ? depsFor(id) : "",
           isOpen ? notesFor(id) : "",
+          // Present only alongside the heading cell above (row[9]) — TaskApp.mil's
+          // doc comment on task-rows documents this pairing.
+          heading ? String(groupSizes.get(group)) : "",
         ];
       });
       const doneCount = ids.filter((id) => byTask.get(id)!.value[DONE]?.value === true).length;
@@ -795,10 +808,21 @@ function makeController(engine: any, init: ControllerInit = {}) {
       // reused here so the headers/widths/sort-options line up with the cells
       // sheetRows() returned (same array, same order, same length).
       const sheetFields = visibleSheetFields(complexity);
+      // Project-wide percent-complete for the progress ring. `ringGradient` below is
+      // a placeholder — the actual `conic-gradient(...)` needs the resolved theme,
+      // which this controller (shared by both TaskAppLight and TaskAppDark) never
+      // sees, so Root overrides it with `ringGradient(theme, ringPercentValue)` from
+      // ./theme.ts before handing props to the emitted component. Same reasoning as
+      // `GROUND` in theme.ts: the host computes what the stylesheet can't know.
+      const ringPercentValue = ids.length ? Math.round((doneCount / ids.length) * 100) : 0;
       return {
         appTitle: "Tasks — auto-scheduled",
         statusLabel: overdue > 0 ? `${overdue} overdue` : "On track",
         statusWarn: overdue > 0 ? "warn" : "",
+        ringPercentValue,
+        ringPercent: `${ringPercentValue}%`,
+        ringGradient: "",
+        themeIsDark: "",
         complexityLabel: complexity === "full" ? "Full CPM" : "Board",
         allowTimeline: complexity === "full" ? "full" : "",
         timelineMode: view === "timeline" ? "timeline" : "",
@@ -1273,10 +1297,6 @@ async function boot() {
   function Root() {
     const [props, setProps] = useState(() => controller.getProps());
     const [theme, setTheme] = useState<Theme>(resolveTheme);
-    const dispatch = useCallback((event: TaskAppEvent) => {
-      controller.apply(event);
-      setProps(controller.getProps());
-    }, []);
 
     // Switching theme swaps the rendered component *type*, so React unmounts the old
     // tree and builds a new one — which destroys the focused <input> and drops the
@@ -1334,34 +1354,30 @@ async function boot() {
       changeTheme(next);
     }, [theme, changeTheme]);
 
+    // The toggle is now a real HostButton in the topbar (task-app-icon-assets-v1.md),
+    // emitting `toggleTheme` like any other control — but theme lives here in Root,
+    // not in `controller`'s engine-backed state, so it's intercepted before reaching
+    // `controller.apply`, which has never heard of it and shouldn't need to.
+    const dispatch = useCallback(
+      (event: TaskAppEvent) => {
+        if (event.type === "toggleTheme") {
+          toggle();
+          return;
+        }
+        controller.apply(event);
+        setProps(controller.getProps());
+      },
+      [toggle],
+    );
+
     const Emitted = theme === "dark" ? TaskAppDark : TaskAppLight;
     return (
-      <>
-        <Emitted {...props} dispatch={dispatch} />
-        <button
-          onClick={toggle}
-          aria-label={`Switch to the ${theme === "dark" ? "light" : "dark"} theme`}
-          title={`Switch to the ${theme === "dark" ? "light" : "dark"} theme`}
-          style={{
-            position: "fixed",
-            top: 16,
-            right: 16,
-            width: 34,
-            height: 34,
-            borderRadius: 9,
-            cursor: "pointer",
-            fontSize: 15,
-            lineHeight: "1",
-            // Themed by hand: this control is the host's, not the emitted component's,
-            // so mosstyle never sees it.
-            background: theme === "dark" ? "#252019" : "#fffdfa",
-            color: theme === "dark" ? "#eaa63f" : "#b6741a",
-            border: `1px solid ${theme === "dark" ? "#352e25" : "#e6ded3"}`,
-          }}
-        >
-          {theme === "dark" ? "☀" : "☾"}
-        </button>
-      </>
+      <Emitted
+        {...props}
+        themeIsDark={theme === "dark" ? "dark" : ""}
+        ringGradient={computeRingGradient(theme, props.ringPercentValue)}
+        dispatch={dispatch}
+      />
     );
   }
 

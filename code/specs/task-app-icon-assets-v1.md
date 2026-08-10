@@ -117,15 +117,25 @@ binds it the same way a Gantt bar's width is bound today.
   `slot ring-gradient : text ;` (the computed `conic-gradient(...)`
   string) and `slot ring-percent : text ;` (the number, for the
   "NN% complete" caption) added near `status-warn`. Task rows' group
-  heading gains an appended count cell. `slot theme-icon-kind : text ;`
-  (`"sun"` or `"moon"`) and `emit onToggleTheme ;` replace the
-  host-owned floating button.
+  heading gains an appended count cell (`row[14]`, present only
+  alongside the heading cell). **Diverged from the original plan here**:
+  rather than `slot theme-icon-kind : text ;` (`"sun"`/`"moon"`), shipped
+  as `slot theme-is-dark : text ;` — the existing non-empty-string-as-
+  boolean idiom already used by `status-warn`/`allow-timeline`, driving
+  an `If`/`Else` in `.mll` between the two `HostButton`s, rather than a
+  three-way string the layout would need to branch on twice. `emit
+  onToggleTheme ;` replaces the host-owned floating button, as planned.
 - `TaskApp.mll`/`.msl`: the shapes described above, each a `Stack` of
   a small number of `Box` children with static or (ring only)
   UI36-bound styling.
-- `main.tsx`: drops the fixed-position theme button entirely; the
-  toggle logic (`storeTheme`/`changeTheme`) moves into the dispatch
-  case for the new `onToggleTheme` emit. A small pure helper computes
-  the ring's conic-gradient string and the group-count cells, mirroring
-  `timeline.ts`'s "pure arithmetic, host formats, layout just places
-  it" pattern.
+- `main.tsx`/`theme.ts`: drops the fixed-position theme button entirely;
+  `toggleTheme` is dispatched like any other emit but intercepted in
+  `Root` before reaching `controller.apply` — theme is page-level React
+  state, not part of the engine-backed controller, which never learns
+  about it. `theme.ts` gained `ringGradient(theme, percent)` (the actual
+  `conic-gradient(...)` string, needing the resolved theme the shared
+  controller can't see — same duplicated-palette reasoning as `GROUND`
+  in the same file) and `getProps()` gained `ringPercentValue` (a raw
+  number) plus the group-count tally ahead of the row-building loop that
+  already walks the same list, mirroring `timeline.ts`'s "pure
+  arithmetic, host formats, layout just places it" pattern.
