@@ -4917,6 +4917,10 @@ impl HtmlParser {
             && self.current_element_is_marked_foreign_fragment_context()
             && matches!(name.as_str(), "br" | "p")
         {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-html-start-tag-in-foreign-content",
+                format!("HTML start tag `<{name}>` forced recovery from foreign content"),
+            ));
             let child_index = self.append_node(Node::element(name.clone(), Vec::new()));
             if name == "p" {
                 let mut path = self.current_parent_path().to_vec();
@@ -33956,6 +33960,17 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "unexpected-html-start-tag-in-foreign-content"));
+
+        let fragment = parse_html_fragment_for_context_with_diagnostics("<p>", "svg svg").unwrap();
+        assert_eq!(fragment.nodes.len(), 1);
+        assert_eq!(element(&fragment.nodes[0]).name, "p");
+        assert_eq!(
+            fragment.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-html-start-tag-in-foreign-content",
+                "HTML start tag `<p>` forced recovery from foreign content"
+            )]
+        );
     }
 
     #[test]

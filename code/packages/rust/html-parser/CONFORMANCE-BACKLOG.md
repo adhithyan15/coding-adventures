@@ -28,8 +28,8 @@ tree-construction cases and all 6,806 html5lib tokenizer cases with zero missing
 signatures and zero normalized skips. DOM output is complete, but diagnostic
 coverage is not:
 the checked 2,637-case tree corpus declares 6,243 errors across 2,183 cases.
-After the seeded-HTML after-body diagnostic slice, 2,182 of those cases emit at
-least one lexer or parser diagnostic and 1 remains uncovered.
+After the seeded-SVG foreign-breakout diagnostic slice, all 2,183 malformed
+cases emit at least one lexer or parser diagnostic and none remain uncovered.
 Another 139 cases emit diagnostics despite having no legacy `#errors` rows.
 These are reviewed rather than automatically removed: 89 are full-document
 inputs for which the legacy fixtures omit the Standard-required missing-doctype
@@ -65,23 +65,16 @@ open table blocks adoption-agency recovery. Description-list item start tags
 now report when implied-end-tag recovery closes a non-current `dt` or `dd`,
 without flagging adjacent description-list items.
 
-The sole residual case is an HTML start tag in a seeded SVG context. A second
-`body` end tag in a seeded `html` fragment now reports its after-body insertion
-mode parse error. Non-whitespace text discarded by a seeded `colgroup` context
-reports its table insertion-mode parse error. Character data and start tags
-after an `html` end tag report even when the end tag materializes an implied
-document shell around leading body text. The current corpus no longer has a
-silent script-tokenizer, document-tail, frameset, table-shell, table-fragment,
-HTML-fragment, foreign end-tag, formatting-only, or general in-body group.
+There are no residual malformed tree-construction cases without a lexer or
+parser diagnostic. HTML `p` and `br` start tags recovered from seeded foreign
+fragment contexts now report their foreign-content breakout parse error. A
+second `body` end tag in a seeded `html` fragment reports its after-body
+insertion-mode parse error, and non-whitespace text discarded by a seeded
+`colgroup` context reports its table insertion-mode parse error.
 
 Prioritized work items:
 
-1. **Fragment-context parsing.** Cover the final foreign HTML start-tag row.
-   Invalid start and end tags targeting seeded fragment-context elements now
-   report without mutating their synthetic shells, seeded `colgroup` text
-   recovery reports its insertion-mode parse error, and seeded `html` fragments
-   report tokens reprocessed from after-body mode.
-2. **Table, select, and template insertion modes.** Continue the algorithm
+1. **Table, select, and template insertion modes.** Continue the algorithm
    audit beyond the currently exercised diagnostic corpus.
    Non-whitespace table text now reports when it is foster-parented. The
    specialized SVG and MathML start-tag path now reports when table insertion
@@ -96,14 +89,14 @@ Prioritized work items:
    structure foster-parents them, covering the remaining silent fostered-anchor
    starts. Seeded table and foreign fragment-shell boundaries now report their
    required parse errors.
-3. **Adoption agency and active formatting.** Cover malformed formatting cases
+2. **Adoption agency and active formatting.** Cover malformed formatting cases
    without changing their now-conforming DOM output.
-4. **Diagnostic positions and error taxonomy.** Carry source positions into
+3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
-5. **Input boundary review.** Document the Unicode-code-point parser boundary
+4. **Input boundary review.** Document the Unicode-code-point parser boundary
    and either add or explicitly separate byte decoding and encoding sniffing.
-6. **Algorithm and differential audit.** Map implemented states/modes to the
+5. **Algorithm and differential audit.** Map implemented states/modes to the
    current HTML Standard and add deterministic differential/fuzz coverage for
    branches not exercised by the upstream corpora.
 

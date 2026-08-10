@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- HTML `p` and `br` start tags recovered from seeded foreign fragment contexts
+  now report the foreign-content breakout parse error. This closes the final
+  malformed tree-construction case that previously emitted no diagnostic.
 - A second `body` end tag in a seeded `html` fragment context now reports that
   it was reprocessed from the after-body insertion mode. This covers the final
   silent HTML-fragment corpus case without changing its recovered DOM.
