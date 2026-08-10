@@ -187,9 +187,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   the dot below, lift once, then keep the pointed hooked head, descent, and bowl
   in one continuous run. The chapter's alternate flat head is purely aesthetic,
   so the learner path preserves the pointed form without inventing a different
-  lift count. The remaining **206** prose part orders across eight scripts
+  lift count. Urdu **ر** follows from the next source-backed chapter as one
+  uninterrupted downward line that curves left. Its zero-lift learner path
+  preserves the chapter's separate final-form motion and its Naskh/Nastaliq
+  distinction without conflating them with the independent form. The remaining
+  **205** prose part orders across eight scripts
 (`arabic` 21, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33,
-`hebrew` 22, `japanese` 34, `urdu-nastaliq` 11) are explicitly **unverified for
+`hebrew` 22, `japanese` 34, `urdu-nastaliq` 10) are explicitly **unverified for
 pen lifts**. The data validator rejects a lift count without a citation (or a
 citation without a count), and Language Ladder's ductus test proves every verified
 claim has the same cited, font-checked path. That closes `HL-C19`; future entries

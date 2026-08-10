@@ -225,6 +225,9 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // Urdu ج starts with its dot, then restarts once on the independent body: the
 // pointed hooked head turns into the descent and bowl without another lift.
 // The textbook's separately animated flat head is an aesthetic alternative.
+// Urdu ر descends first, then bends left without lifting. The source contrasts
+// that independent run with the sharper lower-left drop of the final form and
+// records a separate Naskh/Nastaliq difference for final re.
 // The adjacent ب starts at the bowl's right lip, sweeps right-to-left through
 // its shallow dip, then lifts once before placing the separate dot below.
 // After the intervening Persian-added پ row, ت repeats the same bowl, lifts to
@@ -374,6 +377,44 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: urduAlphabetSource("ج"),
+  },
+  [ductusKey("urdu-nastaliq", "ر")]: {
+    script: "urdu-nastaliq",
+    glyph: "ر",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the downward line",
+            path: [
+              { x: 250, y: 320 },
+              { x: 248, y: 280 },
+              { x: 255, y: 235 },
+              { x: 270, y: 190 },
+              { x: 287, y: 145 },
+              { x: 300, y: 95 },
+              { x: 304, y: 48 },
+            ],
+          },
+          {
+            label: "continue curving to the left",
+            path: [
+              { x: 304, y: 48 },
+              { x: 298, y: 8 },
+              { x: 284, y: -30 },
+              { x: 260, y: -68 },
+              { x: 226, y: -103 },
+              { x: 185, y: -130 },
+              { x: 140, y: -146 },
+              { x: 95, y: -151 },
+              { x: 52, y: -147 },
+              { x: 10, y: -136 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: urduAlphabetSource("ر"),
   },
   "ب": {
     script: "perso-arabic",

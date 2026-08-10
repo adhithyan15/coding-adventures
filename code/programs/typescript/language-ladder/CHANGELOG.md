@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Urdu independent-re ductus (HL-C09W)
+
+- Add Urdu independent ر from Northwestern's *Zer o Zabar* animation and prose
+  as one downward line that curves left in a zero-lift stroke.
+- Preserve the source's separate final-form motion and final-re Naskh/Nastaliq
+  distinction while fitting the independent path to Noto Naskh.
+- Render a real two-frame filmstrip whose movements stay in the same pen-down
+  run, with source, prose, geometry, and summary agreement.
+
 ### Added — cited Urdu independent-jim ductus (HL-C09V)
 
 - Add Urdu independent ج from Northwestern's *Zer o Zabar* animation as a
