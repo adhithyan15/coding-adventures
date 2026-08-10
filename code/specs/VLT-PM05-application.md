@@ -591,7 +591,12 @@ create new object identities.
 ## 12. Audit and status
 
 `status` is safe while locked and reports only `Absent`, `Prepared`, `Locked`,
-`Unlocked`, or `RecoveryRequired`, plus low-resolution counts where safe.
+`Unlocked`, or `RecoveryRequired`. Locked status strictly decodes the bounded
+owner-private state and does not access bootstrap or repository providers.
+Exact item, retained-candidate, and conflicted-item counts are reported only
+from an already authenticated unlocked session; every other state omits them.
+Status never returns vault, device, item, revision, object, locator, or provider
+identities. Owner-state failures use the closed application error taxonomy.
 
 `audit_verify` while unlocked repeats a full VLT-PM04 open, decrypts every
 reachable catalog/current revision, validates all kinds and domain bounds,

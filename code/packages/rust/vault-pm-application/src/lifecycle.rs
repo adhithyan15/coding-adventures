@@ -1,6 +1,6 @@
 use crate::{
     open_active_vault, ApplicationError, ApplicationRepositoryFactory, BootstrapLocator,
-    BootstrapStore, LocalStateStore, UnlockedVaultV1,
+    BootstrapStore, LocalStateStore, UnlockedVaultV1, VaultStatusV1,
 };
 use coding_adventures_zeroize::Zeroizing;
 use core::fmt::{self, Debug, Formatter};
@@ -67,6 +67,19 @@ impl VaultAccessV1 {
             Self::Locked(_) => Err(ApplicationError::Locked),
             Self::Unlocked(session) => Ok(session.as_ref()),
         }
+    }
+
+    /// Return a secret-free low-resolution status projection.
+    ///
+    /// Locked access reads and strictly decodes only the owner-private state
+    /// needed to distinguish absent, prepared, active, and recovery-required
+    /// states. Unlocked access reports authenticated aggregate counts from the
+    /// retained session and does not consult an external provider.
+    pub fn status(
+        &self,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<VaultStatusV1, ApplicationError> {
+        crate::status::status(self, local_state_store)
     }
 
     /// Consume the boundary and return its unlocked session.

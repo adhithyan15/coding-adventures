@@ -1327,7 +1327,10 @@ changelog, focused build, and downstream validation.
        interactive reveal, and warned unsafe non-interactive policy inputs;
    7c-3. host clipboard adapter with ownership-aware timed clear;
    7d. authenticated portable export and restore/import preparation; and
-   7e. audit, status, and doctor workflows; and
+   7e-1. completed safe five-state status workflow, strictly decoding bounded
+       owner state while locked and exposing only authenticated aggregate item,
+       candidate, and conflict counts while unlocked;
+   7e-2. audit verification and doctor workflows; and
    7f. completed stable payload-free VLT-PM05 `Locked` error and compact
        locked/unlocked lifecycle boundary, including failure-stable in-place
        unlock and synchronous live-session drop on idempotent lock.

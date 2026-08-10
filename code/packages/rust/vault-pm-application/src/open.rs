@@ -1536,6 +1536,125 @@ mod tests {
     }
 
     #[test]
+    fn status_is_safe_while_locked_and_adds_counts_only_while_unlocked() {
+        let absent_local = MemoryLocalStateStore::default();
+        let absent = crate::VaultAccessV1::locked(BootstrapLocator::new([0x91; 32]));
+        let status = absent.status(&absent_local).unwrap();
+        assert_eq!(status.state(), crate::VaultStatusStateV1::Absent);
+        assert_eq!(status.item_count(), None);
+        assert_eq!(status.candidate_count(), None);
+        assert_eq!(status.conflicted_item_count(), None);
+        assert_eq!(format!("{status:?}"), "VaultStatusV1 { state: Absent }");
+
+        let prepared = prepare_generation_zero(
+            Zeroizing::new(b"prepared passphrase".to_vec()),
+            GenerationZeroPolicyV1::new(8 * 1024, 1, 1, 10).unwrap(),
+            randomness(),
+        )
+        .unwrap();
+        let prepared_locator = prepared.bootstrap_locator();
+        let prepared_local =
+            MemoryLocalStateStore::with_state(prepared.owner_state().encode().unwrap());
+        let status = crate::VaultAccessV1::locked(prepared_locator)
+            .status(&prepared_local)
+            .unwrap();
+        assert_eq!(status.state(), crate::VaultStatusStateV1::Prepared);
+        assert_eq!(status.item_count(), None);
+
+        let (locator, local, bootstrap, factory) = initialized();
+        let mut access = crate::VaultAccessV1::locked(locator);
+        let status = access.status(&local).unwrap();
+        assert_eq!(status.state(), crate::VaultStatusStateV1::Locked);
+        assert_eq!(status.item_count(), None);
+
+        access
+            .unlock(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap();
+        let status = access.status(&local).unwrap();
+        assert_eq!(status.state(), crate::VaultStatusStateV1::Unlocked);
+        assert_eq!(status.item_count(), Some(0));
+        assert_eq!(status.candidate_count(), Some(0));
+        assert_eq!(status.conflicted_item_count(), Some(0));
+        assert_eq!(
+            format!("{status:?}"),
+            "VaultStatusV1 { state: Unlocked, item_count: 0, candidate_count: 0, conflicted_item_count: 0 }"
+        );
+
+        access.lock();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("initialized state must be active")
+        };
+        let pending =
+            LocalVaultStateV1::pending_publication(active.clone(), pending_publication(&active))
+                .unwrap();
+        *local.0.lock().unwrap() = Some(pending.encode().unwrap());
+        let status = access.status(&local).unwrap();
+        assert_eq!(status.state(), crate::VaultStatusStateV1::RecoveryRequired);
+        assert_eq!(status.item_count(), None);
+        assert_eq!(
+            format!("{status:?}"),
+            "VaultStatusV1 { state: RecoveryRequired }"
+        );
+    }
+
+    #[test]
+    fn locked_status_closes_owner_state_failures() {
+        struct FailingLocalStateStore(LocalStateStoreError);
+
+        impl LocalStateStore for FailingLocalStateStore {
+            fn load(
+                &self,
+                _locator: BootstrapLocator,
+            ) -> Result<Option<Vec<u8>>, LocalStateStoreError> {
+                Err(self.0)
+            }
+
+            fn compare_exchange(
+                &self,
+                _locator: BootstrapLocator,
+                _expected: Option<&[u8]>,
+                _replacement: &[u8],
+            ) -> Result<(), LocalStateStoreError> {
+                Err(self.0)
+            }
+        }
+
+        let access = crate::VaultAccessV1::locked(BootstrapLocator::new([0x92; 32]));
+        for (store_error, expected) in [
+            (
+                LocalStateStoreError::Unavailable,
+                ApplicationError::StorageUnavailable,
+            ),
+            (
+                LocalStateStoreError::ConcurrentHost,
+                ApplicationError::ConcurrentHost,
+            ),
+            (
+                LocalStateStoreError::Corruption,
+                ApplicationError::IntegrityFailure,
+            ),
+        ] {
+            assert_eq!(
+                access.status(&FailingLocalStateStore(store_error)),
+                Err(expected)
+            );
+        }
+
+        let corrupt = MemoryLocalStateStore::with_state(vec![0xff]);
+        assert_eq!(
+            access.status(&corrupt),
+            Err(ApplicationError::IntegrityFailure)
+        );
+    }
+
+    #[test]
     fn active_open_materializes_every_current_revision_candidate() {
         let (locator, local, bootstrap, factory) = initialized();
         let exact_active = local.0.lock().unwrap().clone().unwrap();
