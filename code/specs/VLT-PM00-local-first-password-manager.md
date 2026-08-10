@@ -1412,6 +1412,10 @@ changelog, focused build, and downstream validation.
     deterministic TOML rendering, using `VLT-PM07-config.md`. It persists the
     opaque bootstrap locator and typed storage selections without receiving
     passphrases, provider credentials, item metadata, or host capabilities.
+8d. `vault-pm-local-host`: exact bounded configuration loading plus atomic
+    owner-only initial creation and compare-and-exchange, guarded by the same
+    cross-process writer capability. Persistence remains schema-blind and
+    safely stores canonical bytes emitted by `vault-pm-config`.
 9. `vault-pm-cli` + real executable and pseudo-terminal E2E suite.
 10. Crash/fault matrix and local restore drill.
 

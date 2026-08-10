@@ -1,13 +1,16 @@
 use super::{LocalHostError, MAX_PATH_BYTES};
 use std::ffi::c_void;
 use std::fs::File;
+use std::io::{Read, Write};
 use std::mem::{size_of, MaybeUninit};
 use std::os::windows::ffi::OsStrExt;
 use std::os::windows::io::{AsRawHandle, FromRawHandle, OwnedHandle};
-use std::path::{Component, Path};
+use std::path::{Component, Path, PathBuf};
 use std::ptr::{addr_of, null, null_mut};
+use std::sync::atomic::{AtomicU64, Ordering};
 use windows_sys::Win32::Foundation::{
-    BOOL, ERROR_ALREADY_EXISTS, HANDLE, INVALID_HANDLE_VALUE, PSID,
+    BOOL, ERROR_ALREADY_EXISTS, ERROR_FILE_EXISTS, ERROR_FILE_NOT_FOUND, ERROR_PATH_NOT_FOUND,
+    HANDLE, INVALID_HANDLE_VALUE, PSID,
 };
 use windows_sys::Win32::Security::{
     AclSizeInformation, AddAccessAllowedAce, EqualSid, GetAce, GetAclInformation,
@@ -19,11 +22,12 @@ use windows_sys::Win32::Security::{
     SE_DACL_PROTECTED, TOKEN_QUERY, TOKEN_USER,
 };
 use windows_sys::Win32::Storage::FileSystem::{
-    CreateDirectoryW, CreateFileW, FileAttributeTagInfo, GetFileInformationByHandleEx, CREATE_NEW,
-    FILE_ALL_ACCESS, FILE_ATTRIBUTE_DIRECTORY, FILE_ATTRIBUTE_REPARSE_POINT,
-    FILE_ATTRIBUTE_TAG_INFO, FILE_FLAG_BACKUP_SEMANTICS, FILE_FLAG_OPEN_REPARSE_POINT,
-    FILE_GENERIC_READ, FILE_GENERIC_WRITE, FILE_READ_ATTRIBUTES, FILE_SHARE_DELETE,
-    FILE_SHARE_READ, FILE_SHARE_WRITE, OPEN_EXISTING,
+    CreateDirectoryW, CreateFileW, DeleteFileW, FileAttributeTagInfo, GetFileInformationByHandleEx,
+    MoveFileExW, CREATE_NEW, FILE_ALL_ACCESS, FILE_ATTRIBUTE_DIRECTORY,
+    FILE_ATTRIBUTE_REPARSE_POINT, FILE_ATTRIBUTE_TAG_INFO, FILE_FLAG_BACKUP_SEMANTICS,
+    FILE_FLAG_OPEN_REPARSE_POINT, FILE_GENERIC_READ, FILE_GENERIC_WRITE, FILE_READ_ATTRIBUTES,
+    FILE_SHARE_DELETE, FILE_SHARE_READ, FILE_SHARE_WRITE, MOVEFILE_REPLACE_EXISTING,
+    MOVEFILE_WRITE_THROUGH, OPEN_EXISTING,
 };
 use windows_sys::Win32::System::SystemServices::{
     ACCESS_ALLOWED_ACE_TYPE, SECURITY_DESCRIPTOR_REVISION,
@@ -32,6 +36,8 @@ use windows_sys::Win32::System::Threading::{GetCurrentProcess, OpenProcessToken}
 
 const MAX_SECURITY_DESCRIPTOR_BYTES: u32 = 64 * 1024;
 const MINIMUM_SID_BYTES: usize = 8;
+const MAX_TEMPORARY_ATTEMPTS: usize = 64;
+static NEXT_TEMPORARY: AtomicU64 = AtomicU64::new(0);
 
 pub(super) fn ensure_private_directory(path: &Path) -> Result<(), LocalHostError> {
     validate_absolute(path)?;
@@ -81,8 +87,10 @@ pub(super) fn open_private_lock(path: &Path) -> Result<File, LocalHostError> {
         )
     };
     let raw = if raw == INVALID_HANDLE_VALUE
-        && unsafe { windows_sys::Win32::Foundation::GetLastError() } == ERROR_ALREADY_EXISTS
-    {
+        && matches!(
+            unsafe { windows_sys::Win32::Foundation::GetLastError() },
+            ERROR_ALREADY_EXISTS | ERROR_FILE_EXISTS
+        ) {
         unsafe {
             CreateFileW(
                 wide.as_ptr(),
@@ -90,7 +98,7 @@ pub(super) fn open_private_lock(path: &Path) -> Result<File, LocalHostError> {
                 FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
                 null(),
                 OPEN_EXISTING,
-                FILE_FLAG_OPEN_REPARSE_POINT,
+                FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT,
                 0,
             )
         }
@@ -101,6 +109,169 @@ pub(super) fn open_private_lock(path: &Path) -> Result<File, LocalHostError> {
     verify_regular_file(handle.as_raw_handle() as HANDLE)?;
     verify_owner_acl(handle.as_raw_handle() as HANDLE)?;
     Ok(File::from(handle))
+}
+
+pub(super) fn load_private_config(
+    path: &Path,
+    max_bytes: usize,
+) -> Result<Option<Vec<u8>>, LocalHostError> {
+    validate_absolute(path)?;
+    let parent = path.parent().ok_or(LocalHostError::InvalidPath)?;
+    let parent_handle = open_directory(parent)?;
+    verify_owner_acl(parent_handle.as_raw_handle() as HANDLE)?;
+    let wide = wide_path(path)?;
+    let raw = unsafe {
+        CreateFileW(
+            wide.as_ptr(),
+            FILE_GENERIC_READ,
+            FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+            null(),
+            OPEN_EXISTING,
+            FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT,
+            0,
+        )
+    };
+    if raw == INVALID_HANDLE_VALUE {
+        return match unsafe { windows_sys::Win32::Foundation::GetLastError() } {
+            ERROR_FILE_NOT_FOUND | ERROR_PATH_NOT_FOUND => Ok(None),
+            _ => Err(LocalHostError::AccessFailed),
+        };
+    }
+    let handle = owned_handle(raw).map_err(|_| LocalHostError::AccessFailed)?;
+    verify_regular_file(handle.as_raw_handle() as HANDLE)?;
+    verify_owner_acl(handle.as_raw_handle() as HANDLE)?;
+    let file = File::from(handle);
+    let mut bytes = Vec::new();
+    file.take((max_bytes as u64).saturating_add(1))
+        .read_to_end(&mut bytes)
+        .map_err(|_| LocalHostError::AccessFailed)?;
+    if bytes.is_empty() || bytes.len() > max_bytes {
+        return Err(LocalHostError::InvalidConfigBytes);
+    }
+    Ok(Some(bytes))
+}
+
+pub(super) fn create_private_config(
+    path: &Path,
+    bytes: &[u8],
+    max_bytes: usize,
+) -> Result<(), LocalHostError> {
+    if load_private_config(path, max_bytes)?.is_some() {
+        return Err(LocalHostError::ConfigAlreadyExists);
+    }
+    verify_config_parent(path)?;
+    let (temporary, temporary_path) = create_temporary(path)?;
+    let result = (|| {
+        persist_temporary(&temporary, bytes)?;
+        let source = wide_path(&temporary_path)?;
+        let destination = wide_path(path)?;
+        if unsafe {
+            MoveFileExW(
+                source.as_ptr(),
+                destination.as_ptr(),
+                MOVEFILE_WRITE_THROUGH,
+            )
+        } == 0
+        {
+            return Err(
+                match unsafe { windows_sys::Win32::Foundation::GetLastError() } {
+                    ERROR_ALREADY_EXISTS | ERROR_FILE_EXISTS => LocalHostError::ConfigAlreadyExists,
+                    _ => LocalHostError::AccessFailed,
+                },
+            );
+        }
+        Ok(())
+    })();
+    if result.is_err() {
+        delete_temporary(&temporary_path);
+    }
+    result
+}
+
+pub(super) fn compare_exchange_private_config(
+    path: &Path,
+    expected: &[u8],
+    replacement: &[u8],
+    max_bytes: usize,
+) -> Result<(), LocalHostError> {
+    if load_private_config(path, max_bytes)?.as_deref() != Some(expected) {
+        return Err(LocalHostError::ConfigConflict);
+    }
+    let (temporary, temporary_path) = create_temporary(path)?;
+    let result = (|| {
+        persist_temporary(&temporary, replacement)?;
+        let source = wide_path(&temporary_path)?;
+        let destination = wide_path(path)?;
+        let flags = MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH;
+        if unsafe { MoveFileExW(source.as_ptr(), destination.as_ptr(), flags) } == 0 {
+            return Err(LocalHostError::AccessFailed);
+        }
+        Ok(())
+    })();
+    if result.is_err() {
+        delete_temporary(&temporary_path);
+    }
+    result
+}
+
+fn verify_config_parent(path: &Path) -> Result<(), LocalHostError> {
+    validate_absolute(path)?;
+    let parent = path.parent().ok_or(LocalHostError::InvalidPath)?;
+    let handle = open_directory(parent)?;
+    verify_owner_acl(handle.as_raw_handle() as HANDLE)
+}
+
+fn create_temporary(path: &Path) -> Result<(File, PathBuf), LocalHostError> {
+    let parent = path.parent().ok_or(LocalHostError::InvalidPath)?;
+    for _ in 0..MAX_TEMPORARY_ATTEMPTS {
+        let sequence = NEXT_TEMPORARY.fetch_add(1, Ordering::Relaxed);
+        let temporary_path = parent.join(format!(
+            ".vault-pm.toml.tmp.{}.{}",
+            std::process::id(),
+            sequence
+        ));
+        let wide = wide_path(&temporary_path)?;
+        let mut security = OwnerSecurity::new(FILE_ALL_ACCESS)?;
+        let attributes = security.attributes();
+        let raw = unsafe {
+            CreateFileW(
+                wide.as_ptr(),
+                FILE_GENERIC_READ | FILE_GENERIC_WRITE,
+                FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+                &attributes,
+                CREATE_NEW,
+                FILE_FLAG_OPEN_REPARSE_POINT,
+                0,
+            )
+        };
+        if raw != INVALID_HANDLE_VALUE {
+            let handle = owned_handle(raw).map_err(|_| LocalHostError::AccessFailed)?;
+            verify_regular_file(handle.as_raw_handle() as HANDLE)?;
+            verify_owner_acl(handle.as_raw_handle() as HANDLE)?;
+            return Ok((File::from(handle), temporary_path));
+        }
+        if !matches!(
+            unsafe { windows_sys::Win32::Foundation::GetLastError() },
+            ERROR_ALREADY_EXISTS | ERROR_FILE_EXISTS
+        ) {
+            return Err(LocalHostError::AccessFailed);
+        }
+    }
+    Err(LocalHostError::AccessFailed)
+}
+
+fn persist_temporary(mut file: &File, bytes: &[u8]) -> Result<(), LocalHostError> {
+    file.write_all(bytes)
+        .map_err(|_| LocalHostError::AccessFailed)?;
+    file.sync_all().map_err(|_| LocalHostError::AccessFailed)
+}
+
+fn delete_temporary(path: &Path) {
+    if let Ok(wide) = wide_path(path) {
+        unsafe {
+            DeleteFileW(wide.as_ptr());
+        }
+    }
 }
 
 fn create_private_directory(path: &Path) -> Result<(), LocalHostError> {

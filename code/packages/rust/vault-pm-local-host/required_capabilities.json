@@ -12,27 +12,27 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "resolved vault-pm configuration, data, cache, and lock paths",
-      "justification": "Inspects every local root and lock object without following links before exposing paths to storage adapters."
+      "target": "resolved vault-pm configuration file, data, cache, and lock paths",
+      "justification": "Inspects every local root, lock object, and bounded configuration file without following links before returning paths or exact bytes."
     },
     {
       "category": "fs",
       "action": "create",
-      "target": "resolved vault-pm configuration, data, cache, and lock paths",
-      "justification": "Creates missing application roots and the persistent lock file with owner-only native security metadata."
+      "target": "resolved vault-pm configuration file, data, cache, and lock paths",
+      "justification": "Creates missing application roots, the persistent lock file, and same-directory configuration staging files with owner-only native security metadata."
     },
     {
       "category": "fs",
       "action": "write",
-      "target": "resolved vault-pm lock path",
-      "justification": "Acquires an operating-system advisory lock that excludes concurrent local writer processes."
+      "target": "resolved vault-pm lock and configuration paths",
+      "justification": "Acquires an operating-system advisory lock and atomically publishes synchronized exact configuration bytes."
     },
     {
       "category": "ffi",
       "action": "call",
-      "target": "libc openat/fstat and Windows file/token/security APIs",
-      "justification": "Uses no-follow handles, native identity and access-control inspection, and platform file locking unavailable through path-only filesystem calls."
+      "target": "libc descriptor-relative file APIs and Windows file/token/security APIs",
+      "justification": "Uses no-follow handles, native identity and access-control inspection, atomic publication, durable synchronization, and platform file locking unavailable through path-only filesystem calls."
     }
   ],
-  "justification": "Local CLI trust-boundary adapter for platform-standard paths, owner-private directories, and one-process-at-a-time vault access."
+  "justification": "Local CLI trust-boundary adapter for platform-standard paths, owner-private directories and configuration, and one-process-at-a-time vault access."
 }

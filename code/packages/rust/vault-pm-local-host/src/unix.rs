@@ -1,10 +1,15 @@
 use super::{LocalHostError, MAX_PATH_BYTES};
 use std::ffi::{CString, OsStr};
 use std::fs::File;
+use std::io::{Read, Write};
 use std::mem::MaybeUninit;
 use std::os::fd::{AsRawFd, FromRawFd, OwnedFd};
 use std::os::unix::ffi::OsStrExt;
 use std::path::{Component, Path};
+use std::sync::atomic::{AtomicU64, Ordering};
+
+static NEXT_TEMPORARY: AtomicU64 = AtomicU64::new(0);
+const MAX_TEMPORARY_ATTEMPTS: usize = 64;
 
 pub(super) fn ensure_private_directory(path: &Path) -> Result<(), LocalHostError> {
     validate_absolute(path)?;
@@ -78,6 +83,172 @@ pub(super) fn open_private_lock(path: &Path) -> Result<File, LocalHostError> {
     let file = File::from(owned_fd(raw).map_err(|_| LocalHostError::AccessFailed)?);
     verify_private_file(&file)?;
     Ok(file)
+}
+
+pub(super) fn load_private_config(
+    path: &Path,
+    max_bytes: usize,
+) -> Result<Option<Vec<u8>>, LocalHostError> {
+    let (parent, name) = open_existing_parent(path)?;
+    verify_private_directory(&parent)?;
+    read_private_file(&parent, &name, max_bytes)
+}
+
+pub(super) fn create_private_config(
+    path: &Path,
+    bytes: &[u8],
+    max_bytes: usize,
+) -> Result<(), LocalHostError> {
+    let (parent, name) = open_existing_parent(path)?;
+    verify_private_directory(&parent)?;
+    if read_private_file(&parent, &name, max_bytes)?.is_some() {
+        return Err(LocalHostError::ConfigAlreadyExists);
+    }
+    let (temporary, temporary_name) = create_temporary(&parent)?;
+    let result = (|| {
+        persist_temporary(&temporary, bytes)?;
+        if unsafe {
+            libc::linkat(
+                parent.as_raw_fd(),
+                temporary_name.as_ptr(),
+                parent.as_raw_fd(),
+                name.as_ptr(),
+                0,
+            )
+        } != 0
+        {
+            return Err(match std::io::Error::last_os_error().raw_os_error() {
+                Some(libc::EEXIST) => LocalHostError::ConfigAlreadyExists,
+                _ => LocalHostError::AccessFailed,
+            });
+        }
+        sync_directory(&parent)?;
+        verify_named_private_file(&parent, &name)?;
+        Ok(())
+    })();
+    unlink_temporary(&parent, &temporary_name);
+    if result.is_ok() {
+        sync_directory(&parent)?;
+    }
+    result
+}
+
+pub(super) fn compare_exchange_private_config(
+    path: &Path,
+    expected: &[u8],
+    replacement: &[u8],
+    max_bytes: usize,
+) -> Result<(), LocalHostError> {
+    let (parent, name) = open_existing_parent(path)?;
+    verify_private_directory(&parent)?;
+    if read_private_file(&parent, &name, max_bytes)?.as_deref() != Some(expected) {
+        return Err(LocalHostError::ConfigConflict);
+    }
+    let (temporary, temporary_name) = create_temporary(&parent)?;
+    let result = (|| {
+        persist_temporary(&temporary, replacement)?;
+        if unsafe {
+            libc::renameat(
+                parent.as_raw_fd(),
+                temporary_name.as_ptr(),
+                parent.as_raw_fd(),
+                name.as_ptr(),
+            )
+        } != 0
+        {
+            return Err(LocalHostError::AccessFailed);
+        }
+        sync_directory(&parent)?;
+        verify_named_private_file(&parent, &name)
+    })();
+    if result.is_err() {
+        unlink_temporary(&parent, &temporary_name);
+    }
+    result
+}
+
+fn read_private_file(
+    parent: &OwnedFd,
+    name: &CString,
+    max_bytes: usize,
+) -> Result<Option<Vec<u8>>, LocalHostError> {
+    let raw = unsafe {
+        libc::openat(
+            parent.as_raw_fd(),
+            name.as_ptr(),
+            libc::O_RDONLY | libc::O_NOFOLLOW | libc::O_CLOEXEC,
+        )
+    };
+    if raw < 0 {
+        return match std::io::Error::last_os_error().raw_os_error() {
+            Some(libc::ENOENT) => Ok(None),
+            Some(libc::ELOOP) | Some(libc::EISDIR) => Err(LocalHostError::UnsafeObjectType),
+            _ => Err(LocalHostError::AccessFailed),
+        };
+    }
+    let file = File::from(owned_fd(raw).map_err(|_| LocalHostError::AccessFailed)?);
+    verify_private_file(&file)?;
+    let mut bytes = Vec::new();
+    file.take((max_bytes as u64).saturating_add(1))
+        .read_to_end(&mut bytes)
+        .map_err(|_| LocalHostError::AccessFailed)?;
+    if bytes.is_empty() || bytes.len() > max_bytes {
+        return Err(LocalHostError::InvalidConfigBytes);
+    }
+    Ok(Some(bytes))
+}
+
+fn create_temporary(parent: &OwnedFd) -> Result<(File, CString), LocalHostError> {
+    for _ in 0..MAX_TEMPORARY_ATTEMPTS {
+        let sequence = NEXT_TEMPORARY.fetch_add(1, Ordering::Relaxed);
+        let name = CString::new(format!(
+            ".vault-pm.toml.tmp.{}.{}",
+            std::process::id(),
+            sequence
+        ))
+        .map_err(|_| LocalHostError::AccessFailed)?;
+        let raw = unsafe {
+            libc::openat(
+                parent.as_raw_fd(),
+                name.as_ptr(),
+                libc::O_RDWR | libc::O_CREAT | libc::O_EXCL | libc::O_NOFOLLOW | libc::O_CLOEXEC,
+                0o600,
+            )
+        };
+        if raw >= 0 {
+            let file = File::from(owned_fd(raw).map_err(|_| LocalHostError::AccessFailed)?);
+            verify_private_file(&file)?;
+            return Ok((file, name));
+        }
+        if std::io::Error::last_os_error().raw_os_error() != Some(libc::EEXIST) {
+            return Err(LocalHostError::AccessFailed);
+        }
+    }
+    Err(LocalHostError::AccessFailed)
+}
+
+fn persist_temporary(mut file: &File, bytes: &[u8]) -> Result<(), LocalHostError> {
+    file.write_all(bytes)
+        .map_err(|_| LocalHostError::AccessFailed)?;
+    file.sync_all().map_err(|_| LocalHostError::AccessFailed)
+}
+
+fn verify_named_private_file(parent: &OwnedFd, name: &CString) -> Result<(), LocalHostError> {
+    read_private_file(parent, name, usize::MAX).map(|_| ())
+}
+
+fn sync_directory(parent: &OwnedFd) -> Result<(), LocalHostError> {
+    if unsafe { libc::fsync(parent.as_raw_fd()) } == 0 {
+        Ok(())
+    } else {
+        Err(LocalHostError::AccessFailed)
+    }
+}
+
+fn unlink_temporary(parent: &OwnedFd, name: &CString) {
+    unsafe {
+        libc::unlinkat(parent.as_raw_fd(), name.as_ptr(), 0);
+    }
 }
 
 fn open_existing_parent(path: &Path) -> Result<(OwnedFd, CString), LocalHostError> {
@@ -259,6 +430,27 @@ mod tests {
             verify_owner_permissions(&foreign, 0o700),
             Err(LocalHostError::InsecurePermissions)
         );
+
+        assert_eq!(
+            ensure_private_directory(Path::new("/")),
+            Err(LocalHostError::InvalidPath)
+        );
+        let oversized_name = directory.0.join("x".repeat(300));
+        assert_eq!(
+            open_private_lock(&oversized_name).unwrap_err(),
+            LocalHostError::AccessFailed
+        );
+        assert_eq!(
+            load_private_config(&oversized_name, 64).unwrap_err(),
+            LocalHostError::AccessFailed
+        );
+
+        let mut pipe = [-1; 2];
+        assert_eq!(unsafe { libc::pipe(pipe.as_mut_ptr()) }, 0);
+        let read_end = owned_fd(pipe[0]).unwrap();
+        let write_end = owned_fd(pipe[1]).unwrap();
+        assert_eq!(sync_directory(&read_end), Err(LocalHostError::AccessFailed));
+        drop(write_end);
     }
 
     #[test]
