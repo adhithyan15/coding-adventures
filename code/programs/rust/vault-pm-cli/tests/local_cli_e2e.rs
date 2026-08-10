@@ -154,6 +154,55 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert_transcript_excludes_secrets(&history_transcript);
     assert!(!history_transcript.contains("e2e item password"));
     assert!(!history_transcript.contains("e2e updated password"));
+    let original_revision = extract_history_revision(&history_transcript, "Example account");
+
+    let expected_delete = format!("Item deleted: {item_id}");
+    let (delete_status, delete_transcript) = run_unlock_in_pty(
+        &home,
+        &["item", "delete", &item_id],
+        expected_delete.as_bytes(),
+    );
+    assert!(
+        delete_status.success(),
+        "item delete failed: {delete_transcript}"
+    );
+    assert!(delete_transcript.contains(&format!("Item deleted: {item_id}")));
+    assert_transcript_excludes_secrets(&delete_transcript);
+
+    let (deleted_show_status, deleted_show_transcript) =
+        run_unlock_in_pty(&home, &["item", "show", &item_id], b"vault-pm: not found");
+    assert_eq!(deleted_show_status.code(), Some(4));
+    assert_transcript_excludes_secrets(&deleted_show_transcript);
+
+    let (deleted_history_status, deleted_history_transcript) = run_unlock_in_pty(
+        &home,
+        &["history", "list", &item_id],
+        b"vault/login/v1\t\"Example account\"",
+    );
+    assert!(deleted_history_status.success());
+    assert!(deleted_history_transcript.contains("\tdeleted\tparents=1\tdeleted="));
+    assert_transcript_excludes_secrets(&deleted_history_transcript);
+
+    let expected_restore = format!("Item restored: {item_id}");
+    let (restore_status, restore_transcript) = run_unlock_in_pty(
+        &home,
+        &["history", "restore", &item_id, &original_revision],
+        expected_restore.as_bytes(),
+    );
+    assert!(
+        restore_status.success(),
+        "history restore failed: {restore_transcript}"
+    );
+    assert!(restore_transcript.contains(&format!("Item restored: {item_id}")));
+    assert_transcript_excludes_secrets(&restore_transcript);
+
+    let (restored_status, restored_transcript) =
+        run_unlock_in_pty(&home, &["item", "show", &item_id], b"Password: <redacted>");
+    assert!(restored_status.success());
+    assert!(restored_transcript.contains("Title: \"Example account\""));
+    assert_transcript_excludes_secrets(&restored_transcript);
+    assert!(!restored_transcript.contains("e2e item password"));
+    assert!(!restored_transcript.contains("e2e updated password"));
 
     assert_tree_excludes(&home.0, PASSPHRASE);
     assert_tree_excludes(&home.0, ITEM_PASSWORD);
@@ -249,6 +298,16 @@ fn extract_item_id(transcript: &str) -> String {
         .next()
         .expect("item-add ID")
         .trim_end_matches('\r')
+        .to_string()
+}
+
+fn extract_history_revision(transcript: &str, title: &str) -> String {
+    transcript
+        .lines()
+        .map(|line| line.trim_end_matches('\r'))
+        .find(|line| line.contains("\tlive\t") && line.ends_with(&format!("\"{title}\"")))
+        .and_then(|line| line.split('\t').next())
+        .expect("canonical live history revision")
         .to_string()
 }
 

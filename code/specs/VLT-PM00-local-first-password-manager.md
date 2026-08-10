@@ -1437,7 +1437,9 @@ changelog, focused build, and downstream validation.
 9b-3a-1. revision-safe authenticated login replacement using
          `VLT-PM12-cli-login-replace.md`.
 9b-3a-2. remaining record creation plus richer notes/multiple-URL editing.
-9b-3b. authenticated delete, restore, and conflict-resolution mutations.
+9b-3b-1. reversible authenticated item deletion and exact historical restore
+         using `VLT-PM14-cli-delete-restore.md`.
+9b-3b-2. explicit authenticated current-conflict resolution.
 9b-4. portable export/import CLI host composition and destination policy.
 9b-5. foreground interactive shell over the same command/use-case boundary.
 10. Crash/fault matrix and local restore drill.
@@ -1498,13 +1500,13 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   `VLT-PM04-repository.md`, `VLT-PM05-application.md`,
   `VLT-PM06-local-host.md`, `VLT-PM07-config.md`, `VLT-PM08-cli-host.md`,
   `VLT-PM09-cli-bootstrap.md`, `VLT-PM10-cli-authenticated-verification.md`,
-  `VLT-PM11-cli-login-create-read.md`, `VLT-PM12-cli-login-replace.md`, and
-  `VLT-PM13-cli-history-list.md` —
+  `VLT-PM11-cli-login-create-read.md`, `VLT-PM12-cli-login-replace.md`,
+  `VLT-PM13-cli-history-list.md`, and `VLT-PM14-cli-delete-restore.md` —
   product repository wire,
   object-store, domain, verified-DAG, application, local-host, configuration,
   terminal/entropy, executable composition, authenticated verification, and
-  first CRUD-vertical, revision-safe replacement, and redacted history
-  contracts.
+  first CRUD vertical, revision-safe replacement, redacted history, and
+  reversible delete/restore contracts.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.
