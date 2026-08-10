@@ -1,0 +1,46 @@
+% ============================================================================
+% mitosis-phase-order — each phase of mitosis as a NUMBER (1-4), the position
+% in the ordered cycle (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% `biology/mitosis-phases.adj` already tables each phase's defining EVENT
+% (prophase → chromatin_forms_chromosomes, etc.) and documents in its own
+% header that "the ordering ... is itself asserted by the source's 'The four
+% phases of mitosis are ...' list" — but that ordering lives only in the row
+% ORDER of that table, not as a queryable NUMBER. This sibling table makes
+% the same source's ordering a first-class, bindable fact, exactly the shape
+% `astronomy/moon-phases.adj` already established for `moon_phase_order`
+% (phase → number, so a recalled position composes into arithmetic or, as
+% `mitosis-phase-ordinal-position.adj` does, into an ordinal WORD). Recall is
+% a binding query:
+%
+%     ? mitosis_phase_order(anaphase, $N)   % 3
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `mitosis_phase_order(phase, order)` carrying the NCI SEER citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% position WITH its source, on the CPU, with zero model calls, and abstains
+% on `interphase` (the resting phase BETWEEN divisions, deliberately not one
+% of the four ordered phases, matching `mitosis-phases.adj`'s own exclusion).
+%
+% Provenance: the SAME primary source and verbatim span `mitosis-phases.adj`
+% already cites — "The four phases of mitosis are Prophase ... Metaphase ...
+% Anaphase ... Telophase" — read as an ORDERED enumeration (this table adds
+% no new sourcing risk; it is the numeric restatement of a sentence already
+% verified for the sibling table). `trust authoritative` — the U.S. National
+% Cancer Institute's own teaching page.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_adjudication_no_interpretive_gating.)
+% ============================================================================
+
+table mitosis_phase_order {
+    columns phase, order
+
+    row (prophase, 1)
+    row (metaphase, 2)
+    row (anaphase, 3)
+    row (telophase, 4)
+
+    source "The four phases of mitosis are Prophase ... Metaphase ... Anaphase ... Telophase."
+    locator "https://training.seer.cancer.gov/disease/cancer/biology/cycle.html"
+    trust authoritative
+}

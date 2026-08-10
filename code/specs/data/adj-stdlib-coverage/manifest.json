@@ -1472,6 +1472,21 @@
       "source_cas_hashes": [],
       "benchmark_paths": [],
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.science.6to8.mitosis_phase_ordinal_position",
+      "title": "Derive each mitotic phase's position in the cell-division cycle as a word (e.g. 'third'), by bridging a mitosis-phase-order fact to an ordinal-number fact",
+      "band": "6-8",
+      "domain": "science",
+      "competency": "infer",
+      "coverage_roots": ["ngss"],
+      "standards": [],
+      "prerequisites": [],
+      "libraries": ["code/specs/data/adj-facts-stdlib/biology/mitosis-phase-ordinal-position.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     }
   ]
 }
