@@ -128,6 +128,20 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("Sources/App/MosaicRuntimeHost.swift", workflow)
         self.assertIn("Sources/CMosaicRuntime/CMosaicRuntime.c", workflow)
         self.assertIn("swift run --package-path \"$harness\" Conformance", workflow)
+        self.assertIn("mosaic-swift-native-complete-rating-controls", workflow)
+        self.assertIn("mosaic-pkg-rating-controls", workflow)
+        self.assertIn(
+            '--backend swiftui --output "$strict_output" '
+            "--emit-project --profile native-complete",
+            workflow,
+        )
+        self.assertIn(
+            ".nativeComplete == true and (.degradations | length == 0)",
+            workflow,
+        )
+        self.assertIn(
+            'swift build --package-path "$strict_output/swiftui"', workflow
+        )
         self.assertIn("MOSAIC_APP_LIBRARY", workflow)
 
     def test_harness_does_not_duplicate_the_generated_binding(self) -> None:

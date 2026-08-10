@@ -981,6 +981,11 @@ jobs:
           export MOSAIC_APP_LIBRARY="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.dylib"
           swift run --package-path "$harness" Conformance
 
+          strict_output="$RUNNER_TEMP/mosaic-swift-native-complete-rating-controls"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend swiftui --output "$strict_output" --emit-project --profile native-complete
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/swiftui/mosaic-degradations.json"
+          swift build --package-path "$strict_output/swiftui"
+
       - name: Round-trip Rust engine through standard Qt binding
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_qt_runtime == 'true'
         shell: bash

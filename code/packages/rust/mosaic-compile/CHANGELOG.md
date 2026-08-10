@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Changed - strict SwiftUI shells require Rust
+
+`mosaic-compile pkg --backend swiftui --emit-project --profile native-complete`
+now emits a runtime-required application shell. It loads the standard
+Foundation/C binding synchronously, applies the initial Rust props, and contains
+no reflection-host, event-print, or generated sample-value path.
+
 ### Changed - strict Flutter shells require Rust
 
 `mosaic-compile pkg --backend flutter --emit-project --profile native-complete`

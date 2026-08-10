@@ -34,10 +34,10 @@ the selected backend has a known degradation.
 The initial inventory identifies passive drag/drop lowerings, native table
 lowerings without table semantics, Flutter's dialog placeholder and missing URL
 effect host, and generated native project shells that can fall back to sample
-props. Compose and Flutter are the first closed shells: their strict profiles
+props. Compose, Flutter, and SwiftUI are the first closed shells: their strict profiles
 require Mosaic's standard Rust runtime, wait for the first props envelope,
 reject missing required props, and omit sample-data and optional-host fallbacks.
-The overall native-complete milestone remains open while the other three native
+The overall native-complete milestone remains open while the other two native
 shells are closed and ignored properties, events, styles, effects, and
 accessibility metadata are added to the inventory.
 
@@ -68,8 +68,9 @@ binding and runtime-provided props before mounting the component.
 SwiftUI package shells likewise install Mosaic's standard Foundation host plus
 a tiny C dynamic-loader target. Set `MOSAIC_APP_LIBRARY` to the application
 `cdylib` path (or package it as `libmosaic_app.dylib`); the generated host owns
-the Rust handle, buffers, sequence, snapshots, and updates before falling back
-to the legacy reflection hook in permissive builds.
+the Rust handle, buffers, sequence, snapshots, and updates. Permissive builds
+can fall back to the legacy reflection hook; `native-complete` builds require
+the standard binding and runtime-provided props before mounting the view.
 XAML project shells install a standard .NET host that uses built-in native
 loading and JSON APIs. The generated window prefers that runtime when its DLL is
 available, then retains the app-owned reflection host only as a permissive

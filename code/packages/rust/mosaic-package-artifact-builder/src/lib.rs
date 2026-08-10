@@ -582,7 +582,10 @@ pub fn analyze_package_degradations(
     }
 
     let runtime_required_shell = profile == BuildProfile::NativeComplete
-        && matches!(opts.backend, Backend::Compose | Backend::Flutter);
+        && matches!(
+            opts.backend,
+            Backend::Compose | Backend::Flutter | Backend::SwiftUI
+        );
     if opts.emit_project && opts.backend.is_native() && !runtime_required_shell {
         degradations.push(Degradation {
             code: "runtime.sample-fallback".to_string(),
@@ -1429,6 +1432,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         Backend::SwiftUI => {
             let sw_opts = mosaic_emit_swiftui::pipeline::EmitOptions {
                 emit_project: true,
+                require_runtime: profile == Some(BuildProfile::NativeComplete),
                 ..Default::default()
             };
             let r = mosaic_emit_swiftui::pipeline::from_pipeline_with_options(
@@ -3538,7 +3542,12 @@ layout Board {
     #[test]
     fn generated_native_shell_sample_fallback_is_reported() {
         let pkg = make_package("mosaic-pkg-card", &["Card"]);
-        for backend in [Backend::Xaml, Backend::Compose, Backend::Flutter] {
+        for backend in [
+            Backend::Xaml,
+            Backend::Compose,
+            Backend::Flutter,
+            Backend::SwiftUI,
+        ] {
             let out = TempDir::new().unwrap();
             let report = analyze_package_degradations(
                 &BuildOptions {
@@ -3658,6 +3667,61 @@ layout Board {
         assert!(host.contains("native-complete requires the Mosaic Rust application runtime"));
 
         let readme = fs::read_to_string(out.path().join("flutter/README.md")).unwrap();
+        assert!(readme.contains("requires Mosaic's standard Rust application runtime"));
+        assert!(readme.contains("never substitutes preview/sample values"));
+    }
+
+    #[test]
+    fn native_complete_swiftui_shell_requires_the_standard_rust_runtime() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        fs::write(
+            pkg.path().join("src/Card.mil"),
+            "component Card { slot label : text ; }\n",
+        )
+        .unwrap();
+        fs::write(
+            pkg.path().join("src/Card.mll"),
+            "layout Card { Text [ root ] ( content : slot: label ) }\n",
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let result = build_package_with_profile(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::SwiftUI,
+                emit_project: true,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("native-complete SwiftUI shell");
+
+        let report_path = out.path().join("swiftui/mosaic-degradations.json");
+        assert!(result.artifacts.contains(&report_path));
+        let report = fs::read_to_string(report_path).unwrap();
+        assert!(report.contains("\"nativeComplete\": true"));
+
+        let app = fs::read_to_string(out.path().join("swiftui/Sources/App/App.swift")).unwrap();
+        assert!(app.contains("MosaicRuntimeHost.loadRequired()"));
+        assert!(app.contains("private let bridge: MosaicHostBridgeObject"));
+        assert!(app.contains("MosaicHostValue.requiredString(host.props, \"label\")"));
+        assert!(app.contains("preconditionFailure(\"Mosaic runtime update omitted props\")"));
+        assert!(!app.contains("MosaicHostBridge.load()"));
+        assert!(!app.contains("NSClassFromString"));
+        assert!(!app.contains("MosaicHostBridgeObject?"));
+        assert!(!app.contains("print(\"Mosaic dispatch:"));
+        assert!(!app.contains("Sample Label"));
+
+        let host = fs::read_to_string(
+            out.path()
+                .join("swiftui/Sources/App/MosaicRuntimeHost.swift"),
+        )
+        .unwrap();
+        assert!(host.contains("static func loadRequired() -> MosaicRuntimeHost"));
+        assert!(host.contains("native-complete requires the Mosaic Rust application runtime"));
+
+        let readme = fs::read_to_string(out.path().join("swiftui/README.md")).unwrap();
         assert!(readme.contains("requires Mosaic's standard Rust application runtime"));
         assert!(readme.contains("never substitutes preview/sample values"));
     }
