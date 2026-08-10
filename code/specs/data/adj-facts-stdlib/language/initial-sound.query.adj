@@ -1,0 +1,14 @@
+% ============================================================================
+% initial-sound.query.adj — worked recall over the beginning-sound library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what sound does this
+% word start with?" (direct) or "which words start with this sound?"
+% (reverse, the classic phoneme-identity exercise) — it states no fact of
+% its own — it only `import`s the grounded table and asks binding queries.
+% ============================================================================
+
+import "initial-sound.adj"
+
+? initial_sound(bell, $S)   % expect b (direct: what sound does "bell" start with?)
+? initial_sound($W, b)      % expect bell, bike, boy (reverse: which words start with /b/?)
+? initial_sound(cup, $S)    % expect abstain -- "cup" is not one of the three words tabled
