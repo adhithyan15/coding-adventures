@@ -28,8 +28,8 @@ tree-construction cases and all 6,806 html5lib tokenizer cases with zero missing
 signatures and zero normalized skips. DOM output is complete, but diagnostic
 coverage is not:
 the checked 2,637-case tree corpus declares 6,243 errors across 2,183 cases.
-After the seeded-colgroup diagnostic slice, 2,181 of those cases emit at least
-one lexer or parser diagnostic and 2 remain uncovered.
+After the seeded-HTML after-body diagnostic slice, 2,182 of those cases emit at
+least one lexer or parser diagnostic and 1 remains uncovered.
 Another 139 cases emit diagnostics despite having no legacy `#errors` rows.
 These are reviewed rather than automatically removed: 89 are full-document
 inputs for which the legacy fixtures omit the Standard-required missing-doctype
@@ -65,21 +65,22 @@ open table blocks adoption-agency recovery. Description-list item start tags
 now report when implied-end-tag recovery closes a non-current `dt` or `dd`,
 without flagging adjacent description-list items.
 
-The fresh 2-case residual inventory consists entirely of an after-body token in
-an HTML fragment and an HTML start tag in a seeded SVG context. Non-whitespace
-text discarded by a seeded `colgroup` context now reports its table
-insertion-mode parse error. Character data and start tags after an `html` end
-tag report even when the end tag materializes an implied document shell around
-leading body text. The current corpus no longer has a silent script-tokenizer,
-document-tail, frameset, table-shell, table-fragment, foreign end-tag,
-formatting-only, or general in-body group.
+The sole residual case is an HTML start tag in a seeded SVG context. A second
+`body` end tag in a seeded `html` fragment now reports its after-body insertion
+mode parse error. Non-whitespace text discarded by a seeded `colgroup` context
+reports its table insertion-mode parse error. Character data and start tags
+after an `html` end tag report even when the end tag materializes an implied
+document shell around leading body text. The current corpus no longer has a
+silent script-tokenizer, document-tail, frameset, table-shell, table-fragment,
+HTML-fragment, foreign end-tag, formatting-only, or general in-body group.
 
 Prioritized work items:
 
-1. **Fragment-context parsing.** Cover the final after-body and foreign HTML
-   start-tag rows. Invalid start and end tags targeting seeded fragment-context
-   elements now report without mutating their synthetic shells, and seeded
-   `colgroup` text recovery reports its insertion-mode parse error.
+1. **Fragment-context parsing.** Cover the final foreign HTML start-tag row.
+   Invalid start and end tags targeting seeded fragment-context elements now
+   report without mutating their synthetic shells, seeded `colgroup` text
+   recovery reports its insertion-mode parse error, and seeded `html` fragments
+   report tokens reprocessed from after-body mode.
 2. **Table, select, and template insertion modes.** Continue the algorithm
    audit beyond the currently exercised diagnostic corpus.
    Non-whitespace table text now reports when it is foster-parented. The
