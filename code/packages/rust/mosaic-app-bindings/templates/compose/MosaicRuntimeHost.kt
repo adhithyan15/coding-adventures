@@ -26,14 +26,17 @@ private const val MOSAIC_STATUS_OK = 0
 
 class MosaicRuntimeException(val status: Int, message: String) : RuntimeException(message)
 
-private class MosaicSizeT(value: Long = 0) :
+// JNA constructs ABI carrier types reflectively from its own package. These
+// classes must therefore have public JVM constructors even though applications
+// should treat them as generated implementation details.
+class MosaicSizeT(value: Long = 0) :
     IntegerType(Native.SIZE_T_SIZE, value, true) {
     override fun toByte(): Byte = toLong().toByte()
     override fun toShort(): Short = toLong().toShort()
 }
 
 @Structure.FieldOrder("ptr", "len")
-private open class MosaicBytes : Structure() {
+open class MosaicBytes : Structure() {
     @JvmField var ptr: Pointer? = null
     @JvmField var len: MosaicSizeT = MosaicSizeT()
 
@@ -47,7 +50,7 @@ private open class MosaicBytes : Structure() {
 }
 
 @Structure.FieldOrder("ptr", "len", "capacity")
-private open class MosaicBuffer : Structure() {
+open class MosaicBuffer : Structure() {
     @JvmField var ptr: Pointer? = null
     @JvmField var len: MosaicSizeT = MosaicSizeT()
     @JvmField var capacity: MosaicSizeT = MosaicSizeT()
@@ -62,7 +65,7 @@ private open class MosaicBuffer : Structure() {
     }
 }
 
-private interface MosaicNativeApi : Library {
+interface MosaicNativeApi : Library {
     fun mosaic_app_create(
         start: MosaicBytes.ByValue,
         app: PointerByReference,

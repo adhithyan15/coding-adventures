@@ -311,7 +311,9 @@ unblocks multiple downstream targets; never count source generation as completio
   - [x] Flutter/Dart FFI loads the shared Rust conformance library and round-trips
     startup, dispatch, snapshot/restore, notification, buffers, and teardown in
     headless Linux CI.
-  - [ ] Promote the same shared Rust fixture through the Compose standard binding.
+  - [x] Compose/JNA loads the shared Rust conformance library and round-trips
+    startup, dispatch, snapshot/restore, notification, buffers, and teardown on
+    the Linux JVM.
 - [x] Gate the complete package-expanded XAML TaskApp on GitHub-hosted Windows
   with real WinUI compilation and executable production.
   - [x] Allocate `For` row-view-model and projection names per loop rather than
@@ -330,6 +332,9 @@ unblocks multiple downstream targets; never count source generation as completio
   its lint configuration, and omit unused authored `For` bindings.
 - [x] Complete Compose TaskApp Kotlin typing: normalize Mosaic value truthiness
   in boolean positions and supply required native input commit payloads.
+- [x] Restore complete Compose TaskApp generation after package expansion added
+  per-row `HostTooltip` nodes: lower them to Compose Foundation's native overlay
+  with plain-text semantics instead of rejecting the current package graph.
 - [x] Route every compile entry point through one package-composition pipeline;
   standalone and package builds now consume the same resolved layout and merged
   dependency-style IR before selecting a backend.

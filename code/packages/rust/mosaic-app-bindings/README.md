@@ -15,6 +15,10 @@ semantic events, and return decoded updates to the generated view.
 Set the `mosaic.app.library` JVM property or `MOSAIC_APP_LIBRARY` environment
 variable to a library name or absolute path. The conventional fallback name is
 `mosaic_app`.
+Linux CI compiles the exact Compose/JNA binding from a complete generated
+TaskApp project with the shared `mosaic-app-conformance` library, then verifies
+startup, semantic dispatch, snapshot/restore, notification, buffer ownership,
+and teardown on the JVM.
 
 For SwiftUI, set `MOSAIC_APP_LIBRARY` to the application dylib path. Without an
 explicit path the loader first checks symbols linked into the process, then tries
