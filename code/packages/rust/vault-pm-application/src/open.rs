@@ -1,4 +1,5 @@
 use crate::initialize::{unlock_active_material, UnlockedActiveMaterial};
+use crate::mutation::{add_item, AddItemRandomnessV1};
 use crate::search::SearchProjectionV1;
 use crate::{
     open_object, ActiveStateV1, ApplicationError, ApplicationRepository,
@@ -7,7 +8,7 @@ use crate::{
     LocalVaultStateV1, ObjectKind, V1Keys,
 };
 use coding_adventures_vault_pm_domain::{
-    CollectionId, ItemCandidate, ItemId, ItemState, RedactedItemView, RevisionId,
+    CollectionId, ItemCandidate, ItemDocument, ItemId, ItemState, RedactedItemView, RevisionId,
 };
 use coding_adventures_vault_pm_format::{DeviceId, ObjectId, VaultId};
 use coding_adventures_vault_pm_repository::{OpenReport, PinnedHeads};
@@ -143,6 +144,35 @@ impl UnlockedVaultV1 {
     /// search projection without exposing item identities or indexed text.
     pub fn search_item_count(&self) -> usize {
         self.search.len()
+    }
+
+    /// Add one new item through the exact crash-resumable publication state
+    /// machine and return the resulting durable active owner state.
+    ///
+    /// The session is consumed so a successful caller cannot keep using stale
+    /// pins, catalog contents, or search state. The document and randomness
+    /// are owned and wiped on every return path. Hosts must reopen a new
+    /// session after success or recover the durable pending journal after an
+    /// interrupted provider/local effect.
+    pub fn add_item(
+        self,
+        document: ItemDocument,
+        wall_time_ms: u64,
+        randomness: AddItemRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        add_item(
+            &self.active,
+            &self.report,
+            &self.current_catalog.items,
+            &self._keys,
+            &self._local_secret,
+            self._repository.as_ref(),
+            document,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+        )
     }
 }
 
@@ -413,7 +443,8 @@ mod tests {
         complete_generation_zero, encode_item_revision, encode_signed_commit,
         prepare_generation_zero, seal_object, CatalogV1, GenerationZeroPolicyV1,
         GenerationZeroRandomness, ObjectKind, ObjectRandomness, PublicationJournalV1,
-        V1ApplicationRepositoryFactory, V1Keys, GENERATION_ZERO_RANDOM_BYTES,
+        V1ApplicationRepositoryFactory, V1Keys, ADD_ITEM_RANDOM_BYTES,
+        GENERATION_ZERO_RANDOM_BYTES,
     };
     use coding_adventures_ed25519::{generate_keypair, sign};
     use coding_adventures_vault_pm_domain::{
@@ -426,7 +457,7 @@ mod tests {
     };
     use coding_adventures_vault_records::{AnyRecord, Login, LOGIN_V1};
     use std::sync::{
-        atomic::{AtomicBool, Ordering},
+        atomic::{AtomicBool, AtomicUsize, Ordering},
         Arc, Mutex,
     };
 
@@ -434,7 +465,8 @@ mod tests {
     struct MemoryLocalStateStore(
         Mutex<Option<Vec<u8>>>,
         AtomicBool,
-        Mutex<Option<LocalStateStoreError>>,
+        Mutex<Option<(usize, LocalStateStoreError)>>,
+        AtomicUsize,
     );
 
     impl MemoryLocalStateStore {
@@ -443,6 +475,7 @@ mod tests {
                 Mutex::new(Some(state)),
                 AtomicBool::new(false),
                 Mutex::new(None),
+                AtomicUsize::new(0),
             )
         }
 
@@ -451,7 +484,16 @@ mod tests {
         }
 
         fn fail_next_compare(&self, error: LocalStateStoreError) {
-            *self.2.lock().unwrap() = Some(error);
+            self.fail_compare_after(0, error);
+        }
+
+        fn fail_compare_after(&self, successful_calls: usize, error: LocalStateStoreError) {
+            let target = self
+                .3
+                .load(Ordering::SeqCst)
+                .checked_add(successful_calls + 1)
+                .unwrap();
+            *self.2.lock().unwrap() = Some((target, error));
         }
     }
 
@@ -469,12 +511,17 @@ mod tests {
             expected: Option<&[u8]>,
             replacement: &[u8],
         ) -> Result<(), LocalStateStoreError> {
+            let call = self.3.fetch_add(1, Ordering::SeqCst) + 1;
             let mut state = self.0.lock().unwrap();
             if state.as_deref() != expected {
                 return Err(LocalStateStoreError::ConcurrentHost);
             }
-            if let Some(error) = self.2.lock().unwrap().take() {
-                return Err(error);
+            let scheduled_error = *self.2.lock().unwrap();
+            if let Some((target, error)) = scheduled_error {
+                if target == call {
+                    self.2.lock().unwrap().take();
+                    return Err(error);
+                }
             }
             if self.1.swap(false, Ordering::SeqCst) {
                 *state = Some(replacement.to_vec());
@@ -527,6 +574,35 @@ mod tests {
 
     fn randomness() -> GenerationZeroRandomness {
         GenerationZeroRandomness::new(generation_zero_bytes())
+    }
+
+    fn add_item_randomness(seed: u8) -> AddItemRandomnessV1 {
+        let mut bytes = [0; ADD_ITEM_RANDOM_BYTES];
+        for (index, byte) in bytes.iter_mut().enumerate() {
+            *byte = (index as u8).wrapping_mul(17).wrapping_add(seed);
+        }
+        AddItemRandomnessV1::new(bytes)
+    }
+
+    fn new_login_document(item_id: ItemId, title: &str, password: &str) -> ItemDocument {
+        ItemDocument::new(
+            item_id,
+            ContentType::new(LOGIN_V1).unwrap(),
+            300,
+            300,
+            LwwRegister::new(false, 300, OperationId::new([0x71; 32])),
+            ObservedSet::new(),
+            ObservedSet::new(),
+            AnyRecord::Login(Login {
+                title: title.to_owned(),
+                username: "new-user@example.test".to_owned(),
+                password: password.to_owned(),
+                urls: vec!["https://new.example.test".to_owned()],
+                notes: None,
+            }),
+            ObservedSet::new(),
+        )
+        .unwrap()
     }
 
     fn initialized() -> (
@@ -1307,6 +1383,317 @@ mod tests {
             .err(),
             Some(ApplicationError::InvalidInput)
         );
+    }
+
+    #[test]
+    fn add_item_publishes_parentless_revision_and_requires_reopen() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let prior_heads = session.local_pins().clone();
+        let randomness = add_item_randomness(0x41);
+        let item_id = randomness.item_id();
+        local.concurrent_winner_on_next_compare();
+        let active = session
+            .add_item(
+                new_login_document(item_id, "New portal", "new-password-secret"),
+                301,
+                randomness,
+                &local,
+            )
+            .unwrap();
+
+        assert_eq!(active.last_device_counter(), 2);
+        assert_ne!(active.pinned_heads(), &prior_heads);
+        assert_eq!(
+            LocalVaultStateV1::decode(&local.0.lock().unwrap().clone().unwrap()).unwrap(),
+            LocalVaultStateV1::Active(active.clone())
+        );
+
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.item_count(), 1);
+        assert_eq!(reopened.search_item_count(), 1);
+        assert_eq!(
+            reopened.get_item(item_id).unwrap().unwrap().item_id,
+            item_id
+        );
+        let [candidate] = reopened.current_catalog.items[&item_id].as_slice() else {
+            panic!("new item must have exactly one current revision")
+        };
+        assert!(candidate.causal_parents().is_empty());
+        let head = *reopened.open_report().heads().iter().next().unwrap();
+        let commit = reopened._repository.read_commit(head).unwrap();
+        assert_eq!(commit.device_counter(), 2);
+        assert_eq!(
+            commit.parents(),
+            prior_heads.iter().copied().collect::<Vec<_>>()
+        );
+        assert_eq!(commit.catalog_root(), active.catalog_root());
+        assert_eq!(commit.added_objects().len(), 2);
+        assert_eq!(commit.wall_time_ms(), 301);
+    }
+
+    #[test]
+    fn add_item_rejects_mismatched_or_existing_random_identity_before_cas() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let mismatched = add_item_randomness(0x51);
+        assert_eq!(
+            session.add_item(
+                new_login_document(ItemId::new([0x99; 16]), "Wrong", "secret"),
+                301,
+                mismatched,
+                &local,
+            ),
+            Err(ApplicationError::InvalidInput)
+        );
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_active.as_slice())
+        );
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let randomness = add_item_randomness(0x61);
+        let item_id = randomness.item_id();
+        session
+            .add_item(
+                new_login_document(item_id, "First", "secret"),
+                302,
+                randomness,
+                &local,
+            )
+            .unwrap();
+        let exact_after_first = local.0.lock().unwrap().clone().unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let mut duplicate_bytes = [0; ADD_ITEM_RANDOM_BYTES];
+        duplicate_bytes[..16].copy_from_slice(item_id.as_bytes());
+        assert_eq!(
+            session.add_item(
+                new_login_document(item_id, "Duplicate", "secret"),
+                303,
+                AddItemRandomnessV1::new(duplicate_bytes),
+                &local,
+            ),
+            Err(ApplicationError::InvalidInput)
+        );
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_after_first.as_slice())
+        );
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let second_randomness = add_item_randomness(0x71);
+        let second_item_id = second_randomness.item_id();
+        session
+            .add_item(
+                new_login_document(second_item_id, "Second", "secret"),
+                304,
+                second_randomness,
+                &local,
+            )
+            .unwrap();
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.item_count(), 2);
+        assert!(reopened.get_item(item_id).unwrap().is_some());
+        assert!(reopened.get_item(second_item_id).unwrap().is_some());
+    }
+
+    #[test]
+    fn add_item_retains_exact_pending_journal_across_ambiguous_provider_failure() {
+        let passphrase = b"active passphrase";
+        let prepared = prepare_generation_zero(
+            Zeroizing::new(passphrase.to_vec()),
+            GenerationZeroPolicyV1::new(8 * 1024, 1, 1, 10).unwrap(),
+            randomness(),
+        )
+        .unwrap();
+        let locator = prepared.bootstrap_locator();
+        let local = MemoryLocalStateStore::default();
+        let bootstrap = MemoryBootstrapStore::default();
+        let backend = Arc::new(FaultInjectingObjectStore::new(InMemoryObjectStore::new()));
+        let factory = V1ApplicationRepositoryFactory::from_shared(Arc::clone(&backend));
+        complete_generation_zero(prepared, &local, &bootstrap, &factory).unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(passphrase.to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let randomness = add_item_randomness(0x81);
+        let item_id = randomness.item_id();
+        backend
+            .enqueue(FaultAction {
+                operation: StoreOperation::PutImmutable,
+                effect: FaultEffect::CommitPutThenNetwork,
+            })
+            .unwrap();
+
+        assert_eq!(
+            session.add_item(
+                new_login_document(item_id, "Crash safe", "secret"),
+                304,
+                randomness,
+                &local,
+            ),
+            Err(ApplicationError::StorageUnavailable)
+        );
+        let exact_pending = local.0.lock().unwrap().clone().unwrap();
+        assert!(matches!(
+            LocalVaultStateV1::decode(&exact_pending).unwrap(),
+            LocalVaultStateV1::PendingPublication { .. }
+        ));
+
+        let active = recover_pending_publication(
+            Zeroizing::new(passphrase.to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(active.last_device_counter(), 2);
+        let reopened = open_active_vault(
+            Zeroizing::new(passphrase.to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            reopened.get_item(item_id).unwrap().unwrap().item_id,
+            item_id
+        );
+        assert_eq!(backend.pending_faults().unwrap(), 0);
+    }
+
+    #[test]
+    fn add_item_persists_before_publish_and_recovers_after_final_cas_failure() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let randomness = add_item_randomness(0x91);
+        let item_id = randomness.item_id();
+        local.fail_next_compare(LocalStateStoreError::Unavailable);
+        assert_eq!(
+            session.add_item(
+                new_login_document(item_id, "No early publish", "secret"),
+                305,
+                randomness,
+                &local,
+            ),
+            Err(ApplicationError::StorageUnavailable)
+        );
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_active.as_slice())
+        );
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.open_report().commit_count(), 1);
+
+        let randomness = add_item_randomness(0xa1);
+        let item_id = randomness.item_id();
+        local.fail_compare_after(1, LocalStateStoreError::Unavailable);
+        assert_eq!(
+            reopened.add_item(
+                new_login_document(item_id, "Recover final state", "secret"),
+                306,
+                randomness,
+                &local,
+            ),
+            Err(ApplicationError::StorageUnavailable)
+        );
+        let exact_pending = local.0.lock().unwrap().clone().unwrap();
+        assert!(matches!(
+            LocalVaultStateV1::decode(&exact_pending).unwrap(),
+            LocalVaultStateV1::PendingPublication { .. }
+        ));
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            reopened.get_item(item_id).unwrap().unwrap().item_id,
+            item_id
+        );
+        assert_eq!(reopened.open_report().commit_count(), 2);
     }
 
     #[test]

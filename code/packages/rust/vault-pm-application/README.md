@@ -80,10 +80,22 @@ schema, and item-ID bytes. Conflicts fail the complete search closed, ordinary
 diagnostics expose only an indexed-item count, and dropping the unlocked
 session clears the accelerator and wipes normalized metadata.
 
+Unlocked sessions can add one new item through the same durable publication
+state machine. The host supplies one exact 256-byte CSPRNG block for a fresh
+item ID and the three encrypted frames. The application creates a parentless
+item revision, rewrites the complete bounded catalog without discarding any
+candidate, makes every current head a parent of the signed commit, and moves
+the local owner state through an exact compare-exchanged pending journal before
+publishing. Ambiguous writes accept only the byte-identical intended state,
+and a provider or final-local-write interruption remains recoverable by the
+existing pending-publication workflow. The mutation consumes its unlocked
+session so callers must reopen before observing or mutating the new pins.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
-credential store, or entropy source. Mutation, history, export, audit, and
-doctor workflows land in the next slices. There is no unchecked
+credential store, or entropy source. Replace, delete, restore, conflict
+resolution, history, export, audit, and doctor workflows land in the next
+slices. There is no unchecked
 repository verification path: construction decrypts and
 authority-verifies the exact locally pinned certificate frame and object ID,
 and commits and announcements must match that vault, device, certificate ID,
@@ -104,8 +116,12 @@ paths, and complete error translation.
 Search tests cover Unicode normalization, short queries, oversized safe-field
 fallback, exact collection filters, deterministic product ordering, every
 record schema's allowlist/denylist, secret exclusion, query/result bounds, and
-conflict closure. The exact Tarpaulin LLVM result is 1,748 of 1,827 production
-lines (95.68%).
+conflict closure. The exact Tarpaulin LLVM result is 1,903 of 1,992 production
+lines (95.53%). Add-item tests cover exact entropy partitioning and wiping,
+identity validation before local writes, parentless revision and complete
+catalog construction, ambiguous successful compare-exchanges, write-ahead
+publication ordering, ambiguous provider commits, failed final activation,
+and recovery through the exact persisted journal.
 
 ## Development
 

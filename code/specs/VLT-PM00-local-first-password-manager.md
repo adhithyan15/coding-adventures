@@ -1295,7 +1295,11 @@ changelog, focused build, and downstream validation.
    6e. the completed wipe-on-lock in-memory search projection, including the
        password-manager query, exact collection-filter, Unicode-normalization,
        safe-field allowlist, and deterministic ordering policy adapters;
-   7a. add-item mutation preparation and crash-resumable publication;
+   7a. completed add-item mutation preparation and crash-resumable publication,
+       including caller-owned entropy, generated identity binding, complete
+       catalog preservation, all-head commit parenting, exact write-ahead
+       owner-state transitions, ambiguous-success handling, and session
+       consumption to prevent stale-pin reuse;
    7b. compare-and-replace, delete, restore, and explicit conflict-resolution
        mutation workflows;
    7c. bounded history traversal and explicit zeroizing field reveal;
