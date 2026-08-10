@@ -96,3 +96,14 @@ landed and why, not a semver-tracked API.
   later, to keep this change scoped to the two rearrangements a first course actually drills. New
   manifest objective `adj.math.algebra.rearrange_kinematics`. Extended the existing
   `formula_kinematics_e2e.rs` with 2 new tests rather than adding a new test file.
+- `physics/energy-work.adj` — a third Wave 3 rung-0 CAS-wiring pair (ADJ-FORMULA-LIBRARIES FL-10,
+  §3D): `force_from_work` and `distance_from_work`, solving the SAME cited NASA `W = F d` equation
+  as the forward `work` formula for a different unknown. Named each new symbolic's target
+  distinctly from the forward formula's plain parameter names (`force_from_work`, not `force`) —
+  the same collision-avoidance discipline `kinematics.adj`'s companions established — so both new
+  solves and the original forward examples coexist in one extended `energy-work.query.adj`.
+  `kinetic_energy`'s inverse is deliberately absent: solving for velocity is quadratic (out of
+  rung-0's linear-only scope); solving for mass is linear but a different nested-multiplication
+  shape (mass sits between two constant factors once velocity is bound), left for a later pass to
+  keep this change scoped to one law. New manifest objective `adj.math.algebra.rearrange_work`.
+  New e2e test `formula_energy_work_e2e.rs` (3 tests — this library had none before).
