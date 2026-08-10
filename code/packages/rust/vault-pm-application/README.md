@@ -124,10 +124,20 @@ accessor and ordinary diagnostics redact them. Historical candidates remain
 inside the unlocked session so restore-by-revision can consume authenticated
 content without adding provider-specific reads or asking a host for plaintext.
 
+Restore-by-revision consumes the unlocked session and proves the requested
+revision appears in a catalog reachable within the 4,096-entry ancestry bound
+from a current head. The selected revision must be live, differ from the sole
+current candidate, and belong to the same current item; unresolved current
+conflicts fail closed. Restoration copies the authenticated historical document
+into a newly randomized revision whose sole direct causal parent is the
+selected revision, then uses the same all-head commit, exact pending journal,
+ambiguous-success handling, and recovery path as other mutations. It never
+rewinds heads, mutates historical bytes, or asks the host to resupply plaintext.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
-credential store, or entropy source. Restore, conflict resolution, explicit
-history reveal, export, audit, and doctor workflows land in the next slices.
+credential store, or entropy source. Conflict resolution, explicit history
+reveal, export, audit, and doctor workflows land in the next slices.
 There is no unchecked
 repository verification path: construction decrypts and
 authority-verifies the exact locally pinned certificate frame and object ID,

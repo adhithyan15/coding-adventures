@@ -1,7 +1,7 @@
 use crate::initialize::{unlock_active_material, UnlockedActiveMaterial};
 use crate::mutation::{
-    add_item, delete_item, replace_item, AddItemRandomnessV1, DeleteItemRandomnessV1,
-    ReplaceItemRandomnessV1,
+    add_item, delete_item, replace_item, restore_item, AddItemRandomnessV1, DeleteItemRandomnessV1,
+    ReplaceItemRandomnessV1, RestoreItemRandomnessV1,
 };
 use crate::search::SearchProjectionV1;
 use crate::{
@@ -336,6 +336,42 @@ impl UnlockedVaultV1 {
             local_state_store,
         )
     }
+
+    /// Restore one reachable historical live revision as a new current live
+    /// revision and return the resulting durable active owner state.
+    ///
+    /// The selected revision must be reachable within the hard history bound,
+    /// belong to an item with exactly one current candidate, and differ from
+    /// that current revision. Tombstones cannot be restored. The new revision
+    /// copies the selected live document and names only the selected revision
+    /// as its direct causal parent; repository heads are never rewound.
+    pub fn restore_item(
+        self,
+        selected_revision: RevisionId,
+        wall_time_ms: u64,
+        randomness: RestoreItemRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        let selected = find_reachable_historical_candidate(
+            &self._keys,
+            self._repository.as_ref(),
+            &self.report,
+            self.active.vault_id(),
+            selected_revision,
+        )?;
+        restore_item(
+            &self.active,
+            &self.report,
+            &self.current_catalog.items,
+            &self._keys,
+            &self._local_secret,
+            self._repository.as_ref(),
+            selected,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+        )
+    }
 }
 
 fn project_current_item(
@@ -589,6 +625,76 @@ fn materialize_item_history_candidates(
     Ok(candidates)
 }
 
+fn find_reachable_historical_candidate(
+    keys: &V1Keys,
+    repository: &dyn ApplicationRepository,
+    report: &OpenReport,
+    vault_id: VaultId,
+    selected_revision: RevisionId,
+) -> Result<ItemCandidate, ApplicationError> {
+    let mut histories = Vec::with_capacity(report.heads().len());
+    for head_id in report.heads().iter().copied() {
+        let history = repository
+            .history(head_id, MAX_ITEM_HISTORY_LIMIT)
+            .map_err(map_repository)?;
+        if history.first().map(|commit| commit.id()) != Some(head_id) {
+            return Err(ApplicationError::IntegrityFailure);
+        }
+        histories.push(history);
+    }
+
+    let mut seen_commits = BTreeSet::new();
+    let mut seen_catalogs = BTreeSet::new();
+    for depth in 0..MAX_ITEM_HISTORY_LIMIT {
+        let mut commits = histories
+            .iter()
+            .filter_map(|history| history.get(depth))
+            .filter(|commit| !seen_commits.contains(&commit.id()))
+            .collect::<Vec<_>>();
+        commits.sort_unstable_by_key(|commit| commit.id());
+
+        for commit in commits {
+            if !seen_commits.insert(commit.id()) {
+                continue;
+            }
+            if commit.vault_id() != vault_id {
+                return Err(ApplicationError::IntegrityFailure);
+            }
+            let catalog_id = commit.catalog_root();
+            if !seen_catalogs.insert(catalog_id) {
+                continue;
+            }
+            let catalog_object = repository.read_object(catalog_id).map_err(map_repository)?;
+            if catalog_object.id() != catalog_id {
+                return Err(ApplicationError::IntegrityFailure);
+            }
+            let catalog_plaintext = open_object(keys, ObjectKind::Catalog, catalog_object.frame())?;
+            let catalog = CatalogV1::decode(&catalog_plaintext)?;
+            let Some((item_id, _)) = catalog
+                .entries()
+                .iter()
+                .find(|(_, revisions)| revisions.binary_search(&selected_revision).is_ok())
+            else {
+                continue;
+            };
+
+            let candidate = read_candidate(keys, repository, selected_revision)?;
+            if candidate.item_id() != *item_id {
+                return Err(ApplicationError::IntegrityFailure);
+            }
+            for parent_id in candidate.causal_parents() {
+                let parent = read_candidate(keys, repository, *parent_id)?;
+                if parent.item_id() != *item_id {
+                    return Err(ApplicationError::IntegrityFailure);
+                }
+            }
+            return Ok(candidate);
+        }
+    }
+
+    Err(ApplicationError::NotFound)
+}
+
 /// Replay one exact durable `PendingPublication` and atomically advance it to
 /// `Active` only after the repository returns the journal's expected pins.
 ///
@@ -690,7 +796,7 @@ mod tests {
         prepare_generation_zero, seal_object, CatalogV1, GenerationZeroPolicyV1,
         GenerationZeroRandomness, ObjectKind, ObjectRandomness, PublicationJournalV1,
         V1ApplicationRepositoryFactory, V1Keys, ADD_ITEM_RANDOM_BYTES, DELETE_ITEM_RANDOM_BYTES,
-        GENERATION_ZERO_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
+        GENERATION_ZERO_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
     };
     use coding_adventures_ed25519::{generate_keypair, sign};
     use coding_adventures_vault_pm_domain::{
@@ -844,6 +950,14 @@ mod tests {
             *byte = (index as u8).wrapping_mul(31).wrapping_add(seed);
         }
         DeleteItemRandomnessV1::new(bytes)
+    }
+
+    fn restore_item_randomness(seed: u8) -> RestoreItemRandomnessV1 {
+        let mut bytes = [0; RESTORE_ITEM_RANDOM_BYTES];
+        for (index, byte) in bytes.iter_mut().enumerate() {
+            *byte = (index as u8).wrapping_mul(37).wrapping_add(seed);
+        }
+        RestoreItemRandomnessV1::new(bytes)
     }
 
     fn new_login_document(item_id: ItemId, title: &str, password: &str) -> ItemDocument {
@@ -2426,6 +2540,235 @@ mod tests {
         assert_eq!(
             session.item_history(item_id, MAX_ITEM_HISTORY_LIMIT + 1),
             Err(ApplicationError::BoundExceeded)
+        );
+    }
+
+    #[test]
+    fn restore_item_copies_one_reachable_live_revision_without_rewinding_heads() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let add_randomness = add_item_randomness(0xa1);
+        let item_id = add_randomness.item_id();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .add_item(
+            new_login_document(item_id, "Restore me", "original-secret"),
+            600,
+            add_randomness,
+            &local,
+        )
+        .unwrap();
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let original_revision = session.current_catalog.items[&item_id][0].revision_id();
+        session
+            .replace_item(
+                original_revision,
+                new_login_document(item_id, "Changed", "changed-secret"),
+                601,
+                replace_item_randomness(0xb1),
+                &local,
+            )
+            .unwrap();
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let changed_revision = session.current_catalog.items[&item_id][0].revision_id();
+        session
+            .delete_item(
+                changed_revision,
+                602,
+                603,
+                delete_item_randomness(0xc1),
+                &local,
+            )
+            .unwrap();
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let tombstone_revision = session.current_catalog.items[&item_id][0].revision_id();
+        let prior_heads = session.local_pins().clone();
+        let active = session
+            .restore_item(
+                original_revision,
+                604,
+                restore_item_randomness(0xd1),
+                &local,
+            )
+            .unwrap();
+        assert_eq!(active.last_device_counter(), 5);
+
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let [candidate] = reopened.current_catalog.items[&item_id].as_slice() else {
+            panic!("restoration must become the sole current candidate")
+        };
+        let restored_revision = candidate.revision_id();
+        assert_ne!(restored_revision, original_revision);
+        assert_eq!(
+            candidate.causal_parents(),
+            &BTreeSet::from([original_revision])
+        );
+        let ItemState::Live(document) = candidate.state() else {
+            panic!("restoration must create a live revision")
+        };
+        let AnyRecord::Login(login) = document.payload() else {
+            panic!("restoration must preserve the selected schema")
+        };
+        assert_eq!(login.title, "Restore me");
+        assert_eq!(login.password, "original-secret");
+        let history = reopened.item_history(item_id, 100).unwrap();
+        assert_eq!(
+            history
+                .iter()
+                .map(ItemHistoryViewV1::revision_id)
+                .collect::<Vec<_>>(),
+            vec![
+                restored_revision,
+                tombstone_revision,
+                changed_revision,
+                original_revision
+            ]
+        );
+        let head = *reopened.open_report().heads().iter().next().unwrap();
+        let commit = reopened._repository.read_commit(head).unwrap();
+        assert_eq!(
+            commit.parents(),
+            prior_heads.iter().copied().collect::<Vec<_>>()
+        );
+        assert_eq!(commit.added_objects().len(), 2);
+        assert_eq!(commit.wall_time_ms(), 604);
+    }
+
+    #[test]
+    fn restore_item_rejects_missing_current_and_tombstone_selections_before_cas() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let add_randomness = add_item_randomness(0xe1);
+        let item_id = add_randomness.item_id();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .add_item(
+            new_login_document(item_id, "Restore guards", "secret"),
+            610,
+            add_randomness,
+            &local,
+        )
+        .unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let live_revision = session.current_catalog.items[&item_id][0].revision_id();
+        let exact_live = local.0.lock().unwrap().clone().unwrap();
+        assert_eq!(
+            session.restore_item(live_revision, 611, restore_item_randomness(0xf1), &local,),
+            Err(ApplicationError::InvalidInput)
+        );
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_live.as_slice())
+        );
+
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .delete_item(
+            live_revision,
+            612,
+            613,
+            delete_item_randomness(0x01),
+            &local,
+        )
+        .unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let tombstone_revision = session.current_catalog.items[&item_id][0].revision_id();
+        let exact_deleted = local.0.lock().unwrap().clone().unwrap();
+        assert_eq!(
+            session.restore_item(
+                tombstone_revision,
+                614,
+                restore_item_randomness(0x11),
+                &local,
+            ),
+            Err(ApplicationError::InvalidInput)
+        );
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_deleted.as_slice())
+        );
+
+        assert_eq!(
+            open_active_vault(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap()
+            .restore_item(
+                RevisionId::new([0x7f; 32]),
+                615,
+                restore_item_randomness(0x21),
+                &local,
+            ),
+            Err(ApplicationError::NotFound)
+        );
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_deleted.as_slice())
         );
     }
 

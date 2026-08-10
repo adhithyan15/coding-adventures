@@ -1311,8 +1311,11 @@ changelog, focused build, and downstream validation.
    7b-2. bounded item-history materialization across every current head,
        decrypting distinct historical catalogs and revisions into deterministic
        secret-free views for restore selection without provider-specific reads;
-   7b-3. restore-by-revision and explicit conflict-resolution mutation
-       workflows;
+   7b-3. completed restore-by-revision mutation workflow, proving the selected
+       live revision is reachable through bounded current-head history, copying
+       its authenticated document into a new one-parent revision, and reusing
+       exact crash-resumable publication without rewinding repository heads;
+   7b-4. explicit conflict-resolution mutation workflows;
    7c. bounded history traversal and explicit zeroizing field reveal;
    7d. authenticated portable export and restore/import preparation; and
    7e. audit, status, and doctor workflows; and
