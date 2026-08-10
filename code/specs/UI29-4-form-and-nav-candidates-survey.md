@@ -151,9 +151,9 @@ platform has a clean path for that. Rich-content tooltips
 
 **Proposed slot/emit surface:**
 
-| moslayout prop  | Kind        | Required | Meaning                                       |
+| moslayout prop  | Kind                | Required | Meaning                                       |
 |---|---|---|---|
-| `text`          | slot/string | yes      | The tooltip body. Plain text only in v1.      |
+| `text`          | slot/string/expr    | yes      | The tooltip body. Plain text only in v1. An expression (e.g. `( t[7] )`, a `For`-loop cell) is the only way to give each row of a loop its own tooltip — a slot is one scalar value for the whole component. Added in the react backend after task-app's richer Gantt needed it (`task-app-richer-gantt-v1.md`); the react backend's `find_expr_prop` mirrors the existing `find_string_prop`/`find_slot_ref_prop` readers, same as UI36's own "expression text is verbatim" discipline for size props. |
 | `target`        | (child)     | yes      | The element the tooltip annotates. Passed as the single child of HostTooltip. |
 | (no emits)      |             |          | Tooltips don't dispatch — they're display-only. |
 
