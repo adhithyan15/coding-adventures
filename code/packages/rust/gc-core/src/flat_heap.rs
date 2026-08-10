@@ -334,13 +334,27 @@ pub const DEFAULT_TENURE_AGE: u8 = 1;
 /// small enough that old-generation garbage is never more than 8 paced cycles stale.
 pub const DEFAULT_MAX_MINOR_STREAK: u32 = 8;
 
-/// Debug-assert message for the four stop-the-world `collect*` entries: none may run
-/// *between* an [`FlatHeap::incremental_start`] and its [`FlatHeap::incremental_finish`].
-/// A full/minor collect mid-incremental-cycle would `sweep` blocks still referenced by the
-/// persistent [`FlatHeap::mark_worklist`], leaving dangling worklist pointers a later
-/// [`FlatHeap::incremental_step`] would pop (a use-after-free). One incremental cycle must
-/// run to `finish` before any other collector — a caller-contract invariant, fenced here in
-/// debug builds (AOT00-T4 §1 scope guard).
+/// Assert message for the stop-the-world `collect*` entries (and the internal helpers
+/// they share): none may run *between* an [`FlatHeap::incremental_start`] and its
+/// [`FlatHeap::incremental_finish`]. A full/minor collect mid-incremental-cycle would
+/// `sweep` blocks still referenced by the persistent [`FlatHeap::mark_worklist`],
+/// leaving dangling worklist pointers a later [`FlatHeap::incremental_step`] would pop
+/// (a use-after-free). One incremental cycle must run to `finish` before any other
+/// collector — a caller-contract invariant, fenced here as a **hard `assert!`, checked
+/// in every build profile including release** (AOT00-T4 §1 scope guard).
+///
+/// **Security-review finding, hardened here:** this was a `debug_assert!` — compiled
+/// out entirely under `--release`. Two already-shipped, un-gated features make the
+/// invariant live, reachable purely through normal, sanctioned use, no caller bug or
+/// attacker input required: `gc_collect_incremental_start/step/finish` (the incremental
+/// GC builtins) and `__gc_safepoint` (which fires automatically at every compiled
+/// loop-back-edge and, before this fix, called the stop-the-world collectors with no
+/// `mark_in_progress` check of its own — see [`FlatHeap::should_collect`]/
+/// `__gc_safepoint`'s own doc for the companion fix that makes a safepoint firing
+/// mid-cycle a safe no-op instead of ever reaching this assert). A release binary that
+/// starts an incremental cycle and then hits a safepoint before calling `finish` — the
+/// intended bounded-pause usage pattern — could previously corrupt the heap silently
+/// instead of failing loudly.
 const INCREMENTAL_MIXING_MSG: &str =
     "stop-the-world collect during an incremental mark phase — drive incremental_step/finish \
      to completion before calling collect*";
@@ -712,8 +726,25 @@ impl FlatHeap {
     /// cycle — lives with the caller (for native AOT, `gc-core-capi`'s stack scan),
     /// because only the caller knows how to enumerate its roots. A safepoint or an
     /// allocation consults this and, when true, drives a collect.
+    ///
+    /// **Security-review finding, fixed here:** answers `false` whenever an incremental
+    /// mark phase is in progress ([`Self::incremental_in_progress`]), regardless of live
+    /// bytes. Every stop-the-world `collect*` entry hard-`assert!`s this same invariant
+    /// (see [`INCREMENTAL_MIXING_MSG`]) because running one mid-cycle would sweep blocks
+    /// the persistent mark worklist still references — a use-after-free. Before this fix,
+    /// that assert was the *only* guard: every automatic call site (`__gc_safepoint`,
+    /// `vm-core`'s `safepoint` opcode, `__gc_collect`) gates its stop-the-world call
+    /// behind `should_collect()` alone, with no `mark_in_progress` check of its own — so
+    /// a release binary driving a legitimate, already-shipped bounded-pause incremental
+    /// cycle (`incremental_start` → repeated `incremental_step` at safepoints → `finish`)
+    /// could hit a safepoint mid-cycle and crash on the assert, purely through normal,
+    /// sanctioned use of two already-shipped features. Deferring here — the one place
+    /// this policy decision lives, per this method's own doc — means a safepoint firing
+    /// mid-cycle is simply a safe no-op instead: the incremental cycle keeps making
+    /// progress via its own `incremental_step` calls, and paced collection resumes
+    /// automatically once `incremental_finish` clears the flag.
     pub fn should_collect(&self) -> bool {
-        self.live_bytes >= self.collect_threshold
+        !self.mark_in_progress && self.live_bytes >= self.collect_threshold
     }
 
     /// Whether the *next* collection should also relocate objects
@@ -842,7 +873,7 @@ impl FlatHeap {
     /// reference are followed).  A false positive retains a dead object for one
     /// extra cycle; it never frees a live one.
     pub fn collect(&mut self, roots: &[usize]) -> GcCycleStats {
-        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         self.minor_streak = 0; // full collect: bound on consecutive minors is satisfied (AOT00-T8)
         let before = self.object_count();
         let prev_live = self.live_bytes;
@@ -909,7 +940,7 @@ impl FlatHeap {
     /// may be null iff `len == 0`). No alignment of `base`/`len` is required —
     /// scanning starts at `base` and a sub-8-byte tail is ignored.
     pub unsafe fn collect_region(&mut self, base: *const u8, len: usize) -> GcCycleStats {
-        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         self.minor_streak = 0; // full collect: bound on consecutive minors is satisfied (AOT00-T8)
         let before = self.object_count();
         let prev_live = self.live_bytes;
@@ -1030,7 +1061,7 @@ impl FlatHeap {
     /// object be wrongly freed. The GC upholds its half; the mutator/codegen must
     /// uphold the barrier.
     pub fn collect_minor(&mut self, roots: &[usize]) -> GcCycleStats {
-        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         let before = self.object_count();
         let prev_live = self.live_bytes;
         let mut work: Vec<*mut FlatHeader> = Vec::new();
@@ -1051,7 +1082,7 @@ impl FlatHeap {
     /// `[base, base + len)` must be readable (or `base` null with `len == 0`),
     /// exactly as for [`Self::collect_region`].
     pub unsafe fn collect_minor_region(&mut self, base: *const u8, len: usize) -> GcCycleStats {
-        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         let before = self.object_count();
         let prev_live = self.live_bytes;
         let mut work: Vec<*mut FlatHeader> = Vec::new();
@@ -1084,7 +1115,7 @@ impl FlatHeap {
         root_slots: &[usize],
         regions: &[(*const u8, usize)],
     ) -> GcCycleStats {
-        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         let before = self.object_count();
         let prev_live = self.live_bytes;
         let mut work: Vec<*mut FlatHeader> = Vec::new();
@@ -1215,7 +1246,7 @@ impl FlatHeap {
     /// is not a valid, readable slot is undefined behaviour — the same contract
     /// [`Self::collect_region`] places on its `[base, base + len)` span.
     pub unsafe fn collect_precise(&mut self, root_slots: &[usize]) -> GcCycleStats {
-        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         self.minor_streak = 0; // full collect: bound on consecutive minors is satisfied (AOT00-T8)
         let before = self.object_count();
         let prev_live = self.live_bytes;
@@ -1295,7 +1326,7 @@ impl FlatHeap {
         root_slots: &[usize],
         regions: &[(*const u8, usize)],
     ) -> GcCycleStats {
-        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         self.minor_streak = 0; // full collect: bound on consecutive minors is satisfied (AOT00-T8)
         let before = self.object_count();
         let prev_live = self.live_bytes;
@@ -1367,7 +1398,7 @@ impl FlatHeap {
         root_slots: &[usize],
         regions: &[(*const u8, usize)],
     ) {
-        debug_assert!(!self.mark_in_progress, "incremental cycle already in progress");
+        assert!(!self.mark_in_progress, "incremental cycle already in progress");
         // Everything white: clear the mark bit on every live block.
         // SAFETY: list walk over blocks we own / null terminator.
         let mut h = self.all;
@@ -2198,7 +2229,7 @@ impl FlatHeap {
         root_slots: &[usize],
         regions: &[(*const u8, usize)],
     ) -> (HashSet<usize>, HashSet<usize>) {
-        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
 
         // Pin bits are a per-classification transient: clear them first.
         {
@@ -2737,7 +2768,7 @@ impl FlatHeap {
         root_slots: &[usize],
         regions: &[(*const u8, usize)],
     ) -> GcCycleStats {
-        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         self.minor_streak = 0; // full collect: bound on consecutive minors is satisfied (AOT00-T8)
         let before = self.object_count();
         let prev_live = self.live_bytes;
@@ -2924,7 +2955,7 @@ impl FlatHeap {
         root_slots: &[usize],
         regions: &[(*const u8, usize)],
     ) -> GcCycleStats {
-        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         let before = self.object_count();
         let prev_live = self.live_bytes;
 
@@ -3664,6 +3695,44 @@ mod tests {
         assert!(heap.should_collect());
         heap.live_bytes = 101;
         assert!(heap.should_collect());
+    }
+
+    /// **Security-review finding, regression:** `should_collect` defers — answers
+    /// `false` — while an incremental mark is in progress, regardless of live bytes vs
+    /// threshold. Before this fix, `should_collect` only consulted live-byte
+    /// accounting, so every automatic call site (`__gc_safepoint`, `vm-core`'s
+    /// `safepoint` opcode) — none of which check `mark_in_progress` themselves — could
+    /// still be told to collect mid-cycle, reaching the stop-the-world collectors'
+    /// own `assert!(!self.mark_in_progress, ...)` (see [`INCREMENTAL_MIXING_MSG`]) —
+    /// a `debug_assert!` before this same review round, so this was a silent
+    /// release-mode heap-corruption path, not just a debug-build panic. Resumes
+    /// normally once the flag clears.
+    #[test]
+    fn should_collect_defers_during_an_incremental_mark_and_resumes_after() {
+        let mut heap = FlatHeap::new();
+        heap.collect_threshold = 100;
+        heap.live_bytes = 200; // well over threshold
+        assert!(heap.should_collect(), "sanity: over threshold, no incremental cycle in progress");
+
+        heap.mark_in_progress = true;
+        assert!(!heap.should_collect(), "must defer while an incremental mark is in progress");
+
+        heap.mark_in_progress = false;
+        assert!(heap.should_collect(), "resumes once the flag clears -- still over threshold");
+    }
+
+    /// The stop-the-world collectors' own reentrancy guard is now a hard `assert!`,
+    /// checked in every build profile (including release), not a `debug_assert!`.
+    /// This test doesn't distinguish build profiles (both panic under `cargo test`'s
+    /// debug profile) — it exists so the invariant has *some* direct coverage, since
+    /// none existed before this security-review round despite the guard being present
+    /// at 11 call sites.
+    #[test]
+    #[should_panic(expected = "stop-the-world collect during an incremental mark phase")]
+    fn collect_compacting_panics_if_called_mid_incremental_mark() {
+        let mut heap = FlatHeap::new();
+        unsafe { heap.incremental_start(&[], &[]) };
+        let _ = unsafe { heap.collect_compacting(&[], &[]) };
     }
 
     #[test]

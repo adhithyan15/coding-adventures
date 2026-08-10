@@ -1,5 +1,48 @@
 # Changelog — gc-core
 
+## 0.33.2 — 2026-08-10 — harden the incremental-mark reentrancy guard (security fix)
+
+- **The 11 `mark_in_progress` reentrancy guards across `flat_heap.rs` were
+  `debug_assert!`-only** — compiled out entirely under `--release`. They exist to
+  prevent any stop-the-world `collect*` call (or the internal helpers they share)
+  from running *between* `incremental_start` and `incremental_finish`: doing so would
+  `sweep` blocks still referenced by the persistent `mark_worklist`, leaving dangling
+  worklist pointers a later `incremental_step` would pop — a use-after-free. All 11
+  are now hard `assert!`s, checked in every build profile.
+- **The real gap this hardening exposed: no automatic call site checked
+  `mark_in_progress` at all.** `__gc_safepoint` (`gc-core-capi`), `vm-core`'s
+  `safepoint` opcode, and `__gc_collect`'s auto-collect all gate their stop-the-world
+  call behind `FlatHeap::should_collect()` alone — which, before this fix, consulted
+  only live-byte accounting. Two already-shipped, un-gated features made this live:
+  the incremental GC builtins (`gc_collect_incremental_start/step/finish`) and
+  `__gc_safepoint`, which fires automatically at every compiled loop-back-edge. A
+  release binary driving the intended bounded-pause pattern — `start`, repeated
+  `step` calls at safepoints, `finish` — could hit a safepoint mid-cycle and, before
+  this fix, silently corrupt the heap (the assert was compiled out); after just the
+  `assert!` hardening alone, it would instead hard-`abort()` the process (confirmed
+  empirically — see below), since a panic crossing an `extern "C"` boundary can't
+  unwind. Neither outcome is acceptable for entirely normal, sanctioned use.
+- **Fix: `should_collect()` itself now answers `false` whenever
+  `incremental_in_progress()` is true**, regardless of live bytes — the one place this
+  policy decision already lived, per its own doc comment, so every current and future
+  automatic call site is protected identically with no per-site change needed. A
+  safepoint firing mid-cycle is now a safe no-op: the incremental cycle keeps making
+  progress via its own `incremental_step` calls, and paced collection resumes
+  automatically once `incremental_finish` clears the flag.
+- 3 new regression tests: a direct `should_collect` policy test (defers while
+  `mark_in_progress`, resumes once cleared); a `#[should_panic]` test giving the
+  now-11-call-site reentrancy guard its first direct coverage (none existed before
+  this round despite the guard's presence at every stop-the-world entry); and an
+  end-to-end `gc-core-capi` test driving the real `start`/`step`/`finish` C-ABI
+  protocol with a safepoint fired mid-cycle. All three confirmed load-bearing by
+  reverting the `should_collect` fix and observing the predicted failure — notably,
+  the C-ABI test didn't just fail, it **hard-aborted the process** (`SIGABRT`),
+  empirically demonstrating the severity described above.
+- Verification: `cargo build`/`test` clean across `gc-core`, `gc-core-capi`,
+  `vm-core` (160 lib tests, up from 158; gc-core-capi 41, up from 40); `cargo clippy
+  --all-targets -- -D warnings` clean; full-crate `cargo +nightly miri test -p
+  gc-core` clean (158 passed, 2 ignored per the existing scale-test gate).
+
 ## 0.33.1 — 2026-08-10 — `find_header`: fix the one-past-the-end pointer gap (security fix)
 
 - **`FlatHeap::find_header`'s upper bound was exclusive** (`addr < payload + size`), so a

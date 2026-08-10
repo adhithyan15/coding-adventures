@@ -1046,6 +1046,62 @@ mod tests {
         core::hint::black_box(kept);
     }
 
+    /// **Security-review finding, regression:** `__gc_safepoint` firing mid-incremental-
+    /// cycle — the intended bounded-pause usage pattern (`start` → repeated `step` at
+    /// safepoints → `finish`) can trigger this through entirely normal, sanctioned use
+    /// — must be a safe no-op, not a panic (or, before `should_collect` gained its own
+    /// `mark_in_progress` check, silent release-mode heap corruption via the
+    /// stop-the-world collectors' `debug_assert!`-only guard). Live bytes are pushed
+    /// over the paced-collection threshold *before* starting the incremental cycle, so
+    /// the live-byte half of `should_collect` alone would say yes — proving the defer
+    /// is really `mark_in_progress`-driven, not incidental.
+    #[test]
+    fn safepoint_is_a_no_op_during_an_incremental_cycle() {
+        let _guard = crate::TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        __gc_reset();
+        run_safepoint_during_incremental_case();
+        __gc_reset();
+    }
+
+    #[inline(never)]
+    fn run_safepoint_during_incremental_case() {
+        use gc_core::flat_heap::INITIAL_THRESHOLD;
+
+        let big = __gc_alloc(INITIAL_THRESHOLD as i64);
+        assert!(big != 0);
+        unsafe { *(big as *mut i64) = 0xFEED };
+        assert!(__gc_live_bytes() as usize >= INITIAL_THRESHOLD);
+
+        unsafe { __gc_collect_incremental_start() };
+
+        // A safepoint firing mid-cycle must be a safe no-op: no panic, no collection.
+        assert_eq!(unsafe { __gc_safepoint() }, 0, "safepoint must defer during an incremental mark");
+        assert_eq!(__gc_collection_count(), 0, "no stop-the-world cycle ran mid-incremental-mark");
+        assert_eq!(
+            unsafe { *(big as *const i64) },
+            0xFEED,
+            "the object survives untouched -- no sweep happened"
+        );
+
+        // Drive the cycle to completion normally -- the deferred safepoint didn't
+        // disturb it -- then confirm paced collection isn't permanently disabled.
+        let mut steps = 0;
+        while unsafe { __gc_collect_incremental_step(1) } == 0 {
+            steps += 1;
+            assert!(steps < 100_000, "incremental mark must converge");
+        }
+        let _ = unsafe { __gc_collect_incremental_finish() };
+        assert_eq!(__gc_collection_count(), 1, "the incremental cycle itself completed and counted");
+
+        let _ = unsafe { __gc_safepoint() }; // must not panic now that the flag is clear
+        assert_eq!(
+            unsafe { *(big as *const i64) },
+            0xFEED,
+            "the object -- still stack-rooted -- survives whether or not this safepoint collected again"
+        );
+        core::hint::black_box(big);
+    }
+
     /// The incremental C-ABI protocol is safe even if no phase is in progress: `step` reports
     /// "done" and `finish` reclaims nothing (the no-op cycle an untrustworthy-stack `start`
     /// produces). Nothing is swept, so no live object could be lost.
