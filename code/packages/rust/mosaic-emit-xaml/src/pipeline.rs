@@ -4046,7 +4046,7 @@ fn emit_csproj(_name: &str, options: &EmitOptions) -> String {
          \n\
            <ItemGroup>\n\
              <PackageReference Include=\"Microsoft.WindowsAppSDK\" Version=\"{sdk_ver}\" />\n\
-             <PackageReference Include=\"Microsoft.Windows.SDK.BuildTools\" Version=\"10.0.22621.756\" />\n\
+             <PackageReference Include=\"Microsoft.Windows.SDK.BuildTools\" Version=\"10.0.26100.4654\" />\n\
            </ItemGroup>\n\
          \n\
            <!-- Fix B2: dotnet build leaves the native runtime DLLs in\n\
@@ -10149,6 +10149,7 @@ mod tests {
         // csproj has the WindowsAppSDK reference + unpackaged WinUI build switches.
         assert!(p.csproj.contains("Microsoft.WindowsAppSDK"));
         assert!(p.csproj.contains("Version=\"1.8.260710003\""));
+        assert!(p.csproj.contains("Version=\"10.0.26100.4654\""));
         assert!(p.csproj.contains("AppxGeneratePriEnabled>false"));
         assert!(p.csproj.contains("EnableCoreMrtTooling>false"));
         assert!(p.csproj.contains("UseRidGraph>true"));
