@@ -2,6 +2,16 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Urdu independent-kaf ductus (HL-C09Z)
+
+- Add Urdu independent ک from Northwestern's *Zer o Zabar* animations and prose
+  as one main-line body stroke followed by the separately lifted long slash.
+- Preserve the source's flatter independent bowl, pronounced final hook, and
+  explicit warning not to write kāf in one penstroke while fitting the learner
+  path to Noto Naskh.
+- Render a real three-frame filmstrip whose two strokes, one lift, source,
+  prose, geometry, and summary agree.
+
 ### Added — cited Urdu independent-shin ductus (HL-C09Y)
 
 - Add Urdu independent ش from Northwestern's *Zer o Zabar* animations as the

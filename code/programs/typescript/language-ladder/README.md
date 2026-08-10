@@ -235,7 +235,12 @@ a five-frame filmstrip from the same chapter: the two body movements stay in
 one run, then three sourced lifts place the lower-left, lower-right, and centered
 upper dots. Its source note preserves the two-below/one-above arrangement,
 centers the dots above either the toothed or optional toothless body, and keeps
-the standard learner path on Noto Naskh. The runtime resolves
+the standard learner path on Noto Naskh. Urdu ک adds a three-frame Chapter-1
+filmstrip: the stem descends and flows left through the flatter bowl and
+pronounced hook in one run; one sourced lift then starts the long upper-right
+slash down toward the stem. Its source note preserves the explicit warning not
+to collapse those two strokes while the learner path fits Noto Naskh's connected
+outline. The runtime resolves
 each cited path back to the owning script and lazily loads that script's font,
 while Tamil continues to use Noto Sans Tamil. Unverified letters still
 fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
