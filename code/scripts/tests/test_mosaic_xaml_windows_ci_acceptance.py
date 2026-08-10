@@ -114,6 +114,10 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
             "windowsappsdk/1.8/1.8.260710003/windowsappruntimeinstall-x64.exe",
             workflow,
         )
+        self.assertIn(
+            "windowsappsdk/1.7/1.7.250606001/windowsappruntimeinstall-x64.exe",
+            workflow,
+        )
         self.assertIn("for ($attempt = 1; $attempt -le 3; $attempt++)", workflow)
         self.assertIn("Get-WinEvent -FilterHashtable", workflow)
         self.assertIn("TaskApp WinUI launch failed", workflow)
