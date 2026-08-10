@@ -103,6 +103,15 @@ Module.new)`, and `include M` / `extend M` → native `(Class).include(M)` /
 `(Class).extend(M)` (both operands validated) — a module's methods reuse the
 existing `__def_method__` registration, so a mixed-in method resolves through the
 ancestry with no new machinery.
+**`ConsoleIO`** (SIR28): `__sys_write__("stdout"|"stderr", "none"|"per_value"|
+"once", unpack_arrays, ...values)` → `sir_write(...)`, a plain pass-through —
+every arg, including the `stream`/`terminator` literals (already validated
+against a closed set by `semantic-ir`'s validator), is an ordinary Ruby
+argument, and `sir_write` branches on them at Ruby runtime (no compile-time
+literal extraction needed, unlike the C/Go/Rust backends). Generalizes the
+existing `sir_print`/`sir_puts` — still present, still used by bare
+`"print"`/`"puts"` — into one function. Not yet emitted by any frontend — see
+[SIR28](../../../specs/SIR28-syscall-primitives.md).
 Rejects `TailCalls`, `Intrinsics`, and every not-yet-wired feature (array
 indexing / slicing via `IndexGet` — `NDArrays`; array-pattern destructuring;
 built-in collection methods; plus a namespaced class/constant definition or a

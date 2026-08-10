@@ -227,6 +227,11 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // references, no injection).  A non-empty module body is deferred (a
     // method-only module has an empty body — its methods are hoisted).
     Feature::Modules,
+    // `Feature::ConsoleIO` (SIR28) — `__sys_write__`, the reserved
+    // console-output primitive `print`/`puts` will migrate to. Additive:
+    // nothing emits it yet, so this declares acceptance ahead of any
+    // frontend using it.
+    Feature::ConsoleIO,
 ];
 
 impl Backend for RubyBackend {
