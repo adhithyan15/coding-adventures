@@ -50,10 +50,18 @@ compare-exchanges the complete intended `Active` state. Ambiguous provider
 failure retains byte-for-byte retry state, and an identical concurrent local
 winner is the only compare-exchange conflict accepted as success.
 
+Authenticated reopen now materializes the complete current application view.
+It reads every verified maximal head, decrypts each distinct catalog exactly
+once, unions identical and concurrent candidate references without loss, and
+decrypts every distinct current revision. The open fails closed on dangling,
+wrong-kind, cross-item, missing direct-parent, or amplified references. The
+unlocked session retains the resulting wipe-on-drop domain candidates while
+exposing only payload-free item, candidate, and conflicted-item counts.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
-credential store, or entropy source. Catalog materialization and item session
-workflows land in the next slices. There is no unchecked
+credential store, or entropy source. Redacted item views, search projection,
+and mutation workflows land in the next slices. There is no unchecked
 repository verification path: construction decrypts and
 authority-verifies the exact locally pinned certificate frame and object ID,
 and commits and announcements must match that vault, device, certificate ID,
@@ -61,15 +69,17 @@ and Ed25519 key.
 
 ## Verification
 
-The package has 56 tests covering exact canonical and cryptographic vectors,
+The package has 61 tests covering exact canonical and cryptographic vectors,
 lossless removed-value persistence, live and tombstone revisions, catalog
 bounds and ordering, cross-kind and cross-vault rejection, AEAD tampering,
 authority/device/certificate binding, Ed25519 signature rejection, closed
 parser failures, crash-state relationship checks, diagnostic redaction, and
-explicit key wiping. Repository tests additionally exercise initialization,
-publication, verified open/read/history, every injected provider operation,
-constructor paths, and complete error translation. The exact Tarpaulin result
-under its LLVM engine is 1,497 of 1,562 production lines (95.84%).
+explicit key wiping. Open tests additionally prove empty and conflicted current
+catalog materialization plus dangling current-revision, missing-parent, and
+cross-item rejection. Repository tests exercise initialization, publication,
+verified open/read/history, every injected provider operation, constructor
+paths, and complete error translation.
+The exact Tarpaulin LLVM result is 1,561 of 1,628 production lines (95.88%).
 
 ## Development
 

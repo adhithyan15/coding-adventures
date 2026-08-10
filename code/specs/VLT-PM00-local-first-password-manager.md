@@ -1286,9 +1286,13 @@ changelog, focused build, and downstream validation.
       local activation side effects;
    6a. authenticated active-state unlock and verified repository open;
    6b. exact pending-publication recovery and durable active-state advancement;
-   6c. current catalog/revision materialization into an unlocked session; and
-   7. item mutation, redacted views, search, history, export, audit, status,
-      and doctor workflows.
+   6c. current catalog/revision materialization into an unlocked session,
+       including bounded union of every verified head catalog, exact candidate
+       decryption, direct-parent existence checks, dangling/wrong-item
+       rejection, and payload-free session counts;
+   6d. redacted current-item views and the wipe-on-lock in-memory search
+       projection over materialized candidates; and
+   7. item mutation, history, export, audit, status, and doctor workflows.
 9. `vault-pm-cli` + real executable and pseudo-terminal E2E suite.
 10. Crash/fault matrix and local restore drill.
 
