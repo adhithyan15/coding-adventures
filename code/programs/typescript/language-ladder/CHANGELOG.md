@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Urdu independent-nun ductus (HL-C09AC)
+
+- Add Urdu independent ن from Northwestern's *Zer o Zabar* animations as one
+  right-to-left bowl below the baseline, then one lifted dot.
+- Preserve the near-baseline dot guidance and distinct initial/medial tooth
+  form while fitting the independent two-stroke motion to Noto Naskh.
+- Render a real two-frame filmstrip whose two strokes, one lift, source,
+  prose, geometry, and summary agree.
+
 ### Added — cited Urdu independent-mim ductus (HL-C09AB)
 
 - Add Urdu independent م from Northwestern's *Zer o Zabar* animations as one

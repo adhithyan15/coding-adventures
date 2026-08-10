@@ -212,9 +212,12 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   head and below-baseline tail in one zero-lift run. The prose distinguishes
   calligraphy from the constant-width handwritten counterclockwise loop, while
   the learner path reconciles their shared head-to-tail order with Noto Naskh.
-  The remaining **200** prose part orders across eight scripts (`arabic` 21,
+  Urdu **ن** returns to Chapter 6: both independent animations draw the
+  below-baseline bowl first, then lift once for the dot near the baseline. The
+  learner path keeps the source's distinct initial/medial tooth form explicit.
+  The remaining **199** prose part orders across eight scripts (`arabic` 21,
   `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 22,
-  `japanese` 34, `urdu-nastaliq` 5) are explicitly **unverified for pen lifts**.
+  `japanese` 34, `urdu-nastaliq` 4) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
   verified claim has the same cited, font-checked path. That closes `HL-C19`;

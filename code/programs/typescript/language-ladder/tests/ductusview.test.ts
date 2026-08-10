@@ -92,6 +92,8 @@ const URDU_LAM = ductusFor("ل", "urdu-nastaliq")!;
 const urduLamOutline = naskhOutline("ل");
 const URDU_MIM = ductusFor("م", "urdu-nastaliq")!;
 const urduMimOutline = naskhOutline("م");
+const URDU_NUN = ductusFor("ن", "urdu-nastaliq")!;
+const urduNunOutline = naskhOutline("ن");
 const PERSIAN_BEH = DUCTUS["ب"];
 const persianBehOutline = naskhOutline("ب");
 const PERSIAN_TEH = DUCTUS["ت"];
@@ -119,7 +121,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds all eleven authored Tamil letters, nine Persian letters, and Urdu ا, ج, ر, س, ش, ک, ل, and م", () => {
+  it("finds all eleven authored Tamil letters, nine Persian letters, and Urdu ا, ج, ر, س, ش, ک, ل, م, and ن", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -154,6 +156,8 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("ل", "perso-arabic")?.glyph).toBe("ل");
     expect(ductusFor("م", "urdu-nastaliq")?.glyph).toBe("م");
     expect(ductusFor("م", "perso-arabic")?.glyph).toBe("م");
+    expect(ductusFor("ن", "urdu-nastaliq")?.glyph).toBe("ن");
+    expect(ductusFor("ن", "perso-arabic")?.glyph).toBe("ن");
   });
 
   it("keeps the shared Persian and Urdu ا independently addressable", () => {
@@ -181,6 +185,15 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(urdu?.script).toBe("urdu-nastaliq");
     expect(persian?.source.url).not.toBe(urdu?.source.url);
     expect(ductusFor("م", "arabic")).toBeUndefined();
+  });
+
+  it("keeps the shared Persian and Urdu ن independently addressable", () => {
+    const persian = ductusFor("ن", "perso-arabic");
+    const urdu = ductusFor("ن", "urdu-nastaliq");
+    expect(persian?.script).toBe("perso-arabic");
+    expect(urdu?.script).toBe("urdu-nastaliq");
+    expect(persian?.source.url).not.toBe(urdu?.source.url);
+    expect(ductusFor("ن", "arabic")).toBeUndefined();
   });
 
   it("returns undefined for a letter nobody has authored a stroke order for", () => {
@@ -907,6 +920,42 @@ describe("Urdu م — its round head flows into the below-baseline tail", () => 
     expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(URDU_MIM.strokes[0], 1),
+    );
+  });
+});
+
+describe("Urdu ن — its below-baseline bowl precedes the lifted dot", () => {
+  const steps = ductusSteps(URDU_NUN);
+  const strip = ductusFilmstrip(URDU_NUN, urduNunOutline);
+
+  it("keeps the bowl together, then marks the sourced lift", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep the independent bowl right to left below the baseline",
+      "lift, then place the dot near the baseline",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1]);
+    const bowl = URDU_NUN.strokes[0].segments[0].path;
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+    expect(Math.min(...bowl.map((point) => point.y))).toBeLessThan(0);
+  });
+
+  it("reports two movements separated by one pen lift", () => {
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 2 movements");
+  });
+
+  it("draws the Noto Naskh outline and retains the bowl during the dot", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      urduNunOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(URDU_NUN.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(URDU_NUN.strokes[1], 1),
     );
   });
 });
