@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate multiword sequence actor IDs through the native Metal PNG pipeline.
 - Validate forced sequence text wrapping through PaintScene and Metal PNG rendering.
 - Export sequence accessibility title and description as PaintScene metadata.
 - Preserve multiline accessibility descriptions in that scene metadata.

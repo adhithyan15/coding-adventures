@@ -349,7 +349,7 @@ mod apple {
     #[test]
     fn render_mermaid_sequence_to_png() {
         let mut diagram = parse_sequence_diagram(
-            "sequenceDiagram;title: Native Mermaid sequence;accTitle: Native transfer sequence;accDescr {\n  Banking transfer\n  interaction\n}\nautonumber\nbox hsl(180, 100%, 50%) Client tier\nactor User\nparticipant API@{ \"type\": \"boundary\" } as Banking API\nend\nbox Services\nparticipant DB@{ \"type\": \"database\", \"alias\": \"Ledger\" }\nend\nalt Transfer accepted\nUser->>+API: wrap: Submit a deliberately detailed native transfer request\ncreate participant Worker as Audit Worker\nAPI()->>()Worker: Start audit\nWorker--|\\API: Audit complete\ndestroy Worker\nloop Persist until committed\nAPI->>DB: Record transaction\nDB-->>API: Committed\nend\nnote right of API: Metal #9829;<br/>native scene\nAPI-->>-User: Transfer complete\nelse Transfer rejected\nAPI-->>User: Validation failed\nend",
+            "sequenceDiagram;title: Native Mermaid sequence;accTitle: Native transfer sequence;accDescr {\n  Banking transfer\n  interaction\n}\nautonumber\nbox hsl(180, 100%, 50%) Client tier\nactor Banking User as User\nparticipant API@{ \"type\": \"boundary\" } as Banking API\nend\nbox Services\nparticipant DB@{ \"type\": \"database\", \"alias\": \"Ledger\" }\nend\nalt Transfer accepted\nBanking User->>+API: wrap: Submit a deliberately detailed native transfer request\ncreate participant Worker as Audit Worker\nAPI()->>()Worker: Start audit\nWorker--|\\API: Audit complete\ndestroy Worker\nloop Persist until committed\nAPI->>DB: Record transaction\nDB-->>API: Committed\nend\nnote right of API: Metal #9829;<br/>native scene\nAPI-->>-Banking User: Transfer complete\nelse Transfer rejected\nAPI-->>Banking User: Validation failed\nend",
         )
         .expect("Mermaid sequence parse failed");
         diagram.auto_number_start = 10.5;
@@ -409,7 +409,9 @@ mod apple {
             scene
                 .metadata
                 .as_ref()
-                .and_then(|metadata| metadata.get("sequence.participant.User.link.Dashboard"))
+                .and_then(|metadata| {
+                    metadata.get("sequence.participant.Banking User.link.Dashboard")
+                })
                 .map(String::as_str),
             Some("https://example.com/dashboard")
         );
@@ -417,7 +419,9 @@ mod apple {
             scene
                 .metadata
                 .as_ref()
-                .and_then(|metadata| metadata.get("sequence.participant.User.property.role"))
+                .and_then(|metadata| {
+                    metadata.get("sequence.participant.Banking User.property.role")
+                })
                 .map(String::as_str),
             Some("\"administrator\"")
         );
@@ -426,7 +430,7 @@ mod apple {
                 .metadata
                 .as_ref()
                 .and_then(|metadata| {
-                    metadata.get("sequence.participant.User.details_reference")
+                    metadata.get("sequence.participant.Banking User.details_reference")
                 })
                 .map(String::as_str),
             Some("user-details")

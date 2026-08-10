@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.24.0
+
+- Parse multiword sequence actor identifiers across declarations, messages, notes, lifecycle statements, and metadata commands.
+
 ## 0.23.0
 
 - Preserve explicit message and note `wrap:` and `nowrap:` semantics.
