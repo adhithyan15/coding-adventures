@@ -1685,8 +1685,12 @@ impl FlatHeap {
     /// region, every aligned 8-byte word in `[tail_from, size)` (the variable-length array
     /// case). Returns `true` iff `h` had a registered kind (so precise tracing applied);
     /// returns `false` for `kind == 0` / an unregistered id, leaving the caller to trace
-    /// **conservatively** if it needs to (the mark and remembered-set sites do; the compaction
-    /// sites treat `kind == 0` as *"holds no precise reference"* and do nothing).
+    /// **conservatively** if it needs to. The mark and remembered-set sites (`scan_payload`)
+    /// already do; the compaction sites must gate on [`Self::is_precisely_traced`] — the
+    /// exact complement of this return value — not on a bare `kind == 0` test, which
+    /// mis-treats an unregistered nonzero kind as "holds no precise reference" while actually
+    /// never routing its children to the conservative wave either (a real use-after-free once
+    /// relocated — see `is_precisely_traced`'s own doc for the full history).
     ///
     /// This is the single place the [`KindLayout`] is walked, so the four consumers
     /// ([`Self::scan_payload`], [`Self::precise_children`], [`Self::fixup_ref_fields`],
@@ -1780,9 +1784,36 @@ impl FlatHeap {
         }
     }
 
+    /// Whether `h` is actually traced through [`Self::for_each_ref_slot`]'s precise
+    /// path — the **exact** condition under which [`Self::scan_payload`] (liveness)
+    /// takes the field-map branch instead of its conservative fallback.
+    ///
+    /// **Not** the same as `h.kind != 0`. `for_each_ref_slot` returns `false` — meaning
+    /// "trace conservatively instead" — for two distinct reasons: `kind == 0`
+    /// (deliberately opaque), *or* `kind != 0` but with no `field_maps` entry (an
+    /// **unregistered** kind id — reachable in practice: `FlatHeap::alloc`/`alloc_kind`
+    /// and the C ABI `__gc_alloc_kind` accept an arbitrary `u16` with no validation
+    /// against the registry). A caller that tests only `kind == 0` to decide "is this
+    /// object's tracing conservative" mis-classifies the second case as precise —
+    /// [`Self::precise_children`] correctly contributes nothing for it (mirroring
+    /// `for_each_ref_slot`'s `false`), but nothing then routes its children to the
+    /// pinning wave either, so a reachable child ends up in **neither** `precise` nor
+    /// pinned: invisible to a compacting sweep that trusts the invariant "reachable ⟺
+    /// pinned ∨ movable" — a real use-after-free once relocated. Every mobility-wave
+    /// call site must gate on **this** predicate, not on `kind` directly.
+    ///
+    /// # Safety
+    /// `h` is a live block owned by this heap.
+    unsafe fn is_precisely_traced(&self, h: *mut FlatHeader) -> bool {
+        let kind = (*h).kind;
+        kind != 0 && self.field_maps.get((kind - 1) as usize).is_some()
+    }
+
     /// Append `h`'s **precise** children — the blocks its *registered-kind reference
-    /// fields* point at. A `kind == 0` object (no field map) contributes **nothing**
-    /// here: its out-edges are conservative and are handled by the pinning wave.
+    /// fields* point at. An object [`Self::is_precisely_traced`] finds `false`
+    /// contributes **nothing** here: its out-edges are conservative and must be
+    /// handled by the pinning wave (via [`Self::is_precisely_traced`] at the call
+    /// site, not a bare `kind == 0` test — see that method's doc for why).
     ///
     /// # Safety
     /// `h` is a live block owned by this heap.
@@ -1821,10 +1852,11 @@ impl FlatHeap {
     ///   registered-kind reference edges — so every object on the path is one whose
     ///   pointers can be rewritten; **and**
     /// - **not pinned**: no `regions` (conservative) root reaches it, and it is not a
-    ///   child of any `kind == 0` object — a maybe-pointer to it could not be safely
-    ///   rewritten if it moved; **and**
-    /// - a **registered kind** (`kind != 0`): so its *own* pointers can be updated
-    ///   after it moves.
+    ///   child of any object [`Self::is_precisely_traced`] finds `false` for — a
+    ///   maybe-pointer to it could not be safely rewritten if it moved; **and**
+    /// - **actually precisely traced** ([`Self::is_precisely_traced`] — a registered
+    ///   kind *with a field-map entry*, not merely `kind != 0`): so its *own* pointers
+    ///   can be updated after it moves.
     ///
     /// Everything else is **pinned** (its header [`FlatHeader::pinned`] bit is set).
     /// This is the simple, always-sound model (spec §2): *any* conservative in-edge
@@ -1877,9 +1909,26 @@ impl FlatHeap {
 
         // ── Pinning (conservative) wave ────────────────────────────────────────
         // Seeds: every conservative-region candidate, plus every precise-reachable
-        // kind==0 object (its conservative out-edges make its children unmovable, and
-        // it is itself unmovable). Then trace conservatively — every reached object is
-        // pinned, and every word it holds is a candidate that pins its target.
+        // object that is NOT actually precisely traced (`!is_precisely_traced` —
+        // kind==0, or an unregistered kind id; see that method's doc for why this must
+        // not be a bare `kind == 0` test). Its conservative out-edges make its children
+        // unmovable, and it is itself unmovable. Then trace conservatively — every
+        // reached object is pinned, and every candidate it holds pins its target.
+        //
+        // Security-review finding (fixed here): `conservative_children` only visits
+        // **8-aligned** words, but `for_each_ref_slot`'s declared ref fields (what
+        // `precise_children`/the precise wave follow) are read with `read_unaligned`
+        // at whatever offset the kind's `KindLayout` names — sub-8-aligned is
+        // explicitly tolerated there. So a *pinned* object with a misaligned declared
+        // ref field pointing at a registered-kind child would, without this union,
+        // leave that child reachable only via the precise wave — unpinned, and thus
+        // wrongly `movable` — even though its (pinned, unrelocatable) parent's field
+        // can never be found-and-rewritten. Unioning `precise_children` into every
+        // pinning-wave step makes the pinning wave dominate every edge
+        // `for_each_ref_slot` can ever produce, aligned or not — a provable no-op for
+        // every kind whose declared offsets are already 8-aligned (the only kind of
+        // layout any in-tree registrant produces today), since `precise_children`'s
+        // slots are then already a subset of what `conservative_children` visits.
         let mut cwork: Vec<*mut FlatHeader> = Vec::new();
         for &(base, len) in regions {
             let mut off = 0usize;
@@ -1891,7 +1940,7 @@ impl FlatHeap {
         }
         for &ph in &precise {
             let h = ph as *mut FlatHeader;
-            if (*h).kind == 0 {
+            if !self.is_precisely_traced(h) {
                 cwork.push(h);
             }
         }
@@ -1901,16 +1950,17 @@ impl FlatHeap {
             }
             (*h).pinned = true;
             self.conservative_children(h, &mut tmp);
+            self.precise_children(h, &mut tmp); // dominate sub-8-aligned ref fields too
             for c in tmp.drain(..) {
                 cwork.push(c);
             }
         }
 
-        // ── Result: movable = precise-reachable, not pinned, registered kind ────
+        // ── Result: movable = precise-reachable, not pinned, precisely-traced ────
         let mut movable: HashSet<usize> = HashSet::new();
         for &ph in &precise {
             let h = ph as *mut FlatHeader;
-            if !(*h).pinned && (*h).kind != 0 {
+            if !(*h).pinned && self.is_precisely_traced(h) {
                 movable.insert(h as usize + HEADER_SIZE); // payload address
             }
         }
@@ -1980,11 +2030,14 @@ impl FlatHeap {
     ///
     /// Only **base** pointers are handled, deliberately: a moved object is referenced
     /// *only* by base pointers. Precise reference fields hold base pointers, and any
-    /// object reachable *conservatively* (a `regions` root, or a `kind == 0` object)
-    /// was scanned every-word during classification, which **pins** its targets — so a
-    /// moved object has no interior-pointer and no conservative in-edge. An interior or
-    /// integer look-alike therefore never legitimately names a moved object, and is
-    /// never rewritten (avoiding corrupting a non-pointer word).
+    /// object reachable *conservatively* (a `regions` root, or a pinned object) had
+    /// **both** its conservative words *and* its declared ref fields (aligned or not —
+    /// `classify_mobility`'s pinning wave unions `conservative_children` with
+    /// `precise_children` for exactly this reason) scanned during classification,
+    /// which **pins** its targets — so a moved object has no interior-pointer and no
+    /// conservative in-edge, from either scan. An interior or integer look-alike
+    /// therefore never legitimately names a moved object, and is never rewritten
+    /// (avoiding corrupting a non-pointer word).
     fn forwarded(&self, word: usize, forward: &HashMap<usize, usize>) -> Option<usize> {
         if let Some(&nw) = forward.get(&word) {
             return Some(nw); // untagged base pointer
@@ -2009,10 +2062,13 @@ impl FlatHeap {
     /// # Safety
     /// `h` is a live block owned by this heap (or its arena copy).
     unsafe fn fixup_ref_fields(&self, h: *mut FlatHeader, forward: &HashMap<usize, usize>) {
-        // A `kind == 0` / unregistered object provably holds no pointer to a moved object (its
-        // targets were pinned by the conservative pinning wave), so `for_each_ref_slot` visits
-        // nothing for it — exactly the old early-return. Rewrite each *precise* reference word
-        // (fixed field or array-tail element) that names a moved object.
+        // An object `Self::is_precisely_traced` finds false for — kind == 0, OR a kind != 0
+        // with no field-map entry (an unregistered id; see that method's doc) — provably holds
+        // no pointer to a moved object: `classify_mobility`'s pinning wave seeds on
+        // `!is_precisely_traced`, not on `kind == 0` alone, so its targets were pinned
+        // regardless of which of the two reasons applies. `for_each_ref_slot` visits nothing
+        // for such an object either way — exactly the old early-return. Rewrite each *precise*
+        // reference word (fixed field or array-tail element) that names a moved object.
         self.for_each_ref_slot(h, |slot| {
             let w = ptr::read_unaligned(slot);
             // PR-3b reviewer follow-up: a *precise* reference word holds a reference —
@@ -2106,11 +2162,13 @@ impl FlatHeap {
     /// > set; every reachable-but-not-moved object is pinned.**
     ///
     /// Proof: a reachable object is either (a) reached conservatively (a `regions` root, or
-    /// through a `kind == 0` object) — the pinning wave sets its pin bit; or (b) reached
-    /// only precisely. A precise `kind == 0` object is *seeded* into the pinning wave (its
-    /// conservative out-edges make it unmovable) → pinned. A precise `kind != 0` object is
-    /// pinned iff a conservative edge also reached it; if not, it is exactly a **movable**
-    /// object and was moved. So `reachable ∧ ¬moved ≡ pinned`, and `movable ⇒ ¬pinned`.
+    /// through an object [`Self::is_precisely_traced`] finds `false` for — kind `0` or an
+    /// unregistered kind id) — the pinning wave sets its pin bit; or (b) reached only
+    /// precisely. A precise object `is_precisely_traced` finds `false` for is *seeded* into
+    /// the pinning wave (its conservative out-edges make it unmovable) → pinned. A precise,
+    /// precisely-traced object is pinned iff a conservative edge also reached it; if not, it
+    /// is exactly a **movable** object and was moved. So `reachable ∧ ¬moved ≡ pinned`, and
+    /// `movable ⇒ ¬pinned`.
     ///
     /// Therefore the pin bit is a ready-made *keep-in-place* predicate:
     /// 1. **Mark survivors-in-place**: set `marked = pinned` on every from-space block.
@@ -4501,6 +4559,232 @@ mod tests {
         assert!(
             unsafe { heap.classify_mobility(&slots, &[]) }.contains(&a),
             "pin bit is a per-classification transient, cleared each call",
+        );
+    }
+
+    // ── `is_precisely_traced` / unregistered-kind-id use-after-free fix ───────────
+    // Security-review finding on AOT00-T9 PR-2: `classify_mobility`'s pinning-wave
+    // seed and final `movable` filter tested `kind == 0` directly, but the actual
+    // condition under which an object is precisely traced is `kind != 0 AND has a
+    // field_maps entry` — a nonzero kind id that was never passed to `register_kind`
+    // (reachable via `alloc`/`alloc_kind`/the C ABI, which validate nothing) also
+    // traces conservatively (per `for_each_ref_slot`'s own contract), but the old
+    // `kind == 0` test never routed such an object into the pinning wave. Its
+    // children ended up in NEITHER `precise` nor pinned — invisible — and the object
+    // itself was wrongly eligible for `movable`. `collect_compacting` then moved it
+    // without rewriting its (unvisited) conservative field, and swept the child it
+    // named: a real use-after-free, confirmed end-to-end below.
+
+    /// The helper itself: `false` for `kind == 0`, but ALSO `false` for a nonzero
+    /// kind id that was never registered — the exact gap `kind != 0` alone misses.
+    #[test]
+    fn is_precisely_traced_is_false_for_unregistered_kind_id() {
+        let mut heap = FlatHeap::new();
+        let opaque = heap.alloc(16, 0) as usize;
+        let unregistered = heap.alloc(16, 999) as usize; // never passed to register_kind
+        let k = heap.register_kind(&[0]);
+        let registered = heap.alloc(16, k) as usize;
+
+        let h_opaque = heap.find_header(opaque);
+        let h_unregistered = heap.find_header(unregistered);
+        let h_registered = heap.find_header(registered);
+        unsafe {
+            assert!(!heap.is_precisely_traced(h_opaque));
+            assert!(
+                !heap.is_precisely_traced(h_unregistered),
+                "kind != 0 alone is NOT sufficient — this kind id was never registered"
+            );
+            assert!(heap.is_precisely_traced(h_registered));
+        }
+    }
+
+    /// An object with an unregistered nonzero kind is never movable — mirrors
+    /// `mobility_kind_zero_object_is_never_movable`, but for the gap `kind == 0`
+    /// alone missed.
+    #[test]
+    fn mobility_unregistered_kind_id_is_never_movable() {
+        let mut heap = FlatHeap::new();
+        let a = heap.alloc(16, 999) as usize; // never registered
+        let slot_word = a;
+        let slots = [&slot_word as *const usize as usize];
+
+        let movable = unsafe { heap.classify_mobility(&slots, &[]) };
+        assert!(!movable.contains(&a), "an unregistered nonzero kind id is never movable");
+    }
+
+    /// The load-bearing regression: a young object reachable only through an
+    /// unregistered-kind parent's conservative field must be **pinned** (found,
+    /// safely retained) — not silently absent from both the `precise` and pinning
+    /// sets. Before the fix, `movable_contains_child == false` AND
+    /// `child.pinned == false` simultaneously — invisible, not conservative.
+    #[test]
+    fn mobility_child_of_unregistered_kind_parent_is_pinned_not_invisible() {
+        let mut heap = FlatHeap::new();
+        let parent = heap.alloc(16, 999) as usize; // unregistered nonzero kind
+        let k = heap.register_kind(&[0]);
+        let child = heap.alloc(16, k) as usize; // would be movable if reached precisely
+        unsafe { *(parent as *mut usize) = child };
+
+        let slot_word = parent;
+        let slots = [&slot_word as *const usize as usize];
+        let movable = unsafe { heap.classify_mobility(&slots, &[]) };
+
+        assert!(!movable.contains(&parent), "the unregistered-kind parent is never movable");
+        assert!(!movable.contains(&child), "its child must not be movable either");
+        let child_header = heap.find_header(child);
+        assert!(!child_header.is_null(), "the child must still be found, not silently dropped");
+        assert!(
+            unsafe { (*child_header).pinned },
+            "...and must actually be pinned by the classification, not just absent from both sets"
+        );
+    }
+
+    /// End-to-end: `collect_compacting` over the exact shape above no longer produces
+    /// a dangling pointer. Before the fix, the unregistered-kind parent was wrongly
+    /// classified movable, relocated without its (unvisited) conservative field being
+    /// rewritten, and the child it named — unpinned, unmoved-but-orphaned — was swept
+    /// as garbage: a live use-after-free through the parent's stale field. After the
+    /// fix, neither parent nor child moves (both pinned), and reading through the
+    /// parent's field still returns the child's live, correct address.
+    #[test]
+    fn collect_compacting_unregistered_kind_parent_does_not_dangle_its_child() {
+        let mut heap = FlatHeap::new();
+        let parent = heap.alloc(16, 999) as usize; // unregistered nonzero kind
+        let k = heap.register_kind(&[0]);
+        let child = heap.alloc(16, k) as usize;
+        unsafe {
+            *(parent as *mut usize) = child;
+            *((child) as *mut usize) = 0; // child's own field: null (leaf)
+            *((child + 8) as *mut usize) = 0x7EA1_5EA1_usize; // sentinel
+        }
+
+        let root = parent;
+        let slots = [&root as *const usize as usize];
+        let stats = unsafe { heap.collect_compacting(&slots, &[]) };
+
+        assert_eq!(stats.freed, 0, "nothing is garbage — parent and child are both reachable");
+        assert_eq!(stats.survived, 2, "both survive, in place (neither is movable)");
+        assert_eq!(root, parent, "the pinned parent's root slot is untouched (no relocation)");
+        let live_child = unsafe { *(parent as *const usize) };
+        assert_eq!(live_child, child, "the parent's field still names the child's real, live address");
+        assert_eq!(
+            unsafe { *((live_child + 8) as *const usize) },
+            0x7EA1_5EA1,
+            "reading through the (unmoved) child recovers the sentinel — no dangling pointer",
+        );
+    }
+
+    // ── Misaligned-ref-field-on-a-pinned-parent use-after-free fix ────────────────
+    // A second finding from the same adversarial review: `conservative_children` only
+    // visits 8-ALIGNED words, but a registered kind's declared ref field can sit at
+    // any offset (`for_each_ref_slot` reads it with `read_unaligned`, no alignment
+    // requirement). A *pinned* parent's misaligned ref field pointing at a
+    // registered-kind child left that child reachable only via the precise wave —
+    // unpinned, and thus wrongly movable — even though the pinned (unrelocatable)
+    // parent's field could never be found-and-rewritten on relocation. Fixed by
+    // unioning `precise_children` into the pinning wave's own traversal.
+
+    /// The load-bearing regression: a child named only by a **pinned** parent's
+    /// misaligned (offset 4, not 8-aligned) ref field must itself be pinned — not
+    /// left movable because the conservative walk's 8-aligned stride skipped past it.
+    #[test]
+    fn mobility_pinned_parent_with_misaligned_ref_field_pins_its_child() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[4]); // ref field at a non-8-aligned offset
+        let parent = heap.alloc(16, k) as usize;
+        let kc = heap.register_kind(&[0]);
+        let child = heap.alloc(16, kc) as usize;
+        unsafe { ptr::write_unaligned((parent + 4) as *mut usize, child) };
+
+        // Parent reachable BOTH precisely (a root slot) and conservatively (a region)
+        // -> pinned.
+        let precise_word = parent;
+        let cons_word = parent;
+        let slots = [&precise_word as *const usize as usize];
+        let region = [(&cons_word as *const usize as *const u8, 8usize)];
+
+        let movable = unsafe { heap.classify_mobility(&slots, &region) };
+        assert!(!movable.contains(&parent), "the pinned parent is never movable");
+        assert!(
+            !movable.contains(&child),
+            "a child reachable only via the pinned parent's misaligned ref field must not be movable"
+        );
+        let child_header = heap.find_header(child);
+        assert!(!child_header.is_null(), "the child must still be found");
+        assert!(
+            unsafe { (*child_header).pinned },
+            "...and must actually be pinned, not silently unpinned-and-invisible"
+        );
+    }
+
+    /// End-to-end: `collect_compacting` over the exact shape above no longer produces
+    /// a dangling pointer. Before the fix, the child (wrongly movable) would relocate
+    /// while the pinned parent's misaligned field — never visited by the (then
+    /// aligned-only) pinning wave's fixup — kept naming the from-space original,
+    /// which is then swept as unreachable.
+    #[test]
+    fn collect_compacting_pinned_parent_with_misaligned_ref_field_does_not_dangle_its_child() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[4]);
+        let parent = heap.alloc(16, k) as usize;
+        let kc = heap.register_kind(&[0]);
+        let child = heap.alloc(16, kc) as usize;
+        unsafe {
+            ptr::write_unaligned((parent + 4) as *mut usize, child);
+            *((child + 8) as *mut usize) = 0xFEED_FACE_usize; // sentinel in child's non-ref word
+        }
+
+        let precise_word = parent;
+        let cons_word = parent;
+        let slots = [&precise_word as *const usize as usize];
+        let region = [(&cons_word as *const usize as *const u8, 8usize)];
+        let stats = unsafe { heap.collect_compacting(&slots, &region) };
+
+        assert_eq!(stats.freed, 0, "nothing is garbage — parent and child are both reachable");
+        assert_eq!(stats.survived, 2, "both survive, in place (the pinned parent forces both to stay)");
+        let live_child = unsafe { ptr::read_unaligned((parent + 4) as *const usize) };
+        assert_eq!(live_child, child, "the parent's misaligned field still names the child's real, live address");
+        assert_eq!(
+            unsafe { *((live_child + 8) as *const usize) },
+            0xFEED_FACE,
+            "reading through the (unmoved) child recovers the sentinel — no dangling pointer",
+        );
+    }
+
+    /// A **strictly more severe** variant of the same bug, flagged by the round-3
+    /// follow-up review: when the parent is reached *only* conservatively (a `regions`
+    /// root, no `root_slots` at all — so the parent is never in the `precise` set to
+    /// begin with, only found by the region scan directly), `collect_compacting`'s
+    /// live set is exactly `pinned ∪ movable` (there is no separate mark phase). A
+    /// child named only through such a parent's misaligned ref field was, without the
+    /// `precise_children` union, in **neither** set at all — not "wrongly movable" but
+    /// **swept while genuinely live**, a premature free rather than a
+    /// relocate-without-fixup. Same fix, same test shape, no `root_slots`.
+    #[test]
+    fn collect_compacting_conservatively_reached_parent_with_misaligned_ref_field_does_not_free_live_child() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[4]);
+        let parent = heap.alloc(16, k) as usize;
+        let kc = heap.register_kind(&[0]);
+        let child = heap.alloc(16, kc) as usize;
+        unsafe {
+            ptr::write_unaligned((parent + 4) as *mut usize, child);
+            *((child + 8) as *mut usize) = 0xC0FF_EE00_usize; // sentinel
+        }
+
+        // The parent is reached ONLY conservatively — no root_slots at all.
+        let cons_word = parent;
+        let region = [(&cons_word as *const usize as *const u8, 8usize)];
+        let stats = unsafe { heap.collect_compacting(&[], &region) };
+
+        assert_eq!(stats.freed, 0, "neither the parent nor its live child is garbage");
+        assert_eq!(stats.survived, 2, "both survive, in place");
+        let live_child = unsafe { ptr::read_unaligned((parent + 4) as *const usize) };
+        assert_eq!(live_child, child, "the parent's misaligned field still names the live child");
+        assert_eq!(
+            unsafe { *((live_child + 8) as *const usize) },
+            0xC0FF_EE00,
+            "the child was never swept — its sentinel is intact, not freed memory",
         );
     }
 

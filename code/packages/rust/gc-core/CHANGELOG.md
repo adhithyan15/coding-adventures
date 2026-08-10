@@ -1,5 +1,58 @@
 # Changelog — gc-core
 
+## 0.29.0 — 2026-08-07 — fix: `classify_mobility`'s pinning wave gated on the wrong predicate — a live use-after-free in `collect_compacting`
+
+**Security fix, found by adversarial review of an unrelated in-progress PR (AOT00-T9), confirmed
+live and exploitable against already-shipped code, fixed and regression-tested here.**
+
+- **The bug:** `classify_mobility`'s pinning-wave seed and its final `movable` filter tested
+  `(*h).kind == 0` / `kind != 0` directly to decide whether an object is traced *precisely* (so
+  its fields can be found-and-rewritten) or *conservatively* (so it must pin). But the actual
+  condition under which `for_each_ref_slot` — the single source of truth every consumer
+  (`scan_payload`, `precise_children`, `fixup_ref_fields`, `points_to_live_young`) shares — takes
+  the precise path is `kind != 0 AND field_maps.get(kind - 1).is_some()`. A **nonzero kind id that
+  was never passed to `register_kind`** (reachable: `FlatHeap::alloc`/`alloc_kind` and the C ABI
+  `__gc_alloc_kind` accept an arbitrary `u16` with no validation against the registry) also traces
+  conservatively — but the old `kind == 0` test never routed such an object into the pinning wave,
+  and `precise_children` correctly contributed nothing for it either. Its children ended up in
+  **neither** the `precise` set nor pinned: invisible to the classification, not conservatively
+  retained. Worse, the unregistered-kind object *itself* passed the old `kind != 0` movable
+  conjunct, so `collect_compacting` would relocate it **without rewriting its own (unvisited)
+  conservative field** — a moved object whose stale field still names its original, now-swept
+  child. Confirmed end-to-end with a real `collect_compacting` differential before the fix landed.
+- **The fix:** `FlatHeap::is_precisely_traced(&self, h) -> bool` — `kind != 0 &&
+  field_maps.get(kind - 1).is_some()`, the exact complement of `for_each_ref_slot`'s conservative
+  fallback. Every mobility-wave call site (`classify_mobility`'s pinning-wave seed and its
+  `movable` filter) now gates on this predicate instead of a bare `kind` test. Doc comments on
+  `for_each_ref_slot`, `precise_children`, `classify_mobility`, and `fixup_ref_fields` corrected —
+  several stated the old, incorrect invariant as if it were guaranteed.
+- 5 new regression tests, including an end-to-end `collect_compacting` differential
+  (`collect_compacting_unregistered_kind_parent_does_not_dangle_its_child`) proving the exact
+  use-after-free shape is closed: an unregistered-kind parent pointing at a registered-kind child
+  no longer relocates either object, and reading through the parent's field after a compacting
+  collect still returns the child's live, correct address.
+- No API change — `is_precisely_traced` is a private helper; `classify_mobility`'s signature and
+  documented contract (an object is movable iff precise-reachable, unpinned, and *actually*
+  precisely traced) are unchanged, only now correctly enforced.
+- **Second fix, found by the follow-up adversarial review of the fix above:** the pinning wave's
+  own conservative scan (`conservative_children`) only visits **8-aligned** words, but a
+  registered kind's declared ref field can sit at *any* offset — `for_each_ref_slot` reads it with
+  `read_unaligned`, no alignment requirement. A **pinned** parent with a misaligned ref field
+  pointing at a registered-kind child left that child reachable only through the *precise* wave —
+  unpinned, and thus wrongly `movable` — even though the pinned (unrelocatable) parent's field
+  could never be found-and-rewritten on relocation. Confirmed end-to-end (a real `collect_compacting`
+  differential) before this half of the fix landed. Fixed by unioning `precise_children` into every
+  pinning-wave step alongside `conservative_children`, so the pinning wave dominates every edge
+  `for_each_ref_slot` can ever produce — a provable no-op for the 8-aligned layouts every current
+  registrant uses (their precise-wave edges are already a subset of the aligned conservative scan).
+  3 more regression tests, including two end-to-end `collect_compacting` differentials: a child
+  named only through a *pinned* parent's misaligned field survives unmoved, and — the strictly
+  more severe variant a third round of review flagged, since `collect_compacting` has no separate
+  mark phase, so its live set is exactly `pinned ∪ movable` — a child named only through a
+  *conservatively-reached* (region-root-only, no precise root at all) parent's misaligned field is
+  not merely left un-relocated-but-dangling but was previously **swept while genuinely live**
+  (premature free, not relocate-without-fixup); both are closed by the same fix.
+
 ## 0.28.0 — 2026-08-06 — `FlatHeap::should_collect_minor` — automatic generational enactment, gated (AOT00-T8)
 
 - **`FlatHeap::should_collect_minor(&self) -> bool`** — the generational sibling of
