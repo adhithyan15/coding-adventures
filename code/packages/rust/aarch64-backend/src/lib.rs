@@ -272,6 +272,17 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "gc_collect_incremental_finish", n_args: 0, returns: true  },
     BuiltinSig { name: "gc_live_bytes",         n_args: 0, returns: true  },
     BuiltinSig { name: "gc_stackmap_count",     n_args: 0, returns: true  },
+    // AOT00-T8 follow-up test seams — mirror `iir-to-llvm`'s identically-named
+    // `call_builtin`s (`gc-core-capi`'s `twig_compat`, already linked). `gc_set_auto_minor`
+    // attests every heap-reference store this program's compiled output performs is
+    // barrier-covered (see `__gc_set_auto_minor`'s own doc for the soundness argument);
+    // `gc_collect_minor_precise` is a *direct*, unconditional minor collection, gated on
+    // that attestation at the shared entry point itself (`__gc_collect_minor_precise`'s
+    // own doc) — a safe no-op without it. Not exposed to Twig source; test-only, letting a
+    // hand-built end-to-end differential drive a real minor collection and prove the
+    // `field_store` write barrier above keeps a remembered-set edge alive.
+    BuiltinSig { name: "gc_set_auto_minor",         n_args: 1, returns: false },
+    BuiltinSig { name: "gc_collect_minor_precise",  n_args: 0, returns: true  },
     // AOT00-T5 — declare a variable-length reference-array layout so the collector traces (and
     // under compaction relocates) the array + its elements precisely. `(fixed, fixed_count,
     // tail_from) -> kind_id`: the seam a language frontend's array type calls; auto-emits
@@ -1522,6 +1533,29 @@ fn emit_instr(
     }
 
     // `field_store <ptr>, <idx>, <value>` — `[ptr + idx*8] = value`.  No dest.
+    //
+    // AOT00-T8 follow-up (mirrors `iir-to-llvm`'s `lower_field_store`, 0.50.0): every
+    // store also calls the generational write barrier, `__twig_gc_write_barrier(parent,
+    // child)` — the mechanism that lets a real minor (young-generation-only) collection
+    // eventually be turned on for this backend's output. Unconditional, deliberately:
+    // this op carries no static type information distinguishing a reference store from
+    // a non-reference one, so there is no way to skip the call only for genuine
+    // reference stores. Per the barrier's own contract
+    // (`gc_core::FlatHeap::write_barrier`'s doc) that's sound: it never dereferences
+    // `child`, only inspects `parent`'s generation, and recording an old parent that
+    // stored no young child is a harmless over-approximation — the alternative (a
+    // missed call on a genuine reference store) is a real use-after-free once minor
+    // collection is enabled, so unconditional is the only sound choice.
+    //
+    // Zero register shuffling needed: `ptr`/`value` are already in X0/X1 immediately
+    // before the store above, which is exactly the barrier's own `(parent, child)`
+    // AAPCS64 argument order — `STR` doesn't clobber its source registers, so both stay
+    // live in X0/X1 across the store, ready for the call. Like `safepoint` above, no
+    // save/restore around the call is needed: the frame allocator has already spilled
+    // every live value this instruction doesn't itself own, and `field_store` (like
+    // every other op here) reloads its own operands from stack slots fresh, with no
+    // cross-instruction register-liveness assumption for anything the barrier call
+    // might clobber.
     if op == "field_store" {
         if instr.dest.is_some() {
             return Err(BackendError::MalformedInstr(
@@ -1538,6 +1572,7 @@ fn emit_instr(
         load_operand(asm, alloc, Reg::X0, ptr_src)?;
         load_operand(asm, alloc, Reg::X1, val_src)?;
         asm.str_(Reg::X1, Reg::X0, off)?;
+        asm.bl_external("__twig_gc_write_barrier");
         return Ok(());
     }
 
@@ -2376,6 +2411,82 @@ mod tests {
                 "default-pair alloc must use the movable pair allocator, got {symbols:?}");
         assert!(!symbols.contains(&"__twig_gc_alloc"),
                 "must NOT use the kind-0 conservative allocator for a pair: {symbols:?}");
+    }
+
+    /// AOT00-T8 follow-up: every `field_store` must also call the generational write
+    /// barrier, unconditionally — see `field_store`'s own lowering comment for why no
+    /// reference/non-reference discrimination is attempted. One `field_store` must
+    /// produce exactly one `__twig_gc_write_barrier` relocation, alongside the store's
+    /// own allocator relocation.
+    #[test]
+    fn field_store_calls_the_generational_write_barrier() {
+        let cir = vec![
+            heap("alloc", Some("cell"), vec![], "ref<LispyPair>"),
+            const_u64("v", 42),
+            heap("field_store", None,
+                 vec![CIROperand::Var("cell".into()), CIROperand::Int(0), CIROperand::Var("v".into())], "void"),
+            ret_u64("cell"),
+        ];
+        let (_bytes, ext) = compile_with_relocs(&ctx("fs_barrier", &[], "u64"), &cir)
+            .unwrap_or_else(|e| panic!("field_store must lower: {e}"));
+        let count = ext.iter().filter(|r| r.symbol == "__twig_gc_write_barrier").count();
+        assert_eq!(
+            count, 1,
+            "exactly one field_store must emit exactly one write-barrier relocation, got {count} in {ext:?}"
+        );
+    }
+
+    /// Two `field_store`s in the same function must each get their own barrier call —
+    /// proving the relocation isn't accidentally deduplicated/memoized like the
+    /// pair-kind allocator registration is.
+    #[test]
+    fn field_store_write_barrier_is_emitted_per_store_not_deduplicated() {
+        let cir = vec![
+            heap("alloc", Some("cell"), vec![], "ref<LispyPair>"),
+            const_u64("h", 7),
+            const_u64("t", 9),
+            heap("field_store", None,
+                 vec![CIROperand::Var("cell".into()), CIROperand::Int(0), CIROperand::Var("h".into())], "void"),
+            heap("field_store", None,
+                 vec![CIROperand::Var("cell".into()), CIROperand::Int(1), CIROperand::Var("t".into())], "void"),
+            ret_u64("cell"),
+        ];
+        let (_bytes, ext) = compile_with_relocs(&ctx("fs_barrier_twice", &[], "u64"), &cir)
+            .unwrap_or_else(|e| panic!("field_store must lower: {e}"));
+        let count = ext.iter().filter(|r| r.symbol == "__twig_gc_write_barrier").count();
+        assert_eq!(count, 2, "two field_stores must emit two write-barrier relocations, got {count} in {ext:?}");
+    }
+
+    /// AOT00-T8 follow-up: the two new test-only builtins (`gc_set_auto_minor`,
+    /// `gc_collect_minor_precise`) lower via the fully generic `call_builtin` dispatch —
+    /// a table entry, no per-name codegen (mirrors `str_concat`'s own doc comment on
+    /// that same dispatcher). Proves both resolve to the `__twig_gc_*` symbols
+    /// `gc-core-capi`'s `twig_compat` already exports.
+    #[test]
+    fn gc_set_auto_minor_and_collect_minor_precise_resolve_generic_dispatch() {
+        let cir = vec![
+            const_u64("on", 1),
+            CIRInstr {
+                op: "call_builtin".into(),
+                dest: None,
+                srcs: vec![CIROperand::Var("gc_set_auto_minor".into()), CIROperand::Var("on".into())],
+                ty: "void".into(),
+                deopt_to: None,
+            },
+            CIRInstr {
+                op: "call_builtin".into(),
+                dest: Some("freed".into()),
+                srcs: vec![CIROperand::Var("gc_collect_minor_precise".into())],
+                ty: "u64".into(),
+                deopt_to: None,
+            },
+            ret_u64("freed"),
+        ];
+        let (_bytes, ext) = compile_with_relocs(&ctx("minor_seams", &[], "u64"), &cir)
+            .unwrap_or_else(|e| panic!("gc_set_auto_minor/gc_collect_minor_precise must lower: {e}"));
+        let symbols: Vec<&str> = ext.iter().map(|r| r.symbol.as_str()).collect();
+        assert!(symbols.contains(&"__twig_gc_set_auto_minor"), "got {symbols:?}");
+        assert!(symbols.contains(&"__twig_gc_collect_minor_precise"), "got {symbols:?}");
     }
 
     #[test]
