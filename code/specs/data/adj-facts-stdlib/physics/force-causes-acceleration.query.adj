@@ -1,0 +1,20 @@
+% ============================================================================
+% force-causes-acceleration.query.adj — worked recall over the force/Newton's-
+% second-law causal library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "why does this force
+% matter?" — it states no physics fact of its own — it only `import`s the
+% grounded rule and asks binding queries. The answer is DERIVED, composing
+% Newton's second law's own general statement with a specific force->example
+% fact, so every answer carries the law's citation AND the example's citation
+% in its `steps` trail.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli force-causes-acceleration.query.adj
+% ============================================================================
+
+import "force-causes-acceleration.adj"
+
+? force_causes_acceleration(gravity, $Ex)      % expect waterfall (direct: gravity's own NASA example)
+? force_causes_acceleration($F, wheels)        % expect friction (reverse: which force is illustrated by "wheels"?)
+? force_causes_acceleration(magnetism, $Ex)    % expect abstain -- not one of the five tabled forces
