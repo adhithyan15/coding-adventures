@@ -178,6 +178,7 @@ TextContent {
   font:      FontSpec
   color:     Color
   maxLines:  int?         // null = unlimited; wraps at containing width
+  wrap:      bool         // default true; false disables soft wrapping only
   textAlign: TextAlign    // default "start"
 }
 ```

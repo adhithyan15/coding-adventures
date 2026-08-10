@@ -54,6 +54,8 @@ Decimal (`#9829;`) and HTML named (`#infin;`) Mermaid entity codes decode to
 Unicode before layout and native text shaping.
 Sequence message and note `<br>` variants become semantic newlines with
 deterministic multiline layout and native glyph shaping.
+Message and note `wrap:` and `nowrap:` directives survive semantic lowering;
+forced wrapping becomes deterministic hard lines before backend-neutral Paint shaping.
 All Mermaid 11.16.1 solid/dotted, normal/reverse filled and stick half-arrow
 forms preserve their line style, half orientation, and endpoint through Paint.
 Central connection markers before and/or after an arrow preserve source,

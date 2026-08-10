@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.20.0";
+pub const VERSION: &str = "0.21.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -111,7 +111,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.20.0");
+        assert_eq!(VERSION, "0.21.0");
     }
 
     #[test]
@@ -496,5 +496,18 @@ A\\-B: reverse stick bottom
                 .count(),
             3
         );
+    }
+
+    #[test]
+    fn tokenizes_sequence_wrap_directives() {
+        let tokens = tokenize_mermaid_sequence(
+            "sequenceDiagram\nAlice->>Bob: wrap: A long message\nnote over Alice,Bob: nowrap: A note\n",
+        );
+        let directives: Vec<_> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("WRAP_DIRECTIVE"))
+            .map(|token| token.value.as_str())
+            .collect();
+        assert_eq!(directives, vec!["wrap:", "nowrap:"]);
     }
 }

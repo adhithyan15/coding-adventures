@@ -329,7 +329,11 @@ fn emit_text_content<S, M, R>(
     let fill_css = color_to_css(tc.color);
 
     for segment in tc.value.split('\n') {
-        let wrapped = wrap_line(options.shaper, handle, segment, size_dpr, max_width_dpr);
+        let wrapped = if tc.wrap {
+            wrap_line(options.shaper, handle, segment, size_dpr, max_width_dpr)
+        } else {
+            vec![segment.to_string()]
+        };
         for line in wrapped {
             // Shape the line once. This gives us total_advance for
             // alignment AND the glyph IDs/positions for emission.
@@ -339,15 +343,18 @@ fn emit_text_content<S, M, R>(
             }
             let shaped = match options.shaper.shape(&line, handle, size_dpr, &shape_opts) {
                 Ok(s) => s,
-                Err(_) => { baseline_y += line_height_dpr; continue; }
+                Err(_) => {
+                    baseline_y += line_height_dpr;
+                    continue;
+                }
             };
 
             // Compute the starting x position based on text alignment.
             let line_advance = shaped.total_advance() as f64;
             let baseline_x = match tc.text_align {
                 TextAlign::Center => box_x_dpr + (max_width_dpr - line_advance) / 2.0,
-                TextAlign::End    => box_x_dpr + max_width_dpr - line_advance,
-                TextAlign::Start  => box_x_dpr,
+                TextAlign::End => box_x_dpr + max_width_dpr - line_advance,
+                TextAlign::Start => box_x_dpr,
             };
 
             emit_glyph_runs_from_shaped(&shaped, size_dpr, baseline_x, baseline_y, &fill_css, out);
@@ -412,11 +419,7 @@ fn emit_glyph_runs_from_shaped(
         // Advance the line-level pen by this segment's total advance
         // so the next segment starts where this one ended.
         line_pen_x += run.x_advance_total as f64;
-        line_pen_y += run
-            .glyphs
-            .iter()
-            .map(|g| g.y_advance as f64)
-            .sum::<f64>();
+        line_pen_y += run.glyphs.iter().map(|g| g.y_advance as f64).sum::<f64>();
     }
 }
 
@@ -536,7 +539,11 @@ fn query_from_font(font: &FontSpec) -> FontQuery {
     FontQuery {
         family_names: vec![family],
         weight: FontWeight(font.weight),
-        style: if font.italic { FontStyle::Italic } else { FontStyle::Normal },
+        style: if font.italic {
+            FontStyle::Italic
+        } else {
+            FontStyle::Normal
+        },
         stretch: FontStretch::Normal,
     }
 }
@@ -590,9 +597,7 @@ fn color_to_css(c: Color) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use layout_ir::{
-        color_black, color_white, font_spec, rgb, TextAlign, TextContent,
-    };
+    use layout_ir::{color_black, color_white, font_spec, rgb, TextAlign, TextContent};
     use text_interfaces::{
         Direction, FontResolutionError, Glyph, ShapedRun, ShapedText, ShapingError,
     };
@@ -602,10 +607,7 @@ mod tests {
     struct FakeResolver;
     impl FontResolver for FakeResolver {
         type Handle = FakeHandle;
-        fn resolve(
-            &self,
-            _q: &FontQuery,
-        ) -> Result<Self::Handle, FontResolutionError> {
+        fn resolve(&self, _q: &FontQuery) -> Result<Self::Handle, FontResolutionError> {
             Ok(FakeHandle)
         }
     }
@@ -613,10 +615,7 @@ mod tests {
     struct FailingResolver;
     impl FontResolver for FailingResolver {
         type Handle = FakeHandle;
-        fn resolve(
-            &self,
-            _q: &FontQuery,
-        ) -> Result<Self::Handle, FontResolutionError> {
+        fn resolve(&self, _q: &FontQuery) -> Result<Self::Handle, FontResolutionError> {
             Err(FontResolutionError::NoFamilyFound)
         }
     }
@@ -737,7 +736,11 @@ mod tests {
 
             for ch in text.chars() {
                 let needs_fallback = ch == '\u{2192}';
-                let want_font = if needs_fallback { "fake:fallback" } else { "fake:primary" };
+                let want_font = if needs_fallback {
+                    "fake:fallback"
+                } else {
+                    "fake:primary"
+                };
                 if want_font != current_font && !current.is_empty() {
                     let start = cluster - current.chars().count() as u32;
                     push(&mut runs, &current, current_font, start);
@@ -779,6 +782,7 @@ mod tests {
             font: font_spec("Test", 16.0),
             color: color_black(),
             max_lines: None,
+            wrap: true,
             text_align: TextAlign::Start,
         }
     }
@@ -975,6 +979,27 @@ mod tests {
     }
 
     #[test]
+    fn text_can_disable_soft_wrapping() {
+        let mut content = text_content("aa bb cc dd ee ff");
+        content.wrap = false;
+        let leaf = positioned_leaf(content, 0.0, 0.0, 40.0, 20.0);
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_options(&shaper, &metrics, &resolver);
+        let scene = layout_to_paint(&leaf, &opts);
+
+        assert_eq!(
+            scene
+                .instructions
+                .iter()
+                .filter(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_)))
+                .count(),
+            1
+        );
+    }
+
+    #[test]
     fn absolute_positioning_accumulates_through_nesting() {
         // Outer at (10, 20); inner at (5, 7); leaf at (0, 0) inside inner.
         let leaf = positioned_leaf(text_content("A"), 0.0, 0.0, 100.0, 16.0);
@@ -1068,10 +1093,20 @@ mod tests {
     #[test]
     fn color_to_css_handles_alpha() {
         assert_eq!(
-            color_to_css(Color { r: 255, g: 0, b: 0, a: 255 }),
+            color_to_css(Color {
+                r: 255,
+                g: 0,
+                b: 0,
+                a: 255
+            }),
             "rgb(255, 0, 0)"
         );
-        let half = color_to_css(Color { r: 0, g: 0, b: 0, a: 128 });
+        let half = color_to_css(Color {
+            r: 0,
+            g: 0,
+            b: 0,
+            a: 128,
+        });
         assert!(half.starts_with("rgba(0, 0, 0, 0.50"));
     }
 
@@ -1124,10 +1159,7 @@ mod tests {
         }
         impl FontResolver for CountingResolver {
             type Handle = FakeHandle;
-            fn resolve(
-                &self,
-                _q: &FontQuery,
-            ) -> Result<Self::Handle, FontResolutionError> {
+            fn resolve(&self, _q: &FontQuery) -> Result<Self::Handle, FontResolutionError> {
                 self.count.set(self.count.get() + 1);
                 Ok(FakeHandle)
             }
@@ -1213,7 +1245,15 @@ mod tests {
     fn rgb_helper_works_in_test_fixture() {
         // Sanity: the `rgb()` helper from layout-ir is used in the
         // document-default-theme, so its behavior matters for downstream.
-        assert_eq!(rgb(1, 2, 3), Color { r: 1, g: 2, b: 3, a: 255 });
+        assert_eq!(
+            rgb(1, 2, 3),
+            Color {
+                r: 1,
+                g: 2,
+                b: 3,
+                a: 255
+            }
+        );
     }
 
     #[test]
@@ -1228,6 +1268,7 @@ mod tests {
             font: font_spec("Test", 10.0),
             color: color_black(),
             max_lines: None,
+            wrap: true,
             text_align: TextAlign::Start,
         };
         let leaf = positioned_leaf(tc, 0.0, 0.0, 500.0, 20.0);
@@ -1258,7 +1299,12 @@ mod tests {
         // "a → b" = "a " (primary) + "→" (fallback) + " b" (primary).
         // The fallback-splitting shaper emits 3 ShapedRuns; layout-to-paint
         // must emit 3 PaintGlyphRuns.
-        assert_eq!(runs.len(), 3, "expected 3 PaintGlyphRuns (a / → / b), got {}", runs.len());
+        assert_eq!(
+            runs.len(),
+            3,
+            "expected 3 PaintGlyphRuns (a / → / b), got {}",
+            runs.len()
+        );
 
         // At least two distinct font_refs among the runs — the core
         // invariant that the bug violated.

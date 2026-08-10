@@ -36,9 +36,8 @@ use document_ast::{
     ListChildNode, ListItemNode, ListNode, ParagraphNode, TaskItemNode, ThematicBreakNode,
 };
 use layout_ir::{
-    color_black, color_white, edges_all, edges_xy, font_bold, font_spec, rgb,
-    rgba, size_fill, size_fixed, size_wrap, Color, Edges, ExtValue, FontSpec, LayoutNode,
-    TextAlign, TextContent,
+    color_black, color_white, edges_all, edges_xy, font_bold, font_spec, rgb, rgba, size_fill,
+    size_fixed, size_wrap, Color, Edges, ExtValue, FontSpec, LayoutNode, TextAlign, TextContent,
 };
 
 pub const VERSION: &str = "0.1.0";
@@ -154,7 +153,13 @@ pub fn document_ast_to_layout(doc: &DocumentNode, theme: &DocumentTheme) -> Layo
         .with_height(size_wrap())
         .with_ext(
             "paint",
-            ExtValue::Map(std::iter::once(("backgroundColor".to_string(), color_to_ext(theme.page_background))).collect()),
+            ExtValue::Map(
+                std::iter::once((
+                    "backgroundColor".to_string(),
+                    color_to_ext(theme.page_background),
+                ))
+                .collect(),
+            ),
         )
         .with_ext("block", block_ext_display_block())
 }
@@ -216,6 +221,7 @@ fn heading_node(h: &HeadingNode, theme: &DocumentTheme) -> LayoutNode {
         font,
         color: theme.heading_color,
         max_lines: None,
+        wrap: true,
         text_align: TextAlign::Start,
     })
     .with_margin(edges_xy(0.0, theme.heading_spacing / 2.0))
@@ -233,6 +239,7 @@ fn paragraph_node(p: &ParagraphNode, theme: &DocumentTheme) -> LayoutNode {
         font: theme.body_font.clone(),
         color: theme.text_color,
         max_lines: None,
+        wrap: true,
         text_align: TextAlign::Start,
     })
     .with_margin(edges_xy(0.0, theme.paragraph_spacing / 2.0))
@@ -246,7 +253,10 @@ fn code_block_node(cb: &CodeBlockNode, theme: &DocumentTheme) -> LayoutNode {
     let content = cb.value.trim_end_matches('\n').to_string();
 
     let mut paint = std::collections::HashMap::new();
-    paint.insert("backgroundColor".to_string(), color_to_ext(theme.code_bg_color));
+    paint.insert(
+        "backgroundColor".to_string(),
+        color_to_ext(theme.code_bg_color),
+    );
     paint.insert("cornerRadius".to_string(), ExtValue::Float(4.0));
 
     LayoutNode::leaf_text(TextContent {
@@ -254,6 +264,7 @@ fn code_block_node(cb: &CodeBlockNode, theme: &DocumentTheme) -> LayoutNode {
         font: theme.code_font.clone(),
         color: theme.code_color,
         max_lines: None,
+        wrap: true,
         text_align: TextAlign::Start,
     })
     .with_margin(edges_xy(0.0, theme.paragraph_spacing / 2.0))
@@ -347,6 +358,7 @@ fn list_item_with_marker(
         font: theme.body_font.clone(),
         color: theme.text_color,
         max_lines: None,
+        wrap: true,
         text_align: TextAlign::Start,
     })
     .with_margin(Edges {
@@ -379,6 +391,7 @@ fn task_item_with_marker(ti: &TaskItemNode, theme: &DocumentTheme, _idx: usize) 
         font: theme.body_font.clone(),
         color: theme.text_color,
         max_lines: None,
+        wrap: true,
         text_align: TextAlign::Start,
     })
     .with_margin(Edges {
@@ -521,7 +534,7 @@ fn block_as_plain_text(b: &BlockNode) -> String {
             .map(block_as_plain_text)
             .collect::<Vec<_>>()
             .join("\n"),
-        BlockNode::List(_) => String::new(),  // nested list flattening is a v2 concern
+        BlockNode::List(_) => String::new(), // nested list flattening is a v2 concern
         BlockNode::ListItem(li) => li
             .children
             .iter()
@@ -548,7 +561,9 @@ fn block_as_plain_text(b: &BlockNode) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use document_ast::{EmphasisNode, HardBreakNode, LinkNode, SoftBreakNode, StrongNode, TextNode};
+    use document_ast::{
+        EmphasisNode, HardBreakNode, LinkNode, SoftBreakNode, StrongNode, TextNode,
+    };
     // `Content` is only referenced in these tests (destructuring laid-out leaf
     // content); import it here rather than at crate scope to avoid an unused
     // import in non-test builds.

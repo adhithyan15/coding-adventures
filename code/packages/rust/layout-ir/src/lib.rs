@@ -75,10 +75,20 @@ pub struct Edges {
 }
 
 pub fn edges_all(v: f64) -> Edges {
-    Edges { top: v, right: v, bottom: v, left: v }
+    Edges {
+        top: v,
+        right: v,
+        bottom: v,
+        left: v,
+    }
 }
 pub fn edges_xy(x: f64, y: f64) -> Edges {
-    Edges { top: y, right: x, bottom: y, left: x }
+    Edges {
+        top: y,
+        right: x,
+        bottom: y,
+        left: x,
+    }
 }
 pub fn edges_zero() -> Edges {
     Edges::default()
@@ -104,13 +114,28 @@ pub fn rgb(r: u8, g: u8, b: u8) -> Color {
     Color { r, g, b, a: 255 }
 }
 pub fn color_transparent() -> Color {
-    Color { r: 0, g: 0, b: 0, a: 0 }
+    Color {
+        r: 0,
+        g: 0,
+        b: 0,
+        a: 0,
+    }
 }
 pub fn color_black() -> Color {
-    Color { r: 0, g: 0, b: 0, a: 255 }
+    Color {
+        r: 0,
+        g: 0,
+        b: 0,
+        a: 255,
+    }
 }
 pub fn color_white() -> Color {
-    Color { r: 255, g: 255, b: 255, a: 255 }
+    Color {
+        r: 255,
+        g: 255,
+        b: 255,
+        a: 255,
+    }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -184,6 +209,9 @@ pub struct TextContent {
     /// None = unlimited; wraps at the containing width until this many
     /// lines are reached, then truncates.
     pub max_lines: Option<u32>,
+    /// Whether soft wrapping may occur at the containing width. Hard `\n`
+    /// line breaks are always preserved.
+    pub wrap: bool,
     pub text_align: TextAlign,
 }
 
@@ -250,13 +278,22 @@ impl LayoutNode {
         Self::default()
     }
     pub fn leaf_text(content: TextContent) -> Self {
-        Self { content: Some(Content::Text(content)), ..Default::default() }
+        Self {
+            content: Some(Content::Text(content)),
+            ..Default::default()
+        }
     }
     pub fn leaf_image(content: ImageContent) -> Self {
-        Self { content: Some(Content::Image(content)), ..Default::default() }
+        Self {
+            content: Some(Content::Image(content)),
+            ..Default::default()
+        }
     }
     pub fn container(children: Vec<LayoutNode>) -> Self {
-        Self { children, ..Default::default() }
+        Self {
+            children,
+            ..Default::default()
+        }
     }
 
     pub fn with_id(mut self, id: impl Into<String>) -> Self {
@@ -299,7 +336,12 @@ pub struct Constraints {
 }
 
 pub fn constraints_fixed(w: f64, h: f64) -> Constraints {
-    Constraints { min_width: w, max_width: w, min_height: h, max_height: h }
+    Constraints {
+        min_width: w,
+        max_width: w,
+        min_height: h,
+        max_height: h,
+    }
 }
 
 pub fn constraints_width(w: f64) -> Constraints {
@@ -367,12 +409,7 @@ pub trait TextMeasurer {
     /// Measure `text` rendered in `font`. If `max_width` is Some, text
     /// wraps at that width (line count > 1 possible); if None, it is
     /// measured as a single unbounded line.
-    fn measure(
-        &self,
-        text: &str,
-        font: &FontSpec,
-        max_width: Option<f64>,
-    ) -> MeasureResult;
+    fn measure(&self, text: &str, font: &FontSpec, max_width: Option<f64>) -> MeasureResult;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -394,22 +431,72 @@ mod tests {
     fn edges_builders() {
         assert_eq!(
             edges_all(4.0),
-            Edges { top: 4.0, right: 4.0, bottom: 4.0, left: 4.0 }
+            Edges {
+                top: 4.0,
+                right: 4.0,
+                bottom: 4.0,
+                left: 4.0
+            }
         );
         assert_eq!(
             edges_xy(8.0, 2.0),
-            Edges { top: 2.0, right: 8.0, bottom: 2.0, left: 8.0 }
+            Edges {
+                top: 2.0,
+                right: 8.0,
+                bottom: 2.0,
+                left: 8.0
+            }
         );
         assert_eq!(edges_zero(), Edges::default());
     }
 
     #[test]
     fn color_builders() {
-        assert_eq!(rgba(1, 2, 3, 4), Color { r: 1, g: 2, b: 3, a: 4 });
-        assert_eq!(rgb(10, 20, 30), Color { r: 10, g: 20, b: 30, a: 255 });
-        assert_eq!(color_transparent(), Color { r: 0, g: 0, b: 0, a: 0 });
-        assert_eq!(color_black(), Color { r: 0, g: 0, b: 0, a: 255 });
-        assert_eq!(color_white(), Color { r: 255, g: 255, b: 255, a: 255 });
+        assert_eq!(
+            rgba(1, 2, 3, 4),
+            Color {
+                r: 1,
+                g: 2,
+                b: 3,
+                a: 4
+            }
+        );
+        assert_eq!(
+            rgb(10, 20, 30),
+            Color {
+                r: 10,
+                g: 20,
+                b: 30,
+                a: 255
+            }
+        );
+        assert_eq!(
+            color_transparent(),
+            Color {
+                r: 0,
+                g: 0,
+                b: 0,
+                a: 0
+            }
+        );
+        assert_eq!(
+            color_black(),
+            Color {
+                r: 0,
+                g: 0,
+                b: 0,
+                a: 255
+            }
+        );
+        assert_eq!(
+            color_white(),
+            Color {
+                r: 255,
+                g: 255,
+                b: 255,
+                a: 255
+            }
+        );
     }
 
     #[test]
@@ -461,6 +548,7 @@ mod tests {
             font: font_spec("Helvetica", 16.0),
             color: color_black(),
             max_lines: None,
+            wrap: true,
             text_align: TextAlign::Start,
         };
         let leaf = LayoutNode::leaf_text(tc.clone()).with_id("greeting");
@@ -490,12 +578,7 @@ mod tests {
     }
 
     impl TextMeasurer for FixedWidthMeasurer {
-        fn measure(
-            &self,
-            text: &str,
-            font: &FontSpec,
-            max_width: Option<f64>,
-        ) -> MeasureResult {
+        fn measure(&self, text: &str, font: &FontSpec, max_width: Option<f64>) -> MeasureResult {
             let chars = text.chars().count() as f64;
             let line_width = chars * self.char_width * font.size;
             match max_width {

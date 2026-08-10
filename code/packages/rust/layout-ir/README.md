@@ -12,7 +12,8 @@ Spec: [code/specs/UI02-layout-ir.md](../../../specs/UI02-layout-ir.md).
 ## Exports
 
 - **Geometry types:** `SizeValue`, `Edges`, `Constraints`
-- **Visual types:** `Color`, `FontSpec`, `TextAlign`, `ImageFit`
+- **Visual types:** `Color`, `FontSpec`, `TextAlign`, `ImageFit`; `TextContent`
+  independently controls soft wrapping while preserving hard line breaks.
 - **Content payloads:** `TextContent`, `ImageContent`, `Content`
 - **Tree types:** `LayoutNode`, `PositionedNode`
 - **Extension bag:** `Ext` / `ExtValue` (zero-dep typed map)

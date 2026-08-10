@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.21.0
+
+- Tokenize sequence `wrap:` and `nowrap:` directives atomically.
+
 ## 0.20.0
 
 - Tokenize Mermaid sequence HTML line-break variants atomically.
