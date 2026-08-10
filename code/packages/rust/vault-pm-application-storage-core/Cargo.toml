@@ -1,0 +1,15 @@
+[package]
+name = "coding_adventures_vault_pm_application_storage_core"
+version = "0.1.0"
+edition = "2021"
+description = "Storage-core adapters for password-manager bootstrap and owner state"
+
+[dependencies]
+coding-adventures-json-value = { path = "../json-value" }
+coding_adventures_sha256 = { path = "../sha256" }
+coding_adventures_vault_pm_application = { path = "../vault-pm-application" }
+coding_adventures_vault_pm_format = { path = "../vault-pm-format" }
+storage-core = { path = "../storage-core" }
+
+[dev-dependencies]
+coding_adventures_storage_fs = { path = "../storage-fs" }

@@ -774,6 +774,11 @@ import, password rotation UI, OS custody, device enrollment/revocation,
 multi-replica transfer, automatic conflict resolution, physical GC execution,
 or provider-specific diagnostics. Those compose above or extend this contract.
 
+The separate `vault-pm-application-storage-core` package now implements these
+byte-oriented store traits over an injected `storage-core` backend. It does not
+change this host-neutral contract or own the filesystem path, permissions, or
+cross-process exclusion required by a CLI composition.
+
 ---
 
 *End of VLT-PM05.*
