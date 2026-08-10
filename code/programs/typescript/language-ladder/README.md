@@ -171,7 +171,7 @@ sitting upside down on a correct letter.
 
 **All eleven starter Tamil letters — அ, ஆ, இ, க, ம, வ, ல, ற, ன, ண, and ந —,
 all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —, and Urdu
-independent ا, ج, ر, س, ش, ک, ل, م, and ن have authored pen paths today.**
+independent ا, ج, ر, س, ش, ک, ل, م, ن, and ہ have authored pen paths today.**
 `DUCTUS` admits no letter without a citation
 for its stroke order, and hand-drawing a letter is forbidden
 outright (a subtly wrong Tamil ண looks perfect to exactly the audience that
@@ -252,6 +252,11 @@ their shared head-to-tail motion follows Noto Naskh. Urdu ن adds a two-frame
 Chapter-6 filmstrip: its independent bowl sweeps right-to-left below the
 baseline before one sourced lift places the dot. The source note preserves the
 near-baseline dot and distinct initial/medial tooth while the path follows Noto
+Naskh. Urdu ہ adds a one-frame Chapter-4 filmstrip: the pen starts at the
+independent teardrop's upper right, loops counterclockwise down and left around
+the base, then returns up the right side and crosses the top without lifting.
+The source note preserves the distinct initial/medial divot-and-mark forms and
+the final up-and-down squiggle while the independent learner path follows Noto
 Naskh. The runtime resolves
 each cited path back to the owning script and lazily loads that script's font,
 while Tamil continues to use Noto Sans Tamil. Unverified letters still

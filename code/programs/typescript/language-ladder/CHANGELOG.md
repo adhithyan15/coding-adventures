@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Urdu independent-he ductus (HL-C09AD)
+
+- Add Urdu independent ہ from Northwestern's *Zer o Zabar* animations as one
+  counterclockwise teardrop loop that closes without a lift.
+- Preserve the source's oval-or-teardrop prose and its distinct initial,
+  medial, and final forms while fitting the independent motion to Noto Naskh.
+- Render a real one-frame filmstrip whose one stroke, zero lifts, source,
+  prose, geometry, and summary agree.
+
 ### Added — cited Urdu independent-nun ductus (HL-C09AC)
 
 - Add Urdu independent ن from Northwestern's *Zer o Zabar* animations as one
