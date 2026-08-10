@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.22.0";
+pub const VERSION: &str = "0.23.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -450,9 +450,9 @@ use diagram_ir::{
     GitEvent, PieSlice, RelKind, SankeyFlow, SankeyNode, SequenceArrowhead, SequenceBlockKind,
     SequenceCentralConnection, SequenceDiagram, SequenceEvent, SequenceLineStyle, SequenceLink,
     SequenceNotePlacement, SequenceParticipant, SequenceParticipantGroup, SequenceParticipantKind,
-    SequenceProperty, SeriesKind, StructuralDiagram, StructuralGroup, StructuralKind,
-    StructuralNode, StructuralNodeKind, StructuralRelationship, TaskStart, TaskStatus,
-    TemporalBody, TemporalDiagram, TemporalKind,
+    SequenceProperty, SequenceTextWrap, SeriesKind, StructuralDiagram, StructuralGroup,
+    StructuralKind, StructuralNode, StructuralNodeKind, StructuralRelationship, TaskStart,
+    TaskStatus, TemporalBody, TemporalDiagram, TemporalKind,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -1688,13 +1688,14 @@ fn parse_sequence_message(
     cursor
         .consume_if("COLON")
         .ok_or_else(|| token_error(cursor.current(), "expected ':' before sequence message"))?;
-    let label = take_sequence_line_text(cursor);
+    let (label, wrap) = take_sequence_wrapped_text(cursor);
     ensure_sequence_participant(diagram, participant_indices, &from);
     ensure_sequence_participant(diagram, participant_indices, &to);
     diagram.events.push(SequenceEvent::Message {
         from,
         to,
         label,
+        wrap,
         line_style,
         arrowhead,
         bidirectional,
@@ -1736,7 +1737,7 @@ fn parse_sequence_note(
     cursor
         .consume_if("COLON")
         .ok_or_else(|| token_error(cursor.current(), "expected ':' before note text"))?;
-    let text = take_sequence_line_text(cursor);
+    let (text, wrap) = take_sequence_wrapped_text(cursor);
     for participant in &participants {
         ensure_sequence_participant(diagram, participant_indices, participant);
     }
@@ -1744,6 +1745,7 @@ fn parse_sequence_note(
         participants,
         placement,
         text,
+        wrap,
     });
     Ok(())
 }
@@ -1799,6 +1801,20 @@ fn take_sequence_line_text(cursor: &mut TokenCursor) -> String {
         .map(str::trim)
         .collect::<Vec<_>>()
         .join("\n")
+}
+
+fn take_sequence_wrapped_text(cursor: &mut TokenCursor) -> (String, SequenceTextWrap) {
+    let wrap = if token_name(cursor.current()) == "WRAP_DIRECTIVE" {
+        let directive = cursor.advance().value.trim_start_matches(':');
+        if directive.starts_with("nowrap:") {
+            SequenceTextWrap::NoWrap
+        } else {
+            SequenceTextWrap::Wrap
+        }
+    } else {
+        SequenceTextWrap::Default
+    };
+    (take_sequence_line_text(cursor), wrap)
 }
 
 fn ensure_sequence_participant(
@@ -3448,6 +3464,24 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn sequence_preserves_message_and_note_wrap_directives() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nAlice->>Bob: wrap: A deliberately long message\nnote over Alice,Bob: nowrap: A deliberately long note\n",
+        )
+        .unwrap();
+        assert!(matches!(
+            &diagram.events[0],
+            SequenceEvent::Message { label, wrap: SequenceTextWrap::Wrap, .. }
+                if label == "A deliberately long message"
+        ));
+        assert!(matches!(
+            &diagram.events[1],
+            SequenceEvent::Note { text, wrap: SequenceTextWrap::NoWrap, .. }
+                if text == "A deliberately long note"
+        ));
+    }
+
+    #[test]
     fn sequence_parses_multiline_accessibility_description() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\naccDescr {\n  Transfers funds\n  between accounts\n}\nAlice->>Bob: Hello\n",
@@ -3491,7 +3525,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.22.0");
+        assert_eq!(crate::VERSION, "0.23.0");
     }
 
     #[test]

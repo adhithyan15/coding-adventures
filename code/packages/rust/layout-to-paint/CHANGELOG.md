@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.0]
+
+- Honor `TextContent.wrap = false` while preserving explicit hard line breaks.
+
 ## [0.1.0] — initial release
 
 ### Added

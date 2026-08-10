@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.23.0
+
+- Preserve explicit message and note `wrap:` and `nowrap:` semantics.
+
 ## 0.22.0
 
 - Convert sequence `<br>`, `<br/>`, and `<br />` tags to semantic newlines.

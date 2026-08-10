@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.17.0";
+pub const VERSION: &str = "0.18.0";
 
 use std::collections::HashMap;
 
@@ -279,11 +279,28 @@ fn text_node(
             font,
             color,
             max_lines: None,
+            wrap: true,
             text_align: TextAlign::Center,
         })),
         children: Vec::new(),
         ext: HashMap::new(),
     }
+}
+
+fn text_node_no_wrap(
+    value: &str,
+    x: f64,
+    y: f64,
+    width: f64,
+    height: f64,
+    font: FontSpec,
+    color: Color,
+) -> PositionedNode {
+    let mut node = text_node(value, x, y, width, height, font, color);
+    if let Some(Content::Text(text)) = &mut node.content {
+        text.wrap = false;
+    }
+    node
 }
 
 // ============================================================================
@@ -1339,7 +1356,7 @@ where
                     Some(number) => format!("{}. {label}", format_sequence_number(*number)),
                     None => label.clone(),
                 };
-                text_children.push(text_node(
+                text_children.push(text_node_no_wrap(
                     &rendered_label,
                     label_x,
                     *y - *label_height - 6.0,
@@ -1421,7 +1438,7 @@ where
                     stroke_dash: None,
                     stroke_dash_offset: None,
                 }));
-                text_children.push(text_node(
+                text_children.push(text_node_no_wrap(
                     text,
                     *x + 8.0,
                     *y + 8.0,
@@ -2417,6 +2434,7 @@ where
                             a: 255,
                         },
                         max_lines: None,
+                        wrap: true,
                         text_align: ta,
                     })),
                     children: Vec::new(),
@@ -2676,7 +2694,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.17.0");
+        assert_eq!(crate::VERSION, "0.18.0");
     }
 
     #[test]

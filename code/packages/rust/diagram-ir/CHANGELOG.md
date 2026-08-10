@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.18.0
+
+- Preserve default, forced-wrap, and forced-no-wrap sequence text intent.
+
 ## 0.17.0
 
 - Added explicit sequence message-label height to layout IR.

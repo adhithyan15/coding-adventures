@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.0]
+
+- Add explicit soft-wrap control to `TextContent`; hard newlines remain authoritative.
+
 ## [0.1.0] — initial release
 
 ### Added

@@ -65,7 +65,8 @@ strings.
 - Empty container; background color → Rect; text content →
   PaintGlyphRun with correct ID / baseline / advance math.
 - Hard newline → multiple glyph runs with increasing baseline.
-- Word-wrap at whitespace within box width → multiple glyph runs.
+- Word-wrap at whitespace within box width → multiple glyph runs; callers can
+  disable soft wrapping while retaining explicit hard line breaks.
 - Absolute positioning accumulating through two levels of nesting.
 - Device pixel ratio scaling of font size + positions.
 - Failing resolver drops text silently (no crash).

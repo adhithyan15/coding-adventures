@@ -140,6 +140,9 @@ Sequence text decodes Mermaid decimal and HTML named entity codes to Unicode
 before layout and Paint glyph shaping.
 Message and note `<br>`, `<br/>`, and `<br />` tags become semantic newlines;
 sequence layout reserves line-aware geometry before Paint glyph shaping.
+Message and note `wrap:` and `nowrap:` directives lower to explicit semantic
+wrap intent. Forced wrapping is resolved into deterministic lines during
+sequence layout, before Paint glyph shaping and native backend rendering.
 
 Inline participant configuration now carries `type` and `alias` into semantic
 IR. Boundary, control, entity, database, collections, and queue kinds lower to

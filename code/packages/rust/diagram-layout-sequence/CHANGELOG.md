@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.14.0 - 2026-08-10
+
+- Apply explicit sequence wrap directives with deterministic backend-neutral line breaks.
+
 ## 0.13.0 - 2026-08-10
 
 - Reserve deterministic vertical space for multiline messages and notes.

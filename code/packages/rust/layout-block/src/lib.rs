@@ -531,6 +531,7 @@ mod tests {
                 a: 255,
             },
             max_lines: None,
+            wrap: true,
             text_align: TextAlign::Start,
         }
     }

@@ -151,6 +151,7 @@ fn text_leaf(value: &str, style: &InheritedStyle) -> LayoutNode {
         font: style.font.clone(),
         color: style.color,
         max_lines: None,
+        wrap: true,
         text_align: TextAlign::Start,
     })
     .with_width(SizeValue::Wrap)

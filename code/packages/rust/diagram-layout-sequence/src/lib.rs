@@ -4,10 +4,10 @@ use std::collections::{HashMap, HashSet};
 
 use diagram_ir::{
     LayoutedSequenceDiagram, LayoutedSequenceItem, SequenceBlockKind, SequenceDiagram,
-    SequenceEvent, SequenceNotePlacement,
+    SequenceEvent, SequenceNotePlacement, SequenceTextWrap,
 };
 
-pub const VERSION: &str = "0.13.0";
+pub const VERSION: &str = "0.14.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -21,6 +21,7 @@ const BLOCK_BRANCH_H: f64 = 48.0;
 const BLOCK_BOTTOM_PAD: f64 = 14.0;
 const BLOCK_AFTER_GAP: f64 = 12.0;
 const BLOCK_INSET: f64 = 10.0;
+const WRAPPED_TEXT_MAX_WIDTH: f64 = 240.0;
 
 struct BlockFrameState {
     kind: SequenceBlockKind,
@@ -99,6 +100,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 from,
                 to,
                 label,
+                wrap,
                 line_style,
                 arrowhead,
                 bidirectional,
@@ -112,6 +114,11 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 let Some(&to_x) = centers.get(to) else {
                     continue;
                 };
+                let label = wrap_sequence_text(
+                    label,
+                    wrap,
+                    (to_x - from_x).abs().clamp(80.0, WRAPPED_TEXT_MAX_WIDTH),
+                );
                 items.push(LayoutedSequenceItem::Message {
                     from_x,
                     to_x,
@@ -201,6 +208,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 participants,
                 placement,
                 text,
+                wrap,
             } => {
                 let participant_centers: Vec<f64> = participants
                     .iter()
@@ -217,6 +225,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     .iter()
                     .copied()
                     .fold(f64::NEG_INFINITY, f64::max);
+                let text = wrap_sequence_text(text, wrap, WRAPPED_TEXT_MAX_WIDTH);
                 let line_count = text.lines().count().max(1);
                 let longest_line = text
                     .lines()
@@ -237,7 +246,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     y: y - 10.0,
                     width: note_width,
                     height: NOTE_H + 16.0 * line_count.saturating_sub(1) as f64,
-                    text: text.clone(),
+                    text,
                 });
                 y += NOTE_H + 16.0 * line_count.saturating_sub(1) as f64 + 20.0;
             }
@@ -350,6 +359,39 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
     }
 }
 
+fn wrap_sequence_text(text: &str, wrap: &SequenceTextWrap, max_width: f64) -> String {
+    if wrap != &SequenceTextWrap::Wrap {
+        return text.to_string();
+    }
+    let max_chars = (max_width / 7.5).floor().max(1.0) as usize;
+    text.lines()
+        .flat_map(|line| wrap_sequence_line(line, max_chars))
+        .collect::<Vec<_>>()
+        .join("\n")
+}
+
+fn wrap_sequence_line(line: &str, max_chars: usize) -> Vec<String> {
+    let mut lines = Vec::new();
+    let mut current = String::new();
+    for word in line.split_whitespace() {
+        let next_len =
+            current.chars().count() + usize::from(!current.is_empty()) + word.chars().count();
+        if !current.is_empty() && next_len > max_chars {
+            lines.push(current);
+            current = word.to_string();
+        } else {
+            if !current.is_empty() {
+                current.push(' ');
+            }
+            current.push_str(word);
+        }
+    }
+    if !current.is_empty() || lines.is_empty() {
+        lines.push(current);
+    }
+    lines
+}
+
 fn close_activation(
     items: &mut Vec<LayoutedSequenceItem>,
     starts: &mut HashMap<String, Vec<f64>>,
@@ -403,6 +445,7 @@ mod tests {
                 from: "Alice".into(),
                 to: "Bob".into(),
                 label: "Hello".into(),
+                wrap: SequenceTextWrap::Default,
                 line_style: SequenceLineStyle::Solid,
                 arrowhead: SequenceArrowhead::Filled,
                 bidirectional: false,
@@ -438,6 +481,17 @@ mod tests {
     }
 
     #[test]
+    fn wraps_sequence_text_only_when_requested() {
+        let text = "A deliberately long message that must wrap across several native lines";
+        let wrapped = wrap_sequence_text(text, &SequenceTextWrap::Wrap, 90.0);
+        assert!(wrapped.contains('\n'));
+        assert_eq!(
+            wrap_sequence_text(text, &SequenceTextWrap::NoWrap, 90.0),
+            text
+        );
+    }
+
+    #[test]
     fn preserves_half_arrow_semantics() {
         let diagram = SequenceDiagram {
             title: None,
@@ -452,6 +506,7 @@ mod tests {
                 from: "Alice".into(),
                 to: "Bob".into(),
                 label: "Half".into(),
+                wrap: SequenceTextWrap::Default,
                 line_style: SequenceLineStyle::Dotted,
                 arrowhead: SequenceArrowhead::ReverseStickBottom,
                 bidirectional: false,
@@ -526,6 +581,7 @@ mod tests {
                     from: "Alice".into(),
                     to: "Bob".into(),
                     label: "Ping".into(),
+                    wrap: SequenceTextWrap::Default,
                     line_style: SequenceLineStyle::Solid,
                     arrowhead: SequenceArrowhead::Filled,
                     bidirectional: false,
@@ -577,6 +633,7 @@ mod tests {
                     from: "Alice".into(),
                     to: "Alice".into(),
                     label: "Start".into(),
+                    wrap: SequenceTextWrap::Default,
                     line_style: SequenceLineStyle::Solid,
                     arrowhead: SequenceArrowhead::Filled,
                     bidirectional: false,
@@ -591,6 +648,7 @@ mod tests {
                     from: "Alice".into(),
                     to: "Worker".into(),
                     label: "Work".into(),
+                    wrap: SequenceTextWrap::Default,
                     line_style: SequenceLineStyle::Solid,
                     arrowhead: SequenceArrowhead::Filled,
                     bidirectional: false,
