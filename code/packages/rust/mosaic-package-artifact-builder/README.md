@@ -34,11 +34,11 @@ the selected backend has a known degradation.
 The initial inventory identifies passive drag/drop lowerings, native table
 lowerings without table semantics, Flutter's dialog placeholder and missing URL
 effect host, and generated native project shells that can fall back to sample
-props. Compose, Flutter, and SwiftUI are the first closed shells: their strict profiles
+props. Compose, Flutter, SwiftUI, and XAML are the first closed shells: their strict profiles
 require Mosaic's standard Rust runtime, wait for the first props envelope,
 reject missing required props, and omit sample-data and optional-host fallbacks.
-The overall native-complete milestone remains open while the other two native
-shells are closed and ignored properties, events, styles, effects, and
+The overall native-complete milestone remains open while the Qt native shell is
+closed and ignored properties, events, styles, effects, and
 accessibility metadata are added to the inventory.
 
 `compose_component` is the canonical in-memory entry point shared by package
@@ -74,7 +74,9 @@ the standard binding and runtime-provided props before mounting the view.
 XAML project shells install a standard .NET host that uses built-in native
 loading and JSON APIs. The generated window prefers that runtime when its DLL is
 available, then retains the app-owned reflection host only as a permissive
-compatibility fallback.
+compatibility fallback. `native-complete` builds instead load Rust before WinUI
+activation, validate required MIL props before showing the component, and omit
+reflection, sample-prop, and app-owned dispatch paths.
 Flutter project shells replace the no-op host stub with the standard Dart FFI
 runtime while preserving `MosaicApp(mosaicHost: ...)` injection. Set
 `MOSAIC_APP_LIBRARY` to the Rust application library, or package it under the

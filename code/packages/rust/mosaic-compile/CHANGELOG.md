@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Changed - strict XAML shells require Rust
+
+`mosaic-compile pkg --backend xaml --emit-project --profile native-complete`
+now emits a runtime-required WinUI application shell. It loads the standard
+.NET binding before activation, validates required MIL props, routes events
+through Rust, and contains no reflection-host or generated sample-value path.
+
 ### Changed - strict SwiftUI shells require Rust
 
 `mosaic-compile pkg --backend swiftui --emit-project --profile native-complete`

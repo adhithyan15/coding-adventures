@@ -1,5 +1,13 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — native-complete runtime-required shell
+
+`EmitOptions::require_runtime` now emits a direct standard-runtime WinUI host.
+It loads Rust before window activation, validates required MIL props before the
+component is shown, sends every Mosaic event to Rust, and omits reflection-host,
+sample-prop, and app-owned dispatch fallbacks. The default permissive shell is
+unchanged.
+
 ## [Unreleased] — VC2-xaml Grid: WinUI value translation + nested-For + per-column widths
 
 ### Fixed - Serviced Windows App Runtime
