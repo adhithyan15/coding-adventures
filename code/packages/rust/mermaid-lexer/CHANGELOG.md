@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.20.0
+
+- Tokenize Mermaid sequence HTML line-break variants atomically.
+
 ## 0.19.0
 
 - Tokenize Mermaid sequence numeric and named entity codes atomically.

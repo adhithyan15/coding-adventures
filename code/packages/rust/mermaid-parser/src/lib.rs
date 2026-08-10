@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.21.0";
+pub const VERSION: &str = "0.22.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1790,7 +1790,15 @@ fn take_sequence_line_text(cursor: &mut TokenCursor) -> String {
             words.push(token.value.clone());
         }
     }
-    words.join(" ")
+    let text = words
+        .join(" ")
+        .replace("<br/>", "\n")
+        .replace("<br />", "\n")
+        .replace("<br>", "\n");
+    text.split('\n')
+        .map(str::trim)
+        .collect::<Vec<_>>()
+        .join("\n")
 }
 
 fn ensure_sequence_participant(
@@ -3424,6 +3432,22 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn sequence_converts_html_breaks_to_semantic_newlines() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nAlice->>Bob: First line<br/>Second line\nnote over Alice,Bob: Note one<br />Note two\n",
+        )
+        .unwrap();
+        assert!(matches!(
+            &diagram.events[0],
+            SequenceEvent::Message { label, .. } if label == "First line\nSecond line"
+        ));
+        assert!(matches!(
+            &diagram.events[1],
+            SequenceEvent::Note { text, .. } if text == "Note one\nNote two"
+        ));
+    }
+
+    #[test]
     fn sequence_parses_multiline_accessibility_description() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\naccDescr {\n  Transfers funds\n  between accounts\n}\nAlice->>Bob: Hello\n",
@@ -3467,7 +3491,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.21.0");
+        assert_eq!(crate::VERSION, "0.22.0");
     }
 
     #[test]

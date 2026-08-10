@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.19.0";
+pub const VERSION: &str = "0.20.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -111,7 +111,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.19.0");
+        assert_eq!(VERSION, "0.20.0");
     }
 
     #[test]
@@ -482,5 +482,19 @@ A\\-B: reverse stick bottom
             .collect();
         assert_eq!(entities, vec!["#9829;", "#infin;"]);
         assert!(!tokens.iter().any(|token| token.value == ";"));
+    }
+
+    #[test]
+    fn tokenizes_sequence_line_break_variants() {
+        let tokens = tokenize_mermaid_sequence(
+            "sequenceDiagram\nAlice->>Bob: One<br>Two<br/>Three<br />Four\n",
+        );
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| token.type_name.as_deref() == Some("LINE_BREAK"))
+                .count(),
+            3
+        );
     }
 }

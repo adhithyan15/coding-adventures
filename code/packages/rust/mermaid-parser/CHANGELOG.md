@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.22.0
+
+- Convert sequence `<br>`, `<br/>`, and `<br />` tags to semantic newlines.
+
 ## 0.21.0
 
 - Decode Mermaid numeric and HTML named entity codes in sequence text.

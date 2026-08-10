@@ -8,6 +8,7 @@ skip:
 
 NEWLINE                  = /\r?\n/
 ENTITY                   = /#(?:[0-9]+|[A-Za-z][A-Za-z0-9]+);/
+LINE_BREAK               = /<br[ \t]*\/?>/
 SEMICOLON                = ";"
 HEADER                   = "sequenceDiagram"
 ACC_DESCR_BLOCK          = /accDescr[ \t]*\{[^\}]*\}/

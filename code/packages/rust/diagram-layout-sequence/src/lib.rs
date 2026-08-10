@@ -7,7 +7,7 @@ use diagram_ir::{
     SequenceEvent, SequenceNotePlacement,
 };
 
-pub const VERSION: &str = "0.12.0";
+pub const VERSION: &str = "0.13.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -117,6 +117,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     to_x,
                     y,
                     label: label.clone(),
+                    label_height: 16.0 * label.lines().count().max(1) as f64,
                     line_style: line_style.clone(),
                     arrowhead: arrowhead.clone(),
                     bidirectional: *bidirectional,
@@ -130,7 +131,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 if *deactivate {
                     close_activation(&mut items, &mut activation_starts, from, from_x, y);
                 }
-                y += EVENT_H;
+                y += EVENT_H + 16.0 * label.lines().count().saturating_sub(1) as f64;
             }
             SequenceEvent::Activation {
                 participant,
@@ -216,7 +217,13 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     .iter()
                     .copied()
                     .fold(f64::NEG_INFINITY, f64::max);
-                let note_width = ((text.chars().count() as f64 * 7.5) + 28.0)
+                let line_count = text.lines().count().max(1);
+                let longest_line = text
+                    .lines()
+                    .map(|line| line.chars().count())
+                    .max()
+                    .unwrap_or(0);
+                let note_width = ((longest_line as f64 * 7.5) + 28.0)
                     .max(100.0)
                     .min((width - MARGIN * 2.0).max(100.0));
                 let note_x = match placement {
@@ -229,10 +236,10 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     x: note_x,
                     y: y - 10.0,
                     width: note_width,
-                    height: NOTE_H,
+                    height: NOTE_H + 16.0 * line_count.saturating_sub(1) as f64,
                     text: text.clone(),
                 });
-                y += NOTE_H + 20.0;
+                y += NOTE_H + 16.0 * line_count.saturating_sub(1) as f64 + 20.0;
             }
             SequenceEvent::BlockStart { kind, label, fill } => {
                 let depth = block_stack.len();

@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.16.0";
+pub const VERSION: &str = "0.17.0";
 
 use std::collections::HashMap;
 
@@ -1247,6 +1247,7 @@ where
                 to_x,
                 y,
                 label,
+                label_height,
                 line_style,
                 arrowhead,
                 bidirectional,
@@ -1341,9 +1342,9 @@ where
                 text_children.push(text_node(
                     &rendered_label,
                     label_x,
-                    *y - options.label_font.size - 6.0,
+                    *y - *label_height - 6.0,
                     label_width.max(80.0),
-                    options.label_font.size * 1.35,
+                    *label_height,
                     label_font.clone(),
                     text_color,
                 ));
@@ -2675,7 +2676,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.16.0");
+        assert_eq!(crate::VERSION, "0.17.0");
     }
 
     #[test]

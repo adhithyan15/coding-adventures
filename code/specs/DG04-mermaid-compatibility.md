@@ -138,6 +138,8 @@ Both modern `title Text` and legacy `title: Text` sequence title forms lower
 through the same title semantics and native text pipeline.
 Sequence text decodes Mermaid decimal and HTML named entity codes to Unicode
 before layout and Paint glyph shaping.
+Message and note `<br>`, `<br/>`, and `<br />` tags become semantic newlines;
+sequence layout reserves line-aware geometry before Paint glyph shaping.
 
 Inline participant configuration now carries `type` and `alias` into semantic
 IR. Boundary, control, entity, database, collections, and queue kinds lower to
