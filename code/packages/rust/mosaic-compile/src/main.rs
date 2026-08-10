@@ -933,7 +933,8 @@ fn run_pipeline(
             // Fix B1: --emit-project — full WinUI 3 host shell.
             if let Some(proj) = &result.project {
                 let component = &result.component_name;
-                let writes: [(String, &str); 7] = [
+                let writes: [(String, &str); 8] = [
+                    (side_file_path("global.json"), &proj.global_json),
                     (side_file_path(&format!("{component}.csproj")), &proj.csproj),
                     (side_file_path("App.xaml"), &proj.app_xaml),
                     (side_file_path("App.xaml.cs"), &proj.app_xaml_cs),

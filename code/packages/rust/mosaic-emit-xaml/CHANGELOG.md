@@ -2,6 +2,58 @@
 
 ## [Unreleased] — VC2-xaml Grid: WinUI value translation + nested-For + per-column widths
 
+### Fixed - Typed-template helper ownership
+
+Generated `For` row view models now retain their owning component and expose
+Mosaic expressions as ordinary computed row properties. Those properties
+delegate to assembly-local component helpers in C#, so WinUI's compiled
+binding engine never has to resolve a page method from a typed DataTemplate.
+Nested loops are projected by their enclosing row VM and capture outer element
+and index bindings, while component-slot bindings route through the retained
+owner. This keeps flat-list filters, nested grid cells, and editor state in the
+correct typed scope without application-specific XAML glue.
+Generated nested grid projections also zip authored `column-widths` into each
+cell VM and invalidate outer projections when nested sources or widths change,
+preserving both visible geometry and live runtime updates.
+The shared visibility converter now applies Mosaic truthiness to booleans,
+numbers, text, and collections, so string-backed list fields drive `If` blocks
+the same way they do on the other native backends.
+
+### Fixed - Valid styled text composition
+
+Text primitives now split MSL box paint from typography. Backgrounds, borders,
+corner radii, padding, and sizing render on a native `Border`, while foreground
+and font properties remain on the nested `TextBlock`. This preserves pill/chip
+styling without sending unsupported `CornerRadius` or `Background` attributes
+to WinUI's `TextBlock` markup compiler.
+
+MSL `text-align` on `HostButton` now maps to WinUI's native
+`HorizontalContentAlignment` property instead of the unsupported
+`Button.TextAlignment` attribute.
+
+### Fixed - Collision-safe repeated-loop projections
+
+Each `For` loop now receives a distinct generated row-view-model and projection
+name when a package-expanded component reuses an `as:` alias. The first alias
+keeps its stable historical name and later loops receive numeric suffixes, so
+TaskApp's sheet and task-list `row` loops no longer share the wrong collection.
+
+### Fixed - Native input commit payloads
+
+`HostInput.onCommit` and `onCancel` handlers now inspect the authored MIL emit
+schema. Void events remain parameterless, while single text, number, or boolean
+events receive the native `TextBox` value with the required conversion. Complete
+TaskApp generation therefore constructs `SheetEditCommit(value: text)` correctly
+instead of emitting code-behind that cannot compile.
+
+### Fixed - Generated WinUI SDK selection
+
+Complete project emission now includes a `global.json` that selects the .NET 9
+SDK family targeted by the generated project. The generated build script also
+builds from the project directory, so machines with .NET 10 installed globally
+do not accidentally run the Windows App SDK 1.7 XAML compiler under an
+unsupported newer SDK toolchain.
+
 ### Fixed - Native multiline Input compatibility
 
 The still-supported UI25 `Input` primitive now shares the complete native
