@@ -174,6 +174,16 @@ impl UnlockedVaultV1 {
         self.current_catalog.conflicted_item_count()
     }
 
+    /// Re-verify the complete reachable vault and return aggregate counts.
+    ///
+    /// This repeats repository discovery relative to durable local pins,
+    /// checks the local writer counter/catalog anchor, walks complete verified
+    /// ancestry from every head, and decrypts every distinct catalog and
+    /// catalog-referenced revision. It returns no identities or item metadata.
+    pub fn audit_verify(&self) -> Result<crate::AuditVerificationV1, ApplicationError> {
+        crate::audit::audit_verify(&self.active, &self._keys, self._repository.as_ref())
+    }
+
     /// Return the ordinary redacted view for one unambiguous live item.
     ///
     /// A missing item and a current tombstone both return `None`. Multiple
@@ -656,7 +666,7 @@ fn materialize_current_catalog(
     })
 }
 
-fn read_candidate(
+pub(crate) fn read_candidate(
     keys: &V1Keys,
     repository: &dyn ApplicationRepository,
     revision_id: RevisionId,
@@ -1502,6 +1512,119 @@ mod tests {
         assert_eq!(
             format!("{session:?}"),
             "UnlockedVaultV1 { local_pin_count: 1, verified_head_count: 1, item_count: 0, candidate_count: 0, conflicted_item_count: 0, search_item_count: 0, .. }"
+        );
+    }
+
+    #[test]
+    fn audit_verify_reopens_complete_ancestry_and_reports_only_counts() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let initial = session.audit_verify().unwrap();
+        assert!(initial.integrity_verified());
+        assert_eq!(initial.announcement_count(), 1);
+        assert_eq!(initial.commit_count(), 1);
+        assert_eq!(initial.catalog_count(), 1);
+        assert_eq!(initial.revision_count(), 0);
+        assert_eq!(initial.item_count(), 0);
+
+        let randomness = add_item_randomness(0xa8);
+        let item_id = randomness.item_id();
+        session
+            .add_item(
+                new_login_document(item_id, "Audited login", "audit-secret"),
+                700,
+                randomness,
+                &local,
+            )
+            .unwrap();
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let report = reopened.audit_verify().unwrap();
+        assert_eq!(report.announcement_count(), 2);
+        assert_eq!(report.commit_count(), 2);
+        assert_eq!(report.catalog_count(), 2);
+        assert_eq!(report.revision_count(), 1);
+        assert_eq!(report.item_count(), 1);
+        assert_eq!(
+            format!("{report:?}"),
+            "AuditVerificationV1 { integrity_verified: true, announcement_count: 2, commit_count: 2, catalog_count: 2, revision_count: 1, item_count: 1 }"
+        );
+        assert!(!format!("{report:?}").contains("Audited login"));
+        assert!(!format!("{report:?}").contains("audit-secret"));
+
+        let expected_revision = reopened.current_catalog.items[&item_id][0].revision_id();
+        reopened
+            .replace_item(
+                expected_revision,
+                login_document_with_times(
+                    item_id,
+                    "Audited login updated",
+                    "audit-secret-updated",
+                    300,
+                    701,
+                ),
+                702,
+                replace_item_randomness(0xa9),
+                &local,
+            )
+            .unwrap();
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let report = reopened.audit_verify().unwrap();
+        assert_eq!(report.announcement_count(), 3);
+        assert_eq!(report.commit_count(), 3);
+        assert_eq!(report.catalog_count(), 3);
+        assert_eq!(report.revision_count(), 2);
+        assert_eq!(report.item_count(), 1);
+    }
+
+    #[test]
+    fn audit_verify_rejects_a_local_counter_without_an_exact_pinned_anchor() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let mut session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        session.active = ActiveStateV1::new(
+            session.active.bootstrap_locator(),
+            session.active.vault_id(),
+            session.active.bootstrap_id(),
+            session.active.authority_fingerprint(),
+            session.active.device_id(),
+            session.active.device_certificate_id(),
+            session.active.device_certificate_frame().clone(),
+            session.active.local_secret().clone(),
+            session.active.pinned_heads().clone(),
+            session.active.last_device_counter() + 1,
+            session.active.catalog_root(),
+        )
+        .unwrap();
+        assert_eq!(
+            session.audit_verify(),
+            Err(ApplicationError::IntegrityFailure)
         );
     }
 

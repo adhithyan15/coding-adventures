@@ -7,6 +7,7 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+mod audit;
 mod codec;
 mod crypto;
 mod disclosure;
@@ -20,6 +21,7 @@ mod state;
 mod status;
 mod verifier;
 
+pub use audit::AuditVerificationV1;
 pub use codec::{
     decode_device_certificate, decode_item_revision, decode_signed_commit,
     encode_device_certificate, encode_item_revision, encode_signed_commit, CatalogV1,

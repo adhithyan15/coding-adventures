@@ -228,6 +228,9 @@ History is deterministic graph ancestry, not wall-clock ordering. Starting
 from one commit, `history(limit)` returns the start node followed by a bounded
 reverse traversal whose frontier is ordered by commit object ID. Advisory wall
 time is returned as metadata but never changes ancestry or security decisions.
+`complete_history` uses the same ordering but returns the entire verified graph
+up to the repository graph bound for integrity audits; it is not an ordinary
+interactive-history API.
 
 ## 9. Conservative GC planning
 
