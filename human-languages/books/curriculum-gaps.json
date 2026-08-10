@@ -48531,5 +48531,13 @@
       "8": 1
     },
     "underspentPercent": 97
+  },
+  "infoDump": {
+    "lessons": 1694,
+    "lessonsWithFindings": 106,
+    "ruleStatements": 17,
+    "paradigmTables": 93,
+    "fullParadigmGrids": 18,
+    "overBudget": 3
   }
 }

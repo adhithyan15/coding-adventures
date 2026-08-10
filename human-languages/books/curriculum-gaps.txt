@@ -81,3 +81,6 @@ grammar cells (spanish): 0 of 231 regular cells taught (0%), against 231 univers
 root ledger: 2717 roots, 2624 spent fewer than 3 times (97%), 1807 never spent at all
   taught once and never returned to: a-dios-latin (ES-C05-adios), a-k-l (AR-C30-akala), a-kh-dh (AR-C32-akhadha)
   best-spent root: LA-ETYMON-SALVE-02 with 8 payoffs
+
+info dump (report-only): 106 of 1694 lessons -- 17 rule statements, 93 paradigm tables (18 full grids)
+  complete paradigms presented at once: FR-C05-parler (7-row table with 6 person rows), FR-C16-passe-compose-etre (5-row table with 5 person rows), GE-C05-wohnen (7-row table with 6 person rows)
