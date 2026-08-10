@@ -24,8 +24,9 @@ pub use crypto::{
     ObjectKind, ObjectRandomness, V1Keys,
 };
 pub use initialize::{
-    prepare_generation_zero, rehydrate_prepared_init, GenerationZeroPolicyV1,
-    GenerationZeroRandomness, PreparedGenerationZero, GENERATION_ZERO_RANDOM_BYTES,
+    complete_generation_zero, prepare_generation_zero, rehydrate_prepared_init,
+    GenerationZeroPolicyV1, GenerationZeroRandomness, PreparedGenerationZero,
+    GENERATION_ZERO_RANDOM_BYTES,
 };
 pub use repository::{
     ApplicationRepository, ApplicationRepositoryError, ApplicationRepositoryFactory,

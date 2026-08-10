@@ -1,9 +1,10 @@
 use crate::{
     decode_device_certificate, encode_device_certificate, encode_signed_commit, open_local_secret,
     open_object, seal_local_secret, seal_object, ActiveStateV1, ApplicationError,
-    AuthorityFingerprint, BootstrapLocator, CatalogV1, LocalSecretRandomness, LocalSecretV1,
-    LocalVaultStateV1, ObjectKind, ObjectRandomness, PreparedInitV1, PublicationJournalV1, V1Keys,
-    V1SingleDeviceVerifier,
+    ApplicationRepositoryError, ApplicationRepositoryFactory, AuthorityFingerprint,
+    BootstrapLocator, BootstrapStore, BootstrapStoreError, CatalogV1, LocalSecretRandomness,
+    LocalSecretV1, LocalStateStore, LocalStateStoreError, LocalVaultStateV1, ObjectKind,
+    ObjectRandomness, PreparedInitV1, PublicationJournalV1, V1Keys, V1SingleDeviceVerifier,
 };
 use coding_adventures_argon2id::{argon2id, Options as Argon2idOptions};
 use coding_adventures_chacha20_poly1305::{
@@ -450,6 +451,156 @@ pub fn rehydrate_prepared_init(
     })
 }
 
+/// Durably install and idempotently complete one exact generation-zero
+/// journal through injected local, bootstrap, and repository authorities.
+///
+/// The exact `PreparedInit` bytes are atomically installed before the first
+/// external effect. Every retry reuses the same signed and randomized bytes,
+/// and the intended `Active` bytes replace the journal only after exact
+/// bootstrap read-back and repository receipt verification.
+pub fn complete_generation_zero(
+    prepared: PreparedGenerationZero,
+    local_state_store: &dyn LocalStateStore,
+    bootstrap_store: &dyn BootstrapStore,
+    repository_factory: &dyn ApplicationRepositoryFactory,
+) -> Result<ActiveStateV1, ApplicationError> {
+    let (locator, owner_state, address, verifier) = prepared.into_parts();
+    let LocalVaultStateV1::PreparedInit(journal) = owner_state else {
+        return Err(ApplicationError::InternalInvariant);
+    };
+    let prepared_state = LocalVaultStateV1::PreparedInit(journal.clone());
+    let exact_prepared = prepared_state.encode()?;
+    let intended_active = journal.intended_active().clone();
+    let exact_active = LocalVaultStateV1::Active(intended_active.clone()).encode()?;
+
+    if ensure_prepared_state(
+        local_state_store,
+        locator,
+        &exact_prepared,
+        &exact_active,
+        &intended_active,
+    )? {
+        return Ok(intended_active);
+    }
+
+    bootstrap_store
+        .put_generation(locator, None, journal.bootstrap())
+        .map_err(map_bootstrap_store)?;
+    let observed_bootstrap = bootstrap_store
+        .load_latest(locator)
+        .map_err(map_bootstrap_store)?
+        .ok_or(ApplicationError::IntegrityFailure)?;
+    if observed_bootstrap != journal.bootstrap() {
+        return Err(ApplicationError::IntegrityFailure);
+    }
+
+    let repository = repository_factory
+        .connect(address, Box::new(verifier))
+        .map_err(map_application_repository)?;
+    repository
+        .initialize()
+        .map_err(map_application_repository)?;
+    let receipt = repository
+        .publish(
+            journal.publication().publication(),
+            journal.publication().base_heads(),
+        )
+        .map_err(map_application_repository)?;
+    if receipt.heads() != journal.publication().expected_heads() {
+        return Err(ApplicationError::IntegrityFailure);
+    }
+
+    install_active_state(
+        local_state_store,
+        locator,
+        &exact_prepared,
+        &exact_active,
+        intended_active,
+    )
+}
+
+fn ensure_prepared_state(
+    store: &dyn LocalStateStore,
+    locator: BootstrapLocator,
+    exact_prepared: &[u8],
+    exact_active: &[u8],
+    intended_active: &ActiveStateV1,
+) -> Result<bool, ApplicationError> {
+    match store.load(locator).map_err(map_local_state_store)? {
+        Some(observed) if observed == exact_prepared => return Ok(false),
+        Some(observed) if observed == exact_active => {
+            let state = LocalVaultStateV1::decode(&observed)?;
+            if state == LocalVaultStateV1::Active(intended_active.clone()) {
+                return Ok(true);
+            }
+            return Err(ApplicationError::IntegrityFailure);
+        }
+        Some(observed) => {
+            LocalVaultStateV1::decode(&observed)?;
+            return Err(ApplicationError::AlreadyInitialized);
+        }
+        None => {}
+    }
+
+    match store.compare_exchange(locator, None, exact_prepared) {
+        Ok(()) => Ok(false),
+        Err(LocalStateStoreError::ConcurrentHost) => {
+            match store.load(locator).map_err(map_local_state_store)? {
+                Some(observed) if observed == exact_prepared => Ok(false),
+                Some(observed) if observed == exact_active => Ok(true),
+                _ => Err(ApplicationError::ConcurrentHost),
+            }
+        }
+        Err(error) => Err(map_local_state_store(error)),
+    }
+}
+
+fn install_active_state(
+    store: &dyn LocalStateStore,
+    locator: BootstrapLocator,
+    exact_prepared: &[u8],
+    exact_active: &[u8],
+    intended_active: ActiveStateV1,
+) -> Result<ActiveStateV1, ApplicationError> {
+    match store.compare_exchange(locator, Some(exact_prepared), exact_active) {
+        Ok(()) => Ok(intended_active),
+        Err(LocalStateStoreError::ConcurrentHost) => {
+            match store.load(locator).map_err(map_local_state_store)? {
+                Some(observed) if observed == exact_active => Ok(intended_active),
+                _ => Err(ApplicationError::ConcurrentHost),
+            }
+        }
+        Err(error) => Err(map_local_state_store(error)),
+    }
+}
+
+fn map_bootstrap_store(error: BootstrapStoreError) -> ApplicationError {
+    match error {
+        BootstrapStoreError::Unavailable => ApplicationError::StorageUnavailable,
+        BootstrapStoreError::Conflict | BootstrapStoreError::Corruption => {
+            ApplicationError::IntegrityFailure
+        }
+    }
+}
+
+fn map_local_state_store(error: LocalStateStoreError) -> ApplicationError {
+    match error {
+        LocalStateStoreError::Unavailable => ApplicationError::StorageUnavailable,
+        LocalStateStoreError::ConcurrentHost => ApplicationError::ConcurrentHost,
+        LocalStateStoreError::Corruption => ApplicationError::IntegrityFailure,
+    }
+}
+
+fn map_application_repository(error: ApplicationRepositoryError) -> ApplicationError {
+    match error {
+        ApplicationRepositoryError::NotInitialized => ApplicationError::NotInitialized,
+        ApplicationRepositoryError::InvalidInput => ApplicationError::InvalidInput,
+        ApplicationRepositoryError::BoundExceeded => ApplicationError::BoundExceeded,
+        ApplicationRepositoryError::StorageUnavailable => ApplicationError::StorageUnavailable,
+        ApplicationRepositoryError::IntegrityFailure => ApplicationError::IntegrityFailure,
+    }
+}
+
 fn wrap_root_key(
     passphrase: &[u8],
     kdf: &Argon2idParametersV1,
@@ -594,8 +745,130 @@ mod tests {
     use coding_adventures_argon2id::argon2id;
     use coding_adventures_chacha20_poly1305::xchacha20_poly1305_aead_decrypt;
     use coding_adventures_ed25519::verify;
-    use coding_adventures_vault_pm_format::BootstrapV1;
-    use coding_adventures_vault_pm_storage::InMemoryObjectStore;
+    use coding_adventures_vault_pm_format::{BootstrapId, BootstrapV1};
+    use coding_adventures_vault_pm_storage::{
+        FaultAction, FaultEffect, FaultInjectingObjectStore, InMemoryObjectStore, StoreError,
+        StoreOperation,
+    };
+    use std::sync::{
+        atomic::{AtomicBool, AtomicUsize, Ordering},
+        Arc, Mutex,
+    };
+
+    #[derive(Default)]
+    struct MemoryLocalStateStore {
+        state: Mutex<Option<Vec<u8>>>,
+        compare_calls: AtomicUsize,
+        fail_compare_call: AtomicUsize,
+    }
+
+    impl MemoryLocalStateStore {
+        fn fail_compare_call(&self, call: usize) {
+            self.fail_compare_call.store(call, Ordering::SeqCst);
+        }
+
+        fn stored(&self) -> Option<Vec<u8>> {
+            self.state.lock().unwrap().clone()
+        }
+    }
+
+    impl LocalStateStore for MemoryLocalStateStore {
+        fn load(
+            &self,
+            _locator: BootstrapLocator,
+        ) -> Result<Option<Vec<u8>>, LocalStateStoreError> {
+            Ok(self.stored())
+        }
+
+        fn compare_exchange(
+            &self,
+            _locator: BootstrapLocator,
+            expected: Option<&[u8]>,
+            replacement: &[u8],
+        ) -> Result<(), LocalStateStoreError> {
+            let call = self.compare_calls.fetch_add(1, Ordering::SeqCst) + 1;
+            if self.fail_compare_call.load(Ordering::SeqCst) == call {
+                return Err(LocalStateStoreError::Unavailable);
+            }
+            let mut state = self
+                .state
+                .lock()
+                .map_err(|_| LocalStateStoreError::Unavailable)?;
+            if state.as_deref() != expected {
+                return Err(LocalStateStoreError::ConcurrentHost);
+            }
+            *state = Some(replacement.to_vec());
+            Ok(())
+        }
+    }
+
+    #[derive(Default)]
+    struct MemoryBootstrapStore {
+        bootstrap: Mutex<Option<Vec<u8>>>,
+        put_calls: AtomicUsize,
+        fail_next_put: AtomicBool,
+        corrupt_next_read: AtomicBool,
+    }
+
+    impl MemoryBootstrapStore {
+        fn fail_next_put(&self) {
+            self.fail_next_put.store(true, Ordering::SeqCst);
+        }
+
+        fn corrupt_next_read(&self) {
+            self.corrupt_next_read.store(true, Ordering::SeqCst);
+        }
+
+        fn put_calls(&self) -> usize {
+            self.put_calls.load(Ordering::SeqCst)
+        }
+
+        fn stored(&self) -> Option<Vec<u8>> {
+            self.bootstrap.lock().unwrap().clone()
+        }
+    }
+
+    impl BootstrapStore for MemoryBootstrapStore {
+        fn load_latest(
+            &self,
+            _locator: BootstrapLocator,
+        ) -> Result<Option<Vec<u8>>, BootstrapStoreError> {
+            let mut value = self.stored();
+            if self.corrupt_next_read.swap(false, Ordering::SeqCst) {
+                if let Some(bytes) = &mut value {
+                    bytes[0] ^= 1;
+                }
+            }
+            Ok(value)
+        }
+
+        fn put_generation(
+            &self,
+            _locator: BootstrapLocator,
+            expected_previous: Option<BootstrapId>,
+            exact_bootstrap: &[u8],
+        ) -> Result<(), BootstrapStoreError> {
+            self.put_calls.fetch_add(1, Ordering::SeqCst);
+            if expected_previous.is_some() {
+                return Err(BootstrapStoreError::Conflict);
+            }
+            if self.fail_next_put.swap(false, Ordering::SeqCst) {
+                return Err(BootstrapStoreError::Unavailable);
+            }
+            let mut bootstrap = self
+                .bootstrap
+                .lock()
+                .map_err(|_| BootstrapStoreError::Unavailable)?;
+            match &*bootstrap {
+                Some(existing) if existing == exact_bootstrap => Ok(()),
+                Some(_) => Err(BootstrapStoreError::Conflict),
+                None => {
+                    *bootstrap = Some(exact_bootstrap.to_vec());
+                    Ok(())
+                }
+            }
+        }
+    }
 
     fn fixture_randomness() -> GenerationZeroRandomness {
         let mut bytes = [0; GENERATION_ZERO_RANDOM_BYTES];
@@ -607,6 +880,23 @@ mod tests {
 
     fn policy() -> GenerationZeroPolicyV1 {
         GenerationZeroPolicyV1::new(8 * 1024, 1, 1, 1_700_000_000_000).unwrap()
+    }
+
+    fn prepared(passphrase: &[u8]) -> PreparedGenerationZero {
+        prepare_generation_zero(
+            Zeroizing::new(passphrase.to_vec()),
+            policy(),
+            fixture_randomness(),
+        )
+        .unwrap()
+    }
+
+    fn rehydrated(passphrase: &[u8], store: &MemoryLocalStateStore) -> PreparedGenerationZero {
+        rehydrate_prepared_init(
+            Zeroizing::new(passphrase.to_vec()),
+            LocalVaultStateV1::decode(&store.stored().unwrap()).unwrap(),
+        )
+        .unwrap()
     }
 
     #[test]
@@ -834,6 +1124,232 @@ mod tests {
         assert_eq!(
             rehydrate_prepared_init(Zeroizing::new(passphrase.to_vec()), mismatched_state).err(),
             Some(ApplicationError::IntegrityFailure)
+        );
+    }
+
+    #[test]
+    fn completion_persists_first_finishes_exactly_and_is_idempotent() {
+        let passphrase = b"completion passphrase";
+        let initial = prepared(passphrase);
+        let expected_active = match initial.owner_state() {
+            LocalVaultStateV1::PreparedInit(journal) => journal.intended_active().clone(),
+            _ => panic!("generation zero must be prepared"),
+        };
+        let expected_bootstrap = match initial.owner_state() {
+            LocalVaultStateV1::PreparedInit(journal) => journal.bootstrap().to_vec(),
+            _ => unreachable!(),
+        };
+        let local = MemoryLocalStateStore::default();
+        let bootstrap = MemoryBootstrapStore::default();
+        let factory = V1ApplicationRepositoryFactory::new(InMemoryObjectStore::new());
+
+        let active = complete_generation_zero(initial, &local, &bootstrap, &factory).unwrap();
+        assert_eq!(active, expected_active);
+        assert_eq!(bootstrap.stored(), Some(expected_bootstrap));
+        assert_eq!(
+            LocalVaultStateV1::decode(&local.stored().unwrap()).unwrap(),
+            LocalVaultStateV1::Active(expected_active.clone())
+        );
+
+        let put_calls = bootstrap.put_calls();
+        assert_eq!(
+            complete_generation_zero(prepared(passphrase), &local, &bootstrap, &factory).unwrap(),
+            expected_active
+        );
+        assert_eq!(bootstrap.put_calls(), put_calls);
+    }
+
+    #[test]
+    fn completion_performs_no_external_effect_when_prepared_state_is_not_durable() {
+        let local = MemoryLocalStateStore::default();
+        local.fail_compare_call(1);
+        let bootstrap = MemoryBootstrapStore::default();
+        let factory = V1ApplicationRepositoryFactory::new(InMemoryObjectStore::new());
+
+        assert_eq!(
+            complete_generation_zero(prepared(b"persist-first"), &local, &bootstrap, &factory,)
+                .err(),
+            Some(ApplicationError::StorageUnavailable)
+        );
+        assert_eq!(local.stored(), None);
+        assert_eq!(bootstrap.put_calls(), 0);
+    }
+
+    #[test]
+    fn completion_resumes_exactly_after_bootstrap_and_readback_failures() {
+        let passphrase = b"bootstrap recovery";
+        for corrupt_readback in [false, true] {
+            let local = MemoryLocalStateStore::default();
+            let bootstrap = MemoryBootstrapStore::default();
+            if corrupt_readback {
+                bootstrap.corrupt_next_read();
+            } else {
+                bootstrap.fail_next_put();
+            }
+            let factory = V1ApplicationRepositoryFactory::new(InMemoryObjectStore::new());
+
+            let error =
+                complete_generation_zero(prepared(passphrase), &local, &bootstrap, &factory).err();
+            assert_eq!(
+                error,
+                Some(if corrupt_readback {
+                    ApplicationError::IntegrityFailure
+                } else {
+                    ApplicationError::StorageUnavailable
+                })
+            );
+            assert!(matches!(
+                LocalVaultStateV1::decode(&local.stored().unwrap()).unwrap(),
+                LocalVaultStateV1::PreparedInit(_)
+            ));
+
+            complete_generation_zero(rehydrated(passphrase, &local), &local, &bootstrap, &factory)
+                .unwrap();
+            assert!(matches!(
+                LocalVaultStateV1::decode(&local.stored().unwrap()).unwrap(),
+                LocalVaultStateV1::Active(_)
+            ));
+        }
+    }
+
+    #[test]
+    fn completion_recovers_exact_publication_after_provider_failures() {
+        let passphrase = b"repository recovery";
+        for fault in [
+            FaultAction {
+                operation: StoreOperation::Initialize,
+                effect: FaultEffect::Return(StoreError::Network),
+            },
+            FaultAction {
+                operation: StoreOperation::PutImmutable,
+                effect: FaultEffect::CommitPutThenNetwork,
+            },
+        ] {
+            let local = MemoryLocalStateStore::default();
+            let bootstrap = MemoryBootstrapStore::default();
+            let backend = Arc::new(FaultInjectingObjectStore::new(InMemoryObjectStore::new()));
+            backend.enqueue(fault).unwrap();
+            let factory = V1ApplicationRepositoryFactory::from_shared(Arc::clone(&backend));
+
+            assert_eq!(
+                complete_generation_zero(prepared(passphrase), &local, &bootstrap, &factory,).err(),
+                Some(ApplicationError::StorageUnavailable)
+            );
+            assert!(matches!(
+                LocalVaultStateV1::decode(&local.stored().unwrap()).unwrap(),
+                LocalVaultStateV1::PreparedInit(_)
+            ));
+
+            complete_generation_zero(rehydrated(passphrase, &local), &local, &bootstrap, &factory)
+                .unwrap();
+            assert_eq!(backend.pending_faults().unwrap(), 0);
+            assert!(matches!(
+                LocalVaultStateV1::decode(&local.stored().unwrap()).unwrap(),
+                LocalVaultStateV1::Active(_)
+            ));
+        }
+    }
+
+    #[test]
+    fn completion_recovers_after_active_compare_exchange_failure() {
+        let passphrase = b"local commit recovery";
+        let local = MemoryLocalStateStore::default();
+        local.fail_compare_call(2);
+        let bootstrap = MemoryBootstrapStore::default();
+        let factory = V1ApplicationRepositoryFactory::new(InMemoryObjectStore::new());
+
+        assert_eq!(
+            complete_generation_zero(prepared(passphrase), &local, &bootstrap, &factory,).err(),
+            Some(ApplicationError::StorageUnavailable)
+        );
+        assert!(matches!(
+            LocalVaultStateV1::decode(&local.stored().unwrap()).unwrap(),
+            LocalVaultStateV1::PreparedInit(_)
+        ));
+
+        complete_generation_zero(rehydrated(passphrase, &local), &local, &bootstrap, &factory)
+            .unwrap();
+        assert!(matches!(
+            LocalVaultStateV1::decode(&local.stored().unwrap()).unwrap(),
+            LocalVaultStateV1::Active(_)
+        ));
+    }
+
+    #[test]
+    fn completion_rejects_occupied_or_corrupt_local_state_before_external_effects() {
+        for (occupied, expected) in [
+            (
+                prepared(b"different initialization")
+                    .owner_state()
+                    .encode()
+                    .unwrap(),
+                ApplicationError::AlreadyInitialized,
+            ),
+            (vec![0xff], ApplicationError::IntegrityFailure),
+        ] {
+            let local = MemoryLocalStateStore::default();
+            *local.state.lock().unwrap() = Some(occupied);
+            let bootstrap = MemoryBootstrapStore::default();
+            let factory = V1ApplicationRepositoryFactory::new(InMemoryObjectStore::new());
+
+            assert_eq!(
+                complete_generation_zero(
+                    prepared(b"requested initialization"),
+                    &local,
+                    &bootstrap,
+                    &factory,
+                )
+                .err(),
+                Some(expected)
+            );
+            assert_eq!(bootstrap.put_calls(), 0);
+        }
+    }
+
+    #[test]
+    fn completion_error_translation_is_closed() {
+        assert_eq!(
+            [
+                BootstrapStoreError::Unavailable,
+                BootstrapStoreError::Conflict,
+                BootstrapStoreError::Corruption,
+            ]
+            .map(map_bootstrap_store),
+            [
+                ApplicationError::StorageUnavailable,
+                ApplicationError::IntegrityFailure,
+                ApplicationError::IntegrityFailure,
+            ]
+        );
+        assert_eq!(
+            [
+                LocalStateStoreError::Unavailable,
+                LocalStateStoreError::ConcurrentHost,
+                LocalStateStoreError::Corruption,
+            ]
+            .map(map_local_state_store),
+            [
+                ApplicationError::StorageUnavailable,
+                ApplicationError::ConcurrentHost,
+                ApplicationError::IntegrityFailure,
+            ]
+        );
+        assert_eq!(
+            [
+                ApplicationRepositoryError::NotInitialized,
+                ApplicationRepositoryError::InvalidInput,
+                ApplicationRepositoryError::BoundExceeded,
+                ApplicationRepositoryError::StorageUnavailable,
+                ApplicationRepositoryError::IntegrityFailure,
+            ]
+            .map(map_application_repository),
+            [
+                ApplicationError::NotInitialized,
+                ApplicationError::InvalidInput,
+                ApplicationError::BoundExceeded,
+                ApplicationError::StorageUnavailable,
+                ApplicationError::IntegrityFailure,
+            ]
         );
     }
 
