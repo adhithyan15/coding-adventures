@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.1
+
+- Move username and password fields into zeroizing storage before validation so
+  rejected credential input is also cleared on drop.
+
 ## 0.4.0
 
 - Probe the bounded VAPIX image parameter inventory during authenticated
