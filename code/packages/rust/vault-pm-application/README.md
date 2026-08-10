@@ -166,6 +166,14 @@ warning. The application validates those facts before repository traversal.
 Actual TTY inspection, warning rendering, clipboard writes, ownership checks,
 and timed clear remain host responsibilities.
 
+Long-lived hosts can retain an explicit `VaultAccessV1` lifecycle boundary.
+It begins with only a redacted `LockedVaultV1` locator handle, authenticates a
+complete verified session in place, returns the stable payload-free `Locked`
+error when a caller asks for session access too early, and synchronously drops
+the live session on `lock()`. A failed unlock leaves the boundary locked;
+repeated lock is idempotent. The unlocked variant is boxed so the host state
+object stays compact without copying key material.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
 credential store, or entropy source. User-authored conflict merging, host field
@@ -192,8 +200,8 @@ paths, and complete error translation.
 Search tests cover Unicode normalization, short queries, oversized safe-field
 fallback, exact collection filters, deterministic product ordering, every
 record schema's allowlist/denylist, secret exclusion, query/result bounds, and
-conflict closure. The exact Tarpaulin LLVM result is 2,250 of 2,361 production
-lines (95.30%). Add-item tests cover exact entropy partitioning and wiping,
+conflict closure. The exact Tarpaulin LLVM result is 2,292 of 2,403 production
+lines (95.38%). Add-item tests cover exact entropy partitioning and wiping,
 identity validation before local writes, parentless revision and complete
 catalog construction, ambiguous successful compare-exchanges, write-ahead
 publication ordering, ambiguous provider commits, failed final activation,
