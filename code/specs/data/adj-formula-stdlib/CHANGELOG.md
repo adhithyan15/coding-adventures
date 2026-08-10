@@ -131,3 +131,12 @@ landed and why, not a semver-tracked API.
   `geometry-formulas.adj`'s `square_area` boundary case. New manifest objective
   `adj.math.algebra.rearrange_kinetic_energy`. Extended the existing `formula_energy_work_e2e.rs`
   with 1 new test rather than adding a new test file.
+- `physics/pressure.adj` — a sixth Wave 3 rung-0 CAS-wiring companion (ADJ-FORMULA-LIBRARIES FL-10,
+  §3D): `area_from_pressure`, solving the same cited HyperPhysics `P = F/A` definition (via its
+  equivalent multiplicative form `F = P·A`, already hand-shipped as the `force` formula) for area —
+  the one direction `pressure`/`force` leave open. Found via a fresh sweep across every domain
+  under `adj-formula-stdlib/` (mathematics, physics, chemistry, arithmetic, clinical) confirming
+  Wave 3's original kinematics/geometry/work/mechanics-force/kinetic-energy sweep had missed this
+  library — most sibling 2-parameter libraries already hand-ship every direction, and this was the
+  one overlooked. New manifest objective `adj.math.algebra.rearrange_pressure`. Extended the
+  existing `formula_pressure_e2e.rs` with 1 new test rather than adding a new test file.

@@ -107,3 +107,37 @@ fn computes_force_as_pressure_times_area_with_citation() {
         "force carries its HyperPhysics citation: {s}"
     );
 }
+
+// ---------------------------------------------------------------------------
+// F = P·A, solved for a different unknown (ADJ-FORMULA-LIBRARIES FL-10, §3D
+// rung-0 CAS-wiring companion) — the SAME cited HyperPhysics definition as
+// `pressure`/`force` above, closing the one direction they leave open: area.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn solves_for_area_from_pressure_with_the_same_citation() {
+    let dir = scratch("area_solve");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"pressure.adj\"\n\
+         observe force(50)\n\
+         observe pressure(25)\n\
+         ? area_from_pressure(force, pressure)\n",
+    )
+    .unwrap();
+
+    let (ok, s) = run(&dir.join("case.adj"));
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(!s.contains("\"error\""), "no compile error: {s}");
+    // 50 = 25 * a  =>  a = 2.
+    assert!(
+        s.contains("\"name\":\"area_from_pressure\"") && s.contains("\"value\":2"),
+        "area_from_pressure(50, 25) = 2: {s}"
+    );
+    assert!(
+        s.contains("\"trust\":\"authoritative\"")
+            && s.contains("hyperphysics.gsu.edu/hbase/press.html"),
+        "carries the same HyperPhysics citation as the forward pressure/force formulas: {s}"
+    );
+}

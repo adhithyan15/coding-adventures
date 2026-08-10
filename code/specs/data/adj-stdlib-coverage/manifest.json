@@ -1247,6 +1247,21 @@
       "source_cas_hashes": [],
       "benchmark_paths": [],
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.math.algebra.rearrange_pressure",
+      "title": "Solve P = F / A for area, given the force and the pressure",
+      "band": "9-12",
+      "domain": "mathematics",
+      "competency": "compute",
+      "coverage_roots": ["ccss.math"],
+      "standards": [],
+      "prerequisites": ["adj.science.physics.pressure"],
+      "libraries": ["code/specs/data/adj-formula-stdlib/physics/pressure.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     }
   ]
 }
