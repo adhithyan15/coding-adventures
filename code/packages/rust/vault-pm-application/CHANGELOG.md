@@ -2,6 +2,18 @@
 
 All notable changes to this package are documented here.
 
+## [0.29.0] - 2026-08-10
+
+### Added
+
+- Add an authenticated current-item revision capability for optimistic host
+  mutations without putting revision identities in ordinary redacted views.
+
+### Security
+
+- Return no revision for absent/tombstoned items and fail closed on current
+  conflicts, so a CLI edit cannot select an arbitrary candidate.
+
 ## [0.28.0] - 2026-08-10
 
 ### Added

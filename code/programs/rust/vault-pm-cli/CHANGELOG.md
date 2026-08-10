@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Exposed revision-safe login edit and extended the PTY restart suite through
+  replacement plus a later redacted show.
 - Exposed login add and redacted list/show through the thin executable.
 - Extended the PTY suite through encrypted item persistence across processes.
 - Exposed authenticated `audit verify` and `doctor --unlock` through the thin
