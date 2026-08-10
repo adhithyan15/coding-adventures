@@ -313,6 +313,10 @@ unblocks multiple downstream targets; never count source generation as completio
     to QML names, and cover normal, missing-prop, and missing-runtime paths.
   - [ ] Inventory ignored properties, events, styles, effects, and accessibility
     metadata across every native emitter, and add the equivalent package setting.
+    - [x] Report property-level degradations for ignored tri-state checkbox
+      state and radio-group behavior, including package-expanded paths.
+    - [ ] Inventory the remaining ignored dialog/link events, layout properties,
+      MSL styles, effects, and accessibility metadata.
     - [ ] Define a serializable native-view reference contract for `node` and
       component slots; Flutter's JSON runtime cannot currently materialize a
       Dart `Widget` value for those otherwise typed composition seams.
@@ -392,6 +396,9 @@ unblocks multiple downstream targets; never count source generation as completio
 - [ ] Ship `mosaic-std-feedback`: alert, dialog, toast, progress, empty/error states.
 - [ ] Ship `mosaic-std-data`: list, virtualized list, table, form and field patterns.
 - [ ] Ship `mosaic-std-services` and umbrella `mosaic-std` manifests.
+- [ ] Make the existing `mosaic-pkg-toolkit` compile across all five native
+  backends as a migration baseline; Compose currently rejects `HostLink` in
+  shared navigation components such as Breadcrumb.
 - [ ] Enforce accessible names, focus, keyboard actions, scaling, contrast, and
   reduced-motion behavior in the strict profile.
 

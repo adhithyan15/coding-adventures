@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased] - ignored native control property inventory
+
+- Native-complete analysis now reports stable, property-level degradations for
+  tri-state checkbox state ignored by Compose, Flutter, and SwiftUI, and radio
+  grouping ignored by Compose, Flutter, Qt, and SwiftUI.
+- Strict builds reject those authored behavior losses before emitting app
+  artifacts. Explicit `indeterminate: false` remains a clean semantic no-op.
+
 ## [Unreleased] - native-complete Qt runtime shell
 
 - Qt project shells emitted under `BuildProfile::NativeComplete` now require

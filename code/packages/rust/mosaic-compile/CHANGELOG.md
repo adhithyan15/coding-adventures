@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Changed - strict native control properties are capability-checked
+
+`mosaic-compile pkg --profile native-complete` now rejects authored tri-state
+checkbox state on Compose, Flutter, and SwiftUI, plus authored radio grouping on
+Compose, Flutter, Qt, and SwiftUI. The degradation report identifies the exact
+package-expanded property path instead of allowing the emitter to ignore it.
+
 ### Changed - strict Qt shells require Rust
 
 `mosaic-compile pkg --backend qt --emit-project --profile native-complete`
