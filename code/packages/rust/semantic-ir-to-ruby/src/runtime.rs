@@ -242,6 +242,58 @@ def sir_print(*xs)
   nil
 end
 
+# SIR28 §2.1: `__sys_write__`, the console-output primitive `print`/`puts`
+# generalize into. Where `sir_print`/`sir_puts` above hard-code ONE newline
+# policy each, this is the SAME operation parameterized by policy flags
+# carried as DATA (validated by `semantic-ir`'s validator against a closed
+# enum, SIR28 §2.2) -- the root cause SIR28 exists to fix: real Ruby's
+# `print` never newline-terminates, Python's `print()`/JS's `console.log`
+# always do, but all three used to lower to the identical
+# `BuiltinCall("print", ...)` this backend had no way to tell apart.
+#
+# `stream`: "stdout" | "stderr". `terminator`: "none" (`sir_print`'s
+# behavior) | "per_value" (`sir_puts`'s behavior, honouring
+# `unpack_arrays`) | "once" (Python `print`/JS `console.log` -- space-join
+# every value, one trailing newline). Unlike the C/Go/Rust backends, no
+# compile-time dispatch is needed here -- `stream`/`terminator` arrive as
+# ordinary Ruby string arguments (already validated to a closed set by
+# `semantic-ir` before this backend ever sees them) and this function
+# branches on them directly at Ruby runtime, exactly like every other
+# `sir_*` helper in this file.
+def sir_write_puts_one(out, x)
+  if x.is_a?(Array)
+    x.each { |e| sir_write_puts_one(out, e) }
+  else
+    out.write(sir_fmt(x))
+    out.write("\n")
+  end
+end
+
+def sir_write(stream, terminator, unpack_arrays, *xs)
+  out = stream == "stderr" ? STDERR : STDOUT
+  case terminator
+  when "per_value"
+    if xs.empty?
+      out.write("\n")
+    else
+      xs.each do |x|
+        if unpack_arrays
+          sir_write_puts_one(out, x)
+        else
+          out.write(sir_fmt(x))
+          out.write("\n")
+        end
+      end
+    end
+  when "once"
+    out.write(xs.map { |x| sir_fmt(x) }.join(" "))
+    out.write("\n")
+  else
+    xs.each { |x| out.write(sir_fmt(x)) }
+  end
+  nil
+end
+
 # A builtin used in value position becomes a lambda that dispatches by name.
 # The case IS the allowlist — an unknown name fails cleanly, never resolving
 # reflectively (the repo's anti-RCE discipline).
