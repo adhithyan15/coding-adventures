@@ -146,6 +146,8 @@ sequence layout, before Paint glyph shaping and native backend rendering.
 Whitespace-separated multiword actor IDs are grammar-backed and retain one
 semantic identity across declarations, messages, notes, lifecycle events, and
 participant metadata before layout and Paint lowering.
+Hyphenated actor IDs are likewise grammar-backed; parsing distinguishes an
+interior identifier hyphen from Mermaid's post-arrow deactivation marker.
 
 Inline participant configuration now carries `type` and `alias` into semantic
 IR. Boundary, control, entity, database, collections, and queue kinds lower to

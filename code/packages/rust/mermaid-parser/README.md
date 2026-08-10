@@ -46,6 +46,8 @@ compatibility gap.
 Actor identifiers may contain multiple whitespace-separated words; the full ID
 is retained consistently across declarations, messages, notes, lifecycle events,
 and metadata commands.
+Hyphenated actor identifiers retain their punctuation through those same
+semantic references while post-arrow `-` remains the deactivation operator.
 Both single-line accessibility statements and multiline `accDescr` blocks
 lower to PaintScene metadata.
 Newlines and semicolons are interchangeable sequence statement terminators,

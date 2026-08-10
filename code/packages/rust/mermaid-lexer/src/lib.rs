@@ -520,4 +520,18 @@ A\\-B: reverse stick bottom
         assert!(values.windows(2).any(|pair| pair == ["Customer", "Portal"]));
         assert!(values.windows(2).any(|pair| pair == ["Order", "Service"]));
     }
+
+    #[test]
+    fn tokenizes_hyphenated_sequence_actor_references() {
+        let tokens = tokenize_mermaid_sequence(
+            "sequenceDiagram\nparticipant Customer-Portal\nCustomer-Portal->>Order-Service: Submit\n",
+        );
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| token.value == "-")
+                .count(),
+            3
+        );
+    }
 }
