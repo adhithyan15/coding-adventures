@@ -106,6 +106,10 @@ Prioritized work items:
    error both when the form pointer is initially null and when a repeated form
    is ignored, matching WPT `tests20.dat` `unexpected-form-in-table` evidence
    while leaving forms inside cells quiet.
+   Non-hidden `input` start tags processed in table mode now report the general
+   parse error before foster parenting, matching WPT `tests7.dat` and
+   `webkit02.dat` evidence while preserving the specialized hidden-input path
+   and leaving inputs inside cells quiet.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases
