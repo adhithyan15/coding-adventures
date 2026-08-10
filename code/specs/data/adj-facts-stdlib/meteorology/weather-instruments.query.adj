@@ -1,0 +1,15 @@
+% ============================================================================
+% weather-instruments.query.adj — worked recall over the weather-instrument
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does this
+% instrument measure?" (direct) or "what instrument measures this
+% quantity?" (reverse) — it states no fact of its own — it only `import`s
+% the grounded table and asks binding queries.
+% ============================================================================
+
+import "weather-instruments.adj"
+
+? weather_instrument(barometer, $Q)    % expect atmospheric_pressure (direct: what does a barometer measure?)
+? weather_instrument($I, humidity)     % expect hygrometer (reverse: what instrument measures humidity?)
+? weather_instrument(seismometer, $Q)  % expect abstain -- a seismometer is not a weather instrument tabled here
