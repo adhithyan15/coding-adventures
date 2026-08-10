@@ -7,6 +7,18 @@
 export * from "./types.js";
 export * from "./constants.js";
 export { splitFrontmatter, type Frontmatter } from "./frontmatter.js";
+export {
+  declaredStrands,
+  strandDefects,
+  nodeSizeDefects,
+  summarizeStrands,
+  renderStrandSummary,
+  NODE_CONCEPT_TARGET,
+  type StrandDefect,
+  type NodeSizeDefect,
+  type StrandCount,
+  type StrandSummary,
+} from "./strands.js";
 export { parseBodyBlocks, parseLesson, buildDataset, type ParsedLesson } from "./parse.js";
 export {
   parseLessonActivityValue,

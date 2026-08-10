@@ -94,9 +94,43 @@ export interface LanguageRegistry {
   languages: LanguageDefinition[];
 }
 
+/**
+ * HL10 section 2: the eight parallel ladders the curriculum runs.
+ *
+ * Before this existed there was one organising line -- FUNCTION, "I can greet
+ * someone" -- and grammar, culture and etymology rode inside whichever lesson
+ * happened to need them. That is workable at 188 lessons and unfalsifiable at
+ * 5,000: you cannot ask whether the grammar ramp is gentle when grammar is not
+ * a thing the data model knows about.
+ *
+ * Universality differs by strand, and section 4 of HL10 turns that into a
+ * contract other tracks depend on:
+ *   FUNCTION, TEXT              fully universal, node for node
+ *   GRAMMAR, SOUND, ETYMOLOGY   universal SLOTS, filled per language
+ *   CULTURE, IDIOM              universal HOOKS, content entirely local
+ */
+export const CURRICULUM_STRANDS = [
+  "FUNCTION",
+  "GRAMMAR",
+  "LEXICON",
+  "SOUND",
+  "ETYMOLOGY",
+  "CULTURE",
+  "IDIOM",
+  "TEXT",
+] as const;
+
+export type CurriculumStrand = (typeof CURRICULUM_STRANDS)[number];
+
 export interface SpineNode {
   id: string;
   stage: CurriculumStage;
+  /**
+   * Which of the eight ladders this node advances. Exactly one -- a node that
+   * genuinely serves two is two nodes, because a rung you can reach by two
+   * different routes cannot be ordered against the rest of either ladder.
+   */
+  strand: CurriculumStrand;
   canDo: string;
   prerequisites: string[];
   core: boolean;
@@ -107,6 +141,9 @@ export interface SpineNode {
 export interface CurriculumSpine {
   version: number;
   stages: CurriculumStage[];
+  /** The declared strand vocabulary. Authoritative over CURRICULUM_STRANDS at load time. */
+  strands?: CurriculumStrand[];
+  strandNote?: string;
   nodes: SpineNode[];
 }
 
@@ -261,6 +298,25 @@ export interface ChapterPolicy {
    * lineariser's own measured default.
    */
   maxLinearisableTableColumns?: number;
+  /**
+   * HL10 section 2.2: the per-strand ceilings.
+   *
+   * All optional, so a policy file written before HL10 still loads and the gates
+   * that read them simply do not run. Each measures a burden the atom budget
+   * cannot see.
+   */
+  /** Most paradigm CELLS one lesson may introduce. A cell is `hablo`, not the six-form table. */
+  maxNewGrammarCellsPerLesson?: number;
+  maxNewIdiomsPerLesson?: number;
+  /** Polysemy is not vocabulary: each sense of `quedar` is its own atom and its own lesson. */
+  maxNewSensesPerLesson?: number;
+  maxNewCultureClaimsPerLesson?: number;
+  /** The info-dump gate. One rule statement per lesson. */
+  maxRuleStatementsPerLesson?: number;
+  /** No dead ends: an introduced atom some later lesson never requires or practises. */
+  minDownstreamReach?: number;
+  /** An etymon must be cashed in by at least this many later lessons to earn its place. */
+  rootLedgerMinReuse?: number;
   /**
    * HL08: most NEW target-script glyphs one lesson may put in front of the reader.
    *
