@@ -27,6 +27,7 @@ export {
   type CellGraphDefect,
   type CellCoverage,
 } from "./grammar-cells.js";
+export {
   buildRootLedger,
   renderRootLedger,
   type RootEntry,
