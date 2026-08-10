@@ -1290,8 +1290,10 @@ changelog, focused build, and downstream validation.
        including bounded union of every verified head catalog, exact candidate
        decryption, direct-parent existence checks, dangling/wrong-item
        rejection, and payload-free session counts;
-   6d. redacted current-item views and the wipe-on-lock in-memory search
-       projection over materialized candidates; and
+   6d. redacted current-item views over materialized candidates, failing closed
+       on unresolved conflicts without returning partial lists;
+   6e. the wipe-on-lock in-memory search projection, including the
+       password-manager query and Unicode-normalization policy adapter; and
    7. item mutation, history, export, audit, status, and doctor workflows.
 9. `vault-pm-cli` + real executable and pseudo-terminal E2E suite.
 10. Crash/fault matrix and local restore drill.

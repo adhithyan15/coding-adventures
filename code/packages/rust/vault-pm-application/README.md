@@ -58,10 +58,18 @@ wrong-kind, cross-item, missing direct-parent, or amplified references. The
 unlocked session retains the resulting wipe-on-drop domain candidates while
 exposing only payload-free item, candidate, and conflicted-item counts.
 
+Unlocked sessions now provide ordinary redacted current-item reads. A single
+live candidate is projected through the typed domain `RedactedItemView`, while
+a current tombstone is absent. Any multi-candidate item fails the complete read
+with `ConflictRequired`; the application never selects an arbitrary winner or
+returns a partial list, and every candidate remains available for later
+resolution. Returned lists are deterministic by exact item-ID bytes and their
+display metadata is wiped on drop by the domain view types.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
-credential store, or entropy source. Redacted item views, search projection,
-and mutation workflows land in the next slices. There is no unchecked
+credential store, or entropy source. Search projection and mutation workflows
+land in the next slices. There is no unchecked
 repository verification path: construction decrypts and
 authority-verifies the exact locally pinned certificate frame and object ID,
 and commits and announcements must match that vault, device, certificate ID,
@@ -69,7 +77,7 @@ and Ed25519 key.
 
 ## Verification
 
-The package has 61 tests covering exact canonical and cryptographic vectors,
+The package tests cover exact canonical and cryptographic vectors,
 lossless removed-value persistence, live and tombstone revisions, catalog
 bounds and ordering, cross-kind and cross-vault rejection, AEAD tampering,
 authority/device/certificate binding, Ed25519 signature rejection, closed
@@ -79,7 +87,7 @@ catalog materialization plus dangling current-revision, missing-parent, and
 cross-item rejection. Repository tests exercise initialization, publication,
 verified open/read/history, every injected provider operation, constructor
 paths, and complete error translation.
-The exact Tarpaulin LLVM result is 1,561 of 1,628 production lines (95.88%).
+The exact Tarpaulin LLVM result is 1,580 of 1,647 production lines (95.93%).
 
 ## Development
 

@@ -63,6 +63,8 @@ pub enum ApplicationError {
     IntegrityFailure,
     /// A requested version, suite, or object kind is not supported.
     Unsupported,
+    /// One item has multiple current candidates and needs explicit resolution.
+    ConflictRequired,
     /// An infallible internal relation was violated.
     InternalInvariant,
 }
@@ -79,6 +81,7 @@ impl ApplicationError {
             Self::StorageUnavailable => "StorageUnavailable",
             Self::IntegrityFailure => "IntegrityFailure",
             Self::Unsupported => "Unsupported",
+            Self::ConflictRequired => "ConflictRequired",
             Self::InternalInvariant => "InternalInvariant",
         }
     }

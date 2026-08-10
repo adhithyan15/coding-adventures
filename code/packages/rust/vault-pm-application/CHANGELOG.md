@@ -2,6 +2,22 @@
 
 All notable changes to this package are documented here.
 
+## [0.11.0] - 2026-08-09
+
+### Added
+
+- Add deterministic `get_item` and `list_items` session reads that return only
+  typed, wipe-on-drop `RedactedItemView` values.
+- Treat a current tombstone as absent while retaining it internally for
+  history and restore.
+
+### Security
+
+- Fail every multi-candidate current-item read with the closed
+  `ConflictRequired` error instead of selecting an arbitrary winner.
+- Abort conflicted list reads without returning a partial result, while
+  retaining every materialized candidate for explicit resolution.
+
 ## [0.10.0] - 2026-08-09
 
 ### Added
