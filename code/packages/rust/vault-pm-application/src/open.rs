@@ -5,7 +5,9 @@ use crate::{
     BootstrapStoreError, CatalogV1, LocalSecretV1, LocalStateStore, LocalStateStoreError,
     LocalVaultStateV1, ObjectKind, V1Keys,
 };
-use coding_adventures_vault_pm_domain::{ItemCandidate, ItemId, RevisionId};
+use coding_adventures_vault_pm_domain::{
+    ItemCandidate, ItemId, ItemState, RedactedItemView, RevisionId,
+};
 use coding_adventures_vault_pm_format::{DeviceId, ObjectId, VaultId};
 use coding_adventures_vault_pm_repository::{OpenReport, PinnedHeads};
 use coding_adventures_zeroize::Zeroizing;
@@ -86,6 +88,47 @@ impl UnlockedVaultV1 {
     /// Return how many current items retain more than one revision candidate.
     pub fn conflicted_item_count(&self) -> usize {
         self.current_catalog.conflicted_item_count()
+    }
+
+    /// Return the ordinary redacted view for one unambiguous live item.
+    ///
+    /// A missing item and a current tombstone both return `None`. Multiple
+    /// retained candidates fail closed with [`ApplicationError::ConflictRequired`]
+    /// rather than selecting a winner or exposing only part of the conflict.
+    pub fn get_item(&self, item_id: ItemId) -> Result<Option<RedactedItemView>, ApplicationError> {
+        let Some(candidates) = self.current_catalog.items.get(&item_id) else {
+            return Ok(None);
+        };
+        project_current_item(candidates)
+    }
+
+    /// Return every unambiguous live item as an ordinary redacted view.
+    ///
+    /// Views are ordered by exact item-ID bytes. A current conflict aborts the
+    /// complete read with [`ApplicationError::ConflictRequired`]; no partial
+    /// list is returned and every retained candidate remains in the session.
+    pub fn list_items(&self) -> Result<Vec<RedactedItemView>, ApplicationError> {
+        let mut views = Vec::with_capacity(self.current_catalog.items.len());
+        for candidates in self.current_catalog.items.values() {
+            if let Some(view) = project_current_item(candidates)? {
+                views.push(view);
+            }
+        }
+        Ok(views)
+    }
+}
+
+fn project_current_item(
+    candidates: &[ItemCandidate],
+) -> Result<Option<RedactedItemView>, ApplicationError> {
+    let [candidate] = candidates else {
+        return Err(ApplicationError::ConflictRequired);
+    };
+    match candidate.state() {
+        ItemState::Live(document) => RedactedItemView::from_document(document)
+            .map(Some)
+            .map_err(|_| ApplicationError::InternalInvariant),
+        ItemState::Tombstone(_) => Ok(None),
     }
 }
 
@@ -342,11 +385,15 @@ mod tests {
         V1ApplicationRepositoryFactory, V1Keys, GENERATION_ZERO_RANDOM_BYTES,
     };
     use coding_adventures_ed25519::{generate_keypair, sign};
-    use coding_adventures_vault_pm_domain::{ItemState, Tombstone};
+    use coding_adventures_vault_pm_domain::{
+        ContentType, ItemDocument, ItemState, LwwRegister, ObservedSet, OperationId,
+        RedactedRecordView, Tombstone,
+    };
     use coding_adventures_vault_pm_format::{AnnouncementV1, BootstrapId, CommitV1, Signature};
     use coding_adventures_vault_pm_storage::{
         FaultAction, FaultEffect, FaultInjectingObjectStore, InMemoryObjectStore, StoreOperation,
     };
+    use coding_adventures_vault_records::{AnyRecord, Login, LOGIN_V1};
     use std::sync::{
         atomic::{AtomicBool, Ordering},
         Arc, Mutex,
@@ -534,6 +581,58 @@ mod tests {
             publication_for_catalog(active, objects, catalog_frame),
             revision_ids,
         )
+    }
+
+    fn pending_live_publication(
+        active: &ActiveStateV1,
+        item_id: ItemId,
+        title: &str,
+        password: &str,
+    ) -> PublicationJournalV1 {
+        let fixture = generation_zero_bytes();
+        let root_key: [u8; 32] = fixture[48..80].try_into().unwrap();
+        let keys = V1Keys::derive(active.vault_id(), &root_key).unwrap();
+        let document = ItemDocument::new(
+            item_id,
+            ContentType::new(LOGIN_V1).unwrap(),
+            100,
+            200,
+            LwwRegister::new(false, 200, OperationId::new([0x81; 32])),
+            ObservedSet::new(),
+            ObservedSet::new(),
+            AnyRecord::Login(Login {
+                title: title.into(),
+                username: "ada@example.test".into(),
+                password: password.into(),
+                urls: vec!["https://example.test".into()],
+                notes: Some("private note".into()),
+            }),
+            ObservedSet::new(),
+        )
+        .unwrap();
+        let candidate = ItemCandidate::new(
+            RevisionId::new([0; 32]),
+            [],
+            ItemState::Live(Box::new(document)),
+        )
+        .unwrap();
+        let revision_frame = seal_object(
+            &keys,
+            ObjectKind::ItemRevision,
+            &encode_item_revision(candidate.causal_parents(), candidate.state()).unwrap(),
+            &ObjectRandomness::new([0x91; 32], [0x92; 24], [0x93; 24]),
+        )
+        .unwrap();
+        let revision_id = RevisionId::new(*revision_frame.id().unwrap().as_bytes());
+        let catalog = CatalogV1::new(BTreeMap::from([(item_id, vec![revision_id])])).unwrap();
+        let catalog_frame = seal_object(
+            &keys,
+            ObjectKind::Catalog,
+            &catalog.encode().unwrap(),
+            &ObjectRandomness::new([0xa4; 32], [0xa5; 24], [0xa6; 24]),
+        )
+        .unwrap();
+        publication_for_catalog(active, vec![revision_frame], catalog_frame)
     }
 
     fn pending_dangling_catalog(active: &ActiveStateV1) -> PublicationJournalV1 {
@@ -755,6 +854,113 @@ mod tests {
         );
         assert!(format!("{session:?}").contains("item_count: 1"));
         assert!(!format!("{session:?}").contains(&item_id.to_user_string()));
+    }
+
+    #[test]
+    fn current_item_reads_return_only_typed_redacted_views() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x27; 16]);
+        let title = "Personal portal";
+        let password = "never-log-this-password";
+        let publication = pending_live_publication(&active, item_id, title, password);
+        let pending = LocalVaultStateV1::pending_publication(active, publication).unwrap();
+        *local.0.lock().unwrap() = Some(pending.encode().unwrap());
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let view = session.get_item(item_id).unwrap().unwrap();
+        assert_eq!(view.item_id, item_id);
+        assert_eq!(view.schema.as_str(), LOGIN_V1);
+        match &view.record {
+            RedactedRecordView::Login {
+                title: view_title,
+                username,
+                urls,
+                password: redacted_password,
+                has_notes,
+            } => {
+                assert_eq!(view_title, title);
+                assert_eq!(username, "ada@example.test");
+                assert_eq!(urls, &["https://example.test"]);
+                assert_eq!(redacted_password.to_string(), "<redacted>");
+                assert!(*has_notes);
+            }
+            _ => panic!("fixture must project as a login"),
+        }
+        assert_eq!(session.list_items().unwrap(), vec![view.clone()]);
+        assert_eq!(session.get_item(ItemId::new([0x28; 16])).unwrap(), None);
+        let debug = format!("{view:?}");
+        assert!(!debug.contains(title));
+        assert!(!debug.contains(password));
+        assert!(!debug.contains(&item_id.to_user_string()));
+    }
+
+    #[test]
+    fn current_item_reads_hide_tombstones_and_fail_closed_on_conflicts() {
+        for candidate_count in [1, 2] {
+            let (locator, local, bootstrap, factory) = initialized();
+            let exact_active = local.0.lock().unwrap().clone().unwrap();
+            let LocalVaultStateV1::Active(active) =
+                LocalVaultStateV1::decode(&exact_active).unwrap()
+            else {
+                panic!("fixture must be active")
+            };
+            let item_id = ItemId::new([0x29; 16]);
+            let (publication, _) =
+                pending_tombstone_publication(&active, item_id, item_id, candidate_count, None);
+            let pending = LocalVaultStateV1::pending_publication(active, publication).unwrap();
+            *local.0.lock().unwrap() = Some(pending.encode().unwrap());
+            recover_pending_publication(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap();
+            let session = open_active_vault(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap();
+
+            if candidate_count == 1 {
+                assert_eq!(session.get_item(item_id).unwrap(), None);
+                assert!(session.list_items().unwrap().is_empty());
+            } else {
+                assert_eq!(
+                    session.get_item(item_id),
+                    Err(ApplicationError::ConflictRequired)
+                );
+                assert_eq!(
+                    session.list_items(),
+                    Err(ApplicationError::ConflictRequired)
+                );
+                assert_eq!(session.candidate_count(), 2);
+            }
+        }
     }
 
     #[test]

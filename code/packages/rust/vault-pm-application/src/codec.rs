@@ -1158,6 +1158,7 @@ mod tests {
             (ApplicationError::StorageUnavailable, "StorageUnavailable"),
             (ApplicationError::IntegrityFailure, "IntegrityFailure"),
             (ApplicationError::Unsupported, "Unsupported"),
+            (ApplicationError::ConflictRequired, "ConflictRequired"),
             (ApplicationError::InternalInvariant, "InternalInvariant"),
         ] {
             assert_eq!(format!("{error:?}"), label);
