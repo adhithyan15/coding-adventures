@@ -24,6 +24,17 @@
 %
 % Run the worked consumer (from this directory so the relative import resolves):
 %     ../../../../packages/rust/target/debug/adj-lang-cli kinematics.query.adj
+%
+% This library also carries two rung-0 CAS-wiring companions (ADJ-FORMULA-
+% LIBRARIES FL-10, §3D — continuing Wave 3's algebra-applied-to-science thread
+% `mathematics/geometry-formulas.adj` opened): `v = u + at` is just as often
+% given the FINAL velocity and asked for the acceleration or the elapsed time
+% as it is asked to compute v forward. Each `symbolic` clause below is the SAME
+% cited OpenStax equation, solved for a different unknown, through `cas-solve`'s
+% real linear-equation solver — never a second hand-written formula. The third
+% possible unknown (initial velocity) is deliberately left for a later pass —
+% not because it is harder (it solves the same way), just to keep this change
+% scoped to the two rearrangements a first course actually drills.
 % ============================================================================
 
 % ----------------------------------------------------------------------------
@@ -40,6 +51,9 @@ dictionary kinematics_vocab {
     define acceleration     : finding  surface "acceleration", "a", "rate of change of velocity"     % length / time² (e.g. m/s²)
     define time             : finding  surface "time", "elapsed time", "duration", "t"               % time (e.g. s)
     define final_velocity   : finding  surface "final velocity", "velocity", "v"                     % length / time (e.g. m/s)
+
+    define acceleration_from_final_velocity : finding  surface "missing acceleration", "unknown acceleration"
+    define time_from_final_velocity         : finding  surface "missing time", "unknown time", "how long"
 
     % --- linear momentum: p = m·v ---
     define mass             : finding  surface "mass", "m"                                            % mass (e.g. kg)
@@ -64,6 +78,20 @@ formulabook physics_kinematics {
     % v = u + a·t.  Source: OpenStax College Physics 2e (a peer-reviewed, primary
     % physics textbook reference) → authoritative.
     formula final_velocity(initial_velocity, acceleration, time) = initial_velocity + (acceleration * time)
+        source "Solving for v yields v = v0 + at (constant a)."
+        locator "https://openstax.org/books/college-physics-2e/pages/2-5-motion-equations-for-constant-acceleration-in-one-dimension"
+        trust authoritative
+
+    % v = u + at, SOLVED FOR ACCELERATION instead of computed forward — the
+    % same cited OpenStax equation, only which quantity is bound and which is
+    % unknown differs.
+    symbolic acceleration_from_final_velocity(final_velocity, initial_velocity, time) { final_velocity == initial_velocity + (acceleration_from_final_velocity * time) } for acceleration_from_final_velocity
+        source "Solving for v yields v = v0 + at (constant a)."
+        locator "https://openstax.org/books/college-physics-2e/pages/2-5-motion-equations-for-constant-acceleration-in-one-dimension"
+        trust authoritative
+
+    % v = u + at, SOLVED FOR TIME. The same cited equation again.
+    symbolic time_from_final_velocity(final_velocity, initial_velocity, acceleration) { final_velocity == initial_velocity + (acceleration * time_from_final_velocity) } for time_from_final_velocity
         source "Solving for v yields v = v0 + at (constant a)."
         locator "https://openstax.org/books/college-physics-2e/pages/2-5-motion-equations-for-constant-acceleration-in-one-dimension"
         trust authoritative
