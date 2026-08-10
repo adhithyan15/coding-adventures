@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.25.0
+
+- Preserve hyphens inside sequence actor identifiers without confusing them with message deactivation markers.
+
 ## 0.24.0
 
 - Parse multiword sequence actor identifiers across declarations, messages, notes, lifecycle statements, and metadata commands.

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate hyphenated sequence actor IDs through the native Metal PNG pipeline.
 - Validate multiword sequence actor IDs through the native Metal PNG pipeline.
 - Validate forced sequence text wrapping through PaintScene and Metal PNG rendering.
 - Export sequence accessibility title and description as PaintScene metadata.

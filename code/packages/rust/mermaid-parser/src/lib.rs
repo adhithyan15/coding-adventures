@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.24.0";
+pub const VERSION: &str = "0.25.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1764,21 +1764,38 @@ fn consume_sequence_word(cursor: &mut TokenCursor, expected: &str) -> Result<(),
 
 fn take_sequence_actor_ref(cursor: &mut TokenCursor) -> Result<String, ParseError> {
     let start = cursor.current().clone();
-    let mut parts = Vec::new();
-    while matches!(
-        token_name(cursor.current()),
-        "IDENTIFIER" | "WORD" | "NUMBER"
-    ) && cursor.current().value != "as"
-    {
-        parts.push(cursor.advance().value.clone());
+    let mut actor = String::new();
+    loop {
+        if matches!(
+            token_name(cursor.current()),
+            "IDENTIFIER" | "WORD" | "NUMBER"
+        ) && cursor.current().value != "as"
+        {
+            if !actor.is_empty() && !actor.ends_with('-') {
+                actor.push(' ');
+            }
+            actor.push_str(&cursor.advance().value);
+            continue;
+        }
+        let hyphen_continues_actor = token_name(cursor.current()) == "MINUS"
+            && cursor
+                .tokens
+                .get(cursor.index + 1)
+                .is_some_and(|next| matches!(token_name(next), "IDENTIFIER" | "WORD" | "NUMBER"));
+        if !actor.is_empty() && hyphen_continues_actor {
+            actor.push('-');
+            cursor.advance();
+            continue;
+        }
+        break;
     }
-    if parts.is_empty() {
+    if actor.is_empty() {
         return Err(token_error(
             &start,
             "expected sequence participant identifier",
         ));
     }
-    Ok(parts.join(" "))
+    Ok(actor)
 }
 
 fn take_sequence_line_text(cursor: &mut TokenCursor) -> String {
@@ -3508,6 +3525,31 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn sequence_preserves_hyphenated_actor_identifiers() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nparticipant Customer-Portal as Customer\nparticipant Order-Service\nCustomer-Portal->>Order-Service: Submit\nnote over Customer-Portal,Order-Service: Accepted\nOrder-Service-->>-Customer-Portal: Done\nactivate Order-Service\ndeactivate Order-Service\n",
+        )
+        .unwrap();
+        assert_eq!(diagram.participants[0].id, "Customer-Portal");
+        assert_eq!(diagram.participants[1].id, "Order-Service");
+        assert!(matches!(
+            &diagram.events[0],
+            SequenceEvent::Message { from, to, .. }
+                if from == "Customer-Portal" && to == "Order-Service"
+        ));
+        assert!(matches!(
+            &diagram.events[1],
+            SequenceEvent::Note { participants, .. }
+                if participants == &["Customer-Portal", "Order-Service"]
+        ));
+        assert!(matches!(
+            &diagram.events[2],
+            SequenceEvent::Message { from, to, deactivate: true, .. }
+                if from == "Order-Service" && to == "Customer-Portal"
+        ));
+    }
+
+    #[test]
     fn sequence_parses_multiline_accessibility_description() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\naccDescr {\n  Transfers funds\n  between accounts\n}\nAlice->>Bob: Hello\n",
@@ -3551,7 +3593,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.24.0");
+        assert_eq!(crate::VERSION, "0.25.0");
     }
 
     #[test]
