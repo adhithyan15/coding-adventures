@@ -4,7 +4,7 @@ use coding_adventures_vault_pm_domain::{
     AttachmentId, CollectionId, ContentType, ItemCandidate, ItemDocument, ItemId, ItemState,
     LwwRegister, ObservedSet, OperationId, RevisionId, Tombstone,
 };
-use coding_adventures_vault_pm_format::{DeviceId, VaultId};
+use coding_adventures_vault_pm_format::{CommitV1, DeviceCertificateV1, DeviceId, VaultId};
 use coding_adventures_vault_records::{decode_record, encode_opaque, encode_record, AnyRecord};
 use coding_adventures_zeroize::Zeroize;
 use core::fmt::{self, Debug, Formatter};
@@ -283,6 +283,62 @@ pub fn decode_item_revision(
         _ => return Err(ApplicationError::Unsupported),
     };
     ItemCandidate::new(revision_id, parents, state).map_err(map_domain)
+}
+
+/// Wrap one exact authority-signed VLT-PM01 device certificate as a canonical
+/// authenticated application object.
+pub fn encode_device_certificate(
+    certificate: &DeviceCertificateV1,
+) -> Result<Vec<u8>, ApplicationError> {
+    encode_signed_object(
+        ObjectKind::DeviceCertificate,
+        certificate
+            .encode()
+            .map_err(|_| ApplicationError::IntegrityFailure)?,
+    )
+}
+
+/// Strictly unwrap and decode one authority-signed VLT-PM01 device certificate.
+pub fn decode_device_certificate(encoded: &[u8]) -> Result<DeviceCertificateV1, ApplicationError> {
+    let exact = decode_signed_object(encoded, ObjectKind::DeviceCertificate)?;
+    DeviceCertificateV1::decode(&exact).map_err(|_| ApplicationError::IntegrityFailure)
+}
+
+/// Wrap one exact device-signed VLT-PM01 commit as a canonical authenticated
+/// application object.
+pub fn encode_signed_commit(commit: &CommitV1) -> Result<Vec<u8>, ApplicationError> {
+    encode_signed_object(
+        ObjectKind::Commit,
+        commit
+            .encode()
+            .map_err(|_| ApplicationError::IntegrityFailure)?,
+    )
+}
+
+/// Strictly unwrap and decode one device-signed VLT-PM01 commit.
+pub fn decode_signed_commit(encoded: &[u8]) -> Result<CommitV1, ApplicationError> {
+    let exact = decode_signed_object(encoded, ObjectKind::Commit)?;
+    CommitV1::decode(&exact).map_err(|_| ApplicationError::IntegrityFailure)
+}
+
+fn encode_signed_object(kind: ObjectKind, exact: Vec<u8>) -> Result<Vec<u8>, ApplicationError> {
+    let encoded = encode(&CborValue::Map(vec![
+        field(1, CborValue::Unsigned(VERSION)),
+        field(2, CborValue::Unsigned(kind.code())),
+        field(3, CborValue::Bytes(exact)),
+    ]));
+    check_plaintext_bound(&encoded)?;
+    Ok(encoded)
+}
+
+fn decode_signed_object(
+    encoded: &[u8],
+    expected_kind: ObjectKind,
+) -> Result<Vec<u8>, ApplicationError> {
+    let mut fields = closed_fields(encoded, &[1, 2, 3])?;
+    check_version(take_uint(&mut fields, 1)?)?;
+    check_kind(take_uint(&mut fields, 2)?, expected_kind)?;
+    take_bytes(&mut fields, 3)
 }
 
 fn encode_live(document: &ItemDocument) -> Result<CborValue, ApplicationError> {
@@ -636,6 +692,7 @@ fn map_domain(error: coding_adventures_vault_pm_domain::DomainError) -> Applicat
 mod tests {
     use super::*;
     use coding_adventures_canonical_cbor::encode;
+    use coding_adventures_vault_pm_format::{ObjectId, PublicKey, Signature};
     use coding_adventures_vault_records::{Login, LOGIN_V1};
 
     fn op(value: u8) -> OperationId {
@@ -804,6 +861,61 @@ mod tests {
         assert_eq!(format!("{catalog:?}"), "CatalogV1 { entry_count: 2 }");
         assert!(CatalogV1::empty().entries().is_empty());
         assert_eq!(hex(&CatalogV1::empty().encode().unwrap()), "a3010102020380");
+    }
+
+    #[test]
+    fn signed_object_wrappers_are_exact_closed_and_kind_bound() {
+        let certificate = DeviceCertificateV1 {
+            vault_id: VaultId::new([1; 16]),
+            device_id: DeviceId::new([2; 16]),
+            signing_public_key: PublicKey::new([3; 32]),
+            wrapping_public_key: PublicKey::new([4; 32]),
+            created_at_ms: 5,
+            capabilities: Vec::new(),
+            signature: Signature::new([6; 64]),
+        };
+        let encoded_certificate = encode_device_certificate(&certificate).unwrap();
+        assert_eq!(
+            hex(&encoded_certificate),
+            "a3010102030358b4a80101025001010101010101010101010101010101035002020202020202020202020202020202045820030303030303030303030303030303030303030303030303030303030303030305582004040404040404040404040404040404040404040404040404040404040404040605078008584006060606060606060606060606060606060606060606060606060606060606060606060606060606060606060606060606060606060606060606060606060606"
+        );
+        assert_eq!(
+            decode_device_certificate(&encoded_certificate).unwrap(),
+            certificate
+        );
+
+        let commit = CommitV1 {
+            vault_id: VaultId::new([1; 16]),
+            device_id: DeviceId::new([2; 16]),
+            device_counter: 1,
+            parents: Vec::new(),
+            catalog_root: ObjectId::new([3; 32]),
+            added_objects: vec![ObjectId::new([3; 32])],
+            tombstone_root: None,
+            wall_time_ms: 5,
+            device_certificate: ObjectId::new([4; 32]),
+            signature: Signature::new([6; 64]),
+        };
+        let encoded_commit = encode_signed_commit(&commit).unwrap();
+        assert_eq!(
+            hex(&encoded_commit),
+            "a3010102040358dcab010102500101010101010101010101010101010103500202020202020202020202020202020204010580065820030303030303030303030303030303030303030303030303030303030303030307815820030303030303030303030303030303030303030303030303030303030303030308f609050a582004040404040404040404040404040404040404040404040404040404040404040b584006060606060606060606060606060606060606060606060606060606060606060606060606060606060606060606060606060606060606060606060606060606"
+        );
+        assert_eq!(decode_signed_commit(&encoded_commit).unwrap(), commit);
+
+        assert_eq!(
+            decode_signed_commit(&encoded_certificate),
+            Err(ApplicationError::IntegrityFailure)
+        );
+        let malformed_nested = encode(&CborValue::Map(vec![
+            field(1, CborValue::Unsigned(VERSION)),
+            field(2, CborValue::Unsigned(ObjectKind::DeviceCertificate.code())),
+            field(3, CborValue::Bytes(vec![0xff])),
+        ]));
+        assert_eq!(
+            decode_device_certificate(&malformed_nested),
+            Err(ApplicationError::IntegrityFailure)
+        );
     }
 
     #[test]

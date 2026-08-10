@@ -1269,9 +1269,13 @@ changelog, focused build, and downstream validation.
    in `VLT-PM05-application.md`:
    1. canonical local-secret, item-revision, and catalog persistence codecs,
       plus domain-separated encrypted object framing;
-   2. bootstrap, local-state, repository-verifier, init/open, and publication
-      recovery workflows; and
-   3. item mutation, redacted views, search, history, export, audit, status,
+   2. exact signed-certificate and commit wrappers plus the authority-anchored
+      single-device repository verifier;
+   3. bootstrap and encrypted local-state codecs, injected stores, and exact
+      initialization/publication journals;
+   4. generation-zero init, open, and crash-resumable publication workflows;
+      and
+   5. item mutation, redacted views, search, history, export, audit, status,
       and doctor workflows.
 9. `vault-pm-cli` + real executable and pseudo-terminal E2E suite.
 10. Crash/fault matrix and local restore drill.
