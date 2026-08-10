@@ -1,0 +1,67 @@
+% ============================================================================
+% season-start-month-number — which NUMBERED month each meteorological season
+% STARTS in, DERIVED (not looked up) by bridging a season fact to a calendar
+% fact (adj-facts-stdlib, EARTH-SCIENCE, cross-directory composition with
+% CALENDAR). NGSS 1-ESS1-2 (observing seasonal patterns across the year).
+% ============================================================================
+% `earth-science/seasons.adj` already tables each season's START MONTH as a
+% NAME ("summer" starts in "june"); `calendar/months.adj` already tables each
+% month NAME's 1-based NUMBER ("june" is month 6). Neither file states outright
+% "summer starts in month 6" — but composing the two ALREADY-SHIPPED facts
+% answers it directly, exactly the bridge `seasons.adj`'s own header comment
+% already invites ("to turn it into a number for arithmetic, compose it with
+% the calendar library... the concrete bridge from RECALL to COMPUTE"). This is
+% the SAME "compose two independently-citable facts into a derived, dual-cited
+% conclusion" discipline `language/word-families.adj` and
+% `physics/heat-causes-phase-change.adj` already established — applied here to
+% a genuinely CROSS-DIRECTORY pair (earth-science + calendar, not two files in
+% the same subject directory like those two precedents).
+%
+%     import "season-start-month-number.adj"
+%     ? season_start_month_number(summer, $N)   % 6
+%     ? season_start_month_number($S, 12)       % winter (reverse recall)
+%     ? season_start_month_number(monsoon, $N)  % abstain -- not a tabled season
+%
+% This is a native `rule` (ADJ-TABLES RS-6): its body binds `$Season`/`$Month`
+% through the already-shipped `season_start_month` table, then re-binds
+% `$Month`/`$Number` through the already-shipped `month_number` table -- a
+% plain two-hop join, not a causal inference (unlike `causes_phase_change` or
+% `force_causes_acceleration`, this rule states no NEW principle of its own;
+% it just names the standard calendar convention that a month has both a NAME
+% and a NUMBER). A query's `steps` trail shows THREE entries: the rule's own
+% citation (the calendar-numbering convention), the `season_start_month` fact's
+% citation (NOAA), and the `month_number` fact's citation (ISO 8601), so a
+% human can independently verify each link. Honest abstention on any season
+% word `seasons.adj` does not table (an equinox, a solstice, a made-up
+% "monsoon") -- the rule only derives what its premises can ground.
+%
+% CROSS-DIRECTORY IMPORT: this file lives in `earth-science/` (its natural
+% subject home, alongside `seasons.adj`) and imports its calendar sibling with
+% a relative `../calendar/months.adj` path -- empirically confirmed (in a
+% scratch dir, before writing this file) that this resolves cleanly PROVIDED
+% the consuming entry program lives at or above the package root (so both
+% `earth-science/` and `calendar/` fall inside its sandbox subtree; the CLI's
+% import sandbox is rooted at the TOP-LEVEL PROGRAM's own directory, not each
+% importer's directory -- confirmed by reading `adj-lang-cli`'s `FsProvider`
+% source directly, not just guessing from the error message). This is the
+% SAME shape `mathematics/word-problems.adj` already established (it lives in
+% `mathematics/` and imports `../arithmetic/arithmetic.adj`); mirroring that
+% precedent, this library's OWN `.query.adj` companion is placed at the
+% package root (not beside this file) so a bare `adj-lang-cli
+% <query>.query.adj` invocation from the package root works directly.
+%
+% Deliberately scoped to the STANDARD calendar-number bridge only (Northern-
+% Hemisphere meteorological seasons, inherited unchanged from `seasons.adj`'s
+% own scope note) -- no new season or month content is asserted here, only
+% the join. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+import "seasons.adj"
+import "../calendar/months.adj"
+
+rule { head: season_start_month_number($Season, $Number)
+       when: season_start_month($Season, $Month), month_number($Month, $Number)
+       source "MM is the month of the year between 01 (January) and 12 (December)"
+       locator "https://www.cl.cam.ac.uk/~mgk25/iso-time.html"
+       trust consensus }
