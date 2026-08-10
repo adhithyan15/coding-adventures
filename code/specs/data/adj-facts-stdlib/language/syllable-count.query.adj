@@ -1,0 +1,16 @@
+% ============================================================================
+% syllable-count.query.adj — worked recall over the syllable-count library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how many syllables does
+% this word have?" — it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli syllable-count.query.adj
+% ============================================================================
+
+import "syllable-count.adj"
+
+? syllable_count(peanut, $N)      % expect 2   (direct: how many syllables does "peanut" have?)
+? syllable_count($W, 2)           % expect peanut, pencil, sunset, laptop (reverse: which words have 2 syllables?)
+? syllable_count(banana, $N)      % expect abstain -- "banana" has no shipped row, not segmented on the cited page
