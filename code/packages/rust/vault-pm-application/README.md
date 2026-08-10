@@ -113,11 +113,22 @@ and search views omit the deleted item. The three deletion frames use a
 caller-owned wipe-on-drop 240-byte entropy block and the shared exact pending
 journal/recovery state machine.
 
+Item history walks verified commit ancestry from every current head and
+decrypts each distinct catalog needed to collect revisions for one requested
+item. Results are bounded to 1–4,096 entries (100 by default), deduplicated
+across heads, and ordered newest ancestry depth first with exact commit and
+revision object IDs as deterministic tie-breakers. Each result exposes only a
+redacted live view or a tombstone marker, direct-parent count, and the
+document-update or deletion advisory time; revision IDs require an explicit
+accessor and ordinary diagnostics redact them. Historical candidates remain
+inside the unlocked session so restore-by-revision can consume authenticated
+content without adding provider-specific reads or asking a host for plaintext.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
-credential store, or entropy source. Replace, delete, restore, conflict
-resolution, history, export, audit, and doctor workflows land in the next
-slices. There is no unchecked
+credential store, or entropy source. Restore, conflict resolution, explicit
+history reveal, export, audit, and doctor workflows land in the next slices.
+There is no unchecked
 repository verification path: construction decrypts and
 authority-verifies the exact locally pinned certificate frame and object ID,
 and commits and announcements must match that vault, device, certificate ID,

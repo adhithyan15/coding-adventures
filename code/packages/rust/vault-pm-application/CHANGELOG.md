@@ -2,6 +2,25 @@
 
 All notable changes to this package are documented here.
 
+## [0.16.0] - 2026-08-09
+
+### Added
+
+- Add bounded item-history reads over verified ancestry from every current
+  repository head, with a default limit of 100 and a hard limit of 4,096.
+- Return typed historical views containing redacted live metadata or a
+  tombstone marker, direct-parent count, advisory revision time, and an
+  explicitly requested revision ID.
+
+### Security
+
+- Decrypt historical catalogs and revisions only inside the unlocked session,
+  verify vault, object, item, and direct-parent bindings, and deduplicate shared
+  ancestry without weakening the provider-neutral repository seam.
+- Order results by ancestry depth, commit object ID, and revision object ID
+  rather than advisory wall time, while redacting revision and item metadata
+  from ordinary diagnostics.
+
 ## [0.15.0] - 2026-08-09
 
 ### Added

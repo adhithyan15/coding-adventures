@@ -21,6 +21,78 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use crate::codec::{MAX_CANDIDATES_PER_ITEM, MAX_CATALOG_ENTRIES};
 
+/// Default maximum number of historical revisions returned for one item.
+pub const DEFAULT_ITEM_HISTORY_LIMIT: usize = 100;
+/// Hard maximum number of historical revisions returned for one item.
+pub const MAX_ITEM_HISTORY_LIMIT: usize = 4_096;
+
+/// One secret-free historical item revision projection.
+#[derive(Clone, PartialEq, Eq)]
+pub struct ItemHistoryViewV1 {
+    revision_id: RevisionId,
+    redacted_item: Option<RedactedItemView>,
+    causal_parent_count: usize,
+    advisory_time_ms: u64,
+}
+
+impl ItemHistoryViewV1 {
+    fn from_candidate(candidate: &ItemCandidate) -> Result<Self, ApplicationError> {
+        let (redacted_item, advisory_time_ms) = match candidate.state() {
+            ItemState::Live(document) => (
+                Some(
+                    RedactedItemView::from_document(document)
+                        .map_err(|_| ApplicationError::InternalInvariant)?,
+                ),
+                document.updated_at_ms(),
+            ),
+            ItemState::Tombstone(tombstone) => (None, tombstone.deleted_at_ms),
+        };
+        Ok(Self {
+            revision_id: candidate.revision_id(),
+            redacted_item,
+            causal_parent_count: candidate.causal_parents().len(),
+            advisory_time_ms,
+        })
+    }
+
+    /// Return the exact encrypted revision object identity.
+    pub const fn revision_id(&self) -> RevisionId {
+        self.revision_id
+    }
+
+    /// Borrow safe live metadata, or `None` when this revision is a tombstone.
+    pub const fn redacted_item(&self) -> Option<&RedactedItemView> {
+        self.redacted_item.as_ref()
+    }
+
+    /// Return whether this historical revision is a deletion marker.
+    pub const fn is_deleted(&self) -> bool {
+        self.redacted_item.is_none()
+    }
+
+    /// Return the number of direct causal parents named by this revision.
+    pub const fn causal_parent_count(&self) -> usize {
+        self.causal_parent_count
+    }
+
+    /// Return the document-update or tombstone-deletion advisory time.
+    pub const fn advisory_time_ms(&self) -> u64 {
+        self.advisory_time_ms
+    }
+}
+
+impl Debug for ItemHistoryViewV1 {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("ItemHistoryViewV1")
+            .field("revision_id", &"<redacted>")
+            .field("is_deleted", &self.is_deleted())
+            .field("causal_parent_count", &self.causal_parent_count)
+            .field("advisory_time_ms", &self.advisory_time_ms)
+            .finish_non_exhaustive()
+    }
+}
+
 struct CurrentCatalogV1 {
     items: BTreeMap<ItemId, Vec<ItemCandidate>>,
     candidate_count: usize,
@@ -147,6 +219,31 @@ impl UnlockedVaultV1 {
     /// search projection without exposing item identities or indexed text.
     pub fn search_item_count(&self) -> usize {
         self.search.len()
+    }
+
+    /// Return bounded secret-free history for one item across every current
+    /// repository head.
+    ///
+    /// Traversal is newest ancestry depth first. Commits at the same depth and
+    /// revisions in the same catalog are ordered by exact object ID. Revisions
+    /// reached through more than one head are returned once. `limit` must be
+    /// between 1 and [`MAX_ITEM_HISTORY_LIMIT`], inclusive.
+    pub fn item_history(
+        &self,
+        item_id: ItemId,
+        limit: usize,
+    ) -> Result<Vec<ItemHistoryViewV1>, ApplicationError> {
+        materialize_item_history_candidates(
+            &self._keys,
+            self._repository.as_ref(),
+            &self.report,
+            self.active.vault_id(),
+            item_id,
+            limit,
+        )?
+        .iter()
+        .map(ItemHistoryViewV1::from_candidate)
+        .collect()
     }
 
     /// Add one new item through the exact crash-resumable publication state
@@ -406,6 +503,90 @@ fn read_candidate(
     }
     let revision_plaintext = open_object(keys, ObjectKind::ItemRevision, revision_object.frame())?;
     crate::decode_item_revision(revision_id, &revision_plaintext)
+}
+
+fn materialize_item_history_candidates(
+    keys: &V1Keys,
+    repository: &dyn ApplicationRepository,
+    report: &OpenReport,
+    vault_id: VaultId,
+    item_id: ItemId,
+    limit: usize,
+) -> Result<Vec<ItemCandidate>, ApplicationError> {
+    if limit == 0 {
+        return Err(ApplicationError::InvalidInput);
+    }
+    if limit > MAX_ITEM_HISTORY_LIMIT {
+        return Err(ApplicationError::BoundExceeded);
+    }
+
+    let mut histories = Vec::with_capacity(report.heads().len());
+    for head_id in report.heads().iter().copied() {
+        let history = repository.history(head_id, limit).map_err(map_repository)?;
+        if history.first().map(|commit| commit.id()) != Some(head_id) {
+            return Err(ApplicationError::IntegrityFailure);
+        }
+        histories.push(history);
+    }
+
+    let mut seen_commits = BTreeSet::new();
+    let mut seen_catalogs = BTreeSet::new();
+    let mut seen_revisions = BTreeSet::new();
+    let mut candidates = Vec::new();
+
+    for depth in 0..limit {
+        let mut commits = histories
+            .iter()
+            .filter_map(|history| history.get(depth))
+            .filter(|commit| !seen_commits.contains(&commit.id()))
+            .collect::<Vec<_>>();
+        commits.sort_unstable_by_key(|commit| commit.id());
+
+        for commit in commits {
+            if !seen_commits.insert(commit.id()) {
+                continue;
+            }
+            if commit.vault_id() != vault_id {
+                return Err(ApplicationError::IntegrityFailure);
+            }
+            let catalog_id = commit.catalog_root();
+            if !seen_catalogs.insert(catalog_id) {
+                continue;
+            }
+            let catalog_object = repository.read_object(catalog_id).map_err(map_repository)?;
+            if catalog_object.id() != catalog_id {
+                return Err(ApplicationError::IntegrityFailure);
+            }
+            let catalog_plaintext = open_object(keys, ObjectKind::Catalog, catalog_object.frame())?;
+            let catalog = CatalogV1::decode(&catalog_plaintext)?;
+            let Some(revision_ids) = catalog.entries().get(&item_id) else {
+                continue;
+            };
+
+            for revision_id in revision_ids {
+                if seen_revisions.contains(revision_id) {
+                    continue;
+                }
+                let candidate = read_candidate(keys, repository, *revision_id)?;
+                if candidate.item_id() != item_id {
+                    return Err(ApplicationError::IntegrityFailure);
+                }
+                for parent_id in candidate.causal_parents() {
+                    let parent = read_candidate(keys, repository, *parent_id)?;
+                    if parent.item_id() != item_id {
+                        return Err(ApplicationError::IntegrityFailure);
+                    }
+                }
+                seen_revisions.insert(*revision_id);
+                candidates.push(candidate);
+                if candidates.len() == limit {
+                    return Ok(candidates);
+                }
+            }
+        }
+    }
+
+    Ok(candidates)
 }
 
 /// Replay one exact durable `PendingPublication` and atomically advance it to
@@ -2117,6 +2298,134 @@ mod tests {
         assert_eq!(
             local.0.lock().unwrap().as_deref(),
             Some(exact_active.as_slice())
+        );
+    }
+
+    #[test]
+    fn item_history_materializes_live_and_deleted_revisions_in_ancestry_order() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let add_randomness = add_item_randomness(0x61);
+        let item_id = add_randomness.item_id();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .add_item(
+            new_login_document(item_id, "History one", "first-secret"),
+            500,
+            add_randomness,
+            &local,
+        )
+        .unwrap();
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let first_revision = session.current_catalog.items[&item_id][0].revision_id();
+        session
+            .replace_item(
+                first_revision,
+                new_login_document(item_id, "History two", "second-secret"),
+                501,
+                replace_item_randomness(0x71),
+                &local,
+            )
+            .unwrap();
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let second_revision = session.current_catalog.items[&item_id][0].revision_id();
+        session
+            .delete_item(
+                second_revision,
+                502,
+                503,
+                delete_item_randomness(0x81),
+                &local,
+            )
+            .unwrap();
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let tombstone_revision = session.current_catalog.items[&item_id][0].revision_id();
+        let history = session
+            .item_history(item_id, DEFAULT_ITEM_HISTORY_LIMIT)
+            .unwrap();
+
+        assert_eq!(history.len(), 3);
+        assert_eq!(history[0].revision_id(), tombstone_revision);
+        assert!(history[0].is_deleted());
+        assert_eq!(history[0].causal_parent_count(), 1);
+        assert_eq!(history[0].advisory_time_ms(), 502);
+        assert_eq!(history[1].revision_id(), second_revision);
+        assert_eq!(history[1].causal_parent_count(), 1);
+        assert_eq!(history[2].revision_id(), first_revision);
+        assert_eq!(history[2].causal_parent_count(), 0);
+        let Some(RedactedItemView {
+            record: RedactedRecordView::Login { title, .. },
+            ..
+        }) = history[1].redacted_item()
+        else {
+            panic!("historical live revision must retain safe login metadata")
+        };
+        assert_eq!(title, "History two");
+        assert!(!format!("{:?}", history[1]).contains("History two"));
+
+        let limited = session.item_history(item_id, 2).unwrap();
+        assert_eq!(
+            limited
+                .iter()
+                .map(ItemHistoryViewV1::revision_id)
+                .collect::<Vec<_>>(),
+            vec![tombstone_revision, second_revision]
+        );
+        assert!(session
+            .item_history(ItemId::new([0xff; 16]), 100)
+            .unwrap()
+            .is_empty());
+    }
+
+    #[test]
+    fn item_history_rejects_invalid_bounds_without_disclosing_identity() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let item_id = ItemId::new([0x91; 16]);
+
+        assert_eq!(
+            session.item_history(item_id, 0),
+            Err(ApplicationError::InvalidInput)
+        );
+        assert_eq!(
+            session.item_history(item_id, MAX_ITEM_HISTORY_LIMIT + 1),
+            Err(ApplicationError::BoundExceeded)
         );
     }
 
