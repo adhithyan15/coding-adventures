@@ -1142,7 +1142,19 @@ fn emit_compose_tree(
     let pad = "    ".repeat(depth);
     match node.tag.as_str() {
         "HostSurface" => emit_host_surface_compose(node, depth),
-        "Box" => emit_container(
+        // `Stack` (UI29's `position: relative` + absolutely-positioned-children
+        // container) lowers to Compose's `Box` — the same composable `Box`
+        // itself already uses. Jetpack Compose's `Box` natively layers its
+        // children (later children paint over earlier ones at the same
+        // origin) so this is a close analog, not a degradation the way
+        // `HostDraggable`/`HostDropTarget` → `Column` below is. What v1
+        // doesn't yet do: turn a child's static `position: absolute` +
+        // `top`/`left` into `Modifier.offset(...)`, so a Stack's children
+        // currently all render at the Box's origin instead of the pixel
+        // positions the web/Flutter backends place them at — the same
+        // "anything else silently skipped" v1 posture `compose_box_style`
+        // already documents for every other static prop it doesn't lower.
+        "Box" | "Stack" => emit_container(
             node,
             "Box",
             depth,
@@ -3158,6 +3170,22 @@ mod tests {
         assert!(out.contains("val mosaicEnvelope: Map<String, Any?>"));
         assert!(out.contains("@Composable\nfun Empty("));
         assert!(out.contains("dispatch: (EmptyEvent) -> Unit"));
+    }
+
+    /// `Stack` (UI29's layering container) lowers to Compose's `Box` — the
+    /// same composable the plain `Box` primitive already uses, since
+    /// `Box` natively stacks its children. Before this, any component
+    /// using `Stack` hit `UnknownPrimitive` on this backend (found while
+    /// wiring `task-app`'s icon assets — see `task-app-icon-assets-v1.md`).
+    #[test]
+    fn stack_lowers_to_compose_box() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node("Stack", vec![], vec![node("Text", vec![], vec![])]),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(out.contains("Box("), "expected a Box(...), got:\n{out}");
     }
 
     #[test]

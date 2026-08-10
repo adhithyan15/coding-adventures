@@ -4,6 +4,69 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - icon/SVG assets: pill dot, progress ring, real theme-toggle icon, group-count badge, composer plus, brand mark
+
+Closes most of the "Icon/SVG assets" line of the design-fidelity gap
+backlog item — see `code/specs/task-app-icon-assets-v1.md` for the full
+scope decision, including what's deliberately NOT here (the six
+segmented-switch icons — not a capability gap, deferred so they can be
+iterated on together as one matched family rather than shipped as six
+independent first guesses).
+
+- **Pill status dot**: a small `currentColor` circle before "On track" /
+  "N overdue" in the topbar status pill.
+- **Group-count badge**: a count pill next to each List-view group
+  heading ("IN PROGRESS 2"), from a new appended `taskRows` cell
+  (`row[14]`, present only alongside the heading cell).
+- **Composer "+" icon box**: a dashed-border box with a plus mark before
+  the task-name input.
+- **Theme toggle, moved into the topbar with a real icon**: was a
+  `position: fixed` unicode-glyph button living entirely outside the
+  Mosaic-compiled component, invisible to mostyle. Now a real
+  `HostButton` in the topbar, with a drawn crescent moon / filled sun
+  instead of "☾"/"☀". `HostButton` can't render children
+  (`host_button_label_body` in `mosaic-emit-react` reads only the flat
+  `label` prop), so the shape comes entirely from the button's own
+  background/box-shadow styling; the accessible label text stays real
+  (screen readers) but is visually hidden via `color: transparent`.
+- **Progress ring**: the active project's percent-complete as a
+  circular ring in the topbar, next to the view switcher. The one shape
+  here that needed real data — see the `mosaic-emit-react` CHANGELOG
+  entry for UI36's `background` binding, which this ring is the reason
+  for.
+- **Brand mark**: a bridge arc (two upright posts joined by a border-only
+  arc), replacing the previously-empty honey square. User-chosen from a
+  proposed shortlist (Truss triangle / Three pillars / Bridge arc /
+  A-frame chevron).
+
+Every shape is built from primitives that already exist — no new
+SVG-embedding kernel primitive, no image files. `Stack`'s
+`position: relative` + absolutely-positioned children draws the
+donut ring, the crescent moon, and the bridge arc; individual-corner
+`border-*-radius` and individual-side `border-*` properties (already
+proven safe for the Gantt day-grid) draw the arc and the dashed
+composer box.
+
+`main.tsx`: the fixed-position theme button is gone; `toggleTheme` is a
+real dispatched event, intercepted in `Root` before reaching
+`controller.apply` (theme is page-level React state, not part of the
+engine-backed controller). `theme.ts` gained `ringGradient(theme,
+percent)` — the actual `conic-gradient(...)` string needs the resolved
+theme, which the (theme-agnostic, shared-by-both-themes) controller
+never sees, so it's computed in `Root` and overrides the controller's
+placeholder the same way `themeIsDark` does. Group sizes for the count
+badge are tallied once per `getProps()` call, ahead of the row-building
+loop that already walks the same list.
+
+Verified live in a real browser session (both themes, zero console
+errors, via DOM/computed-style inspection since this session's browser
+pane doesn't compose screenshot frames): the ring's `conic-gradient`
+recomputing correctly as a task's done state flips (0% → 100%, correct
+per-theme fill/track colours), the group-count badge updating with the
+group ("IN PROGRESS 1" → "DONE 1"), the theme toggle swapping between
+moon and sun with the correct crescent `box-shadow` and the correct
+accessible label text, and the page ground repainting on toggle.
+
 ### Added - richer Gantt: day-grid, milestones, percent-fill, tooltips, legend
 
 Closes the "Richer Gantt" line of the design-fidelity gap backlog item —
