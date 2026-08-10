@@ -1,0 +1,62 @@
+% ============================================================================
+% weather-instruments — each common weather-observing instrument and the ONE
+% quantity it measures (adj-facts-stdlib, METEOROLOGY).
+% ============================================================================
+% A genuinely new axis in the "observation and measurement" gap ADJ-STDLIB-
+% COVERAGE.md 5.1 names as a Major Gap for K-8 science — a DIFFERENT
+% measurement domain from the already-shipped `chemistry/measuring-tools.adj`
+% (lab tools: ruler/graduated cylinder/balance/thermometer). This table maps
+% a WEATHER-OBSERVING instrument to the quantity it measures:
+% `weather_instrument(instrument, quantity)`. Recall is a binding query:
+%
+%     ? weather_instrument(barometer, $Q)   % atmospheric_pressure
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `weather_instrument(instrument, quantity)` carrying the NOAA citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns
+% the quantity WITH its source, on the CPU, with zero model calls, and
+% abstains on an instrument not one of the six the cited page names. The
+% query also runs BACKWARD — bind a quantity and recall the instrument that
+% measures it:
+%
+%     ? weather_instrument($I, humidity)   % hygrometer
+%
+% The six instruments and the quantity each one measures, as a little truth
+% table:
+%
+%     instrument      quantity                the cited heading
+%     -------------   ---------------------   -----------------------------------
+%     anemometer      wind_speed              "Build an Anemometer to Measure Wind Speed"
+%     weather_vane    wind_direction          "Build a Weather Vane to Find Wind Direction"
+%     barometer       atmospheric_pressure    "Build a Barometer for Measuring Atmospheric Pressure"
+%     thermometer     air_temperature         "Build a Screened Thermometer to Measure Air Temperature"
+%     hygrometer      humidity                "Build a Hygrometer to Measure Humidity"
+%     rain_gauge      rainfall                "Build a Rain Gauge to Measure Rainfall"
+%
+% Provenance: quoted verbatim from NOAA's "Build Your Own Weather Station"
+% education page, whose six section headings each name one instrument and
+% the quantity it measures (or, for the weather vane, "finds"). WebFetch-
+% verified TWICE for consistency before writing. `trust authoritative` —
+% oceanservice.noaa.gov is a primary U.S. government (NOAA) science-
+% education source, the same tier `precipitation-types.adj`'s and
+% `wind-scale.adj`'s NOAA/NWS sources earned. An instrument not one of
+% these six — a seismometer, a compass, a microscope — has no row, so a
+% recall on it ABSTAINS rather than inventing a quantity. (See
+% ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table weather_instrument {
+    columns instrument, quantity
+
+    row (anemometer, wind_speed)
+    row (weather_vane, wind_direction)
+    row (barometer, atmospheric_pressure)
+    row (thermometer, air_temperature)
+    row (hygrometer, humidity)
+    row (rain_gauge, rainfall)
+
+    source "Build an Anemometer to Measure Wind Speed"
+    locator "https://oceanservice.noaa.gov/education/dyw-weather-station.html"
+    trust authoritative
+}
