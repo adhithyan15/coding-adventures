@@ -232,6 +232,9 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // run. The textbook also records a toothless long curve as an optional,
 // especially handwritten alternative; this learner path uses the canonical
 // toothed Noto Naskh fallback form shown in both independent animations.
+// Urdu ش repeats that complete body before three separate dot strokes: lower
+// left, lower right, then the centered upper dot. The chapter keeps the same
+// optional toothless body while requiring the dots to remain centered above.
 // The adjacent ب starts at the bowl's right lip, sweeps right-to-left through
 // its shallow dip, then lifts once before placing the separate dot below.
 // After the intervening Persian-added پ row, ت repeats the same bowl, lifts to
@@ -460,6 +463,83 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: urduAlphabetSource("س"),
+  },
+  [ductusKey("urdu-nastaliq", "ش")]: {
+    script: "urdu-nastaliq",
+    glyph: "ش",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "shape the three close teeth from right to left",
+            path: [
+              { x: 923, y: 310 },
+              { x: 935, y: 120 },
+              { x: 925, y: 70 },
+              { x: 870, y: 45 },
+              { x: 770, y: 75 },
+              { x: 748, y: 110 },
+              { x: 748, y: 230 },
+              { x: 690, y: 65 },
+              { x: 640, y: 45 },
+              { x: 540, y: 55 },
+              { x: 478, y: 190 },
+              { x: 515, y: 20 },
+            ],
+          },
+          {
+            label: "flow directly into the final bowl without lifting",
+            path: [
+              { x: 515, y: 20 },
+              { x: 515, y: -25 },
+              { x: 470, y: -125 },
+              { x: 370, y: -205 },
+              { x: 250, y: -230 },
+              { x: 145, y: -180 },
+              { x: 92, y: -95 },
+              { x: 110, y: 35 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then place the lower-left dot",
+            path: [
+              { x: 610, y: 360 },
+              { x: 648, y: 410 },
+              { x: 686, y: 365 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again, then place the lower-right dot",
+            path: [
+              { x: 753, y: 370 },
+              { x: 792, y: 423 },
+              { x: 830, y: 376 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift a third time, then place the centered upper dot",
+            path: [
+              { x: 684, y: 446 },
+              { x: 720, y: 494 },
+              { x: 757, y: 446 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: urduAlphabetSource("ش"),
   },
   "ب": {
     script: "perso-arabic",

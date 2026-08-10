@@ -230,8 +230,12 @@ keeps the distinct final-form motion and Naskh/Nastaliq contrast explicit. Urdu
 س adds another two-frame independent filmstrip: its three close teeth flow
 right-to-left directly into the final bowl in the same zero-lift run. The
 script-scoped source keeps it distinct from Persian س and records the optional
-long gentle curve as an especially common handwriting alternative. The runtime
-resolves
+long gentle curve as an especially common handwriting alternative. Urdu ش adds
+a five-frame filmstrip from the same chapter: the two body movements stay in
+one run, then three sourced lifts place the lower-left, lower-right, and centered
+upper dots. Its source note preserves the two-below/one-above arrangement,
+centers the dots above either the toothed or optional toothless body, and keeps
+the standard learner path on Noto Naskh. The runtime resolves
 each cited path back to the owning script and lazily loads that script's font,
 while Tamil continues to use Noto Sans Tamil. Unverified letters still
 fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

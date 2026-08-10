@@ -195,9 +195,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   its three close teeth and final bowl in one right-to-left, zero-lift run. The
   learner path uses that standard toothed form while preserving the chapter's
   optional long gentle curve as an especially common handwriting alternative.
-  The remaining **204** prose part orders across eight scripts
+  Urdu **ش** follows in the same chapter: both independent animations complete
+  that **س** body first, then place the lower-left, lower-right, and centered
+  upper dots as three separately lifted strokes. The learner path preserves the
+  chapter's two-below/one-above arrangement, centered dots, and optional
+  toothless body. The remaining **203** prose part orders across eight scripts
 (`arabic` 21, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33,
-`hebrew` 22, `japanese` 34, `urdu-nastaliq` 9) are explicitly **unverified for
+`hebrew` 22, `japanese` 34, `urdu-nastaliq` 8) are explicitly **unverified for
 pen lifts**. The data validator rejects a lift count without a citation (or a
 citation without a count), and Language Ladder's ductus test proves every verified
 claim has the same cited, font-checked path. That closes `HL-C19`; future entries
