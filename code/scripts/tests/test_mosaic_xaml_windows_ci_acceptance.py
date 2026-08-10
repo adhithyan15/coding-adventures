@@ -93,10 +93,8 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
         self.assertIn("--backend xaml --output $output --emit-project", workflow)
         self.assertIn("dotnet build (Split-Path -Leaf $project)", workflow)
         self.assertIn("selected by generated global.json", workflow)
-        self.assertIn("First failing VisualStateGroup prefix length", workflow)
-        self.assertIn("First failing ItemsRepeater prefix length", workflow)
-        self.assertIn("First failing x:Bind prefix length", workflow)
-        self.assertIn("empty TaskApp root Grid", workflow)
+        self.assertIn("TaskApp.binlog", workflow)
+        self.assertIn("output.json", workflow)
         self.assertIn("Start-Process -FilePath $executable", workflow)
 
 

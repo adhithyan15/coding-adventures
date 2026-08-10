@@ -933,11 +933,6 @@ jobs:
 
           $project = Join-Path $output 'xaml/TaskApp.csproj'
           $binaryLog = Join-Path $output 'xaml/TaskApp.binlog'
-          $taskAppXaml = Join-Path $output 'xaml/TaskApp.xaml'
-          # Keep the backup outside the project directory. SDK-style WinUI
-          # projects implicitly compile every adjacent *.xaml file as a Page.
-          $originalTaskAppXaml = Join-Path $output 'TaskApp.original.xml'
-          Copy-Item $taskAppXaml $originalTaskAppXaml
           Push-Location (Split-Path -Parent $project)
           Write-Host "Using .NET SDK $(dotnet --version) selected by generated global.json"
           dotnet build (Split-Path -Leaf $project) -c Debug -p:Platform=x64 --nologo "-bl:$binaryLog"
@@ -948,152 +943,8 @@ jobs:
               Write-Host "--- $($_.FullName) ---"
               Get-Content $_.FullName
             }
-
-            function Test-VisualStatePrefix([int] $groupsToKeep) {
-              Copy-Item $originalTaskAppXaml $taskAppXaml -Force
-              [xml] $document = Get-Content $taskAppXaml -Raw
-              $managers = @($document.SelectNodes("//*[local-name()='VisualStateManager.VisualStateGroups']"))
-              $groups = @($document.SelectNodes("//*[local-name()='VisualStateGroup']"))
-              for ($index = $groups.Count - 1; $index -ge $groupsToKeep; $index--) {
-                [void] $groups[$index].ParentNode.RemoveChild($groups[$index])
-              }
-              foreach ($manager in $managers) {
-                $remainingGroups = @($manager.ChildNodes | Where-Object { $_.LocalName -eq 'VisualStateGroup' })
-                if ($remainingGroups.Count -eq 0) {
-                  [void] $manager.ParentNode.RemoveChild($manager)
-                }
-              }
-              $document.Save($taskAppXaml)
-              Remove-Item (Join-Path $output 'xaml/obj'), (Join-Path $output 'xaml/bin') -Recurse -Force -ErrorAction SilentlyContinue
-              Push-Location (Split-Path -Parent $project)
-              Write-Host "--- Diagnostic build with first $groupsToKeep VisualStateGroup nodes ---"
-              dotnet build (Split-Path -Leaf $project) -c Debug -p:Platform=x64 --nologo | Out-Host
-              $exitCode = $LASTEXITCODE
-              Pop-Location
-              return $exitCode
-            }
-
-            [xml] $originalDocument = Get-Content $originalTaskAppXaml -Raw
-            $allGroups = @($originalDocument.SelectNodes("//*[local-name()='VisualStateGroup']"))
-            if ((Test-VisualStatePrefix 0) -eq 0) {
-              $low = 1
-              $high = $allGroups.Count
-              while ($low -lt $high) {
-                $mid = [int] [Math]::Floor(($low + $high) / 2)
-                if ((Test-VisualStatePrefix $mid) -eq 0) {
-                  $low = $mid + 1
-                } else {
-                  $high = $mid
-                }
-              }
-              Write-Host "First failing VisualStateGroup prefix length: $low of $($allGroups.Count)"
-              Write-Host $allGroups[$low - 1].OuterXml
-            } else {
-              Write-Host 'TaskApp still fails after removing every VisualStateGroup.'
-
-              function Test-ItemsRepeaterPrefix([int] $repeatersToKeep) {
-                Copy-Item $originalTaskAppXaml $taskAppXaml -Force
-                [xml] $document = Get-Content $taskAppXaml -Raw
-                $managers = @($document.SelectNodes("//*[local-name()='VisualStateManager.VisualStateGroups']"))
-                foreach ($manager in $managers) {
-                  [void] $manager.ParentNode.RemoveChild($manager)
-                }
-                $repeaters = @($document.SelectNodes("//*[local-name()='ItemsRepeater']"))
-                for ($index = $repeaters.Count - 1; $index -ge $repeatersToKeep; $index--) {
-                  if ($null -ne $repeaters[$index].ParentNode) {
-                    [void] $repeaters[$index].ParentNode.RemoveChild($repeaters[$index])
-                  }
-                }
-                $document.Save($taskAppXaml)
-                Remove-Item (Join-Path $output 'xaml/obj'), (Join-Path $output 'xaml/bin') -Recurse -Force -ErrorAction SilentlyContinue
-                Push-Location (Split-Path -Parent $project)
-                Write-Host "--- Diagnostic build with first $repeatersToKeep ItemsRepeater nodes ---"
-                dotnet build (Split-Path -Leaf $project) -c Debug -p:Platform=x64 --nologo | Out-Host
-                $exitCode = $LASTEXITCODE
-                Pop-Location
-                return $exitCode
-              }
-
-              function Test-XBindPrefix([int] $bindingsToKeep) {
-                Copy-Item $originalTaskAppXaml $taskAppXaml -Force
-                [xml] $document = Get-Content $taskAppXaml -Raw
-                $managers = @($document.SelectNodes("//*[local-name()='VisualStateManager.VisualStateGroups']"))
-                foreach ($manager in $managers) {
-                  [void] $manager.ParentNode.RemoveChild($manager)
-                }
-                $bindings = @($document.SelectNodes('//@*') | Where-Object { $_.Value.StartsWith('{x:Bind') })
-                for ($index = $bindings.Count - 1; $index -ge $bindingsToKeep; $index--) {
-                  [void] $bindings[$index].OwnerElement.RemoveAttributeNode($bindings[$index])
-                }
-                $document.Save($taskAppXaml)
-                Remove-Item (Join-Path $output 'xaml/obj'), (Join-Path $output 'xaml/bin') -Recurse -Force -ErrorAction SilentlyContinue
-                Push-Location (Split-Path -Parent $project)
-                Write-Host "--- Diagnostic build with first $bindingsToKeep x:Bind attributes ---"
-                dotnet build (Split-Path -Leaf $project) -c Debug -p:Platform=x64 --nologo | Out-Host
-                $exitCode = $LASTEXITCODE
-                Pop-Location
-                return $exitCode
-              }
-
-              function Test-EmptyTaskAppContent {
-                Copy-Item $originalTaskAppXaml $taskAppXaml -Force
-                [xml] $document = Get-Content $taskAppXaml -Raw
-                $rootGrid = $document.DocumentElement.SelectSingleNode("./*[local-name()='Grid']")
-                foreach ($child in @($rootGrid.ChildNodes)) {
-                  if ($child.NodeType -eq [System.Xml.XmlNodeType]::Element) {
-                    [void] $rootGrid.RemoveChild($child)
-                  }
-                }
-                $document.Save($taskAppXaml)
-                Remove-Item (Join-Path $output 'xaml/obj'), (Join-Path $output 'xaml/bin') -Recurse -Force -ErrorAction SilentlyContinue
-                Push-Location (Split-Path -Parent $project)
-                Write-Host '--- Diagnostic build with empty TaskApp root Grid ---'
-                dotnet build (Split-Path -Leaf $project) -c Debug -p:Platform=x64 --nologo | Out-Host
-                $exitCode = $LASTEXITCODE
-                Pop-Location
-                return $exitCode
-              }
-
-              if ((Test-EmptyTaskAppContent) -eq 0) {
-                Write-Host 'TaskApp compiles with an empty root Grid; the failure is in generated child markup.'
-              } else {
-                Write-Host 'TaskApp still fails with an empty root Grid; inspect generated page or code-behind shape.'
-              }
-
-              $allRepeaters = @($originalDocument.SelectNodes("//*[local-name()='ItemsRepeater']"))
-              if ((Test-ItemsRepeaterPrefix 0) -eq 0) {
-                $low = 1
-                $high = $allRepeaters.Count
-                while ($low -lt $high) {
-                  $mid = [int] [Math]::Floor(($low + $high) / 2)
-                  if ((Test-ItemsRepeaterPrefix $mid) -eq 0) { $low = $mid + 1 } else { $high = $mid }
-                }
-                Write-Host "First failing ItemsRepeater prefix length: $low of $($allRepeaters.Count)"
-                $repeaterXml = $allRepeaters[$low - 1].OuterXml
-                Write-Host $repeaterXml.Substring(0, [Math]::Min(1200, $repeaterXml.Length))
-              } else {
-                Write-Host 'TaskApp still fails after removing every ItemsRepeater.'
-              }
-
-              $allBindings = @($originalDocument.SelectNodes('//@*') | Where-Object { $_.Value.StartsWith('{x:Bind') })
-              if ((Test-XBindPrefix 0) -eq 0) {
-                $low = 1
-                $high = $allBindings.Count
-                while ($low -lt $high) {
-                  $mid = [int] [Math]::Floor(($low + $high) / 2)
-                  if ((Test-XBindPrefix $mid) -eq 0) { $low = $mid + 1 } else { $high = $mid }
-                }
-                $failingBinding = $allBindings[$low - 1]
-                Write-Host "First failing x:Bind prefix length: $low of $($allBindings.Count)"
-                Write-Host "$($failingBinding.OwnerElement.LocalName).$($failingBinding.LocalName)=$($failingBinding.Value)"
-              } else {
-                Write-Host 'TaskApp still fails after removing every x:Bind attribute.'
-              }
-            }
-            Copy-Item $originalTaskAppXaml $taskAppXaml -Force
             throw "TaskApp WinUI build failed with exit code $buildExitCode"
           }
-
           $executable = Get-ChildItem -Path (Join-Path $output 'xaml/bin') -Filter 'TaskApp.exe' -Recurse -File | Select-Object -First 1
           if ($null -eq $executable) {
             throw 'TaskApp WinUI build did not produce TaskApp.exe'
@@ -1113,7 +964,6 @@ jobs:
           path: |
             ${{ runner.temp }}/mosaic-xaml-taskapp/xaml/TaskApp.binlog
             ${{ runner.temp }}/mosaic-xaml-taskapp/xaml/TaskApp.xaml
-            ${{ runner.temp }}/mosaic-xaml-taskapp/TaskApp.original.xml
             ${{ runner.temp }}/mosaic-xaml-taskapp/xaml/obj/**/input.json
             ${{ runner.temp }}/mosaic-xaml-taskapp/xaml/obj/**/output.json
           if-no-files-found: warn
