@@ -198,10 +198,22 @@ revision, and item counts plus `integrity_verified = true`; any provider,
 format, graph, anchor, cryptographic, or domain failure returns the closed
 application error taxonomy without a partial report.
 
+The lifecycle boundary also exposes a read-only `doctor` workflow with one
+closed coarse outcome. Locked checks distinguish absent/prepared
+initialization, pending-publication recovery, owner-state availability,
+bootstrap availability, unsupported persisted versions or suites, integrity
+failure, and the authentication required before repository verification.
+Unlocked checks first require the exact durable active state and signed
+bootstrap retained by the session, then run the complete audit to distinguish
+healthy, repository-unavailable, unsupported, and integrity-failure states.
+The report carries no counts or vault, device, item, revision, object, locator,
+or provider identities, and the workflow never repairs state or accepts pins.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
 credential store, or entropy source. Host field clipboard implementation,
-export and doctor workflows land in the next slices.
+portable export/restore preparation, and richer host-side path, authorization,
+quota, and cache checks land in later slices.
 There is no unchecked
 repository verification path: construction decrypts and
 authority-verifies the exact locally pinned certificate frame and object ID,
@@ -227,11 +239,16 @@ Audit tests cover complete re-discovery and ancestry traversal, aggregate-only
 diagnostics, historical catalog/revision counts, and exact local-anchor
 rejection. Repository tests also prove the complete security-history seam uses
 the same deterministic order as bounded interactive history.
+Doctor tests cover absent, prepared, recovery-required, locked-authentication,
+healthy, local/bootstrap/repository unavailable, unsupported-version, and
+integrity-failure outcomes; exact durable session binding; aggregate-free
+diagnostics; and failure without repair.
 Search tests cover Unicode normalization, short queries, oversized safe-field
 fallback, exact collection filters, deterministic product ordering, every
 record schema's allowlist/denylist, secret exclusion, query/result bounds, and
-conflict closure. The exact Tarpaulin LLVM result is 2,459 of 2,582 production
-lines (95.23%); the status module remains 46 of 46. Add-item tests cover exact
+conflict closure. The exact Tarpaulin LLVM result is 2,516 of 2,637 production
+lines (95.41%); the doctor module is 44 of 45 and status remains 46 of 46.
+Add-item tests cover exact
 entropy partitioning and wiping,
 identity validation before local writes, parentless revision and complete
 catalog construction, ambiguous successful compare-exchanges, write-ahead

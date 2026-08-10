@@ -2,6 +2,23 @@
 
 All notable changes to this package are documented here.
 
+## [0.25.0] - 2026-08-10
+
+### Added
+
+- Add a read-only locked/unlocked `doctor` workflow with one closed,
+  identity-free coarse report.
+- Distinguish initialization required, recovery required, local-state,
+  bootstrap, and repository unavailability, unsupported versions or suites,
+  authentication required, integrity failure, and authenticated health.
+
+### Security
+
+- Require exact durable active-state and signed-bootstrap binding before an
+  unlocked complete audit can report healthy.
+- Never repair owner state, accept new pins, expose provider detail, or return
+  counts and identities through doctor diagnostics.
+
 ## [0.24.0] - 2026-08-10
 
 ### Added

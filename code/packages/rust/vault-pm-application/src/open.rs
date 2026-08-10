@@ -133,6 +133,10 @@ pub struct UnlockedVaultV1 {
 }
 
 impl UnlockedVaultV1 {
+    pub(crate) const fn active_state(&self) -> &ActiveStateV1 {
+        &self.active
+    }
+
     pub(crate) const fn bootstrap_locator(&self) -> BootstrapLocator {
         self.active.bootstrap_locator()
     }
@@ -938,6 +942,9 @@ mod tests {
         GENERATION_ZERO_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
         RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
     };
+    use coding_adventures_canonical_cbor::{
+        decode as decode_cbor, encode as encode_cbor, CborValue,
+    };
     use coding_adventures_ed25519::{generate_keypair, sign};
     use coding_adventures_vault_pm_domain::{
         ContentType, ItemDocument, ItemState, LwwRegister, ObservedSet, OperationId,
@@ -953,6 +960,66 @@ mod tests {
         atomic::{AtomicBool, AtomicUsize, Ordering},
         Arc, Mutex,
     };
+
+    struct FailingAuditRepository(ApplicationRepositoryError);
+
+    impl ApplicationRepository for FailingAuditRepository {
+        fn initialize(&self) -> Result<(), ApplicationRepositoryError> {
+            Err(self.0)
+        }
+
+        fn open(&self, _pins: &PinnedHeads) -> Result<OpenReport, ApplicationRepositoryError> {
+            Err(self.0)
+        }
+
+        fn publish(
+            &self,
+            _publication: coding_adventures_vault_pm_repository::Publication,
+            _current_heads: &PinnedHeads,
+        ) -> Result<
+            coding_adventures_vault_pm_repository::PublicationReceipt,
+            ApplicationRepositoryError,
+        > {
+            Err(self.0)
+        }
+
+        fn read_object(
+            &self,
+            _id: ObjectId,
+        ) -> Result<coding_adventures_vault_pm_repository::VerifiedObject, ApplicationRepositoryError>
+        {
+            Err(self.0)
+        }
+
+        fn read_commit(
+            &self,
+            _id: ObjectId,
+        ) -> Result<coding_adventures_vault_pm_repository::CommitSummary, ApplicationRepositoryError>
+        {
+            Err(self.0)
+        }
+
+        fn history(
+            &self,
+            _start: ObjectId,
+            _limit: usize,
+        ) -> Result<
+            Vec<coding_adventures_vault_pm_repository::CommitSummary>,
+            ApplicationRepositoryError,
+        > {
+            Err(self.0)
+        }
+
+        fn complete_history(
+            &self,
+            _start: ObjectId,
+        ) -> Result<
+            Vec<coding_adventures_vault_pm_repository::CommitSummary>,
+            ApplicationRepositoryError,
+        > {
+            Err(self.0)
+        }
+    }
 
     #[derive(Default)]
     struct MemoryLocalStateStore(
@@ -1067,6 +1134,22 @@ mod tests {
 
     fn randomness() -> GenerationZeroRandomness {
         GenerationZeroRandomness::new(generation_zero_bytes())
+    }
+
+    fn replace_top_level_version(encoded: &[u8], version: u64) -> Vec<u8> {
+        let CborValue::Map(mut fields) = decode_cbor(encoded).unwrap() else {
+            panic!("fixture must be a CBOR map")
+        };
+        let mut replaced = false;
+        for (key, value) in &mut fields {
+            if key == &CborValue::Unsigned(1) {
+                *value = CborValue::Unsigned(version);
+                replaced = true;
+                break;
+            }
+        }
+        assert!(replaced);
+        encode_cbor(&CborValue::Map(fields))
     }
 
     fn add_item_randomness(seed: u8) -> AddItemRandomnessV1 {
@@ -1763,6 +1846,254 @@ mod tests {
         assert_eq!(
             format!("{status:?}"),
             "VaultStatusV1 { state: RecoveryRequired }"
+        );
+    }
+
+    #[test]
+    fn doctor_reports_coarse_locked_and_unlocked_health_states() {
+        let absent_local = MemoryLocalStateStore::default();
+        let absent_bootstrap = MemoryBootstrapStore::default();
+        let absent = crate::VaultAccessV1::locked(BootstrapLocator::new([0x93; 32]));
+        assert_eq!(
+            absent.doctor(&absent_local, &absent_bootstrap).state(),
+            crate::VaultDoctorStateV1::InitializationRequired
+        );
+
+        let prepared = prepare_generation_zero(
+            Zeroizing::new(b"prepared passphrase".to_vec()),
+            GenerationZeroPolicyV1::new(8 * 1024, 1, 1, 10).unwrap(),
+            randomness(),
+        )
+        .unwrap();
+        let prepared_locator = prepared.bootstrap_locator();
+        let prepared_local =
+            MemoryLocalStateStore::with_state(prepared.owner_state().encode().unwrap());
+        assert_eq!(
+            crate::VaultAccessV1::locked(prepared_locator)
+                .doctor(&prepared_local, &absent_bootstrap)
+                .state(),
+            crate::VaultDoctorStateV1::InitializationRequired
+        );
+
+        let (locator, local, bootstrap, factory) = initialized();
+        let mut access = crate::VaultAccessV1::locked(locator);
+        let locked_report = access.doctor(&local, &bootstrap);
+        assert_eq!(
+            locked_report.state(),
+            crate::VaultDoctorStateV1::AuthenticationRequired
+        );
+        assert_eq!(
+            format!("{locked_report:?}"),
+            "VaultDoctorReportV1 { state: AuthenticationRequired }"
+        );
+
+        access
+            .unlock(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap();
+        assert_eq!(
+            access.doctor(&local, &bootstrap).state(),
+            crate::VaultDoctorStateV1::Healthy
+        );
+
+        access.lock();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("initialized state must be active")
+        };
+        let pending =
+            LocalVaultStateV1::pending_publication(active.clone(), pending_publication(&active))
+                .unwrap();
+        *local.0.lock().unwrap() = Some(pending.encode().unwrap());
+        assert_eq!(
+            access.doctor(&local, &bootstrap).state(),
+            crate::VaultDoctorStateV1::RecoveryRequired
+        );
+    }
+
+    #[test]
+    fn doctor_closes_store_version_and_integrity_failures_without_detail() {
+        struct FailingLocalStateStore(LocalStateStoreError);
+
+        impl LocalStateStore for FailingLocalStateStore {
+            fn load(
+                &self,
+                _locator: BootstrapLocator,
+            ) -> Result<Option<Vec<u8>>, LocalStateStoreError> {
+                Err(self.0)
+            }
+
+            fn compare_exchange(
+                &self,
+                _locator: BootstrapLocator,
+                _expected: Option<&[u8]>,
+                _replacement: &[u8],
+            ) -> Result<(), LocalStateStoreError> {
+                Err(self.0)
+            }
+        }
+
+        struct FailingBootstrapStore(BootstrapStoreError);
+
+        impl BootstrapStore for FailingBootstrapStore {
+            fn load_latest(
+                &self,
+                _locator: BootstrapLocator,
+            ) -> Result<Option<Vec<u8>>, BootstrapStoreError> {
+                Err(self.0)
+            }
+
+            fn put_generation(
+                &self,
+                _locator: BootstrapLocator,
+                _expected_previous: Option<BootstrapId>,
+                _exact_bootstrap: &[u8],
+            ) -> Result<(), BootstrapStoreError> {
+                Err(self.0)
+            }
+        }
+
+        let locator = BootstrapLocator::new([0x94; 32]);
+        let access = crate::VaultAccessV1::locked(locator);
+        assert_eq!(
+            access
+                .doctor(
+                    &FailingLocalStateStore(LocalStateStoreError::Unavailable),
+                    &MemoryBootstrapStore::default(),
+                )
+                .state(),
+            crate::VaultDoctorStateV1::LocalStateUnavailable
+        );
+        assert_eq!(
+            access
+                .doctor(
+                    &FailingLocalStateStore(LocalStateStoreError::ConcurrentHost),
+                    &MemoryBootstrapStore::default(),
+                )
+                .state(),
+            crate::VaultDoctorStateV1::IntegrityFailure
+        );
+        assert_eq!(
+            access
+                .doctor(
+                    &MemoryLocalStateStore::with_state(vec![0xff]),
+                    &MemoryBootstrapStore::default(),
+                )
+                .state(),
+            crate::VaultDoctorStateV1::IntegrityFailure
+        );
+
+        let (locator, local, bootstrap, _) = initialized();
+        let access = crate::VaultAccessV1::locked(locator);
+        assert_eq!(
+            access
+                .doctor(
+                    &local,
+                    &FailingBootstrapStore(BootstrapStoreError::Unavailable),
+                )
+                .state(),
+            crate::VaultDoctorStateV1::BootstrapUnavailable
+        );
+        assert_eq!(
+            access
+                .doctor(
+                    &local,
+                    &FailingBootstrapStore(BootstrapStoreError::Conflict),
+                )
+                .state(),
+            crate::VaultDoctorStateV1::IntegrityFailure
+        );
+        assert_eq!(
+            access
+                .doctor(&local, &MemoryBootstrapStore::default())
+                .state(),
+            crate::VaultDoctorStateV1::IntegrityFailure
+        );
+        assert_eq!(
+            access
+                .doctor(&local, &MemoryBootstrapStore(Mutex::new(Some(vec![0xff]))),)
+                .state(),
+            crate::VaultDoctorStateV1::IntegrityFailure
+        );
+
+        let unsupported_local =
+            replace_top_level_version(local.0.lock().unwrap().as_deref().unwrap(), 2);
+        let unsupported_local = MemoryLocalStateStore::with_state(unsupported_local);
+        assert_eq!(
+            access.doctor(&unsupported_local, &bootstrap).state(),
+            crate::VaultDoctorStateV1::UnsupportedCapability
+        );
+
+        let unsupported_bootstrap =
+            replace_top_level_version(bootstrap.0.lock().unwrap().as_deref().unwrap(), 2);
+        let unsupported_bootstrap = MemoryBootstrapStore(Mutex::new(Some(unsupported_bootstrap)));
+        assert_eq!(
+            access.doctor(&local, &unsupported_bootstrap).state(),
+            crate::VaultDoctorStateV1::UnsupportedCapability
+        );
+    }
+
+    #[test]
+    fn unlocked_doctor_distinguishes_repository_unavailability_from_integrity() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let mut unavailable = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        unavailable._repository = Box::new(FailingAuditRepository(
+            ApplicationRepositoryError::StorageUnavailable,
+        ));
+        let unavailable = crate::VaultAccessV1::Unlocked(Box::new(unavailable));
+        assert_eq!(
+            unavailable.doctor(&local, &bootstrap).state(),
+            crate::VaultDoctorStateV1::RepositoryUnavailable
+        );
+
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("initialized state must be active")
+        };
+        let pending =
+            LocalVaultStateV1::pending_publication(active.clone(), pending_publication(&active))
+                .unwrap();
+        *local.0.lock().unwrap() = Some(pending.encode().unwrap());
+        assert_eq!(
+            unavailable.doctor(&local, &bootstrap).state(),
+            crate::VaultDoctorStateV1::IntegrityFailure
+        );
+        *local.0.lock().unwrap() = Some(exact_active);
+
+        let mut corrupt = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        corrupt._repository = Box::new(FailingAuditRepository(
+            ApplicationRepositoryError::IntegrityFailure,
+        ));
+        let corrupt = crate::VaultAccessV1::Unlocked(Box::new(corrupt));
+        assert_eq!(
+            corrupt.doctor(&local, &bootstrap).state(),
+            crate::VaultDoctorStateV1::IntegrityFailure
+        );
+
+        *local.0.lock().unwrap() = None;
+        assert_eq!(
+            corrupt.doctor(&local, &bootstrap).state(),
+            crate::VaultDoctorStateV1::IntegrityFailure
         );
     }
 

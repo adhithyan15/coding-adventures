@@ -611,10 +611,24 @@ counts. A report exists only after the complete audit succeeds and therefore
 has `integrity_verified = true`; any failure returns the closed application
 error taxonomy without a partial report. It never returns object or item IDs.
 
-`doctor` distinguishes local state availability, bootstrap availability,
-repository availability, unsupported capability, authentication required, and
-integrity failure without including provider detail. It must not weaken open or
-accept new pins as a repair side effect.
+`doctor` is read-only and returns exactly one of `Healthy`,
+`InitializationRequired`, `RecoveryRequired`, `LocalStateUnavailable`,
+`BootstrapUnavailable`, `RepositoryUnavailable`, `UnsupportedCapability`,
+`AuthenticationRequired`, or `IntegrityFailure`. While locked, it strictly
+decodes the bounded owner state, verifies an active state's exact signed
+bootstrap binding, and returns `AuthenticationRequired` before repository
+access because its opaque address and verifier require authenticated secrets.
+Prepared state returns `InitializationRequired`; pending publication returns
+`RecoveryRequired`. While unlocked, it additionally requires the exact durable
+active state retained by the session and runs the complete audit before
+returning `Healthy`. Unsupported persisted versions or mandatory suites remain
+distinct from malformed or unauthenticated integrity failures.
+
+The report contains no counts or vault, device, item, revision, object,
+locator, or provider identity. Provider-specific path, authorization, quota,
+and cache diagnostics belong to host adapters and may only be collapsed into
+the same coarse vocabulary. `doctor` must not repair state, publish bytes,
+weaken open, or accept new pins as a side effect.
 
 ## 13. Bounds and errors
 

@@ -82,6 +82,20 @@ impl VaultAccessV1 {
         crate::status::status(self, local_state_store)
     }
 
+    /// Run read-only low-resolution health checks without repairing state.
+    ///
+    /// Locked access checks owner-state and public-bootstrap availability, then
+    /// reports `AuthenticationRequired` because repository addressing and
+    /// verification require authenticated secrets. Unlocked access additionally
+    /// rechecks exact local/bootstrap binding and runs the complete vault audit.
+    pub fn doctor(
+        &self,
+        local_state_store: &dyn LocalStateStore,
+        bootstrap_store: &dyn BootstrapStore,
+    ) -> crate::VaultDoctorReportV1 {
+        crate::doctor::doctor(self, local_state_store, bootstrap_store)
+    }
+
     /// Consume the boundary and return its unlocked session.
     ///
     /// A locked boundary fails with the stable `Locked` class and retains no
