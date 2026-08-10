@@ -536,7 +536,11 @@ publication. Device enrollment defines the later fresh-device ceremony.
   through a schema-specific API after validating clipboard, confirmed
   interactive reveal, or warned unsafe non-interactive intent; and
 - unresolved concurrent candidates return `ConflictRequired` and remain
-  available for a later resolution workflow.
+  available for explicit choose-candidate or caller-authored merged-document
+  resolution. An authored merge follows a host-controlled reveal ceremony,
+  requires at least one live current candidate, preserves every live
+  candidate's schema and creation time, and names the complete current
+  candidate set as causal parents.
 
 Mutation input is owned and zeroized on all return paths. Item IDs, operation
 IDs, and revision randomness come from injected entropy. Timestamps come from

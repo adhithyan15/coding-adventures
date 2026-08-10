@@ -426,6 +426,65 @@ pub(crate) fn resolve_item_conflict(
     publish_mutation(active, repository, publication, local_state_store)
 }
 
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn merge_item_conflict(
+    active: &ActiveStateV1,
+    report: &OpenReport,
+    current_items: &BTreeMap<ItemId, Vec<ItemCandidate>>,
+    keys: &V1Keys,
+    local_secret: &LocalSecretV1,
+    repository: &dyn ApplicationRepository,
+    document: ItemDocument,
+    wall_time_ms: u64,
+    randomness: ResolveItemConflictRandomnessV1,
+    local_state_store: &dyn LocalStateStore,
+) -> Result<ActiveStateV1, ApplicationError> {
+    if report.heads() != active.pinned_heads() {
+        return Err(ApplicationError::ConcurrentHost);
+    }
+    document
+        .validate()
+        .map_err(|_| ApplicationError::InvalidInput)?;
+    let candidates = current_items
+        .get(&document.id())
+        .ok_or(ApplicationError::NotFound)?;
+    if candidates.len() < 2 {
+        return Err(ApplicationError::ConflictRequired);
+    }
+
+    let mut live_candidate_count = 0usize;
+    for candidate in candidates {
+        if let ItemState::Live(current) = candidate.state() {
+            live_candidate_count += 1;
+            if current.schema() != document.schema()
+                || current.created_at_ms() != document.created_at_ms()
+            {
+                return Err(ApplicationError::InvalidInput);
+            }
+        }
+    }
+    if live_candidate_count == 0 {
+        return Err(ApplicationError::InvalidInput);
+    }
+
+    let causal_parents = candidates
+        .iter()
+        .map(ItemCandidate::revision_id)
+        .collect::<BTreeSet<_>>();
+    let publication = prepare_item_publication(
+        active,
+        current_items,
+        keys,
+        local_secret,
+        document.id(),
+        ItemState::Live(Box::new(document)),
+        &causal_parents,
+        wall_time_ms,
+        &randomness.bytes,
+    )?;
+    publish_mutation(active, repository, publication, local_state_store)
+}
+
 fn publish_mutation(
     active: &ActiveStateV1,
     repository: &dyn ApplicationRepository,

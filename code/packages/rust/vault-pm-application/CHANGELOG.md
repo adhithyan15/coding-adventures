@@ -2,6 +2,21 @@
 
 All notable changes to this package are documented here.
 
+## [0.23.0] - 2026-08-10
+
+### Added
+
+- Add user-authored merged-document conflict resolution for a current item
+  with two or more retained candidates.
+
+### Security
+
+- Require at least one live candidate and preserve the schema and creation time
+  of every retained live candidate before any local write.
+- Publish the complete current candidate set as causal parents, consume the
+  secret-bearing document and session on every path, and retain all immutable
+  candidate bytes as reachable history.
+
 ## [0.22.0] - 2026-08-10
 
 ### Added

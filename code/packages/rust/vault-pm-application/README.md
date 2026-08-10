@@ -140,9 +140,15 @@ same typed redacted live view or tombstone marker as history. Choosing one
 authenticated candidate consumes the session and republishes its complete live
 document or tombstone as a new revision whose direct parents are the entire
 current conflict set. The resolution never selects implicitly, drops a losing
-candidate, rewrites history, or asks the host to round-trip plaintext. A later
-slice will add user-authored merged-document resolution after explicit field
-reveal.
+candidate, rewrites history, or asks the host to round-trip plaintext.
+
+After an explicit host-controlled field-reveal ceremony, a user may instead
+author one complete merged document. The application accepts that owned
+secret-bearing document only for an actual current conflict, requires at least
+one live candidate, preserves every live candidate's immutable schema and
+creation time, and publishes the complete conflict set as causal parents. The
+document and session are consumed on every return path, while all prior
+candidate bytes remain immutable reachable history.
 
 An unlocked session can explicitly reveal one exact reachable live revision.
 The application proves reachability through the same bounded verified history
@@ -184,9 +190,8 @@ device, item, revision, object, locator, or provider identity.
 
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
-credential store, or entropy source. User-authored conflict merging, host field
-clipboard implementation, export, audit verification, and doctor workflows
-land in the next slices.
+credential store, or entropy source. Host field clipboard implementation,
+export, audit verification, and doctor workflows land in the next slices.
 There is no unchecked
 repository verification path: construction decrypts and
 authority-verifies the exact locally pinned certificate frame and object ID,
@@ -203,16 +208,16 @@ parser failures, crash-state relationship checks, diagnostic redaction, and
 explicit key wiping. Status tests prove every coarse lifecycle state,
 unlocked-only counts, diagnostic redaction, strict corrupt-state rejection,
 and closed local-store error translation. Open tests additionally prove empty
-and conflicted current
-catalog materialization plus dangling current-revision, missing-parent, and
+and conflicted current catalog materialization plus dangling current-revision,
+missing-parent, and
 cross-item rejection. Repository tests exercise initialization, publication,
 verified open/read/history, every injected provider operation, constructor
 paths, and complete error translation.
 Search tests cover Unicode normalization, short queries, oversized safe-field
 fallback, exact collection filters, deterministic product ordering, every
 record schema's allowlist/denylist, secret exclusion, query/result bounds, and
-conflict closure. The exact Tarpaulin LLVM result is 2,340 of 2,451 production
-lines (95.47%); the status module is 46 of 46. Add-item tests cover exact
+conflict closure. The exact Tarpaulin LLVM result is 2,381 of 2,493 production
+lines (95.51%); the status module remains 46 of 46. Add-item tests cover exact
 entropy partitioning and wiping,
 identity validation before local writes, parentless revision and complete
 catalog construction, ambiguous successful compare-exchanges, write-ahead
@@ -224,9 +229,10 @@ Deletion tests prove one-parent tombstone causality, advisory timestamp
 separation, ordinary-view omission, repeat/missing rejection before
 compare-exchange, and entropy redaction/wiping.
 Conflict-resolution tests prove deterministic redacted inspection, live and
-tombstone selection, complete multi-parent causality, immutable losing-candidate
-retention, missing/unconflicted rejection before compare-exchange, and entropy
-redaction/wiping.
+tombstone selection, authored merged-secret persistence, complete multi-parent
+causality, immutable live-identity preservation, immutable losing-candidate
+retention, missing/unconflicted/all-tombstone rejection before
+compare-exchange, and entropy redaction/wiping.
 
 ## Development
 

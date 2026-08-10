@@ -1,8 +1,8 @@
 use crate::initialize::{unlock_active_material, UnlockedActiveMaterial};
 use crate::mutation::{
-    add_item, delete_item, replace_item, resolve_item_conflict, restore_item, AddItemRandomnessV1,
-    DeleteItemRandomnessV1, ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1,
-    RestoreItemRandomnessV1,
+    add_item, delete_item, merge_item_conflict, replace_item, resolve_item_conflict, restore_item,
+    AddItemRandomnessV1, DeleteItemRandomnessV1, ReplaceItemRandomnessV1,
+    ResolveItemConflictRandomnessV1, RestoreItemRandomnessV1,
 };
 use crate::search::SearchProjectionV1;
 use crate::{
@@ -467,6 +467,35 @@ impl UnlockedVaultV1 {
             &self._local_secret,
             self._repository.as_ref(),
             selected_revision,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+        )
+    }
+
+    /// Resolve one current conflict with a complete caller-authored document.
+    ///
+    /// The document must name an item with at least two current candidates and
+    /// preserve the schema and creation time of every retained live candidate.
+    /// At least one live candidate is required. The new revision names the
+    /// complete current conflict set as direct causal parents, consumes the
+    /// session and owned secret-bearing document, and never deletes immutable
+    /// candidate bytes.
+    pub fn merge_item_conflict(
+        self,
+        document: ItemDocument,
+        wall_time_ms: u64,
+        randomness: ResolveItemConflictRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        merge_item_conflict(
+            &self.active,
+            &self.report,
+            &self.current_catalog.items,
+            &self._keys,
+            &self._local_secret,
+            self._repository.as_ref(),
+            document,
             wall_time_ms,
             randomness,
             local_state_store,
@@ -1071,12 +1100,22 @@ mod tests {
     }
 
     fn new_login_document(item_id: ItemId, title: &str, password: &str) -> ItemDocument {
+        login_document_with_times(item_id, title, password, 300, 300)
+    }
+
+    fn login_document_with_times(
+        item_id: ItemId,
+        title: &str,
+        password: &str,
+        created_at_ms: u64,
+        updated_at_ms: u64,
+    ) -> ItemDocument {
         ItemDocument::new(
             item_id,
             ContentType::new(LOGIN_V1).unwrap(),
-            300,
-            300,
-            LwwRegister::new(false, 300, OperationId::new([0x71; 32])),
+            created_at_ms,
+            updated_at_ms,
+            LwwRegister::new(false, updated_at_ms, OperationId::new([0x71; 32])),
             ObservedSet::new(),
             ObservedSet::new(),
             AnyRecord::Login(Login {
@@ -2003,6 +2042,234 @@ mod tests {
         );
         assert_eq!(commit.added_objects().len(), 2);
         assert_eq!(commit.wall_time_ms(), 401);
+    }
+
+    #[test]
+    fn authored_conflict_merge_publishes_complete_parent_set_and_document() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x25; 16]);
+        let (publication, revisions) = pending_live_conflict_publication(&active, item_id);
+        let pending = LocalVaultStateV1::pending_publication(active, publication).unwrap();
+        *local.0.lock().unwrap() = Some(pending.encode().unwrap());
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let prior_heads = session.local_pins().clone();
+        session
+            .merge_item_conflict(
+                new_login_document(item_id, "Merged result", "merged-secret"),
+                405,
+                resolve_item_conflict_randomness(0x51),
+                &local,
+            )
+            .unwrap();
+
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.conflicted_item_count(), 0);
+        let [candidate] = reopened.current_catalog.items[&item_id].as_slice() else {
+            panic!("authored merge must become the sole current candidate")
+        };
+        assert_eq!(
+            candidate.causal_parents(),
+            &revisions
+                .iter()
+                .map(|(revision_id, _)| *revision_id)
+                .collect::<BTreeSet<_>>()
+        );
+        let ItemState::Live(document) = candidate.state() else {
+            panic!("authored merge must publish a live document")
+        };
+        let AnyRecord::Login(login) = document.payload() else {
+            panic!("authored merge must retain the input schema")
+        };
+        assert_eq!(login.title, "Merged result");
+        assert_eq!(login.password, "merged-secret");
+        assert_eq!(reopened.item_history(item_id, 100).unwrap().len(), 3);
+        let head = *reopened.open_report().heads().iter().next().unwrap();
+        let commit = reopened._repository.read_commit(head).unwrap();
+        assert_eq!(
+            commit.parents(),
+            prior_heads.iter().copied().collect::<Vec<_>>()
+        );
+        assert_eq!(commit.added_objects().len(), 2);
+        assert_eq!(commit.wall_time_ms(), 405);
+    }
+
+    #[test]
+    fn authored_conflict_merge_rejects_missing_sole_and_changed_identity_before_cas() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let missing = ItemId::new([0x26; 16]);
+        let exact_empty = local.0.lock().unwrap().clone().unwrap();
+        assert_eq!(
+            open_active_vault(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap()
+            .merge_item_conflict(
+                new_login_document(missing, "Missing", "missing-secret"),
+                406,
+                resolve_item_conflict_randomness(0x52),
+                &local,
+            ),
+            Err(ApplicationError::NotFound)
+        );
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_empty.as_slice())
+        );
+
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_empty).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let sole_id = ItemId::new([0x27; 16]);
+        let publication = pending_live_publication(&active, sole_id, "Sole", "sole-secret");
+        let pending = LocalVaultStateV1::pending_publication(active, publication).unwrap();
+        *local.0.lock().unwrap() = Some(pending.encode().unwrap());
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let exact_sole = local.0.lock().unwrap().clone().unwrap();
+        assert_eq!(
+            open_active_vault(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap()
+            .merge_item_conflict(
+                login_document_with_times(sole_id, "Not a conflict", "secret", 100, 300),
+                407,
+                resolve_item_conflict_randomness(0x53),
+                &local,
+            ),
+            Err(ApplicationError::ConflictRequired)
+        );
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_sole.as_slice())
+        );
+
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_sole).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let conflict_id = ItemId::new([0x28; 16]);
+        let (publication, _) = pending_live_conflict_publication(&active, conflict_id);
+        let pending = LocalVaultStateV1::pending_publication(active, publication).unwrap();
+        *local.0.lock().unwrap() = Some(pending.encode().unwrap());
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let exact_conflict = local.0.lock().unwrap().clone().unwrap();
+        assert_eq!(
+            open_active_vault(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap()
+            .merge_item_conflict(
+                login_document_with_times(conflict_id, "Changed identity", "secret", 301, 301,),
+                408,
+                resolve_item_conflict_randomness(0x54),
+                &local,
+            ),
+            Err(ApplicationError::InvalidInput)
+        );
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_conflict.as_slice())
+        );
+    }
+
+    #[test]
+    fn authored_conflict_merge_rejects_all_tombstone_conflict_before_cas() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x29; 16]);
+        let (publication, _) = pending_tombstone_publication(&active, item_id, item_id, 2, None);
+        let pending = LocalVaultStateV1::pending_publication(active, publication).unwrap();
+        *local.0.lock().unwrap() = Some(pending.encode().unwrap());
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let exact_conflict = local.0.lock().unwrap().clone().unwrap();
+
+        assert_eq!(
+            open_active_vault(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap()
+            .merge_item_conflict(
+                new_login_document(item_id, "Cannot revive", "secret"),
+                409,
+                resolve_item_conflict_randomness(0x55),
+                &local,
+            ),
+            Err(ApplicationError::InvalidInput)
+        );
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_conflict.as_slice())
+        );
     }
 
     #[test]
