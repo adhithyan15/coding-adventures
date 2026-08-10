@@ -173,6 +173,11 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // A `ModuleDef` body reaching emit is now hosted (not rejected); the
     // soundness gate below recurses into it for the residual `Const` checks.
     Feature::Modules,
+    // `Feature::ConsoleIO` (SIR28) — `__sys_write__`, the reserved
+    // console-output primitive `print`/`puts` will migrate to. Additive:
+    // nothing emits it yet, so this declares acceptance ahead of any
+    // frontend using it.
+    Feature::ConsoleIO,
 ];
 
 impl Backend for GoBackend {
