@@ -2,6 +2,22 @@
 
 All notable changes to this package are documented here.
 
+## [0.22.0] - 2026-08-10
+
+### Added
+
+- Add a closed five-state `VaultStatusV1` projection for absent, prepared,
+  locked, unlocked, and recovery-required lifecycle states.
+- Add authenticated item, candidate, and conflicted-item counts while unlocked.
+
+### Security
+
+- Locked status strictly decodes only bounded owner-private state and never
+  opens the bootstrap or repository.
+- Omit all counts outside an authenticated live session, keep diagnostics free
+  of identities and provider details, and translate store failures through the
+  closed application error taxonomy.
+
 ## [0.21.0] - 2026-08-10
 
 ### Added

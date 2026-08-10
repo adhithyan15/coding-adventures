@@ -17,6 +17,7 @@ mod open;
 mod repository;
 mod search;
 mod state;
+mod status;
 mod verifier;
 
 pub use codec::{
@@ -55,6 +56,7 @@ pub use state::{
     ActiveStateV1, AuthorityFingerprint, BootstrapLocator, BootstrapStore, BootstrapStoreError,
     LocalStateStore, LocalStateStoreError, LocalVaultStateV1, PreparedInitV1, PublicationJournalV1,
 };
+pub use status::{VaultStatusStateV1, VaultStatusV1};
 pub use verifier::V1SingleDeviceVerifier;
 
 use core::fmt::{self, Debug, Display, Formatter};

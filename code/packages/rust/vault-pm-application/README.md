@@ -174,11 +174,19 @@ the live session on `lock()`. A failed unlock leaves the boundary locked;
 repeated lock is idempotent. The unlocked variant is boxed so the host state
 object stays compact without copying key material.
 
+That boundary now exposes a safe status workflow for CLI and later UI hosts.
+While locked it strictly decodes the bounded owner-private record to report
+only `Absent`, `Prepared`, `Locked`, or `RecoveryRequired`; it does not access
+bootstrap or repository providers. While unlocked it reports `Unlocked` plus
+authenticated aggregate item, candidate, and conflicted-item counts. Counts
+are omitted in every other state, and status diagnostics contain no vault,
+device, item, revision, object, locator, or provider identity.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
 credential store, or entropy source. User-authored conflict merging, host field
-clipboard implementation, export, audit, and doctor workflows land in the next
-slices.
+clipboard implementation, export, audit verification, and doctor workflows
+land in the next slices.
 There is no unchecked
 repository verification path: construction decrypts and
 authority-verifies the exact locally pinned certificate frame and object ID,
@@ -192,7 +200,10 @@ lossless removed-value persistence, live and tombstone revisions, catalog
 bounds and ordering, cross-kind and cross-vault rejection, AEAD tampering,
 authority/device/certificate binding, Ed25519 signature rejection, closed
 parser failures, crash-state relationship checks, diagnostic redaction, and
-explicit key wiping. Open tests additionally prove empty and conflicted current
+explicit key wiping. Status tests prove every coarse lifecycle state,
+unlocked-only counts, diagnostic redaction, strict corrupt-state rejection,
+and closed local-store error translation. Open tests additionally prove empty
+and conflicted current
 catalog materialization plus dangling current-revision, missing-parent, and
 cross-item rejection. Repository tests exercise initialization, publication,
 verified open/read/history, every injected provider operation, constructor
@@ -200,8 +211,9 @@ paths, and complete error translation.
 Search tests cover Unicode normalization, short queries, oversized safe-field
 fallback, exact collection filters, deterministic product ordering, every
 record schema's allowlist/denylist, secret exclusion, query/result bounds, and
-conflict closure. The exact Tarpaulin LLVM result is 2,292 of 2,403 production
-lines (95.38%). Add-item tests cover exact entropy partitioning and wiping,
+conflict closure. The exact Tarpaulin LLVM result is 2,340 of 2,451 production
+lines (95.47%); the status module is 46 of 46. Add-item tests cover exact
+entropy partitioning and wiping,
 identity validation before local writes, parentless revision and complete
 catalog construction, ambiguous successful compare-exchanges, write-ahead
 publication ordering, ambiguous provider commits, failed final activation,
