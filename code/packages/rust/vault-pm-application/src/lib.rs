@@ -35,7 +35,10 @@ pub use mutation::{
     AddItemRandomnessV1, DeleteItemRandomnessV1, ReplaceItemRandomnessV1, ADD_ITEM_RANDOM_BYTES,
     DELETE_ITEM_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
 };
-pub use open::{open_active_vault, recover_pending_publication, UnlockedVaultV1};
+pub use open::{
+    open_active_vault, recover_pending_publication, ItemHistoryViewV1, UnlockedVaultV1,
+    DEFAULT_ITEM_HISTORY_LIMIT, MAX_ITEM_HISTORY_LIMIT,
+};
 pub use repository::{
     ApplicationRepository, ApplicationRepositoryError, ApplicationRepositoryFactory,
     V1ApplicationRepositoryFactory,

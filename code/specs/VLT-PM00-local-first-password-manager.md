@@ -1308,7 +1308,11 @@ changelog, focused build, and downstream validation.
        live revision, producing a one-parent tombstone, retaining it for later
        history/restore while omitting it from ordinary views, and reusing exact
        crash-resumable publication;
-   7b-2. restore and explicit conflict-resolution mutation workflows;
+   7b-2. bounded item-history materialization across every current head,
+       decrypting distinct historical catalogs and revisions into deterministic
+       secret-free views for restore selection without provider-specific reads;
+   7b-3. restore-by-revision and explicit conflict-resolution mutation
+       workflows;
    7c. bounded history traversal and explicit zeroizing field reveal;
    7d. authenticated portable export and restore/import preparation; and
    7e. audit, status, and doctor workflows; and
