@@ -121,6 +121,12 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         )
         self.assertIn("compose/src/main/kotlin/MosaicRuntimeHost.kt", workflow)
         self.assertIn("gradle --no-daemon --stacktrace -p \"$harness\" run", workflow)
+        self.assertIn("mosaic-pkg-rating-controls", workflow)
+        self.assertIn("--profile native-complete", workflow)
+        self.assertIn(
+            "gradle --no-daemon --stacktrace -p \"$strict_output/compose\" compileKotlin",
+            workflow,
+        )
         self.assertIn("MOSAIC_APP_LIBRARY", workflow)
 
     def test_harness_does_not_duplicate_the_generated_binding(self) -> None:

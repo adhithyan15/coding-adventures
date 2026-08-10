@@ -1,5 +1,16 @@
 # Changelog
 
+## [Unreleased] - native-complete Compose runtime shell
+
+- Compose project shells emitted under `BuildProfile::NativeComplete` now
+  require Mosaic's standard Rust runtime and a complete props envelope before
+  mounting the generated component.
+- Strict Compose shells omit the package-owned reflection bridge, event-print
+  fallback, and generated sample values for required props. Permissive output
+  retains those preview and compatibility paths.
+- Compose runtime CI now compiles a zero-degradation strict project in addition
+  to round-tripping the standard JNA binding.
+
 ## [Unreleased] - native-complete package profile
 
 - Added deterministic package-expanded degradation analysis and the

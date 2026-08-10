@@ -104,7 +104,9 @@ machine-readable `<backend>/mosaic-degradations.json`. Use
 `--profile native-complete` in CI to reject known interactive, accessibility,
 effect-host, or placeholder behavior before any application artifacts are
 emitted. The first inventory is intentionally conservative and will grow as
-backend property/event coverage is audited.
+backend property/event coverage is audited. Compose project shells that pass the
+strict profile require the standard Rust application library at startup and do
+not include legacy-host or generated sample-prop fallbacks.
 
 ## Examples
 

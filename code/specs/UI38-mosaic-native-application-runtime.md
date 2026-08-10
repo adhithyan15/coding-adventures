@@ -303,6 +303,10 @@ unblocks multiple downstream targets; never count source generation as completio
 - [ ] Add `native-complete` capability/degradation analysis to the compiler.
   - [x] Add a package-builder API and CLI profile with deterministic,
     package-expanded degradation reports and pre-emission strict rejection.
+  - [x] Make Compose `native-complete` project shells require the standard Rust
+    runtime and runtime-provided props, with no legacy-host or sample-data path.
+  - [ ] Repeat the runtime-required shell policy for SwiftUI, XAML, Qt, and
+    Flutter.
   - [ ] Inventory ignored properties, events, styles, effects, and accessibility
     metadata across every native emitter, and add the equivalent package setting.
   - [ ] Remove every reported TaskApp degradation on all five native backends.

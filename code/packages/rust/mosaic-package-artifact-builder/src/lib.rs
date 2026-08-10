@@ -543,7 +543,7 @@ pub fn build_package_with_profile(
         });
     }
 
-    let mut result = build_package(opts)?;
+    let mut result = build_package_inner(opts, Some(profile))?;
     write_degradation_report(&report_path, &report)?;
     result.artifacts.push(report_path);
     Ok(result)
@@ -581,7 +581,9 @@ pub fn analyze_package_degradations(
         });
     }
 
-    if opts.emit_project && opts.backend.is_native() {
+    let runtime_required_shell =
+        profile == BuildProfile::NativeComplete && opts.backend == Backend::Compose;
+    if opts.emit_project && opts.backend.is_native() && !runtime_required_shell {
         degradations.push(Degradation {
             code: "runtime.sample-fallback".to_string(),
             backend: opts.backend.dir_name().to_string(),
@@ -730,6 +732,13 @@ fn flutter_link_requires_url_host(node: &LayoutNode) -> bool {
 ///   build into a stable dist directory and treat a half-written tree as
 ///   the same outcome as a successful rebuild that subsequently failed.
 pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
+    build_package_inner(opts, None)
+}
+
+fn build_package_inner(
+    opts: &BuildOptions,
+    profile: Option<BuildProfile>,
+) -> Result<BuildResult, BuildError> {
     // ----- 1. Validate the backend up front --------------------------------
     //
     // All six backends are wired since v0.2; `component_extension`
@@ -854,15 +863,16 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
     // means a re-build overwrites them deterministically.
     if opts.emit_project {
         if let Some(first_component) = components_built.first() {
-            let shell_artifacts = emit_project_shell(
-                first_component,
-                &src_dir,
-                &backend_dir,
-                opts.backend,
-                &manifest.package.name,
-                &package_search_paths,
-                opts.theme.as_deref(),
-            )?;
+            let shell_artifacts = emit_project_shell(ProjectShellOptions {
+                component: first_component,
+                src_dir: &src_dir,
+                backend_dir: &backend_dir,
+                backend: opts.backend,
+                package_name: &manifest.package.name,
+                package_search_paths: &package_search_paths,
+                theme: opts.theme.as_deref(),
+                profile,
+            })?;
             artifacts.extend(shell_artifacts);
         }
         // Empty packages with emit_project: true don't emit a shell —
@@ -1074,15 +1084,28 @@ fn unsafe_path_err(kind: &'static str, path: &str) -> BuildError {
 /// `EmitOptions::emit_project` mechanism (PR #3917) that runs
 /// through `mosaic-compile` directly, bypassing the artifact-builder.
 /// Unifying the two paths is queued as UI32-M.1.
-fn emit_project_shell(
-    component: &str,
-    src_dir: &Path,
-    backend_dir: &Path,
+struct ProjectShellOptions<'a> {
+    component: &'a str,
+    src_dir: &'a Path,
+    backend_dir: &'a Path,
     backend: Backend,
-    package_name: &str,
-    package_search_paths: &[PathBuf],
-    theme: Option<&str>,
-) -> Result<Vec<PathBuf>, BuildError> {
+    package_name: &'a str,
+    package_search_paths: &'a [PathBuf],
+    theme: Option<&'a str>,
+    profile: Option<BuildProfile>,
+}
+
+fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, BuildError> {
+    let ProjectShellOptions {
+        component,
+        src_dir,
+        backend_dir,
+        backend,
+        package_name,
+        package_search_paths,
+        theme,
+        profile,
+    } = options;
     // Re-read the triple. This duplicates `compile_one_component`'s
     // file-loading logic; we accept the redundancy because the shell
     // emission lives outside the per-component compile loop and we'd
@@ -1313,6 +1336,7 @@ fn emit_project_shell(
             }
         }
         Backend::Compose => {
+            let require_runtime = profile == Some(BuildProfile::NativeComplete);
             let r = mosaic_emit_compose::pipeline::from_pipeline(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -1329,7 +1353,10 @@ fn emit_project_shell(
                     "build.gradle.kts",
                     build_compose_build_gradle_kts(package_name),
                 ),
-                ("README.md", build_compose_readme(package_name, component)),
+                (
+                    "README.md",
+                    build_compose_readme(package_name, component, require_runtime),
+                ),
             ];
             for (rel, body) in flat {
                 let p = backend_dir.join(rel);
@@ -1340,7 +1367,8 @@ fn emit_project_shell(
             let main_nested = backend_dir.join("src/main/kotlin/Main.kt");
             write_file(
                 &main_nested,
-                build_compose_main_kt(component, &mosmodel_out.component.slots).as_bytes(),
+                build_compose_main_kt(component, &mosmodel_out.component.slots, require_runtime)
+                    .as_bytes(),
             )?;
             written.push(main_nested);
 
@@ -1601,12 +1629,120 @@ fn build_compose_build_gradle_kts(package_name: &str) -> String {
     )
 }
 
-fn build_compose_main_kt(component_name: &str, slots: &[SlotDecl]) -> String {
-    let root = build_compose_root_invocation(component_name, slots);
+fn build_compose_main_kt(
+    component_name: &str,
+    slots: &[SlotDecl],
+    require_runtime: bool,
+) -> String {
+    let root = build_compose_root_invocation(component_name, slots, require_runtime);
+    let component_label = escape_kotlin_string(component_name);
+    let host_loader = if require_runtime {
+        "requireNotNull(MosaicRuntimeHost.load()) { \"native-complete requires the Mosaic Rust application runtime\" }"
+    } else {
+        "MosaicRuntimeHost.load() ?: MosaicComposeHostBridge.load()"
+    };
+    let host_type = if require_runtime {
+        "MosaicComposeHost"
+    } else {
+        "MosaicComposeHost?"
+    };
+    let startup_import = if require_runtime {
+        "import androidx.compose.material.Text\n"
+    } else {
+        ""
+    };
+    let ready_decl = if require_runtime {
+        "    var hostReady by remember { mutableStateOf(false) }\n"
+    } else {
+        ""
+    };
+    let props_update = if require_runtime {
+        concat!(
+            "        check(response.containsKey(\"props\")) {\n",
+            "            \"Mosaic runtime response did not include props\"\n",
+            "        }\n",
+            "        hostProps = nextProps\n",
+            "        hostReady = true\n",
+        )
+    } else {
+        "        if (nextProps.isNotEmpty()) { hostProps = nextProps }\n"
+    };
+    let lifecycle = if require_runtime {
+        concat!(
+            "    LaunchedEffect(mosaicHost) {\n",
+            "        applyMosaicResponse(checkNotNull(mosaicHost.props()) {\n",
+            "            \"Mosaic runtime returned no startup props\"\n",
+            "        })\n",
+            "    }\n",
+            "    DisposableEffect(mosaicHost) {\n",
+            "        mosaicHost.setPropsChangedHandler {\n",
+            "            applyMosaicResponse(checkNotNull(mosaicHost.props()) {\n",
+            "                \"Mosaic runtime returned no changed props\"\n",
+            "            })\n",
+            "        }\n",
+            "        onDispose {\n",
+            "            mosaicHost.setPropsChangedHandler(null)\n",
+            "            mosaicHost.close()\n",
+            "        }\n",
+            "    }\n",
+        )
+    } else {
+        concat!(
+            "    LaunchedEffect(mosaicHost) {\n",
+            "        applyMosaicResponse(mosaicHost?.props())\n",
+            "    }\n",
+            "    DisposableEffect(mosaicHost) {\n",
+            "        mosaicHost?.setPropsChangedHandler { applyMosaicResponse(mosaicHost.props()) }\n",
+            "        onDispose {\n",
+            "            mosaicHost?.setPropsChangedHandler(null)\n",
+            "            mosaicHost?.close()\n",
+            "        }\n",
+            "    }\n",
+        )
+    };
+    let root_body = if require_runtime {
+        format!(
+            "        if (hostReady) {{\n{root}\n        }} else {{\n            Text(\"Starting {component_label}…\")\n        }}"
+        )
+    } else {
+        root
+    };
+    let legacy_bridge = if require_runtime {
+        ""
+    } else {
+        concat!(
+            "private class MosaicComposeHostBridge(private val instance: Any) : MosaicComposeHost {\n",
+            "    override fun props(): Map<String, Any?>? = invokeMap(\"props\")\n",
+            "    override fun handleEvent(event: Map<String, Any?>): Map<String, Any?>? = invokeMap(\"handleEvent\", event)\n\n",
+            "    override fun setPropsChangedHandler(handler: (() -> Unit)?) { invoke(\"setPropsChangedHandler\", handler) }\n",
+            "    override fun close() { invoke(\"close\") }\n\n",
+            "    private fun invoke(methodName: String, vararg args: Any?): Any? = runCatching {\n",
+            "        val method = instance.javaClass.methods.firstOrNull { method ->\n",
+            "            method.name == methodName && method.parameterCount == args.size\n",
+            "        } ?: return@runCatching null\n",
+            "        method.invoke(instance, *args)\n",
+            "    }.getOrNull()\n\n",
+            "    private fun invokeMap(methodName: String, vararg args: Any?): Map<String, Any?>? =\n",
+            "        mosaicMap(invoke(methodName, *args))\n\n",
+            "    companion object {\n",
+            "        fun load(): MosaicComposeHostBridge? = runCatching {\n",
+            "            val clazz = Class.forName(\"MosaicHost\")\n",
+            "            MosaicComposeHostBridge(clazz.getDeclaredConstructor().newInstance())\n",
+            "        }.getOrNull()\n",
+            "    }\n",
+            "}\n\n",
+        )
+    };
+    let required_helpers = if require_runtime {
+        build_compose_required_prop_helpers()
+    } else {
+        ""
+    };
     format!(
         concat!(
             "// AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit.\n",
             "import androidx.compose.material.MaterialTheme\n",
+            "{startup_import}",
             "import androidx.compose.runtime.Composable\n",
             "import androidx.compose.runtime.DisposableEffect\n",
             "import androidx.compose.runtime.LaunchedEffect\n",
@@ -1617,7 +1753,7 @@ fn build_compose_main_kt(component_name: &str, slots: &[SlotDecl]) -> String {
             "import androidx.compose.ui.window.Window\n",
             "import androidx.compose.ui.window.application\n\n",
             "fun main() = application {{\n",
-            "    val mosaicHost = remember {{ MosaicRuntimeHost.load() ?: MosaicComposeHostBridge.load() }}\n",
+            "    val mosaicHost = remember {{ {host_loader} }}\n",
             "    Window(onCloseRequest = ::exitApplication, title = \"{}\") {{\n",
             "        MosaicApp(mosaicHost)\n",
             "    }}\n",
@@ -1629,50 +1765,23 @@ fn build_compose_main_kt(component_name: &str, slots: &[SlotDecl]) -> String {
             "    override fun close() {{}}\n",
             "}}\n\n",
             "@Composable\n",
-            "fun MosaicApp(mosaicHost: MosaicComposeHost?) {{\n",
+            "fun MosaicApp(mosaicHost: {host_type}) {{\n",
             "    var hostProps by remember {{ mutableStateOf<Map<String, Any?>>(emptyMap()) }}\n",
+            "{ready_decl}",
             "    fun applyMosaicResponse(response: Map<String, Any?>?) {{\n",
             "        if (response == null) return\n",
             "        val nextProps = mosaicMap(response[\"props\"])\n",
-            "        if (nextProps.isNotEmpty()) {{ hostProps = nextProps }}\n",
+            "{props_update}",
             "        val hostIntent = mosaicMap(response[\"hostIntent\"])\n",
             "        if (hostIntent.isNotEmpty()) {{ println(\"hostIntent: $hostIntent\") }}\n",
             "        response[\"error\"]?.let {{ println(\"host error: $it\") }}\n",
             "    }}\n",
-            "    LaunchedEffect(mosaicHost) {{\n",
-            "        applyMosaicResponse(mosaicHost?.props())\n",
-            "    }}\n",
-            "    DisposableEffect(mosaicHost) {{\n",
-            "        mosaicHost?.setPropsChangedHandler {{ applyMosaicResponse(mosaicHost.props()) }}\n",
-            "        onDispose {{\n",
-            "            mosaicHost?.setPropsChangedHandler(null)\n",
-            "            mosaicHost?.close()\n",
-            "        }}\n",
-            "    }}\n",
+            "{lifecycle}",
             "    MaterialTheme {{\n",
-            "{root}\n",
+            "{root_body}\n",
             "    }}\n",
             "}}\n\n",
-            "private class MosaicComposeHostBridge(private val instance: Any) : MosaicComposeHost {{\n",
-            "    override fun props(): Map<String, Any?>? = invokeMap(\"props\")\n",
-            "    override fun handleEvent(event: Map<String, Any?>): Map<String, Any?>? = invokeMap(\"handleEvent\", event)\n\n",
-            "    override fun setPropsChangedHandler(handler: (() -> Unit)?) {{ invoke(\"setPropsChangedHandler\", handler) }}\n",
-            "    override fun close() {{ invoke(\"close\") }}\n\n",
-            "    private fun invoke(methodName: String, vararg args: Any?): Any? = runCatching {{\n",
-            "        val method = instance.javaClass.methods.firstOrNull {{ method ->\n",
-            "            method.name == methodName && method.parameterCount == args.size\n",
-            "        }} ?: return@runCatching null\n",
-            "        method.invoke(instance, *args)\n",
-            "    }}.getOrNull()\n\n",
-            "    private fun invokeMap(methodName: String, vararg args: Any?): Map<String, Any?>? =\n",
-            "        mosaicMap(invoke(methodName, *args))\n\n",
-            "    companion object {{\n",
-            "        fun load(): MosaicComposeHostBridge? = runCatching {{\n",
-            "            val clazz = Class.forName(\"MosaicHost\")\n",
-            "            MosaicComposeHostBridge(clazz.getDeclaredConstructor().newInstance())\n",
-            "        }}.getOrNull()\n",
-            "    }}\n",
-            "}}\n\n",
+            "{legacy_bridge}",
             "private fun mosaicMap(value: Any?): Map<String, Any?> {{\n",
             "    val source = value as? Map<*, *> ?: return emptyMap()\n",
             "    return source.entries.mapNotNull {{ entry ->\n",
@@ -1680,6 +1789,7 @@ fn build_compose_main_kt(component_name: &str, slots: &[SlotDecl]) -> String {
             "        key to entry.value\n",
             "    }}.toMap()\n",
             "}}\n\n",
+            "{required_helpers}",
             "private fun mosaicString(props: Map<String, Any?>, name: String, fallback: String): String =\n",
             "    props[name]?.toString() ?: fallback\n\n",
             "private fun mosaicDouble(props: Map<String, Any?>, name: String, fallback: Double): Double =\n",
@@ -1720,33 +1830,120 @@ fn build_compose_main_kt(component_name: &str, slots: &[SlotDecl]) -> String {
             "): @Composable () -> Unit =\n",
             "    props[name] as? (@Composable () -> Unit) ?: fallback\n",
         ),
-        escape_kotlin_string(component_name),
-        root = root,
+        component_label,
+        startup_import = startup_import,
+        host_loader = host_loader,
+        host_type = host_type,
+        ready_decl = ready_decl,
+        props_update = props_update,
+        lifecycle = lifecycle,
+        root_body = root_body,
+        legacy_bridge = legacy_bridge,
+        required_helpers = required_helpers,
     )
 }
 
-fn build_compose_root_invocation(component_name: &str, slots: &[SlotDecl]) -> String {
+fn build_compose_required_prop_helpers() -> &'static str {
+    concat!(
+        "private fun mosaicRequiredString(props: Map<String, Any?>, name: String): String =\n",
+        "    checkNotNull(props[name]) { \"Mosaic runtime omitted required prop '$name'\" }.toString()\n\n",
+        "private fun mosaicRequiredDouble(props: Map<String, Any?>, name: String): Double =\n",
+        "    when (val value = props[name]) {\n",
+        "        is Number -> value.toDouble()\n",
+        "        is String -> checkNotNull(value.toDoubleOrNull()) { \"Mosaic runtime prop '$name' is not a number\" }\n",
+        "        else -> error(\"Mosaic runtime omitted required numeric prop '$name'\")\n",
+        "    }\n\n",
+        "private fun mosaicRequiredBoolean(props: Map<String, Any?>, name: String): Boolean =\n",
+        "    when (val value = props[name]) {\n",
+        "        is Boolean -> value\n",
+        "        is String -> when (value.lowercase()) {\n",
+        "            \"true\" -> true\n",
+        "            \"false\" -> false\n",
+        "            else -> error(\"Mosaic runtime prop '$name' is not a boolean\")\n",
+        "        }\n",
+        "        else -> error(\"Mosaic runtime omitted required boolean prop '$name'\")\n",
+        "    }\n\n",
+        "private fun mosaicRequiredStringList(props: Map<String, Any?>, name: String): List<String> =\n",
+        "    (props[name] as? List<*>)?.mapIndexed { index, value ->\n",
+        "        checkNotNull(value) { \"Mosaic runtime prop '$name[$index]' is null\" }.toString()\n",
+        "    } ?: error(\"Mosaic runtime omitted required list prop '$name'\")\n\n",
+        "private fun mosaicRequiredDoubleList(props: Map<String, Any?>, name: String): List<Double> =\n",
+        "    (props[name] as? List<*>)?.mapIndexed { index, value ->\n",
+        "        when (value) {\n",
+        "            is Number -> value.toDouble()\n",
+        "            is String -> checkNotNull(value.toDoubleOrNull()) { \"Mosaic runtime prop '$name[$index]' is not a number\" }\n",
+        "            else -> error(\"Mosaic runtime prop '$name[$index]' is not a number\")\n",
+        "        }\n",
+        "    } ?: error(\"Mosaic runtime omitted required list prop '$name'\")\n\n",
+        "private fun mosaicRequiredBooleanList(props: Map<String, Any?>, name: String): List<Boolean> =\n",
+        "    (props[name] as? List<*>)?.mapIndexed { index, value ->\n",
+        "        when (value) {\n",
+        "            is Boolean -> value\n",
+        "            is String -> when (value.lowercase()) {\n",
+        "                \"true\" -> true\n",
+        "                \"false\" -> false\n",
+        "                else -> error(\"Mosaic runtime prop '$name[$index]' is not a boolean\")\n",
+        "            }\n",
+        "            else -> error(\"Mosaic runtime prop '$name[$index]' is not a boolean\")\n",
+        "        }\n",
+        "    } ?: error(\"Mosaic runtime omitted required list prop '$name'\")\n\n",
+        "@Suppress(\"UNCHECKED_CAST\")\n",
+        "private fun <T> mosaicRequiredValue(props: Map<String, Any?>, name: String): T =\n",
+        "    checkNotNull(props[name]) { \"Mosaic runtime omitted required prop '$name'\" } as T\n\n",
+    )
+}
+
+fn build_compose_root_invocation(
+    component_name: &str,
+    slots: &[SlotDecl],
+    require_runtime: bool,
+) -> String {
     let mut out = format!("            {component_name}(\n");
     for slot in slots {
         let field = to_camel_case_first_lower(&slot.name);
-        let value = compose_host_value_for_slot(slot);
+        let value = compose_host_value_for_slot(slot, require_runtime);
         writeln!(out, "                {field} = {value},").unwrap();
     }
     out.push_str("                dispatch = { event ->\n");
-    out.push_str(
-        "                    val response = mosaicHost?.handleEvent(event.mosaicEnvelope)\n",
-    );
-    out.push_str(
-        "                    if (response == null) println(\"event: ${event.mosaicEnvelope}\")\n",
-    );
+    if require_runtime {
+        out.push_str(
+            "                    val response = checkNotNull(mosaicHost.handleEvent(event.mosaicEnvelope)) {\n",
+        );
+        out.push_str("                        \"Mosaic runtime returned no event response\"\n");
+        out.push_str("                    }\n");
+    } else {
+        out.push_str(
+            "                    val response = mosaicHost?.handleEvent(event.mosaicEnvelope)\n",
+        );
+        out.push_str(
+            "                    if (response == null) println(\"event: ${event.mosaicEnvelope}\")\n",
+        );
+    }
     out.push_str("                    applyMosaicResponse(response)\n");
     out.push_str("                },\n");
     out.push_str("            )");
     out
 }
 
-fn compose_host_value_for_slot(slot: &SlotDecl) -> String {
+fn compose_host_value_for_slot(slot: &SlotDecl, require_runtime: bool) -> String {
     let slot_name = escape_kotlin_string(&slot.name);
+    if require_runtime && slot.default.is_none() {
+        let helper = match &slot.r#type {
+            SlotType::Text | SlotType::Image | SlotType::Color => "mosaicRequiredString",
+            SlotType::Number => "mosaicRequiredDouble",
+            SlotType::Bool => "mosaicRequiredBoolean",
+            SlotType::List(inner) => match inner.as_ref() {
+                ListInnerType::Text | ListInnerType::Image | ListInnerType::Color => {
+                    "mosaicRequiredStringList"
+                }
+                ListInnerType::Number => "mosaicRequiredDoubleList",
+                ListInnerType::Bool => "mosaicRequiredBooleanList",
+                _ => "mosaicRequiredValue",
+            },
+            SlotType::Node | SlotType::Component(_) => "mosaicRequiredValue",
+        };
+        return format!("{helper}(hostProps, \"{slot_name}\")");
+    }
     let fallback = sample_kotlin_value_for_slot(slot);
     match &slot.r#type {
         SlotType::Text | SlotType::Image | SlotType::Color => {
@@ -1857,13 +2054,23 @@ fn escape_kotlin_string(s: &str) -> String {
     out
 }
 
-fn build_compose_readme(package_name: &str, component: &str) -> String {
+fn build_compose_readme(package_name: &str, component: &str, require_runtime: bool) -> String {
     let app_id = compose_gradle_application_id(package_name);
+    let runtime_policy = if require_runtime {
+        "This `native-complete` shell requires the standard Rust runtime at startup. It does not load a package-owned reflection host or mount the component with sample props. The component is mounted only after the runtime returns its first props envelope."
+    } else {
+        "If no runtime library is present, this permissive shell can use a legacy package host or deterministic sample values. Use `--profile native-complete` to require the Rust runtime and remove both fallbacks."
+    };
+    let main_purpose = if require_runtime {
+        "Desktop app entrypoint that requires the Rust runtime and mounts the component after its first props envelope."
+    } else {
+        "Desktop app entrypoint that mounts the component with Rust runtime props or permissive sample values."
+    };
     format!(
         "<!-- AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit. -->\n\
 # {component} - Compose Desktop shell\n\n\
 Auto-generated by `mosaic-compile pkg --backend compose --emit-project`.\n\n\
-The top-level `{component}.kt` remains the reusable Mosaic library artifact. The nested `src/main/kotlin/` copy plus Gradle files form a runnable Compose Desktop app. The generated `MosaicRuntimeHost.kt` standard binding loads the Rust application library through JNA and round-trips props and semantic events without application-owned host code. If no runtime library is present, the permissive shell can use a legacy package host or deterministic sample values; the future `native-complete` profile will reject both fallbacks.\n\n\
+The top-level `{component}.kt` remains the reusable Mosaic library artifact. The nested `src/main/kotlin/` copy plus Gradle files form a runnable Compose Desktop app. The generated `MosaicRuntimeHost.kt` standard binding loads the Rust application library through JNA and round-trips props and semantic events without application-owned host code. {runtime_policy}\n\n\
 ## Prerequisites\n\n\
 - JDK 21 or newer.\n\
 - Gradle 8.7 or newer.\n\n\
@@ -1882,7 +2089,7 @@ gradle packageDistributionForCurrentOS\n\
 | `index.kt` | Lightweight manifest of generated Compose components. |\n\
 | `settings.gradle.kts` | Gradle settings with pinned repositories. |\n\
 | `build.gradle.kts` | Compose Desktop app build pinned to Compose Multiplatform {COMPOSE_GRADLE_PLUGIN_VERSION} and Kotlin {COMPOSE_KOTLIN_PLUGIN_VERSION}. |\n\
-| `src/main/kotlin/Main.kt` | Desktop app entrypoint that mounts `{component}` with Rust runtime props or permissive sample values. |\n\
+| `src/main/kotlin/Main.kt` | {main_purpose} |\n\
 | `src/main/kotlin/{component}.kt` | Source-set copy of the generated component so Gradle can compile it without file moves. |\n\n\
 | `src/main/kotlin/MosaicRuntimeHost.kt` | Standard JNA binding that owns the Rust runtime handle, buffers, startup context, and event sequence. |\n\n\
 Gradle native package name: `{app_id}`.\n"
@@ -3330,22 +3537,77 @@ layout Board {
     #[test]
     fn generated_native_shell_sample_fallback_is_reported() {
         let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        for backend in [Backend::Xaml, Backend::Compose] {
+            let out = TempDir::new().unwrap();
+            let report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: true,
+                    theme: None,
+                },
+                BuildProfile::Permissive,
+            )
+            .expect("project analysis");
+
+            assert_eq!(report.degradations.len(), 1);
+            assert_eq!(report.degradations[0].code, "runtime.sample-fallback");
+            assert_eq!(report.degradations[0].layout_path, "$project");
+        }
+    }
+
+    #[test]
+    fn native_complete_compose_shell_requires_the_standard_rust_runtime() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        fs::write(
+            pkg.path().join("src/Card.mil"),
+            "component Card { slot label : text ; }\n",
+        )
+        .unwrap();
+        fs::write(
+            pkg.path().join("src/Card.mll"),
+            "layout Card { Text [ root ] ( content : slot: label ) }\n",
+        )
+        .unwrap();
         let out = TempDir::new().unwrap();
-        let report = analyze_package_degradations(
+        let result = build_package_with_profile(
             &BuildOptions {
                 package_root: pkg.path().to_path_buf(),
                 output_root: out.path().to_path_buf(),
-                backend: Backend::Xaml,
+                backend: Backend::Compose,
                 emit_project: true,
                 theme: None,
             },
             BuildProfile::NativeComplete,
         )
-        .expect("project analysis");
+        .expect("native-complete Compose shell");
 
-        assert_eq!(report.degradations.len(), 1);
-        assert_eq!(report.degradations[0].code, "runtime.sample-fallback");
-        assert_eq!(report.degradations[0].layout_path, "$project");
+        let report_path = out.path().join("compose/mosaic-degradations.json");
+        assert!(result.artifacts.contains(&report_path));
+        let report = fs::read_to_string(report_path).unwrap();
+        assert!(report.contains("\"nativeComplete\": true"));
+
+        let main = fs::read_to_string(out.path().join("compose/src/main/kotlin/Main.kt")).unwrap();
+        assert!(main.contains(
+            "requireNotNull(MosaicRuntimeHost.load()) { \"native-complete requires the Mosaic Rust application runtime\" }"
+        ));
+        assert!(main.contains("fun MosaicApp(mosaicHost: MosaicComposeHost)"));
+        assert!(main.contains("var hostReady by remember"));
+        assert!(main.contains("if (hostReady)"));
+        assert!(main.contains("check(response.containsKey(\"props\"))"));
+        assert!(main.contains("checkNotNull(mosaicHost.props())"));
+        assert!(main.contains("checkNotNull(mosaicHost.handleEvent(event.mosaicEnvelope))"));
+        assert!(main.contains("label = mosaicRequiredString(hostProps, \"label\")"));
+        assert!(!main.contains("MosaicComposeHostBridge"));
+        assert!(!main.contains("Class.forName(\"MosaicHost\")"));
+        assert!(!main.contains("mosaicHost?."));
+        assert!(!main.contains("println(\"event:"));
+        assert!(!main.contains("Sample Label"));
+
+        let readme = fs::read_to_string(out.path().join("compose/README.md")).unwrap();
+        assert!(readme.contains("This `native-complete` shell requires the standard Rust runtime"));
+        assert!(!readme.contains("future `native-complete` profile"));
     }
 
     #[test]

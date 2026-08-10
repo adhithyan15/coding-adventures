@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Changed - strict Compose shells require Rust
+
+`mosaic-compile pkg --backend compose --emit-project --profile native-complete`
+now emits a runtime-required application shell. The strict shell waits for the
+standard Rust engine's first props envelope and contains neither the legacy
+reflection host nor generated sample values for required props.
+
 ### Added - package native-complete profile
 
 `mosaic-compile pkg` now accepts `--profile permissive|native-complete`.
