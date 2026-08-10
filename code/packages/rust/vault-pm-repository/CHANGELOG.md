@@ -2,6 +2,14 @@
 
 All notable changes to this package are documented here.
 
+## [0.2.0] - 2026-08-10
+
+### Added
+
+- Add a complete deterministic verified-ancestry read for security audits that
+  remains bounded by the repository graph limit instead of the interactive
+  history limit.
+
 ## [0.1.0] - 2026-08-09
 
 ### Added

@@ -1332,7 +1332,12 @@ changelog, focused build, and downstream validation.
    7e-1. completed safe five-state status workflow, strictly decoding bounded
        owner state while locked and exposing only authenticated aggregate item,
        candidate, and conflict counts while unlocked;
-   7e-2. audit verification and doctor workflows; and
+   7e-2a. completed unlocked audit verification, repeating pinned repository
+       discovery, proving the exact local counter/catalog/certificate anchor,
+       walking complete bounded ancestry, decrypting every distinct reachable
+       catalog and referenced revision, and returning aggregate-only counts;
+   7e-2b. locked/unlocked doctor workflow with coarse provider and integrity
+       classifications; and
    7f. completed stable payload-free VLT-PM05 `Locked` error and compact
        locked/unlocked lifecycle boundary, including failure-stable in-place
        unlock and synchronous live-session drop on idempotent lock.

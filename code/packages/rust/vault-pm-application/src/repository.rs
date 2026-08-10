@@ -80,6 +80,12 @@ pub trait ApplicationRepository: Send + Sync {
         start: ObjectId,
         limit: usize,
     ) -> Result<Vec<CommitSummary>, ApplicationRepositoryError>;
+
+    /// Walk complete bounded verified ancestry from one commit for audits.
+    fn complete_history(
+        &self,
+        start: ObjectId,
+    ) -> Result<Vec<CommitSummary>, ApplicationRepositoryError>;
 }
 
 /// Host-injected constructor used only after unlock derives address and verifier.
@@ -173,6 +179,15 @@ impl<S: VaultObjectStore + 'static> ApplicationRepository for V1ApplicationRepos
     ) -> Result<Vec<CommitSummary>, ApplicationRepositoryError> {
         self.repository
             .history(start, limit)
+            .map_err(map_repository)
+    }
+
+    fn complete_history(
+        &self,
+        start: ObjectId,
+    ) -> Result<Vec<CommitSummary>, ApplicationRepositoryError> {
+        self.repository
+            .complete_history(start)
             .map_err(map_repository)
     }
 }
@@ -384,6 +399,7 @@ mod tests {
         assert_eq!(repository.read_object(catalog_id).unwrap().id(), catalog_id);
         assert_eq!(repository.read_commit(commit_id).unwrap().id(), commit_id);
         assert_eq!(repository.history(commit_id, 1).unwrap().len(), 1);
+        assert_eq!(repository.complete_history(commit_id).unwrap().len(), 1);
         assert_eq!(
             repository.read_object(ObjectId::new([0xff; 32])).err(),
             Some(ApplicationRepositoryError::IntegrityFailure)

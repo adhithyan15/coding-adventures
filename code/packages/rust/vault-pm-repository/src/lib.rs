@@ -727,6 +727,31 @@ impl<S: VaultObjectStore, V: RepositoryVerifier> Repository<S, V> {
         Ok(order)
     }
 
+    /// Return complete deterministic verified ancestry beginning with `start`.
+    ///
+    /// Unlike [`Self::history`], this security-oriented traversal is not
+    /// truncated at the interactive history limit. It remains bounded by
+    /// [`MAX_GRAPH_COMMITS`] while loading and validating the complete graph.
+    pub fn complete_history(
+        &self,
+        start: FormatObjectId,
+    ) -> Result<Vec<CommitSummary>, RepositoryError> {
+        self.ensure_initialized()?;
+        let graph = self.load_graph([start])?;
+        let mut order = Vec::with_capacity(graph.commits.len());
+        let mut frontier = BTreeSet::from([start]);
+        let mut visited = BTreeSet::new();
+        while let Some(id) = frontier.pop_first() {
+            if !visited.insert(id) {
+                continue;
+            }
+            let commit = graph.commits.get(&id).ok_or(RepositoryError::Corruption)?;
+            order.push(CommitSummary::from_commit(id, commit));
+            frontier.extend(commit.parents.iter().copied());
+        }
+        Ok(order)
+    }
+
     /// Build a complete conservative reachability plan without deleting bytes.
     pub fn plan_gc(&self, retained_heads: &PinnedHeads) -> Result<GcPlan, RepositoryError> {
         self.ensure_initialized()?;
@@ -1349,6 +1374,10 @@ mod tests {
             Err(RepositoryError::NotInitialized)
         );
         assert_eq!(
+            repository.complete_history(FormatObjectId::new([1; 32])),
+            Err(RepositoryError::NotInitialized)
+        );
+        assert_eq!(
             repository.plan_gc(&PinnedHeads::empty()),
             Err(RepositoryError::NotInitialized)
         );
@@ -1583,6 +1612,9 @@ mod tests {
         assert!(history.iter().any(|summary| summary.id() == genesis_id));
         assert_eq!(history[0].parents(), sorted(vec![id_a, id_b]));
         assert!(format!("{:?}", history[0]).contains("parent_count: 2"));
+
+        let complete = repository.complete_history(merge_id).unwrap();
+        assert_eq!(complete, history);
     }
 
     #[test]

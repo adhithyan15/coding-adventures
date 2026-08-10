@@ -605,7 +605,11 @@ identities. Owner-state failures use the closed application error taxonomy.
 `audit_verify` while unlocked repeats a full VLT-PM04 open, decrypts every
 reachable catalog/current revision, validates all kinds and domain bounds,
 checks local pins/counter/bootstrap ancestry, and returns counts plus boolean
-integrity status. It never returns object or item IDs.
+integrity status. The V1 report contains announcement, commit, distinct
+catalog, distinct catalog-referenced revision, and distinct item-identity
+counts. A report exists only after the complete audit succeeds and therefore
+has `integrity_verified = true`; any failure returns the closed application
+error taxonomy without a partial report. It never returns object or item IDs.
 
 `doctor` distinguishes local state availability, bootstrap availability,
 repository availability, unsupported capability, authentication required, and

@@ -2,6 +2,22 @@
 
 All notable changes to this package are documented here.
 
+## [0.24.0] - 2026-08-10
+
+### Added
+
+- Add unlocked `audit_verify` with a secret-free aggregate report covering
+  announcements, commits, catalogs, item revisions, and item identities.
+
+### Security
+
+- Repeat repository discovery from durable pins, require an exact local
+  counter/catalog/certificate anchor, traverse complete bounded ancestry, and
+  authenticate/decrypt every distinct reachable catalog and referenced item
+  revision before returning a successful report.
+- Return no partial report on failure and keep ordinary diagnostics free of
+  vault, device, item, revision, object, locator, and provider identities.
+
 ## [0.23.0] - 2026-08-10
 
 ### Added

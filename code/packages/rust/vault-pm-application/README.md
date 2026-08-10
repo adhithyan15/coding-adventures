@@ -188,10 +188,20 @@ authenticated aggregate item, candidate, and conflicted-item counts. Counts
 are omitted in every other state, and status diagnostics contain no vault,
 device, item, revision, object, locator, or provider identity.
 
+An unlocked session can now run a complete read-only integrity audit. The
+workflow repeats verified repository discovery relative to durable local pins,
+requires one exact pinned commit matching the local device counter, catalog,
+and certificate, walks complete bounded ancestry from every current head, and
+authenticates and decrypts every distinct reachable catalog and catalog-named
+item revision. Success returns only aggregate announcement, commit, catalog,
+revision, and item counts plus `integrity_verified = true`; any provider,
+format, graph, anchor, cryptographic, or domain failure returns the closed
+application error taxonomy without a partial report.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
 credential store, or entropy source. Host field clipboard implementation,
-export, audit verification, and doctor workflows land in the next slices.
+export and doctor workflows land in the next slices.
 There is no unchecked
 repository verification path: construction decrypts and
 authority-verifies the exact locally pinned certificate frame and object ID,
@@ -213,11 +223,15 @@ missing-parent, and
 cross-item rejection. Repository tests exercise initialization, publication,
 verified open/read/history, every injected provider operation, constructor
 paths, and complete error translation.
+Audit tests cover complete re-discovery and ancestry traversal, aggregate-only
+diagnostics, historical catalog/revision counts, and exact local-anchor
+rejection. Repository tests also prove the complete security-history seam uses
+the same deterministic order as bounded interactive history.
 Search tests cover Unicode normalization, short queries, oversized safe-field
 fallback, exact collection filters, deterministic product ordering, every
 record schema's allowlist/denylist, secret exclusion, query/result bounds, and
-conflict closure. The exact Tarpaulin LLVM result is 2,381 of 2,493 production
-lines (95.51%); the status module remains 46 of 46. Add-item tests cover exact
+conflict closure. The exact Tarpaulin LLVM result is 2,459 of 2,582 production
+lines (95.23%); the status module remains 46 of 46. Add-item tests cover exact
 entropy partitioning and wiping,
 identity validation before local writes, parentless revision and complete
 catalog construction, ambiguous successful compare-exchanges, write-ahead
