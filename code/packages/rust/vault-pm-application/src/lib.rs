@@ -9,6 +9,7 @@
 
 mod codec;
 mod crypto;
+mod disclosure;
 mod initialize;
 mod mutation;
 mod open;
@@ -25,6 +26,9 @@ pub use codec::{
 pub use crypto::{
     open_local_secret, open_object, seal_local_secret, seal_object, LocalSecretRandomness,
     ObjectKind, ObjectRandomness, V1Keys,
+};
+pub use disclosure::{
+    RevealedSecretEncodingV1, RevealedSecretV1, SecretDisclosureIntentV1, SecretFieldV1,
 };
 pub use initialize::{
     complete_generation_zero, prepare_generation_zero, rehydrate_prepared_init,

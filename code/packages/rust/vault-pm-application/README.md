@@ -152,10 +152,24 @@ printable nor cloneable and wipes the secret-bearing payload and tags on drop;
 the application never guesses which current, conflicted, or historical
 candidate a host intended.
 
+Hosts can now narrow that exact revision to one schema-specific first-party
+secret field. The selector covers login passwords, secure-note bodies, card
+numbers and CVVs, raw TOTP seeds, API tokens, and database passwords; a selector
+for the wrong schema or an opaque record fails closed. The resulting
+`RevealedSecretV1` distinguishes UTF-8 from binary bytes but implements no
+printing or cloning and wipes its full allocation on drop.
+
+Every field disclosure also declares one policy path: clipboard with no secret
+stdout, reveal after a confirmed controlling-TTY ceremony, or explicitly
+unsafe non-interactive output after both flag opt-in and a host-emitted stderr
+warning. The application validates those facts before repository traversal.
+Actual TTY inspection, warning rendering, clipboard writes, ownership checks,
+and timed clear remain host responsibilities.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
 credential store, or entropy source. User-authored conflict merging, host field
-selection/copy policy, export, audit, and doctor workflows land in the next
+clipboard implementation, export, audit, and doctor workflows land in the next
 slices.
 There is no unchecked
 repository verification path: construction decrypts and
@@ -178,8 +192,8 @@ paths, and complete error translation.
 Search tests cover Unicode normalization, short queries, oversized safe-field
 fallback, exact collection filters, deterministic product ordering, every
 record schema's allowlist/denylist, secret exclusion, query/result bounds, and
-conflict closure. The exact Tarpaulin LLVM result is 2,213 of 2,324 production
-lines (95.22%). Add-item tests cover exact entropy partitioning and wiping,
+conflict closure. The exact Tarpaulin LLVM result is 2,250 of 2,361 production
+lines (95.30%). Add-item tests cover exact entropy partitioning and wiping,
 identity validation before local writes, parentless revision and complete
 catalog construction, ambiguous successful compare-exchanges, write-ahead
 publication ordering, ambiguous provider commits, failed final activation,

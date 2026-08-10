@@ -1322,7 +1322,10 @@ changelog, focused build, and downstream validation.
        field reveal;
    7c-1. completed bounded reachable live-revision reveal into a non-printable
        owned zeroizing document wrapper;
-   7c-2. host-facing field selection and explicit copy/reveal policy adapters;
+   7c-2. completed schema-specific first-party secret-field selection into a
+       non-printable wipe-on-drop value, with explicit clipboard, confirmed
+       interactive reveal, and warned unsafe non-interactive policy inputs;
+   7c-3. host clipboard adapter with ownership-aware timed clear;
    7d. authenticated portable export and restore/import preparation; and
    7e. audit, status, and doctor workflows; and
    7f. close the remaining VLT-PM05 `Locked` error and explicit lock-state

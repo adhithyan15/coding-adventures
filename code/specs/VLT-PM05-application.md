@@ -525,8 +525,9 @@ publication. Device enrollment defines the later fresh-device ceremony.
 - `restore_item(revision)` writes a new live revision whose causal parent is the
   selected historical revision;
 - `get_item(id)` and `list_items(filter)` return only `RedactedItemView`;
-- `reveal_field(id, field)` returns one zeroizing `RevealedSecret` through an
-  explicit API; and
+- `reveal_field(id, field, intent)` returns one zeroizing `RevealedSecret`
+  through a schema-specific API after validating clipboard, confirmed
+  interactive reveal, or warned unsafe non-interactive intent; and
 - unresolved concurrent candidates return `ConflictRequired` and remain
   available for a later resolution workflow.
 
