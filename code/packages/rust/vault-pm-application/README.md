@@ -28,18 +28,24 @@ re-derives the repository address, decrypts local custody, and proves that all
 three private seeds reproduce the authority and device public identities
 pinned in the bootstrap and certificate before rebuilding the verifier.
 
+Generation-zero side effects are crash-resumable over injected stores. The
+completion workflow atomically installs the exact `PreparedInit` bytes before
+the first external write, performs idempotent bootstrap and repository work,
+verifies the exact resulting pins, and compare-exchanges to `Active`. A retry
+after any failure rehydrates and reuses the same signed and randomized journal.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
-credential store, or entropy source. Crash-resumable side effects and session
-workflows land in the next slices. There is no unchecked repository
-verification path: construction decrypts and
+credential store, or entropy source. Active open/unlock, pending-publication
+recovery, and session workflows land in the next slices. There is no unchecked
+repository verification path: construction decrypts and
 authority-verifies the exact locally pinned certificate frame and object ID,
 and commits and announcements must match that vault, device, certificate ID,
 and Ed25519 key.
 
 ## Verification
 
-The package has 40 tests covering exact canonical and cryptographic vectors,
+The package has 47 tests covering exact canonical and cryptographic vectors,
 lossless removed-value persistence, live and tombstone revisions, catalog
 bounds and ordering, cross-kind and cross-vault rejection, AEAD tampering,
 authority/device/certificate binding, Ed25519 signature rejection, closed
@@ -47,8 +53,9 @@ parser failures, crash-state relationship checks, diagnostic redaction, and
 explicit key wiping. Repository tests additionally exercise initialization,
 publication, verified open/read/history, every injected provider operation,
 constructor paths, and complete error translation. The exact Tarpaulin result
-under its LLVM engine is 1,315 of 1,350 production lines (97.41%); the
-generation-zero and restart-rehydration module covers 294 of 297 lines.
+under its LLVM engine is 1,386 of 1,431 production lines (96.86%); the
+generation-zero preparation, rehydration, and completion module covers 365 of
+378 lines.
 
 ## Development
 

@@ -1282,8 +1282,9 @@ changelog, focused build, and downstream validation.
    5a. passphrase-authenticated `PreparedInit` rehydration after process loss,
        re-deriving the same repository address and proving local private seeds
        reproduce every pinned bootstrap/certificate public identity;
-   6. crash-resumable initialization side effects, open/unlock, and pending
-      publication recovery; and
+   6. crash-resumable generation-zero bootstrap, repository-publication, and
+      local activation side effects;
+   6a. active open/unlock and pending-publication recovery; and
    7. item mutation, redacted views, search, history, export, audit, status,
       and doctor workflows.
 9. `vault-pm-cli` + real executable and pseudo-terminal E2E suite.

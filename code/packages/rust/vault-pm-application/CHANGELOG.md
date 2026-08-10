@@ -2,6 +2,26 @@
 
 All notable changes to this package are documented here.
 
+## [0.7.0] - 2026-08-09
+
+### Added
+
+- One injected, provider-neutral generation-zero completion workflow for both
+  first execution and restart recovery.
+- Exact idempotent bootstrap installation/readback, repository initialization
+  and publication, receipt verification, and final local activation.
+- An explicit bootstrap-store contract requiring exact generation replay to
+  succeed idempotently while different bytes conflict.
+
+### Security
+
+- The exact `PreparedInit` journal is atomically durable before the first
+  bootstrap or repository effect.
+- Every failure retains the same randomized and signed bytes for retry; only an
+  exact expected receipt can advance local state to `Active`.
+- Exact already-active replay succeeds idempotently, while conflicting local,
+  bootstrap, repository, and compare-exchange state fails closed.
+
 ## [0.6.0] - 2026-08-09
 
 ### Added

@@ -564,6 +564,8 @@ pub trait BootstrapStore: Send + Sync {
     ) -> Result<Option<Vec<u8>>, BootstrapStoreError>;
 
     /// Immutably install one generation after the expected predecessor.
+    /// Repeating the exact already-installed generation is idempotent success;
+    /// the same generation with different bytes is a conflict.
     fn put_generation(
         &self,
         locator: BootstrapLocator,
