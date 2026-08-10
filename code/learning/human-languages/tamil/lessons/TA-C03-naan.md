@@ -20,11 +20,6 @@ reviews_of: [TA-C02-en]
 [PAUSE 2s] To answer "how are you?" you first need "I." In Chapter 2 you learned
 *eṉ* ("my"); here is its owner.
 
-## The letters in this word
-
-**ந** (dental *na*) + **ா** (the long-*ā* sign) + **ன்** (the *ṉ*, a special Tamil
-*n*) → **நான்** (*nāṉ*).
-
 ## The word, taken apart
 
 **நான்** (*nāṉ*, "I") ← Proto-Dravidian **\*yāṉ / \*nāṉ** — a native first-person

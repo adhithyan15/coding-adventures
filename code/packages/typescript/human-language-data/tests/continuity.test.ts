@@ -385,7 +385,9 @@ describe("the real corpus", () => {
     // Chapter 17 repeats that bounded twelve-atom shape across seven teaching
     // steps and one atom-free terminal checkpoint.
     // Chapter 18 does the same across eight teaching steps before its checkpoint.
-    expect(report.summary.atomsTaught).toBe(2631);
+    // +9: the four lessons that extend the Tamil writing strand to chapters 2-3's
+    // glyphs introduce 2 + 3 + 2 + 2 atoms (TA-W10/11/12/13).
+    expect(report.summary.atomsTaught).toBe(2640);
     // +2, and it goes UP, which is worth stating plainly. Three of the five new atoms
     // are TA-W09's and nothing follows TA-W09, so they are orphans by construction:
     // PA-YA-01, E-SIGN-02, READ-PEYAR-03. TA-W08's two are revisited by TA-W09.
@@ -397,7 +399,16 @@ describe("the real corpus", () => {
     // pulling one pre-existing atom out of the orphan set.
     // The Chapter-14 checkpoint also revives one older item, so the corpus orphan
     // count falls by one while none of the six new atoms becomes an orphan.
-    expect(report.summary.atomsNeverRevisited).toBe(469);
+    // +1, measured as a set difference against the pre-change corpus rather than
+    // inferred from the total. THREE atoms enter the orphan set — TTA-01 (TA-W12),
+    // U-SIGN-01 and READ-QUESTION-02 (TA-W13). Nothing follows TA-W13, so its two are
+    // orphans by construction. TWO leave it, both TA-W09's: extending the strand finally
+    // re-uses ெ and ப, so E-SIGN-02 (TA-W10's sign-position table) and PA-YA-01 (TA-W12,
+    // which spells எப்படி with ப) go from 0 revisits to 1. READ-PEYAR-03 stays an orphan.
+    // Three in, two out. AA-SIGN-01, II-SIGN-01, NGA-LLA-01 and READ-NAAN-02 never become
+    // orphans at all, because each later strand lesson declares — and genuinely assesses
+    // — the earlier letters its own word is built from.
+    expect(report.summary.atomsNeverRevisited).toBe(470);
     expect(report.summary.neverRevisitedPercent).toBe(18);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
@@ -525,7 +536,13 @@ describe("the real corpus", () => {
     // retrieved locally, but its eight-lesson footprint pushes two beyond R1.
     // Chapter 18 adds four: its terminal checkpoint retrieves all twelve atoms,
     // but eight small teaching steps push the earliest four beyond R1.
-    expect(report.summary.missedByWindow.R1).toBe(864);
+    // +10, and the composition is measured per atom, not inferred from the total.
+    // NINE of the ten are the new script atoms: every atom TA-W10..TA-W13 introduces
+    // misses R1, because the strand's 3:1 cadence puts consecutive script lessons well
+    // outside a 1-3 window. The TENTH is not new and is worth naming: interleaving a
+    // writing lesson at chapter 29 pushes TA-LEX-AFTERNOON-BOUNDARY-01's reinforcement
+    // past R1 ([R2,R3] -> [R1,R2,R3]). No atom gains R1 reinforcement here.
+    expect(report.summary.missedByWindow.R1).toBe(874);
     // +2 net, and the composition is the interesting part: all FIVE new atoms miss R2
     // as well, offset by THREE pre-existing atoms that TA-W09 pulls back into it.
     // TA-W09 sits 12 lessons after TA-W06 and 8 after TA-W07, both inside R2's 5-15
@@ -548,7 +565,17 @@ describe("the real corpus", () => {
     // Chapter 17 adds seven more: the local checkpoint retrieves every atom,
     // while later chapters still own the five-to-fifteen-lesson revisit window.
     // Chapter 18 adds five more far-window misses for the same reason.
-    expect(report.summary.missedByWindow.R2).toBe(1799);
+    // +1 net, and again the composition matters more than the number. FOUR of the nine
+    // new atoms miss R2 (TTA-01, U-SIGN-01, READ-EPPADI-02, READ-QUESTION-02); the other
+    // five do NOT — AA-SIGN-01, II-SIGN-01, NGA-LLA-01, READ-NAAN-02 and READ-NIINGAL-03
+    // are practised by a later strand lesson 5-15 lessons on, which is exactly what R2
+    // measures and exactly what threading them through `practises` was for. Against those
+    // four, THREE pre-existing atoms are pulled back inside R2: PA-YA-01 (TA-W09's ப, now
+    // re-used by TA-W12) and ETYMON-KAALAI-01 and ETYMON-MAALAI-01, whose distances shift
+    // as the new lessons land between them. Note E-SIGN-02 does NOT leave R2: TA-W10
+    // re-uses it, which is what takes it out of the orphan set above, but at a distance
+    // R2 does not count. Four in, three out.
+    expect(report.summary.missedByWindow.R2).toBe(1800);
   });
 
   it("shows what a declared reading order was worth", () => {

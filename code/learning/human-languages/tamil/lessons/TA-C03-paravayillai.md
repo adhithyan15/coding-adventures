@@ -20,11 +20,6 @@ reviews_of: [TA-C01-illai, TA-C01-nandri-family-register, TA-C01-nandri]
 [PAUSE 2s] When someone thanks you — or apologises — this is the easy, gracious
 reply, and it hides one of the most Tamil words there is.
 
-## The letters in this word
-
-Two joined words: **பரவாய்** (*paravāy*, "harm, worry") + **இல்லை** (*illai*,
-"is not") → **பரவாயில்லை** (*paravāyillai*).
-
 ## The word, taken apart
 
 **பரவாயில்லை** literally means "**there is no harm**" — *paravāy* ("harm, trouble")

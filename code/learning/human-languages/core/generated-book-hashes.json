@@ -3959,9 +3959,10 @@
     {
       "language": "tamil",
       "chapter": 25,
-      "sourceHash": "fnv1a64:11c2224eeb3cd4b9",
+      "sourceHash": "fnv1a64:98bf0d2bda9177c5",
       "lessonIds": [
         "TA-C25-iniya-iravu",
+        "TA-W10-read-naan",
         "TA-C25-goodnight-alternatives"
       ],
       "tex": "tamil/book/chapters/ch25-good-night.tex"
@@ -3978,9 +3979,10 @@
     {
       "language": "tamil",
       "chapter": 27,
-      "sourceHash": "fnv1a64:6197d3c4b4040882",
+      "sourceHash": "fnv1a64:9f987f9f4c88336d",
       "lessonIds": [
-        "TA-C27-maalai"
+        "TA-C27-maalai",
+        "TA-W11-read-niingal"
       ],
       "tex": "tamil/book/chapters/ch27-evening.tex"
     },
@@ -3997,9 +3999,10 @@
     {
       "language": "tamil",
       "chapter": 29,
-      "sourceHash": "fnv1a64:825f3ac97af78344",
+      "sourceHash": "fnv1a64:02f13e86ba18eac0",
       "lessonIds": [
-        "TA-C29-kaalai-vanakkam"
+        "TA-C29-kaalai-vanakkam",
+        "TA-W12-read-eppadi"
       ],
       "tex": "tamil/book/chapters/ch29-good-morning.tex"
     },
@@ -4015,10 +4018,11 @@
     {
       "language": "tamil",
       "chapter": 31,
-      "sourceHash": "fnv1a64:16928bffcb407199",
+      "sourceHash": "fnv1a64:69fe16e20cd758a3",
       "lessonIds": [
         "TA-C31-matiya-vanakkam",
-        "TA-C31-afternoon-greeting-root"
+        "TA-C31-afternoon-greeting-root",
+        "TA-W13-read-irukkirirgal"
       ],
       "tex": "tamil/book/chapters/ch31-good-afternoon.tex"
     },

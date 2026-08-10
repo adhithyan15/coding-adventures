@@ -7047,7 +7047,7 @@
     {
       "language": "tamil",
       "chapter": 2,
-      "sourceHash": "fnv1a64:8d5757d04fc5050e",
+      "sourceHash": "fnv1a64:b828f372c82c3c3a",
       "lessonIds": [
         "TA-C02-peyar",
         "TA-C02-en",
@@ -7058,17 +7058,17 @@
         "TA-C02-magizhcci",
         "TA-C02-practice"
       ],
-      "voiceLessons": 6,
+      "voiceLessons": 7,
       "drivablePrefix": 2,
       "text": "tamil/narration/ch02.txt",
       "json": "tamil/narration/ch02.json",
-      "textHash": "fnv1a64:244586946331121c",
-      "jsonHash": "fnv1a64:7f95b059a49e4b1f"
+      "textHash": "fnv1a64:f8b83f8afdf52b6d",
+      "jsonHash": "fnv1a64:291f8aec772e5a3b"
     },
     {
       "language": "tamil",
       "chapter": 3,
-      "sourceHash": "fnv1a64:1c736a85ee572d92",
+      "sourceHash": "fnv1a64:919bcef05a0e1250",
       "lessonIds": [
         "TA-C03-eppadi",
         "TA-C03-eppadi-irukkirirgal",
@@ -7077,12 +7077,12 @@
         "TA-C03-paravayillai",
         "TA-C03-practice"
       ],
-      "voiceLessons": 1,
-      "drivablePrefix": 0,
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
       "text": "tamil/narration/ch03.txt",
       "json": "tamil/narration/ch03.json",
-      "textHash": "fnv1a64:20361f0a27ab7832",
-      "jsonHash": "fnv1a64:2ec39197c5e28e81"
+      "textHash": "fnv1a64:97e4fd146c1d71e9",
+      "jsonHash": "fnv1a64:126adf0bed4e3b79"
     },
     {
       "language": "tamil",
@@ -7416,17 +7416,18 @@
     {
       "language": "tamil",
       "chapter": 25,
-      "sourceHash": "fnv1a64:a476bb11b5f796c3",
+      "sourceHash": "fnv1a64:2f31b122ac3d89dd",
       "lessonIds": [
         "TA-C25-iniya-iravu",
+        "TA-W10-read-naan",
         "TA-C25-goodnight-alternatives"
       ],
       "voiceLessons": 2,
-      "drivablePrefix": 2,
+      "drivablePrefix": 1,
       "text": "tamil/narration/ch25.txt",
       "json": "tamil/narration/ch25.json",
-      "textHash": "fnv1a64:4b85de6a52f99aa7",
-      "jsonHash": "fnv1a64:526c1b5e091769aa"
+      "textHash": "fnv1a64:dd6cf4b15bfcfa2e",
+      "jsonHash": "fnv1a64:a001cdd75c9bd8e0"
     },
     {
       "language": "tamil",
@@ -7445,16 +7446,17 @@
     {
       "language": "tamil",
       "chapter": 27,
-      "sourceHash": "fnv1a64:8a3ee365c271485b",
+      "sourceHash": "fnv1a64:7cddce6c619c2508",
       "lessonIds": [
-        "TA-C27-maalai"
+        "TA-C27-maalai",
+        "TA-W11-read-niingal"
       ],
       "voiceLessons": 1,
       "drivablePrefix": 1,
       "text": "tamil/narration/ch27.txt",
       "json": "tamil/narration/ch27.json",
-      "textHash": "fnv1a64:eee1bcc33fc7e65c",
-      "jsonHash": "fnv1a64:02e3f70c92b52d45"
+      "textHash": "fnv1a64:4670222b395f378f",
+      "jsonHash": "fnv1a64:93136384361a21aa"
     },
     {
       "language": "tamil",
@@ -7474,16 +7476,17 @@
     {
       "language": "tamil",
       "chapter": 29,
-      "sourceHash": "fnv1a64:c5303420ac3aa1b6",
+      "sourceHash": "fnv1a64:f50670956f8c9ff2",
       "lessonIds": [
-        "TA-C29-kaalai-vanakkam"
+        "TA-C29-kaalai-vanakkam",
+        "TA-W12-read-eppadi"
       ],
       "voiceLessons": 1,
       "drivablePrefix": 1,
       "text": "tamil/narration/ch29.txt",
       "json": "tamil/narration/ch29.json",
-      "textHash": "fnv1a64:411d70e89e1e9e3b",
-      "jsonHash": "fnv1a64:819aefebf24cf2bd"
+      "textHash": "fnv1a64:7f04068190c169a6",
+      "jsonHash": "fnv1a64:ffa5ba963c997062"
     },
     {
       "language": "tamil",
@@ -7502,17 +7505,18 @@
     {
       "language": "tamil",
       "chapter": 31,
-      "sourceHash": "fnv1a64:9da02aa156c2f34f",
+      "sourceHash": "fnv1a64:930027490aca12db",
       "lessonIds": [
         "TA-C31-matiya-vanakkam",
-        "TA-C31-afternoon-greeting-root"
+        "TA-C31-afternoon-greeting-root",
+        "TA-W13-read-irukkirirgal"
       ],
       "voiceLessons": 2,
       "drivablePrefix": 2,
       "text": "tamil/narration/ch31.txt",
       "json": "tamil/narration/ch31.json",
-      "textHash": "fnv1a64:9dd889090730b2ee",
-      "jsonHash": "fnv1a64:e701fc6b90667a99"
+      "textHash": "fnv1a64:dfd13ee08165cd43",
+      "jsonHash": "fnv1a64:50dcc07339596bb8"
     },
     {
       "language": "tamil",

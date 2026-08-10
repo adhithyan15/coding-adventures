@@ -1,8 +1,8 @@
 Tamil, chapter 27: Evening.
-1 lesson. All 1 can be done entirely by ear.
+2 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 1.
+Lesson 1 of 2.
 மாலை (mālai) — "evening," and a garland that only looks like the same word.
 
 Warm-up.
@@ -27,3 +27,50 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Are evening-mālai and garland-mālai the same word with two meanings? (No — Wiktionary treats them as two entirely separate etymologies; a genuine homonym, not one word stretched.) Which direction did the garland sense's Sanskrit connection likely travel? (Dravidian into Sanskrit — a reverse-direction loan, per Wiktionary's own "probably borrowed from Dravidian languages" note.) Is it fully certain that "evening" derives from māl's "darkness" sense specifically? (No — plausible and natural, but Wiktionary only says "compare māl," without spelling out that exact mechanism.)
+
+
+Lesson 2 of 2.
+நீங்கள் (nīṅgaḷ) — two old promises, paid.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ங and ள, Script you'll notice: the ீ sign and Script you'll notice: build the word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+This book owes you two letters: the nasal in ங்க, printed before you knew what it was, and one of the three l-letters it promised. Both come due in one word.
+
+Script you'll notice: ங and ள.
+[a table of 2 rows, read aloud]
+ங, ṅa — the nasal made where க is made, the ng of "sing".
+ள, ḷa — the retroflex l.
+ங is the reason க softens: in ங்க the nasal comes first — the "after a nasal" rule from your first writing lesson, with a face on it.
+ள is the retroflex one of Tamil's three l-letters — ல ள ழ. You met ல in இல்லை; ழ still lies ahead. Retroflex: the tongue curls back, as for ண.
+Read both; do not draw them yet. Neither has an entry in this book's script data, so neither gets a stroke order. ள's description leans on ண's sourced "tongue curled back"; ங's is this lesson's own, since the data says nothing about where க is made.
+
+Script you'll notice: the ீ sign.
+ீ is the long partner of the ி you hooked onto ற in நன்றி — the same short/long pairing அ and ஆ have.
+ந + ீ becomes நீ, said nī, the familiar "you."
+The data describes ி and has no entry for ீ, so the pairing is stated from the pattern, not from a source.
+
+Script you'll notice: build the word.
+[a table of 4 rows, read aloud]
+piece: நீ, nī — ந with the ீ sign, "you," familiar.
+piece: ங், bare ṅ — ங under a puḷḷi, this lesson.
+piece: க, ka, softened to ga by the nasal in front of it, from வணக்கம்.
+piece: ள், bare ḷ — ள under a puḷḷi, this lesson.
+நீ, ங், க, ள் becomes நீங்கள் (nīṅgaḷ).
+The middle two are the ங்க you were shown when க was new and ங unreadable. நீங்கள் (nīṅgaḷ) is the respectful "you" — நீ plus a plural ending — so the shorter word sits inside the longer one.
+
+Guided Practice.
+[pause 1 second]
+[your turn — read: நீ — then ங்க — then நீங்கள் (nīṅgaḷ)]
+[pause 8 seconds for the answer]
+[your turn — say: "nī" … "nīṅgaḷ" — familiar, then respectful]
+[pause 8 seconds for the answer]
+[your turn — contrast: றி and நீ — the short i sign and the long ī sign]
+[pause 8 seconds for the answer]
+[your turn — contrast: ல and ள — the first two of the three l-letters]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Read நீங்கள் (nīṅgaḷ), then find the shorter நீ inside it. Why does the க in the middle sound like g? (ங் stands in front of it — a nasal.) How many l-letters does Tamil keep, and which is ள? (Three — ல ள ழ; the retroflex one.) What are the two dots doing? (Removing the built-in a from ங and ள.) Next: the afternoon word.

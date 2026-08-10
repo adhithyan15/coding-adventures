@@ -333,6 +333,126 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 - Add `generate:progress` and the byte-for-byte `check:progress` publication gate;
   a new registered language appears even when it has no lessons or book yet.
 
+### Added — the Tamil writing strand reaches chapter 3's words
+
+The chapter 2 pass left six lessons still teaching script inline (`TA-C02-nii-niingal`
+plus all five of chapter 3), and the same rule applied: the glyphs they explained —
+ங, ள, ீ, ா, ட and ு — were taught nowhere in the strand, so deleting the sections
+would have deleted the only explanation those letters had. Four new reading lessons
+close that:
+
+- **`TA-W10-read-naan`** (chapter 25) — the **ா** sign, spelling **நான்**. This is the
+  one sign with a sourced description in `data/scripts/tamil.json` — *"a vertical
+  stroke with a small top hook, written after the consonant"* — and it completes the
+  picture of where a vowel sign can sit: after (ா), above-right (ி), before (ை, ெ).
+- **`TA-W11-read-niingal`** (chapter 27) — **ங**, **ள** and the **ீ** sign, spelling
+  **நீங்கள்**. It pays two debts the corpus had been carrying: `TA-W01` explained that
+  **க** sounds like *g* after a nasal and printed **ங்க** without ever saying what **ங**
+  was, and `TA-W06` promised three *l*-letters while teaching only **ல**.
+- **`TA-W12-read-eppadi`** (chapter 29) — **ட**, spelling **எப்படி**, held against the
+  **ண** the learner already has: the same retroflex curl, stopped rather than nasal.
+- **`TA-W13-read-irukkirirgal`** (chapter 31) — the **ு** sign, spelling
+  **இருக்கிறீர்கள்** and then the whole chapter 3 question off the page.
+
+All four are reading-only. Of the six glyphs, only **ா** appears in
+`data/scripts/tamil.json` at all (under `marks`, not `letters`), so it is the only one
+described from a source. The other five say plainly that the book has no entry for
+them, and the hedge covers the **sound** descriptions as well as the missing stroke
+orders: **ங**, **ள** and **ட** lean on **ண**'s sourced "tongue curled back" and **க**'s
+sourced position-picks-the-sound note, and say so rather than asserting their own
+phonetics flat. `TA-W11` marks the same attestation gap for **ீ** that `TA-W09` marked
+for **ெ**.
+
+This started as three lessons and became four because the corpus caps a lesson under
+300 effective seconds. The first draft put **எப்படி** and **இருக்கிறீர்கள்** in one
+lesson and computed at 380s; splitting them is what the cap is for, and the result is
+gentler than the draft was.
+
+### Removed — six more lessons stop teaching script
+
+`TA-C02-nii-niingal` and all five chapter 3 lessons drop their `## The letters in this
+word` sections, and `ch02-introductions.tex` and `ch03-responding.tex` drop the four
+matching `sounds` boxes. Verified against the **generated** manifest rather than the
+source: all six flip `reasons: ["script-block"]` → `["no-visual-dependency"]` and their
+`detachableSegments` lists empty, so the script teaching genuinely left the lesson.
+
+Two of the six sections were not letter lessons at all. `TA-C03-eppadi-irukkirirgal`
+used the heading to carry **verb morphology**, which is speaking content that happens to
+be printed in Tamil; it moves into the lesson's own prose as *iru* + *-kkiṟ-* +
+*-īrgaḷ* — the segmentation `TA-C32-iru` already pins, and one that concatenates to the
+surface word — rather than being deleted. `TA-C03-paravayillai`'s section was a
+word-joining note the very next section already makes, so it goes.
+
+`sounds:` frontmatter is **kept** on all six, unlike the chapter 2 pass. Those lessons
+list genuine pronunciation ids (`long-aa`, `retroflex-kk`, `final-m`); chapter 2's
+listed script ids (`independent-e`, `pulli`), which is why clearing them was right
+there and would be wrong here.
+
+Chapter 3 is closed; chapters 4-5 are not. The claim carried over from the last pass —
+that their boxes show ப, எ and ய — was wrong, so here is the measured inventory of the
+four `sounds` boxes in `ch04-farewells.tex` and `ch05-first-verbs.tex`, by the chapter
+that first teaches each glyph:
+
+| | glyphs |
+|---|---|
+| never taught by any strand lesson | **ோ**, **ே**, **ழ** |
+| taught long after book chapter 5 | **ா** (25), **ள** (27), **ு** (31), **ப** (23), **ர** (19), **ச** (19), **ல** (18), **ை** (18), **்** (7), **ந** (6), **ம** (6) |
+| taught in time | **வ** (4), **க** (5) |
+
+So the debt there is bigger than "three glyphs," and it is two different debts: three
+glyphs the strand never reaches at all, and eleven it reaches only much later. Neither
+is addressed here.
+
+### Measured, not inferred
+
+Every figure below is a set difference against the pre-change corpus, computed by
+loading both with the same build.
+
+- `totalLessons` 1680 → 1684, `pen` 58 → 62 — the four new lessons. They are `type:
+  writing` and therefore `pen`, even though all four are reading-only.
+- `voice` 1100 → 1106, `sight` 522 → 516, `drivableLessons` 1100 → 1106 — the same six
+  lessons, no others.
+- `drivablePrefixTotal` 913 → 918 and `unstartableChapters` 140 → 139. Chapter 3 gains
+  6 — its first lesson needed eyes, and the whole chapter is now one ear-only run — and
+  chapter 25 loses 1, because holding the 3:1 cadence puts `TA-W10` *between* its two
+  speaking lessons rather than after them. `TA-W06` already sits mid-chapter in chapter
+  18, so this is the established shape, not a new one. `unstartableChapters` is chapter
+  3 alone.
+- `fullyDrivableChapters` 327 → **324**, which moves the wrong way. Chapters 25, 27, 29
+  and 31 each take a writing lesson and stop being fully drivable (−4); chapter 3
+  becomes fully drivable (+1). That is the honest cost of paying the debt where it
+  belongs. Corpus `coreDrivable` does not move, but not because these blocks detach —
+  rule 1 classifies a `type: writing` lesson as `pen` without reading its body, so all
+  four record `coreDrivable: false`. It holds because the six lessons that flipped were
+  already core-drivable and the four new ones were never counted.
+- `payoffsNotRepresentative` 27 → **29**. Tamil 25 (2/3 → 2/5) and 27 (2/2 → 2/5) fall
+  below the 0.5 floor because they gained script atoms their speaking payoffs do not
+  assess — the same trade chapter 13 already records, and both are now noted in
+  `tamil/chapters.json`. Tamil 29 and 31 took the same hit and did **not** join: each
+  landed on exactly 2/4 (0.50). The difference is one atom of arithmetic.
+- `atomsTaught` 2631 → 2640 — 2 + 3 + 2 + 2 new atoms.
+- `atomsNeverRevisited` rises 469 → 470. Three in — `TTA-01`, `U-SIGN-01` and
+  `READ-QUESTION-02`; nothing follows `TA-W13`, so its two are orphans by construction.
+  Two out: extending the strand finally re-uses ெ and ப, so `E-SIGN-02` and `PA-YA-01`
+  leave the set. `READ-PEYAR-03` stays. Three in, two out. `AA-SIGN-01`, `II-SIGN-01`,
+  `NGA-LLA-01` and `READ-NAAN-02` never become orphans, because each lesson declares —
+  and genuinely assesses — the earlier letters its own word is built from: `TA-W11`
+  credits the ந it builds **நீ** from, `TA-W13` credits the ள it re-reads in
+  **ள்** and the **நான்** it holds against **நீங்கள்**.
+- `missedByWindow.R1` 864 → 874. Nine are the new atoms. The cadence puts consecutive
+  strand lessons **four** apart in reading order, and R1 is a 1-3 window — an early draft
+  put `TA-W10` after the fourth speaking lesson instead of the third, which made that gap
+  3 and quietly falsified this rationale; the sequence was moved to 785 so the claim and
+  the corpus agree. The tenth miss is not new and is worth naming: interleaving at
+  chapter 29 pushes `TA-LEX-AFTERNOON-BOUNDARY-01`'s reinforcement past R1.
+- `missedByWindow.R2` 1799 → 1800. Four of the nine new atoms miss R2; the other five —
+  `AA-SIGN-01`, `II-SIGN-01`, `NGA-LLA-01`, `READ-NAAN-02`, `READ-NIINGAL-03` — do not,
+  because a later strand lesson practises them 5-15 lessons on, which is what threading
+  them through `practises` was for. Three pre-existing atoms are pulled back inside R2
+  against that: `PA-YA-01`, `ETYMON-KAALAI-01` and `ETYMON-MAALAI-01`. `E-SIGN-02` leaves
+  the orphan set but not R2 — `TA-W10` re-uses it at a distance R2 does not count.
+  Four in, three out.
+
 ### Added — the Tamil writing strand reaches chapter 2's words
 
 The speaking-first change left nine chapter 2-3 word lessons still teaching script

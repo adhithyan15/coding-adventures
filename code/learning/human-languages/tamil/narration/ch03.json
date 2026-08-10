@@ -3,8 +3,8 @@
   "language": "tamil",
   "chapter": 3,
   "title": "How Are You?",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1c736a85ee572d92",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:919bcef05a0e1250",
   "lessons": [
     {
       "id": "TA-C03-eppadi",
@@ -14,22 +14,13 @@
       "romanization": "",
       "gloss": "how",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d3bf7b5cc442f13",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:64342f32f2e5e919",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -50,17 +41,6 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Tamil.) எ (e) + ப்ப (ppa, a doubled p) + டி (ḍi) becomes எப்படி (eppaḍi)."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
@@ -71,7 +51,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +91,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -137,22 +117,13 @@
       "romanization": "",
       "gloss": "how are you? (respectful)",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a99d5e4478d95d7",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:b0842834ee732703",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -173,21 +144,6 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The new word is இருக்கிறீர்கள் (irukkiṟīrgaḷ): the verb stem இரு (iru)."
-            },
-            {
-              "kind": "speech",
-              "text": "க்கிற (present) + ீர்கள் (-īrgaḷ, \"you,\" respectful/plural). A long verb, but built of clean pieces."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "etymology",
           "title": "The phrase, taken apart",
           "segments": [
@@ -197,12 +153,16 @@
             },
             {
               "kind": "speech",
-              "text": "The verb is இரு (iru), \"to be, to exist, to stay\" — native Dravidian."
+              "text": "The verb is இரு (iru), \"to be, to exist, to stay\" — native Dravidian. Inside irukkiṟīrgaḷ that stem carries two endings: iru + -kkiṟ- (present)."
+            },
+            {
+              "kind": "speech",
+              "text": "-īrgaḷ (\"you,\" respectful/plural) — the three run together exactly as written. A long word, but built of clean pieces, and you can hear all three."
             }
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "grammar",
           "title": "Grammar Lens: now the copula returns",
           "segments": [
@@ -213,7 +173,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +213,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -279,22 +239,13 @@
       "romanization": "",
       "gloss": "I",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aaef6470e27b2b3d",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:048724de9db451e5",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -315,17 +266,6 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ந (dental na) + ா (the long-ā sign) + ன் (the ṉ, a special Tamil n) becomes நான் (nāṉ)."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
@@ -336,7 +276,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "grammar",
           "title": "Grammar Lens: \"I\" you can drop",
           "segments": [
@@ -347,7 +287,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -387,7 +327,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -413,22 +353,13 @@
       "romanization": "",
       "gloss": "well, wellness, good — and the reply \"நான் நலமாக இருக்கிறேன்\"",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e274834464afc76",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:45b455e9ad00a5f6",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -449,17 +380,6 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ந (na) + ல (la) + ம் (m) becomes நலம் (nalam)."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
@@ -470,7 +390,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "unknown",
           "title": "The reply",
           "segments": [
@@ -489,7 +409,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -529,7 +449,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -555,22 +475,13 @@
       "romanization": "",
       "gloss": "it's okay / no problem / you're welcome",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7e6694023ebed70",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:8a3e39237641211e",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -591,17 +502,6 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Two joined words: பரவாய் (paravāy, \"harm, worry\") + இல்லை (illai, \"is not\") becomes பரவாயில்லை (paravāyillai)."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
@@ -616,7 +516,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "grammar",
           "title": "Grammar Lens: இல்லை, the all-purpose \"no\"",
           "segments": [
@@ -627,7 +527,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -667,7 +567,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

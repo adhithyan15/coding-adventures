@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:8d5757d04fc5050e",
+  "sourceHash": "fnv1a64:b828f372c82c3c3a",
   "lessons": [
     {
       "id": "TA-C02-peyar",
@@ -335,22 +335,13 @@
       "romanization": "",
       "gloss": "you (familiar / respectful)",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88ed443a4d4d2cbc",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:3b2dc0902dd010a2",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -371,17 +362,6 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Tamil.) நீ: ந (dental na) + ீ (the long-ī sign) becomes nī. நீங்கள் adds ங்கள் (ṅgaḷ)."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
@@ -392,7 +372,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "grammar",
           "title": "Grammar Lens: respect by the plural — again",
           "segments": [
@@ -403,7 +383,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -434,7 +414,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

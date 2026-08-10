@@ -20,12 +20,6 @@ reviews_of: [TA-C02-nii-niingal, TA-C03-eppadi]
 [PAUSE 2s] The everyday "how are you?" — and the first time Tamil actually *needs*
 a verb "to be."
 
-## The letters in this word
-
-The new word is **இருக்கிறீர்கள்** (*irukkiṟīrgaḷ*): the verb stem **இரு** (*iru*)
-+ **க்கிற** (present) + **ீர்கள்** (*-īrgaḷ*, "you," respectful/plural). A long
-verb, but built of clean pieces.
-
 ## The phrase, taken apart
 
 **நீங்கள் எப்படி இருக்கிறீர்கள்?** = **நீங்கள்** (*nīṅgaḷ*, "you," respectful) +
@@ -33,6 +27,9 @@ verb, but built of clean pieces.
 "you how are?" The verb comes **last**, as in every Tamil sentence.
 
 The verb is **இரு** (*iru*), "to be, to exist, to stay" — native Dravidian.
+Inside *irukkiṟīrgaḷ* that stem carries two endings: *iru* + *-kkiṟ-* (present)
++ *-īrgaḷ* ("you," respectful/plural) — the three run together exactly as
+written. A long word, but built of clean pieces, and you can hear all three.
 
 ## Grammar Lens: now the copula returns
 

@@ -1,8 +1,8 @@
 Tamil, chapter 31: Good Afternoon.
-2 lessons. All 2 can be done entirely by ear.
+3 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
 மதிய வணக்கம் (matiya vaṇakkam) — a sourced afternoon greeting.
 
 Warm-up.
@@ -25,7 +25,7 @@ Wrap-up Recall.
 What is one sourced Tamil greeting for "good afternoon"? (மதிய வணக்கம், matiya vaṇakkam.) Do all three fetched sources agree on a distinct "afternoon" greeting slot? (No — two confirm மதிய வணக்கம் directly; a third doesn't list a separate afternoon greeting at all, treating morning and evening as bookending the day.) What clock window is a useful guide rather than a universal rule? (Roughly noon to 4 PM.)
 
 
-Lesson 2 of 2.
+Lesson 2 of 3.
 மதிய — the greeting takes a different root.
 
 Warm-up.
@@ -52,3 +52,50 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Does மதிய வணக்கம் begin with பிற்பகல்? (No.) What noun is மதிய related to? (மதியம், "noon.") What older root lies behind it? (Sanskrit madhya, "middle.") Why should you learn the whole greeting rather than construct it from the time word? (Tamil uses a different root in the greeting.)
+
+
+Lesson 3 of 3.
+இருக்கிறீர்கள் (irukkiṟīrgaḷ) — the last sign, and the whole question.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: the ு sign and Script you'll notice: build the word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Two words of the question already come off the page. One vowel sign stands between you and the third.
+
+Script you'll notice: the ு sign.
+ு is the sign for short u. It is not left-standing — but it does not stand beside its letter the way ா does either: it joins on below and to the right, and the pair is usually drawn as one shape.
+Careful with "after": every vowel sign is spoken after its consonant, ை and ெ included. The signs differ in where the mark sits, not when you say it.
+ர + ு becomes ரு, said ru.
+The script data behind this book carries entries for ா, ி, ை and the puḷḷi, and none for ு — so everything here, the joined shape included, is this lesson's own statement of ordinary Tamil, not something it can cite.
+
+Script you'll notice: build the word.
+Every piece is now yours:
+[a table of 8 rows, read aloud]
+piece: இ, i, independent — the word opens on a vowel.
+piece: ரு, ru — ர with the ு sign, this lesson.
+piece: க், bare k, க under a puḷḷi.
+piece: கி, ki — க with the ி sign, blank.
+piece: றீ, ṟī — ற with the ீ sign, ற from நன்றி.
+piece: ர், bare r, ர from சரி.
+piece: க, ka, blank.
+piece: ள், bare ḷ, from நீங்கள்.
+இ, ரு, க், கி, றீ, ர், க, ள் becomes இருக்கிறீர்கள் (irukkiṟīrgaḷ).
+And the whole question:
+நீங்கள் எப்படி இருக்கிறீர்கள் (irukkiṟīrgaḷ)?
+Nothing in it is new to say. You have asked it since chapter 3; the letters took until now to catch up.
+
+Guided Practice.
+[pause 1 second]
+[your turn — read: ரு — then இருக்கிறீர்கள் (irukkiṟīrgaḷ)]
+[pause 8 seconds for the answer]
+[your turn — read: the whole question — நீங்கள் எப்படி இருக்கிறீர்கள் (irukkiṟīrgaḷ)?]
+[pause 8 seconds for the answer]
+[your turn — say: "nīṅgaḷ eppaḍi irukkiṟīrgaḷ?" — "how are you?"]
+[pause 8 seconds for the answer]
+[your turn — contrast: நான் and நீங்கள் — the I of the answer, the you of the question]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Read நீங்கள் எப்படி இருக்கிறீர்கள் (irukkiṟīrgaḷ)? aloud. Is ு written before its consonant or after? (After — ை and ெ are the ones written before.) When is a vowel sign spoken? (Always after, wherever it sits.) Which word did you learn to read first? (நீங்கள்.) Next: the verb இரு on its own.
