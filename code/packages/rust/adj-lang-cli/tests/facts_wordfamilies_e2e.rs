@@ -120,6 +120,42 @@ fn rhymes_with_isolates_a_second_family_with_the_same_unmodified_rule() {
 }
 
 #[test]
+fn rhymes_with_isolates_a_third_family_and_abstains_on_the_excluded_blend_word() {
+    let dir = scratch("third_family");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"word-families.adj\"\n\
+         ? rhymes_with(pig, $W)\n\
+         ? word_family(twig, $F)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // Every other member of the -ig family rhymes with "pig" (plus itself).
+    for w in ["pig", "big", "fig", "dig", "wig"] {
+        assert!(
+            out.contains(&format!("\"W\":\"{w}\"")),
+            "pig rhymes with {w}: {out}"
+        );
+    }
+    // No cross-contamination: no -an or -at family member should appear as a rhyme of "pig".
+    for w in ["pan", "fan", "ran", "man", "tan", "van", "cat", "bat", "fat", "sat", "rat", "pat", "mat", "hat"] {
+        assert!(
+            !out.contains(&format!("\"W\":\"{w}\"")),
+            "-an/-at member {w} must NOT rhyme with -ig member pig: {out}"
+        );
+    }
+    // "twig" is deliberately excluded (a four-letter consonant-blend word, out of CVC scope) --
+    // honest abstention, never invented.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "twig has no shipped row -- honest abstention: {out}"
+    );
+}
+
+#[test]
 fn word_family_abstains_honestly_on_an_unshipped_word() {
     let dir = scratch("abstain");
     place_lib(&dir);
