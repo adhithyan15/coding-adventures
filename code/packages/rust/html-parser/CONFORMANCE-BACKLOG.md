@@ -28,8 +28,8 @@ tree-construction cases and all 6,806 html5lib tokenizer cases with zero missing
 signatures and zero normalized skips. DOM output is complete, but diagnostic
 coverage is not:
 the checked 2,637-case tree corpus declares 6,243 errors across 2,183 cases.
-After the document-tail diagnostic slice, 2,180 of those cases emit at least
-one lexer or parser diagnostic and 3 remain uncovered.
+After the seeded-colgroup diagnostic slice, 2,181 of those cases emit at least
+one lexer or parser diagnostic and 2 remain uncovered.
 Another 139 cases emit diagnostics despite having no legacy `#errors` rows.
 These are reviewed rather than automatically removed: 89 are full-document
 inputs for which the legacy fixtures omit the Standard-required missing-doctype
@@ -65,22 +65,21 @@ open table blocks adoption-agency recovery. Description-list item start tags
 now report when implied-end-tag recovery closes a non-current `dt` or `dd`,
 without flagging adjacent description-list items.
 
-The fresh 3-case residual inventory consists entirely of the final
-fragment-context rows for colgroup text, an after-body token, and an HTML start
-tag in a seeded SVG context. Character data and start tags after an `html` end
-tag now report even when the end tag materializes an implied document shell
-around leading body text. Open framesets report EOF, and non-whitespace
-character data discarded in or after framesets reports the corresponding
-insertion-mode parse error. The current corpus no longer has a silent
-script-tokenizer, document-tail, frameset, table-shell, foreign end-tag,
+The fresh 2-case residual inventory consists entirely of an after-body token in
+an HTML fragment and an HTML start tag in a seeded SVG context. Non-whitespace
+text discarded by a seeded `colgroup` context now reports its table
+insertion-mode parse error. Character data and start tags after an `html` end
+tag report even when the end tag materializes an implied document shell around
+leading body text. The current corpus no longer has a silent script-tokenizer,
+document-tail, frameset, table-shell, table-fragment, foreign end-tag,
 formatting-only, or general in-body group.
 
 Prioritized work items:
 
-1. **Fragment-context parsing.** Cover the final colgroup text, after-body, and
-   foreign HTML start-tag rows. Invalid start and end tags targeting seeded
-   fragment-context elements now report without mutating their synthetic
-   shells.
+1. **Fragment-context parsing.** Cover the final after-body and foreign HTML
+   start-tag rows. Invalid start and end tags targeting seeded fragment-context
+   elements now report without mutating their synthetic shells, and seeded
+   `colgroup` text recovery reports its insertion-mode parse error.
 2. **Table, select, and template insertion modes.** Continue the algorithm
    audit beyond the currently exercised diagnostic corpus.
    Non-whitespace table text now reports when it is foster-parented. The
@@ -95,8 +94,7 @@ Prioritized work items:
    from template table mode. Formatting start tags now report when table
    structure foster-parents them, covering the remaining silent fostered-anchor
    starts. Seeded table and foreign fragment-shell boundaries now report their
-   required parse errors. The only silent table fragment row is non-whitespace
-   text in a seeded `colgroup` context.
+   required parse errors.
 3. **Adoption agency and active formatting.** Cover malformed formatting cases
    without changing their now-conforming DOM output.
 4. **Diagnostic positions and error taxonomy.** Carry source positions into

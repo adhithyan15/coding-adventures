@@ -5678,6 +5678,10 @@ impl HtmlParser {
         let text = if self.current_element_is_marked_fragment_context("colgroup")
             && !is_html_whitespace_text(&text)
         {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-character-in-colgroup",
+                "non-whitespace character data was ignored by the seeded colgroup fragment context",
+            ));
             text.chars()
                 .filter(|character| is_html_whitespace(*character))
                 .collect::<String>()
@@ -33675,6 +33679,22 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "unexpected-table-start-tag-in-fragment"));
+    }
+
+    #[test]
+    fn reports_text_ignored_by_a_seeded_colgroup_fragment_context() {
+        let output =
+            parse_html_fragment_for_context_with_diagnostics("foo<col>", "colgroup").unwrap();
+
+        assert_eq!(output.nodes.len(), 1);
+        assert_eq!(element(&output.nodes[0]).name, "col");
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-character-in-colgroup",
+                "non-whitespace character data was ignored by the seeded colgroup fragment context"
+            )]
+        );
     }
 
     #[test]
