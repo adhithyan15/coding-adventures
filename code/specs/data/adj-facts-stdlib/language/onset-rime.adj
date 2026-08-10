@@ -1,0 +1,66 @@
+% ============================================================================
+% onset-rime — a word's onset and rime split, a FOURTH literacy sub-skill in
+% the ADJ stdlib (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% Deliberately DIFFERENT in shape from all three prior literacy libraries:
+% `word-families.adj` derives RHYMING (RF.K.2.a) via a `rule`,
+% `syllable-count.adj` recalls a SYLLABLE COUNT (RF.K.2.b), and
+% `initial-sound.adj` recalls a word's BEGINNING sound (RF.K.2.d). This
+% library recalls how a single-syllable word splits into its ONSET (the
+% sound(s) before the vowel) and RIME (the vowel and everything after),
+% grounding RF.K.2.c ("Blend and segment onsets and rimes of single-syllable
+% spoken words") as a pure lookup: `onset_rime(word, onset, rime)`. Recall is
+% a binding query:
+%
+%     ? onset_rime(sleep, $Onset, $Rime)   % sl, eep
+%
+% A native `table` (ADJ-TABLES RS-5, a THREE-column table like
+% `metrology/si-base-units.adj`): each `row` lowers to a ground relation
+% `onset_rime(word, onset, rime)` carrying the Reading Rockets citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns
+% both parts WITH their source, on the CPU, with zero model calls, and
+% abstains on a word not one of the two the cited page splits. The query
+% also runs BACKWARD — bind an onset and rime and recall the word they
+% blend into (the classic "blending" exercise, the inverse of "segmenting"):
+%
+%     ? onset_rime($Word, bl, ast)   % blast
+%
+% The two words and their splits, as a little truth table:
+%
+%     word     onset   rime   the cited split
+%     ------   -----   ----   -------------------------------------
+%     sleep    sl      eep    "sleep could be broken into /sl/ and /eep/"
+%     blast    bl      ast    "Onset (bl) – Rime (ast)"
+%
+% Provenance: quoted verbatim from Reading Rockets' "Tuning In to the Sounds
+% in Words" article, WebFetch-verified TWICE for consistency before writing.
+% The exact spans:
+%
+%   sleep -> sl / eep:
+%     "One way to break down the syllable is into onset (everything before
+%      the vowel) and rime (the vowel and everything after it). For example,
+%      sleep could be broken into /sl/ and /eep/."
+%   blast -> bl / ast:
+%     "Here are two ways to break up the word blast: Onset (bl) – Rime (ast)"
+%
+% `trust consensus` — Reading Rockets is a widely-used literacy
+% parent/educator resource, the same tier `word-families.adj`'s and
+% `syllable-count.adj`'s Reading Rockets sources earned. Deliberately
+% scoped to ONLY these two words this single cited page splits explicitly
+% — honestly narrow (mirroring `syllable-count.adj`'s and
+% `initial-sound.adj`'s precedent) rather than inventing a split for a word
+% the source does not explicitly break down. A future slice can add a third
+% split once a comparably clean citation is found. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table onset_rime {
+    columns word, onset, rime
+
+    row (sleep, sl, eep)
+    row (blast, bl, ast)
+
+    source "For example, sleep could be broken into /sl/ and /eep/."
+    locator "https://www.readingrockets.org/topics/phonological-and-phonemic-awareness/articles/tuning-sounds-words"
+    trust consensus
+}
