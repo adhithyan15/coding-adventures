@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Shape resolved multiline sequence control labels without backend soft rewrapping.
 - Validate hyphenated sequence actor IDs through the native Metal PNG pipeline.
 - Validate multiword sequence actor IDs through the native Metal PNG pipeline.
 - Validate forced sequence text wrapping through PaintScene and Metal PNG rendering.

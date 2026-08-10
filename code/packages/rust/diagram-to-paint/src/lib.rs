@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.18.0";
+pub const VERSION: &str = "0.19.0";
 
 use std::collections::HashMap;
 
@@ -1166,6 +1166,7 @@ where
         if let LayoutedSequenceItem::BlockFrame {
             kind,
             label,
+            label_height,
             fill: frame_fill,
             x,
             y,
@@ -1194,12 +1195,12 @@ where
                 } else {
                     format!("{}  {label}", sequence_block_name(kind))
                 };
-                text_children.push(text_node(
+                text_children.push(text_node_no_wrap(
                     &frame_label,
                     *x + 8.0,
                     *y + 6.0,
                     *width - 16.0,
-                    20.0,
+                    *label_height,
                     label_font.clone(),
                     text_color,
                 ));
@@ -1208,7 +1209,14 @@ where
     }
 
     for item in &diagram.items {
-        if let LayoutedSequenceItem::BlockDivider { label, x, y, width } = item {
+        if let LayoutedSequenceItem::BlockDivider {
+            label,
+            label_height,
+            x,
+            y,
+            width,
+        } = item
+        {
             instructions.push(PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),
                 commands: vec![
@@ -1227,12 +1235,12 @@ where
                 stroke_dash: Some(vec![4.0, 3.0]),
                 stroke_dash_offset: None,
             }));
-            text_children.push(text_node(
+            text_children.push(text_node_no_wrap(
                 label,
                 *x + 8.0,
                 *y + 5.0,
                 *width - 16.0,
-                20.0,
+                *label_height,
                 label_font.clone(),
                 text_color,
             ));
@@ -2694,7 +2702,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.18.0");
+        assert_eq!(crate::VERSION, "0.19.0");
     }
 
     #[test]

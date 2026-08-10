@@ -143,6 +143,8 @@ sequence layout reserves line-aware geometry before Paint glyph shaping.
 Message and note `wrap:` and `nowrap:` directives lower to explicit semantic
 wrap intent. Forced wrapping is resolved into deterministic lines during
 sequence layout, before Paint glyph shaping and native backend rendering.
+Control-block and branch labels carry the same explicit wrap intent; layout
+reserves line-aware frame headers and branch bands before Paint lowering.
 Whitespace-separated multiword actor IDs are grammar-backed and retain one
 semantic identity across declarations, messages, notes, lifecycle events, and
 participant metadata before layout and Paint lowering.

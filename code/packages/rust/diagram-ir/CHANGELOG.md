@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.19.0
+
+- Preserve explicit wrap intent and line-aware layout geometry for sequence control-block labels.
+
 ## 0.18.0
 
 - Preserve default, forced-wrap, and forced-no-wrap sequence text intent.
