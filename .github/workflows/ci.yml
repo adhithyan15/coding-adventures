@@ -881,14 +881,6 @@ jobs:
         if: runner.os == 'Windows' && needs.detect.outputs.needs_venture_windows == 'true'
         shell: pwsh
         run: |
-          $installer = Join-Path $env:RUNNER_TEMP 'WindowsAppRuntimeInstall-x64.exe'
-          Invoke-WebRequest `
-            'https://aka.ms/windowsappsdk/1.8/1.8.260710003/windowsappruntimeinstall-x64.exe' `
-            -OutFile $installer
-          & $installer --quiet
-          if ($LASTEXITCODE -ne 0) {
-            throw "Windows App Runtime installer failed with exit code $LASTEXITCODE"
-          }
           Set-Location code/packages/rust
           cargo test -p paint-vm-cairo -p venture-browser-cairo -p venture-browser-qt -p venture-browser-windows
           if ($LASTEXITCODE -ne 0) {
@@ -916,15 +908,6 @@ jobs:
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
         shell: pwsh
         run: |
-          $installer = Join-Path $env:RUNNER_TEMP 'WindowsAppRuntimeInstall-x64.exe'
-          Invoke-WebRequest `
-            'https://aka.ms/windowsappsdk/1.8/1.8.260710003/windowsappruntimeinstall-x64.exe' `
-            -OutFile $installer
-          & $installer --quiet
-          if ($LASTEXITCODE -ne 0) {
-            throw "Windows App Runtime installer failed with exit code $LASTEXITCODE"
-          }
-
           $output = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-taskapp'
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend xaml --output $output --emit-project
           if ($LASTEXITCODE -ne 0) {

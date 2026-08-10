@@ -153,8 +153,8 @@ pub struct ProjectFiles {
     /// each `.mil/.mll/.msl` triple, then `dotnet build`, then
     /// optionally launches the .exe. Fix B3.
     pub build_script: String,
-    /// `README.md` for the emitted project â€” describes prerequisites
-    /// (Windows App Runtime install), the build command, and the
+    /// `README.md` for the emitted project â€” describes prerequisites,
+    /// bundled Windows App SDK deployment, the build command, and the
     /// known MSBuild error from bare-SDK environments.
     pub readme: String,
 }
@@ -4027,11 +4027,10 @@ fn emit_csproj(_name: &str, options: &EmitOptions) -> String {
              <Nullable>enable</Nullable>\n\
              <ImplicitUsings>enable</ImplicitUsings>\n\
              <LangVersion>latest</LangVersion>\n\
-             <!-- Framework-dependent: the Windows App Runtime must be installed\n\
-                  system-wide (`winget install Microsoft.WindowsAppRuntime.1.8`).\n\
-                  Keep the runtime dependency explicit so the host can receive\n\
-                  Microsoft's independently serviced WinUI reliability fixes. -->\n\
-             <WindowsAppSDKSelfContained>false</WindowsAppSDKSelfContained>\n\
+             <!-- Bundle the pinned Windows App SDK with the host so users do not\n\
+                  need a separately registered Windows App Runtime. The .NET\n\
+                  runtime remains framework-dependent. -->\n\
+             <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>\n\
              <SelfContained>false</SelfContained>\n\
              <!-- WindowsAppSDK uses the legacy `win10-*` RIDs that .NET 8+\n\
                   removed from the default graph. UseRidGraph=true restores\n\
@@ -4602,11 +4601,8 @@ fn emit_build_script(name: &str) -> String {
          # triple from the Mosaic sources (if mosaic-compile is on PATH), then runs\n\
          # `dotnet build`.\n\
          #\n\
-         # Prerequisite:\n\
-         #   - The generated project is framework-dependent, so a system-wide\n\
-         #     install of the Windows App Runtime is required to run it:\n\
-         #         winget install Microsoft.WindowsAppRuntime.1.8\n\
-         #\n\
+         # The pinned Windows App SDK is bundled with the executable; no separate\n\
+         # Windows App Runtime install is required.\n\
          param([switch]$Clean, [switch]$Run)\n\
          \n\
          $ErrorActionPreference = \"Stop\"\n\
@@ -4690,8 +4686,8 @@ fn emit_project_readme(name: &str, shape: RootShape) -> String {
          ## Prerequisites\n\
          \n\
          1. **.NET 9.0 SDK** â€” `dotnet --list-sdks` should list one matching `9.0.*`.\n\
-         2. The Windows App Runtime 1.8 installed system-wide:\n\
-            `winget install Microsoft.WindowsAppRuntime.1.8`.\n\
+         2. No separate Windows App Runtime install is required; the pinned\n\
+            Windows App SDK is bundled with the generated host.\n\
          3. Visual Studio Build Tools 2022 is useful when opening the project in\n\
             Visual Studio, but `.\\build.ps1` uses `dotnet build` and keeps the\n\
             unpackaged MSIX / PRI tooling disabled.\n\
@@ -4704,7 +4700,8 @@ fn emit_project_readme(name: &str, shape: RootShape) -> String {
          .\\build.ps1 -Clean     # deletes bin/ + obj/\n\
          ```\n\
          \n\
-         The build emits a framework-dependent .exe at\n\
+         The build emits a .NET framework-dependent .exe with the pinned Windows\n\
+         App SDK bundled beside it at\n\
          `bin\\x64\\Debug\\net9.0-windows10.0.19041.0\\win-x64\\{name}.exe`. The native\n\
          WindowsAppRuntime DLLs are auto-flattened next to the .exe by an\n\
          MSBuild post-build target (see the project's `.csproj`).\n\
@@ -10150,6 +10147,9 @@ mod tests {
         assert!(p.csproj.contains("Microsoft.WindowsAppSDK"));
         assert!(p.csproj.contains("Version=\"1.8.260710003\""));
         assert!(p.csproj.contains("Version=\"10.0.26100.4654\""));
+        assert!(p
+            .csproj
+            .contains("<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>"));
         assert!(p.csproj.contains("AppxGeneratePriEnabled>false"));
         assert!(p.csproj.contains("EnableCoreMrtTooling>false"));
         assert!(p.csproj.contains("UseRidGraph>true"));
@@ -10193,8 +10193,10 @@ mod tests {
         assert!(p.build_script.contains("exit 127"));
         assert!(p.build_script.contains("$buildExitCode = $LASTEXITCODE"));
         assert!(p.build_script.contains("exit $buildExitCode"));
-        // README documents the framework-dependent runtime requirement.
-        assert!(p.readme.contains("Microsoft.WindowsAppRuntime.1.8"));
+        // README documents that Windows App SDK is bundled with the host.
+        assert!(p
+            .readme
+            .contains("No separate Windows App Runtime install is required"));
         // app.manifest declares DPI awareness.
         assert!(p.package_manifest.contains("PerMonitorV2"));
     }
