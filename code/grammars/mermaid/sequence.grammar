@@ -18,7 +18,7 @@ properties_stmt = "properties" identifier COLON JSON_OBJECT ;
 details_stmt = "details" identifier COLON details_reference ;
 details_reference = identifier { identifier | MINUS } ;
 accessibility_stmt = ( "accTitle" | "accDescr" ) COLON text | ACC_DESCR_BLOCK ;
-title_stmt = "title" text ;
+title_stmt = "title" [ COLON ] text ;
 autonumber_stmt = "autonumber" [ "off" | NUMBER [ NUMBER ] ] ;
 
 control_block = simple_block | rect_block | alt_block | par_block | critical_block ;

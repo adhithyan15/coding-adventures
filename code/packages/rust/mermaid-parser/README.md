@@ -49,6 +49,7 @@ Newlines and semicolons are interchangeable sequence statement terminators,
 including inside control blocks.
 Sequence boxes and rect highlights accept `rgb`, `rgba`, `hsl`, and `hsla`;
 HSL colors normalize to RGB so native backends receive portable paint values.
+Sequence titles accept both `title Text` and legacy `title: Text` syntax.
 All Mermaid 11.16.1 solid/dotted, normal/reverse filled and stick half-arrow
 forms preserve their line style, half orientation, and endpoint through Paint.
 Central connection markers before and/or after an arrow preserve source,

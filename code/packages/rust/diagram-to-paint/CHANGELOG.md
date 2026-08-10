@@ -6,6 +6,7 @@
 - Preserve multiline accessibility descriptions in that scene metadata.
 - Validate semicolon-separated sequence input through Metal PNG rendering.
 - Validate normalized HSL sequence group colors through Metal PNG rendering.
+- Validate legacy colon-prefixed sequence titles through Metal PNG rendering.
 - Export sequence actor details references as PaintScene metadata.
 - Export JSON-valued sequence actor properties as PaintScene metadata.
 - Export sequence actor links as PaintScene hit-test metadata.

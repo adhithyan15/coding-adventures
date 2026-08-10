@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.20.0
+
+- Parse legacy colon-prefixed sequence titles.
+
 ## 0.19.0
 
 - Parse HSL sequence box and rect colors and normalize them to backend-safe RGB.
