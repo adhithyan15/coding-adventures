@@ -26,3 +26,14 @@ observe mass_one(5.972e24)     % "…Earth's mass, 5.972×10²⁴ kg…"        
 observe mass_two(7.348e22)     % "…the Moon's mass, 7.348×10²² kg…"        (span cited by the model)
 observe distance(3.844e8)      % "…a centre-to-centre distance of 3.844×10⁸ m…" (span cited)
 ? gravitational_force(mass_one, mass_two, distance)  % engine → ≈1.98e20 N (F = G·m₁·m₂/r², NIST, authoritative)
+
+% --- F = G·m₁·m₂/r², SOLVED FOR THE FIRST MASS (rung-0 CAS-wiring, FL-10).
+% "Two point masses 1 m apart exert a mutual gravitational force of
+% 4.00458×10⁻¹⁰ N. One mass is 2 kg — what is the other?" Chosen with clean
+% round numbers (2 kg, 1 m) so the round trip through G checks exactly, rather
+% than inverting the Earth–Moon example above where float noise would obscure
+% the check. ---
+observe gravitational_force(0.00000000040045800)  % "…a mutual gravitational force of 4.00458e-10 N…" (span cited)
+observe mass_two(2)                                % "…one mass is 2 kg…"                              (span cited)
+observe distance(1)                                % "…1 m apart…"                                      (span cited)
+? mass_one_from_force(gravitational_force, mass_two, distance)  % engine → 3 kg (NIST CODATA, authoritative)
