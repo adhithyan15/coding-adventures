@@ -2,6 +2,16 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Urdu independent-shin ductus (HL-C09Y)
+
+- Add Urdu independent ش from Northwestern's *Zer o Zabar* animations as the
+  full two-movement س body followed by lower-left, lower-right, and centered
+  upper dot strokes, with three sourced pen lifts.
+- Preserve the chapter's two-below/one-above arrangement and optional toothless
+  body while fitting the standard toothed form to Noto Naskh.
+- Render a real five-frame filmstrip whose four strokes, lift boundaries,
+  source, prose, geometry, and summary agree.
+
 ### Added — cited Urdu independent-sin ductus (HL-C09X)
 
 - Add Urdu independent س from Northwestern's *Zer o Zabar* animations as three

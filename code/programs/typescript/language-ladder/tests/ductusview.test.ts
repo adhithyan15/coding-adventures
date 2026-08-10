@@ -84,6 +84,8 @@ const URDU_RE = ductusFor("ر", "urdu-nastaliq")!;
 const urduReOutline = naskhOutline("ر");
 const URDU_SIN = ductusFor("س", "urdu-nastaliq")!;
 const urduSinOutline = naskhOutline("س");
+const URDU_SHIN = ductusFor("ش", "urdu-nastaliq")!;
+const urduShinOutline = naskhOutline("ش");
 const PERSIAN_BEH = DUCTUS["ب"];
 const persianBehOutline = naskhOutline("ب");
 const PERSIAN_TEH = DUCTUS["ت"];
@@ -111,7 +113,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds all eleven authored Tamil letters, nine Persian letters, and Urdu ا, ج, ر, and س", () => {
+  it("finds all eleven authored Tamil letters, nine Persian letters, and Urdu ا, ج, ر, س, and ش", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -138,6 +140,8 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("ر", "urdu-nastaliq")?.glyph).toBe("ر");
     expect(ductusFor("ر", "perso-arabic")).toBeUndefined();
     expect(ductusFor("س", "urdu-nastaliq")?.glyph).toBe("س");
+    expect(ductusFor("ش", "urdu-nastaliq")?.glyph).toBe("ش");
+    expect(ductusFor("ش", "perso-arabic")).toBeUndefined();
   });
 
   it("keeps the shared Persian and Urdu ا independently addressable", () => {
@@ -751,6 +755,43 @@ describe("Urdu س — three close teeth flowing into one final bowl", () => {
     expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(URDU_SIN.strokes[0], 1),
+    );
+  });
+});
+
+describe("Urdu ش — a complete س body followed by three dots", () => {
+  const steps = ductusSteps(URDU_SHIN);
+  const strip = ductusFilmstrip(URDU_SHIN, urduShinOutline);
+
+  it("shows the body first, then lower-left, lower-right, and upper dots", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "shape the three close teeth from right to left",
+      "flow directly into the final bowl without lifting",
+      "lift, then place the lower-left dot",
+      "lift again, then place the lower-right dot",
+      "lift a third time, then place the centered upper dot",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 2, 3]);
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 5 movements");
+  });
+
+  it("uses Noto Naskh and preserves all completed strokes during the upper dot", () => {
+    const paths = byTag(strip.frames[4], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      urduShinOutline.path,
+    );
+    const done = paths.filter((path) => path.attrs.class === "ductus__done");
+    expect(done).toHaveLength(3);
+    expect(done.map((path) => path.attrs.d)).toEqual([
+      penPathD(URDU_SHIN.strokes[0], 1),
+      penPathD(URDU_SHIN.strokes[1], 1),
+      penPathD(URDU_SHIN.strokes[2], 1),
+    ]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(URDU_SHIN.strokes[3], 1),
     );
   });
 });

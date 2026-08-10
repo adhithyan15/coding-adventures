@@ -28,6 +28,7 @@ const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
 const URDU_SIN = DUCTUS[ductusKey("urdu-nastaliq", "س")];
+const URDU_SHIN = DUCTUS[ductusKey("urdu-nastaliq", "ش")];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
@@ -305,6 +306,22 @@ describe("handwriting ductus", () => {
     expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
   });
 
+  it("Urdu independent ش writes its س body before three separately lifted dots", () => {
+    expect(URDU_SHIN.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_SHIN)).toBe(3);
+    expect(URDU_SHIN.strokes).toHaveLength(4);
+    expect(URDU_SHIN.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 1, 1]);
+    const teeth = URDU_SHIN.strokes[0].segments[0].path;
+    const bowl = URDU_SHIN.strokes[0].segments[1].path;
+    expect(bowl[0]).toEqual(teeth.at(-1));
+    const [lowerLeft, lowerRight, upper] = URDU_SHIN.strokes.slice(1).map(
+      (stroke) => stroke.segments[0].path,
+    );
+    expect(lowerLeft[0].x).toBeLessThan(lowerRight[0].x);
+    expect(upper[0].y).toBeGreaterThan(lowerLeft[0].y);
+    expect(upper[0].y).toBeGreaterThan(lowerRight[0].y);
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -571,6 +588,19 @@ describe("handwriting ductus", () => {
       /one uninterrupted stroke.*three close teeth.*right to left.*final bowl without lifting.*optional long gentle curve.*especially common in handwriting.*adjacent sīns.*standard toothed.*Noto Naskh.*Nastaliq/i,
     );
     expect(src.url).not.toBe(DUCTUS["س"].source.url);
+  });
+
+  it("Urdu independent ش traces to Zer o Zabar's body-first three-dot animations", () => {
+    const src = URDU_SHIN.source;
+    expect(src.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/sin-shin-bari-he-nun-nun-ghunna/",
+    );
+    expect(src.citation).toMatch(
+      /Zer o Zabar.*independent ش.*calligraphic and handwriting animations.*Shīn instructions.*Northwestern/i,
+    );
+    expect(src.variation).toMatch(
+      /standard toothed sīn body first.*lower-left dot.*lower-right dot.*centered upper dot.*four strokes.*three pen lifts.*two below.*nestled.*optional long gentle curve.*dots stay centered.*Noto Naskh.*Nastaliq/i,
+    );
   });
 
   it("Persian ب traces to the adjacent sourced bowl-and-dot demonstration", () => {
