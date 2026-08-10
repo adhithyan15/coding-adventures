@@ -1,0 +1,75 @@
+% ============================================================================
+% heat-causes-phase-change — which direction of a phase change HEATING and
+% COOLING each cause, DERIVED (not just looked up) by composing two cited
+% facts (adj-facts-stdlib, PHYSICS). NGSS 2-PS1-4 "Construct an argument with
+% evidence that some changes caused by heating or cooling can be reversed and
+% some cannot."
+% ============================================================================
+% The first SCIENCE-domain causal-explanation library in this loop's
+% curriculum sweep (ADJ-STDLIB-COVERAGE.md §5.1's Science row: many labels and
+% categories already ship — `chemistry/states-of-matter.adj`'s
+% state→container-behavior table, `physics/states-of-matter.adj`'s
+% change→name table — but CAUSAL explanations, one of the still-missing
+% majors, are not). "Why does ice melt?" is a causal question: heating causes
+% it. No single sentence in either already-shipped library states "heating
+% causes melting" as a citable claim — but the general causal PRINCIPLE (heat
+% in → solid becomes liquid or liquid becomes gas; heat out → the reverse) IS
+% citable, and WHICH DIRECTION EACH NAMED CHANGE IS (already shipped, in
+% `phase_change_name`) IS citable — so, exactly like `shape-composition.adj`
+% and `word-families.adj` before it, the causal fact is built from both:
+%
+%   1. `heat_direction($Change, $Direction)` — the table below, naming which
+%      of the four everyday phase changes heat flows IN for (`heating`) and
+%      which it flows OUT for (`cooling`), quoted verbatim from the SAME
+%      LibreTexts page `states-of-matter.adj` already cites.
+%   2. `phase_change_name($Change, $Name)` — the ALREADY-SHIPPED table in
+%      this directory's own `states-of-matter.adj`, giving each change's name
+%      (melting, freezing, vaporization, condensation, sublimation,
+%      deposition).
+%
+% The RULE's `source` states the general heat-direction principle; the new
+% TABLE's `source` states the same (it is the direct factual basis for each
+% row); the composed `phase_change_name` fact carries its OWN separate
+% citation — so a query's `steps` trail shows every link, and a human can
+% independently check each one. `trust consensus`: LibreTexts is a respected
+% secondary teaching reference, not a primary/official standards body (the
+% same tier this directory's other `rule`-derived and table facts already
+% use).
+%
+%     import "heat-causes-phase-change.adj"    % transitively imports states-of-matter.adj
+%     ? causes_phase_change(heating, $Name)    % melting, vaporization
+%     ? causes_phase_change(cooling, $Name)    % freezing, condensation
+%
+% Deliberately scoped to the FOUR everyday transitions the cited sentence
+% names directly (melting, freezing, vaporization, condensation) — NOT
+% sublimation or deposition, which `states-of-matter.adj`'s own header notes
+% the SAME source describes only by temperature/pressure condition, not by a
+% parallel "heat in / heat out" sentence, so asserting a heat-direction row
+% for either would outrun what is actually cited. That is a genuine, honestly
+% scoped gap left for a later pass with its own verified source, the same
+% "keep the first slice small and citable" discipline every prior curriculum
+% item in this loop has used.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+import "states-of-matter.adj"
+
+table heat_direction {
+    columns change, direction
+
+    row (solid_to_liquid, heating)
+    row (liquid_to_gas, heating)
+    row (liquid_to_solid, cooling)
+    row (gas_to_liquid, cooling)
+
+    source "Heat going into a substance changes it from a solid to a liquid, or a liquid to a gas. Removing heat from a substance changes a gas to a liquid, or a liquid to a solid."
+    locator "https://chem.libretexts.org/Courses/Madera_Community_College/MacArthur_Chemistry_3A_v_1.2/09:_Attractive_Forces/9.03:_Phase_Transitions/9.3.01:_Melting_Freezing_and_Sublimation"
+    trust consensus
+}
+
+rule { head: causes_phase_change($Direction, $Name)
+       when: heat_direction($Change, $Direction), phase_change_name($Change, $Name)
+       source "Heat going into a substance changes it from a solid to a liquid, or a liquid to a gas. Removing heat from a substance changes a gas to a liquid, or a liquid to a solid."
+       locator "https://chem.libretexts.org/Courses/Madera_Community_College/MacArthur_Chemistry_3A_v_1.2/09:_Attractive_Forces/9.03:_Phase_Transitions/9.3.01:_Melting_Freezing_and_Sublimation"
+       trust consensus }

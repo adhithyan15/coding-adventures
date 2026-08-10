@@ -1,0 +1,19 @@
+% ============================================================================
+% heat-causes-phase-change.query.adj — worked recall over the heat/phase-change
+% causal library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does heating (or
+% cooling) a substance cause?" — it states no physics fact of its own — it
+% only `import`s the grounded table+rule and asks binding queries. The answer
+% is DERIVED, composing the new heat-direction fact with the already-shipped
+% `phase_change_name` table, so every answer carries BOTH citations in its
+% `steps` trail.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli heat-causes-phase-change.query.adj
+% ============================================================================
+
+import "heat-causes-phase-change.adj"
+
+? causes_phase_change(heating, $Name)   % expect melting, vaporization
+? causes_phase_change(cooling, $Name)   % expect freezing, condensation
