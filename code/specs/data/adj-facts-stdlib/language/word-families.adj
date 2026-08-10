@@ -17,8 +17,9 @@
 % family membership IS citable, so the rhyme relation is built from both:
 %
 %   1. `word_family($Word, $Family)` — the table below, listing each of the
-%      "-an" family's core CVC (consonant-vowel-consonant) members as named,
-%      verbatim, by Reading Rockets (a WETA/PBS literacy education nonprofit).
+%      "-an" and "-at" families' core CVC (consonant-vowel-consonant) members
+%      as named, verbatim, by Reading Rockets (a WETA/PBS literacy education
+%      nonprofit).
 %   2. The general word-family PRINCIPLE, quoted verbatim from the same page
 %      in the rule's own `source` below: words in the same family "look alike
 %      at the end" because they "sound alike at the end."
@@ -34,18 +35,34 @@
 %     import "word-families.adj"
 %     ? word_family(pan, $F)        % an        (which family "pan" belongs to)
 %     ? rhymes_with(pan, $W)        % fan, ran, man, tan, van, pan (itself too)
+%     ? rhymes_with(cat, $W)        % bat, fat, sat, rat, pat, mat, hat, cat
 %
-% Deliberately scoped to ONE family ("-an") with its SIX simple three-letter
-% CVC members, not the full 37-family phonics inventory a complete phonics
-% curriculum would need (Reading Rockets' own page also lists longer blended
-% and multi-syllable "-an" words — "plan", "scan", "bran", "began" — and this
-% library deliberately ships only the plain three-letter core, matching
-% kindergarten-level CVC scope; the blends and longer words are left for a
-% later pass, the same "keep the first slice small and citable" discipline
-% every prior curriculum item in this loop has used). `rhymes_with` includes
-% a trivial self-pair (a word "rhymes with" itself, since it shares its own
-% family) — logically consistent, left unfiltered rather than adding
-% unverified exclusion logic for a case no worked example below relies on.
+% Deliberately scoped to TWO families ("-an", "-at") with their plain
+% three-letter CVC members only, not the full 37-family phonics inventory a
+% complete phonics curriculum would need (Reading Rockets' own "-an" page also
+% lists longer blended and multi-syllable words — "plan", "scan", "bran",
+% "began" — and this library deliberately ships only the plain three-letter
+% core, matching kindergarten-level CVC scope; the "-at" family happens to be
+% ALL plain CVC in its cited source except "flat", which is excluded for the
+% same reason). The "-at" family's eight members are quoted verbatim from a
+% DIFFERENT Reading Rockets page than "-an"'s (a kindergarten phonological-
+% awareness parent guide, not "Meet the Word Families") — same organization,
+% same `consensus` trust tier, but its own real citation, documented on the
+% `word_family` table's second row block below since one `table` carries only
+% ONE declared provenance envelope (the same "one declared envelope, every
+% other row's real citation documented in prose" discipline
+% `physics/states-of-matter.adj` already established for its own six rows
+% drawn from two different LibreTexts sections). The "-at" family's citation:
+% "Then ask your child to name all the "kids" in the cat family, such as:
+% bat, fat, sat, rat, pat, mat, hat, flat." (https://www.readingrockets.org/
+% literacy-home/reading-101-guide-parents/your-kindergartener/phonological-
+% and-phonemic-awareness). Blends and longer words, and every family beyond
+% these two, are left for a later pass, the same "keep each slice small and
+% citable" discipline every prior curriculum item in this loop has used.
+% `rhymes_with` includes a trivial self-pair (a word "rhymes with" itself,
+% since it shares its own family) — logically consistent, left unfiltered
+% rather than adding unverified exclusion logic for a case no worked example
+% below relies on.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
@@ -59,6 +76,14 @@ table word_family {
     row (man, an)
     row (tan, an)
     row (van, an)
+    row (cat, at)
+    row (bat, at)
+    row (fat, at)
+    row (sat, at)
+    row (rat, at)
+    row (pat, at)
+    row (mat, at)
+    row (hat, at)
 
     source "pan, fan, ran, man, tan, van, plan, scan, bran, began"
     locator "https://www.readingrockets.org/topics/activities/articles/meet-word-families"

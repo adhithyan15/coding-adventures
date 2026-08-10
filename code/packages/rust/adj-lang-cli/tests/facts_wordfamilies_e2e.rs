@@ -91,6 +91,35 @@ fn rhymes_with_is_derived_from_shared_family_membership() {
 }
 
 #[test]
+fn rhymes_with_isolates_a_second_family_with_the_same_unmodified_rule() {
+    let dir = scratch("second_family");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"word-families.adj\"\n\
+         ? rhymes_with(cat, $W)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // Every other member of the -at family rhymes with "cat" (plus itself).
+    for w in ["cat", "bat", "fat", "sat", "rat", "pat", "mat", "hat"] {
+        assert!(
+            out.contains(&format!("\"W\":\"{w}\"")),
+            "cat rhymes with {w}: {out}"
+        );
+    }
+    // No cross-contamination: no -an family member should appear as a rhyme of "cat".
+    for w in ["pan", "fan", "ran", "man", "tan", "van"] {
+        assert!(
+            !out.contains(&format!("\"W\":\"{w}\"")),
+            "-an member {w} must NOT rhyme with -at member cat: {out}"
+        );
+    }
+}
+
+#[test]
 fn word_family_abstains_honestly_on_an_unshipped_word() {
     let dir = scratch("abstain");
     place_lib(&dir);
