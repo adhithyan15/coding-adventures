@@ -1,5 +1,5 @@
 use crate::initialize::{unlock_active_material, UnlockedActiveMaterial};
-use crate::mutation::{add_item, AddItemRandomnessV1};
+use crate::mutation::{add_item, replace_item, AddItemRandomnessV1, ReplaceItemRandomnessV1};
 use crate::search::SearchProjectionV1;
 use crate::{
     open_object, ActiveStateV1, ApplicationError, ApplicationRepository,
@@ -168,6 +168,37 @@ impl UnlockedVaultV1 {
             &self._keys,
             &self._local_secret,
             self._repository.as_ref(),
+            document,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+        )
+    }
+
+    /// Replace the sole expected current live revision and return the resulting
+    /// durable active owner state.
+    ///
+    /// The replacement preserves item identity, content schema, and creation
+    /// time. Its new revision directly names `expected_revision` as its causal
+    /// parent. A missing item returns `NotFound`; a stale, tombstoned, or
+    /// conflicted current candidate returns `ConflictRequired`. The session and
+    /// all owned mutation inputs are consumed on every return path.
+    pub fn replace_item(
+        self,
+        expected_revision: RevisionId,
+        document: ItemDocument,
+        wall_time_ms: u64,
+        randomness: ReplaceItemRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        replace_item(
+            &self.active,
+            &self.report,
+            &self.current_catalog.items,
+            &self._keys,
+            &self._local_secret,
+            self._repository.as_ref(),
+            expected_revision,
             document,
             wall_time_ms,
             randomness,
@@ -444,7 +475,7 @@ mod tests {
         prepare_generation_zero, seal_object, CatalogV1, GenerationZeroPolicyV1,
         GenerationZeroRandomness, ObjectKind, ObjectRandomness, PublicationJournalV1,
         V1ApplicationRepositoryFactory, V1Keys, ADD_ITEM_RANDOM_BYTES,
-        GENERATION_ZERO_RANDOM_BYTES,
+        GENERATION_ZERO_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
     };
     use coding_adventures_ed25519::{generate_keypair, sign};
     use coding_adventures_vault_pm_domain::{
@@ -582,6 +613,14 @@ mod tests {
             *byte = (index as u8).wrapping_mul(17).wrapping_add(seed);
         }
         AddItemRandomnessV1::new(bytes)
+    }
+
+    fn replace_item_randomness(seed: u8) -> ReplaceItemRandomnessV1 {
+        let mut bytes = [0; REPLACE_ITEM_RANDOM_BYTES];
+        for (index, byte) in bytes.iter_mut().enumerate() {
+            *byte = (index as u8).wrapping_mul(29).wrapping_add(seed);
+        }
+        ReplaceItemRandomnessV1::new(bytes)
     }
 
     fn new_login_document(item_id: ItemId, title: &str, password: &str) -> ItemDocument {
@@ -1141,6 +1180,22 @@ mod tests {
                     Err(ApplicationError::ConflictRequired)
                 );
             }
+            let expected_revision = session.current_catalog.items[&item_id][0].revision_id();
+            let exact_state = local.0.lock().unwrap().clone().unwrap();
+            assert_eq!(
+                session.replace_item(
+                    expected_revision,
+                    new_login_document(item_id, "Cannot replace", "secret"),
+                    299,
+                    replace_item_randomness(0x31),
+                    &local,
+                ),
+                Err(ApplicationError::ConflictRequired)
+            );
+            assert_eq!(
+                local.0.lock().unwrap().as_deref(),
+                Some(exact_state.as_slice())
+            );
         }
     }
 
@@ -1694,6 +1749,212 @@ mod tests {
             item_id
         );
         assert_eq!(reopened.open_report().commit_count(), 2);
+    }
+
+    #[test]
+    fn replace_item_advances_one_expected_live_revision_and_preserves_others() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let first_randomness = add_item_randomness(0xb1);
+        let first_item_id = first_randomness.item_id();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .add_item(
+            new_login_document(first_item_id, "Before", "old-secret"),
+            401,
+            first_randomness,
+            &local,
+        )
+        .unwrap();
+        let second_randomness = add_item_randomness(0xc1);
+        let second_item_id = second_randomness.item_id();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .add_item(
+            new_login_document(second_item_id, "Untouched", "other-secret"),
+            402,
+            second_randomness,
+            &local,
+        )
+        .unwrap();
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let prior_heads = session.local_pins().clone();
+        let expected_revision = session.current_catalog.items[&first_item_id][0].revision_id();
+        let active = session
+            .replace_item(
+                expected_revision,
+                new_login_document(first_item_id, "After", "new-secret"),
+                403,
+                replace_item_randomness(0xd1),
+                &local,
+            )
+            .unwrap();
+
+        assert_eq!(active.last_device_counter(), 4);
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.item_count(), 2);
+        assert!(reopened.get_item(second_item_id).unwrap().is_some());
+        let [candidate] = reopened.current_catalog.items[&first_item_id].as_slice() else {
+            panic!("replacement must become the sole current candidate")
+        };
+        assert_ne!(candidate.revision_id(), expected_revision);
+        assert_eq!(
+            candidate.causal_parents(),
+            &BTreeSet::from([expected_revision])
+        );
+        let ItemState::Live(document) = candidate.state() else {
+            panic!("replacement must remain live")
+        };
+        let AnyRecord::Login(login) = document.payload() else {
+            panic!("replacement schema must remain login")
+        };
+        assert_eq!(login.title, "After");
+        assert_eq!(login.password, "new-secret");
+        let head = *reopened.open_report().heads().iter().next().unwrap();
+        let commit = reopened._repository.read_commit(head).unwrap();
+        assert_eq!(
+            commit.parents(),
+            prior_heads.iter().copied().collect::<Vec<_>>()
+        );
+        assert_eq!(commit.added_objects().len(), 2);
+        assert_eq!(commit.wall_time_ms(), 403);
+    }
+
+    #[test]
+    fn replace_item_rejects_missing_stale_and_immutable_identity_changes_before_cas() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let missing_randomness = add_item_randomness(0xe1);
+        let item_id = missing_randomness.item_id();
+        let exact_empty = local.0.lock().unwrap().clone().unwrap();
+        assert_eq!(
+            open_active_vault(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap()
+            .replace_item(
+                RevisionId::new([0x91; 32]),
+                new_login_document(item_id, "Missing", "secret"),
+                404,
+                replace_item_randomness(0xf1),
+                &local,
+            ),
+            Err(ApplicationError::NotFound)
+        );
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_empty.as_slice())
+        );
+
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .add_item(
+            new_login_document(item_id, "Original", "secret"),
+            405,
+            missing_randomness,
+            &local,
+        )
+        .unwrap();
+        let exact_item = local.0.lock().unwrap().clone().unwrap();
+        assert_eq!(
+            open_active_vault(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap()
+            .replace_item(
+                RevisionId::new([0x92; 32]),
+                new_login_document(item_id, "Stale", "secret"),
+                406,
+                replace_item_randomness(0x01),
+                &local,
+            ),
+            Err(ApplicationError::ConflictRequired)
+        );
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_item.as_slice())
+        );
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let expected_revision = session.current_catalog.items[&item_id][0].revision_id();
+        let changed_creation = ItemDocument::new(
+            item_id,
+            ContentType::new(LOGIN_V1).unwrap(),
+            299,
+            300,
+            LwwRegister::new(false, 300, OperationId::new([0x72; 32])),
+            ObservedSet::new(),
+            ObservedSet::new(),
+            AnyRecord::Login(Login {
+                title: "Changed creation".to_owned(),
+                username: "new-user@example.test".to_owned(),
+                password: "secret".to_owned(),
+                urls: vec!["https://new.example.test".to_owned()],
+                notes: None,
+            }),
+            ObservedSet::new(),
+        )
+        .unwrap();
+        assert_eq!(
+            session.replace_item(
+                expected_revision,
+                changed_creation,
+                407,
+                replace_item_randomness(0x11),
+                &local,
+            ),
+            Err(ApplicationError::InvalidInput)
+        );
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_item.as_slice())
+        );
     }
 
     #[test]

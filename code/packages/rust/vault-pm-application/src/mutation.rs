@@ -19,6 +19,8 @@ const OBJECT_RANDOM_BYTES: usize = 32 + 24 + 24;
 
 /// Exact caller-filled CSPRNG bytes consumed by one add-item mutation.
 pub const ADD_ITEM_RANDOM_BYTES: usize = ITEM_ID_BYTES + 3 * OBJECT_RANDOM_BYTES;
+/// Exact caller-filled CSPRNG bytes consumed by one replace-item mutation.
+pub const REPLACE_ITEM_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES;
 
 /// Owned wipe-on-drop entropy for one item ID and three encrypted frames.
 pub struct AddItemRandomnessV1 {
@@ -59,6 +61,36 @@ impl Debug for AddItemRandomnessV1 {
     }
 }
 
+/// Owned wipe-on-drop entropy for the three encrypted replacement frames.
+pub struct ReplaceItemRandomnessV1 {
+    bytes: [u8; REPLACE_ITEM_RANDOM_BYTES],
+}
+
+impl ReplaceItemRandomnessV1 {
+    /// Take one exact block filled by the host's cryptographic entropy source.
+    pub const fn new(bytes: [u8; REPLACE_ITEM_RANDOM_BYTES]) -> Self {
+        Self { bytes }
+    }
+}
+
+impl Zeroize for ReplaceItemRandomnessV1 {
+    fn zeroize(&mut self) {
+        self.bytes.zeroize();
+    }
+}
+
+impl Drop for ReplaceItemRandomnessV1 {
+    fn drop(&mut self) {
+        self.zeroize();
+    }
+}
+
+impl Debug for ReplaceItemRandomnessV1 {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter.write_str("ReplaceItemRandomnessV1(<redacted>)")
+    }
+}
+
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn add_item(
     active: &ActiveStateV1,
@@ -85,15 +117,80 @@ pub(crate) fn add_item(
         return Err(ApplicationError::InvalidInput);
     }
 
-    let publication = prepare_add_publication(
+    let publication = prepare_item_publication(
         active,
         current_items,
         keys,
         local_secret,
-        document,
+        document.id(),
+        ItemState::Live(Box::new(document)),
+        &BTreeSet::new(),
         wall_time_ms,
-        randomness,
+        randomness.bytes[ITEM_ID_BYTES..]
+            .try_into()
+            .expect("the add-item object-randomness partition length is constant"),
     )?;
+    publish_mutation(active, repository, publication, local_state_store)
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn replace_item(
+    active: &ActiveStateV1,
+    report: &OpenReport,
+    current_items: &BTreeMap<ItemId, Vec<ItemCandidate>>,
+    keys: &V1Keys,
+    local_secret: &LocalSecretV1,
+    repository: &dyn ApplicationRepository,
+    expected_revision: RevisionId,
+    document: ItemDocument,
+    wall_time_ms: u64,
+    randomness: ReplaceItemRandomnessV1,
+    local_state_store: &dyn LocalStateStore,
+) -> Result<ActiveStateV1, ApplicationError> {
+    if report.heads() != active.pinned_heads() {
+        return Err(ApplicationError::ConcurrentHost);
+    }
+    document
+        .validate()
+        .map_err(|_| ApplicationError::InvalidInput)?;
+    let candidates = current_items
+        .get(&document.id())
+        .ok_or(ApplicationError::NotFound)?;
+    let [candidate] = candidates.as_slice() else {
+        return Err(ApplicationError::ConflictRequired);
+    };
+    let ItemState::Live(current_document) = candidate.state() else {
+        return Err(ApplicationError::ConflictRequired);
+    };
+    if candidate.revision_id() != expected_revision {
+        return Err(ApplicationError::ConflictRequired);
+    }
+    if current_document.schema() != document.schema()
+        || current_document.created_at_ms() != document.created_at_ms()
+    {
+        return Err(ApplicationError::InvalidInput);
+    }
+
+    let publication = prepare_item_publication(
+        active,
+        current_items,
+        keys,
+        local_secret,
+        document.id(),
+        ItemState::Live(Box::new(document)),
+        &BTreeSet::from([expected_revision]),
+        wall_time_ms,
+        &randomness.bytes,
+    )?;
+    publish_mutation(active, repository, publication, local_state_store)
+}
+
+fn publish_mutation(
+    active: &ActiveStateV1,
+    repository: &dyn ApplicationRepository,
+    publication: PublicationJournalV1,
+    local_state_store: &dyn LocalStateStore,
+) -> Result<ActiveStateV1, ApplicationError> {
     let intended_active = active.after_publication(&publication)?;
     let exact_active = LocalVaultStateV1::Active(active.clone()).encode()?;
     let exact_pending =
@@ -138,28 +235,29 @@ pub(crate) fn add_item(
     }
 }
 
-fn prepare_add_publication(
+#[allow(clippy::too_many_arguments)]
+fn prepare_item_publication(
     active: &ActiveStateV1,
     current_items: &BTreeMap<ItemId, Vec<ItemCandidate>>,
     keys: &V1Keys,
     local_secret: &LocalSecretV1,
-    document: ItemDocument,
+    item_id: ItemId,
+    item_state: ItemState,
+    causal_parents: &BTreeSet<RevisionId>,
     wall_time_ms: u64,
-    randomness: AddItemRandomnessV1,
+    randomness: &[u8; REPLACE_ITEM_RANDOM_BYTES],
 ) -> Result<PublicationJournalV1, ApplicationError> {
     let device_counter = active
         .last_device_counter()
         .checked_add(1)
         .ok_or(ApplicationError::BoundExceeded)?;
-    let mut offset = ITEM_ID_BYTES;
-    let revision_randomness = take_object_randomness(&randomness.bytes, &mut offset);
-    let catalog_randomness = take_object_randomness(&randomness.bytes, &mut offset);
-    let commit_randomness = take_object_randomness(&randomness.bytes, &mut offset);
-    debug_assert_eq!(offset, ADD_ITEM_RANDOM_BYTES);
+    let mut offset = 0;
+    let revision_randomness = take_object_randomness(randomness, &mut offset);
+    let catalog_randomness = take_object_randomness(randomness, &mut offset);
+    let commit_randomness = take_object_randomness(randomness, &mut offset);
+    debug_assert_eq!(offset, REPLACE_ITEM_RANDOM_BYTES);
 
-    let item_id = document.id();
-    let item_state = ItemState::Live(Box::new(document));
-    let revision_plaintext = Zeroizing::new(encode_item_revision(&BTreeSet::new(), &item_state)?);
+    let revision_plaintext = Zeroizing::new(encode_item_revision(causal_parents, &item_state)?);
     let revision_frame = seal_object(
         keys,
         ObjectKind::ItemRevision,
@@ -265,7 +363,7 @@ fn prepare_add_publication(
 }
 
 fn take_object_randomness(
-    bytes: &[u8; ADD_ITEM_RANDOM_BYTES],
+    bytes: &[u8; REPLACE_ITEM_RANDOM_BYTES],
     offset: &mut usize,
 ) -> ObjectRandomness {
     ObjectRandomness::new(
@@ -275,7 +373,7 @@ fn take_object_randomness(
     )
 }
 
-fn take<const N: usize>(bytes: &[u8; ADD_ITEM_RANDOM_BYTES], offset: &mut usize) -> [u8; N] {
+fn take<const N: usize>(bytes: &[u8; REPLACE_ITEM_RANDOM_BYTES], offset: &mut usize) -> [u8; N] {
     let end = *offset + N;
     let value = bytes[*offset..end]
         .try_into()
@@ -315,6 +413,20 @@ mod tests {
 
         randomness.zeroize();
         assert_eq!(randomness.item_id(), ItemId::new([0; ITEM_ID_BYTES]));
+    }
+
+    #[test]
+    fn replace_item_randomness_redacts_and_zeroizes() {
+        let mut randomness = ReplaceItemRandomnessV1::new([0xa5; REPLACE_ITEM_RANDOM_BYTES]);
+
+        assert_eq!(
+            format!("{randomness:?}"),
+            "ReplaceItemRandomnessV1(<redacted>)"
+        );
+        assert!(randomness.bytes.iter().all(|byte| *byte == 0xa5));
+
+        randomness.zeroize();
+        assert!(randomness.bytes.iter().all(|byte| *byte == 0));
     }
 
     #[test]
