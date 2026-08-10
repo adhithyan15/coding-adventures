@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.39.5 — implement `__sys_write__`, the SIR28 console-output primitive
+
+Adds a `"__sys_write__"` `emit_sys_write` arm (mirroring `emit_method_dispatch`'s
+"lift compile-time-known literals to Rust literals, degrade gracefully
+rather than panic on the unexpected" discipline) and a new runtime
+function, `write`/`write_to`/`write_one`, generalizing the existing
+`print`/`puts` into one function parameterized by `stream` (stdout/stderr),
+`terminator` (none/per_value/once), and `unpack_arrays` — the policy axes
+SIR28 §2.1 defines. Declares `Feature::ConsoleIO`.
+
+`stream`/`terminator` are lifted to Rust `&str` literals at emit time
+(same rationale as the method-dispatch name lift: keeps the runtime's
+`match` on a compile-time-known `&str`, closed dispatch) rather than
+passed through as runtime `Value`s.
+
+Deliberately does NOT replicate `puts`'s trailing-newline-suppression
+nuance (`puts "x\n"` prints `x\n`, not `x\n\n`) — that's a pre-existing
+divergence from the C/Go backends' own `puts` (neither has this
+suppression either), orthogonal to and not fixed by SIR28; `__sys_write__`'s
+`per_value` terminator always appends exactly one newline per value,
+matching SIR28 §2.1's table and every other backend's `__sys_write__`
+faithfully — this is a case where staying faithful to the new spec means
+NOT copying an existing helper's extra behavior.
+
+Purely additive: nothing emits `__sys_write__` yet, so `print`/`puts` and
+every existing `print`/`puts`-sourced program are unchanged.
+
+New `tests/compile_and_run_sys_write.rs` (mirrors
+`compile_and_run_case_eq.rs`'s hand-built-`Module` + real-`rustc` pattern):
+hand-builds a `Module` directly per stream/terminator/unpack_arrays
+combination (no frontend emits the op yet), emits Rust, compiles with a
+real `rustc`, runs, and asserts stdout/stderr — covering all three
+`terminator` modes, `unpack_arrays` true/false, the `stderr` stream, and
+the empty-args `per_value` edge case.
+
 ## 0.39.4 — doc-comment reframing: SIR25 §2 is the dispatch authority, not "matches Ruby"
 
 Documentation-only, no behavior change. Per `SIR25-language-agnostic-

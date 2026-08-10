@@ -286,6 +286,17 @@ the string/array arms *ahead of* the unchanged numeric fold:
   `+`/`*` already lower to `__sir::plus`/`__sir::times`; only those two
   helpers gained the polymorphic arms.
 
+**`ConsoleIO`** (SIR28): `__sys_write__("stdout"|"stderr",
+"none"|"per_value"|"once", unpack_arrays, ...values)` → `__sir::write(...)`
+— `stream`/`terminator` (already validated by `semantic-ir`'s validator
+against a closed set) are lifted to Rust `&str` literals at emit time
+(same rationale as `__method__`'s method-name lift: keeps the runtime's
+`match` on a compile-time-known `&str`), the rest pass through as an
+ordinary `vec![...]`. Generalizes the existing `print`/`puts` — still
+present, still used by bare `"print"`/`"puts"` — into one function. Not
+yet emitted by any frontend — see
+[SIR28](../../../specs/SIR28-syscall-primitives.md).
+
 Rejects: `TailCalls` (Rust does not guarantee TCO), `Intrinsics`
 (empty whitelist in v0), `StringInterpolation`, and a stateful (non-empty
 body) `Class`/`Module` or a non-name-slot `Const` reference (rejected
