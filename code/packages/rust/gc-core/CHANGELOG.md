@@ -1,5 +1,83 @@
 # Changelog — gc-core
 
+## 0.33.0 — 2026-08-10 — `FlatHeap::collect_minor_compacting` — the full moving-minor cycle, live (AOT00-T9 PR-4)
+
+- **`FlatHeap::collect_minor_compacting(&mut self, root_slots, regions) -> GcCycleStats`** — the
+  last piece of the moving-minor-collector staged plan (`AOT00-T9-moving-minor-collector.md`).
+  Unlike `classify_mobility_minor`/`plan_compaction_minor`/`evacuate_and_fixup_minor` (PR-2/PR-3,
+  dry-run scaffolding), this is a **real, live, freeing** collection entry point: young survivors
+  that are movable relocate into a fresh compacting arena, dead young objects are reclaimed, pinned
+  young survivors stay in place (aged, possibly tenured), and — the defining property of a minor
+  cycle — every **old** object is completely untouched, whether or not it is itself garbage.
+- **Design correction versus the spec's own §4 point 1** (recorded inline in the function's doc and
+  in the spec itself): the spec describes a separate liveness "Mark" step ahead of "Classify" —
+  implying two independent heap traversals. The shipped implementation runs only **one**:
+  `evacuate_and_fixup_minor`'s own internal classification call already computes a `pinned` bit on
+  every object it traverses — proven (spec §3) to compute the same closure a separate liveness mark
+  would — exactly mirroring how the already-shipped `collect_compacting` needs no separate mark
+  pass either, reusing `classify_mobility`'s own `pinned` bits as its keep-in-place predicate.
+  `collect_minor_compacting` does the same, restricted to `generation == GEN_YOUNG` (old objects'
+  mark bits are left untouched, since `sweep(true)` never reads them).
+- **Adversarial security review found a CRITICAL, empirically-confirmed use-after-free, fixed
+  before landing**: step 4.3 (arena integration) has two independent tenuring sites — `sweep`'s own
+  in-place tenuring (already fed into the promotion barrier via its `promoted` return) and this
+  function's own tenuring of *moved* survivors (which was **not**). `collect_compacting` gets away
+  with the identical second site because its own unconditional `rebuild_remembered()` re-derives
+  every old→young edge regardless of which tenuring site created it; `collect_minor_compacting`
+  deliberately skips that (see the "remembered set" point below), so a moved survivor that tenures
+  without being added to the promotion list creates a genuinely new, *unrecorded* old→young edge —
+  the just-tenured arena copy, now old, still pointing at its own young children. Reproduced with a
+  3-cycle scenario (`tenure_age >= 2`, so a parent moves once while young, then tenures on a *later*
+  move): the child was silently swept by a subsequent minor cycle while the live, old, tenured
+  parent's field still named it. Fixed by pushing every moved-and-tenured survivor onto the same
+  `promoted` list `sweep`'s in-place survivors already use, before
+  `record_promoted_old_to_young` runs.
+- 8 new regression tests, including the spec's own suggested canonical differential: an old parent,
+  a live young child reachable only through it (via the remembered set), and dead young garbage —
+  asserting in one real, freeing call that the child relocates *and* the parent's field was
+  rewritten to the new address *and* the garbage was reclaimed *and* an unrelated, genuinely-old,
+  untouched object was never scanned or moved; and the exact 3-cycle reproducer for the CRITICAL
+  finding above, confirmed load-bearing by reverting the fix and observing the predicted failure.
+  Also covers: strict generalization of `collect_minor_mixed` when nothing is movable, tenuring a
+  moved survivor, `minor_streak` bookkeeping, the remembered set surviving a second live relocation
+  cycle, and an interior-pointer-reached child staying pinned through the full live cycle (composing
+  the interior-pointer fix from an earlier, unrelated PR this session all the way through a real
+  freeing collection, not just the classify/evacuate layers its own tests covered). The "mark young
+  survivors" step was separately confirmed load-bearing by reverting it and observing the two tests
+  that depend on it fail exactly as predicted.
+- **A second review round** (of the CRITICAL fix itself, to confirm it was correct and complete —
+  it was: re-derived from first principles, every edge-creating site enumerated, no double-counting
+  or desync possible) found four smaller issues, all fixed: the `# Safety` doc didn't state this
+  function's strictly-stronger write-barrier obligation versus its non-moving siblings (a moving
+  minor cannot tolerate a missed barrier on an independently-unreachable parent the way a
+  non-moving one can — now documented, cross-referencing the spec's §7); a stale `SAFETY` comment
+  on `record_promoted_old_to_young` still described only the pre-fix single producer; two of this
+  PR's own new tests wrote through a root slot derived from a `*const` pointer to a non-`mut` local
+  (provenance UB under Stacked/Tree Borrows, masked only by Miri's permissive int-to-pointer mode —
+  both objects are genuinely movable and really do get written through by relocation's root fixup),
+  fixed to the `mut` + `*mut`-derived pattern this PR's other tests already used correctly; and a
+  zero-capacity arena (the common case for an all-pinned or nothing-movable cycle) was being pushed
+  onto `self.arenas` unconditionally, growing the vector every cycle for no reason — now skipped
+  when `arena.cap == 0`.
+- **Two further follow-ups flagged across both review rounds, not fixed here (out of scope for this
+  PR, tracked separately)**: (1) neither this function nor the already-shipped `collect_compacting`
+  ever reclaims a retained `Arena` once every object within it has died — a real, unbounded
+  memory-growth risk once this collector is wired to auto-trigger (`AOT00-T9`'s own optional
+  follow-up PR-5), since this collector's whole purpose is to run far more often than the
+  full-scope one (the zero-capacity skip above is the cheap partial mitigation, not the real fix);
+  (2) the `mark_in_progress` guard here (like every such guard in this file, including the
+  already-shipped `collect_compacting`) is `debug_assert!`-only, compiled out in release builds,
+  and this function's call path writes through the remembered set — worth a deliberate, uniform
+  architectural decision across all such guards, not a piecemeal fix to one function.
+- `plan_compaction_minor`/`evacuate_and_fixup_minor`'s `#[allow(dead_code)]` attributes removed —
+  both are now genuinely called by production code. Their doc comments updated to describe
+  `collect_minor_compacting` as their real (and, for `evacuate_and_fixup_minor`, only-safe) caller,
+  rather than "no in-tree caller yet."
+- The `should_collect_minor` family gains **no new scheduling decision** here — whether an
+  automatic minor cycle should sometimes compact instead of sweeping in place is `AOT00-T9`'s
+  optional, follow-up PR-5, deliberately out of scope (the same way `collect_compacting` itself
+  shipped useful and directly callable before `should_compact` existed to auto-trigger it).
+
 ## 0.32.1 — 2026-08-10 — test: gate the AOT00-T5 scale tests behind `#[cfg_attr(miri, ignore)]`
 
 - `scale_deep_chain_marks_without_stack_overflow` (20,000-object chain) and
