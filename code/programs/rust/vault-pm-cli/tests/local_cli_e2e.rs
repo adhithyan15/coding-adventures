@@ -10,6 +10,7 @@ use std::sync::atomic::{AtomicU64, Ordering};
 
 static NEXT_TEMP: AtomicU64 = AtomicU64::new(1);
 const PASSPHRASE: &[u8] = b"e2e correct horse battery staple";
+const ITEM_PASSWORD: &[u8] = b"e2e item password stays encrypted";
 const STDIN_INJECTION: &[u8] = b"stdin injected secret\nstdin injected secret\n";
 
 struct TestHome(PathBuf);
@@ -95,7 +96,91 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert!(doctor_transcript.contains("Doctor: healthy"));
     assert_transcript_excludes_secrets(&doctor_transcript);
 
+    let (add_status, add_transcript) = run_add_login_in_pty(&home);
+    assert!(add_status.success(), "item add failed: {add_transcript}");
+    assert!(add_transcript.contains("Title: "));
+    assert!(add_transcript.contains("Username: "));
+    assert!(add_transcript.contains("Password: "));
+    assert!(add_transcript.contains("URL (optional): "));
+    assert!(!add_transcript.contains("e2e item password"));
+    let item_id = extract_item_id(&add_transcript);
+
+    let (list_status, list_transcript) = run_unlock_in_pty(
+        &home,
+        &["item", "list"],
+        b"vault/login/v1\t\"Example account\"",
+    );
+    assert!(list_status.success(), "item list failed: {list_transcript}");
+    assert!(list_transcript.contains(&item_id));
+    assert!(!list_transcript.contains("e2e item password"));
+
+    let (show_status, show_transcript) =
+        run_unlock_in_pty(&home, &["item", "show", &item_id], b"Password: <redacted>");
+    assert!(show_status.success(), "item show failed: {show_transcript}");
+    assert!(show_transcript.contains("Title: \"Example account\""));
+    assert!(show_transcript.contains("Username: \"ada@example.test\""));
+    assert!(show_transcript.contains("URL: \"https://example.test\""));
+    assert!(!show_transcript.contains("e2e item password"));
+
     assert_tree_excludes(&home.0, PASSPHRASE);
+    assert_tree_excludes(&home.0, ITEM_PASSWORD);
+}
+
+fn run_add_login_in_pty(home: &TestHome) -> (ExitStatus, String) {
+    let (mut master, slave) = open_pty();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
+    command.args(["item", "add", "login"]);
+    home.configure(&mut command);
+    command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::from(slave.try_clone().unwrap()))
+        .stderr(Stdio::from(slave));
+    unsafe {
+        command.pre_exec(|| {
+            if libc::setsid() < 0 || libc::ioctl(libc::STDOUT_FILENO, tiocsctty_request(), 0) < 0 {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    let mut child = command.spawn().unwrap();
+    drop(command);
+    child
+        .stdin
+        .take()
+        .unwrap()
+        .write_all(STDIN_INJECTION)
+        .unwrap();
+    let mut transcript = Vec::new();
+    read_until(&mut master, &mut transcript, b"Vault passphrase: ");
+    master.write_all(PASSPHRASE).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Title: ");
+    master.write_all(b"Example account\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Username: ");
+    master.write_all(b"ada@example.test\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Password: ");
+    master.write_all(ITEM_PASSWORD).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(&mut master, &mut transcript, b"URL (optional): ");
+    master.write_all(b"https://example.test\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Item added: ");
+    let item_line = transcript.len() - b"Item added: ".len();
+    read_until_from(&mut master, &mut transcript, item_line, b"\n");
+    drop(master);
+    let status = child.wait().unwrap();
+    (status, String::from_utf8_lossy(&transcript).into_owned())
+}
+
+fn extract_item_id(transcript: &str) -> String {
+    let marker = "Item added: ";
+    let start = transcript.find(marker).expect("item-add marker") + marker.len();
+    transcript[start..]
+        .lines()
+        .next()
+        .expect("item-add ID")
+        .trim_end_matches('\r')
+        .to_string()
 }
 
 fn run_plain(home: &TestHome, arguments: &[&str]) -> std::process::Output {
@@ -225,6 +310,21 @@ fn read_until(master: &mut File, transcript: &mut Vec<u8>, pattern: &[u8]) {
         match master.read(&mut byte) {
             Ok(1) => transcript.push(byte[0]),
             Ok(0) => panic!("pseudo-terminal closed before expected prompt"),
+            Ok(_) => unreachable!(),
+            Err(error) => panic!("pseudo-terminal read failed: {error}"),
+        }
+    }
+}
+
+fn read_until_from(master: &mut File, transcript: &mut Vec<u8>, start: usize, pattern: &[u8]) {
+    while !transcript[start..]
+        .windows(pattern.len())
+        .any(|value| value == pattern)
+    {
+        let mut byte = [0_u8; 1];
+        match master.read(&mut byte) {
+            Ok(1) => transcript.push(byte[0]),
+            Ok(0) => panic!("pseudo-terminal closed before expected line ending"),
             Ok(_) => unreachable!(),
             Err(error) => panic!("pseudo-terminal read failed: {error}"),
         }

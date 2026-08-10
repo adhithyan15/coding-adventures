@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Exposed login add and redacted list/show through the thin executable.
+- Extended the PTY suite through encrypted item persistence across processes.
 - Exposed authenticated `audit verify` and `doctor --unlock` through the thin
   executable.
 - Extended the real-process PTY suite across restart and redirected-stdin

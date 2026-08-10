@@ -28,6 +28,45 @@ pub(super) fn read_secret(
     read_secret_from_terminal(&mut terminal, prompt.as_bytes(), max_bytes)
 }
 
+pub(super) fn read_text(
+    prompt: &str,
+    max_bytes: usize,
+) -> Result<Zeroizing<Vec<u8>>, CliHostError> {
+    let raw = unsafe {
+        libc::open(
+            c"/dev/tty".as_ptr(),
+            libc::O_RDWR | libc::O_CLOEXEC | libc::O_NOFOLLOW,
+        )
+    };
+    if raw < 0 {
+        return Err(match std::io::Error::last_os_error().raw_os_error() {
+            Some(libc::ENXIO) | Some(libc::ENODEV) | Some(libc::ENOENT) | Some(libc::ENOTTY) => {
+                CliHostError::TerminalUnavailable
+            }
+            _ => CliHostError::TerminalAccessFailed,
+        });
+    }
+    let mut terminal = File::from(owned_fd(raw).map_err(|_| CliHostError::TerminalAccessFailed)?);
+    read_text_from_terminal(&mut terminal, prompt.as_bytes(), max_bytes)
+}
+
+fn read_text_from_terminal(
+    terminal: &mut File,
+    prompt: &[u8],
+    max_bytes: usize,
+) -> Result<Zeroizing<Vec<u8>>, CliHostError> {
+    verify_terminal(terminal)?;
+    terminal
+        .write_all(prompt)
+        .and_then(|()| terminal.flush())
+        .map_err(|_| CliHostError::TerminalAccessFailed)?;
+    read_bounded_line(terminal, max_bytes).map_err(|error| match error {
+        CliHostError::SecretInputFailed => CliHostError::TextInputFailed,
+        CliHostError::SecretTooLong => CliHostError::InvalidText,
+        other => other,
+    })
+}
+
 fn read_secret_from_terminal(
     terminal: &mut File,
     prompt: &[u8],
@@ -245,6 +284,26 @@ mod tests {
             original.c_lflag & (libc::ECHO | libc::ECHONL)
         );
         drop(master);
+    }
+
+    #[test]
+    fn echoed_text_roundtrip_uses_the_terminal_line_discipline() {
+        let (mut master, mut slave) = pseudo_terminal();
+        let prompt = b"Title: ";
+        let peer = thread::spawn(move || {
+            let mut seen = vec![0; prompt.len()];
+            master.read_exact(&mut seen).unwrap();
+            assert_eq!(seen, prompt);
+            master.write_all(b"Example account\n").unwrap();
+            master
+        });
+
+        let text = read_text_from_terminal(&mut slave, prompt, 64).unwrap();
+        assert_eq!(&*text, b"Example account");
+        let mut master = peer.join().unwrap();
+        let mut echoed = [0u8; 17];
+        master.read_exact(&mut echoed).unwrap();
+        assert!(echoed.starts_with(b"Example account"));
     }
 
     #[test]
