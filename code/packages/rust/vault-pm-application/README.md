@@ -91,6 +91,17 @@ and a provider or final-local-write interruption remains recoverable by the
 existing pending-publication workflow. The mutation consumes its unlocked
 session so callers must reopen before observing or mutating the new pins.
 
+Compare-and-replace is available through the same session-consuming boundary.
+It requires the requested item to have exactly one current live candidate equal
+to the caller's expected revision, then writes a new revision whose sole direct
+causal parent is that expected revision. Item identity, content schema, and
+creation time are immutable; every unrelated catalog candidate is preserved.
+Absent items return the payload-free `NotFound` error, while stale, tombstoned,
+or conflicted candidates return `ConflictRequired` before any local write.
+Replacement uses an owned wipe-on-drop 240-byte entropy block and the same exact
+pending journal, all-head commit parenting, ambiguous-success rules, and
+recovery path as add-item.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
 credential store, or entropy source. Replace, delete, restore, conflict
@@ -116,12 +127,14 @@ paths, and complete error translation.
 Search tests cover Unicode normalization, short queries, oversized safe-field
 fallback, exact collection filters, deterministic product ordering, every
 record schema's allowlist/denylist, secret exclusion, query/result bounds, and
-conflict closure. The exact Tarpaulin LLVM result is 1,903 of 1,992 production
-lines (95.53%). Add-item tests cover exact entropy partitioning and wiping,
+conflict closure. The exact Tarpaulin LLVM result is 1,953 of 2,043 production
+lines (95.59%). Add-item tests cover exact entropy partitioning and wiping,
 identity validation before local writes, parentless revision and complete
 catalog construction, ambiguous successful compare-exchanges, write-ahead
 publication ordering, ambiguous provider commits, failed final activation,
-and recovery through the exact persisted journal.
+and recovery through the exact persisted journal. Replacement tests prove
+one-parent causality, immutable identity fields, complete catalog preservation,
+stale/missing rejection before compare-exchange, and secret/entropy wiping.
 
 ## Development
 

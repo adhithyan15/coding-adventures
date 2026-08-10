@@ -1153,6 +1153,7 @@ mod tests {
                 "AuthenticationFailed",
             ),
             (ApplicationError::InvalidInput, "InvalidInput"),
+            (ApplicationError::NotFound, "NotFound"),
             (ApplicationError::BoundExceeded, "BoundExceeded"),
             (ApplicationError::ConcurrentHost, "ConcurrentHost"),
             (ApplicationError::StorageUnavailable, "StorageUnavailable"),

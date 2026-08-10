@@ -31,7 +31,9 @@ pub use initialize::{
     GenerationZeroPolicyV1, GenerationZeroRandomness, PreparedGenerationZero,
     GENERATION_ZERO_RANDOM_BYTES,
 };
-pub use mutation::{AddItemRandomnessV1, ADD_ITEM_RANDOM_BYTES};
+pub use mutation::{
+    AddItemRandomnessV1, ReplaceItemRandomnessV1, ADD_ITEM_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
+};
 pub use open::{open_active_vault, recover_pending_publication, UnlockedVaultV1};
 pub use repository::{
     ApplicationRepository, ApplicationRepositoryError, ApplicationRepositoryFactory,
@@ -56,6 +58,8 @@ pub enum ApplicationError {
     AuthenticationFailed,
     /// Caller input violates a V1 precondition.
     InvalidInput,
+    /// The requested item does not exist in the current catalog.
+    NotFound,
     /// A fixed parser or collection bound would be exceeded.
     BoundExceeded,
     /// A host compare-exchange lost to another local writer.
@@ -79,6 +83,7 @@ impl ApplicationError {
             Self::AlreadyInitialized => "AlreadyInitialized",
             Self::AuthenticationFailed => "AuthenticationFailed",
             Self::InvalidInput => "InvalidInput",
+            Self::NotFound => "NotFound",
             Self::BoundExceeded => "BoundExceeded",
             Self::ConcurrentHost => "ConcurrentHost",
             Self::StorageUnavailable => "StorageUnavailable",

@@ -2,6 +2,24 @@
 
 All notable changes to this package are documented here.
 
+## [0.14.0] - 2026-08-09
+
+### Added
+
+- Add a session-consuming `replace_item` workflow that creates a live revision
+  directly descended from the caller's sole expected current revision.
+- Add the specified payload-free `NotFound` application error and owned
+  wipe-on-drop replacement randomness for exactly three encrypted frames.
+
+### Security
+
+- Reject absent, stale, tombstoned, or conflicted replacement targets before
+  local persistence, and preserve item identity, schema, and creation time.
+- Reuse the exact write-ahead `PendingPublication` state machine for
+  replacement, including byte-identical ambiguous winners and crash recovery.
+- Rewrite the complete bounded catalog and make all current repository heads
+  commit parents without using advisory timestamps for causality.
+
 ## [0.13.0] - 2026-08-09
 
 ### Added

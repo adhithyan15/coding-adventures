@@ -1300,11 +1300,16 @@ changelog, focused build, and downstream validation.
        catalog preservation, all-head commit parenting, exact write-ahead
        owner-state transitions, ambiguous-success handling, and session
        consumption to prevent stale-pin reuse;
-   7b. compare-and-replace, delete, restore, and explicit conflict-resolution
-       mutation workflows;
+   7b. completed compare-and-replace mutation workflow, requiring the sole
+       expected current live revision, preserving immutable identity fields
+       and unrelated catalog candidates, creating exact one-parent causality,
+       and reusing the crash-resumable publication state machine;
+   7b-1. delete, restore, and explicit conflict-resolution mutation workflows;
    7c. bounded history traversal and explicit zeroizing field reveal;
    7d. authenticated portable export and restore/import preparation; and
-   7e. audit, status, and doctor workflows.
+   7e. audit, status, and doctor workflows; and
+   7f. close the remaining VLT-PM05 `Locked` error and explicit lock-state
+       boundary before CLI composition.
 9. `vault-pm-cli` + real executable and pseudo-terminal E2E suite.
 10. Crash/fault matrix and local restore drill.
 
