@@ -106,3 +106,38 @@ fn computes_electric_power_as_voltage_times_current_with_citation() {
         "electric power carries its HyperPhysics citation: {s}"
     );
 }
+
+// ---------------------------------------------------------------------------
+// Ohm's law, solved for a different unknown (ADJ-FORMULA-LIBRARIES FL-10, §3D
+// rung-0 CAS-wiring companion) — the SAME cited law as `voltage`/
+// `resistance_from_ohms_law` above, closing the one direction they leave
+// open: current.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn solves_for_current_from_voltage_with_the_same_citation() {
+    let dir = scratch("current_solve");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"electricity.adj\"\n\
+         observe voltage(6)\n\
+         observe resistance(3)\n\
+         ? current_from_voltage(voltage, resistance)\n",
+    )
+    .unwrap();
+
+    let (ok, s) = run(&dir.join("case.adj"));
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(!s.contains("\"error\""), "no compile error: {s}");
+    // 6 = c * 3  =>  c = 2.
+    assert!(
+        s.contains("\"name\":\"current_from_voltage\"") && s.contains("\"value\":2"),
+        "current_from_voltage(6, 3) = 2: {s}"
+    );
+    assert!(
+        s.contains("\"trust\":\"authoritative\"")
+            && s.contains("hyperphysics.gsu.edu/hbase/electric/ohmlaw.html"),
+        "carries the same HyperPhysics citation as the forward voltage/resistance formulas: {s}"
+    );
+}
