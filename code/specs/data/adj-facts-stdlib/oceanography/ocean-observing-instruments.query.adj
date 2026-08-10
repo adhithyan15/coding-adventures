@@ -1,0 +1,15 @@
+% ============================================================================
+% ocean-observing-instruments.query.adj — worked recall over the
+% ocean-observing-instruments library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does this ocean
+% instrument measure?" (direct) or "which instrument measures this
+% quantity?" (reverse) — it states no fact of its own — it only `import`s
+% the grounded table and asks binding queries.
+% ============================================================================
+
+import "ocean-observing-instruments.adj"
+
+? ocean_instrument(tide_gauge, $Q)             % expect sea_level (direct)
+? ocean_instrument($I, underwater_sound)       % expect hydrophone (reverse)
+? ocean_instrument(ctd, $Q)                    % expect abstain -- a CTD measures multiple quantities, not one, so it is deliberately not a row
