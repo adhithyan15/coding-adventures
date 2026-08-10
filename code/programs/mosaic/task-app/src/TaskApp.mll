@@ -199,8 +199,15 @@ layout TaskApp {
                 Row [ tl-track ] {
                   Box [ tl-pad ] ( width : ( t[1] ) )
                   If ( when: ( t[5] ) ) {
+                    // No width binding here, deliberately: a milestone is
+                    // zero-duration by definition, so it's a small FIXED-size
+                    // marker (see the .msl part), not a bar sized from t[2]
+                    // the way every other row's shape is. UI36's own
+                    // precedence rule (a bound size always beats a static
+                    // one) means binding width here would make a static
+                    // small-diamond style unreachable.
                     HostTooltip ( text : ( t[7] ) ) {
-                      Box [ tl-bar-milestone ] ( width : ( t[2] ) )
+                      Box [ tl-bar-milestone ] { }
                     }
                   }
                   Else {

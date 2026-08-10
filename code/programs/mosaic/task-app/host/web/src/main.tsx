@@ -433,7 +433,7 @@ function makeController(engine: any, init: ControllerInit = {}) {
   // that falls. See timeline.ts for the inclusive-date rule that governs the maths.
   const timeline = () => {
     const bars = (engine.gantt(today).data?.bars ?? []) as GanttBar[];
-    return buildTimeline(bars);
+    return buildTimeline(bars, today);
   };
 
   // Snapshot the engine + host state and hand it to the persistence sink. Called
@@ -763,7 +763,7 @@ function makeController(engine: any, init: ControllerInit = {}) {
         // top-level row stays flush left.
         p.depths[i] > 0 ? `${" ".repeat((p.depths[i] - 1) * 2)}↳` : "",
       ]);
-      const tl = view === "timeline" ? timeline() : { scale: "", rows: [] };
+      const tl = view === "timeline" ? timeline() : { scale: "", rows: [], grid: [] };
       // Computed only while the sheet is showing — same reasoning as `boardCards`
       // below: an engine query the current view doesn't need shouldn't run on every
       // keystroke elsewhere in the app.
@@ -837,6 +837,7 @@ function makeController(engine: any, init: ControllerInit = {}) {
         noteBodyValue: noteBodyDraft,
         noteTaskValue: noteTaskDraft,
         timelineScale: tl.scale,
+        timelineGrid: tl.grid,
         timelineRows: tl.rows,
         newTaskName: newName,
         newTaskDue: newDue,
