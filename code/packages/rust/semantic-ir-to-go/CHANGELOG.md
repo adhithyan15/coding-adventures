@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.37.3 — implement `__sys_write__`, the SIR28 console-output primitive
+
+Adds a `"__sys_write__"` emit arm (mirroring `__new__`'s "lift a
+compile-time-known `StrLit` to a quoted Go string literal" discipline) and
+a new runtime function, `_sir_write`/`_sir_write_one`, generalizing the
+existing `_sir_print`/`_sir_puts` into one function parameterized by
+`stream` (stdout/stderr), `terminator` (none/per_value/once), and
+`unpackArrays` — the policy axes SIR28 §2.1 defines. Declares
+`Feature::ConsoleIO`. Adds `"os"` to the always-emitted import list
+(needed for `os.Stdout`/`os.Stderr`).
+
+`stream`/`terminator` are lifted to quoted Go string literals at emit
+time (same rationale as the OOP envelope's class/method-name lifts:
+keeps the runtime's `switch` on a compile-time-known string, closed
+dispatch) rather than passed through as runtime values.
+
+Deliberately does NOT replicate `_sir_puts`'s trailing-newline-suppression
+nuance (`puts "x\n"` prints `x\n`, not `x\n\n`) — a pre-existing
+divergence from the C backend's own `puts`, orthogonal to and not fixed
+by SIR28; `__sys_write__`'s `per_value` terminator always appends exactly
+one newline per value, matching SIR28 §2.1's table and every other
+backend's `__sys_write__` faithfully.
+
+Purely additive: nothing emits `__sys_write__` yet, so `_sir_print`/
+`_sir_puts` and every existing `print`/`puts`-sourced program are
+unchanged.
+
+New `tests/compile_and_run_sys_write.rs` (mirrors
+`compile_and_run_case_eq.rs`'s hand-built-`Module` + real-`go run`
+pattern): hand-builds a `Module` directly per
+stream/terminator/unpack_arrays combination, emits Go, runs it with `go
+run`, and asserts stdout/stderr.
+
 ## 0.37.2 — doc-comment reframing: SIR25 §2 is the dispatch authority, not "matches Ruby"
 
 Documentation-only, no behavior change. Per `SIR25-language-agnostic-

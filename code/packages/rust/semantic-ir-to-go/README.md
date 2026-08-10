@@ -275,6 +275,19 @@ method↔class association is recovered at **runtime** with explicit tables.
   value / a `Const` assignment / a `ModuleDef` are still rejected cleanly by the
   soundness gate — the widened acceptance never admits those.
 
+### `ConsoleIO` (SIR28)
+
+`__sys_write__("stdout"|"stderr", "none"|"per_value"|"once", unpackArrays,
+...values)` → `_sir_write(...)` — `stream`/`terminator` (already validated
+by `semantic-ir`'s validator against a closed set) are lifted to quoted Go
+string literals at emit time (same rationale as the OOP envelope's
+class/method-name lifts: keeps the runtime's `switch` on a
+compile-time-known string), the rest pass through as an ordinary
+`[]Value{...}`. Generalizes the existing `_sir_print`/`_sir_puts` — still
+present, still used by bare `"print"`/`"puts"` — into one function. Adds
+`"os"` to the always-emitted import list. Not yet emitted by any frontend
+— see [SIR28](../../../specs/SIR28-syscall-primitives.md).
+
 ## Value model
 
 ```go
