@@ -168,3 +168,20 @@ landed and why, not a semver-tracked API.
   objectives `adj.science.chemistry.ideal_gas_law` and
   `adj.math.algebra.rearrange_ideal_gas_law`. Extended the existing `formula_idealgas_e2e.rs` with
   1 new test rather than adding a new test file.
+- `physics/gravitation.adj` — the TENTH Wave 3 rung-0 CAS-wiring companion (ADJ-FORMULA-LIBRARIES
+  FL-10, §3D): `mass_one_from_force`, solving the same cited NIST CODATA Newtonian gravitation
+  relation as the forward `gravitational_force` formula for one mass — written in its equivalent
+  multiplicative form (`F·r² = G·m₁·m₂`) rather than the natural quotient form. The first Wave 3
+  companion whose equation combines a grounded constant WITH a squared term in the same relation;
+  confirmed empirically before writing that `cas-solve`'s linear solver handles this shape cleanly,
+  same as every simpler product/quotient pair already shipped. Solving for `distance` is
+  deliberately absent (quadratic, out of rung-0's linear-only scope, the sibling of
+  `geometry-formulas.adj`'s `square_area` boundary case); solving for `mass_two` is symmetric and
+  left for a later pass. The query example uses clean round numbers (2 kg, 1 m) rather than
+  inverting the existing Earth–Moon example, so the round trip through G checks exactly rather than
+  approximately. New manifest objective `adj.math.algebra.rearrange_gravitation` (this library
+  already had base manifest coverage, unlike `ideal-gas-law.adj`). Extended the existing
+  `formula_gravitation_e2e.rs` with 1 new test rather than adding a new test file. This closes out
+  the two originally-flagged remaining candidates from the Wave 3 sweeps (gravitation, bmi is now
+  the only one left, deliberately deferred as lowest priority — an isolated clinical definition,
+  not part of a citable physics "family").

@@ -115,3 +115,39 @@ fn universal_gravitation_binds_and_computes_with_nist_citation() {
         "source quotes NIST's verbatim value of G: {s}"
     );
 }
+
+/// F = G·m₁·m₂/r², solved for a different unknown (ADJ-FORMULA-LIBRARIES FL-10,
+/// §3D rung-0 CAS-wiring companion) — the SAME cited NIST relation as
+/// `gravitational_force` above, rearranged rather than computed forward. Uses
+/// clean round numbers (2 kg, 1 m) rather than inverting the Earth–Moon example,
+/// so the round trip through G checks exactly rather than approximately.
+#[test]
+fn solves_for_mass_one_from_force_with_the_same_citation() {
+    let dir = scratch("mass_solve");
+    let lib = std::fs::read_to_string(shipped_gravitation_lib()).unwrap();
+    std::fs::write(dir.join("gravitation.adj"), lib).unwrap();
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"gravitation.adj\"\n\
+         observe gravitational_force(0.00000000040045800)\n\
+         observe mass_two(2)\n\
+         observe distance(1)\n\
+         ? mass_one_from_force(gravitational_force, mass_two, distance)\n",
+    )
+    .unwrap();
+
+    let (ok, s) = run(&dir.join("case.adj"));
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(!s.contains("\"error\""), "no compile error: {s}");
+    // F·r² = G·m1·m2  =>  4.00458e-10 = 6.67430e-11 * m1 * 2  =>  m1 = 3.
+    assert!(
+        s.contains("\"name\":\"mass_one_from_force\"") && s.contains("\"value\":3"),
+        "mass_one_from_force(4.00458e-10, 2, 1) = 3: {s}"
+    );
+    assert!(
+        s.contains("\"trust\":\"authoritative\"")
+            && s.contains("physics.nist.gov")
+            && s.contains("6.674 30 x 10-11"),
+        "carries the same NIST CODATA citation as the forward gravitational_force formula: {s}"
+    );
+}
