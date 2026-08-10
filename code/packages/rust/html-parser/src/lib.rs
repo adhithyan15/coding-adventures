@@ -4691,7 +4691,7 @@ impl HtmlParser {
     }
 
     fn process_document_tail_mode(&mut self, token: &Token) {
-        if self.is_fragment {
+        if self.is_fragment && self.open_fragment_context_name() != Some("html") {
             return;
         }
         if self.document_has_closed_frameset() {
@@ -6847,7 +6847,7 @@ impl HtmlParser {
         if name == "body" && self.has_open_element("body") && self.current_element_is("bdy") {
             return;
         }
-        if !self.is_fragment
+        if (!self.is_fragment || self.open_fragment_context_name() == Some("html"))
             && !self.document_has_closed_frameset()
             && name == "body"
             && self.has_open_element("body")
@@ -34124,6 +34124,25 @@ mod tests {
         assert!(!ignored_html_end.parser_diagnostics.iter().any(|diagnostic| {
             diagnostic.code == "unexpected-token-after-html"
         }));
+    }
+
+    #[test]
+    fn reports_an_after_body_end_tag_in_a_seeded_html_fragment_context() {
+        let output =
+            parse_html_fragment_for_context_with_diagnostics("<body>X</body></body>", "html")
+                .unwrap();
+
+        assert_eq!(output.nodes.len(), 2);
+        assert_eq!(element(&output.nodes[0]).name, "head");
+        assert_eq!(element(&output.nodes[1]).name, "body");
+        assert_eq!(element_text(element(&output.nodes[1])), "X");
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-token-after-body",
+                "unexpected token was reprocessed from the after body insertion mode"
+            )]
+        );
     }
 
     #[test]
