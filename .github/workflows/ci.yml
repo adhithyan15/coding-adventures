@@ -623,6 +623,14 @@ jobs:
         if: needs.detect.outputs.needs_dart == 'true' || needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
         uses: dart-lang/setup-dart@v1
 
+      - name: Set up Flutter
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: stable
+          cache: true
+
       - name: Set up Swift (Windows)
         if: needs.detect.outputs.needs_swift == 'true' && runner.os == 'Windows'
         shell: pwsh
@@ -1014,6 +1022,15 @@ jobs:
             dart pub get
             dart analyze
             dart run bin/conformance.dart
+          )
+
+          strict_output="$RUNNER_TEMP/mosaic-flutter-native-complete-rating-controls"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend flutter --output "$strict_output" --emit-project --profile native-complete
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/flutter/mosaic-degradations.json"
+          (
+            cd "$strict_output/flutter"
+            flutter pub get
+            dart analyze lib
           )
 
       - name: Round-trip Rust engine through standard Compose binding

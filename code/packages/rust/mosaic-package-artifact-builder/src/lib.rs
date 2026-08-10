@@ -581,8 +581,8 @@ pub fn analyze_package_degradations(
         });
     }
 
-    let runtime_required_shell =
-        profile == BuildProfile::NativeComplete && opts.backend == Backend::Compose;
+    let runtime_required_shell = profile == BuildProfile::NativeComplete
+        && matches!(opts.backend, Backend::Compose | Backend::Flutter);
     if opts.emit_project && opts.backend.is_native() && !runtime_required_shell {
         degradations.push(Degradation {
             code: "runtime.sample-fallback".to_string(),
@@ -1285,6 +1285,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         Backend::Flutter => {
             let fl_opts = mosaic_emit_flutter::pipeline::EmitOptions {
                 emit_project: true,
+                require_runtime: profile == Some(BuildProfile::NativeComplete),
                 ..Default::default()
             };
             let r = mosaic_emit_flutter::pipeline::from_pipeline_with_options(
@@ -3537,7 +3538,7 @@ layout Board {
     #[test]
     fn generated_native_shell_sample_fallback_is_reported() {
         let pkg = make_package("mosaic-pkg-card", &["Card"]);
-        for backend in [Backend::Xaml, Backend::Compose] {
+        for backend in [Backend::Xaml, Backend::Compose, Backend::Flutter] {
             let out = TempDir::new().unwrap();
             let report = analyze_package_degradations(
                 &BuildOptions {
@@ -3608,6 +3609,57 @@ layout Board {
         let readme = fs::read_to_string(out.path().join("compose/README.md")).unwrap();
         assert!(readme.contains("This `native-complete` shell requires the standard Rust runtime"));
         assert!(!readme.contains("future `native-complete` profile"));
+    }
+
+    #[test]
+    fn native_complete_flutter_shell_requires_the_standard_rust_runtime() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        fs::write(
+            pkg.path().join("src/Card.mil"),
+            "component Card { slot label : text ; }\n",
+        )
+        .unwrap();
+        fs::write(
+            pkg.path().join("src/Card.mll"),
+            "layout Card { Text [ root ] ( content : slot: label ) }\n",
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let result = build_package_with_profile(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Flutter,
+                emit_project: true,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("native-complete Flutter shell");
+
+        let report_path = out.path().join("flutter/mosaic-degradations.json");
+        assert!(result.artifacts.contains(&report_path));
+        let report = fs::read_to_string(report_path).unwrap();
+        assert!(report.contains("\"nativeComplete\": true"));
+
+        let main = fs::read_to_string(out.path().join("flutter/lib/main.dart")).unwrap();
+        assert!(main.contains("MosaicHost.loadRequired()"));
+        assert!(main.contains("required this.mosaicHost"));
+        assert!(main.contains("bool _hostReady = false"));
+        assert!(main.contains("response.containsKey('props')"));
+        assert!(main.contains("mosaicRequiredString(_hostProps, \"label\")"));
+        assert!(!main.contains("MosaicHost?"));
+        assert!(!main.contains("_mosaicHost?."));
+        assert!(!main.contains("debugPrint(\"event:"));
+        assert!(!main.contains("Sample Label"));
+
+        let host = fs::read_to_string(out.path().join("flutter/lib/mosaic_host.dart")).unwrap();
+        assert!(host.contains("static MosaicHost loadRequired()"));
+        assert!(host.contains("native-complete requires the Mosaic Rust application runtime"));
+
+        let readme = fs::read_to_string(out.path().join("flutter/README.md")).unwrap();
+        assert!(readme.contains("requires Mosaic's standard Rust application runtime"));
+        assert!(readme.contains("never substitutes preview/sample values"));
     }
 
     #[test]

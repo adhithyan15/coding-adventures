@@ -303,12 +303,15 @@ unblocks multiple downstream targets; never count source generation as completio
 - [ ] Add `native-complete` capability/degradation analysis to the compiler.
   - [x] Add a package-builder API and CLI profile with deterministic,
     package-expanded degradation reports and pre-emission strict rejection.
-  - [x] Make Compose `native-complete` project shells require the standard Rust
-    runtime and runtime-provided props, with no legacy-host or sample-data path.
-  - [ ] Repeat the runtime-required shell policy for SwiftUI, XAML, Qt, and
-    Flutter.
+  - [x] Make Compose and Flutter `native-complete` project shells require the
+    standard Rust runtime and runtime-provided props, with no optional-host or
+    sample-data path.
+  - [ ] Repeat the runtime-required shell policy for SwiftUI, XAML, and Qt.
   - [ ] Inventory ignored properties, events, styles, effects, and accessibility
     metadata across every native emitter, and add the equivalent package setting.
+    - [ ] Define a serializable native-view reference contract for `node` and
+      component slots; Flutter's JSON runtime cannot currently materialize a
+      Dart `Widget` value for those otherwise typed composition seams.
   - [ ] Remove every reported TaskApp degradation on all five native backends.
 - [ ] Add launch-and-dispatch conformance fixtures for every native backend.
   - [x] XAML/.NET loads the shared Rust conformance DLL and round-trips startup,

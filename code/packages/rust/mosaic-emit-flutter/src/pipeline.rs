@@ -151,6 +151,12 @@ pub struct EmitOptions {
     /// alongside the component `.dart` file. Default `false`.
     pub emit_project: bool,
 
+    /// Make the generated application shell require Mosaic's standard Rust
+    /// runtime and runtime-provided props. This removes the preview/sample
+    /// paths but does not change the reusable component artifact. Default
+    /// `false` preserves permissive standalone emission.
+    pub require_runtime: bool,
+
     /// Pinned Flutter SDK constraint to write into
     /// `pubspec.yaml`'s `environment.flutter`. UI32 spec §3.6.3
     /// requires exact pinning. Default `">=3.24.0 <4.0.0"` — a
@@ -177,6 +183,7 @@ impl Default for EmitOptions {
     fn default() -> Self {
         Self {
             emit_project: false,
+            require_runtime: false,
             pinned_flutter_sdk: ">=3.24.0 <4.0.0".to_string(),
             pinned_dart_sdk: ">=3.5.0 <4.0.0".to_string(),
             package_name: None,
@@ -285,9 +292,9 @@ fn build_flutter_project_files(
 
     Ok(ProjectFiles {
         pubspec_yaml: build_pubspec_yaml(&pub_name, options),
-        main_dart: build_main_dart(name, &interface.slots),
-        mosaic_host_dart: build_mosaic_host_dart(),
-        readme: build_flutter_readme(&pub_name, name),
+        main_dart: build_main_dart(name, &interface.slots, options.require_runtime),
+        mosaic_host_dart: build_mosaic_host_dart(options.require_runtime),
+        readme: build_flutter_readme(&pub_name, name, options.require_runtime),
     })
 }
 
@@ -333,7 +340,14 @@ fn build_pubspec_yaml(pub_name: &str, options: &EmitOptions) -> String {
     )
 }
 
-fn build_main_dart(component_name: &str, slots: &[SlotDecl]) -> String {
+fn build_main_dart(component_name: &str, slots: &[SlotDecl], require_runtime: bool) -> String {
+    if require_runtime {
+        return build_runtime_required_main_dart(component_name, slots);
+    }
+    build_permissive_main_dart(component_name, slots)
+}
+
+fn build_permissive_main_dart(component_name: &str, slots: &[SlotDecl]) -> String {
     let root_widget = build_root_widget_constructor(component_name, slots);
     format!(
         concat!(
@@ -491,6 +505,384 @@ fn build_main_dart(component_name: &str, slots: &[SlotDecl]) -> String {
     )
 }
 
+fn build_runtime_required_main_dart(component_name: &str, slots: &[SlotDecl]) -> String {
+    let root_widget = build_runtime_required_root_widget_constructor(component_name, slots);
+    format!(
+        concat!(
+            "{banner}",
+            "import 'dart:async';\n",
+            "import 'package:flutter/material.dart';\n",
+            "import '{component_name}.dart';\n",
+            "import 'mosaic_host.dart';\n\n",
+            "void main() {{\n",
+            "  runApp(MosaicApp(mosaicHost: MosaicHost.loadRequired()));\n",
+            "}}\n\n",
+            "class MosaicApp extends StatefulWidget {{\n",
+            "  const MosaicApp({{super.key, required this.mosaicHost}});\n\n",
+            "  final MosaicHost mosaicHost;\n\n",
+            "  @override\n",
+            "  State<MosaicApp> createState() => _MosaicAppState();\n",
+            "}}\n\n",
+            "class _MosaicAppState extends State<MosaicApp> {{\n",
+            "  late final MosaicHost _mosaicHost;\n",
+            "  Map<String, Object?> _hostProps = const <String, Object?>{{}};\n",
+            "  bool _hostReady = false;\n\n",
+            "  @override\n",
+            "  void initState() {{\n",
+            "    super.initState();\n",
+            "    _mosaicHost = widget.mosaicHost;\n",
+            "    _mosaicHost.setPropsChangedHandler(() =>\n",
+            "        _queueMosaicResponse(_mosaicHost.props()));\n",
+            "    _queueMosaicResponse(_mosaicHost.props());\n",
+            "  }}\n\n",
+            "  @override\n",
+            "  void dispose() {{\n",
+            "    _mosaicHost.dispose();\n",
+            "    super.dispose();\n",
+            "  }}\n\n",
+            "  void _queueMosaicResponse(\n",
+            "    FutureOr<Map<String, Object?>?>? responseOrFuture,\n",
+            "  ) {{\n",
+            "    if (responseOrFuture == null) {{\n",
+            "      throw StateError('Mosaic runtime returned no response');\n",
+            "    }}\n",
+            "    Future<Map<String, Object?>?>.value(responseOrFuture).then((response) {{\n",
+            "      if (response == null) {{\n",
+            "        throw StateError('Mosaic runtime returned no response');\n",
+            "      }}\n",
+            "      _applyMosaicResponse(response);\n",
+            "    }});\n",
+            "  }}\n\n",
+            "  void _applyMosaicResponse(Map<String, Object?> response) {{\n",
+            "    if (!response.containsKey('props')) {{\n",
+            "      throw StateError('Mosaic runtime response did not include props');\n",
+            "    }}\n",
+            "    final nextProps = mosaicMap(response['props']);\n",
+            "    final hostIntent = mosaicMap(response['hostIntent']);\n",
+            "    final error = response['error'];\n",
+            "    if (!mounted) return;\n",
+            "    setState(() {{\n",
+            "      _hostProps = nextProps;\n",
+            "      _hostReady = true;\n",
+            "    }});\n",
+            "    if (hostIntent.isNotEmpty) {{\n",
+            "      debugPrint('hostIntent: $hostIntent');\n",
+            "    }}\n",
+            "    if (error != null) {{\n",
+            "      debugPrint('host error: $error');\n",
+            "    }}\n",
+            "  }}\n\n",
+            "  @override\n",
+            "  Widget build(BuildContext context) {{\n",
+            "    return MaterialApp(\n",
+            "      title: '{component_name}',\n",
+            "      home: Scaffold(\n",
+            "        appBar: AppBar(title: const Text('{component_name}')),\n",
+            "        body: Center(\n",
+            "          child: _hostReady\n",
+            "              ? {root_widget}\n",
+            "              : Semantics(\n",
+            "                  label: 'Starting {component_name}',\n",
+            "                  child: const CircularProgressIndicator(),\n",
+            "                ),\n",
+            "        ),\n",
+            "      ),\n",
+            "    );\n",
+            "  }}\n",
+            "}}\n\n",
+            "Map<String, Object?> mosaicMap(Object? value) {{\n",
+            "  if (value is Map<String, Object?>) return value;\n",
+            "  if (value is Map) {{\n",
+            "    return Map<String, Object?>.fromEntries(\n",
+            "      value.entries.where((entry) => entry.key is String).map(\n",
+            "        (entry) => MapEntry(entry.key as String, entry.value),\n",
+            "      ),\n",
+            "    );\n",
+            "  }}\n",
+            "  return const <String, Object?>{{}};\n",
+            "}}\n\n",
+            "String? mosaicOptionalString(Map<String, Object?> props, String name) {{\n",
+            "  final value = props[name];\n",
+            "  return value?.toString();\n",
+            "}}\n\n",
+            "double? mosaicOptionalDouble(Map<String, Object?> props, String name) {{\n",
+            "  final value = props[name];\n",
+            "  if (value == null) return null;\n",
+            "  if (value is num) return value.toDouble();\n",
+            "  if (value is String) {{\n",
+            "    final parsed = double.tryParse(value);\n",
+            "    if (parsed != null) return parsed;\n",
+            "  }}\n",
+            "  throw StateError(\"Mosaic runtime prop '$name' is not a number\");\n",
+            "}}\n\n",
+            "bool? mosaicOptionalBoolean(Map<String, Object?> props, String name) {{\n",
+            "  final value = props[name];\n",
+            "  if (value == null) return null;\n",
+            "  if (value is bool) return value;\n",
+            "  if (value is String) {{\n",
+            "    final lowered = value.toLowerCase();\n",
+            "    if (lowered == 'true') return true;\n",
+            "    if (lowered == 'false') return false;\n",
+            "  }}\n",
+            "  throw StateError(\"Mosaic runtime prop '$name' is not a boolean\");\n",
+            "}}\n\n",
+            "List<String>? mosaicOptionalStringList(\n",
+            "  Map<String, Object?> props,\n",
+            "  String name,\n",
+            ") {{\n",
+            "  final value = props[name];\n",
+            "  if (value == null) return null;\n",
+            "  if (value is! List) {{\n",
+            "    throw StateError(\"Mosaic runtime prop '$name' is not a list\");\n",
+            "  }}\n",
+            "  return value.map((item) {{\n",
+            "    if (item == null) {{\n",
+            "      throw StateError(\"Mosaic runtime prop '$name' contains null\");\n",
+            "    }}\n",
+            "    return item.toString();\n",
+            "  }}).toList(growable: false);\n",
+            "}}\n\n",
+            "List<double>? mosaicOptionalDoubleList(\n",
+            "  Map<String, Object?> props,\n",
+            "  String name,\n",
+            ") {{\n",
+            "  final value = props[name];\n",
+            "  if (value == null) return null;\n",
+            "  if (value is! List) {{\n",
+            "    throw StateError(\"Mosaic runtime prop '$name' is not a list\");\n",
+            "  }}\n",
+            "  return value.map((item) {{\n",
+            "    if (item is num) return item.toDouble();\n",
+            "    if (item is String) {{\n",
+            "      final parsed = double.tryParse(item);\n",
+            "      if (parsed != null) return parsed;\n",
+            "    }}\n",
+            "    throw StateError(\"Mosaic runtime prop '$name' contains a non-number\");\n",
+            "  }}).toList(growable: false);\n",
+            "}}\n\n",
+            "List<bool>? mosaicOptionalBooleanList(\n",
+            "  Map<String, Object?> props,\n",
+            "  String name,\n",
+            ") {{\n",
+            "  final value = props[name];\n",
+            "  if (value == null) return null;\n",
+            "  if (value is! List) {{\n",
+            "    throw StateError(\"Mosaic runtime prop '$name' is not a list\");\n",
+            "  }}\n",
+            "  return value.map((item) {{\n",
+            "    if (item is bool) return item;\n",
+            "    if (item is String) {{\n",
+            "      final lowered = item.toLowerCase();\n",
+            "      if (lowered == 'true') return true;\n",
+            "      if (lowered == 'false') return false;\n",
+            "    }}\n",
+            "    throw StateError(\"Mosaic runtime prop '$name' contains a non-boolean\");\n",
+            "  }}).toList(growable: false);\n",
+            "}}\n\n",
+            "Widget? mosaicOptionalWidget(Map<String, Object?> props, String name) {{\n",
+            "  final value = props[name];\n",
+            "  if (value == null) return null;\n",
+            "  if (value is Widget) return value;\n",
+            "  throw StateError(\"Mosaic runtime prop '$name' is not a Widget\");\n",
+            "}}\n\n",
+            "T? mosaicOptionalValue<T>(Map<String, Object?> props, String name) {{\n",
+            "  final value = props[name];\n",
+            "  if (value == null) return null;\n",
+            "  if (value is T) return value as T;\n",
+            "  throw StateError(\"Mosaic runtime prop '$name' has the wrong type\");\n",
+            "}}\n\n",
+            "String mosaicRequiredString(Map<String, Object?> props, String name) {{\n",
+            "  final value = props[name];\n",
+            "  if (value != null) return value.toString();\n",
+            "  throw StateError(\"Mosaic runtime omitted required prop '$name'\");\n",
+            "}}\n\n",
+            "double mosaicRequiredDouble(Map<String, Object?> props, String name) {{\n",
+            "  final value = props[name];\n",
+            "  if (value is num) return value.toDouble();\n",
+            "  if (value is String) {{\n",
+            "    final parsed = double.tryParse(value);\n",
+            "    if (parsed != null) return parsed;\n",
+            "  }}\n",
+            "  throw StateError(\"Mosaic runtime prop '$name' is not a number\");\n",
+            "}}\n\n",
+            "bool mosaicRequiredBoolean(Map<String, Object?> props, String name) {{\n",
+            "  final value = props[name];\n",
+            "  if (value is bool) return value;\n",
+            "  if (value is String) {{\n",
+            "    final lowered = value.toLowerCase();\n",
+            "    if (lowered == 'true') return true;\n",
+            "    if (lowered == 'false') return false;\n",
+            "  }}\n",
+            "  throw StateError(\"Mosaic runtime prop '$name' is not a boolean\");\n",
+            "}}\n\n",
+            "List<String> mosaicRequiredStringList(\n",
+            "  Map<String, Object?> props,\n",
+            "  String name,\n",
+            ") {{\n",
+            "  final value = props[name];\n",
+            "  if (value is! List) {{\n",
+            "    throw StateError(\"Mosaic runtime omitted required list prop '$name'\");\n",
+            "  }}\n",
+            "  return value.map((item) {{\n",
+            "    if (item == null) {{\n",
+            "      throw StateError(\"Mosaic runtime prop '$name' contains null\");\n",
+            "    }}\n",
+            "    return item.toString();\n",
+            "  }}).toList(growable: false);\n",
+            "}}\n\n",
+            "List<double> mosaicRequiredDoubleList(\n",
+            "  Map<String, Object?> props,\n",
+            "  String name,\n",
+            ") {{\n",
+            "  final value = props[name];\n",
+            "  if (value is! List) {{\n",
+            "    throw StateError(\"Mosaic runtime omitted required list prop '$name'\");\n",
+            "  }}\n",
+            "  return value.map((item) {{\n",
+            "    if (item is num) return item.toDouble();\n",
+            "    if (item is String) {{\n",
+            "      final parsed = double.tryParse(item);\n",
+            "      if (parsed != null) return parsed;\n",
+            "    }}\n",
+            "    throw StateError(\"Mosaic runtime prop '$name' contains a non-number\");\n",
+            "  }}).toList(growable: false);\n",
+            "}}\n\n",
+            "List<bool> mosaicRequiredBooleanList(\n",
+            "  Map<String, Object?> props,\n",
+            "  String name,\n",
+            ") {{\n",
+            "  final value = props[name];\n",
+            "  if (value is! List) {{\n",
+            "    throw StateError(\"Mosaic runtime omitted required list prop '$name'\");\n",
+            "  }}\n",
+            "  return value.map((item) {{\n",
+            "    if (item is bool) return item;\n",
+            "    if (item is String) {{\n",
+            "      final lowered = item.toLowerCase();\n",
+            "      if (lowered == 'true') return true;\n",
+            "      if (lowered == 'false') return false;\n",
+            "    }}\n",
+            "    throw StateError(\"Mosaic runtime prop '$name' contains a non-boolean\");\n",
+            "  }}).toList(growable: false);\n",
+            "}}\n\n",
+            "Widget mosaicRequiredWidget(Map<String, Object?> props, String name) {{\n",
+            "  final value = props[name];\n",
+            "  if (value is Widget) return value;\n",
+            "  throw StateError(\"Mosaic runtime prop '$name' is not a Widget\");\n",
+            "}}\n\n",
+            "T mosaicRequiredValue<T>(Map<String, Object?> props, String name) {{\n",
+            "  final value = props[name];\n",
+            "  if (value is T) return value as T;\n",
+            "  throw StateError(\"Mosaic runtime prop '$name' has the wrong type\");\n",
+            "}}\n"
+        ),
+        banner = BANNER_DART,
+        component_name = component_name,
+        root_widget = root_widget,
+    )
+}
+
+fn build_runtime_required_root_widget_constructor(
+    component_name: &str,
+    slots: &[SlotDecl],
+) -> String {
+    let mut out = format!("{component_name}(\n");
+    for slot in slots {
+        let field = to_camel_case_first_lower(&slot.name);
+        let value = runtime_required_host_value_for_slot(slot);
+        writeln!(out, "            {field}: {value},").unwrap();
+    }
+    out.push_str("            dispatch: (event) {\n");
+    out.push_str(
+        "              _queueMosaicResponse(_mosaicHost.handleEvent(event.mosaicEnvelope));\n",
+    );
+    out.push_str("            },\n");
+    out.push_str("          )");
+    out
+}
+
+fn runtime_required_host_value_for_slot(slot: &SlotDecl) -> String {
+    let slot_name = escape_dart_string(&slot.name);
+    if let Some(default) = &slot.default {
+        return match default {
+            SlotDefault::Text(value) => format!(
+                "mosaicOptionalString(_hostProps, \"{slot_name}\") ?? \"{}\"",
+                escape_dart_string(value)
+            ),
+            SlotDefault::Number(value) if value.is_finite() => format!(
+                "mosaicOptionalDouble(_hostProps, \"{slot_name}\") ?? {}",
+                dart_double_literal(*value)
+            ),
+            SlotDefault::Number(_) => {
+                format!("mosaicOptionalDouble(_hostProps, \"{slot_name}\") ?? 0.0")
+            }
+            SlotDefault::Bool(value) => {
+                format!("mosaicOptionalBoolean(_hostProps, \"{slot_name}\") ?? {value}")
+            }
+        };
+    }
+    if !slot.required {
+        return match &slot.r#type {
+            SlotType::Text | SlotType::Image | SlotType::Color => {
+                format!("mosaicOptionalString(_hostProps, \"{slot_name}\")")
+            }
+            SlotType::Number => {
+                format!("mosaicOptionalDouble(_hostProps, \"{slot_name}\")")
+            }
+            SlotType::Bool => {
+                format!("mosaicOptionalBoolean(_hostProps, \"{slot_name}\")")
+            }
+            SlotType::List(inner) => match inner.as_ref() {
+                ListInnerType::Text | ListInnerType::Image | ListInnerType::Color => {
+                    format!("mosaicOptionalStringList(_hostProps, \"{slot_name}\")")
+                }
+                ListInnerType::Number => {
+                    format!("mosaicOptionalDoubleList(_hostProps, \"{slot_name}\")")
+                }
+                ListInnerType::Bool => {
+                    format!("mosaicOptionalBooleanList(_hostProps, \"{slot_name}\")")
+                }
+                _ => format!(
+                    "mosaicOptionalValue<{}>(_hostProps, \"{slot_name}\")",
+                    slot_type_to_dart(&slot.r#type)
+                ),
+            },
+            SlotType::Node => format!("mosaicOptionalWidget(_hostProps, \"{slot_name}\")"),
+            SlotType::Component(_) => format!(
+                "mosaicOptionalValue<{}>(_hostProps, \"{slot_name}\")",
+                slot_type_to_dart(&slot.r#type)
+            ),
+        };
+    }
+    match &slot.r#type {
+        SlotType::Text | SlotType::Image | SlotType::Color => {
+            format!("mosaicRequiredString(_hostProps, \"{slot_name}\")")
+        }
+        SlotType::Number => format!("mosaicRequiredDouble(_hostProps, \"{slot_name}\")"),
+        SlotType::Bool => format!("mosaicRequiredBoolean(_hostProps, \"{slot_name}\")"),
+        SlotType::List(inner) => match inner.as_ref() {
+            ListInnerType::Text | ListInnerType::Image | ListInnerType::Color => {
+                format!("mosaicRequiredStringList(_hostProps, \"{slot_name}\")")
+            }
+            ListInnerType::Number => {
+                format!("mosaicRequiredDoubleList(_hostProps, \"{slot_name}\")")
+            }
+            ListInnerType::Bool => {
+                format!("mosaicRequiredBooleanList(_hostProps, \"{slot_name}\")")
+            }
+            _ => format!(
+                "mosaicRequiredValue<{}>(_hostProps, \"{slot_name}\")",
+                slot_type_to_dart(&slot.r#type)
+            ),
+        },
+        SlotType::Node => format!("mosaicRequiredWidget(_hostProps, \"{slot_name}\")"),
+        SlotType::Component(_) => format!(
+            "mosaicRequiredValue<{}>(_hostProps, \"{slot_name}\")",
+            slot_type_to_dart(&slot.r#type)
+        ),
+    }
+}
+
 fn build_root_widget_constructor(component_name: &str, slots: &[SlotDecl]) -> String {
     let mut out = format!("{component_name}(\n");
     for slot in slots {
@@ -534,12 +926,19 @@ fn host_value_for_slot(slot: &SlotDecl) -> String {
     }
 }
 
-fn build_mosaic_host_dart() -> String {
+fn build_mosaic_host_dart(require_runtime: bool) -> String {
     let mut out = String::from(BANNER_DART);
     out.push_str("import 'dart:async';\n\n");
     out.push_str("class MosaicHost {\n");
     out.push_str("  const MosaicHost();\n\n");
     out.push_str("  static MosaicHost? load() => null;\n\n");
+    if require_runtime {
+        out.push_str("  static MosaicHost loadRequired() {\n");
+        out.push_str(
+            "    throw StateError('native-complete requires the Mosaic Rust application runtime');\n",
+        );
+        out.push_str("  }\n\n");
+    }
     out.push_str("  FutureOr<Map<String, Object?>?> props() => null;\n\n");
     out.push_str(
         "  FutureOr<Map<String, Object?>?> handleEvent(Map<String, Object?> event) => null;\n\n",
@@ -598,9 +997,15 @@ fn kebab_to_pascal_case_for_label(s: &str) -> String {
     }
 }
 
-fn build_flutter_readme(pub_name: &str, component_name: &str) -> String {
-    format!(
+fn build_flutter_readme(pub_name: &str, component_name: &str, require_runtime: bool) -> String {
+    if !require_runtime {
+        return format!(
         "{BANNER_MD}# {component_name} — Flutter app shell\n\nAuto-generated by `mosaic-compile --backend flutter --emit-project`.\n\n## Prerequisites\n\n- Flutter SDK 3.24+ (run `flutter --version` to check).\n- A device target: iOS simulator, Android emulator, or desktop (`flutter config --enable-macos-desktop` / `--enable-linux-desktop` / `--enable-windows-desktop`).\n\n## Run\n\nChoose the platforms this host will ship, let Flutter add their standard runner files, then build or run normally. Flutter preserves the Mosaic-generated `lib/` sources:\n\n```sh\nflutter create --platforms=macos,windows,linux .\nflutter pub get\nflutter run -d <device-id>   # or `flutter run` to pick interactively\n```\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `lib/{component_name}.dart` | The Mosaic-compiled component mounted by the app shell. |\n| `pubspec.yaml` | Dart pub manifest. Pinned Flutter + Dart SDKs per UI32 spec §3.6.3. |\n| `lib/main.dart` | MaterialApp shell that mounts `{component_name}(...)`, hydrates slot values from an optional Mosaic host, and forwards Mosaic event envelopes. |\n| `lib/mosaic_host.dart` | Default no-op Mosaic host hook. App packages can overwrite it with a real bridge. |\n| `README.md` | This file. |\n\nDart pub name: `{pub_name}`.\n\n## Editing\n\nEvery shell file carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
+        );
+    }
+
+    format!(
+        "{BANNER_MD}# {component_name} — Flutter native-complete app shell\n\nAuto-generated by `mosaic-compile --backend flutter --emit-project --profile native-complete`.\n\nThis shell requires Mosaic's standard Rust application runtime at startup. It waits for the first runtime props envelope before mounting `{component_name}` and never substitutes preview/sample values for missing required props.\n\n## Prerequisites\n\n- Flutter SDK 3.24+ (run `flutter --version` to check).\n- A built Mosaic Rust application library, available through `MOSAIC_APP_LIBRARY` or the platform's conventional `mosaic_app` library name.\n- A device target: iOS simulator, Android emulator, or desktop (`flutter config --enable-macos-desktop` / `--enable-linux-desktop` / `--enable-windows-desktop`).\n\n## Run\n\nChoose the platforms this host will ship, let Flutter add their standard runner files, then build or run normally. Flutter preserves the Mosaic-generated `lib/` sources:\n\n```sh\nflutter create --platforms=macos,windows,linux .\nflutter pub get\nMOSAIC_APP_LIBRARY=/absolute/path/to/libmosaic_app.dylib flutter run -d <device-id>\n```\n\nUse the platform-appropriate library filename on Linux or Windows. Startup fails explicitly when the Rust runtime cannot be loaded or does not provide the required props envelope.\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `lib/{component_name}.dart` | The Mosaic-compiled component mounted by the app shell. |\n| `pubspec.yaml` | Dart pub manifest. Pinned Flutter + Dart SDKs per UI32 spec §3.6.3. |\n| `lib/main.dart` | Runtime-required MaterialApp shell that waits for Rust-provided props and forwards Mosaic event envelopes. |\n| `lib/mosaic_host.dart` | Mosaic host contract. The package builder installs the standard Dart FFI binding here. |\n| `README.md` | This file. |\n\nDart pub name: `{pub_name}`.\n\n## Editing\n\nEvery shell file carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
     )
 }
 
@@ -5141,6 +5546,64 @@ mod tests {
             r.project.is_some(),
             "emit_project: true must produce a shell"
         );
+    }
+
+    #[test]
+    fn native_complete_shell_requires_runtime_props_without_samples() {
+        let mut count = slot("count", SlotType::Number, false);
+        count.default = Some(SlotDefault::Number(3.0));
+        let m = component(
+            "Card",
+            vec![
+                slot("label", SlotType::Text, true),
+                slot("subtitle", SlotType::Text, false),
+                count,
+            ],
+            vec![],
+        );
+        let l = layout("Card", node("Box"));
+        let opts = EmitOptions {
+            emit_project: true,
+            require_runtime: true,
+            ..EmitOptions::default()
+        };
+        let project = from_pipeline_with_options(&m, &l, &empty_style("Card"), &opts)
+            .unwrap()
+            .project
+            .expect("strict project shell");
+
+        assert!(project.main_dart.contains("MosaicHost.loadRequired()"));
+        assert!(project.main_dart.contains("required this.mosaicHost"));
+        assert!(project.main_dart.contains("bool _hostReady = false"));
+        assert!(project.main_dart.contains("response.containsKey('props')"));
+        assert!(project
+            .main_dart
+            .contains("mosaicRequiredString(_hostProps, \"label\")"));
+        assert!(project
+            .main_dart
+            .contains("mosaicOptionalString(_hostProps, \"subtitle\")"));
+        assert!(project
+            .main_dart
+            .contains("mosaicOptionalDouble(_hostProps, \"count\") ?? 3.0"));
+        assert!(project.main_dart.contains("Starting Card"));
+        assert!(project
+            .main_dart
+            .contains("child: const CircularProgressIndicator()"));
+        assert!(!project.main_dart.contains(": const Semantics("));
+        assert!(project.main_dart.contains("return value as T"));
+        assert!(!project.main_dart.contains("MosaicHost?"));
+        assert!(!project.main_dart.contains("_mosaicHost?."));
+        assert!(!project.main_dart.contains("debugPrint(\"event:"));
+        assert!(!project.main_dart.contains("Sample Label"));
+        assert!(project
+            .mosaic_host_dart
+            .contains("static MosaicHost loadRequired()"));
+        assert!(project
+            .readme
+            .contains("requires Mosaic's standard Rust application runtime"));
+        assert!(project
+            .readme
+            .contains("never substitutes preview/sample values"));
     }
 
     #[test]

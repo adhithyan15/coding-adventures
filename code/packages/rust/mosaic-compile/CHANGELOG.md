@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Changed - strict Flutter shells require Rust
+
+`mosaic-compile pkg --backend flutter --emit-project --profile native-complete`
+now emits a runtime-required application shell. It waits for the standard Rust
+engine's first props envelope and contains no nullable-host, event-print, or
+generated sample-value path for required props.
+
 ### Changed - strict Compose shells require Rust
 
 `mosaic-compile pkg --backend compose --emit-project --profile native-complete`

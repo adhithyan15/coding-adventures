@@ -34,12 +34,12 @@ the selected backend has a known degradation.
 The initial inventory identifies passive drag/drop lowerings, native table
 lowerings without table semantics, Flutter's dialog placeholder and missing URL
 effect host, and generated native project shells that can fall back to sample
-props. Compose is the first closed shell: its strict profile requires Mosaic's
-standard Rust runtime, waits for the first props envelope, rejects missing
-required props, and omits both sample-data and package-owned reflection-host
-fallbacks. The overall native-complete milestone remains open while the other
-four native shells are closed and ignored properties, events, styles, effects,
-and accessibility metadata are added to the inventory.
+props. Compose and Flutter are the first closed shells: their strict profiles
+require Mosaic's standard Rust runtime, wait for the first props envelope,
+reject missing required props, and omit sample-data and optional-host fallbacks.
+The overall native-complete milestone remains open while the other three native
+shells are closed and ignored properties, events, styles, effects, and
+accessibility metadata are added to the inventory.
 
 `compose_component` is the canonical in-memory entry point shared by package
 builds and standalone three-file compilation. It returns the compiled model,
@@ -77,7 +77,9 @@ compatibility fallback.
 Flutter project shells replace the no-op host stub with the standard Dart FFI
 runtime while preserving `MosaicApp(mosaicHost: ...)` injection. Set
 `MOSAIC_APP_LIBRARY` to the Rust application library, or package it under the
-target platform's conventional `mosaic_app` name.
+target platform's conventional `mosaic_app` name. Permissive builds retain the
+injectable/optional preview path; `native-complete` builds require the binding
+and Rust-provided props before mounting the generated widget.
 Qt project shells install a standard QObject host backed by `QLibrary` and
 Qt JSON/variant APIs. Explicit package host assets can still replace
 `MosaicHost.h/.cpp` for specialized native surfaces and effects.
