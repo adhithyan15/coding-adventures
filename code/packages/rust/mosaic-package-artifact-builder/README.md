@@ -34,9 +34,12 @@ the selected backend has a known degradation.
 The initial inventory identifies passive drag/drop lowerings, native table
 lowerings without table semantics, Flutter's dialog placeholder and missing URL
 effect host, and generated native project shells that can fall back to sample
-props. The overall native-complete milestone remains open while ignored
-properties, events, styles, effects, and accessibility metadata are added to the
-inventory.
+props. Compose is the first closed shell: its strict profile requires Mosaic's
+standard Rust runtime, waits for the first props envelope, rejects missing
+required props, and omits both sample-data and package-owned reflection-host
+fallbacks. The overall native-complete milestone remains open while the other
+four native shells are closed and ignored properties, events, styles, effects,
+and accessibility metadata are added to the inventory.
 
 `compose_component` is the canonical in-memory entry point shared by package
 builds and standalone three-file compilation. It returns the compiled model,
@@ -56,12 +59,12 @@ package source tree. Typed `node` slots remain in-process host objects rather
 than serialized scalars: the generated shell resolves the matching native
 view, element, widget, composable, or QML/WinUI object through its optional
 `MosaicHost` contract.
-Compose Desktop shells install Mosaic's standard JNA runtime binding and try it
-before the legacy optional host hook. The binding owns the Rust application
-handle, buffer lifecycle, startup context, event sequence, and JSON updates;
-applications no longer need to rebuild that FFI adapter. Package-owned hosts
-remain a permissive compatibility fallback until the `native-complete` profile
-can reject them.
+Compose Desktop shells install Mosaic's standard JNA runtime binding. The binding
+owns the Rust application handle, buffer lifecycle, startup context, event
+sequence, and JSON updates; applications no longer need to rebuild that FFI
+adapter. Permissive builds try the binding before the legacy optional host hook
+and retain sample props for previews. `native-complete` builds require the
+binding and runtime-provided props before mounting the component.
 SwiftUI package shells likewise install Mosaic's standard Foundation host plus
 a tiny C dynamic-loader target. Set `MOSAIC_APP_LIBRARY` to the application
 `cdylib` path (or package it as `libmosaic_app.dylib`); the generated host owns

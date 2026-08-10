@@ -1033,6 +1033,11 @@ jobs:
           export MOSAIC_APP_LIBRARY="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.so"
           gradle --no-daemon --stacktrace -p "$harness" run
 
+          strict_output="$RUNNER_TEMP/mosaic-compose-native-complete-rating-controls"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend compose --output "$strict_output" --emit-project --profile native-complete
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/compose/mosaic-degradations.json"
+          gradle --no-daemon --stacktrace -p "$strict_output/compose" compileKotlin
+
       - name: Build complete Mosaic TaskApp WinUI shell
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
         shell: pwsh
