@@ -1,5 +1,42 @@
 # Changelog — gc-core
 
+## 0.33.1 — 2026-08-10 — `find_header`: fix the one-past-the-end pointer gap (security fix)
+
+- **`FlatHeap::find_header`'s upper bound was exclusive** (`addr < payload + size`), so a
+  legitimate one-past-the-end pointer — `payload + size` exactly, the value a Rust slice's
+  `.as_ptr_range().end` or a C-style `arr + len` loop sentinel actually holds, never a pointer
+  that is itself dereferenced — was invisible to every classification path built on it
+  (`mark_word`, `push_candidates`, `classify_precise_word`, and therefore every `collect_*`
+  variant: `collect_mixed`, `collect_region`, `collect_compacting`, `collect_minor_compacting`,
+  `classify_mobility`/`classify_mobility_minor`, incremental marking). An object reachable
+  **only** through such a pointer could be freed (conservative paths) or relocated without its
+  sole reference being rewritten (precise paths, via `classify_precise_word`) while still live —
+  a use-after-free.
+- **Flagged pre-existing, not a regression.** A prior adversarial security review (the
+  `classify_precise_word` interior-pointer fix, 0.32.0) already found and noted this exact gap —
+  *"a one-past-the-end pointer is invisible to both the precise and liveness-marking waves
+  alike (confirmed as pre-existing on `collect_mixed` too, not a regression from this fix)"* —
+  and consciously deferred it as out of scope for that PR. This release closes it.
+- **Fix: the upper bound is now inclusive** (`addr <= payload + size`). A safe widening, not a
+  new ambiguity: every block is preceded by its own `HEADER_SIZE`-byte header, so block B's
+  payload start is always `>= HEADER_SIZE` past block A's payload-end — A's inclusive upper
+  bound can never collide with B's inclusive lower bound. A one-past-the-end address now
+  resolves to the object it bounds; on the precise path it is routed to the pinning wave (not
+  the movable set), since it still fails `classify_precise_word`'s exact-base check
+  (`h + HEADER_SIZE == word`) — it can never accidentally become eligible for relocation, only
+  correctly retained.
+- 3 new regression tests: a direct `find_header` assertion at the exact one-past-the-end
+  address; a `classify_mobility` root-pointer test proving the object is pinned (not silently
+  absent from both the movable and pinned sets); and an end-to-end `collect_compacting`
+  differential over a **conservative** region (the likelier real-world path, since a precisely-
+  traced base+derived pointer pair normally keeps the base itself live too) proving the object
+  is neither freed nor left dangling. All three confirmed load-bearing by reverting the fix and
+  observing the predicted failure (2 assertion failures, 1 `freed: 1` instead of `0`).
+- Verification: `cargo build`/`test` clean across `gc-core`, `gc-core-capi`, `vm-core` (157 lib
+  tests, up from 154); `cargo clippy --all-targets -- -D warnings` clean; full-crate
+  `cargo +nightly miri test -p gc-core` clean (155 passed, 2 ignored per the existing scale-test
+  gate).
+
 ## 0.33.0 — 2026-08-10 — `FlatHeap::collect_minor_compacting` — the full moving-minor cycle, live (AOT00-T9 PR-4)
 
 - **`FlatHeap::collect_minor_compacting(&mut self, root_slots, regions) -> GcCycleStats`** — the
