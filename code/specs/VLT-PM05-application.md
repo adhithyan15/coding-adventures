@@ -1,0 +1,509 @@
+# VLT-PM05 — Password Manager Application Core V1
+
+**Status:** Draft 0.1 — Phase 1A implementation contract
+
+**Parent:** VLT-PM00 §§5, 7–11, 14, and §23 Phase 1A
+
+**Depends on:** VLT-PM01 format, VLT-PM02 storage, VLT-PM03 domain, and
+VLT-PM04 repository
+
+## 1. Purpose
+
+This specification defines the storage- and host-agnostic application layer
+shared by the local CLI and every later web, desktop, extension, and mobile
+client. It composes unlock, verified repository open, item mutation and
+projection, search rebuild, item history, portable export, audit verification,
+and crash recovery without owning a filesystem path, provider SDK, terminal,
+clipboard, process, environment, or platform credential store.
+
+The Phase 1A implementation supports one authorized device and one repository.
+Its formats and state machine already preserve multiple verified heads and
+whole-record conflicts so Phase 2 can add replicas and enrollment without
+replacing application data.
+
+## 2. Layer and authority boundary
+
+```text
+CLI / web / desktop / extension / mobile host
+                     |
+        +------------v-------------+
+        | vault-pm-application     | VLT-PM05
+        | workflows and view models|
+        +------+---------+---------+
+               |         |
+       +-------v--+   +--v----------------+
+       | domain   |   | immutable repo    |
+       | VLT-PM03 |   | VLT-PM04          |
+       +----------+   +-------------------+
+```
+
+The host injects five authorities:
+
+1. `ApplicationRepositoryFactory`, implemented over VLT-PM04 and an opaque
+   VLT-PM02 store;
+2. `BootstrapStore`, for the provider-discoverable signed bootstrap family;
+3. `LocalStateStore`, for owner-private atomic state and recovery journals;
+4. `EntropySource`, which fills caller-sized buffers or fails closed; and
+5. `Clock`, which returns advisory Unix milliseconds.
+
+The application never discovers a path or provider by itself. It never accepts
+passwords from argv, environment variables, configuration, or URLs. A host
+passes an already-collected zeroizing secret input to `initialize` or `open`.
+
+Repository, bootstrap, state, entropy, and clock failures are translated to a
+closed application error. Provider messages, paths, IDs, item text, secret
+bytes, ciphertext, and passphrases are never embedded in diagnostics.
+
+## 3. Required injected contracts
+
+### 3.1 Application repository
+
+Repository address derivation and verification require unlocked keys, so the
+host cannot inject a ready repository before `initialize` or `open`. Instead it
+injects an object-safe factory. After deriving the locator key, the application
+supplies the VLT-PM04 `RepositoryAddress` and its mandatory unlocked
+`RepositoryVerifier`; the factory returns one erased application repository:
+
+```rust
+pub trait ApplicationRepositoryFactory {
+    fn connect(
+        &self,
+        address: RepositoryAddress,
+        verifier: Box<dyn RepositoryVerifier>,
+    ) -> Result<Box<dyn ApplicationRepository>, ApplicationRepositoryError>;
+}
+```
+
+The resulting application-facing contract exposes only VLT-PM04 operations:
+
+```rust
+pub trait ApplicationRepository {
+    fn initialize(&self) -> Result<(), ApplicationRepositoryError>;
+    fn open(&self, pins: &PinnedHeads) -> Result<OpenReport, ApplicationRepositoryError>;
+    fn publish(
+        &self,
+        publication: &Publication,
+        current_heads: &PinnedHeads,
+    ) -> Result<PublicationReceipt, ApplicationRepositoryError>;
+    fn read_object(&self, id: ObjectId) -> Result<VerifiedObject, ApplicationRepositoryError>;
+    fn read_commit(&self, id: ObjectId) -> Result<CommitSummary, ApplicationRepositoryError>;
+    fn history(
+        &self,
+        start: ObjectId,
+        limit: usize,
+    ) -> Result<Vec<CommitSummary>, ApplicationRepositoryError>;
+}
+```
+
+The production factory delegates to `vault-pm-repository` and retains the
+injected VLT-PM02 store behind the erased handle. Tests may inject a
+deterministic memory implementation, but production construction has no
+unchecked repository or pre-unlock address option. A factory cannot inspect or
+persist the locator key or verifier secret state.
+
+### 3.2 Bootstrap store
+
+`BootstrapStore` reads the latest exact signed bootstrap bytes for one random
+`BootstrapLocator` and immutably installs a generation with compare-and-set
+semantics. A provider-visible locator is random and independent of vault ID,
+user name, repository bucket IDs, and record metadata.
+
+Generation zero requires `expected_previous = None`. Rotation requires the
+last pinned bootstrap ID. A successful put is followed by an exact readback.
+Duplicate identical puts succeed; a different value for the same generation or
+predecessor is corruption. Listing or provider-specific revision semantics are
+adapter concerns.
+
+### 3.3 Owner-private local state
+
+`LocalStateStore` atomically loads and compare-exchanges one bounded canonical
+state record for a bootstrap locator. It is permission-protected by the host
+and must not be placed in the remote repository by default.
+
+The state contains no passphrase or unwrapped root/device key. It may contain:
+
+- pinned bootstrap ID and authority fingerprint;
+- VLT-PM04 head pins;
+- current device ID and encrypted device/authority secret state;
+- the last consumed device counter;
+- a prepared initialization journal; or
+- one exact pending publication journal.
+
+Compare-exchange mismatch returns `ConcurrentHost` and never overwrites the
+winner. Hosts backed by files use owner-only create plus durable atomic replace;
+IndexedDB, SQLite, or native preferences use an equivalent transaction.
+
+## 4. Cryptographic profile and live keys
+
+V1 uses only suite 1:
+
+- Argon2id for the passphrase-derived 32-byte KEK;
+- HKDF-SHA-256 for VRK subkeys;
+- XChaCha20-Poly1305 for root wrapping, local secret state, object-DEK wrapping,
+  and object payload encryption;
+- Ed25519 for authority, device, commit, and announcement signatures; and
+- X25519 keys in the device certificate for later recipient wrapping.
+
+The application implementation composes the existing primitive packages behind
+one `V1Crypto` implementation. Entropy remains injected and every nonce, VRK,
+object DEK, identifier, authority seed, device signing seed, and device X25519
+secret is independently drawn. Deterministic entropy is test-only.
+
+HKDF uses the vault ID as salt. The exact labels used to derive 32-byte subkeys
+are:
+
+```text
+vpm/locator-key/v1
+vpm/object-wrap-key/v1
+vpm/local-state-key/v1
+vpm/audit-key/v1
+```
+
+Associated data is domain separated and binds suite, vault ID, object kind, and
+purpose. Exact prefixes are:
+
+```text
+VPM-ROOT-WRAP-v1
+VPM-LOCAL-SECRET-v1
+VPM-OBJECT-DEK-WRAP-v1
+VPM-OBJECT-PAYLOAD-v1
+VPM-PORTABLE-EXPORT-v1
+```
+
+The object kind registry is fixed in section 6. A frame cannot be decrypted as
+a different kind. AEAD authentication completes before plaintext parsing.
+
+`UnlockedKeys` owns the VRK, derived keys, authority seed when present, and
+device private keys in zeroizing containers. `VaultSession` owns
+`UnlockedKeys`; `lock`, drop, failed open, and failed mutation wipe them and all
+decrypted documents, search terms, and temporary export buffers.
+
+The application implements VLT-PM04 `RepositoryVerifier` with the unlocked
+profile. It decrypts commit frames as `Commit`, authority-verifies the encrypted
+device certificate, and verifies commit/announcement signatures. Unknown,
+revoked, cross-vault, or unauthenticated devices fail closed.
+
+## 5. Bootstrap and local secret state
+
+Generation-zero initialization creates:
+
+- random vault and bootstrap locator IDs;
+- a random 256-bit VRK;
+- calibrated bounded Argon2id parameters and salt;
+- a passphrase KEK wrapping the VRK;
+- an authority Ed25519 key pair;
+- one device Ed25519 key pair and X25519 key pair;
+- an authority-signed `DeviceCertificateV1`; and
+- an encrypted local secret record containing the private seeds.
+
+The signed `BootstrapV1` contains only the public authority and wrapped VRK
+defined by VLT-PM01. The encrypted local secret record is:
+
+```text
+LocalSecretV1 {
+    version: 1,
+    vault_id: [u8; 16],
+    device_id: [u8; 16],
+    authority_seed: [u8; 32],
+    device_signing_seed: [u8; 32],
+    device_x25519_secret: [u8; 32],
+}
+```
+
+It is canonical, bounded, AEAD-encrypted under `vpm/local-state-key/v1`, and
+stored only as an `AeadEnvelopeV1` in local state. Public keys are re-derived
+after unlock and must match the pinned bootstrap and certificate.
+
+Phase 1A keeps the authority seed locally because it must support password
+rotation and later enrollment. It is loaded only into an unlocked session and
+is not included in normal item/export views. Recovery and OS-backed custody are
+later extensions.
+
+## 6. Encrypted application object kinds
+
+The authenticated plaintext in every VLT-PM01 frame begins with one closed
+canonical CBOR map. Kind codes are:
+
+| Code | Name | Purpose |
+|---:|---|---|
+| 1 | `ItemRevisionV1` | one live document or tombstone revision |
+| 2 | `CatalogV1` | item ID to current revision candidates |
+| 3 | `DeviceCertificateV1` | exact VLT-PM01 certificate bytes |
+| 4 | `CommitV1` | exact VLT-PM01 signed commit bytes |
+
+All maps include version `1` and the kind code. Unknown fields or kinds are
+rejected. Plaintext object size is limited to 16 MiB in Phase 1A even though the
+outer frame permits 64 MiB.
+
+### 6.1 Item revision
+
+```text
+ItemRevisionV1 {
+    version: 1,
+    kind: 1,
+    causal_parents: sorted unique array<ObjectId>,
+    state: Live(ItemDocumentV1) | Tombstone(ItemId, deleted_at_ms),
+}
+```
+
+The domain `RevisionId` is the encrypted frame's `ObjectId`, converted
+losslessly. A revision never embeds its own randomized ciphertext identity.
+Direct causal parents are limited by VLT-PM03 and must exist.
+
+`ItemDocumentV1` encodes every VLT-PM03 field. Each observed set serializes
+every `retained_value`, then its sorted retained add operations and removal
+tombstones. Present-only `values()` is forbidden for persistence. The VLT02
+record is its canonical tagged encoding. Decode rebuilds through checked domain
+constructors, `add`, and `observe_removal`; it never creates unbounded maps and
+validates afterward.
+
+### 6.2 Catalog
+
+```text
+CatalogV1 {
+    version: 1,
+    kind: 2,
+    entries: sorted unique array<{
+        item_id: ItemId,
+        candidates: sorted unique array<ObjectId>,
+    }>,
+}
+```
+
+V1 permits 100,000 entries and at most 16 current candidates per item. Every
+candidate frame must decrypt as `ItemRevisionV1` with the same item ID. Empty
+candidate sets, duplicate item IDs, wrong-kind frames, dangling references, and
+candidate amplification are corruption.
+
+Catalogs are immutable snapshots. Phase 1A rewrites one encrypted catalog frame
+per mutation. A later tree format may optimize this without changing domain or
+repository contracts.
+
+## 7. Crash-resumable local state machine
+
+```text
+Absent
+  -> PreparedInit
+  -> Active
+  -> PendingPublication
+  -> Active
+```
+
+`Corrupt` is an error result, never a writable state.
+
+### 7.1 Initialization journal
+
+Before external writes, initialization atomically records a `PreparedInit`
+journal containing the exact signed bootstrap bytes, encrypted initial object
+frames, commit frame, announcement bytes, encrypted local secret envelope, and
+intended final pins. It contains ciphertext and public data only.
+
+Resume performs the exact idempotent sequence:
+
+1. immutable bootstrap put and exact readback;
+2. repository initialize;
+3. VLT-PM04 publication of certificate, empty catalog, initial commit, and
+   announcement;
+4. exact verification of the returned pins; and
+5. atomic replacement with `Active` state.
+
+A crash at any step leaves a retryable exact journal. A conflicting bootstrap,
+repository object, or local state is corruption; initialization never silently
+adopts it.
+
+### 7.2 Publication journal and counters
+
+Every mutation first reserves the next non-zero device counter and constructs
+the complete randomized frames, signed commit, and signed announcement. One
+atomic compare-exchange replaces `Active` with `PendingPublication` containing
+the exact `Publication`, old pins, expected new pins, counter, and resulting
+catalog root.
+
+Only then may repository publication begin. Success atomically installs the
+new pins and counter in `Active`. Failure retains the journal. Open or the next
+mutation retries the identical bytes before doing any new work.
+
+The counter is consumed even if recovery later proves the publication never
+became visible. Gaps are valid. The application never generates different
+signed bytes for a reserved counter, preventing self-equivocation after a crash
+or ambiguous provider response.
+
+## 8. Open and trust
+
+`open` performs:
+
+1. load and strictly decode local state;
+2. resume a prepared initialization or pending publication when present;
+3. fetch, decode, ID-check, signature-check, and pin-check the latest bootstrap;
+4. derive the passphrase KEK and authenticate-unlock the VRK;
+5. decrypt local secret state and re-derive/match public keys;
+6. derive the repository address and invoke VLT-PM04 `open` with local pins;
+7. reject an unanchored fresh-device report unless the caller supplied an
+   explicit trust ceremony token;
+8. decrypt every head catalog and referenced current revision;
+9. merge identical/concurrent candidate sets without dropping a candidate; and
+10. build the in-memory catalog and search projection.
+
+An incorrect passphrase is `AuthenticationFailed`, indistinguishable from a bad
+root wrap. Bootstrap rollback, pin withholding, signature failure, graph
+equivocation, wrong object kind, malformed domain state, or cross-vault data is
+`IntegrityFailure`.
+
+Phase 1A does not auto-accept a provider view when pins are absent. The only
+automatic first pin is the receipt from the locally prepared generation-zero
+publication. Device enrollment defines the later fresh-device ceremony.
+
+## 9. Item workflows
+
+`VaultSession` provides bounded host-neutral operations:
+
+- `add_item(document)` rejects an existing item ID and writes a parentless item
+  revision plus a new catalog and commit;
+- `replace_item(expected_revision, document)` requires the current candidate
+  set to contain exactly the expected live revision;
+- `delete_item(expected_revision, deleted_at_ms)` writes a tombstone revision;
+- `restore_item(revision)` writes a new live revision whose causal parent is the
+  selected historical revision;
+- `get_item(id)` and `list_items(filter)` return only `RedactedItemView`;
+- `reveal_field(id, field)` returns one zeroizing `RevealedSecret` through an
+  explicit API; and
+- unresolved concurrent candidates return `ConflictRequired` and remain
+  available for a later resolution workflow.
+
+Mutation input is owned and zeroized on all return paths. Item IDs, operation
+IDs, and revision randomness come from injected entropy. Timestamps come from
+the injected clock or an explicit import timestamp; wall time never establishes
+causality.
+
+Each mutation makes all current repository heads parents of its commit. The
+commit `added_objects` contains the new revision, catalog, and certificate when
+needed. The receipt removes only its parents and preserves unrelated heads as
+defined by VLT-PM04.
+
+## 10. Search and redacted views
+
+Search is an in-memory, rebuildable projection. It indexes only fields present
+in `RedactedItemView`: display titles, usernames, URLs, labels, services,
+database hosts, tags, and explicit collection filters. It never indexes
+passwords, note bodies, TOTP seeds, API tokens, card numbers/CVVs, database
+passwords, lease IDs, or opaque payload bytes.
+
+Queries are 1–256 UTF-8 bytes, contain no control characters, and use Unicode
+lowercase token matching. Results are deterministically ordered by normalized
+display title, schema, then explicit item-ID bytes; the item ID is rendered only
+when the host intentionally requests it. Search terms and the index are wiped
+on lock.
+
+Normal `Debug` for sessions, reports, filters, views, and errors omits IDs and
+display metadata as well as secret fields.
+
+## 11. History, restore, and export
+
+Item history walks repository commit ancestry from every current head, decrypts
+each catalog, and collects distinct revision candidates for the requested item.
+It is ordered by repository ancestry and object ID, never advisory wall time.
+The default limit is 100 and the hard limit is 4,096.
+
+History views report live/tombstone state, safe redacted metadata, causal-parent
+count, and advisory time. `history_reveal` uses the same explicit zeroizing
+field API as current items. Restore always creates a new revision and commit;
+it never rewinds repository heads or mutates historical bytes.
+
+Portable export is one authenticated encrypted artifact containing a canonical
+snapshot of all current candidates, complete live documents/tombstones,
+bootstrap public metadata required for import, and a manifest count/hash. It is
+encrypted under a fresh export key or a separately collected export
+passphrase—never implicitly under the live VRK. Export excludes local device
+private state, provider credentials, local pins, and search indexes.
+
+Phase 1A returns export bytes to the host; it does not choose or write a path.
+Import and cross-vault re-identification are the next paired workflow and must
+create new object identities.
+
+## 12. Audit and status
+
+`status` is safe while locked and reports only `Absent`, `Prepared`, `Locked`,
+`Unlocked`, or `RecoveryRequired`, plus low-resolution counts where safe.
+
+`audit_verify` while unlocked repeats a full VLT-PM04 open, decrypts every
+reachable catalog/current revision, validates all kinds and domain bounds,
+checks local pins/counter/bootstrap ancestry, and returns counts plus boolean
+integrity status. It never returns object or item IDs.
+
+`doctor` distinguishes local state availability, bootstrap availability,
+repository availability, unsupported capability, authentication required, and
+integrity failure without including provider detail. It must not weaken open or
+accept new pins as a repair side effect.
+
+## 13. Bounds and errors
+
+Additional V1 bounds are checked before allocation:
+
+| Resource | Bound |
+|---|---:|
+| local state bytes | 32 MiB |
+| prepared/pending publication objects | 4,096 |
+| catalog entries | 100,000 |
+| candidates per item | 16 |
+| application plaintext object | 16 MiB |
+| search query | 256 bytes |
+| list/search results | 10,000 |
+| history request | 4,096 |
+| portable export plaintext | 512 MiB |
+
+The public error taxonomy is:
+
+```text
+NotInitialized
+AlreadyInitialized
+Locked
+AuthenticationFailed
+InvalidInput
+NotFound
+ConflictRequired
+BoundExceeded
+ConcurrentHost
+StorageUnavailable
+Unsupported
+IntegrityFailure
+InternalInvariant
+```
+
+`Debug` and `Display` use static low-resolution labels. Wrapped domain,
+format, repository, crypto, and provider errors are mapped without formatting
+their payloads.
+
+## 14. Required verification
+
+The Phase 1A package must include:
+
+- exact canonical vectors for local state, item revision, catalog, and export;
+- deterministic cryptographic vectors for root wrap, subkeys, object sealing,
+  signing, and verification;
+- generation-zero initialize, restart, unlock, and wrong-passphrase tests;
+- crash injection before and after every bootstrap/publication/state step;
+- exact retry proving one counter never signs two byte sequences;
+- item add/get/list/replace/delete/restore and restart persistence;
+- lossless observed-set round trips retaining tombstones;
+- wrong-kind, cross-vault, dangling catalog, malformed domain, signature, AEAD,
+  bootstrap rollback, and pinned-head withholding tests;
+- search rebuild tests proving fixture secrets never enter the index;
+- deterministic history and restore tests;
+- portable export authentication and secret-state exclusion tests;
+- complete audit/status/doctor low-resolution reports;
+- redacted diagnostics and zeroizing drop tests;
+- capability manifest proving no direct filesystem/network/process/environment
+  authority; and
+- greater than 95% production line coverage.
+
+## 15. Deliberate exclusions
+
+V1 does not define CLI parsing/rendering, a filesystem local-state adapter,
+interactive shell timeout, clipboard behavior, TOTP generation, attachments,
+import, password rotation UI, OS custody, device enrollment/revocation,
+multi-replica transfer, automatic conflict resolution, physical GC execution,
+or provider-specific diagnostics. Those compose above or extend this contract.
+
+---
+
+*End of VLT-PM05.*
