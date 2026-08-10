@@ -119,6 +119,10 @@ pub struct EmittedFile {
 /// see lessons.md).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ProjectFiles {
+    /// `global.json` — keeps WinUI's markup compiler on the .NET 9 SDK
+    /// family targeted by the generated project, even when a newer SDK is
+    /// installed globally.
+    pub global_json: String,
     /// `<Component>.csproj` â€” MSBuild project file. Targets net9.0-windows,
     /// references WindowsAppSDK + Microsoft.Windows.SDK.BuildTools,
     /// declares the project unpackaged + self-contained, includes a
@@ -578,13 +582,34 @@ struct RowVm {
     has_index: bool,
     /// GROUP C: `true` iff this VM is the per-column cell loop (a `For`
     /// whose `each:` is an enclosing For binding â€” UI29 Â§3.4). Such VMs
-    /// carry an extra `double Width` field so the host can thread the
-    /// matching column's fixed pixel width onto every cell, and the
-    /// generated cell element binds `Width="{x:Bind Width}"`.
+    /// carry an extra `double Width` field so the enclosing generated
+    /// projection can thread the matching authored column width onto every
+    /// cell, and the generated cell element binds `Width="{x:Bind Width}"`.
     has_width: bool,
     /// True when a template-local predicate such as `i == selectedIndex`
     /// is lowered into a row-local boolean instead of a page helper call.
     has_is_selected: bool,
+    /// Computed expression values exposed as ordinary properties to WinUI's
+    /// typed DataTemplate binding compiler.
+    helper_bindings: Vec<RowVmHelperBinding>,
+    /// Lexical values copied from enclosing For rows so nested templates keep
+    /// the same MIL expression scope after WinUI changes DataContext.
+    captures: Vec<RowVmCapture>,
+    /// Row projections owned by this VM for nested For blocks.
+    nested_projections: Vec<RowProjection>,
+}
+
+#[derive(Debug, Clone)]
+struct RowVmHelperBinding {
+    property_name: String,
+    return_type: String,
+    owner_call: String,
+}
+
+#[derive(Debug, Clone)]
+struct RowVmCapture {
+    property_name: String,
+    property_type: String,
 }
 
 /// A code-behind property that projects a slot list into generated row VMs.
@@ -592,10 +617,14 @@ struct RowVm {
 struct RowProjection {
     property_name: String,
     source_path: String,
+    dependency_paths: Vec<String>,
     vm_class: String,
     has_index: bool,
     has_width: bool,
+    width_source_path: Option<String>,
     selected_index_path: Option<String>,
+    owner_expr: String,
+    capture_args: Vec<String>,
 }
 
 /// Mutable state threaded through the recursive XAML emission.
@@ -615,6 +644,10 @@ struct EmitContext<'a> {
     /// resolves at expression-lowering time we walk from the back of
     /// the stack to find the closest binding.
     for_scope: Vec<ForBinding>,
+    /// Per-alias allocation count for generated row-VM names. Package-expanded
+    /// applications can contain unrelated loops that reuse a short alias such
+    /// as `row`; only the first keeps the historical unsuffixed name.
+    for_alias_counts: std::collections::HashMap<String, u32>,
     /// Helper methods to emit into the code-behind. Deduplicated by
     /// method name so two identical expressions in the same component
     /// produce only one helper.
@@ -697,6 +730,7 @@ impl<'a> EmitContext<'a> {
             slot_types,
             emit_payloads,
             for_scope: Vec::new(),
+            for_alias_counts: std::collections::HashMap::new(),
             helpers: Vec::new(),
             needs_bool_to_vis: false,
             needs_focus_state_converter: false,
@@ -720,11 +754,20 @@ impl<'a> EmitContext<'a> {
     /// this so a slot named `title` on a ContentDialog-rooted
     /// component resolves to `DialogTitle`, not the shadowed
     /// `Title`. Fix A4.
-    fn slot_xbind_path(&self, slot_name: &str) -> String {
+    fn slot_property_name(&self, slot_name: &str) -> String {
         if let Some(alias) = self.slot_aliases.get(slot_name) {
             return alias.clone();
         }
         kebab_to_pascal_case(slot_name)
+    }
+
+    fn slot_xbind_path(&self, slot_name: &str) -> String {
+        let property = self.slot_property_name(slot_name);
+        if self.for_scope.is_empty() {
+            property
+        } else {
+            format!("Owner.{property}")
+        }
     }
 
     /// Allocate a unique counter for a Host* element that lacks a
@@ -753,6 +796,43 @@ impl<'a> EmitContext<'a> {
             .iter()
             .rev()
             .find(|b| b.index_name.as_deref() == Some(index_name))
+    }
+
+    fn scoped_name_xbind_path(&self, name: &str) -> String {
+        if self.lookup_for_binding(name).is_some() {
+            return kebab_to_pascal_case(name);
+        }
+        if let Some(position) = self
+            .for_scope
+            .iter()
+            .rposition(|binding| binding.index_name.as_deref() == Some(name))
+        {
+            return if position + 1 == self.for_scope.len() {
+                "Index".to_string()
+            } else {
+                kebab_to_pascal_case(name)
+            };
+        }
+        self.slot_xbind_path(name)
+    }
+
+    fn allocate_for_vm_class(&mut self, as_name: &str) -> String {
+        let count = self
+            .for_alias_counts
+            .entry(as_name.to_string())
+            .or_default();
+        *count += 1;
+        let suffix = if *count == 1 {
+            String::new()
+        } else {
+            count.to_string()
+        };
+        format!(
+            "{}_{}{}Vm",
+            self.component_name,
+            kebab_to_pascal_case(as_name),
+            suffix
+        )
     }
 
     /// Add a helper method (or skip if a method by the same name already
@@ -2167,6 +2247,32 @@ fn part_style_attr(node: &LayoutNode, part_styles: &PartStyleMap) -> String {
     String::new()
 }
 
+/// ContentControl descendants such as Button align their content through
+/// `HorizontalContentAlignment`; unlike TextBox/TextBlock they do not expose a
+/// `TextAlignment` dependency property. Keep shared MSL `text-align` semantics
+/// while emitting the native property accepted by WinUI's markup compiler.
+fn content_control_style_attr(node: &LayoutNode, part_styles: &PartStyleMap) -> String {
+    let Some(fragment) = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.get(part))
+        .map(|entry| entry.base_fragment.as_str())
+    else {
+        return String::new();
+    };
+    parse_style_fragment(fragment)
+        .into_iter()
+        .map(|(setter, value)| {
+            let setter = if setter == "TextAlignment" {
+                "HorizontalContentAlignment"
+            } else {
+                setter.as_str()
+            };
+            format!(" {setter}=\"{value}\"")
+        })
+        .collect()
+}
+
 /// Parse a joined style fragment (the value side of `PartStyleMap`)
 /// back into individual `(setter, value)` pairs. Round-trips
 /// `build_style_fragment`'s output. Used by `emit_container` to
@@ -2495,15 +2601,21 @@ fn emit_text(
     ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
-    let style = part_style_attr(node, part_styles);
+    let inner_pad = " ".repeat(indent + 4);
+    let (container_style, text_setters) =
+        partition_box_style(node.part_name.as_deref(), part_styles);
+    let text_style = text_setters
+        .into_iter()
+        .map(|(setter, value)| format!(" {setter}=\"{value}\""))
+        .collect::<String>();
 
     let text_attr = match find_prop_value(node, "content") {
         Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
-            if !is_safe_identifier(&pascal) {
-                return Err(PipelineEmitError::UnsafeSlotName(pascal));
+            let property = ctx.slot_property_name(slot);
+            if !is_safe_identifier(&property) {
+                return Err(PipelineEmitError::UnsafeSlotName(property));
             }
-            format!(" Text=\"{{x:Bind {pascal}}}\"")
+            format!(" Text=\"{{x:Bind {}}}\"", ctx.slot_xbind_path(slot))
         }
         Some(LayoutPropValue::String(s)) => {
             let escaped = escape_xaml_attr(s);
@@ -2536,7 +2648,13 @@ fn emit_text(
         Some(LayoutPropValue::EmitRef(_)) | None => String::new(),
     };
 
-    Ok(format!("{pad}<TextBlock{text_attr}{style}/>\n"))
+    if container_style.is_empty() {
+        Ok(format!("{pad}<TextBlock{text_attr}{text_style}/>\n"))
+    } else {
+        Ok(format!(
+            "{pad}<Border{container_style}>\n{inner_pad}<TextBlock{text_attr}{text_style}/>\n{pad}</Border>\n"
+        ))
+    }
 }
 
 /// `Image [name] (source: slot: foo)` â†’ `<Image Source="{x:Bind Foo}"/>`.
@@ -2544,7 +2662,7 @@ fn emit_image(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
-    _ctx: &mut EmitContext<'_>,
+    ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let style = part_style_attr(node, part_styles);
@@ -2552,11 +2670,11 @@ fn emit_image(
     let source_attr = match find_prop_value(node, "source").or_else(|| find_prop_value(node, "src"))
     {
         Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
-            if !is_safe_identifier(&pascal) {
-                return Err(PipelineEmitError::UnsafeSlotName(pascal));
+            let property = ctx.slot_property_name(slot);
+            if !is_safe_identifier(&property) {
+                return Err(PipelineEmitError::UnsafeSlotName(property));
             }
-            format!(" Source=\"{{x:Bind {pascal}}}\"")
+            format!(" Source=\"{{x:Bind {}}}\"", ctx.slot_xbind_path(slot))
         }
         Some(LayoutPropValue::String(s)) => format!(" Source=\"{}\"", escape_xaml_attr(s)),
         _ => String::new(),
@@ -2617,7 +2735,7 @@ fn emit_icon(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
-    _ctx: &mut EmitContext<'_>,
+    ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let style = part_style_attr(node, part_styles);
@@ -2638,7 +2756,7 @@ fn emit_icon(
     {
         Some(LayoutPropValue::String(s)) => format!(" Glyph=\"{}\"", escape_xaml_attr(s)),
         Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
+            let pascal = ctx.slot_xbind_path(slot);
             format!(" Glyph=\"{{x:Bind {pascal}}}\"")
         }
         _ => String::new(),
@@ -2777,7 +2895,8 @@ fn emit_code_behind(
 
     // PR-2: helper methods registered by the ExprLowerer for expressions
     // that {x:Bind} cannot evaluate directly (indexer / comparison /
-    // logical). Each helper is a private method on the partial class.
+    // logical). Row-VM expression properties call these methods from a
+    // separate generated type, so assembly-local visibility is required.
     for helper in &ctx.helpers {
         let params: Vec<String> = helper
             .parameters
@@ -2786,7 +2905,7 @@ fn emit_code_behind(
             .collect();
         writeln!(
             out,
-            "    private {} {}({}) => {};",
+            "    internal {} {}({}) => {};",
             helper.return_type,
             helper.name,
             params.join(", "),
@@ -2815,7 +2934,7 @@ fn emit_dependency_property(
     // Fix A4: use the alias if this slot's PascalCased name would
     // collide with an inherited property on the chosen base class
     // (e.g. ContentDialog.Title).
-    let pascal = ctx.slot_xbind_path(&slot.name);
+    let pascal = ctx.slot_property_name(&slot.name);
     if !is_safe_identifier(&pascal) {
         return Err(PipelineEmitError::UnsafeSlotName(pascal));
     }
@@ -2872,7 +2991,10 @@ fn emit_dependency_property(
 fn row_projections_depending_on<'a>(ctx: &'a EmitContext<'_>, slot_path: &str) -> Vec<&'a str> {
     let mut properties = Vec::new();
     for projection in &ctx.row_projections {
-        let depends_on_slot = projection.source_path == slot_path
+        let depends_on_slot = projection
+            .dependency_paths
+            .iter()
+            .any(|dependency| dependency == slot_path)
             || projection.selected_index_path.as_deref() == Some(slot_path);
         if depends_on_slot
             && !properties
@@ -2891,16 +3013,23 @@ fn emit_row_projection_property(projection: &RowProjection) -> String {
     let source_path = &projection.source_path;
     let vm_class = &projection.vm_class;
 
-    let mut args = vec!["source[i]".to_string()];
+    let mut args = vec![projection.owner_expr.clone(), "source[i]".to_string()];
     if projection.has_index {
         args.push("i".to_string());
     }
     if projection.has_width {
-        args.push("0".to_string());
+        args.push(
+            projection
+                .width_source_path
+                .as_ref()
+                .map(|path| format!("{path} is {{ }} widths && i < widths.Count ? widths[i] : 0"))
+                .unwrap_or_else(|| "0".to_string()),
+        );
     }
     if let Some(selected_index_path) = &projection.selected_index_path {
         args.push(format!("i == {selected_index_path}"));
     }
+    args.extend(projection.capture_args.iter().cloned());
     let ctor_args = args.join(", ");
 
     let mut out = String::new();
@@ -3148,6 +3277,7 @@ fn emit_for(
         PipelineEmitError::UnsupportedPrimitive("For block missing required prop 'as:'".to_string())
     })?;
     let index_name = find_prop_keyword(node, "index");
+    let is_nested = !ctx.for_scope.is_empty();
 
     // -- 2. Resolve the `each:` source to a {x:Bind} path and an
     //    element type --
@@ -3159,7 +3289,7 @@ fn emit_for(
     let (items_path, element_type, is_cell_loop, slot_backed_items_source) =
         match find_prop_value(node, "each") {
             Some(LayoutPropValue::SlotRef(slot)) => {
-                let pascal = ctx.slot_xbind_path(slot);
+                let pascal = ctx.slot_property_name(slot);
                 if !is_safe_identifier(&pascal) {
                     return Err(PipelineEmitError::UnsafeSlotName(pascal));
                 }
@@ -3237,9 +3367,26 @@ fn emit_for(
         };
 
     // -- 3. Generate / register the RowVm --
-    let vm_class = format!("{}_{}Vm", ctx.component_name, kebab_to_pascal_case(as_name));
+    let vm_class = ctx.allocate_for_vm_class(as_name);
     let element_property = kebab_to_pascal_case(as_name);
     let has_index = index_name.is_some();
+    let capture_specs = row_vm_capture_specs(&ctx.for_scope, &element_property, has_index);
+    let captures = capture_specs
+        .iter()
+        .map(|(capture, _)| capture.clone())
+        .collect();
+    let capture_args = capture_specs
+        .into_iter()
+        .map(|(_, argument)| argument)
+        .collect::<Vec<_>>();
+    let width_component_source = is_cell_loop.then(|| {
+        ctx.slot_types
+            .keys()
+            .filter(|slot| slot.ends_with("column-widths"))
+            .min()
+            .map(|slot| ctx.slot_property_name(slot))
+    });
+    let width_component_source = width_component_source.flatten();
 
     let vm = RowVm {
         class_name: vm_class.clone(),
@@ -3249,26 +3396,106 @@ fn emit_for(
         // GROUP C: only the per-column cell loop's VM carries `Width`.
         has_width: is_cell_loop,
         has_is_selected: false,
+        helper_bindings: Vec::new(),
+        captures,
+        nested_projections: Vec::new(),
     };
     if !ctx.row_vms.iter().any(|v| v.class_name == vm.class_name) {
         ctx.row_vms.push(vm);
     }
 
-    let projection_property = slot_backed_items_source.as_ref().map(|source| {
+    let projection_source = if is_nested {
+        Some(
+            slot_backed_items_source
+                .as_ref()
+                .map(|source| format!("Owner.{source}"))
+                .unwrap_or_else(|| items_path.clone()),
+        )
+    } else {
+        slot_backed_items_source.clone()
+    };
+    let projection_property = projection_source.as_ref().map(|source| {
         let prop = format!("{}Rows", vm_class.replace('_', ""));
-        if !ctx
+        let projection = RowProjection {
+            property_name: prop.clone(),
+            source_path: source.clone(),
+            dependency_paths: vec![source.clone()],
+            vm_class: vm_class.clone(),
+            has_index,
+            has_width: is_cell_loop,
+            width_source_path: width_component_source.as_ref().map(|path| {
+                if is_nested {
+                    format!("Owner.{path}")
+                } else {
+                    path.clone()
+                }
+            }),
+            selected_index_path: None,
+            owner_expr: if is_nested { "Owner" } else { "this" }.to_string(),
+            capture_args: capture_args.clone(),
+        };
+        if is_nested {
+            let parent_vm_class = &ctx.for_scope.last().expect("nested For parent").vm_class;
+            let parent_vm = ctx
+                .row_vms
+                .iter_mut()
+                .find(|vm| vm.class_name == *parent_vm_class)
+                .expect("nested For parent row VM");
+            if !parent_vm
+                .nested_projections
+                .iter()
+                .any(|existing| existing.property_name == prop)
+            {
+                parent_vm.nested_projections.push(projection);
+            }
+            if let (Some(component_source), Some(top_projection_name)) = (
+                slot_backed_items_source.as_ref(),
+                ctx.for_scope
+                    .first()
+                    .and_then(|binding| binding.projection_property.as_ref()),
+            ) {
+                if let Some(top_projection) = ctx
+                    .row_projections
+                    .iter_mut()
+                    .find(|existing| existing.property_name == *top_projection_name)
+                {
+                    if !top_projection
+                        .dependency_paths
+                        .iter()
+                        .any(|dependency| dependency == component_source)
+                    {
+                        top_projection
+                            .dependency_paths
+                            .push(component_source.clone());
+                    }
+                }
+            }
+            if let (Some(width_source), Some(top_projection_name)) = (
+                width_component_source.as_ref(),
+                ctx.for_scope
+                    .first()
+                    .and_then(|binding| binding.projection_property.as_ref()),
+            ) {
+                if let Some(top_projection) = ctx
+                    .row_projections
+                    .iter_mut()
+                    .find(|existing| existing.property_name == *top_projection_name)
+                {
+                    if !top_projection
+                        .dependency_paths
+                        .iter()
+                        .any(|dependency| dependency == width_source)
+                    {
+                        top_projection.dependency_paths.push(width_source.clone());
+                    }
+                }
+            }
+        } else if !ctx
             .row_projections
             .iter()
-            .any(|projection| projection.property_name == prop)
+            .any(|existing| existing.property_name == prop)
         {
-            ctx.row_projections.push(RowProjection {
-                property_name: prop.clone(),
-                source_path: source.clone(),
-                vm_class: vm_class.clone(),
-                has_index,
-                has_width: is_cell_loop,
-                selected_index_path: None,
-            });
+            ctx.row_projections.push(projection);
         }
         prop
     });
@@ -3280,7 +3507,11 @@ fn emit_for(
         index_name: index_name.map(String::from),
         element_type,
         vm_class: vm_class.clone(),
-        projection_property: projection_property.clone(),
+        projection_property: if is_nested {
+            None
+        } else {
+            projection_property.clone()
+        },
     });
     ctx.template_visual_state_groups.push(Vec::new());
     let body_result =
@@ -3340,6 +3571,53 @@ fn emit_for(
     writeln!(out, "{pad2}</ItemsRepeater.ItemTemplate>").unwrap();
     writeln!(out, "{pad}</ItemsRepeater>").unwrap();
     Ok(out)
+}
+
+fn row_vm_capture_specs(
+    scope: &[ForBinding],
+    own_element_property: &str,
+    own_has_index: bool,
+) -> Vec<(RowVmCapture, String)> {
+    let mut candidates = Vec::new();
+    for (position, binding) in scope.iter().enumerate() {
+        let element_property = kebab_to_pascal_case(&binding.as_name);
+        candidates.push((
+            RowVmCapture {
+                property_name: element_property.clone(),
+                property_type: binding.element_type.clone(),
+            },
+            element_property,
+        ));
+        if let Some(index_name) = &binding.index_name {
+            let index_property = kebab_to_pascal_case(index_name);
+            let argument = if position + 1 == scope.len() {
+                "Index".to_string()
+            } else {
+                index_property.clone()
+            };
+            candidates.push((
+                RowVmCapture {
+                    property_name: index_property,
+                    property_type: "int".to_string(),
+                },
+                argument,
+            ));
+        }
+    }
+
+    let own_index_collision = own_has_index.then_some("Index");
+    candidates
+        .iter()
+        .enumerate()
+        .filter(|(position, (capture, _))| {
+            capture.property_name != own_element_property
+                && own_index_collision != Some(capture.property_name.as_str())
+                && !candidates[position + 1..]
+                    .iter()
+                    .any(|(later, _)| later.property_name == capture.property_name)
+        })
+        .map(|(_, candidate)| candidate.clone())
+        .collect()
 }
 
 /// Inject an extra attribute into the opening tag of the first XML
@@ -3406,11 +3684,11 @@ fn emit_if(
     // -- 1. Lower the `when:` expression --
     let when_path = match find_prop_value(if_node, "when") {
         Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
-            if !is_safe_identifier(&pascal) {
-                return Err(PipelineEmitError::UnsafeSlotName(pascal));
+            let property = ctx.slot_property_name(slot);
+            if !is_safe_identifier(&property) {
+                return Err(PipelineEmitError::UnsafeSlotName(property));
             }
-            pascal
+            ctx.slot_xbind_path(slot)
         }
         Some(LayoutPropValue::Keyword(k)) if k == "true" => "True".to_string(),
         Some(LayoutPropValue::Keyword(k)) if k == "false" => "False".to_string(),
@@ -3541,7 +3819,17 @@ fn emit_bool_to_vis_converter_source(namespace: &str) -> String {
          {{\n    \
              public object Convert(object value, Type targetType, object parameter, string language)\n    \
              {{\n        \
-                 var b = value is bool x && x;\n        \
+                 var b = value switch\n        \
+                 {{\n            \
+                     null => false,\n            \
+                     bool x => x,\n            \
+                     double number => number != 0,\n            \
+                     float number => number != 0,\n            \
+                     int number => number != 0,\n            \
+                     string text => text.Length != 0,\n            \
+                     System.Collections.ICollection collection => collection.Count != 0,\n            \
+                     _ => true,\n        \
+                 }};\n        \
                  if (parameter is string p && p == \"invert\") b = !b;\n        \
                  return b ? Visibility.Visible : Visibility.Collapsed;\n    \
              }}\n\n    \
@@ -3585,7 +3873,7 @@ fn emit_focus_state_to_bool_converter_source(namespace: &str) -> String {
 /// produces one of these, written into `XamlEmitResult::for_view_models`
 /// as a separate `.cs` file the host project compiles alongside the
 /// UserControl.
-fn emit_row_vm_source(_component: &str, vm: &RowVm, options: &EmitOptions) -> String {
+fn emit_row_vm_source(component: &str, vm: &RowVm, options: &EmitOptions) -> String {
     let ns = &options.namespace;
     let element_type = &vm.element_type;
     let element_property = &vm.element_property;
@@ -3601,6 +3889,11 @@ fn emit_row_vm_source(_component: &str, vm: &RowVm, options: &EmitOptions) -> St
     } else {
         ""
     };
+    let capture_fields = vm
+        .captures
+        .iter()
+        .map(|capture| format!(", {} {}", capture.property_type, capture.property_name))
+        .collect::<String>();
     let mut out = String::new();
     writeln!(out, "// Auto-generated by mosaic-emit-xaml. Do not edit.").unwrap();
     writeln!(out, "namespace {ns};").unwrap();
@@ -3611,35 +3904,41 @@ fn emit_row_vm_source(_component: &str, vm: &RowVm, options: &EmitOptions) -> St
     )
     .unwrap();
     if vm.has_width {
-        // The host-side VM-builder that POPULATES these instances (zipping
-        // each cell value with its column index â†’ width) is host code the
-        // emitter doesn't generate. Tell the Windows dev exactly how, in a
-        // `<remarks>` the IDE surfaces on hover.
         writeln!(
             out,
             "/// <remarks>\n\
              /// GROUP C â€” fixed per-column widths. This VM carries a `Width`\n\
              /// (double) the cell element binds via `Width=\"{{x:Bind Width}}\"`.\n\
-             /// The emitter does NOT generate the code that fills it â€” the\n\
-             /// host builds these VMs per row and must zip each cell value\n\
-             /// with its column index to look up the column's pixel width.\n\
-             /// Example (inside the per-row VM builder):\n\
-             /// <code>\n\
-             /// for (int col = 0; col &lt; row.Count; col++)\n\
-             ///     cells.Add(new {class_name}(row[col], col, ColumnWidths[col]));\n\
-             /// </code>\n\
-             /// where `ColumnWidths` is the host's `column-widths` slot\n\
-             /// (e.g. [48, 96, 96, 96, 96, 96] for a gutter + five data\n\
-             /// columns).\n\
+             /// The enclosing generated row projection zips each cell index\n\
+             /// with the component's authored `column-widths` slot.\n\
              /// </remarks>"
         )
         .unwrap();
     }
-    writeln!(
+    write!(
         out,
-        "public sealed record {class_name}({element_type} {element_property}{index_field}{width_field}{selected_field});"
+        "public sealed record {class_name}({component} Owner, {element_type} {element_property}{index_field}{width_field}{selected_field}{capture_fields})"
     )
     .unwrap();
+    if vm.helper_bindings.is_empty() && vm.nested_projections.is_empty() {
+        writeln!(out, ";").unwrap();
+    } else {
+        writeln!(out).unwrap();
+        writeln!(out, "{{").unwrap();
+        for binding in &vm.helper_bindings {
+            writeln!(
+                out,
+                "    public {} {} => {};",
+                binding.return_type, binding.property_name, binding.owner_call
+            )
+            .unwrap();
+        }
+        for projection in &vm.nested_projections {
+            writeln!(out).unwrap();
+            out.push_str(&emit_row_projection_property(projection));
+        }
+        writeln!(out, "}}").unwrap();
+    }
     out
 }
 
@@ -3686,6 +3985,7 @@ fn build_project_files(
     options: &EmitOptions,
 ) -> ProjectFiles {
     ProjectFiles {
+        global_json: emit_global_json(),
         csproj: emit_csproj(name, options),
         app_xaml: emit_app_xaml(options),
         app_xaml_cs: emit_app_xaml_cs(options),
@@ -3695,6 +3995,11 @@ fn build_project_files(
         build_script: emit_build_script(name),
         readme: emit_project_readme(name, shape),
     }
+}
+
+fn emit_global_json() -> String {
+    "{\n  \"sdk\": {\n    \"version\": \"9.0.100\",\n    \"rollForward\": \"latestFeature\",\n    \"allowPrerelease\": false\n  }\n}\n"
+        .to_string()
 }
 
 fn emit_csproj(_name: &str, options: &EmitOptions) -> String {
@@ -4329,8 +4634,16 @@ fn emit_build_script(name: &str) -> String {
          # The Platform=x64 arg is required because WindowsAppSDK's\n\
          # self-contained mode rejects AnyCPU. The csproj's <Platforms>x64</Platforms>\n\
          # only declares the SET of platforms; the ACTIVE one comes from this arg.\n\
-         & $dotnet build $proj -c Debug -p:Platform=x64 --nologo\n\
-         $buildExitCode = $LASTEXITCODE\n\
+         # Resolve the SDK from the generated global.json. The dotnet SDK\n\
+         # resolver starts at the process working directory, not the project\n\
+         # argument's directory.\n\
+         Push-Location $PSScriptRoot\n\
+         try {{\n    \
+             & $dotnet build (Split-Path -Leaf $proj) -c Debug -p:Platform=x64 --nologo\n    \
+             $buildExitCode = $LASTEXITCODE\n\
+         }} finally {{\n    \
+             Pop-Location\n\
+         }}\n\
          if ($buildExitCode -ne 0) {{\n    \
              exit $buildExitCode\n\
          }}\n\
@@ -4483,7 +4796,7 @@ fn try_lower_for_template_predicate(src: &str, ctx: &mut EmitContext<'_>) -> Opt
         [ExprTok::Name(left), ExprTok::EqEq, ExprTok::SlotPrefix, ExprTok::Name(right)]
             if ctx.lookup_for_index(left).is_some() =>
         {
-            ctx.slot_xbind_path(right)
+            ctx.slot_property_name(right)
         }
         [ExprTok::Name(left), ExprTok::EqEq, ExprTok::Name(right)]
             if ctx.lookup_for_index(right).is_some() =>
@@ -4493,7 +4806,7 @@ fn try_lower_for_template_predicate(src: &str, ctx: &mut EmitContext<'_>) -> Opt
         [ExprTok::SlotPrefix, ExprTok::Name(left), ExprTok::EqEq, ExprTok::Name(right)]
             if ctx.lookup_for_index(right).is_some() =>
         {
-            ctx.slot_xbind_path(left)
+            ctx.slot_property_name(left)
         }
         _ => return None,
     };
@@ -4536,8 +4849,9 @@ fn lower_expr_for_xbind(src: &str, ctx: &mut EmitContext<'_>) -> ExprLowering {
     // Walk the token stream once with a recursive-descent parser whose
     // output is the lowered form. The parser is split into helper
     // functions; see below.
+    let inside_template = !ctx.for_scope.is_empty();
     let mut p = ExprParser::new(&tokens, ctx, src);
-    match p.parse_or() {
+    let lowered = match p.parse_or() {
         Ok(lowering) => {
             if p.is_done() {
                 lowering
@@ -4546,7 +4860,104 @@ fn lower_expr_for_xbind(src: &str, ctx: &mut EmitContext<'_>) -> ExprLowering {
             }
         }
         Err(e) => ExprLowering::Unsupported(e),
+    };
+    match lowered {
+        ExprLowering::Helper(call) if inside_template => {
+            register_template_helper_binding(&call, ctx)
+                .map(ExprLowering::Bindable)
+                .unwrap_or(ExprLowering::Helper(call))
+        }
+        other => other,
     }
+}
+
+/// WinUI's typed DataTemplate compiler accepts normal row properties but does
+/// not accept function bindings rooted through another property
+/// (`Owner.Helper(...)`). Expose the helper result on the generated row VM and
+/// let that C# property delegate to the owning component.
+fn register_template_helper_binding(call: &str, ctx: &mut EmitContext<'_>) -> Option<String> {
+    let helper_name = call.split('(').next()?;
+    let helper = ctx
+        .helpers
+        .iter()
+        .find(|helper| helper.name == helper_name)?
+        .clone();
+    let arguments = helper
+        .parameters
+        .iter()
+        .map(|(parameter, _)| template_helper_argument(parameter, ctx))
+        .collect::<Vec<_>>()
+        .join(", ");
+    let owner_call = format!("Owner.{}({arguments})", helper.name);
+    register_row_vm_computed_binding(ctx, helper.name.clone(), helper.return_type, owner_call)?;
+    Some(helper.name)
+}
+
+fn register_row_vm_computed_binding(
+    ctx: &mut EmitContext<'_>,
+    property_name: String,
+    return_type: String,
+    owner_call: String,
+) -> Option<()> {
+    let vm_class = ctx.for_scope.last()?.vm_class.clone();
+    let vm = ctx
+        .row_vms
+        .iter_mut()
+        .find(|vm| vm.class_name == vm_class)?;
+    if !vm
+        .helper_bindings
+        .iter()
+        .any(|binding| binding.property_name == property_name)
+    {
+        vm.helper_bindings.push(RowVmHelperBinding {
+            property_name,
+            return_type,
+            owner_call,
+        });
+    }
+    Some(())
+}
+
+fn disabled_slot_xbind_path(slot: &str, ctx: &mut EmitContext<'_>) -> String {
+    let property = ctx.slot_property_name(slot);
+    if ctx.for_scope.is_empty() {
+        ctx.add_helper(HelperMethod {
+            name: "Not".to_string(),
+            parameters: vec![("b".to_string(), "bool".to_string())],
+            return_type: "bool".to_string(),
+            body: "!b".to_string(),
+        });
+        format!("Not({property})")
+    } else {
+        let binding_property = format!("Not{property}");
+        let _ = register_row_vm_computed_binding(
+            ctx,
+            binding_property.clone(),
+            "bool".to_string(),
+            format!("!Owner.{property}"),
+        );
+        binding_property
+    }
+}
+
+fn template_helper_argument(parameter: &str, ctx: &EmitContext<'_>) -> String {
+    for (position, binding) in ctx.for_scope.iter().enumerate().rev() {
+        if kebab_to_pascal_case(&binding.as_name) == parameter {
+            return kebab_to_pascal_case(&binding.as_name);
+        }
+        if binding
+            .index_name
+            .as_deref()
+            .is_some_and(|name| kebab_to_pascal_case(name) == parameter)
+        {
+            return if position + 1 == ctx.for_scope.len() {
+                "Index".to_string()
+            } else {
+                parameter.to_string()
+            };
+        }
+    }
+    parameter.to_string()
 }
 
 /// Tokens emitted by the tiny expression lexer.
@@ -4798,11 +5209,11 @@ impl<'a, 'b> ExprParser<'a, 'b> {
             ExprTok::SlotPrefix => {
                 self.pos += 1;
                 let name = self.expect_name()?;
-                Ok(kebab_to_pascal_case(&name))
+                Ok(self.ctx.slot_xbind_path(&name))
             }
             ExprTok::Name(n) => {
                 self.pos += 1;
-                Ok(kebab_to_pascal_case(&n))
+                Ok(self.ctx.scoped_name_xbind_path(&n))
             }
             ExprTok::True => {
                 self.pos += 1;
@@ -5147,7 +5558,7 @@ fn emit_host_input(
     // value: slot/string/expr â†’ Text binding
     match find_prop_value(node, "value") {
         Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
+            let pascal = ctx.slot_xbind_path(slot);
             attrs.push_str(&format!(" Text=\"{{x:Bind {pascal}, Mode=TwoWay}}\""));
         }
         Some(LayoutPropValue::String(s)) => {
@@ -5159,7 +5570,7 @@ fn emit_host_input(
     // read-only: slot/keyword
     match find_prop_value(node, "read-only") {
         Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
+            let pascal = ctx.slot_xbind_path(slot);
             attrs.push_str(&format!(" IsReadOnly=\"{{x:Bind {pascal}}}\""));
         }
         Some(LayoutPropValue::Keyword(k)) if k == "true" => {
@@ -5194,8 +5605,9 @@ fn emit_host_input(
         let emit_case = strip_on_prefix(emit_name);
         let case_pascal = kebab_to_pascal_case(&emit_case);
         let component = ctx.component_name;
+        let args = host_input_event_args(ctx, emit_name, "tb.Text")?;
         let body = format!(
-            "    private void {handler}(object sender, Microsoft.UI.Xaml.Controls.TextChangedEventArgs e)\n    {{\n        if (sender is Microsoft.UI.Xaml.Controls.TextBox tb)\n        {{\n            Dispatch?.Invoke(this, new {component}Event.{case_pascal}(tb.Text));\n        }}\n    }}"
+            "    private void {handler}(object sender, Microsoft.UI.Xaml.Controls.TextChangedEventArgs e)\n    {{\n        if (sender is Microsoft.UI.Xaml.Controls.TextBox tb)\n        {{\n            Dispatch?.Invoke(this, new {component}Event.{case_pascal}({args}));\n        }}\n    }}"
         );
         ctx.add_host_handler(HostHandler {
             name: handler.clone(),
@@ -5217,19 +5629,21 @@ fn emit_host_input(
         let handler = format!("{x_name}_KeyDown");
         let mut body = String::new();
         body.push_str(&format!(
-            "    private void {handler}(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)\n    {{\n"
+            "    private void {handler}(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)\n    {{\n        if (sender is not Microsoft.UI.Xaml.Controls.TextBox tb) return;\n"
         ));
         let component = ctx.component_name;
         if let Some(emit) = &commit {
             let case = kebab_to_pascal_case(&strip_on_prefix(emit));
+            let args = host_input_event_args(ctx, emit, "tb.Text")?;
             body.push_str(&format!(
-                "        if (e.Key == Windows.System.VirtualKey.Enter)\n        {{\n            Dispatch?.Invoke(this, new {component}Event.{case}());\n        }}\n"
+                "        if (e.Key == Windows.System.VirtualKey.Enter)\n        {{\n            Dispatch?.Invoke(this, new {component}Event.{case}({args}));\n        }}\n"
             ));
         }
         if let Some(emit) = &cancel {
             let case = kebab_to_pascal_case(&strip_on_prefix(emit));
+            let args = host_input_event_args(ctx, emit, "tb.Text")?;
             body.push_str(&format!(
-                "        if (e.Key == Windows.System.VirtualKey.Escape)\n        {{\n            Dispatch?.Invoke(this, new {component}Event.{case}());\n        }}\n"
+                "        if (e.Key == Windows.System.VirtualKey.Escape)\n        {{\n            Dispatch?.Invoke(this, new {component}Event.{case}({args}));\n        }}\n"
             ));
         }
         body.push_str("    }");
@@ -5261,6 +5675,35 @@ fn emit_host_input(
     ))
 }
 
+/// Construct the native text input callback arguments required by an authored
+/// emit. A HostInput owns one textual callback value, so it can satisfy void or
+/// single-value text/number/bool events without app-authored platform glue.
+fn host_input_event_args(
+    ctx: &EmitContext<'_>,
+    emit_name: &str,
+    value_expr: &str,
+) -> Result<String, PipelineEmitError> {
+    let Some(payloads) = ctx.emit_payloads.get(emit_name) else {
+        // Direct emitter callers historically omitted the interface declaration
+        // and received the text value. Keep that narrow compatibility fallback;
+        // package compilation always supplies the canonical emit schema.
+        return Ok(value_expr.to_string());
+    };
+    match payloads.as_slice() {
+        [] => Ok(String::new()),
+        [(_, ty)] if ty == "string" => Ok(value_expr.to_string()),
+        [(_, ty)] if ty == "double" => Ok(format!(
+            "double.TryParse({value_expr}, out var mosaicNumber) ? mosaicNumber : 0.0"
+        )),
+        [(_, ty)] if ty == "bool" => Ok(format!(
+            "bool.TryParse({value_expr}, out var mosaicBool) && mosaicBool"
+        )),
+        _ => Err(PipelineEmitError::UnsupportedExpression(format!(
+            "HostInput callback {emit_name:?} must emit zero or one text, number, or bool payload"
+        ))),
+    }
+}
+
 /// `HostButton` â†’ `<Button>` per spec Â§4.2.
 fn emit_host_button(
     node: &LayoutNode,
@@ -5269,7 +5712,7 @@ fn emit_host_button(
     ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
-    let style = part_style_attr(node, part_styles);
+    let style = content_control_style_attr(node, part_styles);
     let x_name = host_x_name(node, "HostButton", ctx);
     register_host_visual_states(node, "Button", &x_name, part_styles, ctx);
 
@@ -5284,7 +5727,7 @@ fn emit_host_button(
     // label: slot/string
     match find_prop_value(node, "label") {
         Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
+            let pascal = ctx.slot_xbind_path(slot);
             attrs.push_str(&format!(" Content=\"{{x:Bind {pascal}}}\""));
         }
         Some(LayoutPropValue::String(s)) => {
@@ -5307,17 +5750,8 @@ fn emit_host_button(
     // `Not(bool)` helper on the partial class.
     match find_prop_value(node, "disabled") {
         Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
-            // Register the shared Not(bool) helper.
-            ctx.add_helper(HelperMethod {
-                name: "Not".to_string(),
-                parameters: vec![("b".to_string(), "bool".to_string())],
-                return_type: "bool".to_string(),
-                body: "!b".to_string(),
-            });
-            attrs.push_str(&format!(
-                " IsEnabled=\"{{x:Bind Not({pascal}), Mode=OneWay}}\""
-            ));
+            let path = disabled_slot_xbind_path(slot, ctx);
+            attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {path}, Mode=OneWay}}\""));
         }
         Some(LayoutPropValue::Keyword(k)) if k == "true" => {
             attrs.push_str(" IsEnabled=\"False\"");
@@ -5429,24 +5863,24 @@ fn host_link_click_payload_expr(
 
     let (param_name, param_type) = &params[0];
     if param_name == "href" && param_type == "string" {
-        return Some(host_link_href_payload_expr(node));
+        return Some(host_link_href_payload_expr(node, ctx));
     }
     if let Some(expr) = host_button_click_payload_expr(emit_name, ctx) {
         return Some(expr);
     }
     if param_type == "string" {
-        return Some(host_link_href_payload_expr(node));
+        return Some(host_link_href_payload_expr(node, ctx));
     }
     None
 }
 
-fn host_link_href_payload_expr(node: &LayoutNode) -> String {
+fn host_link_href_payload_expr(node: &LayoutNode, ctx: &EmitContext<'_>) -> String {
     match find_prop_value(node, "href") {
         Some(LayoutPropValue::String(s)) => {
             format!("\"{}\"", escape_csharp_string(s))
         }
         Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
+            let pascal = ctx.slot_property_name(slot);
             format!("this.{pascal}")
         }
         _ => "\"\"".to_string(),
@@ -5469,7 +5903,7 @@ fn emit_host_checkbox(
     // Content (label).
     match find_prop_value(node, "label") {
         Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
+            let pascal = ctx.slot_xbind_path(slot);
             attrs.push_str(&format!(" Content=\"{{x:Bind {pascal}}}\""));
         }
         Some(LayoutPropValue::String(s)) => {
@@ -5484,7 +5918,7 @@ fn emit_host_checkbox(
     // IsChecked from `checked:`.
     match find_prop_value(node, "checked") {
         Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
+            let pascal = ctx.slot_xbind_path(slot);
             attrs.push_str(&format!(" IsChecked=\"{{x:Bind {pascal}, Mode=OneWay}}\""));
         }
         Some(LayoutPropValue::Keyword(k)) if k == "true" => {
@@ -5500,16 +5934,8 @@ fn emit_host_checkbox(
     // Not(bool) helper).
     match find_prop_value(node, "disabled") {
         Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
-            ctx.add_helper(HelperMethod {
-                name: "Not".to_string(),
-                parameters: vec![("b".to_string(), "bool".to_string())],
-                return_type: "bool".to_string(),
-                body: "!b".to_string(),
-            });
-            attrs.push_str(&format!(
-                " IsEnabled=\"{{x:Bind Not({pascal}), Mode=OneWay}}\""
-            ));
+            let path = disabled_slot_xbind_path(slot, ctx);
+            attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {path}, Mode=OneWay}}\""));
         }
         Some(LayoutPropValue::Keyword(k)) if k == "true" => {
             attrs.push_str(" IsEnabled=\"False\"");
@@ -5622,7 +6048,7 @@ fn emit_host_radio(
     // Content (label).
     match find_prop_value(node, "label") {
         Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
+            let pascal = ctx.slot_xbind_path(slot);
             attrs.push_str(&format!(" Content=\"{{x:Bind {pascal}}}\""));
         }
         Some(LayoutPropValue::String(s)) => {
@@ -5637,7 +6063,7 @@ fn emit_host_radio(
     // GroupName from `group:` â€” native WinUI radio-mutex.
     match find_prop_value(node, "group") {
         Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
+            let pascal = ctx.slot_xbind_path(slot);
             attrs.push_str(&format!(" GroupName=\"{{x:Bind {pascal}}}\""));
         }
         Some(LayoutPropValue::String(s)) => {
@@ -5649,7 +6075,7 @@ fn emit_host_radio(
     // IsChecked from `checked:`.
     match find_prop_value(node, "checked") {
         Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
+            let pascal = ctx.slot_xbind_path(slot);
             attrs.push_str(&format!(" IsChecked=\"{{x:Bind {pascal}, Mode=OneWay}}\""));
         }
         Some(LayoutPropValue::Keyword(k)) if k == "true" => {
@@ -5664,16 +6090,8 @@ fn emit_host_radio(
     // IsEnabled from `disabled:` (same as HostCheckbox / HostButton).
     match find_prop_value(node, "disabled") {
         Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
-            ctx.add_helper(HelperMethod {
-                name: "Not".to_string(),
-                parameters: vec![("b".to_string(), "bool".to_string())],
-                return_type: "bool".to_string(),
-                body: "!b".to_string(),
-            });
-            attrs.push_str(&format!(
-                " IsEnabled=\"{{x:Bind Not({pascal}), Mode=OneWay}}\""
-            ));
+            let path = disabled_slot_xbind_path(slot, ctx);
+            attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {path}, Mode=OneWay}}\""));
         }
         Some(LayoutPropValue::Keyword(k)) if k == "true" => {
             attrs.push_str(" IsEnabled=\"False\"");
@@ -5691,7 +6109,7 @@ fn emit_host_radio(
         let value_expr: String = match find_prop_value(node, "value") {
             Some(LayoutPropValue::String(s)) => format!("\"{}\"", escape_csharp_string(s)),
             Some(LayoutPropValue::SlotRef(slot)) => {
-                let pascal = kebab_to_pascal_case(slot);
+                let pascal = ctx.slot_property_name(slot);
                 format!("this.{pascal}")
             }
             _ => "\"\"".to_string(),
@@ -5800,7 +6218,7 @@ fn emit_host_link(
     let mut content_attr = String::new();
     match find_prop_value(node, "label") {
         Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
+            let pascal = ctx.slot_xbind_path(slot);
             content_attr.push_str(&format!(" Content=\"{{x:Bind {pascal}}}\""));
         }
         Some(LayoutPropValue::String(s)) => {
@@ -5857,7 +6275,7 @@ fn emit_host_link(
                 attrs.push_str(&format!(" NavigateUri=\"{}\"", escape_xaml_attr(s)));
             }
             Some(LayoutPropValue::SlotRef(slot)) => {
-                let pascal = kebab_to_pascal_case(slot);
+                let pascal = ctx.slot_xbind_path(slot);
                 attrs.push_str(&format!(" NavigateUri=\"{{x:Bind {pascal}}}\""));
             }
             _ => {}
@@ -5899,7 +6317,7 @@ fn emit_host_tooltip(
             format!(" ToolTipService.ToolTip=\"{}\"", escape_xaml_attr(s))
         }
         Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
+            let pascal = ctx.slot_xbind_path(slot);
             format!(" ToolTipService.ToolTip=\"{{x:Bind {pascal}}}\"")
         }
         _ => String::new(),
@@ -5952,7 +6370,7 @@ fn emit_host_number_input(
     // value: slot ref TwoWay binding; numeric literal as a Value attr.
     match find_prop_value(node, "value") {
         Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
+            let pascal = ctx.slot_xbind_path(slot);
             attrs.push_str(&format!(" Value=\"{{x:Bind {pascal}, Mode=TwoWay}}\""));
         }
         Some(LayoutPropValue::Number(n)) => {
@@ -5978,7 +6396,7 @@ fn emit_host_number_input(
             attrs.push_str(&format!(" PlaceholderText=\"{}\"", escape_xaml_attr(s)));
         }
         Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
+            let pascal = ctx.slot_xbind_path(slot);
             attrs.push_str(&format!(" PlaceholderText=\"{{x:Bind {pascal}}}\""));
         }
         _ => {}
@@ -5987,16 +6405,8 @@ fn emit_host_number_input(
     // disabled: slot polarity-flip (Not helper) or literal keyword.
     match find_prop_value(node, "disabled") {
         Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
-            ctx.add_helper(HelperMethod {
-                name: "Not".to_string(),
-                parameters: vec![("b".to_string(), "bool".to_string())],
-                return_type: "bool".to_string(),
-                body: "!b".to_string(),
-            });
-            attrs.push_str(&format!(
-                " IsEnabled=\"{{x:Bind Not({pascal}), Mode=OneWay}}\""
-            ));
+            let path = disabled_slot_xbind_path(slot, ctx);
+            attrs.push_str(&format!(" IsEnabled=\"{{x:Bind {path}, Mode=OneWay}}\""));
         }
         Some(LayoutPropValue::Keyword(k)) if k == "true" => {
             attrs.push_str(" IsEnabled=\"False\"");
@@ -6335,9 +6745,12 @@ fn emit_host_table(
     // `{x:Bind ...}` attribute value.
     let flow_direction_attr: String = match find_prop_value(node, "dir") {
         Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
-            if is_safe_identifier(&pascal) {
-                format!(" FlowDirection=\"{{x:Bind {pascal}}}\"")
+            let property = ctx.slot_property_name(slot);
+            if is_safe_identifier(&property) {
+                format!(
+                    " FlowDirection=\"{{x:Bind {}}}\"",
+                    ctx.slot_xbind_path(slot)
+                )
             } else {
                 String::new()
             }
@@ -6620,11 +7033,14 @@ fn emit_component_reference(
         let attr_name = kebab_to_pascal_case(&prop.name);
         match &prop.value {
             LayoutPropValue::SlotRef(slot) => {
-                let pascal = kebab_to_pascal_case(slot);
-                if !is_safe_identifier(&pascal) {
-                    return Err(PipelineEmitError::UnsafeSlotName(pascal));
+                let property = ctx.slot_property_name(slot);
+                if !is_safe_identifier(&property) {
+                    return Err(PipelineEmitError::UnsafeSlotName(property));
                 }
-                attrs.push_str(&format!(" {attr_name}=\"{{x:Bind {pascal}}}\""));
+                attrs.push_str(&format!(
+                    " {attr_name}=\"{{x:Bind {}}}\"",
+                    ctx.slot_xbind_path(slot)
+                ));
             }
             LayoutPropValue::String(s) => {
                 attrs.push_str(&format!(" {attr_name}=\"{}\"", escape_xaml_attr(s)));
@@ -7141,6 +7557,48 @@ mod tests {
     }
 
     #[test]
+    fn styled_text_moves_box_paint_to_border() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Text".to_string(),
+                part_name: Some("pill".to_string()),
+                props: vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::String("Ready".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        );
+        let s = style_for_box(
+            "pill",
+            vec![
+                ("background", "#22301f"),
+                ("padding", "4"),
+                ("border-radius", "20"),
+                ("color", "#6fb489"),
+                ("font-size", "12"),
+            ],
+        );
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml
+                .contains("<Border Background=\"#22301f\" Padding=\"4\" CornerRadius=\"20\">"),
+            "box paint must live on a valid WinUI Border:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("<TextBlock Text=\"Ready\" Foreground=\"#6fb489\" FontSize=\"12\"/>"),
+            "typography must remain on the TextBlock:\n{}",
+            r.xaml
+        );
+        assert!(!r.xaml.contains("<TextBlock Text=\"Ready\" Background="));
+        assert!(!r.xaml.contains("<TextBlock Text=\"Ready\" CornerRadius="));
+    }
+
+    #[test]
     fn text_with_slot_ref_content_uses_xbind() {
         let c = component("Foo", vec![slot("greeting", SlotType::Text, true)], vec![]);
         let l = layout_with_root(
@@ -7239,7 +7697,7 @@ mod tests {
         );
         // The helper should be inlined into the code-behind.
         assert!(
-            r.code_behind.contains("private string Expr_"),
+            r.code_behind.contains("internal string Expr_"),
             "expected helper method in code-behind, got:\n{}",
             r.code_behind
         );
@@ -8607,6 +9065,34 @@ mod tests {
         assert!(cb.contains("FooEvent.Cancel()"));
     }
 
+    #[test]
+    fn host_input_commit_supplies_required_text_payload() {
+        let c = component(
+            "Foo",
+            vec![],
+            vec![emit(
+                "onCommit",
+                vec![param("value", EmitPayloadType::Text)],
+            )],
+        );
+        let l = layout_with_root(
+            "Foo",
+            host_input_node(
+                Some("formula-field"),
+                vec![LayoutProp {
+                    name: "onCommit".to_string(),
+                    value: LayoutPropValue::EmitRef("onCommit".to_string()),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.code_behind.contains("FooEvent.Commit(tb.Text)"),
+            "HostInput commit must forward its controlled value:\n{}",
+            r.code_behind
+        );
+    }
+
     // â”€â”€ HostButton â”€â”€
 
     #[test]
@@ -8625,6 +9111,20 @@ mod tests {
             "got:\n{}",
             r.xaml
         );
+    }
+
+    #[test]
+    fn host_button_maps_text_alignment_to_content_alignment() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root("Foo", host_button_node(Some("submit"), Vec::new()));
+        let s = style_for_box("submit", vec![("text-align", "left")]);
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains("HorizontalContentAlignment=\"Left\""),
+            "Button content alignment must use the WinUI ContentControl property:\n{}",
+            r.xaml
+        );
+        assert!(!r.xaml.contains("TextAlignment=\"Left\""));
     }
 
     #[test]
@@ -8791,7 +9291,7 @@ mod tests {
         );
         // The Not(bool) helper should be in the code-behind.
         assert!(
-            r.code_behind.contains("private bool Not(bool b) => !b;"),
+            r.code_behind.contains("internal bool Not(bool b) => !b;"),
             "got:\n{}",
             r.code_behind
         );
@@ -9096,6 +9596,41 @@ mod tests {
     }
 
     #[test]
+    fn for_template_routes_component_slots_through_row_owner() {
+        let c = component(
+            "Grid",
+            vec![
+                slot("rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("title", SlotType::Text, true),
+            ],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Grid",
+            for_node(
+                LayoutPropValue::SlotRef("rows".to_string()),
+                "row",
+                None,
+                vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::SlotRef("title".to_string()),
+                    }],
+                    children: Vec::new(),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Grid"));
+        assert!(
+            r.xaml.contains("Text=\"{x:Bind Owner.Title}\""),
+            "component slots inside a typed template must route through Owner:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
     fn for_generates_row_vm_record() {
         let c = component(
             "Grid",
@@ -9122,7 +9657,7 @@ mod tests {
         assert_eq!(vm.filename, "Grid_RowVm.cs");
         assert!(vm
             .source
-            .contains("public sealed record Grid_RowVm(string Row);"));
+            .contains("public sealed record Grid_RowVm(Grid Owner, string Row);"));
     }
 
     #[test]
@@ -9149,7 +9684,7 @@ mod tests {
         let vm = &r.for_view_models[0];
         assert!(
             vm.source
-                .contains("public sealed record Grid_RowVm(string Row, int Index);"),
+                .contains("public sealed record Grid_RowVm(Grid Owner, string Row, int Index);"),
             "got:\n{}",
             vm.source
         );
@@ -9179,17 +9714,17 @@ mod tests {
         assert!(
             r.for_view_models[0]
                 .source
-                .contains("public sealed record Stats_VVm(double V);"),
+                .contains("public sealed record Stats_VVm(Stats Owner, double V);"),
             "got:\n{}",
             r.for_view_models[0].source
         );
     }
 
     #[test]
-    fn for_dedupes_row_vms_within_one_component() {
-        // Two For blocks binding the same `as:` produce the same VM
-        // class. The emitter must register only one â€” the assembly step
-        // in from_pipeline depends on uniqueness.
+    fn for_disambiguates_reused_aliases_within_one_component() {
+        // Package composition can place unrelated loops with the same short
+        // alias in one component. They need distinct VM and projection types
+        // so each ItemsRepeater keeps its own source and row shape.
         let c = component(
             "Grid",
             vec![slot(
@@ -9222,7 +9757,17 @@ mod tests {
             },
         );
         let r = compile(&c, &l, &empty_style("Grid"));
-        assert_eq!(r.for_view_models.len(), 1, "expected dedup to one RowVm");
+        assert_eq!(r.for_view_models.len(), 2);
+        assert!(r
+            .for_view_models
+            .iter()
+            .any(|vm| vm.filename == "Grid_RowVm.cs"));
+        assert!(r
+            .for_view_models
+            .iter()
+            .any(|vm| vm.filename == "Grid_Row2Vm.cs"));
+        assert!(r.xaml.contains("GridRowVmRows"));
+        assert!(r.xaml.contains("GridRow2VmRows"));
     }
 
     #[test]
@@ -9308,6 +9853,20 @@ mod tests {
         // Only one occurrence â€” converter is shared.
         let count = r.xaml.matches("BoolToVisibilityConverter x:Key").count();
         assert_eq!(count, 1, "expected exactly one converter resource entry");
+        let helper = r
+            .if_helpers
+            .iter()
+            .find(|file| file.filename == "BoolToVisibilityConverter.cs")
+            .expect("visibility converter helper");
+        assert!(
+            helper.source.contains("string text => text.Length != 0")
+                && helper.source.contains("double number => number != 0")
+                && helper
+                    .source
+                    .contains("ICollection collection => collection.Count != 0"),
+            "visibility conversion must preserve Mosaic value truthiness:\n{}",
+            helper.source
+        );
     }
 
     #[test]
@@ -9449,7 +10008,11 @@ mod tests {
         });
         let r = lower_expr_for_xbind("row == \"hello\"", &mut ctx);
         match r {
-            ExprLowering::Helper(_) => {
+            ExprLowering::Helper(call) => {
+                // This low-level fixture has no registered RowVm, so the
+                // helper remains a call. Full For lowering projects it onto
+                // the generated RowVm; see the end-to-end test below.
+                assert!(call.starts_with("Expr_"));
                 assert_eq!(ctx.helpers.len(), 1);
                 // Helper should accept a `string Row` parameter.
                 let h = &ctx.helpers[0];
@@ -9584,6 +10147,8 @@ mod tests {
         o.emit_project = true;
         let r = from_pipeline(&c, &l, &s, None, &o).unwrap();
         let p = r.project.as_ref().expect("project populated");
+        assert!(p.global_json.contains("\"version\": \"9.0.100\""));
+        assert!(p.global_json.contains("\"rollForward\": \"latestFeature\""));
         // csproj has the WindowsAppSDK reference + unpackaged WinUI build switches.
         assert!(p.csproj.contains("Microsoft.WindowsAppSDK"));
         assert!(p.csproj.contains("AppxGeneratePriEnabled>false"));
@@ -11139,6 +11704,28 @@ mod tests {
             r.xaml
         );
         assert_eq!(r.xaml.matches("<ContentControl").count(), 2);
+        assert!(
+            r.xaml.contains("Visibility=\"{x:Bind Expr_"),
+            "typed templates must bind a normal row-VM property:\n{}",
+            r.xaml
+        );
+        let vm = r
+            .for_view_models
+            .iter()
+            .find(|file| file.filename == "Foo_ItemVm.cs")
+            .expect("row vm");
+        assert!(
+            vm.source.contains("public bool Expr_")
+                && vm.source.contains("=> Owner.Expr_")
+                && vm.source.contains("(Item);"),
+            "row VM must delegate the computed expression to its owner:\n{}",
+            vm.source
+        );
+        assert!(
+            r.code_behind.contains("internal bool Expr_"),
+            "row VM helper target must be assembly-visible:\n{}",
+            r.code_behind
+        );
     }
 
     #[test]
@@ -11191,14 +11778,14 @@ mod tests {
             .expect("row vm");
         assert!(
             vm.source.contains(
-                "public sealed record Foo_ItemVm(string Item, int Index, bool IsSelected);"
+                "public sealed record Foo_ItemVm(Foo Owner, string Item, int Index, bool IsSelected);"
             ),
             "got:\n{}",
             vm.source
         );
         assert!(
             r.code_behind
-                .contains("rows.Add(new Foo_ItemVm(source[i], i, i == SelectedIndex));"),
+                .contains("rows.Add(new Foo_ItemVm(this, source[i], i, i == SelectedIndex));"),
             "got:\n{}",
             r.code_behind
         );
@@ -11656,11 +12243,18 @@ mod tests {
     fn grid_component() -> MosmodelComponent {
         component(
             "Grid",
-            vec![slot(
-                "viewport-rows",
-                SlotType::List(Box::new(ListInnerType::List(Box::new(ListInnerType::Text)))),
-                true,
-            )],
+            vec![
+                slot(
+                    "viewport-rows",
+                    SlotType::List(Box::new(ListInnerType::List(Box::new(ListInnerType::Text)))),
+                    true,
+                ),
+                slot(
+                    "column-widths",
+                    SlotType::List(Box::new(ListInnerType::Number)),
+                    true,
+                ),
+            ],
             vec![],
         )
     }
@@ -11701,6 +12295,24 @@ mod tests {
             rowvm.contains("IReadOnlyList<string> Row"),
             "outer row VM must keep the list type, got:\n{rowvm}"
         );
+        assert!(
+            rowvm.contains("public IReadOnlyList<Grid_VVm> GridVVmRows")
+                && rowvm.contains("var source = Row;")
+                && rowvm.contains(
+                    "new Grid_VVm(Owner, source[i], i, Owner.ColumnWidths is { } widths && i < widths.Count ? widths[i] : 0, Row, Index)"
+                ),
+            "outer row VM must own the nested typed projection, got:\n{rowvm}"
+        );
+        assert!(
+            vvm.contains("IReadOnlyList<string> Row, int R"),
+            "inner value VM must capture the outer row and authored index, got:\n{vvm}"
+        );
+        assert!(
+            r.xaml
+                .contains("ItemsSource=\"{x:Bind GridVVmRows, Mode=OneWay}\""),
+            "nested repeater must bind its parent row-VM projection, got:\n{}",
+            r.xaml
+        );
     }
 
     /// GROUP C: the per-column cell loop's value VM carries a
@@ -11722,10 +12334,10 @@ mod tests {
             vvm.contains("double Width"),
             "value VM must carry a `double Width` field, got:\n{vvm}"
         );
-        // The <remarks> tells the Windows dev how to populate it.
+        // The <remarks> documents the generated width projection.
         assert!(
-            vvm.contains("<remarks>") && vvm.contains("ColumnWidths"),
-            "value VM must document how the host populates Width, got:\n{vvm}"
+            vvm.contains("<remarks>") && vvm.contains("column-widths"),
+            "value VM must document generated Width population, got:\n{vvm}"
         );
 
         // The cell element binds the width.
@@ -12676,8 +13288,9 @@ mod tests {
             r.xaml
         );
         assert!(
-            r.code_behind
-                .contains("rows.Add(new AnimatedRow_RowVm(source[i], i, i == SelectedIndex));"),
+            r.code_behind.contains(
+                "rows.Add(new AnimatedRow_RowVm(this, source[i], i, i == SelectedIndex));"
+            ),
             "the selected predicate must be projected onto each row VM:\n{}",
             r.code_behind
         );

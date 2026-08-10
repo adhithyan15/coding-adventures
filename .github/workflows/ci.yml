@@ -65,6 +65,7 @@ jobs:
       needs_swift: ${{ steps.toolchains.outputs.needs_swift }}
       needs_cpp: ${{ steps.toolchains.outputs.needs_cpp }}
       needs_venture_windows: ${{ steps.venture-windows.outputs.required }}
+      needs_mosaic_xaml_windows: ${{ steps.mosaic-xaml-windows.outputs.required }}
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
       build_shards: ${{ steps.detect.outputs.build_shards }}
@@ -125,6 +126,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_capability_broker.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_linux_oci.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_venture_windows_ci_acceptance.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_xaml_windows_ci_acceptance.py'
           python3 code/scripts/build_tool_conformance.py validate-corpus
           python3 code/scripts/build_tool_conformance_execution.py validate-contract
           python3 code/scripts/package_parity_report.py --format json --fail-on-collisions > /tmp/package-parity-report.json
@@ -215,6 +217,15 @@ jobs:
         shell: bash
         run: |
           python3 code/scripts/venture_windows_ci_acceptance.py \
+            build-plan.json \
+            --repo-root . \
+            --diff-base "${{ steps.diff-base.outputs.base }}" >> "$GITHUB_OUTPUT"
+
+      - name: Detect Mosaic XAML native-shell acceptance
+        id: mosaic-xaml-windows
+        shell: bash
+        run: |
+          python3 code/scripts/mosaic_xaml_windows_ci_acceptance.py \
             build-plan.json \
             --repo-root . \
             --diff-base "${{ steps.diff-base.outputs.base }}" >> "$GITHUB_OUTPUT"
@@ -519,7 +530,7 @@ jobs:
           clang --version | head -1
 
       - name: Set up Rust
-        if: needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_venture_windows == 'true'
+        if: needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
         # Uses the `stable` channel (matching the rest of this repo's Rust CI).
         # NOTE on the -clippy gate: clippy adds/tightens lints on each stable
         # release, so a new Rust release can surface new lints on `main` — treat
@@ -704,7 +715,7 @@ jobs:
           cabal-version: '3.10'
 
       - name: Set up .NET
-        if: needs.detect.outputs.needs_dotnet == 'true' || (needs.detect.outputs.needs_venture_windows == 'true' && runner.os == 'Windows')
+        if: needs.detect.outputs.needs_dotnet == 'true' || ((needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_xaml_windows == 'true') && runner.os == 'Windows')
         uses: actions/setup-dotnet@v4
         with:
           # .NET 9 is the current LTS release. No platform exclusions needed —
@@ -773,7 +784,7 @@ jobs:
             echo "Node: $(node --version)"
             echo "npm: $(npm --version)"
           fi
-          if [ "${{ needs.detect.outputs.needs_rust }}" = "true" ] || [ "${{ needs.detect.outputs.needs_venture_windows }}" = "true" ]; then
+          if [ "${{ needs.detect.outputs.needs_rust }}" = "true" ] || [ "${{ needs.detect.outputs.needs_venture_windows }}" = "true" ] || [ "${{ needs.detect.outputs.needs_mosaic_xaml_windows }}" = "true" ]; then
             echo "Rust: $(rustc --version)"
             echo "Cargo: $(cargo --version)"
           fi
@@ -900,6 +911,63 @@ jobs:
           set -euo pipefail
           cd code/packages/rust
           cargo test -p venture-browser-macos
+
+      - name: Build and launch complete Mosaic TaskApp WinUI shell
+        if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
+        shell: pwsh
+        run: |
+          $installer = Join-Path $env:RUNNER_TEMP 'WindowsAppRuntimeInstall-x64.exe'
+          Invoke-WebRequest `
+            'https://aka.ms/windowsappsdk/1.7/1.7.250606001/windowsappruntimeinstall-x64.exe' `
+            -OutFile $installer
+          & $installer --quiet
+          if ($LASTEXITCODE -ne 0) {
+            throw "Windows App Runtime installer failed with exit code $LASTEXITCODE"
+          }
+
+          $output = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-taskapp'
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend xaml --output $output --emit-project
+          if ($LASTEXITCODE -ne 0) {
+            throw "TaskApp XAML generation failed with exit code $LASTEXITCODE"
+          }
+
+          $project = Join-Path $output 'xaml/TaskApp.csproj'
+          $binaryLog = Join-Path $output 'xaml/TaskApp.binlog'
+          Push-Location (Split-Path -Parent $project)
+          Write-Host "Using .NET SDK $(dotnet --version) selected by generated global.json"
+          dotnet build (Split-Path -Leaf $project) -c Debug -p:Platform=x64 --nologo "-bl:$binaryLog"
+          $buildExitCode = $LASTEXITCODE
+          Pop-Location
+          if ($buildExitCode -ne 0) {
+            Get-ChildItem -Path (Join-Path $output 'xaml/obj') -Filter 'output.json' -Recurse -File -ErrorAction SilentlyContinue | ForEach-Object {
+              Write-Host "--- $($_.FullName) ---"
+              Get-Content $_.FullName
+            }
+            throw "TaskApp WinUI build failed with exit code $buildExitCode"
+          }
+          $executable = Get-ChildItem -Path (Join-Path $output 'xaml/bin') -Filter 'TaskApp.exe' -Recurse -File | Select-Object -First 1
+          if ($null -eq $executable) {
+            throw 'TaskApp WinUI build did not produce TaskApp.exe'
+          }
+          $process = Start-Process -FilePath $executable.FullName -PassThru
+          Start-Sleep -Seconds 10
+          if ($process.HasExited) {
+            throw "TaskApp WinUI process exited during launch smoke test with code $($process.ExitCode)"
+          }
+          Stop-Process -Id $process.Id
+
+      - name: Upload failed Mosaic TaskApp WinUI diagnostics
+        if: failure() && runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: mosaic-xaml-taskapp-diagnostics
+          path: |
+            ${{ runner.temp }}/mosaic-xaml-taskapp/xaml/TaskApp.binlog
+            ${{ runner.temp }}/mosaic-xaml-taskapp/xaml/TaskApp.xaml
+            ${{ runner.temp }}/mosaic-xaml-taskapp/xaml/obj/**/input.json
+            ${{ runner.temp }}/mosaic-xaml-taskapp/xaml/obj/**/output.json
+          if-no-files-found: warn
+          retention-days: 3
 
       # ── Run the build ─────────────────────────────────────────
       - name: Build and test affected packages

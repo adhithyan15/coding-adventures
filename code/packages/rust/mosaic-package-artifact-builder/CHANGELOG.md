@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased] - reproducible XAML SDK selection
+
+- XAML package shells now preserve the emitter's `global.json`, keeping WinUI
+  project builds on the .NET 9 SDK family they target when newer SDKs are also
+  installed.
+
 ## [Unreleased] - standard Qt Rust runtime binding
 
 - Qt project shells now install Mosaic's package-independent QObject binding

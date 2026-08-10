@@ -1153,6 +1153,7 @@ fn emit_project_shell(
                     proj.readme
                 );
                 let flat: Vec<(String, &str)> = vec![
+                    ("global.json".to_string(), &proj.global_json),
                     (format!("{component}.csproj"), &proj.csproj),
                     ("App.xaml".to_string(), &proj.app_xaml),
                     ("App.xaml.cs".to_string(), &proj.app_xaml_cs),
@@ -4414,6 +4415,7 @@ version = "1"
             (
                 Backend::Xaml,
                 vec![
+                    "global.json",
                     "Grid.csproj",
                     "App.xaml",
                     "App.xaml.cs",

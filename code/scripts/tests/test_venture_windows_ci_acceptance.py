@@ -108,7 +108,8 @@ class VentureWindowsCIAcceptanceTests(unittest.TestCase):
             workflow,
         )
         self.assertIn(
-            "needs.detect.outputs.needs_venture_windows == 'true' "
+            "(needs.detect.outputs.needs_venture_windows == 'true' || "
+            "needs.detect.outputs.needs_mosaic_xaml_windows == 'true') "
             "&& runner.os == 'Windows')",
             workflow,
         )
