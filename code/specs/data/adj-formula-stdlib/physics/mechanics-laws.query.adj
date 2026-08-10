@@ -26,3 +26,15 @@ observe acceleration(3)                % "…accelerates at 3 m/s²…" (span ci
 observe current(4)                     % "…a current of 4 amperes…"   (span cited)
 observe resistance(5)                  % "…a 5 ohm resistor…"         (span cited)
 ? voltage(current, resistance)         % engine → 20 (V = I·R, Wikipedia, consensus)
+
+% --- F = m a, SOLVED FOR MASS (rung-0 CAS-wiring, FL-10). "A net force of 12 N
+% accelerates an object at 3 m/s². What is its mass?" ---
+observe force(12)                      % "…a net force of 12 N…"      (span cited)
+observe acceleration(3)                % "…accelerates … at 3 m/s²…"  (span cited)
+? mass_from_force(force, acceleration) % engine → 4 (NASA, authoritative)
+
+% --- F = m a, SOLVED FOR ACCELERATION. "A 12 N force acts on a 4 kg mass. What
+% acceleration results?" ---
+observe force(12)                      % "…a 12 N force…"             (span cited)
+observe mass(4)                        % "…a 4 kg mass…"              (span cited)
+? acceleration_from_force(force, mass) % engine → 3 (NASA, authoritative)
