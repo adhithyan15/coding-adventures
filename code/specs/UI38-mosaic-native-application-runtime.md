@@ -302,14 +302,20 @@ unblocks multiple downstream targets; never count source generation as completio
 - [ ] Generate standard effect hosts, beginning with storage and lifecycle.
 - [ ] Add `native-complete` capability/degradation analysis to the compiler.
 - [ ] Add launch-and-dispatch conformance fixtures for every native backend.
+- [ ] Make the generated Flutter project analyzer-clean after its documented
+  `flutter create` bootstrap: replace the stock `MyApp` widget test, provision
+  its lint configuration, and omit unused authored `For` bindings.
 - [ ] Route every compile entry point through one package-composition pipeline;
   standalone `mosaic-compile` currently inlines dependency layouts without merging
   their MSL, while the artifact builder merges both layout and style.
 - [ ] Type-check the complete generated Trestle application on every target, not
   only focused fixtures; the complete package-expanded TaskApp now passes the
   Swift compiler and SwiftPM linker with type-correct truthiness, collision-safe
-  generated members, and bounded native-view type inference. Flutter still needs
-  boolean truthiness lowering and required input values. Qt's plain multiline `Input`
+  generated members, and bounded native-view type inference. Flutter now lowers
+  Mosaic value truthiness into Dart boolean positions and supplies declared native
+  input payloads; the complete TaskApp passes Dart analysis, builds as a native
+  macOS Flutter bundle, and remains running when launched with the generated
+  no-runtime fallback. Qt's plain multiline `Input`
   lowering and fixed-dimension wrapper deduplication are complete, and the complete
   TaskApp now passes Qt's QML compiler, AUTOMOC, C++ compiler, and linker. Fractional
   font sizing is type-correct and the app remains running in a headless launch.

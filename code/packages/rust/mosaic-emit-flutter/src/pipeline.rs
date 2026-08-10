@@ -792,6 +792,22 @@ fn emit_widget_class(
     writeln!(out, "    required this.dispatch,").unwrap();
     writeln!(out, "  }});").unwrap();
 
+    // Mosaic conditions use value truthiness, while Dart requires a
+    // statically-typed bool. Keep the conversion on the generated widget so
+    // multiple emitted component files cannot introduce a top-level helper
+    // collision. The leading underscore is outside mosmodel's authored-name
+    // grammar, so slots cannot shadow this member.
+    writeln!(out).unwrap();
+    writeln!(out, "  bool _mosaicTruthy(Object? value) {{").unwrap();
+    writeln!(out, "    if (value == null) return false;").unwrap();
+    writeln!(out, "    if (value is bool) return value;").unwrap();
+    writeln!(out, "    if (value is num) return value != 0;").unwrap();
+    writeln!(out, "    if (value is String) return value.isNotEmpty;").unwrap();
+    writeln!(out, "    if (value is Iterable) return value.isNotEmpty;").unwrap();
+    writeln!(out, "    if (value is Map) return value.isNotEmpty;").unwrap();
+    writeln!(out, "    return true;").unwrap();
+    writeln!(out, "  }}").unwrap();
+
     // 3. build method.
     writeln!(out).unwrap();
     writeln!(out, "  @override").unwrap();
@@ -919,7 +935,14 @@ fn emit_widget_tree(
         return emit_host_surface(node, indent);
     }
     if node.tag == "HostInput" {
-        return emit_host_input(node, indent, part_styles, component, ctx.direct_row_child);
+        return emit_host_input(
+            node,
+            indent,
+            part_styles,
+            component,
+            emits,
+            ctx.direct_row_child,
+        );
     }
     if node.tag == "HostButton" {
         return emit_host_button(node, indent, part_styles, component, emits, ctx);
@@ -1526,7 +1549,9 @@ fn emit_for_dart(
 /// | `If { then } Else { e }`| `(<cond>) ? <then> : <else>`              |
 ///
 /// `<cond>` is the camelCased name for a `SlotRef`, or the
-/// expression source text verbatim for an `Expr` (author-controlled).
+/// expression source text verbatim for an `Expr` (author-controlled),
+/// wrapped in the generated `_mosaicTruthy` conversion so text, number,
+/// list, record, and boolean values all produce a Dart `bool`.
 /// The ternary's branches are recursed through [`emit_widget_tree`]
 /// so nested `If`/`Else` still pairs naturally.
 ///
@@ -1570,7 +1595,7 @@ fn emit_if_dart(
     };
 
     Ok(format!(
-        "{pad}(({cond}) ? {then_b} : {else_b})\n",
+        "{pad}((_mosaicTruthy({cond})) ? {then_b} : {else_b})\n",
         cond = cond_expr,
         then_b = then_branch,
         else_b = else_branch,
@@ -1813,7 +1838,12 @@ fn state_color_expr(
     // the outermost (highest-precedence) condition.
     for layer in layers.iter().rev() {
         if let Some(color) = pick(layer) {
-            acc = format!("(( {} )) ? {} : {}", layer.cond.trim(), color, acc);
+            acc = format!(
+                "_mosaicTruthy(( {} )) ? {} : {}",
+                layer.cond.trim(),
+                color,
+                acc
+            );
         }
     }
     acc
@@ -2067,6 +2097,7 @@ fn emit_host_input(
     indent: usize,
     _part_styles: &HashMap<String, String>,
     component: &str,
+    emits: &[EmitDecl],
     direct_row_child: bool,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
@@ -2147,18 +2178,20 @@ fn emit_host_input(
     if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
         let case = pascalize(&strip_on_prefix(emit_name));
         validate_emit_name(&case)?;
+        let args = host_input_event_args(emits, emit_name, "value")?;
         writeln!(
             out,
-            "{field_pad}  onChanged: (value) => dispatch({component}Event{case}(value: value)),"
+            "{field_pad}  onChanged: (value) => dispatch({component}Event{case}({args})),"
         )
         .unwrap();
     }
     if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
         let case = pascalize(&strip_on_prefix(emit_name));
         validate_emit_name(&case)?;
+        let args = host_input_event_args(emits, emit_name, "value")?;
         writeln!(
             out,
-            "{field_pad}  onSubmitted: (_) => dispatch({component}Event{case}()),"
+            "{field_pad}  onSubmitted: (value) => dispatch({component}Event{case}({args})),"
         )
         .unwrap();
     }
@@ -2167,6 +2200,50 @@ fn emit_host_input(
         writeln!(out, "{pad})").unwrap();
     }
     Ok(out)
+}
+
+/// Build the named event arguments supplied by a native text input callback.
+/// A text input owns exactly one callback value, so zero- and one-payload
+/// events are fully synthesised. For a malformed multi-payload binding we
+/// still name every required constructor argument and fail loudly at runtime
+/// instead of generating Dart that cannot compile.
+fn host_input_event_args(
+    emits: &[EmitDecl],
+    emit_name: &str,
+    value: &str,
+) -> Result<String, PipelineEmitError> {
+    let Some(emit) = emits.iter().find(|emit| emit.name == emit_name) else {
+        // Retain the historical single-text-field fallback for direct emitter
+        // callers that provide a layout without its interface emits.
+        return Ok(format!("value: {value}"));
+    };
+    if emit.params.is_empty() {
+        return Ok(String::new());
+    }
+    if emit.params.len() == 1 {
+        let param = &emit.params[0];
+        let field = to_camel_case_first_lower(&param.name);
+        validate_slot_or_field_name(&field)?;
+        let expression = match &param.r#type {
+            EmitPayloadType::Text | EmitPayloadType::Color | EmitPayloadType::Component(_) => {
+                value.to_string()
+            }
+            EmitPayloadType::Number => format!("double.tryParse({value}) ?? 0"),
+            EmitPayloadType::Bool => format!("{value}.toLowerCase() == \"true\""),
+        };
+        return Ok(format!("{field}: {expression}"));
+    }
+    emit.params
+        .iter()
+        .map(|param| {
+            let field = to_camel_case_first_lower(&param.name);
+            validate_slot_or_field_name(&field)?;
+            Ok(format!(
+                "{field}: /* TODO: payload */ throw UnimplementedError()"
+            ))
+        })
+        .collect::<Result<Vec<_>, _>>()
+        .map(|parts| parts.join(", "))
 }
 
 /// `HostButton` → `ElevatedButton`. Label can be a string literal,
@@ -3372,12 +3449,14 @@ fn bool_prop_expression(
         LayoutPropValue::SlotRef(slot) => {
             let camel = to_camel_case_first_lower(slot);
             validate_slot_or_field_name(&camel)?;
-            camel
+            format!("_mosaicTruthy({camel})")
         }
         LayoutPropValue::Keyword(keyword) if keyword == "true" || keyword == "false" => {
             keyword.clone()
         }
-        LayoutPropValue::Expr(expression) => expression.trim().to_string(),
+        LayoutPropValue::Expr(expression) => {
+            format!("_mosaicTruthy(({}))", expression.trim())
+        }
         _ => return Ok(None),
     };
     Ok(Some(expression))
@@ -3982,7 +4061,7 @@ mod tests {
         let r = from_pipeline(&m, &l, &empty_style("BrowserChrome")).unwrap();
         assert!(
             r.output.contains(
-                "onPressed: backDisabled ? null : () => dispatch(BrowserChromeEventBack())"
+                "onPressed: _mosaicTruthy(backDisabled) ? null : () => dispatch(BrowserChromeEventBack())"
             ),
             "slot-backed disabled state must control the native button:\n{}",
             r.output
@@ -4050,10 +4129,50 @@ mod tests {
             ),
         );
         let r = from_pipeline(&m, &l, &empty_style("BrowserChrome")).unwrap();
-        assert!(r.output.contains("readOnly: navigationDisabled"));
         assert!(r
             .output
-            .contains("onSubmitted: (_) => dispatch(BrowserChromeEventNavigate())"));
+            .contains("readOnly: _mosaicTruthy(navigationDisabled)"));
+        assert!(r
+            .output
+            .contains("onSubmitted: (value) => dispatch(BrowserChromeEventNavigate())"));
+    }
+
+    #[test]
+    fn host_input_commit_supplies_required_text_payload() {
+        let m = component(
+            "Editor",
+            vec![slot("body", SlotType::Text, true)],
+            vec![emit(
+                "onCommit",
+                vec![EmitParam {
+                    name: "value".into(),
+                    r#type: EmitPayloadType::Text,
+                }],
+            )],
+        );
+        let l = layout(
+            "Editor",
+            node_with(
+                "HostInput",
+                vec![
+                    LayoutProp {
+                        name: "value".into(),
+                        value: LayoutPropValue::SlotRef("body".into()),
+                    },
+                    LayoutProp {
+                        name: "onCommit".into(),
+                        value: LayoutPropValue::EmitRef("onCommit".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let output = from_pipeline(&m, &l, &empty_style("Editor"))
+            .expect("emit input with commit payload")
+            .output;
+        assert!(
+            output.contains("onSubmitted: (value) => dispatch(EditorEventCommit(value: value))")
+        );
     }
 
     #[test]
@@ -5570,7 +5689,7 @@ mod tests {
         let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
         let out = &r.output;
         assert!(
-            out.contains("((editing) ?"),
+            out.contains("((_mosaicTruthy(editing)) ?"),
             "expected ternary on the camelCased slot ref, got:\n{}",
             out
         );
@@ -5608,7 +5727,7 @@ mod tests {
         let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
         let out = &r.output;
         assert!(
-            out.contains("((editing) ?"),
+            out.contains("((_mosaicTruthy(editing)) ?"),
             "expected the conditional ternary, got:\n{}",
             out
         );
@@ -5658,7 +5777,7 @@ mod tests {
         let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
         assert!(
             r.output
-                .contains("((cellRow == editRow && cellCol == editCol) ?"),
+                .contains("((_mosaicTruthy(cellRow == editRow && cellCol == editCol)) ?"),
             "expected the Expr source threaded into the ternary, got:\n{}",
             r.output
         );
