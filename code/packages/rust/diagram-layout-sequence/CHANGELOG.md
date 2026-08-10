@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.15.0 - 2026-08-10
+
+- Resolve wrapped sequence control and branch labels into deterministic frame geometry.
+
 ## 0.14.0 - 2026-08-10
 
 - Apply explicit sequence wrap directives with deterministic backend-neutral line breaks.

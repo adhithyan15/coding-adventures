@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.26.0
+
+- Preserve `wrap:` and `nowrap:` directives on sequence control-block and branch labels.
+
 ## 0.25.0
 
 - Preserve hyphens inside sequence actor identifiers without confusing them with message deactivation markers.

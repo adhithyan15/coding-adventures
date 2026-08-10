@@ -61,6 +61,8 @@ Sequence message and note `<br>` variants become semantic newlines with
 deterministic multiline layout and native glyph shaping.
 Message and note `wrap:` and `nowrap:` directives survive semantic lowering;
 forced wrapping becomes deterministic hard lines before backend-neutral Paint shaping.
+The same wrap controls apply to control-block and branch labels, with sequence
+layout reserving line-aware frame and divider geometry.
 All Mermaid 11.16.1 solid/dotted, normal/reverse filled and stick half-arrow
 forms preserve their line style, half orientation, and endpoint through Paint.
 Central connection markers before and/or after an arrow preserve source,

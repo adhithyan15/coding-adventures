@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.25.0";
+pub const VERSION: &str = "0.26.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1524,15 +1524,21 @@ fn parse_sequence_control_block(
             ))
         }
     };
-    let block_text = take_sequence_line_text(cursor);
-    let (label, fill) = if kind == SequenceBlockKind::Rect {
-        (String::new(), Some(normalize_sequence_color(&block_text)))
+    let (label, wrap, fill) = if kind == SequenceBlockKind::Rect {
+        let color = take_sequence_line_text(cursor);
+        (
+            String::new(),
+            SequenceTextWrap::Default,
+            Some(normalize_sequence_color(&color)),
+        )
     } else {
-        (block_text, None)
+        let (label, wrap) = take_sequence_wrapped_text(cursor);
+        (label, wrap, None)
     };
     diagram.events.push(SequenceEvent::BlockStart {
         kind: kind.clone(),
         label,
+        wrap,
         fill,
     });
     cursor.skip_terminators();
@@ -1562,9 +1568,10 @@ fn parse_sequence_control_block(
                 format!("unexpected sequence block branch {:?}", branch.value),
             ));
         }
-        diagram.events.push(SequenceEvent::BlockBranch {
-            label: take_sequence_line_text(cursor),
-        });
+        let (label, wrap) = take_sequence_wrapped_text(cursor);
+        diagram
+            .events
+            .push(SequenceEvent::BlockBranch { label, wrap });
         cursor.skip_terminators();
     }
 }
@@ -3189,7 +3196,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         ));
         assert!(matches!(
             &diagram.events[5],
-            SequenceEvent::BlockBranch { label } if label == "Rejected"
+            SequenceEvent::BlockBranch { label, .. } if label == "Rejected"
         ));
         assert!(matches!(
             diagram.events.last(),
@@ -3504,6 +3511,29 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn sequence_preserves_control_block_wrap_directives() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nalt wrap: A deliberately detailed acceptance path\nA->>B: Yes\nelse nowrap: A deliberately detailed rejection path\nB-->>A: No\nend\n",
+        )
+        .unwrap();
+        assert!(matches!(
+            &diagram.events[0],
+            SequenceEvent::BlockStart {
+                label,
+                wrap: SequenceTextWrap::Wrap,
+                ..
+            } if label == "A deliberately detailed acceptance path"
+        ));
+        assert!(matches!(
+            &diagram.events[2],
+            SequenceEvent::BlockBranch {
+                label,
+                wrap: SequenceTextWrap::NoWrap,
+            } if label == "A deliberately detailed rejection path"
+        ));
+    }
+
+    #[test]
     fn sequence_preserves_multiword_actor_identifiers() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\nparticipant Customer Portal as Customer\nparticipant Order Service\nCustomer Portal->>Order Service: Submit\nnote over Customer Portal,Order Service: Accepted\nactivate Order Service\ndeactivate Order Service\n",
@@ -3593,7 +3623,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.25.0");
+        assert_eq!(crate::VERSION, "0.26.0");
     }
 
     #[test]

@@ -7,7 +7,7 @@ use diagram_ir::{
     SequenceEvent, SequenceNotePlacement, SequenceTextWrap,
 };
 
-pub const VERSION: &str = "0.14.0";
+pub const VERSION: &str = "0.15.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -26,6 +26,7 @@ const WRAPPED_TEXT_MAX_WIDTH: f64 = 240.0;
 struct BlockFrameState {
     kind: SequenceBlockKind,
     label: String,
+    label_height: f64,
     fill: Option<String>,
     depth: usize,
     x: f64,
@@ -119,12 +120,14 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     wrap,
                     (to_x - from_x).abs().clamp(80.0, WRAPPED_TEXT_MAX_WIDTH),
                 );
+                let label_height = 16.0 * label.lines().count().max(1) as f64;
+                let message_y = y + label_height + 6.0;
                 items.push(LayoutedSequenceItem::Message {
                     from_x,
                     to_x,
-                    y,
+                    y: message_y,
                     label: label.clone(),
-                    label_height: 16.0 * label.lines().count().max(1) as f64,
+                    label_height,
                     line_style: line_style.clone(),
                     arrowhead: arrowhead.clone(),
                     bidirectional: *bidirectional,
@@ -133,12 +136,15 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 });
                 message_number += diagram.auto_number_step;
                 if *activate {
-                    activation_starts.entry(to.clone()).or_default().push(y);
+                    activation_starts
+                        .entry(to.clone())
+                        .or_default()
+                        .push(message_y);
                 }
                 if *deactivate {
-                    close_activation(&mut items, &mut activation_starts, from, from_x, y);
+                    close_activation(&mut items, &mut activation_starts, from, from_x, message_y);
                 }
-                y += EVENT_H + 16.0 * label.lines().count().saturating_sub(1) as f64;
+                y = message_y + EVENT_H;
             }
             SequenceEvent::Activation {
                 participant,
@@ -250,32 +256,44 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 });
                 y += NOTE_H + 16.0 * line_count.saturating_sub(1) as f64 + 20.0;
             }
-            SequenceEvent::BlockStart { kind, label, fill } => {
+            SequenceEvent::BlockStart {
+                kind,
+                label,
+                wrap,
+                fill,
+            } => {
                 let depth = block_stack.len();
                 let x = MARGIN + depth as f64 * BLOCK_INSET;
+                let frame_width = (width - x * 2.0).max(120.0);
+                let label = wrap_sequence_text(label, wrap, frame_width - 16.0);
+                let label_height = 16.0 * label.lines().count().max(1) as f64;
                 block_stack.push(BlockFrameState {
                     kind: kind.clone(),
-                    label: label.clone(),
+                    label,
+                    label_height,
                     fill: fill.clone(),
                     depth,
                     x,
                     y,
-                    width: (width - x * 2.0).max(120.0),
+                    width: frame_width,
                 });
                 if kind != &SequenceBlockKind::Rect {
-                    y += BLOCK_HEADER_H;
+                    y += BLOCK_HEADER_H + label_height - 16.0;
                 }
             }
-            SequenceEvent::BlockBranch { label } => {
+            SequenceEvent::BlockBranch { label, wrap } => {
                 if let Some(frame) = block_stack.last() {
+                    let label = wrap_sequence_text(label, wrap, frame.width - 16.0);
+                    let label_height = 16.0 * label.lines().count().max(1) as f64;
                     items.push(LayoutedSequenceItem::BlockDivider {
-                        label: label.clone(),
+                        label,
+                        label_height,
                         x: frame.x,
                         y,
                         width: frame.width,
                     });
+                    y += BLOCK_BRANCH_H + label_height - 16.0;
                 }
-                y += BLOCK_BRANCH_H;
             }
             SequenceEvent::BlockEnd { kind } => {
                 if let Some(frame) = block_stack.pop() {
@@ -285,6 +303,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     items.push(LayoutedSequenceItem::BlockFrame {
                         kind: frame.kind,
                         label: frame.label,
+                        label_height: frame.label_height,
                         fill: frame.fill,
                         depth: frame.depth,
                         x: frame.x,
@@ -569,12 +588,14 @@ mod tests {
             events: vec![
                 SequenceEvent::BlockStart {
                     kind: SequenceBlockKind::Alt,
-                    label: "Ready".into(),
+                    label: "Ready for a deliberately detailed transfer acceptance path".into(),
+                    wrap: SequenceTextWrap::Wrap,
                     fill: None,
                 },
                 SequenceEvent::BlockStart {
                     kind: SequenceBlockKind::Loop,
                     label: "Retry".into(),
+                    wrap: SequenceTextWrap::Default,
                     fill: None,
                 },
                 SequenceEvent::Message {
@@ -593,7 +614,8 @@ mod tests {
                     kind: SequenceBlockKind::Loop,
                 },
                 SequenceEvent::BlockBranch {
-                    label: "Fallback".into(),
+                    label: "Fallback after a deliberately detailed rejection path".into(),
+                    wrap: SequenceTextWrap::Wrap,
                 },
                 SequenceEvent::BlockEnd {
                     kind: SequenceBlockKind::Alt,
@@ -614,7 +636,16 @@ mod tests {
         assert_eq!(frames.len(), 2);
         assert!(frames.iter().any(|(depth, _, _)| *depth == 1));
         assert!(frames.iter().all(|(_, _, height)| *height > BLOCK_HEADER_H));
-        assert!(layout.items.iter().any(|item| matches!(item, LayoutedSequenceItem::BlockDivider { label, .. } if label == "Fallback")));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedSequenceItem::BlockFrame { label, label_height, .. }
+                if label.contains('\n') && *label_height > 16.0
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedSequenceItem::BlockDivider { label, label_height, .. }
+                if label.contains('\n') && *label_height > 16.0
+        )));
     }
 
     #[test]
