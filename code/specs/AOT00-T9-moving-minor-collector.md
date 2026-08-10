@@ -173,12 +173,15 @@ adversarial pass in review, not just a restatement here.
 
 ## 5. Staged PR plan (mirroring how `AOT00-T3` shipped: land the UAF-sensitive parts in isolation)
 
-1. **PR-1 (this spec)** — sign-off gate, no code.
+1. **PR-1 (this spec)** — sign-off gate, no code. ✅ merged.
 2. **PR-2 — `classify_mobility_minor` alone**, dry-run only (returns the `HashSet`, relocates
    nothing) — reviewed and unit-tested against `classify_mobility`'s existing test shapes *plus* a
    remembered-set-specific case (a young object reachable *only* via a kind-tracked old parent is
    `movable`; reachable only via a kind-0 old parent is *not* `movable` but *is* found — i.e. `pinned`
    — proving it isn't silently invisible). Mirrors PR-3a's "land the classification in isolation" shape.
+   ✅ **Landed** (`gc-core` 0.29.0) — 6 tests, including both load-bearing remembered-set cases; each
+   passed on first implementation, matching this spec's §3 derivation exactly (no design revision
+   needed once coded).
 3. **PR-3 — evacuate + fixup**, parameterized on `classify_mobility_minor`'s output — proves the arena
    copy + pointer rewrite (roots, moved objects' own fields, **and** any remembered-parent field that
    pointed at a moved child) against a differential, still not wired into a live collection.

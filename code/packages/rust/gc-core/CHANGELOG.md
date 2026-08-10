@@ -1,5 +1,61 @@
 # Changelog — gc-core
 
+## 0.30.0 — 2026-08-10 — `FlatHeap::classify_mobility_minor` — moving-minor mobility classification, dry-run only (AOT00-T9 PR-2)
+
+- **`FlatHeap::classify_mobility_minor(&mut self, root_slots, regions) -> HashSet<usize>`** —
+  the young-generation-scoped sibling of `classify_mobility`, and the first landed piece
+  of `AOT00-T9-moving-minor-collector.md`'s staged plan. Dry-run only: computes which
+  young objects a future moving-minor collector may relocate, without relocating
+  anything (mirrors how `classify_mobility` itself shipped as its own PR-2 scaffold
+  before the compacting collector consumed it).
+- **Why this needed its own function, not a `young_only` flag on `classify_mobility`:**
+  that function's "reachable ⟺ pinned ∨ movable" soundness proof only holds for the seed
+  set it was built for (`root_slots` ∪ `regions`). A minor cycle's liveness mark
+  additionally reaches survivors through the **remembered set**; calling
+  `classify_mobility` unmodified on a minor-scoped collection would leave a young object
+  reachable *only* through a remembered old parent absent from the classification
+  entirely — not conservatively pinned, just invisible, which would let a moving-minor
+  sweep free a live, reachable object. `classify_mobility_minor` extends both waves'
+  seeding with remembered-parent children, split by whether the parent is precisely
+  traced exactly the way `scan_payload` already splits for liveness marking (precisely
+  traced → precise wave via `precise_children`; otherwise → pinning wave via
+  `conservative_children`, since an opaque/unregistered parent's raw word can never be
+  found-and-rewritten by fixup). The final `movable` filter also gains a
+  `generation == GEN_YOUNG` conjunct — an old object may still be precise-reachable (e.g.
+  a root points at it directly, and tracing through it is necessary to reach its own
+  young children) but must never itself be classified movable by a minor-scoped pass.
+- Built directly on top of `is_precisely_traced` (0.29.0, below): both waves' seeding and
+  the final movable filter gate on that predicate rather than a bare `kind` test, and the
+  pinning wave unions `precise_children` alongside `conservative_children` — the same two
+  fixes `classify_mobility` needed, applied here from the start rather than repeating the
+  bug.
+- Guards `debug_assert!(!self.mark_in_progress, ...)` at entry, matching every other
+  minor-collect entry point (`collect_minor`, `collect_minor_region`,
+  `collect_minor_mixed`) — calling this mid-incremental-mark would read the remembered
+  set while it (and the objects it names) may be in an inconsistent, partially-freed
+  state.
+- `pub(crate)`, not `pub` — adversarial review noted this is `&mut self` (rewrites every
+  header's `pinned` bit) with no in-tree caller yet to enforce ordering; narrowed
+  visibility until a PR-3/PR-4 consumer actually needs it public.
+- **Two load-bearing caveats for the PR-3/PR-4 consumers this scaffolds toward, found by
+  the same review and recorded in the function's doc rather than fixed now (nothing
+  calls this yet):** (1) the `GEN_YOUNG` filter means `pinned ∨ movable` is a complete
+  partition of *young* objects only, not every live object like `classify_mobility`'s —
+  a future sweep built on this must restrict itself to young blocks, or it will both
+  misfree a live old object and leave stale mark bits on other old objects the pinning
+  wave pinned; (2) a remembered *old* parent's precise ref slot can name a movable young
+  object, which breaks `evacuate_and_fixup`'s existing "only moved objects' own copies
+  need fixing up" premise — a future evacuation pass must additionally walk remembered
+  parents' precise slots.
+- New tests, including the two load-bearing cases the spec's derivation predicts: a young
+  object reachable only via a remembered, precisely-traced old parent is movable; the
+  same shape through a remembered, non-precisely-traced (opaque or unregistered-kind) old
+  parent is not movable but is verified **pinned** (found, safely retained), not silently
+  absent from both sets.
+- See `code/specs/AOT00-T9-moving-minor-collector.md` §3 for the full derivation and
+  proof sketch this implements, and §5 for the remaining staged plan (evacuate+fixup,
+  then the full `collect_minor_compacting` cycle).
+
 ## 0.29.0 — 2026-08-07 — fix: `classify_mobility`'s pinning wave gated on the wrong predicate — a live use-after-free in `collect_compacting`
 
 **Security fix, found by adversarial review of an unrelated in-progress PR (AOT00-T9), confirmed

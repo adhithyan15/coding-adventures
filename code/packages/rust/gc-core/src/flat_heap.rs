@@ -1967,6 +1967,194 @@ impl FlatHeap {
         movable
     }
 
+    /// **AOT00-T9 PR-2** — the young-generation-scoped mobility classification a moving
+    /// *minor* collector needs. Dry-run only: like [`Self::classify_mobility`] itself
+    /// (the full moving collector's own PR-2), this computes *which* young objects a
+    /// future minor-compacting cycle may relocate, without relocating anything —
+    /// evacuation/fixup logic consumes it in a later PR (AOT00-T9-moving-minor-collector.md
+    /// §5, PR-3/PR-4).
+    ///
+    /// [`Self::classify_mobility`] cannot be reused unmodified for a minor cycle: its
+    /// soundness proof ("reachable ⟺ pinned ∨ movable") only holds for the seed set it
+    /// was built for (`root_slots` ∪ `regions`). A minor cycle's *liveness* mark
+    /// ([`Self::collect_minor`] / [`Self::minor_finish`]) additionally reaches survivors
+    /// through the **remembered set** — old objects [`Self::write_barrier`] recorded as
+    /// possibly holding an old→young pointer. Naively classifying with only the plain
+    /// `root_slots`/`regions` seed would leave a young object reachable *only* through a
+    /// remembered old parent absent from **both** the `precise` and pinning sets — not
+    /// safely pinned, just invisible — which would break the invariant a moving minor
+    /// sweep must rely on to decide what to free (a real use-after-free, not a missed
+    /// optimization). See `AOT00-T9-moving-minor-collector.md` §2–§3 for the full
+    /// derivation and proof sketch; this function is that fix.
+    ///
+    /// **Extra seeding**, added to both waves before either drains (mirroring
+    /// `minor_finish`'s own remembered-parent scan, split across the two waves the same
+    /// way [`Self::scan_payload`] already splits per-object): for each remembered
+    /// parent —
+    /// - **[`Self::is_precisely_traced`]**: its [`Self::precise_children`] feed the
+    ///   **precise** wave, exactly as a normal precise-wave-discovered precisely-traced
+    ///   object's own children do. A young child reached only this way is
+    ///   precise-reachable and a movability *candidate* (still subject to the ordinary
+    ///   "not pinned from any other angle" test below).
+    /// - **not precisely traced** (opaque, or a nonzero kind id never passed to
+    ///   `register_kind` — see [`Self::is_precisely_traced`]'s doc for why `kind != 0`
+    ///   alone is not sufficient): its [`Self::conservative_children`] feed the
+    ///   **pinning** wave directly. Relocating a child reachable only through such a
+    ///   parent's raw word would leave that word stale and unrewritable (fixup only
+    ///   ever touches *precise* reference slots) — a real use-after-free, so such a
+    ///   child must pin.
+    ///
+    /// Both waves gate on [`Self::is_precisely_traced`] throughout — never a bare
+    /// `kind` test — and the pinning wave's drain unions [`Self::precise_children`]
+    /// alongside [`Self::conservative_children`] at every step, mirroring the same two
+    /// fixes [`Self::classify_mobility`] needed after its own security review (see that
+    /// function's doc and the gc-core CHANGELOG's 0.29.0 entry): an object with a
+    /// nonzero-but-unregistered kind id must still route into the pinning wave (not be
+    /// left invisible to both sets), and a *pinned* parent's misaligned declared ref
+    /// field — sub-8-aligned, so `conservative_children`'s aligned-only scan would miss
+    /// it — must still dominate the pinning wave via `precise_children`.
+    ///
+    /// **Extra filter**: the final `movable` set gains one conjunct beyond
+    /// `classify_mobility`'s own `precise ∧ ¬pinned ∧ is_precisely_traced`:
+    /// **`generation == GEN_YOUNG`**. An old object can legitimately appear in
+    /// `precise` (a root may point at it directly, and tracing through it can be
+    /// necessary to reach its own young children) — that's required for correctness,
+    /// but it must never itself be classified movable by a *minor*-scoped pass: nothing
+    /// rewrites other old objects' pointers to it during a minor cycle, so relocating it
+    /// here would orphan them. This conjunct only *narrows* an already-sound `movable`
+    /// set; it can never make an unsound object movable.
+    ///
+    /// **Load-bearing caveat for future consumers (PR-3/PR-4), found by security review:**
+    /// unlike [`Self::classify_mobility`], whose contract is the clean "reachable ⟺
+    /// pinned ∨ movable" over *every* live object, the `GEN_YOUNG` conjunct here means
+    /// `pinned ∨ movable` is a complete partition of **young objects only** — a
+    /// precise-reachable, precisely-traced, unpinned **old** object is neither pinned
+    /// nor in `movable`. A consumer that mirrors `collect_compacting`'s
+    /// `marked = pinned` idiom over *every* live block (not just young ones) before
+    /// sweeping will (a) misclassify that old object as garbage if it sweeps
+    /// unconditionally, and (b) leave a stale `pinned`-derived mark bit on every *other*
+    /// old object the pinning wave touched, which a later full collect could misread as
+    /// reachable (the exact hazard [`Self::mark_candidate`]'s own doc already warns
+    /// about for a different code path). A future evacuate/sweep built on this
+    /// classification MUST restrict itself to `generation == GEN_YOUNG` blocks only —
+    /// both when deciding what counts as unreachable and when writing `marked`.
+    ///
+    /// A second load-bearing caveat: because a remembered **old** parent can hold a
+    /// precise ref slot pointing at a young object this function marks movable,
+    /// [`Self::evacuate_and_fixup`]'s existing premise — that only *moved* objects'
+    /// own (copied) fields can name a moved object, so only root slots and copies need
+    /// rewriting — does not hold here. A future evacuation pass built on this
+    /// classification must additionally walk every remembered parent's precise ref
+    /// slots and fix up any that now name a relocated young object.
+    ///
+    /// # Safety
+    /// Each `root_slots` address and each `regions` span must be readable (same
+    /// contract as [`Self::classify_mobility`]/[`Self::collect_mixed`]). Must not be
+    /// called while an incremental mark is in progress (`mark_in_progress`) — the
+    /// remembered set can name objects an in-progress incremental sweep has already
+    /// freed; reading their header through this function would be a use-after-free.
+    #[allow(dead_code)]
+    pub(crate) unsafe fn classify_mobility_minor(
+        &mut self,
+        root_slots: &[usize],
+        regions: &[(*const u8, usize)],
+    ) -> HashSet<usize> {
+        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+
+        // Pin bits are a per-classification transient: clear them first.
+        {
+            let mut h = self.all;
+            while !h.is_null() {
+                (*h).pinned = false;
+                h = (*h).next;
+            }
+        }
+
+        // ── Precise wave seeds ───────────────────────────────────────────────────
+        let mut precise: HashSet<usize> = HashSet::new();
+        let mut work: Vec<*mut FlatHeader> = Vec::new();
+        let mut tmp: Vec<*mut FlatHeader> = Vec::new();
+        for &slot in root_slots {
+            let word = ptr::read_unaligned(slot as *const usize);
+            self.push_candidates(word, &mut tmp);
+        }
+
+        // ── Pinning (conservative) wave seeds ────────────────────────────────────
+        // Seeded here (before the precise wave drains) purely so the remembered-set
+        // loop below can extend both waves' seed sets in one pass; draining is still
+        // deferred until after the precise wave fully resolves, exactly as
+        // `classify_mobility`'s own ordering — this is a code-sharing reorder, not a
+        // semantic one.
+        let mut cwork: Vec<*mut FlatHeader> = Vec::new();
+        for &(base, len) in regions {
+            let mut off = 0usize;
+            while off + 8 <= len {
+                let word = ptr::read_unaligned(base.add(off) as *const usize);
+                self.push_candidates(word, &mut cwork);
+                off += 8;
+            }
+        }
+
+        // AOT00-T9 §3: remembered-parent seeding, split by parent kind exactly as
+        // `Self::scan_payload` splits for liveness marking (`minor_finish`'s own
+        // remembered-parent loop calls `scan_payload`, which does this same dispatch
+        // internally; here the two branches are pulled apart because each must feed a
+        // *different* wave).
+        let remembered: Vec<usize> = self.remembered.iter().copied().collect();
+        for parent in remembered {
+            let h = (parent - HEADER_SIZE) as *mut FlatHeader;
+            if self.is_precisely_traced(h) {
+                self.precise_children(h, &mut tmp);
+            } else {
+                self.conservative_children(h, &mut cwork);
+            }
+        }
+
+        // ── Precise wave: drain ──────────────────────────────────────────────────
+        for h in tmp.drain(..) {
+            if precise.insert(h as usize) {
+                work.push(h);
+            }
+        }
+        while let Some(h) = work.pop() {
+            self.precise_children(h, &mut tmp);
+            for c in tmp.drain(..) {
+                if precise.insert(c as usize) {
+                    work.push(c);
+                }
+            }
+        }
+
+        // ── Pinning wave: drain ───────────────────────────────────────────────────
+        for &ph in &precise {
+            let h = ph as *mut FlatHeader;
+            if !self.is_precisely_traced(h) {
+                cwork.push(h);
+            }
+        }
+        while let Some(h) = cwork.pop() {
+            if (*h).pinned {
+                continue;
+            }
+            (*h).pinned = true;
+            self.conservative_children(h, &mut tmp);
+            self.precise_children(h, &mut tmp); // dominate sub-8-aligned ref fields too
+            for c in tmp.drain(..) {
+                cwork.push(c);
+            }
+        }
+
+        // ── Result: movable = precise-reachable, not pinned, precisely-traced, YOUNG ──
+        let mut movable: HashSet<usize> = HashSet::new();
+        for &ph in &precise {
+            let h = ph as *mut FlatHeader;
+            if !(*h).pinned && self.is_precisely_traced(h) && (*h).generation == GEN_YOUNG {
+                movable.insert(h as usize + HEADER_SIZE); // payload address
+            }
+        }
+        movable
+    }
+
     /// **PR-3a scaffold** for the compacting collector: classify mobility, then copy every
     /// MOVABLE object (header + payload) verbatim into a fresh to-space [`Arena`], returning
     /// the arena and a **forwarding map** from each moved object's *old* payload address to
@@ -4786,6 +4974,253 @@ mod tests {
             0xC0FF_EE00,
             "the child was never swept — its sentinel is intact, not freed memory",
         );
+    }
+    // ── Moving MINOR collector — young-scoped mobility classification (AOT00-T9 PR-2) ──
+
+    /// A precise-reachable young registered-kind object is movable — the same result
+    /// `classify_mobility` gives, for the pure-young case with no remembered set
+    /// involved at all. Genuinely differential: both classifiers run over the same
+    /// heap state and must agree.
+    #[test]
+    fn classify_mobility_minor_matches_classify_mobility_for_pure_young_case() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let a = heap.alloc(16, k) as usize; // young
+        let slot_word = a;
+        let slots = [&slot_word as *const usize as usize];
+
+        let movable = unsafe { heap.classify_mobility_minor(&slots, &[]) };
+        assert!(movable.contains(&a), "precise-reachable young registered-kind object is movable");
+        assert!(
+            unsafe { heap.classify_mobility(&slots, &[]) }.contains(&a),
+            "sanity: the full-scope classifier agrees for a case its own seed set covers"
+        );
+    }
+
+    /// The two 0.29.0 `classify_mobility` fixes, combined, reached only through the
+    /// **remembered-set** path this function adds: a **registered-kind** remembered old
+    /// parent whose declared ref field is **misaligned** (offset 4), and which is
+    /// itself **pinned** by a separate conservative in-edge. Before the
+    /// `precise_children` union in the pinning-wave drain (`:2117-2118`), a remembered
+    /// parent reached this way pinned via `conservative_children` alone — which only
+    /// visits 8-aligned words — so the misaligned field naming the young child was
+    /// never walked by the pinning wave, leaving the child in neither `precise` nor
+    /// pinned: invisible, exactly the shape of `classify_mobility`'s own
+    /// `mobility_pinned_parent_with_misaligned_ref_field_pins_its_child` regression, but
+    /// reached via `remembered` instead of `regions`.
+    #[test]
+    fn classify_mobility_minor_pinned_remembered_parent_with_misaligned_ref_field_pins_its_child() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[4]); // declared ref field at a non-8-aligned offset
+        let parent = heap.alloc(16, k) as usize;
+        let _ = heap.collect(&[parent]); // parent -> old
+        let kc = heap.register_kind(&[0]);
+        let child = heap.alloc(16, kc) as usize; // young
+        unsafe {
+            ptr::write_unaligned((parent + 4) as *mut usize, child);
+            heap.write_barrier(parent, child); // records parent in the remembered set
+        }
+
+        // Pin the parent via a SEPARATE conservative in-edge (a region), independent of
+        // the remembered-set seeding under test.
+        let cons_word = parent;
+        let region = [(&cons_word as *const usize as *const u8, 8usize)];
+
+        let movable = unsafe { heap.classify_mobility_minor(&[], &region) };
+        assert!(
+            !movable.contains(&child),
+            "a child reachable only via a pinned remembered parent's misaligned field must not be movable"
+        );
+        let child_header = heap.find_header(child);
+        assert!(!child_header.is_null(), "the child must still be found, not silently dropped");
+        assert!(
+            unsafe { (*child_header).pinned },
+            "...and must actually be pinned, not silently unpinned-and-invisible"
+        );
+    }
+
+    /// The load-bearing new case: a young object reachable **only** through a
+    /// remembered **kind-registered** old parent's precise field (no root names it
+    /// directly) is still classified movable. Without AOT00-T9's remembered-set
+    /// seeding this object would be entirely absent from `classify_mobility`'s
+    /// traversal — not safely pinned, just invisible.
+    #[test]
+    fn classify_mobility_minor_young_reachable_only_via_remembered_precise_parent_is_movable() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]); // one ref field at offset 0
+        let parent = heap.alloc(16, k) as usize;
+        let _ = heap.collect(&[parent]); // parent -> old
+        let child = heap.alloc(16, k) as usize; // young
+        unsafe {
+            *(parent as *mut usize) = child;
+            heap.write_barrier(parent, child); // records parent in the remembered set
+        }
+
+        // No root anywhere names `child`.
+        let movable = unsafe { heap.classify_mobility_minor(&[], &[]) };
+        assert!(
+            movable.contains(&child),
+            "a young object reachable only via a kind-tracked remembered parent is movable"
+        );
+    }
+
+    /// The other new case: a young object reachable **only** through a remembered
+    /// **kind-0 (opaque)** old parent must NOT be movable — relocating it would leave
+    /// the parent's raw word stale and unrewritable. Crucially it must be **pinned**
+    /// (found, safely retained), not merely absent from the movable set — verified
+    /// directly against the header's `pinned` bit (this test lives in the same crate,
+    /// unlike an external consumer, so it can check the mechanism, not just the
+    /// public result).
+    #[test]
+    fn classify_mobility_minor_young_reachable_only_via_remembered_conservative_parent_is_pinned() {
+        let mut heap = FlatHeap::new();
+        let parent = heap.alloc(16, 0) as usize; // kind 0 / opaque
+        let _ = heap.collect(&[parent]); // parent -> old
+        let k = heap.register_kind(&[0]); // child WOULD be movable if reached precisely
+        let child = heap.alloc(16, k) as usize; // young
+        unsafe {
+            *(parent as *mut usize) = child;
+            heap.write_barrier(parent, child);
+        }
+
+        let movable = unsafe { heap.classify_mobility_minor(&[], &[]) };
+        assert!(
+            !movable.contains(&child),
+            "young object reachable only via a kind-0 remembered parent must not be movable"
+        );
+        let child_header = heap.find_header(child);
+        assert!(!child_header.is_null(), "the child must still be found, not silently dropped");
+        assert!(
+            unsafe { (*child_header).pinned },
+            "...and is actually pinned by the classification, not just absent from both sets"
+        );
+    }
+
+    /// The same non-precisely-traced-parent case, but with an **unregistered nonzero
+    /// kind** old parent instead of kind-0 — mirrors
+    /// `mobility_unregistered_kind_id_is_never_movable`'s distinction for the
+    /// minor-scoped, remembered-set path: `kind != 0` alone is NOT sufficient to prove
+    /// precise tracing (see `is_precisely_traced`'s doc), so this must pin exactly like
+    /// the kind-0 case above. Before the `is_precisely_traced` fix, the old
+    /// `kind == 0` test on the remembered-parent seeding routed this parent into the
+    /// **precise** wave (since its kind is nonzero), so its raw conservative field was
+    /// never scanned and the child was invisible to both sets — a real
+    /// use-after-free once a moving-minor collector consumed this classification.
+    #[test]
+    fn classify_mobility_minor_young_reachable_only_via_remembered_unregistered_kind_parent_is_pinned() {
+        let mut heap = FlatHeap::new();
+        let parent = heap.alloc(16, 999) as usize; // unregistered nonzero kind
+        let _ = heap.collect(&[parent]); // parent -> old
+        let k = heap.register_kind(&[0]);
+        let child = heap.alloc(16, k) as usize; // young
+        unsafe {
+            *(parent as *mut usize) = child;
+            heap.write_barrier(parent, child);
+        }
+
+        let movable = unsafe { heap.classify_mobility_minor(&[], &[]) };
+        assert!(
+            !movable.contains(&child),
+            "young object reachable only via an unregistered-kind remembered parent must not be movable"
+        );
+        let child_header = heap.find_header(child);
+        assert!(!child_header.is_null(), "the child must still be found, not silently dropped");
+        assert!(
+            unsafe { (*child_header).pinned },
+            "...and is actually pinned, not silently absent from both sets"
+        );
+    }
+
+    /// `classify_mobility_minor` must refuse to run mid-incremental-mark: the
+    /// remembered set can name an old object an in-progress incremental sweep has
+    /// already freed back to the free list, and reading its header (the `kind` check
+    /// in the remembered-parent seeding loop) would be a use-after-free. Every other
+    /// minor-collect entry point (`collect_minor`, `collect_minor_region`,
+    /// `collect_minor_mixed`) already asserts this; confirmed here via
+    /// `catch_unwind` that the debug_assert actually fires (debug-assertions builds
+    /// only — release builds have no guard here, matching every sibling entry point).
+    #[test]
+    #[cfg(debug_assertions)]
+    fn classify_mobility_minor_panics_if_called_mid_incremental_mark() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let _ = heap.alloc(16, k);
+        unsafe { heap.incremental_start(&[], &[]) };
+        assert!(heap.incremental_in_progress());
+
+        let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| unsafe {
+            heap.classify_mobility_minor(&[], &[])
+        }));
+        assert!(
+            result.is_err(),
+            "classify_mobility_minor must debug_assert against a mid-mark call, not silently proceed"
+        );
+    }
+
+    /// An **old** object is never classified movable by the minor-scoped pass, even
+    /// when directly, precisely reachable — the one conjunct `classify_mobility_minor`
+    /// adds beyond `classify_mobility`'s own rules. Sanity-checked against the full
+    /// `classify_mobility`, which — correctly, for its own full-scope purpose — WOULD
+    /// consider the very same object movable.
+    #[test]
+    fn classify_mobility_minor_excludes_old_objects_even_if_precisely_reachable() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let old_obj = heap.alloc(16, k) as usize;
+        let _ = heap.collect(&[old_obj]); // -> old
+        let slot_word = old_obj;
+        let slots = [&slot_word as *const usize as usize];
+
+        assert!(
+            unsafe { heap.classify_mobility(&slots, &[]) }.contains(&old_obj),
+            "sanity: the full-scope classifier WOULD move this old object"
+        );
+        let movable = unsafe { heap.classify_mobility_minor(&slots, &[]) };
+        assert!(
+            !movable.contains(&old_obj),
+            "a minor-scoped pass must never classify an old object as movable"
+        );
+    }
+
+    /// The ordinary (non-remembered-set) traversal path still works through an old
+    /// object reached **directly** by a root: the old parent's own young child is
+    /// still classified movable, via the SAME transitive `precise_children` loop
+    /// `classify_mobility` already has — no remembered-set seeding is needed for this
+    /// case, since the root itself supplies the traversal's entry point into the old
+    /// object. Confirms the generation conjunct narrows only the *result*, not the
+    /// traversal that reaches young descendants through an old node.
+    #[test]
+    fn classify_mobility_minor_traverses_through_a_directly_rooted_old_parent_to_reach_young_child() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let parent = heap.alloc(16, k) as usize;
+        let _ = heap.collect(&[parent]); // -> old
+        let child = heap.alloc(16, k) as usize; // young
+        unsafe { *(parent as *mut usize) = child }; // no write_barrier: root reaches parent directly
+
+        let slot_word = parent;
+        let slots = [&slot_word as *const usize as usize]; // root names the OLD parent directly
+        let movable = unsafe { heap.classify_mobility_minor(&slots, &[]) };
+        assert!(!movable.contains(&parent), "the old parent itself is never movable");
+        assert!(movable.contains(&child), "its young child, reached by tracing through it, is movable");
+    }
+
+    /// The same conservative-in-edge-pins rule `classify_mobility` has still applies
+    /// to the minor-scoped pass for a purely-young chain (no remembered set involved).
+    #[test]
+    fn classify_mobility_minor_conservative_in_edge_pins_even_when_precise() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let a = heap.alloc(16, k) as usize; // young
+
+        let precise_word = a;
+        let cons_word = a;
+        let slots = [&precise_word as *const usize as usize];
+        let region = [(&cons_word as *const usize as *const u8, 8usize)];
+
+        assert!(unsafe { heap.classify_mobility_minor(&slots, &[]) }.contains(&a));
+        let movable = unsafe { heap.classify_mobility_minor(&slots, &region) };
+        assert!(!movable.contains(&a), "a conservative in-edge pins a precisely-reachable young object");
     }
 
     // ── Moving/compacting collector — arena + copy scaffold (AOT00-T3 PR-3a) ──
