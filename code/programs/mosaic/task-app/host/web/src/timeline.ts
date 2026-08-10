@@ -18,15 +18,45 @@ export interface GanttBar {
   /** Days since the Unix epoch, inclusive — equals `start` for a one-day task. */
   finish: number;
   critical: boolean;
+  /**
+   * 0..=100. Optional (defaults to 0) so existing fixtures/tests that predate
+   * this field keep compiling — real engine payloads always send it.
+   */
+  percentComplete?: number;
+  /**
+   * Optional (defaults to "leaf") for the same reason as `percentComplete`. A
+   * "milestone" bar renders as a diamond instead of the usual proportional bar
+   * — see task-app-richer-gantt-v1.md.
+   */
+  kind?: "leaf" | "summary" | "milestone";
 }
 
-/** A row as the layout consumes it: `[ name, padWidth, barWidth, window, critical ]`. */
-export type TimelineRow = [string, string, string, string, string];
+/**
+ * A row as the layout consumes it:
+ * `[ name, padWidth, barWidth, window, critical, milestone, percentComplete, tooltip ]`.
+ * Appended fields (milestone/percentComplete/tooltip), not inserted — no
+ * existing `t[n]` reference in TaskApp.mll shifts meaning.
+ */
+export type TimelineRow = [
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+];
+
+/** One calendar day of the day-grid: `[ widthPct, weekend, today ]`. */
+export type TimelineGridCell = [string, string, string];
 
 export interface TimelineView {
   /** The date ruler shown above the bars. */
   scale: string;
   rows: TimelineRow[];
+  /** One cell per calendar day in the visible span — see task-app-richer-gantt-v1.md. */
+  grid: TimelineGridCell[];
 }
 
 /**
@@ -51,13 +81,15 @@ export function dayToIso(days: number): string {
  * Lay the engine's bars out on one shared date scale.
  *
  * Returns render-ready percentage strings; an empty or unusable bar list yields an
- * empty view with an explanatory scale rather than throwing.
+ * empty view with an explanatory scale rather than throwing. `today` (days since
+ * epoch) highlights that day's grid column — omit it (or pass a day outside the
+ * visible span) and no column is marked "today".
  */
-export function buildTimeline(bars: readonly GanttBar[]): TimelineView {
+export function buildTimeline(bars: readonly GanttBar[], today = NaN): TimelineView {
   // Ignore bars the engine couldn't place — a NaN would poison min/max and every
   // percentage downstream.
   const usable = bars.filter((b) => Number.isFinite(b.start) && Number.isFinite(b.finish));
-  if (usable.length === 0) return { scale: "Nothing scheduled yet.", rows: [] };
+  if (usable.length === 0) return { scale: "Nothing scheduled yet.", rows: [], grid: [] };
 
   // `reduce`, not `Math.min(...bars)`: spreading a large array throws
   // "too many arguments" somewhere past ~100k elements.
@@ -67,20 +99,48 @@ export function buildTimeline(bars: readonly GanttBar[]): TimelineView {
   // Inclusive: a project that starts and ends on the same day spans one day, not zero.
   const span = Math.max(1, last - first + 1);
   const pct = (days: number) => `${((days / span) * 100).toFixed(2)}%`;
+  // Every grid cell is exactly one day wide, as a fraction of the shared track —
+  // the same `pct` a bar's own width uses, so the grid and the bars agree on scale.
+  const dayWidth = pct(1);
+
+  // One cell per calendar day in [first, last]. `getUTCDay()` (0 = Sunday, 6 =
+  // Saturday) is enough for weekend shading; there's no per-project week-start
+  // setting wired through here yet (ProjectSettings.weekStart exists but nothing
+  // in the host reads it today — a pre-existing gap, not something this widens).
+  const grid: TimelineGridCell[] = [];
+  for (let day = first; day <= last; day += 1) {
+    const weekday = new Date(day * DAY_MS).getUTCDay();
+    const isWeekend = weekday === 0 || weekday === 6;
+    grid.push([dayWidth, isWeekend ? "weekend" : "", day === today ? "today" : ""]);
+  }
 
   return {
     scale: `${dayToIso(first)} → ${dayToIso(last)} · ${span} day${span === 1 ? "" : "s"}`,
+    grid,
     rows: usable.map((b): TimelineRow => {
       // Clamp defensively: a malformed bar with finish < start would otherwise produce
       // a negative width, and one starting before `first` a negative pad.
       const length = Math.max(b.finish - b.start + 1, span * MIN_BAR_FRACTION);
       const pad = Math.max(0, b.start - first);
+      // The RAW inclusive day count, not the width-floored `length` above — a
+      // tooltip should say how long the task really is, even for a bar too
+      // short to show its true width without the visual floor.
+      const rawDays = Math.max(1, b.finish - b.start + 1);
+      const percent = Math.max(0, Math.min(100, Math.round(b.percentComplete ?? 0)));
+      const tooltip =
+        `${b.name}: ${dayToIso(b.start)} → ${dayToIso(b.finish)}` +
+        ` (${rawDays} day${rawDays === 1 ? "" : "s"})` +
+        (b.critical ? " — on the critical path" : "") +
+        ` · ${percent}% complete`;
       return [
         b.name,
         pct(pad),
         pct(Math.min(length, span - pad)),
         `${dayToIso(b.start)} → ${dayToIso(b.finish)}`,
         b.critical ? "critical" : "",
+        b.kind === "milestone" ? "milestone" : "",
+        `${percent}%`,
+        tooltip,
       ];
     }),
   };

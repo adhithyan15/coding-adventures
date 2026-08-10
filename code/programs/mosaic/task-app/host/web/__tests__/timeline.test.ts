@@ -20,7 +20,7 @@ const pctOf = (s: string) => parseFloat(s);
 
 describe("timeline geometry", () => {
   it("says so plainly when nothing is scheduled", () => {
-    expect(buildTimeline([])).toEqual({ scale: "Nothing scheduled yet.", rows: [] });
+    expect(buildTimeline([])).toEqual({ scale: "Nothing scheduled yet.", rows: [], grid: [] });
   });
 
   it("gives a one-day project a full-width bar, not a sliver", () => {
@@ -113,5 +113,76 @@ describe("timeline geometry", () => {
     // Math.min(...arr) throws "too many arguments" at this size; reduce doesn't.
     const many = Array.from({ length: 200_000 }, (_, i) => bar(`T${i}`, i, i));
     expect(() => buildTimeline(many)).not.toThrow();
+  });
+
+  // ---- richer Gantt: day-grid, milestones, percent-complete, tooltips ----
+
+  it("builds one grid cell per calendar day, each the same width as a one-day bar", () => {
+    const view = buildTimeline([bar("A", 10, 11), bar("B", 12, 13)]); // span: 10..13, 4 days
+    expect(view.grid).toHaveLength(4);
+    view.grid.forEach((cell) => expect(cell[0]).toBe("25.00%"));
+  });
+
+  it("marks weekend columns — 19723 (2024-01-01) is a Monday", () => {
+    // Sat 2024-01-06 = 19728, Sun 2024-01-07 = 19729.
+    const view = buildTimeline([bar("Week", 19723, 19729)]);
+    const weekdayFlags = view.grid.map((c) => c[1]);
+    expect(weekdayFlags).toEqual(["", "", "", "", "", "weekend", "weekend"]);
+  });
+
+  it("marks exactly the grid column matching `today`", () => {
+    const view = buildTimeline([bar("Span", 100, 104)], 102);
+    expect(view.grid.map((c) => c[2])).toEqual(["", "", "today", "", ""]);
+  });
+
+  it("marks no column today when `today` falls outside the visible span", () => {
+    const view = buildTimeline([bar("Span", 100, 104)], 200);
+    expect(view.grid.every((c) => c[2] === "")).toBe(true);
+  });
+
+  it("marks a milestone-kind bar and leaves ordinary bars unmarked", () => {
+    const view = buildTimeline([
+      { ...bar("Ship", 5, 5), kind: "milestone" },
+      { ...bar("Build", 0, 4), kind: "leaf" },
+    ]);
+    const ship = view.rows.find((r) => r[0] === "Ship")!;
+    const build = view.rows.find((r) => r[0] === "Build")!;
+    expect(ship[5]).toBe("milestone");
+    expect(build[5]).toBe("");
+  });
+
+  it("defaults an omitted kind to a non-milestone bar", () => {
+    const view = buildTimeline([bar("Plain", 0, 1)]);
+    expect(view.rows[0][5]).toBe("");
+  });
+
+  it("reports percent-complete as a CSS-ready percentage, clamped to 0..100", () => {
+    const view = buildTimeline([
+      { ...bar("Half", 0, 1), percentComplete: 50 },
+      { ...bar("Over", 0, 1), percentComplete: 150 },
+      { ...bar("Under", 0, 1), percentComplete: -10 },
+      bar("Unset", 0, 1),
+    ]);
+    const byName = (n: string) => view.rows.find((r) => r[0] === n)!;
+    expect(byName("Half")[6]).toBe("50%");
+    expect(byName("Over")[6]).toBe("100%");
+    expect(byName("Under")[6]).toBe("0%");
+    expect(byName("Unset")[6]).toBe("0%");
+  });
+
+  it("writes a tooltip with the real day count, not the width-floored one", () => {
+    // A milestone sharing a day with a long task gets width-floored (see "keeps a
+    // zero-duration milestone visible" above) but its tooltip must still say 1 day,
+    // not the floor's fractional value.
+    const view = buildTimeline([
+      { ...bar("Long", 0, 99), percentComplete: 40 },
+      { ...bar("Launch", 99, 99, true), kind: "milestone" },
+    ]);
+    const launch = view.rows.find((r) => r[0] === "Launch")!;
+    expect(launch[7]).toBe(
+      "Launch: 1970-04-10 → 1970-04-10 (1 day) — on the critical path · 0% complete",
+    );
+    const long = view.rows.find((r) => r[0] === "Long")!;
+    expect(long[7]).toBe("Long: 1970-01-01 → 1970-04-10 (100 days) · 40% complete");
   });
 });
