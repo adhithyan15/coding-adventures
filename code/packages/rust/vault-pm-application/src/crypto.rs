@@ -1,10 +1,10 @@
-use crate::ApplicationError;
+use crate::{ApplicationError, LocalSecretV1};
 use coding_adventures_canonical_cbor::{decode, CborValue};
 use coding_adventures_chacha20_poly1305::{
     xchacha20_poly1305_aead_decrypt, xchacha20_poly1305_aead_encrypt,
 };
 use coding_adventures_hkdf::{hkdf, HashAlgorithm};
-use coding_adventures_vault_pm_format::{ObjectFrameV1, VaultId, CRYPTO_SUITE_V1};
+use coding_adventures_vault_pm_format::{AeadEnvelopeV1, ObjectFrameV1, VaultId, CRYPTO_SUITE_V1};
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use core::fmt::{self, Debug, Formatter};
 
@@ -14,6 +14,7 @@ const LOCAL_STATE_KEY_LABEL: &[u8] = b"vpm/local-state-key/v1";
 const AUDIT_KEY_LABEL: &[u8] = b"vpm/audit-key/v1";
 const WRAP_AAD_PREFIX: &[u8] = b"VPM-OBJECT-DEK-WRAP-v1";
 const PAYLOAD_AAD_PREFIX: &[u8] = b"VPM-OBJECT-PAYLOAD-v1";
+const LOCAL_SECRET_AAD_PREFIX: &[u8] = b"VPM-LOCAL-SECRET-v1";
 const MAX_PLAINTEXT_BYTES: usize = 16 * 1024 * 1024;
 
 /// Closed registry of authenticated application object kinds.
@@ -142,6 +143,89 @@ impl Debug for ObjectRandomness {
     }
 }
 
+/// Independently generated nonce consumed by one local-secret seal operation.
+pub struct LocalSecretRandomness {
+    nonce: [u8; 24],
+}
+
+impl LocalSecretRandomness {
+    /// Construct caller-supplied nonce material.
+    pub const fn new(nonce: [u8; 24]) -> Self {
+        Self { nonce }
+    }
+}
+
+impl Zeroize for LocalSecretRandomness {
+    fn zeroize(&mut self) {
+        self.nonce.zeroize();
+    }
+}
+
+impl Drop for LocalSecretRandomness {
+    fn drop(&mut self) {
+        self.zeroize();
+    }
+}
+
+impl Debug for LocalSecretRandomness {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter.write_str("LocalSecretRandomness(<redacted>)")
+    }
+}
+
+/// Encrypt owner-private seeds into a bounded local-state envelope.
+pub fn seal_local_secret(
+    keys: &V1Keys,
+    secret: &LocalSecretV1,
+    randomness: &LocalSecretRandomness,
+) -> Result<AeadEnvelopeV1, ApplicationError> {
+    if secret.vault_id() != keys.vault_id {
+        return Err(ApplicationError::InvalidInput);
+    }
+    let plaintext = Zeroizing::new(secret.encode());
+    let aad = local_secret_aad(keys.vault_id);
+    let (ciphertext, tag) =
+        xchacha20_poly1305_aead_encrypt(&plaintext, &keys.local_state_key, &randomness.nonce, &aad);
+    let envelope = AeadEnvelopeV1 {
+        suite: CRYPTO_SUITE_V1,
+        nonce: randomness.nonce,
+        ciphertext,
+        tag,
+    };
+    envelope
+        .validate()
+        .map_err(|_| ApplicationError::InternalInvariant)?;
+    Ok(envelope)
+}
+
+/// Authenticate, decrypt, and identity-bind owner-private local seeds.
+pub fn open_local_secret(
+    keys: &V1Keys,
+    envelope: &AeadEnvelopeV1,
+) -> Result<LocalSecretV1, ApplicationError> {
+    if envelope.suite != CRYPTO_SUITE_V1 {
+        return Err(ApplicationError::Unsupported);
+    }
+    envelope
+        .validate()
+        .map_err(|_| ApplicationError::IntegrityFailure)?;
+    let aad = local_secret_aad(keys.vault_id);
+    let plaintext = xchacha20_poly1305_aead_decrypt(
+        &envelope.ciphertext,
+        &keys.local_state_key,
+        &envelope.nonce,
+        &aad,
+        &envelope.tag,
+    )
+    .ok_or(ApplicationError::IntegrityFailure)?;
+    let plaintext = Zeroizing::new(plaintext);
+    let secret = LocalSecretV1::decode(&plaintext)?;
+    if secret.vault_id() != keys.vault_id {
+        return Err(ApplicationError::IntegrityFailure);
+    }
+    Ok(secret)
+}
+
 /// Encrypt one canonical application object into an exact VLT-PM01 frame.
 pub fn seal_object(
     keys: &V1Keys,
@@ -251,6 +335,14 @@ fn object_aad(prefix: &[u8], vault_id: VaultId, kind: ObjectKind) -> Vec<u8> {
     aad
 }
 
+fn local_secret_aad(vault_id: VaultId) -> Vec<u8> {
+    let mut aad = Vec::with_capacity(LOCAL_SECRET_AAD_PREFIX.len() + 2 + 16);
+    aad.extend_from_slice(LOCAL_SECRET_AAD_PREFIX);
+    aad.extend_from_slice(&CRYPTO_SUITE_V1.to_be_bytes());
+    aad.extend_from_slice(vault_id.as_bytes());
+    aad
+}
+
 fn validate_plaintext_header(
     plaintext: &[u8],
     expected_kind: ObjectKind,
@@ -325,6 +417,61 @@ mod tests {
             &plaintext
         );
         assert_eq!(format!("{randomness:?}"), "ObjectRandomness(<redacted>)");
+    }
+
+    #[test]
+    fn local_secret_seals_opens_and_is_identity_bound() {
+        let keys = keys();
+        let secret = LocalSecretV1::new(
+            keys.vault_id(),
+            coding_adventures_vault_pm_format::DeviceId::new([0x66; 16]),
+            [0x77; 32],
+            [0x88; 32],
+            [0x99; 32],
+        );
+        let randomness = LocalSecretRandomness::new([0xaa; 24]);
+        let envelope = seal_local_secret(&keys, &secret, &randomness).unwrap();
+        assert_eq!(
+            hex(&envelope.ciphertext),
+            "0b0579aa801c68ba91ec18ab4417c88a223e185be2ba0a63dd072c7a81f84c26fc8fc83155822ad1dfc259f69caabc10424afdbb816e205d2cd75744e04ae6ff23e14300e170124a8f074881ebf80f965a13ae002a53cbc028d36d5ff7470ff9d5fd5489478d8176733076427e14901868e301842608f9952463d4f468e1e1f086447059c85e31ac396dad367a603c2a"
+        );
+        assert_eq!(open_local_secret(&keys, &envelope).unwrap(), secret);
+        assert_eq!(
+            format!("{randomness:?}"),
+            "LocalSecretRandomness(<redacted>)"
+        );
+
+        let other_keys = V1Keys::derive(VaultId::new([0x12; 16]), &[0x22; 32]).unwrap();
+        assert_eq!(
+            open_local_secret(&other_keys, &envelope).err(),
+            Some(ApplicationError::IntegrityFailure)
+        );
+        let mut tampered = envelope.clone();
+        tampered.tag[0] ^= 1;
+        assert_eq!(
+            open_local_secret(&keys, &tampered).err(),
+            Some(ApplicationError::IntegrityFailure)
+        );
+        let mut unsupported = envelope;
+        unsupported.suite = CRYPTO_SUITE_V1 + 1;
+        assert_eq!(
+            open_local_secret(&keys, &unsupported).err(),
+            Some(ApplicationError::Unsupported)
+        );
+        let wrong_vault = LocalSecretV1::new(
+            VaultId::new([0x12; 16]),
+            coding_adventures_vault_pm_format::DeviceId::new([0x66; 16]),
+            [0x77; 32],
+            [0x88; 32],
+            [0x99; 32],
+        );
+        assert_eq!(
+            seal_local_secret(&keys, &wrong_vault, &LocalSecretRandomness::new([1; 24])),
+            Err(ApplicationError::InvalidInput)
+        );
+        let mut wipe = LocalSecretRandomness::new([0xbb; 24]);
+        wipe.zeroize();
+        assert_eq!(wipe.nonce, [0; 24]);
     }
 
     #[test]

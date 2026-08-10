@@ -9,6 +9,7 @@
 
 mod codec;
 mod crypto;
+mod state;
 mod verifier;
 
 pub use codec::{
@@ -16,7 +17,14 @@ pub use codec::{
     encode_device_certificate, encode_item_revision, encode_signed_commit, CatalogV1,
     LocalSecretV1,
 };
-pub use crypto::{open_object, seal_object, ObjectKind, ObjectRandomness, V1Keys};
+pub use crypto::{
+    open_local_secret, open_object, seal_local_secret, seal_object, LocalSecretRandomness,
+    ObjectKind, ObjectRandomness, V1Keys,
+};
+pub use state::{
+    ActiveStateV1, AuthorityFingerprint, BootstrapLocator, BootstrapStore, BootstrapStoreError,
+    LocalStateStore, LocalStateStoreError, LocalVaultStateV1, PreparedInitV1, PublicationJournalV1,
+};
 pub use verifier::V1SingleDeviceVerifier;
 
 use core::fmt::{self, Debug, Display, Formatter};
@@ -24,10 +32,18 @@ use core::fmt::{self, Debug, Display, Formatter};
 /// Closed, payload-free application failure taxonomy.
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum ApplicationError {
+    /// No initialized owner state exists for the requested locator.
+    NotInitialized,
+    /// Owner state already exists and cannot be replaced by initialization.
+    AlreadyInitialized,
     /// Caller input violates a V1 precondition.
     InvalidInput,
     /// A fixed parser or collection bound would be exceeded.
     BoundExceeded,
+    /// A host compare-exchange lost to another local writer.
+    ConcurrentHost,
+    /// An injected host store is unavailable without exposing provider detail.
+    StorageUnavailable,
     /// A persisted value is malformed, unauthenticated, or cross-vault.
     IntegrityFailure,
     /// A requested version, suite, or object kind is not supported.
@@ -39,8 +55,12 @@ pub enum ApplicationError {
 impl ApplicationError {
     fn label(self) -> &'static str {
         match self {
+            Self::NotInitialized => "NotInitialized",
+            Self::AlreadyInitialized => "AlreadyInitialized",
             Self::InvalidInput => "InvalidInput",
             Self::BoundExceeded => "BoundExceeded",
+            Self::ConcurrentHost => "ConcurrentHost",
+            Self::StorageUnavailable => "StorageUnavailable",
             Self::IntegrityFailure => "IntegrityFailure",
             Self::Unsupported => "Unsupported",
             Self::InternalInvariant => "InternalInvariant",
