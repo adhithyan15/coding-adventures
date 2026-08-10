@@ -238,6 +238,8 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // Urdu ک writes the independent main-line body first: descend the stem, sweep
 // left through its flatter bowl, and finish with the hook. After one lift, the
 // long upper-right slash descends toward the stem as a separate stroke.
+// Urdu ل begins at the top of its tall independent upright, descends through
+// the baseline, and continues below it around the leftward bowl in one run.
 // The adjacent ب starts at the bowl's right lip, sweeps right-to-left through
 // its shallow dip, then lifts once before placing the separate dot below.
 // After the intervening Persian-added پ row, ت repeats the same bowl, lifts to
@@ -599,6 +601,40 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: urduAlphabetSource("ک"),
+  },
+  [ductusKey("urdu-nastaliq", "ل")]: {
+    script: "urdu-nastaliq",
+    glyph: "ل",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the tall independent upright downward",
+            path: [
+              { x: 458, y: 640 },
+              { x: 445, y: 500 },
+              { x: 440, y: 420 },
+              { x: 450, y: 240 },
+              { x: 475, y: 80 },
+              { x: 510, y: -20 },
+            ],
+          },
+          {
+            label: "continue below the baseline through the leftward bowl and back up without lifting",
+            path: [
+              { x: 510, y: -20 },
+              { x: 465, y: -120 },
+              { x: 350, y: -205 },
+              { x: 205, y: -215 },
+              { x: 105, y: -135 },
+              { x: 90, y: -75 },
+              { x: 100, y: 25 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: urduAlphabetSource("ل"),
   },
   "ب": {
     script: "perso-arabic",

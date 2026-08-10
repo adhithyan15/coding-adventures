@@ -203,13 +203,18 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   and the prose write the main-line stem, flatter bowl, and pronounced final
   hook in one run, then lift once for the long downward slash from the upper
   right toward the stem. The learner path preserves the explicit warning not to
-  write kāf in one penstroke. The remaining **202** prose part orders across
-eight scripts (`arabic` 21, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33,
-`hebrew` 22, `japanese` 34, `urdu-nastaliq` 7) are explicitly **unverified for
-pen lifts**. The data validator rejects a lift count without a citation (or a
-citation without a count), and Language Ladder's ductus test proves every verified
-claim has the same cited, font-checked path. That closes `HL-C19`; future entries
-join one side of this enforced boundary automatically.
+  write kāf in one penstroke. Urdu **ل** then returns to Chapter 2: both
+  independent animations begin at the top, descend the tall upright, and keep
+  the pen down while the line passes below the baseline through the leftward
+  bowl and back up its outer side. The learner path preserves that zero-lift
+  independent motion and the prose's connector and final-bowl distinctions.
+  The remaining **201** prose part orders across eight scripts (`arabic` 21,
+  `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 22,
+  `japanese` 34, `urdu-nastaliq` 6) are explicitly **unverified for pen lifts**.
+  The data validator rejects a lift count without a citation (or a
+  citation without a count), and Language Ladder's ductus test proves every
+  verified claim has the same cited, font-checked path. That closes `HL-C19`;
+  future entries join one side of this enforced boundary automatically.
 
 **Telugu, Kannada and Malayalam currently have zero authored letters** and
 therefore no `penLifts` anywhere. See [`BACKLOG.md`](../../BACKLOG.md) HL-C41 for

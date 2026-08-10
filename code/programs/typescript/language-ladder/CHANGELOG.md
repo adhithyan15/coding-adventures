@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Urdu independent-lam ductus (HL-C09AA)
+
+- Add Urdu independent ل from Northwestern's *Zer o Zabar* animations as one
+  top-down stroke through the tall upright and below-baseline leftward bowl.
+- Preserve the chapter's connector and final-bowl distinctions while fitting
+  the independent zero-lift motion to Noto Naskh.
+- Render a real two-frame filmstrip whose one stroke, zero lifts, source,
+  prose, geometry, and summary agree.
+
 ### Added — cited Urdu independent-kaf ductus (HL-C09Z)
 
 - Add Urdu independent ک from Northwestern's *Zer o Zabar* animations and prose

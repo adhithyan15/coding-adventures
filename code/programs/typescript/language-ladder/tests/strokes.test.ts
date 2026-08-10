@@ -30,6 +30,7 @@ const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
 const URDU_SIN = DUCTUS[ductusKey("urdu-nastaliq", "س")];
 const URDU_SHIN = DUCTUS[ductusKey("urdu-nastaliq", "ش")];
 const URDU_KAF = DUCTUS[ductusKey("urdu-nastaliq", "ک")];
+const URDU_LAM = DUCTUS[ductusKey("urdu-nastaliq", "ل")];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
@@ -338,6 +339,20 @@ describe("handwriting ductus", () => {
     expect(slash[0].y).toBeGreaterThan(slash.at(-1)!.y);
   });
 
+  it("Urdu independent ل descends through its below-baseline bowl without lifting", () => {
+    expect(URDU_LAM.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_LAM)).toBe(0);
+    expect(URDU_LAM.strokes).toHaveLength(1);
+    expect(URDU_LAM.strokes[0].segments).toHaveLength(2);
+    const upright = URDU_LAM.strokes[0].segments[0].path;
+    const bowl = URDU_LAM.strokes[0].segments[1].path;
+    expect(upright[0].y).toBeGreaterThan(upright.at(-1)!.y);
+    expect(bowl[0]).toEqual(upright.at(-1));
+    expect(Math.min(...bowl.map((point) => point.y))).toBeLessThan(0);
+    expect(bowl.at(-1)!.x).toBeLessThan(bowl[0].x);
+    expect(bowl.at(-1)!.y).toBeGreaterThan(Math.min(...bowl.map((point) => point.y)));
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -629,6 +644,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /two separate pen strokes.*stem.*main line.*right to left.*flatter bowl.*pronounced final hook.*lift once.*upper right.*long downward slash.*not to write kāf in one penstroke.*flatter than be.*Noto Naskh.*rather than Arabic ك.*Nastaliq/i,
+    );
+  });
+
+  it("Urdu independent ل traces to Zer o Zabar's unbroken downward-and-around animations", () => {
+    const src = URDU_LAM.source;
+    expect(src.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/pe-gaf-alif-lam/",
+    );
+    expect(src.citation).toMatch(
+      /Zer o Zabar.*independent ل.*calligraphic and handwriting animations.*Lām instructions.*Northwestern/i,
+    );
+    expect(src.variation).toMatch(
+      /one uninterrupted stroke.*begin at the top.*descend the tall upright.*below the baseline.*leftward bowl.*back up.*without lifting.*connector.*final form.*Noto Naskh.*Nastaliq/i,
     );
   });
 
