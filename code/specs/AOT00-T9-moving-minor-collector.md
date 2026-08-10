@@ -143,9 +143,36 @@ rebuild the remembered set) needs a young-scoped sibling, `collect_minor_compact
    this determines who survives.
 2. **Classify**: run `classify_mobility_minor(root_slots, regions)` (§3) — determines, among young
    objects, who's movable.
-3. **Evacuate**: `plan_compaction`/`evacuate_and_fixup`'s existing arena-copy + pointer-fixup logic,
-   parameterized on the `movable` set from step 2 instead of full `classify_mobility`'s — **no
-   change to the copy/fixup mechanics themselves**, only which set drives them.
+3. **Evacuate**: `plan_compaction_minor`/`evacuate_and_fixup_minor` — young-scoped siblings of
+   `plan_compaction`/`evacuate_and_fixup`, parameterized on `classify_mobility_minor`'s `movable`
+   set. **Correction (PR-3, landed, revised across two review rounds):** this point originally
+   claimed "no change to the copy/fixup mechanics themselves, only which set drives them" — that
+   claim does not hold. `evacuate_and_fixup`'s existing fixup only rewrites (a) `root_slots` and (b)
+   moved objects' own arena copies; neither touches an old parent's field pointing at a moved young
+   child, since such a parent is never itself movable (old objects are never in `movable`).
+   `evacuate_and_fixup_minor` therefore adds a genuine third step, (c) — but (c) must walk **two**
+   populations, unioned, neither subsuming the other:
+   - **`precise`** (every precise-reachable object `classify_mobility_minor`'s internal traversal
+     actually *discovered as a node* — header addresses, movable or not, transitively including old
+     objects reached through other old objects) — catches a parent reached *directly by a root* (or
+     transitively through another precise-reachable old object), which may never appear in the
+     remembered set at all if no barriered store ever named it.
+   - **`self.remembered`** — catches a parent used *only* as a remembered-set **seed**: such a
+     parent's children are consulted and fed into the traversal, but the parent itself is never
+     independently *discovered* as a node by that traversal, so it is **not** a member of `precise`.
+   A first-draft fix walked only `self.remembered` (necessary, not sufficient — missed the
+   directly-rooted case, next bullet's citation). The fix for *that* walked only `precise` (also
+   necessary, not sufficient — broke the original remembered-seed-only case, caught immediately by
+   the existing test suite). The shipped version unions both; each half was independently confirmed
+   load-bearing by reverting it and observing the exact predicted failure, and a third round of
+   review confirmed no third population exists (traced through: a multi-hop
+   old→old→young chain with no barriers, a parent that is a member of both sets simultaneously, and
+   a tagged reference — all tested).
+   - **Residual, and now correctly scoped, dependency on write-barrier fidelity**: a parent reached
+     *only* through the very store that should have been barriered — not independently
+     root/region/precise-reachable, and never recorded in `self.remembered` because the barrier was
+     skipped — is covered by **neither** population. See §7's revised barrier-contract note: this is
+     new, and stricter than what a non-moving minor cycle requires.
 4. **Sweep + integrate**: **young-only** version of `collect_compacting`'s step 4 — sweep only young
    blocks (mirroring `sweep(true)`'s existing `young_only` branch, which already skips old blocks
    entirely and just counts them as survived-in-place), free unmarked young blocks, keep
@@ -153,21 +180,21 @@ rebuild the remembered set) needs a young-scoped sibling, `collect_minor_compact
    re-thread the arena's moved objects into `self.all` (identical to `collect_compacting`'s own
    integration, generation-tagged young — freshly-moved survivors have *not* tenured this cycle,
    matching a same-place minor survivor's own aging), and — **do not clear the remembered set**
-   (a minor cycle never invalidates it, same as `collect_minor`/`collect_minor_region` today), but
-   **do remap any moved *old→young* remembered entry to the child's new address** (an old parent's
-   recorded child address is now stale if that child just relocated — this is the one piece of
-   bookkeeping `collect_compacting`'s full-scope `rebuild_remembered` gets for free by clearing and
-   redoing everything from scratch, that a minor-scoped version must do surgically instead: for each
-   `forward` entry, if the *old* address matches a value implicitly held by a remembered parent's
-   field, that field was already rewritten by the fixup pass in step 3 — no separate bookkeeping
-   needed there. The remembered *set itself* holds parent addresses, not child addresses, so it does
-   not need remapping unless a remembered *parent* was itself young and moved — impossible, since the
-   remembered set holds only old objects.)
+   (a minor cycle never invalidates it, same as `collect_minor`/`collect_minor_region` today). The
+   remembered *set itself* holds parent addresses, not child addresses, so it does not need remapping
+   (a remembered *parent* is always old, and old objects are never movable, so no remembered-set entry
+   is ever itself stale after a minor-compacting cycle) — PR-3's step (c) above is what makes this true
+   by construction, by rewriting every such parent's *field* in place (under an honest write barrier;
+   see the residual dependency noted above) before this step runs, rather than this step needing to
+   reconstruct anything from `forward`.
 5. `minor_streak`/`adapt_threshold` bookkeeping — identical to `collect_minor_mixed`'s existing tail.
 
-Point 4's parenthetical is the one genuinely new piece of reasoning versus a mechanical merge of
-"§3's classify" + "existing minor sweep" + "existing compacting integrate" — it needs its own
-adversarial pass in review, not just a restatement here.
+~~Point 4's parenthetical is the one genuinely new piece of reasoning versus a mechanical merge...~~
+**Superseded by the PR-3 correction above**: the new reasoning turned out to belong in step 3 (an
+explicit fixup step over two unioned populations, not a single set), not step 4 (a remap derived
+after the fact) — the original framing had the right instinct (something extra was needed) but
+placed and justified it incorrectly, twice, before landing on the correct shape. PR-3's two rounds of
+adversarial review are the "own adversarial pass" this paragraph called for.
 
 ---
 
@@ -176,15 +203,28 @@ adversarial pass in review, not just a restatement here.
 1. **PR-1 (this spec)** — sign-off gate, no code. ✅ merged.
 2. **PR-2 — `classify_mobility_minor` alone**, dry-run only (returns the `HashSet`, relocates
    nothing) — reviewed and unit-tested against `classify_mobility`'s existing test shapes *plus* a
-   remembered-set-specific case (a young object reachable *only* via a kind-tracked old parent is
-   `movable`; reachable only via a kind-0 old parent is *not* `movable` but *is* found — i.e. `pinned`
-   — proving it isn't silently invisible). Mirrors PR-3a's "land the classification in isolation" shape.
-   ✅ **Landed** (`gc-core` 0.29.0) — 6 tests, including both load-bearing remembered-set cases; each
-   passed on first implementation, matching this spec's §3 derivation exactly (no design revision
-   needed once coded).
+   remembered-set-specific case (a young object reachable *only* via a precisely-traced old parent is
+   `movable`; reachable only via a non-precisely-traced old parent — kind-0, or a nonzero kind id never
+   registered — is *not* `movable` but *is* found — i.e. `pinned` — proving it isn't silently
+   invisible). Mirrors PR-3a's "land the classification in isolation" shape.
+   ✅ **Landed** (`gc-core` 0.30.0; see 0.29.0 for the `is_precisely_traced` fix `classify_mobility_minor`
+   was built on top of from the start) — 9 tests, including both load-bearing remembered-set cases and
+   the two-prior-bugs-combined case an adversarial review specifically flagged as missing. Design held;
+   the review found scoping/documentation gaps for future consumers (recorded in the function's own
+   doc), not implementation bugs.
 3. **PR-3 — evacuate + fixup**, parameterized on `classify_mobility_minor`'s output — proves the arena
    copy + pointer rewrite (roots, moved objects' own fields, **and** any remembered-parent field that
    pointed at a moved child) against a differential, still not wired into a live collection.
+   ✅ **Landed** (`gc-core` 0.31.0) — `plan_compaction_minor`/`evacuate_and_fixup_minor`, 10 tests. Found
+   and fixed a real gap in this very spec's §4 point 3/4 (see the correction there, revised across two
+   review rounds): the field-rewrite this bullet promises is **not** free from reusing "the existing...
+   mechanics unchanged" as originally written — it needed a genuine new step (c) that unions two
+   populations (`precise` and `self.remembered`), neither of which alone is sufficient. Round 1 of
+   review found the single-remembered-walk design's directly-rooted-old-parent gap; the fix for that
+   (walking `precise` alone) was itself caught by the existing test suite as breaking the original
+   remembered-seed-only case before it ever reached round 2 of review. Round 2 confirmed the union is
+   complete under an honest write barrier and flagged the residual (and now documented) barrier-fidelity
+   dependency in §7.
 4. **PR-4 — `collect_minor_compacting`**, the full cycle (§4) wired end-to-end, plus the `should_collect_minor`
    family gains no new *scheduling* decision (out of scope here — whether an automatic minor cycle
    should sometimes also compact is a follow-up policy question, not this spec's; PR-4 only makes
@@ -214,15 +254,28 @@ scanned or moved).
   only removes old objects that would otherwise be structurally eligible) — it cannot make anything
   unsoundly movable; it can only make the pass conservative in the safe direction (an old object
   simply isn't moved, exactly as before this spec).
-- Evacuation/fixup mechanics (arena copy, `forwarded()`, root-slot rewrite, moved-object field
-  rewrite) are **entirely reused, unmodified**, from the already-shipped, already-reviewed
-  `collect_compacting` machinery — the only new code is *which set* feeds them.
-- The one piece of bookkeeping without a direct full-scope analogue — remembered-parent fields
-  pointing at a moved child — is covered by the *existing* fixup pass already visiting every moved
-  object's own fields plus root slots; §4's point 4 argues this needs no separate step, but that
-  argument is exactly what PR-3's differential (a live young child reachable *only* through a
-  remembered old parent, relocated, then read back *through that same old parent's field*) must
-  prove empirically, not just by this spec's prose.
+- Evacuation/fixup **primitives** (`Arena`, `forwarded()`, `fixup_ref_fields`) are entirely reused,
+  unmodified, from the already-shipped, already-reviewed `collect_compacting` machinery. **Correction
+  (PR-3, landed, revised across two review rounds):** the *orchestration* around them is not a pure
+  reuse, though — root-slot rewrite and moved-object field rewrite alone do **not** cover an old
+  parent's field pointing at a moved young child, so `evacuate_and_fixup_minor` adds one new
+  orchestration step — running the *same*, unmodified `fixup_ref_fields` primitive over the union of
+  `precise` (every precise-reachable object the classifier's traversal discovered as a node — catches
+  a directly-rooted or transitively-reached old parent) and `self.remembered` (catches an old parent
+  used only as a remembered-set *seed*, never independently discovered as a node, so absent from
+  `precise`). The primitives stayed unmodified; the claim that *no new step at all* was needed did
+  not hold, and neither did the claim (from this step's own first correction) that walking one of the
+  two populations alone would suffice. PR-3's two rounds of review each proved a gap empirically
+  (revert the relevant half of the union, observe the exact predicted stale-field failure) before
+  proving the fix closes it.
+- **Residual barrier-fidelity dependency (round-2 finding, not eliminated):** the union above is
+  complete only under an honest write barrier. A parent reached *only* through the very store that
+  should have been barriered — not independently root/region/precise-reachable, and never recorded in
+  `self.remembered` because the barrier was skipped — is covered by neither population. A **non-moving**
+  minor cycle tolerates this exact missed barrier (the child, if independently reachable, is simply
+  marked and kept live; if not, both die together, which is correct); a **moving** minor cycle does
+  not, since nothing rewrites the parent's stale field once the child relocates. This is a strictly
+  stronger barrier obligation than §7 originally claimed unchanged — see §7's revision.
 
 ---
 
@@ -231,7 +284,20 @@ scanned or moved).
 - `collect_minor`/`collect_minor_region`/`collect_minor_mixed` (non-moving minor) are untouched —
   this is a new, additional entry point, not a replacement.
 - `collect_compacting` (full moving) is untouched.
-- No change to the write-barrier contract, tenuring, or the AOT00-T8 `auto_minor` attestation gate —
-  a moving minor cycle carries the *identical* barrier-coverage requirement a non-moving minor cycle
-  already does (§2b of AOT00-T8), since it's still fundamentally a minor-scoped collection that
-  depends on the remembered set for old→young reachability.
+- Tenuring and the AOT00-T8 `auto_minor` attestation gate itself are unchanged by this spec.
+- **Correction (PR-3 round-2 review) — the write-barrier contract is NOT identical between a
+  non-moving and a moving minor cycle; a moving cycle is strictly stricter.** The original claim here
+  (that a moving minor "carries the identical barrier-coverage requirement" per AOT00-T8 §2b) does not
+  hold and was disproven empirically (§6's residual-dependency bullet). A non-moving minor cycle
+  tolerates a barrier the embedder skipped, *as long as the child is independently reachable* —
+  nothing about that liveness mark depends on rewriting a stale field, since nothing relocates. A
+  moving minor cycle does not have this slack: `evacuate_and_fixup_minor`'s fixup (§4 point 3, §6)
+  covers a barrier-missed parent only if that parent is *itself* independently reachable via
+  `root_slots`/`regions`/a precise chain from one of those — a barrier-missed parent that is reachable
+  *only* through the very store the barrier should have recorded is invisible to both the `precise`
+  and `self.remembered` populations the fixup walks, and its field goes stale (dangling, once PR-4
+  wires reclamation in) the moment its child relocates. **Before PR-4 wires this into any automatically
+  triggered cycle, the AOT00-T8 `auto_minor` attestation gate's own documentation and any embedder
+  guidance must be revisited against this strengthened obligation** — an embedder whose barrier
+  coverage was merely "good enough" for the existing non-moving minor (tolerates occasional missed
+  barriers on independently-reachable objects) is not automatically good enough for a moving one.
