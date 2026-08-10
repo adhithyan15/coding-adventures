@@ -25,7 +25,9 @@ All notable changes to this crate are documented here.
   which have no analogous "exposed tag invalidated by a later write through a
   differently-typed Rust binding" concern — there is no competing safe-Rust alias to
   the same memory doing the invalidating write.
-- **Fix: every affected test (7 of the module's 9) now computes its FINAL `sp`/
+- **Fix: every affected test (8 of the module's 9 — every test except
+  `degenerate_start_fp_falls_back_to_full_conservative_scan`, the only one that
+  never writes to `stack`) now computes its FINAL `sp`/
   `fp0`/`fp1`/.../`base` values — the ones passed to `build_precise_roots` or
   compared in assertions — only *after* every `stack[i] = ...` write is done.** An
   `addr_of` call used only to compute a value to *write* (not to dereference later)
