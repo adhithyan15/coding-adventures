@@ -1157,6 +1157,21 @@
       "source_cas_hashes": [],
       "benchmark_paths": [],
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.math.k2.spatial_composition",
+      "title": "Derive how many triangles a named quadrilateral decomposes into, by combining a shape's defining property with the general definitions of triangulation and a polygon diagonal",
+      "band": "K-2",
+      "domain": "mathematics",
+      "competency": "infer",
+      "coverage_roots": ["ccss.math"],
+      "standards": [],
+      "prerequisites": [],
+      "libraries": ["code/specs/data/adj-facts-stdlib/geometry/shape-composition.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     }
   ]
 }

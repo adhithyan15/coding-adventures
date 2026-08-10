@@ -1,0 +1,25 @@
+% ============================================================================
+% shape-composition.query.adj — a worked recall over the DERIVED
+% shape-composition fact.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how many triangles make
+% up a square?": it states no geometry reasoning of its own — it only
+% `import`s the library and asks a binding query. The engine derives the
+% answer via the `rule` (composing the quadrilateral-types table with the
+% triangulation/diagonal definitions) and returns it WITH the full two-step
+% audit trail: the rule's own citation and the underlying quadrilateral
+% fact's citation. The third query runs the relation BACKWARD (bind the
+% count `2`, recall every quadrilateral it holds for). A shape not in the
+% quadrilateral-types table (a triangle, which has no diagonals to draw in
+% the first place) abstains honestly — the engine never invents a count.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli shape-composition.query.adj
+% ============================================================================
+
+import "shape-composition.adj"
+
+? triangle_decomposition_count(square, $N)       % expect 2
+? triangle_decomposition_count(trapezoid, $N)    % expect 2
+? triangle_decomposition_count($Shape, 2)        % reverse bind — expect all 5 quadrilaterals
+? triangle_decomposition_count(triangle, $N)     % expect abstain — a triangle has no diagonal to draw

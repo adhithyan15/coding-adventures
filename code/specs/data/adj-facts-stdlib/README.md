@@ -31,6 +31,7 @@ per rotation, in parallel):
 | `geometry/` | quadrilateral family → its one defining property (rectangle → four_right_angles, rhombus → all_sides_same_length, trapezoid → two_sides_parallel) | Wolfram MathWorld (authoritative) |
 | `geometry/` | circle part → its defining description (radius → center_to_perimeter, diameter → maximum_distance_across, chord → ends_on_circle) | Wolfram MathWorld (authoritative) |
 | `geometry/` | angle-pair relationship → its defining condition (complementary → sum_to_90, supplementary → sum_to_180, vertical → equal, adjacent → share_side_and_vertex) | OpenStax / Mathematics LibreTexts (consensus) |
+| `geometry/` | **DERIVED, not looked up** — how many triangles a named quadrilateral decomposes into (`triangle_decomposition_count(shape, 2)`), by a `rule` combining the `quadrilateral_property` table with the general definitions of triangulation and a polygon diagonal — no single source states the composite fact directly | Wolfram MathWorld (consensus; see `shape-composition.adj`'s header for why this earns `consensus` rather than `authoritative`) |
 | `astronomy/` | planet → order from the Sun | NASA |
 | `astronomy/` | stellar spectral class letter → the color NASA assigns it (o → blue, g → yellow, m → red) | NASA Science (authoritative) |
 | `astronomy/` | galaxy type → defining shape NASA states (spiral → spiral_arms, elliptical → round_to_oval, irregular → unusual_shapes) | NASA Science (authoritative) |
@@ -137,3 +138,28 @@ Because a `table` row lowers to a relation whose value is a number ([`ADJ-TABLES
 a recalled fact **composes into a formula** — a looked-up atomic number, side count, or
 conversion factor flows straight into arithmetic. That is the bridge from **recall** to
 **compute**, and the reason facts and formulas belong in one standard library.
+
+## When no single source states the fact directly: DERIVE it with a `rule`
+
+Every library above is a `table`: one source states the answer, and recall is a plain lookup.
+Not every curriculum fact has that shape — `geometry/shape-composition.adj` is the first library
+here where no single source states the target conclusion as a citable sentence (checked several
+MathWorld pages; a formal mathematics reference does not bother spelling out something this
+elementary). Rather than block on a missing verbatim quote, it DERIVES the fact with a `rule`,
+composing cited PRIMITIVES:
+
+```adj
+rule { head: triangle_decomposition_count($Shape, 2)
+       when: quadrilateral_property($Shape, $Property)
+       source "…the general definitions this rule's own reasoning is built on…"
+       locator "https://mathworld.wolfram.com/…"
+       trust consensus }
+```
+
+The bar is **human-auditability**, not a verbatim match: a query's `steps` trail names BOTH the
+rule's own citation (the general definitions) and the underlying fact's citation (the specific
+shape's defining property), so a human can independently check each link in the inference — and
+if one is wrong, point at exactly which step and fix it, rather than the whole content family
+being unrepresentable. `trust consensus` (not `authoritative`) is the honest tier here: the
+CONCLUSION is this library's own derivation from quoted material, not a sentence any single
+source states outright.
