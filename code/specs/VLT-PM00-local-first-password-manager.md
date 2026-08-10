@@ -1420,7 +1420,15 @@ changelog, focused build, and downstream validation.
     echo restoration, constant-time new-passphrase confirmation, and stable OS
     entropy, using the closed CLI-only trust boundary in
     `VLT-PM08-cli-host.md`.
-9. `vault-pm-cli` + real executable and pseudo-terminal E2E suite.
+9a. completed `vault-pm-cli` bootstrap composition: closed parsing/rendering,
+    stable exit classes, real `init`, locked `status`, and locked `doctor`, plus
+    a thin executable and real-process pseudo-terminal restart suite, using
+    `VLT-PM09-cli-bootstrap.md`. Generation zero installs its exact prepared
+    journal before configuration makes the random locator discoverable, and a
+    restart resumes that journal without generating replacement identities.
+9b. authenticated one-shot CLI composition for item CRUD/list, search, history,
+    portable export/import, and audit verification, followed by the foreground
+    interactive shell over the same command/use-case boundary.
 10. Crash/fault matrix and local restore drill.
 
 ### Phase 1B — daily local use
@@ -1476,8 +1484,11 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
 - `VLT10-vault-sync-engine.md` — version vectors and conflict semantics.
 - `VLT11-transports.md` — current CLI transport contract.
 - `VLT-PM01-format.md`, `VLT-PM02-storage.md`, `VLT-PM03-domain.md`,
-  `VLT-PM04-repository.md`, and `VLT-PM05-application.md` — product repository
-  wire, object-store, domain, verified-DAG, and application contracts.
+  `VLT-PM04-repository.md`, `VLT-PM05-application.md`,
+  `VLT-PM06-local-host.md`, `VLT-PM07-config.md`, `VLT-PM08-cli-host.md`, and
+  `VLT-PM09-cli-bootstrap.md` — product repository wire, object-store, domain,
+  verified-DAG, application, local-host, configuration, terminal/entropy, and
+  initial executable-composition contracts.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.
