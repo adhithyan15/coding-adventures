@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Urdu independent-ye ductus (HL-C09AE)
+
+- Add Urdu independent ی from Northwestern's *Zer o Zabar* animations as one
+  dotless S-shaped stroke from the upper right through the below-baseline bowl.
+- Preserve the source's initial/medial two-dot distinction while fitting the
+  independent zero-lift motion to Noto Naskh.
+- Render a real two-frame filmstrip whose one stroke, zero lifts, source,
+  prose, geometry, and summary agree.
+
 ### Added — cited Urdu independent-he ductus (HL-C09AD)
 
 - Add Urdu independent ہ from Northwestern's *Zer o Zabar* animations as one
