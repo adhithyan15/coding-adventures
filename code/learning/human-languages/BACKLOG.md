@@ -261,6 +261,38 @@ These restate and sharpen the program; where they conflict with an older item, t
    `lessons/XX-CNN-*.md` at the reader today), no app assumptions, no dangling cross-track
    references, and the front/back matter a book is expected to have. → HL-C50.
 
+## P0 — The Spanish pre-A1 → C2 course (HL10)
+
+**2026-08-10.** [HL10](../../specs/HL10-spanish-pre-a1-to-c2-course-architecture.md)
+is the course architecture HL09 implied but never wrote. HL09 fixed how gentle a
+step must be; HL10 says what the steps are — eight parallel strands, a spine
+rebuilt to ~400 nodes, a grammar ramp expressed in ~630 individually-taught verb
+cells at one cell per lesson, etymology as a productive system with a payoff
+ledger, and a stage-by-stage map of ~4,950 lessons across ~851 chapters
+(≈10,500 pages, seven volumes).
+
+Three measurements from the current corpus that set the starting point:
+Spanish's 188 lessons contain **one** distinct culture atom, **zero** mentions of
+*vos* (a form used by ~100 million speakers), and **188 of 188** lessons declare
+`variety: general` — the unmarked default HL09 §8.1 forbids.
+
+| ID | Status | Work item | Completion signal |
+|---|---|---|---|
+| HL-C79 | Queued — unblocker | Land HL09 steps 1–3: measure order integrity, reinforcement windows, and forward references; finish the schema-v2 migration; wire `practises.knowledge` to close R1/R2. | The gap report publishes all three per track; zero sequence-less Spanish lessons. Everything downstream of this is unverifiable without it. |
+| HL-C80 | Queued | Add the strand dimension to `spine.json` and the HL10 §2.2 budgets to `chapter-policy.json`, report-only. | Every existing node carries one of the eight strands; `maxNewGrammarCellsPerLesson`, `maxRuleStatementsPerLesson`, `minDownstreamReach` and the rest run and report without failing CI on recorded debt. |
+| HL-C81 | Queued | Split every oversized spine node, starting with `SPINE-SAY-WHAT-I-DO` (42 concepts → nine nodes, HL10 §3.3). | No node declares more than 12 concepts; the ≤6 design target is measured and reported. |
+| HL-C82 | Queued | Author the Spanish grammar cell inventory (HL10 §5.1) as data. | ~630 verb cells enumerated with prerequisites; the cell DAG validates; no cell is reachable before its prerequisites. |
+| HL-C83 | Queued | Build the Root Ledger over the 1,100 existing `ES-ETYMON-*` references (HL10 §6.2). | Every root reports its downstream payoff count; roots below `rootLedgerMinReuse: 3` are listed for cutting or relocation. |
+| HL-C84 | Queued | Enforce the info-dump gate (HL10 §7.3), report-only. | Every lesson reports a rule-statement count; the corpus's worst offenders are listed and read by a human before merge. |
+| HL-C85 | Queued | Absorb the existing 188 Spanish lessons into the rebuilt spine (HL10 §13). | Zero forward references and zero dead-end atoms in Spanish; the learner can say *no* and *I am*; nothing is deleted. |
+| HL-C86 | Queued | Author pre-A1 to its full 30 chapters / ~180 lessons. | HL09 §3.1 satisfied at pre-A1; ≥95% of lessons `voice`; every chapter drivable from its first lesson, with an intro, an etymological thread, and a culture note. |
+| HL-C87 | Queued | Per-atom mastery and voice mode in Language Ladder (HL10 §10.1–10.2). | The app schedules from atom strength rather than lesson completion; a full chapter is completable hands-free. |
+
+**Two owner decisions are open** and are recorded in HL10 §16 rather than assumed:
+which variety is productive by default (recommendation: neutral Latin American,
+with Peninsular and Rioplatense receptive from pre-A1), and seven volumes versus
+one (recommendation: seven, plus a generated single-file edition for search).
+
 ## P0 — Step-by-Step capability program (HL05–HL08)
 
 Specified in [HL05](../../specs/HL05-chapter-capability-and-step-by-step-shape.md),
