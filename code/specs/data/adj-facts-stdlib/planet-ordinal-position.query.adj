@@ -1,0 +1,28 @@
+% ============================================================================
+% planet-ordinal-position.query.adj — worked recall over the planet/ordinal
+% bridge library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what position is this
+% planet from the Sun, in words?" — it states no fact of its own — it only
+% `import`s the grounded rule and asks binding queries. The answer is
+% DERIVED, joining a planet-order fact to an ordinal-word fact, so every
+% answer carries BOTH citations in its `steps` trail.
+%
+% Placed at the stdlib PACKAGE ROOT (not beside `astronomy/planet-ordinal-
+% position.adj`) — the same cross-directory-import sandboxing pattern
+% `earth-science/season-start-month-number.adj` (and, before it,
+% `mathematics/word-problems.adj`) already established: the library itself
+% lives in `astronomy/` and reaches its mathematics sibling via a relative
+% `../mathematics/ordinal-numbers.adj` import, which only resolves if the
+% CONSUMING entry program (this file) sits at or above the package root.
+%
+% Run (from this directory, the package root, so the relative import
+% resolves):
+%     ../../packages/rust/target/debug/adj-lang-cli planet-ordinal-position.query.adj
+% ============================================================================
+
+import "astronomy/planet-ordinal-position.adj"
+
+? planet_ordinal_position(earth, $O)      % expect third  (direct: what position is Earth in, in words?)
+? planet_ordinal_position($P, eighth)     % expect neptune (reverse: which planet is eighth?)
+? planet_ordinal_position(pluto, $O)      % expect abstain -- Pluto is not one of the 8 major planets tabled

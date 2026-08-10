@@ -1,0 +1,68 @@
+% ============================================================================
+% planet-ordinal-position — each planet's position from the Sun as an ORDINAL
+% WORD ("third", not just "3"), DERIVED (not looked up) by bridging an
+% astronomy fact to a math fact (adj-facts-stdlib, ASTRONOMY, cross-directory
+% composition with MATHEMATICS). Grounds the common early-elementary framing
+% "Earth is the THIRD planet from the Sun."
+% ============================================================================
+% `astronomy/planets.adj` already tables each planet's order from the Sun as a
+% NUMBER ("earth" is position 3); `mathematics/ordinal-numbers.adj` already
+% tables each NUMBER's ordinal WORD (3 is "third"). Neither file states
+% outright "Earth is the third planet" — but composing the two ALREADY-SHIPPED
+% facts answers it directly. `planets.adj`'s own header already notes its
+% `order` column "composes into arithmetic"; this is the SAME kind of
+% composition, just into ordinal LANGUAGE instead of arithmetic. This is the
+% same "compose two independently-citable facts into a derived, dual-cited
+% conclusion" discipline `language/word-families.adj`,
+% `physics/heat-causes-phase-change.adj`, and
+% `earth-science/season-start-month-number.adj` already established — the
+% SECOND genuinely CROSS-DIRECTORY `rule` composition in this library
+% (astronomy + mathematics, not two files in the same subject directory).
+%
+%     import "planet-ordinal-position.adj"
+%     ? planet_ordinal_position(earth, $O)     % third
+%     ? planet_ordinal_position($P, eighth)    % neptune (reverse recall)
+%     ? planet_ordinal_position(pluto, $O)     % abstain -- not one of the 8 major planets
+%
+% This is a native `rule` (ADJ-TABLES RS-6): its body binds `$Planet`/`$Number`
+% through the already-shipped `planet_order` table, then re-binds
+% `$Number`/`$Ordinal` through the already-shipped `ordinal_number` table -- a
+% plain two-hop join (the same shape `season-start-month-number.adj` already
+% established), not a causal inference; it just names the standard convention
+% that a counting number has a corresponding ordinal word. A query's `steps`
+% trail shows THREE entries: the rule's own citation (the ordinal-word
+% convention), the `planet_order` fact's citation (NASA), and the
+% `ordinal_number` fact's citation, so a human can independently verify each
+% link. Honest abstention on any body `planets.adj` does not table -- Pluto
+% (reclassified a dwarf planet in 2006) is deliberately NOT a row in the
+% source table, so this rule abstains on it too, rather than inventing a
+% position.
+%
+% CROSS-DIRECTORY IMPORT: this file lives in `astronomy/` (its natural
+% subject home, alongside `planets.adj`) and imports its mathematics sibling
+% with a relative `../mathematics/ordinal-numbers.adj` path -- the SAME shape
+% `earth-science/season-start-month-number.adj` already established and
+% empirically verified (in a scratch dir, before writing this file, following
+% that precedent exactly): the CLI's import sandbox is rooted at the
+% TOP-LEVEL PROGRAM's own directory, not each importer's directory, so this
+% resolves cleanly provided the consuming entry program lives at or above the
+% package root. This library's OWN `.query.adj` companion is therefore placed
+% at the package root (not beside this file), mirroring
+% `mathematics/word-problems.query.adj` and
+% `season-start-month-number.query.adj`'s already-established pattern.
+%
+% Deliberately scoped to the STANDARD ordinal-word bridge only, over the
+% canonical eight major planets `planets.adj` already tables -- no new planet
+% or ordinal-number content is asserted here, only the join. (See
+% ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+import "planets.adj"
+import "../mathematics/ordinal-numbers.adj"
+
+rule { head: planet_ordinal_position($Planet, $Ordinal)
+       when: planet_order($Planet, $Number), ordinal_number($Number, $Ordinal)
+       source "1 one first, 2 two second, 3 three third, 4 four fourth, 5 five fifth"
+       locator "https://www.ef.edu/english-resources/english-grammar/numbers-english/"
+       trust consensus }
