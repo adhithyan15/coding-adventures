@@ -20,12 +20,6 @@ reviews_of: [TA-C04-po]
 [PAUSE 2s] The everyday Tamil goodbye — and it is, quite literally, a promise to
 return.
 
-## The letters in this word
-
-**போய்** (*pōy*, "having gone") is *pō* + the ending **-ய்** that means "having
-…d." **வருகிறேன்** (*varugiṟēṉ*, "I come") is *varu* (come) + present + **-ஏன்**
-("I").
-
 ## The phrase, taken apart
 
 **போய் வருகிறேன்** = **போய்** (*pōy*, "having gone") + **வருகிறேன்** (*varugiṟēṉ*,
@@ -36,6 +30,10 @@ return" farewell you meet, in its own words, across the Dravidian south (Kannada
 *hōgi baruttēne*, Telugu *veḷḷi vastānu*, Malayalam *pōyi varāṁ*) — and it echoes
 the Indo-Aryan tracks too (Bengali *āshi*, Marathi *yeto*, Hindi *phir milenge*).
 The reply is warm: **போய் வா** (*pōy vā*, "go and come [back]").
+
+*Varugiṟēṉ* itself is built in three parts: *varu* ("come") + a present-tense
+marker + *-ēṉ* ("I"). Chapter 5 makes that stem-tense-person pattern explicit;
+here it is enough to hear the three pieces.
 
 ## Grammar Lens: the "having …d" participle
 

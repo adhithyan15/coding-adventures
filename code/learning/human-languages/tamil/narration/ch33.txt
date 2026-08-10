@@ -1,8 +1,8 @@
 Tamil, chapter 33: Four Verbs of the Mind.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 நினை (ninai) — "to think," which is also "to remember".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -42,7 +42,7 @@ Wrap-up Recall.
 What two English verbs does ninai cover, and which camp is it in? (Think and remember; strong, from the held kk.) What is ninaivu, and which sister keeps the root? (Memory; Kannada, nene / nenapu.) Which two n's does ninai use, in order? (Dental ந, then alveolar ன.) And why does teriyum carry no -ēṉ? (Knowing happens to you — its person sits in the dative instead.)
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 புரி (puri) — "to become clear," and who it becomes clear to.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -93,7 +93,7 @@ Wrap-up Recall.
 What does puri mean underneath "understand," and what fills its person slot? (To become clear; -அது, "it".) So where does the understander go? (Into the dative — enakku.) Name the other verb that puts you there. (Teri — enakku teriyum.) And which verb from this chapter keeps the person on the ending? (Ninai — nāṉ ninaikkiṟēṉ.)
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 படி (paḍi) — "to read," and the letter that is two sounds.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -135,7 +135,48 @@ Wrap-up Recall.
 Why is ட written one way and heard two ways, and where is it made? (Tamil marks no voicing — position decides, as with க; and it is retroflex, made where ண is.) Is paḍi borrowed from Sanskrit paṭh, and what can Tamil never keep from a Sanskrit word? (Unsettled; the aspiration.) Say "I study Tamil." (Nāṉ tamiḻ paḍikkiṟēṉ.)
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
+தமிழ் (tamiḻ) — the letter the language is named for.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: த and ழ and Script you'll notice: build the word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+This book has said more than once that Tamil keeps three l-letters, and the strand has shown you two: ல in இல்லை, ள in நீங்கள். The third has been outstanding since chapter 18. Here it is, in the word it matters most in.
+
+Script you'll notice: த and ழ.
+[a table of 2 rows, read aloud]
+த, ta — the dental t, tongue on the teeth.
+ழ, ḻ — the third l-letter, curled far back.
+த is the dental partner of the retroflex ட you read in எப்படி: same kind of stop, different place in the mouth. Tamil keeps the pair apart in writing, so த and ட are never interchangeable.
+ழ is the one Tamil is known for. It is made further back than ள, and its sound sits somewhere between an r, an l and a zh — rare enough in the world's languages that Tamil is sometimes called the ḻ language. That is why the word for the language itself ends in it.
+Read both; do not draw them yet. Neither த nor ழ has an entry in this book's script data, so neither gets a stroke order, and the mouth positions above are this lesson's own — the data is sourced for ண's retroflex curl and nothing else here.
+
+Script you'll notice: build the word.
+[a table of 3 rows, read aloud]
+piece: த, ta, this lesson.
+piece: மி, mi — ம with the ி sign, ம from வணக்கம், ி from நன்றி.
+piece: ழ், bare ḻ — ழ under a puḷḷi, this lesson.
+த, மி, ழ் becomes தமிழ் (tamiḻ).
+Three pieces, and you can now read the name of the language you have been speaking since page one. That was the plan: the word first, the letters when they can be earned.
+
+Guided Practice.
+[pause 1 second]
+[your turn — read: த, ழ — then தமிழ் (tamiḻ)]
+[pause 8 seconds for the answer]
+[your turn — say: "tamiḻ" — and hold that last sound]
+[pause 8 seconds for the answer]
+[your turn — contrast: த and ட — dental and retroflex, teeth and roof]
+[pause 8 seconds for the answer]
+[your turn — contrast: ல, ள, ழ — all three l-letters, at last]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Read தமிழ் (tamiḻ). Which letter is த's retroflex partner? (ட, from எப்படி.) Which of the three l-letters ends the word, and what is the dot doing? (ழ; the puḷḷi removes its built-in a.) Next: the verb for writing — spelled with the ழ you just met.
+
+
+Lesson 5 of 5.
 எழுது (eḻudu) — "to write," and the sound Tamil is named for.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.

@@ -333,6 +333,118 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 - Add `generate:progress` and the byte-for-byte `check:progress` publication gate;
   a new registered language appears even when it has no lessons or book yet.
 
+### Added — the Tamil writing strand reaches chapters 4-5, and stops at chapter 32
+
+Chapters 4 and 5 were the last hand-authored Tamil chapters still teaching script
+inline: eight lessons carrying a `## The letters in this word` section, and four
+`sounds` boxes in the book. The glyphs they explained — **ே**, **ோ**, **த**, **ழ** —
+were taught nowhere in the strand, so the sections could not simply go.
+
+- **`TA-W16-read-tamizh`** (chapter 33) — **த** and **ழ**, spelling **தமிழ்**. **ழ** is
+  the third *l*-letter, outstanding since chapter 18, and the letter the language is
+  named for. It goes **first** of the three, and deliberately: `TA-C33-ezhutu` at
+  sequence 970 already takes **ழு** and **து** apart inline, so the strand has to reach
+  those letters before that lesson, not after it.
+- **`TA-W14-read-pesu`** (chapter 34) — the **ே** sign, spelling **பேசு**. It is the
+  long partner of the **ெ** from **பெயர்**, which makes it the third short/long pair
+  after **அ**/**ஆ** and **ி**/**ீ**.
+- **`TA-W15-read-po`** (chapter 35) — the **ோ** sign, spelling **போ**. This is the
+  first sign that is two marks at once, and it carries the strand's first citation from
+  outside `tamil.json`: the **Unicode Character Database** gives **ோ** (U+0BCB) a
+  canonical decomposition of **ே** (U+0BC7) + **ா** (U+0BBE), both already taught. That
+  is an encoding fact and the lesson says so — it settles what the sign is *composed
+  of*, not how either half is drawn; the placement comes from the page.
+
+Neither **த**, **ழ**, **ே** nor **ோ** has an entry in `tamil.json`, so none gets a
+stroke order and the mouth-position descriptions are marked as the lesson's own rather
+than sourced — except the **ோ** decomposition, which is cited to Unicode.
+
+### Removed — chapters 4-5's inline script sections and book boxes
+
+`TA-C04-po`, `-poy-varugiren`, `-naalai`, `-mindum-sandippom` and `TA-C05-pesu`,
+`-velai-sey`, `-vaazh`, `-naan-tamizh-pesugiren` drop their sections. That closes the
+five hand-authored chapters; **22** lessons in the generated chapters 33-38 still carry
+one, which is the next chunk of this work rather than part of it. Meanwhile
+`ch04-farewells.tex` and `ch05-first-verbs.tex` drop their four `sounds` boxes. All
+eight flip `reasons: ["script-block"] → ["no-visual-dependency"]` in the generated
+manifest with an empty `detachableSegments`.
+
+Four of the eight sections held content that was not letter teaching — five items
+between them — and all of it stays. The
+*varu* + present + *-ēṉ* build, the *-ppōm* ending and the *-kkalām* ending move into
+their lessons' prose in romanization; the retroflex *ṇḍ* of *mīṇḍum* becomes a spoken
+note, which is what its `sounds: [retroflex-nd]` id was always pointing at; and the
+**ḻ** note — which is about a *sound*, and about why Tamil is sometimes called "the *ḻ*
+language" — moves into `TA-C05-naan-tamizh-pesugiren`'s discussion of the name rather
+than being deleted with the block it happened to sit in.
+
+### Two constraints that moved the lessons
+
+Two constraints bit here, and both are recorded because both changed the plan.
+
+**Ordering.** `TA-C33-ezhutu` (sequence 970) already makes **ழ** and **த** its own
+subjects inline — "**ழு** is **ழ** with the *u* sign" — so a strand lesson introducing
+them afterwards would be claiming first contact it does not have. `TA-W16` has no
+dependency on the other two, so it goes first, at sequence 965, immediately ahead of
+that lesson. The cost is visible in R2 above and is worth naming rather than smoothing.
+
+**The chapter-32 budget.** The strand's 3:1 cadence put two of these lessons inside
+chapter 32. Chapter 32 was
+already **at** the ramp policy's ceiling — six verb lessons, two atoms each, exactly the
+`maxNewAtomsPerChapter: 12` budget — so interleaving there took it to **16** and broke
+`chapterViolations`, the number `ramp.test.ts` calls the one that most directly measures
+"do not throw many things at the reader at once."
+
+That is the opposite of the point, so the cadence yields and chapter 32 is skipped
+entirely. The three lessons sit at chapters 33, 34 and 35, which leaves one nine-lesson
+gap after `TA-W13` and then resumes 3:1. Reading distance between consecutive strand
+lessons stays at 4 or more everywhere, so the R1 rationale in `continuity.test.ts` still
+holds.
+
+Skipping chapter 32 was not only the gentler choice, it was the cheaper one. Measured
+both ways: interleaving there would have cost a ramp violation (24 → 25), a payoff
+representativeness failure (29 → 30, chapter 32 at 7/16), a fully-drivable chapter
+(324 → 323) and three lessons of chapter-32 drivable prefix. Skipping it costs none of
+those.
+
+### Measured, not inferred
+
+Set differences against the pre-change corpus, both loaded with the same build.
+
+- `totalLessons` 1684 → 1687, `pen` 62 → 65 — the three new lessons.
+- `voice` 1106 → 1114, `sight` 516 → 508, `drivableLessons` 1106 → 1114 — the eight
+  chapter 4-5 lessons, no others.
+- `drivablePrefixTotal` 918 → 924 and `unstartableChapters` 139 → 137 — chapters 4 and 5
+  gain 4 and 2 and both start by ear for the first time. Nothing is lost anywhere.
+- `fullyDrivableChapters` **324, unchanged**; `payoffsNotRepresentative` **29,
+  unchanged**; `chapterViolations` **24, unchanged**. All three because of the skip.
+- `atomsTaught` 2640 → 2646 — 2 + 2 + 2.
+- `atomsNeverRevisited` **470, unchanged** — the first time extending the strand has been
+  free. Two in (`READ-TAMIZH-02`, `TA-ZHA-01`; nothing follows `TA-W16`), two out
+  (`TTA-01` and `U-SIGN-01`, genuinely re-used by `TA-W16`'s ட/த contrast and `TA-W14`'s
+  சு).
+- `missedByWindow.R1` 874 → 880 — the six new atoms, nothing out.
+- `missedByWindow.R2` 1800 → 1804 — all six miss it, and that is an ordering
+  consequence rather than an authoring one. Putting `TA-W16` ahead of the other two, so
+  it lands before `TA-C33-ezhutu`, spaces consecutive strand lessons 4 apart: outside
+  R1's 1-3, but short of R2's 5-15, so nothing one introduces can be reinforced at R2
+  distance by the next. Two leave: `TTA-01` and `U-SIGN-01`.
+- `forwardReferences` 425 → **423**, and it improves for Tamil reasons rather than
+  Spanish ones. Two chapter 4-5 lessons were quoting a verb in *script* that chapter 32
+  teaches some twenty-seven chapters later: `TA-C05-vaazh` spelled **வாழ்** out of
+  **வா**, and `TA-C04-naalai` glossed **பார்க்கலாம்** from **பார்**. Neither word moved;
+  both are now named in romanization, which is what a speaking-first lesson should have
+  been doing with them anyway.
+
+### Still open
+
+Chapter 1 keeps five `sounds` boxes, and they are a different problem again: their
+content is pure pronunciation prose in romanization, with no Tamil letters in it at all.
+The box is what is wrong there — `preamble.tex` hard-codes its title as "The letters in
+this word", and `book.ts` routes every generated `Sounds you'll need` block into the same
+box, so the mis-titling is corpus-wide across all 22 tracks rather than Tamil-specific.
+That wants its own change.
+
 ### Added — the Tamil writing strand reaches chapter 3's words
 
 The chapter 2 pass left six lessons still teaching script inline (`TA-C02-nii-niingal`

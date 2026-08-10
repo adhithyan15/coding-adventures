@@ -1,8 +1,8 @@
 Tamil, chapter 34: Four Verbs Between People.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 எடு (eḍu) — "to take," beside the "put" you already own.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -43,7 +43,7 @@ Wrap-up Recall.
 What does eḍu mean, and which camp is it in? (To take; strong — eḍukkiṟēṉ holds the kk.) Which verb is one vowel away, and where did you meet it? (இடு, "to put" — inside சாப்பிடு.) Is that pair related? (No — the dictionaries keep them apart; it is a memory hook, not evidence.) Say "I take water," then "I take rice." (Nāṉ taṇṇīr eḍukkiṟēṉ; nāṉ arisi eḍukkiṟēṉ.)
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 கேள் (kēḷ) — one verb for asking and for hearing.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -89,7 +89,50 @@ Wrap-up Recall.
 What two English verbs is kēḷ, and what happens to its ள் before an ending? (Ask and hear; it hardens to ட்.) Which verb taught you to expect a second stem, and what is kēḷvi? (வா, built on varu-; a question.) Which register do these lessons teach, and how do you ask politely? (Standard spoken kēṭkiṟēṉ; kēḷungaḷ.)
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
+பேசு (pēsu) — the long partner of ெ.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: the ே sign and Script you'll notice: build the word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Twice now a Tamil vowel has come in a short and a long version: அ and ஆ, ி and ீ. For அ/ஆ the script data even says the long one is the short one plus a tail; for ி/ீ it says nothing, and the pairing is the lesson's. Here is a third pair.
+
+Script you'll notice: the ே sign.
+ே is the sign for long ē, and it is the long partner of the ெ you met in பெயர். Like ெ, it is written to the left of its consonant and spoken after it.
+ப + ே becomes பே, said pē.
+[a table of 3 rows, read aloud]
+sign: ெ. sound: short e. where it is written: to the left.
+sign: ே. sound: long ē. where it is written: to the left.
+sign: ை. sound: ai. where it is written: to the left.
+Three left-standing signs now. The evidence is the same as it was for ெ: the script data describes ை and has no entry for ெ or ே at all, so both the shared position and the short/long pairing are stated from the pattern these signs share, not from a source for either one.
+
+Script you'll notice: build the word.
+[a table of 2 rows, read aloud]
+piece: பே, pē — ப with the ே sign on its left, ப from பெயர்.
+piece: சு, su — ச with the ு sign, ச from சரி, ு from இருக்கிறீர்கள்.
+பே, சு becomes பேசு (pēsu).
+Two pieces, one new sign, and its two signs pull in opposite directions on the page: ே stands before its letter, ு joins after it. பேசு (pēsu) is "speak" — the verb every lesson so far has been in service of.
+
+Guided Practice.
+[pause 1 second]
+[your turn — read: பே — then பேசு (pēsu)]
+[pause 8 seconds for the answer]
+[your turn — say: "pēsu" — "speak"]
+[pause 8 seconds for the answer]
+[your turn — contrast: பெ and பே — the short sign and the long one, both on the left]
+[pause 8 seconds for the answer]
+[your turn — contrast: பே and சு — a sign before, a sign after, inside one word]
+[pause 8 seconds for the answer]
+[your turn — read: தமிழ் பேசு (pēsu) — "speak Tamil," both words off the page]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Read பேசு (pēsu). Which side of its consonant is ே written on? (The left — like ெ and ை.) Which sign is its short partner? (ெ, as in பெயர்.) What is the ச doing here — is it s or ch? (Either; one letter covers both, and position picks.) Next: the verb for helping.
+
+
+Lesson 4 of 5.
 உதவு (udavu) — "to help," and a word Tamil did not borrow.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -128,7 +171,7 @@ Wrap-up Recall.
 Which camp is udavu in, and what is udavi? (Weak, by the single softened bead; help, the noun.) Say "I help you," then "please help." (Nāṉ ungaḷukku udavugiṟēṉ; udavungaḷ.) Which word do the neighbours borrow from Sanskrit where Tamil keeps its own? (Help — sahāya against udavi.) And which word did all four sisters borrow together? (Please — daya plus a light verb.)
 
 
-Lesson 4 of 4.
+Lesson 5 of 5.
 பிடி (piḍi) — "to catch," and therefore "to like".
 
 Warm-up.

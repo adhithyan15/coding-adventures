@@ -3,8 +3,8 @@
   "language": "tamil",
   "chapter": 4,
   "title": "Farewells",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ac8d1a3a89c18c13",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:a5a6cf8447b604ca",
   "lessons": [
     {
       "id": "TA-C04-po",
@@ -14,22 +14,13 @@
       "romanization": "",
       "gloss": "to go (and வா, to come)",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a137cdf96f4af1dd",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:4032f776949c58bb",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -50,17 +41,6 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ப (pa) + ோ (the long-ō sign) becomes போ (pō). Its partner: வா (vā, \"come\") — வ (va) + long ā."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
@@ -71,7 +51,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -102,7 +82,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -128,22 +108,13 @@
       "romanization": "",
       "gloss": "goodbye (lit. \"I'll go and come back\")",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b827e77978feac54",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:4db27cf81bd3a648",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -164,28 +135,21 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "போய் (pōy, \"having gone\") is pō + the ending -ய் that means \"having …d.\" வருகிறேன் (varugiṟēṉ, \"I come\") is varu (come) + present + -ஏன் (\"I\")."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "etymology",
           "title": "The phrase, taken apart",
           "segments": [
             {
               "kind": "speech",
               "text": "போய் வருகிறேன் = போய் (pōy, \"having gone\") + வருகிறேன் (varugiṟēṉ, \"I come\") — literally \"having gone, I come,\" i.e. \"I'll go and come back.\" A Tamil speaker never signs off with a bare \"I'm leaving\" — that sounds final, even ill-omened. Instead they promise return. It is the exact \"promise of return\" farewell you meet, in its own words, across the Dravidian south (Kannada hōgi baruttēne, Telugu veḷḷi vastānu, Malayalam pōyi varāṁ) — and it echoes the Indo-Aryan tracks too (Bengali āshi, Marathi yeto, Hindi phir milenge). The reply is warm: போய் வா (pōy vā, \"go and come [back]\")."
+            },
+            {
+              "kind": "speech",
+              "text": "Varugiṟēṉ itself is built in three parts: varu (\"come\") + a present-tense marker + -ēṉ (\"I\"). Chapter 5 makes that stem-tense-person pattern explicit; here it is enough to hear the three pieces."
             }
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "grammar",
           "title": "Grammar Lens: the \"having …d\" participle",
           "segments": [
@@ -196,7 +160,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -236,7 +200,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -262,22 +226,13 @@
       "romanization": "",
       "gloss": "see you tomorrow",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93385c7a8e7ee524",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:34d2538c5a595200",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -298,28 +253,17 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "நாளை (nāḷai): நா (nā) + ளை (ḷai, with the retroflex ள ḷ, tongue curled back). பார்க்கலாம் (pārkkalām) = pār (\"see\") + -kkalām (\"let's / we may\")."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "நாளை (nāḷai, \"tomorrow\") is native Dravidian, from நாள் (nāḷ, \"day\") — the same nāḷ in iṉṟu / nāḷ counting and in nal-vāḻttukkaḷ (\"good [day]-wishes\"). பார்க்கலாம் (pārkkalām) is \"let's see / we may see,\" from பார் (pār, \"to see, to look\") — so the whole phrase is \"tomorrow, let's see [each other],\" the Tamil \"see you tomorrow.\" Note the retroflex ள் (ḷ) — a sound English lacks entirely, made with the tongue-tip curled up and back."
+              "text": "நாளை (nāḷai, \"tomorrow\") is native Dravidian, from நாள் (nāḷ, \"day\") — the same nāḷ in iṉṟu / nāḷ counting and in nal-vāḻttukkaḷ (\"good [day]-wishes\"). பார்க்கலாம் (pārkkalām) is \"let's see / we may see\" — pār (\"to see, to look\") plus the ending -kkalām, \"let's / we may\" — so the whole phrase is \"tomorrow, let's see [each other],\" the Tamil \"see you tomorrow.\" Note the retroflex ள் (ḷ) — a sound English lacks entirely, made with the tongue-tip curled up and back."
             }
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -359,7 +303,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -385,22 +329,13 @@
       "romanization": "",
       "gloss": "we'll meet again",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8dd1d2b81b09c384",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:5d3e6bac3fb15ffa",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -421,17 +356,6 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "மீண்டும் (mīṇḍum): note the retroflex cluster ண்ட (ṇḍ). சந்திப்போம் (sandippōm): சந்தி (sandi) + -ப்போம் (-ppōm, \"we will\")."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
@@ -441,11 +365,11 @@
             },
             {
               "kind": "speech",
-              "text": "மீண்டும் (mīṇḍum, \"again\") is native Dravidian, from mīḷ (\"to return\")."
+              "text": "மீண்டும் (mīṇḍum, \"again\") is native Dravidian, from mīḷ (\"to return\"). Say it mīṇ-ḍum: the ṇḍ in the middle is a retroflex pair, both halves made with the tongue curled back, and it is one gesture rather than two."
             },
             {
               "kind": "speech",
-              "text": "சந்தி (sandi, \"to meet, a junction\") is a Sanskrit loan — from sandhi (\"a joining, union\"), the very word Sanskrit grammar uses for how sounds join at a word-boundary."
+              "text": "சந்தி (sandi, \"to meet, a junction\") is a Sanskrit loan — from sandhi (\"a joining, union\"), the very word Sanskrit grammar uses for how sounds join at a word-boundary. The ending on it is -ppōm, \"we will,\" so sandippōm is \"we will meet.\""
             },
             {
               "kind": "speech",
@@ -454,7 +378,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -485,7 +409,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

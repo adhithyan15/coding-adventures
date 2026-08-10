@@ -46,7 +46,10 @@
         "TA-W10-read-naan",
         "TA-W11-read-niingal",
         "TA-W12-read-eppadi",
-        "TA-W13-read-irukkirirgal"
+        "TA-W13-read-irukkirirgal",
+        "TA-W16-read-tamizh",
+        "TA-W14-read-pesu",
+        "TA-W15-read-po"
       ],
       "before": [],
       "inline": [
@@ -892,7 +895,10 @@
         "TA-W10-read-naan",
         "TA-W11-read-niingal",
         "TA-W12-read-eppadi",
-        "TA-W13-read-irukkirirgal"
+        "TA-W13-read-irukkirirgal",
+        "TA-W16-read-tamizh",
+        "TA-W14-read-pesu",
+        "TA-W15-read-po"
       ]
     },
     {

@@ -124,7 +124,7 @@ enter cross-language review only after focused retrieval.
 | [German](./german/README.md) | Germanic / Latin | 106 | 91 | 31 chapters; through Ch. 31; 15 generated |
 | [Arabic](./arabic/README.md) | Semitic / Arabic | 100 | 98 | 36 chapters; through Ch. 36; 34 generated |
 | [Hindi](./hindi/README.md) | Indo-Aryan / Devanagari | 109 | 103 | 39 chapters; through Ch. 39; 34 generated |
-| [Tamil](./tamil/README.md) | Dravidian / Tamil | 122 | 118 | 38 chapters; through Ch. 38; 33 generated |
+| [Tamil](./tamil/README.md) | Dravidian / Tamil | 125 | 121 | 38 chapters; through Ch. 38; 33 generated |
 | [Kannada](./kannada/README.md) | Dravidian / Kannada | 88 | 84 | 40 chapters; through Ch. 40; 35 generated |
 | [Telugu](./telugu/README.md) | Dravidian / Telugu | 74 | 70 | 34 chapters; through Ch. 34; 29 generated |
 | [Malayalam](./malayalam/README.md) | Dravidian / Malayalam | 78 | 74 | 34 chapters; through Ch. 34; 29 generated |

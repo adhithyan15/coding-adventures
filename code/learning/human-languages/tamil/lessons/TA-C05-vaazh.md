@@ -20,11 +20,6 @@ reviews_of: [TA-C05-pesu, TA-C05-naan-tamizh-pesugiren]
 [PAUSE 2s] A second verb — and one of the most beloved words in the language, the
 one Tamils use to bless.
 
-## The letters in this word
-
-**வா** (*vā*) + **ழ்** (*ḻ*, the retroflex you just met in *tamiḻ*) → **வாழ்**
-(*vāḻ*).
-
 ## The word, taken apart
 
 **வாழ்** (*vāḻ*, "to live, to flourish, to thrive") is native Dravidian, and

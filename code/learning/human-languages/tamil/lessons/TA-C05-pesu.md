@@ -20,10 +20,6 @@ reviews_of: []
 [PAUSE 2s] So far, "to be." Here is a verb that *does* something — and it shows
 how Tamil builds "I do X."
 
-## The letters in this word
-
-**ப** (*pa*) + **ே** (the long-*ē* sign) + **சு** (*su*) → **பேசு** (*pēsu*).
-
 ## The word, taken apart
 
 **பேசு** (*pēsu*, "to speak") is native Dravidian. The bare stem *pēsu* is also

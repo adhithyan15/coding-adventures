@@ -20,11 +20,6 @@ reviews_of: []
 [PAUSE 2s] Two of the shortest, oldest verbs in Tamil — and together they make
 the Tamil goodbye.
 
-## The letters in this word
-
-**ப** (*pa*) + **ோ** (the long-*ō* sign) → **போ** (*pō*). Its partner: **வா**
-(*vā*, "come") — **வ** (*va*) + long *ā*.
-
 ## The word, taken apart
 
 **போ** (*pō*, "to go") and **வா** (*vā*, "to come") are native Dravidian verbs of
