@@ -1068,4 +1068,5 @@ members = [
   "vault-pm-local-host",
   "vault-pm-config",
   "vault-pm-cli-host",
+  "vault-pm-cli",
 ]

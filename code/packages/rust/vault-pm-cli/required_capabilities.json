@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/vault-pm-cli",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "platform-resolved owner-private vault-pm roots",
+      "justification": "Loads exact configuration, owner state, bootstrap generations, and encrypted immutable repository objects through audited adapters."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "platform-resolved owner-private vault-pm roots",
+      "justification": "Persists atomic configuration, crash-resumable owner journals, signed bootstraps, and encrypted immutable repository objects during initialization."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "platform-resolved owner-private vault-pm roots",
+      "justification": "Creates missing private roots and first-generation durable records through the local host and storage adapters."
+    },
+    {
+      "category": "time",
+      "action": "read",
+      "target": "system wall clock",
+      "justification": "Supplies the advisory generation-zero certificate and commit timestamp."
+    }
+  ],
+  "justification": "Product composition package; terminal and entropy capabilities remain delegated to rust/vault-pm-cli-host."
+}

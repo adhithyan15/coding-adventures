@@ -1,0 +1,18 @@
+[package]
+name = "vault-pm-cli-program"
+version = "0.1.0"
+edition = "2021"
+description = "Local-first vault-pm command-line executable"
+license = "MIT"
+
+[workspace]
+
+[dependencies]
+coding_adventures_vault_pm_cli = { path = "../../../packages/rust/vault-pm-cli" }
+
+[dev-dependencies]
+libc = "0.2"
+
+[[bin]]
+name = "vault-pm"
+path = "src/main.rs"
