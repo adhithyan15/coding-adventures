@@ -156,6 +156,45 @@ fn rhymes_with_isolates_a_third_family_and_abstains_on_the_excluded_blend_word()
 }
 
 #[test]
+fn rhymes_with_isolates_a_fourth_family_and_abstains_on_excluded_blend_words() {
+    let dir = scratch("fourth_family");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"word-families.adj\"\n\
+         ? rhymes_with(bug, $W)\n\
+         ? word_family(snug, $F)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // Every other member of the -ug family rhymes with "bug" (plus itself).
+    for w in ["bug", "tug", "rug", "hug", "mug", "jug", "dug"] {
+        assert!(
+            out.contains(&format!("\"W\":\"{w}\"")),
+            "bug rhymes with {w}: {out}"
+        );
+    }
+    // No cross-contamination: no -an, -at, or -ig family member should appear as a rhyme of "bug".
+    for w in [
+        "pan", "fan", "ran", "man", "tan", "van", "cat", "bat", "fat", "sat", "rat", "pat", "mat",
+        "hat", "pig", "big", "fig", "dig", "wig",
+    ] {
+        assert!(
+            !out.contains(&format!("\"W\":\"{w}\"")),
+            "-an/-at/-ig member {w} must NOT rhyme with -ug member bug: {out}"
+        );
+    }
+    // "snug" is deliberately excluded (a four-letter consonant-blend word, out of CVC scope) --
+    // honest abstention, never invented.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "snug has no shipped row -- honest abstention: {out}"
+    );
+}
+
+#[test]
 fn word_family_abstains_honestly_on_an_unshipped_word() {
     let dir = scratch("abstain");
     place_lib(&dir);
