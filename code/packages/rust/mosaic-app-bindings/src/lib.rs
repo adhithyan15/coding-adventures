@@ -267,6 +267,8 @@ mod tests {
         assert!(source.contains("finally {\n      _bufferFree(buffer);"));
         assert!(source.contains("void dispose()"));
         assert!(source.contains("const MosaicHost()"));
+        assert!(source.contains("static MosaicHost loadRequired()"));
+        assert!(source.contains("native-complete requires the Mosaic Rust application runtime"));
     }
 
     #[test]

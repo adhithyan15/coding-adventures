@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased] - native-complete Flutter runtime shell
+
+- Flutter project shells emitted under `BuildProfile::NativeComplete` now
+  require Mosaic's standard Dart FFI runtime and the first props envelope before
+  mounting the generated widget.
+- Strict Flutter shells omit nullable-host, event-print, and generated sample
+  paths while permissive output remains backward-compatible.
+- Flutter runtime CI now analyzes a zero-degradation strict project in addition
+  to round-tripping the standard binding.
+
 ## [Unreleased] - native-complete Compose runtime shell
 
 - Compose project shells emitted under `BuildProfile::NativeComplete` now

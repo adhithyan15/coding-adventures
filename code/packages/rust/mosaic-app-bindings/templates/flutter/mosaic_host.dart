@@ -70,6 +70,16 @@ class MosaicHost {
     }
   }
 
+  static MosaicHost loadRequired() {
+    final host = load();
+    if (host == null) {
+      throw StateError(
+        'native-complete requires the Mosaic Rust application runtime',
+      );
+    }
+    return host;
+  }
+
   FutureOr<Map<String, Object?>?> props() => _runtime?.latestUpdate;
 
   FutureOr<Map<String, Object?>?> handleEvent(Map<String, Object?> event) =>

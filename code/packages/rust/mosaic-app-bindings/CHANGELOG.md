@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `MosaicHost.loadRequired()` for strict Flutter shells that must fail
+  explicitly when the Rust application runtime cannot be loaded.
 - Execute the generated Compose/JNA host against the shared Rust conformance
   library in Linux CI, covering startup, dispatch, snapshot/restore,
   notification, buffer ownership, and teardown on the JVM.
