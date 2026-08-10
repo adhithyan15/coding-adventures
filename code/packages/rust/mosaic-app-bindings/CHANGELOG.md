@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Execute the generated Flutter/Dart FFI host against the shared Rust
+  conformance library in Linux CI, covering startup, dispatch,
+  snapshot/restore, notification, buffer ownership, and teardown.
 - Execute the generated Qt/QML host against the shared Rust conformance library
   in headless Linux CI, covering startup, dispatch, snapshot/restore, buffer
   ownership, and teardown through the real ABI.

@@ -34,6 +34,9 @@ semantic dispatch, revision application, buffer ownership, and teardown.
 For Flutter, set `MOSAIC_APP_LIBRARY` to the application library path. Without
 an explicit path the host checks symbols linked into the process, then the
 platform's conventional `mosaic_app` dynamic-library names.
+Linux CI runs the exact binding from a complete generated TaskApp project with
+the shared `mosaic-app-conformance` library, verifying startup, semantic
+dispatch, snapshot/restore, notification, buffer ownership, and teardown.
 
 For Qt/QML, set `MOSAIC_APP_LIBRARY` to the application library path or package
 it under the platform's conventional `mosaic_app` name. The generated QObject
