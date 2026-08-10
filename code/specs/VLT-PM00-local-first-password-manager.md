@@ -1328,7 +1328,14 @@ changelog, focused build, and downstream validation.
        non-printable wipe-on-drop value, with explicit clipboard, confirmed
        interactive reveal, and warned unsafe non-interactive policy inputs;
    7c-3. host clipboard adapter with ownership-aware timed clear;
-   7d. authenticated portable export and restore/import preparation; and
+   7d-1. completed authenticated canonical portable export, preserving every
+       current live, tombstone, and conflict candidate under a separately
+       collected Argon2id passphrase with fresh salt/nonce, header-bound AEAD,
+       a signed-bootstrap-bound snapshot hash, identity-free diagnostics,
+       wipe-on-drop plaintext, and host-neutral destination handling;
+   7d-2. authenticated portable artifact opening, snapshot verification, and
+       import into a new vault with new item, revision, object, and encryption
+       identities, followed by an independent restore/open comparison; and
    7e-1. completed safe five-state status workflow, strictly decoding bounded
        owner state while locked and exposing only authenticated aggregate item,
        candidate, and conflict counts while unlocked;

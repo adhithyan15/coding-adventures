@@ -2,6 +2,30 @@
 
 All notable changes to this package are documented here.
 
+## [0.26.0] - 2026-08-10
+
+### Added
+
+- Add canonical authenticated passphrase-encrypted portable export from an
+  unlocked session, retaining every current live, tombstone, and conflict
+  candidate in deterministic source item/revision order.
+- Bind the exact active signed bootstrap, candidate count, and
+  domain-separated snapshot hash inside the encrypted 512 MiB-bounded
+  plaintext; authenticate all artifact header parameters as AEAD associated
+  data.
+
+### Security
+
+- Require a separately collected non-empty bounded passphrase, caller-validated
+  Argon2id policy, and fresh host-supplied salt and XChaCha20 nonce rather than
+  implicitly reusing the live VRK or unlock credential.
+- Exclude owner-private state, private seeds, provider credentials, local pins,
+  journals, and search data; redact public diagnostics and wipe temporary
+  passphrase, key, plaintext, revision, and hash-preimage buffers on drop.
+- Return only encrypted bytes and leave path choice, overwrite policy, and
+  persistence authority to the host. Authenticated import and cross-vault
+  re-identification remain a separate follow-up workflow.
+
 ## [0.25.0] - 2026-08-10
 
 ### Added

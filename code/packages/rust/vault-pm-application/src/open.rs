@@ -188,6 +188,30 @@ impl UnlockedVaultV1 {
         crate::audit::audit_verify(&self.active, &self._keys, self._repository.as_ref())
     }
 
+    /// Build one canonical authenticated encrypted snapshot for host persistence.
+    ///
+    /// The passphrase must be collected separately from the live vault
+    /// passphrase. The host supplies fresh salt/nonce randomness and chooses the
+    /// destination only after this method returns. Every current live,
+    /// tombstone, and conflicted candidate is included; local private state,
+    /// provider credentials, pins, and search projections are excluded.
+    pub fn export_portable_with_passphrase(
+        &self,
+        exact_bootstrap: &[u8],
+        passphrase: Zeroizing<Vec<u8>>,
+        policy: crate::PortableExportPolicyV1,
+        randomness: crate::PortableExportRandomnessV1,
+    ) -> Result<crate::PortableExportArtifactV1, ApplicationError> {
+        crate::export::export_portable_with_passphrase(
+            &self.current_catalog.items,
+            &self.active,
+            exact_bootstrap,
+            passphrase,
+            policy,
+            randomness,
+        )
+    }
+
     /// Return the ordinary redacted view for one unambiguous live item.
     ///
     /// A missing item and a current tombstone both return `None`. Multiple
@@ -1152,6 +1176,14 @@ mod tests {
         encode_cbor(&CborValue::Map(fields))
     }
 
+    fn take_cbor_field(fields: &mut Vec<(CborValue, CborValue)>, key: u64) -> CborValue {
+        let index = fields
+            .iter()
+            .position(|(candidate, _)| candidate == &CborValue::Unsigned(key))
+            .unwrap();
+        fields.remove(index).1
+    }
+
     fn add_item_randomness(seed: u8) -> AddItemRandomnessV1 {
         let mut bytes = [0; ADD_ITEM_RANDOM_BYTES];
         for (index, byte) in bytes.iter_mut().enumerate() {
@@ -1678,6 +1710,280 @@ mod tests {
         assert_eq!(report.catalog_count(), 3);
         assert_eq!(report.revision_count(), 2);
         assert_eq!(report.item_count(), 1);
+    }
+
+    #[test]
+    fn portable_export_encrypts_every_current_candidate_under_a_separate_passphrase() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let randomness = add_item_randomness(0xaa);
+        let item_id = randomness.item_id();
+        session
+            .add_item(
+                new_login_document(item_id, "Portable portal", "portable-export-secret"),
+                800,
+                randomness,
+                &local,
+            )
+            .unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let exact_bootstrap = bootstrap.0.lock().unwrap().clone().unwrap();
+        let policy = crate::PortableExportPolicyV1::new(8 * 1024, 1, 1).unwrap();
+        let export_randomness = [0x5b; crate::PORTABLE_EXPORT_RANDOM_BYTES];
+        let artifact = session
+            .export_portable_with_passphrase(
+                &exact_bootstrap,
+                Zeroizing::new(b"separate export passphrase".to_vec()),
+                policy,
+                crate::PortableExportRandomnessV1::new(export_randomness),
+            )
+            .unwrap();
+        let repeated = session
+            .export_portable_with_passphrase(
+                &exact_bootstrap,
+                Zeroizing::new(b"separate export passphrase".to_vec()),
+                policy,
+                crate::PortableExportRandomnessV1::new(export_randomness),
+            )
+            .unwrap();
+        assert_eq!(artifact.as_bytes(), repeated.as_bytes());
+        assert_eq!(
+            coding_adventures_sha256::sha256(artifact.as_bytes()),
+            [
+                0xb8, 0xb7, 0x05, 0x87, 0xea, 0x11, 0x3b, 0x11, 0xea, 0x23, 0xa7, 0x7a, 0x9b, 0x36,
+                0xe6, 0xc4, 0x0e, 0x51, 0x04, 0x86, 0x99, 0x60, 0xb9, 0x38, 0x98, 0x93, 0xaf, 0x5e,
+                0x96, 0x53, 0xa1, 0x3a,
+            ]
+        );
+        for plaintext in [b"Portable portal".as_slice(), b"portable-export-secret"] {
+            assert!(!artifact
+                .as_bytes()
+                .windows(plaintext.len())
+                .any(|window| window == plaintext));
+        }
+        assert!(crate::export::decrypt_portable_for_test(
+            artifact.as_bytes(),
+            Zeroizing::new(b"wrong export passphrase".to_vec()),
+        )
+        .is_none());
+        let mut tampered = artifact.as_bytes().to_vec();
+        let last = tampered.last_mut().unwrap();
+        *last ^= 1;
+        assert!(crate::export::decrypt_portable_for_test(
+            &tampered,
+            Zeroizing::new(b"separate export passphrase".to_vec()),
+        )
+        .is_none());
+
+        let plaintext = crate::export::decrypt_portable_for_test(
+            artifact.as_bytes(),
+            Zeroizing::new(b"separate export passphrase".to_vec()),
+        )
+        .unwrap();
+        let CborValue::Map(mut snapshot) = decode_cbor(&plaintext).unwrap() else {
+            panic!("portable snapshot must be a canonical map")
+        };
+        assert_eq!(take_cbor_field(&mut snapshot, 1), CborValue::Unsigned(1));
+        let CborValue::Bytes(exported_bootstrap) = take_cbor_field(&mut snapshot, 2) else {
+            panic!()
+        };
+        assert_eq!(exported_bootstrap, exact_bootstrap);
+        let mut entries = take_cbor_field(&mut snapshot, 3);
+        let encoded_entries = encode_cbor(&entries);
+        let CborValue::Unsigned(candidate_count) = take_cbor_field(&mut snapshot, 4) else {
+            panic!()
+        };
+        assert_eq!(candidate_count, 1);
+        let CborValue::Bytes(exported_hash) = take_cbor_field(&mut snapshot, 5) else {
+            panic!()
+        };
+        assert_eq!(
+            exported_hash,
+            crate::export::snapshot_hash(&exact_bootstrap, &encoded_entries)
+                .unwrap()
+                .to_vec()
+        );
+        assert!(snapshot.is_empty());
+
+        let CborValue::Array(exported_candidates) = &mut entries else {
+            panic!()
+        };
+        assert_eq!(exported_candidates.len(), 1);
+        let CborValue::Map(mut entry) = exported_candidates.remove(0) else {
+            panic!()
+        };
+        let CborValue::Bytes(exported_item_id) = take_cbor_field(&mut entry, 1) else {
+            panic!()
+        };
+        assert_eq!(exported_item_id, item_id.as_bytes());
+        let CborValue::Bytes(exported_revision_id) = take_cbor_field(&mut entry, 2) else {
+            panic!()
+        };
+        let revision_id = RevisionId::new(exported_revision_id.try_into().unwrap());
+        let CborValue::Bytes(mut encoded_revision) = take_cbor_field(&mut entry, 3) else {
+            panic!()
+        };
+        assert!(entry.is_empty());
+        let candidate = crate::decode_item_revision(revision_id, &encoded_revision).unwrap();
+        let ItemState::Live(document) = candidate.state() else {
+            panic!()
+        };
+        let AnyRecord::Login(login) = document.payload() else {
+            panic!()
+        };
+        assert_eq!(login.title, "Portable portal");
+        assert_eq!(login.password, "portable-export-secret");
+        encoded_revision.zeroize();
+        crate::export::zeroize_cbor(&mut entries);
+        assert_eq!(
+            format!("{artifact:?}"),
+            "PortableExportArtifactV1(<encrypted>)"
+        );
+    }
+
+    #[test]
+    fn portable_export_rejects_credential_and_bootstrap_misuse() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let exact_bootstrap = bootstrap.0.lock().unwrap().clone().unwrap();
+        let policy = crate::PortableExportPolicyV1::new(8 * 1024, 1, 1).unwrap();
+        let randomness =
+            || crate::PortableExportRandomnessV1::new([0x6c; crate::PORTABLE_EXPORT_RANDOM_BYTES]);
+        assert_eq!(
+            session
+                .export_portable_with_passphrase(
+                    &exact_bootstrap,
+                    Zeroizing::new(Vec::new()),
+                    policy,
+                    randomness(),
+                )
+                .err(),
+            Some(ApplicationError::InvalidInput)
+        );
+        assert_eq!(
+            session
+                .export_portable_with_passphrase(
+                    &exact_bootstrap,
+                    Zeroizing::new(vec![0x61; crate::MAX_PORTABLE_EXPORT_PASSPHRASE_BYTES + 1]),
+                    policy,
+                    randomness(),
+                )
+                .err(),
+            Some(ApplicationError::InvalidInput)
+        );
+        assert_eq!(
+            session
+                .export_portable_with_passphrase(
+                    &[0xff],
+                    Zeroizing::new(b"separate export passphrase".to_vec()),
+                    policy,
+                    randomness(),
+                )
+                .err(),
+            Some(ApplicationError::IntegrityFailure)
+        );
+    }
+
+    #[test]
+    fn portable_export_preserves_every_current_conflict_tombstone() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x7d; 16]);
+        let (publication, expected_revision_ids) =
+            pending_tombstone_publication(&active, item_id, item_id, 2, None);
+        *local.0.lock().unwrap() = Some(
+            LocalVaultStateV1::pending_publication(active, publication)
+                .unwrap()
+                .encode()
+                .unwrap(),
+        );
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(session.conflicted_item_count(), 1);
+        let exact_bootstrap = bootstrap.0.lock().unwrap().clone().unwrap();
+        let artifact = session
+            .export_portable_with_passphrase(
+                &exact_bootstrap,
+                Zeroizing::new(b"conflict export passphrase".to_vec()),
+                crate::PortableExportPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+                crate::PortableExportRandomnessV1::new([0x7e; crate::PORTABLE_EXPORT_RANDOM_BYTES]),
+            )
+            .unwrap();
+        let plaintext = crate::export::decrypt_portable_for_test(
+            artifact.as_bytes(),
+            Zeroizing::new(b"conflict export passphrase".to_vec()),
+        )
+        .unwrap();
+        let CborValue::Map(mut snapshot) = decode_cbor(&plaintext).unwrap() else {
+            panic!()
+        };
+        let mut entries = take_cbor_field(&mut snapshot, 3);
+        assert_eq!(take_cbor_field(&mut snapshot, 4), CborValue::Unsigned(2));
+        let CborValue::Array(exported_candidates) = &mut entries else {
+            panic!()
+        };
+        let mut actual_revision_ids = Vec::new();
+        for value in exported_candidates.drain(..) {
+            let CborValue::Map(mut entry) = value else {
+                panic!()
+            };
+            assert_eq!(
+                take_cbor_field(&mut entry, 1),
+                CborValue::Bytes(item_id.as_bytes().to_vec())
+            );
+            let CborValue::Bytes(revision_id) = take_cbor_field(&mut entry, 2) else {
+                panic!()
+            };
+            let revision_id = RevisionId::new(revision_id.try_into().unwrap());
+            actual_revision_ids.push(revision_id);
+            let CborValue::Bytes(mut encoded_revision) = take_cbor_field(&mut entry, 3) else {
+                panic!()
+            };
+            let candidate = crate::decode_item_revision(revision_id, &encoded_revision).unwrap();
+            assert!(matches!(candidate.state(), ItemState::Tombstone(_)));
+            encoded_revision.zeroize();
+        }
+        assert_eq!(actual_revision_ids, expected_revision_ids);
+        crate::export::zeroize_cbor(&mut entries);
     }
 
     #[test]
