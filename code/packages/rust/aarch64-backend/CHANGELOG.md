@@ -1,5 +1,32 @@
 # Changelog — `aarch64-backend`
 
+## 0.38.0 - 2026-08-10 - `array_set` also calls the generational write barrier (AOT00-T8 follow-up)
+
+- **`array_set` now also emits `BL __twig_gc_write_barrier`** after its store,
+  mirroring 0.37.0's `field_store` fix — flagged as an INFO-level follow-up by
+  that PR's own security review (an array element write was the one remaining
+  GC-tracked store site this backend didn't barrier-cover).
+- **`parent` must be the array's exact base handle, not the computed element
+  address** — a real distinction from `field_store`'s otherwise-identical fix.
+  `array_set`'s addressing overwrites X0 with `base + idx*elem_size` (an
+  *interior* pointer) to perform the store; `write_barrier`'s own contract
+  trusts its `parent` argument unconditionally (reads `parent - HEADER_SIZE`
+  with no validation it's actually a base address), so passing the interior
+  element address would read the wrong byte as the generation flag, silently
+  corrupting the remembered set. Fixed by reloading the array's base handle
+  and the stored value fresh from their own stack slots (unaffected by X0/X2
+  having been repurposed for the address computation) immediately before the
+  barrier call.
+- Still inert today: `gc_set_auto_minor` remains unreachable from real Twig
+  source (unchanged from 0.37.0's own finding).
+- 2 new unit tests (relocation-symbol assertions on `compile_with_relocs`'s
+  output, mirroring `field_store`'s own tests), both confirmed load-bearing by
+  reverting the emission and observing the predicted failure.
+- Verification: `cargo build`/`test` clean (80 lib tests, up from 78); `cargo
+  clippy --all-targets -- -D warnings` clean. Same structural limitation as
+  0.37.0 applies — no real compiled-and-executed differential (see
+  `lessons.md`); unit-level relocation tests are the primary evidence.
+
 ## 0.37.0 - 2026-08-10 - generational write barrier emission (AOT00-T8 follow-up)
 
 - **`field_store` now also emits `BL __twig_gc_write_barrier`** right after the
