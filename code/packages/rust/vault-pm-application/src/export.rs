@@ -8,7 +8,7 @@ use coding_adventures_chacha20_poly1305::{
 };
 use coding_adventures_sha256::sha256;
 use coding_adventures_vault_pm_domain::{ItemCandidate, ItemId, RevisionId};
-use coding_adventures_vault_pm_format::{Argon2idParametersV1, CRYPTO_SUITE_V1};
+use coding_adventures_vault_pm_format::{Argon2idParametersV1, VaultId, CRYPTO_SUITE_V1};
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use core::fmt::{self, Debug, Formatter};
 use std::collections::BTreeMap;
@@ -210,6 +210,7 @@ impl Debug for PortableExportArtifactV1 {
 /// decrypted documents have no public accessor and diagnostics are redacted.
 pub struct OpenedPortableSnapshotV1 {
     _exact_bootstrap: Zeroizing<Vec<u8>>,
+    source_vault_id: VaultId,
     candidates: BTreeMap<ItemId, Vec<ItemCandidate>>,
 }
 
@@ -222,6 +223,15 @@ impl OpenedPortableSnapshotV1 {
     /// Return the number of retained current source candidates.
     pub fn candidate_count(&self) -> usize {
         self.candidates.values().map(Vec::len).sum()
+    }
+
+    pub(crate) fn into_import_parts(self) -> (VaultId, BTreeMap<ItemId, Vec<ItemCandidate>>) {
+        let Self {
+            _exact_bootstrap,
+            source_vault_id,
+            candidates,
+        } = self;
+        (source_vault_id, candidates)
     }
 }
 
@@ -359,7 +369,7 @@ fn parse_opened_snapshot(plaintext: &[u8]) -> Result<OpenedPortableSnapshotV1, A
     if snapshot_hash(&exact_bootstrap, &encoded_entries)? != expected_hash {
         return Err(ApplicationError::IntegrityFailure);
     }
-    verify_signed_bootstrap(&exact_bootstrap)?;
+    let source_bootstrap = verify_signed_bootstrap(&exact_bootstrap)?;
 
     let mut entries = entries_value.into_values()?;
     if entries.len() != candidate_count {
@@ -400,6 +410,7 @@ fn parse_opened_snapshot(plaintext: &[u8]) -> Result<OpenedPortableSnapshotV1, A
 
     Ok(OpenedPortableSnapshotV1 {
         _exact_bootstrap: exact_bootstrap,
+        source_vault_id: source_bootstrap.vault_id,
         candidates,
     })
 }

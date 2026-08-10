@@ -1,8 +1,9 @@
 use crate::initialize::{unlock_active_material, UnlockedActiveMaterial};
 use crate::mutation::{
-    add_item, delete_item, merge_item_conflict, replace_item, resolve_item_conflict, restore_item,
-    AddItemRandomnessV1, DeleteItemRandomnessV1, ReplaceItemRandomnessV1,
-    ResolveItemConflictRandomnessV1, RestoreItemRandomnessV1,
+    add_item, delete_item, import_opened_portable_snapshot, merge_item_conflict, replace_item,
+    resolve_item_conflict, restore_item, AddItemRandomnessV1, DeleteItemRandomnessV1,
+    PortableImportRandomnessV1, ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1,
+    RestoreItemRandomnessV1,
 };
 use crate::search::SearchProjectionV1;
 use crate::{
@@ -209,6 +210,37 @@ impl UnlockedVaultV1 {
             passphrase,
             policy,
             randomness,
+        )
+    }
+
+    /// Consume an authenticated portable snapshot into this untouched target
+    /// vault and return the resulting durable active owner state.
+    ///
+    /// The target must still be the empty generation-zero vault. Every source
+    /// item and retained live, tombstone, or conflicted candidate receives a
+    /// new target item/revision/object identity and is encrypted by the target
+    /// vault's independent keys. Source causal-parent identities are not
+    /// copied. The complete import is one crash-resumable publication, and the
+    /// session, opaque snapshot, and owned randomness are consumed on every
+    /// return path.
+    pub fn import_opened_portable_snapshot(
+        self,
+        snapshot: crate::OpenedPortableSnapshotV1,
+        wall_time_ms: u64,
+        randomness: PortableImportRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        import_opened_portable_snapshot(
+            &self.active,
+            &self.report,
+            &self.current_catalog.items,
+            &self._keys,
+            &self._local_secret,
+            self._repository.as_ref(),
+            snapshot,
+            wall_time_ms,
+            randomness,
+            local_state_store,
         )
     }
 
@@ -1306,11 +1338,25 @@ mod tests {
         MemoryBootstrapStore,
         V1ApplicationRepositoryFactory<InMemoryObjectStore>,
     ) {
-        let passphrase = Zeroizing::new(b"active passphrase".to_vec());
+        initialized_with(
+            b"active passphrase",
+            GenerationZeroRandomness::new(generation_zero_bytes()),
+        )
+    }
+
+    fn initialized_with(
+        passphrase: &[u8],
+        randomness: GenerationZeroRandomness,
+    ) -> (
+        BootstrapLocator,
+        MemoryLocalStateStore,
+        MemoryBootstrapStore,
+        V1ApplicationRepositoryFactory<InMemoryObjectStore>,
+    ) {
         let prepared = prepare_generation_zero(
-            passphrase,
+            Zeroizing::new(passphrase.to_vec()),
             GenerationZeroPolicyV1::new(8 * 1024, 1, 1, 10).unwrap(),
-            randomness(),
+            randomness,
         )
         .unwrap();
         let locator = prepared.bootstrap_locator();
@@ -2263,6 +2309,307 @@ mod tests {
             .err(),
             Some(ApplicationError::IntegrityFailure)
         );
+    }
+
+    #[test]
+    fn portable_import_rekeys_an_independently_reopenable_new_vault() {
+        let (source_locator, source_local, source_bootstrap, source_factory) = initialized();
+        let exact_active = source_local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(source_active) =
+            LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let conflicted_source_item = ItemId::new([0x7d; 16]);
+        let (publication, _) = pending_tombstone_publication(
+            &source_active,
+            conflicted_source_item,
+            conflicted_source_item,
+            2,
+            None,
+        );
+        *source_local.0.lock().unwrap() = Some(
+            LocalVaultStateV1::pending_publication(source_active, publication)
+                .unwrap()
+                .encode()
+                .unwrap(),
+        );
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            source_locator,
+            &source_local,
+            &source_bootstrap,
+            &source_factory,
+        )
+        .unwrap();
+        let source_session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            source_locator,
+            &source_local,
+            &source_bootstrap,
+            &source_factory,
+        )
+        .unwrap();
+        let live_randomness = add_item_randomness(0x9a);
+        let live_source_item = live_randomness.item_id();
+        source_session
+            .add_item(
+                new_login_document(live_source_item, "Restored portal", "restored-secret"),
+                900,
+                live_randomness,
+                &source_local,
+            )
+            .unwrap();
+        let source_session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            source_locator,
+            &source_local,
+            &source_bootstrap,
+            &source_factory,
+        )
+        .unwrap();
+        assert_eq!(source_session.item_count(), 2);
+        assert_eq!(source_session.candidate_count(), 3);
+        assert_eq!(source_session.conflicted_item_count(), 1);
+        let source_vault_id = source_session.vault_id();
+        let source_item_ids = source_session
+            .current_catalog
+            .items
+            .keys()
+            .copied()
+            .collect::<BTreeSet<_>>();
+        let source_revision_ids = source_session
+            .current_catalog
+            .items
+            .values()
+            .flatten()
+            .map(ItemCandidate::revision_id)
+            .collect::<BTreeSet<_>>();
+        let exact_source_bootstrap = source_bootstrap.0.lock().unwrap().clone().unwrap();
+        let artifact = source_session
+            .export_portable_with_passphrase(
+                &exact_source_bootstrap,
+                Zeroizing::new(b"restore passphrase".to_vec()),
+                crate::PortableExportPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+                crate::PortableExportRandomnessV1::new([0x8b; crate::PORTABLE_EXPORT_RANDOM_BYTES]),
+            )
+            .unwrap();
+        let opened = crate::open_portable_with_passphrase(
+            artifact.as_bytes(),
+            Zeroizing::new(b"restore passphrase".to_vec()),
+            crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+        )
+        .unwrap();
+        let import_random_byte_count = crate::portable_import_random_bytes(&opened).unwrap();
+        assert_eq!(import_random_byte_count, 2 * 16 + 5 * 80);
+        assert_eq!(
+            crate::PortableImportRandomnessV1::new(
+                vec![0x91; import_random_byte_count - 1],
+                &opened,
+            )
+            .err(),
+            Some(ApplicationError::InvalidInput)
+        );
+        let import_randomness_bytes = (0..import_random_byte_count)
+            .map(|index| (index as u8).wrapping_mul(43).wrapping_add(0x91))
+            .collect::<Vec<_>>();
+        let import_randomness =
+            crate::PortableImportRandomnessV1::new(import_randomness_bytes.clone(), &opened)
+                .unwrap();
+        assert_eq!(
+            format!("{import_randomness:?}"),
+            "PortableImportRandomnessV1(<redacted>)"
+        );
+
+        let mut target_generation_zero = generation_zero_bytes();
+        for byte in &mut target_generation_zero {
+            *byte = byte.wrapping_add(0x65);
+        }
+        let (target_locator, target_local, target_bootstrap, target_factory) = initialized_with(
+            b"independent target passphrase",
+            GenerationZeroRandomness::new(target_generation_zero),
+        );
+        let target_session = open_active_vault(
+            Zeroizing::new(b"independent target passphrase".to_vec()),
+            target_locator,
+            &target_local,
+            &target_bootstrap,
+            &target_factory,
+        )
+        .unwrap();
+        assert_ne!(target_session.vault_id(), source_vault_id);
+        target_local.fail_next_compare(LocalStateStoreError::Unavailable);
+        assert_eq!(
+            target_session
+                .import_opened_portable_snapshot(opened, 901, import_randomness, &target_local)
+                .err(),
+            Some(ApplicationError::StorageUnavailable)
+        );
+        let target_session = open_active_vault(
+            Zeroizing::new(b"independent target passphrase".to_vec()),
+            target_locator,
+            &target_local,
+            &target_bootstrap,
+            &target_factory,
+        )
+        .unwrap();
+        assert_eq!(target_session.item_count(), 0);
+        let opened = crate::open_portable_with_passphrase(
+            artifact.as_bytes(),
+            Zeroizing::new(b"restore passphrase".to_vec()),
+            crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+        )
+        .unwrap();
+        let import_randomness =
+            crate::PortableImportRandomnessV1::new(import_randomness_bytes, &opened).unwrap();
+        let imported_active = target_session
+            .import_opened_portable_snapshot(opened, 901, import_randomness, &target_local)
+            .unwrap();
+        assert_eq!(imported_active.last_device_counter(), 2);
+
+        drop(source_session);
+        let restored = open_active_vault(
+            Zeroizing::new(b"independent target passphrase".to_vec()),
+            target_locator,
+            &target_local,
+            &target_bootstrap,
+            &target_factory,
+        )
+        .unwrap();
+        assert_eq!(restored.item_count(), 2);
+        assert_eq!(restored.candidate_count(), 3);
+        assert_eq!(restored.conflicted_item_count(), 1);
+        assert!(restored
+            .current_catalog
+            .items
+            .keys()
+            .all(|item_id| !source_item_ids.contains(item_id)));
+        assert!(restored
+            .current_catalog
+            .items
+            .values()
+            .flatten()
+            .all(|candidate| {
+                !source_revision_ids.contains(&candidate.revision_id())
+                    && candidate.causal_parents().is_empty()
+            }));
+        let mut tombstone_times = Vec::new();
+        let mut restored_login = None;
+        for candidates in restored.current_catalog.items.values() {
+            for candidate in candidates {
+                assert_eq!(candidate.item_id(), candidate.state().item_id());
+                match candidate.state() {
+                    ItemState::Live(document) => {
+                        let AnyRecord::Login(login) = document.payload() else {
+                            panic!("fixture must retain a login")
+                        };
+                        restored_login = Some((login.title.clone(), login.password.clone()));
+                    }
+                    ItemState::Tombstone(tombstone) => {
+                        tombstone_times.push(tombstone.deleted_at_ms);
+                    }
+                }
+            }
+        }
+        tombstone_times.sort_unstable();
+        assert_eq!(tombstone_times, vec![100, 101]);
+        assert_eq!(
+            restored_login,
+            Some(("Restored portal".to_owned(), "restored-secret".to_owned()))
+        );
+        let audit = restored.audit_verify().unwrap();
+        assert_eq!(audit.commit_count(), 2);
+        assert_eq!(audit.catalog_count(), 2);
+        assert_eq!(audit.revision_count(), 3);
+        assert_eq!(audit.item_count(), 2);
+    }
+
+    #[test]
+    fn portable_import_rejects_source_and_mutated_targets_before_local_writes() {
+        let (source_locator, source_local, source_bootstrap, source_factory) = initialized();
+        let source_session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            source_locator,
+            &source_local,
+            &source_bootstrap,
+            &source_factory,
+        )
+        .unwrap();
+        let exact_source_bootstrap = source_bootstrap.0.lock().unwrap().clone().unwrap();
+        let artifact = source_session
+            .export_portable_with_passphrase(
+                &exact_source_bootstrap,
+                Zeroizing::new(b"empty restore passphrase".to_vec()),
+                crate::PortableExportPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+                crate::PortableExportRandomnessV1::new([0xa2; crate::PORTABLE_EXPORT_RANDOM_BYTES]),
+            )
+            .unwrap();
+        let opened = crate::open_portable_with_passphrase(
+            artifact.as_bytes(),
+            Zeroizing::new(b"empty restore passphrase".to_vec()),
+            crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(crate::portable_import_random_bytes(&opened), Ok(160));
+        let randomness = crate::PortableImportRandomnessV1::new(vec![0xa3; 160], &opened).unwrap();
+        let source_compare_calls = source_local.3.load(Ordering::SeqCst);
+        assert_eq!(
+            source_session
+                .import_opened_portable_snapshot(opened, 902, randomness, &source_local)
+                .err(),
+            Some(ApplicationError::InvalidInput)
+        );
+        assert_eq!(source_local.3.load(Ordering::SeqCst), source_compare_calls);
+
+        let mut target_generation_zero = generation_zero_bytes();
+        for byte in &mut target_generation_zero {
+            *byte = byte.wrapping_add(0x43);
+        }
+        let (target_locator, target_local, target_bootstrap, target_factory) = initialized_with(
+            b"mutated target passphrase",
+            GenerationZeroRandomness::new(target_generation_zero),
+        );
+        let target_session = open_active_vault(
+            Zeroizing::new(b"mutated target passphrase".to_vec()),
+            target_locator,
+            &target_local,
+            &target_bootstrap,
+            &target_factory,
+        )
+        .unwrap();
+        let add_randomness = add_item_randomness(0xa4);
+        let target_item_id = add_randomness.item_id();
+        target_session
+            .add_item(
+                new_login_document(target_item_id, "Existing target", "target-secret"),
+                903,
+                add_randomness,
+                &target_local,
+            )
+            .unwrap();
+        let target_session = open_active_vault(
+            Zeroizing::new(b"mutated target passphrase".to_vec()),
+            target_locator,
+            &target_local,
+            &target_bootstrap,
+            &target_factory,
+        )
+        .unwrap();
+        let opened = crate::open_portable_with_passphrase(
+            artifact.as_bytes(),
+            Zeroizing::new(b"empty restore passphrase".to_vec()),
+            crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+        )
+        .unwrap();
+        let randomness = crate::PortableImportRandomnessV1::new(vec![0xa5; 160], &opened).unwrap();
+        let target_compare_calls = target_local.3.load(Ordering::SeqCst);
+        assert_eq!(
+            target_session
+                .import_opened_portable_snapshot(opened, 904, randomness, &target_local)
+                .err(),
+            Some(ApplicationError::InvalidInput)
+        );
+        assert_eq!(target_local.3.load(Ordering::SeqCst), target_compare_calls);
     }
 
     #[test]

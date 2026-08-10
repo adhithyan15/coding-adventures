@@ -2,6 +2,29 @@
 
 All notable changes to this package are documented here.
 
+## [0.28.0] - 2026-08-10
+
+### Added
+
+- Add one atomic cross-vault import that consumes an authenticated opaque
+  portable snapshot into an untouched empty generation-zero target.
+- Add exact count-derived host-CSPRNG sizing and a non-printable wipe-on-drop
+  entropy container for new item identities plus every revision, catalog, and
+  commit frame.
+
+### Security
+
+- Reject source-vault reuse, mutated or non-empty targets, stale pins,
+  source/target identity collisions, malformed candidate bindings, and imports
+  exceeding the repository's 4,096-object publication bound before activation.
+- Re-identify every item and revision under independent target encryption while
+  preserving complete validated live, tombstone, conflict, CRDT, timestamp, and
+  secret state; source causal identities are deliberately not copied.
+- Reuse the exact write-ahead pending-publication journal for all-or-nothing
+  crash recovery, consume the opaque snapshot on every path, and independently
+  reopen the target to prove source/target identity separation and restored
+  content equality.
+
 ## [0.27.0] - 2026-08-10
 
 ### Added

@@ -1140,6 +1140,41 @@ never gains plaintext.
 Every export has a restore test. “Backup completed” is not reported until the
 artifact can be parsed and authenticated.
 
+Portable restore is a cross-vault re-identification operation, not a repository
+copy:
+
+1. authenticate and fully validate the portable artifact through the bounded
+   no-write opener before selecting a target;
+2. initialize a separate target vault with a newly collected target passphrase,
+   fresh generation-zero entropy, and its own repository and owner state;
+3. require the target session to remain the untouched empty generation-zero
+   vault and reject the source vault itself as a target;
+4. derive the exact host-CSPRNG requirement as `16I + 80(C + 2)` bytes, where
+   `I` is the distinct source-item count and `C` is the retained current
+   candidate count, and reject `C + 1` above the repository's 4,096-object
+   atomic-publication bound;
+5. allocate a new target item ID for every source item and a new encrypted
+   revision/object ID for every retained live document, tombstone, and conflict
+   candidate; source item, revision, object, vault, and key identities are never
+   reused;
+6. preserve validated schema, timestamps, complete record payload, CRDT field
+   state, deletion time, and the current candidate grouping, but make imported
+   revisions parentless because source causal identities are intentionally not
+   part of the portable current-state closure;
+7. seal all imported revisions plus one new target catalog and signed commit,
+   persist the exact pending journal before provider publication, and activate
+   it only after exact receipt verification; the import is all-or-nothing and
+   uses the ordinary crash-recovery path; and
+8. discard the consumed opaque source snapshot and entropy, independently open
+   the target from durable state under its own passphrase, compare item,
+   candidate, conflict, schema, timestamp, deletion, and revealed field values,
+   and prove source and target item/revision identities are disjoint.
+
+The source remains untouched. Import into a non-empty or already-mutated target,
+identity collision, stale target pins, an oversized snapshot, or any local or
+provider failure returns the closed application error and never authorizes a
+partial logical restore.
+
 ### 19.4 Garbage collection
 
 GC is mark-and-sweep from all verified heads, retained conflicts, history
@@ -1338,9 +1373,11 @@ changelog, focused build, and downstream validation.
        authentication-before-plaintext parsing, signed-bootstrap and complete
        snapshot validation, opaque secret-bearing custody, and count-only
        diagnostics;
-   7d-2b. consume an opened portable snapshot into a new vault with new item,
-       revision, object, and encryption identities, followed by an independent
-       restore/open comparison; and
+   7d-2b. completed atomic cross-vault portable import, consuming the opaque
+       opened snapshot into an untouched generation-zero vault, allocating new
+       item/revision/object/encryption identities, preserving every current
+       live, tombstone, and conflict candidate, and independently reopening and
+       comparing the restored target; and
    7e-1. completed safe five-state status workflow, strictly decoding bounded
        owner state while locked and exposing only authenticated aggregate item,
        candidate, and conflict counts while unlocked;
