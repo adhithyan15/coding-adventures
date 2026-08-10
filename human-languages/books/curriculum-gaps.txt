@@ -69,3 +69,7 @@ Chapters that cannot be started by ear (drivable prefix 0): 40
 
 Modality findings (report-only): 0
 
+strands: 33 nodes across 8 strands -- FUNCTION 14, GRAMMAR 7, LEXICON 2, SOUND 0, ETYMOLOGY 0, CULTURE 3, IDIOM 0, TEXT 7
+  strands with no nodes: SOUND, ETYMOLOGY, IDIOM (declared as ladders, not yet climbed)
+  nodes above the chapter atom ceiling: 1 (worst SPINE-SAY-WHAT-I-DO at 42 concepts) -- no single chapter can realize these
+  nodes above the 6-concept design target: 2
