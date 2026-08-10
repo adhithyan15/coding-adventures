@@ -10,6 +10,14 @@ from pathlib import Path
 
 SCRIPT = Path(__file__).resolve().parents[1] / "mosaic_xaml_windows_ci_acceptance.py"
 WORKFLOW = Path(__file__).resolve().parents[3] / ".github" / "workflows" / "ci.yml"
+XAML_CONFORMANCE = (
+    Path(__file__).resolve().parents[2]
+    / "packages"
+    / "rust"
+    / "mosaic-app-bindings"
+    / "conformance"
+    / "xaml"
+)
 SPEC = importlib.util.spec_from_file_location("mosaic_xaml_windows_ci_acceptance", SCRIPT)
 assert SPEC is not None and SPEC.loader is not None
 MODULE = importlib.util.module_from_spec(SPEC)
@@ -113,9 +121,22 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
         self.assertIn("MOSAIC_SKIP_INTERACTIVE_WINDOWS_ACCEPTANCE: '1'", workflow)
         self.assertNotIn("Start-Process -FilePath $executable", workflow)
         self.assertIn("Round-trip Rust engine through standard XAML binding", workflow)
+        self.assertIn("timeout-minutes: 10", workflow)
         self.assertIn("cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance", workflow)
         self.assertIn("XamlRuntimeConformance.csproj", workflow)
         self.assertIn("MOSAIC_APP_LIBRARY", workflow)
+
+    def test_console_conformance_does_not_bootstrap_winui(self) -> None:
+        project = (XAML_CONFORMANCE / "XamlRuntimeConformance.csproj").read_text(
+            encoding="utf-8"
+        )
+        color_stub = (XAML_CONFORMANCE / "WindowsColorStub.cs").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("<TargetFramework>net9.0</TargetFramework>", project)
+        self.assertNotIn("Microsoft.WindowsAppSDK", project)
+        self.assertIn("namespace Windows.UI;", color_stub)
+        self.assertIn("Color FromArgb", color_stub)
 
 
 if __name__ == "__main__":

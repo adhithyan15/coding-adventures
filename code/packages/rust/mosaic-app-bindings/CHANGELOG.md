@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Make the XAML Rust-runtime conformance executable independent of WinUI desktop
+  initialization after the complete generated TaskApp has compiled against the
+  real Windows App SDK, and bound the CI execution with an explicit timeout.
 - Execute the generated XAML binding against the shared Rust conformance DLL in
   Windows CI, covering startup, initial props, dispatch, revised props, Rust
   buffer release, and teardown through the real ABI.

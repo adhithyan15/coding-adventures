@@ -942,6 +942,7 @@ jobs:
       - name: Round-trip Rust engine through standard XAML binding
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
         shell: pwsh
+        timeout-minutes: 10
         run: |
           cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
           if ($LASTEXITCODE -ne 0) {
