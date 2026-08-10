@@ -17,10 +17,10 @@
 % family membership IS citable, so the rhyme relation is built from both:
 %
 %   1. `word_family($Word, $Family)` — the table below, listing each of the
-%      "-an", "-at", "-ig", and "-ug" families' core CVC (consonant-vowel-
-%      consonant) members as named, verbatim, by a literacy-education source
-%      (Reading Rockets for "-an"/"-at"; Super Teacher Worksheets for
-%      "-ig"/"-ug").
+%      "-an", "-at", "-ig", "-ug", and "-og" families' core CVC (consonant-
+%      vowel-consonant) members as named, verbatim, by a literacy-education
+%      source (Reading Rockets for "-an"/"-at"; Super Teacher Worksheets for
+%      "-ig"/"-ug"/"-og").
 %   2. The general word-family PRINCIPLE, quoted verbatim from the same page
 %      in the rule's own `source` below: words in the same family "look alike
 %      at the end" because they "sound alike at the end."
@@ -39,8 +39,9 @@
 %     ? rhymes_with(cat, $W)        % bat, fat, sat, rat, pat, mat, hat, cat
 %     ? rhymes_with(pig, $W)        % big, fig, dig, wig, pig
 %     ? rhymes_with(bug, $W)        % tug, rug, hug, mug, jug, dug, bug
+%     ? rhymes_with(dog, $W)        % hog, fog, log, jog, dog
 %
-% Deliberately scoped to FOUR families ("-an", "-at", "-ig", "-ug") with their plain
+% Deliberately scoped to FIVE families ("-an", "-at", "-ig", "-ug", "-og") with their plain
 % three-letter CVC members only, not the full 37-family phonics inventory a
 % complete phonics curriculum would need (Reading Rockets' own "-an" page also
 % lists longer blended and multi-syllable words — "plan", "scan", "bran",
@@ -77,10 +78,19 @@
 % verification bar. This library ships only the SEVEN plain three-letter CVC
 % members (tug, rug, hug, mug, jug, dug, bug), excluding "snug", "plug",
 % "slug", and "shrug" (four- and five-letter consonant-blend words), the same
-% CVC-scope discipline every prior family in this table has used. Blends and
-% longer words, and every family beyond these four, are left for a later pass,
-% the same "keep each slice small and citable" discipline every prior
-% curriculum item in this loop has used.
+% CVC-scope discipline every prior family in this table has used. The "-og"
+% family's seven members are quoted verbatim from a THIRD Super Teacher
+% Worksheets page (the same site, same `consensus` trust tier, its own real
+% citation): "Here is a collection of printable activities for young readers
+% to learn about the 'og' family of words... Words included: clog, jog, dog,
+% hog, frog, fog, and log." (https://www.superteacherworksheets.com/word-
+% family-og.html) — WebFetch-verified twice for consistency, mirroring "-ig"/
+% "-ug"'s bar. This library ships only the FIVE plain three-letter CVC members
+% (dog, hog, fog, log, jog), excluding "clog" and "frog" (four-letter
+% consonant-blend words), the same CVC-scope discipline every prior family in
+% this table has used. Blends and longer words, and every family beyond these
+% five, are left for a later pass, the same "keep each slice small and
+% citable" discipline every prior curriculum item in this loop has used.
 % `rhymes_with` includes a trivial self-pair (a word "rhymes with" itself,
 % since it shares its own family) — logically consistent, left unfiltered
 % rather than adding unverified exclusion logic for a case no worked example
@@ -118,6 +128,11 @@ table word_family {
     row (jug, ug)
     row (dug, ug)
     row (bug, ug)
+    row (dog, og)
+    row (hog, og)
+    row (fog, og)
+    row (log, og)
+    row (jog, og)
 
     source "pan, fan, ran, man, tan, van, plan, scan, bran, began"
     locator "https://www.readingrockets.org/topics/activities/articles/meet-word-families"
