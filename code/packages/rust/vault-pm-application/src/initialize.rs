@@ -477,10 +477,24 @@ pub(crate) fn verify_active_bootstrap(
     active: &ActiveStateV1,
     exact_bootstrap: &[u8],
 ) -> Result<BootstrapV1, ApplicationError> {
-    let bootstrap = BootstrapV1::decode(exact_bootstrap).map_err(map_bootstrap_format)?;
+    let bootstrap = verify_signed_bootstrap(exact_bootstrap)?;
     let bootstrap_id = bootstrap
         .id()
         .map_err(|_| ApplicationError::IntegrityFailure)?;
+    if bootstrap_id != active.bootstrap_id()
+        || bootstrap.vault_id != active.vault_id()
+        || AuthorityFingerprint::for_public_key(bootstrap.authority_public_key)
+            != active.authority_fingerprint()
+    {
+        return Err(ApplicationError::IntegrityFailure);
+    }
+    Ok(bootstrap)
+}
+
+pub(crate) fn verify_signed_bootstrap(
+    exact_bootstrap: &[u8],
+) -> Result<BootstrapV1, ApplicationError> {
+    let bootstrap = BootstrapV1::decode(exact_bootstrap).map_err(map_bootstrap_format)?;
     let bootstrap_preimage = bootstrap
         .signing_preimage()
         .map_err(|_| ApplicationError::IntegrityFailure)?;
@@ -490,10 +504,6 @@ pub(crate) fn verify_active_bootstrap(
             bootstrap.signature.as_bytes(),
             bootstrap.authority_public_key.as_bytes(),
         )
-        || bootstrap_id != active.bootstrap_id()
-        || bootstrap.vault_id != active.vault_id()
-        || AuthorityFingerprint::for_public_key(bootstrap.authority_public_key)
-            != active.authority_fingerprint()
     {
         return Err(ApplicationError::IntegrityFailure);
     }

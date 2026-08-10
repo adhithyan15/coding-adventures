@@ -1,10 +1,13 @@
-use crate::initialize::verify_active_bootstrap;
-use crate::{encode_item_revision, ApplicationError};
+use crate::codec::{MAX_CANDIDATES_PER_ITEM, MAX_CATALOG_ENTRIES};
+use crate::initialize::{verify_active_bootstrap, verify_signed_bootstrap};
+use crate::{decode_item_revision, encode_item_revision, ApplicationError};
 use coding_adventures_argon2id::{argon2id, Options as Argon2idOptions};
-use coding_adventures_canonical_cbor::{encode, CborValue};
-use coding_adventures_chacha20_poly1305::xchacha20_poly1305_aead_encrypt;
+use coding_adventures_canonical_cbor::{decode, encode, CborValue};
+use coding_adventures_chacha20_poly1305::{
+    xchacha20_poly1305_aead_decrypt, xchacha20_poly1305_aead_encrypt,
+};
 use coding_adventures_sha256::sha256;
-use coding_adventures_vault_pm_domain::{ItemCandidate, ItemId};
+use coding_adventures_vault_pm_domain::{ItemCandidate, ItemId, RevisionId};
 use coding_adventures_vault_pm_format::{Argon2idParametersV1, CRYPTO_SUITE_V1};
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use core::fmt::{self, Debug, Formatter};
@@ -18,6 +21,7 @@ const SNAPSHOT_HASH_DOMAIN: &[u8] = b"VPM-PORTABLE-SNAPSHOT-v1";
 const EXPORT_AAD_DOMAIN: &[u8] = b"VPM-PORTABLE-EXPORT-AAD-v1";
 const CANDIDATE_ESTIMATE_OVERHEAD: usize = 128;
 const SNAPSHOT_ESTIMATE_OVERHEAD: usize = 1_024;
+const ARTIFACT_OVERHEAD: usize = 4_096;
 
 /// Exact host-supplied CSPRNG bytes consumed by one passphrase export.
 pub const PORTABLE_EXPORT_RANDOM_BYTES: usize = KDF_SALT_BYTES + NONCE_BYTES;
@@ -25,6 +29,9 @@ pub const PORTABLE_EXPORT_RANDOM_BYTES: usize = KDF_SALT_BYTES + NONCE_BYTES;
 pub const MAX_PORTABLE_EXPORT_PASSPHRASE_BYTES: usize = 1_024;
 /// Maximum canonical plaintext snapshot size accepted by V1.
 pub const MAX_PORTABLE_EXPORT_PLAINTEXT_BYTES: usize = 512 * 1024 * 1024;
+/// Maximum encrypted artifact bytes accepted by the V1 opener.
+pub const MAX_PORTABLE_EXPORT_ARTIFACT_BYTES: usize =
+    MAX_PORTABLE_EXPORT_PLAINTEXT_BYTES + ARTIFACT_OVERHEAD;
 
 /// Bounded caller-calibrated Argon2id policy for a portable export.
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -75,6 +82,54 @@ impl Debug for PortableExportPolicyV1 {
             .field("memory_kib", &self.memory_kib)
             .field("iterations", &self.iterations)
             .field("lanes", &self.lanes)
+            .finish()
+    }
+}
+
+/// Host-approved resource ceiling for opening an untrusted portable artifact.
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub struct PortableOpenPolicyV1 {
+    max_memory_kib: u32,
+    max_iterations: u32,
+    max_lanes: u8,
+}
+
+impl PortableOpenPolicyV1 {
+    /// Validate one maximum Argon2id resource policy for artifact opening.
+    pub fn new(
+        max_memory_kib: u32,
+        max_iterations: u32,
+        max_lanes: u8,
+    ) -> Result<Self, ApplicationError> {
+        Argon2idParametersV1 {
+            memory_kib: max_memory_kib,
+            iterations: max_iterations,
+            lanes: max_lanes,
+            salt: [0; KDF_SALT_BYTES],
+        }
+        .validate()
+        .map_err(|_| ApplicationError::InvalidInput)?;
+        Ok(Self {
+            max_memory_kib,
+            max_iterations,
+            max_lanes,
+        })
+    }
+
+    fn allows(&self, kdf: &Argon2idParametersV1) -> bool {
+        kdf.memory_kib <= self.max_memory_kib
+            && kdf.iterations <= self.max_iterations
+            && kdf.lanes <= self.max_lanes
+    }
+}
+
+impl Debug for PortableOpenPolicyV1 {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("PortableOpenPolicyV1")
+            .field("max_memory_kib", &self.max_memory_kib)
+            .field("max_iterations", &self.max_iterations)
+            .field("max_lanes", &self.max_lanes)
             .finish()
     }
 }
@@ -145,6 +200,215 @@ impl PortableExportArtifactV1 {
 impl Debug for PortableExportArtifactV1 {
     fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
         formatter.write_str("PortableExportArtifactV1(<encrypted>)")
+    }
+}
+
+/// Authenticated secret-bearing snapshot retained only inside the application.
+///
+/// The host can inspect aggregate counts before choosing whether to continue a
+/// later import. Source identities, bootstrap bytes, candidate metadata, and
+/// decrypted documents have no public accessor and diagnostics are redacted.
+pub struct OpenedPortableSnapshotV1 {
+    _exact_bootstrap: Zeroizing<Vec<u8>>,
+    candidates: BTreeMap<ItemId, Vec<ItemCandidate>>,
+}
+
+impl OpenedPortableSnapshotV1 {
+    /// Return the number of distinct source item identities in the snapshot.
+    pub fn item_count(&self) -> usize {
+        self.candidates.len()
+    }
+
+    /// Return the number of retained current source candidates.
+    pub fn candidate_count(&self) -> usize {
+        self.candidates.values().map(Vec::len).sum()
+    }
+}
+
+impl Debug for OpenedPortableSnapshotV1 {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter.write_str("OpenedPortableSnapshotV1(<redacted>)")
+    }
+}
+
+/// Authenticate, decrypt, and strictly validate one untrusted portable artifact.
+///
+/// The caller supplies an owned separately collected passphrase and an explicit
+/// Argon2id resource ceiling. Authentication completes before any plaintext is
+/// parsed. The returned snapshot intentionally exposes only aggregate counts.
+pub fn open_portable_with_passphrase(
+    artifact: &[u8],
+    passphrase: Zeroizing<Vec<u8>>,
+    policy: PortableOpenPolicyV1,
+) -> Result<OpenedPortableSnapshotV1, ApplicationError> {
+    if passphrase.is_empty() || passphrase.len() > MAX_PORTABLE_EXPORT_PASSPHRASE_BYTES {
+        return Err(ApplicationError::InvalidInput);
+    }
+    if artifact.len() > MAX_PORTABLE_EXPORT_ARTIFACT_BYTES {
+        return Err(ApplicationError::BoundExceeded);
+    }
+
+    let mut fields =
+        SecretCborValue::new(decode(artifact).map_err(|_| ApplicationError::IntegrityFailure)?)
+            .into_map()?;
+    fields.require_keys(&[1, 2, 3, 4, 5, 6, 7])?;
+    check_wire_value(fields.take(1)?.into_uint()?, VERSION)?;
+    check_wire_value(fields.take(2)?.into_uint()?, PASSPHRASE_PROTECTION)?;
+    check_wire_value(fields.take(3)?.into_uint()?, CRYPTO_SUITE_V1.into())?;
+    let mut kdf_fields = fields.take(4)?.into_map()?;
+    kdf_fields.require_keys(&[1, 2, 3, 4])?;
+    let kdf = Argon2idParametersV1 {
+        memory_kib: u32::try_from(kdf_fields.take(1)?.into_uint()?)
+            .map_err(|_| ApplicationError::BoundExceeded)?,
+        iterations: u32::try_from(kdf_fields.take(2)?.into_uint()?)
+            .map_err(|_| ApplicationError::BoundExceeded)?,
+        lanes: u8::try_from(kdf_fields.take(3)?.into_uint()?)
+            .map_err(|_| ApplicationError::BoundExceeded)?,
+        salt: kdf_fields.take(4)?.into_fixed()?,
+    };
+    kdf.validate()
+        .map_err(|_| ApplicationError::BoundExceeded)?;
+    if !policy.allows(&kdf) {
+        return Err(ApplicationError::BoundExceeded);
+    }
+    let nonce = fields.take(5)?.into_fixed()?;
+    let ciphertext = Zeroizing::new(fields.take(6)?.into_bytes()?);
+    if ciphertext.len() > MAX_PORTABLE_EXPORT_PLAINTEXT_BYTES {
+        return Err(ApplicationError::BoundExceeded);
+    }
+    let tag = fields.take(7)?.into_fixed()?;
+
+    let derived = Zeroizing::new(
+        argon2id(
+            &passphrase,
+            &kdf.salt,
+            kdf.iterations,
+            kdf.memory_kib,
+            kdf.lanes.into(),
+            32,
+            &Argon2idOptions::default(),
+        )
+        .map_err(|_| ApplicationError::InvalidInput)?,
+    );
+    let mut key = Zeroizing::new([0; 32]);
+    key.copy_from_slice(&derived);
+    let plaintext = Zeroizing::new(
+        xchacha20_poly1305_aead_decrypt(
+            &ciphertext,
+            &key,
+            &nonce,
+            &artifact_aad(&kdf, nonce),
+            &tag,
+        )
+        .ok_or(ApplicationError::AuthenticationFailed)?,
+    );
+    if plaintext.len() > MAX_PORTABLE_EXPORT_PLAINTEXT_BYTES {
+        return Err(ApplicationError::BoundExceeded);
+    }
+    parse_opened_snapshot(&plaintext)
+}
+
+fn encrypt_portable_plaintext(
+    plaintext: &[u8],
+    passphrase: Zeroizing<Vec<u8>>,
+    kdf: &Argon2idParametersV1,
+    nonce: [u8; NONCE_BYTES],
+) -> Result<PortableExportArtifactV1, ApplicationError> {
+    let derived = Zeroizing::new(
+        argon2id(
+            &passphrase,
+            &kdf.salt,
+            kdf.iterations,
+            kdf.memory_kib,
+            kdf.lanes.into(),
+            32,
+            &Argon2idOptions::default(),
+        )
+        .map_err(|_| ApplicationError::InvalidInput)?,
+    );
+    let mut key = Zeroizing::new([0; 32]);
+    key.copy_from_slice(&derived);
+    let aad = artifact_aad(kdf, nonce);
+    let (ciphertext, tag) = xchacha20_poly1305_aead_encrypt(plaintext, &key, &nonce, &aad);
+    let artifact = CborValue::Map(vec![
+        field(1, CborValue::Unsigned(VERSION)),
+        field(2, CborValue::Unsigned(PASSPHRASE_PROTECTION)),
+        field(3, CborValue::Unsigned(CRYPTO_SUITE_V1.into())),
+        field(4, kdf_value(kdf)),
+        field(5, CborValue::Bytes(nonce.to_vec())),
+        field(6, CborValue::Bytes(ciphertext)),
+        field(7, CborValue::Bytes(tag.to_vec())),
+    ]);
+    Ok(PortableExportArtifactV1 {
+        bytes: encode(&artifact),
+    })
+}
+
+fn parse_opened_snapshot(plaintext: &[u8]) -> Result<OpenedPortableSnapshotV1, ApplicationError> {
+    let mut fields =
+        SecretCborValue::new(decode(plaintext).map_err(|_| ApplicationError::IntegrityFailure)?)
+            .into_map()?;
+    fields.require_keys(&[1, 2, 3, 4, 5])?;
+    check_wire_value(fields.take(1)?.into_uint()?, VERSION)?;
+    let exact_bootstrap = Zeroizing::new(fields.take(2)?.into_bytes()?);
+    let entries_value = fields.take(3)?;
+    let encoded_entries = Zeroizing::new(encode(entries_value.get()));
+    let candidate_count = usize::try_from(fields.take(4)?.into_uint()?)
+        .map_err(|_| ApplicationError::BoundExceeded)?;
+    let expected_hash: [u8; 32] = fields.take(5)?.into_fixed()?;
+    if snapshot_hash(&exact_bootstrap, &encoded_entries)? != expected_hash {
+        return Err(ApplicationError::IntegrityFailure);
+    }
+    verify_signed_bootstrap(&exact_bootstrap)?;
+
+    let mut entries = entries_value.into_values()?;
+    if entries.len() != candidate_count {
+        return Err(ApplicationError::IntegrityFailure);
+    }
+    if candidate_count > MAX_CATALOG_ENTRIES * MAX_CANDIDATES_PER_ITEM {
+        return Err(ApplicationError::BoundExceeded);
+    }
+    let mut candidates: BTreeMap<ItemId, Vec<ItemCandidate>> = BTreeMap::new();
+    let mut next_identity = None;
+    while let Some(entry) = entries.pop() {
+        let mut entry = entry.into_map()?;
+        entry.require_keys(&[1, 2, 3])?;
+        let item_id = ItemId::new(entry.take(1)?.into_fixed()?);
+        let revision_id = RevisionId::new(entry.take(2)?.into_fixed()?);
+        let identity = (item_id, revision_id);
+        if next_identity.is_some_and(|next| identity >= next) {
+            return Err(ApplicationError::IntegrityFailure);
+        }
+        next_identity = Some(identity);
+        let encoded_revision = Zeroizing::new(entry.take(3)?.into_bytes()?);
+        let candidate = decode_item_revision(revision_id, &encoded_revision)?;
+        if candidate.item_id() != item_id {
+            return Err(ApplicationError::IntegrityFailure);
+        }
+        if !candidates.contains_key(&item_id) && candidates.len() == MAX_CATALOG_ENTRIES {
+            return Err(ApplicationError::BoundExceeded);
+        }
+        let item_candidates = candidates.entry(item_id).or_default();
+        if item_candidates.len() == MAX_CANDIDATES_PER_ITEM {
+            return Err(ApplicationError::BoundExceeded);
+        }
+        item_candidates.push(candidate);
+    }
+    for item_candidates in candidates.values_mut() {
+        item_candidates.reverse();
+    }
+
+    Ok(OpenedPortableSnapshotV1 {
+        _exact_bootstrap: exact_bootstrap,
+        candidates,
+    })
+}
+
+fn check_wire_value(actual: u64, expected: u64) -> Result<(), ApplicationError> {
+    if actual == expected {
+        Ok(())
+    } else {
+        Err(ApplicationError::Unsupported)
     }
 }
 
@@ -219,34 +483,24 @@ pub(crate) fn export_portable_with_passphrase(
         return Err(ApplicationError::BoundExceeded);
     }
 
-    let derived = Zeroizing::new(
-        argon2id(
-            &passphrase,
-            &kdf.salt,
-            kdf.iterations,
-            kdf.memory_kib,
-            kdf.lanes.into(),
-            32,
-            &Argon2idOptions::default(),
-        )
-        .map_err(|_| ApplicationError::InvalidInput)?,
-    );
-    let mut key = Zeroizing::new([0; 32]);
-    key.copy_from_slice(&derived);
-    let aad = artifact_aad(&kdf, nonce);
-    let (ciphertext, tag) = xchacha20_poly1305_aead_encrypt(&plaintext, &key, &nonce, &aad);
-    let artifact = CborValue::Map(vec![
-        field(1, CborValue::Unsigned(VERSION)),
-        field(2, CborValue::Unsigned(PASSPHRASE_PROTECTION)),
-        field(3, CborValue::Unsigned(CRYPTO_SUITE_V1.into())),
-        field(4, kdf_value(&kdf)),
-        field(5, CborValue::Bytes(nonce.to_vec())),
-        field(6, CborValue::Bytes(ciphertext)),
-        field(7, CborValue::Bytes(tag.to_vec())),
-    ]);
-    Ok(PortableExportArtifactV1 {
-        bytes: encode(&artifact),
-    })
+    encrypt_portable_plaintext(&plaintext, passphrase, &kdf, nonce)
+}
+
+#[cfg(test)]
+pub(crate) fn encrypt_portable_for_test(
+    plaintext: &[u8],
+    passphrase: Zeroizing<Vec<u8>>,
+    policy: PortableExportPolicyV1,
+    randomness: PortableExportRandomnessV1,
+) -> PortableExportArtifactV1 {
+    let nonce = randomness.nonce();
+    let kdf = Argon2idParametersV1 {
+        memory_kib: policy.memory_kib,
+        iterations: policy.iterations,
+        lanes: policy.lanes,
+        salt: randomness.salt(),
+    };
+    encrypt_portable_plaintext(plaintext, passphrase, &kdf, nonce).unwrap()
 }
 
 pub(crate) fn snapshot_hash(
@@ -318,6 +572,10 @@ impl SecretCborValues {
     fn into_inner(mut self) -> Vec<CborValue> {
         self.0.take().unwrap_or_default()
     }
+
+    fn pop(&mut self) -> Option<SecretCborValue> {
+        self.0.as_mut()?.pop().map(SecretCborValue::new)
+    }
 }
 
 impl Drop for SecretCborValues {
@@ -342,12 +600,104 @@ impl SecretCborValue {
     fn take(&mut self) -> CborValue {
         self.0.take().expect("secret CBOR value is present")
     }
+
+    fn into_map(mut self) -> Result<SecretCborMap, ApplicationError> {
+        match self.take() {
+            CborValue::Map(entries) => Ok(SecretCborMap::new(entries)),
+            mut value => {
+                zeroize_cbor(&mut value);
+                Err(ApplicationError::IntegrityFailure)
+            }
+        }
+    }
+
+    fn into_values(mut self) -> Result<SecretCborValues, ApplicationError> {
+        match self.take() {
+            CborValue::Array(values) => Ok(SecretCborValues(Some(values))),
+            mut value => {
+                zeroize_cbor(&mut value);
+                Err(ApplicationError::IntegrityFailure)
+            }
+        }
+    }
+
+    fn into_uint(mut self) -> Result<u64, ApplicationError> {
+        match self.take() {
+            CborValue::Unsigned(value) => Ok(value),
+            mut value => {
+                zeroize_cbor(&mut value);
+                Err(ApplicationError::IntegrityFailure)
+            }
+        }
+    }
+
+    fn into_bytes(mut self) -> Result<Vec<u8>, ApplicationError> {
+        match self.take() {
+            CborValue::Bytes(value) => Ok(value),
+            mut value => {
+                zeroize_cbor(&mut value);
+                Err(ApplicationError::IntegrityFailure)
+            }
+        }
+    }
+
+    fn into_fixed<const N: usize>(self) -> Result<[u8; N], ApplicationError> {
+        let mut value = self.into_bytes()?;
+        let result = value
+            .as_slice()
+            .try_into()
+            .map_err(|_| ApplicationError::IntegrityFailure);
+        value.zeroize();
+        result
+    }
 }
 
 impl Drop for SecretCborValue {
     fn drop(&mut self) {
         if let Some(value) = &mut self.0 {
             zeroize_cbor(value);
+        }
+    }
+}
+
+struct SecretCborMap(Option<Vec<(CborValue, CborValue)>>);
+
+impl SecretCborMap {
+    fn new(entries: Vec<(CborValue, CborValue)>) -> Self {
+        Self(Some(entries))
+    }
+
+    fn require_keys(&self, expected: &[u64]) -> Result<(), ApplicationError> {
+        let entries = self.0.as_ref().expect("secret CBOR map is present");
+        if entries.len() != expected.len()
+            || entries.iter().any(
+                |(key, _)| !matches!(key, CborValue::Unsigned(value) if expected.contains(value)),
+            )
+        {
+            return Err(ApplicationError::IntegrityFailure);
+        }
+        Ok(())
+    }
+
+    fn take(&mut self, key: u64) -> Result<SecretCborValue, ApplicationError> {
+        let entries = self.0.as_mut().expect("secret CBOR map is present");
+        let index = entries
+            .iter()
+            .position(|(candidate, _)| candidate == &CborValue::Unsigned(key))
+            .ok_or(ApplicationError::IntegrityFailure)?;
+        let (mut encoded_key, value) = entries.remove(index);
+        zeroize_cbor(&mut encoded_key);
+        Ok(SecretCborValue::new(value))
+    }
+}
+
+impl Drop for SecretCborMap {
+    fn drop(&mut self) {
+        if let Some(entries) = &mut self.0 {
+            for (key, value) in entries {
+                zeroize_cbor(key);
+                zeroize_cbor(value);
+            }
         }
     }
 }
@@ -467,6 +817,19 @@ mod tests {
         assert_eq!(
             PortableExportPolicyV1::new(1, 1, 1),
             Err(ApplicationError::InvalidInput)
+        );
+        let open_policy = PortableOpenPolicyV1::new(8 * 1024, 2, 1).unwrap();
+        assert_eq!(
+            format!("{open_policy:?}"),
+            "PortableOpenPolicyV1 { max_memory_kib: 8192, max_iterations: 2, max_lanes: 1 }"
+        );
+        assert_eq!(
+            PortableOpenPolicyV1::new(1, 1, 1),
+            Err(ApplicationError::InvalidInput)
+        );
+        assert_eq!(
+            MAX_PORTABLE_EXPORT_ARTIFACT_BYTES,
+            MAX_PORTABLE_EXPORT_PLAINTEXT_BYTES + 4_096
         );
 
         let randomness = PortableExportRandomnessV1::new([0x5a; PORTABLE_EXPORT_RANDOM_BYTES]);

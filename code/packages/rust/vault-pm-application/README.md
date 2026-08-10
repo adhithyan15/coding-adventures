@@ -222,9 +222,24 @@ and search data; public diagnostics reveal no bytes, while passphrase, key,
 plaintext, encoded revisions, and hash preimages are wiped on drop.
 
 The host receives only exact encrypted bytes and remains responsible for an
-explicit destination and safe file replacement. Public import is deliberately
-separate: its follow-up must authenticate and verify the artifact, then create
-new item, revision, object, and encryption identities inside a new target vault.
+explicit destination and safe file replacement.
+
+Untrusted artifacts can now be opened through a separate no-write boundary.
+The caller supplies the owned export passphrase plus an explicit maximum
+Argon2id memory/iteration/lane policy, preventing artifact-controlled resource
+cost beyond host approval. Opening strictly checks the bounded canonical
+header, authenticates header-bound AEAD before plaintext parsing, verifies the
+snapshot count/hash and signed source bootstrap, enforces deterministic unique
+source item/revision order and per-item bounds, and decodes every candidate with
+exact item binding. Wrong credentials and valid-shape tag tampering share the
+closed authentication failure.
+
+Success remains inside an opaque non-cloneable application object exposing only
+item and candidate counts. Source identities, bootstrap bytes, metadata, and
+documents have no public accessor; diagnostics are redacted and all intermediate
+secret-bearing buffers and CBOR trees wipe on every path. Cross-vault import is
+still separate: its follow-up must consume the opaque snapshot and create new
+item, revision, object, and encryption identities inside a new target vault.
 
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
@@ -263,9 +278,9 @@ diagnostics; and failure without repair.
 Search tests cover Unicode normalization, short queries, oversized safe-field
 fallback, exact collection filters, deterministic product ordering, every
 record schema's allowlist/denylist, secret exclusion, query/result bounds, and
-conflict closure. The exact Tarpaulin LLVM result is 2,727 of 2,858 production
-lines (95.42%); portable export is 204 of 214, doctor is 44 of 45, and status
-remains 46 of 46.
+conflict closure. The exact Tarpaulin LLVM result is 2,894 of 3,042 production
+lines (95.13%); portable export and opening are 367 of 394, doctor is 44 of 45,
+and status remains 46 of 46.
 Add-item tests cover exact
 entropy partitioning and wiping,
 identity validation before local writes, parentless revision and complete
@@ -282,11 +297,12 @@ tombstone selection, authored merged-secret persistence, complete multi-parent
 causality, immutable live-identity preservation, immutable losing-candidate
 retention, missing/unconflicted/all-tombstone rejection before
 compare-exchange, and entropy redaction/wiping.
-Portable-export tests prove the exact canonical encrypted vector, separate
+Portable-export/open tests prove the exact canonical encrypted vector, separate
 passphrase authentication, header/ciphertext tamper rejection, exact active
 bootstrap binding, plaintext-secret exclusion, complete snapshot count/hash,
-live-document recovery, bounded credential rejection, and lossless retention
-of every current conflicting tombstone.
+signed-bootstrap validation, host KDF-ceiling enforcement, candidate identity
+and ordering validation, live-document recovery, bounded credential rejection,
+and lossless retention of every current conflicting tombstone.
 
 ## Development
 

@@ -2,6 +2,28 @@
 
 All notable changes to this package are documented here.
 
+## [0.27.0] - 2026-08-10
+
+### Added
+
+- Add strict authenticated opening for an untrusted canonical portable export,
+  returning one opaque non-cloneable secret-bearing snapshot with aggregate
+  item and candidate counts only.
+- Add an explicit host-approved Argon2id memory, iteration, and lane ceiling
+  checked before artifact-controlled KDF work.
+
+### Security
+
+- Bound the artifact before canonical decode, authenticate the complete
+  header-bound ciphertext before plaintext parsing, and make wrong credentials
+  indistinguishable from valid-shape tag tampering.
+- Verify the exact snapshot count/hash, embedded authority-signed bootstrap,
+  strict source item/revision ordering, per-item candidate bounds, canonical
+  revisions, and entry/document item binding before returning success.
+- Keep opening free of target-vault or provider writes; expose no source
+  identity or document accessors, redact diagnostics, and wipe all intermediate
+  secret-bearing buffers and CBOR trees on every return path.
+
 ## [0.26.0] - 2026-08-10
 
 ### Added
