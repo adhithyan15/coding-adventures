@@ -58,6 +58,7 @@ wants the strict-Flux store/dispatcher contract.
 | Text         | `Text(text = ...)`                        |
 | Spacer       | `Spacer(modifier = Modifier.weight(1f))`  |
 | HostInput    | `BasicTextField(value, onValueChange...)` |
+| Input        | multiline-capable `BasicTextField`        |
 | HostButton   | `Button(onClick) { Text(label) }`         |
 
 `For`, `If`/`Else`, `Grid`, `HostTable`, `HostDialog`,
