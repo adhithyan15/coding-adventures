@@ -66,6 +66,7 @@ jobs:
       needs_cpp: ${{ steps.toolchains.outputs.needs_cpp }}
       needs_venture_windows: ${{ steps.venture-windows.outputs.required }}
       needs_mosaic_xaml_windows: ${{ steps.mosaic-xaml-windows.outputs.required }}
+      needs_mosaic_swift_runtime: ${{ steps.mosaic-swift-runtime.outputs.required }}
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
       build_shards: ${{ steps.detect.outputs.build_shards }}
@@ -127,6 +128,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_linux_oci.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_venture_windows_ci_acceptance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_xaml_windows_ci_acceptance.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_swift_runtime_ci_acceptance.py'
           python3 code/scripts/build_tool_conformance.py validate-corpus
           python3 code/scripts/build_tool_conformance_execution.py validate-contract
           python3 code/scripts/package_parity_report.py --format json --fail-on-collisions > /tmp/package-parity-report.json
@@ -226,6 +228,15 @@ jobs:
         shell: bash
         run: |
           python3 code/scripts/mosaic_xaml_windows_ci_acceptance.py \
+            build-plan.json \
+            --repo-root . \
+            --diff-base "${{ steps.diff-base.outputs.base }}" >> "$GITHUB_OUTPUT"
+
+      - name: Detect Mosaic Swift runtime acceptance
+        id: mosaic-swift-runtime
+        shell: bash
+        run: |
+          python3 code/scripts/mosaic_swift_runtime_ci_acceptance.py \
             build-plan.json \
             --repo-root . \
             --diff-base "${{ steps.diff-base.outputs.base }}" >> "$GITHUB_OUTPUT"
@@ -530,7 +541,7 @@ jobs:
           clang --version | head -1
 
       - name: Set up Rust
-        if: needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
+        if: needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_xaml_windows == 'true' || needs.detect.outputs.needs_mosaic_swift_runtime == 'true'
         # Uses the `stable` channel (matching the rest of this repo's Rust CI).
         # NOTE on the -clippy gate: clippy adds/tightens lints on each stable
         # release, so a new Rust release can surface new lints on `main` — treat
@@ -908,6 +919,26 @@ jobs:
           set -euo pipefail
           cd code/packages/rust
           cargo test -p venture-browser-macos
+
+      - name: Round-trip Rust engine through standard SwiftUI binding
+        if: runner.os == 'macOS' && needs.detect.outputs.needs_mosaic_swift_runtime == 'true'
+        shell: bash
+        timeout-minutes: 10
+        run: |
+          set -euo pipefail
+          output="$RUNNER_TEMP/mosaic-swift-taskapp"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend swiftui --output "$output" --emit-project
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
+
+          harness="$RUNNER_TEMP/mosaic-swift-runtime-conformance"
+          cp -R code/packages/rust/mosaic-app-bindings/conformance/swiftui "$harness"
+          mkdir -p "$harness/Sources/CMosaicRuntime/include"
+          cp "$output/swiftui/Sources/App/MosaicRuntimeHost.swift" "$harness/Sources/Conformance/MosaicRuntimeHost.swift"
+          cp "$output/swiftui/Sources/CMosaicRuntime/CMosaicRuntime.c" "$harness/Sources/CMosaicRuntime/CMosaicRuntime.c"
+          cp "$output/swiftui/Sources/CMosaicRuntime/include/CMosaicRuntime.h" "$harness/Sources/CMosaicRuntime/include/CMosaicRuntime.h"
+
+          export MOSAIC_APP_LIBRARY="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.dylib"
+          swift run --package-path "$harness" Conformance
 
       - name: Build complete Mosaic TaskApp WinUI shell
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'

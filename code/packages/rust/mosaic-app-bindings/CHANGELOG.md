@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Execute the generated SwiftUI binding and C loader against the shared Rust
+  conformance dylib in macOS CI, covering startup, dispatch, snapshot/restore,
+  prop-change notification, buffer ownership, and teardown through the real ABI.
 - Make the XAML Rust-runtime conformance executable independent of WinUI desktop
   initialization after the complete generated TaskApp has compiled against the
   real Windows App SDK, and bound the CI execution with an explicit timeout.
