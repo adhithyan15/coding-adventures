@@ -2,6 +2,26 @@
 
 All notable changes to this package are documented here.
 
+## [0.17.0] - 2026-08-09
+
+### Added
+
+- Add a session-consuming `restore_item` workflow that locates one selected
+  revision through bounded reachable history and republishes its live document
+  as a new current revision.
+- Add owned wipe-on-drop randomness for the three encrypted restoration frames.
+
+### Security
+
+- Require the selected revision to be reachable from a current head, live,
+  different from the sole current candidate, and bound to the same item before
+  the local write-ahead compare-exchange.
+- Make only the selected historical revision the new revision's causal parent,
+  while preserving all current commit heads and historical immutable bytes.
+- Reject unreachable revisions with `NotFound`, tombstones/current selections
+  with `InvalidInput`, and unresolved current candidates with
+  `ConflictRequired`, without asking a host to resupply secret plaintext.
+
 ## [0.16.0] - 2026-08-09
 
 ### Added

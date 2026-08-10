@@ -23,6 +23,8 @@ pub const ADD_ITEM_RANDOM_BYTES: usize = ITEM_ID_BYTES + 3 * OBJECT_RANDOM_BYTES
 pub const REPLACE_ITEM_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES;
 /// Exact caller-filled CSPRNG bytes consumed by one delete-item mutation.
 pub const DELETE_ITEM_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES;
+/// Exact caller-filled CSPRNG bytes consumed by one restore-item mutation.
+pub const RESTORE_ITEM_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES;
 
 /// Owned wipe-on-drop entropy for one item ID and three encrypted frames.
 pub struct AddItemRandomnessV1 {
@@ -120,6 +122,36 @@ impl Drop for DeleteItemRandomnessV1 {
 impl Debug for DeleteItemRandomnessV1 {
     fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
         formatter.write_str("DeleteItemRandomnessV1(<redacted>)")
+    }
+}
+
+/// Owned wipe-on-drop entropy for the three encrypted restoration frames.
+pub struct RestoreItemRandomnessV1 {
+    bytes: [u8; RESTORE_ITEM_RANDOM_BYTES],
+}
+
+impl RestoreItemRandomnessV1 {
+    /// Take one exact block filled by the host's cryptographic entropy source.
+    pub const fn new(bytes: [u8; RESTORE_ITEM_RANDOM_BYTES]) -> Self {
+        Self { bytes }
+    }
+}
+
+impl Zeroize for RestoreItemRandomnessV1 {
+    fn zeroize(&mut self) {
+        self.bytes.zeroize();
+    }
+}
+
+impl Drop for RestoreItemRandomnessV1 {
+    fn drop(&mut self) {
+        self.zeroize();
+    }
+}
+
+impl Debug for RestoreItemRandomnessV1 {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter.write_str("RestoreItemRandomnessV1(<redacted>)")
     }
 }
 
@@ -262,6 +294,50 @@ pub(crate) fn delete_item(
             deleted_at_ms,
         }),
         &BTreeSet::from([expected_revision]),
+        wall_time_ms,
+        &randomness.bytes,
+    )?;
+    publish_mutation(active, repository, publication, local_state_store)
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn restore_item(
+    active: &ActiveStateV1,
+    report: &OpenReport,
+    current_items: &BTreeMap<ItemId, Vec<ItemCandidate>>,
+    keys: &V1Keys,
+    local_secret: &LocalSecretV1,
+    repository: &dyn ApplicationRepository,
+    selected: ItemCandidate,
+    wall_time_ms: u64,
+    randomness: RestoreItemRandomnessV1,
+    local_state_store: &dyn LocalStateStore,
+) -> Result<ActiveStateV1, ApplicationError> {
+    if report.heads() != active.pinned_heads() {
+        return Err(ApplicationError::ConcurrentHost);
+    }
+    let item_id = selected.item_id();
+    let current = current_items
+        .get(&item_id)
+        .ok_or(ApplicationError::NotFound)?;
+    let [current] = current.as_slice() else {
+        return Err(ApplicationError::ConflictRequired);
+    };
+    if current.revision_id() == selected.revision_id() {
+        return Err(ApplicationError::InvalidInput);
+    }
+    let ItemState::Live(document) = selected.state() else {
+        return Err(ApplicationError::InvalidInput);
+    };
+
+    let publication = prepare_item_publication(
+        active,
+        current_items,
+        keys,
+        local_secret,
+        item_id,
+        ItemState::Live(document.clone()),
+        &BTreeSet::from([selected.revision_id()]),
         wall_time_ms,
         &randomness.bytes,
     )?;
@@ -521,6 +597,20 @@ mod tests {
             "DeleteItemRandomnessV1(<redacted>)"
         );
         assert!(randomness.bytes.iter().all(|byte| *byte == 0x3c));
+
+        randomness.zeroize();
+        assert!(randomness.bytes.iter().all(|byte| *byte == 0));
+    }
+
+    #[test]
+    fn restore_item_randomness_redacts_and_zeroizes() {
+        let mut randomness = RestoreItemRandomnessV1::new([0xc3; RESTORE_ITEM_RANDOM_BYTES]);
+
+        assert_eq!(
+            format!("{randomness:?}"),
+            "RestoreItemRandomnessV1(<redacted>)"
+        );
+        assert!(randomness.bytes.iter().all(|byte| *byte == 0xc3));
 
         randomness.zeroize();
         assert!(randomness.bytes.iter().all(|byte| *byte == 0));
