@@ -36,14 +36,24 @@ set stays sound once minor collection is reachable from real Twig source.
   no static type information distinguishing a pointer element/field from a scalar
   one, and the barrier never dereferences `child`, so passing a non-pointer value is
   a harmless over-approximation.
-- 5 new unit tests (`field_store_calls_the_generational_write_barrier`,
+- 7 new unit tests. Five assert `__twig_gc_write_barrier` `PltRel32`-relocation
+  presence/count via `compile_function_with_relocs`
+  (`field_store_calls_the_generational_write_barrier`,
   `field_store_write_barrier_is_emitted_per_store_not_deduplicated`,
   `array_set_calls_the_generational_write_barrier`,
   `array_set_write_barrier_is_emitted_per_store_not_deduplicated`,
-  `field_store_write_barrier_lowers_under_msx64_abi_too`), asserting
-  `__twig_gc_write_barrier` `PltRel32`-relocation presence/count via
-  `compile_function_with_relocs`. Confirmed load-bearing via revert-check (barrier
-  calls disabled → all 5 new tests fail as predicted; restored → all 80 pass).
+  `field_store_write_barrier_lowers_under_msx64_abi_too`). Confirmed load-bearing via
+  revert-check (barrier calls disabled → all 5 fail as predicted; restored → pass).
+  Two more, added after security review flagged that a reloc-count-only MsX64 test
+  can't tell a correct `abi.arg_regs()` reload from a latent hardcoded-SysV-register
+  bug (both compile to the same relocation), assert the actual machine-code bytes:
+  `field_store_write_barrier_loads_sysv_args_into_rdi_rsi` proves the SysV reload
+  lands in RDI/RSI (registers `field_store` never otherwise touches), and the
+  strengthened `field_store_write_barrier_lowers_under_msx64_abi_too` /
+  new `array_set_write_barrier_lowers_under_msx64_abi_too` prove the MsX64-compiled
+  body contains **no** RDI/RSI loads at all. Verified these two are load-bearing by
+  temporarily hardcoding `Reg::Rdi`/`Reg::Rsi` into the `field_store` MsX64 path —
+  the MsX64 absence-check failed exactly as predicted; reverted, all 82 pass.
 - Currently inert in practice, same as the aarch64 fixes: no `gc_set_auto_minor`/
   `gc_collect_minor_precise` builtin table entries exist in this backend yet, so
   minor collection is not reachable from real Twig source through this path. No

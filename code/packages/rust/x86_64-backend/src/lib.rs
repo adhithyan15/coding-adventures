@@ -2455,11 +2455,35 @@ mod tests {
         assert_eq!(count, 2, "expected 2 write-barrier calls (one per store), relocs: {relocs:?}");
     }
 
-    /// The barrier reload must target the MsX64 arg registers (RCX/RDX), not SysV's
-    /// (RDI/RSI), when compiled under that ABI — the dual-ABI hazard this fix's own
-    /// design comment calls out. We can't decode individual MOV operands cheaply here,
-    /// but we CAN assert the call itself still lowers (no ABI-conditional panic/bad
-    /// arg-count path) and still emits exactly one barrier reloc under MsX64.
+    /// SysV positive proof: the barrier reload must actually land in RDI/RSI (SysV
+    /// arg0/arg1), not just emit a reloc of the right count/symbol. `field_store`'s
+    /// own codegen never otherwise touches RDI or RSI (only RAX/RCX), so their
+    /// presence here is unambiguous evidence the reload used `abi.arg_regs()`, not an
+    /// accident of some other operand happening to land in the same register.
+    #[test]
+    fn field_store_write_barrier_loads_sysv_args_into_rdi_rsi() {
+        let ir = vec![
+            instr("const_u64", Some("h"), vec![Op::Int(7)]),
+            instr("alloc", Some("cell"), vec![]),
+            instr("field_store", None, vec![Op::Var("cell".into()), Op::Int(0), Op::Var("h".into())]),
+            instr("ret_u64", None, vec![Op::Int(0)]),
+        ];
+        let bytes = compile_function(&fn_ctx("wb_field_store_sysv_regs", &[], "u64"), &ir, X86_64Abi::SysV)
+            .expect("field_store must lower");
+        // `mov rdi, [rbp+disp32]` = 48 8B BD; `mov rsi, [rbp+disp32]` = 48 8B B5.
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0xBD]),
+            "expected the barrier's parent reload into RDI (SysV arg0) — field_store never otherwise uses RDI");
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0xB5]),
+            "expected the barrier's child reload into RSI (SysV arg1) — field_store never otherwise uses RSI");
+    }
+
+    /// The dual-ABI hazard this fix's own design comment calls out: under MsX64 the
+    /// barrier reload must target RCX/RDX (MsX64 arg0/arg1), never fall back to SysV's
+    /// RDI/RSI. `field_store` never otherwise uses RDI/RSI for anything (this IR has no
+    /// params to spill and no other calls), so their absence in MsX64-compiled bytes is
+    /// direct, executable proof the reload used `abi.arg_regs()` rather than a
+    /// hardcoded SysV register pair — the exact regression class a reloc-count-only
+    /// test (as this test originally was, per security review) would silently miss.
     #[test]
     fn field_store_write_barrier_lowers_under_msx64_abi_too() {
         let ir = vec![
@@ -2474,6 +2498,42 @@ mod tests {
         assert!(!bytes.is_empty());
         let count = relocs.iter().filter(|r| r.symbol == "__twig_gc_write_barrier").count();
         assert_eq!(count, 1, "expected exactly 1 write-barrier call under MsX64, relocs: {relocs:?}");
+        // `mov rdi, [rbp+disp32]` = 48 8B BD; `mov rsi, [rbp+disp32]` = 48 8B B5 —
+        // neither SysV arg register should appear anywhere in an MsX64-compiled body.
+        assert!(!body_contains(&bytes, &[0x48, 0x8B, 0xBD]),
+            "must NOT load into RDI (SysV arg0) when compiled under MsX64");
+        assert!(!body_contains(&bytes, &[0x48, 0x8B, 0xB5]),
+            "must NOT load into RSI (SysV arg1) when compiled under MsX64");
+        // `mov rdx, [rbp+disp32]` = 48 8B 95 — field_store never otherwise touches RDX,
+        // so its presence is unambiguous proof the child reload landed in MsX64 arg1.
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0x95]),
+            "expected the barrier's child reload into RDX (MsX64 arg1)");
+    }
+
+    /// Same dual-ABI absence-of-SysV-registers check for `array_set`. Unlike
+    /// `field_store`, `array_set`'s own codegen already uses RAX/RCX/RDX for the
+    /// bounds check and store, so a positive "which register got the reload" proof
+    /// isn't clean here — but RDI/RSI are still never touched by anything else in
+    /// this op, so their absence still directly proves no hardcoded-SysV leak.
+    #[test]
+    fn array_set_write_barrier_lowers_under_msx64_abi_too() {
+        let ir = vec![
+            instr("const_u64", Some("n"), vec![Op::Int(3)]),
+            instr("alloc_array", Some("a"), vec![Op::Var("n".into())]),
+            instr("const_u64", Some("i"), vec![Op::Int(0)]),
+            instr("const_u64", Some("v"), vec![Op::Int(42)]),
+            instr("array_set", None, vec![Op::Var("a".into()), Op::Var("i".into()), Op::Var("v".into())]),
+            instr("ret_u64", None, vec![Op::Int(0)]),
+        ];
+        let (bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("wb_array_set_msx64", &[], "u64"), &ir, X86_64Abi::MsX64)
+                .expect("array_set must lower under MsX64 too");
+        let count = relocs.iter().filter(|r| r.symbol == "__twig_gc_write_barrier").count();
+        assert_eq!(count, 1, "expected exactly 1 write-barrier call under MsX64, relocs: {relocs:?}");
+        assert!(!body_contains(&bytes, &[0x48, 0x8B, 0xBD]),
+            "must NOT load into RDI (SysV arg0) when compiled under MsX64");
+        assert!(!body_contains(&bytes, &[0x48, 0x8B, 0xB5]),
+            "must NOT load into RSI (SysV arg1) when compiled under MsX64");
     }
 
     #[test]
