@@ -2,6 +2,23 @@
 
 All notable changes to this package are documented here.
 
+## [0.10.0] - 2026-08-09
+
+### Added
+
+- Materialize every distinct verified-head catalog and referenced current item
+  revision into the authenticated unlocked session.
+- Expose payload-free item, candidate, and conflicted-item counts for later
+  status, redacted-view, and search workflows.
+
+### Security
+
+- Bound the union across head catalogs to 100,000 item identities and 16
+  candidates per item, deduplicate identical references, and fail closed on
+  dangling, missing direct-parent, or cross-item revision references.
+- Keep decrypted domain candidates inside the wipe-on-drop session boundary
+  and omit item IDs and metadata from ordinary diagnostics.
+
 ## [0.9.0] - 2026-08-09
 
 ### Added

@@ -14,8 +14,8 @@ const VERSION: u64 = 1;
 const LIVE_STATE: u64 = 1;
 const TOMBSTONE_STATE: u64 = 2;
 const MAX_PLAINTEXT_BYTES: usize = 16 * 1024 * 1024;
-const MAX_CATALOG_ENTRIES: usize = 100_000;
-const MAX_CANDIDATES_PER_ITEM: usize = 16;
+pub(crate) const MAX_CATALOG_ENTRIES: usize = 100_000;
+pub(crate) const MAX_CANDIDATES_PER_ITEM: usize = 16;
 
 /// Owner-private authority and device seeds persisted only as encrypted state.
 #[derive(PartialEq, Eq)]

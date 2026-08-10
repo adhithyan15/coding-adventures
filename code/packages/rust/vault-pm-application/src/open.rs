@@ -1,13 +1,40 @@
 use crate::initialize::{unlock_active_material, UnlockedActiveMaterial};
 use crate::{
-    ActiveStateV1, ApplicationError, ApplicationRepository, ApplicationRepositoryError,
-    ApplicationRepositoryFactory, BootstrapLocator, BootstrapStore, BootstrapStoreError,
-    LocalSecretV1, LocalStateStore, LocalStateStoreError, LocalVaultStateV1, V1Keys,
+    open_object, ActiveStateV1, ApplicationError, ApplicationRepository,
+    ApplicationRepositoryError, ApplicationRepositoryFactory, BootstrapLocator, BootstrapStore,
+    BootstrapStoreError, CatalogV1, LocalSecretV1, LocalStateStore, LocalStateStoreError,
+    LocalVaultStateV1, ObjectKind, V1Keys,
 };
-use coding_adventures_vault_pm_format::{DeviceId, VaultId};
+use coding_adventures_vault_pm_domain::{ItemCandidate, ItemId, RevisionId};
+use coding_adventures_vault_pm_format::{DeviceId, ObjectId, VaultId};
 use coding_adventures_vault_pm_repository::{OpenReport, PinnedHeads};
 use coding_adventures_zeroize::Zeroizing;
 use core::fmt::{self, Debug, Formatter};
+use std::collections::{BTreeMap, BTreeSet};
+
+use crate::codec::{MAX_CANDIDATES_PER_ITEM, MAX_CATALOG_ENTRIES};
+
+struct CurrentCatalogV1 {
+    items: BTreeMap<ItemId, Vec<ItemCandidate>>,
+    candidate_count: usize,
+}
+
+impl CurrentCatalogV1 {
+    fn item_count(&self) -> usize {
+        self.items.len()
+    }
+
+    const fn candidate_count(&self) -> usize {
+        self.candidate_count
+    }
+
+    fn conflicted_item_count(&self) -> usize {
+        self.items
+            .values()
+            .filter(|candidates| candidates.len() > 1)
+            .count()
+    }
+}
 
 /// One authenticated active-vault session with live keys and a verified
 /// repository view.
@@ -17,6 +44,7 @@ use core::fmt::{self, Debug, Formatter};
 pub struct UnlockedVaultV1 {
     active: ActiveStateV1,
     report: OpenReport,
+    current_catalog: CurrentCatalogV1,
     _keys: V1Keys,
     _local_secret: LocalSecretV1,
     _repository: Box<dyn ApplicationRepository>,
@@ -42,6 +70,23 @@ impl UnlockedVaultV1 {
     pub const fn open_report(&self) -> &OpenReport {
         &self.report
     }
+
+    /// Return the number of distinct current item identities without exposing
+    /// any identity or item metadata.
+    pub fn item_count(&self) -> usize {
+        self.current_catalog.item_count()
+    }
+
+    /// Return the number of retained current revision candidates across all
+    /// items. A value larger than [`Self::item_count`] indicates conflicts.
+    pub const fn candidate_count(&self) -> usize {
+        self.current_catalog.candidate_count()
+    }
+
+    /// Return how many current items retain more than one revision candidate.
+    pub fn conflicted_item_count(&self) -> usize {
+        self.current_catalog.conflicted_item_count()
+    }
 }
 
 impl Debug for UnlockedVaultV1 {
@@ -50,6 +95,12 @@ impl Debug for UnlockedVaultV1 {
             .debug_struct("UnlockedVaultV1")
             .field("local_pin_count", &self.active.pinned_heads().len())
             .field("verified_head_count", &self.report.heads().len())
+            .field("item_count", &self.current_catalog.item_count())
+            .field("candidate_count", &self.current_catalog.candidate_count())
+            .field(
+                "conflicted_item_count",
+                &self.current_catalog.conflicted_item_count(),
+            )
             .finish_non_exhaustive()
     }
 }
@@ -95,14 +146,97 @@ pub fn open_active_vault(
     if report.fresh_device_unanchored() || report.heads().is_empty() {
         return Err(ApplicationError::IntegrityFailure);
     }
+    let current_catalog = materialize_current_catalog(
+        &material.keys,
+        repository.as_ref(),
+        &report,
+        active.vault_id(),
+    )?;
 
     Ok(UnlockedVaultV1 {
         active,
         report,
+        current_catalog,
         _keys: material.keys,
         _local_secret: material.local_secret,
         _repository: repository,
     })
+}
+
+fn materialize_current_catalog(
+    keys: &V1Keys,
+    repository: &dyn ApplicationRepository,
+    report: &OpenReport,
+    vault_id: VaultId,
+) -> Result<CurrentCatalogV1, ApplicationError> {
+    let mut materialized = BTreeMap::<ItemId, BTreeMap<RevisionId, ItemCandidate>>::new();
+    let mut seen_catalogs = BTreeSet::new();
+
+    for head_id in report.heads().iter().copied() {
+        let commit = repository.read_commit(head_id).map_err(map_repository)?;
+        if commit.id() != head_id || commit.vault_id() != vault_id {
+            return Err(ApplicationError::IntegrityFailure);
+        }
+        let catalog_id = commit.catalog_root();
+        if !seen_catalogs.insert(catalog_id) {
+            continue;
+        }
+        let catalog_object = repository.read_object(catalog_id).map_err(map_repository)?;
+        if catalog_object.id() != catalog_id {
+            return Err(ApplicationError::IntegrityFailure);
+        }
+        let catalog_plaintext = open_object(keys, ObjectKind::Catalog, catalog_object.frame())?;
+        let catalog = CatalogV1::decode(&catalog_plaintext)?;
+
+        for (item_id, revision_ids) in catalog.entries() {
+            if !materialized.contains_key(item_id) && materialized.len() == MAX_CATALOG_ENTRIES {
+                return Err(ApplicationError::IntegrityFailure);
+            }
+            let candidates = materialized.entry(*item_id).or_default();
+            for revision_id in revision_ids {
+                if candidates.contains_key(revision_id) {
+                    continue;
+                }
+                if candidates.len() == MAX_CANDIDATES_PER_ITEM {
+                    return Err(ApplicationError::IntegrityFailure);
+                }
+                let candidate = read_candidate(keys, repository, *revision_id)?;
+                if candidate.item_id() != *item_id {
+                    return Err(ApplicationError::IntegrityFailure);
+                }
+                for parent_id in candidate.causal_parents() {
+                    let parent = read_candidate(keys, repository, *parent_id)?;
+                    if parent.item_id() != *item_id {
+                        return Err(ApplicationError::IntegrityFailure);
+                    }
+                }
+                candidates.insert(*revision_id, candidate);
+            }
+        }
+    }
+
+    let candidate_count = materialized.values().map(BTreeMap::len).sum();
+    Ok(CurrentCatalogV1 {
+        items: materialized
+            .into_iter()
+            .map(|(item_id, candidates)| (item_id, candidates.into_values().collect()))
+            .collect(),
+        candidate_count,
+    })
+}
+
+fn read_candidate(
+    keys: &V1Keys,
+    repository: &dyn ApplicationRepository,
+    revision_id: RevisionId,
+) -> Result<ItemCandidate, ApplicationError> {
+    let object_id = ObjectId::new(*revision_id.as_bytes());
+    let revision_object = repository.read_object(object_id).map_err(map_repository)?;
+    if revision_object.id() != object_id {
+        return Err(ApplicationError::IntegrityFailure);
+    }
+    let revision_plaintext = open_object(keys, ObjectKind::ItemRevision, revision_object.frame())?;
+    crate::decode_item_revision(revision_id, &revision_plaintext)
 }
 
 /// Replay one exact durable `PendingPublication` and atomically advance it to
@@ -202,11 +336,13 @@ fn map_repository(error: ApplicationRepositoryError) -> ApplicationError {
 mod tests {
     use super::*;
     use crate::{
-        complete_generation_zero, encode_signed_commit, prepare_generation_zero, seal_object,
-        CatalogV1, GenerationZeroPolicyV1, GenerationZeroRandomness, ObjectKind, ObjectRandomness,
-        PublicationJournalV1, V1ApplicationRepositoryFactory, V1Keys, GENERATION_ZERO_RANDOM_BYTES,
+        complete_generation_zero, encode_item_revision, encode_signed_commit,
+        prepare_generation_zero, seal_object, CatalogV1, GenerationZeroPolicyV1,
+        GenerationZeroRandomness, ObjectKind, ObjectRandomness, PublicationJournalV1,
+        V1ApplicationRepositoryFactory, V1Keys, GENERATION_ZERO_RANDOM_BYTES,
     };
     use coding_adventures_ed25519::{generate_keypair, sign};
+    use coding_adventures_vault_pm_domain::{ItemState, Tombstone};
     use coding_adventures_vault_pm_format::{AnnouncementV1, BootstrapId, CommitV1, Signature};
     use coding_adventures_vault_pm_storage::{
         FaultAction, FaultEffect, FaultInjectingObjectStore, InMemoryObjectStore, StoreOperation,
@@ -340,8 +476,6 @@ mod tests {
     fn pending_publication(active: &ActiveStateV1) -> PublicationJournalV1 {
         let fixture = generation_zero_bytes();
         let root_key: [u8; 32] = fixture[48..80].try_into().unwrap();
-        let signing_seed: [u8; 32] = fixture[168..200].try_into().unwrap();
-        let (_, signing_secret) = generate_keypair(&signing_seed);
         let keys = V1Keys::derive(active.vault_id(), &root_key).unwrap();
         let catalog_frame = seal_object(
             &keys,
@@ -350,7 +484,147 @@ mod tests {
             &ObjectRandomness::new([0xd1; 32], [0xd2; 24], [0xd3; 24]),
         )
         .unwrap();
+        publication_for_catalog(active, Vec::new(), catalog_frame)
+    }
+
+    fn pending_tombstone_publication(
+        active: &ActiveStateV1,
+        catalog_item_id: ItemId,
+        revision_item_id: ItemId,
+        candidate_count: usize,
+        causal_parent: Option<RevisionId>,
+    ) -> (PublicationJournalV1, Vec<RevisionId>) {
+        let fixture = generation_zero_bytes();
+        let root_key: [u8; 32] = fixture[48..80].try_into().unwrap();
+        let keys = V1Keys::derive(active.vault_id(), &root_key).unwrap();
+        let mut objects = Vec::new();
+        let mut revision_ids = Vec::new();
+        for index in 0..candidate_count {
+            let candidate = ItemCandidate::new(
+                RevisionId::new([0; 32]),
+                causal_parent,
+                ItemState::Tombstone(Tombstone {
+                    item_id: revision_item_id,
+                    deleted_at_ms: 100 + index as u64,
+                }),
+            )
+            .unwrap();
+            let base = 0x40u8.wrapping_add(index as u8 * 3);
+            let frame = seal_object(
+                &keys,
+                ObjectKind::ItemRevision,
+                &encode_item_revision(candidate.causal_parents(), candidate.state()).unwrap(),
+                &ObjectRandomness::new([base; 32], [base + 1; 24], [base + 2; 24]),
+            )
+            .unwrap();
+            revision_ids.push(RevisionId::new(*frame.id().unwrap().as_bytes()));
+            objects.push(frame);
+        }
+        revision_ids.sort_unstable();
+        let catalog =
+            CatalogV1::new(BTreeMap::from([(catalog_item_id, revision_ids.clone())])).unwrap();
+        let catalog_frame = seal_object(
+            &keys,
+            ObjectKind::Catalog,
+            &catalog.encode().unwrap(),
+            &ObjectRandomness::new([0xa1; 32], [0xa2; 24], [0xa3; 24]),
+        )
+        .unwrap();
+        (
+            publication_for_catalog(active, objects, catalog_frame),
+            revision_ids,
+        )
+    }
+
+    fn pending_dangling_catalog(active: &ActiveStateV1) -> PublicationJournalV1 {
+        let fixture = generation_zero_bytes();
+        let root_key: [u8; 32] = fixture[48..80].try_into().unwrap();
+        let keys = V1Keys::derive(active.vault_id(), &root_key).unwrap();
+        let catalog = CatalogV1::new(BTreeMap::from([(
+            ItemId::new([0x31; 16]),
+            vec![RevisionId::new([0x32; 32])],
+        )]))
+        .unwrap();
+        let catalog_frame = seal_object(
+            &keys,
+            ObjectKind::Catalog,
+            &catalog.encode().unwrap(),
+            &ObjectRandomness::new([0xb1; 32], [0xb2; 24], [0xb3; 24]),
+        )
+        .unwrap();
+        publication_for_catalog(active, Vec::new(), catalog_frame)
+    }
+
+    fn pending_child_publication(
+        active: &ActiveStateV1,
+        item_id: ItemId,
+        parent_item_id: ItemId,
+    ) -> PublicationJournalV1 {
+        let fixture = generation_zero_bytes();
+        let root_key: [u8; 32] = fixture[48..80].try_into().unwrap();
+        let keys = V1Keys::derive(active.vault_id(), &root_key).unwrap();
+        let parent = ItemCandidate::new(
+            RevisionId::new([0; 32]),
+            [],
+            ItemState::Tombstone(Tombstone {
+                item_id: parent_item_id,
+                deleted_at_ms: 100,
+            }),
+        )
+        .unwrap();
+        let parent_frame = seal_object(
+            &keys,
+            ObjectKind::ItemRevision,
+            &encode_item_revision(parent.causal_parents(), parent.state()).unwrap(),
+            &ObjectRandomness::new([0xc1; 32], [0xc2; 24], [0xc3; 24]),
+        )
+        .unwrap();
+        let parent_id = RevisionId::new(*parent_frame.id().unwrap().as_bytes());
+        let child = ItemCandidate::new(
+            RevisionId::new([0; 32]),
+            [parent_id],
+            ItemState::Tombstone(Tombstone {
+                item_id,
+                deleted_at_ms: 101,
+            }),
+        )
+        .unwrap();
+        let child_frame = seal_object(
+            &keys,
+            ObjectKind::ItemRevision,
+            &encode_item_revision(child.causal_parents(), child.state()).unwrap(),
+            &ObjectRandomness::new([0xd1; 32], [0xd2; 24], [0xd3; 24]),
+        )
+        .unwrap();
+        let child_id = RevisionId::new(*child_frame.id().unwrap().as_bytes());
+        let catalog = CatalogV1::new(BTreeMap::from([(item_id, vec![child_id])])).unwrap();
+        let catalog_frame = seal_object(
+            &keys,
+            ObjectKind::Catalog,
+            &catalog.encode().unwrap(),
+            &ObjectRandomness::new([0xe1; 32], [0xe2; 24], [0xe3; 24]),
+        )
+        .unwrap();
+        publication_for_catalog(active, vec![parent_frame, child_frame], catalog_frame)
+    }
+
+    fn publication_for_catalog(
+        active: &ActiveStateV1,
+        mut objects: Vec<coding_adventures_vault_pm_format::ObjectFrameV1>,
+        catalog_frame: coding_adventures_vault_pm_format::ObjectFrameV1,
+    ) -> PublicationJournalV1 {
+        let fixture = generation_zero_bytes();
+        let root_key: [u8; 32] = fixture[48..80].try_into().unwrap();
+        let signing_seed: [u8; 32] = fixture[168..200].try_into().unwrap();
+        let (_, signing_secret) = generate_keypair(&signing_seed);
+        let keys = V1Keys::derive(active.vault_id(), &root_key).unwrap();
         let catalog_id = catalog_frame.id().unwrap();
+        objects.push(catalog_frame);
+        let mut added_objects = objects
+            .iter()
+            .map(|frame| frame.id().unwrap())
+            .collect::<Vec<_>>();
+        added_objects.sort_unstable();
         let parents = active.pinned_heads().iter().copied().collect::<Vec<_>>();
         let commit = CommitV1 {
             vault_id: active.vault_id(),
@@ -358,7 +632,7 @@ mod tests {
             device_counter: active.last_device_counter() + 1,
             parents,
             catalog_root: catalog_id,
-            added_objects: vec![catalog_id],
+            added_objects,
             tombstone_root: None,
             wall_time_ms: 20,
             device_certificate: active.device_certificate_id(),
@@ -388,7 +662,7 @@ mod tests {
             &signing_secret,
         )));
         PublicationJournalV1::new(
-            vec![catalog_frame],
+            objects,
             commit_frame,
             announcement.encode().unwrap(),
             active.pinned_heads().clone(),
@@ -424,13 +698,220 @@ mod tests {
         .unwrap();
 
         assert_eq!(session.local_pins(), session.open_report().heads());
+        assert_eq!(session.vault_id(), session.active.vault_id());
+        assert_eq!(session.device_id(), session.active.device_id());
         assert_eq!(session.open_report().announcement_count(), 1);
         assert_eq!(session.open_report().commit_count(), 1);
         assert!(!session.open_report().fresh_device_unanchored());
+        assert_eq!(session.item_count(), 0);
+        assert_eq!(session.candidate_count(), 0);
+        assert_eq!(session.conflicted_item_count(), 0);
         assert_eq!(
             format!("{session:?}"),
-            "UnlockedVaultV1 { local_pin_count: 1, verified_head_count: 1, .. }"
+            "UnlockedVaultV1 { local_pin_count: 1, verified_head_count: 1, item_count: 0, candidate_count: 0, conflicted_item_count: 0, .. }"
         );
+    }
+
+    #[test]
+    fn active_open_materializes_every_current_revision_candidate() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x21; 16]);
+        let (publication, expected_revision_ids) =
+            pending_tombstone_publication(&active, item_id, item_id, 2, None);
+        let pending = LocalVaultStateV1::pending_publication(active, publication).unwrap();
+        *local.0.lock().unwrap() = Some(pending.encode().unwrap());
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(session.item_count(), 1);
+        assert_eq!(session.candidate_count(), 2);
+        assert_eq!(session.conflicted_item_count(), 1);
+        let candidates = session.current_catalog.items.get(&item_id).unwrap();
+        assert_eq!(
+            candidates
+                .iter()
+                .map(ItemCandidate::revision_id)
+                .collect::<Vec<_>>(),
+            expected_revision_ids
+        );
+        assert!(format!("{session:?}").contains("item_count: 1"));
+        assert!(!format!("{session:?}").contains(&item_id.to_user_string()));
+    }
+
+    #[test]
+    fn active_open_rejects_catalog_revision_item_mismatch() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let (publication, _) = pending_tombstone_publication(
+            &active,
+            ItemId::new([0x21; 16]),
+            ItemId::new([0x22; 16]),
+            1,
+            None,
+        );
+        let pending = LocalVaultStateV1::pending_publication(active, publication).unwrap();
+        *local.0.lock().unwrap() = Some(pending.encode().unwrap());
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+
+        assert_eq!(
+            open_active_vault(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .err(),
+            Some(ApplicationError::IntegrityFailure)
+        );
+    }
+
+    #[test]
+    fn active_open_rejects_dangling_catalog_revision() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let publication = pending_dangling_catalog(&active);
+        let pending = LocalVaultStateV1::pending_publication(active, publication).unwrap();
+        *local.0.lock().unwrap() = Some(pending.encode().unwrap());
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+
+        assert_eq!(
+            open_active_vault(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .err(),
+            Some(ApplicationError::IntegrityFailure)
+        );
+    }
+
+    #[test]
+    fn active_open_rejects_dangling_causal_parent() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x41; 16]);
+        let (publication, _) = pending_tombstone_publication(
+            &active,
+            item_id,
+            item_id,
+            1,
+            Some(RevisionId::new([0x42; 32])),
+        );
+        let pending = LocalVaultStateV1::pending_publication(active, publication).unwrap();
+        *local.0.lock().unwrap() = Some(pending.encode().unwrap());
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+
+        assert_eq!(
+            open_active_vault(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .err(),
+            Some(ApplicationError::IntegrityFailure)
+        );
+    }
+
+    #[test]
+    fn active_open_validates_existing_causal_parent_item_binding() {
+        for matching_parent in [true, false] {
+            let (locator, local, bootstrap, factory) = initialized();
+            let exact_active = local.0.lock().unwrap().clone().unwrap();
+            let LocalVaultStateV1::Active(active) =
+                LocalVaultStateV1::decode(&exact_active).unwrap()
+            else {
+                panic!("fixture must be active")
+            };
+            let item_id = ItemId::new([0x51; 16]);
+            let parent_item_id = if matching_parent {
+                item_id
+            } else {
+                ItemId::new([0x52; 16])
+            };
+            let publication = pending_child_publication(&active, item_id, parent_item_id);
+            let pending = LocalVaultStateV1::pending_publication(active, publication).unwrap();
+            *local.0.lock().unwrap() = Some(pending.encode().unwrap());
+            recover_pending_publication(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap();
+
+            let result = open_active_vault(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            );
+            if matching_parent {
+                let session = result.unwrap();
+                assert_eq!(session.item_count(), 1);
+                assert_eq!(session.candidate_count(), 1);
+            } else {
+                assert_eq!(result.err(), Some(ApplicationError::IntegrityFailure));
+            }
+        }
     }
 
     #[test]
