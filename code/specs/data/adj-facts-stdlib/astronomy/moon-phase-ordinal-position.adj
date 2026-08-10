@@ -1,0 +1,70 @@
+% ============================================================================
+% moon-phase-ordinal-position — each Moon phase's place in the lunar cycle as
+% an ORDINAL WORD ("fifth", not just "5"), DERIVED (not looked up) by
+% bridging an astronomy fact to a math fact (adj-facts-stdlib, ASTRONOMY,
+% cross-directory composition with MATHEMATICS). Grounds the common framing
+% "the full Moon is the FIFTH phase in the cycle."
+% ============================================================================
+% `astronomy/moon-phases.adj` already tables each Moon phase's position in the
+% lunar cycle as a NUMBER ("full_moon" is position 5); `mathematics/ordinal-
+% numbers.adj` already tables each NUMBER's ordinal WORD (5 is "fifth").
+% Neither file states outright "the full Moon is the fifth phase" — but
+% composing the two ALREADY-SHIPPED facts answers it directly. This is the
+% SAME "compose two independently-citable facts into a derived, dual-cited
+% conclusion" discipline `language/word-families.adj`,
+% `earth-science/season-start-month-number.adj`, and
+% `astronomy/planet-ordinal-position.adj` already established — the THIRD
+% cross-directory `rule` composition in this library, and the SECOND time
+% this exact number-to-ordinal-word bridge pattern has been applied (the
+% first was `planet-ordinal-position.adj`, to a DIFFERENT already-shipped
+% table in the SAME `astronomy/` directory), demonstrating the pattern
+% generalizes to any already-shipped `(thing, number)` table with zero new
+% engine work.
+%
+%     import "moon-phase-ordinal-position.adj"
+%     ? moon_phase_ordinal_position(full_moon, $O)      % fifth
+%     ? moon_phase_ordinal_position($P, eighth)         % waning_crescent (reverse recall)
+%     ? moon_phase_ordinal_position(eclipse, $O)        % abstain -- not one of the 8 tabled phases
+%
+% This is a native `rule` (ADJ-TABLES RS-6): its body binds `$Phase`/`$Number`
+% through the already-shipped `moon_phase_order` table, then re-binds
+% `$Number`/`$Ordinal` through the already-shipped `ordinal_number` table -- a
+% plain two-hop join (the same shape `planet-ordinal-position.adj` already
+% established), not a causal inference; it just names the standard convention
+% that a counting number has a corresponding ordinal word. A query's `steps`
+% trail shows THREE entries: the rule's own citation (the ordinal-word
+% convention), the `moon_phase_order` fact's citation (NASA), and the
+% `ordinal_number` fact's citation, so a human can independently verify each
+% link. Honest abstention on any word `moon-phases.adj` does not table -- an
+% eclipse is a different astronomical event, deliberately NOT a row in the
+% source table, so this rule abstains on it too, rather than inventing a
+% position.
+%
+% CROSS-DIRECTORY IMPORT: this file lives in `astronomy/` (its natural
+% subject home, alongside `moon-phases.adj`) and imports its mathematics
+% sibling with a relative `../mathematics/ordinal-numbers.adj` path -- the
+% SAME shape `planet-ordinal-position.adj` and, before it,
+% `earth-science/season-start-month-number.adj` already established and
+% empirically verified: the CLI's import sandbox is rooted at the TOP-LEVEL
+% PROGRAM's own directory, not each importer's directory, so this resolves
+% cleanly provided the consuming entry program lives at or above the package
+% root. This library's OWN `.query.adj` companion is therefore placed at the
+% package root (not beside this file), mirroring
+% `mathematics/word-problems.query.adj`, `season-start-month-number.query.adj`,
+% and `planet-ordinal-position.query.adj`'s already-established pattern.
+%
+% Deliberately scoped to the STANDARD ordinal-word bridge only, over the
+% canonical eight lunar phases `moon-phases.adj` already tables -- no new
+% phase or ordinal-number content is asserted here, only the join. (See
+% ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+import "moon-phases.adj"
+import "../mathematics/ordinal-numbers.adj"
+
+rule { head: moon_phase_ordinal_position($Phase, $Ordinal)
+       when: moon_phase_order($Phase, $Number), ordinal_number($Number, $Ordinal)
+       source "1 one first, 2 two second, 3 three third, 4 four fourth, 5 five fifth"
+       locator "https://www.ef.edu/english-resources/english-grammar/numbers-english/"
+       trust consensus }
