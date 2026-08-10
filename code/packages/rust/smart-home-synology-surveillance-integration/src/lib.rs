@@ -23,12 +23,12 @@ use smart_home_runtime::{RuntimeError, SmartHomeRuntime};
 use std::collections::BTreeSet;
 use std::fmt;
 use std::io::{self, Read, Write};
-use std::net::{TcpStream, ToSocketAddrs};
+use std::net::{SocketAddr, TcpStream, ToSocketAddrs};
 use std::time::Duration;
 use tls_platform::{default_connector, TlsConfig, TlsConnector};
 use url_parser::{Url, UrlError};
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.1.1";
 pub const INTEGRATION_ID: &str = "synology-surveillance";
 pub const PROTOCOL_ID: &str = "synology_surveillance_webapi";
 pub const API_INFO_PATH: &str = "/webapi/query.cgi?api=SYNO.API.Info&method=Query&version=1&query=SYNO.API.Auth%2CSYNO.SurveillanceStation.Info%2CSYNO.SurveillanceStation.Camera";
@@ -156,8 +156,8 @@ impl SynologyCredentials {
         username: impl Into<String>,
         password: impl Into<String>,
     ) -> Result<Self, SynologyError> {
-        let username = username.into();
-        let password = password.into();
+        let username = Zeroizing::new(username.into());
+        let password = Zeroizing::new(password.into());
         if username.trim().is_empty() || password.is_empty() {
             return Err(SynologyError::Validation(
                 "username and password must not be empty".to_string(),
@@ -172,10 +172,7 @@ impl SynologyCredentials {
                 "credentials exceed bounds or contain a NUL byte".to_string(),
             ));
         }
-        Ok(Self {
-            username: Zeroizing::new(username),
-            password: Zeroizing::new(password),
-        })
+        Ok(Self { username, password })
     }
 }
 
@@ -322,6 +319,7 @@ pub struct SynologyLanTransport {
     connector: Box<dyn TlsConnector>,
     tls_config: TlsConfig,
     maximum_response_bytes: usize,
+    pinned_address: Option<SocketAddr>,
 }
 
 /// One operation-scoped Surveillance Station session and its bearer endpoint.
@@ -360,11 +358,17 @@ impl SynologyLanTransport {
             connector,
             tls_config,
             maximum_response_bytes: DEFAULT_MAX_RESPONSE_BYTES,
+            pinned_address: None,
         }
     }
 
     pub fn with_maximum_response_bytes(mut self, maximum: usize) -> Self {
         self.maximum_response_bytes = maximum.max(1);
+        self
+    }
+
+    pub fn with_pinned_address(mut self, address: SocketAddr) -> Self {
+        self.pinned_address = Some(address);
         self
     }
 
@@ -384,9 +388,20 @@ impl SynologyLanTransport {
             .effective_port()
             .ok_or(SynologyError::MissingField("request URL port"))?;
         let timeout = Duration::from_millis(plan.timeout_ms.max(1));
+        if self
+            .pinned_address
+            .is_some_and(|address| address.port() != port)
+        {
+            return Err(SynologyError::Validation(
+                "reviewed socket port does not match the Synology endpoint".to_string(),
+            ));
+        }
         let response = match url.scheme.as_str() {
             "http" if is_loopback_host(host) => {
-                let mut stream = connect_tcp(host, port, timeout)?;
+                let mut stream = match self.pinned_address {
+                    Some(address) => connect_tcp_addr(address, timeout)?,
+                    None => connect_tcp(host, port, timeout)?,
+                };
                 write_request(&mut stream, request.as_slice())?;
                 Zeroizing::new(read_bounded(&mut stream, self.maximum_response_bytes)?)
             }
@@ -395,10 +410,11 @@ impl SynologyLanTransport {
                 config.connect_timeout = timeout;
                 config.read_timeout = Some(timeout);
                 config.write_timeout = Some(timeout);
-                let mut stream = self
-                    .connector
-                    .connect(host, port, &config)
-                    .map_err(|error| SynologyError::Tls(error.to_string()))?;
+                let mut stream = match self.pinned_address {
+                    Some(address) => self.connector.connect_addr(host, address, &config),
+                    None => self.connector.connect(host, port, &config),
+                }
+                .map_err(|error| SynologyError::Tls(error.to_string()))?;
                 write_request(&mut stream, request.as_slice())?;
                 let bytes = Zeroizing::new(read_bounded(&mut stream, self.maximum_response_bytes)?);
                 stream
@@ -1486,6 +1502,16 @@ fn connect_tcp(host: &str, port: u16, timeout: Duration) -> Result<TcpStream, Sy
     ))
 }
 
+fn connect_tcp_addr(address: SocketAddr, timeout: Duration) -> Result<TcpStream, SynologyError> {
+    let stream = TcpStream::connect_timeout(&address, timeout)
+        .map_err(|error| SynologyError::Io(error.to_string()))?;
+    stream
+        .set_read_timeout(Some(timeout))
+        .and_then(|_| stream.set_write_timeout(Some(timeout)))
+        .map_err(|error| SynologyError::Io(error.to_string()))?;
+    Ok(stream)
+}
+
 fn write_request(writer: &mut dyn Write, request: &[u8]) -> Result<(), SynologyError> {
     writer
         .write_all(request)
@@ -1604,11 +1630,99 @@ fn decode_chunked(input: &[u8], maximum: usize) -> Result<Vec<u8>, SynologyError
 mod tests {
     use super::*;
     use smart_home_core::{CapabilityGrant, CapabilityGrantId, PrivilegeTier};
-    use std::io::{BufRead, BufReader};
+    use std::io::{BufRead, BufReader, Cursor};
     use std::net::TcpListener;
     use std::sync::atomic::{AtomicUsize, Ordering};
     use std::sync::{Arc, Mutex};
     use std::thread;
+    use tls_platform::{TlsConnectionSummary, TlsError, TlsStream, TlsVersion, VerifyMode};
+
+    #[derive(Default)]
+    struct TlsCapture {
+        connects: Vec<(String, SocketAddr, bool)>,
+        request: Vec<u8>,
+    }
+
+    struct RecordingConnector {
+        response: Vec<u8>,
+        capture: Arc<Mutex<TlsCapture>>,
+    }
+
+    impl TlsConnector for RecordingConnector {
+        fn connect(
+            &self,
+            _host: &str,
+            _port: u16,
+            _config: &TlsConfig,
+        ) -> Result<Box<dyn TlsStream>, TlsError> {
+            panic!("pinned Synology transport must not resolve the endpoint hostname")
+        }
+
+        fn connect_addr(
+            &self,
+            server_name: &str,
+            address: SocketAddr,
+            config: &TlsConfig,
+        ) -> Result<Box<dyn TlsStream>, TlsError> {
+            self.capture.lock().unwrap().connects.push((
+                server_name.to_string(),
+                address,
+                config.verify_mode == VerifyMode::Strict,
+            ));
+            Ok(Box::new(RecordingTlsStream {
+                response: Cursor::new(self.response.clone()),
+                capture: Arc::clone(&self.capture),
+            }))
+        }
+    }
+
+    struct RecordingTlsStream {
+        response: Cursor<Vec<u8>>,
+        capture: Arc<Mutex<TlsCapture>>,
+    }
+
+    impl Read for RecordingTlsStream {
+        fn read(&mut self, buffer: &mut [u8]) -> io::Result<usize> {
+            self.response.read(buffer)
+        }
+    }
+
+    impl Write for RecordingTlsStream {
+        fn write(&mut self, buffer: &[u8]) -> io::Result<usize> {
+            self.capture
+                .lock()
+                .unwrap()
+                .request
+                .extend_from_slice(buffer);
+            Ok(buffer.len())
+        }
+
+        fn flush(&mut self) -> io::Result<()> {
+            Ok(())
+        }
+    }
+
+    impl TlsStream for RecordingTlsStream {
+        fn peer_certificates(&self) -> Result<Vec<Vec<u8>>, TlsError> {
+            Ok(Vec::new())
+        }
+
+        fn negotiated_alpn(&self) -> Option<String> {
+            Some("http/1.1".to_string())
+        }
+
+        fn negotiated_version(&self) -> TlsVersion {
+            TlsVersion::Tls13
+        }
+
+        fn close_notify(&mut self) -> Result<(), TlsError> {
+            Ok(())
+        }
+
+        fn summary(&self) -> TlsConnectionSummary {
+            panic!("summary is not used by the Synology transport")
+        }
+    }
 
     fn credentials() -> SynologyCredentials {
         SynologyCredentials::new("operator", "secret-password").unwrap()
@@ -1621,6 +1735,37 @@ mod tests {
             VaultRef::trusted("vault://synology/test"),
         )
         .unwrap()
+    }
+
+    #[test]
+    fn reviewed_socket_pinning_keeps_canonical_tls_identity_and_strict_verification() {
+        let response = b"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: 26\r\nConnection: close\r\n\r\n{\"success\":true,\"data\":{}}".to_vec();
+        let capture = Arc::new(Mutex::new(TlsCapture::default()));
+        let address: SocketAddr = "192.0.2.44:443".parse().unwrap();
+        let connector = RecordingConnector {
+            response,
+            capture: Arc::clone(&capture),
+        };
+        let config = SynologyConfig::new(
+            BridgeId::trusted("synology.test"),
+            "https://diskstation.example",
+            VaultRef::trusted("vault://synology/test"),
+        )
+        .unwrap();
+        let plans = SynologyRequestPlans::new(&config).unwrap();
+        let mut transport =
+            SynologyLanTransport::new(Box::new(connector), TlsConfig::https_default())
+                .with_pinned_address(address);
+
+        transport.request(&plans.api_info, None, &[]).unwrap();
+        let capture = capture.lock().unwrap();
+        assert_eq!(
+            capture.connects,
+            vec![("diskstation.example".to_string(), address, true)]
+        );
+        let request = String::from_utf8_lossy(&capture.request);
+        assert!(request.starts_with("GET /webapi/query.cgi?"));
+        assert!(request.contains("Host: diskstation.example"));
     }
 
     fn snapshot() -> SynologySnapshot {
