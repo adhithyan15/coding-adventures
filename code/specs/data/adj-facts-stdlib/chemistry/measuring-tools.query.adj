@@ -1,0 +1,14 @@
+% ============================================================================
+% measuring-tools.query.adj — worked recall over the measuring-tool library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does this tool
+% measure?" (direct) or "what tool measures this quantity?" (reverse) — it
+% states no fact of its own — it only `import`s the grounded table and asks
+% binding queries.
+% ============================================================================
+
+import "measuring-tools.adj"
+
+? measuring_tool(thermometer, $Q)   % expect temperature (direct: what does a thermometer measure?)
+? measuring_tool($T, volume)        % expect graduated_cylinder (reverse: what tool measures volume?)
+? measuring_tool(microscope, $Q)    % expect abstain -- a microscope is not one of the four tools tabled
