@@ -13,6 +13,7 @@ import { buildCurriculumGapReport, renderCurriculumGapReport } from "./report.js
 import { renderStrandSummary, summarizeStrands } from "./strands.js";
 import { cellCoverage, renderCellCoverage } from "./grammar-cells.js";
 import { buildRootLedger, renderRootLedger } from "./root-ledger.js";
+import { measureInfoDump, renderInfoDump } from "./info-dump.js";
 
 interface ReportOptions {
   root?: string;
@@ -85,8 +86,12 @@ export function runCurriculumGapReport(args = process.argv.slice(2)): number {
   // if it is spent again -- so the ledger counts payoffs, not mentions.
   const rootLedger = buildRootLedger(lessons, policy.rootLedgerMinReuse ?? 3);
 
+  // HL10 §7.3. The owner's "never info dump" made checkable. The prose turned
+  // out to be fine; the dumps live in paradigm tables.
+  const infoDump = measureInfoDump(lessons, policy.maxRuleStatementsPerLesson ?? 1);
+
   const json = `${JSON.stringify(
-    { ...report, strands, grammarCells: cells, rootLedger: rootLedger.summary },
+    { ...report, strands, grammarCells: cells, rootLedger: rootLedger.summary, infoDump: infoDump.summary },
     null,
     2,
   )}\n`;
@@ -97,6 +102,8 @@ export function runCurriculumGapReport(args = process.argv.slice(2)): number {
     renderCellCoverage(spanishCells, slots, cells).join("\n"),
     "",
     renderRootLedger(rootLedger).join("\n"),
+    "",
+    renderInfoDump(infoDump).join("\n"),
     "",
   ].join("\n");
   process.stdout.write(options.format === "json" ? json : text);

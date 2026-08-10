@@ -34,6 +34,17 @@ export {
   type RootLedger,
   type RootNamespace,
 } from "./root-ledger.js";
+export {
+  PERSON_LABELS,
+  FULL_GRID_ROWS,
+  personRowCount,
+  lessonInfoDump,
+  measureInfoDump,
+  renderInfoDump,
+  type InfoDumpKind,
+  type InfoDumpFinding,
+  type InfoDumpReport,
+} from "./info-dump.js";
 export { parseBodyBlocks, parseLesson, buildDataset, type ParsedLesson } from "./parse.js";
 export {
   parseLessonActivityValue,

@@ -4,6 +4,67 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - the info-dump gate, and what it found (HL-C84)
+
+The owner's rule is one sentence: "will not info dump ever". This makes it a
+measurement.
+
+**The prose is not the problem.** Scanning all 1,694 lessons for rule-statement
+shapes -- "X is used for...", "X always takes...", "there are four kinds of X" --
+turns up **17 lessons**. Seventeen. HL09 called the writing "as well built as
+anything commercial" and the corpus agrees.
+
+**The info dump lives in tables**, and in one specific shape:
+
+    70 lessons carry a paradigm-shaped table -- a grid whose first column walks
+    a list of grammatical persons -- and 18 of those are FULL grids of five or
+    more rows. FR-C05-parler, GE-C05-wohnen and ES-C17-practice each present a
+    complete six-person conjugation at once.
+
+That is exactly the artifact HL10 section 5.3 forbids: six new forms, one new
+concept, no retrieval, and an implicit claim that the learner absorbs them by
+staring. It is also the single most universal convention in language publishing,
+which is why it needs a gate rather than a style note -- nobody writing one
+thinks they are doing anything unusual.
+
+**Shape, not size.** 470 tables in the corpus have three or more data rows and
+most are perfectly good: a vocabulary recap, a regional comparison, a list of
+labelled facts. Flagging all 470 would bury the 70 that matter and teach authors
+that the gate cries wolf. The signal is a first column that walks a paradigm,
+because that is a table presenting N grammar cells where the budget allows one.
+
+`PERSON_LABELS` is a census of what the corpus's own tables put in that column,
+per track, covering the six Latin-script tracks that use them today. A track
+absent from the map is never flagged -- honest rather than silently clean, the
+same rule `continuity.ts` uses for its article map.
+
+Report-only, per the HL05 precedent. Its real value is as a review aid: a lesson
+that trips it is not automatically wrong, but it is automatically read by a
+human before merge.
+
+### Fixed - two ways a lesson file could attack its own gate
+
+Security review of the above, both verified by execution.
+
+**A quadratic comment strip.** `replace(/<!--[\s\S]*?-->/g, "")` looks like the
+safe construct and is not. With `/g` the engine retries at every `<!--`, and
+when there is no closing `-->` each start expands one character at a time to
+EOF before failing -- O(n squared) in the *count* of `<!--` tokens, with no
+`-->` needed anywhere. Measured: 500 KB of repeated `<!--` took **13 seconds**,
+and a 4 MB lesson would have pinned a core for roughly fifteen minutes. Now a
+monotonic `indexOf` scan: the same input takes **22 ms**, and an unterminated
+comment keeps the remainder of the file verbatim rather than swallowing it.
+
+**A directory name resolving through `Object.prototype`.** `PERSON_LABELS` is a
+plain object indexed by `lesson.language`, which `loader.ts` takes straight from
+`readdirSync` -- so a track directory named `constructor`, `toString` or
+`__proto__` resolved to an inherited member, passed the `undefined` check, and
+threw on `.includes`. This package already exports `hasOwn` for exactly this and
+uses it at five sites; `parse.ts` guards its own language lookup the same way
+and `ramp.ts` documents this identical bug being fixed once before. The new
+module simply skipped the convention.
+
+
 ### Added - the Root Ledger, and the account it renders (HL-C83)
 
 HL00 calls the etymology "the heart of the lesson... the signature of this
