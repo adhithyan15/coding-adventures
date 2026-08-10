@@ -1,7 +1,8 @@
 use crate::initialize::{unlock_active_material, UnlockedActiveMaterial};
 use crate::mutation::{
-    add_item, delete_item, replace_item, restore_item, AddItemRandomnessV1, DeleteItemRandomnessV1,
-    ReplaceItemRandomnessV1, RestoreItemRandomnessV1,
+    add_item, delete_item, replace_item, resolve_item_conflict, restore_item, AddItemRandomnessV1,
+    DeleteItemRandomnessV1, ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1,
+    RestoreItemRandomnessV1,
 };
 use crate::search::SearchProjectionV1;
 use crate::{
@@ -246,6 +247,30 @@ impl UnlockedVaultV1 {
         .collect()
     }
 
+    /// Return every retained current candidate for one conflicted item as a
+    /// deterministic secret-free view.
+    ///
+    /// Candidates are ordered by exact revision ID. A missing item returns
+    /// `NotFound`; an item with fewer than two current candidates returns
+    /// `ConflictRequired`. No candidate is selected or discarded.
+    pub fn conflict_candidates(
+        &self,
+        item_id: ItemId,
+    ) -> Result<Vec<ItemHistoryViewV1>, ApplicationError> {
+        let candidates = self
+            .current_catalog
+            .items
+            .get(&item_id)
+            .ok_or(ApplicationError::NotFound)?;
+        if candidates.len() < 2 {
+            return Err(ApplicationError::ConflictRequired);
+        }
+        candidates
+            .iter()
+            .map(ItemHistoryViewV1::from_candidate)
+            .collect()
+    }
+
     /// Add one new item through the exact crash-resumable publication state
     /// machine and return the resulting durable active owner state.
     ///
@@ -367,6 +392,34 @@ impl UnlockedVaultV1 {
             &self._local_secret,
             self._repository.as_ref(),
             selected,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+        )
+    }
+
+    /// Resolve one current conflict by choosing an existing authenticated
+    /// candidate and publishing it as a new current revision.
+    ///
+    /// The selected revision must be one of at least two current candidates.
+    /// The resolution revision copies its complete live document or tombstone
+    /// and names every retained current candidate as a direct causal parent.
+    /// This consumes the session and never deletes the losing immutable bytes.
+    pub fn resolve_item_conflict(
+        self,
+        selected_revision: RevisionId,
+        wall_time_ms: u64,
+        randomness: ResolveItemConflictRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        resolve_item_conflict(
+            &self.active,
+            &self.report,
+            &self.current_catalog.items,
+            &self._keys,
+            &self._local_secret,
+            self._repository.as_ref(),
+            selected_revision,
             wall_time_ms,
             randomness,
             local_state_store,
@@ -796,7 +849,8 @@ mod tests {
         prepare_generation_zero, seal_object, CatalogV1, GenerationZeroPolicyV1,
         GenerationZeroRandomness, ObjectKind, ObjectRandomness, PublicationJournalV1,
         V1ApplicationRepositoryFactory, V1Keys, ADD_ITEM_RANDOM_BYTES, DELETE_ITEM_RANDOM_BYTES,
-        GENERATION_ZERO_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
+        GENERATION_ZERO_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
+        RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
     };
     use coding_adventures_ed25519::{generate_keypair, sign};
     use coding_adventures_vault_pm_domain::{
@@ -958,6 +1012,14 @@ mod tests {
             *byte = (index as u8).wrapping_mul(37).wrapping_add(seed);
         }
         RestoreItemRandomnessV1::new(bytes)
+    }
+
+    fn resolve_item_conflict_randomness(seed: u8) -> ResolveItemConflictRandomnessV1 {
+        let mut bytes = [0; RESOLVE_ITEM_CONFLICT_RANDOM_BYTES];
+        for (index, byte) in bytes.iter_mut().enumerate() {
+            *byte = (index as u8).wrapping_mul(41).wrapping_add(seed);
+        }
+        ResolveItemConflictRandomnessV1::new(bytes)
     }
 
     fn new_login_document(item_id: ItemId, title: &str, password: &str) -> ItemDocument {
@@ -1123,6 +1185,60 @@ mod tests {
         )
         .unwrap();
         publication_for_catalog(active, vec![revision_frame], catalog_frame)
+    }
+
+    fn pending_live_conflict_publication(
+        active: &ActiveStateV1,
+        item_id: ItemId,
+    ) -> (PublicationJournalV1, Vec<(RevisionId, String)>) {
+        let fixture = generation_zero_bytes();
+        let root_key: [u8; 32] = fixture[48..80].try_into().unwrap();
+        let keys = V1Keys::derive(active.vault_id(), &root_key).unwrap();
+        let mut objects = Vec::new();
+        let mut revisions = Vec::new();
+        for (index, (title, password)) in
+            [("Keep left", "left-secret"), ("Keep right", "right-secret")]
+                .into_iter()
+                .enumerate()
+        {
+            let candidate = ItemCandidate::new(
+                RevisionId::new([0; 32]),
+                [],
+                ItemState::Live(Box::new(new_login_document(item_id, title, password))),
+            )
+            .unwrap();
+            let base = 0xb0u8.wrapping_add(index as u8 * 3);
+            let frame = seal_object(
+                &keys,
+                ObjectKind::ItemRevision,
+                &encode_item_revision(candidate.causal_parents(), candidate.state()).unwrap(),
+                &ObjectRandomness::new([base; 32], [base + 1; 24], [base + 2; 24]),
+            )
+            .unwrap();
+            let revision_id = RevisionId::new(*frame.id().unwrap().as_bytes());
+            revisions.push((revision_id, title.to_owned()));
+            objects.push(frame);
+        }
+        revisions.sort_unstable_by_key(|(revision_id, _)| *revision_id);
+        let catalog = CatalogV1::new(BTreeMap::from([(
+            item_id,
+            revisions
+                .iter()
+                .map(|(revision_id, _)| *revision_id)
+                .collect(),
+        )]))
+        .unwrap();
+        let catalog_frame = seal_object(
+            &keys,
+            ObjectKind::Catalog,
+            &catalog.encode().unwrap(),
+            &ObjectRandomness::new([0xc0; 32], [0xc1; 24], [0xc2; 24]),
+        )
+        .unwrap();
+        (
+            publication_for_catalog(active, objects, catalog_frame),
+            revisions,
+        )
     }
 
     fn pending_dangling_catalog(active: &ActiveStateV1) -> PublicationJournalV1 {
@@ -1534,6 +1650,259 @@ mod tests {
                 Some(exact_state.as_slice())
             );
         }
+    }
+
+    #[test]
+    fn conflict_candidates_are_redacted_and_choose_resolution_retains_every_parent() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x2a; 16]);
+        let (publication, revisions) = pending_live_conflict_publication(&active, item_id);
+        let pending = LocalVaultStateV1::pending_publication(active, publication).unwrap();
+        *local.0.lock().unwrap() = Some(pending.encode().unwrap());
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let views = session.conflict_candidates(item_id).unwrap();
+        assert_eq!(
+            views
+                .iter()
+                .map(ItemHistoryViewV1::revision_id)
+                .collect::<Vec<_>>(),
+            revisions
+                .iter()
+                .map(|(revision_id, _)| *revision_id)
+                .collect::<Vec<_>>()
+        );
+        let titles = views
+            .iter()
+            .map(|view| {
+                let RedactedRecordView::Login { title, .. } = &view.redacted_item().unwrap().record
+                else {
+                    panic!("conflict fixture must contain logins")
+                };
+                title.as_str()
+            })
+            .collect::<Vec<_>>();
+        assert!(titles.contains(&"Keep left"));
+        assert!(titles.contains(&"Keep right"));
+        let debug = format!("{views:?}");
+        for hidden in [
+            "Keep left",
+            "Keep right",
+            "left-secret",
+            "right-secret",
+            &item_id.to_user_string(),
+        ] {
+            assert!(!debug.contains(hidden));
+        }
+
+        let selected_revision = revisions
+            .iter()
+            .find(|(_, title)| title == "Keep right")
+            .map(|(revision_id, _)| *revision_id)
+            .unwrap();
+        let prior_heads = session.local_pins().clone();
+        let resolved = session
+            .resolve_item_conflict(
+                selected_revision,
+                401,
+                resolve_item_conflict_randomness(0x4d),
+                &local,
+            )
+            .unwrap();
+        assert_eq!(resolved.last_device_counter(), 3);
+
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.conflicted_item_count(), 0);
+        let [candidate] = reopened.current_catalog.items[&item_id].as_slice() else {
+            panic!("resolution must become the sole current candidate")
+        };
+        assert_eq!(
+            candidate.causal_parents(),
+            &revisions
+                .iter()
+                .map(|(revision_id, _)| *revision_id)
+                .collect::<BTreeSet<_>>()
+        );
+        let ItemState::Live(document) = candidate.state() else {
+            panic!("selected live conflict candidate must remain live")
+        };
+        let AnyRecord::Login(login) = document.payload() else {
+            panic!("selected conflict candidate must retain its schema")
+        };
+        assert_eq!(login.title, "Keep right");
+        assert_eq!(login.password, "right-secret");
+        assert_eq!(reopened.item_history(item_id, 100).unwrap().len(), 3);
+        let head = *reopened.open_report().heads().iter().next().unwrap();
+        let commit = reopened._repository.read_commit(head).unwrap();
+        assert_eq!(
+            commit.parents(),
+            prior_heads.iter().copied().collect::<Vec<_>>()
+        );
+        assert_eq!(commit.added_objects().len(), 2);
+        assert_eq!(commit.wall_time_ms(), 401);
+    }
+
+    #[test]
+    fn conflict_resolution_rejects_missing_or_unconflicted_revisions_before_cas() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            session.conflict_candidates(ItemId::new([0x2b; 16])),
+            Err(ApplicationError::NotFound)
+        );
+        let exact_empty = local.0.lock().unwrap().clone().unwrap();
+        assert_eq!(
+            session.resolve_item_conflict(
+                RevisionId::new([0x2c; 32]),
+                410,
+                resolve_item_conflict_randomness(0x5d),
+                &local,
+            ),
+            Err(ApplicationError::NotFound)
+        );
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_empty.as_slice())
+        );
+
+        let add_randomness = add_item_randomness(0x6d);
+        let item_id = add_randomness.item_id();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .add_item(
+            new_login_document(item_id, "Sole candidate", "only-secret"),
+            411,
+            add_randomness,
+            &local,
+        )
+        .unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            session.conflict_candidates(item_id),
+            Err(ApplicationError::ConflictRequired)
+        );
+        let sole_revision = session.current_catalog.items[&item_id][0].revision_id();
+        let exact_sole = local.0.lock().unwrap().clone().unwrap();
+        assert_eq!(
+            session.resolve_item_conflict(
+                sole_revision,
+                412,
+                resolve_item_conflict_randomness(0x7d),
+                &local,
+            ),
+            Err(ApplicationError::ConflictRequired)
+        );
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_sole.as_slice())
+        );
+    }
+
+    #[test]
+    fn conflict_resolution_can_choose_a_retained_tombstone_without_losing_parents() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x2d; 16]);
+        let (publication, revisions) =
+            pending_tombstone_publication(&active, item_id, item_id, 2, None);
+        let pending = LocalVaultStateV1::pending_publication(active, publication).unwrap();
+        *local.0.lock().unwrap() = Some(pending.encode().unwrap());
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let views = session.conflict_candidates(item_id).unwrap();
+        assert!(views.iter().all(ItemHistoryViewV1::is_deleted));
+        session
+            .resolve_item_conflict(
+                revisions[1],
+                420,
+                resolve_item_conflict_randomness(0x8d),
+                &local,
+            )
+            .unwrap();
+
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.get_item(item_id).unwrap(), None);
+        let [candidate] = reopened.current_catalog.items[&item_id].as_slice() else {
+            panic!("resolution must become the sole current candidate")
+        };
+        assert!(matches!(candidate.state(), ItemState::Tombstone(_)));
+        assert_eq!(
+            candidate.causal_parents(),
+            &revisions.into_iter().collect::<BTreeSet<_>>()
+        );
     }
 
     #[test]

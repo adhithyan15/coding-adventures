@@ -32,8 +32,9 @@ pub use initialize::{
     GENERATION_ZERO_RANDOM_BYTES,
 };
 pub use mutation::{
-    AddItemRandomnessV1, DeleteItemRandomnessV1, ReplaceItemRandomnessV1, RestoreItemRandomnessV1,
-    ADD_ITEM_RANDOM_BYTES, DELETE_ITEM_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
+    AddItemRandomnessV1, DeleteItemRandomnessV1, ReplaceItemRandomnessV1,
+    ResolveItemConflictRandomnessV1, RestoreItemRandomnessV1, ADD_ITEM_RANDOM_BYTES,
+    DELETE_ITEM_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES, RESOLVE_ITEM_CONFLICT_RANDOM_BYTES,
     RESTORE_ITEM_RANDOM_BYTES,
 };
 pub use open::{

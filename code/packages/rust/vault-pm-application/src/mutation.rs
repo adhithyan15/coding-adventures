@@ -25,6 +25,8 @@ pub const REPLACE_ITEM_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES;
 pub const DELETE_ITEM_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES;
 /// Exact caller-filled CSPRNG bytes consumed by one restore-item mutation.
 pub const RESTORE_ITEM_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES;
+/// Exact caller-filled CSPRNG bytes consumed by one conflict-resolution mutation.
+pub const RESOLVE_ITEM_CONFLICT_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES;
 
 /// Owned wipe-on-drop entropy for one item ID and three encrypted frames.
 pub struct AddItemRandomnessV1 {
@@ -152,6 +154,36 @@ impl Drop for RestoreItemRandomnessV1 {
 impl Debug for RestoreItemRandomnessV1 {
     fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
         formatter.write_str("RestoreItemRandomnessV1(<redacted>)")
+    }
+}
+
+/// Owned wipe-on-drop entropy for the three encrypted conflict-resolution frames.
+pub struct ResolveItemConflictRandomnessV1 {
+    bytes: [u8; RESOLVE_ITEM_CONFLICT_RANDOM_BYTES],
+}
+
+impl ResolveItemConflictRandomnessV1 {
+    /// Take one exact block filled by the host's cryptographic entropy source.
+    pub const fn new(bytes: [u8; RESOLVE_ITEM_CONFLICT_RANDOM_BYTES]) -> Self {
+        Self { bytes }
+    }
+}
+
+impl Zeroize for ResolveItemConflictRandomnessV1 {
+    fn zeroize(&mut self) {
+        self.bytes.zeroize();
+    }
+}
+
+impl Drop for ResolveItemConflictRandomnessV1 {
+    fn drop(&mut self) {
+        self.zeroize();
+    }
+}
+
+impl Debug for ResolveItemConflictRandomnessV1 {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter.write_str("ResolveItemConflictRandomnessV1(<redacted>)")
     }
 }
 
@@ -338,6 +370,56 @@ pub(crate) fn restore_item(
         item_id,
         ItemState::Live(document.clone()),
         &BTreeSet::from([selected.revision_id()]),
+        wall_time_ms,
+        &randomness.bytes,
+    )?;
+    publish_mutation(active, repository, publication, local_state_store)
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn resolve_item_conflict(
+    active: &ActiveStateV1,
+    report: &OpenReport,
+    current_items: &BTreeMap<ItemId, Vec<ItemCandidate>>,
+    keys: &V1Keys,
+    local_secret: &LocalSecretV1,
+    repository: &dyn ApplicationRepository,
+    selected_revision: RevisionId,
+    wall_time_ms: u64,
+    randomness: ResolveItemConflictRandomnessV1,
+    local_state_store: &dyn LocalStateStore,
+) -> Result<ActiveStateV1, ApplicationError> {
+    if report.heads() != active.pinned_heads() {
+        return Err(ApplicationError::ConcurrentHost);
+    }
+    let (item_id, candidates) = current_items
+        .iter()
+        .find(|(_, candidates)| {
+            candidates
+                .iter()
+                .any(|candidate| candidate.revision_id() == selected_revision)
+        })
+        .ok_or(ApplicationError::NotFound)?;
+    if candidates.len() < 2 {
+        return Err(ApplicationError::ConflictRequired);
+    }
+    let selected = candidates
+        .iter()
+        .find(|candidate| candidate.revision_id() == selected_revision)
+        .ok_or(ApplicationError::InternalInvariant)?;
+    let causal_parents = candidates
+        .iter()
+        .map(ItemCandidate::revision_id)
+        .collect::<BTreeSet<_>>();
+
+    let publication = prepare_item_publication(
+        active,
+        current_items,
+        keys,
+        local_secret,
+        *item_id,
+        selected.state().clone(),
+        &causal_parents,
         wall_time_ms,
         &randomness.bytes,
     )?;
@@ -611,6 +693,21 @@ mod tests {
             "RestoreItemRandomnessV1(<redacted>)"
         );
         assert!(randomness.bytes.iter().all(|byte| *byte == 0xc3));
+
+        randomness.zeroize();
+        assert!(randomness.bytes.iter().all(|byte| *byte == 0));
+    }
+
+    #[test]
+    fn conflict_resolution_randomness_redacts_and_zeroizes() {
+        let mut randomness =
+            ResolveItemConflictRandomnessV1::new([0x6d; RESOLVE_ITEM_CONFLICT_RANDOM_BYTES]);
+
+        assert_eq!(
+            format!("{randomness:?}"),
+            "ResolveItemConflictRandomnessV1(<redacted>)"
+        );
+        assert!(randomness.bytes.iter().all(|byte| *byte == 0x6d));
 
         randomness.zeroize();
         assert!(randomness.bytes.iter().all(|byte| *byte == 0));

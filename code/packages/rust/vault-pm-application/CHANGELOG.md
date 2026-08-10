@@ -2,6 +2,23 @@
 
 All notable changes to this package are documented here.
 
+## [0.18.0] - 2026-08-09
+
+### Added
+
+- Add deterministic redacted inspection for every retained current conflict
+  candidate, including typed live metadata and tombstone markers.
+- Add a session-consuming choose-candidate resolution workflow and owned
+  wipe-on-drop randomness for its three encrypted frames.
+
+### Security
+
+- Publish the selected authenticated live document or tombstone as a new
+  revision whose direct parents include the complete current conflict set.
+- Preserve every losing candidate as immutable reachable history, reject
+  missing and unconflicted selections before local persistence, and never ask
+  the host to round-trip secret plaintext.
+
 ## [0.17.0] - 2026-08-09
 
 ### Added

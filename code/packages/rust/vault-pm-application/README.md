@@ -134,10 +134,20 @@ selected revision, then uses the same all-head commit, exact pending journal,
 ambiguous-success handling, and recovery path as other mutations. It never
 rewinds heads, mutates historical bytes, or asks the host to resupply plaintext.
 
+Current conflicts can now be inspected without revealing secret fields. The
+session returns every retained candidate in exact revision-ID order using the
+same typed redacted live view or tombstone marker as history. Choosing one
+authenticated candidate consumes the session and republishes its complete live
+document or tombstone as a new revision whose direct parents are the entire
+current conflict set. The resolution never selects implicitly, drops a losing
+candidate, rewrites history, or asks the host to round-trip plaintext. A later
+slice will add user-authored merged-document resolution after explicit field
+reveal.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
-credential store, or entropy source. Conflict resolution, explicit history
-reveal, export, audit, and doctor workflows land in the next slices.
+credential store, or entropy source. User-authored conflict merging, explicit
+history reveal, export, audit, and doctor workflows land in the next slices.
 There is no unchecked
 repository verification path: construction decrypts and
 authority-verifies the exact locally pinned certificate frame and object ID,
@@ -159,8 +169,8 @@ paths, and complete error translation.
 Search tests cover Unicode normalization, short queries, oversized safe-field
 fallback, exact collection filters, deterministic product ordering, every
 record schema's allowlist/denylist, secret exclusion, query/result bounds, and
-conflict closure. The exact Tarpaulin LLVM result is 1,996 of 2,088 production
-lines (95.59%). Add-item tests cover exact entropy partitioning and wiping,
+conflict closure. The exact Tarpaulin LLVM result is 2,204 of 2,315 production
+lines (95.21%). Add-item tests cover exact entropy partitioning and wiping,
 identity validation before local writes, parentless revision and complete
 catalog construction, ambiguous successful compare-exchanges, write-ahead
 publication ordering, ambiguous provider commits, failed final activation,
@@ -170,6 +180,10 @@ stale/missing rejection before compare-exchange, and secret/entropy wiping.
 Deletion tests prove one-parent tombstone causality, advisory timestamp
 separation, ordinary-view omission, repeat/missing rejection before
 compare-exchange, and entropy redaction/wiping.
+Conflict-resolution tests prove deterministic redacted inspection, live and
+tombstone selection, complete multi-parent causality, immutable losing-candidate
+retention, missing/unconflicted rejection before compare-exchange, and entropy
+redaction/wiping.
 
 ## Development
 
