@@ -90,7 +90,9 @@ use std::fs;
 use std::path::{Component, Path, PathBuf};
 
 use mosaic_package_manifest::{parse_path as parse_manifest, ManifestError, MosaicPackage};
+use moslayout_compiler::{LayoutNode, LayoutPropValue};
 use mosmodel_compiler::{ListInnerType, SlotDecl, SlotDefault, SlotType};
+use serde::Serialize;
 
 // ===========================================================================
 // Public types
@@ -133,6 +135,44 @@ pub enum Backend {
     /// single `.kt` file containing a sealed `<Component>Event` union and
     /// a `@Composable fun <Component>(...)` entrypoint.
     Compose,
+}
+
+/// Package-build policy. `Permissive` preserves preview/development output and
+/// records every known degradation. `NativeComplete` rejects that same report
+/// before emitting application artifacts.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum BuildProfile {
+    Permissive,
+    NativeComplete,
+}
+
+/// One machine-readable reason why a package/backend pair is not natively
+/// complete. Codes are stable automation keys; `reason` is the human context.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Degradation {
+    pub code: String,
+    pub backend: String,
+    pub component: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub variant: Option<String>,
+    pub layout_path: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub primitive: Option<String>,
+    pub reason: String,
+}
+
+/// Stable JSON document written by profiled package builds.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DegradationReport {
+    pub schema_version: u32,
+    pub profile: BuildProfile,
+    pub package: String,
+    pub backend: String,
+    pub native_complete: bool,
+    pub degradations: Vec<Degradation>,
 }
 
 impl Backend {
@@ -192,6 +232,13 @@ impl Backend {
             Backend::Flutter => Some("dart"),
             Backend::Compose => Some("kt"),
         }
+    }
+
+    fn is_native(self) -> bool {
+        matches!(
+            self,
+            Self::SwiftUI | Self::Qt | Self::Xaml | Self::Flutter | Self::Compose
+        )
     }
 }
 
@@ -319,6 +366,13 @@ pub enum BuildError {
     /// A `pkg::P::C` reference in a component layout could not be resolved or
     /// inlined before backend emission.
     PackageReferenceError { component: String, error: String },
+    /// The strict profile found known degradations. The diagnostic JSON is
+    /// written, but no application/backend artifacts are emitted.
+    NativeIncomplete {
+        backend: Backend,
+        degradation_count: usize,
+        report_path: PathBuf,
+    },
     /// A read/write/mkdir call failed. The string is `io::Error::to_string()`
     /// because we don't want to leak `std::io::Error`'s `Send`-only quirks
     /// into our public API.
@@ -354,6 +408,15 @@ impl std::fmt::Display for BuildError {
                     "package reference error for component '{component}': {error}"
                 )
             }
+            BuildError::NativeIncomplete {
+                backend,
+                degradation_count,
+                report_path,
+            } => write!(
+                f,
+                "backend {backend:?} is not native-complete: {degradation_count} degradation(s); report: {}",
+                report_path.display()
+            ),
             BuildError::UnsafeName { kind, name, reason } => write!(
                 f,
                 "unsafe {kind} name '{name}': {reason} (would break path or output safety)"
@@ -455,6 +518,203 @@ pub fn compose_component_with_model(
 // ===========================================================================
 // Public entry point
 // ===========================================================================
+
+/// Analyze and build a package under an explicit completion profile.
+///
+/// Unlike the legacy [`build_package`] entry point, this always writes a
+/// deterministic `mosaic-degradations.json` next to the selected backend's
+/// output. Strict builds with any degradation write only that diagnostic and
+/// return [`BuildError::NativeIncomplete`] before backend emission begins.
+pub fn build_package_with_profile(
+    opts: &BuildOptions,
+    profile: BuildProfile,
+) -> Result<BuildResult, BuildError> {
+    let report = analyze_package_degradations(opts, profile)?;
+    let backend_dir = opts.output_root.join(opts.backend.dir_name());
+    let report_path = backend_dir.join("mosaic-degradations.json");
+
+    if profile == BuildProfile::NativeComplete && !report.degradations.is_empty() {
+        create_dir_all(&backend_dir)?;
+        write_degradation_report(&report_path, &report)?;
+        return Err(BuildError::NativeIncomplete {
+            backend: opts.backend,
+            degradation_count: report.degradations.len(),
+            report_path,
+        });
+    }
+
+    let mut result = build_package(opts)?;
+    write_degradation_report(&report_path, &report)?;
+    result.artifacts.push(report_path);
+    Ok(result)
+}
+
+/// Return the deterministic capability report without emitting backend files.
+pub fn analyze_package_degradations(
+    opts: &BuildOptions,
+    profile: BuildProfile,
+) -> Result<DegradationReport, BuildError> {
+    let manifest_path = opts.package_root.join("mosaic-package.toml");
+    let manifest = parse_manifest(&manifest_path)?;
+    validate_package_name(&manifest.package.name)?;
+    for component in &manifest.components.exports {
+        validate_component_name(component)?;
+    }
+    if let Some(theme) = &opts.theme {
+        validate_theme_name(theme)?;
+    }
+
+    let src_dir = opts.package_root.join("src");
+    let package_search_paths = default_package_search_paths(&opts.package_root);
+    let mut degradations = Vec::new();
+
+    if !opts.backend.is_native() {
+        degradations.push(Degradation {
+            code: "profile.backend-not-native".to_string(),
+            backend: opts.backend.dir_name().to_string(),
+            component: "*".to_string(),
+            variant: None,
+            layout_path: "$".to_string(),
+            primitive: None,
+            reason: "native-complete applies only to SwiftUI, Qt/QML, XAML, Flutter, and Compose"
+                .to_string(),
+        });
+    }
+
+    if opts.emit_project && opts.backend.is_native() {
+        degradations.push(Degradation {
+            code: "runtime.sample-fallback".to_string(),
+            backend: opts.backend.dir_name().to_string(),
+            component: manifest
+                .components
+                .exports
+                .first()
+                .cloned()
+                .unwrap_or_else(|| "*".to_string()),
+            variant: None,
+            layout_path: "$project".to_string(),
+            primitive: None,
+            reason: "generated project shells still allow deterministic sample props when the Rust runtime is unavailable"
+                .to_string(),
+        });
+    }
+
+    for component in &manifest.components.exports {
+        let mil_path = src_dir.join(format!("{component}.mil"));
+        let variants = discover_variants(&src_dir, component)?;
+        for variant in variants {
+            let mll_path = match variant.as_deref() {
+                Some(value) => src_dir.join(format!("{component}.{value}.mll")),
+                None => src_dir.join(format!("{component}.mll")),
+            };
+            if !mil_path.exists() || !mll_path.exists() {
+                return Err(BuildError::SourceNotFound {
+                    component: component.clone(),
+                    expected_dir: src_dir.clone(),
+                });
+            }
+            let msl_path = resolve_style_path(&src_dir, component, opts.theme.as_deref())?;
+            let mil_src = read_to_string(&mil_path)?;
+            let mll_src = read_to_string(&mll_path)?;
+            let msl_src = match msl_path {
+                Some(path) => read_to_string(&path)?,
+                None => format!("style {component} {{ }}"),
+            };
+            let composed = compose_component(
+                component,
+                &mil_src,
+                &mll_src,
+                &msl_src,
+                &package_search_paths,
+                opts.theme.as_deref(),
+            )?;
+            collect_native_degradations(
+                opts.backend,
+                component,
+                variant.as_deref(),
+                &composed.layout.def.root,
+                "root",
+                &mut degradations,
+            );
+        }
+    }
+
+    Ok(DegradationReport {
+        schema_version: 1,
+        profile,
+        package: manifest.package.name,
+        backend: opts.backend.dir_name().to_string(),
+        native_complete: degradations.is_empty(),
+        degradations,
+    })
+}
+
+fn write_degradation_report(path: &Path, report: &DegradationReport) -> Result<(), BuildError> {
+    let mut json = serde_json::to_string_pretty(report)
+        .map_err(|error| BuildError::Io(format!("serialize degradation report: {error}")))?;
+    json.push('\n');
+    write_file(path, json.as_bytes())
+}
+
+fn collect_native_degradations(
+    backend: Backend,
+    component: &str,
+    variant: Option<&str>,
+    node: &LayoutNode,
+    path: &str,
+    degradations: &mut Vec<Degradation>,
+) {
+    let backend_name = backend.dir_name();
+    let reason = match node.tag.as_str() {
+        "HostDraggable" | "HostDropTarget" if backend.is_native() => Some((
+            "interaction.drag-drop-inert",
+            "the backend lowers this interactive primitive to a non-interactive container",
+        )),
+        "HostTable" if backend.is_native() => Some((
+            "accessibility.table-semantics-missing",
+            "the backend preserves the visual rows and cells but does not expose native table semantics",
+        )),
+        "HostDialog" if backend == Backend::Flutter => Some((
+            "interaction.dialog-placeholder",
+            "the Flutter emitter produces a zero-size TODO placeholder instead of a native dialog",
+        )),
+        "HostLink" if backend == Backend::Flutter && flutter_link_requires_url_host(node) => Some((
+            "effect.url-host-missing",
+            "the Flutter emitter cannot open URLs without an application-supplied effect host",
+        )),
+        _ => None,
+    };
+    if let Some((code, reason)) = reason {
+        degradations.push(Degradation {
+            code: code.to_string(),
+            backend: backend_name.to_string(),
+            component: component.to_string(),
+            variant: variant.map(str::to_string),
+            layout_path: path.to_string(),
+            primitive: Some(node.tag.clone()),
+            reason: reason.to_string(),
+        });
+    }
+
+    for (index, child) in node.children.iter().enumerate() {
+        let child_path = format!("{path}.children[{index}]");
+        collect_native_degradations(
+            backend,
+            component,
+            variant,
+            child,
+            &child_path,
+            degradations,
+        );
+    }
+}
+
+fn flutter_link_requires_url_host(node: &LayoutNode) -> bool {
+    !node.props.iter().any(|prop| {
+        prop.name == "external"
+            && matches!(&prop.value, LayoutPropValue::Keyword(value) if value == "false")
+    })
+}
 
 /// Build a package's artifact for a single backend.
 ///
@@ -2961,6 +3221,264 @@ version = "1"
             "exactly one artifact (the index)"
         );
         assert!(result.artifacts[0].ends_with("index.ts"));
+    }
+
+    #[test]
+    fn native_degradation_analysis_reports_stable_codes_and_layout_paths() {
+        let pkg = make_package("mosaic-pkg-board", &["Board"]);
+        fs::write(
+            pkg.path().join("src/Board.mll"),
+            r#"
+layout Board {
+  Column [ root ] {
+    HostDropTarget [ lane ] {
+      HostDraggable [ card ] {
+        HostTable [ table ] { }
+      }
+    }
+  }
+}
+"#,
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let opts = BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Compose,
+            emit_project: false,
+            theme: None,
+        };
+        let report =
+            analyze_package_degradations(&opts, BuildProfile::NativeComplete).expect("analysis");
+
+        assert!(!report.native_complete);
+        assert_eq!(
+            report
+                .degradations
+                .iter()
+                .map(|entry| (entry.code.as_str(), entry.layout_path.as_str()))
+                .collect::<Vec<_>>(),
+            vec![
+                ("interaction.drag-drop-inert", "root.children[0]"),
+                (
+                    "interaction.drag-drop-inert",
+                    "root.children[0].children[0]"
+                ),
+                (
+                    "accessibility.table-semantics-missing",
+                    "root.children[0].children[0].children[0]"
+                ),
+            ]
+        );
+        assert_eq!(
+            report,
+            analyze_package_degradations(&opts, BuildProfile::NativeComplete)
+                .expect("repeat analysis"),
+            "the report must not depend on directory iteration order"
+        );
+    }
+
+    #[test]
+    fn degradation_analysis_walks_package_expanded_layouts() {
+        let workspace = TempDir::new().unwrap();
+        let child = workspace.path().join("mosaic-pkg-drag-card");
+        let parent = workspace.path().join("mosaic-pkg-board");
+
+        write_package_manifest(&child, "mosaic-pkg-drag-card", &["DragCard"], &[]);
+        write_component_sources(
+            &child,
+            "DragCard",
+            "component DragCard { }\n",
+            "layout DragCard { HostDraggable [ drag-root ] { Text ( content: \"Card\" ) } }\n",
+            "style DragCard { part drag-root { width: 100% ; } }\n",
+        );
+        write_package_manifest(
+            &parent,
+            "mosaic-pkg-board",
+            &["Board"],
+            &[("mosaic-pkg-drag-card", "0.1.0")],
+        );
+        write_component_sources(
+            &parent,
+            "Board",
+            "component Board { }\n",
+            "layout Board { Column [ root ] { pkg::mosaic-pkg-drag-card::DragCard } }\n",
+            "style Board { part root { width: 100% ; } }\n",
+        );
+
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: parent,
+                output_root: out.path().to_path_buf(),
+                backend: Backend::SwiftUI,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("package-expanded analysis");
+
+        assert!(report.degradations.iter().any(|entry| {
+            entry.component == "Board"
+                && entry.primitive.as_deref() == Some("HostDraggable")
+                && entry.code == "interaction.drag-drop-inert"
+        }));
+    }
+
+    #[test]
+    fn generated_native_shell_sample_fallback_is_reported() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Xaml,
+                emit_project: true,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("project analysis");
+
+        assert_eq!(report.degradations.len(), 1);
+        assert_eq!(report.degradations[0].code, "runtime.sample-fallback");
+        assert_eq!(report.degradations[0].layout_path, "$project");
+    }
+
+    #[test]
+    fn permissive_profile_emits_artifacts_and_machine_readable_report() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        fs::write(
+            pkg.path().join("src/Card.mll"),
+            "layout Card { HostDraggable [ root ] { Text ( content: \"Card\" ) } }\n",
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let result = build_package_with_profile(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Compose,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::Permissive,
+        )
+        .expect("permissive build");
+
+        let report_path = out.path().join("compose/mosaic-degradations.json");
+        assert!(result.artifacts.contains(&report_path));
+        assert!(out.path().join("compose/Card.kt").exists());
+        let json: serde_json::Value =
+            serde_json::from_str(&fs::read_to_string(report_path).unwrap()).unwrap();
+        assert_eq!(json["schemaVersion"], 1);
+        assert_eq!(json["profile"], "permissive");
+        assert_eq!(json["nativeComplete"], false);
+        assert_eq!(
+            json["degradations"][0]["code"],
+            "interaction.drag-drop-inert"
+        );
+    }
+
+    #[test]
+    fn native_complete_rejects_before_emitting_application_artifacts() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        fs::write(
+            pkg.path().join("src/Card.mll"),
+            "layout Card { HostDraggable [ root ] { Text ( content: \"Card\" ) } }\n",
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package_with_profile(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Compose,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect_err("strict build must reject an inert drag primitive");
+
+        assert!(matches!(
+            error,
+            BuildError::NativeIncomplete {
+                backend: Backend::Compose,
+                degradation_count: 1,
+                ..
+            }
+        ));
+        let emitted = fs::read_dir(out.path().join("compose"))
+            .unwrap()
+            .map(|entry| entry.unwrap().file_name())
+            .collect::<Vec<_>>();
+        assert_eq!(emitted, vec!["mosaic-degradations.json"]);
+    }
+
+    #[test]
+    fn native_complete_emits_a_clean_native_package() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package_with_profile(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Compose,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("clean native package");
+
+        assert!(out.path().join("compose/Card.kt").exists());
+        let report_path = out.path().join("compose/mosaic-degradations.json");
+        assert!(result.artifacts.contains(&report_path));
+        let report = fs::read_to_string(report_path).unwrap();
+        assert!(report.contains("\"profile\": \"native-complete\""));
+        assert!(report.contains("\"nativeComplete\": true"));
+    }
+
+    #[test]
+    fn flutter_specific_placeholders_are_reported() {
+        let pkg = make_package("mosaic-pkg-links", &["Links"]);
+        fs::write(
+            pkg.path().join("src/Links.mll"),
+            r#"layout Links {
+  Column [ root ] {
+    HostDialog [ dialog ] { }
+    HostLink ( href: "https://example.com", label: "Example" )
+    HostLink ( href: "/settings", label: "Settings", external: false )
+  }
+}
+"#,
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Flutter,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("analysis");
+
+        assert_eq!(
+            report
+                .degradations
+                .iter()
+                .map(|entry| entry.code.as_str())
+                .collect::<Vec<_>>(),
+            vec!["interaction.dialog-placeholder", "effect.url-host-missing"]
+        );
     }
 
     // -----------------------------------------------------------------------

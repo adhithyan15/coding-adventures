@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Added - package native-complete profile
+
+`mosaic-compile pkg` now accepts `--profile permissive|native-complete`.
+Permissive builds retain preview output and add a deterministic
+`mosaic-degradations.json`; strict builds reject known degradations before
+emitting application artifacts.
+
 ### Fixed - dependency styles in standalone pipeline mode
 
 Standalone `--interface` / `--layout` / `--style` builds now use the same

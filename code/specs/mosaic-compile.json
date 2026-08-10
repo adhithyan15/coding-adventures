@@ -136,6 +136,14 @@
           "description": "Theme selector for style resolution, e.g. 'light' or 'dark'. Reads each component's <Component>.<theme>.msl (falling back to the bare <Component>.msl). Omitted → theme-agnostic (historical dark default). The style analogue of --variant.",
           "type": "string",
           "required": false
+        },
+        {
+          "id": "profile",
+          "long": "profile",
+          "description": "Build policy: 'permissive' emits artifacts plus mosaic-degradations.json; 'native-complete' rejects known native degradations before emitting application artifacts",
+          "type": "enum",
+          "enum_values": ["permissive", "native-complete"],
+          "required": false
         }
       ],
       "arguments": [

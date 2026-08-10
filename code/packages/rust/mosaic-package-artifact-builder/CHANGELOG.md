@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased] - native-complete package profile
+
+- Added deterministic package-expanded degradation analysis and the
+  `mosaic-degradations.json` build artifact.
+- Added `BuildProfile::Permissive` and `BuildProfile::NativeComplete`; strict
+  builds reject known degradations before emitting application artifacts.
+- Seeded the capability inventory with documented native drag/drop, table
+  semantics, Flutter dialog/link, and generated sample-runtime gaps.
+
 ## [Unreleased] - shared package composition
 
 - Added `compose_component` and `compose_component_with_model` as the canonical
