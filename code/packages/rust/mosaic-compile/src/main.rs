@@ -36,7 +36,7 @@ use mosaic_emit_html::HtmlRenderer;
 use mosaic_emit_react::ReactRenderer;
 use mosaic_emit_webcomponent::WebComponentRenderer;
 use mosaic_package_artifact_builder::{
-    build_package, compose_component_with_model, Backend, BuildOptions,
+    build_package_with_profile, compose_component_with_model, Backend, BuildOptions, BuildProfile,
 };
 use mosaic_vm::MosaicVM;
 
@@ -1247,12 +1247,20 @@ fn pkg_backend_from_str(value: &str) -> Option<Backend> {
     }
 }
 
+fn pkg_profile_from_str(value: &str) -> Option<BuildProfile> {
+    match value {
+        "permissive" => Some(BuildProfile::Permissive),
+        "native-complete" => Some(BuildProfile::NativeComplete),
+        _ => None,
+    }
+}
+
 /// Drive `mosaic_package_artifact_builder::build_package` from the CLI.
 ///
 /// Spec (mosaic-compile.json):
 ///
 /// ```text
-/// mosaic-compile pkg <PACKAGE_ROOT> --backend <react|electron|swiftui|qt|xaml|webcomponent|html|flutter|compose> --output <DIR> [--emit-project]
+/// mosaic-compile pkg <PACKAGE_ROOT> --backend <react|electron|swiftui|qt|xaml|webcomponent|html|flutter|compose> --output <DIR> [--emit-project] [--profile permissive|native-complete]
 /// ```
 ///
 /// Required: `package_root` positional, `--backend`, `--output`. cli-builder
@@ -1295,6 +1303,15 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
         .get("emit-project")
         .and_then(|v| v.as_bool())
         .unwrap_or(false);
+
+    let profile = flags
+        .get("profile")
+        .and_then(|v| v.as_str())
+        .unwrap_or("permissive");
+    let profile = pkg_profile_from_str(profile).unwrap_or_else(|| {
+        eprintln!("mosaic-compile pkg: --profile must be 'permissive' or 'native-complete'");
+        process::exit(1);
+    });
 
     // Theme selector for style (`.msl`) resolution — the style analogue of
     // the layout `--variant` flag. `--theme light` makes the builder read
@@ -1343,7 +1360,7 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
         theme: theme.map(|s| s.to_string()),
     };
 
-    match build_package(&opts) {
+    match build_package_with_profile(&opts, profile) {
         Ok(result) => {
             for path in &result.artifacts {
                 eprintln!("Written: {}", path.display());
@@ -1433,6 +1450,19 @@ mod tests {
         assert_eq!(pkg_backend_from_str("flutter"), Some(Backend::Flutter));
         assert_eq!(pkg_backend_from_str("compose"), Some(Backend::Compose));
         assert_eq!(pkg_backend_from_str("paint"), None);
+    }
+
+    #[test]
+    fn pkg_profile_mapping_accepts_the_documented_values() {
+        assert_eq!(
+            pkg_profile_from_str("permissive"),
+            Some(BuildProfile::Permissive)
+        );
+        assert_eq!(
+            pkg_profile_from_str("native-complete"),
+            Some(BuildProfile::NativeComplete)
+        );
+        assert_eq!(pkg_profile_from_str("strict"), None);
     }
 
     /// `build_self_package_registry` returns None when no manifest

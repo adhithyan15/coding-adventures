@@ -30,5 +30,13 @@ deterministic page, and requires a successful Direct2D content-surface render:
 cargo test -p venture-browser-windows --test xaml_project_build
 ```
 
+Launch and interaction are the default and remain required on a local or
+self-hosted Windows machine with an interactive desktop. GitHub-hosted Windows
+workers run the same project-generation and compiler gate with
+`MOSAIC_SKIP_INTERACTIVE_WINDOWS_ACCEPTANCE=1`, because those workers can reject
+WinUI initialization before `OnLaunched` with the WinRT stowed-exception status
+`0xc000027b`. That build-only accommodation must not be used to claim interactive
+Windows acceptance.
+
 Cross-platform unit tests exercise the shared session and chrome event path
 without claiming complete browser or HTML conformance.

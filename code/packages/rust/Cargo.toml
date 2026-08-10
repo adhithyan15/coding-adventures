@@ -548,6 +548,7 @@ members = [
     "image-codec-nef",
     "mosaic-app-capi",
     "mosaic-app-bindings",
+    "mosaic-app-conformance",
     "mosaic-app-runtime",
     "mosaic-analyzer",
     "mosaic-driver",
@@ -1063,4 +1064,9 @@ members = [
   "vault-pm-storage-storage-core",
   "vault-pm-repository",
   "vault-pm-application",
+  "vault-pm-application-storage-core",
+  "vault-pm-local-host",
+  "vault-pm-config",
+  "vault-pm-cli-host",
+  "vault-pm-cli",
 ]

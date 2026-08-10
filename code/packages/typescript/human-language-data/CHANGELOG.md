@@ -4,6 +4,156 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - the ூ sign, and the measured end of the Tamil strand's runway
+
+- Teach `TA-W19-read-muunru` (chapter 38, sequence 1165) around **மூன்று**: the
+  long-*ū* sign **ூ**, completing a four-corner *u*-family that took three
+  lessons to open — **ு** in `TA-W13` (chapter 31), **உ** in `TA-W17` (36) and
+  **ஊ** in `TA-W18` (37) — short/long by independent letter versus consonant
+  sign.
+- Choose **ூ** by census, not by convenience: it is the highest-usage glyph the
+  writing strand never taught, appearing in five lessons.
+- Credit `TA-SCRIPT-READ-UUR-02` and `TA-SCRIPT-THREE-NS-01` where the lesson
+  genuinely re-reads **ஊர்** and **ன**, rather than only declaring the atoms it
+  introduces. Four atoms leave a reinforcement window in total; these two
+  credits are what earns two of them. Measured by removing just these two
+  credits and re-running: R2 goes back 1808 -> 1809 and R4 243 -> 244, while
+  `TA-SCRIPT-U-VOWEL-01` and `TA-SCRIPT-UU-VOWEL-01` leave either way, carried
+  by the Warm-up block.
+- Say what the word buys. With **ூ** taught, six of the numbers one to ten are
+  spellable entirely from glyphs the strand has given: **மூன்று**, **இரண்டு**,
+  **நான்கு**, **ஆறு**, **எட்டு**, **பத்து**. The four that are not —
+  **ஒன்று**, **ஐந்து**, **ஏழு**, **ஒன்பது** — are blocked on **ஒ**, **ஐ** and
+  **ஏ** exactly.
+
+### Measured - the strand cannot finish inside 38 chapters
+
+The queue item that produced this lesson assumed the remaining glyphs were a
+matter of authoring more lessons. Measuring the track says otherwise:
+
+- After `TA-W18` (chapter 37) only five speaking lessons remain in the corpus,
+  at sequences 1120, 1130, 1140, 1150 and 1160. There is room for one more
+  writing lesson and no more, whether it is placed among them or after them.
+- Chapter 38's atom load goes 6 -> 8, inside the twelve-atom chapter budget, and
+  the lesson introduces 2 atoms, inside the three-atom lesson cap.
+
+So the residue stands at thirteen glyphs in chapter 7's numbers alone — **ஏ**,
+**ஐ**, **ஒ** and the ten Tamil digits **௧**-**௰** — with no slot left for any of
+them. Closing that debt requires a decision this changelog does not make: extend
+the Tamil track past chapter 38, or raise the strand's cadence.
+
+A note on the census, because this entry quotes no total for it and earlier
+drafts did. The absolute count of used-but-untaught glyphs is entirely a
+function of how "taught" is detected, and small choices swing it by several
+glyphs: whether a bold span of four code points such as **ஸ்ரீ** counts as
+teaching **ஸ**, how far a negation such as "still wait on letters this book has
+not taught" scopes, whether the `TA-C*` lessons may teach as well as use. The
+figure of 19 written in `continuity.test.ts` during an earlier change does
+reproduce, but only under one particular set of those choices — it needs **ஞ**,
+**ஸ**, **ஃ** and **ஷ** to count as NOT taught. Within the writing strand those
+four occur only in passing: **ஷ** and **ஸ** in `TA-W03`'s borrowed-ligature
+aside (**க்ஷ**, **ஸ்ரீ**) and its Wrap-up answer, **ஃ** in the same lesson's
+character-count mention, **ஞ** in `TA-W07`'s sound-table cell **ஞ்ச**. Two of
+the four also appear in speaking lessons — **ஞ** in **ஞாயிறு**, **மஞ்சள்** and
+**தஞ்சாவூர்**, **ஸ** in **நமஸ்காரம்** — which are uses, not teaching, under
+either detector; **ஃ** and **ஷ** appear nowhere in the corpus but that one
+`TA-W03` aside.
+The detector used here counts all four as taught. Neither reading is wrong; the
+number is simply not portable, which is why this entry quotes no total of its
+own.
+
+The two facts this entry rests on hold under a detector that does two specific
+things, and it is worth naming them rather than claiming detector-independence:
+it must scope negation, and it must not treat a `TA-C*` lesson as teaching. Both
+matter, and this very lesson is why the first one does — it prints **ஒன்று**,
+**ஐந்து** and **ஏழு** in bold inside the sentence saying they *wait on letters
+this book has not taught*, so a detector that ignores negation would score ஏ, ஐ
+and ஒ as taught here and put this lesson's delta at four glyphs instead of one.
+Chapter 7's own lessons bold the same letters while merely using them, which is
+why the second matters. Under a detector that does both: the difference **this**
+lesson makes is exactly **ூ**, and the thirteen chapter-7 glyphs named above are
+untaught.
+
+This supersedes, rather than continues, the census table in the "last two
+glyphs" entry below. That entry's detector scored **ஞ**, **ஸ**, **ஃ** and **ஷ**
+as untaught, which is where its 19 came from; the detector described here scores
+all four as taught. Both entries then say "thirteen of chapter 7's", and they do
+not mean the same thirteen: the earlier list is **ஐ**, **ஒ**, **ூ** plus the ten
+digits, this one is **ஏ**, **ஐ**, **ஒ** plus the ten digits. **ூ** moved out of
+the untaught set, which is precisely what this lesson did; **ஏ** was in it all
+along and the earlier list omitted it. That table is left as written, as a
+record of what was measured then.
+
+### Changed - place the writing lesson LAST in its chapter, and measure why
+
+The lesson was first written at sequence 1145, between `TA-C38-udambu` and
+`TA-C38-sugam`. Measuring that placement against the alternative changed it, and
+both effects are worth recording because neither is visible in a total:
+
+- Hands-free start. `chapter-modalities.tex` for chapter 38 went from "all 3
+  lessons" to "first 1 of 4": a `pen` lesson in position 2 truncates the core
+  drivable prefix, and two speaking lessons lost hands-free reachability.
+  Placed last it reads "first 3 of 4" and nothing is lost. The manifest summary
+  cannot see this — its per-chapter `drivablePrefix` for chapter 38 is 0 either
+  way — so no pinned test would have caught it.
+- Reinforcement distance. At index 127 the lesson sits 6 lessons after `TA-W18`
+  and 10 after `TA-W17`, both inside R2's 5-15 span. At index 125 it sat 4 after
+  `TA-W18` — past R1's 1-3 and short of R2's 5, in the dead zone between them.
+  The same lesson practising the same atoms therefore rescues three atoms from
+  R2 rather than one.
+- Placing a writing lesson last in its chapter is also the corpus's dominant
+  pattern: eleven chapters already do it. The gap from `TA-W18` becomes five
+  speaking lessons rather than three, which the strand already varies (existing
+  gaps include six and nine).
+
+Being last, the lesson carries no `Next:` line. That is not a special terminal
+convention — 84 of the Tamil track's 128 lessons carry no `Next:` line — it is
+simply that there is no successor left to name. `TA-C38-vidai`, which the move
+displaces from last position, has no `Next:` line either — that much predates
+this change — but it now has a successor it could name and does not, and that
+much is created by this change. It is left alone: of the 84, all but TA-W19 have
+a successor, and only a handful gesture at it at all — `TA-C01-practice` and
+`TA-C02-practice` with a "Next chapter:" teaser, `TA-C04-po` in running prose.
+So adding a teaser to `TA-C38-vidai` would be an isolated exception rather than
+a convention.
+
+### Changed - corpus pins re-derived by measurement
+
+Every moved pin was re-derived as a set difference against `origin/main`, and
+the direction of each mover is recorded at the assertion:
+
+- `atomsTaught` 2650 -> 2652; `pre-A1` 877 -> 878; ramp-to-A1 1186 -> 1187;
+  manifest `totalLessons` 1689 -> 1690 and `pen` 67 -> 68. The `pen` derivation
+  comes from `writing-type` before the script block is considered, matching the
+  `["writing-type","script-block"]` pair that 20 other Tamil lessons already
+  carry, so the sight seam does not move.
+- `atomsNeverRevisited` holds at 472, as does the 422-atom subset of it that
+  also misses a window. Both are trades rather than washes, and they trade
+  DIFFERENT atoms, which is worth separating because one set is a superset of
+  the other. Both lose the same two: `TA-SCRIPT-READ-UUR-02` and
+  `TA-SCRIPT-UU-VOWEL-01`, rescued from zero revisits by the re-reading above.
+  The 472 set gains `TA-SCRIPT-UU-SIGN-01` and `TA-SCRIPT-READ-MUUNRU-02`, this
+  lesson's own two atoms, never revisited because nothing follows them. The 422
+  subset gains `TA-ETYMON-VIDAI-02` and `TA-LEX-VIDAI-01` instead — those two
+  were already never-revisited at baseline and merely became window-measurable,
+  the artifact described next, while TA-W19's own atoms miss the subset because
+  at index 127 no window is evaluable for them at all.
+- `missedByWindow.R2` 1809 -> 1808, and it goes DOWN. Three atoms leave —
+  `TA-SCRIPT-READ-UUR-02` (revisits 0 -> 1), `TA-SCRIPT-UU-VOWEL-01` (0 -> 1)
+  and `TA-SCRIPT-U-VOWEL-01` (1 -> 2).
+- `missedByWindow.R4` 242 -> 243, with `TA-SCRIPT-THREE-NS-01` leaving
+  (revisits 4 -> 5, missing R1/R2/R4 -> R1/R2).
+- Every atom that ENTERS a window does so by one mechanism, and the arithmetic
+  is exact in all four: the Tamil track was 127 lessons, and for each entrant
+  `introducedAt + window.from = 127`, so that window's first position did not
+  exist until this lesson made index 127 exist. R1 886, VIDAI pair at 126
+  (126 + 1); R2, IVAR pair at 122 (122 + 5); R3 1307 -> 1309, UTAVU pair at 107
+  (107 + 20); R4, PLEASE-REGISTER pair at 47 (47 + 80).
+- For every one of those entrants the revisit COUNT is identical before and
+  after, which is the check that separates an artifact from a regression: no
+  existing reinforcement was broken by the insertion. TA-W19's own two atoms
+  appear in no window at all, because at index 127 none is evaluable.
+
 ### Added - verified Urdu independent ی handwriting
 
 - Record Northwestern's *Zer o Zabar* independent chhoṭī ye animations as one
@@ -453,7 +603,8 @@ that "every payoff is a chapter's last lesson by `sequence`" — interleaving pu
 - `atomsTaught` 2646 → 2650.
 - `atomsNeverRevisited` 470 → 472 — both `TA-W18`'s, orphans by construction because
   no later lesson practises script atoms. `TA-W17`'s two are not, because `TA-W18`
-  re-reads **உணவு** beside **ஊர்**.
+  re-reads **உணவு** beside **ஊர்**. (Superseded by the `TA-W19` entry above: a
+  later lesson now does practise script atoms, and those same two leave the set.)
 - `missedByWindow.R1` 880 → 884 — the four new atoms, nothing out.
 - `missedByWindow.R2` 1804 → 1809, and only four of those five are new atoms. The fifth
   is a **regression this tranche causes**, and it belongs in the open rather than filed

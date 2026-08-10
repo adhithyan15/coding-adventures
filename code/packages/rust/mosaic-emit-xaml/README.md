@@ -120,6 +120,15 @@ let result: XamlEmitResult = from_pipeline(
 `mosaic-compile --backend xaml` wires this up at the CLI level in the same
 PR.
 
+## Project-shell runtime policy
+
+`EmitOptions::require_runtime` selects the `native-complete` project shell. It
+loads Mosaic's standard .NET/Rust binding before WinUI activates the window,
+validates every required MIL prop before showing the generated component, and
+routes all generated events back through the Rust engine. This shell contains no
+reflection-host or sample-prop fallback. The default `false` setting retains the
+permissive preview and compatibility behavior.
+
 ## Tests
 
 `cargo test -p mosaic-emit-xaml` runs the per-primitive unit tests, plus
@@ -128,6 +137,7 @@ end-to-end smoke tests that build a small `MosmodelComponent` + `LayoutDef`
 generated XAML and C# (presence of the right tags, attributes, and slot
 properties).
 
-Windows CI is the final compiler gate for generated WinUI project shells;
-portable tests validate the IR-to-XAML structure and package fixtures on
-every platform.
+GitHub-hosted Windows CI is the final compiler gate for generated WinUI project
+shells. A local or self-hosted Windows runner with an interactive desktop remains
+the launch/interaction gate; portable tests validate the IR-to-XAML structure and
+package fixtures on every platform.

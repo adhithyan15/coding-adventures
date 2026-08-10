@@ -27,3 +27,9 @@ observe area(2)
 % That 25 Pa pressure over the same 2 m² area: force = 25 * 2.
 observe pressure(25)
 ? force(pressure, area)      % expect 50   (same definition, solved for F = P·A)
+
+% --- P = F/A, SOLVED FOR AREA (rung-0 CAS-wiring, FL-10). "A 50 N force produces
+% 25 Pa of pressure. Over what area is it acting?" ---
+observe force(50)                      % "…a 50 N force…"              (span cited)
+observe pressure(25)                   % "…produces 25 Pa of pressure…" (span cited)
+? area_from_pressure(force, pressure)  % engine → 2 (HyperPhysics, authoritative)

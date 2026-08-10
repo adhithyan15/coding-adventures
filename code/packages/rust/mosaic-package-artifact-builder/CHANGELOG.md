@@ -1,5 +1,73 @@
 # Changelog
 
+## [Unreleased] - ignored native control property inventory
+
+- Native-complete analysis now reports stable, property-level degradations for
+  tri-state checkbox state ignored by Compose, Flutter, and SwiftUI, and radio
+  grouping ignored by Compose, Flutter, Qt, and SwiftUI.
+- Strict builds reject those authored behavior losses before emitting app
+  artifacts. Explicit `indeterminate: false` remains a clean semantic no-op.
+
+## [Unreleased] - native-complete Qt runtime shell
+
+- Qt project shells emitted under `BuildProfile::NativeComplete` now require
+  Mosaic's standard QObject runtime binding and validate required MIL props
+  before QML construction.
+- Strict Qt shells remove conditional binding compilation and nullable event
+  dispatch, while mapping Rust MIL prop names to generated QML member names.
+- Linux CI compiles a zero-degradation strict Qt package and exercises normal,
+  missing-prop, and missing-runtime conformance paths.
+
+## [Unreleased] - native-complete XAML runtime shell
+
+- XAML project shells emitted under `BuildProfile::NativeComplete` now require
+  Mosaic's standard .NET runtime binding before WinUI activation and validate
+  required MIL props before showing the component.
+- Strict XAML shells omit the reflection host, generated sample props, and
+  app-owned dispatch stubs while permissive output remains backward-compatible.
+- Windows CI compiles a zero-degradation strict WinUI package and exercises the
+  required-runtime success and missing-runtime paths.
+
+## [Unreleased] - native-complete SwiftUI runtime shell
+
+- SwiftUI project shells emitted under `BuildProfile::NativeComplete` now
+  require Mosaic's standard Foundation/C runtime binding and its initial props
+  before mounting the generated view.
+- Strict SwiftUI shells omit reflection-host, event-print, and generated sample
+  paths while permissive output remains backward-compatible.
+- macOS runtime CI builds a zero-degradation strict SwiftPM project in addition
+  to round-tripping the standard binding.
+
+## [Unreleased] - native-complete Flutter runtime shell
+
+- Flutter project shells emitted under `BuildProfile::NativeComplete` now
+  require Mosaic's standard Dart FFI runtime and the first props envelope before
+  mounting the generated widget.
+- Strict Flutter shells omit nullable-host, event-print, and generated sample
+  paths while permissive output remains backward-compatible.
+- Flutter runtime CI now analyzes a zero-degradation strict project in addition
+  to round-tripping the standard binding.
+
+## [Unreleased] - native-complete Compose runtime shell
+
+- Compose project shells emitted under `BuildProfile::NativeComplete` now
+  require Mosaic's standard Rust runtime and a complete props envelope before
+  mounting the generated component.
+- Strict Compose shells omit the package-owned reflection bridge, event-print
+  fallback, and generated sample values for required props. Permissive output
+  retains those preview and compatibility paths.
+- Compose runtime CI now compiles a zero-degradation strict project in addition
+  to round-tripping the standard JNA binding.
+
+## [Unreleased] - native-complete package profile
+
+- Added deterministic package-expanded degradation analysis and the
+  `mosaic-degradations.json` build artifact.
+- Added `BuildProfile::Permissive` and `BuildProfile::NativeComplete`; strict
+  builds reject known degradations before emitting application artifacts.
+- Seeded the capability inventory with documented native drag/drop, table
+  semantics, Flutter dialog/link, and generated sample-runtime gaps.
+
 ## [Unreleased] - shared package composition
 
 - Added `compose_component` and `compose_component_with_model` as the canonical

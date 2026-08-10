@@ -66,6 +66,11 @@ returns a partial list, and every candidate remains available for later
 resolution. Returned lists are deterministic by exact item-ID bytes and their
 display metadata is wiped on drop by the domain view types.
 
+Optimistic hosts can separately request the exact sole current live revision
+for a later compare-and-swap mutation. Missing/tombstoned items return no
+capability and conflicts fail closed. Revision identities remain absent from
+ordinary redacted item views and public diagnostics.
+
 Authenticated reopen also builds a session-owned, rebuildable search
 projection. The application admits only the VLT-PM05 allowlist of redacted
 titles/labels, usernames, URLs, services, database hosts, and present tags;
@@ -198,10 +203,66 @@ revision, and item counts plus `integrity_verified = true`; any provider,
 format, graph, anchor, cryptographic, or domain failure returns the closed
 application error taxonomy without a partial report.
 
+The lifecycle boundary also exposes a read-only `doctor` workflow with one
+closed coarse outcome. Locked checks distinguish absent/prepared
+initialization, pending-publication recovery, owner-state availability,
+bootstrap availability, unsupported persisted versions or suites, integrity
+failure, and the authentication required before repository verification.
+Unlocked checks first require the exact durable active state and signed
+bootstrap retained by the session, then run the complete audit to distinguish
+healthy, repository-unavailable, unsupported, and integrity-failure states.
+The report carries no counts or vault, device, item, revision, object, locator,
+or provider identities, and the workflow never repairs state or accepts pins.
+
+An unlocked session can now produce one canonical authenticated portable
+export. The caller supplies the exact active signed bootstrap, a separately
+collected owned passphrase, a bounded Argon2id policy, and exactly 40 host-CSPRNG
+bytes for the fresh salt and XChaCha20 nonce. The encrypted snapshot retains
+every current live, tombstone, and conflict candidate in deterministic
+item/revision order and binds its exact bootstrap, candidate count, and
+domain-separated snapshot hash. Header-bound AEAD authenticates the version,
+protection mode, suite, KDF policy, salt, and nonce. The artifact excludes
+owner-private state, private seeds, provider credentials, local pins, journals,
+and search data; public diagnostics reveal no bytes, while passphrase, key,
+plaintext, encoded revisions, and hash preimages are wiped on drop.
+
+The host receives only exact encrypted bytes and remains responsible for an
+explicit destination and safe file replacement.
+
+Untrusted artifacts can now be opened through a separate no-write boundary.
+The caller supplies the owned export passphrase plus an explicit maximum
+Argon2id memory/iteration/lane policy, preventing artifact-controlled resource
+cost beyond host approval. Opening strictly checks the bounded canonical
+header, authenticates header-bound AEAD before plaintext parsing, verifies the
+snapshot count/hash and signed source bootstrap, enforces deterministic unique
+source item/revision order and per-item bounds, and decodes every candidate with
+exact item binding. Wrong credentials and valid-shape tag tampering share the
+closed authentication failure.
+
+Success remains inside an opaque non-cloneable application object exposing only
+item and candidate counts. Source identities, bootstrap bytes, metadata, and
+documents have no public accessor; diagnostics are redacted and all intermediate
+secret-bearing buffers and CBOR trees wipe on every path.
+
+An untouched empty generation-zero target can consume that opaque snapshot in
+one atomic cross-vault import. The host asks the application for the exact
+count-derived CSPRNG byte requirement, then supplies the owned entropy block and
+an advisory commit time. Import rejects the source vault, a mutated/non-empty
+target, stale pins, identity collisions, and snapshots that exceed one 4,096
+object publication. It creates a new target item identity per source item and a
+new encrypted target revision per retained live, tombstone, or conflict
+candidate, preserves complete validated record/CRDT/deletion state, intentionally
+drops non-portable source causal-parent identities, and seals a new target
+catalog and signed commit. The ordinary write-ahead pending journal makes the
+complete restore crash-resumable without partial logical visibility. The source
+snapshot, imported plaintexts, and entropy remain non-printable and wipe on
+drop.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
 credential store, or entropy source. Host field clipboard implementation,
-export and doctor workflows land in the next slices.
+portable import/restore, and richer host-side path, authorization,
+quota, and cache checks land in later slices.
 There is no unchecked
 repository verification path: construction decrypts and
 authority-verifies the exact locally pinned certificate frame and object ID,
@@ -227,11 +288,17 @@ Audit tests cover complete re-discovery and ancestry traversal, aggregate-only
 diagnostics, historical catalog/revision counts, and exact local-anchor
 rejection. Repository tests also prove the complete security-history seam uses
 the same deterministic order as bounded interactive history.
+Doctor tests cover absent, prepared, recovery-required, locked-authentication,
+healthy, local/bootstrap/repository unavailable, unsupported-version, and
+integrity-failure outcomes; exact durable session binding; aggregate-free
+diagnostics; and failure without repair.
 Search tests cover Unicode normalization, short queries, oversized safe-field
 fallback, exact collection filters, deterministic product ordering, every
 record schema's allowlist/denylist, secret exclusion, query/result bounds, and
-conflict closure. The exact Tarpaulin LLVM result is 2,459 of 2,582 production
-lines (95.23%); the status module remains 46 of 46. Add-item tests cover exact
+conflict closure. The exact Tarpaulin LLVM result is 3,086 of 3,245 production
+lines (95.10%); portable export/opening is 374 of 401, mutation including
+portable import is 475 of 504, doctor is 44 of 45, and status remains 46 of 46.
+Add-item tests cover exact
 entropy partitioning and wiping,
 identity validation before local writes, parentless revision and complete
 catalog construction, ambiguous successful compare-exchanges, write-ahead
@@ -247,6 +314,15 @@ tombstone selection, authored merged-secret persistence, complete multi-parent
 causality, immutable live-identity preservation, immutable losing-candidate
 retention, missing/unconflicted/all-tombstone rejection before
 compare-exchange, and entropy redaction/wiping.
+Portable-export/open/import tests prove the exact canonical encrypted vector, separate
+passphrase authentication, header/ciphertext tamper rejection, exact active
+bootstrap binding, plaintext-secret exclusion, complete snapshot count/hash,
+signed-bootstrap validation, host KDF-ceiling enforcement, candidate identity
+and ordering validation, live-document recovery, bounded credential rejection,
+lossless retention of every current conflicting tombstone, exact import entropy
+sizing, cross-vault item/revision re-identification, target-only encryption,
+atomic publication, conflict/deletion preservation, and independent target
+reopen with aggregate and revealed-secret comparison.
 
 ## Development
 

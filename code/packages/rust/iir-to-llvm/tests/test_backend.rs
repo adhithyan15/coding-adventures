@@ -1011,6 +1011,66 @@ fn declare_omitted_when_print_i64_unused() {
         "no print_i64 use → no extern; got:\n{ll}");
 }
 
+/// AOT00-T8 follow-up: `gc_collect_minor_precise()` (no args) → the unconditional
+/// minor-collection test seam — see `SUPPORTED_BUILTINS`'s own doc for why this
+/// bypasses the `should_collect_minor`/`auto_minor` policy gate entirely.
+#[test]
+fn call_builtin_gc_collect_minor_precise_emits_extern_call_and_declare() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "call_builtin",
+                Some("freed".into()),
+                vec![Operand::Var("gc_collect_minor_precise".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("freed".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(
+        ll.contains("declare i64 @__twig_gc_collect_minor_precise()"),
+        "expected extern declare for @__twig_gc_collect_minor_precise; got:\n{ll}"
+    );
+    assert!(
+        ll.contains("%freed = call i64 @__twig_gc_collect_minor_precise()"),
+        "expected call site assigning the freed count to the dest; got:\n{ll}"
+    );
+}
+
+/// AOT00-T8 follow-up: `gc_kind_of(ptr)` — the deterministic per-object survival
+/// signal an end-to-end write-barrier test needs (see `SUPPORTED_BUILTINS`'s own doc
+/// for why `freed`/live-bytes aren't reliable enough).
+#[test]
+fn call_builtin_gc_kind_of_emits_extern_call_and_declare() {
+    let f = IIRFunction::new(
+        "main",
+        vec![("p".into(), "i64".into())],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "call_builtin",
+                Some("k".into()),
+                vec![Operand::Var("gc_kind_of".into()), Operand::Var("p".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("k".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(
+        ll.contains("declare i64 @__twig_gc_kind_of(i64)"),
+        "expected extern declare for @__twig_gc_kind_of; got:\n{ll}"
+    );
+    assert!(
+        ll.contains("call i64 @__twig_gc_kind_of(i64 %p)"),
+        "expected call site passing the pointer argument through; got:\n{ll}"
+    );
+}
+
 #[test]
 fn call_builtin_unknown_name_is_unsupported_op() {
     let f = IIRFunction::new(
@@ -2680,6 +2740,23 @@ fn field_store_writes_word_at_scaled_offset() {
     assert!(ll.contains("inttoptr i64 %c to ptr"), "{ll}");
     assert!(ll.contains("getelementptr i64, ptr"), "{ll}");
     assert!(ll.contains("store i64 %v, ptr"), "{ll}");
+}
+
+/// AOT00-T8 follow-up: `field_store` also calls the generational write barrier,
+/// unconditionally — see `lower_field_store`'s own doc for why no reference/
+/// non-reference discrimination is attempted. Named parameters (`%c` the object
+/// handle, `%v` the stored word) prove it's `(parent, value)`, not swapped.
+#[test]
+fn field_store_calls_the_generational_write_barrier() {
+    let ll = lower(&heap_ops_module());
+    assert!(
+        ll.contains("declare void @__twig_gc_write_barrier(i64, i64)"),
+        "the barrier must be declared whenever any field_store is lowered: {ll}"
+    );
+    assert!(
+        ll.contains("call void @__twig_gc_write_barrier(i64 %c, i64 %v)"),
+        "the barrier call must name the object handle as parent and the stored word as child: {ll}"
+    );
 }
 
 #[test]

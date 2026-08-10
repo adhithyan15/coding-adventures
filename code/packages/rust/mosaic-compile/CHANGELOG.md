@@ -2,6 +2,55 @@
 
 ## Unreleased
 
+### Changed - strict native control properties are capability-checked
+
+`mosaic-compile pkg --profile native-complete` now rejects authored tri-state
+checkbox state on Compose, Flutter, and SwiftUI, plus authored radio grouping on
+Compose, Flutter, Qt, and SwiftUI. The degradation report identifies the exact
+package-expanded property path instead of allowing the emitter to ignore it.
+
+### Changed - strict Qt shells require Rust
+
+`mosaic-compile pkg --backend qt --emit-project --profile native-complete`
+now emits a runtime-required Qt application shell. It validates the standard
+QObject binding and required MIL props before QML construction, maps runtime
+props to generated QML names, and contains no optional-host event path.
+
+### Changed - strict XAML shells require Rust
+
+`mosaic-compile pkg --backend xaml --emit-project --profile native-complete`
+now emits a runtime-required WinUI application shell. It loads the standard
+.NET binding before activation, validates required MIL props, routes events
+through Rust, and contains no reflection-host or generated sample-value path.
+
+### Changed - strict SwiftUI shells require Rust
+
+`mosaic-compile pkg --backend swiftui --emit-project --profile native-complete`
+now emits a runtime-required application shell. It loads the standard
+Foundation/C binding synchronously, applies the initial Rust props, and contains
+no reflection-host, event-print, or generated sample-value path.
+
+### Changed - strict Flutter shells require Rust
+
+`mosaic-compile pkg --backend flutter --emit-project --profile native-complete`
+now emits a runtime-required application shell. It waits for the standard Rust
+engine's first props envelope and contains no nullable-host, event-print, or
+generated sample-value path for required props.
+
+### Changed - strict Compose shells require Rust
+
+`mosaic-compile pkg --backend compose --emit-project --profile native-complete`
+now emits a runtime-required application shell. The strict shell waits for the
+standard Rust engine's first props envelope and contains neither the legacy
+reflection host nor generated sample values for required props.
+
+### Added - package native-complete profile
+
+`mosaic-compile pkg` now accepts `--profile permissive|native-complete`.
+Permissive builds retain preview output and add a deterministic
+`mosaic-degradations.json`; strict builds reject known degradations before
+emitting application artifacts.
+
 ### Fixed - dependency styles in standalone pipeline mode
 
 Standalone `--interface` / `--layout` / `--style` builds now use the same

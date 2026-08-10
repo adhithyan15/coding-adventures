@@ -804,6 +804,10 @@ code/packages/rust/vault-pm-domain       product record model and merge policy
 code/packages/rust/vault-pm-storage      VaultObjectStore contract + fixtures
 code/packages/rust/vault-pm-repository   immutable DAG, publication, sync, GC
 code/packages/rust/vault-pm-application  use cases and redacted view models
+code/packages/rust/vault-pm-application-storage-core
+                                         durable bootstrap/owner-state adapters
+code/packages/rust/vault-pm-local-host    secure roots and process exclusion
+code/packages/rust/vault-pm-config        strict storage-neutral client config
 code/packages/rust/vault-pm-cli          product parser/driver/renderer
 code/programs/rust/vault-pm-cli          executable composition root
 ```
@@ -1140,6 +1144,41 @@ never gains plaintext.
 Every export has a restore test. “Backup completed” is not reported until the
 artifact can be parsed and authenticated.
 
+Portable restore is a cross-vault re-identification operation, not a repository
+copy:
+
+1. authenticate and fully validate the portable artifact through the bounded
+   no-write opener before selecting a target;
+2. initialize a separate target vault with a newly collected target passphrase,
+   fresh generation-zero entropy, and its own repository and owner state;
+3. require the target session to remain the untouched empty generation-zero
+   vault and reject the source vault itself as a target;
+4. derive the exact host-CSPRNG requirement as `16I + 80(C + 2)` bytes, where
+   `I` is the distinct source-item count and `C` is the retained current
+   candidate count, and reject `C + 1` above the repository's 4,096-object
+   atomic-publication bound;
+5. allocate a new target item ID for every source item and a new encrypted
+   revision/object ID for every retained live document, tombstone, and conflict
+   candidate; source item, revision, object, vault, and key identities are never
+   reused;
+6. preserve validated schema, timestamps, complete record payload, CRDT field
+   state, deletion time, and the current candidate grouping, but make imported
+   revisions parentless because source causal identities are intentionally not
+   part of the portable current-state closure;
+7. seal all imported revisions plus one new target catalog and signed commit,
+   persist the exact pending journal before provider publication, and activate
+   it only after exact receipt verification; the import is all-or-nothing and
+   uses the ordinary crash-recovery path; and
+8. discard the consumed opaque source snapshot and entropy, independently open
+   the target from durable state under its own passphrase, compare item,
+   candidate, conflict, schema, timestamp, deletion, and revealed field values,
+   and prove source and target item/revision identities are disjoint.
+
+The source remains untouched. Import into a non-empty or already-mutated target,
+identity collision, stale target pins, an oversized snapshot, or any local or
+provider failure returns the closed application error and never authorizes a
+partial logical restore.
+
 ### 19.4 Garbage collection
 
 GC is mark-and-sweep from all verified heads, retained conflicts, history
@@ -1328,7 +1367,21 @@ changelog, focused build, and downstream validation.
        non-printable wipe-on-drop value, with explicit clipboard, confirmed
        interactive reveal, and warned unsafe non-interactive policy inputs;
    7c-3. host clipboard adapter with ownership-aware timed clear;
-   7d. authenticated portable export and restore/import preparation; and
+   7d-1. completed authenticated canonical portable export, preserving every
+       current live, tombstone, and conflict candidate under a separately
+       collected Argon2id passphrase with fresh salt/nonce, header-bound AEAD,
+       a signed-bootstrap-bound snapshot hash, identity-free diagnostics,
+       wipe-on-drop plaintext, and host-neutral destination handling;
+   7d-2a. completed no-write authenticated portable artifact opening with
+       host-approved Argon2id resource ceilings, strict canonical/header bounds,
+       authentication-before-plaintext parsing, signed-bootstrap and complete
+       snapshot validation, opaque secret-bearing custody, and count-only
+       diagnostics;
+   7d-2b. completed atomic cross-vault portable import, consuming the opaque
+       opened snapshot into an untouched generation-zero vault, allocating new
+       item/revision/object/encryption identities, preserving every current
+       live, tombstone, and conflict candidate, and independently reopening and
+       comparing the restored target; and
    7e-1. completed safe five-state status workflow, strictly decoding bounded
        owner state while locked and exposing only authenticated aggregate item,
        candidate, and conflict counts while unlocked;
@@ -1336,12 +1389,57 @@ changelog, focused build, and downstream validation.
        discovery, proving the exact local counter/catalog/certificate anchor,
        walking complete bounded ancestry, decrypting every distinct reachable
        catalog and referenced revision, and returning aggregate-only counts;
-   7e-2b. locked/unlocked doctor workflow with coarse provider and integrity
-       classifications; and
+   7e-2b. completed read-only locked/unlocked doctor workflow with nine coarse
+       lifecycle, availability, unsupported, authentication, integrity, and
+       healthy classifications, exact durable session binding, no repair, and
+       no provider or identity detail; and
    7f. completed stable payload-free VLT-PM05 `Locked` error and compact
        locked/unlocked lifecycle boundary, including failure-stable in-place
        unlock and synchronous live-session drop on idempotent lock.
-9. `vault-pm-cli` + real executable and pseudo-terminal E2E suite.
+8a. `vault-pm-application-storage-core`: durable injected-backend adapters for
+    immutable signed-bootstrap generations, an atomic latest-generation
+    pointer, and exact owner-private local-state compare-exchange. The adapter
+    owns no filesystem path or platform policy; Phase 1A composes it over a
+    separately permission-checked `FsStorageBackend` root and retains the
+    single-writer process rule required by `storage-core` conditions.
+8b. `vault-pm-local-host`: platform-standard path resolution, owner-private
+    no-link root preparation, separate application-state/object/cache roots,
+    and a persistent owner-only non-blocking cross-process writer lock, using
+    the closed trust-boundary contract in `VLT-PM06-local-host.md`. Existing
+    broad roots fail closed; permission repair remains an explicit future CLI
+    ceremony rather than an automatic side effect.
+8c. `vault-pm-config`: closed, bounded storage-neutral V1 configuration and
+    deterministic TOML rendering, using `VLT-PM07-config.md`. It persists the
+    opaque bootstrap locator and typed storage selections without receiving
+    passphrases, provider credentials, item metadata, or host capabilities.
+8d. `vault-pm-local-host`: exact bounded configuration loading plus atomic
+    owner-only initial creation and compare-and-exchange, guarded by the same
+    cross-process writer capability. Persistence remains schema-blind and
+    safely stores canonical bytes emitted by `vault-pm-config`.
+8e. `vault-pm-cli-host`: fixed controlling-terminal passphrase collection,
+    echo restoration, constant-time new-passphrase confirmation, and stable OS
+    entropy, using the closed CLI-only trust boundary in
+    `VLT-PM08-cli-host.md`.
+9a. completed `vault-pm-cli` bootstrap composition: closed parsing/rendering,
+    stable exit classes, real `init`, locked `status`, and locked `doctor`, plus
+    a thin executable and real-process pseudo-terminal restart suite, using
+    `VLT-PM09-cli-bootstrap.md`. Generation zero installs its exact prepared
+    journal before configuration makes the random locator discoverable, and a
+    restart resumes that journal without generating replacement identities.
+9b-1. authenticated one-shot audit verification and opt-in full doctor over the
+      exact production unlock boundary, with synchronous session drop before
+      rendering, using `VLT-PM10-cli-authenticated-verification.md`.
+9b-2a. login creation plus durable redacted authenticated item list/show over
+       separate one-shot processes, using `VLT-PM11-cli-login-create-read.md`.
+9b-2b-1. redacted authenticated revision history listing using
+         `VLT-PM13-cli-history-list.md`.
+9b-2b-2. redacted authenticated search plus non-login show renderers.
+9b-3a-1. revision-safe authenticated login replacement using
+         `VLT-PM12-cli-login-replace.md`.
+9b-3a-2. remaining record creation plus richer notes/multiple-URL editing.
+9b-3b. authenticated delete, restore, and conflict-resolution mutations.
+9b-4. portable export/import CLI host composition and destination policy.
+9b-5. foreground interactive shell over the same command/use-case boundary.
 10. Crash/fault matrix and local restore drill.
 
 ### Phase 1B — daily local use
@@ -1397,8 +1495,16 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
 - `VLT10-vault-sync-engine.md` — version vectors and conflict semantics.
 - `VLT11-transports.md` — current CLI transport contract.
 - `VLT-PM01-format.md`, `VLT-PM02-storage.md`, `VLT-PM03-domain.md`,
-  `VLT-PM04-repository.md`, and `VLT-PM05-application.md` — product repository
-  wire, object-store, domain, verified-DAG, and application contracts.
+  `VLT-PM04-repository.md`, `VLT-PM05-application.md`,
+  `VLT-PM06-local-host.md`, `VLT-PM07-config.md`, `VLT-PM08-cli-host.md`,
+  `VLT-PM09-cli-bootstrap.md`, `VLT-PM10-cli-authenticated-verification.md`,
+  `VLT-PM11-cli-login-create-read.md`, `VLT-PM12-cli-login-replace.md`, and
+  `VLT-PM13-cli-history-list.md` —
+  product repository wire,
+  object-store, domain, verified-DAG, application, local-host, configuration,
+  terminal/entropy, executable composition, authenticated verification, and
+  first CRUD-vertical, revision-safe replacement, and redacted history
+  contracts.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.

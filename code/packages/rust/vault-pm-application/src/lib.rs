@@ -11,6 +11,8 @@ mod audit;
 mod codec;
 mod crypto;
 mod disclosure;
+mod doctor;
+mod export;
 mod initialize;
 mod lifecycle;
 mod mutation;
@@ -34,6 +36,13 @@ pub use crypto::{
 pub use disclosure::{
     RevealedSecretEncodingV1, RevealedSecretV1, SecretDisclosureIntentV1, SecretFieldV1,
 };
+pub use doctor::{VaultDoctorReportV1, VaultDoctorStateV1};
+pub use export::{
+    open_portable_with_passphrase, OpenedPortableSnapshotV1, PortableExportArtifactV1,
+    PortableExportPolicyV1, PortableExportRandomnessV1, PortableOpenPolicyV1,
+    MAX_PORTABLE_EXPORT_ARTIFACT_BYTES, MAX_PORTABLE_EXPORT_PASSPHRASE_BYTES,
+    MAX_PORTABLE_EXPORT_PLAINTEXT_BYTES, PORTABLE_EXPORT_RANDOM_BYTES,
+};
 pub use initialize::{
     complete_generation_zero, prepare_generation_zero, rehydrate_prepared_init,
     GenerationZeroPolicyV1, GenerationZeroRandomness, PreparedGenerationZero,
@@ -41,10 +50,10 @@ pub use initialize::{
 };
 pub use lifecycle::{LockedVaultV1, VaultAccessV1};
 pub use mutation::{
-    AddItemRandomnessV1, DeleteItemRandomnessV1, ReplaceItemRandomnessV1,
-    ResolveItemConflictRandomnessV1, RestoreItemRandomnessV1, ADD_ITEM_RANDOM_BYTES,
-    DELETE_ITEM_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES, RESOLVE_ITEM_CONFLICT_RANDOM_BYTES,
-    RESTORE_ITEM_RANDOM_BYTES,
+    portable_import_random_bytes, AddItemRandomnessV1, DeleteItemRandomnessV1,
+    PortableImportRandomnessV1, ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1,
+    RestoreItemRandomnessV1, ADD_ITEM_RANDOM_BYTES, DELETE_ITEM_RANDOM_BYTES,
+    REPLACE_ITEM_RANDOM_BYTES, RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
 };
 pub use open::{
     open_active_vault, recover_pending_publication, ItemHistoryViewV1, UnlockedVaultV1,

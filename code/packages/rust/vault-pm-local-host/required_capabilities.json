@@ -1,0 +1,38 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/vault-pm-local-host",
+  "capabilities": [
+    {
+      "category": "env",
+      "action": "read",
+      "target": "platform user-directory variables",
+      "justification": "Resolves the current user's standard configuration, local-data, and cache directories without hard-coding a home path."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "resolved vault-pm configuration file, data, cache, and lock paths",
+      "justification": "Inspects every local root, lock object, and bounded configuration file without following links before returning paths or exact bytes."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "resolved vault-pm configuration file, data, cache, and lock paths",
+      "justification": "Creates missing application roots, the persistent lock file, and same-directory configuration staging files with owner-only native security metadata."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "resolved vault-pm lock and configuration paths",
+      "justification": "Acquires an operating-system advisory lock and atomically publishes synchronized exact configuration bytes."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "libc descriptor-relative file APIs and Windows file/token/security APIs",
+      "justification": "Uses no-follow handles, native identity and access-control inspection, atomic publication, durable synchronization, and platform file locking unavailable through path-only filesystem calls."
+    }
+  ],
+  "justification": "Local CLI trust-boundary adapter for platform-standard paths, owner-private directories and configuration, and one-process-at-a-time vault access."
+}

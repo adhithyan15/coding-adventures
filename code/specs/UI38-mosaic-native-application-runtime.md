@@ -301,20 +301,60 @@ unblocks multiple downstream targets; never count source generation as completio
   - [x] Qt/QML through the standard Qt Core binding.
 - [ ] Generate standard effect hosts, beginning with storage and lifecycle.
 - [ ] Add `native-complete` capability/degradation analysis to the compiler.
+  - [x] Add a package-builder API and CLI profile with deterministic,
+    package-expanded degradation reports and pre-emission strict rejection.
+  - [x] Make Compose and Flutter `native-complete` project shells require the
+    standard Rust runtime and runtime-provided props, with no optional-host or
+    sample-data path.
+  - [x] Repeat the runtime-required shell policy for SwiftUI.
+  - [x] Repeat the runtime-required shell policy for XAML.
+  - [x] Repeat the runtime-required shell policy for Qt: require the standard
+    QObject binding, validate Rust props before QML construction, map MIL names
+    to QML names, and cover normal, missing-prop, and missing-runtime paths.
+  - [ ] Inventory ignored properties, events, styles, effects, and accessibility
+    metadata across every native emitter, and add the equivalent package setting.
+    - [x] Report property-level degradations for ignored tri-state checkbox
+      state and radio-group behavior, including package-expanded paths.
+    - [ ] Inventory the remaining ignored dialog/link events, layout properties,
+      MSL styles, effects, and accessibility metadata.
+    - [ ] Define a serializable native-view reference contract for `node` and
+      component slots; Flutter's JSON runtime cannot currently materialize a
+      Dart `Widget` value for those otherwise typed composition seams.
+  - [ ] Remove every reported TaskApp degradation on all five native backends.
 - [ ] Add launch-and-dispatch conformance fixtures for every native backend.
-- [x] Gate the complete package-expanded XAML TaskApp on Windows with real
-  WinUI compilation and a process launch smoke test.
+  - [x] XAML/.NET loads the shared Rust conformance DLL and round-trips startup,
+    typed props, semantic dispatch, revised props, buffers, and teardown.
+  - [x] SwiftUI/Foundation loads the shared Rust conformance dylib and round-trips
+    startup, dispatch, snapshot/restore, notification, and teardown in macOS CI.
+  - [x] Qt/QML loads the shared Rust conformance library and round-trips startup,
+    dispatch, snapshot/restore, buffers, and teardown in headless Linux CI.
+  - [x] Flutter/Dart FFI loads the shared Rust conformance library and round-trips
+    startup, dispatch, snapshot/restore, notification, buffers, and teardown in
+    headless Linux CI.
+  - [x] Compose/JNA loads the shared Rust conformance library and round-trips
+    startup, dispatch, snapshot/restore, notification, buffers, and teardown on
+    the Linux JVM.
+- [x] Gate the complete package-expanded XAML TaskApp on GitHub-hosted Windows
+  with real WinUI compilation and executable production.
   - [x] Allocate `For` row-view-model and projection names per loop rather than
     per `as:` alias; package expansion currently makes the sheet and task-list
     `row` loops collide on `TaskApp_RowVm` / `TaskAppRowVmRows`.
   - [x] Keep nested `For` bindings and expression helpers inside the generated
     DataTemplate binding scope instead of referring to page members or an
     enclosing template from a typed child template.
+- [ ] Add a self-hosted Windows worker with an interactive desktop as the required
+  WinUI launch-and-interaction gate. GitHub-hosted workers compile the complete
+  TaskApp and round-trip the real Rust engine through the generated .NET binding,
+  but can terminate WinUI before `OnLaunched` with stowed-exception status
+  `0xc000027b`; they therefore cannot honestly prove a visible native surface.
 - [ ] Make the generated Flutter project analyzer-clean after its documented
   `flutter create` bootstrap: replace the stock `MyApp` widget test, provision
   its lint configuration, and omit unused authored `For` bindings.
 - [x] Complete Compose TaskApp Kotlin typing: normalize Mosaic value truthiness
   in boolean positions and supply required native input commit payloads.
+- [x] Restore complete Compose TaskApp generation after package expansion added
+  per-row `HostTooltip` nodes: lower them to Compose Foundation's native overlay
+  with plain-text semantics instead of rejecting the current package graph.
 - [x] Route every compile entry point through one package-composition pipeline;
   standalone and package builds now consume the same resolved layout and merged
   dependency-style IR before selecting a backend.
@@ -356,6 +396,9 @@ unblocks multiple downstream targets; never count source generation as completio
 - [ ] Ship `mosaic-std-feedback`: alert, dialog, toast, progress, empty/error states.
 - [ ] Ship `mosaic-std-data`: list, virtualized list, table, form and field patterns.
 - [ ] Ship `mosaic-std-services` and umbrella `mosaic-std` manifests.
+- [ ] Make the existing `mosaic-pkg-toolkit` compile across all five native
+  backends as a migration baseline; Compose currently rejects `HostLink` in
+  shared navigation components such as Breadcrumb.
 - [ ] Enforce accessible names, focus, keyboard actions, scaling, contrast, and
   reduced-motion behavior in the strict profile.
 

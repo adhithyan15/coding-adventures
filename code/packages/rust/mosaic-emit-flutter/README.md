@@ -123,6 +123,12 @@ generated component. Hosts can also register a prop-change handler; native
 surface interactions use it to ask the generated shell to reproject current
 Mosaic props without creating a backend-specific state store.
 
+Project emission defaults to the permissive preview contract. Setting
+`EmitOptions::require_runtime` produces the `native-complete` shell used by the
+package builder: it requires `MosaicHost.loadRequired()`, waits for the first
+Rust props envelope, exposes an accessible startup indicator, and fails on
+missing required props instead of synthesizing sample values.
+
 Mosaic conditions pass through a generated value-truthiness helper before they
 enter Dart's statically typed boolean positions. Text-input change and commit
 handlers synthesize their declared zero- or one-value event constructors, so a

@@ -1,0 +1,22 @@
+% ============================================================================
+% word-families.query.adj — worked recall over the word-family / rhyme library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what family is this word
+% in?" or "what rhymes with this word?" — it states no fact of its own — it
+% only `import`s the grounded table+rule and asks binding queries. Family
+% lookup is a direct table recall; the rhyme relation is DERIVED by the rule,
+% composing family membership with the general word-family principle — so
+% every rhyme answer carries BOTH citations in its `steps` trail.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli word-families.query.adj
+% ============================================================================
+
+import "word-families.adj"
+
+? word_family(pan, $F)     % expect an    (direct recall: which family is "pan" in?)
+? rhymes_with(pan, $W)     % expect fan, ran, man, tan, van, pan (derived: shares the -an family)
+? rhymes_with(cat, $W)     % expect bat, fat, sat, rat, pat, mat, hat, cat (derived: shares the -at family)
+? rhymes_with(pig, $W)     % expect big, fig, dig, wig, pig (derived: shares the -ig family)
+? rhymes_with(bug, $W)     % expect tug, rug, hug, mug, jug, dug, bug (derived: shares the -ug family)
+? word_family(dog, $F)     % expect abstain — "dog" has no shipped row, not in this family

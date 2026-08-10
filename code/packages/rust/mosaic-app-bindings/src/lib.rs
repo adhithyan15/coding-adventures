@@ -110,6 +110,14 @@ mod tests {
     #[test]
     fn compose_binding_owns_the_full_c_abi_lifecycle() {
         let source = compose_jna_binding();
+        assert!(source.contains("class MosaicSizeT(value: Long = 0)"));
+        assert!(source.contains("open class MosaicBytes : Structure()"));
+        assert!(source.contains("open class MosaicBuffer : Structure()"));
+        assert!(source.contains("interface MosaicNativeApi : Library"));
+        assert!(!source.contains("private class MosaicSizeT"));
+        assert!(!source.contains("private open class MosaicBytes"));
+        assert!(!source.contains("private open class MosaicBuffer"));
+        assert!(!source.contains("private interface MosaicNativeApi"));
         for symbol in [
             "mosaic_app_create",
             "mosaic_app_dispatch",
@@ -191,6 +199,8 @@ mod tests {
             dispatch < commit,
             "sequence must commit only after dispatch succeeds"
         );
+        assert!(source.contains("static func loadRequired() -> MosaicRuntimeHost"));
+        assert!(source.contains("native-complete requires the Mosaic Rust application runtime"));
     }
 
     #[test]
@@ -240,6 +250,12 @@ mod tests {
             dispatch < commit,
             "sequence must commit only after dispatch succeeds"
         );
+        assert!(source.contains("public static void LoadRequired()"));
+        assert!(source.contains("public static string ApplyRequiredProps("));
+        assert!(source.contains("public static Task<MosaicRuntimeResult> HandleRequiredEvent("));
+        assert!(source.contains("native-complete requires the Mosaic Rust application runtime"));
+        assert!(source.contains("Mosaic runtime props are missing required value"));
+        assert!(source.contains("Mosaic runtime response did not include a props object"));
     }
 
     #[test]
@@ -259,6 +275,8 @@ mod tests {
         assert!(source.contains("finally {\n      _bufferFree(buffer);"));
         assert!(source.contains("void dispose()"));
         assert!(source.contains("const MosaicHost()"));
+        assert!(source.contains("static MosaicHost loadRequired()"));
+        assert!(source.contains("native-complete requires the Mosaic Rust application runtime"));
     }
 
     #[test]
@@ -323,5 +341,14 @@ mod tests {
             dispatch < commit,
             "sequence must commit only after dispatch succeeds"
         );
+        assert!(binding.header.contains("void requireRuntime() const"));
+        assert!(binding.header.contains("QVariantMap propsRequired() const"));
+        assert!(binding
+            .header
+            .contains("Q_INVOKABLE QVariantMap handleRequiredEvent"));
+        assert!(binding
+            .source
+            .contains("native-complete requires the Mosaic Rust application runtime"));
+        assert!(binding.source.contains("missing required MIL prop"));
     }
 }

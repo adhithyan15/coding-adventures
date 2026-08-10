@@ -34,3 +34,9 @@ observe resistance(3)
 
 % Electric power at that same current: power = 6 * 2.
 ? power(voltage, current)          % expect 12  (electric power: P = V·I)
+
+% --- Ohm's law, SOLVED FOR CURRENT (rung-0 CAS-wiring, FL-10). The same
+% already-bound voltage(6) and resistance(3) give back the original 2 A
+% current — a second round trip, closing the one direction the forward
+% `voltage`/`resistance_from_ohms_law` pair above leave open. ---
+? current_from_voltage(voltage, resistance)   % expect 2   (I = V / R = 6 / 3)

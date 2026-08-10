@@ -582,15 +582,89 @@ field API as current items. Restore always creates a new revision and commit;
 it never rewinds repository heads or mutates historical bytes.
 
 Portable export is one authenticated encrypted artifact containing a canonical
-snapshot of all current candidates, complete live documents/tombstones,
-bootstrap public metadata required for import, and a manifest count/hash. It is
-encrypted under a fresh export key or a separately collected export
-passphrase—never implicitly under the live VRK. Export excludes local device
-private state, provider credentials, local pins, and search indexes.
+snapshot of all current candidates, complete live documents/tombstones, the
+exact signed bootstrap needed to interpret the source, and a manifest
+count/hash. It is encrypted under a separately collected export passphrase,
+never implicitly under the live VRK or unlock passphrase. The host supplies the
+bounded Argon2id policy and exactly 40 fresh CSPRNG bytes: 16 bytes of salt,
+followed by a 24-byte XChaCha20 nonce. Empty passphrases and passphrases over
+1,024 bytes are rejected.
 
-Phase 1A returns export bytes to the host; it does not choose or write a path.
-Import and cross-vault re-identification are the next paired workflow and must
-create new object identities.
+The V1 artifact is closed canonical CBOR with integer keys:
+
+| Key | Value |
+|---:|---|
+| 1 | version `1` |
+| 2 | protection `1` (passphrase) |
+| 3 | crypto suite `1` |
+| 4 | Argon2id map `{1: memory_kib, 2: iterations, 3: lanes, 4: 16-byte salt}` |
+| 5 | 24-byte nonce |
+| 6 | XChaCha20-Poly1305 ciphertext |
+| 7 | 16-byte authentication tag |
+
+The 32-byte export key is the direct Argon2id output for the supplied
+passphrase and key-4 parameters. AEAD associated data is
+`"VPM-PORTABLE-EXPORT-AAD-v1" || canonical_cbor(header)`, where `header` is
+the artifact map containing exactly keys 1–5. Changing a version, protection
+mode, suite, KDF parameter, salt, or nonce therefore fails authentication.
+
+Authenticated plaintext is a closed canonical CBOR map:
+
+| Key | Value |
+|---:|---|
+| 1 | snapshot version `1` |
+| 2 | exact signed bootstrap bytes accepted by the active session |
+| 3 | candidate array |
+| 4 | candidate-array length |
+| 5 | 32-byte snapshot hash |
+
+Every candidate entry is `{1: source_item_id, 2: source_revision_id, 3:
+canonical_item_revision}`. Entries are ordered first by exact 16-byte item ID
+and then by exact 32-byte revision ID. Every current live, tombstone, and
+conflicting candidate is retained. The hash is
+`SHA-256("VPM-PORTABLE-SNAPSHOT-v1" || bootstrap_length_u64_be ||
+exact_bootstrap || canonical_cbor(candidate_array))`. The complete canonical
+plaintext is limited to 512 MiB.
+
+Export excludes owner-private local state, authority/device private seeds,
+provider credentials, local pins, recovery journals, and the rebuildable
+search projection. All passphrase, derived-key, plaintext, candidate-encoding,
+and hash-preimage buffers are owned by wipe-on-drop containers. Public export
+types redact their bytes from diagnostics.
+
+Phase 1A returns exact encrypted artifact bytes to the host; it does not choose
+or write a path, overwrite a destination, report backup completion, or retain
+provider authority.
+
+Artifact opening is a separate no-write boundary. The host passes untrusted
+bytes, an owned separately collected passphrase, and explicit maximum Argon2id
+memory, iteration, and lane costs. The encrypted artifact is bounded to 512 MiB
+plus 4 KiB of framing before CBOR decode. The opener rejects a header whose
+valid KDF cost exceeds the host-approved ceiling before performing Argon2id;
+the ceiling itself must remain inside the V1 Argon2id bounds.
+
+Opening strictly requires the exact closed canonical header above, supported
+version/protection/suite values, exact salt/nonce/tag widths, and ciphertext no
+larger than 512 MiB. It derives the export key and authenticates the complete
+header-bound artifact before decoding any plaintext. A wrong passphrase and a
+valid-shape artifact with a wrong authentication tag both return the same
+closed `AuthenticationFailed` class.
+
+After authentication, the opener strictly decodes the closed snapshot, checks
+the exact candidate count and domain-separated hash, and verifies the embedded
+bootstrap's authority public key and self-signature. Candidate entries must be
+strictly increasing by source item/revision identity, unique, bounded to
+100,000 items and 16 candidates per item, canonically decode as item revisions,
+and reproduce the entry's item identity. Every intermediate plaintext CBOR
+tree, passphrase, derived key, ciphertext copy, bootstrap, encoded revision,
+and hash preimage is wiped on every return path.
+
+Success returns an opaque secret-bearing application object with public item
+and candidate counts only. It has no document, bootstrap, or source-identity
+accessor, cannot be cloned, and redacts diagnostics. Opening does not initialize
+or write a target vault. The next workflow consumes this object and creates a
+new vault with new item, revision, object, and encryption identities rather
+than publishing source identities into the target repository.
 
 ## 12. Audit and status
 
@@ -611,10 +685,24 @@ counts. A report exists only after the complete audit succeeds and therefore
 has `integrity_verified = true`; any failure returns the closed application
 error taxonomy without a partial report. It never returns object or item IDs.
 
-`doctor` distinguishes local state availability, bootstrap availability,
-repository availability, unsupported capability, authentication required, and
-integrity failure without including provider detail. It must not weaken open or
-accept new pins as a repair side effect.
+`doctor` is read-only and returns exactly one of `Healthy`,
+`InitializationRequired`, `RecoveryRequired`, `LocalStateUnavailable`,
+`BootstrapUnavailable`, `RepositoryUnavailable`, `UnsupportedCapability`,
+`AuthenticationRequired`, or `IntegrityFailure`. While locked, it strictly
+decodes the bounded owner state, verifies an active state's exact signed
+bootstrap binding, and returns `AuthenticationRequired` before repository
+access because its opaque address and verifier require authenticated secrets.
+Prepared state returns `InitializationRequired`; pending publication returns
+`RecoveryRequired`. While unlocked, it additionally requires the exact durable
+active state retained by the session and runs the complete audit before
+returning `Healthy`. Unsupported persisted versions or mandatory suites remain
+distinct from malformed or unauthenticated integrity failures.
+
+The report contains no counts or vault, device, item, revision, object,
+locator, or provider identity. Provider-specific path, authorization, quota,
+and cache diagnostics belong to host adapters and may only be collapsed into
+the same coarse vocabulary. `doctor` must not repair state, publish bytes,
+weaken open, or accept new pins as a side effect.
 
 ## 13. Bounds and errors
 
@@ -630,7 +718,8 @@ Additional V1 bounds are checked before allocation:
 | search query | 256 bytes |
 | list/search results | 10,000 |
 | history request | 4,096 |
-| portable export plaintext | 512 MiB |
+| portable export plaintext/ciphertext | 512 MiB |
+| portable encrypted artifact | 512 MiB + 4 KiB framing |
 
 The public error taxonomy is:
 
@@ -684,6 +773,11 @@ interactive shell timeout, clipboard behavior, TOTP generation, attachments,
 import, password rotation UI, OS custody, device enrollment/revocation,
 multi-replica transfer, automatic conflict resolution, physical GC execution,
 or provider-specific diagnostics. Those compose above or extend this contract.
+
+The separate `vault-pm-application-storage-core` package now implements these
+byte-oriented store traits over an injected `storage-core` backend. It does not
+change this host-neutral contract or own the filesystem path, permissions, or
+cross-process exclusion required by a CLI composition.
 
 ---
 

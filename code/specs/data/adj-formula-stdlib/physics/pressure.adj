@@ -33,6 +33,18 @@
 % provenance envelope every shipped grounded clause carries; the linter rejects an
 % unsourced one. (See feedback_nothing_human_authored — the definitional sentence is
 % a verbatim span of the cited page, not asserted from memory.)
+%
+% This library also carries a rung-0 CAS-wiring companion (ADJ-FORMULA-LIBRARIES
+% FL-10, §3D — a Wave 3 continuation): `area_from_pressure` solves the SAME cited
+% HyperPhysics definition as the forward `force` formula (`F = P·A`) for area
+% instead, through `cas-solve`'s real linear-equation solver — the exact discipline
+% `electricity.adj`'s `resistance_from_ohms_law` already established. This closes
+% the one remaining direction the hand-shipped `pressure`/`force` pair left open
+% (given pressure and force, recover the area) without duplicating either existing
+% formula's citation work. The new symbolic names its OWN target finding
+% (`area_from_pressure`, not `area`) rather than reusing the plain parameter name,
+% so it coexists with the two forward examples in one query file — no target-
+% collision, no file-splitting needed.
 % ============================================================================
 
 % ----------------------------------------------------------------------------
@@ -47,6 +59,7 @@ dictionary pressure_vocab {
     define force    : finding  surface "force", "F"                     % force, e.g. N (newtons)
     define area     : finding  surface "area", "A"                      % area, e.g. m²
     define pressure : finding  surface "pressure", "P"                  % pressure, e.g. Pa (pascals)
+    define area_from_pressure : finding  surface "missing area", "unknown area"
 }
 
 % ----------------------------------------------------------------------------
@@ -68,6 +81,14 @@ formulabook pressure_laws {
     % Force — the same definition solved for the force a pressure exerts over an
     % area (F = P·A). Defended by the SAME definitional sentence, read the other way.
     formula force(pressure, area) = pressure * area
+        source "Pressure is defined as force per unit area."
+        locator "https://hyperphysics.gsu.edu/hbase/press.html"
+        trust authoritative
+
+    % F = P·A again, SOLVED FOR AREA instead of computed forward — the same cited
+    % HyperPhysics definition, only which quantity is bound and which is unknown
+    % differs. Closes the one direction `pressure`/`force` above leave open.
+    symbolic area_from_pressure(force, pressure) { force == pressure * area_from_pressure } for area_from_pressure
         source "Pressure is defined as force per unit area."
         locator "https://hyperphysics.gsu.edu/hbase/press.html"
         trust authoritative

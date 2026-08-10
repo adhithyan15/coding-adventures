@@ -390,9 +390,31 @@ describe("the real corpus", () => {
     // +6 more: TA-W14/15/16 close chapters 4-5's glyphs at 2 atoms each.
     // +4 more: TA-W17 and TA-W18 teach உ and ஊ — the last two untaught glyphs in the
     // chapter 33-38 sections, NOT in the corpus. A census against the strand's taught
-    // set leaves 19 still used and never taught, thirteen of them in chapter 7's
-    // numbers (ஐ, ஒ, ூ and the digits ௧-௰). That is where the real debt is.
-    expect(report.summary.atomsTaught).toBe(2650);
+    // set leaves glyphs still used and never taught, most of them in chapter 7's
+    // numbers. That is where the real debt is. (A figure of 19 was once written here.
+    // It reproduces, but only under one particular reading: the count depends entirely
+    // on how "taught" is detected, and small choices — whether a bold span of four code
+    // points such as ஸ்ரீ counts, how far a negation scopes, whether a TA-C* lesson may
+    // teach — swing it by several glyphs. 19 needs ஞ, ஸ, ஃ and ஷ to count as untaught;
+    // the reading used below counts all four as taught. The absolute number is not
+    // restated below because it is not portable. The two scoped facts are.)
+    // +2 more: TA-W19 teaches the ூ sign, the highest-usage of the untaught glyphs
+    // (5 lessons) and the last one the strand has room for. Two facts are relied on
+    // here, and they hold under a detector that does two specific things rather than
+    // under every detector: it must scope negation, and it must not count a TA-C*
+    // lesson as teaching. Under one that does both, the difference this lesson makes
+    // is exactly ூ, and thirteen glyphs used by chapter 7's numbers — ஏ, ஐ, ஒ and the
+    // ten digits ௧-௰ — remain untaught. Ignore negation and the delta becomes four
+    // glyphs, because this very lesson prints ஒன்று, ஐந்து and ஏழு in bold inside the
+    // sentence saying they are still unreadable; count TA-C* as teaching and the
+    // untaught set empties, because chapter 7 bolds those letters while merely using
+    // them. See the CHANGELOG entry for this change.
+    // Measured, the Tamil track's teaching runway is the
+    // binding constraint: after TA-W18 only five speaking lessons remain, so the 3:1
+    // remaining runway holds ONE more writing lesson, which TA-W19 now occupies at
+    // sequence 1165, last in chapter 38. Those thirteen glyphs cannot be taught
+    // inside 38 chapters.
+    expect(report.summary.atomsTaught).toBe(2652);
     // +2, and it goes UP, which is worth stating plainly. Three of the five new atoms
     // are TA-W09's and nothing follows TA-W09, so they are orphans by construction:
     // PA-YA-01, E-SIGN-02, READ-PEYAR-03. TA-W08's two are revisited by TA-W09.
@@ -421,6 +443,16 @@ describe("the real corpus", () => {
     // +2 for உ/ஊ, and both are TA-W18's: UU-VOWEL-01 and READ-UUR-02. Nothing follows
     // TA-W18 in the strand, so they are orphans by construction. TA-W17's two are not —
     // TA-W18 re-reads உணவு beside ஊர், which is the point of the pair. Two in, none out.
+    // TA-W19 then moves this number NOT AT ALL, and the sentence above about TA-W18 is
+    // now historical rather than current: something DOES follow TA-W18 in the strand,
+    // and it is exactly the two atoms that entry named that leave. Two out — UU-VOWEL-01
+    // and READ-UUR-02, both 0 revisits -> 1, because TA-W19 re-reads ஊர் beside மூன்று
+    // and declares the atom that owns it. Two in — UU-SIGN-01 and READ-MUUNRU-02,
+    // TA-W19's own, orphans by construction because it is the last lesson in the track.
+    // The 422-atom subset that ALSO misses a window holds too, but it trades different
+    // atoms in: TA-ETYMON-VIDAI-02 and TA-LEX-VIDAI-01, which were already never
+    // revisited and merely became window-measurable. TA-W19's own two are absent from
+    // that subset because at index 127 no window is evaluable for them.
     expect(report.summary.atomsNeverRevisited).toBe(472);
     expect(report.summary.neverRevisitedPercent).toBe(18);
 
@@ -565,7 +597,13 @@ describe("the real corpus", () => {
     // +4: all four new atoms miss R1, and nothing leaves. TA-W17 and TA-W18 are 3
     // speaking lessons apart, so the gap is 4 in reading order, outside the 1-3 window
     // as everywhere else in the strand.
-    expect(report.summary.missedByWindow.R1).toBe(884);
+    // +2, and NEITHER is TA-W19's. TA-W19 is the corpus's last Tamil lesson, at index
+    // 127, so no window is evaluable for the atoms it introduces at all. The two that
+    // enter are TA-ETYMON-VIDAI-02 and TA-LEX-VIDAI-01, introduced at 126, and they
+    // are the R1 case of the one mechanism described at the R2 pin below: the track
+    // was 127 lessons, 126 + 1 = 127, so R1's first position did not exist until this
+    // lesson made index 127 exist. Their revisit counts are 0 before and 0 after.
+    expect(report.summary.missedByWindow.R1).toBe(886);
     // +2 net, and the composition is the interesting part: all FIVE new atoms miss R2
     // as well, offset by THREE pre-existing atoms that TA-W09 pulls back into it.
     // TA-W09 sits 12 lessons after TA-W06 and 8 after TA-W07, both inside R2's 5-15
@@ -611,7 +649,29 @@ describe("the real corpus", () => {
     // one lesson, TA-C38-vidai. That revisit sat at offset 15 — the LAST position R2's
     // 5-15 window counts. Inserting TA-W17 and TA-W18 between them pushed it to 17, so
     // an atom that was passing R2 now misses it. Nothing leaves.
-    expect(report.summary.missedByWindow.R2).toBe(1809);
+    // -1, and it goes DOWN, which is the point of placing this lesson LAST in its
+    // chapter rather than mid-chapter. THREE atoms leave: TA-SCRIPT-READ-UUR-02
+    // (revisits 0 -> 1), TA-SCRIPT-UU-VOWEL-01 (0 -> 1) and TA-SCRIPT-U-VOWEL-01
+    // (1 -> 2). At index 127 the lesson sits 6 lessons after TA-W18 and 10 after
+    // TA-W17, both inside R2's 5-15 span. Placed mid-chapter at index 125 it landed 4
+    // after TA-W18 — past R1's 1-3 and short of R2's 5 — and rescued only one of the
+    // three. Same lesson, same atoms, different distance.
+    // IN (2): TA-GRAMMAR-IVAR-02 and TA-LEX-IVAR-01, introduced at index 122 by
+    // TA-C37-ivar. Their revisit COUNTS are unchanged (1 and 2); what changed is that
+    // R2 became evaluable for them. The arithmetic is exact, and it is the SAME
+    // mechanism in all four windows: the Tamil track was 127 lessons, and
+    // introducedAt + window.from = 127 for every atom that enters, so that window's
+    // first position did not exist until this lesson made index 127 exist.
+    //   R1: VIDAI pair at 126, 126 + 1 = 127 (pinned above).
+    //   R2: IVAR pair at 122, 122 + 5 = 127.
+    //   R3: 1307 -> 1309, UTAVU pair at 107, 107 + 20 = 127. Nothing leaves.
+    //   R4: 242 -> 243, PLEASE-REGISTER pair at 47, 47 + 80 = 127, offset by ONE atom
+    //   leaving — TA-SCRIPT-THREE-NS-01, revisits 4 -> 5 and missing [R1,R2,R4] ->
+    //   [R1,R2], because this lesson practises it where it re-reads ன in மூன்று.
+    // For every atom that ENTERS any of the four windows the revisit count is
+    // identical before and after, so no existing reinforcement was broken. Every atom
+    // that LEAVES gained a real revisit. R3 and R4 are not pinned here.
+    expect(report.summary.missedByWindow.R2).toBe(1808);
   });
 
   it("shows what a declared reading order was worth", () => {

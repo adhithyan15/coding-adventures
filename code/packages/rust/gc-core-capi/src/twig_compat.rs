@@ -28,12 +28,12 @@
 
 use crate::stack_scan::{
     __gc_collect, __gc_collect_compacting, __gc_collect_incremental_finish,
-    __gc_collect_incremental_start, __gc_collect_incremental_step, __gc_collect_precise,
-    __gc_safepoint,
+    __gc_collect_incremental_start, __gc_collect_incremental_step, __gc_collect_minor_precise,
+    __gc_collect_precise, __gc_safepoint,
 };
 use crate::{
-    __gc_alloc, __gc_alloc_kind, __gc_collection_count, __gc_live_bytes, __gc_register_kind,
-    __gc_register_ref_array_kind,
+    __gc_alloc, __gc_alloc_kind, __gc_collection_count, __gc_kind_of, __gc_live_bytes,
+    __gc_register_kind, __gc_register_ref_array_kind, __gc_write_barrier,
 };
 use core::sync::atomic::{AtomicI64, Ordering};
 
@@ -114,6 +114,24 @@ pub unsafe extern "C" fn __twig_gc_register_ref_array_kind(
     __gc_register_ref_array_kind(fixed, fixed_count, tail_from)
 }
 
+/// `__twig_gc_write_barrier(parent, child)` → [`__gc_write_barrier`]. Unlike every
+/// other alias in this module, `twig_gc.c` never had this symbol — there was no
+/// generational collector to barrier for. It's added here (AOT00-T8 follow-up) under
+/// the same `__twig_gc_*` naming convention as the code generators' other GC calls
+/// (`__twig_gc_alloc`, `__twig_gc_safepoint`, ...) purely for consistency: every
+/// symbol a code generator emits for the GC lives under one naming scheme, so a
+/// reader (or a future codegen backend) doesn't have to remember which few calls are
+/// exceptions. `iir-to-llvm`'s `lower_field_store` is the first emitter.
+///
+/// # Safety
+///
+/// Same contract as [`__gc_write_barrier`]: `parent` must be a live GC-object payload
+/// on this heap (the field_store target always is).
+#[no_mangle]
+pub unsafe extern "C" fn __twig_gc_write_barrier(parent: i64, child: i64) {
+    unsafe { __gc_write_barrier(parent, child) };
+}
+
 /// `__twig_gc_collect()` → [`__gc_collect`] (return value discarded to match the
 /// original `void` prototype). A full conservative stack-scan collection.
 ///
@@ -178,6 +196,45 @@ pub unsafe extern "C" fn __twig_gc_collect_precise() -> i64 {
 #[inline(never)]
 pub unsafe extern "C" fn __twig_gc_collect_compacting() -> i64 {
     __gc_collect_compacting()
+}
+
+/// `__twig_gc_collect_minor_precise()` → [`__gc_collect_minor_precise`]. A **minor**
+/// (young-generation-only) collection rooted precisely at the caller's stack
+/// (AOT00-T8) — the generational analogue of [`__twig_gc_collect_precise`]. Returns
+/// the freed-object count. Unlike the automatic `should_collect_minor`/`auto_minor`
+/// policy path (`__gc_safepoint`'s three-way dispatch), this direct entry point needs
+/// no attestation — the caller takes on the barrier-correctness obligation by calling
+/// it at all. Test-only seam for now (`iir-to-llvm`'s `gc_collect_minor_precise`
+/// builtin, AOT00-T8 follow-up), added alongside `__twig_gc_write_barrier` to let an
+/// end-to-end test drive an unconditional minor collection and prove the write
+/// barrier keeps a remembered-set edge alive.
+///
+/// # Safety
+///
+/// Same contract as [`__gc_collect_minor_precise`]: the calling thread must own its
+/// stack; it must not run while another thread mutates the same heap.
+#[no_mangle]
+#[inline(never)]
+pub unsafe extern "C" fn __twig_gc_collect_minor_precise() -> i64 {
+    unsafe { __gc_collect_minor_precise() }
+}
+
+/// `__twig_gc_kind_of(ptr)` → [`__gc_kind_of`]. Returns the kind id of the live heap
+/// object at payload address `ptr`, or `0` if `ptr` names no live block. Read-only,
+/// no allocation or collection. Test-only seam (see
+/// [`__twig_gc_collect_minor_precise`]'s doc) — lets an end-to-end test check a
+/// *specific* object's survival by kind id after a collection, rather than a
+/// `freed`-count or conservative-scan-dependent signal (not deterministic enough to
+/// prove one object's fate — see `lang-aot/tests/array_ref_tracing.rs`'s own lesson).
+///
+/// # Safety
+///
+/// Same contract as [`__gc_kind_of`]: `ptr` is validated against the live-block list
+/// before any header read, so a bogus or foreign value yields `0`, not an
+/// out-of-bounds read.
+#[no_mangle]
+pub unsafe extern "C" fn __twig_gc_kind_of(ptr: i64) -> i64 {
+    unsafe { __gc_kind_of(ptr) }
 }
 
 /// `__twig_gc_collect_incremental_start()` → [`__gc_collect_incremental_start`]. Begins a

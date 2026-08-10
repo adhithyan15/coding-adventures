@@ -23,3 +23,21 @@ observe distance(3)
 observe mass(2)
 observe velocity(3)
 ? kinetic_energy(mass, velocity)      % expect 9   (HyperPhysics: KE = ½ m v²)
+
+% --- W = F d, SOLVED FOR FORCE (rung-0 CAS-wiring, FL-10). "30 J of work was
+% done pushing a crate 3 m. How much force was applied?" ---
+observe work(30)                       % "…30 J of work…"            (span cited)
+observe distance(3)                    % "…pushing a crate 3 m…"     (span cited)
+? force_from_work(work, distance)      % engine → 10 (NASA, authoritative)
+
+% --- W = F d, SOLVED FOR DISTANCE. "A 10 N force did 30 J of work. Over what
+% distance did it act?" ---
+observe work(30)                       % "…did 30 J of work…"        (span cited)
+observe force(10)                      % "…a 10 N force…"            (span cited)
+? distance_from_work(work, force)      % engine → 3 (NASA, authoritative)
+
+% --- KE = ½ m v², SOLVED FOR MASS (rung-0 CAS-wiring, FL-10). "A mass moving at
+% 3 m/s has 9 J of kinetic energy. What is its mass?" ---
+observe kinetic_energy(9)              % "…has 9 J of kinetic energy…" (span cited)
+observe velocity(3)                    % "…moving at 3 m/s…"           (span cited)
+? mass_from_kinetic_energy(kinetic_energy, velocity)  % engine → 2 (HyperPhysics, authoritative)

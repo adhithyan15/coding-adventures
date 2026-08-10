@@ -66,6 +66,10 @@ jobs:
       needs_cpp: ${{ steps.toolchains.outputs.needs_cpp }}
       needs_venture_windows: ${{ steps.venture-windows.outputs.required }}
       needs_mosaic_xaml_windows: ${{ steps.mosaic-xaml-windows.outputs.required }}
+      needs_mosaic_swift_runtime: ${{ steps.mosaic-swift-runtime.outputs.required }}
+      needs_mosaic_qt_runtime: ${{ steps.mosaic-qt-runtime.outputs.required }}
+      needs_mosaic_flutter_runtime: ${{ steps.mosaic-flutter-runtime.outputs.required }}
+      needs_mosaic_compose_runtime: ${{ steps.mosaic-compose-runtime.outputs.required }}
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
       build_shards: ${{ steps.detect.outputs.build_shards }}
@@ -127,6 +131,10 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_linux_oci.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_venture_windows_ci_acceptance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_xaml_windows_ci_acceptance.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_swift_runtime_ci_acceptance.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_qt_runtime_ci_acceptance.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_flutter_runtime_ci_acceptance.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_compose_runtime_ci_acceptance.py'
           python3 code/scripts/build_tool_conformance.py validate-corpus
           python3 code/scripts/build_tool_conformance_execution.py validate-contract
           python3 code/scripts/package_parity_report.py --format json --fail-on-collisions > /tmp/package-parity-report.json
@@ -226,6 +234,42 @@ jobs:
         shell: bash
         run: |
           python3 code/scripts/mosaic_xaml_windows_ci_acceptance.py \
+            build-plan.json \
+            --repo-root . \
+            --diff-base "${{ steps.diff-base.outputs.base }}" >> "$GITHUB_OUTPUT"
+
+      - name: Detect Mosaic Swift runtime acceptance
+        id: mosaic-swift-runtime
+        shell: bash
+        run: |
+          python3 code/scripts/mosaic_swift_runtime_ci_acceptance.py \
+            build-plan.json \
+            --repo-root . \
+            --diff-base "${{ steps.diff-base.outputs.base }}" >> "$GITHUB_OUTPUT"
+
+      - name: Detect Mosaic Qt runtime acceptance
+        id: mosaic-qt-runtime
+        shell: bash
+        run: |
+          python3 code/scripts/mosaic_qt_runtime_ci_acceptance.py \
+            build-plan.json \
+            --repo-root . \
+            --diff-base "${{ steps.diff-base.outputs.base }}" >> "$GITHUB_OUTPUT"
+
+      - name: Detect Mosaic Flutter runtime acceptance
+        id: mosaic-flutter-runtime
+        shell: bash
+        run: |
+          python3 code/scripts/mosaic_flutter_runtime_ci_acceptance.py \
+            build-plan.json \
+            --repo-root . \
+            --diff-base "${{ steps.diff-base.outputs.base }}" >> "$GITHUB_OUTPUT"
+
+      - name: Detect Mosaic Compose runtime acceptance
+        id: mosaic-compose-runtime
+        shell: bash
+        run: |
+          python3 code/scripts/mosaic_compose_runtime_ci_acceptance.py \
             build-plan.json \
             --repo-root . \
             --diff-base "${{ steps.diff-base.outputs.base }}" >> "$GITHUB_OUTPUT"
@@ -530,7 +574,7 @@ jobs:
           clang --version | head -1
 
       - name: Set up Rust
-        if: needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
+        if: needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_xaml_windows == 'true' || needs.detect.outputs.needs_mosaic_swift_runtime == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true' || needs.detect.outputs.needs_mosaic_flutter_runtime == 'true' || needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
         # Uses the `stable` channel (matching the rest of this repo's Rust CI).
         # NOTE on the -clippy gate: clippy adds/tightens lints on each stable
         # release, so a new Rust release can surface new lints on `main` — treat
@@ -553,7 +597,7 @@ jobs:
           sudo apt-get install -y libcairo2-dev
 
       - name: Install Venture Qt acceptance dependencies
-        if: needs.detect.outputs.needs_venture_windows == 'true' && runner.os == 'Linux'
+        if: (needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true') && runner.os == 'Linux'
         uses: jurplel/install-qt-action@v4
         with:
           version: '6.8.3'
@@ -576,8 +620,16 @@ jobs:
           version-type: strict
 
       - name: Set up Dart
-        if: needs.detect.outputs.needs_dart == 'true'
+        if: needs.detect.outputs.needs_dart == 'true' || needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
         uses: dart-lang/setup-dart@v1
+
+      - name: Set up Flutter
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: stable
+          cache: true
 
       - name: Set up Swift (Windows)
         if: needs.detect.outputs.needs_swift == 'true' && runner.os == 'Windows'
@@ -675,14 +727,14 @@ jobs:
       # A single JDK + Gradle setup covers all three cases.
 
       - name: Set up JDK 21
-        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true'
+        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || (needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && runner.os == 'Linux')
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
 
       - name: Set up Gradle
-        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true'
+        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || (needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && runner.os == 'Linux')
         uses: gradle/actions/setup-gradle@v4
 
       - name: Disable long-lived Gradle services on Windows CI
@@ -880,15 +932,12 @@ jobs:
       - name: Build and test Venture Windows acceptance
         if: runner.os == 'Windows' && needs.detect.outputs.needs_venture_windows == 'true'
         shell: pwsh
+        env:
+          # GitHub-hosted Windows workers do not provide a reliable interactive
+          # WinUI desktop. The test still builds the complete generated app;
+          # local/self-hosted Windows runs launch and interact by default.
+          MOSAIC_SKIP_INTERACTIVE_WINDOWS_ACCEPTANCE: '1'
         run: |
-          $installer = Join-Path $env:RUNNER_TEMP 'WindowsAppRuntimeInstall-x64.exe'
-          Invoke-WebRequest `
-            'https://aka.ms/windowsappsdk/1.7/1.7.250606001/windowsappruntimeinstall-x64.exe' `
-            -OutFile $installer
-          & $installer --quiet
-          if ($LASTEXITCODE -ne 0) {
-            throw "Windows App Runtime installer failed with exit code $LASTEXITCODE"
-          }
           Set-Location code/packages/rust
           cargo test -p paint-vm-cairo -p venture-browser-cairo -p venture-browser-qt -p venture-browser-windows
           if ($LASTEXITCODE -ne 0) {
@@ -912,19 +961,130 @@ jobs:
           cd code/packages/rust
           cargo test -p venture-browser-macos
 
-      - name: Build and launch complete Mosaic TaskApp WinUI shell
+      - name: Round-trip Rust engine through standard SwiftUI binding
+        if: runner.os == 'macOS' && needs.detect.outputs.needs_mosaic_swift_runtime == 'true'
+        shell: bash
+        timeout-minutes: 10
+        run: |
+          set -euo pipefail
+          output="$RUNNER_TEMP/mosaic-swift-taskapp"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend swiftui --output "$output" --emit-project
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
+
+          harness="$RUNNER_TEMP/mosaic-swift-runtime-conformance"
+          cp -R code/packages/rust/mosaic-app-bindings/conformance/swiftui "$harness"
+          mkdir -p "$harness/Sources/CMosaicRuntime/include"
+          cp "$output/swiftui/Sources/App/MosaicRuntimeHost.swift" "$harness/Sources/Conformance/MosaicRuntimeHost.swift"
+          cp "$output/swiftui/Sources/CMosaicRuntime/CMosaicRuntime.c" "$harness/Sources/CMosaicRuntime/CMosaicRuntime.c"
+          cp "$output/swiftui/Sources/CMosaicRuntime/include/CMosaicRuntime.h" "$harness/Sources/CMosaicRuntime/include/CMosaicRuntime.h"
+
+          export MOSAIC_APP_LIBRARY="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.dylib"
+          swift run --package-path "$harness" Conformance
+
+          strict_output="$RUNNER_TEMP/mosaic-swift-native-complete-rating-controls"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend swiftui --output "$strict_output" --emit-project --profile native-complete
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/swiftui/mosaic-degradations.json"
+          swift build --package-path "$strict_output/swiftui"
+
+      - name: Round-trip Rust engine through standard Qt binding
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_qt_runtime == 'true'
+        shell: bash
+        timeout-minutes: 10
+        run: |
+          set -euo pipefail
+          output="$RUNNER_TEMP/mosaic-qt-taskapp"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend qt --output "$output" --emit-project
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
+
+          harness="$RUNNER_TEMP/mosaic-qt-runtime-conformance"
+          cp -R code/packages/rust/mosaic-app-bindings/conformance/qt "$harness"
+          cp "$output/qt/MosaicHost.cpp" "$harness/MosaicHost.cpp"
+          cp "$output/qt/MosaicHost.h" "$harness/MosaicHost.h"
+
+          cmake -S "$harness" -B "$harness/build" -DCMAKE_BUILD_TYPE=Release
+          cmake --build "$harness/build" --config Release --parallel
+          export MOSAIC_APP_LIBRARY="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.so"
+          "$harness/build/mosaic_qt_runtime_conformance"
+          "$harness/build/mosaic_qt_runtime_conformance" --expect-missing-prop-failure
+
+          MOSAIC_APP_LIBRARY="$RUNNER_TEMP/mosaic-app-does-not-exist.so" \
+            "$harness/build/mosaic_qt_runtime_conformance" --expect-required-failure
+
+          strict_output="$RUNNER_TEMP/mosaic-qt-native-complete-rating-controls"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend qt --output "$strict_output" --emit-project --profile native-complete
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/qt/mosaic-degradations.json"
+          cmake -S "$strict_output/qt" -B "$strict_output/qt/build" -DCMAKE_BUILD_TYPE=Release
+          cmake --build "$strict_output/qt/build" --config Release --parallel
+
+          strict_log="$RUNNER_TEMP/mosaic-qt-native-complete-missing-runtime.log"
+          set +e
+          QT_QPA_PLATFORM=offscreen \
+            MOSAIC_APP_LIBRARY="$RUNNER_TEMP/mosaic-app-does-not-exist.so" \
+            timeout 15s "$strict_output/qt/build/RatingControls" >"$strict_log" 2>&1
+          strict_status=$?
+          set -e
+          test "$strict_status" -ne 0
+          test "$strict_status" -ne 124
+          grep -F "native-complete requires the Mosaic Rust application runtime" "$strict_log"
+
+      - name: Round-trip Rust engine through standard Flutter binding
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
+        shell: bash
+        timeout-minutes: 10
+        run: |
+          set -euo pipefail
+          output="$RUNNER_TEMP/mosaic-flutter-taskapp"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend flutter --output "$output" --emit-project
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
+
+          harness="$RUNNER_TEMP/mosaic-flutter-runtime-conformance"
+          cp -R code/packages/rust/mosaic-app-bindings/conformance/flutter "$harness"
+          mkdir -p "$harness/lib"
+          cp "$output/flutter/lib/mosaic_host.dart" "$harness/lib/mosaic_host.dart"
+
+          export MOSAIC_APP_LIBRARY="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.so"
+          (
+            cd "$harness"
+            dart pub get
+            dart analyze
+            dart run bin/conformance.dart
+          )
+
+          strict_output="$RUNNER_TEMP/mosaic-flutter-native-complete-rating-controls"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend flutter --output "$strict_output" --emit-project --profile native-complete
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/flutter/mosaic-degradations.json"
+          (
+            cd "$strict_output/flutter"
+            flutter pub get
+            dart analyze lib
+          )
+
+      - name: Round-trip Rust engine through standard Compose binding
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        shell: bash
+        timeout-minutes: 10
+        run: |
+          set -euo pipefail
+          output="$RUNNER_TEMP/mosaic-compose-taskapp"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend compose --output "$output" --emit-project
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
+
+          harness="$RUNNER_TEMP/mosaic-compose-runtime-conformance"
+          cp -R code/packages/rust/mosaic-app-bindings/conformance/compose "$harness"
+          cp "$output/compose/src/main/kotlin/MosaicRuntimeHost.kt" "$harness/src/main/kotlin/MosaicRuntimeHost.kt"
+
+          export MOSAIC_APP_LIBRARY="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.so"
+          gradle --no-daemon --stacktrace -p "$harness" run
+
+          strict_output="$RUNNER_TEMP/mosaic-compose-native-complete-rating-controls"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend compose --output "$strict_output" --emit-project --profile native-complete
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/compose/mosaic-degradations.json"
+          gradle --no-daemon --stacktrace -p "$strict_output/compose" compileKotlin
+
+      - name: Build complete Mosaic TaskApp WinUI shell
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
         shell: pwsh
         run: |
-          $installer = Join-Path $env:RUNNER_TEMP 'WindowsAppRuntimeInstall-x64.exe'
-          Invoke-WebRequest `
-            'https://aka.ms/windowsappsdk/1.7/1.7.250606001/windowsappruntimeinstall-x64.exe' `
-            -OutFile $installer
-          & $installer --quiet
-          if ($LASTEXITCODE -ne 0) {
-            throw "Windows App Runtime installer failed with exit code $LASTEXITCODE"
-          }
-
           $output = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-taskapp'
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend xaml --output $output --emit-project
           if ($LASTEXITCODE -ne 0) {
@@ -949,12 +1109,65 @@ jobs:
           if ($null -eq $executable) {
             throw 'TaskApp WinUI build did not produce TaskApp.exe'
           }
-          $process = Start-Process -FilePath $executable.FullName -PassThru
-          Start-Sleep -Seconds 10
-          if ($process.HasExited) {
-            throw "TaskApp WinUI process exited during launch smoke test with code $($process.ExitCode)"
+          Write-Host "Built generated WinUI executable at $($executable.FullName)"
+
+          $strictOutput = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-native-complete-rating-controls'
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend xaml --output $strictOutput --emit-project --profile native-complete
+          if ($LASTEXITCODE -ne 0) {
+            throw "Native-complete XAML generation failed with exit code $LASTEXITCODE"
           }
-          Stop-Process -Id $process.Id
+          $strictReport = Get-Content (Join-Path $strictOutput 'xaml/mosaic-degradations.json') -Raw | ConvertFrom-Json
+          if (!$strictReport.nativeComplete -or $strictReport.degradations.Count -ne 0) {
+            throw 'Native-complete XAML generation reported degradations'
+          }
+          $strictProject = Join-Path $strictOutput 'xaml/RatingControls.csproj'
+          Push-Location (Split-Path -Parent $strictProject)
+          dotnet build (Split-Path -Leaf $strictProject) -c Debug -p:Platform=x64 --nologo
+          $strictBuildExitCode = $LASTEXITCODE
+          Pop-Location
+          if ($strictBuildExitCode -ne 0) {
+            throw "Native-complete XAML WinUI build failed with exit code $strictBuildExitCode"
+          }
+
+      - name: Round-trip Rust engine through standard XAML binding
+        if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
+        shell: pwsh
+        timeout-minutes: 10
+        run: |
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
+          if ($LASTEXITCODE -ne 0) {
+            throw "Mosaic Rust conformance app build failed with exit code $LASTEXITCODE"
+          }
+
+          $library = Resolve-Path 'code/packages/rust/target/debug/mosaic_app_conformance.dll'
+          $generatedBinding = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-native-complete-rating-controls/xaml/MosaicRuntimeHost.cs'
+          if (!(Test-Path $generatedBinding)) {
+            throw "Generated XAML runtime binding not found at $generatedBinding"
+          }
+
+          $harness = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-runtime-conformance'
+          New-Item -ItemType Directory -Path $harness -Force | Out-Null
+          Copy-Item `
+            'code/packages/rust/mosaic-app-bindings/conformance/xaml/*' `
+            $harness `
+            -Recurse
+          Copy-Item $generatedBinding (Join-Path $harness 'MosaicRuntimeHost.cs')
+          $env:MOSAIC_APP_LIBRARY = $library.Path
+          dotnet run --project (Join-Path $harness 'XamlRuntimeConformance.csproj') -c Release
+          if ($LASTEXITCODE -ne 0) {
+            throw "Mosaic XAML Rust runtime conformance failed with exit code $LASTEXITCODE"
+          }
+
+          dotnet run --project (Join-Path $harness 'XamlRuntimeConformance.csproj') -c Release -- --expect-missing-prop-failure
+          if ($LASTEXITCODE -ne 0) {
+            throw "Mosaic XAML required-prop failure check failed with exit code $LASTEXITCODE"
+          }
+
+          $env:MOSAIC_APP_LIBRARY = Join-Path $env:RUNNER_TEMP 'missing-mosaic-app.dll'
+          dotnet run --project (Join-Path $harness 'XamlRuntimeConformance.csproj') -c Release -- --expect-required-failure
+          if ($LASTEXITCODE -ne 0) {
+            throw "Mosaic XAML required-runtime failure check failed with exit code $LASTEXITCODE"
+          }
 
       - name: Upload failed Mosaic TaskApp WinUI diagnostics
         if: failure() && runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'

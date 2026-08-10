@@ -107,3 +107,37 @@ fn computes_mass_as_density_times_volume_with_citation() {
         "mass carries its HyperPhysics citation: {s}"
     );
 }
+
+// ---------------------------------------------------------------------------
+// m = ρ·V, solved for a different unknown (ADJ-FORMULA-LIBRARIES FL-10, §3D
+// rung-0 CAS-wiring companion) — the SAME cited HyperPhysics definition as
+// `density`/`mass` above, closing the one direction they leave open: volume.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn solves_for_volume_from_density_with_the_same_citation() {
+    let dir = scratch("volume_solve");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"density.adj\"\n\
+         observe mass(60)\n\
+         observe density(20)\n\
+         ? volume_from_density(mass, density)\n",
+    )
+    .unwrap();
+
+    let (ok, s) = run(&dir.join("case.adj"));
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(!s.contains("\"error\""), "no compile error: {s}");
+    // 60 = 20 * v  =>  v = 3.
+    assert!(
+        s.contains("\"name\":\"volume_from_density\"") && s.contains("\"value\":3"),
+        "volume_from_density(60, 20) = 3: {s}"
+    );
+    assert!(
+        s.contains("\"trust\":\"authoritative\"")
+            && s.contains("hyperphysics.gsu.edu/hbase/dens.html"),
+        "carries the same HyperPhysics citation as the forward density/mass formulas: {s}"
+    );
+}

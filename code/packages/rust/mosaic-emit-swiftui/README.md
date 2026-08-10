@@ -160,6 +160,13 @@ unknown slot, or wrong object type stays an `EmptyView`. This lets a generated
 Venture shell mount a Metal-backed content view without recreating its chrome
 in AppKit.
 
+Package builds using `--profile native-complete` select the runtime-required
+shell instead. It loads `MosaicRuntimeHost` directly, requires an initial props
+envelope before mounting the component, validates slot values, and has no
+reflection-host, event-print, or generated sample-prop path. Authored MIL
+defaults remain valid defaults. Permissive project shells retain the optional
+bridge and sample values for previews and incremental backend work.
+
 Native host surfaces can also implement the optional
 `setPropsChangedHandler(_:)` bridge method. Calling the registered handler asks
 the generated `MosaicHostState` to fetch `applyProps()` again on the main queue,

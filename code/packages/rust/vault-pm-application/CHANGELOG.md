@@ -2,6 +2,104 @@
 
 All notable changes to this package are documented here.
 
+## [0.29.0] - 2026-08-10
+
+### Added
+
+- Add an authenticated current-item revision capability for optimistic host
+  mutations without putting revision identities in ordinary redacted views.
+
+### Security
+
+- Return no revision for absent/tombstoned items and fail closed on current
+  conflicts, so a CLI edit cannot select an arbitrary candidate.
+
+## [0.28.0] - 2026-08-10
+
+### Added
+
+- Add one atomic cross-vault import that consumes an authenticated opaque
+  portable snapshot into an untouched empty generation-zero target.
+- Add exact count-derived host-CSPRNG sizing and a non-printable wipe-on-drop
+  entropy container for new item identities plus every revision, catalog, and
+  commit frame.
+
+### Security
+
+- Reject source-vault reuse, mutated or non-empty targets, stale pins,
+  source/target identity collisions, malformed candidate bindings, and imports
+  exceeding the repository's 4,096-object publication bound before activation.
+- Re-identify every item and revision under independent target encryption while
+  preserving complete validated live, tombstone, conflict, CRDT, timestamp, and
+  secret state; source causal identities are deliberately not copied.
+- Reuse the exact write-ahead pending-publication journal for all-or-nothing
+  crash recovery, consume the opaque snapshot on every path, and independently
+  reopen the target to prove source/target identity separation and restored
+  content equality.
+
+## [0.27.0] - 2026-08-10
+
+### Added
+
+- Add strict authenticated opening for an untrusted canonical portable export,
+  returning one opaque non-cloneable secret-bearing snapshot with aggregate
+  item and candidate counts only.
+- Add an explicit host-approved Argon2id memory, iteration, and lane ceiling
+  checked before artifact-controlled KDF work.
+
+### Security
+
+- Bound the artifact before canonical decode, authenticate the complete
+  header-bound ciphertext before plaintext parsing, and make wrong credentials
+  indistinguishable from valid-shape tag tampering.
+- Verify the exact snapshot count/hash, embedded authority-signed bootstrap,
+  strict source item/revision ordering, per-item candidate bounds, canonical
+  revisions, and entry/document item binding before returning success.
+- Keep opening free of target-vault or provider writes; expose no source
+  identity or document accessors, redact diagnostics, and wipe all intermediate
+  secret-bearing buffers and CBOR trees on every return path.
+
+## [0.26.0] - 2026-08-10
+
+### Added
+
+- Add canonical authenticated passphrase-encrypted portable export from an
+  unlocked session, retaining every current live, tombstone, and conflict
+  candidate in deterministic source item/revision order.
+- Bind the exact active signed bootstrap, candidate count, and
+  domain-separated snapshot hash inside the encrypted 512 MiB-bounded
+  plaintext; authenticate all artifact header parameters as AEAD associated
+  data.
+
+### Security
+
+- Require a separately collected non-empty bounded passphrase, caller-validated
+  Argon2id policy, and fresh host-supplied salt and XChaCha20 nonce rather than
+  implicitly reusing the live VRK or unlock credential.
+- Exclude owner-private state, private seeds, provider credentials, local pins,
+  journals, and search data; redact public diagnostics and wipe temporary
+  passphrase, key, plaintext, revision, and hash-preimage buffers on drop.
+- Return only encrypted bytes and leave path choice, overwrite policy, and
+  persistence authority to the host. Authenticated import and cross-vault
+  re-identification remain a separate follow-up workflow.
+
+## [0.25.0] - 2026-08-10
+
+### Added
+
+- Add a read-only locked/unlocked `doctor` workflow with one closed,
+  identity-free coarse report.
+- Distinguish initialization required, recovery required, local-state,
+  bootstrap, and repository unavailability, unsupported versions or suites,
+  authentication required, integrity failure, and authenticated health.
+
+### Security
+
+- Require exact durable active-state and signed-bootstrap binding before an
+  unlocked complete audit can report healthy.
+- Never repair owner state, accept new pins, expose provider detail, or return
+  counts and identities through doctor diagnostics.
+
 ## [0.24.0] - 2026-08-10
 
 ### Added

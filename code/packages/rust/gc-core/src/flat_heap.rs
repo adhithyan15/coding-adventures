@@ -334,13 +334,27 @@ pub const DEFAULT_TENURE_AGE: u8 = 1;
 /// small enough that old-generation garbage is never more than 8 paced cycles stale.
 pub const DEFAULT_MAX_MINOR_STREAK: u32 = 8;
 
-/// Debug-assert message for the four stop-the-world `collect*` entries: none may run
-/// *between* an [`FlatHeap::incremental_start`] and its [`FlatHeap::incremental_finish`].
-/// A full/minor collect mid-incremental-cycle would `sweep` blocks still referenced by the
-/// persistent [`FlatHeap::mark_worklist`], leaving dangling worklist pointers a later
-/// [`FlatHeap::incremental_step`] would pop (a use-after-free). One incremental cycle must
-/// run to `finish` before any other collector — a caller-contract invariant, fenced here in
-/// debug builds (AOT00-T4 §1 scope guard).
+/// Assert message for the stop-the-world `collect*` entries (and the internal helpers
+/// they share): none may run *between* an [`FlatHeap::incremental_start`] and its
+/// [`FlatHeap::incremental_finish`]. A full/minor collect mid-incremental-cycle would
+/// `sweep` blocks still referenced by the persistent [`FlatHeap::mark_worklist`],
+/// leaving dangling worklist pointers a later [`FlatHeap::incremental_step`] would pop
+/// (a use-after-free). One incremental cycle must run to `finish` before any other
+/// collector — a caller-contract invariant, fenced here as a **hard `assert!`, checked
+/// in every build profile including release** (AOT00-T4 §1 scope guard).
+///
+/// **Security-review finding, hardened here:** this was a `debug_assert!` — compiled
+/// out entirely under `--release`. Two already-shipped, un-gated features make the
+/// invariant live, reachable purely through normal, sanctioned use, no caller bug or
+/// attacker input required: `gc_collect_incremental_start/step/finish` (the incremental
+/// GC builtins) and `__gc_safepoint` (which fires automatically at every compiled
+/// loop-back-edge and, before this fix, called the stop-the-world collectors with no
+/// `mark_in_progress` check of its own — see [`FlatHeap::should_collect`]/
+/// `__gc_safepoint`'s own doc for the companion fix that makes a safepoint firing
+/// mid-cycle a safe no-op instead of ever reaching this assert). A release binary that
+/// starts an incremental cycle and then hits a safepoint before calling `finish` — the
+/// intended bounded-pause usage pattern — could previously corrupt the heap silently
+/// instead of failing loudly.
 const INCREMENTAL_MIXING_MSG: &str =
     "stop-the-world collect during an incremental mark phase — drive incremental_step/finish \
      to completion before calling collect*";
@@ -712,8 +726,25 @@ impl FlatHeap {
     /// cycle — lives with the caller (for native AOT, `gc-core-capi`'s stack scan),
     /// because only the caller knows how to enumerate its roots. A safepoint or an
     /// allocation consults this and, when true, drives a collect.
+    ///
+    /// **Security-review finding, fixed here:** answers `false` whenever an incremental
+    /// mark phase is in progress ([`Self::incremental_in_progress`]), regardless of live
+    /// bytes. Every stop-the-world `collect*` entry hard-`assert!`s this same invariant
+    /// (see [`INCREMENTAL_MIXING_MSG`]) because running one mid-cycle would sweep blocks
+    /// the persistent mark worklist still references — a use-after-free. Before this fix,
+    /// that assert was the *only* guard: every automatic call site (`__gc_safepoint`,
+    /// `vm-core`'s `safepoint` opcode, `__gc_collect`) gates its stop-the-world call
+    /// behind `should_collect()` alone, with no `mark_in_progress` check of its own — so
+    /// a release binary driving a legitimate, already-shipped bounded-pause incremental
+    /// cycle (`incremental_start` → repeated `incremental_step` at safepoints → `finish`)
+    /// could hit a safepoint mid-cycle and crash on the assert, purely through normal,
+    /// sanctioned use of two already-shipped features. Deferring here — the one place
+    /// this policy decision lives, per this method's own doc — means a safepoint firing
+    /// mid-cycle is simply a safe no-op instead: the incremental cycle keeps making
+    /// progress via its own `incremental_step` calls, and paced collection resumes
+    /// automatically once `incremental_finish` clears the flag.
     pub fn should_collect(&self) -> bool {
-        self.live_bytes >= self.collect_threshold
+        !self.mark_in_progress && self.live_bytes >= self.collect_threshold
     }
 
     /// Whether the *next* collection should also relocate objects
@@ -842,7 +873,7 @@ impl FlatHeap {
     /// reference are followed).  A false positive retains a dead object for one
     /// extra cycle; it never frees a live one.
     pub fn collect(&mut self, roots: &[usize]) -> GcCycleStats {
-        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         self.minor_streak = 0; // full collect: bound on consecutive minors is satisfied (AOT00-T8)
         let before = self.object_count();
         let prev_live = self.live_bytes;
@@ -909,7 +940,7 @@ impl FlatHeap {
     /// may be null iff `len == 0`). No alignment of `base`/`len` is required —
     /// scanning starts at `base` and a sub-8-byte tail is ignored.
     pub unsafe fn collect_region(&mut self, base: *const u8, len: usize) -> GcCycleStats {
-        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         self.minor_streak = 0; // full collect: bound on consecutive minors is satisfied (AOT00-T8)
         let before = self.object_count();
         let prev_live = self.live_bytes;
@@ -1030,7 +1061,7 @@ impl FlatHeap {
     /// object be wrongly freed. The GC upholds its half; the mutator/codegen must
     /// uphold the barrier.
     pub fn collect_minor(&mut self, roots: &[usize]) -> GcCycleStats {
-        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         let before = self.object_count();
         let prev_live = self.live_bytes;
         let mut work: Vec<*mut FlatHeader> = Vec::new();
@@ -1051,7 +1082,7 @@ impl FlatHeap {
     /// `[base, base + len)` must be readable (or `base` null with `len == 0`),
     /// exactly as for [`Self::collect_region`].
     pub unsafe fn collect_minor_region(&mut self, base: *const u8, len: usize) -> GcCycleStats {
-        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         let before = self.object_count();
         let prev_live = self.live_bytes;
         let mut work: Vec<*mut FlatHeader> = Vec::new();
@@ -1084,7 +1115,7 @@ impl FlatHeap {
         root_slots: &[usize],
         regions: &[(*const u8, usize)],
     ) -> GcCycleStats {
-        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         let before = self.object_count();
         let prev_live = self.live_bytes;
         let mut work: Vec<*mut FlatHeader> = Vec::new();
@@ -1215,7 +1246,7 @@ impl FlatHeap {
     /// is not a valid, readable slot is undefined behaviour — the same contract
     /// [`Self::collect_region`] places on its `[base, base + len)` span.
     pub unsafe fn collect_precise(&mut self, root_slots: &[usize]) -> GcCycleStats {
-        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         self.minor_streak = 0; // full collect: bound on consecutive minors is satisfied (AOT00-T8)
         let before = self.object_count();
         let prev_live = self.live_bytes;
@@ -1295,7 +1326,7 @@ impl FlatHeap {
         root_slots: &[usize],
         regions: &[(*const u8, usize)],
     ) -> GcCycleStats {
-        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         self.minor_streak = 0; // full collect: bound on consecutive minors is satisfied (AOT00-T8)
         let before = self.object_count();
         let prev_live = self.live_bytes;
@@ -1367,7 +1398,7 @@ impl FlatHeap {
         root_slots: &[usize],
         regions: &[(*const u8, usize)],
     ) {
-        debug_assert!(!self.mark_in_progress, "incremental cycle already in progress");
+        assert!(!self.mark_in_progress, "incremental cycle already in progress");
         // Everything white: clear the mark bit on every live block.
         // SAFETY: list walk over blocks we own / null terminator.
         let mut h = self.all;
@@ -2198,7 +2229,7 @@ impl FlatHeap {
         root_slots: &[usize],
         regions: &[(*const u8, usize)],
     ) -> (HashSet<usize>, HashSet<usize>) {
-        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
 
         // Pin bits are a per-classification transient: clear them first.
         {
@@ -2510,7 +2541,6 @@ impl FlatHeap {
     /// as [`Self::classify_mobility_minor`]/[`Self::collect_mixed`]). Must not be called
     /// while an incremental mark is in progress — inherited from
     /// [`Self::classify_mobility_minor_sets`]'s own `mark_in_progress` guard.
-    #[allow(dead_code)]
     unsafe fn plan_compaction_minor(
         &mut self,
         root_slots: &[usize],
@@ -2542,21 +2572,19 @@ impl FlatHeap {
 
     /// **AOT00-T9 PR-3 — young-scoped [`Self::evacuate_and_fixup`].** Evacuates and fixes
     /// up pointers for a minor-scoped relocation, via [`Self::plan_compaction_minor`].
-    /// Dry-run in the sense that nothing is freed and nothing is integrated into
-    /// `self.all`/`self.arenas` — reclamation and remembered-set/generation bookkeeping
-    /// is PR-4's `collect_minor_compacting` (spec §4 steps 4–5), not this function's
-    /// job. **Unlike [`Self::evacuate_and_fixup`], this is *not* heap-neutral if the
-    /// caller drops the returned arena** (a security-review observation, not yet fixed
-    /// — there is no in-tree caller to be at risk today): step (c) below writes into
-    /// live heap objects *outside* the arena (`precise`/`self.remembered` members that
-    /// still live in `self.all`, not arena copies), rewriting their fields to name the
-    /// arena's new addresses. If the caller drops the arena without integrating it (the
-    /// full-scope `evacuate_and_fixup`'s own supported usage, since its fixups only ever
-    /// touch caller-owned roots and the arena's own copies), those live objects are left
-    /// holding dangling pointers into freed memory. PR-4 must integrate the arena (keep
-    /// it alive, thread its copies into `self.all`) rather than drop it, and this
-    /// function's callers must not be relied upon to be safely droppable the way
-    /// `evacuate_and_fixup`'s are.
+    /// Reclamation and remembered-set/generation bookkeeping is PR-4's
+    /// [`Self::collect_minor_compacting`]'s job, not this function's — this function
+    /// only performs steps 1–3 of that cycle (classify, evacuate, fix up).
+    /// **Unlike [`Self::evacuate_and_fixup`], this is *not* heap-neutral if the caller
+    /// drops the returned arena instead of integrating it** (a security-review
+    /// observation from this function's original PR-3): step (c) below writes into live
+    /// heap objects *outside* the arena (`precise`/`self.remembered` members that still
+    /// live in `self.all`, not arena copies), rewriting their fields to name the
+    /// arena's new addresses. [`Self::collect_minor_compacting`] is this function's one
+    /// in-tree caller, and it always integrates the returned arena (keeps it alive,
+    /// threads its copies into `self.all`) rather than dropping it — any other caller
+    /// must do the same, unlike [`Self::evacuate_and_fixup`]'s own callers, which may
+    /// safely drop its arena.
     ///
     /// Fixes up, in order:
     /// - **(a) roots** — identical to [`Self::evacuate_and_fixup`];
@@ -2620,7 +2648,6 @@ impl FlatHeap {
     /// function's first call — [`Self::plan_compaction_minor`] — already enforces before
     /// any of (a)/(b)/(c) run; restated here since this function, not just the
     /// classifier it calls, is the one that dereferences the remembered set to *write*).
-    #[allow(dead_code)]
     unsafe fn evacuate_and_fixup_minor(
         &mut self,
         root_slots: &[usize],
@@ -2741,7 +2768,7 @@ impl FlatHeap {
         root_slots: &[usize],
         regions: &[(*const u8, usize)],
     ) -> GcCycleStats {
-        debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
         self.minor_streak = 0; // full collect: bound on consecutive minors is satisfied (AOT00-T8)
         let before = self.object_count();
         let prev_live = self.live_bytes;
@@ -2824,9 +2851,246 @@ impl FlatHeap {
         stats
     }
 
+    /// **AOT00-T9 PR-4 — the full moving *minor* cycle.** Young-scoped sibling of
+    /// [`Self::collect_compacting`]: classify + evacuate + fix up young survivors (via
+    /// [`Self::evacuate_and_fixup_minor`]), then **reclaim** young from-space and
+    /// **integrate** the arena — the last piece of the moving-minor-collector staged
+    /// plan (`AOT00-T9-moving-minor-collector.md` §4/§5). After it returns, the heap is
+    /// self-consistent: moved young survivors live in an arena on `self.arenas`,
+    /// pinned young survivors stay in place (aged, possibly tenured), every **old**
+    /// object is completely untouched (never scanned, never freed, never moved — a
+    /// minor cycle's defining property), and the remembered set is kept (never cleared)
+    /// with every entry's *field* already correct (see below).
+    ///
+    /// **Design correction versus the spec's original step 1/step 2 split (found while
+    /// implementing this PR, not yet reviewed independently — flagged for this PR's own
+    /// security review):** the spec describes "Mark: liveness-mark exactly as
+    /// `collect_minor_mixed` does" as a step **separate** from "Classify: run
+    /// `classify_mobility_minor`" — implying two independent traversals over the heap.
+    /// This implementation runs only **one**: [`Self::evacuate_and_fixup_minor`]'s own
+    /// internal `classify_mobility_minor_sets` call already computes, via the identical
+    /// mechanics `AOT00-T9-moving-minor-collector.md` §3 proves compute the same closure
+    /// `collect_minor_mixed`'s own mark would, a `pinned` bit on every object it
+    /// traverses — precisely mirroring how [`Self::collect_compacting`] itself needs no
+    /// separate liveness pass, reusing [`Self::classify_mobility`]'s own `pinned` bits as
+    /// its step-4.1 keep-in-place predicate (see that function's doc, points 1–2). This
+    /// implementation does the same, restricted to the young generation: step 4.1 below
+    /// sets `marked = pinned` only for `generation == GEN_YOUNG` blocks, leaving every
+    /// old object's mark bit untouched (irrelevant regardless, since
+    /// [`Self::sweep`]`(true)` never reads it). A young object surviving *in place*
+    /// (`pinned == true`, so `marked == true`) and a young object that *moved*
+    /// (`pinned == false`, so `marked == false`, exactly like a moved full-scope
+    /// survivor) both come out of this single traversal correctly classified for the
+    /// sweep below — no second pass needed to determine reachability.
+    ///
+    /// 1. **Evacuate**: [`Self::evacuate_and_fixup_minor`] classifies (setting `pinned`
+    ///    on every block its traversal reaches), copies every young `movable` object
+    ///    into a fresh arena, and rewrites every pointer that named a moved object —
+    ///    roots, moved objects' own copies, **and** every other precise-reachable-or-
+    ///    remembered object's field (its step (c), the PR-3 correction) — so by the time
+    ///    this function's own step 4 runs, **no live pointer anywhere still names a
+    ///    from-space address that is about to move**.
+    /// 2. **Mark young survivors-in-place**: `marked = pinned`, restricted to
+    ///    `generation == GEN_YOUNG` (see the design-correction note above).
+    /// 3. **Sweep young-only** (`sweep(true)`): frees unmarked young blocks (the
+    ///    genuinely dead **and** the now-orphaned from-space originals of moved young
+    ///    objects — every live reference to a moved original was already rewritten in
+    ///    step 1, so nothing dangles), keeps + ages pinned young survivors, re-threads
+    ///    `self.all` over (young survivors ∪ every untouched old object — `sweep(true)`
+    ///    already skips old blocks entirely, exactly as [`Self::collect_minor_mixed`]'s
+    ///    own sweep does). `freed` is reported net of the moved-original count, matching
+    ///    [`Self::collect_compacting`]'s own `freed = swept - moved.len()` convention.
+    /// 4. **Integrate the arena**: re-thread the moved copies into one chain, age/tenure
+    ///    each (a moved young survivor still progresses toward tenuring, exactly like
+    ///    an in-place minor survivor), prepend to `self.all`, retain the arena on
+    ///    `self.arenas`. **One addition versus [`Self::collect_compacting`]'s own step
+    ///    4.3, found by security review**: a *moved* survivor that tenures here is
+    ///    also pushed onto the promotion-barrier list, alongside `sweep`'s own
+    ///    in-place-tenured survivors. `collect_compacting` doesn't need this — its
+    ///    unconditional `rebuild_remembered()` re-derives every old→young edge
+    ///    regardless of *which* tenuring site created it — but this function
+    ///    deliberately skips that (point 5, next), so a moved-and-tenured survivor
+    ///    omitted from the promotion list would create a genuinely new old→young edge
+    ///    (the just-tenured arena copy, now old, still pointing at its own young
+    ///    children) with no remembered-set entry recording it: a live use-after-free
+    ///    the next minor cycle that doesn't independently re-reach those children.
+    ///    Confirmed empirically via a 3-cycle reproducer (`tenure_age ≥ 2`, so a
+    ///    parent can tenure a cycle after moving while its child stays young) — the
+    ///    child was silently swept while a live old object still named it.
+    /// 5. **Remembered set**: kept, never cleared or rebuilt (a minor cycle frees no old
+    ///    object, so no entry can dangle — same as [`Self::collect_minor_mixed`]).
+    ///    Unlike [`Self::collect_compacting`]'s full-scope `rebuild_remembered`, no
+    ///    remapping pass is needed here either: every remembered parent's *field* was
+    ///    already corrected by [`Self::evacuate_and_fixup_minor`]'s step (c) **before**
+    ///    this function's sweep/integrate ran, and the remembered *set* itself holds
+    ///    only parent addresses — always old, never moved — so no entry is ever stale
+    ///    (an *omitted* entry, point 4's finding, is a different failure mode than a
+    ///    *stale* one — this point's "no entry is ever stale" claim still holds; it
+    ///    was point 4's completeness that needed the fix).
+    ///    [`Self::record_promoted_old_to_young`] runs on **every** survivor tenured
+    ///    this cycle — in place (via `sweep`'s own `promoted` list) or moved (via the
+    ///    step-4 addition above) — after arena integration, so it can resolve a moved
+    ///    child through `find_header` at its new address.
+    ///
+    /// # Safety
+    /// Each `root_slots` address and each `regions` span must be readable (same contract
+    /// as [`Self::classify_mobility_minor`]/[`Self::collect_mixed`]). **Round-2
+    /// security-review addition**: every old→young reference store must have called
+    /// [`Self::write_barrier`] — a strictly stronger obligation than
+    /// [`Self::collect_minor`]/[`Self::collect_minor_region`]/
+    /// [`Self::collect_minor_mixed`] place on their callers (spec §7). A **non-moving**
+    /// minor cycle tolerates a missed barrier as long as the child is independently
+    /// reachable (it is simply marked and kept live, in place, unmoved); a **moving**
+    /// minor does not have that slack — a barrier-missed parent that is not itself
+    /// independently reachable via `root_slots`/`regions`/a precise chain is invisible
+    /// to both the `precise` and `self.remembered` populations
+    /// [`Self::evacuate_and_fixup_minor`]'s fixup walks (see its own doc and
+    /// `classify_mobility_minor_sets`'s residual-dependency note), so its field goes
+    /// stale — dangling, once a later cycle frees the object it named — the moment that
+    /// child relocates. Before wiring this behind automatic triggering (this spec's own
+    /// optional follow-up PR-5), revisit the `AOT00-T8` `auto_minor` attestation gate's
+    /// guidance against this strengthened requirement.
+    pub unsafe fn collect_minor_compacting(
+        &mut self,
+        root_slots: &[usize],
+        regions: &[(*const u8, usize)],
+    ) -> GcCycleStats {
+        assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
+        let before = self.object_count();
+        let prev_live = self.live_bytes;
+
+        // Steps 1–3 (spec §4, point 3): classify (setting `pinned` — see this
+        // function's doc for why that also serves as the liveness signal below),
+        // evacuate movable young survivors into a fresh arena, and rewrite every
+        // pointer that named a moved object.
+        let (arena, forward) = self.evacuate_and_fixup_minor(root_slots, regions);
+
+        // The moved young objects' new headers (arena copies) and their total live
+        // bytes. Captured before the sweep so the from-space walk below is undisturbed.
+        let mut moved_new: Vec<*mut FlatHeader> = Vec::with_capacity(forward.len());
+        let mut moved_bytes = 0usize;
+        for &new_payload in forward.values() {
+            let nh = (new_payload - HEADER_SIZE) as *mut FlatHeader;
+            moved_bytes += (*nh).size;
+            moved_new.push(nh);
+        }
+
+        // Step 4.1: mark YOUNG survivors-in-place. `pinned` (set by
+        // evacuate_and_fixup_minor's own classification pass) is the keep-in-place
+        // predicate for young objects, exactly as `collect_compacting`'s own step 4.1
+        // — restricted here to `generation == GEN_YOUNG`; old objects' mark bits are
+        // left untouched (irrelevant, since `sweep(true)` never reads them).
+        {
+            let mut h = self.all;
+            while !h.is_null() {
+                if (*h).generation == GEN_YOUNG {
+                    (*h).marked = (*h).pinned;
+                }
+                h = (*h).next;
+            }
+        }
+
+        // Step 4.2: sweep the young generation only. Frees unmarked young blocks (dead
+        // + moved originals), keeps + ages pinned young survivors, re-threads
+        // `self.all` over them (old objects untouched throughout), clears young marks.
+        let (swept, survived_in_place, live_in_place, promoted) = self.sweep(true);
+        // A moved object's from-space original is swept too, but it did not *die* —
+        // its contents live on in the arena. Report only the genuinely-dead
+        // (unreachable) count, matching `collect_compacting`'s own convention.
+        let freed = swept.saturating_sub(moved_new.len());
+
+        // Step 4.3: integrate the arena copies — mirrors `collect_compacting`'s own
+        // step 4.3, with one addition `collect_compacting` doesn't need: a MOVED
+        // survivor that tenures here must also feed the promotion barrier below.
+        // `collect_compacting` gets this for free from its own unconditional
+        // `rebuild_remembered()` (which re-derives every old→young edge over the
+        // whole integrated all-list); this function deliberately skips that (point 5
+        // of its doc) and relies entirely on `promoted` instead, so a moved-and-
+        // tenured survivor that ISN'T added to `promoted` would create a genuinely
+        // new old→young edge (the just-tenured arena copy, now old, still pointing at
+        // its own young children) with NO remembered-set entry recording it — a real
+        // use-after-free the next time a minor cycle runs and doesn't reach those
+        // children through any other path (security-review finding, empirically
+        // confirmed via a 3-cycle reproducer with `tenure_age >= 2`: without this,
+        // the tenured arena copy's still-young child is silently swept out from under
+        // a live reference).
+        let mut promoted = promoted;
+        for &nh in &moved_new {
+            if (*nh).generation == GEN_YOUNG {
+                (*nh).age = (*nh).age.saturating_add(1);
+                if (*nh).age >= self.tenure_age {
+                    (*nh).generation = GEN_OLD;
+                    promoted.push(nh);
+                }
+            }
+            (*nh).marked = false; // a fresh survivor carries no mark into the next cycle
+        }
+        for i in 0..moved_new.len() {
+            let nh = moved_new[i];
+            (*nh).next = if i + 1 < moved_new.len() { moved_new[i + 1] } else { self.all };
+        }
+        if let Some(&head) = moved_new.first() {
+            self.all = head;
+        }
+
+        // Retain the arena so the moved objects' storage outlives the collection --
+        // unless nothing moved this cycle, in which case `arena.cap == 0` and it owns
+        // no allocation at all (round-2 security-review addition: this collector's
+        // whole purpose is to run far more often than `collect_compacting`, so
+        // unconditionally growing `self.arenas` by one empty entry per cycle — the
+        // common case for an all-pinned or nothing-movable minor cycle — is worth
+        // skipping now, cheaply, ahead of the real per-cycle arena reclamation work
+        // this still needs before auto-triggering, tracked separately).
+        if arena.cap > 0 {
+            self.arenas.push(arena);
+        }
+
+        self.live_bytes = live_in_place + moved_bytes;
+        self.adapt_threshold(prev_live);
+
+        // The remembered set is intentionally *kept*, unlike `collect_compacting`'s
+        // full-scope `rebuild_remembered` — see this function's doc, point 5: every
+        // remembered parent's field was already corrected by
+        // `evacuate_and_fixup_minor`'s step (c), and the set itself holds only old
+        // (never-moved) parent addresses, so no entry is ever stale here.
+        self.record_promoted_old_to_young(&promoted);
+
+        let survived = survived_in_place + moved_new.len();
+        let stats = GcCycleStats {
+            freed,
+            survived,
+            pause_ns: 0,
+            heap_size_before: before,
+            heap_size_after: survived,
+        };
+        self.profile.record_cycle(&stats);
+        self.collection_count += 1;
+        // A minor cycle never scans/frees the old generation — see
+        // `should_collect_minor`'s doc for why this is bounded (AOT00-T8).
+        self.minor_streak = self.minor_streak.saturating_add(1);
+        stats
+    }
+
     /// Return the header of the live block whose payload contains `addr`, or null.
     /// Linear scan of the all-blocks list (matching `twig_gc.c`'s V1; a sorted
     /// interval index is a later optimisation).
+    ///
+    /// **Security-review finding, fixed here:** the upper bound is **inclusive**
+    /// (`addr <= end`, not `addr < end`) so a legitimate one-past-the-end pointer —
+    /// `payload + size`, the value a Rust slice's `.as_ptr_range().end` or a C-style
+    /// `arr + len` loop sentinel actually holds, never a pointer that is itself
+    /// dereferenced — still resolves to the object it bounds. Before this fix such a
+    /// pointer was invisible to every classification path that bottoms out here
+    /// (`mark_word`, `push_candidates`, `classify_precise_word`, and therefore every
+    /// `collect_*` variant), so an object reachable *only* via a one-past-the-end
+    /// pointer could be freed (conservative paths) or relocated without its sole
+    /// reference being rewritten (precise paths via `classify_precise_word`, which
+    /// routes any non-exact-base hit — including this one — to `pin_out`) while
+    /// still live, a use-after-free. This is a safe widening, not a new ambiguity:
+    /// every block is preceded by its own `HEADER_SIZE`-byte header, so block `B`'s
+    /// `payload` start is always `>= HEADER_SIZE` past block `A`'s `payload + size`
+    /// end — `A`'s inclusive upper bound can never collide with `B`'s inclusive
+    /// lower bound.
     fn find_header(&self, addr: usize) -> *mut FlatHeader {
         if addr == 0 {
             return ptr::null_mut();
@@ -2837,7 +3101,7 @@ impl FlatHeap {
             while !h.is_null() {
                 let payload = h.add(1) as usize;
                 let end = payload + (*h).size;
-                if addr >= payload && addr < end {
+                if addr >= payload && addr <= end {
                     return h;
                 }
                 h = (*h).next;
@@ -3023,7 +3287,11 @@ impl FlatHeap {
     /// old objects, so they cannot dangle); this covers the new old→young edges that
     /// aging creates when a parent tenures a cycle before its still-young child.
     fn record_promoted_old_to_young(&mut self, promoted: &[*mut FlatHeader]) {
-        // SAFETY: every `h` came from this sweep's survivor set and is live.
+        // SAFETY: every `h` is either a `sweep` survivor (an in-place tenured object)
+        // or an arena copy `collect_minor_compacting`'s own step 4.3 tenured after
+        // already threading it onto `self.all` — both producers hand off only live
+        // pointers, and this runs after every tenuring site for the cycle, so each
+        // object's `generation` is final.
         unsafe {
             for &h in promoted {
                 if self.points_to_live_young(h) {
@@ -3427,6 +3695,44 @@ mod tests {
         assert!(heap.should_collect());
         heap.live_bytes = 101;
         assert!(heap.should_collect());
+    }
+
+    /// **Security-review finding, regression:** `should_collect` defers — answers
+    /// `false` — while an incremental mark is in progress, regardless of live bytes vs
+    /// threshold. Before this fix, `should_collect` only consulted live-byte
+    /// accounting, so every automatic call site (`__gc_safepoint`, `vm-core`'s
+    /// `safepoint` opcode) — none of which check `mark_in_progress` themselves — could
+    /// still be told to collect mid-cycle, reaching the stop-the-world collectors'
+    /// own `assert!(!self.mark_in_progress, ...)` (see [`INCREMENTAL_MIXING_MSG`]) —
+    /// a `debug_assert!` before this same review round, so this was a silent
+    /// release-mode heap-corruption path, not just a debug-build panic. Resumes
+    /// normally once the flag clears.
+    #[test]
+    fn should_collect_defers_during_an_incremental_mark_and_resumes_after() {
+        let mut heap = FlatHeap::new();
+        heap.collect_threshold = 100;
+        heap.live_bytes = 200; // well over threshold
+        assert!(heap.should_collect(), "sanity: over threshold, no incremental cycle in progress");
+
+        heap.mark_in_progress = true;
+        assert!(!heap.should_collect(), "must defer while an incremental mark is in progress");
+
+        heap.mark_in_progress = false;
+        assert!(heap.should_collect(), "resumes once the flag clears -- still over threshold");
+    }
+
+    /// The stop-the-world collectors' own reentrancy guard is now a hard `assert!`,
+    /// checked in every build profile (including release), not a `debug_assert!`.
+    /// This test doesn't distinguish build profiles (both panic under `cargo test`'s
+    /// debug profile) — it exists so the invariant has *some* direct coverage, since
+    /// none existed before this security-review round despite the guard being present
+    /// at 11 call sites.
+    #[test]
+    #[should_panic(expected = "stop-the-world collect during an incremental mark phase")]
+    fn collect_compacting_panics_if_called_mid_incremental_mark() {
+        let mut heap = FlatHeap::new();
+        unsafe { heap.incremental_start(&[], &[]) };
+        let _ = unsafe { heap.collect_compacting(&[], &[]) };
     }
 
     #[test]
@@ -4241,6 +4547,9 @@ mod tests {
     /// objects are reclaimed. A recursion-based mark would blow the stack at this depth; the
     /// worklist mark does not.
     #[test]
+    #[cfg_attr(miri, ignore = "too large for Miri; see the AOT00-T5 module doc above — already \
+        covered at small scale by the tests above, which exercise the identical per-object \
+        mechanics (mark, sweep, tenure) this test scales up, not new code paths")]
     fn scale_deep_chain_marks_without_stack_overflow() {
         const N: usize = 20_000;
         let mut heap = FlatHeap::new();
@@ -4283,6 +4592,9 @@ mod tests {
     /// byte-preserved. Proves the tail fixup (the `for_each_ref_slot` tail walk) is correct and
     /// O(len) over a large instance, not just a 2-slot toy.
     #[test]
+    #[cfg_attr(miri, ignore = "too large for Miri; see the AOT00-T5 module doc above — already \
+        covered at small scale by the tests above, which exercise the identical per-object \
+        mechanics (tail fixup, relocation) this test scales up, not new code paths")]
     fn scale_wide_ref_array_relocates() {
         const M: usize = 4_000;
         let mut heap = FlatHeap::new();
@@ -6189,6 +6501,120 @@ mod tests {
         );
     }
 
+    // ── `find_header` one-past-the-end pointer fix (security review) ─────────────
+    //
+    // `find_header`'s upper bound was EXCLUSIVE (`addr < payload + size`), so a
+    // legitimate one-past-the-end pointer -- `payload + size` exactly, the value a
+    // Rust slice's `.as_ptr_range().end` or a C-style `arr + len` loop sentinel
+    // actually holds -- was invisible to every classification path built on it
+    // (`mark_word`, `push_candidates`, `classify_precise_word`, and therefore every
+    // `collect_*` variant). An object reachable *only* through such a pointer could
+    // be freed out from under it: a use-after-free. Flagged pre-existing (not a
+    // regression) in the `classify_precise_word` interior-pointer security fix
+    // (gc-core 0.32.0 CHANGELOG) and deferred there as out of scope; fixed here by
+    // making the upper bound inclusive. Safe widening, not a new ambiguity: every
+    // block is preceded by its own `HEADER_SIZE`-byte header, so block B's payload
+    // start is always `>= HEADER_SIZE` past block A's payload-end -- A's inclusive
+    // upper bound can never collide with B's inclusive lower bound.
+
+    /// The load-bearing regression this fix exists to prove, at the primitive level:
+    /// `find_header` resolves the exact one-past-the-end address to the object it
+    /// bounds, not null.
+    #[test]
+    fn find_header_matches_one_past_the_end_address() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[]);
+        let a = heap.alloc(16, k) as usize;
+        let one_past_end = a + 16;
+
+        let h = heap.find_header(one_past_end);
+        assert!(!h.is_null(), "a one-past-the-end pointer must still resolve to the object it bounds");
+        assert_eq!(h as usize + HEADER_SIZE, a, "it resolves to A specifically, not some other block");
+    }
+
+    /// A one-past-the-end address is classified as **interior** (pin, not move) by
+    /// `classify_precise_word`, exactly like the mid-payload interior pointers above --
+    /// it fails the exact-base check (`h + HEADER_SIZE == word`) since it names the
+    /// byte after the payload, not the payload's own start.
+    #[test]
+    fn classify_mobility_pins_an_object_reached_only_via_a_one_past_the_end_root_pointer() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let a = heap.alloc(16, k) as usize;
+        unsafe { *(a as *mut usize) = 0 };
+
+        let slot_word = a + 16; // one-past-the-end, not a's base
+        let slots = [&slot_word as *const usize as usize];
+        let movable = unsafe { heap.classify_mobility(&slots, &[]) };
+        assert!(!movable.contains(&a), "an object reached only via a one-past-the-end root pointer must not be movable");
+        let a_header = heap.find_header(a);
+        assert!(!a_header.is_null(), "the object must still be found, not silently dropped");
+        assert!(
+            unsafe { (*a_header).pinned },
+            "...and must actually be pinned, not silently absent from both sets"
+        );
+    }
+
+    /// End-to-end, conservative path: a one-past-the-end pointer sitting in a scanned
+    /// stack region (not a declared root slot) is exactly what `mark_region`/
+    /// `push_candidates` see for a Rust slice's `.as_ptr_range().end` left live on the
+    /// stack after the base pointer itself has gone dead. Before the fix, `find_header`
+    /// silently returned null for it and the object was freed as unreachable garbage.
+    #[test]
+    fn collect_compacting_one_past_the_end_conservative_pointer_does_not_free_reachable_object() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0, 8]);
+        let a = heap.alloc(16, k) as usize;
+        unsafe {
+            *(a as *mut usize) = 0;
+            *((a + 8) as *mut usize) = 0xFACE_FEED_usize; // sentinel
+        }
+
+        // Only the one-past-the-end address is live in the scanned region -- `a`
+        // itself is nowhere in scanned memory.
+        let mut region_word = a + 16;
+        let region = [(&mut region_word as *mut usize as *const u8, std::mem::size_of::<usize>())];
+        let stats = unsafe { heap.collect_compacting(&[], &region) };
+
+        assert_eq!(stats.freed, 0, "the object is reachable -- conservatively, via the one-past-the-end pointer");
+        assert_eq!(stats.survived, 1, "it survives in place -- pinned, never movable");
+        assert_eq!(
+            unsafe { *((a + 8) as *const usize) },
+            0xFACE_FEED,
+            "reading through the (unmoved, unfreed) object recovers the sentinel -- no use-after-free"
+        );
+    }
+
+    /// End-to-end, **precise** path: a one-past-the-end pointer in a `root_slots`
+    /// entry (not a scanned conservative region) must ALSO not dangle. This is the
+    /// scenario `classify_precise_word` (PR #10390) exists to gate: a precise source
+    /// holding a non-exact-base hit is routed to the pinning wave, never the
+    /// movable-eligible `precise` set, so `evacuate_and_fixup`'s base-only root-slot
+    /// fixup is never asked to rewrite something it structurally cannot rewrite.
+    #[test]
+    fn collect_compacting_one_past_the_end_root_pointer_does_not_dangle() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0, 8]);
+        let a = heap.alloc(16, k) as usize;
+        unsafe {
+            *(a as *mut usize) = 0;
+            *((a + 8) as *mut usize) = 0xBEEF_CAFE_usize; // sentinel
+        }
+
+        let mut root = a + 16; // one-past-the-end ROOT pointer, precise source
+        let slots = [&mut root as *mut usize as usize];
+        let stats = unsafe { heap.collect_compacting(&slots, &[]) };
+
+        assert_eq!(stats.freed, 0, "the object is reachable via the one-past-the-end root pointer");
+        assert_eq!(stats.survived, 1, "it survives in place -- pinned by classify_precise_word, never movable");
+        assert_eq!(root, a + 16, "the root slot is untouched -- the object never moved, so nothing needed fixing up");
+        assert_eq!(
+            unsafe { *((a + 8) as *const usize) },
+            0xBEEF_CAFE,
+            "reading through the (unmoved, unfreed) object recovers the sentinel -- no dangling root pointer"
+        );
+    }
+
     // ── Moving collector — arena provenance safety (AOT00-T3 PR-3c-1) ──
     //
     // An arena-backed block is a SLICE of one big arena allocation, so it must never be
@@ -6717,5 +7143,344 @@ mod tests {
         let root = p;
         let stats = unsafe { heap.collect_mixed(&[&root as *const usize as usize], &[]) };
         assert_eq!(stats.freed, 1, "C reclaimed — the barrier had no incremental effect");
+    }
+
+    // ── Moving MINOR collector — the full live cycle (AOT00-T9 PR-4) ──────────────
+
+    /// **The canonical differential (spec §5), the proof this arc's whole staged plan
+    /// exists to deliver**: an old parent, a live young child reachable *only* through
+    /// it (via the remembered set), and dead young garbage. Asserts all four properties
+    /// in one real, live, freeing `collect_minor_compacting` call: the child relocates
+    /// *and* the old parent's field was rewritten to the child's new address *and* the
+    /// dead garbage was reclaimed *and* an unrelated, genuinely-old, untouched object
+    /// was never scanned or moved.
+    #[test]
+    fn collect_minor_compacting_moves_young_reclaims_garbage_preserves_old() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+
+        // An unrelated old object, never referenced by anything below -- proves a
+        // minor cycle never scans or moves the old generation, garbage or not.
+        let untouched_old = heap.alloc(16, k) as usize;
+        unsafe { *(untouched_old as *mut usize) = 0 };
+
+        let parent = heap.alloc(16, k) as usize;
+        unsafe { *(parent as *mut usize) = 0 };
+
+        // Tenure BOTH together in one full collect, rooting both -- a full collect
+        // frees anything not in its own root list, so tenuring them in separate
+        // calls would free the earlier one out from under this test.
+        let _ = heap.collect(&[untouched_old, parent]); // both -> old
+        // (no further root or reference to `untouched_old` from here on)
+
+        let child = heap.alloc(16, k) as usize; // young
+        unsafe {
+            *(child as *mut usize) = 0;
+            *(parent as *mut usize) = child;
+            heap.write_barrier(parent, child);
+        }
+
+        // Dead young garbage: allocated, never rooted.
+        let garbage = heap.alloc(16, k) as usize;
+        unsafe { *(garbage as *mut usize) = 0 };
+
+        // No root anywhere names `child` directly -- it is reachable ONLY via the
+        // remembered parent's field.
+        let stats = unsafe { heap.collect_minor_compacting(&[], &[]) };
+
+        // The dead garbage was reclaimed.
+        assert_eq!(stats.freed, 1, "the unrooted young garbage object was reclaimed");
+
+        // The child relocated (it was movable: young, precisely traced, unpinned).
+        let field_after = unsafe { *(parent as *const usize) };
+        assert_ne!(field_after, child, "the child actually relocated");
+        assert_ne!(field_after, 0, "the parent's field was rewritten, not zeroed/corrupted");
+
+        // Reading through the parent's rewritten field reaches the child's live data
+        // at its NEW address -- no dangling pointer into freed from-space memory.
+        assert_eq!(
+            unsafe { *(field_after as *const usize) },
+            0,
+            "the relocated child's own field (a leaf) is byte-preserved at the new address"
+        );
+
+        // The untouched old object was never scanned, freed, or moved -- a minor
+        // cycle's defining property, garbage or not.
+        assert_eq!(
+            heap.find_header(untouched_old),
+            (untouched_old - HEADER_SIZE) as *mut FlatHeader,
+            "the unrelated old object survives at its ORIGINAL address -- never moved, \
+             never freed, even though it is itself garbage from a full-collect's perspective"
+        );
+    }
+
+    /// **Empirical proof the differential above is real, not vacuous**: reverting
+    /// `evacuate_and_fixup_minor`'s remembered-parent fixup (temporarily, via a local
+    /// harness call composing only the pre-fixup pieces) reproduces exactly the
+    /// dangling-field failure the differential above proves is fixed -- confirming this
+    /// test actually exercises the load-bearing PR-3 fix through a real, live,
+    /// freeing collection, not just the dry-run scaffolding PR-3's own tests covered.
+    #[test]
+    fn collect_minor_compacting_relies_on_the_remembered_parent_fixup_being_correct() {
+        // This is a sanity/documentation test, not a revert harness (PR-4 doesn't
+        // duplicate PR-3's own fixup logic) -- it re-confirms, at the live
+        // collect_minor_compacting layer, the same shape PR-3's own
+        // `evacuate_and_fixup_minor_rewrites_a_remembered_parents_field_to_the_moved_childs_new_address`
+        // test proves at the dry-run layer, closing the loop that wiring this into a
+        // real freeing cycle didn't silently drop the fix.
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let parent = heap.alloc(16, k) as usize;
+        let _ = heap.collect(&[parent]);
+        let child = heap.alloc(16, k) as usize;
+        unsafe {
+            *(child as *mut usize) = 0;
+            *(parent as *mut usize) = child;
+            heap.write_barrier(parent, child);
+        }
+
+        let stats = unsafe { heap.collect_minor_compacting(&[], &[]) };
+        assert_eq!(stats.freed, 0, "nothing is garbage");
+        let field_after = unsafe { *(parent as *const usize) };
+        assert_ne!(field_after, 0, "field not corrupted");
+        assert_ne!(
+            field_after, child,
+            "if this were `child` (the stale from-space address), the fixup was skipped \
+             and this collection just freed a live object out from under a live reference"
+        );
+    }
+
+    /// **Strict generalization (mirroring `collect_compacting_all_pinned_matches_collect_mixed`):**
+    /// with nothing movable (built on `kind == 0` objects reached conservatively, where
+    /// `classify_mobility_minor`'s and `collect_minor_mixed`'s reachability coincide
+    /// exactly), `collect_minor_compacting` behaves as `collect_minor_mixed` — same
+    /// survivors, same frees, and the pinned object keeps its address.
+    #[test]
+    fn collect_minor_compacting_all_pinned_matches_collect_minor_mixed() {
+        let build = || {
+            let mut heap = FlatHeap::new();
+            let p = heap.alloc(16, 0) as usize; // kind 0 -> conservative -> pins
+            let _g = heap.alloc(16, 0) as usize; // unreachable
+            (heap, p)
+        };
+        let (mut hm, pm) = build();
+        let (mut hc, pc) = build();
+
+        let region_m = [(&pm as *const usize as *const u8, 8usize)];
+        let region_c = [(&pc as *const usize as *const u8, 8usize)];
+        let sm = unsafe { hm.collect_minor_mixed(&[], &region_m) };
+        let sc = unsafe { hc.collect_minor_compacting(&[], &region_c) };
+
+        assert_eq!(sc.freed, sm.freed, "same objects freed as collect_minor_mixed");
+        assert_eq!(sc.survived, sm.survived, "same survivor count");
+        assert_eq!(hc.object_count(), hm.object_count(), "same live count");
+        assert_eq!(sc.survived, 1, "just the pinned survivor");
+        assert_eq!(hc.find_header(pc), (pc - HEADER_SIZE) as *mut FlatHeader, "never relocated");
+    }
+
+    /// A moved young survivor still progresses toward tenuring -- identical aging
+    /// semantics to an in-place minor survivor (`collect_compacting`'s own step 4.3
+    /// mirrored, restricted to young).
+    #[test]
+    fn collect_minor_compacting_ages_and_can_tenure_a_moved_survivor() {
+        let mut heap = FlatHeap::new();
+        heap.set_tenure_age(1); // promote on the very next minor survival
+        let k = heap.register_kind(&[0]);
+        let a = heap.alloc(16, k) as usize;
+        unsafe { *(a as *mut usize) = 0 };
+
+        let mut root = a; // mutable: collect_minor_compacting fixes up the slot in place if `a` moves
+        let slots = [&mut root as *mut usize as usize];
+        let _ = unsafe { heap.collect_minor_compacting(&slots, &[]) };
+
+        // Read through the (possibly-updated) root slot, not the stale `a` variable
+        // -- if `a` relocated, its from-space original is freed.
+        let new_a = heap.find_header(root);
+        // Either the object moved (arena copy) or stayed in place, but either way it
+        // must now be tenured: `set_tenure_age(1)` promotes on its first survival.
+        assert!(!new_a.is_null(), "the object must still be found after tenuring");
+        assert_eq!(
+            unsafe { (*new_a).generation },
+            GEN_OLD,
+            "a young survivor (moved or not) reaching tenure_age must be promoted"
+        );
+    }
+
+    /// **The exact regression this PR's own security review found and fixed (F1,
+    /// CRITICAL)**: a *moved* survivor that tenures must feed the promotion barrier
+    /// too, not just an in-place-tenured one. `collect_compacting`'s own step 4.3
+    /// gets this for free from its unconditional `rebuild_remembered()`; this
+    /// function deliberately skips that (spec-documented, point 5 of its own doc),
+    /// so a moved-and-tenured survivor omitted from the promotion list creates a
+    /// genuinely new old→young edge with no remembered-set entry recording it -- a
+    /// live use-after-free the next minor cycle that doesn't independently re-reach
+    /// the child. Three cycles, `tenure_age = 2` so the parent tenures on its
+    /// *second* survival (a `tenure_age = 1` config -- what every other test in this
+    /// file uses -- tenures immediately and can never exercise this: the parent
+    /// would already be old before the child is even linked in). Empirically
+    /// verified: reverting the `promoted.push(nh)` addition to step 4.3 reproduces
+    /// this exact failure (the child is silently freed while `a2`'s live field still
+    /// names it).
+    #[test]
+    fn collect_minor_compacting_records_promotion_barrier_for_a_moved_and_tenured_survivor() {
+        let mut heap = FlatHeap::new();
+        heap.set_tenure_age(2); // tenure on the SECOND survival, not the first
+        let k = heap.register_kind(&[0]);
+
+        // Cycle 1: `a` is young, root-reachable, movable -- relocates (age 0->1, still young).
+        let a = heap.alloc(16, k) as usize;
+        unsafe { *(a as *mut usize) = 0 };
+        let mut root = a;
+        let slots = [&mut root as *mut usize as usize];
+        let _ = unsafe { heap.collect_minor_compacting(&slots, &[]) };
+        let a1 = root;
+        let a1_header = heap.find_header(a1);
+        assert!(!a1_header.is_null());
+        assert_eq!(unsafe { (*a1_header).age }, 1);
+        assert_eq!(unsafe { (*a1_header).generation }, GEN_YOUNG, "not tenured yet");
+
+        // The mutator allocates `c` and stores it into `a1` -- `a1` is YOUNG, so the
+        // generational barrier correctly records nothing (a young parent never needs
+        // a remembered entry).
+        let c = heap.alloc(16, k) as usize;
+        unsafe {
+            *(c as *mut usize) = 0xC0FF_EE00_usize;
+            *(a1 as *mut usize) = c;
+            heap.write_barrier(a1, c); // no-op: a1 is young
+        }
+        assert_eq!(heap.remembered_len(), 0, "a young parent's store needs no remembered entry");
+
+        // Cycle 2: `a1` is still root-reachable and movable -- relocates again, and
+        // this survival (age 1->2 >= tenure_age) tenures it.
+        let _ = unsafe { heap.collect_minor_compacting(&slots, &[]) };
+        let a2 = root;
+        let a2_header = heap.find_header(a2);
+        assert!(!a2_header.is_null());
+        assert_eq!(unsafe { (*a2_header).generation }, GEN_OLD, "a2 tenured this cycle");
+        // The fix under test: the promotion barrier must have recorded a2.
+        assert_eq!(
+            heap.remembered_len(),
+            1,
+            "the moved-and-tenured survivor must be recorded by the promotion barrier"
+        );
+
+        // Cycle 3: root the mutator's attention elsewhere entirely -- `c` is now
+        // reachable ONLY via the remembered old parent `a2`'s field. `a2` itself
+        // survives unconditionally (old objects are immune to a minor sweep); the
+        // question is whether `c` does too.
+        let unrelated = heap.alloc(16, k) as usize;
+        unsafe { *(unrelated as *mut usize) = 0 };
+        let mut root3 = unrelated;
+        let slots3 = [&mut root3 as *mut usize as usize];
+        let stats3 = unsafe { heap.collect_minor_compacting(&slots3, &[]) };
+
+        assert_eq!(stats3.freed, 0, "c must NOT be freed -- still live via a2's remembered field");
+        let c_field = unsafe { *(a2 as *const usize) };
+        assert_ne!(c_field, 0, "a2's field is not corrupted");
+        assert_eq!(
+            unsafe { *(c_field as *const usize) },
+            0xC0FF_EE00,
+            "reading through a2's field recovers c's sentinel -- c is genuinely alive"
+        );
+    }
+
+    /// `collect_minor_compacting` increments `minor_streak` exactly like every other
+    /// minor-collect entry point (AOT00-T8's streak-cap bookkeeping) -- confirming this
+    /// new moving-minor entry point participates in the same pacing accounting as
+    /// `collect_minor`/`collect_minor_region`/`collect_minor_mixed`, not a separate,
+    /// unaccounted-for cycle type.
+    #[test]
+    fn collect_minor_compacting_increments_minor_streak() {
+        let mut heap = FlatHeap::new();
+        assert_eq!(heap.minor_streak, 0);
+        let k = heap.register_kind(&[0]);
+        let a = heap.alloc(16, k) as usize;
+        unsafe { *(a as *mut usize) = 0 };
+        // `mut` + `&mut ... as *mut usize`: `a` is genuinely movable and this root
+        // slot really is written through by the relocation's own root fixup
+        // (round-2 security-review finding — a `*const`-derived write here is
+        // provenance UB, previously masked only by Miri's permissive int-to-pointer
+        // mode).
+        let mut slot_word = a;
+        let slots = [&mut slot_word as *mut usize as usize];
+        let _ = unsafe { heap.collect_minor_compacting(&slots, &[]) };
+        assert_eq!(heap.minor_streak, 1, "a moving-minor cycle counts toward the streak cap too");
+    }
+
+    /// The remembered set is kept (never cleared), and holds up correctly across a
+    /// **second** collect_minor_compacting cycle after the first one relocated the
+    /// child it names -- proving the "no remapping needed" argument (spec §4 point 5:
+    /// the set holds only old, never-moved parent addresses) actually survives a
+    /// second live use, not just the first.
+    #[test]
+    fn collect_minor_compacting_remembered_set_survives_a_second_cycle_after_relocation() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let parent = heap.alloc(16, k) as usize;
+        let _ = heap.collect(&[parent]);
+        let child1 = heap.alloc(16, k) as usize;
+        unsafe {
+            *(child1 as *mut usize) = 0;
+            *(parent as *mut usize) = child1;
+            heap.write_barrier(parent, child1);
+        }
+
+        // First cycle: child1 relocates (reachable only via the remembered parent).
+        let stats1 = unsafe { heap.collect_minor_compacting(&[], &[]) };
+        assert_eq!(stats1.freed, 0);
+        let field_after_1 = unsafe { *(parent as *const usize) };
+        assert_ne!(field_after_1, child1, "child1 relocated");
+
+        // Second cycle: allocate a fresh young child2, point the SAME remembered
+        // parent at it (a fresh barriered store), and confirm the remembered set
+        // still correctly drives another live relocation -- not stale or corrupted
+        // by the first cycle's own bookkeeping.
+        let child2 = heap.alloc(16, k) as usize;
+        unsafe {
+            *(child2 as *mut usize) = 0;
+            *(parent as *mut usize) = child2;
+            heap.write_barrier(parent, child2);
+        }
+        let stats2 = unsafe { heap.collect_minor_compacting(&[], &[]) };
+        assert_eq!(stats2.freed, 0, "nothing new is garbage");
+        let field_after_2 = unsafe { *(parent as *const usize) };
+        assert_ne!(field_after_2, child2, "child2 also relocates on the second cycle");
+        assert_ne!(field_after_2, 0, "parent's field correctly rewritten again");
+    }
+
+    /// A young object reachable **only** via a declared ref field holding a genuine
+    /// **interior** pointer is pinned, not freed, through the full live cycle --
+    /// proving the interior-pointer classification fix (found and fixed in an
+    /// unrelated PR, this session) composes correctly all the way through a real
+    /// relocating-and-freeing collection, not just at the classify/evacuate layers
+    /// its own tests covered.
+    #[test]
+    fn collect_minor_compacting_pins_child_reached_only_via_interior_pointer() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let parent = heap.alloc(16, k) as usize;
+        unsafe { *(parent as *mut usize) = 0 };
+        let child = heap.alloc(16, k) as usize;
+        unsafe {
+            *(child as *mut usize) = 0;
+            *(parent as *mut usize) = child + 8; // INTERIOR pointer, not child's base
+        }
+
+        // `mut` + `&mut ... as *mut usize`: `parent` itself is movable (nothing pins
+        // IT — only its interior-pointer-reached child gets pinned), so this root
+        // slot really is written through by relocation's own fixup (round-2
+        // security-review finding — see the same note in
+        // `collect_minor_compacting_increments_minor_streak`).
+        let mut slot_word = parent;
+        let slots = [&mut slot_word as *mut usize as usize];
+        let stats = unsafe { heap.collect_minor_compacting(&slots, &[]) };
+
+        assert_eq!(stats.freed, 0, "the interior-pointer-reached child must not be freed");
+        assert_eq!(
+            heap.find_header(child),
+            (child - HEADER_SIZE) as *mut FlatHeader,
+            "the child is pinned in place, at its original address -- not relocated \
+             (an interior pointer to it can never be rewritten by fixup)"
+        );
     }
 }

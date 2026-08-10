@@ -337,8 +337,26 @@ const SUPPORTED_OPS: &[&str] = &[
 /// exposing `FlatHeap::live_bytes` so a Twig program (or an end-to-end test) can
 /// observe the collector's live-byte total directly, rather than assuming it
 /// behaves the same as the native backends from reading source alone.
-const SUPPORTED_BUILTINS: &[&str] =
-    &["print_i64", "putchar", "getchar", "input_i64", "input_str", "gc_live_bytes"];
+///
+/// `gc_collect_minor_precise` / `gc_kind_of` (AOT00-T8 follow-up, write-barrier
+/// emission): test-only diagnostic seams, not exposed to Twig source — they let a
+/// hand-built end-to-end test drive an *unconditional* minor collection (bypassing
+/// the `should_collect_minor`/`auto_minor` policy gate entirely, since
+/// `__gc_collect_minor_precise` needs no attestation of its own — see that
+/// function's doc) and then check a specific object's survival by kind id, the
+/// only reliable signal per this crate's own `array_ref_tracing.rs` lesson (a
+/// `freed`-count or conservative-scan-dependent assertion is not deterministic
+/// enough to prove one specific object's fate).
+const SUPPORTED_BUILTINS: &[&str] = &[
+    "print_i64",
+    "putchar",
+    "getchar",
+    "input_i64",
+    "input_str",
+    "gc_live_bytes",
+    "gc_collect_minor_precise",
+    "gc_kind_of",
+];
 
 #[derive(Debug, Clone)]
 struct LlvmStringLiteralDef {
@@ -746,10 +764,18 @@ pub fn lower_iir_to_llvm(
     let mut used_input_str = false;
     let mut used_alloc_bytes = false;
     let mut used_gc_alloc = false;
+    // AOT00-T8 follow-up: `field_store` needs the generational write barrier
+    // (`@__twig_gc_write_barrier`) so a real minor collection can eventually be
+    // turned on for LLVM output — see `lower_field_store`'s doc for why the call
+    // is unconditional (no pointer/non-pointer discrimination needed).
+    let mut used_field_store = false;
     // Twig GC completion round: `call_builtin "gc_live_bytes"` (a diagnostic,
     // mirroring aarch64/x86_64-backend's identically-named builtin) lowers to
     // `@__twig_gc_live_bytes()` from the shared `gc-core-capi` archive.
     let mut used_gc_live_bytes = false;
+    // AOT00-T8 follow-up test seams — see `SUPPORTED_BUILTINS`'s own doc.
+    let mut used_gc_collect_minor_precise = false;
+    let mut used_gc_kind_of = false;
     // LANG-FULL E5: any array op needs `@calloc` (the allocation) and `@llvm.trap`
     // (the out-of-bounds trap). `is_array_op` covers alloc_array/array_*.
     let mut used_arrays = false;
@@ -796,6 +822,9 @@ pub fn lower_iir_to_llvm(
             if i.op == "alloc" {
                 used_gc_alloc = true;
             }
+            if i.op == "field_store" {
+                used_field_store = true;
+            }
             if i.op == "print_str" {
                 used_print_str = true;
             }
@@ -834,6 +863,8 @@ pub fn lower_iir_to_llvm(
                         "input_i64" => used_input_i64 = true,
                         "input_str" => used_input_str = true,
                         "gc_live_bytes" => used_gc_live_bytes = true,
+                        "gc_collect_minor_precise" => used_gc_collect_minor_precise = true,
+                        "gc_kind_of" => used_gc_kind_of = true,
                         _ => {
                             if let Some(b) = dyn_builtin(name) {
                                 if !used_lispy.iter().any(|(n, _, _)| n == &b.0) {
@@ -885,7 +916,7 @@ pub fn lower_iir_to_llvm(
     }
     if used_alloc_bytes || used_arrays || used_conversions || used_str_index || used_putchar || used_getchar
         || used_input_i64 || used_input_str || used_str_concat || used_str_eq || used_str_cmp || used_gc_alloc
-        || used_gc_live_bytes {
+        || used_gc_live_bytes || used_field_store || used_gc_collect_minor_precise || used_gc_kind_of {
         out.push('\n');
         if used_alloc_bytes || used_arrays {
             // Twig GC completion round: `alloc_bytes` (Brainfuck's byte tape)
@@ -931,6 +962,16 @@ pub fn lower_iir_to_llvm(
             // backend. `i64 __twig_gc_alloc(i64 n_bytes)` returns a heap pointer.
             out.push_str("declare i64 @__twig_gc_alloc(i64)\n");
         }
+        if used_field_store {
+            // AOT00-T8 follow-up: the generational write barrier. `void
+            // __twig_gc_write_barrier(i64 parent, i64 child)` records `parent`
+            // (the field_store target) in the remembered set when it's already
+            // OLD, so a later minor collection rescans it for young objects it
+            // may now reference — the pointers a young-only cycle would
+            // otherwise never see. See `lower_field_store` for why every store
+            // calls it unconditionally, not just reference-typed ones.
+            out.push_str("declare void @__twig_gc_write_barrier(i64, i64)\n");
+        }
         if used_gc_live_bytes {
             // Twig GC completion round: exposes `FlatHeap::live_bytes` to Twig
             // source as a diagnostic builtin, mirroring aarch64/x86_64-backend's
@@ -938,6 +979,19 @@ pub fn lower_iir_to_llvm(
             // `alloc`/`gc_alloc`'s auto-collection genuinely runs on LLVM,
             // instead of assuming it from reading the allocator's C source.
             out.push_str("declare i64 @__twig_gc_live_bytes()\n");
+        }
+        if used_gc_collect_minor_precise {
+            // AOT00-T8 follow-up: an unconditional minor collection, bypassing the
+            // `should_collect_minor`/`auto_minor` policy gate entirely (see
+            // `SUPPORTED_BUILTINS`'s own doc) — the test-only seam that proves the
+            // write barrier above actually keeps a remembered-set edge alive.
+            out.push_str("declare i64 @__twig_gc_collect_minor_precise()\n");
+        }
+        if used_gc_kind_of {
+            // AOT00-T8 follow-up: read-only kind-id lookup, the deterministic
+            // per-object survival signal an end-to-end test needs (see
+            // `SUPPORTED_BUILTINS`'s own doc for why `freed`/live-bytes aren't enough).
+            out.push_str("declare i64 @__twig_gc_kind_of(i64)\n");
         }
         if used_arrays || used_conversions || used_str_index {
             // The trap target — out-of-bounds for arrays (LANG-FULL E5) and
@@ -2618,6 +2672,21 @@ fn lower_alloc(instr: &IIRInstr, state: &mut FnState, out: &mut String) -> Resul
 
 /// `field_store ptr, idx, value` (no dest) — `[ptr + idx*8] = value`. `idx` is a
 /// compile-time field index; values are raw 64-bit words.
+///
+/// **AOT00-T8 follow-up:** every store also calls the generational write
+/// barrier (`@__twig_gc_write_barrier(ptr, value)`), unconditionally — `ptr`
+/// is always a live GC object (the field_store target), but `value` may or may
+/// not be a heap reference (this op has no static type information to tell
+/// the two apart, unlike `vm-core`'s interpreter, which skips the call for a
+/// non-`HeapRef` `Value`). Per the barrier's own contract
+/// (`gc_core::FlatHeap::write_barrier`'s doc), that's fine: it never
+/// dereferences `value`, only inspects `ptr`'s generation, and recording an
+/// old parent that didn't actually store a young child is a harmless
+/// over-approximation — the alternative (only calling it for statically-known
+/// reference fields) would require plumbing field-type information this op
+/// doesn't carry, and a missed call on a genuine reference store is a real
+/// use-after-free once minor collection is enabled, so the unconditional call
+/// is the only sound choice here.
 fn lower_field_store(instr: &IIRInstr, state: &mut FnState, out: &mut String) -> Result<(), IIRLlvmError> {
     if instr.dest.is_some() {
         return Err(IIRLlvmError::InvalidOperand {
@@ -2633,6 +2702,7 @@ fn lower_field_store(instr: &IIRInstr, state: &mut FnState, out: &mut String) ->
     let ep = state.fresh("fsep");
     out.push_str(&format!("  {ep} = getelementptr i64, ptr {p}, i64 {idx}\n"));
     out.push_str(&format!("  store i64 {val}, ptr {ep}\n"));
+    out.push_str(&format!("  call void @__twig_gc_write_barrier(i64 {ptr}, i64 {val})\n"));
     Ok(())
 }
 
@@ -3890,6 +3960,27 @@ fn lower_call_builtin(
         "gc_live_bytes" => {
             let dest = require_dest(instr, "gc_live_bytes", state.fn_name)?.to_string();
             out.push_str(&format!("  %{dest} = call i64 @__twig_gc_live_bytes()\n"));
+            state.env.insert(dest.clone(), format!("%{dest}"));
+            Ok(())
+        }
+        // ── gc_collect_minor_precise() -> v — test-only seam (AOT00-T8) ─────
+        //
+        //   srcs = [Var("gc_collect_minor_precise")], dest = v
+        //     → %v = call i64 @__twig_gc_collect_minor_precise()
+        "gc_collect_minor_precise" => {
+            let dest = require_dest(instr, "gc_collect_minor_precise", state.fn_name)?.to_string();
+            out.push_str(&format!("  %{dest} = call i64 @__twig_gc_collect_minor_precise()\n"));
+            state.env.insert(dest.clone(), format!("%{dest}"));
+            Ok(())
+        }
+        // ── gc_kind_of(ptr) -> v — test-only seam (AOT00-T8) ────────────────
+        //
+        //   srcs = [Var("gc_kind_of"), <ptr:i64>], dest = v
+        //     → %v = call i64 @__twig_gc_kind_of(i64 <ptr>)
+        "gc_kind_of" => {
+            let dest = require_dest(instr, "gc_kind_of", state.fn_name)?.to_string();
+            let ptr = resolve_operand(instr.srcs.get(1), &state.env, "i64", state.fn_name)?;
+            out.push_str(&format!("  %{dest} = call i64 @__twig_gc_kind_of(i64 {ptr})\n"));
             state.env.insert(dest.clone(), format!("%{dest}"));
             Ok(())
         }

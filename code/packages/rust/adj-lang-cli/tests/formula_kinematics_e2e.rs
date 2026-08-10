@@ -77,3 +77,67 @@ fn imports_kinematics_library_binds_and_computes_with_its_citation() {
         "momentum carries its NASA Glenn provenance: {s}"
     );
 }
+
+// ---------------------------------------------------------------------------
+// v = u + at, solved for a different unknown (ADJ-FORMULA-LIBRARIES FL-10,
+// §3D rung-0 CAS-wiring companions) — the SAME cited OpenStax equation as
+// `final_velocity` above, rearranged rather than computed forward.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn solves_for_acceleration_from_final_velocity_with_the_same_citation() {
+    let dir = scratch("kinematics_accel_solve");
+    let lib = std::fs::read_to_string(shipped_kinematics_lib()).unwrap();
+    std::fs::write(dir.join("kinematics.adj"), lib).unwrap();
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"kinematics.adj\"\n\
+         observe final_velocity(20)\n\
+         observe initial_velocity(5)\n\
+         observe time(3)\n\
+         ? acceleration_from_final_velocity(final_velocity, initial_velocity, time)\n",
+    )
+    .unwrap();
+
+    let (ok, s) = run(&dir.join("case.adj"));
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(!s.contains("\"error\""), "no compile error: {s}");
+    // 20 = 5 + a * 3  =>  a = 5.
+    assert!(
+        s.contains("\"name\":\"acceleration_from_final_velocity\"") && s.contains("\"value\":5"),
+        "acceleration_from_final_velocity(20, 5, 3) = 5: {s}"
+    );
+    assert!(
+        s.contains("\"trust\":\"authoritative\"") && s.contains("openstax.org"),
+        "carries the same OpenStax citation as the forward final_velocity formula: {s}"
+    );
+}
+
+#[test]
+fn solves_for_time_from_final_velocity_with_the_same_citation() {
+    let dir = scratch("kinematics_time_solve");
+    let lib = std::fs::read_to_string(shipped_kinematics_lib()).unwrap();
+    std::fs::write(dir.join("kinematics.adj"), lib).unwrap();
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"kinematics.adj\"\n\
+         observe final_velocity(20)\n\
+         observe initial_velocity(5)\n\
+         observe acceleration(2)\n\
+         ? time_from_final_velocity(final_velocity, initial_velocity, acceleration)\n",
+    )
+    .unwrap();
+
+    let (ok, s) = run(&dir.join("case.adj"));
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(!s.contains("\"error\""), "no compile error: {s}");
+    // 20 = 5 + 2 * t  =>  t = 7.5.
+    assert!(
+        s.contains("\"name\":\"time_from_final_velocity\"") && s.contains("\"value\":7.5"),
+        "time_from_final_velocity(20, 5, 2) = 7.5: {s}"
+    );
+    assert!(
+        s.contains("\"trust\":\"authoritative\"") && s.contains("openstax.org"),
+        "carries the same OpenStax citation as the forward final_velocity formula: {s}"
+    );
+}

@@ -195,6 +195,11 @@ pub struct EmitOptions {
     /// `README.md` alongside the component `.swift`. Default `false`.
     pub emit_project: bool,
 
+    /// Require the generated project shell to load Mosaic's standard Rust
+    /// application runtime and receive its initial props before mounting the
+    /// component. Default `false` preserves the preview/sample shell.
+    pub require_runtime: bool,
+
     /// Pinned `swift-tools-version` for `Package.swift`. UI32 spec
     /// §3.6.3 requires exact pinning. Default `"5.10"` — a
     /// known-good Swift 5.10 LTS that supports macOS 14 SwiftUI.
@@ -215,6 +220,7 @@ impl Default for EmitOptions {
     fn default() -> Self {
         Self {
             emit_project: false,
+            require_runtime: false,
             pinned_swift_tools: "5.10".to_string(),
             pinned_macos_min: ".v13".to_string(),
             pinned_ios_min: ".v16".to_string(),
@@ -338,8 +344,8 @@ fn build_swiftui_project_files(
 
     Ok(ProjectFiles {
         package_swift: build_package_swift(options),
-        app_swift: build_app_swift(name, &interface.slots),
-        readme: build_swiftui_platform_readme(name),
+        app_swift: build_app_swift(name, &interface.slots, options.require_runtime),
+        readme: build_swiftui_platform_readme(name, options.require_runtime),
     })
 }
 
@@ -384,11 +390,12 @@ fn build_package_swift(options: &EmitOptions) -> String {
     )
 }
 
-fn build_app_swift(component_name: &str, slots: &[SlotDecl]) -> String {
+fn build_app_swift(component_name: &str, slots: &[SlotDecl], require_runtime: bool) -> String {
     // The Mosaic SwiftUI emitter produces a `View` struct named
     // `{component_name}View` (per pipeline.rs:120 doc comment), so
     // mount that here.
-    let root_view = build_root_view_initializer(component_name, slots, "host.props", "host");
+    let root_view =
+        build_root_view_initializer(component_name, slots, "host.props", "host", require_runtime);
     let mut out = String::new();
     write!(
         out,
@@ -409,7 +416,11 @@ fn build_app_swift(component_name: &str, slots: &[SlotDecl]) -> String {
     writeln!(out, "  }}").unwrap();
     writeln!(out, "}}").unwrap();
     writeln!(out).unwrap();
-    out.push_str(&build_mosaic_host_state(component_name));
+    if require_runtime {
+        out.push_str(&build_runtime_required_mosaic_host_state(component_name));
+    } else {
+        out.push_str(&build_mosaic_host_state(component_name));
+    }
     out
 }
 
@@ -418,11 +429,12 @@ fn build_root_view_initializer(
     slots: &[SlotDecl],
     props_expr: &str,
     host_expr: &str,
+    require_runtime: bool,
 ) -> String {
     let mut out = format!("{component_name}View(\n");
     for slot in slots {
         let field = to_camel_case_first_lower(&slot.name);
-        let value = host_value_for_slot(slot, props_expr, host_expr);
+        let value = host_value_for_slot(slot, props_expr, host_expr, require_runtime);
         writeln!(out, "        {field}: {value},").unwrap();
     }
     out.push_str("        dispatch: { event in\n");
@@ -432,7 +444,15 @@ fn build_root_view_initializer(
     out
 }
 
-fn host_value_for_slot(slot: &SlotDecl, props_expr: &str, host_expr: &str) -> String {
+fn host_value_for_slot(
+    slot: &SlotDecl,
+    props_expr: &str,
+    host_expr: &str,
+    require_runtime: bool,
+) -> String {
+    if require_runtime {
+        return runtime_required_host_value_for_slot(slot, props_expr, host_expr);
+    }
     let key = escape_swift_string(&slot.name);
     let fallback = sample_value_for_slot(slot);
     match &slot.r#type {
@@ -463,6 +483,87 @@ fn host_value_for_slot(slot: &SlotDecl, props_expr: &str, host_expr: &str) -> St
     }
 }
 
+fn runtime_required_host_value_for_slot(
+    slot: &SlotDecl,
+    props_expr: &str,
+    host_expr: &str,
+) -> String {
+    let key = escape_swift_string(&slot.name);
+    if let Some(default) = &slot.default {
+        return match default {
+            SlotDefault::Text(value) => format!(
+                "MosaicHostValue.optionalString({props_expr}, \"{key}\") ?? \"{}\"",
+                escape_swift_string(value)
+            ),
+            SlotDefault::Number(value) if value.is_finite() => {
+                format!("MosaicHostValue.optionalDouble({props_expr}, \"{key}\") ?? {value}")
+            }
+            SlotDefault::Number(_) => {
+                format!("MosaicHostValue.optionalDouble({props_expr}, \"{key}\") ?? 0")
+            }
+            SlotDefault::Bool(value) => {
+                format!("MosaicHostValue.optionalBool({props_expr}, \"{key}\") ?? {value}")
+            }
+        };
+    }
+
+    if !slot.required {
+        return match &slot.r#type {
+            SlotType::Text | SlotType::Image | SlotType::Color => {
+                format!("MosaicHostValue.optionalString({props_expr}, \"{key}\")")
+            }
+            SlotType::Number => {
+                format!("MosaicHostValue.optionalDouble({props_expr}, \"{key}\")")
+            }
+            SlotType::Bool => {
+                format!("MosaicHostValue.optionalBool({props_expr}, \"{key}\")")
+            }
+            SlotType::List(inner) => match inner.as_ref() {
+                ListInnerType::Text | ListInnerType::Image | ListInnerType::Color => {
+                    format!("MosaicHostValue.optionalStringList({props_expr}, \"{key}\")")
+                }
+                ListInnerType::Number => {
+                    format!("MosaicHostValue.optionalDoubleList({props_expr}, \"{key}\")")
+                }
+                ListInnerType::Bool => {
+                    format!("MosaicHostValue.optionalBoolList({props_expr}, \"{key}\")")
+                }
+                _ => format!("MosaicHostValue.optionalValue({props_expr}, \"{key}\")"),
+            },
+            SlotType::Node | SlotType::Component(_) => {
+                format!("{host_expr}.optionalNode(named: \"{key}\")")
+            }
+        };
+    }
+
+    match &slot.r#type {
+        SlotType::Text | SlotType::Image | SlotType::Color => {
+            format!("MosaicHostValue.requiredString({props_expr}, \"{key}\")")
+        }
+        SlotType::Number => {
+            format!("MosaicHostValue.requiredDouble({props_expr}, \"{key}\")")
+        }
+        SlotType::Bool => {
+            format!("MosaicHostValue.requiredBool({props_expr}, \"{key}\")")
+        }
+        SlotType::List(inner) => match inner.as_ref() {
+            ListInnerType::Text | ListInnerType::Image | ListInnerType::Color => {
+                format!("MosaicHostValue.requiredStringList({props_expr}, \"{key}\")")
+            }
+            ListInnerType::Number => {
+                format!("MosaicHostValue.requiredDoubleList({props_expr}, \"{key}\")")
+            }
+            ListInnerType::Bool => {
+                format!("MosaicHostValue.requiredBoolList({props_expr}, \"{key}\")")
+            }
+            _ => format!("MosaicHostValue.requiredValue({props_expr}, \"{key}\")"),
+        },
+        SlotType::Node | SlotType::Component(_) => {
+            format!("{host_expr}.requiredNode(named: \"{key}\")")
+        }
+    }
+}
+
 fn build_mosaic_host_state(component_name: &str) -> String {
     let state = format!(
         "private final class MosaicHostState: ObservableObject {{\n  @Published var props: [String: Any] = [:]\n  @Published var lastHostIntent: [String: Any]? = nil\n  private let bridge: MosaicHostBridgeObject?\n\n  init() {{\n    self.bridge = MosaicHostBridge.load()\n    bridge?.setPropsChangedHandler? {{ [weak self] in\n      DispatchQueue.main.async {{\n        self?.refreshProps()\n      }}\n    }}\n    refreshProps()\n  }}\n\n  func node(named name: String) -> AnyView {{\n    guard let object = bridge?.node?(named: name as NSString) else {{\n      return AnyView(EmptyView())\n    }}\n#if os(macOS)\n    guard let view = object as? NSView else {{ return AnyView(EmptyView()) }}\n    return AnyView(MosaicHostPlatformView(view: view))\n#elseif os(iOS)\n    guard let view = object as? UIView else {{ return AnyView(EmptyView()) }}\n    return AnyView(MosaicHostPlatformView(view: view))\n#else\n    return AnyView(EmptyView())\n#endif\n  }}\n\n  func dispatch(_ event: {component_name}Event) {{\n    guard let bridge else {{\n      print(\"Mosaic dispatch: \\(event.mosaicEnvelope)\")\n      return\n    }}\n    applyHostResponse(bridge.handleEvent(event.mosaicEnvelope as NSDictionary, name: event.mosaicName as NSString) as? [String: Any])\n  }}\n\n  private func refreshProps() {{\n    applyHostResponse(bridge?.applyProps() as? [String: Any])\n  }}\n\n  private func applyHostResponse(_ response: [String: Any]?) {{\n    guard let response else {{ return }}\n    if let intent = response[\"hostIntent\"] as? [String: Any] {{\n      self.lastHostIntent = intent\n    }}\n    if let next = response[\"props\"] as? [String: Any] {{\n      self.props = next\n      return\n    }}\n    if response[\"hostIntent\"] != nil || response[\"error\"] != nil {{\n      return\n    }}\n    self.props = response\n  }}\n}}\n\n@objc protocol MosaicHostBridgeObject {{\n  func applyProps() -> NSDictionary?\n  func handleEvent(_ envelope: NSDictionary, name: NSString) -> NSDictionary?\n  @objc optional func node(named name: NSString) -> NSObject?\n  @objc optional func setPropsChangedHandler(_ handler: @escaping () -> Void)\n}}\n\n#if os(macOS)\nprivate struct MosaicHostPlatformView: NSViewRepresentable {{\n  let view: NSView\n  func makeNSView(context: Context) -> NSView {{ view }}\n  func updateNSView(_ nsView: NSView, context: Context) {{}}\n}}\n#elseif os(iOS)\nprivate struct MosaicHostPlatformView: UIViewRepresentable {{\n  let view: UIView\n  func makeUIView(context: Context) -> UIView {{ view }}\n  func updateUIView(_ uiView: UIView, context: Context) {{}}\n}}\n#endif\n\nprivate enum MosaicHostBridge {{\n  static func load() -> MosaicHostBridgeObject? {{\n    for className in [\"App.MosaicHost\", \"MosaicHost\"] {{\n      guard let hostType = NSClassFromString(className) as? NSObject.Type else {{\n        continue\n      }}\n      if let bridge = hostType.init() as? MosaicHostBridgeObject {{\n        return bridge\n      }}\n    }}\n    return nil\n  }}\n}}\n\nprivate enum MosaicHostValue {{\n  static func string(_ props: [String: Any], _ key: String, fallback: String) -> String {{\n    if let value = props[key] as? String {{ return value }}\n    if let value = props[key] {{ return String(describing: value) }}\n    return fallback\n  }}\n\n  static func double(_ props: [String: Any], _ key: String, fallback: Double) -> Double {{\n    if let value = props[key] as? Double {{ return value }}\n    if let value = props[key] as? NSNumber {{ return value.doubleValue }}\n    if let value = props[key] as? String, let parsed = Double(value) {{ return parsed }}\n    return fallback\n  }}\n\n  static func bool(_ props: [String: Any], _ key: String, fallback: Bool) -> Bool {{\n    if let value = props[key] as? Bool {{ return value }}\n    if let value = props[key] as? NSNumber {{ return value.boolValue }}\n    if let value = props[key] as? String, let parsed = Bool(value) {{ return parsed }}\n    return fallback\n  }}\n\n  static func stringList(_ props: [String: Any], _ key: String, fallback: [String]) -> [String] {{\n    if let value = props[key] as? [String] {{ return value }}\n    if let value = props[key] as? [Any] {{ return value.map {{ String(describing: $0) }} }}\n    return fallback\n  }}\n\n  static func doubleList(_ props: [String: Any], _ key: String, fallback: [Double]) -> [Double] {{\n    if let value = props[key] as? [Double] {{ return value }}\n    if let value = props[key] as? [NSNumber] {{ return value.map {{ $0.doubleValue }} }}\n    return fallback\n  }}\n\n  static func boolList(_ props: [String: Any], _ key: String, fallback: [Bool]) -> [Bool] {{\n    if let value = props[key] as? [Bool] {{ return value }}\n    if let value = props[key] as? [NSNumber] {{ return value.map {{ $0.boolValue }} }}\n    return fallback\n  }}\n}}\n"
@@ -476,6 +577,224 @@ fn build_mosaic_host_state(component_name: &str) -> String {
             "  @objc optional func setPropsChangedHandler(_ handler: @escaping () -> Void)\n}",
             "  @objc optional func setPropsChangedHandler(_ handler: @escaping () -> Void)\n  @objc optional func runInteractionAcceptance()\n}",
         )
+}
+
+fn build_runtime_required_mosaic_host_state(component_name: &str) -> String {
+    let mut out = String::new();
+    out.push_str(
+        r#"private final class MosaicHostState: ObservableObject {
+  @Published private(set) var props: [String: Any] = [:]
+  @Published private(set) var lastHostIntent: [String: Any]? = nil
+  private let bridge: MosaicHostBridgeObject
+
+  init() {
+    self.bridge = MosaicRuntimeHost.loadRequired()
+    bridge.setPropsChangedHandler? { [weak self] in
+      DispatchQueue.main.async {
+        self?.refreshProps()
+      }
+    }
+    refreshProps()
+  }
+
+  func optionalNode(named name: String) -> AnyView? {
+    guard let object = bridge.node?(named: name as NSString) else { return nil }
+#if os(macOS)
+    guard let view = object as? NSView else {
+      preconditionFailure("Mosaic runtime node '\(name)' is not an NSView")
+    }
+    return AnyView(MosaicHostPlatformView(view: view))
+#elseif os(iOS)
+    guard let view = object as? UIView else {
+      preconditionFailure("Mosaic runtime node '\(name)' is not a UIView")
+    }
+    return AnyView(MosaicHostPlatformView(view: view))
+#else
+    preconditionFailure("Mosaic runtime nodes require macOS or iOS")
+#endif
+  }
+
+  func requiredNode(named name: String) -> AnyView {
+    guard let view = optionalNode(named: name) else {
+      preconditionFailure("Mosaic runtime omitted required node '\(name)'")
+    }
+    return view
+  }
+
+"#,
+    );
+    writeln!(out, "  func dispatch(_ event: {component_name}Event) {{").unwrap();
+    out.push_str(
+        r#"    applyHostResponse(bridge.handleEvent(event.mosaicEnvelope as NSDictionary, name: event.mosaicName as NSString) as? [String: Any])
+  }
+
+  func runInteractionAcceptanceIfRequested() {
+    bridge.runInteractionAcceptance?()
+  }
+
+  private func refreshProps() {
+    applyHostResponse(bridge.applyProps() as? [String: Any])
+  }
+
+  private func applyHostResponse(_ response: [String: Any]?) {
+    guard let response else {
+      preconditionFailure("Mosaic runtime returned no update")
+    }
+    if let error = response["error"] {
+      preconditionFailure("Mosaic runtime failed: \(error)")
+    }
+    if let intent = response["hostIntent"] as? [String: Any] {
+      self.lastHostIntent = intent
+    }
+    guard let next = response["props"] as? [String: Any] else {
+      preconditionFailure("Mosaic runtime update omitted props")
+    }
+    self.props = next
+  }
+}
+
+@objc protocol MosaicHostBridgeObject {
+  func applyProps() -> NSDictionary?
+  func handleEvent(_ envelope: NSDictionary, name: NSString) -> NSDictionary?
+  @objc optional func node(named name: NSString) -> NSObject?
+  @objc optional func setPropsChangedHandler(_ handler: @escaping () -> Void)
+  @objc optional func runInteractionAcceptance()
+}
+
+#if os(macOS)
+private struct MosaicHostPlatformView: NSViewRepresentable {
+  let view: NSView
+  func makeNSView(context: Context) -> NSView { view }
+  func updateNSView(_ nsView: NSView, context: Context) {}
+}
+#elseif os(iOS)
+private struct MosaicHostPlatformView: UIViewRepresentable {
+  let view: UIView
+  func makeUIView(context: Context) -> UIView { view }
+  func updateUIView(_ uiView: UIView, context: Context) {}
+}
+#endif
+
+private enum MosaicHostValue {
+  static func optionalString(_ props: [String: Any], _ key: String) -> String? {
+    guard let value = props[key] else { return nil }
+    guard let typed = value as? String else {
+      preconditionFailure("Mosaic runtime prop '\(key)' is not text")
+    }
+    return typed
+  }
+
+  static func optionalDouble(_ props: [String: Any], _ key: String) -> Double? {
+    guard let value = props[key] else { return nil }
+    if let typed = value as? Double { return typed }
+    if let typed = value as? NSNumber { return typed.doubleValue }
+    preconditionFailure("Mosaic runtime prop '\(key)' is not a number")
+  }
+
+  static func optionalBool(_ props: [String: Any], _ key: String) -> Bool? {
+    guard let value = props[key] else { return nil }
+    if let typed = value as? Bool { return typed }
+    if let typed = value as? NSNumber { return typed.boolValue }
+    preconditionFailure("Mosaic runtime prop '\(key)' is not a boolean")
+  }
+
+  static func optionalStringList(_ props: [String: Any], _ key: String) -> [String]? {
+    guard let value = props[key] else { return nil }
+    guard let values = value as? [Any] else {
+      preconditionFailure("Mosaic runtime prop '\(key)' is not a list")
+    }
+    return values.map { item in
+      guard let typed = item as? String else {
+        preconditionFailure("Mosaic runtime prop '\(key)' contains non-text")
+      }
+      return typed
+    }
+  }
+
+  static func optionalDoubleList(_ props: [String: Any], _ key: String) -> [Double]? {
+    guard let value = props[key] else { return nil }
+    guard let values = value as? [Any] else {
+      preconditionFailure("Mosaic runtime prop '\(key)' is not a list")
+    }
+    return values.map { item in
+      if let typed = item as? Double { return typed }
+      if let typed = item as? NSNumber { return typed.doubleValue }
+      preconditionFailure("Mosaic runtime prop '\(key)' contains a non-number")
+    }
+  }
+
+  static func optionalBoolList(_ props: [String: Any], _ key: String) -> [Bool]? {
+    guard let value = props[key] else { return nil }
+    guard let values = value as? [Any] else {
+      preconditionFailure("Mosaic runtime prop '\(key)' is not a list")
+    }
+    return values.map { item in
+      if let typed = item as? Bool { return typed }
+      if let typed = item as? NSNumber { return typed.boolValue }
+      preconditionFailure("Mosaic runtime prop '\(key)' contains a non-boolean")
+    }
+  }
+
+  static func optionalValue<T>(_ props: [String: Any], _ key: String) -> T? {
+    guard let value = props[key] else { return nil }
+    guard let typed = value as? T else {
+      preconditionFailure("Mosaic runtime prop '\(key)' has the wrong type")
+    }
+    return typed
+  }
+
+  static func requiredString(_ props: [String: Any], _ key: String) -> String {
+    guard let value = optionalString(props, key) else {
+      preconditionFailure("Mosaic runtime omitted required prop '\(key)'")
+    }
+    return value
+  }
+
+  static func requiredDouble(_ props: [String: Any], _ key: String) -> Double {
+    guard let value = optionalDouble(props, key) else {
+      preconditionFailure("Mosaic runtime omitted required prop '\(key)'")
+    }
+    return value
+  }
+
+  static func requiredBool(_ props: [String: Any], _ key: String) -> Bool {
+    guard let value = optionalBool(props, key) else {
+      preconditionFailure("Mosaic runtime omitted required prop '\(key)'")
+    }
+    return value
+  }
+
+  static func requiredStringList(_ props: [String: Any], _ key: String) -> [String] {
+    guard let value = optionalStringList(props, key) else {
+      preconditionFailure("Mosaic runtime omitted required list prop '\(key)'")
+    }
+    return value
+  }
+
+  static func requiredDoubleList(_ props: [String: Any], _ key: String) -> [Double] {
+    guard let value = optionalDoubleList(props, key) else {
+      preconditionFailure("Mosaic runtime omitted required list prop '\(key)'")
+    }
+    return value
+  }
+
+  static func requiredBoolList(_ props: [String: Any], _ key: String) -> [Bool] {
+    guard let value = optionalBoolList(props, key) else {
+      preconditionFailure("Mosaic runtime omitted required list prop '\(key)'")
+    }
+    return value
+  }
+
+  static func requiredValue<T>(_ props: [String: Any], _ key: String) -> T {
+    guard let value: T = optionalValue(props, key) else {
+      preconditionFailure("Mosaic runtime omitted required prop '\(key)'")
+    }
+    return value
+  }
+}
+"#,
+    );
+    out
 }
 
 fn sample_value_for_slot(slot: &SlotDecl) -> String {
@@ -516,7 +835,12 @@ fn kebab_to_pascal_case_for_label(s: &str) -> String {
     }
 }
 
-fn build_swiftui_platform_readme(component_name: &str) -> String {
+fn build_swiftui_platform_readme(component_name: &str, require_runtime: bool) -> String {
+    if require_runtime {
+        return format!(
+            "{BANNER_MD}# {component_name} - SwiftUI native-complete app shell\n\nAuto-generated by `mosaic-compile --backend swiftui --emit-project --profile native-complete`.\n\nThis shell requires Mosaic's standard Rust application runtime at startup. It applies the initial runtime props before mounting `{component_name}` and never substitutes preview/sample values for missing required props.\n\n## Prerequisites\n\n- Swift 5.10+ (Xcode 15.3+ or the standalone Swift toolchain).\n- macOS 13+ for `swift run`, or Xcode 15.3+ for an iOS 16+ target.\n- A built Mosaic Rust application library supplied through `MOSAIC_APP_LIBRARY` or packaged as `libmosaic_app.dylib`.\n\n## Run on macOS\n\n```sh\nMOSAIC_APP_LIBRARY=/absolute/path/to/libmosaic_app.dylib swift run\n```\n\nStartup fails explicitly when the Rust runtime cannot be loaded or does not provide a props envelope.\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `Sources/App/{component_name}.swift` | The Mosaic-compiled SwiftUI component. |\n| `Sources/App/App.swift` | Runtime-required app shell that mounts the component and forwards Mosaic event envelopes. |\n| `Sources/App/MosaicRuntimeHost.swift` | Standard package-independent Foundation binding to the Mosaic C ABI. |\n| `Sources/CMosaicRuntime/` | Dynamic C loader and public bridge header. |\n| `Package.swift` | SwiftPM manifest with pinned deployment targets. |\n| `README.md` | This file. |\n\n## Editing\n\nGenerated files carry an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
+        );
+    }
     format!(
         "{BANNER_MD}# {component_name} - SwiftUI macOS and iOS-ready shell\n\nAuto-generated by `mosaic-compile --backend swiftui --emit-project`.\n\n## Prerequisites\n\n- Swift 5.10+ (Xcode 15.3+ or the standalone Swift toolchain).\n- macOS 13 (Ventura) or later for `swift run`.\n- Xcode 15.3+ for adding the generated SwiftUI sources to an iOS 16+ host target.\n\n## Run on macOS\n\n```sh\nswift run\n```\n\nThis builds and launches a SwiftUI app with a single window hosting `{component_name}View(...)`. The first run downloads no dependencies; the package only depends on SwiftUI system frameworks.\n\n## Use from iOS\n\n`Package.swift` pins both `.macOS(.v13)` and `.iOS(.v16)`, and generated source guards macOS-only modifiers. Add the generated `Sources/App/{component_name}.swift`, `Sources/App/App.swift`, and any host adapter files to an iOS app target, or import this package from Xcode and mount `{component_name}View(...)` from your own iOS `App` shell.\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `{component_name}.swift` | The Mosaic-compiled SwiftUI component emitted flat by single-component CLI runs. |\n| `Sources/App/{component_name}.swift` | The nested component source written by `mosaic-compile pkg` so SwiftPM can compile immediately. |\n| `Package.swift` | SwiftPM manifest with pinned Swift tools, macOS, and iOS deployment targets. |\n| `Sources/App/App.swift` | `@main App` with `WindowGroup` mounting `{component_name}View(...)` with sample slot values and a dispatch closure. |\n| `README.md` | This file. |\n\n## Layout\n\n`mosaic-compile pkg --backend swiftui --emit-project` writes a ready-to-build SwiftPM layout. If you used the single-component CLI and only have the flat `{component_name}.swift`, copy that file into `Sources/App/` next to `App.swift` before running `swift run`.\n\n## Editing\n\nGenerated files carry an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
     )
@@ -8176,6 +8500,67 @@ mod tests {
         assert!(proj
             .app_swift
             .contains("applyHostResponse(bridge?.applyProps() as? [String: Any])"));
+    }
+
+    #[test]
+    fn native_complete_app_swift_requires_runtime_props_without_preview_fallbacks() {
+        let mut title = slot("title", SlotType::Text, false);
+        title.default = Some(SlotDefault::Text("Authored title".to_string()));
+        let m = component(
+            "Hostable",
+            vec![
+                title,
+                slot("count", SlotType::Number, true),
+                slot("enabled", SlotType::Bool, false),
+                slot("items", SlotType::List(Box::new(ListInnerType::Text)), true),
+            ],
+            vec![emit("onTap", vec![])],
+        );
+        let l = layout_with("Hostable", container_node("Box", vec![]));
+        let s = empty_style("Hostable");
+        let opts = EmitOptions {
+            emit_project: true,
+            require_runtime: true,
+            ..Default::default()
+        };
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .expect("runtime-required project shell");
+
+        assert!(proj
+            .app_swift
+            .contains("self.bridge = MosaicRuntimeHost.loadRequired()"));
+        assert!(proj
+            .app_swift
+            .contains("private let bridge: MosaicHostBridgeObject"));
+        assert!(proj.app_swift.contains(
+            "title: MosaicHostValue.optionalString(host.props, \"title\") ?? \"Authored title\","
+        ));
+        assert!(proj
+            .app_swift
+            .contains("count: MosaicHostValue.requiredDouble(host.props, \"count\"),"));
+        assert!(proj
+            .app_swift
+            .contains("enabled: MosaicHostValue.optionalBool(host.props, \"enabled\"),"));
+        assert!(proj
+            .app_swift
+            .contains("items: MosaicHostValue.requiredStringList(host.props, \"items\"),"));
+        assert!(proj
+            .app_swift
+            .contains("preconditionFailure(\"Mosaic runtime update omitted props\")"));
+        assert!(!proj.app_swift.contains("MosaicHostBridge.load()"));
+        assert!(!proj.app_swift.contains("NSClassFromString"));
+        assert!(!proj.app_swift.contains("MosaicHostBridgeObject?"));
+        assert!(!proj.app_swift.contains("bridge?."));
+        assert!(!proj.app_swift.contains("print(\"Mosaic dispatch:"));
+        assert!(!proj.app_swift.contains("Sample Count"));
+        assert!(proj
+            .readme
+            .contains("requires Mosaic's standard Rust application runtime"));
+        assert!(proj
+            .readme
+            .contains("never substitutes preview/sample values"));
     }
 
     #[test]

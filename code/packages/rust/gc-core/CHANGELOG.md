@@ -1,6 +1,188 @@
 # Changelog — gc-core
 
-## 0.32.0 — 2026-08-10 — fix: interior pointers in precise ref slots/root slots escaped relocation fixup — live use-after-free in `collect_compacting`
+## 0.33.2 — 2026-08-10 — harden the incremental-mark reentrancy guard (security fix)
+
+- **The 11 `mark_in_progress` reentrancy guards across `flat_heap.rs` were
+  `debug_assert!`-only** — compiled out entirely under `--release`. They exist to
+  prevent any stop-the-world `collect*` call (or the internal helpers they share)
+  from running *between* `incremental_start` and `incremental_finish`: doing so would
+  `sweep` blocks still referenced by the persistent `mark_worklist`, leaving dangling
+  worklist pointers a later `incremental_step` would pop — a use-after-free. All 11
+  are now hard `assert!`s, checked in every build profile.
+- **The real gap this hardening exposed: no automatic call site checked
+  `mark_in_progress` at all.** `__gc_safepoint` (`gc-core-capi`), `vm-core`'s
+  `safepoint` opcode, and `__gc_collect`'s auto-collect all gate their stop-the-world
+  call behind `FlatHeap::should_collect()` alone — which, before this fix, consulted
+  only live-byte accounting. Two already-shipped, un-gated features made this live:
+  the incremental GC builtins (`gc_collect_incremental_start/step/finish`) and
+  `__gc_safepoint`, which fires automatically at every compiled loop-back-edge. A
+  release binary driving the intended bounded-pause pattern — `start`, repeated
+  `step` calls at safepoints, `finish` — could hit a safepoint mid-cycle and, before
+  this fix, silently corrupt the heap (the assert was compiled out); after just the
+  `assert!` hardening alone, it would instead hard-`abort()` the process (confirmed
+  empirically — see below), since a panic crossing an `extern "C"` boundary can't
+  unwind. Neither outcome is acceptable for entirely normal, sanctioned use.
+- **Fix: `should_collect()` itself now answers `false` whenever
+  `incremental_in_progress()` is true**, regardless of live bytes — the one place this
+  policy decision already lived, per its own doc comment, so every current and future
+  automatic call site is protected identically with no per-site change needed. A
+  safepoint firing mid-cycle is now a safe no-op: the incremental cycle keeps making
+  progress via its own `incremental_step` calls, and paced collection resumes
+  automatically once `incremental_finish` clears the flag.
+- 3 new regression tests: a direct `should_collect` policy test (defers while
+  `mark_in_progress`, resumes once cleared); a `#[should_panic]` test giving the
+  now-11-call-site reentrancy guard its first direct coverage (none existed before
+  this round despite the guard's presence at every stop-the-world entry); and an
+  end-to-end `gc-core-capi` test driving the real `start`/`step`/`finish` C-ABI
+  protocol with a safepoint fired mid-cycle. All three confirmed load-bearing by
+  reverting the `should_collect` fix and observing the predicted failure — notably,
+  the C-ABI test didn't just fail, it **hard-aborted the process** (`SIGABRT`),
+  empirically demonstrating the severity described above.
+- Verification: `cargo build`/`test` clean across `gc-core`, `gc-core-capi`,
+  `vm-core` (160 lib tests, up from 158; gc-core-capi 41, up from 40); `cargo clippy
+  --all-targets -- -D warnings` clean; full-crate `cargo +nightly miri test -p
+  gc-core` clean (158 passed, 2 ignored per the existing scale-test gate).
+
+## 0.33.1 — 2026-08-10 — `find_header`: fix the one-past-the-end pointer gap (security fix)
+
+- **`FlatHeap::find_header`'s upper bound was exclusive** (`addr < payload + size`), so a
+  legitimate one-past-the-end pointer — `payload + size` exactly, the value a Rust slice's
+  `.as_ptr_range().end` or a C-style `arr + len` loop sentinel actually holds, never a pointer
+  that is itself dereferenced — was invisible to every classification path built on it
+  (`mark_word`, `push_candidates`, `classify_precise_word`, and therefore every `collect_*`
+  variant: `collect_mixed`, `collect_region`, `collect_compacting`, `collect_minor_compacting`,
+  `classify_mobility`/`classify_mobility_minor`, incremental marking). An object reachable
+  **only** through such a pointer could be freed (conservative paths) or relocated without its
+  sole reference being rewritten (precise paths, via `classify_precise_word`) while still live —
+  a use-after-free.
+- **Flagged pre-existing, not a regression.** A prior adversarial security review (the
+  `classify_precise_word` interior-pointer fix, 0.32.0) already found and noted this exact gap —
+  *"a one-past-the-end pointer is invisible to both the precise and liveness-marking waves
+  alike (confirmed as pre-existing on `collect_mixed` too, not a regression from this fix)"* —
+  and consciously deferred it as out of scope for that PR. This release closes it.
+- **Fix: the upper bound is now inclusive** (`addr <= payload + size`). A safe widening, not a
+  new ambiguity: every block is preceded by its own `HEADER_SIZE`-byte header, so block B's
+  payload start is always `>= HEADER_SIZE` past block A's payload-end — A's inclusive upper
+  bound can never collide with B's inclusive lower bound. A one-past-the-end address now
+  resolves to the object it bounds; on the precise path it is routed to the pinning wave (not
+  the movable set), since it still fails `classify_precise_word`'s exact-base check
+  (`h + HEADER_SIZE == word`) — it can never accidentally become eligible for relocation, only
+  correctly retained.
+- 4 new regression tests: a direct `find_header` assertion at the exact one-past-the-end
+  address; a `classify_mobility` root-pointer test proving the object is pinned (not silently
+  absent from both the movable and pinned sets); and two end-to-end `collect_compacting`
+  differentials — one over a **conservative** region, one over a **precise `root_slots`
+  entry** (added after an initial security-review pass raised, then — against this branch's
+  actual code, empirically including under Miri — disproved, a concern that the precise path
+  might relocate the object while leaving a stale root pointer; `classify_precise_word`,
+  0.32.0, already gates the precise wave against exactly this) — both proving the object is
+  neither freed nor left dangling. All four confirmed load-bearing by reverting the fix and
+  observing the predicted failure.
+- Verification: `cargo build`/`test` clean across `gc-core`, `gc-core-capi`, `vm-core` (158 lib
+  tests, up from 154); `cargo clippy --all-targets -- -D warnings` clean; full-crate
+  `cargo +nightly miri test -p gc-core` clean (156 passed, 2 ignored per the existing scale-test
+  gate).
+
+## 0.33.0 — 2026-08-10 — `FlatHeap::collect_minor_compacting` — the full moving-minor cycle, live (AOT00-T9 PR-4)
+
+- **`FlatHeap::collect_minor_compacting(&mut self, root_slots, regions) -> GcCycleStats`** — the
+  last piece of the moving-minor-collector staged plan (`AOT00-T9-moving-minor-collector.md`).
+  Unlike `classify_mobility_minor`/`plan_compaction_minor`/`evacuate_and_fixup_minor` (PR-2/PR-3,
+  dry-run scaffolding), this is a **real, live, freeing** collection entry point: young survivors
+  that are movable relocate into a fresh compacting arena, dead young objects are reclaimed, pinned
+  young survivors stay in place (aged, possibly tenured), and — the defining property of a minor
+  cycle — every **old** object is completely untouched, whether or not it is itself garbage.
+- **Design correction versus the spec's own §4 point 1** (recorded inline in the function's doc and
+  in the spec itself): the spec describes a separate liveness "Mark" step ahead of "Classify" —
+  implying two independent heap traversals. The shipped implementation runs only **one**:
+  `evacuate_and_fixup_minor`'s own internal classification call already computes a `pinned` bit on
+  every object it traverses — proven (spec §3) to compute the same closure a separate liveness mark
+  would — exactly mirroring how the already-shipped `collect_compacting` needs no separate mark
+  pass either, reusing `classify_mobility`'s own `pinned` bits as its keep-in-place predicate.
+  `collect_minor_compacting` does the same, restricted to `generation == GEN_YOUNG` (old objects'
+  mark bits are left untouched, since `sweep(true)` never reads them).
+- **Adversarial security review found a CRITICAL, empirically-confirmed use-after-free, fixed
+  before landing**: step 4.3 (arena integration) has two independent tenuring sites — `sweep`'s own
+  in-place tenuring (already fed into the promotion barrier via its `promoted` return) and this
+  function's own tenuring of *moved* survivors (which was **not**). `collect_compacting` gets away
+  with the identical second site because its own unconditional `rebuild_remembered()` re-derives
+  every old→young edge regardless of which tenuring site created it; `collect_minor_compacting`
+  deliberately skips that (see the "remembered set" point below), so a moved survivor that tenures
+  without being added to the promotion list creates a genuinely new, *unrecorded* old→young edge —
+  the just-tenured arena copy, now old, still pointing at its own young children. Reproduced with a
+  3-cycle scenario (`tenure_age >= 2`, so a parent moves once while young, then tenures on a *later*
+  move): the child was silently swept by a subsequent minor cycle while the live, old, tenured
+  parent's field still named it. Fixed by pushing every moved-and-tenured survivor onto the same
+  `promoted` list `sweep`'s in-place survivors already use, before
+  `record_promoted_old_to_young` runs.
+- 8 new regression tests, including the spec's own suggested canonical differential: an old parent,
+  a live young child reachable only through it (via the remembered set), and dead young garbage —
+  asserting in one real, freeing call that the child relocates *and* the parent's field was
+  rewritten to the new address *and* the garbage was reclaimed *and* an unrelated, genuinely-old,
+  untouched object was never scanned or moved; and the exact 3-cycle reproducer for the CRITICAL
+  finding above, confirmed load-bearing by reverting the fix and observing the predicted failure.
+  Also covers: strict generalization of `collect_minor_mixed` when nothing is movable, tenuring a
+  moved survivor, `minor_streak` bookkeeping, the remembered set surviving a second live relocation
+  cycle, and an interior-pointer-reached child staying pinned through the full live cycle (composing
+  the interior-pointer fix from an earlier, unrelated PR this session all the way through a real
+  freeing collection, not just the classify/evacuate layers its own tests covered). The "mark young
+  survivors" step was separately confirmed load-bearing by reverting it and observing the two tests
+  that depend on it fail exactly as predicted.
+- **A second review round** (of the CRITICAL fix itself, to confirm it was correct and complete —
+  it was: re-derived from first principles, every edge-creating site enumerated, no double-counting
+  or desync possible) found four smaller issues, all fixed: the `# Safety` doc didn't state this
+  function's strictly-stronger write-barrier obligation versus its non-moving siblings (a moving
+  minor cannot tolerate a missed barrier on an independently-unreachable parent the way a
+  non-moving one can — now documented, cross-referencing the spec's §7); a stale `SAFETY` comment
+  on `record_promoted_old_to_young` still described only the pre-fix single producer; two of this
+  PR's own new tests wrote through a root slot derived from a `*const` pointer to a non-`mut` local
+  (provenance UB under Stacked/Tree Borrows, masked only by Miri's permissive int-to-pointer mode —
+  both objects are genuinely movable and really do get written through by relocation's root fixup),
+  fixed to the `mut` + `*mut`-derived pattern this PR's other tests already used correctly; and a
+  zero-capacity arena (the common case for an all-pinned or nothing-movable cycle) was being pushed
+  onto `self.arenas` unconditionally, growing the vector every cycle for no reason — now skipped
+  when `arena.cap == 0`.
+- **Two further follow-ups flagged across both review rounds, not fixed here (out of scope for this
+  PR, tracked separately)**: (1) neither this function nor the already-shipped `collect_compacting`
+  ever reclaims a retained `Arena` once every object within it has died — a real, unbounded
+  memory-growth risk once this collector is wired to auto-trigger (`AOT00-T9`'s own optional
+  follow-up PR-5), since this collector's whole purpose is to run far more often than the
+  full-scope one (the zero-capacity skip above is the cheap partial mitigation, not the real fix);
+  (2) the `mark_in_progress` guard here (like every such guard in this file, including the
+  already-shipped `collect_compacting`) is `debug_assert!`-only, compiled out in release builds,
+  and this function's call path writes through the remembered set — worth a deliberate, uniform
+  architectural decision across all such guards, not a piecemeal fix to one function.
+- `plan_compaction_minor`/`evacuate_and_fixup_minor`'s `#[allow(dead_code)]` attributes removed —
+  both are now genuinely called by production code. Their doc comments updated to describe
+  `collect_minor_compacting` as their real (and, for `evacuate_and_fixup_minor`, only-safe) caller,
+  rather than "no in-tree caller yet."
+- The `should_collect_minor` family gains **no new scheduling decision** here — whether an
+  automatic minor cycle should sometimes compact instead of sweeping in place is `AOT00-T9`'s
+  optional, follow-up PR-5, deliberately out of scope (the same way `collect_compacting` itself
+  shipped useful and directly callable before `should_compact` existed to auto-trigger it).
+
+## 0.32.1 — 2026-08-10 — test: gate the AOT00-T5 scale tests behind `#[cfg_attr(miri, ignore)]`
+
+- `scale_deep_chain_marks_without_stack_overflow` (20,000-object chain) and
+  `scale_wide_ref_array_relocates` (4,000-element ref array) each already carried a doc comment
+  stating "these tests run at counts too large for Miri... here we prove they scale" — but neither
+  actually had a Miri-ignore gate, so `cargo +nightly miri test -p gc-core` ran them at full size
+  anyway. Miri's per-instruction interpretation overhead on tens of thousands of allocations plus a
+  full mark/sweep or compacting traversal made these two tests, alone, the overwhelming majority of
+  the crate's Miri wall-clock cost (observed: 40+ minutes dominated by a single test, confirmed via a
+  live run on 2026-08-10). Neither test exercises a code path the small-scale tests above them don't
+  already cover under Miri — they exist purely to prove O(n) behavior and absence of stack overflow at
+  scale, properties Miri's interpretation doesn't help verify anyway (it can't measure asymptotic
+  complexity, and the worklist-based mark that avoids stack overflow is structurally the same at 10
+  objects as at 20,000).
+- Added `#[cfg_attr(miri, ignore = "...")]` to both, with the ignore reason naming the AOT00-T5 module
+  doc and the specific already-covered mechanics each test scales up. Both still run at full size and
+  full assertion strength under `cargo test` (unaffected — confirmed unchanged pass/fail behavior).
+- **Measured impact**: `cargo +nightly miri test -p gc-core` (full crate, no filters) dropped from
+  40-90+ minutes to ~13-25 seconds. No test coverage lost under Miri — both tests' per-object mechanics
+  (mark, sweep, tenure, tail fixup, relocation) are already exercised by the small-scale tests
+  immediately above them in the same module, which Miri continues to run at full strength.
+- Pure test-infrastructure change — no production code touched.
 
 **Security fix, found by adversarial review of an unrelated in-progress PR (AOT00-T9 PR-3), confirmed
 live and exploitable against already-shipped code, fixed and regression-tested here.**

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/vault-pm-cli-host",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "/dev/tty or the attached Windows console",
+      "justification": "Collects bounded passphrase, item-password, and echoed item-metadata bytes from the controlling terminal instead of redirectable process stdin."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "/dev/tty or the attached Windows console",
+      "justification": "Writes fixed secret and item-field prompts plus post-secret newlines directly to the controlling terminal."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "Unix termios and Windows console APIs",
+      "justification": "Verifies the native terminal object and disables and restores input echo using platform APIs unavailable through portable Rust I/O."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "operating-system cryptographic random source via rust/csprng",
+      "justification": "Fills caller-owned initialization and encryption randomness without a user-space or deterministic fallback."
+    }
+  ],
+  "justification": "CLI-only host boundary for non-redirectable bounded terminal input and fresh operating-system entropy; it performs no configuration, provider, network, environment, or process access."
+}

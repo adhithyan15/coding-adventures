@@ -99,3 +99,42 @@ fn ideal_gas_law_binds_and_computes_pressure_at_stp_with_nist_citation() {
         "applied formula carries its verbatim NIST CODATA provenance: {s}"
     );
 }
+
+/// PV = nRT, solved for a different unknown (ADJ-FORMULA-LIBRARIES FL-10, §3D
+/// rung-0 CAS-wiring companion) — the SAME cited NIST relation as `pressure`
+/// above, rearranged rather than computed forward. "One mole of an ideal gas at
+/// 273.15 K and 101325 Pa — what volume does it occupy?" → the molar volume, a
+/// round trip against the STP example above.
+#[test]
+fn solves_for_volume_from_pressure_with_the_same_citation() {
+    let dir = scratch("volume_solve");
+    let lib = std::fs::read_to_string(shipped_idealgas_lib()).unwrap();
+    std::fs::write(dir.join("ideal-gas-law.adj"), lib).unwrap();
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"ideal-gas-law.adj\"\n\
+         observe pressure(101325)\n\
+         observe moles(1)\n\
+         observe temperature(273.15)\n\
+         ? volume_from_pressure(pressure, moles, temperature)\n",
+    )
+    .unwrap();
+
+    let (ok, s) = run(&dir.join("case.adj"));
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(!s.contains("\"error\""), "no compile error: {s}");
+
+    let volume = derived_value(&s, "volume_from_pressure");
+    let expected = 0.022414_f64; // the molar volume at STP
+    assert!(
+        (volume - expected).abs() < 1e-4,
+        "volume at STP is ~0.022414 m3 (got {volume}): {s}"
+    );
+
+    assert!(
+        s.contains("\"trust\":\"authoritative\"")
+            && s.contains("physics.nist.gov/cgi-bin/cuu/Value?r")
+            && s.contains("8.314 462 618"),
+        "carries the same verbatim NIST CODATA provenance as the forward pressure formula: {s}"
+    );
+}

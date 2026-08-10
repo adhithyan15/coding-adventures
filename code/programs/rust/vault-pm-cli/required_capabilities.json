@@ -1,0 +1,44 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/vault-pm-cli-program",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "platform-resolved owner-private vault-pm roots",
+      "justification": "Composes the audited local host and filesystem storage adapters to read durable local vault state."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "platform-resolved owner-private vault-pm roots",
+      "justification": "Composes the audited local host and filesystem storage adapters to persist durable local vault and encrypted item state."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "platform-resolved owner-private vault-pm roots",
+      "justification": "Creates first-use private roots, configuration, journals, bootstraps, and encrypted immutable records."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "controlling terminal and operating-system entropy APIs",
+      "justification": "Collects bounded login fields and hidden secrets from the controlling terminal and fills generation-zero and item randomness from the OS CSPRNG."
+    },
+    {
+      "category": "time",
+      "action": "read",
+      "target": "system wall clock",
+      "justification": "Supplies advisory generation-zero and item mutation timestamps."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "process stdout and stderr",
+      "justification": "Writes only the bounded public output and fixed payload-free errors returned by the CLI package."
+    }
+  ],
+  "justification": "Thin executable composition root for the local-only password-manager CLI."
+}

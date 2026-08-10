@@ -74,6 +74,13 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
     }
   }
 
+  static func loadRequired() -> MosaicRuntimeHost {
+    guard let host = load() else {
+      preconditionFailure("native-complete requires the Mosaic Rust application runtime")
+    }
+    return host
+  }
+
   func applyProps() -> NSDictionary? {
     lock.withLock { latestUpdate as NSDictionary }
   }

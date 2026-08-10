@@ -1,8 +1,8 @@
 Tamil, chapter 38: Keeping Well, and Leaving.
-3 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 3.
+Lesson 1 of 4.
 உடம்பு (uḍambu) — "body," and how Tamil asks after your health.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -48,7 +48,7 @@ Wrap-up Recall.
 Ask someone respectfully how they are keeping, through the body, and name the two sound rules inside uḍambu. (Uṅgaḷ uḍambu eppaḍi irukku; ட softens between vowels, ப voices after a nasal.) Are உடல் and உடம்பு different words, and where does the person sit in the formal age question? (No, same entry; in the dative.)
 
 
-Lesson 2 of 3.
+Lesson 2 of 4.
 சுகம் (sugam) — "ease," the word Tamil did borrow.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -91,7 +91,7 @@ Wrap-up Recall.
 Why is க heard as g, and what did the noun do that நான் does not? (Between vowels; it takes -உக்கு, while நான் becomes எனக்கு.) Which word did Tamil borrow, which did it keep, and how firm is the "good axle-hole" story? (சுகம் (sugam); நலம்; contested.)
 
 
-Lesson 3 of 3.
+Lesson 3 of 4.
 விடை (viḍai) — "leave," and the root under the house.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -133,3 +133,45 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Take your leave formally, thanks in front of it, and name the earlier word that shares this root. (Naṉṟi. viḍai peṟugiṟēṉ.; வீடு, from விடு, "to let go.") Do ஊர் and நண்பன் belong to that root? (No — a settlement and a closeness; not everything joins up.)
+
+
+Lesson 4 of 4.
+மூன்று (mūṉṟu) — the fourth corner of the u-family.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: the ூ sign and Script you'll notice: build the word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Three corners of one family are already yours: உ and ஊ, the letters that open a word, and ு, the short sign that rides a consonant. One corner is missing, and you can guess what it does.
+
+Script you'll notice: the ூ sign.
+ூ is the sign for long ū — the long partner of ு, exactly as ஊ is the long partner of உ. Both members of each pair, in both jobs:
+[a table of 2 rows, read aloud]
+short u. opens a word: உ. rides a consonant: ு.
+long ū. opens a word: ஊ. rides a consonant: ூ.
+ம + ூ becomes மூ, said mū.
+The four corners are a pattern, not the whole system. Short a is the vowel with no sign at all: the data says a consonant carries a built-in a until a mark replaces it, which is why க needs nothing to be ka. Nor do signs all sit in one place — the ை you met in இல்லை is written to the LEFT of its consonant, which the data does say; where ு and ூ sit is this lesson's own description, since the data has no entry for either.
+Read it; do not draw it yet. None of உ, ஊ, ு or ூ has an entry in this book's script data, so none of them gets a stroke order, and the pairing above is what the page shows rather than something the data states.
+
+Script you'll notice: build the word.
+[a table of 3 rows, read aloud]
+piece: மூ, mū — ம with the ூ sign, ம from வணக்கம்.
+piece: ன், bare ṉ — ன under a puḷḷi, the alveolar n.
+piece: று, ṟu — ற, the hard r, with the ு sign, ற from நன்றி.
+மூ, ன், று becomes மூன்று (mūṉṟu).
+Three pieces, one new sign. மூன்று (mūṉṟu) is "three" — a word you have counted with since chapter 7, and now one you can read. It joins இரண்டு, நான்கு, ஆறு, எட்டு and பத்து, whose letters the strand has already given you; ஒன்று, ஐந்து, ஏழு and ஒன்பது still wait on letters this book has not taught.
+
+Guided Practice.
+[pause 1 second]
+[your turn — read: மூ — then மூன்று (mūṉṟu)]
+[pause 8 seconds for the answer]
+[your turn — say: "mūṉṟu" — "three"]
+[pause 8 seconds for the answer]
+[your turn — contrast: று and மூ — the short sign and the long one, both riding]
+[pause 8 seconds for the answer]
+[your turn — contrast: ஊர் and மூன்று (mūṉṟu) — long ū standing, then long ū riding]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Read மூன்று (mūṉṟu). Which sign is ூ's short partner, and which letter is its standing form? (ு, and ஊ.) Name the four corners of that family. (உ ஊ standing, ு ூ riding.) What is the dot on ன் doing? (Removing the built-in a.)

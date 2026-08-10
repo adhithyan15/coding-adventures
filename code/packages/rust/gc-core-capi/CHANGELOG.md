@@ -2,6 +2,116 @@
 
 All notable changes to this crate are documented here.
 
+## 0.24.4 - 2026-08-10 — new `twig_compat` aliases for the LLVM write-barrier follow-up
+
+- **`__twig_gc_write_barrier(parent, child)`** → [`__gc_write_barrier`]. Unlike every
+  other alias in `twig_compat`, `twig_gc.c` never had this symbol — there was no
+  generational collector to barrier for. Added under the `__twig_gc_*` naming
+  convention purely for consistency with every other GC symbol a code generator
+  emits. `iir-to-llvm`'s `lower_field_store` is the first emitter (that crate's
+  0.50.0).
+- **`__twig_gc_collect_minor_precise()`** → [`__gc_collect_minor_precise`] and
+  **`__twig_gc_kind_of(ptr)`** → [`__gc_kind_of`]: test-only seams, not emitted by
+  any production code generator today. They let `iir-to-llvm`'s new
+  `lang-aot/tests/llvm_gc_write_barrier.rs` drive a real, unconditional minor
+  collection (bypassing the `should_collect_minor`/`auto_minor` policy gate — the
+  direct entry point needs no attestation) and check a specific object's survival,
+  proving the write barrier above actually keeps a remembered-set edge alive across
+  a real compiled-and-executed program.
+- No behavior change to any existing symbol. Verification: `cargo build`/`test`
+  clean (41 lib tests, unchanged — new coverage lives in the consuming crates'
+  integration tests); `cargo clippy --all-targets -- -D warnings` clean.
+
+## 0.24.3 - 2026-08-10 — fix: eliminate `precise_walk`'s Miri Stacked/Tree-Borrows failure
+
+- **Root cause: test-authoring exposure ordering, not a soundness bug in
+  `build_precise_roots`/`build_precise_roots_bounded`.** Every `precise_walk` test
+  builds a synthetic stack in a `[usize; N]` array, using a helper (`addr_of`) that
+  calls `stack.as_ptr() as usize` to hand the walk-under-test real, dereferenceable
+  addresses (`Miri` calls this "exposing" a pointer's provenance — required here,
+  since the walk itself works in plain integers, exactly like real captured
+  registers/stack memory would). Every affected test computed its `sp`/`fp0`/`fp1`/
+  `base` values via `addr_of` calls positioned **before** the `stack[i] = ...` writes
+  that populate the synthetic frames. Under Stacked/Tree Borrows, a write to `stack`
+  through its owning binding invalidates any previously-exposed reborrow tags for
+  that allocation — so a later wildcard pointer read (inside the walk, dereferencing
+  one of those addresses as a real memory access) found "no exposed tags have
+  suitable permission," `precise_walk.rs:176` (`all_unmapped_frames_become_
+  conservative_regions`), reproduced identically under Stacked Borrows, Tree
+  Borrows, and permissive-provenance mode.
+- **Confirmed genuinely a test bug, not a production issue**: the failure is purely
+  an artifact of the synthetic Rust-array test harness's exposure ordering. Real
+  usage walks live captured machine registers and actual stack memory (via `asm!`),
+  which have no analogous "exposed tag invalidated by a later write through a
+  differently-typed Rust binding" concern — there is no competing safe-Rust alias to
+  the same memory doing the invalidating write.
+- **Fix: every affected test (8 of the module's 9 — every test except
+  `degenerate_start_fp_falls_back_to_full_conservative_scan`, the only one that
+  never writes to `stack`) now computes its FINAL `sp`/
+  `fp0`/`fp1`/.../`base` values — the ones passed to `build_precise_roots` or
+  compared in assertions — only *after* every `stack[i] = ...` write is done.** An
+  `addr_of` call used only to compute a value to *write* (not to dereference later)
+  remains fine at any point, since a write doesn't care about its own right-hand
+  side's later tag validity — only the numeric address value matters there, and that
+  doesn't change based on when it's computed. `addr_of` itself gained a doc comment
+  explaining the pitfall for future tests in this style.
+- Verification: `cargo test -p gc-core-capi --lib precise_walk` — 9 passed (was
+  previously untested under Miri at all, since this crate has never been in any
+  Miri CI workflow — informational only, discovered via this session's own local
+  investigation). `cargo +nightly miri test -p gc-core-capi --lib precise_walk` —
+  **9 passed, 0 failed** (previously: 1 confirmed Stacked-Borrows UB failure on the
+  first test, aborting the run before the remaining 8 could even execute). The
+  crate's other Miri blocker (`stack_scan`'s `asm!` register-spill code — Miri
+  fundamentally does not support inline assembly) is unrelated and unaffected;
+  full-crate `cargo +nightly miri test -p gc-core-capi` still cannot run to
+  completion for that separate, pre-existing, already-documented reason.
+- `cargo build`/`test` clean across `gc-core`, `gc-core-capi`, `vm-core` (gc-core-capi
+  41 lib tests, unchanged — this is a test-quality fix with no new test count
+  change, only new pass-under-Miri coverage for the existing 9); `cargo clippy
+  --all-targets -- -D warnings` clean.
+
+## 0.24.2 - 2026-08-10 — test: `__gc_safepoint` mid-incremental-cycle regression coverage
+
+- New `safepoint_is_a_no_op_during_an_incremental_cycle` test: drives the real
+  `__gc_collect_incremental_start/step/finish` C-ABI protocol and fires `__gc_safepoint`
+  mid-cycle (with live bytes deliberately pushed over the paced-collection threshold
+  first), asserting it's a safe no-op — no panic, no collection, the live object
+  untouched — then confirms the incremental cycle completes normally and paced
+  collection isn't permanently disabled afterward. Companion coverage for the
+  `gc-core` 0.33.2 fix (`FlatHeap::should_collect` now defers during an incremental
+  mark); see that crate's changelog for the full story. No functional change in this
+  crate — `__gc_safepoint` needed no code change here, since it already gates
+  entirely through `should_collect()`.
+
+## 0.24.1 - 2026-08-10 — fix: deterministic flaky conservative-stack-scan smoke tests
+
+- Four `stack_scan` integration tests (`stack_scan_keeps_live_local_frees_dead`,
+  `precise_collect_keeps_live_local_frees_dead`,
+  `compacting_collect_keeps_live_local_frees_dead`,
+  `incremental_collect_keeps_live_local_frees_dead`) asserted `freed >= 1` on a single
+  tracked "dead" object as their primary safety claim — non-deterministic in an
+  unoptimized debug build, since a discarded temporary's stale stack word is not
+  guaranteed to be scrubbed and can conservatively retain the object regardless of
+  whether any Rust binding still names it (documented previously in `lessons.md`, but
+  not fixed at the time).
+- **Rejected approach, found to be a genuine Catch-22:** verifying a single dead
+  object's fate via `__gc_kind_of` after the collect call requires keeping that
+  object's address alive as a Rust local spanning the call — which is exactly what
+  makes a conservative stack scan *correctly* treat it as a root and retain it.
+  Confirmed empirically: adding the check turned an occasionally-flaky `freed >= 1`
+  into a *deterministic* false "still alive" for all four tests.
+- **Actual fix:** each test now allocates a batch of 64 dead objects, none ever bound
+  to a Rust local that outlives its own loop iteration, and asserts `freed >= 56`
+  (`DEAD_BATCH - STRAY_TOLERANCE`). A debug build's stray stack/register garbage can
+  only accidentally retain a small, bounded number of stale addresses (bounded by how
+  many words a call site can spill — `spill_and_sp` itself bounds a maximal spill at
+  18 words), so among 64 independent, never-named allocations the overwhelming
+  majority are certain to have no stale reference anywhere on the stack. Confirmed via
+  20 consecutive local runs, all clean.
+- Pure test-infrastructure change — no production code touched. `lessons.md` updated
+  with the corrected understanding (the original entry characterized the flakiness but
+  did not yet land a real fix).
+
 ## 0.24.0 - 2026-08-06 — `__gc_safepoint` gains an (opt-in) automatic generational path (AOT00-T8)
 
 - **`__gc_collect_minor_precise()`** — new C ABI entry, the minor-generation analogue of

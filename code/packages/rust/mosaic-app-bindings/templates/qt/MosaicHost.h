@@ -3,6 +3,7 @@
 
 #include <QLibrary>
 #include <QObject>
+#include <QStringList>
 #include <QVariant>
 #include <QVariantMap>
 
@@ -16,9 +17,14 @@ public:
 
     static void registerTypes();
     void attach(QObject *root);
+    void requireRuntime() const;
+    void configureRequiredProps(const QVariantMap &slotNames,
+                                const QStringList &requiredProps);
+    QVariantMap propsRequired() const;
 
     Q_INVOKABLE QVariantMap props() const;
     Q_INVOKABLE QVariantMap handleEvent(const QVariantMap &event);
+    Q_INVOKABLE QVariantMap handleRequiredEvent(const QVariantMap &event);
     Q_INVOKABLE QVariant snapshot();
     Q_INVOKABLE QVariantMap restore(const QVariantMap &snapshot);
 
@@ -44,6 +50,7 @@ private:
     bool load();
     QVariant consume(quint32 status, Buffer buffer);
     QVariantMap requireMap(const QVariant &value, const char *kind) const;
+    QVariantMap requireAndMapUpdate(const QVariantMap &update, const char *kind) const;
     QVariantMap failure(const QString &message) const;
 
     static constexpr quint32 ProtocolVersion = __MOSAIC_PROTOCOL_VERSION__;
@@ -51,6 +58,8 @@ private:
     void *app_ = nullptr;
     quint64 sequence_ = 0;
     QVariantMap latestUpdate_;
+    QVariantMap requiredSlotNames_;
+    QStringList requiredProps_;
     QString error_;
     Create create_ = nullptr;
     Dispatch dispatch_ = nullptr;

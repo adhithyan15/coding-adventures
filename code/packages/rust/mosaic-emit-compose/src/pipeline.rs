@@ -92,6 +92,17 @@ pub fn from_pipeline(
 
     writeln!(out, "import androidx.compose.foundation.background").unwrap();
     writeln!(out, "import androidx.compose.foundation.border").unwrap();
+    writeln!(out, "import androidx.compose.foundation.BasicTooltipBox").unwrap();
+    writeln!(
+        out,
+        "import androidx.compose.foundation.ExperimentalFoundationApi"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "import androidx.compose.foundation.rememberBasicTooltipState"
+    )
+    .unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Box").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Column").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Row").unwrap();
@@ -122,17 +133,33 @@ pub fn from_pipeline(
     writeln!(out, "import androidx.compose.material.Button").unwrap();
     writeln!(out, "import androidx.compose.material.Checkbox").unwrap();
     writeln!(out, "import androidx.compose.material.RadioButton").unwrap();
+    writeln!(out, "import androidx.compose.material.Surface").unwrap();
     writeln!(out, "import androidx.compose.material.Text").unwrap();
     writeln!(out, "import androidx.compose.material.TextField").unwrap();
     writeln!(out, "import androidx.compose.runtime.Composable").unwrap();
     writeln!(out, "import androidx.compose.ui.Alignment").unwrap();
     writeln!(out, "import androidx.compose.ui.Modifier").unwrap();
+    writeln!(out, "import androidx.compose.ui.unit.IntOffset").unwrap();
+    writeln!(out, "import androidx.compose.ui.unit.IntRect").unwrap();
+    writeln!(out, "import androidx.compose.ui.unit.IntSize").unwrap();
+    writeln!(out, "import androidx.compose.ui.unit.LayoutDirection").unwrap();
+    writeln!(
+        out,
+        "import androidx.compose.ui.window.PopupPositionProvider"
+    )
+    .unwrap();
     writeln!(out, "import androidx.compose.ui.platform.testTag").unwrap();
     writeln!(out, "import androidx.compose.ui.graphics.Color").unwrap();
     writeln!(out, "import androidx.compose.ui.text.TextStyle").unwrap();
     writeln!(out, "import androidx.compose.ui.text.font.FontFamily").unwrap();
     writeln!(out, "import androidx.compose.ui.text.input.ImeAction").unwrap();
     writeln!(out, "import androidx.compose.ui.text.input.KeyboardType").unwrap();
+    writeln!(
+        out,
+        "import androidx.compose.ui.semantics.contentDescription"
+    )
+    .unwrap();
+    writeln!(out, "import androidx.compose.ui.semantics.semantics").unwrap();
     writeln!(out, "import androidx.compose.ui.unit.dp").unwrap();
     writeln!(out, "import androidx.compose.ui.unit.sp").unwrap();
     writeln!(out).unwrap();
@@ -273,6 +300,7 @@ fn emit_composable_function(
     }
 
     let mut out = String::new();
+    writeln!(out, "@OptIn(ExperimentalFoundationApi::class)").unwrap();
     writeln!(out, "@Composable").unwrap();
     writeln!(out, "fun {component_name}(").unwrap();
     for s in slots {
@@ -347,6 +375,7 @@ fn emit_split_composable_function(
 
     for (index, range) in ranges.into_iter().enumerate() {
         writeln!(out).unwrap();
+        writeln!(out, "@OptIn(ExperimentalFoundationApi::class)").unwrap();
         writeln!(out, "@Composable").unwrap();
         writeln!(out, "private fun {component_name}Section{index}(").unwrap();
         emit_composable_parameters(&mut out, slots, component_name)?;
@@ -1266,6 +1295,16 @@ fn emit_compose_tree(
         "HostNumberInput" => {
             emit_host_number_input(node, depth, component_name, emits, part_styles, text_ctx)
         }
+        "HostTooltip" => emit_host_tooltip(
+            node,
+            depth,
+            component_name,
+            emits,
+            part_styles,
+            table_ctx,
+            text_ctx,
+            for_payload,
+        ),
         // UI29 §3.1 / §3.2 — meta-primitives.
         "For" => emit_for_compose(
             node,
@@ -2426,6 +2465,96 @@ fn emit_host_number_input(
         writeln!(out, "{inner}enabled = {enabled},").unwrap();
     }
     writeln!(out, "{pad})").unwrap();
+    Ok(out)
+}
+
+/// Lower `HostTooltip` to Compose Foundation's cross-platform tooltip box.
+///
+/// `BasicTooltipBox` owns the platform input policy, overlay, focus transfer, and
+/// dismissal behavior. The generated position provider prefers the space below
+/// the target, falls back above it, and clamps the popup to the native window.
+/// The wrapper also exposes the plain-text message in the semantics tree so the
+/// annotation is available to assistive technology without app-owned glue.
+#[allow(clippy::too_many_arguments)]
+fn emit_host_tooltip(
+    node: &LayoutNode,
+    depth: usize,
+    component_name: &str,
+    emits: &[EmitDecl],
+    part_styles: &PartStyleMap,
+    table_ctx: Option<&TableContext>,
+    text_ctx: Option<&TextStyleCtx>,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let tooltip_inner = "    ".repeat(depth + 2);
+    let message = text_prop_expr(node, "text")?.unwrap_or_else(|| "\"\"".to_string());
+    let mut out = String::new();
+
+    writeln!(out, "{pad}BasicTooltipBox(").unwrap();
+    writeln!(
+        out,
+        "{inner}positionProvider = object : PopupPositionProvider {{"
+    )
+    .unwrap();
+    writeln!(out, "{tooltip_inner}override fun calculatePosition(").unwrap();
+    writeln!(out, "{tooltip_inner}    anchorBounds: IntRect,").unwrap();
+    writeln!(out, "{tooltip_inner}    windowSize: IntSize,").unwrap();
+    writeln!(out, "{tooltip_inner}    layoutDirection: LayoutDirection,").unwrap();
+    writeln!(out, "{tooltip_inner}    popupContentSize: IntSize,").unwrap();
+    writeln!(out, "{tooltip_inner}): IntOffset {{").unwrap();
+    writeln!(
+        out,
+        "{tooltip_inner}    val maxX = maxOf(0, windowSize.width - popupContentSize.width)"
+    )
+    .unwrap();
+    writeln!(out, "{tooltip_inner}    val preferredX = if (layoutDirection == LayoutDirection.Ltr) anchorBounds.left else anchorBounds.right - popupContentSize.width").unwrap();
+    writeln!(out, "{tooltip_inner}    val below = anchorBounds.bottom").unwrap();
+    writeln!(
+        out,
+        "{tooltip_inner}    val above = anchorBounds.top - popupContentSize.height"
+    )
+    .unwrap();
+    writeln!(out, "{tooltip_inner}    return IntOffset(").unwrap();
+    writeln!(
+        out,
+        "{tooltip_inner}        x = preferredX.coerceIn(0, maxX),"
+    )
+    .unwrap();
+    writeln!(out, "{tooltip_inner}        y = if (below + popupContentSize.height <= windowSize.height) below else maxOf(0, above),").unwrap();
+    writeln!(out, "{tooltip_inner}    )").unwrap();
+    writeln!(out, "{tooltip_inner}}}").unwrap();
+    writeln!(out, "{inner}}},").unwrap();
+    writeln!(out, "{inner}tooltip = {{").unwrap();
+    writeln!(out, "{tooltip_inner}Surface(elevation = 4.dp) {{").unwrap();
+    writeln!(
+        out,
+        "{tooltip_inner}    Text(text = {message}, modifier = Modifier.padding(8.dp))"
+    )
+    .unwrap();
+    writeln!(out, "{tooltip_inner}}}").unwrap();
+    writeln!(out, "{inner}}},").unwrap();
+    writeln!(
+        out,
+        "{inner}state = rememberBasicTooltipState(isPersistent = false),"
+    )
+    .unwrap();
+    writeln!(out, "{inner}modifier = Modifier.semantics(mergeDescendants = true) {{ contentDescription = {message} }},").unwrap();
+    writeln!(out, "{inner}focusable = true,").unwrap();
+    writeln!(out, "{pad}) {{").unwrap();
+    out.push_str(&emit_children_compose(
+        &node.children,
+        depth + 1,
+        component_name,
+        emits,
+        part_styles,
+        table_ctx,
+        text_ctx,
+        for_payload,
+        None,
+    )?);
+    writeln!(out, "{pad}}}").unwrap();
     Ok(out)
 }
 
@@ -4086,6 +4215,99 @@ mod tests {
                 >= 3,
             "expected at least 3 Column blocks (table + head + body), got:\n{out}"
         );
+    }
+
+    #[test]
+    fn host_tooltip_uses_native_overlay_and_accessible_semantics() {
+        let tooltip = node(
+            "HostTooltip",
+            vec![LayoutProp {
+                name: "text".into(),
+                value: LayoutPropValue::String("Save changes".into()),
+            }],
+            vec![node(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".into(),
+                    value: LayoutPropValue::String("Save".into()),
+                }],
+                vec![],
+            )],
+        );
+        let out = from_pipeline(
+            &component("Toolbar", vec![], vec![]),
+            &layout("Toolbar", tooltip),
+            &empty_style("Toolbar"),
+        )
+        .unwrap()
+        .output;
+
+        assert!(out.contains("import androidx.compose.foundation.BasicTooltipBox"));
+        assert!(out.contains("@OptIn(ExperimentalFoundationApi::class)"));
+        assert!(out.contains("BasicTooltipBox("));
+        assert!(out.contains("Surface(elevation = 4.dp)"));
+        assert!(out.contains("Text(text = \"Save changes\", modifier = Modifier.padding(8.dp))"));
+        assert!(out.contains(
+            "Modifier.semantics(mergeDescendants = true) { contentDescription = \"Save changes\" }"
+        ));
+        assert!(out.contains("focusable = true,"));
+        assert!(out.contains("Text(text = \"Save\")"));
+    }
+
+    #[test]
+    fn host_tooltip_accepts_slot_and_loop_expression_text() {
+        let slot_tooltip = node("HostTooltip", vec![slot_prop("text", "help-text")], vec![]);
+        let slot_out = from_pipeline(
+            &component(
+                "Hint",
+                vec![slot("help-text", SlotType::Text, true)],
+                vec![],
+            ),
+            &layout("Hint", slot_tooltip),
+            &empty_style("Hint"),
+        )
+        .unwrap()
+        .output;
+        assert!(slot_out.contains("Text(text = helpText, modifier = Modifier.padding(8.dp))"));
+        assert!(slot_out.contains("contentDescription = helpText"));
+
+        let loop_tooltip = node(
+            "For",
+            vec![
+                slot_prop("each", "rows"),
+                LayoutProp {
+                    name: "as".into(),
+                    value: LayoutPropValue::Keyword("row".into()),
+                },
+            ],
+            vec![node(
+                "HostTooltip",
+                vec![expr_prop("text", "( row[1] )")],
+                vec![node(
+                    "Text",
+                    vec![expr_prop("content", "( row[0] )")],
+                    vec![],
+                )],
+            )],
+        );
+        let loop_out = from_pipeline(
+            &component(
+                "Timeline",
+                vec![slot(
+                    "rows",
+                    SlotType::List(Box::new(ListInnerType::Text)),
+                    true,
+                )],
+                vec![],
+            ),
+            &layout("Timeline", loop_tooltip),
+            &empty_style("Timeline"),
+        )
+        .unwrap()
+        .output;
+        assert!(loop_out.contains("Text(text = ( row[1] ), modifier = Modifier.padding(8.dp))"));
+        assert!(loop_out.contains("contentDescription = ( row[1] )"));
+        assert!(loop_out.contains("Text(text = ( row[0] ))"));
     }
 
     // ── UI34 Compose part-style inlining (the spreadsheet fix) ─────────

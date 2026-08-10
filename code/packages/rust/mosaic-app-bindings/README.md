@@ -15,19 +15,40 @@ semantic events, and return decoded updates to the generated view.
 Set the `mosaic.app.library` JVM property or `MOSAIC_APP_LIBRARY` environment
 variable to a library name or absolute path. The conventional fallback name is
 `mosaic_app`.
+Linux CI compiles the exact Compose/JNA binding from a complete generated
+TaskApp project with the shared `mosaic-app-conformance` library, then verifies
+startup, semantic dispatch, snapshot/restore, notification, buffer ownership,
+and teardown on the JVM.
 
 For SwiftUI, set `MOSAIC_APP_LIBRARY` to the application dylib path. Without an
 explicit path the loader first checks symbols linked into the process, then tries
 `libmosaic_app.dylib` and `mosaic_app.dylib`.
+Strict generated shells call `MosaicRuntimeHost.loadRequired()` so a missing
+Rust library fails at startup rather than silently entering preview mode.
+macOS CI compiles the exact binding and C loader from a complete generated
+TaskApp project with the shared `mosaic-app-conformance` dylib, then verifies
+startup, semantic dispatch, snapshot/restore, notification, buffer ownership,
+and teardown.
 
 For XAML, set `MOSAIC_APP_LIBRARY` to the application DLL path or place
 `mosaic_app.dll` beside the emitted project. The project copies native DLLs next
 to the unpackaged WinUI executable during its build.
+Windows CI compiles the exact generated binding with the shared
+`mosaic-app-conformance` DLL and verifies real startup, prop projection,
+semantic dispatch, revision application, buffer ownership, and teardown.
 
 For Flutter, set `MOSAIC_APP_LIBRARY` to the application library path. Without
 an explicit path the host checks symbols linked into the process, then the
 platform's conventional `mosaic_app` dynamic-library names.
+Strict generated shells call `MosaicHost.loadRequired()` so a missing Rust
+library fails at startup rather than silently entering preview mode.
+Linux CI runs the exact binding from a complete generated TaskApp project with
+the shared `mosaic-app-conformance` library, verifying startup, semantic
+dispatch, snapshot/restore, notification, buffer ownership, and teardown.
 
 For Qt/QML, set `MOSAIC_APP_LIBRARY` to the application library path or package
 it under the platform's conventional `mosaic_app` name. The generated QObject
 host uses only Qt Core APIs and is installed automatically by the artifact builder.
+Linux CI compiles the exact host from a complete generated TaskApp project with
+the shared `mosaic-app-conformance` library, then verifies startup, semantic
+dispatch, snapshot/restore, buffer ownership, and teardown without a display.

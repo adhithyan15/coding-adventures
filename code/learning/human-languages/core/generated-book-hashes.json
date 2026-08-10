@@ -4108,11 +4108,12 @@
     {
       "language": "tamil",
       "chapter": 38,
-      "sourceHash": "fnv1a64:8c7ff3fb6f448f06",
+      "sourceHash": "fnv1a64:054d73c0361cdf30",
       "lessonIds": [
         "TA-C38-udambu",
         "TA-C38-sugam",
-        "TA-C38-vidai"
+        "TA-C38-vidai",
+        "TA-W19-read-muunru"
       ],
       "tex": "tamil/book/chapters/ch38-keeping-well-and-leaving.tex"
     },

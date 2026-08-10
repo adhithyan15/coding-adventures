@@ -69,3 +69,136 @@ landed and why, not a semver-tracked API.
   CAS-provenance track). No new formula, no new citation, no engine change: `surface` synonyms are
   a decomposer-facing hint only, not engine-parsed, so the change is covered by the existing
   formulas' own test suites.
+- `mathematics/geometry-formulas.adj` — four rung-0 CAS-wiring companions (ADJ-FORMULA-LIBRARIES
+  FL-10, §3D — the Wave 3 opener): `width_from_rectangle_area`, `height_from_triangle_area`,
+  `side_from_square_perimeter`, `width_from_rectangle_perimeter`. Each solves the SAME cited
+  equation as its forward `formula` sibling for a different unknown, through `cas-solve`'s real
+  linear-equation solver (the exact discipline `electricity.adj`'s `resistance_from_ohms_law`
+  already established) — no new citations, each reuses its forward formula's own verified
+  MathWorld source. `square_area`'s inverse (side from area) is deliberately absent: it is
+  quadratic in the target, and rung-0's solver is linear-only, so attempting it is a clean
+  `SymbolicNonLinear` compile error (added as a regression test, not worked around). New query
+  companions `geometry-formulas-solve.query.adj` and `geometry-formulas-solve-perimeter.query.adj`
+  (split across two programs: a `symbolic`'s target may not already be observed anywhere in the
+  same compiled program, and two of the four solves share a target name — `width` — so they cannot
+  coexist in one program even in the right order). New manifest objective
+  `adj.math.algebra.rearrange_geometry_formulas`. New e2e test
+  `formula_geometry_algebra_e2e.rs` (5 tests, including the nonlinear-boundary regression).
+- `physics/kinematics.adj` — two more rung-0 CAS-wiring companions (ADJ-FORMULA-LIBRARIES FL-10,
+  §3D): `acceleration_from_final_velocity` and `time_from_final_velocity`, solving the SAME cited
+  OpenStax `v = u + at` equation as the forward `final_velocity` formula for a different unknown.
+  Unlike `geometry-formulas.adj`'s four companions, these name their OWN target findings
+  (`acceleration_from_final_velocity`/`time_from_final_velocity`) rather than reusing the plain
+  `acceleration`/`time` findings the forward formula's own parameters use — confirmed empirically
+  that this sidesteps the target-already-observed collision entirely (no query-file split needed
+  this time: both new solves and the original forward examples coexist in one extended
+  `kinematics.query.adj`). The third possible unknown (initial velocity) is deliberately left for
+  later, to keep this change scoped to the two rearrangements a first course actually drills. New
+  manifest objective `adj.math.algebra.rearrange_kinematics`. Extended the existing
+  `formula_kinematics_e2e.rs` with 2 new tests rather than adding a new test file.
+- `physics/energy-work.adj` — a third Wave 3 rung-0 CAS-wiring pair (ADJ-FORMULA-LIBRARIES FL-10,
+  §3D): `force_from_work` and `distance_from_work`, solving the SAME cited NASA `W = F d` equation
+  as the forward `work` formula for a different unknown. Named each new symbolic's target
+  distinctly from the forward formula's plain parameter names (`force_from_work`, not `force`) —
+  the same collision-avoidance discipline `kinematics.adj`'s companions established — so both new
+  solves and the original forward examples coexist in one extended `energy-work.query.adj`.
+  `kinetic_energy`'s inverse is deliberately absent: solving for velocity is quadratic (out of
+  rung-0's linear-only scope); solving for mass is linear but a different nested-multiplication
+  shape (mass sits between two constant factors once velocity is bound), left for a later pass to
+  keep this change scoped to one law. New manifest objective `adj.math.algebra.rearrange_work`.
+  New e2e test `formula_energy_work_e2e.rs` (3 tests — this library had none before).
+- `physics/mechanics-laws.adj` — a fourth Wave 3 rung-0 CAS-wiring pair (ADJ-FORMULA-LIBRARIES
+  FL-10, §3D): `mass_from_force` and `acceleration_from_force`, solving the SAME cited NASA
+  `F = m a` equation as the forward `force` formula for a different unknown. Named each new
+  symbolic's target distinctly from the forward formula's plain parameter names
+  (`mass_from_force`, not `mass`) — the same collision-avoidance discipline established by
+  `kinematics.adj`/`energy-work.adj`'s companions — so both new solves coexist with the original
+  forward example in one query file. This library's other two laws already have their solve
+  directions covered elsewhere in the physics track (`electricity.adj`'s
+  `resistance_from_ohms_law` for Ohm's law; `density.adj`'s own forward `mass(density, volume)`
+  for density), and average speed is left for a later pass, so this pair closes the one remaining
+  gap in `mechanics-laws.adj` itself. New manifest objective
+  `adj.math.algebra.rearrange_mechanics_force`. New e2e test `formula_mechanics_force_e2e.rs`
+  (3 tests — this library had none before).
+- `physics/energy-work.adj` — a fifth Wave 3 rung-0 CAS-wiring companion (ADJ-FORMULA-LIBRARIES
+  FL-10, §3D): `mass_from_kinetic_energy`, solving the SAME cited HyperPhysics `KE = ½ m v²`
+  equation as the forward `kinetic_energy` formula for mass — the gap this library's own header
+  comment flagged when `force_from_work`/`distance_from_work` shipped. Linear despite the nested
+  `0.5 * mass * velocity * velocity` shape: once `velocity` is bound, `mass` still appears exactly
+  once, multiplied only by constant factors, confirmed empirically via the CLI before writing.
+  Solving for velocity instead (the formula's OTHER unknown) remains deliberately absent: velocity
+  appears squared, which is quadratic and out of rung-0's linear-only scope, the direct sibling of
+  `geometry-formulas.adj`'s `square_area` boundary case. New manifest objective
+  `adj.math.algebra.rearrange_kinetic_energy`. Extended the existing `formula_energy_work_e2e.rs`
+  with 1 new test rather than adding a new test file.
+- `physics/pressure.adj` — a sixth Wave 3 rung-0 CAS-wiring companion (ADJ-FORMULA-LIBRARIES FL-10,
+  §3D): `area_from_pressure`, solving the same cited HyperPhysics `P = F/A` definition (via its
+  equivalent multiplicative form `F = P·A`, already hand-shipped as the `force` formula) for area —
+  the one direction `pressure`/`force` leave open. Found via a fresh sweep across every domain
+  under `adj-formula-stdlib/` (mathematics, physics, chemistry, arithmetic, clinical) confirming
+  Wave 3's original kinematics/geometry/work/mechanics-force/kinetic-energy sweep had missed this
+  library — most sibling 2-parameter libraries already hand-ship every direction, and this was the
+  one overlooked. New manifest objective `adj.math.algebra.rearrange_pressure`. Extended the
+  existing `formula_pressure_e2e.rs` with 1 new test rather than adding a new test file.
+- `physics/density.adj` — a seventh Wave 3 rung-0 CAS-wiring companion (ADJ-FORMULA-LIBRARIES
+  FL-10, §3D): `volume_from_density`, solving the same cited HyperPhysics `ρ = m/V` definition (via
+  its equivalent multiplicative form `m = ρ·V`, already hand-shipped as the `mass` formula) for
+  volume — the one direction `density`/`mass` leave open, the exact same shape `pressure.adj`'s
+  `area_from_pressure` closed one PR earlier. Found via a targeted second confirmation sweep after
+  the pressure fix, re-checking three previously-flagged lower-priority candidates
+  (`chemistry/ideal-gas-law.adj`, `clinical/bmi.adj`, `physics/gravitation.adj`) and turning up this
+  higher-priority match instead. New manifest objective `adj.math.algebra.rearrange_density`.
+  Extended the existing `formula_density_e2e.rs` with 1 new test rather than adding a new test file.
+- `physics/electricity.adj` — an eighth Wave 3 rung-0 CAS-wiring companion (ADJ-FORMULA-LIBRARIES
+  FL-10, §3D): `current_from_voltage`, solving the same cited HyperPhysics `V = I·R` (Ohm's law) as
+  the forward `voltage`/`resistance_from_ohms_law` pair for current — the one direction they leave
+  open. Flagged during the density sweep as a viable remaining candidate. Mirrors
+  `resistance_from_ohms_law`'s exact discipline (same equation, different target). New manifest
+  objective `adj.math.algebra.rearrange_ohms_law`. Extended the existing `formula_electricity_e2e.rs`
+  with 1 new test rather than adding a new test file.
+- `chemistry/ideal-gas-law.adj` — a ninth Wave 3 rung-0 CAS-wiring companion (ADJ-FORMULA-LIBRARIES
+  FL-10, §3D): `volume_from_pressure`, solving the same cited NIST CODATA `PV = nRT` relation as the
+  forward `pressure` formula for volume — rewritten in its equivalent multiplicative form
+  (`P·V = n·R·T`) rather than the natural quotient form, the same technique `pressure.adj`/
+  `density.adj` used, to guarantee the target appears only as a linear factor. Also backfills the
+  base manifest objective `adj.science.chemistry.ideal_gas_law` (the FIRST chemistry-domain
+  coverage entry — the library previously had none), since the new algebra objective needs a valid
+  prerequisite to reference. The other two possible unknowns (moles, temperature) are left for a
+  later pass, keeping this change scoped to one direction like every prior Wave 3 item. New manifest
+  objectives `adj.science.chemistry.ideal_gas_law` and
+  `adj.math.algebra.rearrange_ideal_gas_law`. Extended the existing `formula_idealgas_e2e.rs` with
+  1 new test rather than adding a new test file.
+- `physics/gravitation.adj` — the TENTH Wave 3 rung-0 CAS-wiring companion (ADJ-FORMULA-LIBRARIES
+  FL-10, §3D): `mass_one_from_force`, solving the same cited NIST CODATA Newtonian gravitation
+  relation as the forward `gravitational_force` formula for one mass — written in its equivalent
+  multiplicative form (`F·r² = G·m₁·m₂`) rather than the natural quotient form. The first Wave 3
+  companion whose equation combines a grounded constant WITH a squared term in the same relation;
+  confirmed empirically before writing that `cas-solve`'s linear solver handles this shape cleanly,
+  same as every simpler product/quotient pair already shipped. Solving for `distance` is
+  deliberately absent (quadratic, out of rung-0's linear-only scope, the sibling of
+  `geometry-formulas.adj`'s `square_area` boundary case); solving for `mass_two` is symmetric and
+  left for a later pass. The query example uses clean round numbers (2 kg, 1 m) rather than
+  inverting the existing Earth–Moon example, so the round trip through G checks exactly rather than
+  approximately. New manifest objective `adj.math.algebra.rearrange_gravitation` (this library
+  already had base manifest coverage, unlike `ideal-gas-law.adj`). Extended the existing
+  `formula_gravitation_e2e.rs` with 1 new test rather than adding a new test file. This closes out
+  the two originally-flagged remaining candidates from the Wave 3 sweeps (gravitation, bmi is now
+  the only one left, deliberately deferred as lowest priority — an isolated clinical definition,
+  not part of a citable physics "family").
+- `clinical/bmi.adj` — the ELEVENTH and final Wave 3 rung-0 CAS-wiring companion (ADJ-FORMULA-
+  LIBRARIES FL-10, §3D): `body_mass_from_bmi`, solving the same cited WHO `BMI = mass/height²`
+  definition as the forward `bmi` formula for body mass — written in its equivalent multiplicative
+  form (`BMI · height² = body_mass`) so the target appears only as a linear factor. Solving for
+  height instead is deliberately absent: height is squared, quadratic, out of rung-0's linear-only
+  scope, the direct sibling of `geometry-formulas.adj`'s `square_area` boundary case. Query example
+  uses clean round numbers (BMI 17.5, height 2 m → body mass 70 kg) for an exact round trip. Like
+  `ideal-gas-law.adj`, this library had ZERO manifest.json coverage before this PR — backfilled the
+  base objective `adj.science.clinical.bmi` (domain `science`, `ngss` coverage root, mirroring the
+  convention every other Wave 3 base-science objective already uses; no dedicated clinical coverage
+  root exists yet in this manifest) so the new algebra objective had a valid prerequisite. New
+  e2e test file `formula_bmi_e2e.rs` (2 tests — this library had none before). New manifest
+  objectives `adj.science.clinical.bmi` and `adj.math.algebra.rearrange_bmi`. This closes out ALL
+  originally-flagged Wave 3 rung-0 CAS-wiring candidates (kinematics, geometry, work,
+  mechanics-force, kinetic-energy, pressure, density, electricity-current, ideal-gas-law,
+  gravitation, bmi) — eleven items across six sweep rounds. Wave 3's rung-0 sweep is now
+  genuinely complete.

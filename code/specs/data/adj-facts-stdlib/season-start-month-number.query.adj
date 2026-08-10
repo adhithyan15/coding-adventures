@@ -1,0 +1,29 @@
+% ============================================================================
+% season-start-month-number.query.adj — worked recall over the season/calendar
+% bridge library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what numbered month does
+% this season start in?" — it states no fact of its own — it only `import`s
+% the grounded rule and asks binding queries. The answer is DERIVED, joining
+% a season fact to a calendar fact, so every answer carries BOTH citations in
+% its `steps` trail.
+%
+% Placed at the stdlib PACKAGE ROOT (not beside `earth-science/season-start-
+% month-number.adj`) — the same cross-directory-import sandboxing pattern
+% `mathematics/word-problems.query.adj` already established: the library
+% itself lives in `earth-science/` and reaches its calendar sibling via a
+% relative `../calendar/months.adj` import, which only resolves if the
+% CONSUMING entry program (this file) sits at or above the package root, so
+% both `earth-science/` and `calendar/` fall inside the CLI's sandboxed
+% import subtree.
+%
+% Run (from this directory, the package root, so the relative import
+% resolves):
+%     ../../packages/rust/target/debug/adj-lang-cli season-start-month-number.query.adj
+% ============================================================================
+
+import "earth-science/season-start-month-number.adj"
+
+? season_start_month_number(summer, $N)      % expect 6  (direct: which month number does summer start in?)
+? season_start_month_number($S, 12)          % expect winter (reverse: which season starts in month 12?)
+? season_start_month_number(monsoon, $N)     % expect abstain -- "monsoon" is not a tabled meteorological season

@@ -17,6 +17,11 @@ This project follows [Semantic Versioning](https://semver.org/).
   silently skipped" posture for static props means a Stack's children all
   render at the Box's origin today rather than the pixel positions the
   web/Flutter backends place them at.
+- `HostTooltip` now lowers to Compose Foundation's cross-platform
+  `BasicTooltipBox`, including native overlay placement and dismissal, Material
+  surface chrome, literal/slot/expression text, and assistive-technology
+  semantics. This restores package-expanded TaskApp generation after its richer
+  Gantt introduced per-row tooltips.
 - `HostSurface ( content: slot: ... )` now accepts an
   `@Composable () -> Unit` node slot and invokes it at the shared native
   composition boundary.

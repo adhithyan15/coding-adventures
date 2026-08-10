@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - native-complete runtime-required shell
+
+`EmitOptions::require_runtime` now generates a SwiftUI shell that requires the
+standard Mosaic Rust runtime, applies its initial props before the first view,
+and validates required, optional, and defaulted slots without preview values,
+reflection hosts, or event-print fallbacks. Permissive output is unchanged.
+
 ### Fixed - Complete Task App SwiftUI compilation
 
 Package-expanded applications now lower Mosaic value conditions through

@@ -1,8 +1,9 @@
-# AOT00-T9 — moving minor collector (young-generation compaction) (design)
+# AOT00-T9 — moving minor collector (young-generation compaction)
 
-> Status: **design, needs sign-off** — same bar as [`AOT00-T3`](AOT00-T3-moving-collector.md) and
-> [`AOT00-T4`](AOT00-T4-incremental-collector.md): committed for review before any relocation code
-> lands, because a mobility-classification bug here is a use-after-free, not a slow path.
+> Status: **landed** — PR-1 (this spec, sign-off) through PR-4 (`collect_minor_compacting`, the
+> full live cycle) are all merged; `gc-core` now has a real, callable moving-minor collector. §5's
+> optional PR-5 (auto-triggering pacing, mirroring `should_compact`) remains open follow-up work,
+> not required for this arc to be "complete" — see that bullet.
 >
 > Builds on the now-complete precision ladder
 > (`mark-and-sweep ✓ → interior-precise ✓ → generational ✓ → precise-roots ✓ → compacting ✓ → incremental ✓`)
@@ -230,6 +231,17 @@ adversarial review are the "own adversarial pass" this paragraph called for.
    should sometimes also compact is a follow-up policy question, not this spec's; PR-4 only makes
    the moving-minor primitive *callable*, the same way `collect_compacting` shipped before
    `should_compact` existed).
+   ✅ **Landed** (`gc-core` 0.33.0). **Design correction versus this bullet's own §4 point 1**: the
+   spec describes "Mark" (a `collect_minor_mixed`-style liveness pass) as a step *separate* from
+   "Classify" (`classify_mobility_minor`) — implying two independent traversals. The shipped
+   implementation runs only **one**: `evacuate_and_fixup_minor`'s own internal classification call
+   already computes a `pinned` bit on every object it traverses, proven (§3) to be the same closure
+   a separate liveness mark would compute — exactly mirroring how `collect_compacting` itself needs
+   no separate mark pass, reusing `classify_mobility`'s own `pinned` bits as its keep-in-place
+   predicate. `collect_minor_compacting` does the same, restricted to `generation == GEN_YOUNG`.
+   Proven via the canonical differential this section describes (below), plus 6 further tests, and
+   confirmed load-bearing by reverting the young-survivor marking step and observing two tests fail
+   exactly as predicted.
 5. **PR-5 (optional, follow-up)** — wire `should_compact`-style pacing so an automatic minor cycle
    sometimes evacuates instead of sweeping in place, once PR-4 is proven stable. Not required for
    this arc to be "complete" — `collect_compacting` itself shipped useful and callable before
