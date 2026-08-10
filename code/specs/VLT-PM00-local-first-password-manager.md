@@ -1416,6 +1416,10 @@ changelog, focused build, and downstream validation.
     owner-only initial creation and compare-and-exchange, guarded by the same
     cross-process writer capability. Persistence remains schema-blind and
     safely stores canonical bytes emitted by `vault-pm-config`.
+8e. `vault-pm-cli-host`: fixed controlling-terminal passphrase collection,
+    echo restoration, constant-time new-passphrase confirmation, and stable OS
+    entropy, using the closed CLI-only trust boundary in
+    `VLT-PM08-cli-host.md`.
 9. `vault-pm-cli` + real executable and pseudo-terminal E2E suite.
 10. Crash/fault matrix and local restore drill.
 
