@@ -1336,8 +1336,10 @@ changelog, focused build, and downstream validation.
        discovery, proving the exact local counter/catalog/certificate anchor,
        walking complete bounded ancestry, decrypting every distinct reachable
        catalog and referenced revision, and returning aggregate-only counts;
-   7e-2b. locked/unlocked doctor workflow with coarse provider and integrity
-       classifications; and
+   7e-2b. completed read-only locked/unlocked doctor workflow with nine coarse
+       lifecycle, availability, unsupported, authentication, integrity, and
+       healthy classifications, exact durable session binding, no repair, and
+       no provider or identity detail; and
    7f. completed stable payload-free VLT-PM05 `Locked` error and compact
        locked/unlocked lifecycle boundary, including failure-stable in-place
        unlock and synchronous live-session drop on idempotent lock.

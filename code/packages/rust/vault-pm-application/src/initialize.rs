@@ -13,7 +13,7 @@ use coding_adventures_chacha20_poly1305::{
 use coding_adventures_ed25519::{generate_keypair, is_valid_public_key, sign, verify};
 use coding_adventures_vault_pm_format::{
     AeadEnvelopeV1, AnnouncementV1, Argon2idParametersV1, BootstrapV1, CommitV1,
-    DeviceCertificateV1, DeviceId, PublicKey, Signature, VaultId, CRYPTO_SUITE_V1,
+    DeviceCertificateV1, DeviceId, FormatError, PublicKey, Signature, VaultId, CRYPTO_SUITE_V1,
 };
 use coding_adventures_vault_pm_repository::{PinnedHeads, RepositoryAddress};
 use coding_adventures_x25519::generate_keypair as generate_x25519_public_key;
@@ -417,28 +417,7 @@ pub(crate) fn unlock_active_material(
     active: &ActiveStateV1,
     exact_bootstrap: &[u8],
 ) -> Result<UnlockedActiveMaterial, ApplicationError> {
-    let bootstrap =
-        BootstrapV1::decode(exact_bootstrap).map_err(|_| ApplicationError::IntegrityFailure)?;
-    let bootstrap_id = bootstrap
-        .id()
-        .map_err(|_| ApplicationError::IntegrityFailure)?;
-    let bootstrap_preimage = bootstrap
-        .signing_preimage()
-        .map_err(|_| ApplicationError::IntegrityFailure)?;
-    if !is_valid_public_key(bootstrap.authority_public_key.as_bytes())
-        || !verify(
-            &bootstrap_preimage,
-            bootstrap.signature.as_bytes(),
-            bootstrap.authority_public_key.as_bytes(),
-        )
-        || bootstrap_id != active.bootstrap_id()
-        || bootstrap.vault_id != active.vault_id()
-        || AuthorityFingerprint::for_public_key(bootstrap.authority_public_key)
-            != active.authority_fingerprint()
-    {
-        return Err(ApplicationError::IntegrityFailure);
-    }
-
+    let bootstrap = verify_active_bootstrap(active, exact_bootstrap)?;
     let vault_root_key = unwrap_root_key(&passphrase, &bootstrap)?;
     let keys = V1Keys::derive(bootstrap.vault_id, &vault_root_key)?;
     let verifier_keys = V1Keys::derive(bootstrap.vault_id, &vault_root_key)?;
@@ -492,6 +471,42 @@ pub(crate) fn unlock_active_material(
         local_secret,
         verifier,
     })
+}
+
+pub(crate) fn verify_active_bootstrap(
+    active: &ActiveStateV1,
+    exact_bootstrap: &[u8],
+) -> Result<BootstrapV1, ApplicationError> {
+    let bootstrap = BootstrapV1::decode(exact_bootstrap).map_err(map_bootstrap_format)?;
+    let bootstrap_id = bootstrap
+        .id()
+        .map_err(|_| ApplicationError::IntegrityFailure)?;
+    let bootstrap_preimage = bootstrap
+        .signing_preimage()
+        .map_err(|_| ApplicationError::IntegrityFailure)?;
+    if !is_valid_public_key(bootstrap.authority_public_key.as_bytes())
+        || !verify(
+            &bootstrap_preimage,
+            bootstrap.signature.as_bytes(),
+            bootstrap.authority_public_key.as_bytes(),
+        )
+        || bootstrap_id != active.bootstrap_id()
+        || bootstrap.vault_id != active.vault_id()
+        || AuthorityFingerprint::for_public_key(bootstrap.authority_public_key)
+            != active.authority_fingerprint()
+    {
+        return Err(ApplicationError::IntegrityFailure);
+    }
+    Ok(bootstrap)
+}
+
+fn map_bootstrap_format(error: FormatError) -> ApplicationError {
+    match error {
+        FormatError::UnsupportedVersion | FormatError::UnsupportedSuite => {
+            ApplicationError::Unsupported
+        }
+        _ => ApplicationError::IntegrityFailure,
+    }
 }
 
 /// Durably install and idempotently complete one exact generation-zero

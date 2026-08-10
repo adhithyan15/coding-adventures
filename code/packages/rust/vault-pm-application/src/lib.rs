@@ -11,6 +11,7 @@ mod audit;
 mod codec;
 mod crypto;
 mod disclosure;
+mod doctor;
 mod initialize;
 mod lifecycle;
 mod mutation;
@@ -34,6 +35,7 @@ pub use crypto::{
 pub use disclosure::{
     RevealedSecretEncodingV1, RevealedSecretV1, SecretDisclosureIntentV1, SecretFieldV1,
 };
+pub use doctor::{VaultDoctorReportV1, VaultDoctorStateV1};
 pub use initialize::{
     complete_generation_zero, prepare_generation_zero, rehydrate_prepared_init,
     GenerationZeroPolicyV1, GenerationZeroRandomness, PreparedGenerationZero,
