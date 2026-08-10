@@ -4,6 +4,109 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - Tamil chapter 39, and the first letter of the debt it exists to pay
+
+`TA-W19` measured the strand out of room after itself, and three letters —
+**ஏ**, **ஐ**, **ஒ** — were still used inside words and never taught. The track
+was extended rather than relaxing the chapter atom cap, the 3:1 cadence or the
+rule that a chapter must not open on a pen lesson. This is the first of three
+chapters planned to do it.
+
+One correction belongs here, because the decision was taken partly on it. The
+position search that informed it reported ZERO admissible slots anywhere in the
+track. That was wrong: it assigned a candidate insertion to the chapter of the
+lesson it precedes rather than the one it follows, which silently discarded
+every end-of-chapter position. Re-run correctly against `origin/main`, exactly
+ONE slot exists — chapter 35, after `TA-C35-naarkaali`, gaps of 3 and 3, load
+10 + 2 = 12. One slot is still not three, so extending the track was needed
+either way for at least two of the three letters; but "no slot at all" was not
+true, and chapters 40 and 41 should consider spending that slot before adding a
+second new chapter.
+
+- `TA-C39-vendum` (1170) — **வேண்டும்**, another verb Tamil builds with no
+  subject, after **தெரியும்** (ch32), **புரிகிறது** (ch33) and **பிடிக்கும்**
+  (ch34). The lesson deliberately does not number the family: chapter 19's
+  **ஆகிறது** age construction is described in the same terms, so a count would
+  have to argue for its own boundary. The lesson does not re-teach the
+  dative-subject shape either; it practises chapter 6's
+  `TA-GRAMMAR-DATIVE-SUBJECT-02` at a distance of 90 lessons, the first time
+  anything has reached it at R4 range.
+- `TA-C39-evvalavu` (1180) — **எவ்வளவு**, and the line Tamil draws that English
+  does not: **எத்தனை** counts, **எவ்வளவு** measures. Age took the counting one.
+- `TA-C39-oru` (1190, payoff) — **ஒரு** in front of a noun where **ஒன்று**
+  cannot stand, and the chapter's production task: ask a price, order one tea,
+  decline the second with **வேண்டாம்**.
+- `TA-W20-read-onru` (1195) — **ஒ**, spelling **ஒன்று** and **ஒரு**. It is
+  last in the chapter, so the opening reads "first 3 of 4 lessons".
+
+### Added - the spine node this track had declared and never realized
+
+`curriculum.json` already carried `SPINE-SAY-WHAT-I-WANT` with an empty
+`segments` list and `VERB-WANT` sitting in `omits` — an authored admission that
+the node was mapped but unmet. Chapter 39 realizes it through `TA-PATH-036`, so
+the omission is removed rather than merely annotated. Three of the chapter's
+lessons land at A2 as a result, because that node is an A2 node; only
+`TA-W20-read-onru` is pre-A1, on `SPINE-MEET-GREET` like every other writing
+lesson.
+
+### Changed - what a new chapter costs, measured
+
+Four wiring points are needed, and the first alone is not enough:
+`chapters.json` (the capability ledger), `book-generation.json` (the target),
+`tamil/book/book.tex` (the `\input`), and `curriculum.json` (path segment,
+extension, spine segments). Declaring only the ledger fails the book-cli gate
+"puts every ledgered chapter into its book, not merely into a file", which is
+exactly the check that exists to catch this.
+
+Pins re-derived by set difference against `origin/main`:
+
+- `atomsTaught` 2652 -> 2660; `pre-A1` 878 -> 879 and `A2` 409 -> 412;
+  ramp-to-A1 1187 -> 1188 with `TA-W20-read-onru` the only joiner; manifest
+  `totalLessons` 1690 -> 1694, `chapterCount` 513 -> 514, `pen` 68 -> 69,
+  `sight` 508 -> 511, `unstartableChapters` 137 -> 138.
+- `missedByWindow.R2` 1808 -> 1816, and all eight entrants are one mechanism:
+  the track grew 128 -> 132, so a window becomes evaluable for exactly those
+  atoms whose `introducedAt + window.from` falls in (127, 131]. They are four
+  two-atom pairs — VIDAI at 126, SUGAM at 125, UDAMBU at 124 and
+  IVAR-EN-NANBAR at 123 — and not one of their revisit counts changed.
+  R4 243 -> 247 is the same arithmetic at 80. R3 does not move at all —
+  1309 -> 1309, seven in and seven out — which is the whole argument for
+  declaring what a sentence
+  actually re-uses. `TA-C39-vendum` names **தெரியும்**, **புரிகிறது** and
+  **பிடிக்கும்** in one clause and credits all six of their atoms: the two
+  `PIDI` atoms (index 108) land a revisit at exactly distance 20, R3's first
+  position, so neither enters, while `TA-LEX-PURI-01`, `TA-GRAMMAR-PURI-02`
+  (index 100) and `TA-GRAMMAR-TERI-02` (index 98) leave R3 outright and drop off
+  the defect list. The same clause with the verbs merely named would have read
+  identically on the page and left R3 five windows worse.
+- Against that, ten atoms LEAVE a window, and those are the chapter earning its
+  keep: `TA-SCRIPT-EE-SIGN-01` 1 -> 2 revisits, `INDEPENDENT-VOWEL-E-01` 2 -> 3,
+  `NGA-LLA-01` 2 -> 3, `TTA-01` 1 -> 2, the two `PURI` atoms and
+  `TA-GRAMMAR-TERI-02` out of R3 (seven in all);
+  `GRAMMAR-DATIVE-SUBJECT-02` 2 -> 3, `LEX-DATIVE-SUBJECT-01` 3 -> 4 and
+  `LEX-NUMBERS-1-5-01` 2 -> 3 out of R4.
+- `atomsNeverRevisited` 472 -> 474, five in and three out. IN are
+  `TA-GRAMMAR-EVVALAVU-VS-ETHANAI-02`, `TA-LEX-ORU-01`,
+  `TA-GRAMMAR-ORU-ATTRIBUTIVE-02` and TA-W20's own `TA-SCRIPT-O-VOWEL-01` and
+  `TA-SCRIPT-READ-ONRU-02`; OUT are `TA-SCRIPT-READ-MUUNRU-02`,
+  `TA-GRAMMAR-PIDI-02` and `TA-SCRIPT-UU-SIGN-01`, each 0 -> 1 revisits. The
+  last is TA-W19's own sign, credited where TA-W20 contrasts **மூன்று** with
+  **ஒன்று**. The 422-atom defect
+  subset moves separately, 422 -> 424; the two counters are worth keeping apart.
+  The `ORU` pair being among the entrants is structural, not
+  an oversight: `TA-W20` genuinely re-reads **ஒரு**, but a writing lesson may
+  only take other writing lessons as prerequisites — `TA-EXT-003-SCRIPT` is
+  inlined at `TA-PATH-003`, so naming a chapter-39 lesson would place the
+  prerequisite after its dependent and fail the ordering rule. The tie is
+  carried by `reviews_of`, which is not a revisit. Chapters 40 and 41 are
+  planned to close it.
+- `forwardReferences` 423 -> 424, and the new entry is a measurement
+  improvement rather than fresh damage: `TA-C18-mani-homophone-time` has always
+  printed **ஒரு**, but no lesson owned the word, so the checker had no teacher
+  to measure against. Naming one made a 65-lesson-old early use visible. It is
+  also an argument that **ஒரு** belongs earlier than chapter 39, which the
+  runway did not allow.
+
 ### Added - the ூ sign, and the measured end of the Tamil strand's runway
 
 - Teach `TA-W19-read-muunru` (chapter 38, sequence 1165) around **மூன்று**: the
@@ -65,10 +168,11 @@ own.
 The two facts this entry rests on hold under a detector that does two specific
 things, and it is worth naming them rather than claiming detector-independence:
 it must scope negation, and it must not treat a `TA-C*` lesson as teaching. Both
-matter, and this very lesson is why the first one does — it prints **ஒன்று**,
-**ஐந்து** and **ஏழு** in bold inside the sentence saying they *wait on letters
-this book has not taught*, so a detector that ignores negation would score ஏ, ஐ
-and ஒ as taught here and put this lesson's delta at four glyphs instead of one.
+matter, and this very lesson is why the first one does — it prints the numbers
+it cannot yet spell in bold inside a sentence saying they wait on letters the
+book has not taught, so a detector that ignores negation scores those letters
+as taught here and puts this lesson's delta at four glyphs instead of one.
+(The chapter-39 entry above narrows that sentence, once **ஒ** is taught.)
 Chapter 7's own lessons bold the same letters while merely using them, which is
 why the second matters. Under a detector that does both: the difference **this**
 lesson makes is exactly **ூ**, and the thirteen chapter-7 glyphs named above are

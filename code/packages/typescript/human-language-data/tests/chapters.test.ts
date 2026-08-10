@@ -310,8 +310,11 @@ describe("corpus snapshot", () => {
     // capability total catches up from 415 to 513 and the missing-capability debt falls
     // from 98 to zero. A future chapter without a `canDo`/`payoff` will move these totals
     // apart again, which is exactly what this trio is here to catch.
-    expect(report.summary.bookChapters).toBe(513); // +16: vocabulary wave 4, 4 tracks x 4 chapters
-    expect(report.summary.declaredChapters).toBe(513); // +98: handwritten capability closure
+    // +1 to both: Tamil chapter 39, ledgered in chapters.json, declared in
+    // book-generation.json and \input into tamil/book/book.tex. All three are needed —
+    // the first alone fails the book-cli "ledgered chapter into its book" gate.
+    expect(report.summary.bookChapters).toBe(514); // +16: vocabulary wave 4, 4 tracks x 4 chapters
+    expect(report.summary.declaredChapters).toBe(514); // +98: handwritten capability closure
     expect(report.summary.chaptersWithoutCapability).toBe(0);
     expect(report.summary.payoffsNotClosed).toBe(0);
     expect(report.summary.unknownPayoffLessons).toBe(0);
