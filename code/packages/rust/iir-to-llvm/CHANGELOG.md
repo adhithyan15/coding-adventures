@@ -1,5 +1,57 @@
 # Changelog — iir-to-llvm
 
+## 0.50.0 - 2026-08-10 - generational write barrier emission (AOT00-T8 follow-up)
+
+- **`field_store` now also emits a call to `@__twig_gc_write_barrier(i64 parent, i64
+  value)`**, right after the store itself. This is the AOT00-T8 spec's own
+  explicitly-named follow-up: the mechanism that lets a real minor (young-
+  generation-only) collection eventually be turned on for LLVM-compiled output. The
+  barrier (`gc_core::FlatHeap::write_barrier`) records `parent` in the remembered set
+  whenever it's already old, so a later minor collect rescans it for the young
+  objects it may now reference — the edges a young-only cycle would otherwise never
+  see.
+- **Unconditional, deliberately.** `field_store` carries no static type information
+  distinguishing a reference store from a non-reference one — unlike `vm-core`'s
+  interpreter, which skips the barrier call for a non-`HeapRef` `Value`. Per the
+  barrier's own contract, that's fine to skip *here* too: it never dereferences
+  `value`, only inspects `parent`'s generation, and recording an old parent that
+  didn't actually store a young child is a harmless over-approximation. The
+  alternative — only calling it for statically-known reference fields — would need
+  field-type plumbing this op doesn't carry, and a missed call on a genuine reference
+  store is a real use-after-free once minor collection is enabled. Unconditional is
+  the only sound choice.
+- **New `__twig_gc_write_barrier` alias** (`gc-core-capi`'s `twig_compat`, 0.24.4) —
+  unlike every other alias in that module, `twig_gc.c` never had this symbol (there
+  was no generational collector to barrier for); added under the same `__twig_gc_*`
+  naming convention purely for consistency with every other GC symbol a code
+  generator emits.
+- **Two test-only `call_builtin` seams**: `gc_collect_minor_precise()` (an
+  *unconditional* minor collection, bypassing the `should_collect_minor`/
+  `auto_minor` policy gate entirely — the direct entry point needs no attestation of
+  its own) and `gc_kind_of(ptr)` (read-only kind-id lookup). Neither is exposed to
+  Twig source; both exist purely so an end-to-end test can drive a real minor
+  collection and check a specific object's survival deterministically.
+- **Real, compiled-and-executed proof, not just IR-text assertions**:
+  `lang-aot/tests/llvm_gc_write_barrier.rs` builds a tightly-controlled two-object
+  scenario (an old `parent`, a young `child` stored into it via a real compiled
+  `field_store`, then a second real minor collection) through `clang` and the actual
+  linked `gc-core-capi` collector. `gc_live_bytes()` is fully deterministic here —
+  unlike a garbage-loop scenario, exactly two objects exist, ever, so 32 live bytes
+  afterward means both survived (barrier working) and 16 means `child` was wrongly
+  swept (barrier broken) — no other allocation exists to make either reading
+  ambiguous. Confirmed load-bearing: temporarily removing the barrier call makes
+  this exact test fail (`child` genuinely swept, exit code 0); restoring it passes
+  again (exit code 1).
+- 3 new unit tests in `test_backend.rs` (`field_store_calls_the_generational_
+  write_barrier`, and one each for the two new builtins), all pass, plus the 1 new
+  real end-to-end test above.
+- Verification: `cargo build`/`test` clean across `gc-core`, `gc-core-capi`,
+  `iir-to-llvm`, `lang-aot` (`iir-to-llvm` 114 tests, up from 111; `lang-aot`'s new
+  file, 1 test); `cargo clippy --all-targets -- -D warnings` clean. The full
+  `lang-aot` suite's 6 pre-existing `lang_matrix` ALGOL/backend-matrix failures were
+  independently confirmed present on unmodified `origin/main` (via `git stash`) —
+  unrelated to this change.
+
 ## 0.49.0 - 2026-08-03 - array reference-tracing fix (LANG-FULL E5, LLVM, conditional)
 
 Closes the reference-tracing gap `lower_alloc_array`'s own 0.48.0 doc comment

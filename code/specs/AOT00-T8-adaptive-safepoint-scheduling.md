@@ -297,3 +297,15 @@ per process (e.g. from the same `__gc_init_stackmaps`-style startup hook the pre
 uses) with a differential proving an old→young store survives a minor collection end-to-end on
 real hardware. `vm-core`'s own `handle_safepoint` opting into `should_collect_minor` too (it is
 barrier-correct today) is a smaller, independent follow-up.
+
+**Update (`iir-to-llvm` 0.50.0): the LLVM third of this follow-up is done.** `field_store` now
+emits the barrier call unconditionally (see that crate's own changelog for why unconditional is
+the only sound choice given the op's lack of static type information). Proven via a real
+compiled-and-executed differential (`lang-aot/tests/llvm_gc_write_barrier.rs`, not just an
+IR-text assertion) that fails without the barrier and passes with it. `aarch64-backend` and
+`x86_64-backend` remain open — both are hand-written machine-code emission, a meaningfully
+different (and, per this round's own scoping investigation, harder-to-verify) risk profile than
+LLVM's one-line textual `call`; `__gc_set_auto_minor(1)` is still never called by any producer,
+so the end-to-end payoff (auto minor GC actually running for AOT-compiled output) is still not
+turned on even for LLVM output — this PR closes the barrier-correctness gap, not the
+attestation/enactment step.
