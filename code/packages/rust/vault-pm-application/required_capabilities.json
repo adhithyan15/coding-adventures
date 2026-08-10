@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/vault-pm-application",
   "capabilities": [],
-  "justification": "Pure canonical persistence, crash-state contracts, deterministic generation-zero construction, injected crash-resumable effect sequencing, authenticated active reopen, cryptographic framing, and verified repository composition over caller-provided stores, keys, time, and CSPRNG material. Store traits inject byte operations but the package owns no filesystem, network, process, environment, clock, provider, credential-store, or entropy authority."
+  "justification": "Pure canonical persistence, crash-state contracts, deterministic generation-zero construction, injected crash-resumable generation-zero and pending-publication effect sequencing, authenticated active reopen, cryptographic framing, and verified repository composition over caller-provided stores, keys, time, and CSPRNG material. Store traits inject byte operations but the package owns no filesystem, network, process, environment, clock, provider, credential-store, or entropy authority."
 }

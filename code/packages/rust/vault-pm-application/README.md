@@ -42,10 +42,18 @@ derives the opaque repository address, and performs a complete repository open
 relative to non-empty local head pins. The returned session owns wipe-on-drop
 keys and exposes only identities, pins, and the payload-free verified report.
 
+Interrupted item publications are recoverable from their exact durable
+`PendingPublication` journal. Recovery authenticates the same bootstrap and
+local custody boundary, republishes the already-randomized and already-signed
+batch by value, requires the exact expected receipt heads, and only then
+compare-exchanges the complete intended `Active` state. Ambiguous provider
+failure retains byte-for-byte retry state, and an identical concurrent local
+winner is the only compare-exchange conflict accepted as success.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
-credential store, or entropy source. Pending-publication recovery and catalog
-session workflows land in the next slices. There is no unchecked
+credential store, or entropy source. Catalog materialization and item session
+workflows land in the next slices. There is no unchecked
 repository verification path: construction decrypts and
 authority-verifies the exact locally pinned certificate frame and object ID,
 and commits and announcements must match that vault, device, certificate ID,
@@ -53,7 +61,7 @@ and Ed25519 key.
 
 ## Verification
 
-The package has 51 tests covering exact canonical and cryptographic vectors,
+The package has 56 tests covering exact canonical and cryptographic vectors,
 lossless removed-value persistence, live and tombstone revisions, catalog
 bounds and ordering, cross-kind and cross-vault rejection, AEAD tampering,
 authority/device/certificate binding, Ed25519 signature rejection, closed
@@ -61,7 +69,7 @@ parser failures, crash-state relationship checks, diagnostic redaction, and
 explicit key wiping. Repository tests additionally exercise initialization,
 publication, verified open/read/history, every injected provider operation,
 constructor paths, and complete error translation. The exact Tarpaulin result
-under its LLVM engine is 1,443 of 1,510 production lines (95.56%).
+under its LLVM engine is 1,497 of 1,562 production lines (95.84%).
 
 ## Development
 
