@@ -882,7 +882,8 @@ describe("corpus regression", () => {
       // +4: TA-W10-read-naan, TA-W11-read-niingal, TA-W12-read-eppadi and
       // TA-W13-read-irukkirirgal extend the writing strand over chapters 2-3's glyphs.
       // +3: TA-W14-read-pesu, TA-W15-read-po and TA-W16-read-tamizh close chapters 4-5.
-      totalLessons: 1687,
+      // +2: TA-W17-read-unavu and TA-W18-read-uur close the last two untaught glyphs.
+      totalLessons: 1689,
       // Chapters 10 and 13 replace wide legacy tables with small singular-only
       // comparisons, so three more lessons move from sight to voice.
       // All seven Chapter-16 teaching steps are voice-first. Generating the book
@@ -922,7 +923,10 @@ describe("corpus regression", () => {
       // +4: TA-W10..TA-W13 are `type: writing` too, so rule 1 makes them pen even
       // though all four are reading-only and give no stroke order.
       // +3: TA-W14/15/16 are `type: writing` too.
-      pen: 65,
+      // +2: both new lessons are `type: writing`. voice, sight, drivableLessons,
+      // drivablePrefixTotal, fullyDrivableChapters and unstartableChapters ALL hold —
+      // this tranche adds lessons and removes no inline section, so nothing flips.
+      pen: 67,
       // +6: exactly the six lessons that moved sight -> voice; no other lesson changes.
       // +8: exactly the eight lessons that moved sight -> voice.
       drivableLessons: 1114,

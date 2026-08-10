@@ -56,7 +56,7 @@ softened *-giṟ-***, so **எழுது is weak**, like *pō* and *sāppiḍu
 The dot returns in the noun **எழுத்து** (*eḻuttu*), "**a letter of the
 alphabet**," spelled **எ ழு த் து**: a **puḷḷi** strips the vowel from the first
 **த்** and the second **து** stands whole beside it. Two full letters and a
-visible dot, never a fused shape: Chapter 1's bargain.
+visible dot, never a fused shape: the puḷḷi lesson's bargain.
 
 ## Sounds you'll need: ழ, and how to stop chasing it
 <!-- hl-knowledge: introduces=[TA-SOUND-EZHUTU-02]; assesses=[TA-ETYMON-NUMBERS-6-10-FAMILY-01] -->

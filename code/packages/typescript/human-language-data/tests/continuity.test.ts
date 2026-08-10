@@ -388,7 +388,11 @@ describe("the real corpus", () => {
     // +9: the four lessons that extend the Tamil writing strand to chapters 2-3's
     // glyphs introduce 2 + 3 + 2 + 2 atoms (TA-W10/11/12/13).
     // +6 more: TA-W14/15/16 close chapters 4-5's glyphs at 2 atoms each.
-    expect(report.summary.atomsTaught).toBe(2646);
+    // +4 more: TA-W17 and TA-W18 teach உ and ஊ — the last two untaught glyphs in the
+    // chapter 33-38 sections, NOT in the corpus. A census against the strand's taught
+    // set leaves 19 still used and never taught, thirteen of them in chapter 7's
+    // numbers (ஐ, ஒ, ூ and the digits ௧-௰). That is where the real debt is.
+    expect(report.summary.atomsTaught).toBe(2650);
     // +2, and it goes UP, which is worth stating plainly. Three of the five new atoms
     // are TA-W09's and nothing follows TA-W09, so they are orphans by construction:
     // PA-YA-01, E-SIGN-02, READ-PEYAR-03. TA-W08's two are revisited by TA-W09.
@@ -414,7 +418,10 @@ describe("the real corpus", () => {
     // TA-W16's, orphans by construction because nothing follows it. Two out — TTA-01
     // and U-SIGN-01, which TA-W16 and TA-W14 genuinely re-use (the ட/த contrast, and
     // the ு of சு).
-    expect(report.summary.atomsNeverRevisited).toBe(470);
+    // +2 for உ/ஊ, and both are TA-W18's: UU-VOWEL-01 and READ-UUR-02. Nothing follows
+    // TA-W18 in the strand, so they are orphans by construction. TA-W17's two are not —
+    // TA-W18 re-reads உணவு beside ஊர், which is the point of the pair. Two in, none out.
+    expect(report.summary.atomsNeverRevisited).toBe(472);
     expect(report.summary.neverRevisitedPercent).toBe(18);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
@@ -555,7 +562,10 @@ describe("the real corpus", () => {
     // past R1 ([R2,R3] -> [R1,R2,R3]). No atom gains R1 reinforcement here.
     // +6 for chapters 4-5: all six of TA-W14/15/16's atoms miss R1 and nothing leaves,
     // the same cadence arithmetic as above.
-    expect(report.summary.missedByWindow.R1).toBe(880);
+    // +4: all four new atoms miss R1, and nothing leaves. TA-W17 and TA-W18 are 3
+    // speaking lessons apart, so the gap is 4 in reading order, outside the 1-3 window
+    // as everywhere else in the strand.
+    expect(report.summary.missedByWindow.R1).toBe(884);
     // +2 net, and the composition is the interesting part: all FIVE new atoms miss R2
     // as well, offset by THREE pre-existing atoms that TA-W09 pulls back into it.
     // TA-W09 sits 12 lessons after TA-W06 and 8 after TA-W07, both inside R2's 5-15
@@ -595,7 +605,13 @@ describe("the real corpus", () => {
     // but also short of R2's 5-15 — so nothing any of the three introduces can be
     // reinforced at R2 distance by the next one. TWO leave: TTA-01 and U-SIGN-01, both
     // genuinely re-used far enough back to land inside the window. Six in, two out.
-    expect(report.summary.missedByWindow.R2).toBe(1804);
+    // +5 for உ/ஊ, and only four of those are the new atoms. The fifth is a REGRESSION
+    // this tranche causes, and it is worth naming rather than filing under measurement.
+    // TA-LEX-VEEDU-01 is introduced by TA-C35-veedu and revisited far away by exactly
+    // one lesson, TA-C38-vidai. That revisit sat at offset 15 — the LAST position R2's
+    // 5-15 window counts. Inserting TA-W17 and TA-W18 between them pushed it to 17, so
+    // an atom that was passing R2 now misses it. Nothing leaves.
+    expect(report.summary.missedByWindow.R2).toBe(1809);
   });
 
   it("shows what a declared reading order was worth", () => {

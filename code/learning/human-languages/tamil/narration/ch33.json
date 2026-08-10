@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1692ee153a91024f",
+  "sourceHash": "fnv1a64:d442d66ccc91878e",
   "lessons": [
     {
       "id": "TA-C33-ninai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3da01ee3c6063b7b",
+      "sourceHash": "fnv1a64:df3eb8d967d164b5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -70,7 +70,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "நி is the dental ந with the i sign ி; னை is the alveolar ன with the ai sign ை. Two of Tamil's three n-letters in one word, and not interchangeable: the first sits on the teeth, the second on the ridge behind them. Chapter 1 mapped all three — ந, ன, ண."
+              "text": "நி is the dental ந with the i sign ி; னை is the alveolar ன with the ai sign ை. Two of Tamil's three n-letters in one word, and not interchangeable: the first sits on the teeth, the second on the ridge behind them. Chapter 6's three-n lesson mapped all three — ந, ன, ண."
             }
           ]
         },
@@ -395,7 +395,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7eae469fe811e74e",
+      "sourceHash": "fnv1a64:36ae56781169eff6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -458,7 +458,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now a mystery worth clearing up. The letter is ட, named ṭa, yet the word is written here paḍi, with a d. Nothing is inconsistent: Tamil marks no voicing. One letter covers both sounds and position decides — hard word-initially or doubled, soft between vowels. That is Chapter 1's rule for க, which spells k, g and a soft h without changing shape."
+              "text": "Now a mystery worth clearing up. The letter is ட, named ṭa, yet the word is written here paḍi, with a d. Nothing is inconsistent: Tamil marks no voicing. One letter covers both sounds and position decides — hard word-initially or doubled, soft between vowels. That is Chapter 5's rule for க, which spells k, g and a soft h without changing shape."
             },
             {
               "kind": "speech",
@@ -745,7 +745,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3cbfae9f73f99b68",
+      "sourceHash": "fnv1a64:bdda9249c003f94c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -804,7 +804,7 @@
             },
             {
               "kind": "speech",
-              "text": "The dot returns in the noun எழுத்து (eḻuttu), \"a letter of the alphabet,\" spelled எ ழு த் து: a puḷḷi strips the vowel from the first த் and the second து stands whole beside it. Two full letters and a visible dot, never a fused shape: Chapter 1's bargain."
+              "text": "The dot returns in the noun எழுத்து (eḻuttu), \"a letter of the alphabet,\" spelled எ ழு த் து: a puḷḷi strips the vowel from the first த் and the second து stands whole beside it. Two full letters and a visible dot, never a fused shape: the puḷḷi lesson's bargain."
             }
           ]
         },

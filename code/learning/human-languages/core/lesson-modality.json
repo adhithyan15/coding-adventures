@@ -7,12 +7,12 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:d6e3ba9e6a7c8cf2",
+  "sourceHash": "fnv1a64:20e6a728d8039764",
   "summary": {
-    "totalLessons": 1687,
+    "totalLessons": 1689,
     "voice": 1114,
     "sight": 508,
-    "pen": 65,
+    "pen": 67,
     "drivableLessons": 1114,
     "drivablePercent": 66,
     "trackCount": 22,
@@ -7548,11 +7548,11 @@
     },
     {
       "language": "tamil",
-      "lessonCount": 125,
+      "lessonCount": 127,
       "voice": 76,
       "sight": 29,
-      "pen": 20,
-      "drivablePercent": 61,
+      "pen": 22,
+      "drivablePercent": 60,
       "drivablePrefixTotal": 60,
       "modalities": [
         "voice",
@@ -8180,12 +8180,13 @@
         },
         {
           "chapter": 36,
-          "lessonCount": 4,
+          "lessonCount": 5,
           "voice": 0,
           "sight": 4,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "TA-C36-teneer",
@@ -8194,12 +8195,13 @@
         },
         {
           "chapter": 37,
-          "lessonCount": 4,
+          "lessonCount": 5,
           "voice": 0,
           "sight": 4,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "TA-C37-uur",
@@ -38018,7 +38020,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3da01ee3c6063b7b",
+      "sourceHash": "fnv1a64:df3eb8d967d164b5",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -38060,7 +38062,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7eae469fe811e74e",
+      "sourceHash": "fnv1a64:36ae56781169eff6",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -38105,7 +38107,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3cbfae9f73f99b68",
+      "sourceHash": "fnv1a64:bdda9249c003f94c",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -38387,6 +38389,30 @@
       ]
     },
     {
+      "id": "TA-W17-read-unavu",
+      "language": "tamil",
+      "chapter": 36,
+      "sequence": 1085,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:695185032432fcaf",
+      "detachableSegments": [
+        "Script you'll notice: உ",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "TA-C36-tavaru",
       "language": "tamil",
       "chapter": 36,
@@ -38448,6 +38474,30 @@
       "detachableSegments": [
         "The letters in this word"
       ]
+    },
+    {
+      "id": "TA-W18-read-uur",
+      "language": "tamil",
+      "chapter": 37,
+      "sequence": 1115,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:a4d00dabaf8d79bf",
+      "detachableSegments": [
+        "Script you'll notice: ஊ",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
     },
     {
       "id": "TA-C37-ivar",

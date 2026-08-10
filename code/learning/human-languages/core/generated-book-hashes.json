@@ -4043,7 +4043,7 @@
     {
       "language": "tamil",
       "chapter": 33,
-      "sourceHash": "fnv1a64:c9ee25acee4c3a7f",
+      "sourceHash": "fnv1a64:cf745e4b20acebec",
       "lessonIds": [
         "TA-C33-ninai",
         "TA-C33-puri",
@@ -4082,11 +4082,12 @@
     {
       "language": "tamil",
       "chapter": 36,
-      "sourceHash": "fnv1a64:aba8bf386dab3a06",
+      "sourceHash": "fnv1a64:d5a336d86b5196ce",
       "lessonIds": [
         "TA-C36-teneer",
         "TA-C36-paal",
         "TA-C36-unavu",
+        "TA-W17-read-unavu",
         "TA-C36-tavaru"
       ],
       "tex": "tamil/book/chapters/ch36-what-you-are-offered.tex"
@@ -4094,10 +4095,11 @@
     {
       "language": "tamil",
       "chapter": 37,
-      "sourceHash": "fnv1a64:86603e82eee0d338",
+      "sourceHash": "fnv1a64:0e330365cba813ff",
       "lessonIds": [
         "TA-C37-uur",
         "TA-C37-nanban",
+        "TA-W18-read-uur",
         "TA-C37-ivar",
         "TA-C37-ivar-en-nanbar"
       ],

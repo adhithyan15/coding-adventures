@@ -7540,7 +7540,7 @@
     {
       "language": "tamil",
       "chapter": 33,
-      "sourceHash": "fnv1a64:1692ee153a91024f",
+      "sourceHash": "fnv1a64:d442d66ccc91878e",
       "lessonIds": [
         "TA-C33-ninai",
         "TA-C33-puri",
@@ -7552,8 +7552,8 @@
       "drivablePrefix": 0,
       "text": "tamil/narration/ch33.txt",
       "json": "tamil/narration/ch33.json",
-      "textHash": "fnv1a64:70dee08f58a6d6a0",
-      "jsonHash": "fnv1a64:dc9c376c15fc5184"
+      "textHash": "fnv1a64:4afca61efbc345fb",
+      "jsonHash": "fnv1a64:c81de2b280170ecd"
     },
     {
       "language": "tamil",
@@ -7594,27 +7594,29 @@
     {
       "language": "tamil",
       "chapter": 36,
-      "sourceHash": "fnv1a64:402bf0320fcdb2c7",
+      "sourceHash": "fnv1a64:0c4b08a654ae45b6",
       "lessonIds": [
         "TA-C36-teneer",
         "TA-C36-paal",
         "TA-C36-unavu",
+        "TA-W17-read-unavu",
         "TA-C36-tavaru"
       ],
       "voiceLessons": 0,
       "drivablePrefix": 0,
       "text": "tamil/narration/ch36.txt",
       "json": "tamil/narration/ch36.json",
-      "textHash": "fnv1a64:0939422c53d55470",
-      "jsonHash": "fnv1a64:6923acb60ff29cd2"
+      "textHash": "fnv1a64:952d52c201fd0ca8",
+      "jsonHash": "fnv1a64:30e98ca2b6f0ebb0"
     },
     {
       "language": "tamil",
       "chapter": 37,
-      "sourceHash": "fnv1a64:f9fc24867a2d77c3",
+      "sourceHash": "fnv1a64:35ab5bef10c8172b",
       "lessonIds": [
         "TA-C37-uur",
         "TA-C37-nanban",
+        "TA-W18-read-uur",
         "TA-C37-ivar",
         "TA-C37-ivar-en-nanbar"
       ],
@@ -7622,8 +7624,8 @@
       "drivablePrefix": 0,
       "text": "tamil/narration/ch37.txt",
       "json": "tamil/narration/ch37.json",
-      "textHash": "fnv1a64:ac8790b0e34fcd44",
-      "jsonHash": "fnv1a64:971f62277de17d49"
+      "textHash": "fnv1a64:a39abe3d69af2f8c",
+      "jsonHash": "fnv1a64:d13059d30d302ffa"
     },
     {
       "language": "tamil",
