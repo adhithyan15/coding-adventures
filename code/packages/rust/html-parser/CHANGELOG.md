@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- A `table` start tag processed in table mode now reports the current-Standard
+  parse error before closing the open table and reprocessing the token. Nested
+  tables inside cells remain valid and diagnostic-free.
 - Table-body recovery now reports the current-Standard parse error when a `td`
   or `th` start tag requires an implied row, while preserving the existing DOM
   recovery and leaving cells already processed in row or template mode quiet.

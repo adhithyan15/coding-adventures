@@ -5313,6 +5313,10 @@ impl HtmlParser {
         }
 
         if !in_foreign_content && name == "table" && self.current_element_is_table_structure() {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-table-start-tag-in-table",
+                "table start tag closed and replaced the open table",
+            ));
             self.close_element("table");
         }
 
@@ -31433,6 +31437,33 @@ mod tests {
                 diagnostic.code != "unexpected-cell-start-tag-in-table-body"
             }));
         }
+    }
+
+    #[test]
+    fn reports_table_start_tags_that_replace_an_open_table() {
+        let output = parse_html_with_diagnostics("<!doctype html><table><table></table>").unwrap();
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-table-start-tag-in-table",
+                "table start tag closed and replaced the open table",
+            )]
+        );
+
+        let children = &body(&output.document).children;
+        assert_eq!(children.len(), 2);
+        assert_eq!(element(&children[0]).name, "table");
+        assert_eq!(element(&children[1]).name, "table");
+        assert!(element(&children[1]).children.is_empty());
+
+        let nested_cell = parse_html_with_diagnostics(
+            "<!doctype html><table><tr><td><table>A</table></td></tr></table>",
+        )
+        .unwrap();
+        assert!(nested_cell
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| { diagnostic.code != "unexpected-table-start-tag-in-table" }));
     }
 
     #[test]

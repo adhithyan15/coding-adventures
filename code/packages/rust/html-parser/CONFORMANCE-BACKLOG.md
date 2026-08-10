@@ -98,6 +98,10 @@ Prioritized work items:
    missing row, matching the current Standard and WPT's
    `unexpected-cell-in-table-body` evidence while leaving normal row and
    template-mode cells quiet.
+   Nested `table` start tags now report before table-mode recovery closes the
+   open table and reprocesses the token, matching the minimal WPT
+   `tests6.dat` `<table><table>` evidence while leaving tables nested inside
+   cells quiet.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases
