@@ -584,7 +584,7 @@ pub fn analyze_package_degradations(
     let runtime_required_shell = profile == BuildProfile::NativeComplete
         && matches!(
             opts.backend,
-            Backend::Compose | Backend::Flutter | Backend::SwiftUI | Backend::Xaml
+            Backend::Compose | Backend::Flutter | Backend::Qt | Backend::SwiftUI | Backend::Xaml
         );
     if opts.emit_project && opts.backend.is_native() && !runtime_required_shell {
         degradations.push(Degradation {
@@ -1388,8 +1388,10 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             written.push(host_nested);
         }
         Backend::Qt => {
+            let require_runtime = profile == Some(BuildProfile::NativeComplete);
             let qt_opts = mosaic_emit_qt::pipeline::EmitOptions {
                 emit_project: true,
+                require_runtime,
                 ..Default::default()
             };
             let r = mosaic_emit_qt::pipeline::from_pipeline_with_options(
@@ -1399,16 +1401,27 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 &qt_opts,
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
+            if require_runtime {
+                write_file(
+                    &backend_dir.join(format!("{component}.qml")),
+                    r.output.as_bytes(),
+                )?;
+            }
             if let Some(proj) = r.project {
                 let runtime_binding = mosaic_app_bindings::qt_runtime_binding();
+                let contract = if require_runtime {
+                    " In the native-complete profile the binding and Rust runtime are mandatory; startup validates required MIL props before constructing QML and exits explicitly if the contract is unavailable."
+                } else {
+                    ""
+                };
                 let readme = format!(
                     "{}\n## Rust application runtime\n\nThis project includes Mosaic's standard \
                      Qt binding. Set `MOSAIC_APP_LIBRARY` to the Rust application library \
                      path, or package it under the conventional `mosaic_app` name. The \
                      generated host owns the application handle, event sequence, snapshots, \
                      returned buffers, and teardown. Explicit package host assets may replace \
-                     `MosaicHost.h/.cpp` when specialized platform integration is required.\n",
-                    proj.readme
+                     `MosaicHost.h/.cpp` when specialized platform integration is required.{}\n",
+                    proj.readme, contract
                 );
                 // Qt's qmldir shell file would conflict with the
                 // step-5 qmldir (the module descriptor). The shell's
@@ -3777,6 +3790,63 @@ layout Board {
         assert!(readme
             .contains("This `native-complete` shell requires Mosaic's standard Rust application"));
         assert!(readme.contains("There is no reflection host or"));
+    }
+
+    #[test]
+    fn native_complete_qt_shell_requires_the_standard_rust_runtime() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        fs::write(
+            pkg.path().join("src/Card.mil"),
+            "component Card { slot app-title : text ; emit onReveal ; }\n",
+        )
+        .unwrap();
+        fs::write(
+            pkg.path().join("src/Card.mll"),
+            "layout Card { Text [ root ] ( content : slot: app-title ) }\n",
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let result = build_package_with_profile(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Qt,
+                emit_project: true,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("native-complete Qt shell");
+
+        let report_path = out.path().join("qt/mosaic-degradations.json");
+        assert!(result.artifacts.contains(&report_path));
+        let report = fs::read_to_string(report_path).unwrap();
+        assert!(report.contains("\"nativeComplete\": true"));
+
+        let qml = fs::read_to_string(out.path().join("qt/Card.qml")).unwrap();
+        assert!(qml.contains("required property var mosaicHost"));
+        assert!(qml.contains("mosaicHost.handleRequiredEvent(event)"));
+        assert!(!qml.contains("mosaicHost ?"));
+
+        let main = fs::read_to_string(out.path().join("qt/main.cpp")).unwrap();
+        assert!(main.contains("mosaicHost.requireRuntime();"));
+        assert!(main.contains("mosaicHost.configureRequiredProps"));
+        assert!(main.contains("{QStringLiteral(\"app-title\"), QStringLiteral(\"appTitle\")}"));
+        assert!(main.contains("view.setInitialProperties(initialProperties);"));
+        assert!(!main.contains("__has_include"));
+        assert!(!main.contains("root->setProperty"));
+
+        let cmake = fs::read_to_string(out.path().join("qt/CMakeLists.txt")).unwrap();
+        assert!(cmake.contains("target_sources(Card PRIVATE MosaicHost.cpp MosaicHost.h)"));
+        assert!(!cmake.contains("if(EXISTS \"${CMAKE_CURRENT_SOURCE_DIR}/MosaicHost.cpp\")"));
+
+        let host = fs::read_to_string(out.path().join("qt/MosaicHost.cpp")).unwrap();
+        assert!(host.contains("void MosaicHost::requireRuntime() const"));
+        assert!(host.contains("missing required MIL prop"));
+
+        let readme = fs::read_to_string(out.path().join("qt/README.md")).unwrap();
+        assert!(readme.contains("Native-complete runtime contract"));
+        assert!(readme.contains("runtime are mandatory"));
     }
 
     #[test]

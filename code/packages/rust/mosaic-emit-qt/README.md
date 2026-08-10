@@ -98,6 +98,13 @@ Three things to notice:
    props through `applyMosaicProps`; emitted events round-trip through
    `mosaicHost.handleEvent(event)`.
 
+Package builds using `--profile native-complete` strengthen that bridge into a
+runtime contract: `MosaicHost.h/.cpp` is compiled unconditionally, the Rust
+runtime and required MIL props are validated before QML construction, MIL slot
+names are mapped to their QML camel-case names, and events dispatch through the
+non-null host. Missing runtime state exits explicitly instead of displaying a
+sample or inert UI. Permissive builds retain the optional bridge above.
+
 ## Primitive lowering table
 
 | moslayout tag | QML element                                                                  |

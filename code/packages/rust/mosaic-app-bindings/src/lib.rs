@@ -341,5 +341,14 @@ mod tests {
             dispatch < commit,
             "sequence must commit only after dispatch succeeds"
         );
+        assert!(binding.header.contains("void requireRuntime() const"));
+        assert!(binding.header.contains("QVariantMap propsRequired() const"));
+        assert!(binding
+            .header
+            .contains("Q_INVOKABLE QVariantMap handleRequiredEvent"));
+        assert!(binding
+            .source
+            .contains("native-complete requires the Mosaic Rust application runtime"));
+        assert!(binding.source.contains("missing required MIL prop"));
     }
 }

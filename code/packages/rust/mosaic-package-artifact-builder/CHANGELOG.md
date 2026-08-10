@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased] - native-complete Qt runtime shell
+
+- Qt project shells emitted under `BuildProfile::NativeComplete` now require
+  Mosaic's standard QObject runtime binding and validate required MIL props
+  before QML construction.
+- Strict Qt shells remove conditional binding compilation and nullable event
+  dispatch, while mapping Rust MIL prop names to generated QML member names.
+- Linux CI compiles a zero-degradation strict Qt package and exercises normal,
+  missing-prop, and missing-runtime conformance paths.
+
 ## [Unreleased] - native-complete XAML runtime shell
 
 - XAML project shells emitted under `BuildProfile::NativeComplete` now require

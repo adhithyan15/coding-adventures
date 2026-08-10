@@ -94,6 +94,31 @@ void MosaicHost::attach(QObject *root)
     Q_UNUSED(root);
 }
 
+void MosaicHost::requireRuntime() const
+{
+    if (app_) return;
+    throw std::runtime_error(
+        QStringLiteral("native-complete requires the Mosaic Rust application runtime: %1")
+            .arg(error_.isEmpty() ? QStringLiteral("runtime unavailable") : error_)
+            .toStdString());
+}
+
+void MosaicHost::configureRequiredProps(const QVariantMap &slotNames,
+                                        const QStringList &requiredProps)
+{
+    requireRuntime();
+    requiredSlotNames_ = slotNames;
+    requiredProps_ = requiredProps;
+}
+
+QVariantMap MosaicHost::propsRequired() const
+{
+    requireRuntime();
+    return requireAndMapUpdate(latestUpdate_, "startup update")
+        .value(QStringLiteral("props"))
+        .toMap();
+}
+
 QVariantMap MosaicHost::props() const
 {
     return app_ ? latestUpdate_ : failure(error_);
@@ -139,6 +164,13 @@ QVariantMap MosaicHost::handleEvent(const QVariantMap &event)
     } catch (const std::exception &exception) {
         return failure(QString::fromUtf8(exception.what()));
     }
+}
+
+QVariantMap MosaicHost::handleRequiredEvent(const QVariantMap &event)
+{
+    requireRuntime();
+    const auto update = handleEvent(event);
+    return requireAndMapUpdate(update, "event update");
 }
 
 QVariant MosaicHost::snapshot()
@@ -222,6 +254,31 @@ QVariantMap MosaicHost::requireMap(const QVariant &value, const char *kind) cons
     throw std::runtime_error(QStringLiteral("Mosaic runtime returned a non-object %1")
                                  .arg(QString::fromLatin1(kind))
                                  .toStdString());
+}
+
+QVariantMap MosaicHost::requireAndMapUpdate(const QVariantMap &update, const char *kind) const
+{
+    if (update.contains(QStringLiteral("error"))) {
+        throw std::runtime_error(update.value(QStringLiteral("error")).toString().toStdString());
+    }
+    const auto props = requireMap(update.value(QStringLiteral("props")), kind);
+    for (const auto &name : requiredProps_) {
+        if (!props.contains(name)) {
+            throw std::runtime_error(
+                QStringLiteral("native-complete runtime %1 is missing required MIL prop '%2'")
+                    .arg(QString::fromLatin1(kind), name)
+                    .toStdString());
+        }
+    }
+
+    QVariantMap mappedProps;
+    for (auto it = props.cbegin(); it != props.cend(); ++it) {
+        const auto target = requiredSlotNames_.value(it.key(), it.key()).toString();
+        mappedProps.insert(target, it.value());
+    }
+    auto mappedUpdate = update;
+    mappedUpdate.insert(QStringLiteral("props"), mappedProps);
+    return mappedUpdate;
 }
 
 QVariantMap MosaicHost::failure(const QString &message) const

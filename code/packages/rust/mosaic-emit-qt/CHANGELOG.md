@@ -4,6 +4,14 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - runtime-required native-complete shell
+
+Qt project emission can now require Mosaic's standard Rust runtime. Strict QML
+uses a required host, CMake always compiles the binding, and `main.cpp` validates
+the runtime and required MIL props before constructing the root through
+`QQuickView::setInitialProperties`. Runtime updates map kebab-case MIL names to
+their generated camel-case QML properties; permissive output remains unchanged.
+
 ### Fixed - collision-safe generated QML signal names
 
 MIL emit names that collide with QML reserved words, generated root members,

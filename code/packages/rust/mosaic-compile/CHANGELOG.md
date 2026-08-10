@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Changed - strict Qt shells require Rust
+
+`mosaic-compile pkg --backend qt --emit-project --profile native-complete`
+now emits a runtime-required Qt application shell. It validates the standard
+QObject binding and required MIL props before QML construction, maps runtime
+props to generated QML names, and contains no optional-host event path.
+
 ### Changed - strict XAML shells require Rust
 
 `mosaic-compile pkg --backend xaml --emit-project --profile native-complete`

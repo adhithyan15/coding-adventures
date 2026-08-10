@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add direct required-runtime and required-prop APIs to the standard Qt binding.
+  Strict shells now reject missing Rust libraries and incomplete prop envelopes,
+  while consistently mapping MIL slot names onto generated QML properties.
 - Add direct required-runtime APIs to the standard XAML binding. Strict WinUI
   shells now fail explicitly when Rust is unavailable, reject missing required
   props and invalid values, and revalidate props after every event.
