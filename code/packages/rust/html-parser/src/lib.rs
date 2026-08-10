@@ -7285,6 +7285,16 @@ impl HtmlParser {
                 self.close_open_table_context_element_if(|name| {
                     name == "caption" || name == "colgroup"
                 });
+                if self.current_element_is("table")
+                    || self.current_element_name().is_some_and(is_table_section)
+                {
+                    self.diagnostics.push(ParserDiagnostic::new(
+                        "unexpected-cell-start-tag-in-table-body",
+                        format!(
+                            "start tag `<{incoming_name}>` in a table body context implied a missing row"
+                        ),
+                    ));
+                }
                 if self.current_element_is("table") {
                     self.append_implied_element("tbody");
                 }
@@ -31387,6 +31397,42 @@ mod tests {
             element(&second_row.children[0]).children,
             vec![Node::text("C")]
         );
+    }
+
+    #[test]
+    fn reports_cells_that_require_an_implied_table_row() {
+        for (source, name) in [
+            ("<!doctype html><table><td>A</td></table>", "td"),
+            (
+                "<!doctype html><table><tbody><th>A</th></tbody></table>",
+                "th",
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "unexpected-cell-start-tag-in-table-body",
+                    format!("start tag `<{name}>` in a table body context implied a missing row"),
+                )],
+                "source {source:?}"
+            );
+
+            let table = element(&body(&output.document).children[0]);
+            let tbody = element(&table.children[0]);
+            let row = element(&tbody.children[0]);
+            assert_eq!(element(&row.children[0]).name, name);
+        }
+
+        for source in [
+            "<!doctype html><table><tr><td>A</td></tr></table>",
+            "<!doctype html><template><td>A</td></template>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-cell-start-tag-in-table-body"
+            }));
+        }
     }
 
     #[test]

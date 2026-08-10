@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Table-body recovery now reports the current-Standard parse error when a `td`
+  or `th` start tag requires an implied row, while preserving the existing DOM
+  recovery and leaving cells already processed in row or template mode quiet.
 - Table-structure start tags and `table` end tags that close a caption now
   report the current-Standard parse error when implied-end-tag generation
   leaves a non-caption node current. Caption-scoped `table` end tags also close

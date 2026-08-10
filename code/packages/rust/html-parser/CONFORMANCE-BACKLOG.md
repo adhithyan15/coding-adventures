@@ -94,6 +94,10 @@ Prioritized work items:
    starts. Caption recovery now reports when a table-structure start tag or
    `table` end tag closes the caption while a non-implied node remains current;
    caption-scoped table endings now reprocess after closing the caption.
+   Cell start tags now report when table-body recovery must synthesize a
+   missing row, matching the current Standard and WPT's
+   `unexpected-cell-in-table-body` evidence while leaving normal row and
+   template-mode cells quiet.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases
