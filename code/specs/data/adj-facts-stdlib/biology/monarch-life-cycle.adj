@@ -1,0 +1,60 @@
+% ============================================================================
+% monarch-life-cycle — each stage of the monarch butterfly's life cycle as a
+% NUMBER (1-4), the position in the ordered sequence (adj-facts-stdlib,
+% BIOLOGY).
+% ============================================================================
+% A genuinely new content shape for this loop's science curriculum sweep —
+% NOT another instrument-measures-quantity table (like the already-shipped
+% `chemistry/measuring-tools.adj` and `meteorology/weather-instruments.adj`)
+% and NOT an ordinal-WORD bridge (like the four already-shipped
+% season/planet/moon-phase/mitosis ordinal-position libraries) — this is a
+% plain numbered life-cycle-stage recall table, the same shape
+% `earth-science/water-cycle.adj` already established for a physical process
+% cycle, applied here to a BIOLOGICAL one. Recall is a binding query:
+%
+%     ? monarch_life_stage(pupa, $N)   % 3
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `monarch_life_stage(stage, order)` carrying the USDA citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% position WITH its source, on the CPU, with zero model calls, and abstains
+% on a word that is not one of the four life stages the source names. The
+% query also runs BACKWARD — bind a number and recall the stage:
+%
+%     ? monarch_life_stage($S, 1)   % egg
+%
+% The four stages IN ORDER, as a little truth table:
+%
+%     stage   order   a beginner's cue
+%     -----   -----   --------------------------------------------
+%     egg     1        laid on a host plant by the adult female
+%     larva   2        the caterpillar stage — eats and grows
+%     pupa    3        the chrysalis stage — transforms inside
+%     adult   4        emerges with wings, mates, lays new eggs
+%
+% Provenance: quoted verbatim from the USDA Forest Service's "Monarch
+% Butterfly Biology" page, which names the four stages in an ordered list —
+% the ordinal reading is the row order, the same discipline
+% `biology/mitosis-phases.adj` and `astronomy/moon-phases.adj` already
+% established for a source's own ordered enumeration. WebFetch-verified
+% TWICE for consistency before writing. `trust authoritative` — a primary
+% U.S. government (USDA Forest Service, .gov) source. A word that is NOT one
+% of these four stages — `nymph` (the term for incomplete metamorphosis,
+% e.g. a grasshopper, not the monarch's complete metamorphosis) — is
+% deliberately NOT a row, so a recall ABSTAINS on it rather than inventing a
+% position. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table monarch_life_stage {
+    columns stage, order
+
+    row (egg, 1)
+    row (larva, 2)
+    row (pupa, 3)
+    row (adult, 4)
+
+    source "The monarch has four distinct life stages: egg, larva (caterpillar), pupa (chrysalis), and adult."
+    locator "https://www.fs.usda.gov/wildflowers/pollinators/Monarch_Butterfly/biology/index.shtml"
+    trust authoritative
+}
