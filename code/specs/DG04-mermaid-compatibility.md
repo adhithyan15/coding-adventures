@@ -136,6 +136,8 @@ Sequence newlines and semicolons are interchangeable statement terminators at
 the document level and inside control blocks.
 Both modern `title Text` and legacy `title: Text` sequence title forms lower
 through the same title semantics and native text pipeline.
+Sequence text decodes Mermaid decimal and HTML named entity codes to Unicode
+before layout and Paint glyph shaping.
 
 Inline participant configuration now carries `type` and `alias` into semantic
 IR. Boundary, control, entity, database, collections, and queue kinds lower to

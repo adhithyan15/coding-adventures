@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.18.0";
+pub const VERSION: &str = "0.19.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -111,7 +111,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.18.0");
+        assert_eq!(VERSION, "0.19.0");
     }
 
     #[test]
@@ -469,5 +469,18 @@ A\\-B: reverse stick bottom
         let tokens =
             tokenize_mermaid_sequence("sequenceDiagram;participant Alice;Alice->>Bob: Hello;");
         assert_eq!(tokens.iter().filter(|token| token.value == ";").count(), 3);
+    }
+
+    #[test]
+    fn tokenizes_sequence_entities_without_splitting_the_semicolon() {
+        let tokens =
+            tokenize_mermaid_sequence("sequenceDiagram\nAlice->>Bob: I #9829; you #infin; times\n");
+        let entities: Vec<_> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("ENTITY"))
+            .map(|token| token.value.as_str())
+            .collect();
+        assert_eq!(entities, vec!["#9829;", "#infin;"]);
+        assert!(!tokens.iter().any(|token| token.value == ";"));
     }
 }
