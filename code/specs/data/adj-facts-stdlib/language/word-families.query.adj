@@ -19,4 +19,5 @@ import "word-families.adj"
 ? rhymes_with(cat, $W)     % expect bat, fat, sat, rat, pat, mat, hat, cat (derived: shares the -at family)
 ? rhymes_with(pig, $W)     % expect big, fig, dig, wig, pig (derived: shares the -ig family)
 ? rhymes_with(bug, $W)     % expect tug, rug, hug, mug, jug, dug, bug (derived: shares the -ug family)
-? word_family(dog, $F)     % expect abstain — "dog" has no shipped row, not in this family
+? rhymes_with(dog, $W)     % expect hog, fog, log, jog, dog (derived: shares the -og family)
+? word_family(cup, $F)     % expect abstain — "cup" has no shipped row, not in this family
