@@ -449,6 +449,15 @@ journal containing the exact signed bootstrap bytes, encrypted initial object
 frames, commit frame, announcement bytes, encrypted local secret envelope, and
 intended final pins. It contains ciphertext and public data only.
 
+After process loss, resume first authenticates the passphrase root wrap from
+the exact journal bootstrap, derives the same repository address, decrypts the
+local secret, and proves its authority, device-signing, and device-wrapping
+private seeds reproduce the public identities pinned in the bootstrap and
+certificate. Only then may it rebuild the mandatory repository verifier.
+Wrong passphrases and otherwise unauthenticatable root wraps both return
+`AuthenticationFailed`; identity mismatch returns `IntegrityFailure`. This
+rehydration performs no external write.
+
 Resume performs the exact idempotent sequence:
 
 1. immutable bootstrap put and exact readback;

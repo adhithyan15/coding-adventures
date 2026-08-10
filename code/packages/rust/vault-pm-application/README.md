@@ -22,6 +22,12 @@ bootstrap locator, repository address, and mandatory verifier. All root,
 signing, device, passphrase, and randomness material is held in wipe-on-drop
 containers.
 
+Durable `PreparedInit` journals can be passphrase-rehydrated after process
+loss without any external write. Rehydration authenticates the root wrap,
+re-derives the repository address, decrypts local custody, and proves that all
+three private seeds reproduce the authority and device public identities
+pinned in the bootstrap and certificate before rebuilding the verifier.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
 credential store, or entropy source. Crash-resumable side effects and session
@@ -33,7 +39,7 @@ and Ed25519 key.
 
 ## Verification
 
-The package has 37 tests covering exact canonical and cryptographic vectors,
+The package has 40 tests covering exact canonical and cryptographic vectors,
 lossless removed-value persistence, live and tombstone revisions, catalog
 bounds and ordering, cross-kind and cross-vault rejection, AEAD tampering,
 authority/device/certificate binding, Ed25519 signature rejection, closed
@@ -41,8 +47,8 @@ parser failures, crash-state relationship checks, diagnostic redaction, and
 explicit key wiping. Repository tests additionally exercise initialization,
 publication, verified open/read/history, every injected provider operation,
 constructor paths, and complete error translation. The exact Tarpaulin result
-under its LLVM engine is 1,246 of 1,278 production lines (97.50%); the new
-generation-zero module covers 226 of 226 lines.
+under its LLVM engine is 1,315 of 1,350 production lines (97.41%); the
+generation-zero and restart-rehydration module covers 294 of 297 lines.
 
 ## Development
 

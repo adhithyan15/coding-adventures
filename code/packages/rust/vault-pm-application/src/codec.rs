@@ -1148,6 +1148,10 @@ mod tests {
         for (error, label) in [
             (ApplicationError::NotInitialized, "NotInitialized"),
             (ApplicationError::AlreadyInitialized, "AlreadyInitialized"),
+            (
+                ApplicationError::AuthenticationFailed,
+                "AuthenticationFailed",
+            ),
             (ApplicationError::InvalidInput, "InvalidInput"),
             (ApplicationError::BoundExceeded, "BoundExceeded"),
             (ApplicationError::ConcurrentHost, "ConcurrentHost"),

@@ -2,6 +2,21 @@
 
 All notable changes to this package are documented here.
 
+## [0.6.0] - 2026-08-09
+
+### Added
+
+- No-write passphrase rehydration of a durable generation-zero `PreparedInit`
+  journal into its repository address and authority-anchored verifier.
+
+### Security
+
+- Wrong passphrases and unauthenticatable root wraps share the closed
+  `AuthenticationFailed` result.
+- Rehydration proves the decrypted authority, device-signing, and device-wrap
+  private seeds reproduce the identities pinned in the signed bootstrap and
+  authority-signed certificate before repository access.
+
 ## [0.5.0] - 2026-08-09
 
 ### Added
