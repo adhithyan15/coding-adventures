@@ -6,6 +6,8 @@ the bounded `init`, locked `status`/`doctor`, authenticated `audit verify`, and
 opt-in full `doctor --unlock` workflows. It now also owns the first usable item
 vertical: authenticated login creation plus durable redacted list/show. The
 same one-shot boundary now supports revision-safe login replacement. The
+newest-first `history list ITEM` projection exposes canonical revision
+selectors plus safe causal metadata without opening historical secrets. The
 executable is a thin caller of this package.
 
 The driver composes the existing storage-neutral application over separately
@@ -42,6 +44,14 @@ never available to the renderer.
 exact document only inside a wipe-on-drop wrapper, preserves immutable identity
 and unedited metadata, collects the complete bounded login form again, and
 consumes the session through the crash-resumable replacement compare-and-swap.
+
+`history list ITEM` reopens the authenticated repository, traverses at most the
+application history bound, synchronously locks, and then renders each unique
+revision as a canonical selector, live/deleted state, direct-parent count,
+advisory timestamp, and—only for live revisions—the schema and escaped title.
+Passwords and notes bodies never enter the redacted projection; usernames,
+URLs, paths, object frames, and cryptographic details are never emitted by the
+history renderer.
 
 ## Verification
 

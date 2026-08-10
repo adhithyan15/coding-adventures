@@ -1431,8 +1431,9 @@ changelog, focused build, and downstream validation.
       rendering, using `VLT-PM10-cli-authenticated-verification.md`.
 9b-2a. login creation plus durable redacted authenticated item list/show over
        separate one-shot processes, using `VLT-PM11-cli-login-create-read.md`.
-9b-2b. redacted authenticated search and history reads plus non-login show
-       renderers.
+9b-2b-1. redacted authenticated revision history listing using
+         `VLT-PM13-cli-history-list.md`.
+9b-2b-2. redacted authenticated search plus non-login show renderers.
 9b-3a-1. revision-safe authenticated login replacement using
          `VLT-PM12-cli-login-replace.md`.
 9b-3a-2. remaining record creation plus richer notes/multiple-URL editing.
@@ -1497,11 +1498,13 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   `VLT-PM04-repository.md`, `VLT-PM05-application.md`,
   `VLT-PM06-local-host.md`, `VLT-PM07-config.md`, `VLT-PM08-cli-host.md`,
   `VLT-PM09-cli-bootstrap.md`, `VLT-PM10-cli-authenticated-verification.md`,
-  `VLT-PM11-cli-login-create-read.md`, and `VLT-PM12-cli-login-replace.md` —
+  `VLT-PM11-cli-login-create-read.md`, `VLT-PM12-cli-login-replace.md`, and
+  `VLT-PM13-cli-history-list.md` —
   product repository wire,
   object-store, domain, verified-DAG, application, local-host, configuration,
   terminal/entropy, executable composition, authenticated verification, and
-  first CRUD-vertical, and revision-safe replacement contracts.
+  first CRUD-vertical, revision-safe replacement, and redacted history
+  contracts.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.

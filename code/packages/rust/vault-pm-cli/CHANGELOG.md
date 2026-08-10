@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added authenticated `history list ITEM` with canonical revision selectors,
+  newest-first causal metadata, and redacted record titles.
 - Added revision-safe `item edit ITEM` for complete login-field replacement
   while preserving identity, metadata, notes, and causal history.
 - Added strict `item add login`, `item list`, and `item show ITEM` commands.

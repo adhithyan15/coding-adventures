@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Exposed redacted revision history listing and extended the PTY suite through
+  canonical newest-first history after a durable edit.
 - Exposed revision-safe login edit and extended the PTY restart suite through
   replacement plus a later redacted show.
 - Exposed login add and redacted list/show through the thin executable.
