@@ -185,3 +185,20 @@ landed and why, not a semver-tracked API.
   the two originally-flagged remaining candidates from the Wave 3 sweeps (gravitation, bmi is now
   the only one left, deliberately deferred as lowest priority — an isolated clinical definition,
   not part of a citable physics "family").
+- `clinical/bmi.adj` — the ELEVENTH and final Wave 3 rung-0 CAS-wiring companion (ADJ-FORMULA-
+  LIBRARIES FL-10, §3D): `body_mass_from_bmi`, solving the same cited WHO `BMI = mass/height²`
+  definition as the forward `bmi` formula for body mass — written in its equivalent multiplicative
+  form (`BMI · height² = body_mass`) so the target appears only as a linear factor. Solving for
+  height instead is deliberately absent: height is squared, quadratic, out of rung-0's linear-only
+  scope, the direct sibling of `geometry-formulas.adj`'s `square_area` boundary case. Query example
+  uses clean round numbers (BMI 17.5, height 2 m → body mass 70 kg) for an exact round trip. Like
+  `ideal-gas-law.adj`, this library had ZERO manifest.json coverage before this PR — backfilled the
+  base objective `adj.science.clinical.bmi` (domain `science`, `ngss` coverage root, mirroring the
+  convention every other Wave 3 base-science objective already uses; no dedicated clinical coverage
+  root exists yet in this manifest) so the new algebra objective had a valid prerequisite. New
+  e2e test file `formula_bmi_e2e.rs` (2 tests — this library had none before). New manifest
+  objectives `adj.science.clinical.bmi` and `adj.math.algebra.rearrange_bmi`. This closes out ALL
+  originally-flagged Wave 3 rung-0 CAS-wiring candidates (kinematics, geometry, work,
+  mechanics-force, kinetic-energy, pressure, density, electricity-current, ideal-gas-law,
+  gravitation, bmi) — eleven items across six sweep rounds. Wave 3's rung-0 sweep is now
+  genuinely complete.
