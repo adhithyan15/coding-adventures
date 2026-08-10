@@ -257,6 +257,11 @@ Object wrap and payload AAD are the corresponding prefix bytes followed by the
 big-endian two-byte suite, 16-byte vault ID, and big-endian eight-byte object
 kind. No delimiter or host/provider value is inserted.
 
+Root-wrap AAD is exactly `"VPM-ROOT-WRAP-v1" || suite_u16_be || vault_id`.
+It contains no KDF value, passphrase identifier, provider locator, or bootstrap
+generation. Those values are either inputs to the KEK, signed bootstrap fields,
+or intentionally absent from the cryptographic identity.
+
 The object kind registry is fixed in section 6. A frame cannot be decrypted as
 a different kind. AEAD authentication completes before plaintext parsing.
 
@@ -319,6 +324,45 @@ Phase 1A keeps the authority seed locally because it must support password
 rotation and later enrollment. It is loaded only into an unlocked session and
 is not included in normal item/export views. Recovery and OS-backed custody are
 later extensions.
+
+### 5.1 Pure generation-zero preparation
+
+Generation-zero byte construction is separated from persistence. The pure
+preparation function consumes an owned zeroizing passphrase, a validated
+caller-calibrated KDF policy, one advisory timestamp, and exactly 496 bytes
+filled by the injected CSPRNG. It performs no bootstrap, owner-state,
+repository, filesystem, network, environment, clock, or credential-store
+operation.
+
+The CSPRNG block is partitioned once, without reuse, in this order:
+
+| Value | Bytes |
+|---|---:|
+| bootstrap locator | 32 |
+| vault ID | 16 |
+| vault root key | 32 |
+| Argon2id salt | 16 |
+| root-wrap nonce | 24 |
+| authority Ed25519 seed | 32 |
+| device ID | 16 |
+| device Ed25519 seed | 32 |
+| device X25519 secret | 32 |
+| local-secret nonce | 24 |
+| certificate object DEK/wrap nonce/payload nonce | 80 |
+| catalog object DEK/wrap nonce/payload nonce | 80 |
+| commit object DEK/wrap nonce/payload nonce | 80 |
+
+The caller must fill the complete block from a cryptographic entropy source;
+all-zero, repeated, seeded-test, or partially initialized blocks are forbidden
+in production. The owned block, VRK, KEK, signing keys, X25519 secret,
+passphrase, local-secret plaintext, and object randomness are wiped on drop.
+
+The result owns exactly one `PreparedInit` state, the matching random bootstrap
+locator, the opaque VLT-PM04 repository address, and an authority-anchored
+single-device verifier. It can be deterministically encoded and then consumed
+into those parts by the crash-resumable side-effect workflow. Identical owned
+inputs produce identical signed/encrypted bytes; retries after persistence
+reconstruct from the journal rather than calling preparation again.
 
 ## 6. Encrypted application object kinds
 

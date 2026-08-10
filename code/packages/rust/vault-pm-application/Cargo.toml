@@ -5,6 +5,7 @@ edition = "2021"
 description = "Host-neutral application persistence and cryptographic framing for the local-first password manager"
 
 [dependencies]
+coding_adventures_argon2id = { path = "../argon2id" }
 coding_adventures_canonical_cbor = { path = "../canonical-cbor" }
 coding_adventures_chacha20_poly1305 = { path = "../chacha20-poly1305" }
 coding_adventures_ed25519 = { path = "../ed25519" }
@@ -15,4 +16,5 @@ coding_adventures_vault_pm_format = { path = "../vault-pm-format" }
 coding_adventures_vault_pm_repository = { path = "../vault-pm-repository" }
 coding_adventures_vault_pm_storage = { path = "../vault-pm-storage" }
 coding_adventures_vault_records = { path = "../vault-records" }
+coding_adventures_x25519 = { path = "../x25519" }
 coding_adventures_zeroize = { path = "../zeroize" }
