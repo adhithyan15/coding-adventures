@@ -5,3 +5,11 @@ observe body_mass(70)
 observe height(1.75)
 
 ? bmi(body_mass, height)  % expect 22.857142857142858
+
+% --- BMI = mass/height², SOLVED FOR BODY MASS (rung-0 CAS-wiring, FL-10).
+% "A person is 2 m tall with a BMI of 17.5 -- what is their body mass?" Chosen
+% with clean round numbers so the round trip checks exactly. ---
+observe bmi(17.5)      % "…a BMI of 17.5…"  (span cited by the model)
+observe height(2)      % "…2 m tall…"        (span cited by the model)
+
+? body_mass_from_bmi(bmi, height)  % expect 70 (WHO, authoritative)

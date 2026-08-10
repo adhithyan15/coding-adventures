@@ -1337,6 +1337,36 @@
       "source_cas_hashes": [],
       "benchmark_paths": [],
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.science.clinical.bmi",
+      "title": "Compute body mass index, BMI = mass / height^2",
+      "band": "9-12",
+      "domain": "science",
+      "competency": "compute",
+      "coverage_roots": ["ngss"],
+      "standards": [],
+      "prerequisites": ["adj.math.arithmetic.primitives"],
+      "libraries": ["code/specs/data/adj-formula-stdlib/clinical/bmi.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.math.algebra.rearrange_bmi",
+      "title": "Solve BMI = mass / height^2 for body mass, given the BMI and the height",
+      "band": "9-12",
+      "domain": "mathematics",
+      "competency": "compute",
+      "coverage_roots": ["ccss.math"],
+      "standards": [],
+      "prerequisites": ["adj.science.clinical.bmi"],
+      "libraries": ["code/specs/data/adj-formula-stdlib/clinical/bmi.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     }
   ]
 }
