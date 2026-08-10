@@ -7,6 +7,16 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `Stack` now lowers to Compose's `Box` — the layering container it already
+  uses for the `Box` primitive itself, since Compose's `Box` natively stacks
+  its children. Found while wiring `task-app`'s icon assets (progress ring,
+  crescent moon, bridge-arc brand mark — see `task-app-icon-assets-v1.md`),
+  the first place a Mosaic component used `Stack` and hit this backend's
+  build. Not yet lowered: a child's static `position: absolute` + `top`/
+  `left` into `Modifier.offset(...)` — v1's existing "anything else
+  silently skipped" posture for static props means a Stack's children all
+  render at the Box's origin today rather than the pixel positions the
+  web/Flutter backends place them at.
 - `HostSurface ( content: slot: ... )` now accepts an
   `@Composable () -> Unit` node slot and invokes it at the shared native
   composition boundary.
