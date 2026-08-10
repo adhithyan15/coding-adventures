@@ -84,6 +84,10 @@ Prioritized work items:
    special in-table insertion behavior. Foster-parented `title` and `meta`
    start tags now report the general in-table parse error. Nested `select` and
    `input` start tags now report when they force recovery from select mode.
+   Repeated `option` and `optgroup` start tags now report the current-Standard
+   parse error when implied-end-tag recovery finds an option or optgroup in
+   select scope; the legacy html5lib error rows exercise the DOM recovery
+   without declaring that branch error.
    Non-whitespace text after a template row now reports when it forces recovery
    from template table mode. Formatting start tags now report when table
    structure foster-parents them, covering the remaining silent fostered-anchor

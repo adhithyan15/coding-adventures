@@ -7355,11 +7355,23 @@ impl HtmlParser {
             && (self.current_element_is("option") || self.has_open_element("select"))
         {
             if !self.current_empty_select_is_nested_in_option() {
-                self.close_open_element_if(|name| name == "option");
+                let closed_option = self.close_open_element_if(|name| name == "option");
+                if closed_option && self.has_open_element("select") {
+                    self.diagnostics.push(ParserDiagnostic::new(
+                        "unexpected-option-start-tag-in-select",
+                        "start tag `<option>` implied the end of an option in select scope",
+                    ));
+                }
             }
         } else if incoming_name == "optgroup" {
-            self.close_open_element_if(|name| name == "option");
-            self.close_open_element_if(|name| name == "optgroup");
+            let closed_option = self.close_open_element_if(|name| name == "option");
+            let closed_optgroup = self.close_open_element_if(|name| name == "optgroup");
+            if (closed_option || closed_optgroup) && self.has_open_element("select") {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-optgroup-start-tag-in-select",
+                    "start tag `<optgroup>` implied the end of an option or optgroup in select scope",
+                ));
+            }
         } else if incoming_name == "rb" {
             self.close_open_ruby_element_if(is_ruby_annotation_element);
             self.close_open_ruby_element_if(|name| name == "rtc");
@@ -33796,6 +33808,53 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "unexpected-start-tag-in-select"));
+    }
+
+    #[test]
+    fn reports_select_option_and_optgroup_implied_end_starts() {
+        for (source, diagnostic) in [
+            (
+                "<!doctype html><select><option><option>",
+                ParserDiagnostic::new(
+                    "unexpected-option-start-tag-in-select",
+                    "start tag `<option>` implied the end of an option in select scope",
+                ),
+            ),
+            (
+                "<!doctype html><select><optgroup><option><optgroup>",
+                ParserDiagnostic::new(
+                    "unexpected-optgroup-start-tag-in-select",
+                    "start tag `<optgroup>` implied the end of an option or optgroup in select scope",
+                ),
+            ),
+            (
+                "<!doctype html><select><optgroup><optgroup>",
+                ParserDiagnostic::new(
+                    "unexpected-optgroup-start-tag-in-select",
+                    "start tag `<optgroup>` implied the end of an option or optgroup in select scope",
+                ),
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.contains(&diagnostic),
+                "source {source:?}"
+            );
+        }
+
+        for source in [
+            "<!doctype html><select><option></select><option>",
+            "<!doctype html><select><optgroup></select><optgroup>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                !matches!(
+                    diagnostic.code.as_str(),
+                    "unexpected-option-start-tag-in-select"
+                        | "unexpected-optgroup-start-tag-in-select"
+                )
+            }));
+        }
     }
 
     #[test]
