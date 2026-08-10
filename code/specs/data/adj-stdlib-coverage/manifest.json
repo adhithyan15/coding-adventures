@@ -1367,6 +1367,21 @@
       "source_cas_hashes": [],
       "benchmark_paths": [],
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.literacy.k2.rhyming_word_families",
+      "title": "Recognize rhyming words via shared word-family (rime) membership",
+      "band": "K-2",
+      "domain": "literacy",
+      "competency": "classify",
+      "coverage_roots": ["ccss.ela"],
+      "standards": [],
+      "prerequisites": [],
+      "libraries": ["code/specs/data/adj-facts-stdlib/language/word-families.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     }
   ]
 }
