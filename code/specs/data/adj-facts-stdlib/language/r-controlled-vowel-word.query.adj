@@ -1,0 +1,15 @@
+% ============================================================================
+% r-controlled-vowel-word.query.adj — worked recall over the
+% r-controlled-vowel-word library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what r-controlled
+% pattern does this word follow?" (direct) or "which word follows this
+% pattern?" (reverse) — it states no fact of its own — it only `import`s
+% the grounded table and asks binding queries.
+% ============================================================================
+
+import "r-controlled-vowel-word.adj"
+
+? r_controlled_vowel_word(barn, $Pattern)     % expect ar (direct)
+? r_controlled_vowel_word($W, er)             % expect fern (reverse)
+? r_controlled_vowel_word(star, $Pattern)     % expect abstain -- a real ar-pattern word, but not one this source names
