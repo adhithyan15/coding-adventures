@@ -8,6 +8,7 @@
 - Validate normalized HSL sequence group colors through Metal PNG rendering.
 - Validate legacy colon-prefixed sequence titles through Metal PNG rendering.
 - Validate decoded sequence entity characters through native text shaping.
+- Shape multiline sequence messages and notes into reserved layout geometry.
 - Export sequence actor details references as PaintScene metadata.
 - Export JSON-valued sequence actor properties as PaintScene metadata.
 - Export sequence actor links as PaintScene hit-test metadata.

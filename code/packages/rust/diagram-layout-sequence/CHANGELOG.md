@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.13.0 - 2026-08-10
+
+- Reserve deterministic vertical space for multiline messages and notes.
+
 ## 0.12.0 - 2026-08-09
 
 - Preserve sequence accessibility text through layout.

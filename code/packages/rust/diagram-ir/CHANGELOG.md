@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.17.0
+
+- Added explicit sequence message-label height to layout IR.
+
 ## 0.16.0
 
 - Added sequence accessibility title and description semantics.

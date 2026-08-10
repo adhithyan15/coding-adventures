@@ -1,6 +1,6 @@
-//! diagram-ir v0.16.0 - DG00/DG04 semantic IR
+//! diagram-ir v0.17.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.16.0";
+pub const VERSION: &str = "0.17.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -336,6 +336,7 @@ pub enum LayoutedSequenceItem {
         to_x: f64,
         y: f64,
         label: String,
+        label_height: f64,
         line_style: SequenceLineStyle,
         arrowhead: SequenceArrowhead,
         bidirectional: bool,
@@ -931,8 +932,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn version_is_0_16_0() {
-        assert_eq!(VERSION, "0.16.0");
+    fn version_is_0_17_0() {
+        assert_eq!(VERSION, "0.17.0");
     }
     #[test]
     fn default_direction_is_tb() {
