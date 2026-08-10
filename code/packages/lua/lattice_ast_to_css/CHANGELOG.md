@@ -1,5 +1,16 @@
 # Changelog — coding-adventures-lattice-ast-to-css (Lua)
 
+## [0.1.1] — 2026-08-09
+
+### Fixed
+
+- Closed the Unix and Windows standalone build chain through
+  `lattice_parser` and all of its unpublished local prerequisites.
+- Rebuilt exact checked-in rocks with dependency fetching disabled instead of
+  trusting ambient LuaRocks installations.
+- Added a deployed-module smoke after installation rather than relying only on
+  source-path Busted coverage.
+
 ## [0.1.0] — 2026-03-29
 
 ### Added

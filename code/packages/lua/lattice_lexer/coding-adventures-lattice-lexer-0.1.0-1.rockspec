@@ -30,5 +30,6 @@ build = {
     type = "builtin",
     modules = {
         ["coding_adventures.lattice_lexer"] = "src/coding_adventures/lattice_lexer/init.lua",
+        ["coding_adventures.lattice_lexer.grammar_data"] = "src/coding_adventures/lattice_lexer/grammar_data.lua",
     },
 }

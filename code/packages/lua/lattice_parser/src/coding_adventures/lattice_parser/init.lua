@@ -98,69 +98,17 @@
 -- 3. **Parse** — construct a `GrammarParser` (from the `parser` package)
 --    and call `:parse()`.
 --
--- # Path navigation
---
--- This file lives at:
---   code/packages/lua/lattice_parser/src/coding_adventures/lattice_parser/init.lua
---
--- Walking 6 levels up reaches `code/`, the monorepo root:
---   lattice_parser/        (1)
---   coding_adventures/     (2)
---   src/                   (3)
---   lattice_parser/        (4) — the package directory
---   lua/                   (5)
---   packages/              (6)
---   code/                  → then /grammars/lattice.grammar
+-- The grammar payload is generated from the language-neutral
+-- `code/grammars/lattice/lattice.grammar` fixture and deployed as a Lua
+-- module, so parsing does not depend on a checkout-relative path.
 
 local grammar_tools  = require("coding_adventures.grammar_tools")
 local lattice_lexer  = require("coding_adventures.lattice_lexer")
 local parser_pkg     = require("coding_adventures.parser")
+local grammar_data   = require("coding_adventures.lattice_parser.grammar_data")
 
 local M = {}
 M.VERSION = "0.1.0"
-
--- =========================================================================
--- Path helpers
--- =========================================================================
-
---- Return the directory portion of a file path (no trailing slash).
--- @param path string
--- @return string
-local function dirname(path)
-    return path:match("(.+)/[^/]+$") or "."
-end
-
---- Return the absolute directory of this source file.
--- Uses `debug.getinfo` to retrieve the path Lua recorded at load time.
--- When busted runs tests with a relative path containing ".." the
--- dirname-only approach produces a path that collapses to "." after
--- up() steps, so the grammar file cannot be found.  We resolve to an
--- absolute path via "cd <dir> && pwd" to give up() an absolute anchor.
--- @return string Absolute directory of this init.lua file.
-local function get_script_dir()
-    local info = debug.getinfo(1, "S")
-    local src  = info.source
-    if src:sub(1, 1) == "@" then
-        src = src:sub(2)
-    end
-    -- Normalize Windows backslashes to forward slashes for cross-platform
-    -- path handling (on Linux/macOS this is a no-op).
-    src = src:gsub("\\", "/")
-    local dir = src:match("(.+)/[^/]+$") or "."
-    return dir
-end
-
---- Walk up `levels` directory levels from `path`.
--- @param path   string  Starting directory.
--- @param levels number  How many levels to ascend.
--- @return string        The ancestor directory.
-local function up(path, levels)
-    local result = path
-    for _ = 1, levels do
-        result = result .. "/.."
-    end
-    return result
-end
 
 -- =========================================================================
 -- Grammar loading
@@ -168,34 +116,16 @@ end
 
 local _grammar_cache = nil
 
---- Load and parse `lattice.grammar`, with caching.
---
--- On the first call, walks up 6 directory levels from this file to reach
--- `code/`, then opens `grammars/lattice.grammar`.  The parsed grammar is
--- cached so subsequent calls are instant.
+--- Load and parse the bundled `lattice.grammar` payload, with caching.
 --
 -- @return ParserGrammar
--- @error  Raises an error if the file cannot be opened or parsed.
+-- @error  Raises an error if the bundled grammar payload cannot be parsed.
 local function get_grammar()
     if _grammar_cache then
         return _grammar_cache
     end
 
-    local script_dir   = get_script_dir()
-    local repo_root    = up(script_dir, 6)
-    local grammar_path = repo_root .. "/grammars/lattice/lattice.grammar"
-
-    local f, open_err = io.open(grammar_path, "r")
-    if not f then
-        error(
-            "lattice_parser: cannot open grammar file: " .. grammar_path ..
-            " (" .. (open_err or "unknown error") .. ")"
-        )
-    end
-    local content = f:read("*all")
-    f:close()
-
-    local grammar, parse_err = grammar_tools.parse_parser_grammar(content)
+    local grammar, parse_err = grammar_tools.parse_parser_grammar(grammar_data)
     if not grammar then
         error(
             "lattice_parser: failed to parse lattice.grammar: " ..

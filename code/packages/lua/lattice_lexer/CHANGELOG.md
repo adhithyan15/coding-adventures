@@ -2,6 +2,16 @@
 
 All notable changes to this package are documented here.
 
+## [0.1.1] — 2026-08-09
+
+### Fixed
+
+- Bundled a generated Lua payload of canonical `lattice.tokens` data so a
+  deployed rock no longer depends on the monorepo directory layout or ambient
+  filesystem reads.
+- Added byte-for-byte canonical/payload drift coverage and an installed-runtime
+  regression through the parser/transpiler build chain.
+
 ## [0.1.0] — 2026-03-29
 
 ### Added

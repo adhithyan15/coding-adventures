@@ -14,5 +14,8 @@ dependencies = {
 }
 build = {
   type    = "builtin",
-  modules = { ["coding_adventures.lattice_parser"] = "src/coding_adventures/lattice_parser/init.lua" },
+  modules = {
+    ["coding_adventures.lattice_parser"] = "src/coding_adventures/lattice_parser/init.lua",
+    ["coding_adventures.lattice_parser.grammar_data"] = "src/coding_adventures/lattice_parser/grammar_data.lua",
+  },
 }

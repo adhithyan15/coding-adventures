@@ -1,5 +1,15 @@
 # Changelog — coding-adventures-lattice-parser
 
+## 0.1.1 — 2026-08-09
+
+- Fixed `BUILD` and `BUILD_windows` to install the complete checked-in parser
+  closure from a clean LuaRocks tree.
+- Disabled dependency fetching for every sibling and final rock installation,
+  removing ambient-tree and remote-resolution dependence.
+- Bundled a generated Lua payload of canonical `lattice.grammar` data, added
+  byte-for-byte drift coverage, and added a neutral-path runtime smoke so
+  source-tree test paths cannot mask missing deployed data.
+
 ## 0.1.0 — Initial release
 
 - Grammar-driven parser for the Lattice CSS superset language.

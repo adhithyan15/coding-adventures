@@ -109,6 +109,11 @@ lattice_lexer  ← you are here
 lattice_parser  (future)
 ```
 
+The rockspec installs a generated Lua payload of the canonical
+`code/grammars/lattice/lattice.tokens` data. A byte-for-byte regression keeps
+the payload aligned with the language-neutral fixture, while runtime execution
+needs no checkout-relative or ambient filesystem read.
+
 ## Dependencies
 
 - `coding-adventures-grammar-tools` — parses `lattice.tokens`
@@ -122,3 +127,7 @@ lattice_parser  (future)
 cd tests
 busted . --verbose --pattern=test_
 ```
+
+The downstream parser and transpiler build front doors also run neutral-path
+installed-runtime smokes, which verify that this package can load its bundled
+grammar without monorepo source paths in `package.path`.

@@ -77,3 +77,16 @@ Compile a Lattice AST to CSS text.
 | @each              | `@each $c in red, blue { ... }`         |
 | @function          | `@function spacing($n) { @return ... }` |
 | Selector nesting & | `.nav { &:hover { color: red; } }`      |
+
+## Standalone build contract
+
+`BUILD` and `BUILD_windows` bootstrap the full checked-in Lattice parser stack
+before installing this compiler: `directed_graph -> state_machine ->
+grammar_tools -> lexer -> lattice_lexer -> parser -> lattice_parser ->
+lattice_ast_to_css`. Every step disables dependency fetching, so an empty tree
+uses repository-owned sources and an ambient LuaRocks installation cannot mask
+a missing prerequisite.
+
+After the Busted suite, both front doors load the deployed module without
+monorepo source paths and compile an empty stylesheet as an installed-runtime
+smoke.
