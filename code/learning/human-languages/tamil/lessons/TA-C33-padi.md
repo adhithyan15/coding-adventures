@@ -58,7 +58,7 @@ Tamil does not split reading from studying: **படிப்பு** (*paḍipp
 Now a mystery worth clearing up. The letter is **ட**, named *ṭa*, yet the word
 is written here *paḍi*, with a **d**. Nothing is inconsistent: **Tamil marks no
 voicing.** One letter covers both sounds and **position decides** — hard
-word-initially or doubled, soft between vowels. That is Chapter 1's rule for
+word-initially or doubled, soft between vowels. That is Chapter 5's rule for
 **க**, which spells *k*, *g* and a soft *h* without changing shape.
 
 So **ட** is soft between the vowels of *paḍi* and hard in the doubled **ட்ட** of

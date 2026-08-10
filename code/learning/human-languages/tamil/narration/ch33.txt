@@ -16,7 +16,7 @@ You'll want to know: நினை.
 Two light beats, ni-nai. Threaded up: நினைக்கிறேன் (ninaikkiṟēṉ), "I think" — stem, tense, person, with nothing new in the machine.
 
 The letters in this word.
-நி is the dental ந with the i sign ி; னை is the alveolar ன with the ai sign ை. Two of Tamil's three n-letters in one word, and not interchangeable: the first sits on the teeth, the second on the ridge behind them. Chapter 1 mapped all three — ந, ன, ண.
+நி is the dental ந with the i sign ி; னை is the alveolar ன with the ai sign ை. Two of Tamil's three n-letters in one word, and not interchangeable: the first sits on the teeth, the second on the ridge behind them. Chapter 6's three-n lesson mapped all three — ந, ன, ண.
 
 Grammar Lens: it doubles, so it is strong.
 The k in ninaikkiṟēṉ is held long — ninaik-ki — as it was in irukkiṟēṉ and pārkkiṟēṉ, and not as it was in pōgiṟēṉ. So நினை is strong, and its past is நினைத்தேன் (ninaittēṉ), with the strong verb's doubled t.
@@ -110,7 +110,7 @@ Tamil does not split reading from studying: படிப்பு (paḍippu) is
 
 The letters in this word.
 ப (pa) + டி, which is ட wearing the i sign ி.
-Now a mystery worth clearing up. The letter is ட, named ṭa, yet the word is written here paḍi, with a d. Nothing is inconsistent: Tamil marks no voicing. One letter covers both sounds and position decides — hard word-initially or doubled, soft between vowels. That is Chapter 1's rule for க, which spells k, g and a soft h without changing shape.
+Now a mystery worth clearing up. The letter is ட, named ṭa, yet the word is written here paḍi, with a d. Nothing is inconsistent: Tamil marks no voicing. One letter covers both sounds and position decides — hard word-initially or doubled, soft between vowels. That is Chapter 5's rule for க, which spells k, g and a soft h without changing shape.
 So ட is soft between the vowels of paḍi and hard in the doubled ட்ட of paḍittēṉ. It is why pō becomes pōgiṟēṉ, why sāppiḍu has a ḍ, and why every romanization here softens where a speaker softens.
 ட is also retroflex, made where ண is: tongue tip curled back to the roof of the mouth. That curl matters more than the d-versus-t.
 
@@ -192,7 +192,7 @@ You'll want to know: எழுது.
 
 The letters in this word.
 எ is the standing vowel e; ழு is ழ with the u sign and து is த with the same sign.
-The dot returns in the noun எழுத்து (eḻuttu), "a letter of the alphabet," spelled எ ழு த் து: a puḷḷi strips the vowel from the first த் and the second து stands whole beside it. Two full letters and a visible dot, never a fused shape: Chapter 1's bargain.
+The dot returns in the noun எழுத்து (eḻuttu), "a letter of the alphabet," spelled எ ழு த் து: a puḷḷi strips the vowel from the first த் and the second து stands whole beside it. Two full letters and a visible dot, never a fused shape: the puḷḷi lesson's bargain.
 
 Sounds you'll need: ழ, and how to stop chasing it.
 ழ — written ḻ — is the sound in தமிழ் (tamiḻ) itself and in வாழ் (vāḻ), "to live," and is reputed to be the language's hardest.

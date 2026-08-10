@@ -99,9 +99,12 @@ through.
   native நலம்), and விடை (*viḍai*) — which the Dravidian dictionary files
   in the **same entry as வீடு**, so the arc walks in through the house and out
   through the leave on one root. In the book, Chapters 35–38.
-- **Writing W01–W04** ([`lessons/TA-W*`](./lessons/)): eight gentle steps teach
-  curves, the abugida, retroflexion, the three Tamil n letters, the puḷḷi,
-  vowel signs, and whole-word writing for **வணக்கம்** and **நன்றி**.
+- **The script strand, W01–W18** ([`lessons/TA-W*`](./lessons/)): 22 lessons
+  marked `delivery: script`, one after roughly every third speaking lesson from
+  Chapter 4 to Chapter 37. They teach curves, the abugida, retroflexion, the
+  three Tamil n letters, the puḷḷi, the vowel signs, and then spell — one word
+  per lesson — words the learner has already been saying, from **வணக்கம்** to
+  **தமிழ்**. Chapters 1–3 hold no writing lesson at all, on purpose.
 
 ---
 
@@ -123,15 +126,14 @@ validator may rewrite it.
 
 Two things about this track's ledger are worth knowing before reading it:
 
-- **Chapters 2–5 have no entry, on purpose.** Their lessons are still schema v1
-  with no `practises.knowledge`, so a payoff there could not name a single real
-  atom. The gap is left visible rather than stubbed, because the HL05 gap
-  report's whole job is to measure exactly this kind of debt.
-- **Every payoff is a chapter's last lesson by `sequence`,** because no Tamil
-  chapter yet ends on a schema-v2 `practice` or `practice-mix`. Where that last
-  lesson is one of the eight inline `writing` lessons, or an etymology lesson
-  whose closing work is weighing evidence, `payoff.kind` is `task` and the
-  summary describes that work plainly instead of dressing it up as an exchange.
+- **A payoff is usually a chapter's last lesson by `sequence`,** because no
+  Tamil chapter yet ends on a schema-v2 `practice` or `practice-mix`. It is not
+  always: interleaving the script strand put a `delivery: script` lesson after
+  the payoff in several chapters, so read `payoff.lesson` rather than assuming
+  the last one. Where the payoff lesson is a `writing` lesson, or an etymology
+  lesson whose closing work is weighing evidence, `payoff.kind` is `task` and
+  the summary describes that work plainly instead of dressing it up as an
+  exchange.
 
 The `canDo` statements are pitched at this track's real reader — fluent and
 literate in Tamil, but never formally taught its grammar — so they claim

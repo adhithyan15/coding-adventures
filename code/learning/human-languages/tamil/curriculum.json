@@ -49,7 +49,9 @@
         "TA-W13-read-irukkirirgal",
         "TA-W16-read-tamizh",
         "TA-W14-read-pesu",
-        "TA-W15-read-po"
+        "TA-W15-read-po",
+        "TA-W17-read-unavu",
+        "TA-W18-read-uur"
       ],
       "before": [],
       "inline": [
@@ -898,7 +900,9 @@
         "TA-W13-read-irukkirirgal",
         "TA-W16-read-tamizh",
         "TA-W14-read-pesu",
-        "TA-W15-read-po"
+        "TA-W15-read-po",
+        "TA-W17-read-unavu",
+        "TA-W18-read-uur"
       ]
     },
     {

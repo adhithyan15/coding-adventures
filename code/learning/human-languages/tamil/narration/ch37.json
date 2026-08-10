@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Your Town, Your Friend",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f9fc24867a2d77c3",
+  "sourceHash": "fnv1a64:35ab5bef10c8172b",
   "lessons": [
     {
       "id": "TA-C37-uur",
@@ -398,6 +398,176 @@
             {
               "kind": "speech",
               "text": "Give the friend-word for a woman, a man, and someone you respect. (Naṇbi; naṇbaṉ; naṇbar.) Which axis do the friend words split on, and which do the brother words? (Sex and respect; age.) Why is ப heard as b, and are அப்பா and அம்மா built from a root the way naṇbaṉ is? (A nasal voices the stop after it; no.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W18-read-uur",
+      "sequence": 1115,
+      "title": "ஊர் (ūr) — the long partner",
+      "headword": "ஊர்",
+      "romanization": "ūr",
+      "gloss": "ஊ, the long partner of the உ you read last chapter",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:a4d00dabaf8d79bf",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ஊ",
+          "Script you'll notice: build the word"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஊ and Script you'll notice: build the word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "உ opened உணவு last chapter. Tamil writes its long vowels as separate letters from the short ones, so ū gets a letter of its own."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ஊ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஊ is the standing letter for long ū, and it is the long partner of உ — the fourth short-and-long pair the strand has handed you, after அ/ஆ, ி/ீ and ெ/ே."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "உ, short u.",
+                "ஊ, long ū."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Read it; do not draw it yet. ஊ has no entry in this book's script data, and neither has உ — so neither gets a stroke order, and the pairing above, like the way the shorter letter sits inside the longer one, is what the page shows rather than something the data states."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script you'll notice: build the word",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "piece: ஊ, ū, independent — the word opens on a vowel.",
+                "piece: ர், bare r — ர under a puḷḷi, ர from சரி."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "ஊ, ர் becomes ஊர் (ūr)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, and both were waiting for you. ஊர் (ūr) is the word for your own town, and holding it against உணவு shows the length doing real work: change the vowel and you change the word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஊ — then ஊர் (ūr)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஊ** — then **ஊர்**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ūr\" — \"town\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ūr\" — \"town\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "உ and ஊ — short and long, two letters",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: **உ** and **ஊ** — short and long, two letters]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "உணவு and ஊர் (ūr) together — the pair, side by side",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **உணவு** and **ஊர்** together — the pair, side by side]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read ஊர் (ūr). Which letter is ஊ's short partner, and where did you read it? (உ, opening உணவு.) Why is the vowel a full letter here rather than a sign? (The word starts on it.) What is the dot on ர் doing? (Removing the built-in a.) Next: pointing someone out politely."
             }
           ]
         }

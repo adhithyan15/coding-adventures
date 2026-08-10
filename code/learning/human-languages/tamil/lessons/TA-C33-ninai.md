@@ -51,7 +51,7 @@ think" — stem, tense, person, with nothing new in the machine.
 **நி** is the **dental ந** with the *i* sign **ி**; **னை** is the **alveolar
 ன** with the *ai* sign **ை**. Two of Tamil's three n-letters in one word, and
 not interchangeable: the first sits on the teeth, the second on the ridge
-behind them. Chapter 1 mapped all three — **ந**, **ன**, **ண**.
+behind them. Chapter 6's three-n lesson mapped all three — **ந**, **ன**, **ண**.
 
 ## Grammar Lens: it doubles, so it is strong
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-PAAR-02, TA-GRAMMAR-IRU-02, TA-LEX-NINAI-01] -->

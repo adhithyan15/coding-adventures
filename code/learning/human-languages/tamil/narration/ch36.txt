@@ -1,8 +1,8 @@
 Tamil, chapter 36: What You Are Offered.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 தேநீர் (tēnīr) — "tea," half of it already yours.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -43,7 +43,7 @@ Wrap-up Recall.
 Name the second half of tēnīr and the word that shares it, then ask for tea politely. (நீர், inside தண்ணீர்; tēnīr, tayavuseytu.) Why do some languages say te and others cha, and which is better established — the tea split or arisi-to-rice? (The route the tea travelled; and the tea split.)
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 பால் (pāl) — "milk," and a p that becomes an h next door.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -87,7 +87,7 @@ Wrap-up Recall.
 Say "milk tea," then say what the dot on ல் is doing and what the word would be without it. (Pāl tēnīr; it removes the built-in vowel, and without it, pāla.) What does Kannada put at the front instead of p, and is it a one-off? (h — hālu; regular, from the tenth century to the fourteenth.) Name the other Kannada front-swap. (v to b — vīḍu, bīḍu.)
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 உணவு (uṇavu) — "food," from the verb underneath it.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -132,7 +132,48 @@ Wrap-up Recall.
 What verb is uṇavu built on, and where does your tongue go for ண? (உண்; curled back.) Which eating verb would you use at a table, and how sure is anyone where it came from? (சாப்பிடு — not at all: the Dravidian dictionary has no entry.) Give the raw grain and the cooked meal. (Arisi; sātam.)
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
+உணவு (uṇavu) — the same vowel, twice, two ways.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: உ and Script you'll notice: build the word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+You have the ு sign — the u that hangs off a consonant, as in ரு. But a word that starts on u has no consonant to hang it from, and by now you know what Tamil does about that.
+
+Script you'll notice: உ.
+உ is the standing letter for short u. It is the rule you met with ஆ in ஆம், working again: a vowel that opens a word is written as a full letter, never as a sign.
+[a table of 2 rows, read aloud]
+உ, the letter — opens a word.
+ு, the sign — rides a consonant.
+The word you already say holds both. That is the whole lesson.
+Read it; do not draw it yet. உ has no entry in this book's script data, so it gets no stroke order here.
+
+Script you'll notice: build the word.
+[a table of 3 rows, read aloud]
+piece: உ, u, independent — the word opens on a vowel.
+piece: ண, ṇa, the retroflex n, first met beside ம.
+piece: வு, vu — வ with the ு sign, வ was your first letter.
+உ, ண, வு becomes உணவு (uṇavu).
+Three pieces, and the first and last are the same vowel doing its two jobs: once standing on its own, once hanging off வ. The page keeps them apart so your eye can.
+
+Guided Practice.
+[pause 1 second]
+[your turn — read: உ — then உணவு (uṇavu)]
+[pause 8 seconds for the answer]
+[your turn — say: "uṇavu" — "food"]
+[pause 8 seconds for the answer]
+[your turn — contrast: உ and வு — the letter that opens, the sign that rides]
+[pause 8 seconds for the answer]
+[your turn — contrast: ஆம் and உணவு (uṇavu) — the same opening rule, two vowels apart]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Read உணவு (uṇavu). Why does it open with உ rather than the ு sign? (The word starts on a vowel — there is nothing for a sign to hang on.) Where else in the same word does that vowel appear, and in which form? (On வு, as the ு sign.) Which earlier word set this rule? (ஆம்.) Next: the word for a mistake.
+
+
+Lesson 5 of 5.
 தவறு (tavaṟu) — "a mistake," and the rest of the apology.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
