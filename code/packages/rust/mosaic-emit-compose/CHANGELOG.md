@@ -16,6 +16,14 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- Mosaic text, number, collection, and nullable values now lower through a
+  generated Kotlin truthiness helper anywhere Compose requires a Boolean,
+  including `If`, state styles, checked/selected controls, disabled controls,
+  and read-only inputs. Package-expanded TaskApp output now passes the Kotlin
+  compiler instead of comparing dynamically typed values with `true`.
+- `HostInput.onCommit` now supplies the controlled input value when the MIL
+  event declares one payload parameter, while preserving data-object dispatch
+  for parameterless commits.
 - The legacy `Input ( multiline: true )` spelling now lowers to a native
   multiline `BasicTextField` with a useful editor-sized minimum line count.
   This preserves the multiline capability used by the shared Notes package

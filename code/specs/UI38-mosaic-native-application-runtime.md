@@ -305,7 +305,7 @@ unblocks multiple downstream targets; never count source generation as completio
 - [ ] Make the generated Flutter project analyzer-clean after its documented
   `flutter create` bootstrap: replace the stock `MyApp` widget test, provision
   its lint configuration, and omit unused authored `For` bindings.
-- [ ] Complete Compose TaskApp Kotlin typing: normalize Mosaic value truthiness
+- [x] Complete Compose TaskApp Kotlin typing: normalize Mosaic value truthiness
   in boolean positions and supply required native input commit payloads.
 - [ ] Route every compile entry point through one package-composition pipeline;
   standalone `mosaic-compile` currently inlines dependency layouts without merging
@@ -332,9 +332,11 @@ unblocks multiple downstream targets; never count source generation as completio
   The real standalone Notes project passes Qt's QML compiler, resource/AOT
   generation, AUTOMOC, C++ compiler, linker, and a headless launch.
   Compose now emits the Notes package's legacy multiline `Input` as a native
-  editor, clearing the first package-expansion blocker; the complete TaskApp
-  reaches Kotlin compilation and reports the separately tracked truthiness and
-  required commit-payload typing gaps.
+  editor and normalizes Mosaic truthiness at every Kotlin Boolean boundary.
+  Required native input commit payloads receive the controlled field value.
+  The complete package-expanded TaskApp passes Kotlin compilation, creates a
+  native macOS application and DMG, and remains running when launched with the
+  generated no-runtime fallback.
 
 ### P1 — reusable application vocabulary
 

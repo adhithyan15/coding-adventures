@@ -19,6 +19,12 @@ Consumes the three-file IR produced by `mosmodel-compiler`,
 3. The composable body walks the moslayout tree, emitting one
    Composable call per node
 
+Mosaic conditions have value truthiness rather than Kotlin's strict Boolean
+typing. Generated files include a private `_mosaicTruthy` conversion for
+conditionals, state styles, native control flags, and read-only/disabled state.
+Native text inputs dispatch either parameterless commit events or a declared
+single payload containing the current controlled value.
+
 The same output ships unmodified to:
 
 - **Android** (Jetpack Compose for Android)
@@ -61,26 +67,20 @@ wants the strict-Flux store/dispatcher contract.
 | Input        | multiline-capable `BasicTextField`        |
 | HostButton   | `Button(onClick) { Text(label) }`         |
 
-`For`, `If`/`Else`, `Grid`, `HostTable`, `HostDialog`,
-`HostCheckbox`, `HostRadio`, `HostLink`, `HostNumberInput`,
-`HostScroll`, `HostTooltip` are not yet lowered — they return
-`UnknownPrimitive`.  Those land in follow-up PRs (the
-`grid-emit-compose` cycle is already on the autonomous loop's
-roadmap; the other host primitives follow as each is exercised by
-a real component).
+The emitter also lowers `For`, `If`/`Else`, table structure, buttons, checkbox
+and radio controls, number inputs, links, scroll/tooltip wrappers, and the
+current drag/drop degradation path. Unsupported primitives still return a
+clear `UnknownPrimitive` error instead of silently disappearing.
 
 ## Style handling
 
-v0.1.0 accepts the `.msl` input but does not yet consume it —
-Compose styling lands on `Modifier` chains (`Modifier.padding(...)`,
-`Modifier.background(...)`, etc.) which a future version will
-lower.  The result is unstyled Composables; the host application is
-expected to wrap them in a `MaterialTheme { ... }` or apply its own
-modifiers at the call site for now.
+MSL part styles lower into native `Modifier` chains and inherited Compose text
+styles, including state-dependent backgrounds, borders, dimensions, spacing,
+alignment, colors, fonts, and test tags. Hosts can still wrap the result in
+their own `MaterialTheme` for platform-level theming.
 
 ## Tests
 
-`cargo test -p mosaic-emit-compose` — 8 tests covering: empty
-component, parameterless / one-param emits, slot typing (required +
-optional), the full FormulaBar shape end-to-end, parameterless
-button emit, and the unknown-primitive error path.
+`cargo test -p mosaic-emit-compose` runs 37 focused emitter tests. The
+package-expanded TaskApp is also exercised as a real Compose Desktop project:
+Kotlin compilation, native macOS distribution packaging, and process launch.
