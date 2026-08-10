@@ -1298,9 +1298,22 @@ fn emit_instr(
         asm.ud2();
         asm.bind(ok).map_err(BackendError::from)?;
         asm.shl_imm8(Reg::Rcx, 3); // idx*8
-        asm.add(Reg::Rax, Reg::Rcx); // base + idx*8
+        asm.add(Reg::Rax, Reg::Rcx); // base + idx*8      <-- RAX now an interior pointer
         load_operand(asm, alloc, Reg::Rdx, v_src);
         asm.mov_mem_r64(Reg::Rax, 8, Reg::Rdx); // store past the header
+        // Generational write barrier (AOT00-T8 follow-up, mirrors the aarch64-backend
+        // fix in #10477). `__twig_gc_write_barrier(parent, child)` trusts `parent`
+        // unconditionally (reads `parent - HEADER_SIZE` for the generation byte, no
+        // base-pointer validation) — so it must NOT be handed the interior pointer
+        // RAX now holds (base + idx*8). Reload the array's original base handle
+        // (`h_src`) and the stored value (`v_src`) fresh from their stack slots
+        // instead, into this ABI's first two integer arg registers. Unconditional:
+        // this IR level has no static info distinguishing a pointer element from a
+        // scalar one, and the barrier never dereferences `child`, so passing a
+        // non-pointer element is harmless.
+        load_operand(asm, alloc, abi.arg_regs()[0], h_src);
+        load_operand(asm, alloc, abi.arg_regs()[1], v_src);
+        asm.call_rel32("__twig_gc_write_barrier", ExternalRelocKind::PltRel32);
         return Ok(());
     }
 
@@ -1365,6 +1378,20 @@ fn emit_instr(
         load_operand(asm, alloc, Reg::Rax, ptr_src);
         load_operand(asm, alloc, Reg::Rcx, val_src);
         asm.mov_mem_r64(Reg::Rax, disp, Reg::Rcx);
+        // Generational write barrier (AOT00-T8 follow-up, mirrors the aarch64-backend
+        // fix in #10475). Unlike `array_set` below, `field_store`'s own store address
+        // is `ptr_src` itself (no offset arithmetic folded into the base register), so
+        // RAX still holds the correct `parent` handle post-store — but we reload both
+        // operands fresh from their stack slots into this ABI's arg registers anyway,
+        // for the same reason `array_set` must: SysV's arg0/arg1 (RDI/RSI) and MsX64's
+        // (RCX/RDX) don't line up with the RAX/RCX this op happens to compute into, so
+        // reusing them without a defensive reload would be an ABI-specific landmine.
+        // `__twig_gc_write_barrier(parent, child)` never dereferences `child`, so an
+        // unconditional call is sound even though this IR level has no static type
+        // info distinguishing a pointer field from a scalar one.
+        load_operand(asm, alloc, abi.arg_regs()[0], ptr_src);
+        load_operand(asm, alloc, abi.arg_regs()[1], val_src);
+        asm.call_rel32("__twig_gc_write_barrier", ExternalRelocKind::PltRel32);
         return Ok(());
     }
 
@@ -2341,6 +2368,172 @@ mod tests {
             symbols.contains(&"__twig_gc_register_ref_array_kind"),
             "missing ref-array-kind registration call: {symbols:?}",
         );
+    }
+
+    // ---- AOT00-T8 follow-up: generational write barrier (mirrors aarch64-backend
+    // #10475/#10477) ---------------------------------------------------------------
+
+    /// `field_store` must call `__twig_gc_write_barrier` after the store, once per
+    /// store site — the sibling fix to aarch64-backend's `field_store` (#10475).
+    #[test]
+    fn field_store_calls_the_generational_write_barrier() {
+        let ir = vec![
+            instr("const_u64", Some("h"), vec![Op::Int(7)]),
+            instr("alloc", Some("cell"), vec![]),
+            instr("field_store", None, vec![Op::Var("cell".into()), Op::Int(0), Op::Var("h".into())]),
+            instr("ret_u64", None, vec![Op::Int(0)]),
+        ];
+        let (bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("wb_field_store", &[], "u64"), &ir, X86_64Abi::SysV)
+                .expect("field_store must lower");
+        assert!(!bytes.is_empty());
+        let count = relocs.iter().filter(|r| r.symbol == "__twig_gc_write_barrier").count();
+        assert_eq!(count, 1, "expected exactly 1 write-barrier call, relocs: {relocs:?}");
+    }
+
+    /// Two `field_store`s on the same cell ⇒ two barrier calls — not deduplicated.
+    #[test]
+    fn field_store_write_barrier_is_emitted_per_store_not_deduplicated() {
+        let ir = vec![
+            instr("const_u64", Some("h"), vec![Op::Int(7)]),
+            instr("const_u64", Some("t"), vec![Op::Int(9)]),
+            instr("alloc", Some("cell"), vec![]),
+            instr("field_store", None, vec![Op::Var("cell".into()), Op::Int(0), Op::Var("h".into())]),
+            instr("field_store", None, vec![Op::Var("cell".into()), Op::Int(1), Op::Var("t".into())]),
+            instr("ret_u64", None, vec![Op::Int(0)]),
+        ];
+        let (_bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("wb_field_store_x2", &[], "u64"), &ir, X86_64Abi::SysV)
+                .expect("field_store must lower");
+        let count = relocs.iter().filter(|r| r.symbol == "__twig_gc_write_barrier").count();
+        assert_eq!(count, 2, "expected 2 write-barrier calls (one per store), relocs: {relocs:?}");
+    }
+
+    /// `array_set` must also call the barrier — reloading the array's base handle
+    /// fresh from its stack slot, not the interior `base + idx*8` pointer the store's
+    /// own addressing leaves in RAX (the sibling fix to aarch64-backend's `array_set`,
+    /// #10477). This test only proves the call is emitted once per store; the
+    /// interior-pointer-avoidance argument itself is a source-level property (`h_src`
+    /// is reloaded via `load_operand`, which always re-reads the operand's own stack
+    /// slot — see the `array_set` lowering's own comment) that a relocation-count test
+    /// cannot observe directly.
+    #[test]
+    fn array_set_calls_the_generational_write_barrier() {
+        let ir = vec![
+            instr("const_u64", Some("n"), vec![Op::Int(3)]),
+            instr("alloc_array", Some("a"), vec![Op::Var("n".into())]),
+            instr("const_u64", Some("i"), vec![Op::Int(0)]),
+            instr("const_u64", Some("v"), vec![Op::Int(42)]),
+            instr("array_set", None, vec![Op::Var("a".into()), Op::Var("i".into()), Op::Var("v".into())]),
+            instr("ret_u64", None, vec![Op::Int(0)]),
+        ];
+        let (bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("wb_array_set", &[], "u64"), &ir, X86_64Abi::SysV)
+                .expect("array_set must lower");
+        assert!(!bytes.is_empty());
+        let count = relocs.iter().filter(|r| r.symbol == "__twig_gc_write_barrier").count();
+        assert_eq!(count, 1, "expected exactly 1 write-barrier call, relocs: {relocs:?}");
+    }
+
+    /// Two `array_set`s on the same array ⇒ two barrier calls — not deduplicated.
+    #[test]
+    fn array_set_write_barrier_is_emitted_per_store_not_deduplicated() {
+        let ir = vec![
+            instr("const_u64", Some("n"), vec![Op::Int(3)]),
+            instr("alloc_array", Some("a"), vec![Op::Var("n".into())]),
+            instr("const_u64", Some("i0"), vec![Op::Int(0)]),
+            instr("const_u64", Some("i1"), vec![Op::Int(1)]),
+            instr("const_u64", Some("v"), vec![Op::Int(42)]),
+            instr("array_set", None, vec![Op::Var("a".into()), Op::Var("i0".into()), Op::Var("v".into())]),
+            instr("array_set", None, vec![Op::Var("a".into()), Op::Var("i1".into()), Op::Var("v".into())]),
+            instr("ret_u64", None, vec![Op::Int(0)]),
+        ];
+        let (_bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("wb_array_set_x2", &[], "u64"), &ir, X86_64Abi::SysV)
+                .expect("array_set must lower");
+        let count = relocs.iter().filter(|r| r.symbol == "__twig_gc_write_barrier").count();
+        assert_eq!(count, 2, "expected 2 write-barrier calls (one per store), relocs: {relocs:?}");
+    }
+
+    /// SysV positive proof: the barrier reload must actually land in RDI/RSI (SysV
+    /// arg0/arg1), not just emit a reloc of the right count/symbol. `field_store`'s
+    /// own codegen never otherwise touches RDI or RSI (only RAX/RCX), so their
+    /// presence here is unambiguous evidence the reload used `abi.arg_regs()`, not an
+    /// accident of some other operand happening to land in the same register.
+    #[test]
+    fn field_store_write_barrier_loads_sysv_args_into_rdi_rsi() {
+        let ir = vec![
+            instr("const_u64", Some("h"), vec![Op::Int(7)]),
+            instr("alloc", Some("cell"), vec![]),
+            instr("field_store", None, vec![Op::Var("cell".into()), Op::Int(0), Op::Var("h".into())]),
+            instr("ret_u64", None, vec![Op::Int(0)]),
+        ];
+        let bytes = compile_function(&fn_ctx("wb_field_store_sysv_regs", &[], "u64"), &ir, X86_64Abi::SysV)
+            .expect("field_store must lower");
+        // `mov rdi, [rbp+disp32]` = 48 8B BD; `mov rsi, [rbp+disp32]` = 48 8B B5.
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0xBD]),
+            "expected the barrier's parent reload into RDI (SysV arg0) — field_store never otherwise uses RDI");
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0xB5]),
+            "expected the barrier's child reload into RSI (SysV arg1) — field_store never otherwise uses RSI");
+    }
+
+    /// The dual-ABI hazard this fix's own design comment calls out: under MsX64 the
+    /// barrier reload must target RCX/RDX (MsX64 arg0/arg1), never fall back to SysV's
+    /// RDI/RSI. `field_store` never otherwise uses RDI/RSI for anything (this IR has no
+    /// params to spill and no other calls), so their absence in MsX64-compiled bytes is
+    /// direct, executable proof the reload used `abi.arg_regs()` rather than a
+    /// hardcoded SysV register pair — the exact regression class a reloc-count-only
+    /// test (as this test originally was, per security review) would silently miss.
+    #[test]
+    fn field_store_write_barrier_lowers_under_msx64_abi_too() {
+        let ir = vec![
+            instr("const_u64", Some("h"), vec![Op::Int(7)]),
+            instr("alloc", Some("cell"), vec![]),
+            instr("field_store", None, vec![Op::Var("cell".into()), Op::Int(0), Op::Var("h".into())]),
+            instr("ret_u64", None, vec![Op::Int(0)]),
+        ];
+        let (bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("wb_field_store_msx64", &[], "u64"), &ir, X86_64Abi::MsX64)
+                .expect("field_store must lower under MsX64 too");
+        assert!(!bytes.is_empty());
+        let count = relocs.iter().filter(|r| r.symbol == "__twig_gc_write_barrier").count();
+        assert_eq!(count, 1, "expected exactly 1 write-barrier call under MsX64, relocs: {relocs:?}");
+        // `mov rdi, [rbp+disp32]` = 48 8B BD; `mov rsi, [rbp+disp32]` = 48 8B B5 —
+        // neither SysV arg register should appear anywhere in an MsX64-compiled body.
+        assert!(!body_contains(&bytes, &[0x48, 0x8B, 0xBD]),
+            "must NOT load into RDI (SysV arg0) when compiled under MsX64");
+        assert!(!body_contains(&bytes, &[0x48, 0x8B, 0xB5]),
+            "must NOT load into RSI (SysV arg1) when compiled under MsX64");
+        // `mov rdx, [rbp+disp32]` = 48 8B 95 — field_store never otherwise touches RDX,
+        // so its presence is unambiguous proof the child reload landed in MsX64 arg1.
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0x95]),
+            "expected the barrier's child reload into RDX (MsX64 arg1)");
+    }
+
+    /// Same dual-ABI absence-of-SysV-registers check for `array_set`. Unlike
+    /// `field_store`, `array_set`'s own codegen already uses RAX/RCX/RDX for the
+    /// bounds check and store, so a positive "which register got the reload" proof
+    /// isn't clean here — but RDI/RSI are still never touched by anything else in
+    /// this op, so their absence still directly proves no hardcoded-SysV leak.
+    #[test]
+    fn array_set_write_barrier_lowers_under_msx64_abi_too() {
+        let ir = vec![
+            instr("const_u64", Some("n"), vec![Op::Int(3)]),
+            instr("alloc_array", Some("a"), vec![Op::Var("n".into())]),
+            instr("const_u64", Some("i"), vec![Op::Int(0)]),
+            instr("const_u64", Some("v"), vec![Op::Int(42)]),
+            instr("array_set", None, vec![Op::Var("a".into()), Op::Var("i".into()), Op::Var("v".into())]),
+            instr("ret_u64", None, vec![Op::Int(0)]),
+        ];
+        let (bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("wb_array_set_msx64", &[], "u64"), &ir, X86_64Abi::MsX64)
+                .expect("array_set must lower under MsX64 too");
+        let count = relocs.iter().filter(|r| r.symbol == "__twig_gc_write_barrier").count();
+        assert_eq!(count, 1, "expected exactly 1 write-barrier call under MsX64, relocs: {relocs:?}");
+        assert!(!body_contains(&bytes, &[0x48, 0x8B, 0xBD]),
+            "must NOT load into RDI (SysV arg0) when compiled under MsX64");
+        assert!(!body_contains(&bytes, &[0x48, 0x8B, 0xB5]),
+            "must NOT load into RSI (SysV arg1) when compiled under MsX64");
     }
 
     #[test]
