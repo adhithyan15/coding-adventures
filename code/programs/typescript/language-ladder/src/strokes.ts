@@ -228,6 +228,10 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // Urdu ر descends first, then bends left without lifting. The source contrasts
 // that independent run with the sharper lower-left drop of the final form and
 // records a separate Naskh/Nastaliq difference for final re.
+// Urdu س keeps the standard three close teeth and final bowl in one pen-down
+// run. The textbook also records a toothless long curve as an optional,
+// especially handwritten alternative; this learner path uses the canonical
+// toothed Noto Naskh fallback form shown in both independent animations.
 // The adjacent ب starts at the bowl's right lip, sweeps right-to-left through
 // its shallow dip, then lifts once before placing the separate dot below.
 // After the intervening Persian-added پ row, ت repeats the same bowl, lifts to
@@ -415,6 +419,47 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: urduAlphabetSource("ر"),
+  },
+  [ductusKey("urdu-nastaliq", "س")]: {
+    script: "urdu-nastaliq",
+    glyph: "س",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "shape the three close teeth from right to left",
+            path: [
+              { x: 923, y: 310 },
+              { x: 935, y: 120 },
+              { x: 925, y: 70 },
+              { x: 870, y: 45 },
+              { x: 770, y: 75 },
+              { x: 748, y: 110 },
+              { x: 748, y: 230 },
+              { x: 690, y: 65 },
+              { x: 640, y: 45 },
+              { x: 540, y: 55 },
+              { x: 478, y: 190 },
+              { x: 515, y: 20 },
+            ],
+          },
+          {
+            label: "flow directly into the final bowl without lifting",
+            path: [
+              { x: 515, y: 20 },
+              { x: 515, y: -25 },
+              { x: 470, y: -125 },
+              { x: 370, y: -205 },
+              { x: 250, y: -230 },
+              { x: 145, y: -180 },
+              { x: 92, y: -95 },
+              { x: 110, y: 35 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: urduAlphabetSource("س"),
   },
   "ب": {
     script: "perso-arabic",

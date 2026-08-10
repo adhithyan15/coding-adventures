@@ -190,10 +190,14 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   lift count. Urdu **ر** follows from the next source-backed chapter as one
   uninterrupted downward line that curves left. Its zero-lift learner path
   preserves the chapter's separate final-form motion and its Naskh/Nastaliq
-  distinction without conflating them with the independent form. The remaining
-  **205** prose part orders across eight scripts
+  distinction without conflating them with the independent form. Urdu **س**
+  follows from the source-adjacent chapter: both independent animations keep
+  its three close teeth and final bowl in one right-to-left, zero-lift run. The
+  learner path uses that standard toothed form while preserving the chapter's
+  optional long gentle curve as an especially common handwriting alternative.
+  The remaining **204** prose part orders across eight scripts
 (`arabic` 21, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33,
-`hebrew` 22, `japanese` 34, `urdu-nastaliq` 10) are explicitly **unverified for
+`hebrew` 22, `japanese` 34, `urdu-nastaliq` 9) are explicitly **unverified for
 pen lifts**. The data validator rejects a lift count without a citation (or a
 citation without a count), and Language Ladder's ductus test proves every verified
 claim has the same cited, font-checked path. That closes `HL-C19`; future entries
