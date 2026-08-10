@@ -9,7 +9,8 @@ use crate::{
     open_object, ActiveStateV1, ApplicationError, ApplicationRepository,
     ApplicationRepositoryError, ApplicationRepositoryFactory, BootstrapLocator, BootstrapStore,
     BootstrapStoreError, CatalogV1, LocalSecretV1, LocalStateStore, LocalStateStoreError,
-    LocalVaultStateV1, ObjectKind, V1Keys,
+    LocalVaultStateV1, ObjectKind, RevealedSecretV1, SecretDisclosureIntentV1, SecretFieldV1,
+    V1Keys,
 };
 use coding_adventures_vault_pm_domain::{
     CollectionId, ItemCandidate, ItemDocument, ItemId, ItemState, RedactedItemView, RevisionId,
@@ -293,6 +294,24 @@ impl UnlockedVaultV1 {
             return Err(ApplicationError::InvalidInput);
         };
         Ok(Zeroizing::new(document.as_ref().clone()))
+    }
+
+    /// Select and authorize disclosure of one secret-bearing field from one
+    /// exact reachable live revision.
+    ///
+    /// Policy is checked before repository traversal. The returned value is
+    /// owned, non-printable, non-cloneable, and wipe-on-drop. The host remains
+    /// responsible for its controlling-TTY facts, warning output, and secure
+    /// clipboard ownership/clear behavior.
+    pub fn reveal_item_revision_field(
+        &self,
+        selected_revision: RevisionId,
+        field: SecretFieldV1,
+        intent: SecretDisclosureIntentV1,
+    ) -> Result<RevealedSecretV1, ApplicationError> {
+        intent.authorize()?;
+        let document = self.reveal_item_revision(selected_revision)?;
+        crate::disclosure::select_secret(document.payload(), field)
     }
 
     /// Add one new item through the exact crash-resumable publication state
@@ -2991,6 +3010,32 @@ mod tests {
         };
         assert_eq!(login.title, "Reveal original");
         assert_eq!(login.password, "original-secret");
+
+        let revealed = session
+            .reveal_item_revision_field(
+                original_revision,
+                SecretFieldV1::LoginPassword,
+                SecretDisclosureIntentV1::Clipboard,
+            )
+            .unwrap();
+        assert_eq!(revealed.as_bytes(), b"original-secret");
+        assert_eq!(revealed.encoding(), crate::RevealedSecretEncodingV1::Utf8);
+        assert!(matches!(
+            session.reveal_item_revision_field(
+                original_revision,
+                SecretFieldV1::CardCvv,
+                SecretDisclosureIntentV1::Clipboard,
+            ),
+            Err(ApplicationError::InvalidInput)
+        ));
+        assert!(matches!(
+            session.reveal_item_revision_field(
+                RevisionId::new([0x94; 32]),
+                SecretFieldV1::LoginPassword,
+                SecretDisclosureIntentV1::InteractiveReveal { confirmed: false },
+            ),
+            Err(ApplicationError::InvalidInput)
+        ));
 
         let mut current = session.reveal_item_revision(current_revision).unwrap();
         let AnyRecord::Login(login) = current.payload() else {

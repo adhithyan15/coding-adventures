@@ -2,6 +2,22 @@
 
 All notable changes to this package are documented here.
 
+## [0.20.0] - 2026-08-10
+
+### Added
+
+- Add schema-specific selection for every first-party secret field, returning
+  one owned binary-or-UTF-8 `RevealedSecretV1` value.
+- Add explicit clipboard, confirmed interactive reveal, and unsafe
+  non-interactive reveal policy inputs for host adapters.
+
+### Security
+
+- Validate disclosure policy before repository traversal; non-interactive
+  reveal requires both explicit unsafe opt-in and a host-emitted warning.
+- Reject wrong-schema and opaque field selection, and expose secret bytes only
+  through a non-printable, non-cloneable, wipe-on-drop allocation.
+
 ## [0.19.0] - 2026-08-09
 
 ### Added
