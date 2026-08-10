@@ -252,7 +252,7 @@ pub struct EmitOptions {
     pub namespace: String,
 
     /// Windows App SDK version to pin in the emitted `.csproj` (only used
-    /// when `emit_project` is on). Default `"1.7.250606001"` â€” a known-
+    /// when `emit_project` is on). Default `"1.8.260710003"` â€” a known-
     /// good full version. A bare `"1.5"` or `"1.6"` doesn't pin enough
     /// for NuGet to resolve a build-able combination on every machine.
     pub windows_app_sdk: String,
@@ -272,7 +272,7 @@ impl Default for EmitOptions {
         Self {
             emit_project: false,
             namespace: "Mosaic.Generated".to_string(),
-            windows_app_sdk: "1.7.250606001".to_string(),
+            windows_app_sdk: "1.8.260710003".to_string(),
             use_community_datagrid: false,
             package_mode: false,
         }
@@ -4005,7 +4005,7 @@ fn emit_global_json() -> String {
 fn emit_csproj(_name: &str, options: &EmitOptions) -> String {
     let ns = &options.namespace;
     let sdk_ver = if options.windows_app_sdk.is_empty() {
-        "1.7.250606001"
+        "1.8.260710003"
     } else {
         options.windows_app_sdk.as_str()
     };
@@ -4028,12 +4028,9 @@ fn emit_csproj(_name: &str, options: &EmitOptions) -> String {
              <ImplicitUsings>enable</ImplicitUsings>\n\
              <LangVersion>latest</LangVersion>\n\
              <!-- Framework-dependent: the Windows App Runtime must be installed\n\
-                  system-wide (`winget install Microsoft.WindowsAppRuntime.1.7`).\n\
-                  Self-contained bundling (<WindowsAppSDKSelfContained>true) is\n\
-                  available, but the bundled Microsoft.UI.Xaml.dll 3.1.7.0 in the\n\
-                  1.7 NuGet currently crashes on initialization (0xc000027b in\n\
-                  Microsoft.UI.Xaml.dll). Use framework-dependent until that's\n\
-                  resolved upstream. -->\n\
+                  system-wide (`winget install Microsoft.WindowsAppRuntime.1.8`).\n\
+                  Keep the runtime dependency explicit so the host can receive\n\
+                  Microsoft's independently serviced WinUI reliability fixes. -->\n\
              <WindowsAppSDKSelfContained>false</WindowsAppSDKSelfContained>\n\
              <SelfContained>false</SelfContained>\n\
              <!-- WindowsAppSDK uses the legacy `win10-*` RIDs that .NET 8+\n\
@@ -4608,7 +4605,7 @@ fn emit_build_script(name: &str) -> String {
          # Prerequisite:\n\
          #   - The generated project is framework-dependent, so a system-wide\n\
          #     install of the Windows App Runtime is required to run it:\n\
-         #         winget install Microsoft.WindowsAppRuntime.1.7\n\
+         #         winget install Microsoft.WindowsAppRuntime.1.8\n\
          #\n\
          param([switch]$Clean, [switch]$Run)\n\
          \n\
@@ -4693,8 +4690,8 @@ fn emit_project_readme(name: &str, shape: RootShape) -> String {
          ## Prerequisites\n\
          \n\
          1. **.NET 9.0 SDK** â€” `dotnet --list-sdks` should list one matching `9.0.*`.\n\
-         2. The Windows App Runtime 1.7 installed system-wide:\n\
-            `winget install Microsoft.WindowsAppRuntime.1.7`.\n\
+         2. The Windows App Runtime 1.8 installed system-wide:\n\
+            `winget install Microsoft.WindowsAppRuntime.1.8`.\n\
          3. Visual Studio Build Tools 2022 is useful when opening the project in\n\
             Visual Studio, but `.\\build.ps1` uses `dotnet build` and keeps the\n\
             unpackaged MSIX / PRI tooling disabled.\n\
@@ -10151,6 +10148,7 @@ mod tests {
         assert!(p.global_json.contains("\"rollForward\": \"latestFeature\""));
         // csproj has the WindowsAppSDK reference + unpackaged WinUI build switches.
         assert!(p.csproj.contains("Microsoft.WindowsAppSDK"));
+        assert!(p.csproj.contains("Version=\"1.8.260710003\""));
         assert!(p.csproj.contains("AppxGeneratePriEnabled>false"));
         assert!(p.csproj.contains("EnableCoreMrtTooling>false"));
         assert!(p.csproj.contains("UseRidGraph>true"));
@@ -10195,7 +10193,7 @@ mod tests {
         assert!(p.build_script.contains("$buildExitCode = $LASTEXITCODE"));
         assert!(p.build_script.contains("exit $buildExitCode"));
         // README documents the framework-dependent runtime requirement.
-        assert!(p.readme.contains("Microsoft.WindowsAppRuntime.1.7"));
+        assert!(p.readme.contains("Microsoft.WindowsAppRuntime.1.8"));
         // app.manifest declares DPI awareness.
         assert!(p.package_manifest.contains("PerMonitorV2"));
     }

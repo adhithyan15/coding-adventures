@@ -2,6 +2,13 @@
 
 ## [Unreleased] — VC2-xaml Grid: WinUI value translation + nested-For + per-column widths
 
+### Fixed - Serviced Windows App Runtime
+
+Generated WinUI projects now pin Windows App SDK `1.8.260710003` and document
+the matching 1.8 framework runtime. This replaces the 1.7 runtime whose
+`Microsoft.UI.Xaml.dll` can terminate otherwise valid generated applications
+with a stowed exception during startup.
+
 ### Fixed - Typed-template helper ownership
 
 Generated `For` row view models now retain their owning component and expose
@@ -488,7 +495,7 @@ WindowsAppSDK refuses AnyCPU), and with `-Run` launches the .exe.
 ### Added — Per-project README
 
 Documents file roles, the `winget install
-Microsoft.WindowsAppRuntime.1.7` prerequisite, the expected cosmetic
+Microsoft.WindowsAppRuntime.1.8` prerequisite, the expected cosmetic
 MSB4062 error, and the build/run commands.
 
 ### CLI

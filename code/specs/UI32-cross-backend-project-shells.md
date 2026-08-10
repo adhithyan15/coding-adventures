@@ -223,7 +223,7 @@ backend-specific stricter rules:
 `FetchContent_*`, `.csproj` `<PackageReference>`) MUST pin to a
 specific known-good version. The pinned versions live in a single
 constants module per emitter (XAML's `EmitOptions::windows_app_sdk`
-defaulting to `"1.7.250606001"` is the reference pattern; mirror
+defaulting to `"1.8.260710003"` is the reference pattern; mirror
 that as `pinned_react: &str`, `pinned_flutter_sdk: &str`,
 `pinned_vite: &str`, etc.). Forbidden forms:
 
