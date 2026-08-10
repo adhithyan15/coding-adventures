@@ -27,6 +27,20 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
             )
         )
 
+    def test_standard_runtime_binding_requires_acceptance(self) -> None:
+        for package in (
+            "rust/mosaic-app-bindings",
+            "rust/mosaic-app-capi",
+            "rust/mosaic-app-conformance",
+            "rust/mosaic-app-runtime",
+        ):
+            with self.subTest(package=package):
+                self.assertTrue(
+                    MODULE.requires_mosaic_xaml_windows(
+                        {"affected_packages": [package]}
+                    )
+                )
+
     def test_task_app_requires_acceptance(self) -> None:
         self.assertTrue(
             MODULE.requires_mosaic_xaml_windows(
@@ -96,6 +110,10 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
         self.assertIn("TaskApp.binlog", workflow)
         self.assertIn("output.json", workflow)
         self.assertIn("Start-Process -FilePath $executable", workflow)
+        self.assertIn("Round-trip Rust engine through standard XAML binding", workflow)
+        self.assertIn("cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance", workflow)
+        self.assertIn("XamlRuntimeConformance.csproj", workflow)
+        self.assertIn("MOSAIC_APP_LIBRARY", workflow)
 
 
 if __name__ == "__main__":

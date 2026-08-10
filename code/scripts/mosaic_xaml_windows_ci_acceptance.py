@@ -12,6 +12,10 @@ from typing import Any
 
 ACCEPTANCE_PACKAGES = frozenset(
     {
+        "rust/mosaic-app-bindings",
+        "rust/mosaic-app-capi",
+        "rust/mosaic-app-conformance",
+        "rust/mosaic-app-runtime",
         "rust/mosaic-compile",
         "rust/mosaic-emit-xaml",
         "rust/mosaic-package-artifact-builder",

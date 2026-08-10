@@ -302,6 +302,10 @@ unblocks multiple downstream targets; never count source generation as completio
 - [ ] Generate standard effect hosts, beginning with storage and lifecycle.
 - [ ] Add `native-complete` capability/degradation analysis to the compiler.
 - [ ] Add launch-and-dispatch conformance fixtures for every native backend.
+  - [x] XAML/.NET loads the shared Rust conformance DLL and round-trips startup,
+    typed props, semantic dispatch, revised props, buffers, and teardown.
+  - [ ] Promote the same shared Rust fixture through SwiftUI, Qt/QML, Compose,
+    and Flutter standard bindings.
 - [x] Gate the complete package-expanded XAML TaskApp on Windows with real
   WinUI compilation and a process launch smoke test.
   - [x] Allocate `For` row-view-model and projection names per loop rather than

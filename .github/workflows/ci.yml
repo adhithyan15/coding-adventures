@@ -956,6 +956,34 @@ jobs:
           }
           Stop-Process -Id $process.Id
 
+      - name: Round-trip Rust engine through standard XAML binding
+        if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
+        shell: pwsh
+        run: |
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
+          if ($LASTEXITCODE -ne 0) {
+            throw "Mosaic Rust conformance app build failed with exit code $LASTEXITCODE"
+          }
+
+          $library = Resolve-Path 'code/packages/rust/target/debug/mosaic_app_conformance.dll'
+          $generatedBinding = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-taskapp/xaml/MosaicRuntimeHost.cs'
+          if (!(Test-Path $generatedBinding)) {
+            throw "Generated XAML runtime binding not found at $generatedBinding"
+          }
+
+          $harness = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-runtime-conformance'
+          New-Item -ItemType Directory -Path $harness -Force | Out-Null
+          Copy-Item `
+            'code/packages/rust/mosaic-app-bindings/conformance/xaml/*' `
+            $harness `
+            -Recurse
+          Copy-Item $generatedBinding (Join-Path $harness 'MosaicRuntimeHost.cs')
+          $env:MOSAIC_APP_LIBRARY = $library.Path
+          dotnet run --project (Join-Path $harness 'XamlRuntimeConformance.csproj') -c Release
+          if ($LASTEXITCODE -ne 0) {
+            throw "Mosaic XAML Rust runtime conformance failed with exit code $LASTEXITCODE"
+          }
+
       - name: Upload failed Mosaic TaskApp WinUI diagnostics
         if: failure() && runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
         uses: actions/upload-artifact@v4
