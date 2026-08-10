@@ -67,6 +67,7 @@ dictionary ideal_gas_vocab {
     define temperature : finding  surface "temperature", "absolute temperature", "T"              % kelvin (K)
     define volume      : finding  surface "volume", "V"                                           % length³ (m³)
     define pressure    : finding  surface "pressure", "P", "gas pressure"                         % pascals (Pa)
+    define volume_from_pressure : finding  surface "missing volume", "unknown volume"
 }
 
 % ----------------------------------------------------------------------------
@@ -84,6 +85,16 @@ dictionary ideal_gas_vocab {
 %     for the equation-of-state form itself.
 % The value of the constant is the load-bearing claim, and it is authoritative;
 % the trust tier for the shipped formula follows the constant → authoritative.
+%
+% This library also carries a rung-0 CAS-wiring companion (ADJ-FORMULA-LIBRARIES
+% FL-10, §3D — a Wave 3 continuation): `volume_from_pressure` solves the SAME
+% cited PV = nRT relation, rewritten in its equivalent multiplicative form
+% (`P·V = n·R·T`, avoiding the natural quotient form), for volume instead of
+% computed forward for pressure — the exact discipline `pressure.adj`'s
+% `area_from_pressure` and `density.adj`'s `volume_from_density` already
+% established for their own quotient/product pairs. The other two possible
+% unknowns (moles, temperature) are left for a later pass, to keep this change
+% scoped to one direction, the same discipline every prior Wave 3 item used.
 % ----------------------------------------------------------------------------
 formulabook chemistry_ideal_gas {
     use ideal_gas_vocab
@@ -92,6 +103,15 @@ formulabook chemistry_ideal_gas {
     % the verbatim NIST CODATA value 8.314462618 J mol⁻¹ K⁻¹ (exact, 2022 CODATA).
     % The relation PV = nRT is the standard ideal-gas equation of state.
     formula pressure(moles, temperature, volume) = moles * 8.314462618 * temperature / volume
+        source "molar gas constant | Numerical value | 8.314 462 618 J mol^-1 K^-1 | Standard uncertainty | (exact). The ideal gas law: PV = nRT, where P is the pressure, V is the volume, n is the amount of substance, R is the ideal (universal) gas constant, and T is the absolute temperature."
+        locator "https://physics.nist.gov/cgi-bin/cuu/Value?r"
+        trust authoritative
+
+    % PV = nRT again, SOLVED FOR VOLUME instead of computed forward for
+    % pressure — the same cited relation, only which quantity is bound and
+    % which is unknown differs. Written as P·V = n·R·T (not V = nRT/P) so the
+    % target appears only as a linear factor, never in a denominator.
+    symbolic volume_from_pressure(pressure, moles, temperature) { pressure * volume_from_pressure == moles * 8.314462618 * temperature } for volume_from_pressure
         source "molar gas constant | Numerical value | 8.314 462 618 J mol^-1 K^-1 | Standard uncertainty | (exact). The ideal gas law: PV = nRT, where P is the pressure, V is the volume, n is the amount of substance, R is the ideal (universal) gas constant, and T is the absolute temperature."
         locator "https://physics.nist.gov/cgi-bin/cuu/Value?r"
         trust authoritative

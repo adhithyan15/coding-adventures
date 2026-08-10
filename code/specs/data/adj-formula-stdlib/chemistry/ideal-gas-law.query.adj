@@ -26,3 +26,10 @@ observe moles(1)                              % "…one mole of gas…"        (
 observe temperature(273.15)                   % "…at 273.15 K…"            (span cited by the model)
 observe volume(0.022414)                      % "…occupying 0.022414 m³…"  (span cited by the model)
 ? pressure(moles, temperature, volume)        % engine → ~101325 Pa (P = nRT/V, NIST CODATA R, authoritative)
+
+% --- PV = nRT, SOLVED FOR VOLUME (rung-0 CAS-wiring, FL-10). "One mole of an
+% ideal gas at 273.15 K and 101325 Pa — what volume does it occupy?" The same
+% already-bound moles(1)/temperature(273.15) recover the molar volume — a round
+% trip against the forward pressure just computed above. ---
+observe pressure(101325)                                    % "…at 101325 Pa…" (span cited)
+? volume_from_pressure(pressure, moles, temperature)         % engine → ~0.022414 m³ (NIST CODATA, authoritative)
