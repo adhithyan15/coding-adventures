@@ -245,6 +245,8 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // this path reconciles their shared head-to-tail motion with Noto Naskh.
 // Urdu ن draws its independent below-baseline bowl first, then lifts once for
 // the dot near the baseline. Initial and medial forms use a distinct tooth.
+// Urdu ہ starts at the independent teardrop's upper right, loops
+// counterclockwise around its base, and crosses the top without lifting.
 // The adjacent ب starts at the bowl's right lip, sweeps right-to-left through
 // its shallow dip, then lifts once before placing the separate dot below.
 // After the intervening Persian-added پ row, ت repeats the same bowl, lifts to
@@ -724,6 +726,40 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: urduAlphabetSource("ن"),
+  },
+  [ductusKey("urdu-nastaliq", "ہ")]: {
+    script: "urdu-nastaliq",
+    glyph: "ہ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "loop the independent teardrop counterclockwise without lifting",
+            path: [
+              { x: 250, y: 330 },
+              { x: 190, y: 305 },
+              { x: 150, y: 280 },
+              { x: 120, y: 230 },
+              { x: 95, y: 170 },
+              { x: 90, y: 115 },
+              { x: 115, y: 70 },
+              { x: 155, y: 40 },
+              { x: 200, y: 30 },
+              { x: 245, y: 40 },
+              { x: 290, y: 70 },
+              { x: 320, y: 110 },
+              { x: 330, y: 160 },
+              { x: 325, y: 210 },
+              { x: 305, y: 255 },
+              { x: 275, y: 295 },
+              { x: 235, y: 330 },
+              { x: 195, y: 360 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: urduAlphabetSource("ہ"),
   },
   "ب": {
     script: "perso-arabic",

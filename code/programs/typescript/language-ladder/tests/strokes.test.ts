@@ -33,6 +33,7 @@ const URDU_KAF = DUCTUS[ductusKey("urdu-nastaliq", "ک")];
 const URDU_LAM = DUCTUS[ductusKey("urdu-nastaliq", "ل")];
 const URDU_MIM = DUCTUS[ductusKey("urdu-nastaliq", "م")];
 const URDU_NUN = DUCTUS[ductusKey("urdu-nastaliq", "ن")];
+const URDU_HE = DUCTUS[ductusKey("urdu-nastaliq", "ہ")];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
@@ -380,6 +381,19 @@ describe("handwriting ductus", () => {
     expect(Math.min(...dot.map((point) => point.y))).toBeGreaterThan(0);
   });
 
+  it("Urdu independent ہ closes its counterclockwise teardrop without lifting", () => {
+    expect(URDU_HE.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_HE)).toBe(0);
+    expect(URDU_HE.strokes).toHaveLength(1);
+    expect(URDU_HE.strokes[0].segments).toHaveLength(1);
+    const loop = URDU_HE.strokes[0].segments[0].path;
+    expect(loop[1].x).toBeLessThan(loop[0].x);
+    expect(loop[1].y).toBeLessThan(loop[0].y);
+    expect(Math.min(...loop.map((point) => point.y))).toBeLessThan(100);
+    expect(Math.max(...loop.slice(9).map((point) => point.x))).toBeGreaterThan(loop[0].x);
+    expect(loop.at(-1)!.y).toBeGreaterThan(loop[0].y);
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -713,6 +727,19 @@ describe("handwriting ductus", () => {
       /bowl first.*one uninterrupted right-to-left run.*lift once.*dot near the baseline.*final and independent nūn.*below the baseline.*initial and medial.*be-series tooth.*Noto Naskh.*Nastaliq/i,
     );
     expect(src.url).not.toBe(DUCTUS["ن"].source.url);
+  });
+
+  it("Urdu independent ہ traces to Zer o Zabar's unbroken teardrop animations", () => {
+    const src = URDU_HE.source;
+    expect(src.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/chhoti-he-do-chashmi-he-chhoti-ye-bari-ye/",
+    );
+    expect(src.citation).toMatch(
+      /Zer o Zabar.*independent ہ.*calligraphic and handwriting animations.*Chhoṭī he instructions.*Northwestern/i,
+    );
+    expect(src.variation).toMatch(
+      /one uninterrupted counterclockwise loop.*upper right.*down and left.*around the base.*return up the right side.*cross at the top.*without lifting.*independent form.*oval or teardrop.*initial and medial.*small divot.*number-6-like mark.*final form.*up and then down.*Noto Naskh.*Nastaliq/i,
+    );
   });
 
   it("Persian ب traces to the adjacent sourced bowl-and-dot demonstration", () => {

@@ -94,6 +94,8 @@ const URDU_MIM = ductusFor("م", "urdu-nastaliq")!;
 const urduMimOutline = naskhOutline("م");
 const URDU_NUN = ductusFor("ن", "urdu-nastaliq")!;
 const urduNunOutline = naskhOutline("ن");
+const URDU_HE = ductusFor("ہ", "urdu-nastaliq")!;
+const urduHeOutline = naskhOutline("ہ");
 const PERSIAN_BEH = DUCTUS["ب"];
 const persianBehOutline = naskhOutline("ب");
 const PERSIAN_TEH = DUCTUS["ت"];
@@ -121,7 +123,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds all eleven authored Tamil letters, nine Persian letters, and Urdu ا, ج, ر, س, ش, ک, ل, م, and ن", () => {
+  it("finds all eleven authored Tamil letters, nine Persian letters, and Urdu ا, ج, ر, س, ش, ک, ل, م, ن, and ہ", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -158,6 +160,7 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("م", "perso-arabic")?.glyph).toBe("م");
     expect(ductusFor("ن", "urdu-nastaliq")?.glyph).toBe("ن");
     expect(ductusFor("ن", "perso-arabic")?.glyph).toBe("ن");
+    expect(ductusFor("ہ", "urdu-nastaliq")?.glyph).toBe("ہ");
   });
 
   it("keeps the shared Persian and Urdu ا independently addressable", () => {
@@ -956,6 +959,33 @@ describe("Urdu ن — its below-baseline bowl precedes the lifted dot", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(URDU_NUN.strokes[1], 1),
+    );
+  });
+});
+
+describe("Urdu ہ — its independent teardrop is one unbroken loop", () => {
+  const steps = ductusSteps(URDU_HE);
+  const strip = ductusFilmstrip(URDU_HE, urduHeOutline);
+
+  it("shows one sourced counterclockwise loop with no lift", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "loop the independent teardrop counterclockwise without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0]);
+    expect(strip.frames).toHaveLength(1);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 1 movement");
+  });
+
+  it("draws the Noto Naskh outline and the complete sourced loop", () => {
+    const paths = byTag(strip.frames[0], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      urduHeOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(URDU_HE.strokes[0], 1),
     );
   });
 });
