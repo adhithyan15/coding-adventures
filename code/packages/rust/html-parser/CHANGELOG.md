@@ -6,6 +6,10 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Non-hidden `input` start tags processed in table mode now report the required
+  general parse error before retaining their existing foster-parented DOM
+  placement. Hidden inputs keep their specialized in-table behavior and
+  diagnostic, while inputs inside cells remain quiet.
 - `form` start tags processed in table mode now report the required parse
   error whether the form element pointer is initially null or already set.
   The first form retains its special detached insertion behavior, while a

@@ -5378,6 +5378,10 @@ impl HtmlParser {
                 ));
                 self.append_node(Node::element(name, attributes));
             } else {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-input-start-tag-in-table",
+                    "non-hidden input start tag in a table context was foster parented",
+                ));
                 self.insert_node_before_open_table(Node::element(name, attributes));
             }
             return;
@@ -34127,6 +34131,42 @@ mod tests {
             assert!(output.parser_diagnostics.iter().all(|diagnostic| {
                 diagnostic.code != "unexpected-hidden-input-start-tag-in-table"
             }));
+        }
+    }
+
+    #[test]
+    fn reports_non_hidden_input_start_tags_fostered_from_tables() {
+        for source in [
+            "<!doctype html><table><input></table>",
+            "<!doctype html><table><input type=' hidden'></table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic
+                        == &ParserDiagnostic::new(
+                            "unexpected-input-start-tag-in-table",
+                            "non-hidden input start tag in a table context was foster parented",
+                        )
+                }),
+                "source {source:?}"
+            );
+
+            let children = &body(&output.document).children;
+            assert_eq!(element(&children[0]).name, "input", "source {source:?}");
+            assert_eq!(element(&children[1]).name, "table", "source {source:?}");
+        }
+
+        for source in [
+            "<!doctype html><input type=text>",
+            "<!doctype html><table><tr><td><input></td></tr></table>",
+            "<!doctype html><table><input type=hidden></table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| { diagnostic.code != "unexpected-input-start-tag-in-table" }));
         }
     }
 
