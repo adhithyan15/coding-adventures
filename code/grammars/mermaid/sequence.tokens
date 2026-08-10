@@ -7,6 +7,7 @@ skip:
   COMMENT               = /%%[^\r\n]*/
 
 NEWLINE                  = /\r?\n/
+SEMICOLON                = ";"
 HEADER                   = "sequenceDiagram"
 ACC_DESCR_BLOCK          = /accDescr[ \t]*\{[^\}]*\}/
 BIDIRECTIONAL_SOLID      = "<<->>"
@@ -47,7 +48,7 @@ PLUS                     = "+"
 MINUS                    = "-"
 NUMBER                   = /(?:[0-9]+(?:\.[0-9]{1,2})?|\.[0-9]{1,2})/
 IDENTIFIER               = /[A-Za-z0-9_.$]+/
-WORD                     = /[^ \t\r\n:,+-@]+/
+WORD                     = /[^ \t\r\n:,+-@;]+/
 
 keywords:
   participant

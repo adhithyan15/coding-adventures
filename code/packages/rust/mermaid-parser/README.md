@@ -45,6 +45,8 @@ the native pipeline; resolving host document contents remains an embedding-layer
 compatibility gap.
 Both single-line accessibility statements and multiline `accDescr` blocks
 lower to PaintScene metadata.
+Newlines and semicolons are interchangeable sequence statement terminators,
+including inside control blocks.
 All Mermaid 11.16.1 solid/dotted, normal/reverse filled and stick half-arrow
 forms preserve their line style, half orientation, and endpoint through Paint.
 Central connection markers before and/or after an arrow preserve source,

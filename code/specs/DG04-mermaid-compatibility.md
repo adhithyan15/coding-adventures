@@ -131,6 +131,8 @@ rather than degrade silently.
 
 Sequence `accTitle`, single-line `accDescr`, and multiline `accDescr` blocks
 preserve accessibility semantics in PaintScene metadata.
+Sequence newlines and semicolons are interchangeable statement terminators at
+the document level and inside control blocks.
 
 Inline participant configuration now carries `type` and `alias` into semantic
 IR. Boundary, control, entity, database, collections, and queue kinds lower to

@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.16.0";
+pub const VERSION: &str = "0.17.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -111,7 +111,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.16.0");
+        assert_eq!(VERSION, "0.17.0");
     }
 
     #[test]
@@ -446,5 +446,12 @@ A\\-B: reverse stick bottom
             token.type_name.as_deref() == Some("ACC_DESCR_BLOCK")
                 && token.value.contains("between accounts")
         }));
+    }
+
+    #[test]
+    fn tokenizes_sequence_semicolon_terminators() {
+        let tokens =
+            tokenize_mermaid_sequence("sequenceDiagram;participant Alice;Alice->>Bob: Hello;");
+        assert_eq!(tokens.iter().filter(|token| token.value == ";").count(), 3);
     }
 }
