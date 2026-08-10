@@ -51,7 +51,8 @@
         "TA-W14-read-pesu",
         "TA-W15-read-po",
         "TA-W17-read-unavu",
-        "TA-W18-read-uur"
+        "TA-W18-read-uur",
+        "TA-W19-read-muunru"
       ],
       "before": [],
       "inline": [
@@ -902,7 +903,8 @@
         "TA-W14-read-pesu",
         "TA-W15-read-po",
         "TA-W17-read-unavu",
-        "TA-W18-read-uur"
+        "TA-W18-read-uur",
+        "TA-W19-read-muunru"
       ]
     },
     {

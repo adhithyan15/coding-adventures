@@ -860,6 +860,11 @@ describe("corpus regression", () => {
     // uses CORE. Script blocks land exactly on that seam. Publishing `coreVoice` as the
     // headline per-track number is the standing recommendation; until then, expect this
     // figure to rise whenever a non-Latin track authors honestly.
+    // +1 lesson and +1 `pen`: TA-W19-read-muunru. It carries `type: writing`, so it
+    // derives `pen` from `writing-type` before its script block is even considered —
+    // the same `["writing-type","script-block"]` pair that, counted in
+    // `core/lesson-modality.json`, 20 other Tamil lessons already carry. No other
+    // counter moves, so the sight seam above is untouched by this lesson.
     expect(manifest.summary).toEqual({
       // Both Spanish B1 chapters, 38 and 41, are entirely ear-only, so each is fully
       // drivable. They moved the whole-corpus figure from 66% to 67% — then the
@@ -882,8 +887,12 @@ describe("corpus regression", () => {
       // +4: TA-W10-read-naan, TA-W11-read-niingal, TA-W12-read-eppadi and
       // TA-W13-read-irukkirirgal extend the writing strand over chapters 2-3's glyphs.
       // +3: TA-W14-read-pesu, TA-W15-read-po and TA-W16-read-tamizh close chapters 4-5.
-      // +2: TA-W17-read-unavu and TA-W18-read-uur close the last two untaught glyphs.
-      totalLessons: 1689,
+      // +2: TA-W17-read-unavu and TA-W18-read-uur close the last two glyphs untaught
+      // in the chapter 33-38 sections — NOT in the corpus, which this entry originally
+      // failed to qualify. FOURTEEN chapter-7 glyphs are still untaught after them.
+      // +1: TA-W19-read-muunru teaches one of the fourteen, ூ, leaving thirteen —
+      // ஏ, ஐ, ஒ and the ten digits ௧-௰ — and exhausts the strand's runway.
+      totalLessons: 1690,
       // Chapters 10 and 13 replace wide legacy tables with small singular-only
       // comparisons, so three more lessons move from sight to voice.
       // All seven Chapter-16 teaching steps are voice-first. Generating the book
@@ -926,7 +935,7 @@ describe("corpus regression", () => {
       // +2: both new lessons are `type: writing`. voice, sight, drivableLessons,
       // drivablePrefixTotal, fullyDrivableChapters and unstartableChapters ALL hold —
       // this tranche adds lessons and removes no inline section, so nothing flips.
-      pen: 67,
+      pen: 68,
       // +6: exactly the six lessons that moved sight -> voice; no other lesson changes.
       // +8: exactly the eight lessons that moved sight -> voice.
       drivableLessons: 1114,

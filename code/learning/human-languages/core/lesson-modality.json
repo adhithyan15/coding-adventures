@@ -7,12 +7,12 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:20e6a728d8039764",
+  "sourceHash": "fnv1a64:462d84aa9f1a2082",
   "summary": {
-    "totalLessons": 1689,
+    "totalLessons": 1690,
     "voice": 1114,
     "sight": 508,
-    "pen": 67,
+    "pen": 68,
     "drivableLessons": 1114,
     "drivablePercent": 66,
     "trackCount": 22,
@@ -7548,11 +7548,11 @@
     },
     {
       "language": "tamil",
-      "lessonCount": 127,
+      "lessonCount": 128,
       "voice": 76,
       "sight": 29,
-      "pen": 22,
-      "drivablePercent": 60,
+      "pen": 23,
+      "drivablePercent": 59,
       "drivablePrefixTotal": 60,
       "modalities": [
         "voice",
@@ -8210,12 +8210,13 @@
         },
         {
           "chapter": 38,
-          "lessonCount": 3,
+          "lessonCount": 4,
           "voice": 0,
           "sight": 3,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "TA-C38-udambu",
@@ -38603,6 +38604,30 @@
       "detachableSegments": [
         "The letters in this word"
       ]
+    },
+    {
+      "id": "TA-W19-read-muunru",
+      "language": "tamil",
+      "chapter": 38,
+      "sequence": 1165,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:2ef84654a6ca9fcb",
+      "detachableSegments": [
+        "Script you'll notice: the ூ sign",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
     },
     {
       "id": "TE-C01-avunu",
