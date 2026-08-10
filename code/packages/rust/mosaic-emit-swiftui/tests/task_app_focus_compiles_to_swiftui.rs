@@ -52,6 +52,23 @@ fn resolve_packages(layout: &mut moslayout_compiler::LayoutDef) {
         .expect("resolve pkg:: references in TaskApp.mll");
 }
 
+fn emit_complete_task_app() -> String {
+    let root = task_app_src_root();
+    let mil = fs::read_to_string(root.join("TaskApp.mil")).expect("read TaskApp.mil");
+    let mll = fs::read_to_string(root.join("TaskApp.mll")).expect("read TaskApp.mll");
+    let msl = fs::read_to_string(root.join("TaskApp.light.msl")).expect("read TaskApp.light.msl");
+
+    let interface = mosmodel_compiler::compile(&mil).expect("compile Task App interface");
+    let mut layout = moslayout_compiler::compile(&mll, Some(&interface.descriptor_json))
+        .expect("compile Task App layout");
+    resolve_packages(&mut layout.def);
+    let style = mosstyle_compiler::compile(&msl, Some(&layout.part_map_json))
+        .expect("compile Task App light style");
+    mosaic_emit_swiftui::from_pipeline(&interface.component, &layout.def, &style.def)
+        .expect("emit Task App SwiftUI")
+        .output
+}
+
 #[test]
 fn project_nav_focused_state_lowers_to_native_swiftui_focus() {
     let root = project_nav_src_root();
@@ -70,12 +87,12 @@ fn project_nav_focused_state_lowers_to_native_swiftui_focus() {
         .output;
 
     assert!(
-        output.contains("private struct _MosaicFocusState<Content: View>: View"),
+        output.contains("private struct _MosaicFocusState: View"),
         "ProjectNav must generate native focus support:\n{output}"
     );
     assert_eq!(
         output
-            .matches("_MosaicFocusState { __mosaicFocusActive in")
+            .matches("_MosaicFocusState(content: _mosaicFocusContent)")
             .count(),
         1,
         "ProjectNav has one authored focused surface:\n{output}"
@@ -86,7 +103,7 @@ fn project_nav_focused_state_lowers_to_native_swiftui_focus() {
     );
 
     let focus_start = output
-        .find("_MosaicFocusState { __mosaicFocusActive in")
+        .find("let _mosaicFocusContent: (Bool) -> AnyView = { __mosaicFocusActive in")
         .expect("focus wrapper");
     let focus_region = &output[focus_start..output.len().min(focus_start + 2_000)];
     assert!(
@@ -101,20 +118,7 @@ fn project_nav_focused_state_lowers_to_native_swiftui_focus() {
 
 #[test]
 fn task_app_package_graph_lowers_notes_to_native_multiline_swiftui() {
-    let root = task_app_src_root();
-    let mil = fs::read_to_string(root.join("TaskApp.mil")).expect("read TaskApp.mil");
-    let mll = fs::read_to_string(root.join("TaskApp.mll")).expect("read TaskApp.mll");
-    let msl = fs::read_to_string(root.join("TaskApp.light.msl")).expect("read TaskApp.light.msl");
-
-    let interface = mosmodel_compiler::compile(&mil).expect("compile Task App interface");
-    let mut layout = moslayout_compiler::compile(&mll, Some(&interface.descriptor_json))
-        .expect("compile Task App layout");
-    resolve_packages(&mut layout.def);
-    let style = mosstyle_compiler::compile(&msl, Some(&layout.part_map_json))
-        .expect("compile Task App light style");
-    let output = mosaic_emit_swiftui::from_pipeline(&interface.component, &layout.def, &style.def)
-        .expect("emit Task App SwiftUI")
-        .output;
+    let output = emit_complete_task_app();
 
     assert!(
         output.contains("TextEditor(text: Binding(get: { noteBodyValue }"),
@@ -123,6 +127,62 @@ fn task_app_package_graph_lowers_notes_to_native_multiline_swiftui() {
     assert!(
         output.contains(".accessibilityIdentifier(\"notes-body-input\")"),
         "the authored Notes body identity must reach SwiftUI:\n{output}"
+    );
+}
+
+#[cfg(target_os = "macos")]
+#[test]
+fn complete_task_app_generated_swift_typechecks() {
+    let unique = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .expect("system time after epoch")
+        .as_nanos();
+    let project_root =
+        std::env::temp_dir().join(format!("mosaic-task-app-{}-{unique}", std::process::id()));
+    let sources = project_root.join("Sources").join("App");
+    fs::create_dir_all(&sources).expect("create temporary SwiftPM source tree");
+    fs::write(
+        project_root.join("Package.swift"),
+        r#"// swift-tools-version: 5.10
+import PackageDescription
+
+let package = Package(
+    name: "MosaicTaskAppCompileGate",
+    platforms: [.macOS(.v13)],
+    targets: [.executableTarget(name: "App")]
+)
+"#,
+    )
+    .expect("write temporary Package.swift");
+    fs::write(sources.join("TaskApp.swift"), emit_complete_task_app())
+        .expect("write generated Task App SwiftUI");
+    fs::write(
+        sources.join("App.swift"),
+        r#"import SwiftUI
+
+@main
+struct CompileGateApp: App {
+    var body: some Scene {
+        WindowGroup { EmptyView() }
+    }
+}
+"#,
+    )
+    .expect("write temporary SwiftUI app shell");
+
+    let result = Command::new("swift")
+        .arg("build")
+        .arg("--jobs")
+        .arg("2")
+        .current_dir(&project_root)
+        .output()
+        .expect("run swift build");
+    let _ = fs::remove_dir_all(&project_root);
+
+    assert!(
+        result.status.success(),
+        "the complete generated Task App must build through SwiftPM:\n{}",
+        String::from_utf8_lossy(&result.stderr)
     );
 }
 

@@ -306,9 +306,10 @@ unblocks multiple downstream targets; never count source generation as completio
   standalone `mosaic-compile` currently inlines dependency layouts without merging
   their MSL, while the artifact builder merges both layout and style.
 - [ ] Type-check the complete generated Trestle application on every target, not
-  only focused fixtures; SwiftUI still needs type-correct truthiness lowering and
-  collision-safe generated member names, while Flutter still needs boolean
-  truthiness lowering and required input values. Qt's plain multiline `Input`
+  only focused fixtures; the complete package-expanded TaskApp now passes the
+  Swift compiler and SwiftPM linker with type-correct truthiness, collision-safe
+  generated members, and bounded native-view type inference. Flutter still needs
+  boolean truthiness lowering and required input values. Qt's plain multiline `Input`
   lowering and fixed-dimension wrapper deduplication are complete, and the complete
   TaskApp now passes Qt's QML compiler, AUTOMOC, C++ compiler, and linker. Fractional
   font sizing is type-correct and the app remains running in a headless launch.

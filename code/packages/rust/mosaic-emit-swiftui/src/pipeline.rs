@@ -571,12 +571,13 @@ struct PartStyleEntry {
 }
 
 type PartStyleMap = HashMap<String, PartStyleEntry>;
+const CONCRETE_MODIFIER_HELPERS_KEY: &str = "_mosaic:concrete-modifier-helpers";
 
-const HOVER_STATE_HELPER_SWIFT: &str = r#"private struct _MosaicHoverState<Content: View>: View {
+const HOVER_STATE_HELPER_SWIFT: &str = r#"private struct _MosaicHoverState: View {
     @State private var isHovered = false
-    private let content: (Bool) -> Content
+    private let content: (Bool) -> AnyView
 
-    init(@ViewBuilder content: @escaping (Bool) -> Content) {
+    init(content: @escaping (Bool) -> AnyView) {
         self.content = content
     }
 
@@ -592,11 +593,11 @@ const HOVER_STATE_HELPER_SWIFT: &str = r#"private struct _MosaicHoverState<Conte
 }
 "#;
 
-const FOCUS_STATE_HELPER_SWIFT: &str = r#"private struct _MosaicFocusState<Content: View>: View {
+const FOCUS_STATE_HELPER_SWIFT: &str = r#"private struct _MosaicFocusState: View {
     @FocusState private var isFocused: Bool
-    private let content: (Bool) -> Content
+    private let content: (Bool) -> AnyView
 
-    init(@ViewBuilder content: @escaping (Bool) -> Content) {
+    init(content: @escaping (Bool) -> AnyView) {
         self.content = content
     }
 
@@ -607,11 +608,11 @@ const FOCUS_STATE_HELPER_SWIFT: &str = r#"private struct _MosaicFocusState<Conte
 }
 "#;
 
-const PRESS_STATE_HELPER_SWIFT: &str = r#"private struct _MosaicPressState<Content: View>: View {
+const PRESS_STATE_HELPER_SWIFT: &str = r#"private struct _MosaicPressState: View {
     @GestureState private var isPressed = false
-    private let content: (Bool) -> Content
+    private let content: (Bool) -> AnyView
 
-    init(@ViewBuilder content: @escaping (Bool) -> Content) {
+    init(content: @escaping (Bool) -> AnyView) {
         self.content = content
     }
 
@@ -1729,7 +1730,19 @@ pub fn from_pipeline(
     // the view-tree walker.  Empty when the `.msl` declares no parts,
     // which is the no-op path — every modifier-chain lookup returns
     // None and emission proceeds identically to a styleless pipeline.
-    let part_styles = build_part_style_map(style);
+    let mut part_styles = build_part_style_map(style);
+    if layout_uses_automatic_hover(&layout.root, &part_styles)
+        || layout_uses_automatic_focus(&layout.root, &part_styles)
+        || layout_uses_automatic_press(&layout.root, &part_styles)
+    {
+        part_styles.insert(
+            CONCRETE_MODIFIER_HELPERS_KEY.to_string(),
+            PartStyleEntry {
+                props: vec![],
+                transitions: vec![],
+            },
+        );
+    }
 
     let name = &interface.component;
     let mut out = String::new();
@@ -1994,6 +2007,66 @@ fn emit_view_struct(
     writeln!(out, "    let dispatch: ({component}Event) -> Void").unwrap();
     writeln!(out).unwrap();
 
+    // Moslayout conditions use value truthiness, while Swift requires an
+    // actual Bool. Keep the conversion inside each generated View so the
+    // helper cannot collide when several component files share one module.
+    // The leading underscore is outside mosmodel's authored-name grammar,
+    // so slots cannot shadow this generated member.
+    writeln!(
+        out,
+        "    private func _mosaicTruthy(_ value: Any) -> Bool {{"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "        if let value = value as? Bool {{ return value }}"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "        if let value = value as? Double {{ return value != 0 }}"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "        if let value = value as? Int {{ return value != 0 }}"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "        if let value = value as? String {{ return !value.isEmpty }}"
+    )
+    .unwrap();
+    writeln!(out, "        let reflected = Mirror(reflecting: value)").unwrap();
+    writeln!(
+        out,
+        "        if reflected.displayStyle == .collection {{ return !reflected.children.isEmpty }}"
+    )
+    .unwrap();
+    writeln!(out, "        return true").unwrap();
+    writeln!(out, "    }}").unwrap();
+    writeln!(
+        out,
+        "    private func _mosaicText(_ value: Any) -> Text {{ Text(verbatim: String(describing: value)) }}"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "    private func _mosaicButton(_ label: Any, action: @escaping () -> Void) -> AnyView {{ AnyView(Button(action: action) {{ _mosaicText(label) }}) }}"
+    )
+    .unwrap();
+    if part_styles.contains_key(CONCRETE_MODIFIER_HELPERS_KEY) {
+        writeln!(out, "    private func _mosaicForegroundColor(_ view: AnyView, _ color: Color) -> AnyView {{ AnyView(view.foregroundColor(color)) }}").unwrap();
+        writeln!(out, "    private func _mosaicFont(_ view: AnyView, _ font: Font) -> AnyView {{ AnyView(view.font(font)) }}").unwrap();
+        writeln!(out, "    private func _mosaicPadding(_ view: AnyView, _ length: CGFloat) -> AnyView {{ AnyView(view.padding(length)) }}").unwrap();
+        writeln!(out, "    private func _mosaicBackground(_ view: AnyView, _ color: Color) -> AnyView {{ AnyView(view.background(color)) }}").unwrap();
+        writeln!(out, "    private func _mosaicBorder(_ view: AnyView, _ color: Color, width: CGFloat) -> AnyView {{ AnyView(view.border(color, width: width)) }}").unwrap();
+        writeln!(out, "    private func _mosaicOpacity(_ view: AnyView, _ opacity: Double) -> AnyView {{ AnyView(view.opacity(opacity)) }}").unwrap();
+        writeln!(out, "    private func _mosaicFrame(_ view: AnyView, width: CGFloat? = nil, height: CGFloat? = nil, alignment: Alignment = .center) -> AnyView {{ AnyView(view.frame(width: width, height: height, alignment: alignment)) }}").unwrap();
+        writeln!(out, "    private func _mosaicFrame(_ view: AnyView, minWidth: CGFloat? = nil, idealWidth: CGFloat? = nil, maxWidth: CGFloat? = nil, minHeight: CGFloat? = nil, idealHeight: CGFloat? = nil, maxHeight: CGFloat? = nil, alignment: Alignment = .center) -> AnyView {{ AnyView(view.frame(minWidth: minWidth, idealWidth: idealWidth, maxWidth: maxWidth, minHeight: minHeight, idealHeight: idealHeight, maxHeight: maxHeight, alignment: alignment)) }}").unwrap();
+    }
+    writeln!(out).unwrap();
+
     // body computed property.
     writeln!(out, "    var body: some View {{").unwrap();
     let body = emit_view_tree(layout_root, 8, part_styles, emits, None, None, None)?;
@@ -2055,6 +2128,7 @@ fn emit_view_tree(
     let automatic_wrapper_count = usize::from(uses_automatic_hover)
         + usize::from(uses_automatic_focus)
         + usize::from(uses_automatic_press);
+    let has_automatic_wrapper = automatic_wrapper_count > 0;
     let indent = indent + automatic_wrapper_count * 4;
     let pad = " ".repeat(indent);
 
@@ -2160,8 +2234,8 @@ fn emit_view_tree(
         // multiline contract. Keep accepting it until the kernel grows a
         // dedicated multiline control; single-line Input shares HostInput's
         // native lowering while multiline Input uses TextEditor.
-        "Input" => emit_legacy_input(node, indent)?,
-        "HostInput" => emit_host_input(node, indent)?,
+        "Input" => emit_legacy_input(node, indent, emits)?,
+        "HostInput" => emit_host_input(node, indent, emits)?,
         "HostButton" => emit_host_button(node, indent, emits, for_payload)?,
         "HostSurface" => emit_host_surface(node, indent),
 
@@ -2344,27 +2418,152 @@ fn emit_view_tree(
     let mut wrapper_indent = indent;
     if uses_automatic_press {
         wrapper_indent -= 4;
-        let wrapper_pad = " ".repeat(wrapper_indent);
-        inner = format!(
-            "{wrapper_pad}_MosaicPressState {{ __mosaicPressActive in\n{inner}{wrapper_pad}}}\n"
+        inner = wrap_swiftui_state_view(
+            &inner,
+            wrapper_indent,
+            "_MosaicPressState",
+            "__mosaicPressActive",
+            "_mosaicPressContent",
         );
     }
     if uses_automatic_focus {
         wrapper_indent -= 4;
-        let wrapper_pad = " ".repeat(wrapper_indent);
-        inner = format!(
-            "{wrapper_pad}_MosaicFocusState {{ __mosaicFocusActive in\n{inner}{wrapper_pad}}}\n"
+        inner = wrap_swiftui_state_view(
+            &inner,
+            wrapper_indent,
+            "_MosaicFocusState",
+            "__mosaicFocusActive",
+            "_mosaicFocusContent",
         );
     }
     if uses_automatic_hover {
         wrapper_indent -= 4;
-        let outer_pad = " ".repeat(wrapper_indent);
-        inner = format!(
-            "{outer_pad}_MosaicHoverState {{ __mosaicHoverActive in\n{inner}{outer_pad}}}\n"
+        inner = wrap_swiftui_state_view(
+            &inner,
+            wrapper_indent,
+            "_MosaicHoverState",
+            "__mosaicHoverActive",
+            "_mosaicHoverContent",
+        );
+    }
+
+    // Large generated view builders exceed Swift's constraint-solver budget
+    // even when each individual native view is simple. Erase every real view
+    // node after its authored styles and automatic state wrappers are applied;
+    // the rendered controls and modifiers are unchanged, while every parent
+    // sees one small concrete boundary. Metadata/comment-only nodes are not
+    // Swift expressions and must stay unwrapped.
+    if !has_automatic_wrapper
+        && !matches!(
+            node.tag.as_str(),
+            "Else" | "HostTableHead" | "HostTableBody" | "HostTableFoot" | "HostTableColGroup"
+        )
+    {
+        inner = erase_swiftui_view_type(
+            &inner,
+            wrapper_indent,
+            part_styles.contains_key(CONCRETE_MODIFIER_HELPERS_KEY),
         );
     }
 
     Ok(inner)
+}
+
+fn erase_swiftui_view_type(source: &str, indent: usize, use_concrete_modifiers: bool) -> String {
+    let pad = " ".repeat(indent);
+    let function_pad = " ".repeat(indent + 4);
+    let mut erased =
+        format!("{pad}({{ () -> AnyView in\n{function_pad}func _mosaicNode() -> AnyView {{\n");
+    erased.push_str(&wrap_swiftui_any_view(
+        source,
+        indent + 8,
+        use_concrete_modifiers,
+    ));
+    erased.push_str(&format!(
+        "{function_pad}}}\n{function_pad}return _mosaicNode()\n{pad}}})()\n"
+    ));
+    erased
+}
+
+fn wrap_swiftui_any_view(source: &str, indent: usize, use_concrete_modifiers: bool) -> String {
+    let pad = " ".repeat(indent);
+    let lines: Vec<_> = source.lines().collect();
+    let modifier_start = lines
+        .iter()
+        .rposition(|line| !line.trim_start().starts_with('.'))
+        .map(|index| index + 1)
+        .unwrap_or(0);
+
+    if modifier_start < lines.len() && modifier_start > 0 {
+        let mut wrapped = format!("{pad}let _mosaicStyled0: AnyView = AnyView(\n");
+        for line in &lines[..modifier_start] {
+            writeln!(wrapped, "    {line}").unwrap();
+        }
+        wrapped.push_str(&format!("{pad})\n"));
+        for (index, modifier) in lines[modifier_start..].iter().enumerate() {
+            let previous = format!("_mosaicStyled{index}");
+            let next = format!("_mosaicStyled{}", index + 1);
+            let concrete = if use_concrete_modifiers {
+                concrete_swiftui_modifier_call(&previous, modifier.trim())
+            } else {
+                None
+            };
+            let assignment =
+                concrete.unwrap_or_else(|| format!("AnyView({previous}{})", modifier.trim()));
+            writeln!(wrapped, "{pad}let {next}: AnyView = {assignment}").unwrap();
+        }
+        writeln!(
+            wrapped,
+            "{pad}return _mosaicStyled{}",
+            lines.len() - modifier_start
+        )
+        .unwrap();
+        return wrapped;
+    }
+
+    let mut wrapped = format!("{pad}return AnyView(\n");
+    for line in lines {
+        writeln!(wrapped, "    {line}").unwrap();
+    }
+    wrapped.push_str(&format!("{pad})\n"));
+    wrapped
+}
+
+fn concrete_swiftui_modifier_call(previous: &str, modifier: &str) -> Option<String> {
+    let mappings = [
+        (".foregroundColor(", "_mosaicForegroundColor"),
+        (".font(", "_mosaicFont"),
+        (".padding(", "_mosaicPadding"),
+        (".background(", "_mosaicBackground"),
+        (".border(", "_mosaicBorder"),
+        (".opacity(", "_mosaicOpacity"),
+        (".frame(", "_mosaicFrame"),
+    ];
+    for (prefix, helper) in mappings {
+        if let Some(arguments) = modifier
+            .strip_prefix(prefix)
+            .and_then(|value| value.strip_suffix(')'))
+        {
+            return Some(format!("{helper}({previous}, {arguments})"));
+        }
+    }
+    None
+}
+
+fn wrap_swiftui_state_view(
+    source: &str,
+    indent: usize,
+    wrapper: &str,
+    state_name: &str,
+    content_name: &str,
+) -> String {
+    let pad = " ".repeat(indent);
+    let binding_pad = " ".repeat(indent + 4);
+    let function_pad = " ".repeat(indent + 8);
+    let content = wrap_swiftui_any_view(source, indent + 12, true);
+    format!(
+        "{pad}({{ () -> AnyView in\n{binding_pad}let {content_name}: (Bool) -> AnyView = {{ {state_name} in\n{function_pad}func _mosaicStateNode() -> AnyView {{\n{content}{function_pad}}}\n{function_pad}return _mosaicStateNode()\n{binding_pad}}}\n{binding_pad}return AnyView({wrapper}(content: {content_name}))\n{pad}}})()\n"
+    )
 }
 
 /// Emit a SwiftUI container (`Group`, `HStack`, `VStack`) wrapping `node`'s
@@ -2572,8 +2771,8 @@ fn emit_children(
 ///
 /// 1. `Text { content: "literal"; }` → `Text("literal")` with quotes
 ///    escaped per Swift string-literal rules.
-/// 2. `Text { content: @slot; }` → `Text(slotName)` referencing the let
-///    property by name.
+/// 2. `Text { content: @slot; }` → `_mosaicText(slotName)` referencing the
+///    let property through one concrete, verbatim-text helper.
 /// 3. `Text { }` → `Text("")` placeholder.
 fn swift_text_expression(node: &LayoutNode) -> String {
     for prop in &node.props {
@@ -2583,7 +2782,7 @@ fn swift_text_expression(node: &LayoutNode) -> String {
                     return format!("Text(\"{}\")", escape_swift_string(s));
                 }
                 LayoutPropValue::SlotRef(slot) => {
-                    return format!("Text({})", to_camel_case_first_lower(slot));
+                    return format!("_mosaicText({})", to_camel_case_first_lower(slot));
                 }
                 LayoutPropValue::Keyword(k) => {
                     // Keyword values (e.g. enum members) are rare for Text
@@ -2611,7 +2810,7 @@ fn swift_text_expression(node: &LayoutNode) -> String {
                     // gets the live cell text inside every body cell
                     // instead of the empty placeholder this branch used
                     // to emit before §3.4 made the scope rules explicit.
-                    return format!("Text({text})");
+                    return format!("_mosaicText({text})");
                 }
             }
         }
@@ -2626,9 +2825,13 @@ fn swift_text_expression(node: &LayoutNode) -> String {
 /// Lower the still-supported UI25 `Input` primitive. `HostInput` deliberately
 /// covers only the single-line kernel surface, while UI25 `Input` also carries
 /// the multiline text-editor contract used by Trestle Notes.
-fn emit_legacy_input(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+fn emit_legacy_input(
+    node: &LayoutNode,
+    indent: usize,
+    emits: &[EmitDecl],
+) -> Result<String, PipelineEmitError> {
     if find_keyword_prop(node, "multiline") != Some("true") {
-        return emit_host_input(node, indent);
+        return emit_host_input(node, indent, emits);
     }
 
     let pad = " ".repeat(indent);
@@ -2740,7 +2943,11 @@ fn emit_legacy_input(node: &LayoutNode, indent: usize) -> Result<String, Pipelin
 /// the Escape key via the AppKit responder chain). The same callsite on
 /// iOS / iPadOS will compile but never fire; document this in the
 /// crate's README as a known limitation.
-fn emit_host_input(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_input(
+    node: &LayoutNode,
+    indent: usize,
+    emits: &[EmitDecl],
+) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
     // First arg: the placeholder string literal. We escape `\` and `"`
@@ -2827,31 +3034,26 @@ fn emit_host_input(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
     // addition would feed back: the setter dispatches -> the host updates the
     // bound slot -> `.onChange(of:)` fires -> dispatches again.
 
-    // `.onSubmit { dispatch(.e) }`. SwiftUI fires onSubmit when the
-    // user presses Enter / Return in the TextField.
-    //
-    // We deliberately emit the VOID form regardless of whether
-    // `value:` is bound on the HostInput. The previous shape
-    // `dispatch(.<case>(value: <value_expr>))` was an emitter bug:
-    // it tried to call a Swift enum case with an associated value
-    // that the .mil never declared (`emit onCommit ;` has no
-    // payload), producing "enum case has no associated values"
-    // compile errors. Matches the React backend, which dispatches
-    // `{ type: "commit" }` with no value field. Authors who need
-    // the live value subscribe to `onChange` (which IS the
-    // value-carrying path — see the `.onChange(of:)` handler
-    // above).
-    //
-    // If a future Mosaic component genuinely needs an onCommit
-    // that carries the value, the right move is to declare
-    // `emit onCommit ( value : text ) ;` in the .mil and have the
-    // emitter look up the emit's payload from the interface
-    // descriptor — not to guess from the HostInput's `value:` prop.
-    // That richer payload-aware handling is tracked as a follow-up.
+    // SwiftUI fires `onSubmit` when the user presses Enter / Return.
+    // Preserve the interface contract: void emits dispatch a void enum case,
+    // while the canonical one-text-field commit event carries the input's
+    // current bound value under the authored parameter label.
     if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
         let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_emit_name(&case_name)?;
-        line.push_str(&format!(".onSubmit {{ dispatch(.{case_name}) }}"));
+        let case_call = emits
+            .iter()
+            .find(|emit| emit.name == *emit_name)
+            .and_then(|emit| match emit.params.as_slice() {
+                [] => Some(format!(".{case_name}")),
+                [param] if param.r#type == EmitPayloadType::Text => {
+                    let label = to_camel_case_first_lower(&param.name);
+                    Some(format!(".{case_name}({label}: {value_expr})"))
+                }
+                _ => None,
+            })
+            .unwrap_or_else(|| format!(".{case_name}"));
+        line.push_str(&format!(".onSubmit {{ dispatch({case_call}) }}"));
     }
 
     // `.onExitCommand { dispatch(.e) }` — macOS Escape-key handler.
@@ -2901,9 +3103,8 @@ fn emit_host_input(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
 /// ## Generated shape
 ///
 /// ```swift
-/// Button(action: { dispatch(.tap) }) {
-///     Text(label)
-/// }.disabled(disabled)
+/// _mosaicButton(label, action: { dispatch(.tap) })
+///     .disabled(disabled)
 /// ```
 ///
 /// If no click/tap emit is bound the action closure is `{ }` (a no-op);
@@ -2915,8 +3116,6 @@ fn emit_host_button(
     for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
-    let inner_pad = " ".repeat(indent + 4);
-
     // Action closure body.
     let action_body =
         match find_emit_ref_prop(node, "onClick").or_else(|| find_emit_ref_prop(node, "onTap")) {
@@ -2938,36 +3137,33 @@ fn emit_host_button(
             None => String::new(),
         };
 
-    // Label expression. String literal → `Text("...")`; slot ref →
-    // `Text(slotName)`; nothing bound → `Text("")` placeholder.
+    // Label value. The generated `_mosaicButton` helper turns this into a
+    // concrete `AnyView`, keeping Button's generic label inference out of
+    // deeply nested result-builder expressions in complete applications.
     let label_expr = match find_prop_value(node, "label") {
-        Some(LayoutPropValue::String(s)) => format!("Text(\"{}\")", escape_swift_string(s)),
+        Some(LayoutPropValue::String(s)) => format!("\"{}\"", escape_swift_string(s)),
         Some(LayoutPropValue::SlotRef(slot)) => {
             let camel = to_camel_case_first_lower(slot);
             validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-            format!("Text({camel})")
+            camel
         }
         Some(LayoutPropValue::Keyword(name)) => {
             let camel = to_camel_case_first_lower(name);
             validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-            format!("Text({camel})")
+            camel
         }
-        Some(LayoutPropValue::Expr(text)) => format!("Text({})", text.trim()),
-        _ => "Text(\"\")".to_string(),
+        Some(LayoutPropValue::Expr(text)) => text.trim().to_string(),
+        _ => "\"\"".to_string(),
     };
 
     let mut out = String::new();
-    if action_body.is_empty() {
-        // No-op action closure. Still a valid Swift Button.
-        writeln!(out, "{pad}Button(action: {{ }}) {{").unwrap();
+    let action = if action_body.is_empty() {
+        "{ }".to_string()
     } else {
-        writeln!(out, "{pad}Button(action: {{ {action_body} }}) {{").unwrap();
-    }
-    writeln!(out, "{inner_pad}{label_expr}").unwrap();
+        format!("{{ {action_body} }}")
+    };
 
-    // Closing brace, then any trailing modifiers on the same line so the
-    // generated source stays compact.
-    let mut closing = format!("{pad}}}");
+    let mut closing = format!("{pad}_mosaicButton({label_expr}, action: {action})");
     if let Some(part_name) = &node.part_name {
         closing.push_str(&format!(
             ".accessibilityIdentifier(\"{}\")",
@@ -3932,7 +4128,7 @@ fn emit_table_section_rows(
                     // walker from carrying a styling parameter.
                     for line in emitted.lines() {
                         let trimmed = line.trim_start();
-                        if trimmed.starts_with("Text(") {
+                        if trimmed.starts_with("Text(") || trimmed.starts_with("_mosaicText(") {
                             writeln!(out, "{line}.bold()").unwrap();
                         } else {
                             writeln!(out, "{line}").unwrap();
@@ -4197,8 +4393,13 @@ fn emit_for_swift(
 /// | `If { then } Else { e }`| `if cond { <then> } else { <else> }`   |
 ///
 /// `cond` is the camelCased name for a `SlotRef`, or the expression
-/// source text verbatim for an `Expr`. The branches are recursed
-/// through [`emit_children`] so nested `If`/`Else` still pairs.
+/// source text for an `Expr`. Value expressions pass through the generated
+/// `_mosaicTruthy` conversion because Mosaic permits text, number, list,
+/// and node values in conditions while Swift only accepts `Bool`. Expressions
+/// are isolated in a type-erased Group with collision-safe generated locals,
+/// keeping Swift's constraint solver from absorbing the full `ViewBuilder`.
+/// The branches are recursed through [`emit_children`] so nested
+/// `If`/`Else` still pairs.
 fn emit_if_swift(
     if_node: &LayoutNode,
     else_node: Option<&LayoutNode>,
@@ -4209,55 +4410,253 @@ fn emit_if_swift(
     for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
+    let closure_pad = " ".repeat(indent + 4);
+    let return_pad = " ".repeat(indent + 8);
+    let group_pad = " ".repeat(indent + 12);
 
     // `when:` — required. `validate_if_node` guarantees SlotRef or Expr,
     // but again be defensive: a missing `when:` becomes `false` so the
     // file still compiles (the body is unreachable but well-typed).
-    let cond_expr = match if_node.props.iter().find(|p| p.name == "when") {
+    let cond_bindings = match if_node.props.iter().find(|p| p.name == "when") {
         Some(p) => match &p.value {
-            LayoutPropValue::SlotRef(s) => to_camel_case_first_lower(s),
-            LayoutPropValue::Expr(text) => text.clone(),
-            _ => "false".to_string(),
+            LayoutPropValue::SlotRef(s) => vec![format!(
+                "let _mosaicCondition: Bool = _mosaicTruthy({})",
+                to_camel_case_first_lower(s)
+            )],
+            LayoutPropValue::Expr(text) if swift_expression_is_boolean(text) => {
+                swift_boolean_condition_bindings(text)
+            }
+            LayoutPropValue::Expr(text) => vec![
+                format!("let _mosaicConditionValue = {text}"),
+                "let _mosaicCondition: Bool = _mosaicTruthy(_mosaicConditionValue)".to_string(),
+            ],
+            _ => vec!["let _mosaicCondition: Bool = false".to_string()],
         },
-        None => "false".to_string(),
+        None => vec!["let _mosaicCondition: Bool = false".to_string()],
     };
 
-    let mut out = format!("{pad}if {cond} {{\n", cond = cond_expr);
+    let mut out = format!("{pad}({{ () -> AnyView in\n");
+    for binding in cond_bindings {
+        writeln!(out, "{closure_pad}{binding}").unwrap();
+    }
+    out.push_str(&format!("{closure_pad}if _mosaicCondition {{\n"));
     if if_node.children.is_empty() {
-        out.push_str(&format!("{}EmptyView()\n", " ".repeat(indent + 4)));
+        out.push_str(&format!("{return_pad}return AnyView(EmptyView())\n"));
     } else {
+        out.push_str(&format!(
+            "{return_pad}return AnyView(\n{group_pad}Group {{\n"
+        ));
         out.push_str(&emit_children(
             &if_node.children,
-            indent + 4,
+            indent + 16,
             part_styles,
             emits,
             table_ctx,
             for_payload,
             None,
         )?);
+        out.push_str(&format!("{group_pad}}}\n{return_pad})\n"));
     }
 
     if let Some(en) = else_node {
-        out.push_str(&format!("{pad}}} else {{\n"));
+        out.push_str(&format!("{closure_pad}}} else {{\n"));
         if en.children.is_empty() {
-            out.push_str(&format!("{}EmptyView()\n", " ".repeat(indent + 4)));
+            out.push_str(&format!("{return_pad}return AnyView(EmptyView())\n"));
         } else {
+            out.push_str(&format!(
+                "{return_pad}return AnyView(\n{group_pad}Group {{\n"
+            ));
             out.push_str(&emit_children(
                 &en.children,
-                indent + 4,
+                indent + 16,
                 part_styles,
                 emits,
                 table_ctx,
                 for_payload,
                 None,
             )?);
+            out.push_str(&format!("{group_pad}}}\n{return_pad})\n"));
         }
-        out.push_str(&format!("{pad}}}\n"));
+        out.push_str(&format!("{closure_pad}}}\n"));
     } else {
-        out.push_str(&format!("{pad}}}\n"));
+        out.push_str(&format!(
+            "{closure_pad}}}\n{closure_pad}return AnyView(EmptyView())\n"
+        ));
     }
+    out.push_str(&format!("{pad}}})()\n"));
 
     Ok(out)
+}
+
+/// Mosaic allows scalar values in `If when:` but Swift only accepts `Bool`.
+/// Comparisons and logical expressions already produce a Swift Bool and are
+/// left untouched; wrapping those in an `Any` conversion inside a deeply
+/// nested `ViewBuilder` can make Swift's constraint solver time out. This
+/// scanner ignores quoted strings so a literal containing `==` is still
+/// treated as a value that needs truthiness conversion.
+fn swift_expression_is_boolean(text: &str) -> bool {
+    let trimmed = text
+        .trim()
+        .trim_start_matches('(')
+        .trim_end_matches(')')
+        .trim();
+    if trimmed == "true" || trimmed == "false" {
+        return true;
+    }
+
+    let bytes = text.as_bytes();
+    let mut in_string = false;
+    let mut escaped = false;
+    let mut i = 0;
+    while i < bytes.len() {
+        let byte = bytes[i];
+        if in_string {
+            if escaped {
+                escaped = false;
+            } else if byte == b'\\' {
+                escaped = true;
+            } else if byte == b'"' {
+                in_string = false;
+            }
+            i += 1;
+            continue;
+        }
+        if byte == b'"' {
+            in_string = true;
+            i += 1;
+            continue;
+        }
+
+        let next = bytes.get(i + 1).copied();
+        if matches!(
+            (byte, next),
+            (b'=', Some(b'='))
+                | (b'!', Some(b'='))
+                | (b'<', Some(b'='))
+                | (b'>', Some(b'='))
+                | (b'&', Some(b'&'))
+                | (b'|', Some(b'|'))
+        ) || byte == b'<'
+            || byte == b'>'
+            || (byte == b'!' && next != Some(b'='))
+        {
+            return true;
+        }
+        i += 1;
+    }
+    false
+}
+
+/// Give every top-level logical operand its own explicitly typed local before
+/// combining them. Large generated SwiftUI bodies otherwise make even a small
+/// `a == b && c == d` expression exceed the constraint solver's time budget.
+fn swift_boolean_condition_bindings(text: &str) -> Vec<String> {
+    let text = strip_balanced_outer_parentheses(text);
+    let (operands, operators) = split_top_level_logical_operators(text);
+    let mut bindings = Vec::with_capacity(operands.len() + 1);
+    for (index, operand) in operands.iter().enumerate() {
+        bindings.push(format!(
+            "let _mosaicCondition{index}: Bool = {}",
+            operand.trim()
+        ));
+    }
+    let mut combined = "let _mosaicCondition: Bool = ".to_string();
+    for index in 0..operands.len() {
+        if index > 0 {
+            write!(combined, " {} ", operators[index - 1]).unwrap();
+        }
+        write!(combined, "_mosaicCondition{index}").unwrap();
+    }
+    bindings.push(combined);
+    bindings
+}
+
+fn split_top_level_logical_operators(text: &str) -> (Vec<&str>, Vec<&'static str>) {
+    let bytes = text.as_bytes();
+    let mut operands = Vec::new();
+    let mut operators = Vec::new();
+    let mut start = 0;
+    let mut depth = 0usize;
+    let mut in_string = false;
+    let mut escaped = false;
+    let mut i = 0;
+    while i + 1 < bytes.len() {
+        let byte = bytes[i];
+        if in_string {
+            if escaped {
+                escaped = false;
+            } else if byte == b'\\' {
+                escaped = true;
+            } else if byte == b'"' {
+                in_string = false;
+            }
+            i += 1;
+            continue;
+        }
+        match byte {
+            b'"' => in_string = true,
+            b'(' => depth += 1,
+            b')' => depth = depth.saturating_sub(1),
+            b'&' if depth == 0 && bytes[i + 1] == b'&' => {
+                operands.push(&text[start..i]);
+                operators.push("&&");
+                i += 1;
+                start = i + 1;
+            }
+            b'|' if depth == 0 && bytes[i + 1] == b'|' => {
+                operands.push(&text[start..i]);
+                operators.push("||");
+                i += 1;
+                start = i + 1;
+            }
+            _ => {}
+        }
+        i += 1;
+    }
+    operands.push(&text[start..]);
+    (operands, operators)
+}
+
+fn strip_balanced_outer_parentheses(mut text: &str) -> &str {
+    loop {
+        let trimmed = text.trim();
+        if !trimmed.starts_with('(') || !trimmed.ends_with(')') {
+            return trimmed;
+        }
+        let bytes = trimmed.as_bytes();
+        let mut depth = 0usize;
+        let mut closes_at_end = false;
+        let mut in_string = false;
+        let mut escaped = false;
+        for (index, byte) in bytes.iter().copied().enumerate() {
+            if in_string {
+                if escaped {
+                    escaped = false;
+                } else if byte == b'\\' {
+                    escaped = true;
+                } else if byte == b'"' {
+                    in_string = false;
+                }
+                continue;
+            }
+            match byte {
+                b'"' => in_string = true,
+                b'(' => depth += 1,
+                b')' => {
+                    depth = depth.saturating_sub(1);
+                    if depth == 0 {
+                        closes_at_end = index == bytes.len() - 1;
+                        break;
+                    }
+                }
+                _ => {}
+            }
+        }
+        if !closes_at_end {
+            return trimmed;
+        }
+        text = &trimmed[1..trimmed.len() - 1];
+    }
 }
 
 // =====================================================================
@@ -4825,8 +5224,8 @@ mod tests {
         .unwrap()
         .output;
         assert!(
-            out.contains("Text(displayName)"),
-            "expected Text(displayName), got:\n{out}"
+            out.contains("_mosaicText(displayName)"),
+            "expected verbatim slot text, got:\n{out}"
         );
     }
 
@@ -4980,9 +5379,9 @@ mod tests {
         assert!(out.contains("let dispatch: (HeaderEvent) -> Void"));
         // Layout body.
         assert!(out.contains("HStack {"));
-        assert!(out.contains("Text(title)"));
+        assert!(out.contains("_mosaicText(title)"));
         assert!(out.contains("Spacer()"));
-        assert!(out.contains("Text(subtitle)"));
+        assert!(out.contains("_mosaicText(subtitle)"));
     }
 
     // ---------------------------------------------------------------------
@@ -5314,17 +5713,38 @@ mod tests {
         )
         .unwrap()
         .output;
-        // Always emit the void-form dispatch. The previous
-        // `dispatch(.commit(value: value))` shape was an emitter bug:
-        // when the Mosaic component declares `emit onCommit ;` (no
-        // payload — which is the common case), the Swift compiler
-        // rejected the value-carrying form as "enum case has no
-        // associated values". Authors that need the live value
-        // subscribe to `onChange` instead (which IS the value-
-        // carrying path; see `.onChange(of: ...)` test elsewhere).
+        assert!(
+            out.contains(".onSubmit { dispatch(.commit(value: value)) }"),
+            "expected payload-aware .onSubmit dispatch, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn host_input_void_commit_keeps_void_dispatch() {
+        let layout = layout_with(
+            "F",
+            leaf(
+                "HostInput",
+                vec![
+                    prop_slot_ref("value", "value"),
+                    prop_emit_ref("onCommit", "onCommit"),
+                ],
+            ),
+        );
+        let out = from_pipeline(
+            &component(
+                "F",
+                vec![slot("value", SlotType::Text, true)],
+                vec![emit("onCommit", vec![])],
+            ),
+            &layout,
+            &empty_style("F"),
+        )
+        .unwrap()
+        .output;
         assert!(
             out.contains(".onSubmit { dispatch(.commit) }"),
-            "expected void-form .onSubmit dispatch, got:\n{out}"
+            "expected void .onSubmit dispatch, got:\n{out}"
         );
     }
 
@@ -5390,10 +5810,8 @@ mod tests {
 
     // ---------------------------------------------------------------------
     // Test 19 — `HostButton` with `label` + `onTap` produces the right
-    // SwiftUI Button structure.
-    //
-    // The action closure dispatches `.tap`; the label closure contains a
-    // `Text(label)` slot reference.
+    // SwiftUI Button structure behind the concrete `_mosaicButton` helper.
+    // The action closure dispatches `.tap`; the label is the slot value.
     // ---------------------------------------------------------------------
 
     #[test]
@@ -5423,12 +5841,8 @@ mod tests {
         .unwrap()
         .output;
         assert!(
-            out.contains("Button(action: { dispatch(.tap) }) {"),
-            "expected Button(action:) opener, got:\n{out}"
-        );
-        assert!(
-            out.contains("Text(caption)"),
-            "expected label closure with Text(caption), got:\n{out}"
+            out.contains("_mosaicButton(caption, action: { dispatch(.tap) })"),
+            "expected concrete Button helper call, got:\n{out}"
         );
     }
 
@@ -5488,12 +5902,8 @@ mod tests {
         .unwrap()
         .output;
         assert!(
-            out.contains("Button(action: { dispatch(.click) }) {"),
-            "expected Button(action:) opener, got:\n{out}"
-        );
-        assert!(
-            out.contains("Text(caption)"),
-            "expected label closure with Text(caption), got:\n{out}"
+            out.contains("_mosaicButton(caption, action: { dispatch(.click) })"),
+            "expected concrete Button helper call, got:\n{out}"
         );
     }
 
@@ -5547,7 +5957,7 @@ mod tests {
             "expected HostButton to dispatch index payload, got:\n{out}"
         );
         assert!(
-            out.contains("Text(item)"),
+            out.contains("_mosaicButton(item, action:"),
             "expected HostButton label to use For item binding, got:\n{out}"
         );
     }
@@ -5597,7 +6007,7 @@ mod tests {
             "expected HostButton to dispatch item payload, got:\n{out}"
         );
         assert!(
-            out.contains("Text(option)"),
+            out.contains("_mosaicButton(option, action:"),
             "expected HostButton label to use For item binding, got:\n{out}"
         );
     }
@@ -6355,7 +6765,7 @@ mod tests {
             "expected camelCased as-binding in closure header, got:\n{out}"
         );
         assert!(
-            out.contains("Text(rowItem)"),
+            out.contains("_mosaicText(rowItem)"),
             "expected camelCased as-binding referenced in body, got:\n{out}"
         );
     }
@@ -6415,8 +6825,8 @@ mod tests {
             .unwrap()
             .output;
         assert!(
-            out.contains("if editing {"),
-            "expected `if editing {{` header, got:\n{out}"
+            out.contains("let _mosaicCondition: Bool = _mosaicTruthy(editing)"),
+            "expected truthiness-lowered if header, got:\n{out}"
         );
         assert!(
             out.contains("Text(\"x\")"),
@@ -6452,7 +6862,7 @@ mod tests {
             .unwrap()
             .output;
         assert!(
-            out.contains("if editing {"),
+            out.contains("let _mosaicCondition: Bool = _mosaicTruthy(editing)"),
             "expected if header, got:\n{out}"
         );
         assert!(
@@ -6477,8 +6887,8 @@ mod tests {
 
     // -----------------------------------------------------------------
     // Test 37 — `If (when: <expr>) { ... }` emits the expression
-    // source text verbatim as the Swift condition. This mirrors
-    // For's Expr passthrough (Test 32).
+    // source text directly as the already-Boolean Swift condition.
+    // This matches For's expression passthrough.
     // -----------------------------------------------------------------
 
     #[test]
@@ -6493,8 +6903,49 @@ mod tests {
             .unwrap()
             .output;
         assert!(
-            out.contains("if editing && row == 0 {"),
-            "expected expr passed verbatim into if header, got:\n{out}"
+            out.contains("let _mosaicCondition0: Bool = editing"),
+            "expected Boolean expr isolated in the if header, got:\n{out}"
+        );
+        assert!(
+            out.contains("let _mosaicCondition1: Bool = row == 0"),
+            "expected each logical operand to get an isolated local, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn if_with_value_expr_uses_mosaic_truthiness() {
+        let if_node = node_with_props(
+            "If",
+            vec![prop_expr("when", "row[2]")],
+            vec![leaf("Text", vec![prop_string("content", "x")])],
+        );
+        let layout = layout_with("C", container_node("Box", vec![if_node]));
+        let out = from_pipeline(&component("C", vec![], vec![]), &layout, &empty_style("C"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("let _mosaicConditionValue = row[2]"),
+            "expected indexed text value to be isolated, got:\n{out}"
+        );
+        assert!(
+            out.contains("let _mosaicCondition: Bool = _mosaicTruthy(_mosaicConditionValue)"),
+            "expected indexed text value to use Mosaic truthiness, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn boolean_expression_detection_ignores_operators_inside_strings() {
+        assert!(swift_expression_is_boolean("row[0] == \"done\""));
+        assert!(swift_expression_is_boolean("ready && enabled"));
+        assert!(!swift_expression_is_boolean("\"not == an operator\""));
+        assert!(!swift_expression_is_boolean("row[2]"));
+
+        let bindings = swift_boolean_condition_bindings("(r == editRow && c == editCol)");
+        assert_eq!(bindings[0], "let _mosaicCondition0: Bool = r == editRow");
+        assert_eq!(bindings[1], "let _mosaicCondition1: Bool = c == editCol");
+        assert_eq!(
+            bindings[2],
+            "let _mosaicCondition: Bool = _mosaicCondition0 && _mosaicCondition1"
         );
     }
 
@@ -6551,7 +7002,7 @@ mod tests {
             .unwrap()
             .output;
         assert!(
-            out.contains("if r == 0 {"),
+            out.contains("let _mosaicCondition0: Bool = r == 0"),
             "expected expr condition, got:\n{out}"
         );
         assert!(
@@ -6587,8 +7038,14 @@ mod tests {
         let out = from_pipeline(&component("C", vec![], vec![]), &layout, &empty_style("C"))
             .unwrap()
             .output;
-        assert!(out.contains("if a {"), "expected first if, got:\n{out}");
-        assert!(out.contains("if b {"), "expected second if, got:\n{out}");
+        assert!(
+            out.contains("let _mosaicCondition: Bool = _mosaicTruthy(a)"),
+            "expected first if, got:\n{out}"
+        );
+        assert!(
+            out.contains("let _mosaicCondition: Bool = _mosaicTruthy(b)"),
+            "expected second if, got:\n{out}"
+        );
         assert!(
             !out.contains("} else {"),
             "expected no else clauses, got:\n{out}"
@@ -6626,7 +7083,8 @@ mod tests {
             "expected ForEach header, got:\n{out}"
         );
         assert!(
-            out.contains("if editing {") && out.contains("} else {"),
+            out.contains("let _mosaicCondition: Bool = _mosaicTruthy(editing)")
+                && out.contains("} else {"),
             "expected paired if/else inside For body, got:\n{out}"
         );
     }
@@ -6779,7 +7237,7 @@ mod tests {
             "expected child Text inside dialog, got:\n{out}"
         );
         assert!(
-            out.contains(r#"Text("Cancel")"#),
+            out.contains(r#"_mosaicButton("Cancel", action: { })"#),
             "expected child HostButton's label inside dialog, got:\n{out}"
         );
         // The VStack must appear AFTER the sheet opener, not before.
@@ -8974,16 +9432,17 @@ mod tests {
 
         let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
         assert!(
-            out.contains("private struct _MosaicHoverState<Content: View>: View"),
+            out.contains("private struct _MosaicHoverState: View"),
             "out = {out}"
         );
         assert!(
-            out.contains("_MosaicHoverState { __mosaicHoverActive in"),
+            out.contains("let _mosaicHoverContent: (Bool) -> AnyView = { __mosaicHoverActive in")
+                && out.contains("_MosaicHoverState(content: _mosaicHoverContent)"),
             "out = {out}"
         );
         assert!(
             out.contains(
-                ".background(((__mosaicHoverActive) ? Color(red: 0.91, green: 0.941, blue: 1) : Color(red: 1, green: 1, blue: 1)))"
+                "_mosaicBackground(_mosaicStyled0, ((__mosaicHoverActive) ? Color(red: 0.91, green: 0.941, blue: 1) : Color(red: 1, green: 1, blue: 1)))"
             ),
             "out = {out}"
         );
@@ -9032,11 +9491,12 @@ mod tests {
             .find("ForEach(rows, id: \\.self) { row in")
             .expect("ForEach");
         let hover_pos = out[for_pos..]
-            .find("_MosaicHoverState { __mosaicHoverActive in")
+            .find("let _mosaicHoverContent: (Bool) -> AnyView = { __mosaicHoverActive in")
             .expect("row-local hover wrapper");
         assert!(hover_pos > 0, "out = {out}");
         assert!(
-            out[for_pos..].contains(".opacity(((__mosaicHoverActive) ? 1 : 0.8))"),
+            out[for_pos..]
+                .contains("_mosaicOpacity(_mosaicStyled0, ((__mosaicHoverActive) ? 1 : 0.8))"),
             "out = {out}"
         );
     }
@@ -9102,7 +9562,7 @@ mod tests {
 
         let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
         assert!(
-            out.contains("private struct _MosaicPressState<Content: View>: View"),
+            out.contains("private struct _MosaicPressState: View"),
             "out = {out}"
         );
         assert!(
@@ -9110,7 +9570,8 @@ mod tests {
             "out = {out}"
         );
         assert!(
-            out.contains("_MosaicPressState { __mosaicPressActive in"),
+            out.contains("let _mosaicPressContent: (Bool) -> AnyView = { __mosaicPressActive in")
+                && out.contains("_MosaicPressState(content: _mosaicPressContent)"),
             "out = {out}"
         );
         assert!(
@@ -9118,7 +9579,7 @@ mod tests {
             "out = {out}"
         );
         assert!(
-            out.contains(".opacity(((__mosaicPressActive) ? 0.7 : 1))"),
+            out.contains("_mosaicOpacity(_mosaicStyled0, ((__mosaicPressActive) ? 0.7 : 1))"),
             "out = {out}"
         );
     }
@@ -9207,7 +9668,7 @@ mod tests {
 
         let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
         assert!(
-            out.contains("private struct _MosaicFocusState<Content: View>: View"),
+            out.contains("private struct _MosaicFocusState: View"),
             "out = {out}"
         );
         assert!(
@@ -9215,7 +9676,8 @@ mod tests {
             "out = {out}"
         );
         assert!(
-            out.contains("_MosaicFocusState { __mosaicFocusActive in"),
+            out.contains("let _mosaicFocusContent: (Bool) -> AnyView = { __mosaicFocusActive in")
+                && out.contains("_MosaicFocusState(content: _mosaicFocusContent)"),
             "out = {out}"
         );
         assert!(out.contains(".focused($isFocused)"), "out = {out}");
@@ -9266,7 +9728,7 @@ mod tests {
             .find("ForEach(rows, id: \\.self) { row in")
             .expect("ForEach");
         let focus_pos = out[for_pos..]
-            .find("_MosaicFocusState { __mosaicFocusActive in")
+            .find("let _mosaicFocusContent: (Bool) -> AnyView = { __mosaicFocusActive in")
             .expect("row-local focus wrapper");
         assert!(focus_pos > 0, "out = {out}");
         assert!(out[for_pos..].contains("TextField(\"Edit\""), "out = {out}");

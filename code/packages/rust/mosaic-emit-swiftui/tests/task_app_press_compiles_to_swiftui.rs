@@ -62,12 +62,12 @@ fn task_app_pressed_state_lowers_to_native_swiftui_press_state() {
                 .output;
 
         assert!(
-            output.contains("private struct _MosaicPressState<Content: View>: View"),
+            output.contains("private struct _MosaicPressState: View"),
             "{theme} must generate native pressed-state support:\n{output}"
         );
         assert_eq!(
             output
-                .matches("_MosaicPressState { __mosaicPressActive in")
+                .matches("let _mosaicPressContent: (Bool) -> AnyView = { __mosaicPressActive in")
                 .count(),
             2,
             "{theme} has two authored pressed surfaces:\n{output}"
@@ -75,10 +75,10 @@ fn task_app_pressed_state_lowers_to_native_swiftui_press_state() {
         for action in ["dispatch(.addLabel)", "dispatch(.addTask)"] {
             let action_start = output.find(action).expect("pressed action");
             let wrapper_start = output[..action_start]
-                .rfind("_MosaicPressState { __mosaicPressActive in")
+                .rfind("let _mosaicPressContent: (Bool) -> AnyView = { __mosaicPressActive in")
                 .expect("nearest press wrapper");
             assert!(
-                action_start - wrapper_start < 500,
+                action_start - wrapper_start < 1_500,
                 "{action} must be owned by a nearby {theme} native press wrapper"
             );
             let press_region = &output[wrapper_start..output.len().min(wrapper_start + 1_500)];
