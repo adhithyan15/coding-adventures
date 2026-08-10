@@ -156,3 +156,15 @@ landed and why, not a semver-tracked API.
   `resistance_from_ohms_law`'s exact discipline (same equation, different target). New manifest
   objective `adj.math.algebra.rearrange_ohms_law`. Extended the existing `formula_electricity_e2e.rs`
   with 1 new test rather than adding a new test file.
+- `chemistry/ideal-gas-law.adj` — a ninth Wave 3 rung-0 CAS-wiring companion (ADJ-FORMULA-LIBRARIES
+  FL-10, §3D): `volume_from_pressure`, solving the same cited NIST CODATA `PV = nRT` relation as the
+  forward `pressure` formula for volume — rewritten in its equivalent multiplicative form
+  (`P·V = n·R·T`) rather than the natural quotient form, the same technique `pressure.adj`/
+  `density.adj` used, to guarantee the target appears only as a linear factor. Also backfills the
+  base manifest objective `adj.science.chemistry.ideal_gas_law` (the FIRST chemistry-domain
+  coverage entry — the library previously had none), since the new algebra objective needs a valid
+  prerequisite to reference. The other two possible unknowns (moles, temperature) are left for a
+  later pass, keeping this change scoped to one direction like every prior Wave 3 item. New manifest
+  objectives `adj.science.chemistry.ideal_gas_law` and
+  `adj.math.algebra.rearrange_ideal_gas_law`. Extended the existing `formula_idealgas_e2e.rs` with
+  1 new test rather than adding a new test file.
