@@ -2,6 +2,24 @@
 
 All notable changes to this package are documented here.
 
+## [0.8.0] - 2026-08-09
+
+### Added
+
+- Add authenticated active-vault reopen from injected local/bootstrap stores,
+  including exact signed-bootstrap pin checks, passphrase root unwrap, private
+  identity re-derivation, opaque repository connection, and verified open from
+  non-empty local head pins.
+- Add a wipe-on-drop `UnlockedVaultV1` session boundary with redacted ordinary
+  diagnostics and payload-free verified-open metadata.
+
+### Security
+
+- Refuse missing, malformed, unsigned, rolled-back, cross-vault, or locally
+  unpinned bootstrap state before repository access.
+- Anchor complete repository discovery to durable non-empty head pins and keep
+  provider-specific failures outside the closed application error surface.
+
 ## [0.7.0] - 2026-08-09
 
 ### Added

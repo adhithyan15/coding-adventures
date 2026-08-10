@@ -1284,7 +1284,9 @@ changelog, focused build, and downstream validation.
        reproduce every pinned bootstrap/certificate public identity;
    6. crash-resumable generation-zero bootstrap, repository-publication, and
       local activation side effects;
-   6a. active open/unlock and pending-publication recovery; and
+   6a. authenticated active-state unlock and verified repository open;
+   6b. exact pending-publication recovery and durable active-state advancement;
+   6c. current catalog/revision materialization into an unlocked session; and
    7. item mutation, redacted views, search, history, export, audit, status,
       and doctor workflows.
 9. `vault-pm-cli` + real executable and pseudo-terminal E2E suite.
