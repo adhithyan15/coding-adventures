@@ -19,13 +19,13 @@ use smart_home_runtime::{RuntimeCommandToolRequest, RuntimeError, SmartHomeRunti
 use std::collections::BTreeMap;
 use std::fmt;
 use std::io::{self, Read, Write};
-use std::net::{TcpStream, ToSocketAddrs};
+use std::net::{SocketAddr, TcpStream, ToSocketAddrs};
 use std::thread;
 use std::time::Duration;
 use tls_platform::{default_connector, TlsConfig, TlsConnector};
 use url_parser::{Url, UrlError};
 
-pub const VERSION: &str = "0.4.0";
+pub const VERSION: &str = "0.4.1";
 pub const INTEGRATION_ID: &str = "reolink";
 pub const PROTOCOL_ID: &str = "reolink_cgi";
 pub const SNAPSHOT_PATH: &str = "/cgi-bin/api.cgi";
@@ -163,17 +163,14 @@ impl ReolinkCredentials {
         username: impl Into<String>,
         password: impl Into<String>,
     ) -> Result<Self, ReolinkError> {
-        let username = username.into();
-        let password = password.into();
+        let username = Zeroizing::new(username.into());
+        let password = Zeroizing::new(password.into());
         if username.trim().is_empty() || password.is_empty() {
             return Err(ReolinkError::Validation(
                 "username and password must not be empty".to_string(),
             ));
         }
-        Ok(Self {
-            username: Zeroizing::new(username),
-            password: Zeroizing::new(password),
-        })
+        Ok(Self { username, password })
     }
 }
 
@@ -294,6 +291,7 @@ pub struct ReolinkLanTransport {
     tls_config: TlsConfig,
     timeout: Duration,
     maximum_response_bytes: usize,
+    pinned_address: Option<SocketAddr>,
 }
 
 impl Default for ReolinkLanTransport {
@@ -309,6 +307,7 @@ impl ReolinkLanTransport {
             tls_config,
             timeout: Duration::from_secs(5),
             maximum_response_bytes: DEFAULT_MAX_RESPONSE_BYTES,
+            pinned_address: None,
         }
     }
 
@@ -319,6 +318,11 @@ impl ReolinkLanTransport {
 
     pub fn with_maximum_response_bytes(mut self, maximum: usize) -> Self {
         self.maximum_response_bytes = maximum.max(1);
+        self
+    }
+
+    pub fn with_pinned_address(mut self, address: SocketAddr) -> Self {
+        self.pinned_address = Some(address);
         self
     }
 }
@@ -334,9 +338,20 @@ impl ReolinkTransport for ReolinkLanTransport {
             .effective_port()
             .ok_or_else(|| ReolinkError::Validation("endpoint is missing a port".to_string()))?;
         let request = Zeroizing::new(encode_http_request(&url, body)?);
+        if self
+            .pinned_address
+            .is_some_and(|address| address.port() != port)
+        {
+            return Err(ReolinkError::Validation(
+                "reviewed socket port does not match the Reolink endpoint".to_string(),
+            ));
+        }
         let response = match url.scheme.as_str() {
             "http" => {
-                let mut stream = connect_tcp(host, port, self.timeout)?;
+                let mut stream = match self.pinned_address {
+                    Some(address) => connect_tcp_addr(address, self.timeout)?,
+                    None => connect_tcp(host, port, self.timeout)?,
+                };
                 write_request(&mut stream, &request)?;
                 read_bounded(&mut stream, self.maximum_response_bytes)?
             }
@@ -345,10 +360,11 @@ impl ReolinkTransport for ReolinkLanTransport {
                 config.connect_timeout = self.timeout;
                 config.read_timeout = Some(self.timeout);
                 config.write_timeout = Some(self.timeout);
-                let mut stream = self
-                    .connector
-                    .connect(host, port, &config)
-                    .map_err(|error| ReolinkError::Tls(error.to_string()))?;
+                let mut stream = match self.pinned_address {
+                    Some(address) => self.connector.connect_addr(host, address, &config),
+                    None => self.connector.connect(host, port, &config),
+                }
+                .map_err(|error| ReolinkError::Tls(error.to_string()))?;
                 write_request(&mut stream, &request)?;
                 let bytes = read_bounded(&mut stream, self.maximum_response_bytes)?;
                 stream
@@ -1340,6 +1356,16 @@ fn connect_tcp(host: &str, port: u16, timeout: Duration) -> Result<TcpStream, Re
     ))
 }
 
+fn connect_tcp_addr(address: SocketAddr, timeout: Duration) -> Result<TcpStream, ReolinkError> {
+    let stream = TcpStream::connect_timeout(&address, timeout)
+        .map_err(|error| ReolinkError::Io(error.to_string()))?;
+    stream
+        .set_read_timeout(Some(timeout))
+        .and_then(|_| stream.set_write_timeout(Some(timeout)))
+        .map_err(|error| ReolinkError::Io(error.to_string()))?;
+    Ok(stream)
+}
+
 fn write_request(writer: &mut dyn Write, request: &[u8]) -> Result<(), ReolinkError> {
     writer
         .write_all(request)
@@ -1432,10 +1458,12 @@ fn decode_chunked(input: &[u8], maximum: usize) -> Result<Vec<u8>, ReolinkError>
 mod tests {
     use super::*;
     use smart_home_core::{CapabilityGrant, CapabilityGrantId, PrivilegeTier};
+    use std::io::Cursor;
     use std::net::TcpListener;
     use std::sync::atomic::{AtomicUsize, Ordering};
     use std::sync::{Arc, Mutex};
     use std::thread;
+    use tls_platform::{TlsConnectionSummary, TlsError, TlsStream, TlsVersion, VerifyMode};
 
     fn response(value: JsonValue) -> Vec<u8> {
         serde_json::to_vec(&value).unwrap()
@@ -1452,6 +1480,122 @@ mod tests {
                     "test",
                     1,
                 ));
+    }
+
+    #[derive(Default)]
+    struct TlsCapture {
+        connects: Vec<(String, SocketAddr, bool)>,
+        request: Vec<u8>,
+    }
+
+    struct RecordingConnector {
+        response: Vec<u8>,
+        capture: Arc<Mutex<TlsCapture>>,
+    }
+
+    impl TlsConnector for RecordingConnector {
+        fn connect(
+            &self,
+            _host: &str,
+            _port: u16,
+            _config: &TlsConfig,
+        ) -> Result<Box<dyn TlsStream>, TlsError> {
+            panic!("pinned Reolink transport must not resolve the endpoint hostname")
+        }
+
+        fn connect_addr(
+            &self,
+            server_name: &str,
+            address: SocketAddr,
+            config: &TlsConfig,
+        ) -> Result<Box<dyn TlsStream>, TlsError> {
+            self.capture.lock().unwrap().connects.push((
+                server_name.to_string(),
+                address,
+                config.verify_mode == VerifyMode::Strict,
+            ));
+            Ok(Box::new(RecordingTlsStream {
+                response: Cursor::new(self.response.clone()),
+                capture: Arc::clone(&self.capture),
+            }))
+        }
+    }
+
+    struct RecordingTlsStream {
+        response: Cursor<Vec<u8>>,
+        capture: Arc<Mutex<TlsCapture>>,
+    }
+
+    impl Read for RecordingTlsStream {
+        fn read(&mut self, buffer: &mut [u8]) -> std::io::Result<usize> {
+            self.response.read(buffer)
+        }
+    }
+
+    impl Write for RecordingTlsStream {
+        fn write(&mut self, buffer: &[u8]) -> std::io::Result<usize> {
+            self.capture
+                .lock()
+                .unwrap()
+                .request
+                .extend_from_slice(buffer);
+            Ok(buffer.len())
+        }
+
+        fn flush(&mut self) -> std::io::Result<()> {
+            Ok(())
+        }
+    }
+
+    impl TlsStream for RecordingTlsStream {
+        fn peer_certificates(&self) -> Result<Vec<Vec<u8>>, TlsError> {
+            Ok(Vec::new())
+        }
+
+        fn negotiated_alpn(&self) -> Option<String> {
+            Some("http/1.1".to_string())
+        }
+
+        fn negotiated_version(&self) -> TlsVersion {
+            TlsVersion::Tls13
+        }
+
+        fn close_notify(&mut self) -> Result<(), TlsError> {
+            Ok(())
+        }
+
+        fn summary(&self) -> TlsConnectionSummary {
+            panic!("summary is not used by the Reolink transport")
+        }
+    }
+
+    #[test]
+    fn reviewed_socket_pinning_keeps_canonical_tls_identity_and_strict_verification() {
+        let response = b"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: 2\r\nConnection: close\r\n\r\n[]".to_vec();
+        let capture = Arc::new(Mutex::new(TlsCapture::default()));
+        let address: SocketAddr = "192.0.2.44:443".parse().unwrap();
+        let connector = RecordingConnector {
+            response,
+            capture: Arc::clone(&capture),
+        };
+        let mut transport =
+            ReolinkLanTransport::new(Box::new(connector), TlsConfig::https_default())
+                .with_pinned_address(address);
+
+        assert_eq!(
+            transport
+                .post_json("https://camera.example/api.cgi?cmd=Login", b"[]")
+                .unwrap(),
+            b"[]"
+        );
+        let capture = capture.lock().unwrap();
+        assert_eq!(
+            capture.connects,
+            vec![("camera.example".to_string(), address, true)]
+        );
+        let request = String::from_utf8_lossy(&capture.request);
+        assert!(request.starts_with("POST /api.cgi?cmd=Login HTTP/1.1"));
+        assert!(request.contains("Host: camera.example"));
     }
 
     #[test]

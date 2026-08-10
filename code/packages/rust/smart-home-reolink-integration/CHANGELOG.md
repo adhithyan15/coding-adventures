@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.1
+
+- Add reviewed-socket pinning for HTTP loopback tests and certificate-verifying
+  HTTPS hosts while retaining the reviewed hostname for SNI.
+- Move credentials into zeroizing storage before validation so rejected input
+  is cleared on drop.
+
 ## 0.4.0
 
 - Advertise the documented JPEG snapshot capability only for awake, online
