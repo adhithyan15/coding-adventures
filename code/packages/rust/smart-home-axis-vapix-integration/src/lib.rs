@@ -33,7 +33,7 @@ use std::time::Duration;
 use tls_platform::{default_connector, TlsConfig, TlsConnector};
 use url_parser::{Url, UrlError};
 
-pub const VERSION: &str = "0.4.0";
+pub const VERSION: &str = "0.4.1";
 pub const INTEGRATION_ID: &str = "axis_vapix";
 pub const PROTOCOL_ID: &str = "axis_vapix";
 pub const VIDEO_MDNS_SERVICE_TYPE: &str = "_axis-video._tcp.local";
@@ -176,8 +176,8 @@ impl AxisCredentials {
         username: impl Into<String>,
         password: impl Into<String>,
     ) -> Result<Self, AxisError> {
-        let username = username.into();
-        let password = password.into();
+        let username = Zeroizing::new(username.into());
+        let password = Zeroizing::new(password.into());
         if username.trim().is_empty()
             || password.is_empty()
             || username.len() > MAX_CREDENTIAL_FIELD_BYTES
@@ -192,10 +192,7 @@ impl AxisCredentials {
                 "credentials contain unsafe HTTP text".to_string(),
             ));
         }
-        Ok(Self {
-            username: Zeroizing::new(username),
-            password: Zeroizing::new(password),
-        })
+        Ok(Self { username, password })
     }
 }
 
