@@ -120,3 +120,14 @@ landed and why, not a semver-tracked API.
   gap in `mechanics-laws.adj` itself. New manifest objective
   `adj.math.algebra.rearrange_mechanics_force`. New e2e test `formula_mechanics_force_e2e.rs`
   (3 tests — this library had none before).
+- `physics/energy-work.adj` — a fifth Wave 3 rung-0 CAS-wiring companion (ADJ-FORMULA-LIBRARIES
+  FL-10, §3D): `mass_from_kinetic_energy`, solving the SAME cited HyperPhysics `KE = ½ m v²`
+  equation as the forward `kinetic_energy` formula for mass — the gap this library's own header
+  comment flagged when `force_from_work`/`distance_from_work` shipped. Linear despite the nested
+  `0.5 * mass * velocity * velocity` shape: once `velocity` is bound, `mass` still appears exactly
+  once, multiplied only by constant factors, confirmed empirically via the CLI before writing.
+  Solving for velocity instead (the formula's OTHER unknown) remains deliberately absent: velocity
+  appears squared, which is quadratic and out of rung-0's linear-only scope, the direct sibling of
+  `geometry-formulas.adj`'s `square_area` boundary case. New manifest objective
+  `adj.math.algebra.rearrange_kinetic_energy`. Extended the existing `formula_energy_work_e2e.rs`
+  with 1 new test rather than adding a new test file.

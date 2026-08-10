@@ -35,3 +35,9 @@ observe distance(3)                    % "…pushing a crate 3 m…"     (span c
 observe work(30)                       % "…did 30 J of work…"        (span cited)
 observe force(10)                      % "…a 10 N force…"            (span cited)
 ? distance_from_work(work, force)      % engine → 3 (NASA, authoritative)
+
+% --- KE = ½ m v², SOLVED FOR MASS (rung-0 CAS-wiring, FL-10). "A mass moving at
+% 3 m/s has 9 J of kinetic energy. What is its mass?" ---
+observe kinetic_energy(9)              % "…has 9 J of kinetic energy…" (span cited)
+observe velocity(3)                    % "…moving at 3 m/s…"           (span cited)
+? mass_from_kinetic_energy(kinetic_energy, velocity)  % engine → 2 (HyperPhysics, authoritative)

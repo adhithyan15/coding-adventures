@@ -1232,6 +1232,21 @@
       "source_cas_hashes": [],
       "benchmark_paths": [],
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.math.algebra.rearrange_kinetic_energy",
+      "title": "Solve KE = 1/2 m v^2 for mass, given the kinetic energy and the velocity",
+      "band": "9-12",
+      "domain": "mathematics",
+      "competency": "compute",
+      "coverage_roots": ["ccss.math"],
+      "standards": [],
+      "prerequisites": ["adj.science.physics.energy_work"],
+      "libraries": ["code/specs/data/adj-formula-stdlib/physics/energy-work.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     }
   ]
 }

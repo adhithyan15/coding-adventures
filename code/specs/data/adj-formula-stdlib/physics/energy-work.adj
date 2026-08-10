@@ -30,21 +30,26 @@
 % the same provenance envelope every shipped grounded clause carries; the linter
 % rejects an unsourced one.
 %
-% This library also carries two rung-0 CAS-wiring companions (ADJ-FORMULA-
+% This library also carries three rung-0 CAS-wiring companions (ADJ-FORMULA-
 % LIBRARIES FL-10, §3D — continuing Wave 3's algebra-applied-to-science thread):
 % `force_from_work` and `distance_from_work` solve the SAME cited NASA equation
-% (`W = F d`) as the forward `work` formula for a different unknown, through
+% (`W = F d`) as the forward `work` formula for a different unknown, and
+% `mass_from_kinetic_energy` solves the SAME cited HyperPhysics equation
+% (`KE = ½ m v²`) as the forward `kinetic_energy` formula for mass, through
 % `cas-solve`'s real linear-equation solver — the exact discipline `electricity.
 % adj`'s `resistance_from_ohms_law` and `kinematics.adj`'s `acceleration_from_
 % final_velocity`/`time_from_final_velocity` already established. Each new
 % symbolic names its OWN target finding (`force_from_work`, not `force`) rather
-% than reusing the forward formula's plain parameter name, so both new solves
-% coexist with the original forward example in one query file — no target-
-% collision, no file-splitting needed. `kinetic_energy`'s inverse is deliberately
-% absent here: solving for velocity is quadratic (out of rung-0's linear-only
-% scope); solving for mass is linear but is a genuinely different nested-
-% multiplication shape (mass sits between two constant factors once velocity is
-% bound) left for a later pass, to keep this change scoped to one law.
+% than reusing the forward formula's plain parameter name, so all new solves
+% coexist with the original forward examples in one query file — no target-
+% collision, no file-splitting needed. Solving `mass_from_kinetic_energy` is
+% linear despite the nested `0.5 * mass * velocity * velocity` shape: once
+% `velocity` is bound, `mass` still appears exactly once, multiplied only by
+% constant factors — the exact discipline confirmed empirically before writing
+% this content. `kinetic_energy`'s OTHER inverse — solving for velocity — is
+% deliberately absent: velocity appears squared, which is quadratic and out of
+% rung-0's linear-only scope (the direct sibling of `geometry-formulas.adj`'s
+% `square_area` boundary case).
 % ============================================================================
 
 % ----------------------------------------------------------------------------
@@ -68,6 +73,7 @@ dictionary physics_vocab {
 
     define force_from_work    : finding  surface "missing force", "unknown force"
     define distance_from_work : finding  surface "missing distance", "unknown distance"
+    define mass_from_kinetic_energy : finding  surface "missing mass", "unknown mass"
 }
 
 % ----------------------------------------------------------------------------
@@ -106,6 +112,14 @@ formulabook physics_energy {
     % State University's HyperPhysics states "The kinetic energy of a point mass m
     % is given by" the equation KE = (1/2) m v².
     formula kinetic_energy(mass, velocity) = 0.5 * mass * velocity * velocity
+        source "The kinetic energy of a point mass m is given by"
+        locator "https://hyperphysics.gsu.edu/hbase/ke.html"
+        trust authoritative
+
+    % KE = ½ m v², SOLVED FOR MASS instead of computed forward — the same cited
+    % HyperPhysics equation. Linear in mass once velocity is bound (mass appears
+    % exactly once, multiplied only by the constant factors 0.5 and velocity²).
+    symbolic mass_from_kinetic_energy(kinetic_energy, velocity) { kinetic_energy == 0.5 * mass_from_kinetic_energy * velocity * velocity } for mass_from_kinetic_energy
         source "The kinetic energy of a point mass m is given by"
         locator "https://hyperphysics.gsu.edu/hbase/ke.html"
         trust authoritative
