@@ -32,6 +32,7 @@ const URDU_SHIN = DUCTUS[ductusKey("urdu-nastaliq", "ش")];
 const URDU_KAF = DUCTUS[ductusKey("urdu-nastaliq", "ک")];
 const URDU_LAM = DUCTUS[ductusKey("urdu-nastaliq", "ل")];
 const URDU_MIM = DUCTUS[ductusKey("urdu-nastaliq", "م")];
+const URDU_NUN = DUCTUS[ductusKey("urdu-nastaliq", "ن")];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
@@ -367,6 +368,18 @@ describe("handwriting ductus", () => {
     expect(tail.at(-1)!.y).toBeLessThan(tail[0].y);
   });
 
+  it("Urdu independent ن draws its below-baseline bowl before the lifted dot", () => {
+    expect(URDU_NUN.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_NUN)).toBe(1);
+    expect(URDU_NUN.strokes).toHaveLength(2);
+    expect(URDU_NUN.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1]);
+    const bowl = URDU_NUN.strokes[0].segments[0].path;
+    const dot = URDU_NUN.strokes[1].segments[0].path;
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+    expect(Math.min(...bowl.map((point) => point.y))).toBeLessThan(0);
+    expect(Math.min(...dot.map((point) => point.y))).toBeGreaterThan(0);
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -686,6 +699,20 @@ describe("handwriting ductus", () => {
       /one uninterrupted stroke.*calligraphic and handwritten.*ordinary constant-width pen.*counterclockwise loop.*independent or final mīm drops below the baseline.*head-to-tail.*zero-lift.*Noto Naskh.*Nastaliq/i,
     );
     expect(src.url).not.toBe(DUCTUS["م"].source.url);
+  });
+
+  it("Urdu independent ن traces to Zer o Zabar's bowl-first, dot-second animations", () => {
+    const src = URDU_NUN.source;
+    expect(src.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/sin-shin-bari-he-nun-nun-ghunna/",
+    );
+    expect(src.citation).toMatch(
+      /Zer o Zabar.*independent ن.*calligraphic and handwriting animations.*Nūn instructions.*Northwestern/i,
+    );
+    expect(src.variation).toMatch(
+      /bowl first.*one uninterrupted right-to-left run.*lift once.*dot near the baseline.*final and independent nūn.*below the baseline.*initial and medial.*be-series tooth.*Noto Naskh.*Nastaliq/i,
+    );
+    expect(src.url).not.toBe(DUCTUS["ن"].source.url);
   });
 
   it("Persian ب traces to the adjacent sourced bowl-and-dot demonstration", () => {

@@ -243,6 +243,8 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // Urdu م keeps its round head and below-baseline tail in one run. The source
 // contrasts the calligraphic head with handwriting's counterclockwise loop;
 // this path reconciles their shared head-to-tail motion with Noto Naskh.
+// Urdu ن draws its independent below-baseline bowl first, then lifts once for
+// the dot near the baseline. Initial and medial forms use a distinct tooth.
 // The adjacent ب starts at the bowl's right lip, sweeps right-to-left through
 // its shallow dip, then lifts once before placing the separate dot below.
 // After the intervening Persian-added پ row, ت repeats the same bowl, lifts to
@@ -679,6 +681,49 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: urduAlphabetSource("م"),
+  },
+  [ductusKey("urdu-nastaliq", "ن")]: {
+    script: "urdu-nastaliq",
+    glyph: "ن",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep the independent bowl right to left below the baseline",
+            path: [
+              { x: 495, y: 210 },
+              { x: 475, y: 160 },
+              { x: 480, y: 100 },
+              { x: 500, y: 40 },
+              { x: 510, y: -20 },
+              { x: 485, y: -80 },
+              { x: 430, y: -140 },
+              { x: 360, y: -190 },
+              { x: 280, y: -220 },
+              { x: 210, y: -215 },
+              { x: 150, y: -170 },
+              { x: 105, y: -110 },
+              { x: 90, y: -60 },
+              { x: 95, y: 0 },
+              { x: 105, y: 45 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then place the dot near the baseline",
+            path: [
+              { x: 235, y: 305 },
+              { x: 275, y: 345 },
+              { x: 315, y: 305 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: urduAlphabetSource("ن"),
   },
   "ب": {
     script: "perso-arabic",
