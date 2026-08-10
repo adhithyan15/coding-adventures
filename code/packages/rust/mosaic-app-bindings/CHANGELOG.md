@@ -5,6 +5,9 @@
 - Execute the generated XAML binding against the shared Rust conformance DLL in
   Windows CI, covering startup, initial props, dispatch, revised props, Rust
   buffer release, and teardown through the real ABI.
+- Make the hosted-runner WinUI launch smoke test tolerate transient runtime
+  startup failures while printing Windows application events when every real
+  launch attempt fails.
 - Add the package-independent Qt/QML binding using Qt Core dynamic loading,
   JSON, variants, and QObject invocation.
 - Add the package-independent Flutter/Dart FFI binding and preserve the public

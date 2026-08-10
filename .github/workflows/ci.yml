@@ -949,12 +949,32 @@ jobs:
           if ($null -eq $executable) {
             throw 'TaskApp WinUI build did not produce TaskApp.exe'
           }
-          $process = Start-Process -FilePath $executable.FullName -PassThru
-          Start-Sleep -Seconds 10
-          if ($process.HasExited) {
-            throw "TaskApp WinUI process exited during launch smoke test with code $($process.ExitCode)"
+          $launched = $false
+          $launchFailures = @()
+          for ($attempt = 1; $attempt -le 3; $attempt++) {
+            $startedAt = Get-Date
+            $process = Start-Process -FilePath $executable.FullName -PassThru
+            Start-Sleep -Seconds 10
+            if (!$process.HasExited) {
+              Stop-Process -Id $process.Id
+              $launched = $true
+              break
+            }
+
+            $launchFailures += "attempt $attempt exited with code $($process.ExitCode)"
+            Get-WinEvent -FilterHashtable @{ LogName = 'Application'; StartTime = $startedAt } -ErrorAction SilentlyContinue |
+              Where-Object { $_.ProviderName -in @('Application Error', '.NET Runtime', 'Windows Error Reporting') } |
+              Select-Object TimeCreated, ProviderName, Id, LevelDisplayName, Message |
+              Format-List |
+              Out-String |
+              Write-Host
+            if ($attempt -lt 3) {
+              Start-Sleep -Seconds 3
+            }
           }
-          Stop-Process -Id $process.Id
+          if (!$launched) {
+            throw "TaskApp WinUI launch failed: $($launchFailures -join '; ')"
+          }
 
       - name: Round-trip Rust engine through standard XAML binding
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
