@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.19.0";
+pub const VERSION: &str = "0.20.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1108,6 +1108,7 @@ fn parse_sequence_body(
             }
             "title" => {
                 cursor.advance();
+                cursor.consume_if("COLON");
                 diagram.title = Some(take_sequence_line_text(cursor));
             }
             "autonumber" => {
@@ -3392,6 +3393,15 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn sequence_parses_legacy_colon_title() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\ntitle: Native transfer sequence\nAlice->>Bob: Hello\n",
+        )
+        .unwrap();
+        assert_eq!(diagram.title.as_deref(), Some("Native transfer sequence"));
+    }
+
+    #[test]
     fn sequence_parses_multiline_accessibility_description() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\naccDescr {\n  Transfers funds\n  between accounts\n}\nAlice->>Bob: Hello\n",
@@ -3435,7 +3445,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.19.0");
+        assert_eq!(crate::VERSION, "0.20.0");
     }
 
     #[test]
