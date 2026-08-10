@@ -10,13 +10,15 @@ The current command surface is:
 ```text
 vault-pm init [--vault NAME] [--storage NAME]
 vault-pm status [--json]
-vault-pm doctor
+vault-pm audit verify
+vault-pm doctor [--unlock]
 ```
 
-`init` requires a controlling terminal even when stdin is redirected. No
-passphrase flag, environment variable, config field, URL, or stdin path exists.
-Unix integration tests launch this exact binary under a fresh pseudo-terminal,
-verify the passphrase is not echoed, restart the process for status and doctor,
+`init` and authenticated verification require a controlling terminal even when
+stdin is redirected. No passphrase flag, environment variable, config field,
+URL, or stdin path exists. Unix integration tests launch this exact binary
+under fresh pseudo-terminals, verify the passphrase is not echoed, restart the
+process for locked and authenticated checks, inject decoy bytes through stdin,
 and inspect the isolated filesystem tree for plaintext passphrase bytes.
 
 ## Verification

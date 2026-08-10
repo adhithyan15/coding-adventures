@@ -1426,9 +1426,14 @@ changelog, focused build, and downstream validation.
     `VLT-PM09-cli-bootstrap.md`. Generation zero installs its exact prepared
     journal before configuration makes the random locator discoverable, and a
     restart resumes that journal without generating replacement identities.
-9b. authenticated one-shot CLI composition for item CRUD/list, search, history,
-    portable export/import, and audit verification, followed by the foreground
-    interactive shell over the same command/use-case boundary.
+9b-1. authenticated one-shot audit verification and opt-in full doctor over the
+      exact production unlock boundary, with synchronous session drop before
+      rendering, using `VLT-PM10-cli-authenticated-verification.md`.
+9b-2. redacted authenticated item list/show, search, and history reads.
+9b-3. authenticated add, replace, delete, restore, and conflict-resolution
+      mutations.
+9b-4. portable export/import CLI host composition and destination policy.
+9b-5. foreground interactive shell over the same command/use-case boundary.
 10. Crash/fault matrix and local restore drill.
 
 ### Phase 1B — daily local use

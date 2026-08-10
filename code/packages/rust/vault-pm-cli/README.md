@@ -2,8 +2,9 @@
 
 This crate is the first real composition layer for the local-first password
 manager. It owns strict parsing, stable exit classes, redacted rendering, and
-the bounded `init`, locked `status`, and locked `doctor` workflows. The
-executable is a thin caller of this package.
+the bounded `init`, locked `status`/`doctor`, authenticated `audit verify`, and
+opt-in full `doctor --unlock` workflows. The executable is a thin caller of
+this package.
 
 The driver composes the existing storage-neutral application over separately
 permission-checked application-state and encrypted-object filesystem roots.
@@ -20,10 +21,13 @@ publishing the configuration that makes the random locator discoverable. A
 restart with a prepared journal collects the existing passphrase and resumes
 the exact journal without generating new identities or ciphertext.
 
-Status and doctor do not prompt or unlock. Their text and JSON projections are
-closed labels with no paths, locators, providers, identities, or cryptographic
-details. No command accepts a passphrase through argv, stdin, environment,
-configuration, or URL.
+Status and plain doctor do not prompt or unlock. `audit verify` and
+`doctor --unlock` collect the existing passphrase through the controlling
+terminal, open the storage-neutral repository for one read-only action, and
+synchronously drop the live session before rendering. Their projections contain
+only closed labels or aggregate verification counts, with no paths, locators,
+providers, identities, or cryptographic details. No command accepts a
+passphrase through argv, stdin, environment, configuration, or URL.
 
 ## Verification
 

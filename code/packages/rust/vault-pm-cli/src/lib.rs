@@ -6,9 +6,9 @@
 use coding_adventures_storage_fs::FsStorageBackend;
 use coding_adventures_vault_pm_application::{
     complete_generation_zero, prepare_generation_zero, rehydrate_prepared_init, ApplicationError,
-    BootstrapLocator, GenerationZeroPolicyV1, GenerationZeroRandomness, LocalStateStore,
-    LocalStateStoreError, LocalVaultStateV1, V1ApplicationRepositoryFactory, VaultAccessV1,
-    VaultDoctorStateV1, VaultStatusStateV1, GENERATION_ZERO_RANDOM_BYTES,
+    AuditVerificationV1, BootstrapLocator, GenerationZeroPolicyV1, GenerationZeroRandomness,
+    LocalStateStore, LocalStateStoreError, LocalVaultStateV1, V1ApplicationRepositoryFactory,
+    VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1, GENERATION_ZERO_RANDOM_BYTES,
 };
 use coding_adventures_vault_pm_application_storage_core::StorageCoreApplicationStore;
 use coding_adventures_vault_pm_cli_host::{
@@ -32,7 +32,7 @@ const DEFAULT_STORAGE_NAME: &str = "local";
 const PRODUCTION_KDF_MEMORY_KIB: u32 = 64 * 1024;
 const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm status [--json]\n  vault-pm doctor\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm status [--json]\n  vault-pm audit verify\n  vault-pm doctor [--unlock]\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -110,7 +110,7 @@ pub trait CliHost {
     /// Collect and confirm a new vault passphrase.
     fn read_new_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, HostError>;
 
-    /// Collect the existing passphrase for journal recovery.
+    /// Collect the existing passphrase for recovery or one-shot unlock.
     fn read_existing_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, HostError>;
 
     /// Fill the entire generation-zero randomness block.
@@ -206,7 +206,10 @@ enum Command {
     Status {
         json: bool,
     },
-    Doctor,
+    AuditVerify,
+    Doctor {
+        unlock: bool,
+    },
     Help,
 }
 
@@ -231,7 +234,10 @@ where
         "--help" | "-h" | "help" if values.len() == 1 => Ok(Command::Help),
         "init" => parse_init(&values[1..]),
         "status" => parse_status(&values[1..]),
-        "doctor" if values.len() == 1 => Ok(Command::Doctor),
+        "audit" if values.get(1).map(String::as_str) == Some("verify") && values.len() == 2 => {
+            Ok(Command::AuditVerify)
+        }
+        "doctor" => parse_doctor(&values[1..]),
         _ => Err(CliFailure::InvalidCommand),
     }
 }
@@ -266,6 +272,14 @@ fn parse_status(arguments: &[String]) -> Result<Command, CliFailure> {
     }
 }
 
+fn parse_doctor(arguments: &[String]) -> Result<Command, CliFailure> {
+    match arguments {
+        [] => Ok(Command::Doctor { unlock: false }),
+        [argument] if argument == "--unlock" => Ok(Command::Doctor { unlock: true }),
+        _ => Err(CliFailure::InvalidCommand),
+    }
+}
+
 fn execute(command: Command, host: &dyn CliHost) -> Result<CliOutput, CliFailure> {
     let paths = host.paths().map_err(map_host)?;
     let prepared = paths.prepare().map_err(map_local_host)?;
@@ -273,7 +287,8 @@ fn execute(command: Command, host: &dyn CliHost) -> Result<CliOutput, CliFailure
     match command {
         Command::Init { vault, storage } => init(host, prepared.paths(), &writer, vault, storage),
         Command::Status { json } => status(prepared.paths(), &writer, json),
-        Command::Doctor => doctor(prepared.paths(), &writer),
+        Command::AuditVerify => audit_verify(host, prepared.paths(), &writer),
+        Command::Doctor { unlock } => doctor(host, prepared.paths(), &writer, unlock),
         Command::Help => unreachable!("help returns before host access"),
     }
 }
@@ -407,7 +422,44 @@ fn status(
     Ok(render_status_label(label, json))
 }
 
-fn doctor(paths: &LocalVaultPaths, writer: &LocalWriterGuard) -> Result<CliOutput, CliFailure> {
+fn audit_verify(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+) -> Result<CliOutput, CliFailure> {
+    let exact_config = writer
+        .load_config()
+        .map_err(map_local_host)?
+        .ok_or(CliFailure::InvalidCommand)?;
+    let config = decode_config(&exact_config)?;
+    let vault = configured_vault(paths, &config)?;
+    let locator = application_locator(vault.locator());
+    let application_store = application_store(paths);
+    let repository_factory = repository_factory(paths);
+    let mut access = VaultAccessV1::locked(locator);
+    let passphrase = host.read_existing_passphrase().map_err(map_host)?;
+    access
+        .unlock(
+            passphrase,
+            &application_store,
+            &application_store,
+            &repository_factory,
+        )
+        .map_err(map_application)?;
+    let result = access
+        .as_unlocked()
+        .and_then(|session| session.audit_verify());
+    access.lock();
+    let report = result.map_err(map_application)?;
+    Ok(render_audit(report))
+}
+
+fn doctor(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    unlock: bool,
+) -> Result<CliOutput, CliFailure> {
     let Some(exact_config) = writer.load_config().map_err(map_local_host)? else {
         return Ok(doctor_output(
             "initialization_required",
@@ -418,8 +470,21 @@ fn doctor(paths: &LocalVaultPaths, writer: &LocalWriterGuard) -> Result<CliOutpu
     let vault = configured_vault(paths, &config)?;
     let locator = application_locator(vault.locator());
     let application_store = application_store(paths);
-    let access = VaultAccessV1::locked(locator);
+    let mut access = VaultAccessV1::locked(locator);
+    if unlock {
+        let repository_factory = repository_factory(paths);
+        let passphrase = host.read_existing_passphrase().map_err(map_host)?;
+        access
+            .unlock(
+                passphrase,
+                &application_store,
+                &application_store,
+                &repository_factory,
+            )
+            .map_err(map_application)?;
+    }
     let report = access.doctor(&application_store, &application_store);
+    access.lock();
     let (label, code) = match report.state() {
         VaultDoctorStateV1::Healthy => ("healthy", ExitCode::Success),
         VaultDoctorStateV1::InitializationRequired => {
@@ -434,6 +499,17 @@ fn doctor(paths: &LocalVaultPaths, writer: &LocalWriterGuard) -> Result<CliOutpu
         VaultDoctorStateV1::IntegrityFailure => ("integrity_failure", ExitCode::Integrity),
     };
     Ok(doctor_output(label, code))
+}
+
+fn render_audit(report: AuditVerificationV1) -> CliOutput {
+    CliOutput::success(format!(
+        "Audit: verified (announcements={} commits={} catalogs={} revisions={} items={})\n",
+        report.announcement_count(),
+        report.commit_count(),
+        report.catalog_count(),
+        report.revision_count(),
+        report.item_count(),
+    ))
 }
 
 fn render_status_label(label: &str, json: bool) -> CliOutput {
@@ -689,6 +765,21 @@ mod tests {
         }
     }
 
+    fn first_file(root: &std::path::Path) -> Option<PathBuf> {
+        for entry in fs::read_dir(root).ok()? {
+            let entry = entry.ok()?;
+            let path = entry.path();
+            if entry.file_type().ok()?.is_dir() {
+                if let Some(found) = first_file(&path) {
+                    return Some(found);
+                }
+            } else {
+                return Some(path);
+            }
+        }
+        None
+    }
+
     struct TestHost {
         paths: LocalVaultPaths,
         secrets: Mutex<VecDeque<Vec<u8>>>,
@@ -750,6 +841,9 @@ mod tests {
             vec!["init", "--vault=personal"],
             vec!["status", "--unsafe-include-secrets"],
             vec!["doctor", "extra"],
+            vec!["doctor", "--unlock", "extra"],
+            vec!["audit"],
+            vec!["audit", "verify", "extra"],
             vec!["unlock"],
         ] {
             let output = run(arguments, &host);
@@ -783,6 +877,68 @@ mod tests {
         assert_eq!(doctor.exit_code(), ExitCode::Locked);
         assert_eq!(doctor.stdout(), "Doctor: authentication_required\n");
         assert!(doctor.stderr().is_empty());
+    }
+
+    #[test]
+    fn authenticated_audit_and_doctor_unlock_for_one_operation() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"correct horse battery staple".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let audit_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let audit = run(["audit", "verify"], &audit_host);
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        assert_eq!(
+            audit.stdout(),
+            "Audit: verified (announcements=1 commits=1 catalogs=1 revisions=0 items=0)\n"
+        );
+        assert!(audit.stderr().is_empty());
+
+        let doctor_host = TestHost::new(paths.clone(), [passphrase]);
+        let doctor = run(["doctor", "--unlock"], &doctor_host);
+        assert_eq!(doctor.exit_code(), ExitCode::Success, "{doctor:?}");
+        assert_eq!(doctor.stdout(), "Doctor: healthy\n");
+        assert!(doctor.stderr().is_empty());
+
+        let locked = TestHost::new(paths, []);
+        assert_eq!(run(["status"], &locked).stdout(), "Status: locked\n");
+    }
+
+    #[test]
+    fn authenticated_verification_rejects_the_wrong_passphrase() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let init_host = TestHost::new(paths.clone(), [b"correct passphrase".to_vec()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let wrong = TestHost::new(paths, [b"wrong passphrase".to_vec()]);
+        let output = run(["audit", "verify"], &wrong);
+        assert_eq!(output.exit_code(), ExitCode::Locked);
+        assert!(output.stdout().is_empty());
+        assert_eq!(output.stderr(), "vault-pm: authentication required\n");
+    }
+
+    #[test]
+    fn authenticated_verification_fails_closed_on_repository_tampering() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"correct passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let object = first_file(paths.object_root()).expect("generation zero repository object");
+        let mut bytes = fs::read(&object).unwrap();
+        let last = bytes.last_mut().expect("non-empty storage record");
+        *last ^= 0x01;
+        fs::write(object, bytes).unwrap();
+
+        let audit_host = TestHost::new(paths, [passphrase]);
+        let output = run(["audit", "verify"], &audit_host);
+        assert_eq!(output.exit_code(), ExitCode::Integrity, "{output:?}");
+        assert!(output.stdout().is_empty());
+        assert_eq!(output.stderr(), "vault-pm: integrity check failed\n");
     }
 
     #[test]
@@ -855,6 +1011,12 @@ mod tests {
         let doctor = run(["doctor"], &host);
         assert_eq!(doctor.exit_code(), ExitCode::InvalidInput);
         assert_eq!(doctor.stdout(), "Doctor: initialization_required\n");
+        let full_doctor = run(["doctor", "--unlock"], &host);
+        assert_eq!(full_doctor.exit_code(), ExitCode::InvalidInput);
+        assert_eq!(full_doctor.stdout(), "Doctor: initialization_required\n");
+        let audit = run(["audit", "verify"], &host);
+        assert_eq!(audit.exit_code(), ExitCode::InvalidInput);
+        assert_eq!(audit.stderr(), "vault-pm: invalid command\n");
     }
 
     #[test]

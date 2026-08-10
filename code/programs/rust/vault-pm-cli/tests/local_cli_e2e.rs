@@ -74,6 +74,27 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     );
     assert!(doctor.stderr.is_empty());
 
+    let (audit_status, audit_transcript) = run_unlock_in_pty(
+        &home,
+        &["audit", "verify"],
+        b"Audit: verified (announcements=1 commits=1 catalogs=1 revisions=0 items=0)",
+    );
+    assert!(audit_status.success(), "audit failed: {audit_transcript}");
+    assert!(audit_transcript.contains("Vault passphrase: "));
+    assert!(audit_transcript
+        .contains("Audit: verified (announcements=1 commits=1 catalogs=1 revisions=0 items=0)"));
+    assert_transcript_excludes_secrets(&audit_transcript);
+
+    let (doctor_status, doctor_transcript) =
+        run_unlock_in_pty(&home, &["doctor", "--unlock"], b"Doctor: healthy");
+    assert!(
+        doctor_status.success(),
+        "authenticated doctor failed: {doctor_transcript}"
+    );
+    assert!(doctor_transcript.contains("Vault passphrase: "));
+    assert!(doctor_transcript.contains("Doctor: healthy"));
+    assert_transcript_excludes_secrets(&doctor_transcript);
+
     assert_tree_excludes(&home.0, PASSPHRASE);
 }
 
@@ -120,6 +141,53 @@ fn run_init_in_pty(home: &TestHome) -> (ExitStatus, String) {
     drop(master);
     let status = child.wait().unwrap();
     (status, String::from_utf8_lossy(&transcript).into_owned())
+}
+
+fn run_unlock_in_pty(
+    home: &TestHome,
+    arguments: &[&str],
+    expected_output: &[u8],
+) -> (ExitStatus, String) {
+    let (mut master, slave) = open_pty();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
+    command.args(arguments);
+    home.configure(&mut command);
+    command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::from(slave.try_clone().unwrap()))
+        .stderr(Stdio::from(slave));
+    unsafe {
+        command.pre_exec(|| {
+            if libc::setsid() < 0 || libc::ioctl(libc::STDOUT_FILENO, tiocsctty_request(), 0) < 0 {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    let mut child = command.spawn().unwrap();
+    drop(command);
+    child
+        .stdin
+        .take()
+        .unwrap()
+        .write_all(STDIN_INJECTION)
+        .unwrap();
+    let mut transcript = Vec::new();
+    read_until(&mut master, &mut transcript, b"Vault passphrase: ");
+    master.write_all(PASSPHRASE).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(&mut master, &mut transcript, expected_output);
+    drop(master);
+    let status = child.wait().unwrap();
+    (status, String::from_utf8_lossy(&transcript).into_owned())
+}
+
+fn assert_transcript_excludes_secrets(transcript: &str) {
+    assert!(!transcript
+        .as_bytes()
+        .windows(PASSPHRASE.len())
+        .any(|value| value == PASSPHRASE));
+    assert!(!transcript.contains("stdin injected secret"));
 }
 
 #[cfg(target_vendor = "apple")]
