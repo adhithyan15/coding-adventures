@@ -2726,6 +2726,12 @@
       "scriptSet": "tamil-comparisons"
     },
     {
+      "language": "tamil",
+      "chapter": 39,
+      "output": "tamil/book/chapters/ch39-asking-for-what-you-want.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
       "language": "telugu",
       "chapter": 6,
       "output": "telugu/book/chapters/ch06-dative-case.tex",

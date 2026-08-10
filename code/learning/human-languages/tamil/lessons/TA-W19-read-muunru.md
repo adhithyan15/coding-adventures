@@ -75,8 +75,8 @@ own description, since the data has no entry for either.
 Three pieces, one new sign. **மூன்று** is "three" — a word you have counted
 with since chapter 7, and now one you can read. It joins **இரண்டு**,
 **நான்கு**, **ஆறு**, **எட்டு** and **பத்து**, whose letters the strand has
-already given you; **ஒன்று**, **ஐந்து**, **ஏழு** and **ஒன்பது** still wait on
-letters this book has not taught.
+already given you; **ஐந்து** and **ஏழு** still wait on letters this book has
+not taught, and **ஒன்று** and **ஒன்பது** wait on one it is about to.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-UU-SIGN-01, TA-SCRIPT-READ-MUUNRU-02, TA-SCRIPT-U-SIGN-01, TA-SCRIPT-UU-VOWEL-01, TA-SCRIPT-READ-UUR-02] -->
@@ -93,4 +93,4 @@ letters this book has not taught.
 [PAUSE 3s] Read **மூன்று**. Which sign is **ூ**'s short partner, and which
 letter is its standing form? (**ு**, and **ஊ**.) Name the four corners of that
 family. (**உ ஊ** standing, **ு ூ** riding.) What is the dot on **ன்** doing?
-(**Removing the built-in *a***.)
+(**Removing the built-in *a***.) Next: asking for what you want.

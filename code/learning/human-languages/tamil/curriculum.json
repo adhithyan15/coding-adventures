@@ -52,7 +52,8 @@
         "TA-W15-read-po",
         "TA-W17-read-unavu",
         "TA-W18-read-uur",
-        "TA-W19-read-muunru"
+        "TA-W19-read-muunru",
+        "TA-W20-read-onru"
       ],
       "before": [],
       "inline": [
@@ -499,6 +500,20 @@
         "TA-EXT-035-LANGUAGE-SPECIFIC"
       ],
       "after": []
+    },
+    {
+      "id": "TA-PATH-036",
+      "spine_node": "SPINE-SAY-WHAT-I-WANT",
+      "lessons": [
+        "TA-C39-vendum",
+        "TA-C39-evvalavu",
+        "TA-C39-oru"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-036-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -671,10 +686,10 @@
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-WANT": {
-      "segments": [],
-      "omits": [
-        "VERB-WANT"
+      "segments": [
+        "TA-PATH-036"
       ],
+      "omits": [],
       "relocates": {}
     },
     "SPINE-TALK-ABOUT-PAST": {
@@ -904,7 +919,8 @@
         "TA-W15-read-po",
         "TA-W17-read-unavu",
         "TA-W18-read-uur",
-        "TA-W19-read-muunru"
+        "TA-W19-read-muunru",
+        "TA-W20-read-onru"
       ]
     },
     {
@@ -1277,6 +1293,19 @@
       "prerequisites": [],
       "lessons": [
         "TA-C38-vidai"
+      ]
+    },
+    {
+      "id": "TA-EXT-036-LANGUAGE-SPECIFIC",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can ask for what I want in Tamil with the dative-subject shape, refuse with the verb's own negative, and ask what something costs.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C39-vendum",
+        "TA-C39-evvalavu",
+        "TA-C39-oru"
       ]
     }
   ]
