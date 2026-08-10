@@ -27,6 +27,7 @@ const tamil = () => parseFont(load("NotoSansTamil-Static.ttf"));
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
+const URDU_SIN = DUCTUS[ductusKey("urdu-nastaliq", "س")];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
@@ -292,6 +293,18 @@ describe("handwriting ductus", () => {
     expect(curve[0].x).toBeGreaterThan(curve.at(-1)!.x);
   });
 
+  it("Urdu independent س joins its three close teeth directly to the final bowl", () => {
+    expect(URDU_SIN.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_SIN)).toBe(0);
+    expect(URDU_SIN.strokes).toHaveLength(1);
+    expect(URDU_SIN.strokes[0].segments).toHaveLength(2);
+    const teeth = URDU_SIN.strokes[0].segments[0].path;
+    const bowl = URDU_SIN.strokes[0].segments[1].path;
+    expect(teeth[0].x).toBeGreaterThan(teeth.at(-1)!.x);
+    expect(bowl[0]).toEqual(teeth.at(-1));
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -544,6 +557,20 @@ describe("handwriting ductus", () => {
     expect(src.variation).toMatch(
       /one uninterrupted stroke.*downward line.*curve to the left.*final form.*lower left.*final re rises in Naskh.*not in Nastaliq.*Noto Naskh.*Nastaliq/i,
     );
+  });
+
+  it("Urdu independent س traces to Zer o Zabar's continuous teeth-and-bowl animations", () => {
+    const src = URDU_SIN.source;
+    expect(src.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/sin-shin-bari-he-nun-nun-ghunna/",
+    );
+    expect(src.citation).toMatch(
+      /Zer o Zabar.*independent س.*calligraphic and handwriting animations.*Sīn instructions.*Northwestern/i,
+    );
+    expect(src.variation).toMatch(
+      /one uninterrupted stroke.*three close teeth.*right to left.*final bowl without lifting.*optional long gentle curve.*especially common in handwriting.*adjacent sīns.*standard toothed.*Noto Naskh.*Nastaliq/i,
+    );
+    expect(src.url).not.toBe(DUCTUS["س"].source.url);
   });
 
   it("Persian ب traces to the adjacent sourced bowl-and-dot demonstration", () => {

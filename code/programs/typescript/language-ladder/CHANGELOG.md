@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Urdu independent-sin ductus (HL-C09X)
+
+- Add Urdu independent س from Northwestern's *Zer o Zabar* animations as three
+  close teeth flowing directly into the final bowl in one zero-lift stroke.
+- Preserve the source's optional long gentle curve as an especially common
+  handwriting alternative while fitting the standard toothed form to Noto Naskh.
+- Render a real two-frame filmstrip whose movements stay in the same pen-down
+  run, with script-scoped source, prose, geometry, and summary agreement.
+
 ### Added — cited Urdu independent-re ductus (HL-C09W)
 
 - Add Urdu independent ر from Northwestern's *Zer o Zabar* animation and prose
