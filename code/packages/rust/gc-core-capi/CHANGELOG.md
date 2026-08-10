@@ -2,6 +2,26 @@
 
 All notable changes to this crate are documented here.
 
+## 0.24.4 - 2026-08-10 — new `twig_compat` aliases for the LLVM write-barrier follow-up
+
+- **`__twig_gc_write_barrier(parent, child)`** → [`__gc_write_barrier`]. Unlike every
+  other alias in `twig_compat`, `twig_gc.c` never had this symbol — there was no
+  generational collector to barrier for. Added under the `__twig_gc_*` naming
+  convention purely for consistency with every other GC symbol a code generator
+  emits. `iir-to-llvm`'s `lower_field_store` is the first emitter (that crate's
+  0.50.0).
+- **`__twig_gc_collect_minor_precise()`** → [`__gc_collect_minor_precise`] and
+  **`__twig_gc_kind_of(ptr)`** → [`__gc_kind_of`]: test-only seams, not emitted by
+  any production code generator today. They let `iir-to-llvm`'s new
+  `lang-aot/tests/llvm_gc_write_barrier.rs` drive a real, unconditional minor
+  collection (bypassing the `should_collect_minor`/`auto_minor` policy gate — the
+  direct entry point needs no attestation) and check a specific object's survival,
+  proving the write barrier above actually keeps a remembered-set edge alive across
+  a real compiled-and-executed program.
+- No behavior change to any existing symbol. Verification: `cargo build`/`test`
+  clean (41 lib tests, unchanged — new coverage lives in the consuming crates'
+  integration tests); `cargo clippy --all-targets -- -D warnings` clean.
+
 ## 0.24.3 - 2026-08-10 — fix: eliminate `precise_walk`'s Miri Stacked/Tree-Borrows failure
 
 - **Root cause: test-authoring exposure ordering, not a soundness bug in
