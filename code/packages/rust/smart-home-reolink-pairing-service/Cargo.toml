@@ -1,0 +1,26 @@
+[package]
+name = "smart-home-reolink-pairing-service"
+version = "0.1.0"
+edition = "2021"
+description = "Recoverable credential provisioning for one exact Reolink RLC camera"
+license = "MIT"
+
+[dependencies]
+actor = { path = "../actor" }
+chief-of-staff-daemon-secret-file = { path = "../chief-of-staff-daemon-secret-file" }
+coding_adventures_csprng = { path = "../csprng" }
+coding_adventures_vault_sealed_store = { path = "../vault-sealed-store" }
+coding_adventures_zeroize = { path = "../zeroize" }
+serde_json = "1"
+smart-home-core = { path = "../smart-home-core" }
+smart-home-reolink-integration = { path = "../smart-home-reolink-integration" }
+smart-home-reolink-snapshot-host = { path = "../smart-home-reolink-snapshot-host" }
+smart-home-pairing-transaction = { path = "../smart-home-pairing-transaction" }
+smart-home-runtime = { path = "../smart-home-runtime" }
+smart-home-runtime-store = { path = "../smart-home-runtime-store" }
+storage-core = { path = "../storage-core" }
+url-parser = { path = "../url-parser" }
+
+[dev-dependencies]
+coding_adventures_vault_leases = { path = "../vault-leases" }
+storage-local-folder = { path = "../storage-local-folder" }

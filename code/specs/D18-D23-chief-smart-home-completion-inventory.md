@@ -1652,6 +1652,40 @@ Axis VAPIX camera without weakening snapshot delivery into a credential writer:
   camera-1 loopback, secret-free durable state, interrupted-commit recovery,
   exact replacement cleanup, and cleanup-drift refusal.
 
+## Current Reolink Credential Pairing Slice
+
+This slice extends recoverable camera credential provisioning to one exact
+direct Reolink RLC camera without turning snapshot delivery into a writer:
+
+- `smart-home-reolink-pairing-service` accepts only the exact pending pairing
+  session, D23 principal, expected durable runtime revision, and completion
+  time. Actor messages cannot carry credential paths, bytes, session tokens, or
+  Vault references.
+- One host-owned username/password input is bridge-bound, exact-length,
+  owner-only, one-shot, and zeroizing. Human Approval succeeds before either
+  file is opened, LAN I/O begins, or a transaction journal or Vault record is
+  created.
+- The pending bridge's exact credential-free address must match a host-owned
+  canonical hostname and reviewed socket address. Production inspection keeps
+  the hostname for SNI and strict certificate verification while connecting
+  only to the reviewed address.
+- Authenticated CGI inspection proves a non-empty stable serial, exact equality
+  with every already installed physical channel, and at least one awake online
+  snapshot-capable channel on an `RLC-*` camera. Session query tokens remain
+  process-local and explicit logout runs on every successful or failed
+  inspection path.
+- Only the snapshot host's bounded versioned username/password envelope enters
+  the transaction-owned Vault record. Expected-revision runtime CAS, startup
+  recovery, durable actor-state replacement, and revision-bound prior-record
+  cleanup reuse `smart-home-pairing-transaction` unchanged.
+- Tests cover denial and stale revision before input, exact installed identity,
+  one-shot owner-only files, reviewed-address-pinned strict TLS, a real
+  login-to-logout CGI loopback, secret-free durable state, interrupted-commit
+  recovery, exact replacement cleanup, and cleanup-drift refusal.
+- NVR credential pairing remains blocked because current authenticated
+  `GetChannelstatus` inspection does not prove the RLC model identity behind
+  each physical NVR channel.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
@@ -1664,24 +1698,24 @@ to that image request; the only documented direct URL credentials require
 disabling secure sessions and are rejected. Frigate snapshot delivery remains
 blocked on a cookie-capable media authentication boundary. Revision-guarded
 D23 pairing completion, its recoverable cross-store journal, and production
-Hue, ONVIF, ZoneMinder, and Axis compositions are now available. The camera
-pairing services prove bounded host-owned secret input, D23 principal propagation,
-authenticated exact-bridge inspection, durable runtime revision ownership,
-startup recovery, actor-state replacement, and revision-bound cleanup without
-turning snapshot delivery into a writer. The strongest next post-merge audit is
-explicit Reolink credential provisioning because its HTTPS bridge identity,
-physical channels, snapshot envelope, and sealed-Vault namespace are concrete.
-Synology remains independently pairing-gated.
+Hue, ONVIF, ZoneMinder, Axis, and direct Reolink RLC compositions are now
+available. The camera pairing services prove bounded host-owned secret input,
+D23 principal propagation, authenticated exact-bridge inspection, durable
+runtime revision ownership, startup recovery, actor-state replacement, and
+revision-bound cleanup without turning snapshot delivery into a writer. The
+strongest next post-merge audit is explicit Synology credential provisioning
+because its isolated authenticated session, installed server and camera
+correspondence, snapshot envelope, and sealed-Vault namespace are concrete.
 
-1. Audit explicit Reolink credential provisioning only after proving one exact
-   installed NVR-or-camera pairing identity, physical-channel correspondence,
-   one bounded host-owned zeroizing input, and authenticated capability
-   verification without retaining query credentials beyond the operation.
-2. Audit automated Synology credential provisioning only through an explicit
+1. Audit automated Synology credential provisioning only through an explicit
    pairing flow that proves exact installed-server and camera correspondence,
    bounded host-owned secret input, isolated session logout, the versioned
    envelope, and transaction-owned opaque references. Snapshot delivery must
    not become an implicit credential writer.
+2. Add Reolink NVR credential pairing only after authenticated inspection proves
+   the exact model identity and snapshot capability behind every installed
+   physical channel. Keep query credentials operation-scoped and preserve
+   explicit logout on every outcome.
 3. Add authenticated AirGradient MQTT only after official firmware removes
    plaintext credential logging and one-shot Vault-leased credential injection
    can be proven without request-plan or normalized-state exposure.

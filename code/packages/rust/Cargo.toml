@@ -948,6 +948,7 @@ members = [
     "smart-home-zoneminder-pairing-service",
     "smart-home-zoneminder-snapshot-host",
     "smart-home-axis-pairing-service",
+    "smart-home-reolink-pairing-service",
     "smart-home-shelly-integration",
     "smart-home-wled-integration",
     "smart-home-nanoleaf-local-integration",
