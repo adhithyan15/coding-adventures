@@ -66,7 +66,7 @@ FUNCTION plus at least two others.
 | 2 | **GRAMMAR** | the structural system, cell by cell | §5. The steepest ramp in any language course, and the one currently invisible. |
 | 3 | **LEXICON** | vocabulary by semantic field | Needs its own ordering (frequency × usefulness), independent of function. |
 | 4 | **SOUND** | phonology, orthography, accentuation, regional phonetics | Spanish is nearly phonetic, so this ramp is *short* — which is a gift to spend elsewhere. |
-| 5 | **ETYMOLOGY** | roots, layers, and productive morphology | §6. The project's signature, and at B1+ the engine that makes C2 vocabulary reachable. |
+| 5 | **ETYMOLOGY** | roots, layers, productive morphology, and **friends** | §6. The project's signature; at B1+ the engine that makes C2 vocabulary reachable, and via §6.7 the reason a beginner is never starting from zero. |
 | 6 | **CULTURE** | history, geography, region, pragmatics, taboo | §7.1. Currently **one** distinct atom in the whole Spanish track. |
 | 7 | **IDIOM** | fixed expressions, refranes, collocations, discourse markers | §7.2. Opaque by nature, so it needs the strictest admission rule in the course. |
 | 8 | **TEXT** | utterance → turn → conversation → narrative → argument → literary | The C1/C2 payload. Nothing above B1 is really about words. |
@@ -546,7 +546,100 @@ survivable. Roughly 40 affixes, each one lesson, each multiplying reach:
 | *-ero*, *-ista*, *-dor* | agent nouns | ~1,500 |
 | *-oso*, *-able*, *-ivo* | adjective formation | ~2,000 |
 
-### 6.7 The consequence for the arithmetic
+### 6.7 Friends — the words the learner already knows
+
+*"Introduce things like friends from other languages so the brain can make
+connections."* — owner, 2026-08-10.
+
+This is the single largest untapped memory aid in a Spanish course for English
+speakers, and it follows directly from the etymology the course already teaches.
+English borrowed enormously from Latin and French, so a large share of Spanish
+vocabulary has an English relative already sitting in the learner's head. A word
+introduced with its friend is not a new word; it is a **recognition**.
+
+The rule that keeps this honest, and consistent with the owner's standing
+directive that English is the only requirement for the book:
+
+> **English friends are core. Every other language's friends are a bonus layer** —
+> visually skippable, never gating comprehension, and never charged against the
+> script or vocabulary ramp.
+
+#### The five kinds of friend
+
+**1. Plain friends** — the connection is visible with no help.
+*familia/family · nación/nation · importante/important · hospital/hospital ·
+animal/animal · idea/idea*. Free vocabulary, and the reason a beginner is never
+starting from zero.
+
+**2. Systematic friends** — the connection is a *rule*, so it transfers to
+thousands of words the course never teaches individually. These are the highest-
+value lessons in the whole ETYMOLOGY strand, and they interlock with the
+productive morphology of §6.6:
+
+| Spanish | English | reach | example |
+|---|---|---|---|
+| *-ción* | *-tion* | ~2,000 | *nación · educación · información* |
+| *-dad* / *-tad* | *-ty* | ~1,200 | *ciudad · libertad · universidad* |
+| *-mente* | *-ly* | unbounded | *rápidamente · claramente* |
+| *-oso* | *-ous* | ~800 | *famoso · nervioso · precioso* |
+| *-ario* | *-ary* | ~400 | *necesario · ordinario* |
+| *-ismo* / *-ista* | *-ism* / *-ist* | ~900 | *turismo · artista* |
+| *es-* + consonant | *s-* + consonant | ~500 | *escuela/school · español/Spanish · estudiante/student · especial/special* |
+| *-ncia* | *-nce* | ~400 | *importancia · diferencia* |
+
+One lesson on *-ción* hands the learner more words than fifty vocabulary lessons.
+This is the mechanism behind §6.8's derived reach, seen from the learner's side.
+
+**3. Hidden friends** — the connection is real but invisible until the sound laws
+of §6.5 reveal it. This is the deepest and most satisfying kind, and it is the
+moment etymology stops being history and becomes a **decoder**:
+
+| Spanish | hidden English friend | the bridge |
+|---|---|---|
+| *leche* | *lactose*, *lactic* | *lactem*, -CT- → -ch- |
+| *noche* | *nocturnal* | *noctem*, same law |
+| *hecho* | *fact* | *factum*, same law |
+| *hijo* | *filial* | *fīlium*, F- → h- |
+| *hierro* | *ferrous* | *ferrum*, F- → h- |
+| *lluvia* | *pluvial* | *pluvia*, PL- → ll- |
+| *llave* | *clavicle*, *clef* | *clāvem*, CL- → ll- |
+| *ojo* | *ocular* | *oculum*, -C'L- → -j- |
+| *trabajar* | *travel* | *tripālium*, both descended from the same instrument |
+
+A learner who meets *leche* alongside *lactose* has not memorised a word. They
+have understood a sound law, and they will decode *lechería* and *lácteo*
+unaided.
+
+**4. False friends** — taught as a formal block in the IDIOM strand (§7.2),
+one per lesson, because each is a specific trap: *embarazada* (not embarrassed),
+*éxito* (not exit), *sensible* (sensitive), *actualmente* (currently),
+*realizar* (to carry out), *molestar* (to bother), *asistir* (to attend),
+*constipado* (having a cold).
+
+**5. Cousins beyond English** — the bonus layer. French, Italian, Portuguese and
+Catalan reflexes of the same etymon, plus the non-Romance layers the course
+already teaches: the Arabic layer connects *azúcar/sugar*, *alcohol*, *álgebra*,
+*café*; Nahuatl gives *chocolate*, *tomate*, *aguacate/avocado*; Greek supplies
+the entire scientific register.
+
+This is where the multi-track repository pays off, and where HL-C48 becomes
+valuable rather than decorative: `concept_tag` already joins 1,131 lessons across
+languages, so the cousin panel can be **generated** rather than hand-typed. A
+reader who knows French sees *hijo · fils · figlio · filho*; a reader who does
+not sees nothing missing.
+
+#### The budget and the guardrail
+
+- Friends are an **aid**, never a teaching claim. A friend never counts toward the
+  lesson's ≤3 atoms, because it is not new material — it is a hook onto material
+  the learner already has.
+- **One friend per lesson**, so the aid does not become the info dump it exists to
+  prevent.
+- A friend must be **real**. The etymology has to be defensible, and where a
+  resemblance is coincidence it is taught as a false friend or not at all — the
+  *hola*/*hello* non-relationship (§6.3) is the model.
+
+### 6.8 The consequence for the arithmetic
 
 HL09 §3 sizes C2 at ~16,000 words and therefore ~8,000 lessons at 2 atoms each.
 That assumed every word is taught individually. With §6.6, it is not:
@@ -566,7 +659,7 @@ better than teaching 2,000 nouns that all end in it.
 
 ---
 
-## 7. Culture, idiom, and the info-dump gate
+## 7. Culture, idiom, register, and the info-dump gate
 
 ### 7.1 The CULTURE strand
 
@@ -641,6 +734,72 @@ The gate's real value is as a **review aid**: a lesson that trips it is not
 automatically wrong, but it is automatically read by a human before merge.
 
 ---
+
+### 7.4 Writing for someone who knows nothing
+
+*"Please make this very dummy friendly."* — owner, 2026-08-10.
+
+Gentleness is not only step size; it is also **how the page talks**. A course can
+have a perfect ramp and still lose a beginner in its first paragraph by assuming
+they know what a *verb* is.
+
+The prose rules, enforced at review:
+
+- **No unexplained metalanguage.** See §7.5 — the words for talking about
+  language are themselves taught, on their own ramp.
+- **One idea per paragraph. Short sentences.** If a sentence needs a comma to
+  hold two clauses together, it is usually two sentences.
+- **Analogy before definition.** *"The `-o` on the end is Spanish's way of
+  saying 'I'm the one doing it' — it does the job English does with the separate
+  word 'I'."* is better than a definition of a first-person morpheme.
+- **Show, then name.** The learner uses the thing for many lessons before it gets
+  a technical name. The subjunctive arc (§5.6) waits 24 lessons before saying
+  *subjuntivo*; that is the pattern everywhere.
+- **Never these words:** *simply*, *just*, *obviously*, *of course*, *as you
+  know*, *it should be clear that*. Every one of them tells a struggling reader
+  that the fault is theirs. This is a lint rule, not a style preference.
+- **Never apologise for the language.** No "unfortunately Spanish has three
+  conjugations." Difficulty framed as hostile is difficulty the reader braces
+  against.
+- **Answer the question the beginner actually has.** Usually *"why is it like
+  that?"* — which is precisely what the ETYMOLOGY strand exists to answer, and
+  the reason this course can be gentle without being shallow.
+
+### 7.5 The metalanguage ramp
+
+The hidden prerequisite of every language textbook: it assumes the reader knows
+grammar *vocabulary*. A book that says "the first-person singular present
+indicative of a regular `-ar` verb" has used six technical terms to describe one
+form, and a beginner who has never studied grammar understands none of them.
+
+So **metalanguage is a taught strand of its own**, inside GRAMMAR, at the same
+gentleness as everything else: **one new term per lesson, introduced only when the
+learner has already met the thing it names.**
+
+| stage | terms introduced | introduced only after |
+|---|---|---|
+| pre-A1 | *word*, *sound*, *letter*, *phrase* | — |
+| pre-A1 | *noun*, *name-word* | the learner has used a dozen nouns |
+| A1 | *verb*, *action word* | the learner has used *soy*, *estoy*, *hablo* |
+| A1 | *gender*, *masculine*, *feminine* | ~20 lessons of hearing *el*/*la* |
+| A1 | *ending*, *stem* | the learner has seen *habl-o* / *habl-as* |
+| A1 | *singular*, *plural* | plurals have been used |
+| A1 | *subject*, *person* | *yo*/*tú*/*él* are secure |
+| A2 | *conjugation*, *tense*, *regular*, *irregular* | one full singular row exists |
+| A2 | *object*, *direct*, *indirect* | the pronoun arcs have begun |
+| A2 | *past*, *preterite*, *imperfect*, *aspect* | both pasts are in use |
+| B1 | *mood*, *indicative*, *subjunctive* | §5.6 block D, 24 lessons in |
+| B1 | *clause*, *subordinate*, *relative* | relative clauses are being used |
+| B2 | *voice*, *passive*, *register*, *reported speech* | each is in use |
+| C1 | *aspect*, *periphrasis*, *cohesion*, *implicature* | each is in use |
+
+Roughly 40 terms across the whole course, at one per lesson, all of them named
+**after** the learner can already do the thing. A term is also re-glossed on
+reappearance after a long gap, because a reader at chapter 400 should never have
+to search backward for what *preterite* meant.
+
+This is the difference between a book a beginner can read alone and one that
+needs a teacher standing next to it.
 
 ## 8. The lesson contract, sharpened
 
@@ -786,7 +945,7 @@ All 41 Spanish chapters already generate this way (HL-C77).
 
 ## 11. The arithmetic
 
-Revised from HL09 §3, which assumed all vocabulary is taught atom by atom. §6.7
+Revised from HL09 §3, which assumed all vocabulary is taught atom by atom. §6.8
 shows it is not.
 
 | stage | taught atoms (cum.) | derived reach (cum.) | lessons | chapters | cum. lessons |
@@ -807,24 +966,47 @@ B1 159–275, B2 276–417, C1 418–634, C2 635–851.
 At ~2 pages per lesson plus chapter front matter, that is **≈10,500 pages** —
 which lands exactly where the owner said it may.
 
-**It ships as one continuous book in seven parts** (owner decision, 2026-08-10).
-The single arc is the point: a learner should be able to read forward from
-*gracias* to Cervantes without ever changing artifact, and the strands only feel
-like strands if they are visibly continuous.
+### 11.1 One curriculum, many books — but only one book now
 
-That decision has engineering consequences the pipeline must absorb, none of
-which are reasons to revisit it:
+The canonical artifact is **the curriculum**, not any book. Books are **derived
+views** over it, and the pipeline already works this way: `core/*.json` plus
+`spanish/lessons/*.md` are the source, and all 41 Spanish chapters generate from
+the same ASTs Language Ladder consumes (HL-C77).
 
-- **Scale.** The Spanish book is 214 pages today. 10,500 is ~50×. The existing
-  `latexmk` loop, the LaTeX warning gate, and the per-chapter hash checks all
-  need to stay linear in chapter count; the all-books CI job currently builds 22
-  books in one pass and will need this one budgeted separately.
-- **Bookmarks and cross-references.** ~851 chapters and ~4,950 lesson sections
-  is a large `hyperref` destination table. The duplicate-destination gate that
-  HL-B33 and friends drove to zero must hold at fifty times the size.
-- **Reader ergonomics.** A single PDF this size opens slowly. The build should
-  additionally emit per-part PDFs as a **convenience artifact**, clearly not the
-  canonical form — the canonical book is the continuous one.
+**Right now, exactly one book is built** (owner decision, 2026-08-10): one
+continuous volume, the whole curriculum, no splitting. The single arc is the
+deliverable — a learner reads forward from *gracias* to Cervantes without ever
+changing artifact, and the strands only read as strands if they are visibly
+continuous.
+
+Other editions are **deliberately deferred**, not designed away. Because the
+curriculum is the source, each is later a generation target rather than a
+rewrite:
+
+| future edition | what it filters | status |
+|---|---|---|
+| driving edition | voice-capable lessons only; sight and pen blocks omitted | HL-C43, already in the backlog |
+| per-part editions | one stage each, for readers who want a smaller file | deferred |
+| script/writing companion | pen lessons and ductus only | deferred |
+| reference edition | the recap tables, the paradigms, the root index | deferred |
+
+Nothing in the authoring is allowed to assume a particular edition. That is what
+keeps this a curriculum with books rather than a book with data behind it.
+
+### 11.2 What one 10,500-page book costs the pipeline
+
+Recorded so it is budgeted rather than discovered mid-build:
+
+- **Scale.** The Spanish book is 214 pages today. 10,500 is ~50×. The `latexmk`
+  loop, the LaTeX warning gate, and the per-chapter hash checks must stay linear
+  in chapter count; the all-books CI job currently builds 22 books in one pass
+  and will need this one budgeted separately.
+- **Bookmarks and cross-references.** ~851 chapters and ~4,950 lesson sections is
+  a large `hyperref` destination table. The duplicate-destination gate that
+  HL-B33 and its siblings drove to zero must hold at fifty times the size.
+- **Front and back matter.** A book this size needs a real apparatus: the root
+  index, the atom index, the grammar-cell index, and an English-first glossary.
+  HL-C50 already built the back-matter machinery for the current 22 books.
 
 Study time at one lesson per day: 13.5 years. At ten lessons per day: 16 months.
 The course is designed for the second, and the app's scheduler assumes sessions,
@@ -1018,6 +1200,10 @@ in full.
 - [ ] `maxNewGrammarCellsPerLesson: 1` is measured and reported.
 - [ ] No paradigm table appears before all its cells are taught (§5.3).
 - [ ] Every lesson has an etymology hook, and every root has ≥3 ledger payoffs.
+- [ ] Friends are English-anchored and never counted as taught atoms; cousin panels are generated from `concept_tag`, not hand-typed (§6.7).
+- [ ] No lesson uses an unglossed grammar term before the metalanguage ramp introduces it (§7.5).
+- [ ] The banned-word lint (*simply*, *just*, *obviously*, *as you know*) passes (§7.4).
+- [ ] Exactly one book is generated, and no lesson assumes which edition it appears in (§11.1).
 - [ ] Every chapter advances FUNCTION + ≥2 strands; every strand advances in every ten-chapter window.
 - [ ] Every chapter declares a variety; zero Spanish lessons remain `variety: general`.
 - [ ] Zero forward references and zero dead-end atoms in Spanish.
@@ -1046,10 +1232,16 @@ one marked `productive`, so a Peninsular edition is a config change and a drill
 regeneration, never a rewrite. That property is the reusable part — Portuguese
 (pt-PT/pt-BR), Arabic and Hindi/Urdu all need the same mechanism.
 
-### 16.2 One continuous book, in seven parts
+### 16.2 One curriculum; for now, exactly one book
 
-Not seven volumes. The single arc is the deliverable; §11 records the decision and
-the engineering consequences the build must absorb.
+Not seven volumes, and not a split of any kind yet. The curriculum is canonical
+and books are derived views over it; today the build emits **one continuous
+book** containing the whole course. The driving edition, per-part editions, a
+writing companion and a reference edition are all deferred generation targets,
+listed in §11.1 so they are visibly postponed rather than forgotten.
+
+The consequence for authoring: no lesson may assume which edition it is being
+read in.
 
 ### 16.3 Still genuinely open
 
@@ -1059,6 +1251,6 @@ from evidence by then rather than guessed now:
 1. **How much C1/C2 listening needs recorded audio** rather than TTS. The regional
    variety block (§12.6, block 58) is the first place synthetic speech may stop
    being adequate, since the whole point is hearing how varieties actually differ.
-2. **Whether the derived-reach model needs its own gate.** §6.7 reports derived
+2. **Whether the derived-reach model needs its own gate.** §6.8 reports derived
    reach separately from taught atoms; if it ever starts being cited as coverage,
    it needs the same fail-closed treatment level claims got in HL09 §3.1.

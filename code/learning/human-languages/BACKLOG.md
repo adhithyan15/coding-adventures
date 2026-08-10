@@ -287,14 +287,26 @@ Spanish's 188 lessons contain **one** distinct culture atom, **zero** mentions o
 | HL-C85 | Queued | Absorb the existing 188 Spanish lessons into the rebuilt spine (HL10 §13). | Zero forward references and zero dead-end atoms in Spanish; the learner can say *no* and *I am*; nothing is deleted. |
 | HL-C86 | Queued | Author pre-A1 to its full 30 chapters / ~180 lessons. | HL09 §3.1 satisfied at pre-A1; ≥95% of lessons `voice`; every chapter drivable from its first lesson, with an intro, an etymological thread, and a culture note. |
 | HL-C87 | Queued | Per-atom mastery and voice mode in Language Ladder (HL10 §10.1–10.2). | The app schedules from atom strength rather than lesson completion; a full chapter is completable hands-free. |
+| HL-C88 | Queued | Build the **friends** layer (HL10 §6.7): English cognates, the eight systematic suffix correspondences, hidden friends via the sound laws, and generated cousin panels from `concept_tag`. | Every lesson may carry at most one friend; friends never count toward the ≤3 atom budget; the cousin panel is generated from the 1,131 `concept_tag` lessons rather than hand-typed (closes the authoring half of HL-C48); every asserted friend has a defensible etymology or is taught as a false friend. |
+| HL-C89 | Queued | Build the **metalanguage ramp** and the dummy-friendly prose lint (HL10 §7.4–7.5). | ~40 grammar terms are ordered so each is introduced only after the learner has used the thing it names; no lesson uses an unglossed term before its introduction; a term is re-glossed after a long gap; the banned-word lint (*simply*, *just*, *obviously*, *as you know*) passes corpus-wide. |
 
-**Both owner decisions are settled** (2026-08-10) and recorded in HL10 §16: the
-productive variety is **neutral Latin American**, with Peninsular and Rioplatense
-fully receptive from pre-A1 and the choice held as a track config key rather than
-baked into lessons; and the course ships as **one continuous book in seven parts**,
-not seven volumes, with per-part PDFs emitted only as a non-canonical convenience.
-The second decision puts a ~50× scale requirement on the book pipeline (214 pages
-today), tracked in HL10 §11.
+**Owner decisions, settled 2026-08-10** and recorded in HL10 §16:
+
+1. The productive variety is **neutral Latin American**, with Peninsular and
+   Rioplatense fully receptive from pre-A1, held as a track config key rather than
+   baked into lessons.
+2. **One curriculum; for now exactly one book.** The curriculum is canonical and
+   books are derived views over it. No splitting yet — the driving edition
+   (HL-C43), per-part editions, a writing companion and a reference edition are
+   deferred generation targets, listed in HL10 §11.1 so they are visibly
+   postponed rather than forgotten. No lesson may assume which edition it appears
+   in. This puts a ~50× scale requirement on the book pipeline (214 pages today).
+
+A third directive, same day, added the **friends** system and the
+**dummy-friendly** requirement: introduce relatives from other languages so the
+reader's brain can connect, and write for someone who knows no grammar
+vocabulary at all. Both are specified in HL10 §6.7, §7.4 and §7.5 and carried by
+HL-C88 and HL-C89 below.
 
 ## P0 — Step-by-Step capability program (HL05–HL08)
 
