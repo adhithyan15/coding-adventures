@@ -50,6 +50,8 @@ mosaic-compile --backend compose \
 Drop the resulting `.kt` into a project that already has
 `androidx.compose.runtime.Composable` on its classpath — Jetpack
 Compose for Android, Compose for Desktop, or Compose Multiplatform.
+Generated `HostTooltip` output requires Compose Foundation 1.11 or newer so it
+can use the common `BasicTooltipBox` API on every Compose target.
 The runtime layer (`mosaic-flux-compose`) is a separate package and
 not required for the codegen output; it's only needed if the host
 wants the strict-Flux store/dispatcher contract.
@@ -68,7 +70,7 @@ wants the strict-Flux store/dispatcher contract.
 | HostButton   | `Button(onClick) { Text(label) }`         |
 
 The emitter also lowers `For`, `If`/`Else`, table structure, buttons, checkbox
-and radio controls, number inputs, links, scroll/tooltip wrappers, and the
+and radio controls, number inputs, links, native accessible tooltip wrappers, and the
 current drag/drop degradation path. Unsupported primitives still return a
 clear `UnknownPrimitive` error instead of silently disappearing.
 
@@ -81,6 +83,6 @@ their own `MaterialTheme` for platform-level theming.
 
 ## Tests
 
-`cargo test -p mosaic-emit-compose` runs 37 focused emitter tests. The
+`cargo test -p mosaic-emit-compose` runs 39 focused emitter tests. The
 package-expanded TaskApp is also exercised as a real Compose Desktop project:
 Kotlin compilation, native macOS distribution packaging, and process launch.

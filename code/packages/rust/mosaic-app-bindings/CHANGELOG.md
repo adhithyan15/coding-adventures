@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Execute the generated Compose/JNA host against the shared Rust conformance
+  library in Linux CI, covering startup, dispatch, snapshot/restore,
+  notification, buffer ownership, and teardown on the JVM.
+- Expose the generated Compose ABI carrier constructors to JNA reflection;
+  Kotlin file-private `size_t` and structure classes compiled but failed when
+  the standard host first attempted to load a real Rust library.
 - Execute the generated Flutter/Dart FFI host against the shared Rust
   conformance library in Linux CI, covering startup, dispatch,
   snapshot/restore, notification, buffer ownership, and teardown.

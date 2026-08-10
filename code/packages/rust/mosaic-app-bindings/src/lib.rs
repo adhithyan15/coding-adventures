@@ -110,6 +110,14 @@ mod tests {
     #[test]
     fn compose_binding_owns_the_full_c_abi_lifecycle() {
         let source = compose_jna_binding();
+        assert!(source.contains("class MosaicSizeT(value: Long = 0)"));
+        assert!(source.contains("open class MosaicBytes : Structure()"));
+        assert!(source.contains("open class MosaicBuffer : Structure()"));
+        assert!(source.contains("interface MosaicNativeApi : Library"));
+        assert!(!source.contains("private class MosaicSizeT"));
+        assert!(!source.contains("private open class MosaicBytes"));
+        assert!(!source.contains("private open class MosaicBuffer"));
+        assert!(!source.contains("private interface MosaicNativeApi"));
         for symbol in [
             "mosaic_app_create",
             "mosaic_app_dispatch",
