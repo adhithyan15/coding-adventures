@@ -1182,12 +1182,13 @@ fn emit_jsx_tree(
         }
     }
 
-    // UI36 — data-driven sizing. A bound size is *data*, so it is emitted LAST of all:
-    // after the author's part style and after any state spreads. Otherwise a
-    // `state X { width: … }` block would silently clobber the value the host bound,
-    // which is exactly the "my binding did nothing" confusion this feature removes.
-    // See `dynamic_size_style` for why this can't live in mosstyle.
-    let size_style = dynamic_size_style(node)?;
+    // UI36 — data-driven sizing (and, since icon-assets, background). A bound value
+    // is *data*, so it is emitted LAST of all: after the author's part style and after
+    // any state spreads. Otherwise a `state X { width: … }` block would silently
+    // clobber the value the host bound, which is exactly the "my binding did nothing"
+    // confusion this feature removes. See `dynamic_bound_style` for why this can't
+    // live in mosstyle.
+    let size_style = dynamic_bound_style(node)?;
 
     let style_attr = if merged_style.is_empty() && state_spreads.is_empty() && size_style.is_empty()
     {
@@ -4338,44 +4339,53 @@ fn find_keyword_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a st
 
 /// Find a prop on `node` whose value is a `Number`. Returns the f64, or
 /// `None`.
-/// UI36 — **data-driven sizing**: a size prop whose value comes from the host.
+/// UI36 — **data-driven sizing**: a size (or, since the richer-Gantt/icon-assets
+/// pass, `background`) prop whose value comes from the host.
 ///
 /// (See `find_number_prop` below for the literal-number-only reader this generalises.)
 ///
 /// mosstyle is the right home for *static* appearance, and deliberately bakes its
-/// values at compile time. But some sizes are only knowable at runtime — the length of
-/// a Gantt bar, a progress fill, a proportional column — and there is no amount of
-/// authored CSS that can express "as wide as this row's data says". Before this, such a
-/// node had no way to be sized: `width: slot: x` parsed fine and was then silently
-/// dropped, because the only reader was `find_number_prop`, which matches a literal
-/// number and nothing else. Silently ignoring an author's binding is the worst of the
-/// options, so these props now accept the same three value shapes the rest of the
-/// emitter does.
+/// values at compile time. But some values are only knowable at runtime — the length
+/// of a Gantt bar, a progress fill, a proportional column, a continuously-filling
+/// progress ring's `conic-gradient(...)` — and there is no amount of authored CSS that
+/// can express "as wide as this row's data says" or "as far around as this percentage
+/// says". Before this, such a node had no way to be sized: `width: slot: x` parsed
+/// fine and was then silently dropped, because the only reader was `find_number_prop`,
+/// which matches a literal number and nothing else. Silently ignoring an author's
+/// binding is the worst of the options, so these props accept the same three value
+/// shapes the rest of the emitter does.
 ///
 /// | author writes                  | emitted                    |
 /// |--------------------------------|----------------------------|
 /// | `width: 120`                   | `width: 120` (CSS px)      |
 /// | `width: slot: bar-width`       | `width: barWidth`          |
 /// | `width: ( row[1] )`            | `width: row[1]`            |
+/// | `background: ( row[2] )`       | `background: row[2]`       |
 ///
 /// The value is passed through as a JS expression, so a host may supply either a number
-/// (React reads a bare number as px) or a string like `"42%"` — which is what makes a
-/// bar that scales with its container expressible at all.
+/// (React reads a bare number as px on the size properties) or a string like `"42%"` or
+/// a full `"conic-gradient(...)"` — which is what makes a bar that scales with its
+/// container, or a ring that fills with it, expressible at all.
+///
+/// Was `dynamic_size_style`/`SIZE_PROPS` — renamed when `background` joined the list
+/// (task-app-icon-assets-v1.md) since "size" no longer described every entry; the
+/// mechanism itself (three value shapes, same precedence rule) is unchanged.
 ///
 /// Returns a `, key: value` fragment ready to append inside a JSX style object.
-fn dynamic_size_style(node: &LayoutNode) -> Result<String, PipelineEmitError> {
+fn dynamic_bound_style(node: &LayoutNode) -> Result<String, PipelineEmitError> {
     /// The mosstyle-style kebab prop name paired with its JSX style key.
-    const SIZE_PROPS: [(&str, &str); 6] = [
+    const BINDABLE_PROPS: [(&str, &str); 7] = [
         ("width", "width"),
         ("height", "height"),
         ("min-width", "minWidth"),
         ("max-width", "maxWidth"),
         ("min-height", "minHeight"),
         ("max-height", "maxHeight"),
+        ("background", "background"),
     ];
 
     let mut out = String::new();
-    for (prop_name, css_key) in SIZE_PROPS {
+    for (prop_name, css_key) in BINDABLE_PROPS {
         let Some(prop) = node.props.iter().find(|p| p.name == prop_name) else {
             continue;
         };
@@ -4424,9 +4434,10 @@ fn dynamic_size_style(node: &LayoutNode) -> Result<String, PipelineEmitError> {
 
 /// Find a prop on `node` whose value is a literal `Number`.
 ///
-/// Deliberately narrow: it ignores a slot or expression binding. `dynamic_size_style`
-/// above is the general reader for size props; this one remains for the places that
-/// genuinely require a compile-time constant (a table `Col`'s width, for instance).
+/// Deliberately narrow: it ignores a slot or expression binding. `dynamic_bound_style`
+/// above is the general reader for size (and now background) props; this one remains
+/// for the places that genuinely require a compile-time constant (a table `Col`'s
+/// width, for instance).
 fn find_number_prop(node: &LayoutNode, prop_name: &str) -> Option<f64> {
     node.props.iter().find_map(|p| {
         if p.name == prop_name {
@@ -8113,6 +8124,58 @@ mod tests {
         for key in ["width: 1", "height: 2", "minWidth: 3", "maxWidth: 4", "minHeight: 5", "maxHeight: 6"] {
             assert!(out.contains(key), "missing {key}:\n{out}");
         }
+    }
+
+    /// `background` (task-app-icon-assets-v1.md's progress ring — a
+    /// continuously-filling `conic-gradient(...)`, not expressible as authored CSS)
+    /// joined the six literal-size props on the same bindable-property mechanism, same
+    /// three value shapes.
+    #[test]
+    fn ui36_background_can_come_from_an_expression() {
+        let out = sized(vec![size_prop(
+            "background",
+            LayoutPropValue::Expr("ringGradient".to_string()),
+        )]);
+        assert!(
+            out.contains("background: ringGradient"),
+            "missing bound background:\n{out}"
+        );
+    }
+
+    #[test]
+    fn ui36_bound_background_overrides_the_part_style() {
+        let m = component("S", vec![], vec![]);
+        let layout = LayoutDef {
+            component_name: "S".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("ring".to_string()),
+                props: vec![size_prop(
+                    "background",
+                    LayoutPropValue::SlotRef("ring-gradient".to_string()),
+                )],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "S".to_string(),
+            parts: vec![PartStyle {
+                name: "ring".to_string(),
+                base: vec![StyleProp {
+                    name: "background".to_string(),
+                    value: "#f7f2ea".to_string(),
+                }],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let out = from_pipeline(&m, &layout, &style).unwrap().output;
+        let at_static = out.find("background: \"#f7f2ea\"").expect("static background missing");
+        let at_bound = out.find("background: ringGradient").expect("bound background missing");
+        assert!(
+            at_bound > at_static,
+            "the bound background must come last so it wins:\n{out}"
+        );
     }
 
     /// A bound size must beat the author's static one — otherwise binding a width

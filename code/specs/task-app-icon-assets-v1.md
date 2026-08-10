@@ -107,11 +107,11 @@ binds it the same way a Gantt bar's width is bound today.
 
 ## Wiring summary
 
-- `mosaic-emit-react`: `background` added to `dynamic_size_style`'s
-  bindable-property list (renamed in comments to reflect it's no
-  longer size-only, `SIZE_PROPS` constant itself untouched in name to
-  keep the diff minimal — a follow-up rename is cosmetic, not
-  functional). New tests alongside the existing UI36 property tests.
+- `mosaic-emit-react`: `background` added to the bindable-property
+  list. `dynamic_size_style`/`SIZE_PROPS` renamed to
+  `dynamic_bound_style`/`BINDABLE_PROPS` (four call sites) — cheap
+  enough to do properly rather than leave a now-inaccurate name. New
+  tests alongside the existing UI36 property tests.
 - `TaskApp.mil`: `slot status-dot` isn't needed (the dot is undecorated
   chrome, not data) — `pdot` is written directly in `.mll`/`.msl`.
   `slot ring-gradient : text ;` (the computed `conic-gradient(...)`

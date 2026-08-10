@@ -2,7 +2,10 @@
 
 **Status:** implemented on the React backend; the other seven backends are follow-on.
 **Kernel surface:** the size props `width`, `height`, `min-width`, `max-width`,
-`min-height`, `max-height` on any layout node.
+`min-height`, `max-height`, plus `background` (added for
+task-app-icon-assets-v1.md's progress ring — a continuously-filling
+`conic-gradient(...)` is exactly "a value a stylesheet cannot know", the same
+motivating gap as every size prop here, just not a *size*) on any layout node.
 
 ---
 
@@ -46,9 +49,10 @@ A size prop accepts the same value shapes the rest of the emitter already unders
 | `width: auto` | `width: "auto"` | a CSS keyword |
 | `width: slot: bar-width` | `width: barWidth` | bound to a slot |
 | `width: ( row[2] )` | `width: row[2]` | an expression — e.g. a `For` binding |
+| `background: ( row[3] )` | `background: row[3]` | a computed `conic-gradient(...)` string — the ring's fill percentage, not a size, but the same "unknowable until run time" shape |
 
 The host may therefore supply a number *or* a string, which is what makes a bar that
-scales with its container (`"42%"`) expressible at all.
+scales with its container (`"42%"`), or a ring that fills with it, expressible at all.
 
 Anything that is not a size — an emit ref, say — is a **hard error**, not a silent
 drop. A non-finite numeric literal is likewise rejected rather than emitted as a bare
