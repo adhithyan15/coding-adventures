@@ -1262,6 +1262,21 @@
       "source_cas_hashes": [],
       "benchmark_paths": [],
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.math.algebra.rearrange_density",
+      "title": "Solve rho = m / V for volume, given the mass and the density",
+      "band": "6-8",
+      "domain": "mathematics",
+      "competency": "compute",
+      "coverage_roots": ["ccss.math"],
+      "standards": [],
+      "prerequisites": ["adj.science.physics.density"],
+      "libraries": ["code/specs/data/adj-formula-stdlib/physics/density.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     }
   ]
 }

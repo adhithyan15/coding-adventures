@@ -33,6 +33,18 @@
 % `formula` carries the provenance envelope every shipped grounded clause carries;
 % the linter rejects an unsourced one. (See feedback_nothing_human_authored — the
 % definitional sentence is a verbatim span of the cited page, not asserted from memory.)
+%
+% This library also carries a rung-0 CAS-wiring companion (ADJ-FORMULA-LIBRARIES
+% FL-10, §3D — a Wave 3 continuation): `volume_from_density` solves the SAME cited
+% HyperPhysics definition as the forward `mass` formula (`m = ρ·V`) for volume
+% instead, through `cas-solve`'s real linear-equation solver — the exact discipline
+% `pressure.adj`'s `area_from_pressure` already established for its own sibling
+% quotient/product pair. This closes the one remaining direction the hand-shipped
+% `density`/`mass` pair left open (given mass and density, recover the volume)
+% without duplicating either existing formula's citation work. The new symbolic
+% names its OWN target finding (`volume_from_density`, not `volume`) rather than
+% reusing the plain parameter name, so it coexists with the two forward examples
+% in one query file — no target-collision, no file-splitting needed.
 % ============================================================================
 
 % ----------------------------------------------------------------------------
@@ -47,6 +59,7 @@ dictionary density_vocab {
     define mass    : finding  surface "mass", "m"                        % mass, e.g. kg
     define volume  : finding  surface "volume", "V"                      % volume, e.g. m³
     define density : finding  surface "density", "rho"                  % density, e.g. kg/m³
+    define volume_from_density : finding  surface "missing volume", "unknown volume"
 }
 
 % ----------------------------------------------------------------------------
@@ -68,6 +81,14 @@ formulabook density_laws {
     % Mass — the same definition solved for the mass a density fills a volume with
     % (m = ρ·V). Defended by the SAME definitional sentence, read the other way.
     formula mass(density, volume) = density * volume
+        source "Density is defined as mass per unit volume."
+        locator "https://hyperphysics.gsu.edu/hbase/dens.html"
+        trust authoritative
+
+    % m = ρ·V again, SOLVED FOR VOLUME instead of computed forward — the same
+    % cited HyperPhysics definition, only which quantity is bound and which is
+    % unknown differs. Closes the one direction `density`/`mass` above leave open.
+    symbolic volume_from_density(mass, density) { mass == density * volume_from_density } for volume_from_density
         source "Density is defined as mass per unit volume."
         locator "https://hyperphysics.gsu.edu/hbase/dens.html"
         trust authoritative

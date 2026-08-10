@@ -27,3 +27,9 @@ observe volume(3)
 % That 20 g/cm³ density in the same 3 cm³ volume: mass = 20 * 3.
 observe density(20)
 ? mass(density, volume)      % expect 60   (same definition, solved for m = ρ·V)
+
+% --- ρ = m/V, SOLVED FOR VOLUME (rung-0 CAS-wiring, FL-10). "A 60 g mass has a
+% density of 20 g/cm³. What volume does it occupy?" ---
+observe mass(60)                          % "…a 60 g mass…"                (span cited)
+observe density(20)                       % "…has a density of 20 g/cm³…"  (span cited)
+? volume_from_density(mass, density)      % engine → 3 (HyperPhysics, authoritative)
