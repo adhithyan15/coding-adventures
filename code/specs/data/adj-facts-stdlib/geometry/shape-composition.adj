@@ -1,0 +1,59 @@
+% ============================================================================
+% shape-composition — how many triangles a named quadrilateral decomposes
+% into, DERIVED (not looked up) from two cited geometric primitives
+% (adj-facts-stdlib, GEOMETRY). CCSS K.G.B.6 "compose simple shapes to form
+% larger shapes."
+% ============================================================================
+% Every other library in this directory is a `table`: one source states the
+% answer directly, and recall is a plain lookup. This one is different — no
+% single source states "a square is made of two triangles" as a citable
+% sentence (checked MathWorld's Hexagon, Diagonal, Square, and
+% IsoscelesRightTriangle pages; none of them phrase it that way, since a
+% formal mathematics reference does not bother spelling out something this
+% elementary). So instead of blocking on a missing verbatim quote, this
+% library DERIVES the fact with a `rule`, composing two things that ARE
+% independently, honestly citable:
+%
+%   1. `quadrilateral_property($Shape, $Property)` — the already-shipped
+%      `quadrilateral-types.adj` table: square, rectangle, rhombus,
+%      parallelogram, and trapezoid are each grounded, MathWorld-cited
+%      quadrilaterals (4-sided polygons).
+%   2. The general definitions of TRIANGULATION ("the division of a...
+%      polygon into a set of triangles") and a POLYGON DIAGONAL ("a line
+%      segment connecting two nonadjacent polygon vertices"), both quoted
+%      verbatim from MathWorld in the rule's own `source` below.
+%
+% The RULE's `source` states plainly which part is the verbatim MathWorld
+% quote and which part is the elementary reasoning step built on top of it
+% (a quadrilateral has exactly one diagonal per opposite-vertex pair;
+% drawing it splits the 4-sided region into exactly two 3-sided regions) —
+% so the inference is auditable end to end: a query's `steps` trail shows
+% BOTH the rule's citation (the general triangulation/diagonal definitions)
+% AND the underlying table fact's citation (the quadrilateral's own defining
+% property), and a human can independently check each link. `trust
+% consensus`, not `authoritative`, because the CONCLUSION (exactly two
+% triangles) is this library's own derivation from the quoted material, not
+% a sentence any single source states outright — the honest tier for
+% "well-established, but assembled here rather than copied."
+%
+%     import "shape-composition.adj"       % transitively imports quadrilateral-types.adj
+%     ? triangle_decomposition_count(square, $N)   % 2, with the full 2-step audit trail
+%
+% This deliberately covers only the QUADRILATERAL-by-diagonal case — the
+% single most common K-2 example (splitting a square/rectangle into two
+% triangles) — not a general n-sided-polygon formula. A general
+% `triangles(sides) = sides - 2` rule would need its own honestly-sourced
+% derivation (MathWorld's `PolygonDiagonal` page states a convex n-gon needs
+% C_(n-3) triangulating diagonals but does not spell out the resulting
+% n-2 triangle count), left for a future pass rather than overreaching here.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+import "quadrilateral-types.adj"
+
+rule { head: triangle_decomposition_count($Shape, 2)
+       when: quadrilateral_property($Shape, $Property)
+       source "Triangulation is the division of a surface or plane polygon into a set of triangles, usually with the restriction that each triangle side is entirely shared by two adjacent triangles. A polygonal diagonal is a line segment connecting two nonadjacent polygon vertices of a polygon. A quadrilateral has exactly two diagonals, each splitting it into two triangles; drawing either one divides the quadrilateral into exactly two triangular regions."
+       locator "https://mathworld.wolfram.com/Triangulation.html"
+       trust consensus }

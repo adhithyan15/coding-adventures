@@ -23,7 +23,7 @@ CLAUSE_PATTERNS = {
     "tables": re.compile(r"(?m)^\s*table\s+[a-zA-Z_]"),
     "formulas": re.compile(r"(?m)^\s*formula\s+[a-zA-Z_]"),
     "relations": re.compile(r"(?m)^\s*relate\s+[a-zA-Z_]"),
-    "rules": re.compile(r"(?m)^\s*rule\s+[a-zA-Z_]"),
+    "rules": re.compile(r"(?m)^\s*rule\s*\{"),
     "contributions": re.compile(r"(?m)^\s*contributes\s+"),
 }
 SOURCE_RE = re.compile(r'(?m)^\s*source\s+"')

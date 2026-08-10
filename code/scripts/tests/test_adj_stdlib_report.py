@@ -62,6 +62,52 @@ class AdjStdlibReportTests(unittest.TestCase):
         self.assertEqual(report["summary"]["pin_syntax_libraries"], 1)
         self.assertEqual(report["summary"]["byte_pinned_libraries"], 0)
 
+    def test_rule_clause_is_recognized_with_no_name_before_the_brace(self) -> None:
+        # A `rule` declaration is anonymous -- `rule { head: ... }`, never
+        # `rule some_name { ... }` -- unlike `table`/`formula`/`relate`, which
+        # all take a name immediately after the keyword. A CLAUSE_PATTERNS
+        # regex copied from those three (expecting an identifier right after
+        # the keyword) would silently count zero rule clauses and therefore
+        # zero source/locator/trust requirement, always reporting
+        # source_envelope=True regardless of whether a rule was even sourced.
+        # This pins the fix: a rule clause is counted, and stays honestly
+        # ungrounded if it lacks a citation.
+        with tempfile.TemporaryDirectory() as directory:
+            root = self.make_root(directory)
+            library = root / "code/specs/data/adj-facts-stdlib/geometry/derived.adj"
+            library.parent.mkdir(parents=True, exist_ok=True)
+            library.write_text(
+                "rule { head: derived_fact($X)\n"
+                "       when: base_fact($X)\n"
+                '       source "a real citation"\n'
+                '       locator "https://example.test/source"\n'
+                "       trust consensus }\n",
+                encoding="utf-8",
+            )
+
+            report = stdlib.build_report(root)
+            row = next(item for item in report["libraries"] if item["content_library"])
+
+        self.assertEqual(row["counts"]["rules"], 1)
+        self.assertEqual(row["counts"]["clauses"], 1)
+        self.assertTrue(row["source_envelope"])
+
+    def test_unsourced_rule_clause_reports_missing_source_envelope(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = self.make_root(directory)
+            library = root / "code/specs/data/adj-facts-stdlib/geometry/unsourced.adj"
+            library.parent.mkdir(parents=True, exist_ok=True)
+            library.write_text(
+                "rule { head: derived_fact($X) when: base_fact($X) }\n",
+                encoding="utf-8",
+            )
+
+            report = stdlib.build_report(root)
+            row = next(item for item in report["libraries"] if item["content_library"])
+
+        self.assertEqual(row["counts"]["rules"], 1)
+        self.assertFalse(row["source_envelope"])
+
     def test_report_forwards_formula_inventory_command(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = self.make_root(directory)
