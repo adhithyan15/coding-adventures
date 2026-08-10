@@ -1,0 +1,70 @@
+% ============================================================================
+% silent-e-word — words that follow the "silent e" / "magic e" (VCe)
+% spelling pattern (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% The SEVENTH literacy sub-skill library in this loop's sweep, and the
+% SECOND to move beyond CCSS RF.K.2 (following
+% `compound-word-spelling-example.adj`'s precedent). This one grounds
+% ANOTHER spelling pattern: a single-letter long vowel, followed by a
+% single consonant, followed by a silent "e" at the end of the word — the
+% "VCe" or "magic e" syllable type. Recall is a binding query:
+%
+%     ? silent_e_word(wake, $SyllableType)   % vce_long_vowel
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `silent_e_word(word, syllable_type)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the syllable type WITH its source, on the CPU, with zero
+% model calls, and abstains on any word the source does not name. The
+% query also runs BACKWARD — bind the syllable type and recall every word
+% it applies to:
+%
+%     ? silent_e_word($W, vce_long_vowel)
+%       % wake, whale, while, yoke, yore, rude, hare
+%
+% DESIGN NOTE — this table has a second, constant-per-row column (rather
+% than a bare `columns word`), the same discipline
+% `compound-word-spelling-example.adj` established: an earlier draft in
+% this stdlib empirically found that a fully-ground single-column query
+% does NOT produce ordinary `recall`/`abstained` semantics — the engine
+% instead falls back to its hypothesis-ranking/adjudication mode, the
+% wrong shape for a plain citable fact.
+%
+% Provenance: quoted verbatim from Reading Rockets' "Six Syllable Types"
+% article, which names these seven words as its VCe syllable-pattern
+% examples: "Also known as 'magic e' syllable patterns, VCe syllables
+% contain long vowels spelled with a single letter, followed by a single
+% consonant, and a silent e. Examples of VCe syllables are found in wake,
+% whale, while, yoke, yore, rude, and hare." WebFetch-verified TWICE for
+% consistency before writing. `trust consensus` — the same tier as the
+% other Reading Rockets citations already shipped in this directory
+% (`word-families.adj`, `onset-rime.adj`,
+% `compound-word-spelling-example.adj`). A word that is NOT one of these
+% seven — e.g. `snake`, also a real VCe word but not named by this
+% source — is deliberately NOT a row, so a recall ABSTAINS on it rather
+% than inventing a syllable type the source never asserted. This library
+% intentionally does NOT populate the manifest's `standards` field: CCSS
+% RF.1.3.c ("Know final -e and common vowel team conventions for
+% representing long vowel sounds") is a genuinely clean fit for this
+% pattern, but every objective in this stdlib so far describes its
+% grounding standard in CHANGELOG/README prose rather than the manifest's
+% `standards` array, so this library follows that same established
+% convention rather than unilaterally breaking it. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table silent_e_word {
+    columns word, syllable_type
+
+    row (wake, vce_long_vowel)
+    row (whale, vce_long_vowel)
+    row (while, vce_long_vowel)
+    row (yoke, vce_long_vowel)
+    row (yore, vce_long_vowel)
+    row (rude, vce_long_vowel)
+    row (hare, vce_long_vowel)
+
+    source "Also known as \"magic e\" syllable patterns, VCe syllables contain long vowels spelled with a single letter, followed by a single consonant, and a silent e. Examples of VCe syllables are found in wake, whale, while, yoke, yore, rude, and hare."
+    locator "https://www.readingrockets.org/topics/spelling-and-word-study/articles/six-syllable-types"
+    trust consensus
+}
