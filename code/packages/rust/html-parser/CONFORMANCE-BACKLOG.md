@@ -91,8 +91,11 @@ Prioritized work items:
    Non-whitespace text after a template row now reports when it forces recovery
    from template table mode. Formatting start tags now report when table
    structure foster-parents them, covering the remaining silent fostered-anchor
-   starts. Seeded table and foreign fragment-shell boundaries now report their
-   required parse errors.
+   starts. Caption recovery now reports when a table-structure start tag or
+   `table` end tag closes the caption while a non-implied node remains current;
+   caption-scoped table endings now reprocess after closing the caption.
+   Seeded table and foreign fragment-shell boundaries now report their required
+   parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases
    without changing their now-conforming DOM output.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into

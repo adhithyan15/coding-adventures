@@ -6,6 +6,11 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Table-structure start tags and `table` end tags that close a caption now
+  report the current-Standard parse error when implied-end-tag generation
+  leaves a non-caption node current. Caption-scoped `table` end tags also close
+  the caption before reprocessing the token in table mode. The checked legacy
+  corpus does not cover this caption-plus-formatting branch.
 - Repeated `option` and `optgroup` start tags processed with an open `select`
   now report the current-Standard parse error when implied-end-tag recovery
   closes a scoped option or group. The legacy html5lib rows exercise this DOM
