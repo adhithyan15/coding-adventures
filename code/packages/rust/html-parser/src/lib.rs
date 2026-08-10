@@ -7028,6 +7028,8 @@ impl HtmlParser {
                 }
             }
             "table" => {
+                self.report_non_current_caption_recovery("end tag `</table>`");
+                self.close_open_table_context_element_if(|name| name == "caption");
                 self.close_element(name);
                 if self
                     .pending_formatting_reconstruction
@@ -7241,6 +7243,13 @@ impl HtmlParser {
     }
 
     fn apply_table_implied_contexts(&mut self, incoming_name: &str) {
+        if matches!(
+            incoming_name,
+            "caption" | "col" | "colgroup" | "tbody" | "td" | "tfoot" | "th" | "thead" | "tr"
+        ) {
+            self.report_non_current_caption_recovery(&format!("start tag `<{incoming_name}>`"));
+        }
+
         match incoming_name {
             "caption" | "colgroup" => {
                 self.pop_table_cell_row_and_section_contexts();
@@ -7287,6 +7296,36 @@ impl HtmlParser {
                 }
             }
             _ => {}
+        }
+    }
+
+    fn report_non_current_caption_recovery(&mut self, token: &str) {
+        let Some(table_index) = self.open_elements.iter().rposition(|path| {
+            element_at_path(&self.document, path).is_some_and(|name| name == "table")
+        }) else {
+            return;
+        };
+        let Some(relative_caption_index) =
+            self.open_elements[table_index + 1..]
+                .iter()
+                .rposition(|path| {
+                    element_at_path(&self.document, path).is_some_and(|name| name == "caption")
+                })
+        else {
+            return;
+        };
+        let caption_index = table_index + 1 + relative_caption_index;
+        let current_after_implied_end_tags_is_caption =
+            self.open_elements[caption_index + 1..].iter().all(|path| {
+                element_at_path(&self.document, path).is_some_and(is_implied_end_tag_element)
+            });
+        if !current_after_implied_end_tags_is_caption {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-token-in-caption",
+                format!(
+                    "{token} closed a caption while a non-caption node remained current after implied-end-tag generation"
+                ),
+            ));
         }
     }
 
@@ -31552,6 +31591,51 @@ mod tests {
         assert_eq!(
             element(&element(&foot.children[0]).children[0]).children,
             vec![Node::text("F")]
+        );
+    }
+
+    #[test]
+    fn reports_caption_recovery_with_a_non_caption_current_node() {
+        for (source, token) in [
+            (
+                "<!doctype html><table><caption><b>Cap<col><tr><td>A</table>",
+                "start tag `<col>`",
+            ),
+            (
+                "<!doctype html><table><caption><i>Cap</table>",
+                "end tag `</table>`",
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "unexpected-token-in-caption",
+                    format!(
+                        "{token} closed a caption while a non-caption node remained current after implied-end-tag generation"
+                    ),
+                )],
+                "source {source:?}"
+            );
+        }
+
+        for source in [
+            "<!doctype html><table><caption>Cap<col></table>",
+            "<!doctype html><table><caption><p>Cap<col></table>",
+            "<!doctype html><table><caption><option>Cap</table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.is_empty(), "source {source:?}");
+        }
+
+        let recovered =
+            parse_html("<!doctype html><table><caption><i>Cap</table><p>After").unwrap();
+        let body = body(&recovered);
+        assert_eq!(element(&body.children[0]).name, "table");
+        assert_eq!(element(&body.children[1]).name, "p");
+        assert_eq!(
+            element(&body.children[1]).children,
+            vec![Node::text("After")]
         );
     }
 
