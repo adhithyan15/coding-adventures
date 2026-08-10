@@ -1,0 +1,71 @@
+% ============================================================================
+% force-causes-acceleration — Newton's SECOND LAW's own general principle,
+% applied to every named force this library already knows an everyday example
+% of, DERIVED (not just looked up) (adj-facts-stdlib, PHYSICS). NGSS MS-PS2-2.
+% ============================================================================
+% A causal explanation, not a lookup: `newton-laws.adj` already tables WHICH
+% law is numbered 2 and names it "force"; `forces.adj` already tables five
+% named forces and the everyday NASA scene that illustrates each one. Neither
+% file states outright "gravity causes the waterfall to accelerate" as its own
+% row — but Newton's second law's own general statement ("the acceleration of
+% an object depends on... the amount of force applied") applies to ANY force
+% acting on ANY object, and `forces.adj`'s gravity row already quotes NASA's
+% own causal sentence for its specific example ("gravity... causes it to
+% accelerate downward"). So the general LAW (cited once, from `newton-laws.adj`)
+% composed with each SPECIFIC force->example fact (cited once each, from
+% `forces.adj`) DERIVES a `force_causes_acceleration(force, example)` relation
+% for all five — exactly the same "general principle + specific fact ->
+% derived, dual-cited conclusion" composition discipline
+% `geometry/shape-composition.adj` and `language/word-families.adj` already
+% established, applied here to a genuinely CROSS-FILE pair of ALREADY-SHIPPED
+% physics tables (mirroring `heat-causes-phase-change.adj`'s precedent).
+%
+%     import "force-causes-acceleration.adj"
+%     ? force_causes_acceleration(gravity, $Ex)   % waterfall
+%     ? force_causes_acceleration($F, wheels)     % friction
+%     ? force_causes_acceleration(magnetism, $Ex) % abstain -- not a tabled force
+%
+% This is a native `rule` (ADJ-TABLES RS-6): its body binds `$Force`/`$Example`
+% through the already-shipped `force_example` table, then GUARDS on the
+% already-shipped `newton_law(2, force)` fact (a fully-bound check, not a
+% binding premise -- confirms we are actually invoking the SECOND law before
+% deriving anything). A query's `steps` trail therefore shows THREE entries:
+% the rule's own citation (the general law), the `force_example` fact's
+% citation (the specific example), and the `newton_law` fact's citation --
+% so a human can independently verify each link. Honest abstention on any
+% force `forces.adj` does not table (magnetism, the normal force, air
+% resistance) -- the rule only derives what its premises can ground.
+%
+% Deliberately scoped to Newton's SECOND law only (F = m·a governs any force's
+% relationship to acceleration) -- the first law (inertia: an object's motion
+% does NOT change without a net force) and third law (action-reaction pairs)
+% describe different causal relationships and are left for a later pass, the
+% same "keep each slice small and citable" discipline every prior curriculum
+% item in this loop has used. Grounds NGSS MS-PS2-2 ("the change in an
+% object's motion depends on the sum of forces on the object and the mass of
+% the object"), a direct qualitative statement of the same second-law
+% relationship this rule derives.
+%
+% ---------------------------------------------------------------------------
+% Provenance: this file adds NO new fact rows and needs no fresh sourcing --
+% it composes two citations already WebFetch-verified and shipped in this
+% repo. The rule's own `source`/`locator`/`trust` below quote the SAME NASA
+% Beginner's Guide to Aeronautics sentence `newton-laws.adj`'s header already
+% documents for law 2 ("The acceleration of an object depends on the mass of
+% the object and the amount of force applied."), `trust authoritative` (a
+% primary U.S. government NASA source, matching both composed tables' own
+% trust tier). Each specific force->example fact keeps ITS OWN citation from
+% `forces.adj` (the NASA Goddard Swift mission poster), visible in every
+% query's `steps` trail.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+import "newton-laws.adj"
+import "forces.adj"
+
+rule { head: force_causes_acceleration($Force, $Example)
+       when: force_example($Force, $Example), newton_law(2, force)
+       source "The acceleration of an object depends on the mass of the object and the amount of force applied."
+       locator "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/newtons-laws-of-motion/"
+       trust authoritative }
