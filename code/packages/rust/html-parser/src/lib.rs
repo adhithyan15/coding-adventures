@@ -5320,19 +5320,14 @@ impl HtmlParser {
             self.close_element("table");
         }
 
-        if !in_foreign_content
-            && name == "form"
-            && self.current_element_is_table_structure()
-            && self.form_element_pointer_set
-        {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "nested-form-start-tag",
-                "form start tag inside a table was ignored while a form was already open",
-            ));
-            return;
-        }
-
         if !in_foreign_content && name == "form" && self.current_element_is_table_structure() {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-form-start-tag-in-table",
+                "form start tag in a table context was processed with a parse error",
+            ));
+            if self.form_element_pointer_set {
+                return;
+            }
             self.form_element_pointer_set = true;
             self.append_node(Node::element(name, attributes));
             return;
@@ -31464,6 +31459,41 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| { diagnostic.code != "unexpected-table-start-tag-in-table" }));
+    }
+
+    #[test]
+    fn reports_form_start_tags_processed_in_table_mode() {
+        let output =
+            parse_html_with_diagnostics("<!doctype html><table><form><form></table>").unwrap();
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![
+                ParserDiagnostic::new(
+                    "unexpected-form-start-tag-in-table",
+                    "form start tag in a table context was processed with a parse error",
+                ),
+                ParserDiagnostic::new(
+                    "unexpected-form-start-tag-in-table",
+                    "form start tag in a table context was processed with a parse error",
+                ),
+            ]
+        );
+
+        let table = element(&body(&output.document).children[0]);
+        assert_eq!(table.name, "table");
+        assert_eq!(table.children.len(), 1);
+        assert_eq!(element(&table.children[0]).name, "form");
+
+        for source in [
+            "<!doctype html><form></form>",
+            "<!doctype html><table><tr><td><form></form></td></tr></table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| { diagnostic.code != "unexpected-form-start-tag-in-table" }));
+        }
     }
 
     #[test]

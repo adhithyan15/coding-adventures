@@ -102,6 +102,10 @@ Prioritized work items:
    open table and reprocesses the token, matching the minimal WPT
    `tests6.dat` `<table><table>` evidence while leaving tables nested inside
    cells quiet.
+   `form` start tags processed in table mode now report the required parse
+   error both when the form pointer is initially null and when a repeated form
+   is ignored, matching WPT `tests20.dat` `unexpected-form-in-table` evidence
+   while leaving forms inside cells quiet.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases

@@ -6,6 +6,10 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- `form` start tags processed in table mode now report the required parse
+  error whether the form element pointer is initially null or already set.
+  The first form retains its special detached insertion behavior, while a
+  repeated form is still ignored.
 - A `table` start tag processed in table mode now reports the current-Standard
   parse error before closing the open table and reprocessing the token. Nested
   tables inside cells remain valid and diagnostic-free.
