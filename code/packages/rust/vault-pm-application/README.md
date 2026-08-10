@@ -237,9 +237,21 @@ closed authentication failure.
 Success remains inside an opaque non-cloneable application object exposing only
 item and candidate counts. Source identities, bootstrap bytes, metadata, and
 documents have no public accessor; diagnostics are redacted and all intermediate
-secret-bearing buffers and CBOR trees wipe on every path. Cross-vault import is
-still separate: its follow-up must consume the opaque snapshot and create new
-item, revision, object, and encryption identities inside a new target vault.
+secret-bearing buffers and CBOR trees wipe on every path.
+
+An untouched empty generation-zero target can consume that opaque snapshot in
+one atomic cross-vault import. The host asks the application for the exact
+count-derived CSPRNG byte requirement, then supplies the owned entropy block and
+an advisory commit time. Import rejects the source vault, a mutated/non-empty
+target, stale pins, identity collisions, and snapshots that exceed one 4,096
+object publication. It creates a new target item identity per source item and a
+new encrypted target revision per retained live, tombstone, or conflict
+candidate, preserves complete validated record/CRDT/deletion state, intentionally
+drops non-portable source causal-parent identities, and seals a new target
+catalog and signed commit. The ordinary write-ahead pending journal makes the
+complete restore crash-resumable without partial logical visibility. The source
+snapshot, imported plaintexts, and entropy remain non-printable and wipe on
+drop.
 
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
@@ -278,9 +290,9 @@ diagnostics; and failure without repair.
 Search tests cover Unicode normalization, short queries, oversized safe-field
 fallback, exact collection filters, deterministic product ordering, every
 record schema's allowlist/denylist, secret exclusion, query/result bounds, and
-conflict closure. The exact Tarpaulin LLVM result is 2,894 of 3,042 production
-lines (95.13%); portable export and opening are 367 of 394, doctor is 44 of 45,
-and status remains 46 of 46.
+conflict closure. The exact Tarpaulin LLVM result is 3,086 of 3,245 production
+lines (95.10%); portable export/opening is 374 of 401, mutation including
+portable import is 475 of 504, doctor is 44 of 45, and status remains 46 of 46.
 Add-item tests cover exact
 entropy partitioning and wiping,
 identity validation before local writes, parentless revision and complete
@@ -297,12 +309,15 @@ tombstone selection, authored merged-secret persistence, complete multi-parent
 causality, immutable live-identity preservation, immutable losing-candidate
 retention, missing/unconflicted/all-tombstone rejection before
 compare-exchange, and entropy redaction/wiping.
-Portable-export/open tests prove the exact canonical encrypted vector, separate
+Portable-export/open/import tests prove the exact canonical encrypted vector, separate
 passphrase authentication, header/ciphertext tamper rejection, exact active
 bootstrap binding, plaintext-secret exclusion, complete snapshot count/hash,
 signed-bootstrap validation, host KDF-ceiling enforcement, candidate identity
 and ordering validation, live-document recovery, bounded credential rejection,
-and lossless retention of every current conflicting tombstone.
+lossless retention of every current conflicting tombstone, exact import entropy
+sizing, cross-vault item/revision re-identification, target-only encryption,
+atomic publication, conflict/deletion preservation, and independent target
+reopen with aggregate and revealed-secret comparison.
 
 ## Development
 

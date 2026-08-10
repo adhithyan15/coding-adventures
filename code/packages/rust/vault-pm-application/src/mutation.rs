@@ -9,7 +9,7 @@ use coding_adventures_vault_pm_domain::{
     ItemCandidate, ItemDocument, ItemId, ItemState, RevisionId, Tombstone,
 };
 use coding_adventures_vault_pm_format::{AnnouncementV1, CommitV1, Signature};
-use coding_adventures_vault_pm_repository::{OpenReport, PinnedHeads};
+use coding_adventures_vault_pm_repository::{OpenReport, PinnedHeads, MAX_PUBLICATION_OBJECTS};
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use core::fmt::{self, Debug, Formatter};
 use std::collections::{BTreeMap, BTreeSet};
@@ -27,6 +27,93 @@ pub const DELETE_ITEM_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES;
 pub const RESTORE_ITEM_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES;
 /// Exact caller-filled CSPRNG bytes consumed by one conflict-resolution mutation.
 pub const RESOLVE_ITEM_CONFLICT_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES;
+
+/// Return the exact caller-CSPRNG byte count required to import one opened
+/// portable snapshot.
+///
+/// Import allocates one new 16-byte item identity per source item, one fresh
+/// encrypted revision frame per retained candidate, and fresh catalog and
+/// commit frames. Snapshots too large for one atomic repository publication
+/// are rejected before entropy is accepted.
+pub fn portable_import_random_bytes(
+    snapshot: &crate::OpenedPortableSnapshotV1,
+) -> Result<usize, ApplicationError> {
+    portable_import_random_bytes_for_counts(snapshot.item_count(), snapshot.candidate_count())
+}
+
+fn portable_import_random_bytes_for_counts(
+    item_count: usize,
+    candidate_count: usize,
+) -> Result<usize, ApplicationError> {
+    if candidate_count
+        .checked_add(1)
+        .is_none_or(|object_count| object_count > MAX_PUBLICATION_OBJECTS)
+    {
+        return Err(ApplicationError::BoundExceeded);
+    }
+    ITEM_ID_BYTES
+        .checked_mul(item_count)
+        .and_then(|item_bytes| {
+            OBJECT_RANDOM_BYTES
+                .checked_mul(candidate_count.checked_add(2)?)
+                .and_then(|object_bytes| item_bytes.checked_add(object_bytes))
+        })
+        .ok_or(ApplicationError::BoundExceeded)
+}
+
+/// Owned wipe-on-drop entropy for one atomic cross-vault portable import.
+pub struct PortableImportRandomnessV1 {
+    bytes: Vec<u8>,
+    item_count: usize,
+    candidate_count: usize,
+}
+
+impl PortableImportRandomnessV1 {
+    /// Validate and take the exact host-CSPRNG bytes required by `snapshot`.
+    pub fn new(
+        mut bytes: Vec<u8>,
+        snapshot: &crate::OpenedPortableSnapshotV1,
+    ) -> Result<Self, ApplicationError> {
+        let item_count = snapshot.item_count();
+        let candidate_count = snapshot.candidate_count();
+        let expected = match portable_import_random_bytes_for_counts(item_count, candidate_count) {
+            Ok(expected) => expected,
+            Err(error) => {
+                bytes.zeroize();
+                return Err(error);
+            }
+        };
+        if bytes.len() != expected {
+            bytes.zeroize();
+            return Err(ApplicationError::InvalidInput);
+        }
+        Ok(Self {
+            bytes,
+            item_count,
+            candidate_count,
+        })
+    }
+}
+
+impl Zeroize for PortableImportRandomnessV1 {
+    fn zeroize(&mut self) {
+        self.bytes.zeroize();
+        self.item_count = 0;
+        self.candidate_count = 0;
+    }
+}
+
+impl Drop for PortableImportRandomnessV1 {
+    fn drop(&mut self) {
+        self.zeroize();
+    }
+}
+
+impl Debug for PortableImportRandomnessV1 {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter.write_str("PortableImportRandomnessV1(<redacted>)")
+    }
+}
 
 /// Owned wipe-on-drop entropy for one item ID and three encrypted frames.
 pub struct AddItemRandomnessV1 {
@@ -184,6 +271,238 @@ impl Drop for ResolveItemConflictRandomnessV1 {
 impl Debug for ResolveItemConflictRandomnessV1 {
     fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
         formatter.write_str("ResolveItemConflictRandomnessV1(<redacted>)")
+    }
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn import_opened_portable_snapshot(
+    active: &ActiveStateV1,
+    report: &OpenReport,
+    current_items: &BTreeMap<ItemId, Vec<ItemCandidate>>,
+    keys: &V1Keys,
+    local_secret: &LocalSecretV1,
+    repository: &dyn ApplicationRepository,
+    snapshot: crate::OpenedPortableSnapshotV1,
+    wall_time_ms: u64,
+    randomness: PortableImportRandomnessV1,
+    local_state_store: &dyn LocalStateStore,
+) -> Result<ActiveStateV1, ApplicationError> {
+    if report.heads() != active.pinned_heads() {
+        return Err(ApplicationError::ConcurrentHost);
+    }
+    if active.last_device_counter() != 1 || !current_items.is_empty() {
+        return Err(ApplicationError::InvalidInput);
+    }
+    if randomness.item_count != snapshot.item_count()
+        || randomness.candidate_count != snapshot.candidate_count()
+        || randomness.bytes.len()
+            != portable_import_random_bytes_for_counts(
+                snapshot.item_count(),
+                snapshot.candidate_count(),
+            )?
+    {
+        return Err(ApplicationError::InvalidInput);
+    }
+
+    let (source_vault_id, source_items) = snapshot.into_import_parts();
+    if source_vault_id == active.vault_id() {
+        return Err(ApplicationError::InvalidInput);
+    }
+
+    let publication = prepare_portable_import_publication(
+        active,
+        keys,
+        local_secret,
+        source_items,
+        wall_time_ms,
+        &randomness.bytes,
+    )?;
+    publish_mutation(active, repository, publication, local_state_store)
+}
+
+fn prepare_portable_import_publication(
+    active: &ActiveStateV1,
+    keys: &V1Keys,
+    local_secret: &LocalSecretV1,
+    source_items: BTreeMap<ItemId, Vec<ItemCandidate>>,
+    wall_time_ms: u64,
+    randomness: &[u8],
+) -> Result<PublicationJournalV1, ApplicationError> {
+    let item_count = source_items.len();
+    let candidate_count = source_items.values().map(Vec::len).sum();
+    if randomness.len() != portable_import_random_bytes_for_counts(item_count, candidate_count)? {
+        return Err(ApplicationError::InvalidInput);
+    }
+
+    let device_counter = active
+        .last_device_counter()
+        .checked_add(1)
+        .ok_or(ApplicationError::BoundExceeded)?;
+    let source_item_ids = source_items.keys().copied().collect::<BTreeSet<_>>();
+    let source_revision_ids = source_items
+        .values()
+        .flatten()
+        .map(ItemCandidate::revision_id)
+        .collect::<BTreeSet<_>>();
+    let mut offset = 0;
+    let mut imported_item_ids = BTreeSet::new();
+    let mut item_id_map = BTreeMap::new();
+    for source_item_id in source_items.keys() {
+        let imported_item_id = ItemId::new(take_slice(randomness, &mut offset));
+        if source_item_ids.contains(&imported_item_id)
+            || !imported_item_ids.insert(imported_item_id)
+        {
+            return Err(ApplicationError::InvalidInput);
+        }
+        item_id_map.insert(*source_item_id, imported_item_id);
+    }
+
+    let mut objects = Vec::with_capacity(candidate_count + 1);
+    let mut catalog_entries = BTreeMap::new();
+    let mut added_objects = Vec::with_capacity(candidate_count + 1);
+    for (source_item_id, candidates) in source_items {
+        let imported_item_id = item_id_map[&source_item_id];
+        let mut imported_revision_ids = Vec::with_capacity(candidates.len());
+        for candidate in candidates {
+            if candidate.item_id() != source_item_id {
+                return Err(ApplicationError::IntegrityFailure);
+            }
+            let imported_state = remap_imported_item_state(candidate.state(), imported_item_id)?;
+            let revision_plaintext =
+                Zeroizing::new(encode_item_revision(&BTreeSet::new(), &imported_state)?);
+            let revision_frame = seal_object(
+                keys,
+                ObjectKind::ItemRevision,
+                &revision_plaintext,
+                &take_object_randomness_slice(randomness, &mut offset),
+            )?;
+            let revision_object_id = revision_frame
+                .id()
+                .map_err(|_| ApplicationError::InternalInvariant)?;
+            let revision_id = RevisionId::new(*revision_object_id.as_bytes());
+            if source_revision_ids.contains(&revision_id)
+                || imported_revision_ids.contains(&revision_id)
+                || added_objects.contains(&revision_object_id)
+            {
+                return Err(ApplicationError::InvalidInput);
+            }
+            imported_revision_ids.push(revision_id);
+            added_objects.push(revision_object_id);
+            objects.push(revision_frame);
+        }
+        imported_revision_ids.sort_unstable();
+        catalog_entries.insert(imported_item_id, imported_revision_ids);
+    }
+
+    let catalog_plaintext = Zeroizing::new(CatalogV1::new(catalog_entries)?.encode()?);
+    let catalog_frame = seal_object(
+        keys,
+        ObjectKind::Catalog,
+        &catalog_plaintext,
+        &take_object_randomness_slice(randomness, &mut offset),
+    )?;
+    let catalog_id = catalog_frame
+        .id()
+        .map_err(|_| ApplicationError::InternalInvariant)?;
+    if added_objects.contains(&catalog_id) {
+        return Err(ApplicationError::InvalidInput);
+    }
+    added_objects.push(catalog_id);
+    objects.push(catalog_frame);
+
+    let mut parents = active.pinned_heads().iter().copied().collect::<Vec<_>>();
+    parents.sort_unstable();
+    added_objects.sort_unstable();
+    added_objects.dedup();
+    if added_objects.len() != objects.len() {
+        return Err(ApplicationError::InternalInvariant);
+    }
+    let (_, device_signing_secret) = generate_keypair(local_secret.device_signing_seed());
+    let device_signing_secret = Zeroizing::new(device_signing_secret);
+    let unsigned_commit = CommitV1 {
+        vault_id: active.vault_id(),
+        device_id: active.device_id(),
+        device_counter,
+        parents,
+        catalog_root: catalog_id,
+        added_objects,
+        tombstone_root: None,
+        wall_time_ms,
+        device_certificate: active.device_certificate_id(),
+        signature: Signature::new([0; 64]),
+    };
+    let commit_preimage = unsigned_commit
+        .signing_preimage()
+        .map_err(|_| ApplicationError::InternalInvariant)?;
+    let commit = unsigned_commit.with_signature(Signature::new(sign(
+        &commit_preimage,
+        &device_signing_secret,
+    )));
+    let commit_plaintext = Zeroizing::new(encode_signed_commit(&commit)?);
+    let commit_frame = seal_object(
+        keys,
+        ObjectKind::Commit,
+        &commit_plaintext,
+        &take_object_randomness_slice(randomness, &mut offset),
+    )?;
+    debug_assert_eq!(offset, randomness.len());
+    let commit_id = commit_frame
+        .id()
+        .map_err(|_| ApplicationError::InternalInvariant)?;
+    let unsigned_announcement = AnnouncementV1 {
+        vault_id: active.vault_id(),
+        device_id: active.device_id(),
+        device_counter,
+        commit_id,
+        device_certificate: active.device_certificate_id(),
+        signature: Signature::new([0; 64]),
+    };
+    let announcement_preimage = unsigned_announcement
+        .signing_preimage()
+        .map_err(|_| ApplicationError::InternalInvariant)?;
+    let announcement = unsigned_announcement
+        .with_signature(Signature::new(sign(
+            &announcement_preimage,
+            &device_signing_secret,
+        )))
+        .encode()
+        .map_err(|_| ApplicationError::InternalInvariant)?;
+    let expected_heads =
+        PinnedHeads::new([commit_id]).map_err(|_| ApplicationError::InternalInvariant)?;
+
+    PublicationJournalV1::new(
+        objects,
+        commit_frame,
+        announcement,
+        active.pinned_heads().clone(),
+        expected_heads,
+        device_counter,
+        catalog_id,
+    )
+}
+
+fn remap_imported_item_state(
+    state: &ItemState,
+    item_id: ItemId,
+) -> Result<ItemState, ApplicationError> {
+    match state {
+        ItemState::Live(document) => ItemDocument::new(
+            item_id,
+            document.schema().clone(),
+            document.created_at_ms(),
+            document.updated_at_ms(),
+            document.favorite().clone(),
+            document.collection_ids().clone(),
+            document.tags().clone(),
+            document.payload().clone(),
+            document.attachments().clone(),
+        )
+        .map(|document| ItemState::Live(Box::new(document)))
+        .map_err(|_| ApplicationError::IntegrityFailure),
+        ItemState::Tombstone(tombstone) => Ok(ItemState::Tombstone(Tombstone {
+            item_id,
+            deleted_at_ms: tombstone.deleted_at_ms,
+        })),
     }
 }
 
@@ -673,11 +992,30 @@ fn take_object_randomness(
     )
 }
 
+fn take_object_randomness_slice(bytes: &[u8], offset: &mut usize) -> ObjectRandomness {
+    ObjectRandomness::new(
+        take_slice(bytes, offset),
+        take_slice(bytes, offset),
+        take_slice(bytes, offset),
+    )
+}
+
 fn take<const N: usize>(bytes: &[u8; REPLACE_ITEM_RANDOM_BYTES], offset: &mut usize) -> [u8; N] {
     let end = *offset + N;
     let value = bytes[*offset..end]
         .try_into()
         .expect("add-item partition lengths are constant");
+    *offset = end;
+    value
+}
+
+fn take_slice<const N: usize>(bytes: &[u8], offset: &mut usize) -> [u8; N] {
+    let end = offset
+        .checked_add(N)
+        .expect("validated import randomness offset cannot overflow");
+    let value = bytes[*offset..end]
+        .try_into()
+        .expect("validated import randomness partition must be exact");
     *offset = end;
     value
 }
@@ -770,6 +1108,33 @@ mod tests {
 
         randomness.zeroize();
         assert!(randomness.bytes.iter().all(|byte| *byte == 0));
+    }
+
+    #[test]
+    fn portable_import_randomness_is_exact_bounded_redacted_and_zeroizing() {
+        assert_eq!(portable_import_random_bytes_for_counts(2, 3), Ok(432));
+        assert_eq!(
+            portable_import_random_bytes_for_counts(1, MAX_PUBLICATION_OBJECTS),
+            Err(ApplicationError::BoundExceeded)
+        );
+        assert_eq!(
+            portable_import_random_bytes_for_counts(usize::MAX, 0),
+            Err(ApplicationError::BoundExceeded)
+        );
+
+        let mut randomness = PortableImportRandomnessV1 {
+            bytes: vec![0x87; 432],
+            item_count: 2,
+            candidate_count: 3,
+        };
+        assert_eq!(
+            format!("{randomness:?}"),
+            "PortableImportRandomnessV1(<redacted>)"
+        );
+        randomness.zeroize();
+        assert!(randomness.bytes.iter().all(|byte| *byte == 0));
+        assert_eq!(randomness.item_count, 0);
+        assert_eq!(randomness.candidate_count, 0);
     }
 
     #[test]

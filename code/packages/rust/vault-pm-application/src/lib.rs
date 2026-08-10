@@ -50,10 +50,10 @@ pub use initialize::{
 };
 pub use lifecycle::{LockedVaultV1, VaultAccessV1};
 pub use mutation::{
-    AddItemRandomnessV1, DeleteItemRandomnessV1, ReplaceItemRandomnessV1,
-    ResolveItemConflictRandomnessV1, RestoreItemRandomnessV1, ADD_ITEM_RANDOM_BYTES,
-    DELETE_ITEM_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES, RESOLVE_ITEM_CONFLICT_RANDOM_BYTES,
-    RESTORE_ITEM_RANDOM_BYTES,
+    portable_import_random_bytes, AddItemRandomnessV1, DeleteItemRandomnessV1,
+    PortableImportRandomnessV1, ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1,
+    RestoreItemRandomnessV1, ADD_ITEM_RANDOM_BYTES, DELETE_ITEM_RANDOM_BYTES,
+    REPLACE_ITEM_RANDOM_BYTES, RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
 };
 pub use open::{
     open_active_vault, recover_pending_publication, ItemHistoryViewV1, UnlockedVaultV1,
