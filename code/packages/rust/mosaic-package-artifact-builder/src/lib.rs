@@ -375,6 +375,83 @@ impl From<ManifestError> for BuildError {
     }
 }
 
+/// Canonical three-language result after package composition.
+///
+/// Both package artifact builds and standalone `mosaic-compile` pipeline
+/// builds consume this type so qualified dependency layouts and their styles
+/// cannot drift between entry points.
+#[derive(Debug, Clone)]
+pub struct ComposedComponent {
+    pub model: mosmodel_compiler::CompileOutput,
+    pub layout: moslayout_compiler::CompileOutput,
+    pub style: mosstyle_compiler::StyleDef,
+}
+
+/// Compile MIL, MLL, and MSL sources into one package-composed component.
+///
+/// Qualified `pkg::P::C` layout nodes are resolved recursively before
+/// emission. Styles from those dependencies are collected in the same order
+/// and placed before the component's own styles, preserving the existing
+/// parent-overrides-dependency cascade.
+pub fn compose_component(
+    component: &str,
+    mil_src: &str,
+    mll_src: &str,
+    msl_src: &str,
+    package_search_paths: &[PathBuf],
+    theme: Option<&str>,
+) -> Result<ComposedComponent, BuildError> {
+    let model =
+        mosmodel_compiler::compile(mil_src).map_err(|errs| pipeline_err(component, &errs[0]))?;
+    compose_component_with_model(
+        component,
+        model,
+        mll_src,
+        msl_src,
+        package_search_paths,
+        theme,
+    )
+}
+
+/// Complete package composition from an interface model compiled by a caller.
+///
+/// This variant lets CLI entry points inspect the component name before layout
+/// path resolution without compiling the MIL source a second time.
+pub fn compose_component_with_model(
+    component: &str,
+    model: mosmodel_compiler::CompileOutput,
+    mll_src: &str,
+    msl_src: &str,
+    package_search_paths: &[PathBuf],
+    theme: Option<&str>,
+) -> Result<ComposedComponent, BuildError> {
+    let mut layout = moslayout_compiler::compile(mll_src, Some(&model.descriptor_json))
+        .map_err(|errs| pipeline_err(component, &errs[0]))?;
+    let dependency_style_parts = collect_dependency_style_parts(
+        component,
+        &layout.def,
+        package_search_paths,
+        theme,
+        &mut Vec::new(),
+        &mut HashSet::new(),
+    )?;
+    resolve_layout_package_references(
+        component,
+        &mut layout,
+        &model.descriptor_json,
+        package_search_paths,
+    )?;
+    let own_style = mosstyle_compiler::compile(msl_src, Some(&layout.part_map_json))
+        .map_err(|errs| pipeline_err(component, &errs[0]))?;
+    let style = merge_dependency_styles(own_style.def, dependency_style_parts);
+
+    Ok(ComposedComponent {
+        model,
+        layout,
+        style,
+    })
+}
+
 // ===========================================================================
 // Public entry point
 // ===========================================================================
@@ -773,27 +850,17 @@ fn emit_project_shell(
         format!("style {component} {{ }}")
     };
 
-    let mosmodel_out =
-        mosmodel_compiler::compile(&mil_src).map_err(|errs| pipeline_err(component, &errs[0]))?;
-    let mut layout_out = moslayout_compiler::compile(&mll_src, Some(&mosmodel_out.descriptor_json))
-        .map_err(|errs| pipeline_err(component, &errs[0]))?;
-    let dependency_style_parts = collect_dependency_style_parts(
+    let composed = compose_component(
         component,
-        &layout_out.def,
+        &mil_src,
+        &mll_src,
+        &msl_src,
         package_search_paths,
         theme,
-        &mut Vec::new(),
-        &mut HashSet::new(),
     )?;
-    resolve_layout_package_references(
-        component,
-        &mut layout_out,
-        &mosmodel_out.descriptor_json,
-        package_search_paths,
-    )?;
-    let style_out = mosstyle_compiler::compile(&msl_src, Some(&layout_out.part_map_json))
-        .map_err(|errs| pipeline_err(component, &errs[0]))?;
-    let style_def = merge_dependency_styles(style_out.def, dependency_style_parts);
+    let mosmodel_out = composed.model;
+    let layout_out = composed.layout;
+    let style_def = composed.style;
 
     // Per-backend dispatch. Each branch builds an EmitOptions with
     // emit_project: true, calls the appropriate from_pipeline_with_options,
@@ -1649,29 +1716,17 @@ fn compile_one_component(
     // Each compile call may return a `Vec<CompileError>`. We render the
     // first one and wrap it as `PipelineError` so the caller gets one
     // line per component rather than a flood.
-    let mosmodel_out =
-        mosmodel_compiler::compile(&mil_src).map_err(|errs| pipeline_err(component, &errs[0]))?;
-
-    let mut layout_out = moslayout_compiler::compile(&mll_src, Some(&mosmodel_out.descriptor_json))
-        .map_err(|errs| pipeline_err(component, &errs[0]))?;
-    let dependency_style_parts = collect_dependency_style_parts(
+    let composed = compose_component(
         component,
-        &layout_out.def,
+        &mil_src,
+        &mll_src,
+        &msl_src,
         package_search_paths,
         theme,
-        &mut Vec::new(),
-        &mut HashSet::new(),
     )?;
-    resolve_layout_package_references(
-        component,
-        &mut layout_out,
-        &mosmodel_out.descriptor_json,
-        package_search_paths,
-    )?;
-
-    let style_out = mosstyle_compiler::compile(&msl_src, Some(&layout_out.part_map_json))
-        .map_err(|errs| pipeline_err(component, &errs[0]))?;
-    let style_def = merge_dependency_styles(style_out.def, dependency_style_parts);
+    let mosmodel_out = composed.model;
+    let layout_out = composed.layout;
+    let style_def = composed.style;
     let lattice = mosstyle_compiler::emit_lattice(&style_def);
 
     // ----- 3. Hand the three IRs to the chosen backend ---------------------

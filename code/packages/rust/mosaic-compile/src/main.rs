@@ -26,17 +26,18 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::process;
 
-// UI34 PR-3 — package-reference resolver.  Wired into the
-// `run_pipeline` path between `moslayout_compiler::compile()` and the
-// backend emitter so every `pkg::P::C` reference in the consumer's
-// layout is substituted before any emitter sees it.
+// Package composition is delegated to mosaic-package-artifact-builder so the
+// standalone and package CLI entry points share layout resolution and style
+// merging before any backend sees the component.
 use cli_builder::types::ParserOutput;
 use cli_builder::{load_spec_from_file, Parser};
 use mosaic_analyzer::analyze;
 use mosaic_emit_html::HtmlRenderer;
 use mosaic_emit_react::ReactRenderer;
 use mosaic_emit_webcomponent::WebComponentRenderer;
-use mosaic_package_artifact_builder::{build_package, Backend, BuildOptions};
+use mosaic_package_artifact_builder::{
+    build_package, compose_component_with_model, Backend, BuildOptions,
+};
 use mosaic_vm::MosaicVM;
 
 // ===========================================================================
@@ -661,15 +662,6 @@ fn run_pipeline(
     // every `@slot` and `emit onX` reference resolves correctly.
     let layout_path = resolved_layout_path.as_str();
     let layout_src = read_file_or_die(layout_path);
-    let mut layout_out =
-        moslayout_compiler::compile(&layout_src, Some(&mosmodel_out.descriptor_json))
-            .unwrap_or_else(|errs| {
-                eprintln!("mosaic-compile: moslayout error(s) in {layout_path}:");
-                for e in errs {
-                    eprintln!("  {e:?}");
-                }
-                process::exit(1);
-            });
 
     // -- 2b. UI34 — resolve `pkg::P::C` qualified references -------------
     //
@@ -702,58 +694,29 @@ fn run_pipeline(
             paths
         }
     };
-    let resolver = mosaic_package_resolver::LayoutPackageResolver::new(search_paths);
-    if let Err(e) = resolver.resolve(&mut layout_out.def) {
-        eprintln!("mosaic-compile: package-resolver error in {layout_path}:");
-        eprintln!("  {e:?}");
-        process::exit(1);
-    }
-    if let Some(t) = mosaic_package_resolver::first_qualified_tag(&layout_out.def.root) {
-        // Defensive — the resolver should leave no qualified tags
-        // behind.  If one slips through we exit cleanly rather than
-        // letting it confuse the backend emitter.
-        eprintln!(
-            "mosaic-compile: internal error: package-resolver left \
-             qualified tag `{t}` in the layout"
-        );
-        process::exit(1);
-    }
-    // Re-run `validate()` on the resolved tree so the part-map JSON
-    // reflects the package's inlined parts.  Without this, the
-    // consumer's `.msl` would reject the package's part names as
-    // unknown — they came from the package's `.mll`, not the
-    // consumer's.  Resolution is also a chance for the validator to
-    // catch any slot/emit mismatches that survived the package call,
-    // surfacing them with the same UnknownSlot / UnknownEmit
-    // diagnostics that pre-UI34 builds get.
-    let resolved_parts =
-        moslayout_compiler::validate(&layout_out.def, Some(&mosmodel_out.descriptor_json))
-            .unwrap_or_else(|errs| {
-                eprintln!(
-                    "mosaic-compile: moslayout post-resolver validation error(s) in {layout_path}:"
-                );
-                for e in errs {
-                    eprintln!("  {e:?}");
-                }
-                process::exit(1);
-            });
-    layout_out.parts = resolved_parts;
-    layout_out.part_map_json =
-        moslayout_compiler::emit_part_map_json(&layout_out.def.component_name, &layout_out.parts);
-
-    // -- 3. Compile the mosstyle file ---------------------------------------
+    // -- 3. Compose package layout + style ----------------------------------
     //
-    // The part map JSON from moslayout tells mosstyle which part names are
-    // legal targets for style blocks.
+    // The shared package-composition path resolves qualified dependency
+    // layouts, rebuilds the resolved part map, and merges dependency styles
+    // before any backend sees the component. Package and standalone builds
+    // therefore consume identical composed IR.
     let style_src = read_file_or_die(style_path);
-    let style_out = mosstyle_compiler::compile(&style_src, Some(&layout_out.part_map_json))
-        .unwrap_or_else(|errs| {
-            eprintln!("mosaic-compile: mosstyle error(s) in {style_path}:");
-            for e in errs {
-                eprintln!("  {e:?}");
-            }
-            process::exit(1);
-        });
+    let component_name = mosmodel_out.component.component.clone();
+    let composed = compose_component_with_model(
+        &component_name,
+        mosmodel_out,
+        &layout_src,
+        &style_src,
+        &search_paths,
+        None,
+    )
+    .unwrap_or_else(|error| {
+        eprintln!("mosaic-compile: package composition failed for {component_name}: {error}");
+        process::exit(1);
+    });
+    let mosmodel_out = composed.model;
+    let layout_out = composed.layout;
+    let style_def = composed.style;
 
     // -- 3b. Warn on style parts that match no layout part ------------------
     //
@@ -766,8 +729,7 @@ fn run_pipeline(
     // (Grid.light.msl used the legacy `sheet/cell` naming). Surface it here so
     // the typo can't hide: a warning by default, a hard error under
     // --strict-style for CI that wants to fail on stale stylesheets.
-    let unmatched =
-        mosstyle_compiler::unmatched_parts(&style_out.def, Some(&layout_out.part_map_json));
+    let unmatched = mosstyle_compiler::unmatched_parts(&style_def, Some(&layout_out.part_map_json));
     if !unmatched.is_empty() {
         let component = &layout_out.def.component_name;
         for u in &unmatched {
@@ -809,7 +771,7 @@ fn run_pipeline(
             let result = mosaic_emit_react::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
-                &style_out.def,
+                &style_def,
                 &react_opts,
             )
             .unwrap_or_else(|e| {
@@ -879,7 +841,7 @@ fn run_pipeline(
             let result = mosaic_emit_xaml::from_pipeline(
                 &mosmodel_out.component,
                 &layout_out.def,
-                &style_out.def,
+                &style_def,
                 registry.as_ref(),
                 &opts,
             )
@@ -968,7 +930,7 @@ fn run_pipeline(
             let result = mosaic_emit_html::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
-                &style_out.def,
+                &style_def,
                 &html_opts,
             )
             .unwrap_or_else(|e| {
@@ -1013,7 +975,7 @@ fn run_pipeline(
             let result = mosaic_emit_webcomponent::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
-                &style_out.def,
+                &style_def,
                 &wc_opts,
             )
             .unwrap_or_else(|e| {
@@ -1059,7 +1021,7 @@ fn run_pipeline(
             let result = mosaic_emit_swiftui::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
-                &style_out.def,
+                &style_def,
                 &sw_opts,
             )
             .unwrap_or_else(|e| {
@@ -1115,7 +1077,7 @@ fn run_pipeline(
             let result = mosaic_emit_qt::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
-                &style_out.def,
+                &style_def,
                 &qt_opts,
             )
             .unwrap_or_else(|e| {
@@ -1162,7 +1124,7 @@ fn run_pipeline(
             let result = mosaic_emit_flutter::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
-                &style_out.def,
+                &style_def,
                 &fl_opts,
             )
             .unwrap_or_else(|e| {
@@ -1216,7 +1178,7 @@ fn run_pipeline(
             let result = mosaic_emit_compose::from_pipeline(
                 &mosmodel_out.component,
                 &layout_out.def,
-                &style_out.def,
+                &style_def,
             )
             .unwrap_or_else(|e| {
                 eprintln!("mosaic-compile: compose pipeline emit error: {e}");

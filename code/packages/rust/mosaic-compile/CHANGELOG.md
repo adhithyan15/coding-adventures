@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Fixed - dependency styles in standalone pipeline mode
+
+Standalone `--interface` / `--layout` / `--style` builds now use the same
+package-composition API as `mosaic-compile pkg`. Qualified dependency layouts
+and their MSL styles therefore reach every backend together; reusable package
+components no longer render structurally correct but unstyled outside package
+mode.
+
 ### Added - `--theme` selector for the `pkg` subcommand
 
 `mosaic-compile pkg <ROOT> --backend <b> --output <dir> --theme <name>` selects
