@@ -2,6 +2,19 @@
 
 All notable changes to this crate are documented here.
 
+## 0.24.2 - 2026-08-10 — test: `__gc_safepoint` mid-incremental-cycle regression coverage
+
+- New `safepoint_is_a_no_op_during_an_incremental_cycle` test: drives the real
+  `__gc_collect_incremental_start/step/finish` C-ABI protocol and fires `__gc_safepoint`
+  mid-cycle (with live bytes deliberately pushed over the paced-collection threshold
+  first), asserting it's a safe no-op — no panic, no collection, the live object
+  untouched — then confirms the incremental cycle completes normally and paced
+  collection isn't permanently disabled afterward. Companion coverage for the
+  `gc-core` 0.33.2 fix (`FlatHeap::should_collect` now defers during an incremental
+  mark); see that crate's changelog for the full story. No functional change in this
+  crate — `__gc_safepoint` needed no code change here, since it already gates
+  entirely through `should_collect()`.
+
 ## 0.24.1 - 2026-08-10 — fix: deterministic flaky conservative-stack-scan smoke tests
 
 - Four `stack_scan` integration tests (`stack_scan_keeps_live_local_frees_dead`,
