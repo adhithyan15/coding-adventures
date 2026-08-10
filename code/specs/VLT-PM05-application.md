@@ -582,15 +582,62 @@ field API as current items. Restore always creates a new revision and commit;
 it never rewinds repository heads or mutates historical bytes.
 
 Portable export is one authenticated encrypted artifact containing a canonical
-snapshot of all current candidates, complete live documents/tombstones,
-bootstrap public metadata required for import, and a manifest count/hash. It is
-encrypted under a fresh export key or a separately collected export
-passphrase—never implicitly under the live VRK. Export excludes local device
-private state, provider credentials, local pins, and search indexes.
+snapshot of all current candidates, complete live documents/tombstones, the
+exact signed bootstrap needed to interpret the source, and a manifest
+count/hash. It is encrypted under a separately collected export passphrase,
+never implicitly under the live VRK or unlock passphrase. The host supplies the
+bounded Argon2id policy and exactly 40 fresh CSPRNG bytes: 16 bytes of salt,
+followed by a 24-byte XChaCha20 nonce. Empty passphrases and passphrases over
+1,024 bytes are rejected.
 
-Phase 1A returns export bytes to the host; it does not choose or write a path.
-Import and cross-vault re-identification are the next paired workflow and must
-create new object identities.
+The V1 artifact is closed canonical CBOR with integer keys:
+
+| Key | Value |
+|---:|---|
+| 1 | version `1` |
+| 2 | protection `1` (passphrase) |
+| 3 | crypto suite `1` |
+| 4 | Argon2id map `{1: memory_kib, 2: iterations, 3: lanes, 4: 16-byte salt}` |
+| 5 | 24-byte nonce |
+| 6 | XChaCha20-Poly1305 ciphertext |
+| 7 | 16-byte authentication tag |
+
+The 32-byte export key is the direct Argon2id output for the supplied
+passphrase and key-4 parameters. AEAD associated data is
+`"VPM-PORTABLE-EXPORT-AAD-v1" || canonical_cbor(header)`, where `header` is
+the artifact map containing exactly keys 1–5. Changing a version, protection
+mode, suite, KDF parameter, salt, or nonce therefore fails authentication.
+
+Authenticated plaintext is a closed canonical CBOR map:
+
+| Key | Value |
+|---:|---|
+| 1 | snapshot version `1` |
+| 2 | exact signed bootstrap bytes accepted by the active session |
+| 3 | candidate array |
+| 4 | candidate-array length |
+| 5 | 32-byte snapshot hash |
+
+Every candidate entry is `{1: source_item_id, 2: source_revision_id, 3:
+canonical_item_revision}`. Entries are ordered first by exact 16-byte item ID
+and then by exact 32-byte revision ID. Every current live, tombstone, and
+conflicting candidate is retained. The hash is
+`SHA-256("VPM-PORTABLE-SNAPSHOT-v1" || bootstrap_length_u64_be ||
+exact_bootstrap || canonical_cbor(candidate_array))`. The complete canonical
+plaintext is limited to 512 MiB.
+
+Export excludes owner-private local state, authority/device private seeds,
+provider credentials, local pins, recovery journals, and the rebuildable
+search projection. All passphrase, derived-key, plaintext, candidate-encoding,
+and hash-preimage buffers are owned by wipe-on-drop containers. Public export
+types redact their bytes from diagnostics.
+
+Phase 1A returns exact encrypted artifact bytes to the host; it does not choose
+or write a path, overwrite a destination, report backup completion, or retain
+provider authority. Authenticated artifact opening, snapshot-hash verification,
+and cross-vault import are the next paired workflow. Import must create a new
+vault and new item, revision, object, and encryption identities rather than
+publishing source identities into the target repository.
 
 ## 12. Audit and status
 

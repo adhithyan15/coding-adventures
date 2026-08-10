@@ -209,10 +209,27 @@ healthy, repository-unavailable, unsupported, and integrity-failure states.
 The report carries no counts or vault, device, item, revision, object, locator,
 or provider identities, and the workflow never repairs state or accepts pins.
 
+An unlocked session can now produce one canonical authenticated portable
+export. The caller supplies the exact active signed bootstrap, a separately
+collected owned passphrase, a bounded Argon2id policy, and exactly 40 host-CSPRNG
+bytes for the fresh salt and XChaCha20 nonce. The encrypted snapshot retains
+every current live, tombstone, and conflict candidate in deterministic
+item/revision order and binds its exact bootstrap, candidate count, and
+domain-separated snapshot hash. Header-bound AEAD authenticates the version,
+protection mode, suite, KDF policy, salt, and nonce. The artifact excludes
+owner-private state, private seeds, provider credentials, local pins, journals,
+and search data; public diagnostics reveal no bytes, while passphrase, key,
+plaintext, encoded revisions, and hash preimages are wiped on drop.
+
+The host receives only exact encrypted bytes and remains responsible for an
+explicit destination and safe file replacement. Public import is deliberately
+separate: its follow-up must authenticate and verify the artifact, then create
+new item, revision, object, and encryption identities inside a new target vault.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
 credential store, or entropy source. Host field clipboard implementation,
-portable export/restore preparation, and richer host-side path, authorization,
+portable import/restore, and richer host-side path, authorization,
 quota, and cache checks land in later slices.
 There is no unchecked
 repository verification path: construction decrypts and
@@ -246,8 +263,9 @@ diagnostics; and failure without repair.
 Search tests cover Unicode normalization, short queries, oversized safe-field
 fallback, exact collection filters, deterministic product ordering, every
 record schema's allowlist/denylist, secret exclusion, query/result bounds, and
-conflict closure. The exact Tarpaulin LLVM result is 2,516 of 2,637 production
-lines (95.41%); the doctor module is 44 of 45 and status remains 46 of 46.
+conflict closure. The exact Tarpaulin LLVM result is 2,727 of 2,858 production
+lines (95.42%); portable export is 204 of 214, doctor is 44 of 45, and status
+remains 46 of 46.
 Add-item tests cover exact
 entropy partitioning and wiping,
 identity validation before local writes, parentless revision and complete
@@ -264,6 +282,11 @@ tombstone selection, authored merged-secret persistence, complete multi-parent
 causality, immutable live-identity preservation, immutable losing-candidate
 retention, missing/unconflicted/all-tombstone rejection before
 compare-exchange, and entropy redaction/wiping.
+Portable-export tests prove the exact canonical encrypted vector, separate
+passphrase authentication, header/ciphertext tamper rejection, exact active
+bootstrap binding, plaintext-secret exclusion, complete snapshot count/hash,
+live-document recovery, bounded credential rejection, and lossless retention
+of every current conflicting tombstone.
 
 ## Development
 
