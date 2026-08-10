@@ -140,3 +140,12 @@ landed and why, not a semver-tracked API.
   library — most sibling 2-parameter libraries already hand-ship every direction, and this was the
   one overlooked. New manifest objective `adj.math.algebra.rearrange_pressure`. Extended the
   existing `formula_pressure_e2e.rs` with 1 new test rather than adding a new test file.
+- `physics/density.adj` — a seventh Wave 3 rung-0 CAS-wiring companion (ADJ-FORMULA-LIBRARIES
+  FL-10, §3D): `volume_from_density`, solving the same cited HyperPhysics `ρ = m/V` definition (via
+  its equivalent multiplicative form `m = ρ·V`, already hand-shipped as the `mass` formula) for
+  volume — the one direction `density`/`mass` leave open, the exact same shape `pressure.adj`'s
+  `area_from_pressure` closed one PR earlier. Found via a targeted second confirmation sweep after
+  the pressure fix, re-checking three previously-flagged lower-priority candidates
+  (`chemistry/ideal-gas-law.adj`, `clinical/bmi.adj`, `physics/gravitation.adj`) and turning up this
+  higher-priority match instead. New manifest objective `adj.math.algebra.rearrange_density`.
+  Extended the existing `formula_density_e2e.rs` with 1 new test rather than adding a new test file.
