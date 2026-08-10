@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.18.0
+
+- Tokenize sequence `hsl()` and `hsla()` colors atomically.
+
 ## 0.17.0
 
 - Tokenize semicolons as sequence statement terminators.

@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.17.0";
+pub const VERSION: &str = "0.18.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -111,7 +111,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.17.0");
+        assert_eq!(VERSION, "0.18.0");
     }
 
     #[test]
@@ -333,6 +333,22 @@ mod tests {
         assert!(tokens
             .iter()
             .any(|token| token.value == "rgba(33,66,99,0.5)"));
+    }
+
+    #[test]
+    fn tokenizes_sequence_hsl_colors_as_one_token() {
+        let tokens = tokenize_mermaid_sequence(
+            "sequenceDiagram\nbox hsl(180, 100%, 50%) Services\nparticipant API\nend\nrect hsla(30, 100%, 50%, 0.25)\nAPI->>DB: Query\nend\n",
+        );
+        let colors: Vec<_> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("COLOR"))
+            .map(|token| token.value.as_str())
+            .collect();
+        assert_eq!(
+            colors,
+            vec!["hsl(180, 100%, 50%)", "hsla(30, 100%, 50%, 0.25)"]
+        );
     }
 
     #[test]

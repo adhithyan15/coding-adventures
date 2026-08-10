@@ -125,7 +125,8 @@ survive the pipeline as scene metadata; host-document resolution remains
 embedding-layer compatibility work. Participant `box` declarations now lower into
 semantic groups, lane-enclosing layout geometry, and backend-neutral Paint
 rectangles and labels, including the supported named and `rgb`/`rgba` color
-forms. The family remains partial until those forms and the
+forms. Functional `hsl`/`hsla` colors normalize to backend-safe RGB while
+retaining their color semantics. The family remains partial until the
 pinned upstream corpus pass; unsupported forms must fail grammar validation
 rather than degrade silently.
 
@@ -145,8 +146,8 @@ source/destination endpoint semantics and Paint ellipse markers layered above
 activation bars.
 Automatic numbering preserves Mermaid 11.15+ decimal start and increment
 values through semantic IR, layout, and shaped Paint labels.
-Nested `rect` background highlights require Mermaid `rgb`/`rgba` syntax and
-carry that fill through semantic block events, layout frames, and Paint.
+Nested `rect` background highlights carry RGB/RGBA fills and normalized HSL/HSLA
+fills through semantic block events, layout frames, and Paint.
 
 ### Structural Groups
 

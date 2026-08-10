@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.18.0";
+pub const VERSION: &str = "0.19.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1388,11 +1388,16 @@ fn parse_sequence_box_header(raw: &str) -> (Option<String>, Option<String>) {
     if raw.is_empty() {
         return (None, None);
     }
-    let split = raw.find(char::is_whitespace).unwrap_or(raw.len());
-    let first = &raw[..split];
-    let is_function_color = ["rgb(", "rgba("]
+    let lower = raw.to_ascii_lowercase();
+    let function_color = ["rgb(", "rgba(", "hsl(", "hsla("]
         .iter()
-        .any(|prefix| first.to_ascii_lowercase().starts_with(prefix));
+        .any(|prefix| lower.starts_with(prefix));
+    let split = if function_color {
+        raw.find(')').map_or(raw.len(), |index| index + 1)
+    } else {
+        raw.find(char::is_whitespace).unwrap_or(raw.len())
+    };
+    let first = &raw[..split];
     let is_named_color = matches!(
         first.to_ascii_lowercase().as_str(),
         "aqua"
@@ -1415,12 +1420,84 @@ fn parse_sequence_box_header(raw: &str) -> (Option<String>, Option<String>) {
             | "white"
             | "yellow"
     );
-    if is_function_color || is_named_color {
+    if function_color || is_named_color {
         let label = raw[split..].trim();
-        let fill = (!first.eq_ignore_ascii_case("transparent")).then(|| first.to_string());
+        let fill =
+            (!first.eq_ignore_ascii_case("transparent")).then(|| normalize_sequence_color(first));
         (fill, (!label.is_empty()).then(|| label.to_string()))
     } else {
         (None, Some(raw.to_string()))
+    }
+}
+
+fn normalize_sequence_color(color: &str) -> String {
+    let lower = color.to_ascii_lowercase();
+    let Some((has_alpha, inner)) = lower
+        .strip_prefix("hsla(")
+        .and_then(|value| value.strip_suffix(')'))
+        .map(|inner| (true, inner))
+        .or_else(|| {
+            lower
+                .strip_prefix("hsl(")
+                .and_then(|value| value.strip_suffix(')'))
+                .map(|inner| (false, inner))
+        })
+    else {
+        return color.to_string();
+    };
+    let parts: Vec<_> = inner.split(',').map(str::trim).collect();
+    if parts.len() != if has_alpha { 4 } else { 3 } {
+        return color.to_string();
+    }
+    let Some(hue) = parts[0].parse::<f64>().ok() else {
+        return color.to_string();
+    };
+    let Some(saturation) = parts[1]
+        .strip_suffix('%')
+        .and_then(|value| value.parse::<f64>().ok())
+    else {
+        return color.to_string();
+    };
+    let Some(lightness) = parts[2]
+        .strip_suffix('%')
+        .and_then(|value| value.parse::<f64>().ok())
+    else {
+        return color.to_string();
+    };
+    if !hue.is_finite() || !saturation.is_finite() || !lightness.is_finite() {
+        return color.to_string();
+    }
+    let saturation = (saturation / 100.0).clamp(0.0, 1.0);
+    let lightness = (lightness / 100.0).clamp(0.0, 1.0);
+    let chroma = (1.0 - (2.0 * lightness - 1.0).abs()) * saturation;
+    let sector = hue.rem_euclid(360.0) / 60.0;
+    let x = chroma * (1.0 - (sector.rem_euclid(2.0) - 1.0).abs());
+    let (r, g, b) = match sector as u8 {
+        0 => (chroma, x, 0.0),
+        1 => (x, chroma, 0.0),
+        2 => (0.0, chroma, x),
+        3 => (0.0, x, chroma),
+        4 => (x, 0.0, chroma),
+        _ => (chroma, 0.0, x),
+    };
+    let m = lightness - chroma / 2.0;
+    let channel = |value: f64| ((value + m) * 255.0).round() as u8;
+    if has_alpha {
+        let Ok(alpha) = parts[3].parse::<f64>() else {
+            return color.to_string();
+        };
+        if !alpha.is_finite() {
+            return color.to_string();
+        }
+        let alpha = alpha.clamp(0.0, 1.0);
+        format!(
+            "rgba({}, {}, {}, {alpha})",
+            channel(r),
+            channel(g),
+            channel(b)
+        )
+    } else {
+        format!("rgb({}, {}, {})", channel(r), channel(g), channel(b))
     }
 }
 
@@ -1448,7 +1525,7 @@ fn parse_sequence_control_block(
     };
     let block_text = take_sequence_line_text(cursor);
     let (label, fill) = if kind == SequenceBlockKind::Rect {
-        (String::new(), Some(block_text))
+        (String::new(), Some(normalize_sequence_color(&block_text)))
     } else {
         (block_text, None)
     };
@@ -3098,13 +3175,13 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     #[test]
     fn sequence_parses_participant_boxes() {
         let diagram = parse_sequence_diagram(
-            "sequenceDiagram\nbox Purple Client tier\nactor User\nparticipant API as Banking API\nend\nbox Services\nparticipant DB\nend\n",
+            "sequenceDiagram\nbox hsl(270, 100%, 50%) Client tier\nactor User\nparticipant API as Banking API\nend\nbox Services\nparticipant DB\nend\n",
         )
         .unwrap();
         assert_eq!(diagram.participant_groups.len(), 2);
         assert_eq!(
             diagram.participant_groups[0].fill.as_deref(),
-            Some("Purple")
+            Some("rgb(128, 0, 255)")
         );
         assert_eq!(
             diagram.participant_groups[0].label.as_deref(),
@@ -3231,7 +3308,7 @@ B//-A: reverse stick top
     #[test]
     fn sequence_parses_nested_rect_background_colors() {
         let diagram = parse_sequence_diagram(
-            "sequenceDiagram\nrect rgba(0, 0, 255, .1)\nAlice->>Bob: Outer\nrect rgb(200, 150, 255)\nBob->>Alice: Inner\nend\nend\n",
+            "sequenceDiagram\nrect rgba(0, 0, 255, .1)\nAlice->>Bob: Outer\nrect hsla(30, 100%, 50%, .25)\nBob->>Alice: Inner\nend\nend\n",
         )
         .unwrap();
         let fills: Vec<_> = diagram
@@ -3246,7 +3323,10 @@ B//-A: reverse stick top
                 _ => None,
             })
             .collect();
-        assert_eq!(fills, vec!["rgba(0, 0, 255, .1)", "rgb(200, 150, 255)"]);
+        assert_eq!(
+            fills,
+            vec!["rgba(0, 0, 255, .1)", "rgba(255, 128, 0, 0.25)"]
+        );
     }
 
     #[test]
@@ -3355,7 +3435,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.18.0");
+        assert_eq!(crate::VERSION, "0.19.0");
     }
 
     #[test]
