@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.20.0";
+pub const VERSION: &str = "0.21.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1777,7 +1777,18 @@ fn take_sequence_identifier(cursor: &mut TokenCursor) -> Result<String, ParseErr
 fn take_sequence_line_text(cursor: &mut TokenCursor) -> String {
     let mut words = Vec::new();
     while !cursor.at_eof() && !matches!(token_name(cursor.current()), "NEWLINE" | "SEMICOLON") {
-        words.push(cursor.advance().value.clone());
+        let token = cursor.advance();
+        if token_name(token) == "ENTITY" {
+            let inner = token.value.trim_start_matches('#').trim_end_matches(';');
+            let html_entity = if inner.chars().all(|character| character.is_ascii_digit()) {
+                format!("&#{inner};")
+            } else {
+                format!("&{inner};")
+            };
+            words.push(commonmark_parser::entities::decode_entity(&html_entity));
+        } else {
+            words.push(token.value.clone());
+        }
     }
     words.join(" ")
 }
@@ -3402,6 +3413,17 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn sequence_decodes_numeric_and_named_entities_in_text() {
+        let diagram =
+            parse_sequence_diagram("sequenceDiagram\nAlice->>Bob: I #9829; you #infin; times\n")
+                .unwrap();
+        assert!(matches!(
+            diagram.events.first(),
+            Some(SequenceEvent::Message { label, .. }) if label == "I ♥ you ∞ times"
+        ));
+    }
+
+    #[test]
     fn sequence_parses_multiline_accessibility_description() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\naccDescr {\n  Transfers funds\n  between accounts\n}\nAlice->>Bob: Hello\n",
@@ -3445,7 +3467,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.20.0");
+        assert_eq!(crate::VERSION, "0.21.0");
     }
 
     #[test]

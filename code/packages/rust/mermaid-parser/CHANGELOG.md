@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.21.0
+
+- Decode Mermaid numeric and HTML named entity codes in sequence text.
+
 ## 0.20.0
 
 - Parse legacy colon-prefixed sequence titles.

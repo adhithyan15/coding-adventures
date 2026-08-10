@@ -1,10 +1,11 @@
 [package]
 name = "mermaid-parser"
-version = "0.20.0"
+version = "0.21.0"
 edition = "2021"
 description = "Versioned Mermaid compatibility dispatcher and grammar-driven diagram parsers"
 
 [dependencies]
+commonmark-parser = { path = "../commonmark-parser" }
 diagram-ir = { path = "../diagram-ir" }
 grammar-tools = { path = "../grammar-tools" }
 lexer = { path = "../lexer" }

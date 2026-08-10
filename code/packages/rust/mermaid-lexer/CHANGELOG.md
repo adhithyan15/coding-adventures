@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.19.0
+
+- Tokenize Mermaid sequence numeric and named entity codes atomically.
+
 ## 0.18.0
 
 - Tokenize sequence `hsl()` and `hsla()` colors atomically.
