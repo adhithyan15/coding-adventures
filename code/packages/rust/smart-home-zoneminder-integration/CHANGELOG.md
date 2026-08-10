@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1
+
+- Move supplied usernames and passwords into zeroizing storage before all
+  validation error paths.
+
 ## 0.1.0
 
 - Add manual local-HTTPS endpoint intake and Vault-backed ZoneMinder credentials.

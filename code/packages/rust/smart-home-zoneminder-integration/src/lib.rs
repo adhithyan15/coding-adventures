@@ -28,7 +28,7 @@ use std::time::Duration;
 use tls_platform::{default_connector, TlsConfig, TlsConnector};
 use url_parser::{Url, UrlError};
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.1.1";
 pub const INTEGRATION_ID: &str = "zoneminder";
 pub const PROTOCOL_ID: &str = "zoneminder_http_api";
 pub const LOGIN_PATH: &str = "/api/host/login.json";
@@ -129,8 +129,8 @@ impl ZoneMinderCredentials {
         username: impl Into<String>,
         password: impl Into<String>,
     ) -> Result<Self, ZoneMinderError> {
-        let username = username.into();
-        let password = password.into();
+        let username = Zeroizing::new(username.into());
+        let password = Zeroizing::new(password.into());
         if username.trim().is_empty()
             || password.is_empty()
             || username.len() > MAX_USERNAME_BYTES
@@ -145,10 +145,7 @@ impl ZoneMinderCredentials {
                 "credentials contain a NUL byte".to_string(),
             ));
         }
-        Ok(Self {
-            username: Zeroizing::new(username),
-            password: Zeroizing::new(password),
-        })
+        Ok(Self { username, password })
     }
 }
 

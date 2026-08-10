@@ -945,6 +945,7 @@ members = [
     "smart-home-onvif-integration",
     "smart-home-onvif-pairing-service",
     "smart-home-onvif-snapshot-host",
+    "smart-home-zoneminder-pairing-service",
     "smart-home-zoneminder-snapshot-host",
     "smart-home-shelly-integration",
     "smart-home-wled-integration",
