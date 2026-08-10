@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Urdu independent-mim ductus (HL-C09AB)
+
+- Add Urdu independent م from Northwestern's *Zer o Zabar* animations as one
+  round-head-then-tail stroke that descends below the baseline without a lift.
+- Preserve the source's counterclockwise handwritten loop and calligraphic
+  contrast while fitting their shared head-to-tail motion to Noto Naskh.
+- Render a real two-frame filmstrip whose one stroke, zero lifts, source,
+  prose, geometry, and summary agree.
+
 ### Added — cited Urdu independent-lam ductus (HL-C09AA)
 
 - Add Urdu independent ل from Northwestern's *Zer o Zabar* animations as one

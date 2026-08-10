@@ -31,6 +31,7 @@ const URDU_SIN = DUCTUS[ductusKey("urdu-nastaliq", "س")];
 const URDU_SHIN = DUCTUS[ductusKey("urdu-nastaliq", "ش")];
 const URDU_KAF = DUCTUS[ductusKey("urdu-nastaliq", "ک")];
 const URDU_LAM = DUCTUS[ductusKey("urdu-nastaliq", "ل")];
+const URDU_MIM = DUCTUS[ductusKey("urdu-nastaliq", "م")];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
@@ -353,6 +354,19 @@ describe("handwriting ductus", () => {
     expect(bowl.at(-1)!.y).toBeGreaterThan(Math.min(...bowl.map((point) => point.y)));
   });
 
+  it("Urdu independent م joins its round head to a below-baseline tail", () => {
+    expect(URDU_MIM.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_MIM)).toBe(0);
+    expect(URDU_MIM.strokes).toHaveLength(1);
+    expect(URDU_MIM.strokes[0].segments).toHaveLength(2);
+    const head = URDU_MIM.strokes[0].segments[0].path;
+    const tail = URDU_MIM.strokes[0].segments[1].path;
+    expect(tail[0]).toEqual(head.at(-1));
+    expect(Math.max(...head.map((point) => point.y))).toBeGreaterThan(head[0].y);
+    expect(Math.min(...tail.map((point) => point.y))).toBeLessThan(0);
+    expect(tail.at(-1)!.y).toBeLessThan(tail[0].y);
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -658,6 +672,20 @@ describe("handwriting ductus", () => {
     expect(src.variation).toMatch(
       /one uninterrupted stroke.*begin at the top.*descend the tall upright.*below the baseline.*leftward bowl.*back up.*without lifting.*connector.*final form.*Noto Naskh.*Nastaliq/i,
     );
+  });
+
+  it("Urdu independent م traces to Zer o Zabar's unbroken head-and-tail animations", () => {
+    const src = URDU_MIM.source;
+    expect(src.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/te-mim-jim-che/",
+    );
+    expect(src.citation).toMatch(
+      /Zer o Zabar.*independent م.*calligraphic and handwriting animations.*Mīm instructions.*Northwestern/i,
+    );
+    expect(src.variation).toMatch(
+      /one uninterrupted stroke.*calligraphic and handwritten.*ordinary constant-width pen.*counterclockwise loop.*independent or final mīm drops below the baseline.*head-to-tail.*zero-lift.*Noto Naskh.*Nastaliq/i,
+    );
+    expect(src.url).not.toBe(DUCTUS["م"].source.url);
   });
 
   it("Persian ب traces to the adjacent sourced bowl-and-dot demonstration", () => {

@@ -240,6 +240,9 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // long upper-right slash descends toward the stem as a separate stroke.
 // Urdu ل begins at the top of its tall independent upright, descends through
 // the baseline, and continues below it around the leftward bowl in one run.
+// Urdu م keeps its round head and below-baseline tail in one run. The source
+// contrasts the calligraphic head with handwriting's counterclockwise loop;
+// this path reconciles their shared head-to-tail motion with Noto Naskh.
 // The adjacent ب starts at the bowl's right lip, sweeps right-to-left through
 // its shallow dip, then lifts once before placing the separate dot below.
 // After the intervening Persian-added پ row, ت repeats the same bowl, lifts to
@@ -635,6 +638,47 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: urduAlphabetSource("ل"),
+  },
+  [ductusKey("urdu-nastaliq", "م")]: {
+    script: "urdu-nastaliq",
+    glyph: "م",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "shape the round head",
+            path: [
+              { x: 120, y: 210 },
+              { x: 150, y: 250 },
+              { x: 200, y: 300 },
+              { x: 245, y: 315 },
+              { x: 285, y: 300 },
+              { x: 330, y: 260 },
+              { x: 365, y: 215 },
+              { x: 400, y: 175 },
+              { x: 430, y: 150 },
+            ],
+          },
+          {
+            label: "continue down the tail below the baseline without lifting",
+            path: [
+              { x: 430, y: 150 },
+              { x: 390, y: 110 },
+              { x: 330, y: 95 },
+              { x: 260, y: 80 },
+              { x: 180, y: 65 },
+              { x: 100, y: 35 },
+              { x: 90, y: -20 },
+              { x: 100, y: -90 },
+              { x: 110, y: -160 },
+              { x: 120, y: -240 },
+              { x: 105, y: -285 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: urduAlphabetSource("م"),
   },
   "ب": {
     script: "perso-arabic",
