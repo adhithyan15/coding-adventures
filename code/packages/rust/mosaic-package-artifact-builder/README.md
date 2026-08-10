@@ -31,15 +31,23 @@ builds. `BuildProfile::Permissive` emits the normal artifacts and a deterministi
 same report but rejects the build before application artifacts are emitted when
 the selected backend has a known degradation.
 
-The initial inventory identifies passive drag/drop lowerings, native table
-lowerings without table semantics, Flutter's dialog placeholder and missing URL
-effect host, and generated native project shells that can fall back to sample
-props. Compose, Flutter, Qt, SwiftUI, and XAML now have closed shells: their strict profiles
+The inventory identifies passive drag/drop lowerings, native table lowerings
+without table semantics, Flutter's dialog placeholder and missing URL effect
+host, ignored tri-state checkbox and radio-group properties, and generated
+native project shells that can fall back to sample props. Compose, Flutter, Qt,
+SwiftUI, and XAML now have closed shells: their strict profiles
 require Mosaic's standard Rust runtime, wait for the first props envelope,
 reject missing required props, and omit sample-data and optional-host fallbacks.
 The overall native-complete milestone remains open while ignored properties,
 events, styles, effects, and
 accessibility metadata are added to the inventory.
+
+Property degradations carry the exact package-expanded node and property index.
+For example, Compose/Flutter/SwiftUI report an authored, non-false
+`HostCheckbox.indeterminate`, while Compose/Flutter/Qt/SwiftUI report
+`HostRadio.group` until those emitters provide native mutual exclusion. An
+explicit `indeterminate: false` is a semantic no-op and does not fail a strict
+build.
 
 `compose_component` is the canonical in-memory entry point shared by package
 builds and standalone three-file compilation. It returns the compiled model,

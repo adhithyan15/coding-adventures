@@ -90,7 +90,7 @@ use std::fs;
 use std::path::{Component, Path, PathBuf};
 
 use mosaic_package_manifest::{parse_path as parse_manifest, ManifestError, MosaicPackage};
-use moslayout_compiler::{LayoutNode, LayoutPropValue};
+use moslayout_compiler::{LayoutNode, LayoutProp, LayoutPropValue};
 use mosmodel_compiler::{ListInnerType, SlotDecl, SlotDefault, SlotType};
 use serde::Serialize;
 
@@ -701,6 +701,20 @@ fn collect_native_degradations(
         });
     }
 
+    for (index, prop) in node.props.iter().enumerate() {
+        if let Some((code, reason)) = ignored_native_property(backend, node, prop) {
+            degradations.push(Degradation {
+                code: code.to_string(),
+                backend: backend_name.to_string(),
+                component: component.to_string(),
+                variant: variant.map(str::to_string),
+                layout_path: format!("{path}.props[{index}]"),
+                primitive: Some(node.tag.clone()),
+                reason: reason.to_string(),
+            });
+        }
+    }
+
     for (index, child) in node.children.iter().enumerate() {
         let child_path = format!("{path}.children[{index}]");
         collect_native_degradations(
@@ -711,6 +725,38 @@ fn collect_native_degradations(
             &child_path,
             degradations,
         );
+    }
+}
+
+fn ignored_native_property(
+    backend: Backend,
+    node: &LayoutNode,
+    property: &LayoutProp,
+) -> Option<(&'static str, &'static str)> {
+    match (node.tag.as_str(), property.name.as_str()) {
+        ("HostCheckbox", "indeterminate")
+            if matches!(
+                backend,
+                Backend::Compose | Backend::Flutter | Backend::SwiftUI
+            ) && !matches!(&property.value, LayoutPropValue::Keyword(value) if value == "false") =>
+        {
+            Some((
+                "property.checkbox-indeterminate-ignored",
+                "the backend lowers HostCheckbox to a two-state control and ignores the authored indeterminate state",
+            ))
+        }
+        ("HostRadio", "group")
+            if matches!(
+                backend,
+                Backend::Compose | Backend::Flutter | Backend::Qt | Backend::SwiftUI
+            ) =>
+        {
+            Some((
+                "property.radio-group-ignored",
+                "the backend does not apply the authored HostRadio group to a native mutual-exclusion mechanism",
+            ))
+        }
+        _ => None,
     }
 }
 
@@ -3500,6 +3546,143 @@ layout Board {
                 .expect("repeat analysis"),
             "the report must not depend on directory iteration order"
         );
+    }
+
+    #[test]
+    fn native_degradation_analysis_reports_ignored_checkbox_and_radio_properties() {
+        let pkg = make_package("mosaic-pkg-controls", &["Controls"]);
+        fs::write(
+            pkg.path().join("src/Controls.mil"),
+            "component Controls { slot mixed : bool ; slot group-name : text ; }\n",
+        )
+        .unwrap();
+        fs::write(
+            pkg.path().join("src/Controls.mll"),
+            r#"
+layout Controls {
+  Column [ root ] {
+    HostCheckbox [ tri ] (
+      checked : false,
+      indeterminate : slot: mixed
+    )
+    HostRadio [ choice ] (
+      checked : false,
+      value : "choice-a",
+      group : slot: group-name
+    )
+  }
+}
+"#,
+        )
+        .unwrap();
+
+        for (backend, expected) in [
+            (
+                Backend::Compose,
+                vec![
+                    (
+                        "property.checkbox-indeterminate-ignored",
+                        "root.children[0].props[1]",
+                    ),
+                    ("property.radio-group-ignored", "root.children[1].props[2]"),
+                ],
+            ),
+            (
+                Backend::Flutter,
+                vec![
+                    (
+                        "property.checkbox-indeterminate-ignored",
+                        "root.children[0].props[1]",
+                    ),
+                    ("property.radio-group-ignored", "root.children[1].props[2]"),
+                ],
+            ),
+            (
+                Backend::Qt,
+                vec![("property.radio-group-ignored", "root.children[1].props[2]")],
+            ),
+            (
+                Backend::SwiftUI,
+                vec![
+                    (
+                        "property.checkbox-indeterminate-ignored",
+                        "root.children[0].props[1]",
+                    ),
+                    ("property.radio-group-ignored", "root.children[1].props[2]"),
+                ],
+            ),
+            (Backend::Xaml, vec![]),
+        ] {
+            let out = TempDir::new().unwrap();
+            let report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("control property analysis");
+            let actual = report
+                .degradations
+                .iter()
+                .map(|entry| (entry.code.as_str(), entry.layout_path.as_str()))
+                .collect::<Vec<_>>();
+            assert_eq!(actual, expected, "unexpected {backend:?} inventory");
+        }
+
+        let strict_out = TempDir::new().unwrap();
+        let error = build_package_with_profile(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: strict_out.path().to_path_buf(),
+                backend: Backend::Compose,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect_err("strict output must reject ignored control properties");
+        assert!(matches!(
+            error,
+            BuildError::NativeIncomplete {
+                backend: Backend::Compose,
+                degradation_count: 2,
+                ..
+            }
+        ));
+        assert!(strict_out
+            .path()
+            .join("compose/mosaic-degradations.json")
+            .exists());
+        assert!(!strict_out.path().join("compose/Controls.kt").exists());
+    }
+
+    #[test]
+    fn explicit_false_indeterminate_is_not_a_visible_degradation() {
+        let pkg = make_package("mosaic-pkg-checkbox", &["Checkbox"]);
+        fs::write(
+            pkg.path().join("src/Checkbox.mll"),
+            "layout Checkbox { HostCheckbox [ root ] ( checked: false, indeterminate: false ) }\n",
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Compose,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("no-op property analysis");
+
+        assert!(report.degradations.is_empty());
+        assert!(report.native_complete);
     }
 
     #[test]
