@@ -1318,8 +1318,10 @@ changelog, focused build, and downstream validation.
    7b-4a. completed redacted current-conflict inspection and explicit
        choose-candidate resolution, publishing every retained candidate as a
        causal parent;
-   7b-4b. user-authored merged-document conflict resolution after explicit
-       field reveal;
+   7b-4b. completed user-authored merged-document conflict resolution after
+       explicit field reveal, requiring a real conflict with at least one live
+       candidate, preserving immutable live identity fields, publishing every
+       current candidate as a causal parent, and retaining immutable history;
    7c-1. completed bounded reachable live-revision reveal into a non-printable
        owned zeroizing document wrapper;
    7c-2. completed schema-specific first-party secret-field selection into a
