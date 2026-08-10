@@ -2059,6 +2059,56 @@ impl FlatHeap {
         root_slots: &[usize],
         regions: &[(*const u8, usize)],
     ) -> HashSet<usize> {
+        self.classify_mobility_minor_sets(root_slots, regions).1
+    }
+
+    /// Internal implementation shared by [`Self::classify_mobility_minor`] (which
+    /// returns only `movable`, its documented contract) and
+    /// [`Self::evacuate_and_fixup_minor`] (AOT00-T9 PR-3, which additionally needs the
+    /// **`precise`** set — every precise-reachable object's *header* address, movable
+    /// or not).
+    ///
+    /// **Why PR-3's fixup needs `precise`, not just `movable` (a security-review
+    /// finding on PR-3, not part of `classify_mobility_minor`'s own original PR-2
+    /// contract):** `classify_mobility`'s full-scope invariant — every in-edge to a
+    /// movable object originates from a root or from *another movable object* — holds
+    /// because the pinning wave unions `precise_children` into its own drain: if a
+    /// precise parent is pinned, every precise child it names is transitively pushed
+    /// into the pinning wave too, so a pinned parent can never point at a movable
+    /// child. `classify_mobility_minor`'s extra `generation == GEN_YOUNG` filter breaks
+    /// this for the minor-scoped case: an **old**, precisely-traced, *unpinned* parent
+    /// (structurally identical to a full-scope "movable" object in every way except
+    /// its generation) is excluded from `movable` by the filter alone, not by being
+    /// pinned — so its precise children are never forced into the pinning wave, and it
+    /// can legitimately hold an untouched precise edge to a young `movable` object. Such
+    /// a parent may or may not be in the remembered set (only a parent the write
+    /// barrier actually recorded is — one reached only via `root_slots`, never via a
+    /// barriered store, is not), so a fixup pass over `self.remembered` alone misses it
+    /// — [`Self::evacuate_and_fixup_minor`]'s fixup step therefore walks `precise` and
+    /// `self.remembered` **together** (a second security-review round: `precise` alone
+    /// is not a superset of `self.remembered` either — a remembered parent used only as
+    /// a *seed*, never independently reached by a root/region/precise-chain, is
+    /// consulted by this classification but never inserted into `precise`).
+    ///
+    /// **This narrows, but does not eliminate, the fixup's dependency on write-barrier
+    /// fidelity** (corrected after an initial overclaim was caught by review): a parent
+    /// that is reached *only* through the very store that should have been barriered —
+    /// not independently root/region/precise-reachable, and never recorded in
+    /// `self.remembered` because the barrier was skipped — is covered by **neither**
+    /// `precise` nor `self.remembered`. A non-moving minor tolerates this exact missed
+    /// barrier as long as the child is independently reachable (it is simply marked and
+    /// kept live); a *moving* minor does not, since nothing rewrites that parent's
+    /// stale field once the child relocates. See
+    /// `code/specs/AOT00-T9-moving-minor-collector.md` §7 for the corrected barrier
+    /// obligation this implies for a moving minor cycle versus a non-moving one.
+    ///
+    /// # Safety
+    /// Same contract as [`Self::classify_mobility_minor`].
+    unsafe fn classify_mobility_minor_sets(
+        &mut self,
+        root_slots: &[usize],
+        regions: &[(*const u8, usize)],
+    ) -> (HashSet<usize>, HashSet<usize>) {
         debug_assert!(!self.mark_in_progress, "{}", INCREMENTAL_MIXING_MSG);
 
         // Pin bits are a per-classification transient: clear them first.
@@ -2152,7 +2202,7 @@ impl FlatHeap {
                 movable.insert(h as usize + HEADER_SIZE); // payload address
             }
         }
-        movable
+        (precise, movable)
     }
 
     /// **PR-3a scaffold** for the compacting collector: classify mobility, then copy every
@@ -2327,6 +2377,189 @@ impl FlatHeap {
         //     scanned in classification, which pinned their targets.)
         for &new_payload in forward.values() {
             self.fixup_ref_fields((new_payload - HEADER_SIZE) as *mut FlatHeader, &forward);
+        }
+
+        (arena, forward)
+    }
+
+    /// **AOT00-T9 PR-3 — young-scoped [`Self::plan_compaction`].** Identical mechanics
+    /// (arena-size, copy, forwarding map), driven by
+    /// [`Self::classify_mobility_minor_sets`]'s `movable` set instead of
+    /// [`Self::classify_mobility`]'s. Also returns the `precise` set (header addresses),
+    /// which [`Self::evacuate_and_fixup_minor`] needs for its fixup step — see that
+    /// function's doc for why. Dry-run only, same as its full-scope sibling: copies
+    /// movable young objects into a fresh arena and returns the forwarding map; fixes up
+    /// nothing, frees nothing, leaves the heap observably unchanged if the caller drops
+    /// the arena.
+    ///
+    /// # Safety
+    /// Each `root_slots` address and each `regions` span must be readable (same contract
+    /// as [`Self::classify_mobility_minor`]/[`Self::collect_mixed`]). Must not be called
+    /// while an incremental mark is in progress — inherited from
+    /// [`Self::classify_mobility_minor_sets`]'s own `mark_in_progress` guard.
+    #[allow(dead_code)]
+    unsafe fn plan_compaction_minor(
+        &mut self,
+        root_slots: &[usize],
+        regions: &[(*const u8, usize)],
+    ) -> (Arena, HashMap<usize, usize>, HashSet<usize>) {
+        let (precise, movable) = self.classify_mobility_minor_sets(root_slots, regions);
+
+        let mut total = 0usize;
+        for &payload in &movable {
+            let h = (payload - HEADER_SIZE) as *mut FlatHeader;
+            let obj = HEADER_SIZE.saturating_add((*h).size);
+            let obj16 = obj.saturating_add(ALIGN - 1) & !(ALIGN - 1);
+            total = total.saturating_add(obj16);
+        }
+
+        let mut arena = Arena::with_capacity(total).expect("arena allocation");
+        let mut forward: HashMap<usize, usize> = HashMap::new();
+        for &payload in &movable {
+            let h = (payload - HEADER_SIZE) as *mut FlatHeader;
+            let obj = HEADER_SIZE + (*h).size;
+            let dst = arena.bump(obj).expect("arena sized to the evacuation total");
+            ptr::copy_nonoverlapping(h as *const u8, dst, obj);
+            (*(dst as *mut FlatHeader)).arena_backed = true;
+            let new_payload = dst as usize + HEADER_SIZE;
+            forward.insert(payload, new_payload);
+        }
+        (arena, forward, precise)
+    }
+
+    /// **AOT00-T9 PR-3 — young-scoped [`Self::evacuate_and_fixup`].** Evacuates and fixes
+    /// up pointers for a minor-scoped relocation, via [`Self::plan_compaction_minor`].
+    /// Dry-run in the sense that nothing is freed and nothing is integrated into
+    /// `self.all`/`self.arenas` — reclamation and remembered-set/generation bookkeeping
+    /// is PR-4's `collect_minor_compacting` (spec §4 steps 4–5), not this function's
+    /// job. **Unlike [`Self::evacuate_and_fixup`], this is *not* heap-neutral if the
+    /// caller drops the returned arena** (a security-review observation, not yet fixed
+    /// — there is no in-tree caller to be at risk today): step (c) below writes into
+    /// live heap objects *outside* the arena (`precise`/`self.remembered` members that
+    /// still live in `self.all`, not arena copies), rewriting their fields to name the
+    /// arena's new addresses. If the caller drops the arena without integrating it (the
+    /// full-scope `evacuate_and_fixup`'s own supported usage, since its fixups only ever
+    /// touch caller-owned roots and the arena's own copies), those live objects are left
+    /// holding dangling pointers into freed memory. PR-4 must integrate the arena (keep
+    /// it alive, thread its copies into `self.all`) rather than drop it, and this
+    /// function's callers must not be relied upon to be safely droppable the way
+    /// `evacuate_and_fixup`'s are.
+    ///
+    /// Fixes up, in order:
+    /// - **(a) roots** — identical to [`Self::evacuate_and_fixup`];
+    /// - **(b) moved objects' own arena copies** — identical to
+    ///   [`Self::evacuate_and_fixup`];
+    /// - **(c) every other member of `precise`, UNION every member of `self.remembered`
+    ///   — NEW, and load-bearing. Neither population subsumes the other; both are
+    ///   required.**
+    ///
+    /// **Why (c) is a genuine addition, not a restatement of (a)/(b):** spec §4 step 3
+    /// describes this evacuate step as reusing "the existing arena-copy + pointer-fixup
+    /// logic... no change to the copy/fixup mechanics themselves, only which set drives
+    /// them" — but that claim does not hold once the classified `movable` set can
+    /// contain a young object reached *only* through a precise-reachable, **unpinned**,
+    /// but old — hence excluded from `movable` purely by the `generation == GEN_YOUNG`
+    /// conjunct — parent. `classify_mobility`'s full-scope invariant ("every in-edge to
+    /// a movable object comes from a root or another movable object") holds because the
+    /// pinning wave transitively force-pins a pinned object's own precise children — so
+    /// a *pinned* parent can never point at a movable child. But
+    /// `classify_mobility_minor`'s generation filter creates a parent that is
+    /// structurally identical to "movable" in every way (precise-reachable,
+    /// precisely-traced, **unpinned**) except its generation — its children were never
+    /// force-pinned, since it was never pushed into the pinning wave.
+    ///
+    /// **Why (c) needs BOTH populations (a security-review finding on this PR's own
+    /// first draft, which walked `self.remembered` alone, then a second review finding
+    /// on the fix for *that*, which walked `precise` alone):**
+    /// - A directly-rooted old parent (root names it, no barriered store ever recorded
+    ///   it) is in `precise` but is **not** in `self.remembered` — walking only the
+    ///   remembered set misses it (the shape
+    ///   `evacuate_and_fixup_minor_rewrites_a_directly_rooted_old_parents_field_with_no_remembered_entry`
+    ///   tests, mirroring `classify_mobility_minor_traverses_through_a_directly_rooted_old_parent_to_reach_young_child`'s
+    ///   classify-level case).
+    /// - A remembered parent reached by **no** root or region at all (its only role in
+    ///   this classification is as a remembered-set *seed* — `classify_mobility_minor_sets`
+    ///   consults such a parent's fields to seed the wave with its children, but never
+    ///   independently discovers the *parent itself* as a reachable node, so it is
+    ///   never inserted into `precise`) is **not** in `precise` — walking only `precise`
+    ///   misses it (the shape
+    ///   `evacuate_and_fixup_minor_rewrites_a_remembered_parents_field_to_the_moved_childs_new_address`
+    ///   tests; an earlier revision of this function that walked `precise` alone failed
+    ///   this exact test).
+    ///
+    /// Running (c) on a *pinned* member of `precise` is a proven no-op, not merely an
+    /// unnecessary one: a pinned object's precise children were already force-pinned
+    /// transitively, so it can hold no edge to a `movable` object either. Iterating both
+    /// populations where they overlap is harmless: `fixup_ref_fields` is idempotent per
+    /// header. `fixup_ref_fields` is also safe to call on every member of either
+    /// population unconditionally (not just precisely-traced ones): for a member
+    /// [`Self::is_precisely_traced`] finds `false` for, `for_each_ref_slot` — the single
+    /// source of truth every consumer of it shares — contributes nothing, so the call is
+    /// a proven no-op for exactly the members that must not be treated as holding a
+    /// rewritable reference.
+    ///
+    /// # Safety
+    /// Each `root_slots` address and each `regions` span must be readable (same contract
+    /// as [`Self::classify_mobility_minor`]/[`Self::collect_mixed`]). Must not be called
+    /// while an incremental mark is in progress — step (c) writes through every
+    /// `self.remembered` entry, which can name an already-freed block mid-sweep (see
+    /// [`Self::classify_mobility_minor_sets`]'s own `mark_in_progress` guard, which this
+    /// function's first call — [`Self::plan_compaction_minor`] — already enforces before
+    /// any of (a)/(b)/(c) run; restated here since this function, not just the
+    /// classifier it calls, is the one that dereferences the remembered set to *write*).
+    #[allow(dead_code)]
+    unsafe fn evacuate_and_fixup_minor(
+        &mut self,
+        root_slots: &[usize],
+        regions: &[(*const u8, usize)],
+    ) -> (Arena, HashMap<usize, usize>) {
+        let (arena, forward, precise) = self.plan_compaction_minor(root_slots, regions);
+
+        // (a) Roots: write the forwarded address back into each precise slot.
+        for &slot in root_slots {
+            let w = ptr::read_unaligned(slot as *const usize);
+            if let Some(nw) = self.forwarded(w, &forward) {
+                ptr::write_unaligned(slot as *mut usize, nw);
+            }
+        }
+
+        // (b) Interior: fix up each MOVED object's arena copy.
+        for &new_payload in forward.values() {
+            self.fixup_ref_fields((new_payload - HEADER_SIZE) as *mut FlatHeader, &forward);
+        }
+
+        // (c) Every other precise-reachable object, UNION the remembered set: fix up
+        // precise ref fields that name a moved young child. Both populations are
+        // needed and neither subsumes the other:
+        // - `precise` catches a directly-rooted (or transitively precise-reached) old
+        //   parent that classify_mobility_minor_sets's own traversal discovered as a
+        //   NODE — but a remembered parent used ONLY as a seed (its children were
+        //   pushed into the wave via the remembered-parent loop, but the parent itself
+        //   was never independently reached by a root/region/precise-chain) is never
+        //   inserted into `precise` by that traversal — it's consulted, not discovered.
+        // - `self.remembered` catches exactly that seed-only case, but misses a
+        //   directly-rooted old parent that was never a barriered store's target (see
+        //   the function doc's directly-rooted-parent finding).
+        // Iterating both is safe even where they overlap: `fixup_ref_fields` is
+        // idempotent per header (a second pass rewrites an already-forwarded field to
+        // the same target).
+        for &ph in &precise {
+            let payload = ph + HEADER_SIZE;
+            if forward.contains_key(&payload) {
+                continue; // already fixed up as a moved object's own copy in (b)
+            }
+            self.fixup_ref_fields(ph as *mut FlatHeader, &forward);
+        }
+        // No `forward.contains_key` skip needed here (unlike the `precise` loop above):
+        // every `self.remembered` entry is old (`write_barrier`, `rebuild_remembered`,
+        // and `record_promoted_old_to_young` all enforce `remembered ⊆ GEN_OLD`), and
+        // every `forward` key is young (`classify_mobility_minor_sets`'s own
+        // `generation == GEN_YOUNG` filter), so the two sets are always disjoint by
+        // construction — a remembered parent is never itself a moved object.
+        let remembered: Vec<usize> = self.remembered.iter().copied().collect();
+        for parent in remembered {
+            let h = (parent - HEADER_SIZE) as *mut FlatHeader;
+            self.fixup_ref_fields(h, &forward);
         }
 
         (arena, forward)
@@ -5223,7 +5456,324 @@ mod tests {
         assert!(!movable.contains(&a), "a conservative in-edge pins a precisely-reachable young object");
     }
 
-    // ── Moving/compacting collector — arena + copy scaffold (AOT00-T3 PR-3a) ──
+    // ── Moving MINOR collector — evacuate + fixup, dry-run (AOT00-T9 PR-3) ──
+
+    /// A young object reachable only via a root is moved and its root slot is fixed up
+    /// -- the pure-young case, no remembered set involved, sanity-checking
+    /// `evacuate_and_fixup_minor` against `classify_mobility_minor`'s own pure-young
+    /// case before the remembered-set-specific tests below.
+    #[test]
+    fn evacuate_and_fixup_minor_moves_root_reachable_young_object_and_fixes_up_the_root() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let a = heap.alloc(16, k) as usize; // young
+        unsafe { *(a as *mut usize) = 0 }; // leaf: no ref field payload
+        let mut slot_word = a;
+        let slots = [&mut slot_word as *mut usize as usize];
+
+        let (_arena, forward) = unsafe { heap.evacuate_and_fixup_minor(&slots, &[]) };
+        assert_eq!(forward.len(), 1, "exactly the one young object moved");
+        let new_addr = forward[&a];
+        assert_eq!(slot_word, new_addr, "the root slot was fixed up to the arena address");
+        assert_ne!(new_addr, a, "the object actually relocated, not a no-op copy to the same address");
+    }
+
+    /// **The load-bearing differential this PR exists to prove** (spec §5 PR-3, §4 point
+    /// 4's parenthetical): a live young child reachable *only* through a remembered
+    /// **old** parent's precise field is relocated, and reading back **through that same
+    /// old parent's field** returns the child's *new* address -- not the stale from-space
+    /// one. Before step (c) of `evacuate_and_fixup_minor` (see its doc), neither the root
+    /// fixup (the root here names the *parent*, never the *child*) nor the moved-object
+    /// fixup (the parent is old, never itself moved, so it is never a `forward` key)
+    /// touches the parent's field at all -- confirmed by reverting step (c) below.
+    #[test]
+    fn evacuate_and_fixup_minor_rewrites_a_remembered_parents_field_to_the_moved_childs_new_address() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]); // one ref field at offset 0
+        let parent = heap.alloc(16, k) as usize;
+        let _ = heap.collect(&[parent]); // parent -> old
+        let child = heap.alloc(16, k) as usize; // young
+        unsafe {
+            *(child as *mut usize) = 0; // child is a leaf
+            *(parent as *mut usize) = child;
+            heap.write_barrier(parent, child); // records parent in the remembered set
+        }
+
+        // No root anywhere names `child` -- it is reachable ONLY via the remembered parent.
+        let (_arena, forward) = unsafe { heap.evacuate_and_fixup_minor(&[], &[]) };
+        assert_eq!(forward.len(), 1, "exactly the child moved (the old parent is never movable)");
+        let new_child = forward[&child];
+        assert_ne!(new_child, child, "the child actually relocated");
+
+        let field_after = unsafe { *(parent as *const usize) };
+        assert_eq!(
+            field_after, new_child,
+            "the remembered parent's field was rewritten to the child's new (arena) address, \
+             not left pointing at the stale from-space original"
+        );
+    }
+
+    /// The same shape as above, but the parent's ref field is at a **misaligned** offset
+    /// (4, not 8-aligned) -- proving step (c) reuses `fixup_ref_fields`'s
+    /// `for_each_ref_slot`-driven walk (which reads with `read_unaligned` at whatever
+    /// offset the kind declares), not a hand-rolled aligned-only scan that would repeat
+    /// the misaligned-field class of bug this session already fixed twice in
+    /// `classify_mobility`/`classify_mobility_minor`.
+    #[test]
+    fn evacuate_and_fixup_minor_rewrites_a_remembered_parents_misaligned_field() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[4]); // ref field at a non-8-aligned offset
+        let parent = heap.alloc(16, k) as usize;
+        let _ = heap.collect(&[parent]); // parent -> old
+        let kc = heap.register_kind(&[0]);
+        let child = heap.alloc(16, kc) as usize; // young
+        unsafe {
+            *(child as *mut usize) = 0;
+            ptr::write_unaligned((parent + 4) as *mut usize, child);
+            heap.write_barrier(parent, child);
+        }
+
+        let (_arena, forward) = unsafe { heap.evacuate_and_fixup_minor(&[], &[]) };
+        let new_child = forward[&child];
+        let field_after = unsafe { ptr::read_unaligned((parent + 4) as *const usize) };
+        assert_eq!(
+            field_after, new_child,
+            "the remembered parent's misaligned field was rewritten to the child's new address"
+        );
+    }
+
+    /// **Empirical proof that step (c) is load-bearing**, mirroring this session's
+    /// established revert-and-confirm methodology: with the remembered-parent fixup
+    /// loop removed, the differential above fails exactly as its own doc predicts --
+    /// the parent's field is left naming the stale from-space address of the (silently
+    /// orphaned, not-yet-freed) original. This test exists to fail loudly if a future
+    /// edit ever deletes step (c) without deleting this test too.
+    #[test]
+    fn evacuate_and_fixup_minor_without_remembered_parent_fixup_would_leave_a_stale_field() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let parent = heap.alloc(16, k) as usize;
+        let _ = heap.collect(&[parent]);
+        let child = heap.alloc(16, k) as usize;
+        unsafe {
+            *(child as *mut usize) = 0;
+            *(parent as *mut usize) = child;
+            heap.write_barrier(parent, child);
+        }
+
+        // Reproduce (a)+(b) only -- exactly step (c)'s absence -- via the pieces
+        // `evacuate_and_fixup_minor` composes, to prove the gap step (c) closes is real
+        // rather than asserting against a hypothetical.
+        let (_arena, forward, _precise) = unsafe { heap.plan_compaction_minor(&[], &[]) };
+        for &new_payload in forward.values() {
+            unsafe { heap.fixup_ref_fields((new_payload - HEADER_SIZE) as *mut FlatHeader, &forward) };
+        }
+        let field_after_ab_only = unsafe { *(parent as *const usize) };
+        assert_eq!(
+            field_after_ab_only, child,
+            "sanity: (a)+(b) alone, without step (c), leave the remembered parent's field \
+             stale -- proving step (c) is not a no-op restatement of the existing mechanics"
+        );
+    }
+
+    /// **The headline finding from PR-3's own adversarial security review**: an old,
+    /// precisely-traced, **unpinned** parent reached *directly* by a root (mirroring
+    /// `classify_mobility_minor_traverses_through_a_directly_rooted_old_parent_to_reach_young_child`'s
+    /// exact shape, deliberately with no `write_barrier` call, so the parent is NOT in
+    /// the remembered set) still has its field rewritten when its young child relocates.
+    /// The first implementation of step (c) walked only `self.remembered` and would fail
+    /// this test -- `classify_mobility`'s "a pinned parent can never point at a movable
+    /// child" invariant doesn't save an *unpinned* old parent, since
+    /// `classify_mobility_minor`'s `GEN_YOUNG` filter excludes it from `movable` by
+    /// generation alone, not by pinning, so its children were never force-pinned.
+    #[test]
+    fn evacuate_and_fixup_minor_rewrites_a_directly_rooted_old_parents_field_with_no_remembered_entry() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let parent = heap.alloc(16, k) as usize;
+        let _ = heap.collect(&[parent]); // -> old
+        let child = heap.alloc(16, k) as usize; // young
+        unsafe {
+            *(child as *mut usize) = 0;
+            *(parent as *mut usize) = child; // no write_barrier: root reaches parent directly
+        }
+
+        let slot_word = parent;
+        let slots = [&slot_word as *const usize as usize]; // root names the OLD parent directly
+        let (_arena, forward) = unsafe { heap.evacuate_and_fixup_minor(&slots, &[]) };
+        assert_eq!(forward.len(), 1, "only the child moved; the old parent is never movable");
+        let new_child = forward[&child];
+
+        let field_after = unsafe { *(parent as *const usize) };
+        assert_eq!(
+            field_after, new_child,
+            "a directly-rooted old parent's field must be rewritten too, even with no \
+             remembered-set entry to drive a remembered-only fixup pass"
+        );
+    }
+
+    /// A remembered parent whose field points at a **pinned** (non-movable) young child
+    /// is left untouched by step (c) — `forwarded()` only rewrites values present as
+    /// `forward` keys, and a pinned child is never one, so the field must still read the
+    /// child's original (unmoved) address after evacuation.
+    #[test]
+    fn evacuate_and_fixup_minor_leaves_a_remembered_parents_field_to_a_pinned_child_unchanged() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let parent = heap.alloc(16, k) as usize;
+        let _ = heap.collect(&[parent]); // -> old
+        let child = heap.alloc(16, k) as usize; // young
+        unsafe {
+            *(child as *mut usize) = 0;
+            *(parent as *mut usize) = child;
+            heap.write_barrier(parent, child);
+        }
+
+        // Pin the child via a separate conservative in-edge (a region), independent of
+        // the remembered-parent edge under test.
+        let cons_word = child;
+        let region = [(&cons_word as *const usize as *const u8, 8usize)];
+
+        let (_arena, forward) = unsafe { heap.evacuate_and_fixup_minor(&[], &region) };
+        assert!(!forward.contains_key(&child), "the pinned child is never movable");
+        let field_after = unsafe { *(parent as *const usize) };
+        assert_eq!(
+            field_after, child,
+            "a pinned child never relocates, so the remembered parent's field pointing \
+             at it must be left exactly as it was"
+        );
+    }
+
+    /// A remembered parent that is itself **not precisely traced** (kind-0/opaque)
+    /// contributes nothing when step (c) walks it — `fixup_ref_fields` is a proven no-op
+    /// for such an object via `for_each_ref_slot`'s own contract; this test exercises
+    /// that no-op claim at the evacuate level (the classify-level claim is covered by
+    /// `classify_mobility_minor`'s own tests) by writing a non-pointer sentinel into the
+    /// parent's raw word and confirming evacuation never touches it.
+    #[test]
+    fn evacuate_and_fixup_minor_does_not_touch_an_opaque_remembered_parents_raw_word() {
+        let mut heap = FlatHeap::new();
+        let parent = heap.alloc(16, 0) as usize; // kind 0 / opaque
+        let _ = heap.collect(&[parent]); // -> old
+        let k = heap.register_kind(&[0]);
+        let child = heap.alloc(16, k) as usize; // young, would be movable if reached precisely
+        unsafe {
+            *(child as *mut usize) = 0;
+            *(parent as *mut usize) = child;
+            heap.write_barrier(parent, child);
+        }
+
+        let (_arena, forward) = unsafe { heap.evacuate_and_fixup_minor(&[], &[]) };
+        assert!(
+            !forward.contains_key(&child),
+            "child reachable only via an opaque remembered parent's raw word is pinned, never movable"
+        );
+        let field_after = unsafe { *(parent as *const usize) };
+        assert_eq!(
+            field_after, child,
+            "the opaque parent's raw word is conservative, not a precise ref field -- \
+             fixup_ref_fields must never rewrite it, moved child or not"
+        );
+    }
+
+    /// A parent that is BOTH directly rooted (so a member of `precise`) AND barriered
+    /// (so a member of `self.remembered`) is fixed up correctly despite step (c)
+    /// calling `fixup_ref_fields` on it via both loops -- proving the double pass
+    /// (round-2 security review question) is genuinely idempotent, not merely assumed
+    /// so: the second pass's `forwarded()` lookup on an already-rewritten (new arena
+    /// address) value must miss, since arena addresses are never `forward` keys.
+    #[test]
+    fn evacuate_and_fixup_minor_is_idempotent_for_a_parent_in_both_precise_and_remembered() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let parent = heap.alloc(16, k) as usize;
+        let _ = heap.collect(&[parent]); // -> old
+        let child = heap.alloc(16, k) as usize; // young
+        unsafe {
+            *(child as *mut usize) = 0;
+            *(parent as *mut usize) = child;
+            heap.write_barrier(parent, child); // parent is now ALSO in self.remembered
+        }
+
+        // parent is directly rooted too -- in BOTH `precise` and `self.remembered`.
+        let slot_word = parent;
+        let slots = [&slot_word as *const usize as usize];
+        let (_arena, forward) = unsafe { heap.evacuate_and_fixup_minor(&slots, &[]) };
+        let new_child = forward[&child];
+
+        let field_after = unsafe { *(parent as *const usize) };
+        assert_eq!(
+            field_after, new_child,
+            "a parent fixed up twice (once via `precise`, once via `self.remembered`) \
+             still ends with the correct, single, forwarded address -- not corrupted \
+             by the second pass"
+        );
+    }
+
+    /// A multi-hop `root -> O1(old) -> O2(old) -> M(young)` chain, no write barriers
+    /// anywhere: `classify_mobility_minor_sets`'s precise-wave drain has no generation
+    /// filter, so O2 (the old grandparent, reached transitively through O1, not
+    /// directly rooted and never barriered) still lands in `precise` and gets fixed up
+    /// by step (c) -- the completeness argument for the `precise` half of the union
+    /// rests on exactly this transitive-discovery property, not just directly-rooted
+    /// parents.
+    #[test]
+    fn evacuate_and_fixup_minor_rewrites_a_transitively_reached_old_grandparents_field() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let o1 = heap.alloc(16, k) as usize;
+        let o2 = heap.alloc(16, k) as usize;
+        let _ = heap.collect(&[o1, o2]); // both -> old
+        let child = heap.alloc(16, k) as usize; // young
+        unsafe {
+            *(child as *mut usize) = 0;
+            *(o2 as *mut usize) = child; // O2 -> child, NO write_barrier
+            *(o1 as *mut usize) = o2; // O1 -> O2, NO write_barrier
+        }
+
+        let slot_word = o1;
+        let slots = [&slot_word as *const usize as usize]; // root names O1 directly
+        let (_arena, forward) = unsafe { heap.evacuate_and_fixup_minor(&slots, &[]) };
+        assert_eq!(forward.len(), 1, "only the child moved; both old objects stay in place");
+        let new_child = forward[&child];
+
+        let o2_field_after = unsafe { *(o2 as *const usize) };
+        assert_eq!(
+            o2_field_after, new_child,
+            "the transitively-reached old grandparent's field must be rewritten too, \
+             not just a directly-rooted old parent's"
+        );
+    }
+
+    /// A remembered parent's **tagged** reference field (low-3 NaN-box tag bits set) is
+    /// rewritten with the tag reattached, exercising `forwarded()`'s tag-preserving path
+    /// through step (c) -- previously only exercised through step (b)'s moved-object-copy
+    /// path.
+    #[test]
+    fn evacuate_and_fixup_minor_reattaches_the_tag_on_a_remembered_parents_tagged_field() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let parent = heap.alloc(16, k) as usize;
+        let _ = heap.collect(&[parent]); // -> old
+        let child = heap.alloc(16, k) as usize; // young
+        const TAG: usize = 0x3;
+        unsafe {
+            *(child as *mut usize) = 0;
+            *(parent as *mut usize) = child | TAG; // tagged reference
+            heap.write_barrier(parent, child);
+        }
+
+        let (_arena, forward) = unsafe { heap.evacuate_and_fixup_minor(&[], &[]) };
+        let new_child = forward[&child];
+
+        let field_after = unsafe { *(parent as *const usize) };
+        assert_eq!(
+            field_after,
+            new_child | TAG,
+            "the remembered parent's tagged field must be rewritten to the new address \
+             with the tag bits reattached, not stripped or left stale"
+        );
+    }
 
     /// A movable object is copied **byte-identically** (header + payload) into the arena
     /// at a fresh 16-aligned address, and recorded in the forwarding map. The from-space

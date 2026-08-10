@@ -1,5 +1,49 @@
 # Changelog — gc-core
 
+## 0.31.0 — 2026-08-10 — `FlatHeap::plan_compaction_minor` / `evacuate_and_fixup_minor` — moving-minor evacuate + fixup, dry-run only (AOT00-T9 PR-3)
+
+- **`FlatHeap::plan_compaction_minor`** (returns `(Arena, HashMap<usize, usize>, HashSet<usize>)` — the
+  third element, `precise`, is new versus its full-scope sibling's shape, needed by the fixup step
+  below) / **`FlatHeap::evacuate_and_fixup_minor`** — young-scoped siblings of
+  `plan_compaction`/`evacuate_and_fixup`, driven by a new internal `classify_mobility_minor_sets`
+  helper (`classify_mobility_minor` itself is now a thin wrapper over it, unchanged contract). Dry-run
+  in the sense that nothing is freed or integrated into `self.all`/`self.arenas` — PR-4 wires
+  reclamation (`collect_minor_compacting`, the full cycle). **Not heap-neutral like its full-scope
+  sibling if the caller drops the arena** (see its doc's `# Safety` addendum): unlike
+  `evacuate_and_fixup`, whose fixups only ever touch caller-owned roots and the arena's own copies,
+  this function's fixup step (below) writes into live heap objects outside the arena — a future
+  caller must integrate the arena (PR-4), not drop it. `#[allow(dead_code)]` — not called from any
+  production path yet.
+- **Found and fixed a real gap in `code/specs/AOT00-T9-moving-minor-collector.md`'s own §4 point 3/4,
+  corrected across two rounds of adversarial review** (see the spec's inline `**Correction**` notes in
+  §4, §5, §6, §7): the spec claimed evacuate/fixup for the minor case needed "no change to the
+  copy/fixup mechanics themselves, only which set drives them," and separately that a remembered old
+  parent's field pointing at a moved child was "already rewritten by the fixup pass." Neither holds —
+  `evacuate_and_fixup`'s fixup only ever rewrites (a) `root_slots` and (b) moved objects' own arena
+  copies, and an old parent (never itself movable, so never a `forward` key) is touched by neither.
+  **Round 1** added a fixup step (c) walking `self.remembered` — necessary, but a security review then
+  found it insufficient: an old, precisely-traced, *unpinned* parent reached only by a root (the
+  `generation == GEN_YOUNG` filter excludes it from `movable`, and hence from the pinning wave's
+  force-pin propagation, purely by generation, not by pinning) may never appear in `self.remembered` at
+  all. **Round 2** fixed this by walking `precise` (every object the classifier's traversal discovered
+  as a node) instead — which the test suite immediately caught as *also* insufficient: a remembered
+  parent used only as a seed (its children are consulted, but the parent itself is never independently
+  discovered as a node) is absent from `precise`. The shipped fix unions both populations; each half
+  was independently confirmed load-bearing by reverting it and observing the exact predicted
+  stale-field failure. A residual, now-documented dependency remains: a parent reached *only* through
+  an unbarriered store is covered by neither population — a strictly stronger write-barrier obligation
+  for a moving minor cycle than a non-moving one has, corrected in the spec's §7 (which previously
+  claimed the barrier contract was unchanged).
+- 10 new regression tests, covering: the pure-young root-reachable case (sanity); a young child
+  reachable only through a remembered old parent (the original differential); the same with a
+  misaligned parent ref field; a directly-rooted old parent with **no** remembered-set entry (round-1's
+  finding); a remembered parent's field to a **pinned** (non-movable) child, expected untouched; an
+  opaque/kind-0 remembered parent, expected a no-op; a parent that is a member of **both** `precise`
+  and `self.remembered` simultaneously, proving the double fixup pass is idempotent; a multi-hop
+  `old→old→young` chain with no barriers, proving `precise`'s transitive-discovery half of the union;
+  a **tagged** reference through the new fixup step; and a permanent regression test directly composing
+  (a)+(b) alone (skipping all of step (c)) to prove the field is left stale without it.
+
 ## 0.30.0 — 2026-08-10 — `FlatHeap::classify_mobility_minor` — moving-minor mobility classification, dry-run only (AOT00-T9 PR-2)
 
 - **`FlatHeap::classify_mobility_minor(&mut self, root_slots, regions) -> HashSet<usize>`** —
