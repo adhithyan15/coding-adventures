@@ -239,11 +239,12 @@ mod tests {
             read_secret_from_terminal(&mut slave, b"> ", 4),
             Err(CliHostError::SecretTooLong)
         ));
-        drop(peer.join().unwrap());
+        let master = peer.join().unwrap();
         assert_eq!(
             terminal_mode(&slave).c_lflag & (libc::ECHO | libc::ECHONL),
             original.c_lflag & (libc::ECHO | libc::ECHONL)
         );
+        drop(master);
     }
 
     #[test]
