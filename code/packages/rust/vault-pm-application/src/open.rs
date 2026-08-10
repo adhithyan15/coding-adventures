@@ -1,4 +1,5 @@
 use crate::initialize::{unlock_active_material, UnlockedActiveMaterial};
+use crate::search::SearchProjectionV1;
 use crate::{
     open_object, ActiveStateV1, ApplicationError, ApplicationRepository,
     ApplicationRepositoryError, ApplicationRepositoryFactory, BootstrapLocator, BootstrapStore,
@@ -6,7 +7,7 @@ use crate::{
     LocalVaultStateV1, ObjectKind, V1Keys,
 };
 use coding_adventures_vault_pm_domain::{
-    ItemCandidate, ItemId, ItemState, RedactedItemView, RevisionId,
+    CollectionId, ItemCandidate, ItemId, ItemState, RedactedItemView, RevisionId,
 };
 use coding_adventures_vault_pm_format::{DeviceId, ObjectId, VaultId};
 use coding_adventures_vault_pm_repository::{OpenReport, PinnedHeads};
@@ -47,6 +48,7 @@ pub struct UnlockedVaultV1 {
     active: ActiveStateV1,
     report: OpenReport,
     current_catalog: CurrentCatalogV1,
+    search: SearchProjectionV1,
     _keys: V1Keys,
     _local_secret: LocalSecretV1,
     _repository: Box<dyn ApplicationRepository>,
@@ -116,6 +118,32 @@ impl UnlockedVaultV1 {
         }
         Ok(views)
     }
+
+    /// Search unambiguous live items using only approved redacted metadata.
+    ///
+    /// The owned query is wiped on every return path. It must contain 1–256
+    /// UTF-8 bytes and no control characters. Results optionally require
+    /// membership in one explicit collection and are ordered by normalized
+    /// display title, schema, then exact item-ID bytes. Any current conflict
+    /// aborts the complete search without returning partial results.
+    pub fn search_items(
+        &self,
+        query: Zeroizing<String>,
+        collection: Option<CollectionId>,
+        limit: usize,
+    ) -> Result<Vec<RedactedItemView>, ApplicationError> {
+        if self.current_catalog.conflicted_item_count() != 0 {
+            return Err(ApplicationError::ConflictRequired);
+        }
+        self.search
+            .search(query, collection, limit, &self.current_catalog.items)
+    }
+
+    /// Return how many unambiguous live items are held in the wipe-on-lock
+    /// search projection without exposing item identities or indexed text.
+    pub fn search_item_count(&self) -> usize {
+        self.search.len()
+    }
 }
 
 fn project_current_item(
@@ -144,6 +172,7 @@ impl Debug for UnlockedVaultV1 {
                 "conflicted_item_count",
                 &self.current_catalog.conflicted_item_count(),
             )
+            .field("search_item_count", &self.search.len())
             .finish_non_exhaustive()
     }
 }
@@ -195,11 +224,13 @@ pub fn open_active_vault(
         &report,
         active.vault_id(),
     )?;
+    let search = SearchProjectionV1::build(&current_catalog.items)?;
 
     Ok(UnlockedVaultV1 {
         active,
         report,
         current_catalog,
+        search,
         _keys: material.keys,
         _local_secret: material.local_secret,
         _repository: repository,
@@ -592,14 +623,21 @@ mod tests {
         let fixture = generation_zero_bytes();
         let root_key: [u8; 32] = fixture[48..80].try_into().unwrap();
         let keys = V1Keys::derive(active.vault_id(), &root_key).unwrap();
+        let mut collections = ObservedSet::new();
+        collections
+            .add(CollectionId::new([0x82; 16]), OperationId::new([0x83; 32]))
+            .unwrap();
+        let mut tags = ObservedSet::new();
+        tags.add("Finance".to_owned(), OperationId::new([0x84; 32]))
+            .unwrap();
         let document = ItemDocument::new(
             item_id,
             ContentType::new(LOGIN_V1).unwrap(),
             100,
             200,
             LwwRegister::new(false, 200, OperationId::new([0x81; 32])),
-            ObservedSet::new(),
-            ObservedSet::new(),
+            collections,
+            tags,
             AnyRecord::Login(Login {
                 title: title.into(),
                 username: "ada@example.test".into(),
@@ -805,9 +843,10 @@ mod tests {
         assert_eq!(session.item_count(), 0);
         assert_eq!(session.candidate_count(), 0);
         assert_eq!(session.conflicted_item_count(), 0);
+        assert_eq!(session.search_item_count(), 0);
         assert_eq!(
             format!("{session:?}"),
-            "UnlockedVaultV1 { local_pin_count: 1, verified_head_count: 1, item_count: 0, candidate_count: 0, conflicted_item_count: 0, .. }"
+            "UnlockedVaultV1 { local_pin_count: 1, verified_head_count: 1, item_count: 0, candidate_count: 0, conflicted_item_count: 0, search_item_count: 0, .. }"
         );
     }
 
@@ -865,7 +904,7 @@ mod tests {
             panic!("fixture must be active")
         };
         let item_id = ItemId::new([0x27; 16]);
-        let title = "Personal portal";
+        let title = "ÉCLAIR Personal portal";
         let password = "never-log-this-password";
         let publication = pending_live_publication(&active, item_id, title, password);
         let pending = LocalVaultStateV1::pending_publication(active, publication).unwrap();
@@ -908,6 +947,68 @@ mod tests {
         }
         assert_eq!(session.list_items().unwrap(), vec![view.clone()]);
         assert_eq!(session.get_item(ItemId::new([0x28; 16])).unwrap(), None);
+        assert_eq!(session.search_item_count(), 1);
+        for query in [
+            "E\u{301}CLAIR",
+            "ada@EXAMPLE",
+            "AMPLE.TEST",
+            "finance",
+            "portal ada@example",
+            "a",
+        ] {
+            assert_eq!(
+                session
+                    .search_items(Zeroizing::new(query.to_owned()), None, 10)
+                    .unwrap(),
+                vec![view.clone()]
+            );
+        }
+        assert!(session
+            .search_items(Zeroizing::new("   ".to_owned()), None, 10)
+            .unwrap()
+            .is_empty());
+        assert_eq!(
+            session
+                .search_items(
+                    Zeroizing::new("portal".to_owned()),
+                    Some(CollectionId::new([0x82; 16])),
+                    10,
+                )
+                .unwrap(),
+            vec![view.clone()]
+        );
+        assert!(session
+            .search_items(
+                Zeroizing::new("portal".to_owned()),
+                Some(CollectionId::new([0x85; 16])),
+                10,
+            )
+            .unwrap()
+            .is_empty());
+        for secret in [password, "private note"] {
+            assert!(session
+                .search_items(Zeroizing::new(secret.to_owned()), None, 10)
+                .unwrap()
+                .is_empty());
+        }
+        for invalid in ["", "line\nbreak", "\0"] {
+            assert_eq!(
+                session.search_items(Zeroizing::new(invalid.to_owned()), None, 10),
+                Err(ApplicationError::InvalidInput)
+            );
+        }
+        assert_eq!(
+            session.search_items(Zeroizing::new("x".repeat(257)), None, 10),
+            Err(ApplicationError::InvalidInput)
+        );
+        assert_eq!(
+            session.search_items(Zeroizing::new("portal".to_owned()), None, 0),
+            Err(ApplicationError::InvalidInput)
+        );
+        assert_eq!(
+            session.search_items(Zeroizing::new("portal".to_owned()), None, 10_001),
+            Err(ApplicationError::BoundExceeded)
+        );
         let debug = format!("{view:?}");
         assert!(!debug.contains(title));
         assert!(!debug.contains(password));
@@ -959,6 +1060,10 @@ mod tests {
                     Err(ApplicationError::ConflictRequired)
                 );
                 assert_eq!(session.candidate_count(), 2);
+                assert_eq!(
+                    session.search_items(Zeroizing::new("anything".to_owned()), None, 10),
+                    Err(ApplicationError::ConflictRequired)
+                );
             }
         }
     }

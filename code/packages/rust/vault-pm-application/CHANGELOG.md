@@ -2,6 +2,30 @@
 
 All notable changes to this package are documented here.
 
+## [0.12.0] - 2026-08-09
+
+### Added
+
+- Build a rebuildable in-memory search projection during authenticated reopen
+  and expose bounded `search_items` reads with optional exact collection
+  filtering.
+- Normalize indexed metadata and owned queries with Unicode lowercase followed
+  by NFC, support valid one- and two-byte queries, and deterministically order
+  results by normalized display title, schema, then item-ID bytes.
+
+### Security
+
+- Admit only display titles/labels, usernames, URLs, services, database hosts,
+  and present tags; passwords, note bodies, seeds, tokens, card data, lease IDs,
+  opaque payloads, and non-allowlisted metadata never enter the projection.
+- Hold normalized searchable text and query terms in wipe-on-drop containers,
+  clear the trigram accelerator with the unlocked session, fail closed on any
+  current conflict, and omit indexed values and identities from diagnostics.
+- Intersect whitespace-delimited token candidates, post-filter every trigram
+  candidate for exact normalized substring matches, and
+  safely scan short queries or entries too large for the accelerator without
+  truncating searchable metadata.
+
 ## [0.11.0] - 2026-08-09
 
 ### Added

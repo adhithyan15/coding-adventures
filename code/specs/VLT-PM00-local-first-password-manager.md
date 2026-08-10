@@ -1292,9 +1292,15 @@ changelog, focused build, and downstream validation.
        rejection, and payload-free session counts;
    6d. redacted current-item views over materialized candidates, failing closed
        on unresolved conflicts without returning partial lists;
-   6e. the wipe-on-lock in-memory search projection, including the
-       password-manager query and Unicode-normalization policy adapter; and
-   7. item mutation, history, export, audit, status, and doctor workflows.
+   6e. the completed wipe-on-lock in-memory search projection, including the
+       password-manager query, exact collection-filter, Unicode-normalization,
+       safe-field allowlist, and deterministic ordering policy adapters;
+   7a. add-item mutation preparation and crash-resumable publication;
+   7b. compare-and-replace, delete, restore, and explicit conflict-resolution
+       mutation workflows;
+   7c. bounded history traversal and explicit zeroizing field reveal;
+   7d. authenticated portable export and restore/import preparation; and
+   7e. audit, status, and doctor workflows.
 9. `vault-pm-cli` + real executable and pseudo-terminal E2E suite.
 10. Crash/fault matrix and local restore drill.
 
