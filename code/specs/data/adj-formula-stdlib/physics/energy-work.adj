@@ -29,6 +29,22 @@
 % university .edu physics reference) for kinetic energy — so each `formula` carries
 % the same provenance envelope every shipped grounded clause carries; the linter
 % rejects an unsourced one.
+%
+% This library also carries two rung-0 CAS-wiring companions (ADJ-FORMULA-
+% LIBRARIES FL-10, §3D — continuing Wave 3's algebra-applied-to-science thread):
+% `force_from_work` and `distance_from_work` solve the SAME cited NASA equation
+% (`W = F d`) as the forward `work` formula for a different unknown, through
+% `cas-solve`'s real linear-equation solver — the exact discipline `electricity.
+% adj`'s `resistance_from_ohms_law` and `kinematics.adj`'s `acceleration_from_
+% final_velocity`/`time_from_final_velocity` already established. Each new
+% symbolic names its OWN target finding (`force_from_work`, not `force`) rather
+% than reusing the forward formula's plain parameter name, so both new solves
+% coexist with the original forward example in one query file — no target-
+% collision, no file-splitting needed. `kinetic_energy`'s inverse is deliberately
+% absent here: solving for velocity is quadratic (out of rung-0's linear-only
+% scope); solving for mass is linear but is a genuinely different nested-
+% multiplication shape (mass sits between two constant factors once velocity is
+% bound) left for a later pass, to keep this change scoped to one law.
 % ============================================================================
 
 % ----------------------------------------------------------------------------
@@ -49,6 +65,9 @@ dictionary physics_vocab {
 
     define work           : finding  surface "work", "work done", "W"              % energy, e.g. J
     define kinetic_energy : finding  surface "kinetic energy", "KE"                % energy, e.g. J
+
+    define force_from_work    : finding  surface "missing force", "unknown force"
+    define distance_from_work : finding  surface "missing distance", "unknown distance"
 }
 
 % ----------------------------------------------------------------------------
@@ -66,6 +85,19 @@ formulabook physics_energy {
     % NASA Glenn Research Center (Beginner's Guide to Aeronautics) defines work
     % this way and gives the formula W = F * s.
     formula work(force, distance) = force * distance
+        source "For scientists, work is the product of a force acting through a distance."
+        locator "https://www.grc.nasa.gov/www/k-12/airplane/work.html"
+        trust authoritative
+
+    % W = F d, SOLVED FOR FORCE instead of computed forward — the same cited
+    % NASA equation, only which quantity is bound and which is unknown differs.
+    symbolic force_from_work(work, distance) { work == force_from_work * distance } for force_from_work
+        source "For scientists, work is the product of a force acting through a distance."
+        locator "https://www.grc.nasa.gov/www/k-12/airplane/work.html"
+        trust authoritative
+
+    % W = F d, SOLVED FOR DISTANCE. The same cited equation again.
+    symbolic distance_from_work(work, force) { work == force * distance_from_work } for distance_from_work
         source "For scientists, work is the product of a force acting through a distance."
         locator "https://www.grc.nasa.gov/www/k-12/airplane/work.html"
         trust authoritative
