@@ -8,6 +8,7 @@ import {
 } from "./loader.js";
 import { policyTableWidth } from "./narration-cli.js";
 import { buildCurriculumGapReport, renderCurriculumGapReport } from "./report.js";
+import { renderStrandSummary, summarizeStrands } from "./strands.js";
 
 interface ReportOptions {
   root?: string;
@@ -59,8 +60,14 @@ export function runCurriculumGapReport(args = process.argv.slice(2)): number {
     curricula,
     spine,
   });
-  const json = `${JSON.stringify(report, null, 2)}\n`;
-  const text = renderCurriculumGapReport(report);
+  // HL10 §2, report-only. Appended rather than folded into CurriculumGapReport
+  // because the strand model measures the SPINE, not the lesson corpus, and
+  // merging the two would make a spine defect look like a lesson defect.
+  const policy = loadChapterPolicy(options.root);
+  const strands = summarizeStrands(spine, policy.maxNewAtomsPerChapter);
+
+  const json = `${JSON.stringify({ ...report, strands }, null, 2)}\n`;
+  const text = `${renderCurriculumGapReport(report)}${renderStrandSummary(strands).join("\n")}\n`;
   process.stdout.write(options.format === "json" ? json : text);
   return 0;
 }
