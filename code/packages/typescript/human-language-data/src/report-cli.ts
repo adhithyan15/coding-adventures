@@ -12,6 +12,7 @@ import { policyTableWidth } from "./narration-cli.js";
 import { buildCurriculumGapReport, renderCurriculumGapReport } from "./report.js";
 import { renderStrandSummary, summarizeStrands } from "./strands.js";
 import { cellCoverage, renderCellCoverage } from "./grammar-cells.js";
+import { buildRootLedger, renderRootLedger } from "./root-ledger.js";
 
 interface ReportOptions {
   root?: string;
@@ -80,12 +81,22 @@ export function runCurriculumGapReport(args = process.argv.slice(2)): number {
     policy.maxNewGrammarCellsPerLesson,
   );
 
-  const json = `${JSON.stringify({ ...report, strands, grammarCells: cells }, null, 2)}\n`;
+  // HL10 §6.2. Etymology is the corpus's signature, but a root is only useful
+  // if it is spent again -- so the ledger counts payoffs, not mentions.
+  const rootLedger = buildRootLedger(lessons, policy.rootLedgerMinReuse ?? 3);
+
+  const json = `${JSON.stringify(
+    { ...report, strands, grammarCells: cells, rootLedger: rootLedger.summary },
+    null,
+    2,
+  )}\n`;
   const text = [
     renderCurriculumGapReport(report),
     renderStrandSummary(strands).join("\n"),
     "",
     renderCellCoverage(spanishCells, slots, cells).join("\n"),
+    "",
+    renderRootLedger(rootLedger).join("\n"),
     "",
   ].join("\n");
   process.stdout.write(options.format === "json" ? json : text);

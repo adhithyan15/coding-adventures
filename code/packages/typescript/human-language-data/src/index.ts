@@ -27,6 +27,13 @@ export {
   type CellGraphDefect,
   type CellCoverage,
 } from "./grammar-cells.js";
+export {
+  buildRootLedger,
+  renderRootLedger,
+  type RootEntry,
+  type RootLedger,
+  type RootNamespace,
+} from "./root-ledger.js";
 export { parseBodyBlocks, parseLesson, buildDataset, type ParsedLesson } from "./parse.js";
 export {
   parseLessonActivityValue,
