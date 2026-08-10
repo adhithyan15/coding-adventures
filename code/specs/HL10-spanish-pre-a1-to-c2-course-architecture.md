@@ -805,8 +805,26 @@ B1 159–275, B2 276–417, C1 418–634, C2 635–851.
 **≈4,950 lessons · ≈851 chapters · ≈400 spine nodes.**
 
 At ~2 pages per lesson plus chapter front matter, that is **≈10,500 pages** —
-which lands exactly where the owner said it may. It ships as **seven volumes**,
-one per stage, because a single 10,500-page PDF is not a thing anyone can open.
+which lands exactly where the owner said it may.
+
+**It ships as one continuous book in seven parts** (owner decision, 2026-08-10).
+The single arc is the point: a learner should be able to read forward from
+*gracias* to Cervantes without ever changing artifact, and the strands only feel
+like strands if they are visibly continuous.
+
+That decision has engineering consequences the pipeline must absorb, none of
+which are reasons to revisit it:
+
+- **Scale.** The Spanish book is 214 pages today. 10,500 is ~50×. The existing
+  `latexmk` loop, the LaTeX warning gate, and the per-chapter hash checks all
+  need to stay linear in chapter count; the all-books CI job currently builds 22
+  books in one pass and will need this one budgeted separately.
+- **Bookmarks and cross-references.** ~851 chapters and ~4,950 lesson sections
+  is a large `hyperref` destination table. The duplicate-destination gate that
+  HL-B33 and friends drove to zero must hold at fifty times the size.
+- **Reader ergonomics.** A single PDF this size opens slowly. The build should
+  additionally emit per-part PDFs as a **convenience artifact**, clearly not the
+  canonical form — the canonical book is the continuous one.
 
 Study time at one lesson per day: 13.5 years. At ten lessons per day: 16 months.
 The course is designed for the second, and the app's scheduler assumes sessions,
@@ -1009,19 +1027,38 @@ in full.
 
 ---
 
-## 16. Decisions this spec does not make
+## 16. Owner decisions, recorded
 
-Two are the owner's, and the design is parameterized so that neither blocks
-authoring:
+Both were open when this spec was drafted and were settled on 2026-08-10. They
+are recorded here rather than in a session, because the repository is the source
+of truth.
 
-1. **Which variety is productive by default?** Peninsular (*vosotros*, distinción),
-   neutral Latin American (*ustedes*, seseo), or Rioplatense (*vos*). §4.3 makes
-   this a config key rather than a rewrite, and every split point is authored with
-   all forms regardless — but the drills have to default to something.
-   *Recommendation: neutral Latin American as productive, with Peninsular and
-   Rioplatense fully receptive from pre-A1.* It is the largest speaker base, and
-   `vosotros` is the form a learner can most safely acquire receptively.
+### 16.1 The productive variety is neutral Latin American
 
-2. **Seven volumes or one?** §11 assumes seven, one per stage. The alternative is
-   one continuous book with seven parts, which reads better and opens worse.
-   *Recommendation: seven volumes, plus a generated single-file edition for search.*
+*ustedes*, seseo, *tú*. Peninsular and Rioplatense are **fully receptive from
+pre-A1** — the learner meets *vosotros*, distinción and *vos* from block 4 and is
+never surprised by them, but produces the neutral American forms.
+
+Rationale: the largest speaker base, and `vosotros` is the form a learner can most
+safely hold by recognition alone. Per §4.3 this is a **track configuration key**,
+not a property of the lessons: every split point is authored with all forms and
+one marked `productive`, so a Peninsular edition is a config change and a drill
+regeneration, never a rewrite. That property is the reusable part — Portuguese
+(pt-PT/pt-BR), Arabic and Hindi/Urdu all need the same mechanism.
+
+### 16.2 One continuous book, in seven parts
+
+Not seven volumes. The single arc is the deliverable; §11 records the decision and
+the engineering consequences the build must absorb.
+
+### 16.3 Still genuinely open
+
+Nothing blocking. Two questions that only become real at B1 and can be answered
+from evidence by then rather than guessed now:
+
+1. **How much C1/C2 listening needs recorded audio** rather than TTS. The regional
+   variety block (§12.6, block 58) is the first place synthetic speech may stop
+   being adequate, since the whole point is hearing how varieties actually differ.
+2. **Whether the derived-reach model needs its own gate.** §6.7 reports derived
+   reach separately from taught atoms; if it ever starts being cited as coverage,
+   it needs the same fail-closed treatment level claims got in HL09 §3.1.

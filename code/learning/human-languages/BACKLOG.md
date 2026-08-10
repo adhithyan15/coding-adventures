@@ -288,10 +288,13 @@ Spanish's 188 lessons contain **one** distinct culture atom, **zero** mentions o
 | HL-C86 | Queued | Author pre-A1 to its full 30 chapters / ~180 lessons. | HL09 §3.1 satisfied at pre-A1; ≥95% of lessons `voice`; every chapter drivable from its first lesson, with an intro, an etymological thread, and a culture note. |
 | HL-C87 | Queued | Per-atom mastery and voice mode in Language Ladder (HL10 §10.1–10.2). | The app schedules from atom strength rather than lesson completion; a full chapter is completable hands-free. |
 
-**Two owner decisions are open** and are recorded in HL10 §16 rather than assumed:
-which variety is productive by default (recommendation: neutral Latin American,
-with Peninsular and Rioplatense receptive from pre-A1), and seven volumes versus
-one (recommendation: seven, plus a generated single-file edition for search).
+**Both owner decisions are settled** (2026-08-10) and recorded in HL10 §16: the
+productive variety is **neutral Latin American**, with Peninsular and Rioplatense
+fully receptive from pre-A1 and the choice held as a track config key rather than
+baked into lessons; and the course ships as **one continuous book in seven parts**,
+not seven volumes, with per-part PDFs emitted only as a non-canonical convenience.
+The second decision puts a ~50× scale requirement on the book pipeline (214 pages
+today), tracked in HL10 §11.
 
 ## P0 — Step-by-Step capability program (HL05–HL08)
 
