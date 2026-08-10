@@ -2,6 +2,28 @@
 
 All notable changes to this package are documented here.
 
+## [0.3.0] - 2026-08-09
+
+### Added
+
+- Exact canonical `PreparedInit`, `Active`, and `PendingPublication` owner-state
+  codecs with retry-stable repository journals.
+- Byte-oriented injected bootstrap and atomic local-state store contracts.
+- Domain-separated local-secret XChaCha20-Poly1305 sealing and opening.
+- Random bootstrap locators and domain-separated authority fingerprints.
+
+### Security
+
+- State decoding cross-checks bootstrap, vault, authority, device,
+  certificate-frame ID, announcement, commit ID, catalog, head, and counter
+  relationships before recovery can use persisted bytes.
+- Prepared initialization verifies the embedded-authority generation-zero
+  bootstrap signature; pending publication rebinds announcement identity to
+  the last active vault, device, and certificate.
+- Pending mutations retain exact randomized and signed publication bytes, so a
+  retry cannot equivocate at one reserved device counter.
+- Store and state diagnostics remain closed and payload-free.
+
 ## [0.2.0] - 2026-08-09
 
 ### Added

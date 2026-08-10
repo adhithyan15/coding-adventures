@@ -108,6 +108,25 @@ persist the locator key or verifier secret state.
 semantics. A provider-visible locator is random and independent of vault ID,
 user name, repository bucket IDs, and record metadata.
 
+`BootstrapLocator` is exactly 32 independently random bytes. The injected
+contract is deliberately byte-oriented so adapters cannot reinterpret or
+normalize signed data:
+
+```rust
+pub trait BootstrapStore: Send + Sync {
+    fn load_latest(
+        &self,
+        locator: BootstrapLocator,
+    ) -> Result<Option<Vec<u8>>, BootstrapStoreError>;
+    fn put_generation(
+        &self,
+        locator: BootstrapLocator,
+        expected_previous: Option<BootstrapId>,
+        exact_bootstrap: &[u8],
+    ) -> Result<(), BootstrapStoreError>;
+}
+```
+
 Generation zero requires `expected_previous = None`. Rotation requires the
 last pinned bootstrap ID. A successful put is followed by an exact readback.
 Duplicate identical puts succeed; a different value for the same generation or
@@ -133,6 +152,61 @@ The state contains no passphrase or unwrapped root/device key. It may contain:
 Compare-exchange mismatch returns `ConcurrentHost` and never overwrites the
 winner. Hosts backed by files use owner-only create plus durable atomic replace;
 IndexedDB, SQLite, or native preferences use an equivalent transaction.
+
+The owner-state adapter also remains byte-oriented. `expected = None` means
+create-if-absent; otherwise the host must compare the complete exact current
+byte string inside the same transaction that installs `replacement`:
+
+```rust
+pub trait LocalStateStore: Send + Sync {
+    fn load(
+        &self,
+        locator: BootstrapLocator,
+    ) -> Result<Option<Vec<u8>>, LocalStateStoreError>;
+    fn compare_exchange(
+        &self,
+        locator: BootstrapLocator,
+        expected: Option<&[u8]>,
+        replacement: &[u8],
+    ) -> Result<(), LocalStateStoreError>;
+}
+```
+
+The exact canonical `LocalVaultStateV1` wrapper is `{1: version = 1, 2:
+state, 3: body}`. State codes are `1 = PreparedInit`, `2 = Active`, and `3 =
+PendingPublication`; all maps are closed. `Active` body integer keys are:
+
+| Key | Value |
+|---:|---|
+| 1 | 32-byte bootstrap locator |
+| 2 | 16-byte vault ID |
+| 3 | last accepted 32-byte bootstrap ID |
+| 4 | 32-byte authority fingerprint |
+| 5 | 16-byte current device ID |
+| 6 | 32-byte encrypted device-certificate object ID |
+| 7 | exact encrypted device-certificate frame bytes |
+| 8 | encrypted local-secret `AeadEnvelopeV1` |
+| 9 | sorted unique pinned commit-head IDs |
+| 10 | last durably consumed non-zero device counter |
+| 11 | pinned encrypted catalog-root object ID |
+
+The authority fingerprint is
+`SHA-256("VPM-AUTHORITY-FINGERPRINT-v1" || authority_public_key)`. The
+certificate frame must reproduce key 6. Active pins are never empty.
+
+`PreparedInit` body is `{1: exact_bootstrap, 2: intended_active, 3:
+publication_journal}`. `PendingPublication` body is `{1: prior_active, 2:
+publication_journal}`. A publication journal uses `{1: object_frames, 2:
+commit_frame, 3: announcement, 4: base_heads, 5: expected_heads, 6:
+reserved_counter, 7: resulting_catalog_root}`. Frames and announcements are
+stored as their exact byte strings. The commit frame ID must occur in expected
+heads, the announcement must name that commit and counter, object IDs must be
+unique, and the resulting catalog root must occur among the non-commit frames.
+Prepared initialization additionally binds the generation-zero bootstrap ID,
+vault, valid embedded-authority self-signature, authority fingerprint,
+device/certificate identity, empty base heads, and complete intended final
+state. Pending publication binds the base heads, vault, device, and certificate
+to the prior active state and requires the exact next non-zero reserved counter.
 
 ## 4. Cryptographic profile and live keys
 
@@ -226,6 +300,12 @@ LocalSecretV1 {
 It is canonical, bounded, AEAD-encrypted under `vpm/local-state-key/v1`, and
 stored only as an `AeadEnvelopeV1` in local state. Public keys are re-derived
 after unlock and must match the pinned bootstrap and certificate.
+
+Local-secret AEAD associated data is the exact concatenation
+`"VPM-LOCAL-SECRET-v1" || suite_u16_be || vault_id`. Its nonce is independently
+random and supplied by the host entropy boundary. Authentication and strict
+decoding complete before private seeds are exposed, and a decoded vault ID must
+match the key-derivation vault ID.
 
 Phase 1A keeps the authority seed locally because it must support password
 rotation and later enrollment. It is loaded only into an unlocked session and

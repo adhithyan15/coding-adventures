@@ -9,6 +9,7 @@ coding_adventures_canonical_cbor = { path = "../canonical-cbor" }
 coding_adventures_chacha20_poly1305 = { path = "../chacha20-poly1305" }
 coding_adventures_ed25519 = { path = "../ed25519" }
 coding_adventures_hkdf = { path = "../hkdf" }
+coding_adventures_sha256 = { path = "../sha256" }
 coding_adventures_vault_pm_domain = { path = "../vault-pm-domain" }
 coding_adventures_vault_pm_format = { path = "../vault-pm-format" }
 coding_adventures_vault_pm_repository = { path = "../vault-pm-repository" }

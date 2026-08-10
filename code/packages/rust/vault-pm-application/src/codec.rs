@@ -1146,8 +1146,12 @@ mod tests {
     #[test]
     fn application_errors_are_closed_and_payload_free() {
         for (error, label) in [
+            (ApplicationError::NotInitialized, "NotInitialized"),
+            (ApplicationError::AlreadyInitialized, "AlreadyInitialized"),
             (ApplicationError::InvalidInput, "InvalidInput"),
             (ApplicationError::BoundExceeded, "BoundExceeded"),
+            (ApplicationError::ConcurrentHost, "ConcurrentHost"),
+            (ApplicationError::StorageUnavailable, "StorageUnavailable"),
             (ApplicationError::IntegrityFailure, "IntegrityFailure"),
             (ApplicationError::Unsupported, "Unsupported"),
             (ApplicationError::InternalInvariant, "InternalInvariant"),
