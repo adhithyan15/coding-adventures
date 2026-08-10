@@ -1433,7 +1433,9 @@ changelog, focused build, and downstream validation.
        separate one-shot processes, using `VLT-PM11-cli-login-create-read.md`.
 9b-2b. redacted authenticated search and history reads plus non-login show
        renderers.
-9b-3a. remaining record creation and authenticated replace/edit mutations.
+9b-3a-1. revision-safe authenticated login replacement using
+         `VLT-PM12-cli-login-replace.md`.
+9b-3a-2. remaining record creation plus richer notes/multiple-URL editing.
 9b-3b. authenticated delete, restore, and conflict-resolution mutations.
 9b-4. portable export/import CLI host composition and destination policy.
 9b-5. foreground interactive shell over the same command/use-case boundary.
@@ -1495,10 +1497,11 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   `VLT-PM04-repository.md`, `VLT-PM05-application.md`,
   `VLT-PM06-local-host.md`, `VLT-PM07-config.md`, `VLT-PM08-cli-host.md`,
   `VLT-PM09-cli-bootstrap.md`, `VLT-PM10-cli-authenticated-verification.md`,
-  and `VLT-PM11-cli-login-create-read.md` — product repository wire,
+  `VLT-PM11-cli-login-create-read.md`, and `VLT-PM12-cli-login-replace.md` —
+  product repository wire,
   object-store, domain, verified-DAG, application, local-host, configuration,
   terminal/entropy, executable composition, authenticated verification, and
-  first CRUD-vertical contracts.
+  first CRUD-vertical, and revision-safe replacement contracts.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.

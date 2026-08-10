@@ -256,6 +256,25 @@ impl UnlockedVaultV1 {
         project_current_item(candidates)
     }
 
+    /// Return the exact sole current live revision for optimistic mutation.
+    ///
+    /// A missing item and a current tombstone both return `None`. Multiple
+    /// retained candidates fail closed with [`ApplicationError::ConflictRequired`].
+    /// The revision identity is an application capability for a later
+    /// compare-and-swap mutation and is not an ordinary display value.
+    pub fn current_item_revision(
+        &self,
+        item_id: ItemId,
+    ) -> Result<Option<RevisionId>, ApplicationError> {
+        let Some(candidates) = self.current_catalog.items.get(&item_id) else {
+            return Ok(None);
+        };
+        let [candidate] = candidates.as_slice() else {
+            return Err(ApplicationError::ConflictRequired);
+        };
+        Ok(matches!(candidate.state(), ItemState::Live(_)).then_some(candidate.revision_id()))
+    }
+
     /// Return every unambiguous live item as an ordinary redacted view.
     ///
     /// Views are ordered by exact item-ID bytes. A current conflict aborts the
@@ -3175,7 +3194,17 @@ mod tests {
             _ => panic!("fixture must project as a login"),
         }
         assert_eq!(session.list_items().unwrap(), vec![view.clone()]);
+        assert_eq!(
+            session.current_item_revision(item_id).unwrap(),
+            Some(session.current_catalog.items[&item_id][0].revision_id())
+        );
         assert_eq!(session.get_item(ItemId::new([0x28; 16])).unwrap(), None);
+        assert_eq!(
+            session
+                .current_item_revision(ItemId::new([0x28; 16]))
+                .unwrap(),
+            None
+        );
         assert_eq!(session.search_item_count(), 1);
         for query in [
             "E\u{301}CLAIR",
@@ -3278,6 +3307,7 @@ mod tests {
 
             if candidate_count == 1 {
                 assert_eq!(session.get_item(item_id).unwrap(), None);
+                assert_eq!(session.current_item_revision(item_id).unwrap(), None);
                 assert!(session.list_items().unwrap().is_empty());
             } else {
                 assert_eq!(
@@ -3286,6 +3316,10 @@ mod tests {
                 );
                 assert_eq!(
                     session.list_items(),
+                    Err(ApplicationError::ConflictRequired)
+                );
+                assert_eq!(
+                    session.current_item_revision(item_id),
                     Err(ApplicationError::ConflictRequired)
                 );
                 assert_eq!(session.candidate_count(), 2);

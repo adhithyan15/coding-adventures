@@ -11,6 +11,7 @@ use std::sync::atomic::{AtomicU64, Ordering};
 static NEXT_TEMP: AtomicU64 = AtomicU64::new(1);
 const PASSPHRASE: &[u8] = b"e2e correct horse battery staple";
 const ITEM_PASSWORD: &[u8] = b"e2e item password stays encrypted";
+const UPDATED_ITEM_PASSWORD: &[u8] = b"e2e updated password stays encrypted";
 const STDIN_INJECTION: &[u8] = b"stdin injected secret\nstdin injected secret\n";
 
 struct TestHome(PathBuf);
@@ -122,14 +123,63 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert!(show_transcript.contains("URL: \"https://example.test\""));
     assert!(!show_transcript.contains("e2e item password"));
 
+    let (edit_status, edit_transcript) = run_edit_login_in_pty(&home, &item_id);
+    assert!(edit_status.success(), "item edit failed: {edit_transcript}");
+    assert!(edit_transcript.contains(&format!("Item updated: {item_id}")));
+    assert!(!edit_transcript.contains("e2e updated password"));
+
+    let (updated_status, updated_transcript) =
+        run_unlock_in_pty(&home, &["item", "show", &item_id], b"Password: <redacted>");
+    assert!(
+        updated_status.success(),
+        "updated item show failed: {updated_transcript}"
+    );
+    assert!(updated_transcript.contains("Title: \"Updated account\""));
+    assert!(updated_transcript.contains("Username: \"grace@example.test\""));
+    assert!(updated_transcript.contains("URL: none"));
+    assert!(!updated_transcript.contains("e2e updated password"));
+
     assert_tree_excludes(&home.0, PASSPHRASE);
     assert_tree_excludes(&home.0, ITEM_PASSWORD);
+    assert_tree_excludes(&home.0, UPDATED_ITEM_PASSWORD);
 }
 
 fn run_add_login_in_pty(home: &TestHome) -> (ExitStatus, String) {
+    run_login_form_in_pty(
+        home,
+        &["item", "add", "login"],
+        b"Example account",
+        b"ada@example.test",
+        ITEM_PASSWORD,
+        b"https://example.test",
+        b"Item added: ",
+    )
+}
+
+fn run_edit_login_in_pty(home: &TestHome, item_id: &str) -> (ExitStatus, String) {
+    run_login_form_in_pty(
+        home,
+        &["item", "edit", item_id],
+        b"Updated account",
+        b"grace@example.test",
+        UPDATED_ITEM_PASSWORD,
+        b"",
+        b"Item updated: ",
+    )
+}
+
+fn run_login_form_in_pty(
+    home: &TestHome,
+    arguments: &[&str],
+    title: &[u8],
+    username: &[u8],
+    password: &[u8],
+    url: &[u8],
+    completion: &[u8],
+) -> (ExitStatus, String) {
     let (mut master, slave) = open_pty();
     let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
-    command.args(["item", "add", "login"]);
+    command.args(arguments);
     home.configure(&mut command);
     command
         .stdin(Stdio::piped())
@@ -156,16 +206,19 @@ fn run_add_login_in_pty(home: &TestHome) -> (ExitStatus, String) {
     master.write_all(PASSPHRASE).unwrap();
     master.write_all(b"\n").unwrap();
     read_until(&mut master, &mut transcript, b"Title: ");
-    master.write_all(b"Example account\n").unwrap();
+    master.write_all(title).unwrap();
+    master.write_all(b"\n").unwrap();
     read_until(&mut master, &mut transcript, b"Username: ");
-    master.write_all(b"ada@example.test\n").unwrap();
+    master.write_all(username).unwrap();
+    master.write_all(b"\n").unwrap();
     read_until(&mut master, &mut transcript, b"Password: ");
-    master.write_all(ITEM_PASSWORD).unwrap();
+    master.write_all(password).unwrap();
     master.write_all(b"\n").unwrap();
     read_until(&mut master, &mut transcript, b"URL (optional): ");
-    master.write_all(b"https://example.test\n").unwrap();
-    read_until(&mut master, &mut transcript, b"Item added: ");
-    let item_line = transcript.len() - b"Item added: ".len();
+    master.write_all(url).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(&mut master, &mut transcript, completion);
+    let item_line = transcript.len() - completion.len();
     read_until_from(&mut master, &mut transcript, item_line, b"\n");
     drop(master);
     let status = child.wait().unwrap();

@@ -5,6 +5,7 @@ manager. It owns strict parsing, stable exit classes, redacted rendering, and
 the bounded `init`, locked `status`/`doctor`, authenticated `audit verify`, and
 opt-in full `doctor --unlock` workflows. It now also owns the first usable item
 vertical: authenticated login creation plus durable redacted list/show. The
+same one-shot boundary now supports revision-safe login replacement. The
 executable is a thin caller of this package.
 
 The driver composes the existing storage-neutral application over separately
@@ -36,6 +37,11 @@ consumes the session through the crash-resumable application mutation.
 `item list` and `item show ITEM` reopen in separate one-shot sessions and
 render only escaped redacted projections; the password and notes body are
 never available to the renderer.
+
+`item edit ITEM` resolves the authenticated sole current revision, opens that
+exact document only inside a wipe-on-drop wrapper, preserves immutable identity
+and unedited metadata, collects the complete bounded login form again, and
+consumes the session through the crash-resumable replacement compare-and-swap.
 
 ## Verification
 

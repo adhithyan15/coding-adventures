@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added revision-safe `item edit ITEM` for complete login-field replacement
+  while preserving identity, metadata, notes, and causal history.
 - Added strict `item add login`, `item list`, and `item show ITEM` commands.
 - Added controlling-terminal item input, fresh mutation identities, durable
   application publication, escaped redacted rendering, and restart coverage.

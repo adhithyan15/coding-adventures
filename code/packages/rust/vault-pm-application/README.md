@@ -66,6 +66,11 @@ returns a partial list, and every candidate remains available for later
 resolution. Returned lists are deterministic by exact item-ID bytes and their
 display metadata is wiped on drop by the domain view types.
 
+Optimistic hosts can separately request the exact sole current live revision
+for a later compare-and-swap mutation. Missing/tombstoned items return no
+capability and conflicts fail closed. Revision identities remain absent from
+ordinary redacted item views and public diagnostics.
+
 Authenticated reopen also builds a session-owned, rebuildable search
 projection. The application admits only the VLT-PM05 allowlist of redacted
 titles/labels, usernames, URLs, services, database hosts, and present tags;
