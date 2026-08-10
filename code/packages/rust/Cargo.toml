@@ -1058,4 +1058,5 @@ members = [
   "vault-pm-storage",
   "vault-pm-storage-storage-core",
   "vault-pm-repository",
+  "vault-pm-application",
 ]

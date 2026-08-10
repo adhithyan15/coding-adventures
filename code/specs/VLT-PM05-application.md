@@ -170,6 +170,10 @@ VPM-OBJECT-PAYLOAD-v1
 VPM-PORTABLE-EXPORT-v1
 ```
 
+Object wrap and payload AAD are the corresponding prefix bytes followed by the
+big-endian two-byte suite, 16-byte vault ID, and big-endian eight-byte object
+kind. No delimiter or host/provider value is inserted.
+
 The object kind registry is fixed in section 6. A frame cannot be decrypted as
 a different kind. AEAD authentication completes before plaintext parsing.
 
@@ -201,12 +205,12 @@ defined by VLT-PM01. The encrypted local secret record is:
 
 ```text
 LocalSecretV1 {
-    version: 1,
-    vault_id: [u8; 16],
-    device_id: [u8; 16],
-    authority_seed: [u8; 32],
-    device_signing_seed: [u8; 32],
-    device_x25519_secret: [u8; 32],
+    1: version = 1,
+    2: vault_id = [u8; 16],
+    3: device_id = [u8; 16],
+    4: authority_seed = [u8; 32],
+    5: device_signing_seed = [u8; 32],
+    6: device_x25519_secret = [u8; 32],
 }
 ```
 
@@ -221,8 +225,9 @@ later extensions.
 
 ## 6. Encrypted application object kinds
 
-The authenticated plaintext in every VLT-PM01 frame begins with one closed
-canonical CBOR map. Kind codes are:
+The authenticated plaintext in every VLT-PM01 frame is one closed canonical
+CBOR map. Integer key `1` is version `1`, integer key `2` is the object kind,
+and the remaining keys are kind-specific. Kind codes are:
 
 | Code | Name | Purpose |
 |---:|---|---|
@@ -235,14 +240,19 @@ All maps include version `1` and the kind code. Unknown fields or kinds are
 rejected. Plaintext object size is limited to 16 MiB in Phase 1A even though the
 outer frame permits 64 MiB.
 
+Device-certificate and commit objects use integer key `3` for the exact signed
+VLT-PM01 bytes. The wrapper is authenticated as part of the object payload;
+decoders then strictly decode and verify the nested signed value.
+
 ### 6.1 Item revision
 
 ```text
 ItemRevisionV1 {
-    version: 1,
-    kind: 1,
-    causal_parents: sorted unique array<ObjectId>,
-    state: Live(ItemDocumentV1) | Tombstone(ItemId, deleted_at_ms),
+    1: version = 1,
+    2: kind = 1,
+    3: causal_parents = sorted unique array<ObjectId>,
+    4: state = 1 live | 2 tombstone,
+    5: body = ItemDocumentV1 | Tombstone(ItemId, deleted_at_ms),
 }
 ```
 
@@ -261,11 +271,11 @@ validates afterward.
 
 ```text
 CatalogV1 {
-    version: 1,
-    kind: 2,
-    entries: sorted unique array<{
-        item_id: ItemId,
-        candidates: sorted unique array<ObjectId>,
+    1: version = 1,
+    2: kind = 2,
+    3: entries = sorted unique array<{
+        1: item_id = ItemId,
+        2: candidates = sorted unique array<ObjectId>,
     }>,
 }
 ```
