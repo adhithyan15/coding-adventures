@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased] - native-complete XAML runtime shell
+
+- XAML project shells emitted under `BuildProfile::NativeComplete` now require
+  Mosaic's standard .NET runtime binding before WinUI activation and validate
+  required MIL props before showing the component.
+- Strict XAML shells omit the reflection host, generated sample props, and
+  app-owned dispatch stubs while permissive output remains backward-compatible.
+- Windows CI compiles a zero-degradation strict WinUI package and exercises the
+  required-runtime success and missing-runtime paths.
+
 ## [Unreleased] - native-complete SwiftUI runtime shell
 
 - SwiftUI project shells emitted under `BuildProfile::NativeComplete` now

@@ -21,11 +21,19 @@ public static class MosaicRuntimeHost
 
     public static bool IsAvailable => State.Value is not null;
 
+    public static void LoadRequired() => _ = RequiredRuntime();
+
     public static string? ApplyProps(object component)
     {
         var runtime = State.Value;
         if (runtime is null) return null;
         runtime.ApplyProps(component);
+        return "Status: Mosaic runtime props loaded";
+    }
+
+    public static string ApplyRequiredProps(object component, params string[] requiredProps)
+    {
+        RequiredRuntime().ApplyProps(component, requiredProps, strict: true);
         return "Status: Mosaic runtime props loaded";
     }
 
@@ -52,7 +60,29 @@ public static class MosaicRuntimeHost
         }
     }
 
+    public static Task<MosaicRuntimeResult> HandleRequiredEvent(
+        object component,
+        object mosaicEvent,
+        params string[] requiredProps)
+    {
+        var runtime = RequiredRuntime();
+        var eventType = mosaicEvent.GetType();
+        var name = eventType.GetProperty("MosaicName")?.GetValue(mosaicEvent) as string
+            ?? throw new InvalidOperationException("Mosaic event has no MosaicName");
+        var payload = eventType.GetProperty("MosaicPayload")?.GetValue(mosaicEvent)
+            ?? new Dictionary<string, object?>();
+        runtime.Dispatch(name, payload);
+        runtime.ApplyProps(component, requiredProps, strict: true);
+        return Task.FromResult(
+            new MosaicRuntimeResult($"Status: Mosaic runtime handled {name}"));
+    }
+
     public static void Close() => State.Value?.Dispose();
+
+    private static Runtime RequiredRuntime() => State.Value
+        ?? throw new InvalidOperationException(
+            "native-complete requires the Mosaic Rust application runtime; " +
+            "set MOSAIC_APP_LIBRARY or package mosaic_app.dll beside the application");
 
     private static Runtime? Load()
     {
@@ -216,24 +246,56 @@ public static class MosaicRuntimeHost
             }
         }
 
-        public void ApplyProps(object component)
+        public void ApplyProps(
+            object component,
+            IReadOnlyCollection<string>? requiredProps = null,
+            bool strict = false)
         {
             lock (gate)
             {
                 EnsureOpen();
                 if (!latestUpdate.TryGetProperty("props", out var props)
-                    || props.ValueKind != JsonValueKind.Object) return;
+                    || props.ValueKind != JsonValueKind.Object)
+                {
+                    if (strict)
+                        throw new InvalidOperationException(
+                            "Mosaic runtime response did not include a props object");
+                    return;
+                }
                 var values = props.EnumerateObject().ToDictionary(
                     property => Normalize(property.Name),
                     property => property.Value,
                     StringComparer.OrdinalIgnoreCase);
-                foreach (var property in component.GetType().GetProperties(
-                    BindingFlags.Instance | BindingFlags.Public))
+                var componentProperties = component.GetType().GetProperties(
+                    BindingFlags.Instance | BindingFlags.Public)
+                    .Where(property => property.CanWrite)
+                    .ToDictionary(
+                        property => Normalize(property.Name),
+                        property => property,
+                        StringComparer.OrdinalIgnoreCase);
+                foreach (var requiredProp in requiredProps ?? Array.Empty<string>())
                 {
-                    if (!property.CanWrite || !values.TryGetValue(Normalize(property.Name), out var value))
+                    var normalized = Normalize(requiredProp);
+                    if (!values.ContainsKey(normalized))
+                        throw new InvalidOperationException(
+                            $"Mosaic runtime props are missing required value '{requiredProp}'");
+                    if (!componentProperties.ContainsKey(normalized))
+                        throw new InvalidOperationException(
+                            $"Mosaic component has no writable property for required value '{requiredProp}'");
+                }
+                foreach (var (normalized, property) in componentProperties)
+                {
+                    if (!values.TryGetValue(normalized, out var value))
                         continue;
                     var converted = ConvertValue(value, property.PropertyType);
-                    if (converted.converted) property.SetValue(component, converted.value);
+                    if (!converted.converted)
+                    {
+                        if (strict)
+                            throw new InvalidOperationException(
+                                $"Mosaic runtime prop '{property.Name}' is not valid for {property.PropertyType.Name}");
+                        continue;
+                    }
+                    property.SetValue(component, converted.value);
                 }
             }
         }

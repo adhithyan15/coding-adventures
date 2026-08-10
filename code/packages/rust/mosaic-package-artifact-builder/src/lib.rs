@@ -584,7 +584,7 @@ pub fn analyze_package_degradations(
     let runtime_required_shell = profile == BuildProfile::NativeComplete
         && matches!(
             opts.backend,
-            Backend::Compose | Backend::Flutter | Backend::SwiftUI
+            Backend::Compose | Backend::Flutter | Backend::SwiftUI | Backend::Xaml
         );
     if opts.emit_project && opts.backend.is_native() && !runtime_required_shell {
         degradations.push(Degradation {
@@ -1491,6 +1491,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         Backend::Xaml => {
             let xaml_opts = mosaic_emit_xaml::pipeline::EmitOptions {
                 emit_project: true,
+                require_runtime: profile == Some(BuildProfile::NativeComplete),
                 ..Default::default()
             };
             let r = mosaic_emit_xaml::pipeline::from_pipeline(
@@ -1505,11 +1506,8 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 let runtime_binding =
                     mosaic_app_bindings::xaml_runtime_binding(&xaml_opts.namespace);
                 let readme = format!(
-                    "{}\n## Rust application runtime\n\nThis project includes Mosaic's standard .NET binding. Set \
-                     `MOSAIC_APP_LIBRARY` to the Rust application DLL path, or place \
-                     `mosaic_app.dll` beside the project before building. The generated host \
-                     owns the application handle, event sequence, snapshots, returned buffers, \
-                     and teardown.\n",
+                    "{}\nThe included standard .NET binding owns the Rust application handle, \
+                     event sequence, snapshots, returned buffers, and teardown.\n",
                     proj.readme
                 );
                 let flat: Vec<(String, &str)> = vec![
@@ -3724,6 +3722,61 @@ layout Board {
         let readme = fs::read_to_string(out.path().join("swiftui/README.md")).unwrap();
         assert!(readme.contains("requires Mosaic's standard Rust application runtime"));
         assert!(readme.contains("never substitutes preview/sample values"));
+    }
+
+    #[test]
+    fn native_complete_xaml_shell_requires_the_standard_rust_runtime() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        fs::write(
+            pkg.path().join("src/Card.mil"),
+            "component Card { slot label : text ; }\n",
+        )
+        .unwrap();
+        fs::write(
+            pkg.path().join("src/Card.mll"),
+            "layout Card { Text [ root ] ( content : slot: label ) }\n",
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let result = build_package_with_profile(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Xaml,
+                emit_project: true,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("native-complete XAML shell");
+
+        let report_path = out.path().join("xaml/mosaic-degradations.json");
+        assert!(result.artifacts.contains(&report_path));
+        let report = fs::read_to_string(report_path).unwrap();
+        assert!(report.contains("\"nativeComplete\": true"));
+
+        let window = fs::read_to_string(out.path().join("xaml/MainWindow.xaml.cs")).unwrap();
+        assert!(window.contains("MosaicRuntimeHost.LoadRequired()"));
+        assert!(
+            window.contains("MosaicRuntimeHost.ApplyRequiredProps(this.Component, RequiredProps)")
+        );
+        assert!(window.contains("new[] { \"label\" }"));
+        assert!(window.contains("await MosaicRuntimeHost.HandleRequiredEvent("));
+        assert!(!window.contains("FindMosaicHostMethod"));
+        assert!(!window.contains("Mosaic.Generated.MosaicHost"));
+        assert!(!window.contains("sample props loaded"));
+        assert!(!window.contains("Sample Label"));
+
+        let host = fs::read_to_string(out.path().join("xaml/MosaicRuntimeHost.cs")).unwrap();
+        assert!(host.contains("public static void LoadRequired()"));
+        assert!(host.contains("public static string ApplyRequiredProps("));
+        assert!(host.contains("public static Task<MosaicRuntimeResult> HandleRequiredEvent("));
+        assert!(host.contains("native-complete requires the Mosaic Rust application runtime"));
+
+        let readme = fs::read_to_string(out.path().join("xaml/README.md")).unwrap();
+        assert!(readme
+            .contains("This `native-complete` shell requires Mosaic's standard Rust application"));
+        assert!(readme.contains("There is no reflection host or"));
     }
 
     #[test]

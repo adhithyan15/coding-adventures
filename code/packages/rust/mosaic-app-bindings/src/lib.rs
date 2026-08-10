@@ -250,6 +250,12 @@ mod tests {
             dispatch < commit,
             "sequence must commit only after dispatch succeeds"
         );
+        assert!(source.contains("public static void LoadRequired()"));
+        assert!(source.contains("public static string ApplyRequiredProps("));
+        assert!(source.contains("public static Task<MosaicRuntimeResult> HandleRequiredEvent("));
+        assert!(source.contains("native-complete requires the Mosaic Rust application runtime"));
+        assert!(source.contains("Mosaic runtime props are missing required value"));
+        assert!(source.contains("Mosaic runtime response did not include a props object"));
     }
 
     #[test]

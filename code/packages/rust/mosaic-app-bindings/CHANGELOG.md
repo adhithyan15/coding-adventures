@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add direct required-runtime APIs to the standard XAML binding. Strict WinUI
+  shells now fail explicitly when Rust is unavailable, reject missing required
+  props and invalid values, and revalidate props after every event.
 - Add `MosaicRuntimeHost.loadRequired()` for strict SwiftUI shells that must
   fail explicitly when the Rust application runtime cannot be loaded.
 - Add `MosaicHost.loadRequired()` for strict Flutter shells that must fail

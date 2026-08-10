@@ -1090,6 +1090,24 @@ jobs:
           }
           Write-Host "Built generated WinUI executable at $($executable.FullName)"
 
+          $strictOutput = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-native-complete-rating-controls'
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend xaml --output $strictOutput --emit-project --profile native-complete
+          if ($LASTEXITCODE -ne 0) {
+            throw "Native-complete XAML generation failed with exit code $LASTEXITCODE"
+          }
+          $strictReport = Get-Content (Join-Path $strictOutput 'xaml/mosaic-degradations.json') -Raw | ConvertFrom-Json
+          if (!$strictReport.nativeComplete -or $strictReport.degradations.Count -ne 0) {
+            throw 'Native-complete XAML generation reported degradations'
+          }
+          $strictProject = Join-Path $strictOutput 'xaml/RatingControls.csproj'
+          Push-Location (Split-Path -Parent $strictProject)
+          dotnet build (Split-Path -Leaf $strictProject) -c Debug -p:Platform=x64 --nologo
+          $strictBuildExitCode = $LASTEXITCODE
+          Pop-Location
+          if ($strictBuildExitCode -ne 0) {
+            throw "Native-complete XAML WinUI build failed with exit code $strictBuildExitCode"
+          }
+
       - name: Round-trip Rust engine through standard XAML binding
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
         shell: pwsh
@@ -1101,7 +1119,7 @@ jobs:
           }
 
           $library = Resolve-Path 'code/packages/rust/target/debug/mosaic_app_conformance.dll'
-          $generatedBinding = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-taskapp/xaml/MosaicRuntimeHost.cs'
+          $generatedBinding = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-native-complete-rating-controls/xaml/MosaicRuntimeHost.cs'
           if (!(Test-Path $generatedBinding)) {
             throw "Generated XAML runtime binding not found at $generatedBinding"
           }
@@ -1117,6 +1135,17 @@ jobs:
           dotnet run --project (Join-Path $harness 'XamlRuntimeConformance.csproj') -c Release
           if ($LASTEXITCODE -ne 0) {
             throw "Mosaic XAML Rust runtime conformance failed with exit code $LASTEXITCODE"
+          }
+
+          dotnet run --project (Join-Path $harness 'XamlRuntimeConformance.csproj') -c Release -- --expect-missing-prop-failure
+          if ($LASTEXITCODE -ne 0) {
+            throw "Mosaic XAML required-prop failure check failed with exit code $LASTEXITCODE"
+          }
+
+          $env:MOSAIC_APP_LIBRARY = Join-Path $env:RUNNER_TEMP 'missing-mosaic-app.dll'
+          dotnet run --project (Join-Path $harness 'XamlRuntimeConformance.csproj') -c Release -- --expect-required-failure
+          if ($LASTEXITCODE -ne 0) {
+            throw "Mosaic XAML required-runtime failure check failed with exit code $LASTEXITCODE"
           }
 
       - name: Upload failed Mosaic TaskApp WinUI diagnostics

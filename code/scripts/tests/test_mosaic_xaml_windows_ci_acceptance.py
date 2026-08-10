@@ -118,6 +118,11 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
         self.assertIn("TaskApp.binlog", workflow)
         self.assertIn("output.json", workflow)
         self.assertIn("TaskApp WinUI build did not produce TaskApp.exe", workflow)
+        self.assertIn("mosaic-pkg-rating-controls --backend xaml", workflow)
+        self.assertIn("--emit-project --profile native-complete", workflow)
+        self.assertIn("mosaic-xaml-native-complete-rating-controls", workflow)
+        self.assertIn("Native-complete XAML generation reported degradations", workflow)
+        self.assertIn("dotnet build (Split-Path -Leaf $strictProject)", workflow)
         self.assertIn("MOSAIC_SKIP_INTERACTIVE_WINDOWS_ACCEPTANCE: '1'", workflow)
         self.assertNotIn("Start-Process -FilePath $executable", workflow)
         self.assertIn("Round-trip Rust engine through standard XAML binding", workflow)
@@ -125,6 +130,8 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
         self.assertIn("cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance", workflow)
         self.assertIn("XamlRuntimeConformance.csproj", workflow)
         self.assertIn("MOSAIC_APP_LIBRARY", workflow)
+        self.assertIn("--expect-missing-prop-failure", workflow)
+        self.assertIn("--expect-required-failure", workflow)
 
     def test_console_conformance_does_not_bootstrap_winui(self) -> None:
         project = (XAML_CONFORMANCE / "XamlRuntimeConformance.csproj").read_text(
