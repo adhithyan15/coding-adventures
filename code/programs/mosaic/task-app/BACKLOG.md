@@ -18,9 +18,11 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
    - Board: a 4th column ("In review" — mock has 4, live has 3), colored top accent bar
      + card-count badge on each column header, critical cards get a colored left border
      instead of a text chip.
-   - Richer Gantt: day-grid columns, weekend/today shading, milestone diamonds,
-     dependency arrows, hover tooltips, a legend. Current timeline is a simple
-     proportional-bar-per-row view.
+   - Richer Gantt — shipped (day-grid, weekend/today shading, milestone
+     diamonds, percent-complete fill, hover tooltips, a legend; see Resolved
+     below). Dependency arrows are the one piece that didn't ship — split out
+     as its own item in the Backlog section below, since it needs either a
+     new kernel primitive or product guidance, not just more layout work.
    - Richer task rows: labels/priority chips, the dependency list, and the notes
      paragraph all shipped (see Resolved below). Still missing: critical/slack
      *chips* — today the detail panel's scheduling prose already says "on the
@@ -31,6 +33,17 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Backlog (lower priority — Phase 10+, spec explicitly defers these)
 
+- **Gantt dependency arrows.** Split out from the richer-Gantt item (see
+  Resolved below) — everything else in that item shipped. Curved FS
+  connectors between two bars need genuine 2D line-drawing the UI29 kernel
+  has no primitive for (no SVG-path/canvas-overlay component; `HostDraggable`/
+  `HostDropTarget` are drag primitives, not a drawing surface).
+  `task-app-ui-design.md` §4.6 itself anticipated this needing a dedicated
+  `mosaic-pkg-gantt` package (never built) rather than the simpler inline
+  view that actually shipped. Needs either a new kernel primitive (an
+  SVG-overlay host component) or product guidance on visual treatment
+  before it's picked up — see `code/specs/task-app-richer-gantt-v1.md`'s
+  "What does NOT ship" section for the full reasoning.
 - **Native drag support for HostDraggable/HostDropTarget.** Every non-web backend (SwiftUI,
   Compose, Qt, Flutter, WinUI/XAML, webcomponent) currently degrades the drag family to a plain
   static container — see `code/specs/UI35-host-drag-drop.md`. This means the board and the
@@ -69,6 +82,23 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Resolved (kept for traceability, not actionable)
 
+- **Richer Gantt.** Closes most of the design-fidelity gap's Timeline
+  line — see `code/specs/task-app-richer-gantt-v1.md`. A day-grid ruler
+  (weekday/today shading — a strip above the bars, not composited behind
+  them, since the kernel has no z-index/absolute-positioning primitive),
+  a percent-complete fill inside each bar, milestones as small "inked"
+  diamonds (no bound width, deliberately — UI36's size-precedence rule
+  would otherwise make a fixed diamond shape unreachable), hover
+  tooltips (needed a small, disclosed `mosaic-emit-react` change —
+  `HostTooltip`'s `text` prop now also accepts a per-row expression, not
+  just a literal or a slot), and a static legend. Dependency arrows are
+  the one piece that didn't ship — split into its own Backlog item above,
+  since it's a different kind of gap (missing kernel capability) than
+  everything else here (layout/styling work). Verified live in both
+  themes via DOM inspection (tooltip `title` text, computed colors on
+  the grid/milestone/fill elements), not just visual assumption; zero
+  console errors; confirmed no regression to Board-tier's Timeline-hiding
+  from the complexity-config work.
 - **Phase 9 — per-project complexity config (Board ↔ Full CPM).** Closes
   the gap the nested-project-tree entry below disclosed — Phase 9 is now
   fully shipped. See `code/specs/task-app-complexity-config-v1.md` for

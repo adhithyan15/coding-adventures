@@ -4,6 +4,49 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - richer Gantt: day-grid, milestones, percent-fill, tooltips, legend
+
+Closes the "Richer Gantt" line of the design-fidelity gap backlog item —
+see `code/specs/task-app-richer-gantt-v1.md` for the full scope decision,
+including what's deliberately NOT here (dependency arrows — the UI29
+kernel has no primitive for 2D line-drawing between two bars; left as its
+own backlog item needing either a new kernel primitive or product
+guidance, not forced in with a fragile workaround).
+
+- **A day-grid ruler**: one column per calendar day in the visible span,
+  weekends shaded, today's column in a stronger honey tint. Renders as a
+  strip above the bars, not composited behind them — the kernel has no
+  z-index/absolute-positioning primitive to do that, and the spec's own
+  "Day-grid feasibility note" explains why the *shading* itself was
+  cheap here even though the identical-looking limitation blocked
+  Calendar's own weekend-tinting item (Gantt's grid cells carry no
+  drag-target/event-overlay weight to duplicate).
+- **Percent-complete fill**: a darker overlay inside each bar, sized
+  from `Task.percent_complete` — data `GanttBar` already returned but
+  the host never drew.
+- **Milestones as diamonds**: a zero-duration `TaskKind::Milestone` task
+  renders as a small "inked" diamond (the same dark/light-ink convention
+  Calendar's own milestones already use) instead of the usual bar.
+  Deliberately no bound width on it — UI36's "a bound size always beats
+  a static one" rule would otherwise make a fixed small-diamond style
+  unreachable.
+- **Hover tooltips**: name, dated window, real day count, critical/
+  percent status. Needed a small, disclosed kernel change alongside this
+  — see the `mosaic-emit-react` CHANGELOG entry for `HostTooltip`
+  accepting a per-row expression, found while wiring this in (the
+  literal/slot-only `text` prop had no way to differ per `For`-loop row).
+- **A legend**: static swatches for Normal / Critical / Milestone /
+  Today, above the chart.
+
+Verified live in a real browser session (both themes, zero console
+errors): the day-grid's weekday/today shading, a milestone rendering as
+a diamond with no percent-fill overlay (distinct from an ordinary
+critical bar with the same name, confirming no rendering collision), a
+60%-complete bar's fill overlay, and every tooltip's exact text content
+— all checked via DOM inspection (`title` attributes, computed styles),
+not just visual assumption. Confirmed no regression to the existing
+Board-tier Timeline-hiding behavior from the complexity-config work.
+
 ### Added - per-project complexity config (Board ↔ Full CPM)
 
 Phase 9's remaining half — see `code/specs/task-app-complexity-config-v1.md`
