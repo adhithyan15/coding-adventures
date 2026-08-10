@@ -48514,5 +48514,22 @@
     "overBudget": [],
     "outOfOrder": [],
     "taughtPercent": 0
+  },
+  "rootLedger": {
+    "roots": 2717,
+    "underspent": 2624,
+    "neverSpent": 1807,
+    "payoffDistribution": {
+      "0": 1807,
+      "1": 583,
+      "2": 234,
+      "3": 56,
+      "4": 15,
+      "5": 10,
+      "6": 9,
+      "7": 2,
+      "8": 1
+    },
+    "underspentPercent": 97
   }
 }
