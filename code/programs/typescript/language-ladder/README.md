@@ -240,7 +240,11 @@ filmstrip: the stem descends and flows left through the flatter bowl and
 pronounced hook in one run; one sourced lift then starts the long upper-right
 slash down toward the stem. Its source note preserves the explicit warning not
 to collapse those two strokes while the learner path fits Noto Naskh's connected
-outline. The runtime resolves
+outline. Urdu ل adds a two-frame Chapter-2 filmstrip: the pen starts at the top,
+descends the tall independent upright, and stays down while the line passes
+below the baseline through the leftward bowl and turns back up. Its source note
+preserves the connector and final-bowl prose distinctions while the zero-lift
+learner path follows the Noto Naskh fallback. The runtime resolves
 each cited path back to the owning script and lazily loads that script's font,
 while Tamil continues to use Noto Sans Tamil. Unverified letters still
 fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
