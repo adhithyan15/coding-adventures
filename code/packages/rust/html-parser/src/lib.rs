@@ -4656,6 +4656,12 @@ impl HtmlParser {
                         }));
                     }
                     Token::Eof => {
+                        if !self.is_fragment && self.has_open_element("frameset") {
+                            self.diagnostics.push(ParserDiagnostic::new(
+                                "eof-in-frameset",
+                                "end of file was reached while parsing a frameset",
+                            ));
+                        }
                         if self.current_element_is_authored_text_mode_element() {
                             self.diagnostics.push(ParserDiagnostic::new(
                                 "eof-in-text-mode",
@@ -5630,6 +5636,12 @@ impl HtmlParser {
         }
 
         if self.document_has_closed_frameset() && !self.current_element_is("noframes") {
+            if text.chars().any(|character| !is_html_whitespace(character)) {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-char-after-frameset",
+                    "non-whitespace character data was ignored after the frameset",
+                ));
+            }
             let whitespace = text
                 .chars()
                 .filter(|character| character.is_whitespace())
@@ -5751,6 +5763,12 @@ impl HtmlParser {
         }
 
         let text = if self.in_frameset_text_context() {
+            if text.chars().any(|character| !is_html_whitespace(character)) {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-char-in-frameset",
+                    "non-whitespace character data was ignored in the frameset",
+                ));
+            }
             let whitespace = text
                 .chars()
                 .filter(|character| character.is_whitespace())
@@ -32080,30 +32098,82 @@ mod tests {
 
     #[test]
     fn ignores_non_whitespace_text_directly_inside_framesets() {
-        let document = parse_html("<!DOCTYPE html><frameset>test").unwrap();
+        let output = parse_html_with_diagnostics("<!DOCTYPE html><frameset>test").unwrap();
 
-        let html = html(&document);
+        let html = html(&output.document);
         let frameset = element(&html.children[1]);
         assert_eq!(frameset.name, "frameset");
         assert!(frameset.children.is_empty());
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![
+                ParserDiagnostic::new(
+                    "unexpected-char-in-frameset",
+                    "non-whitespace character data was ignored in the frameset"
+                ),
+                ParserDiagnostic::new(
+                    "eof-in-frameset",
+                    "end of file was reached while parsing a frameset"
+                ),
+            ]
+        );
     }
 
     #[test]
     fn preserves_only_whitespace_from_mixed_frameset_text() {
-        let document = parse_html("<!DOCTYPE html><frameset> te st").unwrap();
+        let output = parse_html_with_diagnostics("<!DOCTYPE html><frameset> te st").unwrap();
 
-        let html = html(&document);
+        let html = html(&output.document);
         let frameset = element(&html.children[1]);
         assert_eq!(frameset.children, vec![Node::text("  ")]);
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![
+                ParserDiagnostic::new(
+                    "unexpected-char-in-frameset",
+                    "non-whitespace character data was ignored in the frameset"
+                ),
+                ParserDiagnostic::new(
+                    "eof-in-frameset",
+                    "end of file was reached while parsing a frameset"
+                ),
+            ]
+        );
     }
 
     #[test]
     fn top_level_frameset_keeps_filtered_trailing_html_text() {
-        let document = parse_html("<!DOCTYPE html><frameset></frameset> te st").unwrap();
+        let output =
+            parse_html_with_diagnostics("<!DOCTYPE html><frameset></frameset> te st").unwrap();
 
-        let html = html(&document);
+        let html = html(&output.document);
         assert_eq!(element(&html.children[1]).name, "frameset");
         assert_eq!(html.children[2], Node::text("  "));
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-char-after-frameset",
+                "non-whitespace character data was ignored after the frameset"
+            )]
+        );
+    }
+
+    #[test]
+    fn reports_eof_with_an_open_frameset_after_head_void_elements() {
+        for source in [
+            "<!doctype html><basefont><frameset>",
+            "<!doctype html><bgsound><frameset>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "eof-in-frameset",
+                    "end of file was reached while parsing a frameset"
+                )],
+                "source {source:?}"
+            );
+        }
     }
 
     #[test]

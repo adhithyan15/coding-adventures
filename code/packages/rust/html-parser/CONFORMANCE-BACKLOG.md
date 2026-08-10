@@ -28,9 +28,8 @@ tree-construction cases and all 6,806 html5lib tokenizer cases with zero missing
 signatures and zero normalized skips. DOM output is complete, but diagnostic
 coverage is not:
 the checked 2,637-case tree corpus declares 6,243 errors across 2,183 cases.
-After the script end-tag EOF diagnostic slice, 2,159 of those cases emit at
-least one lexer or parser diagnostic and 24 remain
-uncovered.
+After the frameset character-data and EOF diagnostic slice, 2,178 of those
+cases emit at least one lexer or parser diagnostic and 5 remain uncovered.
 Another 139 cases emit diagnostics despite having no legacy `#errors` rows.
 These are reviewed rather than automatically removed: 89 are full-document
 inputs for which the legacy fixtures omit the Standard-required missing-doctype
@@ -66,19 +65,21 @@ open table blocks adoption-agency recovery. Description-list item start tags
 now report when implied-end-tag recovery closes a non-current `dt` or `dd`,
 without flagging adjacent description-list items.
 
-The fresh 12-case residual inventory keeps the next concrete groups in this
-priority order: frameset and document-tail boundaries; and the final
-fragment-context rows for colgroup text, an after-body token, and an HTML start
-tag in a seeded SVG context. Plaintext EOF recovery now reports across the
-document shell and templates, and rejected plaintext start tags no longer
-incorrectly switch the lexer out of data state. The current corpus no longer
-has a silent script-tokenizer, table-shell, foreign end-tag, formatting-only,
-or general in-body group.
+The fresh 5-case residual inventory keeps the next concrete groups in this
+priority order: two document-tail boundaries; and the final fragment-context
+rows for colgroup text, an after-body token, and an HTML start tag in a seeded
+SVG context. Open framesets now report EOF, and non-whitespace character data
+discarded in or after framesets reports the corresponding insertion-mode parse
+error. Plaintext EOF recovery now reports across the document shell and
+templates, and rejected plaintext start tags no longer incorrectly switch the
+lexer out of data state. The current corpus no longer has a silent
+script-tokenizer, frameset, table-shell, foreign end-tag, formatting-only, or
+general in-body group.
 
 Prioritized work items:
 
-1. **Frameset and document-tail boundaries.** Cover stray content diagnostics
-   around frameset transitions and after the document shell closes.
+1. **Document-tail boundaries.** Cover the two remaining stray-content
+   diagnostics after the document shell closes.
 2. **Fragment-context parsing.** Cover the final colgroup text, after-body, and
    foreign HTML start-tag rows. Invalid start and end tags targeting seeded
    fragment-context elements now report without mutating their synthetic

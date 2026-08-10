@@ -6,6 +6,10 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Open framesets now report EOF, and non-whitespace character data discarded
+  in or after a frameset reports its insertion-mode parse error. This covers 7
+  previously silent malformed corpus cases without changing DOM recovery or
+  undeclared-diagnostic coverage.
 - Plaintext elements left open at EOF across the document shell and templates
   now report their required parse error. Text-mode lexer handoff now occurs
   only after tree construction accepts the start tag, so plaintext rejected in
