@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/vault-pm-application",
   "capabilities": [],
-  "justification": "Pure canonical persistence, crash-state contracts, and cryptographic framing over caller-provided key and entropy material. Store traits inject byte operations but the package owns no filesystem, network, process, environment, clock, provider, credential-store, or entropy authority."
+  "justification": "Pure canonical persistence, crash-state contracts, cryptographic framing, and verified repository composition over caller-provided stores, keys, and entropy material. Store traits inject byte operations but the package owns no filesystem, network, process, environment, clock, provider, credential-store, or entropy authority."
 }

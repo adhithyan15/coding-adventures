@@ -82,7 +82,7 @@ pub trait ApplicationRepository {
     fn open(&self, pins: &PinnedHeads) -> Result<OpenReport, ApplicationRepositoryError>;
     fn publish(
         &self,
-        publication: &Publication,
+        publication: Publication,
         current_heads: &PinnedHeads,
     ) -> Result<PublicationReceipt, ApplicationRepositoryError>;
     fn read_object(&self, id: ObjectId) -> Result<VerifiedObject, ApplicationRepositoryError>;
@@ -100,6 +100,14 @@ injected VLT-PM02 store behind the erased handle. Tests may inject a
 deterministic memory implementation, but production construction has no
 unchecked repository or pre-unlock address option. A factory cannot inspect or
 persist the locator key or verifier secret state.
+
+`publish` consumes `Publication` by value, matching VLT-PM04. The application
+must first persist an exact recovery journal and reconstruct the owned batch
+from that journal for every attempt. Neither layer clones, regenerates, or
+retains a second independently mutable copy of randomized frames or signed
+announcement bytes. The erased error surface is closed and payload-free; it
+maps provider failures to `StorageUnavailable` and all verification, graph,
+pin, immutable-value, and withholding failures to `IntegrityFailure`.
 
 ### 3.2 Bootstrap store
 

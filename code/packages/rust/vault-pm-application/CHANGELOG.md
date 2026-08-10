@@ -2,6 +2,24 @@
 
 All notable changes to this package are documented here.
 
+## [0.4.0] - 2026-08-09
+
+### Added
+
+- An object-safe application repository and factory over any injected
+  VLT-PM02 object store.
+- Complete delegation for initialization, verified open, by-value publication,
+  encrypted-object reads, commit reads, and bounded history.
+
+### Security
+
+- Production construction requires a caller-supplied unlocked
+  `RepositoryVerifier`; there is no unchecked repository path.
+- Repository and provider failures are translated to a closed payload-free
+  application error taxonomy.
+- Exact randomized and signed publication batches are consumed by value,
+  preserving the crash journal's single-byte-sequence invariant.
+
 ## [0.3.0] - 2026-08-09
 
 ### Added

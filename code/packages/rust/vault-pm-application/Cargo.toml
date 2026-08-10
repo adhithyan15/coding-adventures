@@ -13,5 +13,6 @@ coding_adventures_sha256 = { path = "../sha256" }
 coding_adventures_vault_pm_domain = { path = "../vault-pm-domain" }
 coding_adventures_vault_pm_format = { path = "../vault-pm-format" }
 coding_adventures_vault_pm_repository = { path = "../vault-pm-repository" }
+coding_adventures_vault_pm_storage = { path = "../vault-pm-storage" }
 coding_adventures_vault_records = { path = "../vault-records" }
 coding_adventures_zeroize = { path = "../zeroize" }

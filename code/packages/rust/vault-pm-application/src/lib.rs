@@ -9,6 +9,7 @@
 
 mod codec;
 mod crypto;
+mod repository;
 mod state;
 mod verifier;
 
@@ -20,6 +21,10 @@ pub use codec::{
 pub use crypto::{
     open_local_secret, open_object, seal_local_secret, seal_object, LocalSecretRandomness,
     ObjectKind, ObjectRandomness, V1Keys,
+};
+pub use repository::{
+    ApplicationRepository, ApplicationRepositoryError, ApplicationRepositoryFactory,
+    V1ApplicationRepositoryFactory,
 };
 pub use state::{
     ActiveStateV1, AuthorityFingerprint, BootstrapLocator, BootstrapStore, BootstrapStoreError,

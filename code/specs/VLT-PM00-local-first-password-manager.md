@@ -1273,9 +1273,15 @@ changelog, focused build, and downstream validation.
       single-device repository verifier;
    3. bootstrap and encrypted local-state codecs, injected stores, and exact
       initialization/publication journals;
-   4. generation-zero init, open, and crash-resumable publication workflows;
-      and
-   5. item mutation, redacted views, search, history, export, audit, status,
+   4. the erased application repository factory and adapter, preserving
+      mandatory verification, provider-neutral object storage, by-value exact
+      publication, and closed error translation;
+   5. deterministic generation-zero preparation, producing the exact bootstrap,
+      initial encrypted objects, signed commit/announcement, repository
+      address, verifier, and `PreparedInit` journal without external writes;
+   6. crash-resumable initialization side effects, open/unlock, and pending
+      publication recovery; and
+   7. item mutation, redacted views, search, history, export, audit, status,
       and doctor workflows.
 9. `vault-pm-cli` + real executable and pseudo-terminal E2E suite.
 10. Crash/fault matrix and local restore drill.
