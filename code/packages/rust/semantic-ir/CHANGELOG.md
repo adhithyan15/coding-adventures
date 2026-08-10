@@ -2,6 +2,32 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.25.0 — `Feature::ConsoleIO` + `__sys_write__` structural validation (SIR28)
+
+Core-IR slice of the SIR28 syscall-primitive arc (see
+`code/specs/SIR28-syscall-primitives.md`). Adds `Feature::ConsoleIO`
+(`manifest.rs`, new SIR28 comment group) — declared by any module
+containing a `BuiltinCall("__sys_write__", [StrLit(stream),
+StrLit(terminator), BoolLit(unpack_arrays), ...values])` node, the reserved
+console-output primitive `"print"`/`"puts"`/JS `console.log` will migrate
+to in follow-up PRs.
+
+`validator.rs`'s `Expr::BuiltinCall` arm gains `check_sys_write_args`: a
+structural check that `__sys_write__`'s `stream`/`terminator` args are
+`StrLit`s (never a computed expression — the anti-injection invariant SIR28
+§2.2 states) whose value is one of the closed set SIR28 §2.1 defines, and
+that `unpack_arrays` is a `BoolLit`. This is a small improvement over the
+existing precedent for reserved `BuiltinCall` envelopes (`__new__`/
+`__method__`/etc., SIR25), which have zero structural validation today —
+malformed args are only ever caught late, per-backend, by whatever a given
+`emit.rs` match arm happens to assume.
+
+No behavior change to any existing frontend or backend: nothing emits
+`__sys_write__` yet. Verified: `cargo test -p semantic-ir` green (9 new
+tests); every `*-to-semantic-ir`/`semantic-ir-to-*`/`sir-conformance`
+downstream consumer builds and clippy-checks clean against the new
+`Feature` variant.
+
 ## 0.24.0 — `type_env`: the SIR21 T3c-3 prerequisite
 
 Adds `type_env::TypeEnv` — a shared, reusable name→type lookup that gives a

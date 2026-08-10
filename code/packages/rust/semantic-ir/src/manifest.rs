@@ -42,6 +42,7 @@ use std::fmt;
 /// | `ArrayColumnMajor`         | any `ArrayLit`/matrix op — column-major storage convention |
 /// | `SymbolicExpr`             | a `SymSymbol` or `SymApply` node       |
 /// | `PatternMatching`          | a `SymPatternBlank`, `SymPatternNamed`, `SymRule`, or `SymReplaceAll` node |
+/// | `ConsoleIO`                | a `BuiltinCall("__sys_write__", ...)` node |
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Feature {
     Closures,
@@ -224,6 +225,17 @@ pub enum Feature {
     /// implementing the pattern matcher these nodes require — matching
     /// how `MatrixOps` is split from `NDArrays` in SIR22.
     PatternMatching,
+    // ── SIR28 (syscall primitive family) ─────────────────────────────
+    /// The module contains a `BuiltinCall("__sys_write__", [StrLit(stream),
+    /// StrLit(terminator), BoolLit(unpack_arrays), ...values])` node — the
+    /// reserved console-output primitive that `"print"`/`"puts"`/JS
+    /// `console.log` all lower to. Distinct from a bare `"print"`/`"puts"`
+    /// builtin call (which declares no `Feature` at all today, per SIR28's
+    /// motivation): a backend accepting this promises to implement all
+    /// `stream`/`terminator`/`unpack_arrays` combinations SIR28 §2.1
+    /// defines, not just the subset one frontend happens to emit.  See
+    /// [SIR28](../../../../specs/SIR28-syscall-primitives.md).
+    ConsoleIO,
 }
 
 impl Feature {
@@ -269,6 +281,7 @@ impl Feature {
         Feature::Conversions,
         Feature::SymbolicExpr,
         Feature::PatternMatching,
+        Feature::ConsoleIO,
     ];
 
     /// Kebab-case name for the SIR text format.
@@ -314,6 +327,7 @@ impl Feature {
             Feature::Conversions => "conversions",
             Feature::SymbolicExpr => "symbolic-expr",
             Feature::PatternMatching => "pattern-matching",
+            Feature::ConsoleIO => "console-io",
         }
     }
 
