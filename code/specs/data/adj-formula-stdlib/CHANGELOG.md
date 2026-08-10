@@ -149,3 +149,10 @@ landed and why, not a semver-tracked API.
   (`chemistry/ideal-gas-law.adj`, `clinical/bmi.adj`, `physics/gravitation.adj`) and turning up this
   higher-priority match instead. New manifest objective `adj.math.algebra.rearrange_density`.
   Extended the existing `formula_density_e2e.rs` with 1 new test rather than adding a new test file.
+- `physics/electricity.adj` — an eighth Wave 3 rung-0 CAS-wiring companion (ADJ-FORMULA-LIBRARIES
+  FL-10, §3D): `current_from_voltage`, solving the same cited HyperPhysics `V = I·R` (Ohm's law) as
+  the forward `voltage`/`resistance_from_ohms_law` pair for current — the one direction they leave
+  open. Flagged during the density sweep as a viable remaining candidate. Mirrors
+  `resistance_from_ohms_law`'s exact discipline (same equation, different target). New manifest
+  objective `adj.math.algebra.rearrange_ohms_law`. Extended the existing `formula_electricity_e2e.rs`
+  with 1 new test rather than adding a new test file.
