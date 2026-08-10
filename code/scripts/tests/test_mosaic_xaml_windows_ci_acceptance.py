@@ -99,7 +99,7 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
             "python3 code/scripts/mosaic_xaml_windows_ci_acceptance.py",
             workflow,
         )
-        self.assertIn("Build and launch complete Mosaic TaskApp WinUI shell", workflow)
+        self.assertIn("Build complete Mosaic TaskApp WinUI shell", workflow)
         self.assertIn(
             "mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app",
             workflow,
@@ -109,10 +109,9 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
         self.assertIn("selected by generated global.json", workflow)
         self.assertIn("TaskApp.binlog", workflow)
         self.assertIn("output.json", workflow)
-        self.assertIn("Start-Process -FilePath $executable", workflow)
-        self.assertIn("for ($attempt = 1; $attempt -le 3; $attempt++)", workflow)
-        self.assertIn("Get-WinEvent -FilterHashtable", workflow)
-        self.assertIn("TaskApp WinUI launch failed", workflow)
+        self.assertIn("TaskApp WinUI build did not produce TaskApp.exe", workflow)
+        self.assertIn("MOSAIC_SKIP_INTERACTIVE_WINDOWS_ACCEPTANCE: '1'", workflow)
+        self.assertNotIn("Start-Process -FilePath $executable", workflow)
         self.assertIn("Round-trip Rust engine through standard XAML binding", workflow)
         self.assertIn("cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance", workflow)
         self.assertIn("XamlRuntimeConformance.csproj", workflow)

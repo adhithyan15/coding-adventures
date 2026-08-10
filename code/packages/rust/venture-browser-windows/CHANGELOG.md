@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Keep direct WinUI launch and interaction as the default Windows acceptance,
+  while allowing explicitly non-interactive hosted workers to stop after the
+  complete generated project builds and produces its executable. This avoids
+  treating the hosted runner's pre-`OnLaunched` `0xc000027b` desktop failure as
+  an application regression without weakening local or self-hosted acceptance.
 - Delegate generated-host browser state and interaction behavior to the shared
   `venture-browser-core::BrowserHostController`, retaining only native page
   composition and Direct2D presentation in this adapter.

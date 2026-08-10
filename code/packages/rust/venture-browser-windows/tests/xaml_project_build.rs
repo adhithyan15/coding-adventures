@@ -218,6 +218,13 @@ fn package_owned_xaml_project_builds_launches_and_interacts() {
 
     let executable = find_executable(&project.join("bin"))
         .expect("generated WinUI build must produce VentureChrome.exe");
+    if std::env::var("MOSAIC_SKIP_INTERACTIVE_WINDOWS_ACCEPTANCE").as_deref() == Ok("1") {
+        eprintln!(
+            "skipping WinUI launch/interaction: this runner has no reliable interactive desktop"
+        );
+        fs::remove_dir_all(&output).expect("remove clean build-only acceptance output");
+        return;
+    }
     let marker = output.join("xaml-ready.json");
     let interaction_marker = output.join("xaml-interaction.json");
     let phase_log = output.join("xaml-phase.json");
