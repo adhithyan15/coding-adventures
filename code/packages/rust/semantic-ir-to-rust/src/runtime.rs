@@ -813,6 +813,90 @@ pub const RUNTIME: &str = r##"mod __sir {
         }
     }
 
+    // ── write (SIR28 §2.1) ───────────────────────────────────────────
+    //
+    // `__sys_write__`, the console-output primitive `print`/`puts` above
+    // generalize into. Where `print`/`puts` hard-code ONE newline policy
+    // each, this is the SAME operation parameterized by policy flags
+    // carried as DATA -- the root cause SIR28 exists to fix: real Ruby's
+    // `print` never newline-terminates, Python's `print()`/JS's
+    // `console.log` always do, but all three used to lower to the
+    // identical `BuiltinCall("print", ...)` this backend had no way to
+    // tell apart.
+    //
+    // `terminator`: "none" (`print`'s behavior) | "per_value" (`puts`'s
+    // array-unpacking behavior, honouring `unpack_arrays`) | "once"
+    // (Python `print`/JS `console.log` -- space-join every value, one
+    // trailing newline). Deliberately does NOT replicate `puts`'s
+    // trailing-newline-suppression nuance above (`puts "x\n"` prints
+    // `x\n`, not `x\n\n`) -- that's a pre-existing divergence from the
+    // C/Go backends' own `puts`, orthogonal to and not fixed by SIR28;
+    // `per_value` here always appends exactly one newline per value,
+    // matching SIR28 §2.1's table and every other backend's
+    // `__sys_write__` faithfully.
+    pub fn write(stream: &str, terminator: &str, unpack_arrays: bool, values: Vec<Value>) -> Value {
+        use std::io::Write as _;
+        if stream == "stderr" {
+            write_to(&mut std::io::stderr(), terminator, unpack_arrays, &values);
+        } else {
+            write_to(&mut std::io::stdout(), terminator, unpack_arrays, &values);
+        }
+        Value::Nil
+    }
+
+    fn write_to(out: &mut dyn std::io::Write, terminator: &str, unpack_arrays: bool, values: &[Value]) {
+        match terminator {
+            "per_value" => {
+                if values.is_empty() {
+                    let _ = writeln!(out);
+                    return;
+                }
+                let mut visited: std::collections::HashSet<usize> = std::collections::HashSet::new();
+                for v in values {
+                    write_one(out, v, unpack_arrays, &mut visited);
+                }
+            }
+            "once" => {
+                let parts: Vec<String> = values.iter().map(format).collect();
+                let _ = writeln!(out, "{}", parts.join(" "));
+            }
+            _ => {
+                for v in values {
+                    let _ = write!(out, "{}", format(v));
+                }
+            }
+        }
+    }
+
+    // Emit a single `write` argument under `per_value` terminator. Mirrors
+    // `puts_one`'s array-unpacking + cycle-guard exactly (same `visited`
+    // handle-address set, same `[...]` cycle placeholder), gated by
+    // `unpack_arrays` (`puts`'s behavior sets it; a bare `print`-shaped
+    // `per_value` call would not).
+    fn write_one(
+        out: &mut dyn std::io::Write,
+        v: &Value,
+        unpack_arrays: bool,
+        visited: &mut std::collections::HashSet<usize>,
+    ) {
+        if unpack_arrays {
+            if let Value::Seq(items) = v {
+                let id = seq_handle_id(items);
+                if !visited.insert(id) {
+                    let _ = writeln!(out, "[...]");
+                    return;
+                }
+                let snapshot: Vec<Value> = items.borrow().clone();
+                for item in &snapshot {
+                    write_one(out, item, unpack_arrays, visited);
+                }
+                visited.remove(&id);
+                return;
+            }
+        }
+        let _ = writeln!(out, "{}", format(v));
+    }
+
     // ── format ────────────────────────────────────────────────────
     //
     // Cycle safety.  `Value::Seq`/`Value::Map` are *shared, mutable*
