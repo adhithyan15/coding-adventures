@@ -34,11 +34,11 @@ the selected backend has a known degradation.
 The initial inventory identifies passive drag/drop lowerings, native table
 lowerings without table semantics, Flutter's dialog placeholder and missing URL
 effect host, and generated native project shells that can fall back to sample
-props. Compose, Flutter, SwiftUI, and XAML are the first closed shells: their strict profiles
+props. Compose, Flutter, Qt, SwiftUI, and XAML now have closed shells: their strict profiles
 require Mosaic's standard Rust runtime, wait for the first props envelope,
 reject missing required props, and omit sample-data and optional-host fallbacks.
-The overall native-complete milestone remains open while the Qt native shell is
-closed and ignored properties, events, styles, effects, and
+The overall native-complete milestone remains open while ignored properties,
+events, styles, effects, and
 accessibility metadata are added to the inventory.
 
 `compose_component` is the canonical in-memory entry point shared by package
@@ -85,7 +85,10 @@ injectable/optional preview path; `native-complete` builds require the binding
 and Rust-provided props before mounting the generated widget.
 Qt project shells install a standard QObject host backed by `QLibrary` and
 Qt JSON/variant APIs. Explicit package host assets can still replace
-`MosaicHost.h/.cpp` for specialized native surfaces and effects.
+`MosaicHost.h/.cpp` for specialized native surfaces and effects. Permissive
+builds retain the optional-host seam; `native-complete` builds compile the
+standard binding unconditionally, validate Rust-provided required MIL props
+before QML construction, and never mount an inert or sample-backed component.
 
 Packages may declare optional `[host_assets]` file copies in
 `mosaic-package.toml`. Matching backend assets are copied from package-relative

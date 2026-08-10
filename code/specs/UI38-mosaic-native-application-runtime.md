@@ -308,7 +308,9 @@ unblocks multiple downstream targets; never count source generation as completio
     sample-data path.
   - [x] Repeat the runtime-required shell policy for SwiftUI.
   - [x] Repeat the runtime-required shell policy for XAML.
-  - [ ] Repeat the runtime-required shell policy for Qt.
+  - [x] Repeat the runtime-required shell policy for Qt: require the standard
+    QObject binding, validate Rust props before QML construction, map MIL names
+    to QML names, and cover normal, missing-prop, and missing-runtime paths.
   - [ ] Inventory ignored properties, events, styles, effects, and accessibility
     metadata across every native emitter, and add the equivalent package setting.
     - [ ] Define a serializable native-view reference contract for `node` and

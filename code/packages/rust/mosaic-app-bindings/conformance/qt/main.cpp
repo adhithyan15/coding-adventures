@@ -6,6 +6,7 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <stdexcept>
 
 namespace {
 void require(bool condition, const char *assertion)
@@ -39,32 +40,72 @@ int main(int argc, char *argv[])
 {
     QCoreApplication application(argc, argv);
     MosaicHost host;
+    const QString mode = argc > 1 ? QString::fromLocal8Bit(argv[1]) : QString();
+
+    if (mode == QStringLiteral("--expect-required-failure")) {
+        try {
+            host.requireRuntime();
+        } catch (const std::exception &exception) {
+            const QString message = QString::fromUtf8(exception.what());
+            require(message.contains(QStringLiteral("native-complete requires the Mosaic Rust application runtime")),
+                    "explicit missing runtime error");
+            std::cout << "Mosaic Qt required-runtime failure conformance passed\n";
+            return EXIT_SUCCESS;
+        }
+        require(false, "required runtime should fail when the library is absent");
+    }
+
+    host.requireRuntime();
+    const QVariantMap slotNames{
+        {QStringLiteral("count"), QStringLiteral("count")},
+        {QStringLiteral("platform"), QStringLiteral("platform")},
+        {QStringLiteral("status"), QStringLiteral("runtimeStatus")},
+    };
+    const QStringList requiredProps = mode == QStringLiteral("--expect-missing-prop-failure")
+        ? QStringList{QStringLiteral("count"), QStringLiteral("missing-prop")}
+        : QStringList{QStringLiteral("count"), QStringLiteral("platform"), QStringLiteral("status")};
+    host.configureRequiredProps(slotNames, requiredProps);
+
+    if (mode == QStringLiteral("--expect-missing-prop-failure")) {
+        try {
+            static_cast<void>(host.propsRequired());
+        } catch (const std::exception &exception) {
+            const QString message = QString::fromUtf8(exception.what());
+            require(message.contains(QStringLiteral("missing required MIL prop 'missing-prop'")),
+                    "explicit missing required prop error");
+            std::cout << "Mosaic Qt missing-prop failure conformance passed\n";
+            return EXIT_SUCCESS;
+        }
+        require(false, "required prop validation should reject a missing prop");
+    }
 
     const auto started = host.props();
-    const auto startedProps = props(started, "startup update");
+    const auto startedProps = host.propsRequired();
     require(started.value(QStringLiteral("revision")).toULongLong() == 1,
             "startup revision");
     require(startedProps.value(QStringLiteral("count")).toLongLong() == 0,
             "initial count");
     require(startedProps.value(QStringLiteral("platform")).toString() == expectedPlatform(),
             "startup platform");
-    require(startedProps.value(QStringLiteral("status")).toString() ==
+    require(startedProps.value(QStringLiteral("runtimeStatus")).toString() ==
                 QStringLiteral("started"),
-            "startup status");
+            "startup mapped status");
+    require(!startedProps.contains(QStringLiteral("status")),
+            "startup source name removed after mapping");
 
     const QVariantMap event{
         {QStringLiteral("name"), QStringLiteral("increment")},
         {QStringLiteral("payload"), QVariantMap{{QStringLiteral("amount"), 4}}},
     };
-    const auto dispatched = host.handleEvent(event);
+    const auto dispatched = host.handleRequiredEvent(event);
     const auto dispatchedProps = props(dispatched, "dispatch update");
     require(dispatched.value(QStringLiteral("revision")).toULongLong() == 2,
             "dispatch revision");
     require(dispatchedProps.value(QStringLiteral("count")).toLongLong() == 4,
             "dispatched count");
-    require(dispatchedProps.value(QStringLiteral("status")).toString() ==
+    require(dispatchedProps.value(QStringLiteral("runtimeStatus")).toString() ==
                 QStringLiteral("dispatched"),
-            "dispatch status");
+            "dispatch mapped status");
 
     const auto snapshotValue = host.snapshot();
     require(snapshotValue.canConvert<QVariantMap>(), "snapshot object");
