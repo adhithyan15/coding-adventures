@@ -848,12 +848,11 @@ fn compose_box_style(
                 }
             }
             "border-color" => set(&mut border_color, compose_color_value(&p.value)),
-            "text-align"
-                if layer_idx.is_none() => {
-                    if let Some(a) = content_alignment(&p.value) {
-                        text_align = Some(a);
-                    }
+            "text-align" if layer_idx.is_none() => {
+                if let Some(a) = content_alignment(&p.value) {
+                    text_align = Some(a);
                 }
+            }
             // border-style, border-collapse, outline, width:100% — skipped.
             _ => {}
         }
@@ -1211,7 +1210,12 @@ fn emit_compose_tree(
         }
         "Text" => emit_text(node, depth, text_ctx),
         "Spacer" => Ok(format!("{pad}Spacer(modifier = Modifier.weight(1f))\n")),
-        "HostInput" => emit_host_input(node, depth, component_name, emits, part_styles, text_ctx),
+        // `Input` is the pre-UI29 spelling retained for capabilities such as
+        // multiline editing that were not present on the first HostInput
+        // contract. Both spellings are native text fields on Compose.
+        "HostInput" | "Input" => {
+            emit_host_input(node, depth, component_name, emits, part_styles, text_ctx)
+        }
         "HostButton" => emit_host_button(
             node,
             depth,
@@ -1926,6 +1930,18 @@ fn emit_host_input(
     writeln!(out, "{pad}BasicTextField(").unwrap();
     writeln!(out, "{inner}value = {value_expr},").unwrap();
 
+    let multiline = matches!(
+        find_prop_value(node, "multiline"),
+        Some(LayoutPropValue::Keyword(value)) if value == "true"
+    );
+    if multiline {
+        // BasicTextField is multiline by default, but emitting the contract
+        // explicitly prevents a future default change and gives editor-shaped
+        // inputs a useful native minimum without app-specific Compose code.
+        writeln!(out, "{inner}singleLine = false,").unwrap();
+        writeln!(out, "{inner}minLines = 8,").unwrap();
+    }
+
     // onChange — wraps the new value in a dispatched event whose
     // case mirrors the .mil declaration.  The strict-Flux contract
     // matches mosaic-emit-flutter's `dispatch(<Component>Event<Case>(value:
@@ -1966,7 +1982,9 @@ fn emit_host_input(
     if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
         let case = pascalize(&strip_on_prefix(emit_name));
         validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
-        writeln!(out, "{inner}singleLine = true,").unwrap();
+        if !multiline {
+            writeln!(out, "{inner}singleLine = true,").unwrap();
+        }
         writeln!(
             out,
             "{inner}keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),"
@@ -3136,6 +3154,46 @@ mod tests {
             "expected real dispatch call, got:\n{out}"
         );
         assert!(out.contains("enabled = readOnly != true,"));
+    }
+
+    #[test]
+    fn legacy_multiline_input_emits_native_compose_editor() {
+        let m = component(
+            "Notes",
+            vec![slot("body-value", SlotType::Text, true)],
+            vec![emit_decl(
+                "onBodyChange",
+                vec![param("value", EmitPayloadType::Text)],
+            )],
+        );
+        let l = layout(
+            "Notes",
+            styled_node(
+                "Input",
+                "notes-body-input",
+                vec![
+                    slot_prop("value", "body-value"),
+                    LayoutProp {
+                        name: "multiline".into(),
+                        value: LayoutPropValue::Keyword("true".into()),
+                    },
+                    LayoutProp {
+                        name: "onChange".into(),
+                        value: LayoutPropValue::EmitRef("onBodyChange".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let output = from_pipeline(&m, &l, &empty_style("Notes"))
+            .expect("emit legacy multiline Input")
+            .output;
+
+        assert!(output.contains("BasicTextField("));
+        assert!(output.contains("value = bodyValue,"));
+        assert!(output.contains("singleLine = false,"));
+        assert!(output.contains("minLines = 8,"));
+        assert!(output.contains("NotesEvent.BodyChange(v)"));
     }
 
     #[test]

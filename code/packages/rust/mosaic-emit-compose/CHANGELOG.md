@@ -16,6 +16,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- The legacy `Input ( multiline: true )` spelling now lowers to a native
+  multiline `BasicTextField` with a useful editor-sized minimum line count.
+  This preserves the multiline capability used by the shared Notes package
+  without requiring app-owned Compose code.
 - Generated optional boolean slot predicates now compile as nullable-safe Kotlin
   conditions, and large root containers split their direct children into private
   composables so generated Compose Desktop projects avoid JVM method-size
