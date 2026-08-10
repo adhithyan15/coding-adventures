@@ -301,6 +301,11 @@ unblocks multiple downstream targets; never count source generation as completio
   - [x] Qt/QML through the standard Qt Core binding.
 - [ ] Generate standard effect hosts, beginning with storage and lifecycle.
 - [ ] Add `native-complete` capability/degradation analysis to the compiler.
+  - [x] Add a package-builder API and CLI profile with deterministic,
+    package-expanded degradation reports and pre-emission strict rejection.
+  - [ ] Inventory ignored properties, events, styles, effects, and accessibility
+    metadata across every native emitter, and add the equivalent package setting.
+  - [ ] Remove every reported TaskApp degradation on all five native backends.
 - [ ] Add launch-and-dispatch conformance fixtures for every native backend.
   - [x] XAML/.NET loads the shared Rust conformance DLL and round-trips startup,
     typed props, semantic dispatch, revised props, buffers, and teardown.

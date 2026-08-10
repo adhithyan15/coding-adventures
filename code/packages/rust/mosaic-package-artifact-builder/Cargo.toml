@@ -19,6 +19,8 @@ mosaic-emit-webcomponent = { path = "../mosaic-emit-webcomponent" }
 mosaic-emit-xaml = { path = "../mosaic-emit-xaml" }
 mosaic-emit-flutter = { path = "../mosaic-emit-flutter" }
 mosaic-emit-compose = { path = "../mosaic-emit-compose" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
 
 [dev-dependencies]
 tempfile = "3"

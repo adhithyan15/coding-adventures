@@ -23,6 +23,21 @@ the requested backend and writes a backend-shaped artifact tree:
 It is the library underneath the `mosaic-compile pkg <root> --backend <name>
 --output <dir>` CLI subcommand.
 
+## Native-completeness profiles
+
+`build_package_with_profile` adds an explicit completion policy to package
+builds. `BuildProfile::Permissive` emits the normal artifacts and a deterministic
+`<backend>/mosaic-degradations.json`. `BuildProfile::NativeComplete` writes the
+same report but rejects the build before application artifacts are emitted when
+the selected backend has a known degradation.
+
+The initial inventory identifies passive drag/drop lowerings, native table
+lowerings without table semantics, Flutter's dialog placeholder and missing URL
+effect host, and generated native project shells that can fall back to sample
+props. The overall native-complete milestone remains open while ignored
+properties, events, styles, effects, and accessibility metadata are added to the
+inventory.
+
 `compose_component` is the canonical in-memory entry point shared by package
 builds and standalone three-file compilation. It returns the compiled model,
 resolved layout, and merged style definition without selecting a backend.
@@ -108,15 +123,18 @@ so a fresh emitted project is runnable without a separate build step.
 
 ```rust
 use std::path::PathBuf;
-use mosaic_package_artifact_builder::{build_package, Backend, BuildOptions};
+use mosaic_package_artifact_builder::{
+    build_package_with_profile, Backend, BuildOptions, BuildProfile,
+};
 
 let opts = BuildOptions {
     package_root: PathBuf::from("code/packages/mosaic/mosaic-pkg-grid"),
     output_root: PathBuf::from("/tmp/dist"),
     backend: Backend::React,
     emit_project: false,
+    theme: None,
 };
-let result = build_package(&opts)?;
+let result = build_package_with_profile(&opts, BuildProfile::Permissive)?;
 for path in &result.artifacts {
     println!("wrote {}", path.display());
 }
@@ -133,6 +151,7 @@ build_package(...)
   |-- SourceNotFound         <- .mil/.mll missing under src/
   |-- PipelineError          <- mosmodel / moslayout / mosstyle / emitter failed
   |-- PackageReferenceError  <- pkg::P::C layout/style dependency failed
+  |-- NativeIncomplete       <- strict profile found known degradations
   |-- UnsafeName             <- manifest name unsafe for output paths
   |-- UnsafePath             <- host asset path escaped package/output roots
   `-- Io(_)                  <- read / write / mkdir failed
