@@ -45,6 +45,13 @@ export {
   type InfoDumpFinding,
   type InfoDumpReport,
 } from "./info-dump.js";
+export {
+  termsUsedIn,
+  measureMetalanguage,
+  renderMetalanguage,
+  type MetalanguageUse,
+  type MetalanguageReport,
+} from "./metalanguage.js";
 export { parseBodyBlocks, parseLesson, buildDataset, type ParsedLesson } from "./parse.js";
 export {
   parseLessonActivityValue,
@@ -120,6 +127,7 @@ export {
   loadLanguageCurricula,
   loadTrackChapters,
   loadChapterPolicy,
+  loadMetalanguage,
   loadBookCorpus,
   loadLessons,
   loadModalityManifest,

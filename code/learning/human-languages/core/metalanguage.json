@@ -1,0 +1,515 @@
+{
+  "version": 1,
+  "note": "HL10 section 7.5. The hidden prerequisite of every language textbook: it assumes the reader already knows grammar VOCABULARY. \"The first-person singular present indicative of a regular -ar verb\" spends six technical terms on one form, and a beginner who never studied grammar understands none of them. So the metalanguage is itself a taught ramp -- one new term per lesson, each introduced only AFTER the learner can already do the thing it names, and re-glossed on reappearance after a long gap. `plainAlternative` is what a lesson must say INSTEAD, before the term is introduced. It is the field that makes the rule actionable rather than merely restrictive.",
+  "measuredAt": "2026-08-10",
+  "corpusFinding": "Measured before authoring: `infinitive` appears in 87 lessons, `participle` 67, `dative` 53, `conjugation` 21, `accusative` 19, `declension` 14, `imperfect` 14, `genitive` 13, `nominative` 12 -- with nothing anywhere introducing any of them. That is the gap this file exists to close, and it is why the dummy-friendly work is a metalanguage ramp rather than a prose lint.",
+  "universality": "Universal by design. Every track needs the words for talking about its own language, and the ORDER is the pedagogy rather than the wording. A track whose language has no such category -- Spanish has no declension -- declares an omission rather than leaving a hole.",
+  "stages": [
+    "pre-A1",
+    "A1",
+    "A2",
+    "B1",
+    "B2",
+    "C1",
+    "C2"
+  ],
+  "counts": {
+    "pre-A1": 5,
+    "A1": 14,
+    "A2": 18,
+    "B1": 9,
+    "B2": 5,
+    "C1": 3,
+    "total": 54,
+    "technical": 37
+  },
+  "terms": [
+    {
+      "id": "META-WORD",
+      "term": "word",
+      "technical": false,
+      "stage": "pre-A1",
+      "order": 1,
+      "introduceAfter": "nothing -- this is a starting term",
+      "plainAlternative": "word"
+    },
+    {
+      "id": "META-SOUND",
+      "term": "sound",
+      "technical": false,
+      "stage": "pre-A1",
+      "order": 2,
+      "introduceAfter": "nothing -- this is a starting term",
+      "plainAlternative": "sound"
+    },
+    {
+      "id": "META-LETTER",
+      "term": "letter",
+      "technical": false,
+      "stage": "pre-A1",
+      "order": 3,
+      "introduceAfter": "the script has been seen",
+      "plainAlternative": "letter"
+    },
+    {
+      "id": "META-PHRASE",
+      "term": "phrase",
+      "technical": false,
+      "stage": "pre-A1",
+      "order": 4,
+      "introduceAfter": "a two-word formula has been used",
+      "plainAlternative": "a pair of words that travel together"
+    },
+    {
+      "id": "META-NAME-WORD",
+      "term": "noun",
+      "technical": true,
+      "stage": "pre-A1",
+      "order": 5,
+      "introduceAfter": "a dozen nouns have been used",
+      "plainAlternative": "a naming word"
+    },
+    {
+      "id": "META-ACTION-WORD",
+      "term": "verb",
+      "technical": true,
+      "stage": "A1",
+      "order": 6,
+      "introduceAfter": "soy, estoy and one present form have been used",
+      "plainAlternative": "a doing word"
+    },
+    {
+      "id": "META-GENDER",
+      "term": "gender",
+      "technical": false,
+      "stage": "A1",
+      "order": 7,
+      "introduceAfter": "~20 lessons of hearing el and la",
+      "plainAlternative": "whether a word takes el or la"
+    },
+    {
+      "id": "META-MASCULINE",
+      "term": "masculine",
+      "technical": false,
+      "stage": "A1",
+      "order": 8,
+      "introduceAfter": "gender has been named",
+      "plainAlternative": "the el group"
+    },
+    {
+      "id": "META-FEMININE",
+      "term": "feminine",
+      "technical": false,
+      "stage": "A1",
+      "order": 9,
+      "introduceAfter": "gender has been named",
+      "plainAlternative": "the la group"
+    },
+    {
+      "id": "META-ENDING",
+      "term": "ending",
+      "technical": false,
+      "stage": "A1",
+      "order": 10,
+      "introduceAfter": "habl-o and habl-as have been seen side by side",
+      "plainAlternative": "the last piece of the word"
+    },
+    {
+      "id": "META-STEM",
+      "term": "stem",
+      "technical": false,
+      "stage": "A1",
+      "order": 11,
+      "introduceAfter": "ending has been named",
+      "plainAlternative": "the piece that stays the same"
+    },
+    {
+      "id": "META-SINGULAR",
+      "term": "singular",
+      "technical": false,
+      "stage": "A1",
+      "order": 12,
+      "introduceAfter": "plurals have been used",
+      "plainAlternative": "one of something"
+    },
+    {
+      "id": "META-PLURAL",
+      "term": "plural",
+      "technical": false,
+      "stage": "A1",
+      "order": 13,
+      "introduceAfter": "plurals have been used",
+      "plainAlternative": "more than one"
+    },
+    {
+      "id": "META-SUBJECT",
+      "term": "subject",
+      "technical": false,
+      "stage": "A1",
+      "order": 14,
+      "introduceAfter": "yo, tu and el are secure",
+      "plainAlternative": "who is doing it"
+    },
+    {
+      "id": "META-PERSON",
+      "term": "person",
+      "technical": false,
+      "stage": "A1",
+      "order": 15,
+      "introduceAfter": "subject has been named",
+      "plainAlternative": "which of yo / tu / el"
+    },
+    {
+      "id": "META-AGREEMENT",
+      "term": "agreement",
+      "technical": true,
+      "stage": "A1",
+      "order": 16,
+      "introduceAfter": "adjective agreement has been practised",
+      "plainAlternative": "words changing to match each other"
+    },
+    {
+      "id": "META-ARTICLE",
+      "term": "article",
+      "technical": true,
+      "stage": "A1",
+      "order": 17,
+      "introduceAfter": "el, la, un, una are all in use",
+      "plainAlternative": "el, la, un and una"
+    },
+    {
+      "id": "META-ADJECTIVE",
+      "term": "adjective",
+      "technical": true,
+      "stage": "A1",
+      "order": 18,
+      "introduceAfter": "colours and sizes have been used",
+      "plainAlternative": "a describing word"
+    },
+    {
+      "id": "META-INFINITIVE",
+      "term": "infinitive",
+      "technical": true,
+      "stage": "A1",
+      "order": 19,
+      "introduceAfter": "the naming form has been used many times",
+      "plainAlternative": "the plain form, the one in a dictionary"
+    },
+    {
+      "id": "META-CONJUGATION",
+      "term": "conjugation",
+      "technical": true,
+      "stage": "A2",
+      "order": 20,
+      "introduceAfter": "one full singular row exists",
+      "plainAlternative": "the set of forms a doing word takes"
+    },
+    {
+      "id": "META-CONJUGATE",
+      "term": "conjugate",
+      "technical": true,
+      "stage": "A2",
+      "order": 21,
+      "introduceAfter": "conjugation has been named",
+      "plainAlternative": "change the ending to match who is doing it"
+    },
+    {
+      "id": "META-REGULAR",
+      "term": "regular",
+      "technical": true,
+      "stage": "A2",
+      "order": 22,
+      "introduceAfter": "one full singular row exists",
+      "plainAlternative": "follows the usual pattern"
+    },
+    {
+      "id": "META-IRREGULAR",
+      "term": "irregular",
+      "technical": true,
+      "stage": "A2",
+      "order": 23,
+      "introduceAfter": "regular has been named",
+      "plainAlternative": "breaks the usual pattern"
+    },
+    {
+      "id": "META-TENSE",
+      "term": "tense",
+      "technical": true,
+      "stage": "A2",
+      "order": 24,
+      "introduceAfter": "present and one past are both in use",
+      "plainAlternative": "when it happens"
+    },
+    {
+      "id": "META-PRESENT",
+      "term": "present",
+      "technical": false,
+      "stage": "A2",
+      "order": 25,
+      "introduceAfter": "tense has been named",
+      "plainAlternative": "happening now"
+    },
+    {
+      "id": "META-OBJECT",
+      "term": "object",
+      "technical": false,
+      "stage": "A2",
+      "order": 26,
+      "introduceAfter": "the direct-object arc has begun",
+      "plainAlternative": "what the doing lands on"
+    },
+    {
+      "id": "META-DIRECT-OBJECT",
+      "term": "direct object",
+      "technical": true,
+      "stage": "A2",
+      "order": 27,
+      "introduceAfter": "object has been named",
+      "plainAlternative": "what is acted on"
+    },
+    {
+      "id": "META-INDIRECT-OBJECT",
+      "term": "indirect object",
+      "technical": true,
+      "stage": "A2",
+      "order": 28,
+      "introduceAfter": "the indirect arc has begun",
+      "plainAlternative": "who it is done to or for"
+    },
+    {
+      "id": "META-PRONOUN",
+      "term": "pronoun",
+      "technical": true,
+      "stage": "A2",
+      "order": 29,
+      "introduceAfter": "object pronouns are in use",
+      "plainAlternative": "a short word standing in for a name"
+    },
+    {
+      "id": "META-REFLEXIVE",
+      "term": "reflexive",
+      "technical": true,
+      "stage": "A2",
+      "order": 30,
+      "introduceAfter": "reflexive verbs have been practised",
+      "plainAlternative": "doing it to yourself"
+    },
+    {
+      "id": "META-PAST",
+      "term": "past",
+      "technical": false,
+      "stage": "A2",
+      "order": 31,
+      "introduceAfter": "both pasts are in use",
+      "plainAlternative": "already happened"
+    },
+    {
+      "id": "META-PRETERITE",
+      "term": "preterite",
+      "technical": true,
+      "stage": "A2",
+      "order": 32,
+      "introduceAfter": "the preterite has been practised",
+      "plainAlternative": "the finished past"
+    },
+    {
+      "id": "META-IMPERFECT",
+      "term": "imperfect",
+      "technical": true,
+      "stage": "A2",
+      "order": 33,
+      "introduceAfter": "the imperfect has been practised",
+      "plainAlternative": "the going-on past"
+    },
+    {
+      "id": "META-ASPECT",
+      "term": "aspect",
+      "technical": true,
+      "stage": "A2",
+      "order": 34,
+      "introduceAfter": "the preterite/imperfect contrast is in use",
+      "plainAlternative": "whether it finished or kept going"
+    },
+    {
+      "id": "META-FUTURE",
+      "term": "future",
+      "technical": false,
+      "stage": "A2",
+      "order": 35,
+      "introduceAfter": "the future has been used",
+      "plainAlternative": "hasn't happened yet"
+    },
+    {
+      "id": "META-PARTICIPLE",
+      "term": "participle",
+      "technical": true,
+      "stage": "B1",
+      "order": 36,
+      "introduceAfter": "participles have been formed",
+      "plainAlternative": "the -ado / -ido form"
+    },
+    {
+      "id": "META-GERUND",
+      "term": "gerund",
+      "technical": true,
+      "stage": "B1",
+      "order": 37,
+      "introduceAfter": "the gerund has been used",
+      "plainAlternative": "the -ando / -iendo form"
+    },
+    {
+      "id": "META-MOOD",
+      "term": "mood",
+      "technical": true,
+      "stage": "B1",
+      "order": 38,
+      "introduceAfter": "subjunctive block D, 24 lessons in",
+      "plainAlternative": "whether you are asserting or wanting"
+    },
+    {
+      "id": "META-INDICATIVE",
+      "term": "indicative",
+      "technical": true,
+      "stage": "B1",
+      "order": 39,
+      "introduceAfter": "mood has been named",
+      "plainAlternative": "the asserting set"
+    },
+    {
+      "id": "META-SUBJUNCTIVE",
+      "term": "subjunctive",
+      "technical": true,
+      "stage": "B1",
+      "order": 40,
+      "introduceAfter": "mood has been named",
+      "plainAlternative": "the wanting set"
+    },
+    {
+      "id": "META-IMPERATIVE",
+      "term": "imperative",
+      "technical": true,
+      "stage": "B1",
+      "order": 41,
+      "introduceAfter": "commands have been practised",
+      "plainAlternative": "telling someone to do it"
+    },
+    {
+      "id": "META-CLAUSE",
+      "term": "clause",
+      "technical": true,
+      "stage": "B1",
+      "order": 42,
+      "introduceAfter": "relative clauses are in use",
+      "plainAlternative": "a piece of a sentence with its own doing word"
+    },
+    {
+      "id": "META-SUBORDINATE",
+      "term": "subordinate clause",
+      "technical": true,
+      "stage": "B1",
+      "order": 43,
+      "introduceAfter": "clause has been named",
+      "plainAlternative": "a clause hanging off another"
+    },
+    {
+      "id": "META-RELATIVE",
+      "term": "relative clause",
+      "technical": true,
+      "stage": "B1",
+      "order": 44,
+      "introduceAfter": "clause has been named",
+      "plainAlternative": "a clause describing a thing"
+    },
+    {
+      "id": "META-VOICE",
+      "term": "voice",
+      "technical": true,
+      "stage": "B2",
+      "order": 45,
+      "introduceAfter": "the passive has been met",
+      "plainAlternative": "whether the subject acts or is acted on"
+    },
+    {
+      "id": "META-PASSIVE",
+      "term": "passive",
+      "technical": true,
+      "stage": "B2",
+      "order": 46,
+      "introduceAfter": "voice has been named",
+      "plainAlternative": "the subject is acted on"
+    },
+    {
+      "id": "META-REGISTER",
+      "term": "register",
+      "technical": true,
+      "stage": "B2",
+      "order": 47,
+      "introduceAfter": "register shifting has begun",
+      "plainAlternative": "how formal it sounds"
+    },
+    {
+      "id": "META-REPORTED-SPEECH",
+      "term": "reported speech",
+      "technical": true,
+      "stage": "B2",
+      "order": 48,
+      "introduceAfter": "reported speech is in use",
+      "plainAlternative": "saying what someone said"
+    },
+    {
+      "id": "META-CONDITIONAL",
+      "term": "conditional",
+      "technical": true,
+      "stage": "B2",
+      "order": 49,
+      "introduceAfter": "conditional sentences are in use",
+      "plainAlternative": "the would form"
+    },
+    {
+      "id": "META-PERIPHRASIS",
+      "term": "periphrasis",
+      "technical": true,
+      "stage": "C1",
+      "order": 50,
+      "introduceAfter": "aspectual periphrases are in use",
+      "plainAlternative": "a doing word built from two or more words"
+    },
+    {
+      "id": "META-COHESION",
+      "term": "cohesion",
+      "technical": true,
+      "stage": "C1",
+      "order": 51,
+      "introduceAfter": "discourse structure has begun",
+      "plainAlternative": "how a text holds together"
+    },
+    {
+      "id": "META-IMPLICATURE",
+      "term": "implicature",
+      "technical": true,
+      "stage": "C1",
+      "order": 52,
+      "introduceAfter": "implicit meaning has begun",
+      "plainAlternative": "what is meant without being said"
+    },
+    {
+      "id": "META-DECLENSION",
+      "term": "declension",
+      "technical": true,
+      "stage": "A2",
+      "order": 53,
+      "introduceAfter": "case endings have been practised",
+      "plainAlternative": "the set of endings a naming word takes"
+    },
+    {
+      "id": "META-CASE",
+      "term": "case",
+      "technical": true,
+      "stage": "A2",
+      "order": 54,
+      "introduceAfter": "case endings have been practised",
+      "plainAlternative": "the ending that says what job the word is doing"
+    }
+  ],
+  "technicalityNote": "`technical: false` marks a word an adult reader already owns whatever they studied -- word, sound, letter, past, plural. Those still have a place in the ramp (a lesson should not lean on 'stem' before showing habl-o beside habl-as) but they are not what makes a textbook unreadable. `technical: true` is the actionable set, and it deliberately includes `noun`, `verb` and `adjective`: the premise of this ramp is a reader who never studied grammar, and for that reader 'a doing word' lands and 'verb' does not. Reporting both numbers keeps the gate honest -- the total says how pervasive the assumption is, the technical count says what to fix first."
+}

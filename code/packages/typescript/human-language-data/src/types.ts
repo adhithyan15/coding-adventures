@@ -335,6 +335,41 @@ export interface TrackGrammarCells {
   cells: GrammarCell[];
 }
 
+/** HL10 section 7.5 -- one word for talking about language, and when it is earned. */
+export interface MetalanguageTerm {
+  id: string;
+  term: string;
+  stage: string;
+  order: number;
+  /** What the learner must already be able to DO before the term is named. */
+  introduceAfter: string;
+  /**
+   * False for a word an adult reader already owns -- word, sound, past, plural.
+   * True is the actionable set, and deliberately includes noun/verb/adjective:
+   * for a reader who never studied grammar, "a doing word" lands and "verb"
+   * does not.
+   */
+  technical?: boolean;
+  /**
+   * What a lesson must say instead, until the term is introduced.
+   *
+   * The field that makes the rule actionable rather than merely restrictive: a
+   * gate can tell an author what to write, not only what not to.
+   */
+  plainAlternative: string;
+}
+
+export interface MetalanguageInventory {
+  version: number;
+  note?: string;
+  measuredAt?: string;
+  corpusFinding?: string;
+  universality?: string;
+  stages?: string[];
+  counts?: Record<string, number>;
+  terms: MetalanguageTerm[];
+}
+
 export interface ChapterPolicy {
   version: number;
   /** Minimum share of a chapter's introduced atoms its payoff must assess (0..1). */
