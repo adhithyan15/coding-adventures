@@ -25,16 +25,19 @@
   the movable set), since it still fails `classify_precise_word`'s exact-base check
   (`h + HEADER_SIZE == word`) — it can never accidentally become eligible for relocation, only
   correctly retained.
-- 3 new regression tests: a direct `find_header` assertion at the exact one-past-the-end
+- 4 new regression tests: a direct `find_header` assertion at the exact one-past-the-end
   address; a `classify_mobility` root-pointer test proving the object is pinned (not silently
-  absent from both the movable and pinned sets); and an end-to-end `collect_compacting`
-  differential over a **conservative** region (the likelier real-world path, since a precisely-
-  traced base+derived pointer pair normally keeps the base itself live too) proving the object
-  is neither freed nor left dangling. All three confirmed load-bearing by reverting the fix and
-  observing the predicted failure (2 assertion failures, 1 `freed: 1` instead of `0`).
-- Verification: `cargo build`/`test` clean across `gc-core`, `gc-core-capi`, `vm-core` (157 lib
+  absent from both the movable and pinned sets); and two end-to-end `collect_compacting`
+  differentials — one over a **conservative** region, one over a **precise `root_slots`
+  entry** (added after an initial security-review pass raised, then — against this branch's
+  actual code, empirically including under Miri — disproved, a concern that the precise path
+  might relocate the object while leaving a stale root pointer; `classify_precise_word`,
+  0.32.0, already gates the precise wave against exactly this) — both proving the object is
+  neither freed nor left dangling. All four confirmed load-bearing by reverting the fix and
+  observing the predicted failure.
+- Verification: `cargo build`/`test` clean across `gc-core`, `gc-core-capi`, `vm-core` (158 lib
   tests, up from 154); `cargo clippy --all-targets -- -D warnings` clean; full-crate
-  `cargo +nightly miri test -p gc-core` clean (155 passed, 2 ignored per the existing scale-test
+  `cargo +nightly miri test -p gc-core` clean (156 passed, 2 ignored per the existing scale-test
   gate).
 
 ## 0.33.0 — 2026-08-10 — `FlatHeap::collect_minor_compacting` — the full moving-minor cycle, live (AOT00-T9 PR-4)

@@ -6516,6 +6516,36 @@ mod tests {
         );
     }
 
+    /// End-to-end, **precise** path: a one-past-the-end pointer in a `root_slots`
+    /// entry (not a scanned conservative region) must ALSO not dangle. This is the
+    /// scenario `classify_precise_word` (PR #10390) exists to gate: a precise source
+    /// holding a non-exact-base hit is routed to the pinning wave, never the
+    /// movable-eligible `precise` set, so `evacuate_and_fixup`'s base-only root-slot
+    /// fixup is never asked to rewrite something it structurally cannot rewrite.
+    #[test]
+    fn collect_compacting_one_past_the_end_root_pointer_does_not_dangle() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0, 8]);
+        let a = heap.alloc(16, k) as usize;
+        unsafe {
+            *(a as *mut usize) = 0;
+            *((a + 8) as *mut usize) = 0xBEEF_CAFE_usize; // sentinel
+        }
+
+        let mut root = a + 16; // one-past-the-end ROOT pointer, precise source
+        let slots = [&mut root as *mut usize as usize];
+        let stats = unsafe { heap.collect_compacting(&slots, &[]) };
+
+        assert_eq!(stats.freed, 0, "the object is reachable via the one-past-the-end root pointer");
+        assert_eq!(stats.survived, 1, "it survives in place -- pinned by classify_precise_word, never movable");
+        assert_eq!(root, a + 16, "the root slot is untouched -- the object never moved, so nothing needed fixing up");
+        assert_eq!(
+            unsafe { *((a + 8) as *const usize) },
+            0xBEEF_CAFE,
+            "reading through the (unmoved, unfreed) object recovers the sentinel -- no dangling root pointer"
+        );
+    }
+
     // ── Moving collector — arena provenance safety (AOT00-T3 PR-3c-1) ──
     //
     // An arena-backed block is a SLICE of one big arena allocation, so it must never be
