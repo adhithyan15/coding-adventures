@@ -1,0 +1,33 @@
+% ============================================================================
+% geometry-formulas-solve.query.adj — worked examples over geometry-formulas.
+% adj's rung-0 CAS-wiring companions (ADJ-FORMULA-LIBRARIES FL-10, §3D).
+% ============================================================================
+% A SEPARATE program from geometry-formulas.query.adj, not a continuation of
+% it: a `symbolic`'s target may not already be observed anywhere in the same
+% compiled program (it is the unknown being solved for), and TWO of the four
+% solve-direction companions this library ships share a target name (`width`
+% — one solves it from the area, the other from the perimeter). Two solves for
+% the SAME underlying quantity cannot coexist in one program (the first solve
+% would leave `width` derived, tripping the guard for the second) any more
+% than two independent `observe`s of it could — so `width_from_rectangle_
+% perimeter` gets its own tiny program below, run separately.
+%
+% Run (from this directory):
+%     ../../../../packages/rust/target/debug/adj-lang-cli geometry-formulas-solve.query.adj
+% ============================================================================
+
+import "geometry-formulas.adj"
+
+% "A rectangle has an area of 48 and a length of 8 — how wide is it?"
+observe rectangle_area(48)
+observe length(8)
+? width_from_rectangle_area(rectangle_area, length)   % expect 6  (48 = 8 * 6)
+
+% "A triangle has an area of 15 and a base of 10 — how tall is it?"
+observe triangle_area(15)
+observe base(10)
+? height_from_triangle_area(triangle_area, base)      % expect 3  (15 = 10 * 3 / 2)
+
+% "A square has a perimeter of 20 — how long is each side?"
+observe square_perimeter(20)
+? side_from_square_perimeter(square_perimeter)        % expect 5  (20 = 4 * 5)

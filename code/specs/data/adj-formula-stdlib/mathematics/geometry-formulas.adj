@@ -25,6 +25,22 @@
 % recall library's polygon side counts, right-angle counts, and the like): the
 % facts say WHAT a rectangle is; these formulas say how to MEASURE one. Answer a
 % mixed question by importing both — recall the shape, then apply its measure.
+%
+% This library also carries four rung-0 CAS-wiring companions (ADJ-FORMULA-
+% LIBRARIES FL-10, §3D — the Wave 3 opener, unblocked now that the CAS-wiring
+% rung and FL-11's min/max are both shipped): a geometry question just as often
+% gives the AREA/PERIMETER and one side and asks for the OTHER side, rather
+% than giving every side and asking for the measure. Each `symbolic` clause
+% below is the SAME cited equation as its forward `formula` sibling — only
+% which quantity is bound and which is solved for differs — reaching its
+% answer through `cas-solve`'s real linear-equation solver, never a second
+% hand-written formula (the exact discipline `electricity.adj`'s
+% `resistance_from_ohms_law` already established). `square_area`'s inverse
+% (side from area) is DELIBERATELY ABSENT: `side * side` is quadratic in the
+% target, and rung-0's solver is linear-only (`solve_linear_system`) — solving
+% for a squared unknown needs a later CAS rung this repo has not built yet, and
+% attempting it here is a clean `SymbolicNonLinear` compile error, not
+% something to work around.
 % ============================================================================
 
 % ----------------------------------------------------------------------------
@@ -47,6 +63,11 @@ dictionary geometry_vocab {
     define triangle_area       : finding  surface "area of the triangle", "triangle area"
     define square_area         : finding  surface "area of the square", "square area"
     define square_perimeter    : finding  surface "perimeter of the square", "square perimeter"
+
+    define width_from_rectangle_area      : finding  surface "missing width", "unknown width", "width given the area"
+    define height_from_triangle_area      : finding  surface "missing height", "unknown height", "height given the area"
+    define side_from_square_perimeter     : finding  surface "missing side", "unknown side", "side given the perimeter"
+    define width_from_rectangle_perimeter : finding  surface "missing width", "unknown width", "width given the perimeter"
 }
 
 % ----------------------------------------------------------------------------
@@ -96,6 +117,35 @@ formulabook geometry_formulas {
     % table lists the square perimeter as 4a.
     formula square_perimeter(side) = 4 * side
         source "square | 4a"
+        locator "https://mathworld.wolfram.com/Perimeter.html"
+        trust authoritative
+
+    % Rectangle area, SOLVED FOR WIDTH instead of computed forward — the same
+    % cited A=ab, only which quantity is bound and which is unknown differs.
+    symbolic width_from_rectangle_area(rectangle_area, length) { rectangle_area == length * width } for width
+        source "The area of the rectangle is A=ab."
+        locator "https://mathworld.wolfram.com/Rectangle.html"
+        trust authoritative
+
+    % Triangle area, SOLVED FOR HEIGHT. The same cited Delta=(1/2)ah; rung-0's
+    % Div-by-a-target-free-divisor rewrite (to Mul by the reciprocal) is what
+    % makes the `/ 2` in the forward formula's body reach the solver at all.
+    symbolic height_from_triangle_area(triangle_area, base) { triangle_area == base * height / 2 } for height
+        source "Let a be the base length and h be the height."
+        locator "https://mathworld.wolfram.com/Triangle.html"
+        trust authoritative
+
+    % Square perimeter, SOLVED FOR SIDE. The same cited P=4a.
+    symbolic side_from_square_perimeter(square_perimeter) { square_perimeter == 4 * side } for side
+        source "square | 4a"
+        locator "https://mathworld.wolfram.com/Perimeter.html"
+        trust authoritative
+
+    % Rectangle perimeter, SOLVED FOR WIDTH. The same cited P=2(a+b); the
+    % target sits inside the parenthesised sum the outer `2 *` distributes
+    % over, which rung-0's solver linearizes correctly.
+    symbolic width_from_rectangle_perimeter(rectangle_perimeter, length) { rectangle_perimeter == 2 * (length + width) } for width
+        source "rectangle | 2(a+b)"
         locator "https://mathworld.wolfram.com/Perimeter.html"
         trust authoritative
 }

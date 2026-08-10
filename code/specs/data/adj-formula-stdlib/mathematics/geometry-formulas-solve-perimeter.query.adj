@@ -1,0 +1,20 @@
+% ============================================================================
+% geometry-formulas-solve-perimeter.query.adj — the fourth rung-0 CAS-wiring
+% companion (ADJ-FORMULA-LIBRARIES FL-10, §3D), run in its own program.
+% ============================================================================
+% Separated from geometry-formulas-solve.query.adj: that program already
+% solves `width_from_rectangle_area`, which derives a value for `width` — and
+% `width_from_rectangle_perimeter` targets that SAME underlying quantity, so
+% the two solves cannot share a compiled program (see the sibling query
+% file's header for the full explanation).
+%
+% Run (from this directory):
+%     ../../../../packages/rust/target/debug/adj-lang-cli geometry-formulas-solve-perimeter.query.adj
+% ============================================================================
+
+import "geometry-formulas.adj"
+
+% "A rectangle has a perimeter of 30 and a length of 9 — how wide is it?"
+observe rectangle_perimeter(30)
+observe length(9)
+? width_from_rectangle_perimeter(rectangle_perimeter, length)   % expect 6  (30 = 2 * (9 + 6))
