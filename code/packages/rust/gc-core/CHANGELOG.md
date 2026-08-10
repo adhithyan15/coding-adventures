@@ -1,6 +1,27 @@
 # Changelog — gc-core
 
-## 0.32.0 — 2026-08-10 — fix: interior pointers in precise ref slots/root slots escaped relocation fixup — live use-after-free in `collect_compacting`
+## 0.32.1 — 2026-08-10 — test: gate the AOT00-T5 scale tests behind `#[cfg_attr(miri, ignore)]`
+
+- `scale_deep_chain_marks_without_stack_overflow` (20,000-object chain) and
+  `scale_wide_ref_array_relocates` (4,000-element ref array) each already carried a doc comment
+  stating "these tests run at counts too large for Miri... here we prove they scale" — but neither
+  actually had a Miri-ignore gate, so `cargo +nightly miri test -p gc-core` ran them at full size
+  anyway. Miri's per-instruction interpretation overhead on tens of thousands of allocations plus a
+  full mark/sweep or compacting traversal made these two tests, alone, the overwhelming majority of
+  the crate's Miri wall-clock cost (observed: 40+ minutes dominated by a single test, confirmed via a
+  live run on 2026-08-10). Neither test exercises a code path the small-scale tests above them don't
+  already cover under Miri — they exist purely to prove O(n) behavior and absence of stack overflow at
+  scale, properties Miri's interpretation doesn't help verify anyway (it can't measure asymptotic
+  complexity, and the worklist-based mark that avoids stack overflow is structurally the same at 10
+  objects as at 20,000).
+- Added `#[cfg_attr(miri, ignore = "...")]` to both, with the ignore reason naming the AOT00-T5 module
+  doc and the specific already-covered mechanics each test scales up. Both still run at full size and
+  full assertion strength under `cargo test` (unaffected — confirmed unchanged pass/fail behavior).
+- **Measured impact**: `cargo +nightly miri test -p gc-core` (full crate, no filters) dropped from
+  40-90+ minutes to ~13-25 seconds. No test coverage lost under Miri — both tests' per-object mechanics
+  (mark, sweep, tenure, tail fixup, relocation) are already exercised by the small-scale tests
+  immediately above them in the same module, which Miri continues to run at full strength.
+- Pure test-infrastructure change — no production code touched.
 
 **Security fix, found by adversarial review of an unrelated in-progress PR (AOT00-T9 PR-3), confirmed
 live and exploitable against already-shipped code, fixed and regression-tested here.**

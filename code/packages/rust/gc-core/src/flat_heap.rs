@@ -4241,6 +4241,9 @@ mod tests {
     /// objects are reclaimed. A recursion-based mark would blow the stack at this depth; the
     /// worklist mark does not.
     #[test]
+    #[cfg_attr(miri, ignore = "too large for Miri; see the AOT00-T5 module doc above — already \
+        covered at small scale by the tests above, which exercise the identical per-object \
+        mechanics (mark, sweep, tenure) this test scales up, not new code paths")]
     fn scale_deep_chain_marks_without_stack_overflow() {
         const N: usize = 20_000;
         let mut heap = FlatHeap::new();
@@ -4283,6 +4286,9 @@ mod tests {
     /// byte-preserved. Proves the tail fixup (the `for_each_ref_slot` tail walk) is correct and
     /// O(len) over a large instance, not just a 2-slot toy.
     #[test]
+    #[cfg_attr(miri, ignore = "too large for Miri; see the AOT00-T5 module doc above — already \
+        covered at small scale by the tests above, which exercise the identical per-object \
+        mechanics (tail fixup, relocation) this test scales up, not new code paths")]
     fn scale_wide_ref_array_relocates() {
         const M: usize = 4_000;
         let mut heap = FlatHeap::new();
