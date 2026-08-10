@@ -6,6 +6,11 @@ All notable changes to `task-core` are documented here.
 
 ### Added
 
+- **`GanttBar.kind: TaskKind`** — the `gantt()` projection now reports
+  whether each bar is a Leaf/Summary/Milestone task, the same shape of
+  addition `depth`/`percent_complete` already were on the struct. Lets a
+  host render a zero-duration `Milestone` as a diamond instead of the
+  usual proportional bar — see `code/specs/task-app-richer-gantt-v1.md`.
 - **`ProjectComplexity` — per-project scheduling-surface toggle** (task-app
   Phase 9, engine half — see `code/specs/task-app-complexity-config-v1.md`).
   `ProjectSettings.complexity: ProjectComplexity` (`Board` / `Full`) and a

@@ -231,6 +231,7 @@ impl ProjectState {
                     critical: d.critical,
                     percent_complete: t.percent_complete,
                     depth: self.depth_of(id),
+                    kind: t.kind,
                 })
             })
             .collect();
@@ -404,6 +405,10 @@ pub struct GanttBar {
     pub percent_complete: u8,
     /// Outline depth (for indentation).
     pub depth: u32,
+    /// Leaf, Summary, or Milestone — a host renders a `Milestone` bar as a
+    /// diamond rather than the usual proportional bar (see
+    /// `code/specs/task-app-richer-gantt-v1.md`).
+    pub kind: TaskKind,
 }
 
 /// A Gantt timeline.
@@ -612,6 +617,32 @@ mod tests {
             g.bars.iter().all(|b| b.critical),
             "an FS chain is all-critical"
         );
+        assert!(
+            g.bars.iter().all(|b| b.kind == TaskKind::Leaf),
+            "both tasks here are ordinary leaves"
+        );
+    }
+
+    #[test]
+    fn gantt_bar_carries_milestone_kind() {
+        // task-app-richer-gantt-v1.md: the host needs `kind` on the bar to render a
+        // Milestone as a diamond instead of the usual proportional bar.
+        let mut s = ProjectState::empty(ProjectId::from_raw("p1"));
+        s.create_task(tid("m"), "Ship it", None).unwrap();
+        s.set_kind(&tid("m"), TaskKind::Milestone).unwrap();
+        s.set_schedule(
+            &tid("m"),
+            Some(TaskSchedule {
+                duration: Duration::zero(),
+                work: Work::zero(),
+                ..TaskSchedule::default()
+            }),
+        )
+        .unwrap();
+
+        let g = s.gantt(day(2026, 7, 13));
+        assert_eq!(g.bars.len(), 1);
+        assert_eq!(g.bars[0].kind, TaskKind::Milestone);
     }
 
     #[test]

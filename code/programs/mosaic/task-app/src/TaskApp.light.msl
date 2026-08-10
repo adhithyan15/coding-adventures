@@ -906,10 +906,132 @@ style TaskApp {
     height : 16 ;
     border-radius : 6 ;
   }
+  // The percent-complete overlay, nested inside tl-bar/tl-bar-crit — its
+  // bound width (a CSS percentage) is relative to its own parent, so
+  // "40%" here means 40% of THAT bar's own rendered length, not the
+  // whole track. A darker tint of the same bar colour reads as "fill",
+  // not a second unrelated colour.
+  part tl-bar-fill {
+    background : "rgba(43,39,35,.22)" ;
+    height : 16 ;
+    border-radius : 6 ;
+  }
+  part tl-bar-fill-crit {
+    background : "rgba(43,39,35,.22)" ;
+    height : 16 ;
+    border-radius : 6 ;
+  }
+  // A milestone marker — "inked" (the dark ink colour, matching Calendar's
+  // own "milestones inked" convention — see task-app-ui-design.md §4.4),
+  // small and fixed-size (deliberately no bound width; see the .mll's doc
+  // comment on why), rotated into a diamond.
+  part tl-bar-milestone {
+    background : "#2b2723" ;
+    width : 12 ;
+    height : 12 ;
+    transform : "rotate(45deg)" ;
+    margin-left : 2 ;
+  }
   part tl-window {
     color : "#6a625a" ;
     font-size : 11 ;
     width : 190 ;
     flex-shrink : 0 ;
+  }
+  // ── day-grid ruler ──────────────────────────────────────────────────────
+  // A strip above the bars, not composited behind them — see
+  // task-app-richer-gantt-v1.md's "Day-grid feasibility note".
+  part tl-grid {
+    height : 14 ;
+    border-radius : 4 ;
+    margin-bottom : 2 ;
+  }
+  part tl-grid-day {
+    background : "#f7f2ea" ;
+    height : 14 ;
+    border-right-width : 1 ;
+    border-right-color : "#efe8dd" ;
+    border-right-style : "solid" ;
+  }
+  part tl-grid-weekend {
+    background : "#efe4d3" ;
+    height : 14 ;
+    border-right-width : 1 ;
+    border-right-color : "#e6ded3" ;
+    border-right-style : "solid" ;
+  }
+  // The design's "honey today line" — a stronger honey tint than the
+  // ordinary weekend shade, distinct at a glance.
+  part tl-grid-today {
+    background : "#f3cf94" ;
+    height : 14 ;
+    border-right-width : 1 ;
+    border-right-color : "#e0942a" ;
+    border-right-style : "solid" ;
+  }
+  // ── legend ──────────────────────────────────────────────────────────────
+  part tl-legend {
+    gap : 18 ;
+    align : center-vertical ;
+    padding-top : 4 ;
+    border-top-width : 1 ;
+    border-top-color : "#efe8dd" ;
+    border-top-style : "solid" ;
+  }
+  part tl-legend-item {
+    gap : 6 ;
+    align : center-vertical ;
+  }
+  part tl-legend-item2 {
+    gap : 6 ;
+    align : center-vertical ;
+  }
+  part tl-legend-item3 {
+    gap : 6 ;
+    align : center-vertical ;
+  }
+  part tl-legend-item4 {
+    gap : 6 ;
+    align : center-vertical ;
+  }
+  part tl-legend-swatch {
+    background : "#e0942a" ;
+    width : 10 ;
+    height : 10 ;
+    border-radius : 3 ;
+  }
+  part tl-legend-swatch-crit {
+    background : "#cf4b34" ;
+    width : 10 ;
+    height : 10 ;
+    border-radius : 3 ;
+  }
+  part tl-legend-swatch-milestone {
+    background : "#2b2723" ;
+    width : 8 ;
+    height : 8 ;
+    transform : "rotate(45deg)" ;
+  }
+  part tl-legend-swatch-today {
+    background : "#e0942a" ;
+    width : 10 ;
+    height : 10 ;
+    border-radius : 3 ;
+  }
+  part tl-legend-label {
+    color : "#6a625a" ;
+    font-size : 11 ;
+  }
+  part tl-legend-label2 {
+    color : "#6a625a" ;
+    font-size : 11 ;
+  }
+  part tl-legend-label3 {
+    color : "#6a625a" ;
+    font-size : 11 ;
+  }
+  part tl-legend-label4 {
+    color : "#6a625a" ;
+    font-size : 11 ;
   }
 }

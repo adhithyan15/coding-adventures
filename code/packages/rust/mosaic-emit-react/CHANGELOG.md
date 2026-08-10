@@ -4,6 +4,21 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - HostTooltip: expression-bound `text` (UI29-4 extension)
+
+`HostTooltip`'s `text` prop previously accepted only a string literal or a
+`slot:` reference — no way to say "a different tooltip per row" inside a
+`For` loop, since a slot is one scalar value for the whole component, not
+per-iteration. `text: ( t[7] )` now lowers to `title={t[7]}`, the raw
+expression emitted verbatim (`find_expr_prop`, mirroring `find_string_prop`/
+`find_slot_ref_prop`) — the same "expression text is verbatim" discipline
+UI36 already established for size props. Purely additive: existing
+literal/slot usage is unaffected, checked first, same as before.
+
+Found building task-app's richer Gantt (`task-app-richer-gantt-v1.md`) —
+per-bar hover tooltips needed content that varies per `For`-loop row, which
+had no expressible form before this.
+
 ### Added - UI37: generic-container payload dispatch
 
 `build_emit_handlers` (the generic connects-wiring path used by `Box`/`Row`/`Column`/

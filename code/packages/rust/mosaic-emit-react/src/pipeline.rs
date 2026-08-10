@@ -3285,6 +3285,7 @@ fn host_link_single_payload_expr(
 /// |---|---|
 /// | `text: "..."`           | `title="..."` (JSX-attr-escaped)                |
 /// | `text: slot: t`         | `title={t}` (camelCased slot identifier)        |
+/// | `text: ( t[7] )`        | `title={t[7]}` (raw expression, e.g. a `For`-loop cell — added alongside UI36, same "expression text is verbatim" discipline, for a per-row tooltip a single slot can't express) |
 /// | (single child)          | wrapped inside `<span title=...>...</span>`     |
 fn emit_host_tooltip_jsx(
     node: &LayoutNode,
@@ -3308,13 +3309,17 @@ fn emit_host_tooltip_jsx(
         attrs.push_str(&format!(" style={{{{ {part_style_str} }}}}"));
     }
 
-    // title= — string literal or slot ref.
+    // title= — string literal, slot ref, or a raw expression (e.g. a
+    // For-loop cell reference — the only way to say "a different tooltip
+    // per row", since a slot is one scalar value for the whole component).
     if let Some(s) = find_string_prop(node, "text") {
         attrs.push_str(&jsx_string_attr("title", s));
     } else if let Some(slot) = find_slot_ref_prop(node, "text") {
         let camel = to_camel_case_first_lower(slot);
         validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
         attrs.push_str(&format!(" title={{{camel}}}"));
+    } else if let Some(expr) = find_expr_prop(node, "text") {
+        attrs.push_str(&format!(" title={{{expr}}}"));
     }
 
     // Wrap the single child (or all children) in <span>...</span>.
@@ -4440,6 +4445,21 @@ fn find_string_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a str
         if p.name == prop_name {
             if let LayoutPropValue::String(s) = &p.value {
                 return Some(s.as_str());
+            }
+        }
+        None
+    })
+}
+
+/// Find a prop on `node` whose value is an `Expr` — a parenthesised
+/// author-written expression like `( t[7] )`, typically a `For`-loop cell
+/// reference. Returns the raw expression text, emitted verbatim (see UI36's
+/// "expression text is verbatim" note — the same discipline applies here).
+fn find_expr_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a str> {
+    node.props.iter().find_map(|p| {
+        if p.name == prop_name {
+            if let LayoutPropValue::Expr(e) = &p.value {
+                return Some(e.as_str());
             }
         }
         None
@@ -8852,6 +8872,39 @@ mod tests {
         assert!(
             result.output.contains("title={helpText}"),
             "expected `title={{helpText}}`, got:\n{}",
+            result.output
+        );
+    }
+
+    /// `text: ( t[7] )` lowers to `title={t[7]}` — a raw expression, the
+    /// only way to say "a different tooltip per row" inside a `For` loop,
+    /// since a slot is one scalar value for the whole component. Found
+    /// while building task-app's richer Gantt (task-app-richer-gantt-v1.md):
+    /// per-row tooltip content has no other expressible form.
+    #[test]
+    fn host_tooltip_with_expr_text_emits_raw_expression_attr() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostTooltip".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "text".into(),
+                    value: LayoutPropValue::Expr("t[7]".into()),
+                }],
+                children: vec![LayoutNode {
+                    tag: "Box".to_string(),
+                    part_name: None,
+                    props: Vec::new(),
+                    children: Vec::new(),
+                }],
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("title={t[7]}"),
+            "expected `title={{t[7]}}`, got:\n{}",
             result.output
         );
     }
