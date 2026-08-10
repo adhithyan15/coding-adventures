@@ -281,6 +281,60 @@ export interface TrackChapters {
  * precisely so they can be tightened as the corpus matures without hunting through
  * code — the same reasoning that put the five-minute budget in the lesson schema.
  */
+/**
+ * HL10 section 5.1 -- one individually teachable slot of a verb paradigm.
+ *
+ * Language-neutral by contract. No id or gloss in the universal inventory may
+ * name a form from any particular language, because the other 21 tracks fill
+ * these same slots; a track lacking one declares an omission rather than
+ * leaving a hole.
+ */
+export interface GrammarSlot {
+  id: string;
+  kind: "finite" | "imperative" | "compound" | "non-finite";
+  gloss: string;
+  mood?: string;
+  tense?: string;
+  person?: string;
+  conjugation?: string;
+  polarity?: string;
+  form?: string;
+}
+
+export interface GrammarSlotInventory {
+  version: number;
+  note?: string;
+  counts?: Record<string, number>;
+  dimensions?: Record<string, string[]>;
+  slots: GrammarSlot[];
+}
+
+/** One language's filling of a universal slot, plus where it sits in the ramp. */
+export interface GrammarCell {
+  id: string;
+  slot: string;
+  /**
+   * Cells that must be taught first. This is what makes the inventory a ramp
+   * rather than a list: singular before plural one person at a time, and the
+   * present subjunctive behind the present indicative 1SG its stem comes from.
+   */
+  prerequisites: string[];
+  conjugationEnding?: string;
+  spanishName?: string;
+  /** False where the language keeps a form only for recognition. */
+  productive?: boolean;
+  receptiveOnlyBecause?: string;
+}
+
+export interface TrackGrammarCells {
+  version: number;
+  language: string;
+  note?: string;
+  conjugationClasses?: Record<string, string>;
+  counts?: Record<string, number>;
+  cells: GrammarCell[];
+}
+
 export interface ChapterPolicy {
   version: number;
   /** Minimum share of a chapter's introduced atoms its payoff must assess (0..1). */

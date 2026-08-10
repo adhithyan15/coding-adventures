@@ -4,11 +4,14 @@ import {
   defaultCurriculumRoot as defaultRoot,
   loadChapterPolicy,
   loadEverything,
+  loadGrammarSlots,
   loadTrackChapters,
+  loadTrackGrammarCells,
 } from "./loader.js";
 import { policyTableWidth } from "./narration-cli.js";
 import { buildCurriculumGapReport, renderCurriculumGapReport } from "./report.js";
 import { renderStrandSummary, summarizeStrands } from "./strands.js";
+import { cellCoverage, renderCellCoverage } from "./grammar-cells.js";
 
 interface ReportOptions {
   root?: string;
@@ -60,14 +63,31 @@ export function runCurriculumGapReport(args = process.argv.slice(2)): number {
     curricula,
     spine,
   });
-  // HL10 §2, report-only. Appended rather than folded into CurriculumGapReport
-  // because the strand model measures the SPINE, not the lesson corpus, and
-  // merging the two would make a spine defect look like a lesson defect.
+  // HL10 §2 and §5, both report-only. Appended rather than folded into
+  // CurriculumGapReport because they measure the SPINE and the GRAMMAR
+  // inventory, not the lesson corpus; merging them in would make a spine defect
+  // look like a lesson defect.
   const policy = loadChapterPolicy(options.root);
   const strands = summarizeStrands(spine, policy.maxNewAtomsPerChapter);
+  const slots = loadGrammarSlots(options.root);
+  const spanishCells = loadTrackGrammarCells("spanish", options.root);
+  // The cell budget measures a burden the atom budget cannot see: three cells in
+  // one lesson is three atoms and looks compliant, while being the six-form
+  // table arriving all at once.
+  const cells = cellCoverage(
+    spanishCells,
+    lessons.filter((lesson) => lesson.language === "spanish"),
+    policy.maxNewGrammarCellsPerLesson,
+  );
 
-  const json = `${JSON.stringify({ ...report, strands }, null, 2)}\n`;
-  const text = `${renderCurriculumGapReport(report)}${renderStrandSummary(strands).join("\n")}\n`;
+  const json = `${JSON.stringify({ ...report, strands, grammarCells: cells }, null, 2)}\n`;
+  const text = [
+    renderCurriculumGapReport(report),
+    renderStrandSummary(strands).join("\n"),
+    "",
+    renderCellCoverage(spanishCells, slots, cells).join("\n"),
+    "",
+  ].join("\n");
   process.stdout.write(options.format === "json" ? json : text);
   return 0;
 }

@@ -19,6 +19,14 @@ export {
   type StrandCount,
   type StrandSummary,
 } from "./strands.js";
+export {
+  topologicalOrder,
+  cellGraphDefects,
+  cellCoverage,
+  renderCellCoverage,
+  type CellGraphDefect,
+  type CellCoverage,
+} from "./grammar-cells.js";
 export { parseBodyBlocks, parseLesson, buildDataset, type ParsedLesson } from "./parse.js";
 export {
   parseLessonActivityValue,

@@ -23,6 +23,8 @@ import type {
   ScriptData,
   Taxonomy,
   TrackChapters,
+  GrammarSlotInventory,
+  TrackGrammarCells,
 } from "./types.js";
 
 /** Default curriculum root: code/learning/human-languages, relative to this package. */
@@ -47,6 +49,23 @@ export function loadCurriculumSpine(root = defaultCurriculumRoot()): CurriculumS
   return JSON.parse(
     readFileSync(join(root, "core", "spine.json"), "utf8"),
   ) as CurriculumSpine;
+}
+
+/** HL10 section 5.1: the universal grammar-slot inventory, generated and committed. */
+export function loadGrammarSlots(root = defaultCurriculumRoot()): GrammarSlotInventory {
+  return JSON.parse(
+    readFileSync(join(root, "core", "grammar-slots.json"), "utf8"),
+  ) as GrammarSlotInventory;
+}
+
+/** HL10 section 5: one track's filling of those slots, with its prerequisite ordering. */
+export function loadTrackGrammarCells(
+  language: string,
+  root = defaultCurriculumRoot(),
+): TrackGrammarCells {
+  return JSON.parse(
+    readFileSync(join(root, language, "grammar-cells.json"), "utf8"),
+  ) as TrackGrammarCells;
 }
 
 /** Read each track's authored shared-spine realization map. */
