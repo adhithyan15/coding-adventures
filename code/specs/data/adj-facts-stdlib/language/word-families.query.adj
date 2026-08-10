@@ -16,4 +16,5 @@ import "word-families.adj"
 
 ? word_family(pan, $F)     % expect an    (direct recall: which family is "pan" in?)
 ? rhymes_with(pan, $W)     % expect fan, ran, man, tan, van, pan (derived: shares the -an family)
+? rhymes_with(cat, $W)     % expect bat, fat, sat, rat, pat, mat, hat, cat (derived: shares the -at family)
 ? word_family(dog, $F)     % expect abstain — "dog" has no shipped row, not in this family
