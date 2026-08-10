@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.17.0";
+pub const VERSION: &str = "0.18.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1132,7 +1132,7 @@ fn parse_sequence_body(
 }
 
 fn take_sequence_number(cursor: &mut TokenCursor) -> Result<Option<f64>, ParseError> {
-    if cursor.at_eof() || token_name(cursor.current()) == "NEWLINE" {
+    if cursor.at_eof() || matches!(token_name(cursor.current()), "NEWLINE" | "SEMICOLON") {
         return Ok(None);
     }
     let token = cursor.advance().clone();
@@ -1243,7 +1243,7 @@ fn parse_sequence_details(
         .consume_if("COLON")
         .ok_or_else(|| token_error(cursor.current(), "expected ':' before actor details"))?;
     let mut reference = String::new();
-    while !cursor.at_eof() && token_name(cursor.current()) != "NEWLINE" {
+    while !cursor.at_eof() && !matches!(token_name(cursor.current()), "NEWLINE" | "SEMICOLON") {
         reference.push_str(&cursor.advance().value);
     }
     if reference.is_empty() {
@@ -1698,7 +1698,7 @@ fn take_sequence_identifier(cursor: &mut TokenCursor) -> Result<String, ParseErr
 
 fn take_sequence_line_text(cursor: &mut TokenCursor) -> String {
     let mut words = Vec::new();
-    while !cursor.at_eof() && token_name(cursor.current()) != "NEWLINE" {
+    while !cursor.at_eof() && !matches!(token_name(cursor.current()), "NEWLINE" | "SEMICOLON") {
         words.push(cursor.advance().value.clone());
     }
     words.join(" ")
@@ -3322,6 +3322,23 @@ B//-A: reverse stick top
             Some("Transfers funds\n  between accounts")
         );
     }
+
+    #[test]
+    fn sequence_parses_semicolon_terminated_statements_and_blocks() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram;participant Alice;participant Bob;loop Retry;Alice->>Bob: Ping;end;",
+        )
+        .unwrap();
+        assert_eq!(diagram.participants.len(), 2);
+        assert!(matches!(
+            diagram.events.as_slice(),
+            [
+                SequenceEvent::BlockStart { .. },
+                SequenceEvent::Message { label, .. },
+                SequenceEvent::BlockEnd { .. }
+            ] if label == "Ping"
+        ));
+    }
 }
 #[cfg(test)]
 mod tests {
@@ -3338,7 +3355,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.17.0");
+        assert_eq!(crate::VERSION, "0.18.0");
     }
 
     #[test]

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.18.0
+
+- Accept semicolon terminators between sequence statements and block contents.
+
 ## 0.17.0
 
 - Parse multiline sequence accessibility descriptions.

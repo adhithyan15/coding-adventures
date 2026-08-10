@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.17.0
+
+- Tokenize semicolons as sequence statement terminators.
+
 ## 0.16.0
 
 - Tokenize multiline sequence accessibility-description blocks atomically.
