@@ -25,6 +25,7 @@ const load = (name: string) => {
 };
 const tamil = () => parseFont(load("NotoSansTamil-Static.ttf"));
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
+const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
@@ -265,6 +266,19 @@ describe("handwriting ductus", () => {
     expect(path[0].y).toBeGreaterThan(path.at(-1)!.y);
   });
 
+  it("Urdu independent ج places its dot, then joins the pointed head to the bowl", () => {
+    expect(URDU_JIM.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_JIM)).toBe(1);
+    expect(URDU_JIM.strokes).toHaveLength(2);
+    expect(URDU_JIM.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 2]);
+    expect(URDU_JIM.strokes[0].segments[0].label).toBe("place the dot below");
+    const head = URDU_JIM.strokes[1].segments[0].path;
+    const bowl = URDU_JIM.strokes[1].segments[1].path;
+    expect(head[0].x).toBeGreaterThan(Math.min(...head.map((point) => point.x)));
+    expect(bowl[0]).toEqual(head.at(-1));
+    expect(bowl[0].y).toBeGreaterThan(bowl.at(-1)!.y);
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -495,6 +509,17 @@ describe("handwriting ductus", () => {
       /independent.*top-to-bottom.*one continuous stroke.*final.*bottom-to-top.*Noto Naskh.*Nastaliq/i,
     );
     expect(src.url).not.toBe(DUCTUS["ا"].source.url);
+  });
+
+  it("Urdu independent ج traces to Zer o Zabar's dot-first pointed-head animation", () => {
+    const src = URDU_JIM.source;
+    expect(src.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/te-mim-jim-che/",
+    );
+    expect(src.citation).toMatch(/Zer o Zabar.*independent ج.*flat-head.*Northwestern/i);
+    expect(src.variation).toMatch(
+      /dot below first.*lifts once.*pointed hooked head.*one continuous stroke.*pointed rather than rounded.*flat-head.*purely aesthetic.*Noto Naskh.*Nastaliq/i,
+    );
   });
 
   it("Persian ب traces to the adjacent sourced bowl-and-dot demonstration", () => {

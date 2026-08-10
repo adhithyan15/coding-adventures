@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Urdu independent-jim ductus (HL-C09V)
+
+- Add Urdu independent ج from Northwestern's *Zer o Zabar* animation as a
+  dot-first two-stroke path with one lift and three learner movements.
+- Keep the pointed hooked head, descent, and bowl in one continuous body run;
+  record the chapter's flat-head alternative as purely aesthetic.
+- Render the canonical Noto Naskh fallback behind a real three-frame filmstrip
+  whose body frames retain the completed dot.
+
 ### Added — cited Urdu independent-alif ductus (HL-C09U)
 
 - Add Urdu independent ا from Northwestern's *Zer o Zabar* animation as one

@@ -222,6 +222,9 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // Urdu ا has the same fallback-font geometry but a distinct source and identity:
 // Zer o Zabar's independent animation travels top-to-bottom in one continuous
 // stroke, explicitly unlike the bottom-to-top final-form animation beside it.
+// Urdu ج starts with its dot, then restarts once on the independent body: the
+// pointed hooked head turns into the descent and bowl without another lift.
+// The textbook's separately animated flat head is an aesthetic alternative.
 // The adjacent ب starts at the bowl's right lip, sweeps right-to-left through
 // its shallow dip, then lifts once before placing the separate dot below.
 // After the intervening Persian-added پ row, ت repeats the same bowl, lifts to
@@ -309,6 +312,68 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: urduAlphabetSource("ا"),
+  },
+  [ductusKey("urdu-nastaliq", "ج")]: {
+    script: "urdu-nastaliq",
+    glyph: "ج",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "place the dot below",
+            path: [
+              { x: 415, y: -1 },
+              { x: 374, y: 38 },
+              { x: 330, y: -9 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then sweep left through the pointed hooked head",
+            path: [
+              { x: 540, y: 270 },
+              { x: 490, y: 270 },
+              { x: 420, y: 285 },
+              { x: 350, y: 305 },
+              { x: 280, y: 325 },
+              { x: 210, y: 340 },
+              { x: 150, y: 335 },
+              { x: 110, y: 315 },
+              { x: 100, y: 290 },
+              { x: 130, y: 305 },
+              { x: 170, y: 310 },
+              { x: 220, y: 305 },
+              { x: 270, y: 285 },
+              { x: 320, y: 265 },
+              { x: 300, y: 245 },
+              { x: 260, y: 220 },
+              { x: 216, y: 190 },
+            ],
+          },
+          {
+            label: "continue down and around the bowl",
+            path: [
+              { x: 216, y: 190 },
+              { x: 180, y: 130 },
+              { x: 145, y: 65 },
+              { x: 118, y: -42 },
+              { x: 130, y: -110 },
+              { x: 180, y: -175 },
+              { x: 225, y: -200 },
+              { x: 300, y: -245 },
+              { x: 400, y: -245 },
+              { x: 500, y: -230 },
+              { x: 575, y: -210 },
+              { x: 608, y: -195 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: urduAlphabetSource("ج"),
   },
   "ب": {
     script: "perso-arabic",

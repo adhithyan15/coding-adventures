@@ -182,10 +182,14 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   Zabar*: its independent form travels top-to-bottom in one continuous stroke,
   explicitly unlike the bottom-to-top final form. Script-aware ductus identity
   prevents that Urdu source from colliding with Persian **ا** while both paths
-  are checked against their canonical data files' Noto Naskh fallback. The
-  remaining **207** prose part orders across eight scripts
+  are checked against their canonical data files' Noto Naskh fallback. Urdu
+  **ج** follows from *Zer o Zabar*'s independent handwriting animation: place
+  the dot below, lift once, then keep the pointed hooked head, descent, and bowl
+  in one continuous run. The chapter's alternate flat head is purely aesthetic,
+  so the learner path preserves the pointed form without inventing a different
+  lift count. The remaining **206** prose part orders across eight scripts
 (`arabic` 21, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33,
-`hebrew` 22, `japanese` 34, `urdu-nastaliq` 12) are explicitly **unverified for
+`hebrew` 22, `japanese` 34, `urdu-nastaliq` 11) are explicitly **unverified for
 pen lifts**. The data validator rejects a lift count without a citation (or a
 citation without a count), and Language Ladder's ductus test proves every verified
 claim has the same cited, font-checked path. That closes `HL-C19`; future entries
