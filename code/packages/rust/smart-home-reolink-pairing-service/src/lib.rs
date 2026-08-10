@@ -3,7 +3,7 @@
 #![forbid(unsafe_code)]
 
 use std::any::Any;
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
 use std::net::{IpAddr, SocketAddr};
 use std::path::{Path, PathBuf};
@@ -377,7 +377,9 @@ pub struct VerifiedReolinkCamera {
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct InstalledReolinkIdentity {
     pub serial_number: Option<String>,
+    pub bridge_model: Option<String>,
     pub channels: BTreeSet<u32>,
+    pub channel_models: BTreeMap<u32, String>,
     pub snapshot_channels: BTreeSet<u32>,
 }
 
@@ -486,7 +488,7 @@ impl ReolinkPairingVerifier for NativeReolinkPairingVerifier {
             credentials,
             ReolinkLanTransport::default().with_pinned_address(self.target.pinned_address),
         );
-        let snapshot = client.inspect()?;
+        let snapshot = client.inspect_for_pairing()?;
         let serial_number = snapshot.device.serial.trim();
         validate_camera_correspondence(expected.serial_number.as_deref(), serial_number)?;
         let channels = snapshot
@@ -496,6 +498,35 @@ impl ReolinkPairingVerifier for NativeReolinkPairingVerifier {
             .collect::<BTreeSet<_>>();
         if channels.len() != snapshot.channels.len()
             || (!expected.channels.is_empty() && channels != expected.channels)
+        {
+            return Err(ReolinkPairingServiceError::CameraCorrespondence);
+        }
+        let channel_models = snapshot
+            .channels
+            .iter()
+            .filter_map(|channel| {
+                channel
+                    .model
+                    .as_ref()
+                    .map(|model| (channel.channel, model.clone()))
+            })
+            .collect::<BTreeMap<_, _>>();
+        let observed_nvr = snapshot
+            .device
+            .exact_type
+            .as_deref()
+            .is_some_and(|exact_type| exact_type.eq_ignore_ascii_case("NVR"));
+        let is_nvr = observed_nvr
+            || expected
+                .bridge_model
+                .as_deref()
+                .is_some_and(|model| model.trim().to_ascii_uppercase().starts_with("RLN"));
+        if is_nvr
+            && (!observed_nvr
+                || expected.bridge_model.as_deref() != Some(snapshot.device.model.as_str())
+                || channel_models.len() != channels.len()
+                || expected.channel_models.is_empty()
+                || channel_models != expected.channel_models)
         {
             return Err(ReolinkPairingServiceError::CameraCorrespondence);
         }
@@ -511,6 +542,16 @@ impl ReolinkPairingVerifier for NativeReolinkPairingVerifier {
         if !expected.snapshot_channels.is_empty() && snapshot_channels != expected.snapshot_channels
         {
             return Err(ReolinkPairingServiceError::CameraCorrespondence);
+        }
+        if is_nvr
+            && (snapshot
+                .channels
+                .iter()
+                .any(|channel| channel.snapshot_supported != Some(true))
+                || snapshot_channels != channels
+                || expected.snapshot_channels != channels)
+        {
+            return Err(ReolinkPairingServiceError::MissingSnapshotCapability);
         }
         Ok(VerifiedReolinkCamera {
             serial_number: serial_number.to_string(),
@@ -868,10 +909,12 @@ fn installed_camera_identity(
     if devices.is_empty() {
         return Ok(InstalledReolinkIdentity {
             serial_number,
+            bridge_model: bridge.hardware_model.clone(),
             ..InstalledReolinkIdentity::default()
         });
     }
     let mut channels = BTreeSet::new();
+    let mut channel_models = BTreeMap::new();
     let mut snapshot_channels = BTreeSet::new();
     for device in devices {
         let channel_ids = device
@@ -889,6 +932,15 @@ fn installed_camera_identity(
             .ok_or_else(|| {
                 ReolinkPairingServiceError::InvalidInstalledCamera(bridge.bridge_id.clone())
             })?;
+        if device.model.trim().is_empty()
+            || channel_models
+                .insert(channel, device.model.clone())
+                .is_some()
+        {
+            return Err(ReolinkPairingServiceError::InvalidInstalledCamera(
+                bridge.bridge_id.clone(),
+            ));
+        }
         let cameras = device
             .entity_ids
             .iter()
@@ -919,7 +971,9 @@ fn installed_camera_identity(
     }
     Ok(InstalledReolinkIdentity {
         serial_number,
+        bridge_model: bridge.hardware_model.clone(),
         channels,
+        channel_models,
         snapshot_channels,
     })
 }
@@ -1372,6 +1426,10 @@ mod tests {
         let expected = installed_camera_identity(&runtime, &bridge).unwrap();
         assert_eq!(expected.serial_number.as_deref(), Some("ACCC8EAF8C30"));
         assert_eq!(expected.channels, BTreeSet::from([0]));
+        assert_eq!(
+            expected.channel_models,
+            BTreeMap::from([(0, "RLC-520A".to_string())])
+        );
         assert_eq!(expected.snapshot_channels, BTreeSet::from([0]));
 
         let mut invalid = runtime
@@ -1480,6 +1538,96 @@ mod tests {
             .0
             .starts_with("POST /api.cgi?cmd=Logout&token=token123 HTTP/1.1"));
         assert!(!format!("{verified:?}").contains("secret&password"));
+    }
+
+    #[test]
+    fn native_verifier_requires_exact_nvr_models_and_snapshot_abilities() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        let requests = Arc::new(Mutex::new(Vec::new()));
+        let server_requests = Arc::clone(&requests);
+        let response_bodies = [
+            r#"[{"cmd":"Login","code":0,"value":{"Token":{"name":"token123","leaseTime":3600}}}]"#,
+            r#"[{"cmd":"GetDevInfo","code":0,"value":{"DevInfo":{"name":"Garage NVR","model":"RLN8-410","serial":"NVR123","exactType":"NVR"}}}]"#,
+            r#"[{"cmd":"GetChannelstatus","code":0,"value":{"status":[{"channel":0,"name":"Porch","online":1,"sleep":0,"typeInfo":"RLC-520A"},{"channel":1,"name":"Driveway","online":1,"sleep":0,"typeInfo":"RLC-810A"},{"channel":2,"name":"","online":0,"sleep":0,"typeInfo":""}]}}]"#,
+            r#"[{"cmd":"GetMdState","code":1,"error":{"rspCode":-1,"detail":"unsupported"}}]"#,
+            r#"[{"cmd":"GetRecV20","code":1,"error":{"rspCode":-1,"detail":"unsupported"}}]"#,
+            r#"[{"cmd":"GetPtzPreset","code":1,"error":{"rspCode":-1,"detail":"unsupported"}}]"#,
+            r#"[{"cmd":"GetMdState","code":1,"error":{"rspCode":-1,"detail":"unsupported"}}]"#,
+            r#"[{"cmd":"GetRecV20","code":1,"error":{"rspCode":-1,"detail":"unsupported"}}]"#,
+            r#"[{"cmd":"GetPtzPreset","code":1,"error":{"rspCode":-1,"detail":"unsupported"}}]"#,
+            r#"[{"cmd":"GetAbility","code":0,"value":{"Ability":{"abilityChn":[{"snap":{"permit":6,"ver":1}},{"snap":{"permit":6,"ver":1}},{"snap":{"permit":0,"ver":0}}]}}}]"#,
+            r#"[{"cmd":"Logout","code":0,"value":{}}]"#,
+        ];
+        let handle = thread::spawn(move || {
+            for body in response_bodies {
+                let (stream, _) = listener.accept().unwrap();
+                let mut reader = BufReader::new(stream);
+                let mut head = String::new();
+                loop {
+                    let mut line = String::new();
+                    reader.read_line(&mut line).unwrap();
+                    if line == "\r\n" {
+                        break;
+                    }
+                    head.push_str(&line);
+                }
+                let length = head
+                    .lines()
+                    .find_map(|line| line.strip_prefix("Content-Length: "))
+                    .unwrap_or("0")
+                    .parse::<usize>()
+                    .unwrap();
+                let mut request_body = vec![0u8; length];
+                reader.read_exact(&mut request_body).unwrap();
+                server_requests
+                    .lock()
+                    .unwrap()
+                    .push((head, String::from_utf8(request_body).unwrap()));
+                let response = format!(
+                    "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
+                    body.len()
+                );
+                reader.get_mut().write_all(response.as_bytes()).unwrap();
+            }
+        });
+
+        let mut bridge = Bridge::new(
+            BridgeId::trusted("reolink-nvr-garage"),
+            IntegrationId::trusted(INTEGRATION_ID),
+            BridgeTransport::LanHttp,
+        );
+        bridge.address = Some(format!("http://{address}"));
+        let target =
+            ReolinkPairingConnectionTarget::new(bridge.bridge_id.clone(), "127.0.0.1", address)
+                .unwrap();
+        let mut verifier = NativeReolinkPairingVerifier::new(target);
+        let credentials = ReolinkCredentialSecret::new("operator", "password").unwrap();
+        let expected = InstalledReolinkIdentity {
+            serial_number: Some("NVR123".to_string()),
+            bridge_model: Some("RLN8-410".to_string()),
+            channels: BTreeSet::from([0, 1]),
+            channel_models: BTreeMap::from([
+                (0, "RLC-520A".to_string()),
+                (1, "RLC-810A".to_string()),
+            ]),
+            snapshot_channels: BTreeSet::from([0, 1]),
+        };
+        let verified = verifier.verify(&bridge, &credentials, &expected).unwrap();
+        handle.join().unwrap();
+
+        assert_eq!(verified.serial_number, "NVR123");
+        assert_eq!(verified.channel_count, 2);
+        assert_eq!(verified.snapshot_channel_count, 2);
+        let requests = requests.lock().unwrap();
+        assert_eq!(requests.len(), 11);
+        assert!(requests[9]
+            .0
+            .starts_with("POST /api.cgi?cmd=GetAbility&token=token123 HTTP/1.1"));
+        assert!(requests[9].1.contains("\"userName\":\"operator\""));
+        assert!(requests[10]
+            .0
+            .starts_with("POST /api.cgi?cmd=Logout&token=token123 HTTP/1.1"));
     }
 
     #[test]
