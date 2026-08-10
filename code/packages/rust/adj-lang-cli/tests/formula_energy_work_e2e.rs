@@ -131,3 +131,38 @@ fn solves_for_distance_from_work_with_the_same_citation() {
         "carries the same NASA citation as the forward work formula: {s}"
     );
 }
+
+// ---------------------------------------------------------------------------
+// KE = ½ m v², solved for mass (ADJ-FORMULA-LIBRARIES FL-10, §3D rung-0
+// CAS-wiring companion) — the SAME cited HyperPhysics equation as
+// `kinetic_energy` above, rearranged rather than computed forward. Linear
+// despite the nested `0.5 * mass * velocity * velocity` shape, since mass
+// appears exactly once once velocity is bound.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn solves_for_mass_from_kinetic_energy_with_the_same_citation() {
+    let dir = scratch("mass_ke_solve");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"energy-work.adj\"\n\
+         observe kinetic_energy(9)\n\
+         observe velocity(3)\n\
+         ? mass_from_kinetic_energy(kinetic_energy, velocity)\n",
+    )
+    .unwrap();
+
+    let (ok, s) = run(&dir.join("case.adj"));
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(!s.contains("\"error\""), "no compile error: {s}");
+    // 9 = 0.5 * m * 3 * 3 = 4.5 * m  =>  m = 2.
+    assert!(
+        s.contains("\"name\":\"mass_from_kinetic_energy\"") && s.contains("\"value\":2"),
+        "mass_from_kinetic_energy(9, 3) = 2: {s}"
+    );
+    assert!(
+        s.contains("\"trust\":\"authoritative\"") && s.contains("hyperphysics.gsu.edu"),
+        "carries the same HyperPhysics citation as the forward kinetic_energy formula: {s}"
+    );
+}
