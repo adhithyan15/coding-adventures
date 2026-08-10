@@ -6,6 +6,10 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Non-whitespace character data discarded by a seeded `colgroup` fragment
+  context now reports its table insertion-mode parse error. This covers the
+  final silent table-fragment corpus case without changing DOM recovery or
+  undeclared-diagnostic coverage.
 - An `html` end tag that materializes an implied document shell after leading
   body text now enters the after-html insertion mode, so following character
   data and start tags report their required parse error. This covers 2
