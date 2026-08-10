@@ -1265,7 +1265,9 @@ changelog, focused build, and downstream validation.
 7a. `vault-pm-domain` lossless persistence projection: retained values, add
     operations, and removal tombstones must be enumerable before the
     application codec persists observed sets.
-8. `vault-pm-application`: init/open/item/search/history/export/audit workflows.
+8. `vault-pm-application`: init/open/item/search/history/export/audit workflows,
+   using the crash-resumable, storage-agnostic contract in
+   `VLT-PM05-application.md`.
 9. `vault-pm-cli` + real executable and pseudo-terminal E2E suite.
 10. Crash/fault matrix and local restore drill.
 
@@ -1321,9 +1323,9 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
 - `VLT09-vault-audit-log.md` — audit chain.
 - `VLT10-vault-sync-engine.md` — version vectors and conflict semantics.
 - `VLT11-transports.md` — current CLI transport contract.
-- `VLT-PM01-format.md`, `VLT-PM02-storage.md`, `VLT-PM03-domain.md`, and
-  `VLT-PM04-repository.md` — product repository wire, object-store, domain,
-  and verified-DAG contracts.
+- `VLT-PM01-format.md`, `VLT-PM02-storage.md`, `VLT-PM03-domain.md`,
+  `VLT-PM04-repository.md`, and `VLT-PM05-application.md` — product repository
+  wire, object-store, domain, verified-DAG, and application contracts.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.
