@@ -123,7 +123,12 @@ generated component. Hosts can also register a prop-change handler; native
 surface interactions use it to ask the generated shell to reproject current
 Mosaic props without creating a backend-specific state store.
 
-## What works in v0.1 / what's deferred
+Mosaic conditions pass through a generated value-truthiness helper before they
+enter Dart's statically typed boolean positions. Text-input change and commit
+handlers synthesize their declared zero- or one-value event constructors, so a
+required payload cannot be silently omitted from generated Dart.
+
+## What works in v0.2 / what's deferred
 
 See `CHANGELOG.md` for the full feature matrix. The headline:
 
@@ -131,12 +136,14 @@ See `CHANGELOG.md` for the full feature matrix. The headline:
   Spacer / Divider / Icon), and the most-used host primitives
   (HostInput / HostButton / HostCheckbox / HostRadio / HostScroll)
   are wired with a passing test each.
-- 🚧 HostDialog, HostTable, the For/If/Else meta-primitives, and
-  full dispatch payload synthesis are deferred to follow-up PRs.
+- ✅ HostTable and For/If/Else lower to native Flutter widget trees; Mosaic
+  truthiness is normalized for Dart boolean positions.
+- 🚧 Rich dialog behavior, native drag/drop, and multi-field payload synthesis
+  from a single text-input callback remain follow-up work.
 
 ## Versioning
 
-`0.1.0`. Bumps to `0.2.0` when any deferred-list item lands.
+`0.2.0`.
 
 ## License
 
