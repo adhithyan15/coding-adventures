@@ -6,6 +6,11 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- An `html` end tag that materializes an implied document shell after leading
+  body text now enters the after-html insertion mode, so following character
+  data and start tags report their required parse error. This covers 2
+  previously silent malformed corpus cases without changing DOM recovery or
+  undeclared-diagnostic coverage.
 - Open framesets now report EOF, and non-whitespace character data discarded
   in or after a frameset reports its insertion-mode parse error. This covers 7
   previously silent malformed corpus cases without changing DOM recovery or

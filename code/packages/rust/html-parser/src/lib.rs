@@ -7012,6 +7012,7 @@ impl HtmlParser {
                     self.append_implied_element("html");
                     self.append_implied_element("body");
                     self.open_elements.clear();
+                    self.document_tail_mode = DocumentTailMode::AfterHtml;
                 } else if !self.open_elements.is_empty() {
                     self.open_elements.clear();
                 } else {
@@ -34052,6 +34053,14 @@ mod tests {
             ),
             (
                 "<!doctype html><body></body></html>text<p>x</p>",
+                "unexpected-token-after-html",
+            ),
+            (
+                "<!doctype html>text</html>text",
+                "unexpected-token-after-html",
+            ),
+            (
+                "<!doctype html>text</html><p>text",
                 "unexpected-token-after-html",
             ),
             (
