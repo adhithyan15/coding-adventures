@@ -1,7 +1,7 @@
 # smart-home-reolink-pairing-service
 
 Explicit, recoverable credential provisioning for one exact direct Reolink RLC
-camera bridge.
+camera or one exact installed Reolink NVR bridge.
 
 The actor request carries only the D23 principal, pending pairing session,
 expected durable runtime revision, and completion time. A host-owned input reads
@@ -15,15 +15,18 @@ reviewed socket address. Production traffic uses strict certificate-verifying
 HTTPS, keeps the canonical hostname for SNI, and bypasses fresh name
 resolution. An authenticated CGI session must prove a non-empty stable serial,
 the exact installed physical-channel set when one exists, and at least one
-awake online snapshot-capable channel on a direct `RLC-*` camera. Query tokens
-stay process-local and the verifier logs out on success or failure.
+awake online snapshot-capable channel on a direct `RLC-*` camera. For an NVR,
+authenticated `exactType`, NVR model and serial, every installed physical
+channel's `typeInfo`, and every channel's supported executable
+`abilityChn.snap` value must exactly match durable state. Empty channel slots
+are excluded. Query tokens stay process-local and the verifier logs out on
+success or failure.
 
 The service encodes the same versioned username/password envelope consumed by
 `smart-home-reolink-snapshot-host`. The opaque reference is committed through
 `smart-home-pairing-transaction`. Startup resolves all pending journals before
 accepting work, and replacement cleanup remains bound to the captured Vault
-revision. Reolink NVR pairing remains out of scope until authenticated
-inspection proves the model identity behind every physical channel.
+revision.
 
 Snapshot delivery remains read-only and never provisions credentials.
 

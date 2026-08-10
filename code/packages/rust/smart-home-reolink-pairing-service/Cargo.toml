@@ -1,8 +1,8 @@
 [package]
 name = "smart-home-reolink-pairing-service"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "Recoverable credential provisioning for one exact Reolink RLC camera"
+description = "Recoverable credential provisioning for exact Reolink cameras and NVR channels"
 license = "MIT"
 
 [dependencies]

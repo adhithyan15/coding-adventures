@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.0
+
+- Retain documented `GetDevInfo.exactType` and per-channel
+  `GetChannelstatus.typeInfo`, excluding empty NVR slots from installed camera
+  state.
+- Add pairing-only `GetAbility` inspection and bind each NVR physical channel's
+  JPEG snapshot support to its documented `abilityChn.snap` version and execute
+  permission.
+
 ## 0.4.1
 
 - Add reviewed-socket pinning for HTTP loopback tests and certificate-verifying

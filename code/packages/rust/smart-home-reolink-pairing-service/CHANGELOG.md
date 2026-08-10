@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0
+
+- Extend exact recoverable credential provisioning to installed Reolink NVRs.
+- Require authenticated NVR product type, exact NVR model and serial, exact
+  per-channel `typeInfo`, and supported executable `abilityChn.snap`
+  correspondence before any pairing transaction write.
+- Continue using operation-scoped query tokens with explicit logout after every
+  authenticated success or failure.
+
 ## 0.1.0
 
 - Add D23-authorized Reolink credential provisioning from one-shot owner-only

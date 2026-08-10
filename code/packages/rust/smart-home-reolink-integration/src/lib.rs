@@ -25,7 +25,7 @@ use std::time::Duration;
 use tls_platform::{default_connector, TlsConfig, TlsConnector};
 use url_parser::{Url, UrlError};
 
-pub const VERSION: &str = "0.4.1";
+pub const VERSION: &str = "0.5.0";
 pub const INTEGRATION_ID: &str = "reolink";
 pub const PROTOCOL_ID: &str = "reolink_cgi";
 pub const SNAPSHOT_PATH: &str = "/cgi-bin/api.cgi";
@@ -222,6 +222,7 @@ pub struct ReolinkDeviceInformation {
     pub name: String,
     pub model: String,
     pub serial: String,
+    pub exact_type: Option<String>,
     pub firmware_version: Option<String>,
     pub hardware_version: Option<String>,
 }
@@ -230,8 +231,10 @@ pub struct ReolinkDeviceInformation {
 pub struct ReolinkChannelStatus {
     pub channel: u32,
     pub name: String,
+    pub model: Option<String>,
     pub online: bool,
     pub sleeping: bool,
+    pub snapshot_supported: Option<bool>,
     pub motion: Option<bool>,
     pub recording_enabled: Option<bool>,
     pub ptz_presets: Option<Vec<ReolinkPtzPreset>>,
@@ -279,7 +282,16 @@ pub struct ReolinkSnapshot {
 }
 
 pub fn supports_documented_jpeg_snapshot(model: &str, channel: &ReolinkChannelStatus) -> bool {
-    model.trim().to_ascii_uppercase().starts_with("RLC-") && channel.online && !channel.sleeping
+    channel
+        .model
+        .as_deref()
+        .unwrap_or(model)
+        .trim()
+        .to_ascii_uppercase()
+        .starts_with("RLC-")
+        && channel.online
+        && !channel.sleeping
+        && channel.snapshot_supported.unwrap_or(true)
 }
 
 pub trait ReolinkTransport {
@@ -431,6 +443,41 @@ impl<T: ReolinkTransport> ReolinkClient<T> {
         }
     }
 
+    pub fn inspect_for_pairing(&mut self) -> Result<ReolinkSnapshot, ReolinkError> {
+        let session = self.login()?;
+        let result = self.inspect_pairing_session(&session);
+        let logout = self.logout(&session);
+        match (result, logout) {
+            (Ok(snapshot), Ok(())) => Ok(snapshot),
+            (Err(error), _) => Err(error),
+            (Ok(_), Err(error)) => Err(error),
+        }
+    }
+
+    fn inspect_pairing_session(
+        &mut self,
+        session: &ReolinkSession,
+    ) -> Result<ReolinkSnapshot, ReolinkError> {
+        let mut snapshot = self.inspect_session(session)?;
+        if snapshot
+            .device
+            .exact_type
+            .as_deref()
+            .is_some_and(|exact_type| exact_type.eq_ignore_ascii_case("NVR"))
+        {
+            let abilities = parse_channel_snapshot_abilities(&self.command(
+                "GetAbility",
+                Some(session),
+                json!({"User": {"userName": self.credentials.username.as_str()}}),
+            )?)?;
+            for channel in &mut snapshot.channels {
+                channel.snapshot_supported =
+                    abilities.get(channel.channel as usize).copied().flatten();
+            }
+        }
+        Ok(snapshot)
+    }
+
     fn inspect_session(
         &mut self,
         session: &ReolinkSession,
@@ -439,6 +486,13 @@ impl<T: ReolinkTransport> ReolinkClient<T> {
             parse_device_information(&self.command("GetDevInfo", Some(session), json!({}))?)?;
         let mut channels =
             parse_channels(&self.command("GetChannelstatus", Some(session), json!({}))?)?;
+        if device
+            .exact_type
+            .as_deref()
+            .is_some_and(|exact_type| exact_type.eq_ignore_ascii_case("NVR"))
+        {
+            channels.retain(|channel| channel.model.is_some());
+        }
         if channels.is_empty() {
             return Err(ReolinkError::NoChannels);
         }
@@ -889,7 +943,10 @@ pub fn install_snapshot(
             device_id: device_id.clone(),
             bridge_id: config.bridge_id.clone(),
             manufacturer: "Reolink".to_string(),
-            model: snapshot.device.model.clone(),
+            model: channel
+                .model
+                .clone()
+                .unwrap_or_else(|| snapshot.device.model.clone()),
             name: channel.name.clone(),
             serial: Some(format!("{}:ch{}", snapshot.device.serial, channel.channel)),
             firmware_version: snapshot.device.firmware_version.clone(),
@@ -1024,6 +1081,7 @@ fn parse_device_information(value: &JsonValue) -> Result<ReolinkDeviceInformatio
         name: text(info, "name").unwrap_or_else(|| model.clone()),
         model,
         serial,
+        exact_type: text(info, "exactType"),
         firmware_version: text(info, "firmVer"),
         hardware_version: text(info, "hardVer"),
     })
@@ -1052,14 +1110,36 @@ fn parse_channels(value: &JsonValue) -> Result<Vec<ReolinkChannelStatus>, Reolin
             Ok(ReolinkChannelStatus {
                 channel,
                 name: text(status, "name").unwrap_or_else(|| format!("Camera {}", channel + 1)),
+                model: text(status, "typeInfo").filter(|model| !model.trim().is_empty()),
                 online: boolean(status.get("online")).unwrap_or(false),
                 sleeping: boolean(status.get("sleep")).unwrap_or(false),
+                snapshot_supported: None,
                 motion: None,
                 recording_enabled: None,
                 ptz_presets: None,
             })
         })
         .collect()
+}
+
+fn parse_channel_snapshot_abilities(value: &JsonValue) -> Result<Vec<Option<bool>>, ReolinkError> {
+    let abilities = value
+        .pointer("/Ability/abilityChn")
+        .and_then(JsonValue::as_array)
+        .ok_or(ReolinkError::MissingField {
+            command: "GetAbility",
+            field: "value.Ability.abilityChn",
+        })?;
+    Ok(abilities
+        .iter()
+        .map(|ability| {
+            let version = ability.pointer("/snap/ver").and_then(JsonValue::as_u64)?;
+            let permit = ability
+                .pointer("/snap/permit")
+                .and_then(JsonValue::as_u64)?;
+            Some(version > 0 && permit & 4 != 0)
+        })
+        .collect())
 }
 
 fn parse_motion(value: &JsonValue) -> Option<bool> {
@@ -1935,14 +2015,17 @@ mod tests {
                 name: "NVR".to_string(),
                 model: "RLN8-410".to_string(),
                 serial: "ABC123".to_string(),
+                exact_type: Some("NVR".to_string()),
                 firmware_version: Some("v3".to_string()),
                 hardware_version: None,
             },
             channels: vec![ReolinkChannelStatus {
                 channel: 0,
                 name: "Porch".to_string(),
+                model: Some("RLC-520A".to_string()),
                 online: true,
                 sleeping: false,
+                snapshot_supported: Some(true),
                 motion: Some(false),
                 recording_enabled: Some(true),
                 ptz_presets: None,
@@ -1960,8 +2043,10 @@ mod tests {
         let channel = ReolinkChannelStatus {
             channel: 0,
             name: "Porch".to_string(),
+            model: None,
             online: true,
             sleeping: false,
+            snapshot_supported: None,
             motion: None,
             recording_enabled: None,
             ptz_presets: None,
@@ -1977,5 +2062,27 @@ mod tests {
         assert!(!supports_documented_jpeg_snapshot("RLC-520A", &sleeping));
         assert!(!supports_documented_jpeg_snapshot("RLN8-410", &channel));
         assert!(!supports_documented_jpeg_snapshot("E1 Pro", &channel));
+
+        let mut nvr_channel = channel.clone();
+        nvr_channel.model = Some("RLC-810A".to_string());
+        nvr_channel.snapshot_supported = Some(true);
+        assert!(supports_documented_jpeg_snapshot("RLN8-410", &nvr_channel));
+        nvr_channel.snapshot_supported = Some(false);
+        assert!(!supports_documented_jpeg_snapshot("RLN8-410", &nvr_channel));
+    }
+
+    #[test]
+    fn documented_channel_abilities_are_indexed_and_version_gated() {
+        let abilities = parse_channel_snapshot_abilities(&json!({
+            "Ability": {
+                "abilityChn": [
+                    {"snap": {"permit": 6, "ver": 1}},
+                    {"snap": {"permit": 0, "ver": 1}},
+                    {}
+                ]
+            }
+        }))
+        .unwrap();
+        assert_eq!(abilities, vec![Some(true), Some(false), None]);
     }
 }
