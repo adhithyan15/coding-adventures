@@ -1333,9 +1333,14 @@ changelog, focused build, and downstream validation.
        collected Argon2id passphrase with fresh salt/nonce, header-bound AEAD,
        a signed-bootstrap-bound snapshot hash, identity-free diagnostics,
        wipe-on-drop plaintext, and host-neutral destination handling;
-   7d-2. authenticated portable artifact opening, snapshot verification, and
-       import into a new vault with new item, revision, object, and encryption
-       identities, followed by an independent restore/open comparison; and
+   7d-2a. completed no-write authenticated portable artifact opening with
+       host-approved Argon2id resource ceilings, strict canonical/header bounds,
+       authentication-before-plaintext parsing, signed-bootstrap and complete
+       snapshot validation, opaque secret-bearing custody, and count-only
+       diagnostics;
+   7d-2b. consume an opened portable snapshot into a new vault with new item,
+       revision, object, and encryption identities, followed by an independent
+       restore/open comparison; and
    7e-1. completed safe five-state status workflow, strictly decoding bounded
        owner state while locked and exposing only authenticated aggregate item,
        candidate, and conflict counts while unlocked;

@@ -1184,6 +1184,51 @@ mod tests {
         fields.remove(index).1
     }
 
+    fn replace_cbor_field(fields: &mut [(CborValue, CborValue)], key: u64, replacement: CborValue) {
+        let (_, value) = fields
+            .iter_mut()
+            .find(|(candidate, _)| candidate == &CborValue::Unsigned(key))
+            .unwrap();
+        *value = replacement;
+    }
+
+    fn refresh_portable_snapshot_hash(fields: &mut [(CborValue, CborValue)]) {
+        let CborValue::Bytes(mut bootstrap) = fields
+            .iter()
+            .find(|(key, _)| key == &CborValue::Unsigned(2))
+            .map(|(_, value)| value.clone())
+            .unwrap()
+        else {
+            panic!()
+        };
+        let entries = fields
+            .iter()
+            .find(|(key, _)| key == &CborValue::Unsigned(3))
+            .map(|(_, value)| encode_cbor(value))
+            .unwrap();
+        let hash = crate::export::snapshot_hash(&bootstrap, &entries).unwrap();
+        replace_cbor_field(fields, 5, CborValue::Bytes(hash.to_vec()));
+        bootstrap.zeroize();
+    }
+
+    fn authenticate_portable_snapshot(
+        fields: Vec<(CborValue, CborValue)>,
+        passphrase: &[u8],
+        randomness: u8,
+    ) -> Vec<u8> {
+        let mut plaintext = encode_cbor(&CborValue::Map(fields));
+        let artifact = crate::export::encrypt_portable_for_test(
+            &plaintext,
+            Zeroizing::new(passphrase.to_vec()),
+            crate::PortableExportPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+            crate::PortableExportRandomnessV1::new(
+                [randomness; crate::PORTABLE_EXPORT_RANDOM_BYTES],
+            ),
+        );
+        plaintext.zeroize();
+        artifact.into_bytes()
+    }
+
     fn add_item_randomness(seed: u8) -> AddItemRandomnessV1 {
         let mut bytes = [0; ADD_ITEM_RANDOM_BYTES];
         for (index, byte) in bytes.iter_mut().enumerate() {
@@ -1769,6 +1814,18 @@ mod tests {
                 0x96, 0x53, 0xa1, 0x3a,
             ]
         );
+        let opened = crate::open_portable_with_passphrase(
+            artifact.as_bytes(),
+            Zeroizing::new(b"separate export passphrase".to_vec()),
+            crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(opened.item_count(), 1);
+        assert_eq!(opened.candidate_count(), 1);
+        assert_eq!(
+            format!("{opened:?}"),
+            "OpenedPortableSnapshotV1(<redacted>)"
+        );
         for plaintext in [b"Portable portal".as_slice(), b"portable-export-secret"] {
             assert!(!artifact
                 .as_bytes()
@@ -1780,6 +1837,15 @@ mod tests {
             Zeroizing::new(b"wrong export passphrase".to_vec()),
         )
         .is_none());
+        assert_eq!(
+            crate::open_portable_with_passphrase(
+                artifact.as_bytes(),
+                Zeroizing::new(b"wrong export passphrase".to_vec()),
+                crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+            )
+            .err(),
+            Some(ApplicationError::AuthenticationFailed)
+        );
         let mut tampered = artifact.as_bytes().to_vec();
         let last = tampered.last_mut().unwrap();
         *last ^= 1;
@@ -1788,6 +1854,15 @@ mod tests {
             Zeroizing::new(b"separate export passphrase".to_vec()),
         )
         .is_none());
+        assert_eq!(
+            crate::open_portable_with_passphrase(
+                &tampered,
+                Zeroizing::new(b"separate export passphrase".to_vec()),
+                crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+            )
+            .err(),
+            Some(ApplicationError::AuthenticationFailed)
+        );
 
         let plaintext = crate::export::decrypt_portable_for_test(
             artifact.as_bytes(),
@@ -1849,6 +1924,91 @@ mod tests {
         assert_eq!(login.password, "portable-export-secret");
         encoded_revision.zeroize();
         crate::export::zeroize_cbor(&mut entries);
+
+        let CborValue::Map(mut invalid_count) = decode_cbor(&plaintext).unwrap() else {
+            panic!()
+        };
+        replace_cbor_field(&mut invalid_count, 4, CborValue::Unsigned(2));
+        let invalid_count =
+            authenticate_portable_snapshot(invalid_count, b"separate export passphrase", 0x5c);
+        assert_eq!(
+            crate::open_portable_with_passphrase(
+                &invalid_count,
+                Zeroizing::new(b"separate export passphrase".to_vec()),
+                crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+            )
+            .err(),
+            Some(ApplicationError::IntegrityFailure)
+        );
+
+        let CborValue::Map(mut invalid_hash) = decode_cbor(&plaintext).unwrap() else {
+            panic!()
+        };
+        replace_cbor_field(&mut invalid_hash, 5, CborValue::Bytes(vec![0; 32]));
+        let invalid_hash =
+            authenticate_portable_snapshot(invalid_hash, b"separate export passphrase", 0x5d);
+        assert_eq!(
+            crate::open_portable_with_passphrase(
+                &invalid_hash,
+                Zeroizing::new(b"separate export passphrase".to_vec()),
+                crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+            )
+            .err(),
+            Some(ApplicationError::IntegrityFailure)
+        );
+
+        let CborValue::Map(mut invalid_bootstrap) = decode_cbor(&plaintext).unwrap() else {
+            panic!()
+        };
+        let CborValue::Bytes(bootstrap_bytes) = invalid_bootstrap
+            .iter_mut()
+            .find(|(key, _)| key == &CborValue::Unsigned(2))
+            .map(|(_, value)| value)
+            .unwrap()
+        else {
+            panic!()
+        };
+        *bootstrap_bytes.last_mut().unwrap() ^= 1;
+        refresh_portable_snapshot_hash(&mut invalid_bootstrap);
+        let invalid_bootstrap =
+            authenticate_portable_snapshot(invalid_bootstrap, b"separate export passphrase", 0x5e);
+        assert_eq!(
+            crate::open_portable_with_passphrase(
+                &invalid_bootstrap,
+                Zeroizing::new(b"separate export passphrase".to_vec()),
+                crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+            )
+            .err(),
+            Some(ApplicationError::IntegrityFailure)
+        );
+
+        let CborValue::Map(mut mismatched_item) = decode_cbor(&plaintext).unwrap() else {
+            panic!()
+        };
+        let CborValue::Array(candidate_entries) = mismatched_item
+            .iter_mut()
+            .find(|(key, _)| key == &CborValue::Unsigned(3))
+            .map(|(_, value)| value)
+            .unwrap()
+        else {
+            panic!()
+        };
+        let CborValue::Map(candidate_fields) = &mut candidate_entries[0] else {
+            panic!()
+        };
+        replace_cbor_field(candidate_fields, 1, CborValue::Bytes(vec![0xfe; 16]));
+        refresh_portable_snapshot_hash(&mut mismatched_item);
+        let mismatched_item =
+            authenticate_portable_snapshot(mismatched_item, b"separate export passphrase", 0x5f);
+        assert_eq!(
+            crate::open_portable_with_passphrase(
+                &mismatched_item,
+                Zeroizing::new(b"separate export passphrase".to_vec()),
+                crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+            )
+            .err(),
+            Some(ApplicationError::IntegrityFailure)
+        );
         assert_eq!(
             format!("{artifact:?}"),
             "PortableExportArtifactV1(<encrypted>)"
@@ -1903,6 +2063,92 @@ mod tests {
                 .err(),
             Some(ApplicationError::IntegrityFailure)
         );
+
+        let artifact = session
+            .export_portable_with_passphrase(
+                &exact_bootstrap,
+                Zeroizing::new(b"separate export passphrase".to_vec()),
+                policy,
+                randomness(),
+            )
+            .unwrap();
+        let opened = crate::open_portable_with_passphrase(
+            artifact.as_bytes(),
+            Zeroizing::new(b"separate export passphrase".to_vec()),
+            crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(opened.item_count(), 0);
+        assert_eq!(opened.candidate_count(), 0);
+        assert_eq!(
+            crate::open_portable_with_passphrase(
+                artifact.as_bytes(),
+                Zeroizing::new(Vec::new()),
+                crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+            )
+            .err(),
+            Some(ApplicationError::InvalidInput)
+        );
+        assert_eq!(
+            crate::open_portable_with_passphrase(
+                artifact.as_bytes(),
+                Zeroizing::new(vec![0x61; crate::MAX_PORTABLE_EXPORT_PASSPHRASE_BYTES + 1]),
+                crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+            )
+            .err(),
+            Some(ApplicationError::InvalidInput)
+        );
+
+        let CborValue::Map(mut unsupported_version) = decode_cbor(artifact.as_bytes()).unwrap()
+        else {
+            panic!()
+        };
+        replace_cbor_field(&mut unsupported_version, 1, CborValue::Unsigned(2));
+        assert_eq!(
+            crate::open_portable_with_passphrase(
+                &encode_cbor(&CborValue::Map(unsupported_version)),
+                Zeroizing::new(b"separate export passphrase".to_vec()),
+                crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+            )
+            .err(),
+            Some(ApplicationError::Unsupported)
+        );
+
+        let CborValue::Map(mut excessive_kdf) = decode_cbor(artifact.as_bytes()).unwrap() else {
+            panic!()
+        };
+        let CborValue::Map(kdf_fields) = excessive_kdf
+            .iter_mut()
+            .find(|(key, _)| key == &CborValue::Unsigned(4))
+            .map(|(_, value)| value)
+            .unwrap()
+        else {
+            panic!()
+        };
+        replace_cbor_field(kdf_fields, 1, CborValue::Unsigned(16 * 1024));
+        assert_eq!(
+            crate::open_portable_with_passphrase(
+                &encode_cbor(&CborValue::Map(excessive_kdf)),
+                Zeroizing::new(b"separate export passphrase".to_vec()),
+                crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+            )
+            .err(),
+            Some(ApplicationError::BoundExceeded)
+        );
+
+        let CborValue::Map(mut unknown_field) = decode_cbor(artifact.as_bytes()).unwrap() else {
+            panic!()
+        };
+        unknown_field.push((CborValue::Unsigned(8), CborValue::Null));
+        assert_eq!(
+            crate::open_portable_with_passphrase(
+                &encode_cbor(&CborValue::Map(unknown_field)),
+                Zeroizing::new(b"separate export passphrase".to_vec()),
+                crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+            )
+            .err(),
+            Some(ApplicationError::IntegrityFailure)
+        );
     }
 
     #[test]
@@ -1948,6 +2194,14 @@ mod tests {
                 crate::PortableExportRandomnessV1::new([0x7e; crate::PORTABLE_EXPORT_RANDOM_BYTES]),
             )
             .unwrap();
+        let opened = crate::open_portable_with_passphrase(
+            artifact.as_bytes(),
+            Zeroizing::new(b"conflict export passphrase".to_vec()),
+            crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(opened.item_count(), 1);
+        assert_eq!(opened.candidate_count(), 2);
         let plaintext = crate::export::decrypt_portable_for_test(
             artifact.as_bytes(),
             Zeroizing::new(b"conflict export passphrase".to_vec()),
@@ -1984,6 +2238,31 @@ mod tests {
         }
         assert_eq!(actual_revision_ids, expected_revision_ids);
         crate::export::zeroize_cbor(&mut entries);
+
+        let CborValue::Map(mut reversed_snapshot) = decode_cbor(&plaintext).unwrap() else {
+            panic!()
+        };
+        let CborValue::Array(candidate_entries) = reversed_snapshot
+            .iter_mut()
+            .find(|(key, _)| key == &CborValue::Unsigned(3))
+            .map(|(_, value)| value)
+            .unwrap()
+        else {
+            panic!()
+        };
+        candidate_entries.reverse();
+        refresh_portable_snapshot_hash(&mut reversed_snapshot);
+        let reversed_snapshot =
+            authenticate_portable_snapshot(reversed_snapshot, b"conflict export passphrase", 0x7f);
+        assert_eq!(
+            crate::open_portable_with_passphrase(
+                &reversed_snapshot,
+                Zeroizing::new(b"conflict export passphrase".to_vec()),
+                crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+            )
+            .err(),
+            Some(ApplicationError::IntegrityFailure)
+        );
     }
 
     #[test]

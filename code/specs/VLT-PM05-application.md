@@ -634,10 +634,37 @@ types redact their bytes from diagnostics.
 
 Phase 1A returns exact encrypted artifact bytes to the host; it does not choose
 or write a path, overwrite a destination, report backup completion, or retain
-provider authority. Authenticated artifact opening, snapshot-hash verification,
-and cross-vault import are the next paired workflow. Import must create a new
-vault and new item, revision, object, and encryption identities rather than
-publishing source identities into the target repository.
+provider authority.
+
+Artifact opening is a separate no-write boundary. The host passes untrusted
+bytes, an owned separately collected passphrase, and explicit maximum Argon2id
+memory, iteration, and lane costs. The encrypted artifact is bounded to 512 MiB
+plus 4 KiB of framing before CBOR decode. The opener rejects a header whose
+valid KDF cost exceeds the host-approved ceiling before performing Argon2id;
+the ceiling itself must remain inside the V1 Argon2id bounds.
+
+Opening strictly requires the exact closed canonical header above, supported
+version/protection/suite values, exact salt/nonce/tag widths, and ciphertext no
+larger than 512 MiB. It derives the export key and authenticates the complete
+header-bound artifact before decoding any plaintext. A wrong passphrase and a
+valid-shape artifact with a wrong authentication tag both return the same
+closed `AuthenticationFailed` class.
+
+After authentication, the opener strictly decodes the closed snapshot, checks
+the exact candidate count and domain-separated hash, and verifies the embedded
+bootstrap's authority public key and self-signature. Candidate entries must be
+strictly increasing by source item/revision identity, unique, bounded to
+100,000 items and 16 candidates per item, canonically decode as item revisions,
+and reproduce the entry's item identity. Every intermediate plaintext CBOR
+tree, passphrase, derived key, ciphertext copy, bootstrap, encoded revision,
+and hash preimage is wiped on every return path.
+
+Success returns an opaque secret-bearing application object with public item
+and candidate counts only. It has no document, bootstrap, or source-identity
+accessor, cannot be cloned, and redacts diagnostics. Opening does not initialize
+or write a target vault. The next workflow consumes this object and creates a
+new vault with new item, revision, object, and encryption identities rather
+than publishing source identities into the target repository.
 
 ## 12. Audit and status
 
@@ -691,7 +718,8 @@ Additional V1 bounds are checked before allocation:
 | search query | 256 bytes |
 | list/search results | 10,000 |
 | history request | 4,096 |
-| portable export plaintext | 512 MiB |
+| portable export plaintext/ciphertext | 512 MiB |
+| portable encrypted artifact | 512 MiB + 4 KiB framing |
 
 The public error taxonomy is:
 
