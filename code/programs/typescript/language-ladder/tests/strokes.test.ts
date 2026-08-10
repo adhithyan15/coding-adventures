@@ -6,6 +6,7 @@ import { parseFont, boundsOf, type Contour } from "../src/truetype";
 import { SCRIPTS, verifiedLetterFont } from "../src/data";
 import {
   DUCTUS,
+  ductusKey,
   penPath,
   joinGaps,
   penLifts,
@@ -14,6 +15,7 @@ import {
   type LetterDuctus,
   type Point,
 } from "../src/strokes";
+import { ductusFor } from "../src/ductusview";
 
 const TEST_DIR = dirname(fileURLToPath(import.meta.url));
 const FONT_DIR = resolve(TEST_DIR, "../../../../learning/human-languages/_fonts");
@@ -22,14 +24,15 @@ const load = (name: string) => {
   return b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength) as ArrayBuffer;
 };
 const tamil = () => parseFont(load("NotoSansTamil-Static.ttf"));
+const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 
 const fontForDuctus = (letter: LetterDuctus) => {
-  const script = SCRIPTS.find((candidate) =>
-    candidate.letters.some(
-      (entry) => entry.glyph === letter.glyph && entry.strokeOrderSource?.url === letter.source.url,
-    ),
-  );
+  const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
   if (!script) throw new Error(`no verified script/font owns ${letter.glyph}`);
+  const claim = script.letters.find(
+    (entry) => entry.glyph === letter.glyph && entry.strokeOrderSource?.url === letter.source.url,
+  );
+  if (!claim) throw new Error(`${letter.script} does not verify ${letter.glyph}`);
   return parseFont(load(script.font.split("/").pop()!));
 };
 
@@ -253,6 +256,15 @@ describe("handwriting ductus", () => {
     expect(path[0].y).toBeGreaterThan(path.at(-1)!.y);
   });
 
+  it("Urdu independent ا is its own one-stroke downward ductus", () => {
+    expect(URDU_ALEF.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_ALEF)).toBe(0);
+    expect(URDU_ALEF.strokes).toHaveLength(1);
+    expect(URDU_ALEF.strokes[0].segments).toHaveLength(1);
+    const path = penPath(URDU_ALEF.strokes[0]);
+    expect(path[0].y).toBeGreaterThan(path.at(-1)!.y);
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -359,14 +371,15 @@ describe("handwriting ductus", () => {
     );
     expect(verified).toHaveLength(letters.length);
     for (const { script, letter } of verified) {
-      const ductus = DUCTUS[letter.glyph];
+      const ductus = ductusFor(letter.glyph, script);
       expect(ductus, `${script} ${letter.glyph} claims verification without a ductus`).toBeDefined();
+      if (!ductus) throw new Error(`${script} ${letter.glyph} has no ductus`);
       expect(letter.penLifts).toBe(penLifts(ductus));
       expect(letter.strokeOrderSource).toEqual(ductus.source);
     }
     for (const ductus of letters) {
       expect(
-        verified.some(({ letter }) => letter.glyph === ductus.glyph),
+        verified.some(({ script, letter }) => script === ductus.script && letter.glyph === ductus.glyph),
         `${ductus.glyph} has a ductus but no verified prose claim`,
       ).toBe(true);
     }
@@ -380,6 +393,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
     expect(verifiedLetterFont("ه", DUCTUS["ه"].source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
+    );
+    expect(verifiedLetterFont("ا", URDU_ALEF.source.url)).toBe(
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
     expect(verifiedLetterFont("و", "https://example.invalid/wrong-source")).toBeUndefined();
@@ -467,6 +483,18 @@ describe("handwriting ductus", () => {
     expect(src.url).toContain("laits.utexas.edu/persian_grammar/video");
     expect(src.citation).toMatch(/Persian Online.*ا.*00:08–00:11/i);
     expect(src.variation).toMatch(/top-to-bottom.*right-to-left.*Noto Naskh/i);
+  });
+
+  it("Urdu independent ا traces to Zer o Zabar's top-to-bottom animation", () => {
+    const src = URDU_ALEF.source;
+    expect(src.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/pe-gaf-alif-lam/",
+    );
+    expect(src.citation).toMatch(/Zer o Zabar.*independent ا.*Northwestern/i);
+    expect(src.variation).toMatch(
+      /independent.*top-to-bottom.*one continuous stroke.*final.*bottom-to-top.*Noto Naskh.*Nastaliq/i,
+    );
+    expect(src.url).not.toBe(DUCTUS["ا"].source.url);
   });
 
   it("Persian ب traces to the adjacent sourced bowl-and-dot demonstration", () => {

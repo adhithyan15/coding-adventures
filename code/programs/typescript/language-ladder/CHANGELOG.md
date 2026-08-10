@@ -2,6 +2,18 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Urdu independent-alif ductus (HL-C09U)
+
+- Add Urdu independent ا from Northwestern's *Zer o Zabar* animation as one
+  top-to-bottom movement with zero lifts, retaining the lesson's explicit
+  contrast with bottom-to-top final ـا.
+- Make ductus lookup script-aware and scope the Urdu key so its Northwestern
+  source remains independently addressable from Persian ا's UT Austin source.
+- Keep source/data/geometry agreement on the canonical Noto Naskh fallback and
+  render a real one-frame Urdu filmstrip in Browse and Practice.
+- Keep both narrow shared-glyph filmstrips readable with concise movement
+  captions while their full script-specific instructions remain visible below.
+
 ### Added — cited Persian looping-body ductus (HL-C09T)
 
 - Add Persian ه from UT Austin Persian Online's 02:47–02:50 demonstration as

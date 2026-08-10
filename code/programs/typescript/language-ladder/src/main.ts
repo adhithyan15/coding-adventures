@@ -623,7 +623,7 @@ function renderMatrix(letters: Letter[]): HTMLElement | null {
   return scroll;
 }
 
-function renderDetail(v: LetterView, siblings: Sibling[] = []): HTMLElement {
+function renderDetail(v: LetterView, script: string, siblings: Sibling[] = []): HTMLElement {
   const d = el("div", "detail");
   const head = el("div", "detail__head");
   const big = el("div", "detail__glyph");
@@ -681,8 +681,8 @@ function renderDetail(v: LetterView, siblings: Sibling[] = []): HTMLElement {
   // (`DUCTUS` admits no letter without a cited source.) Every other letter falls
   // back to a prose PART list whose heading explicitly says that numbering does
   // not claim separate strokes or any particular lifts.
-  if (ductusFor(v.glyph)) {
-    d.appendChild(section(handwritingHeading(v, true), renderDuctusSection(v)));
+  if (ductusFor(v.glyph, script)) {
+    d.appendChild(section(handwritingHeading(v, true), renderDuctusSection(v, script)));
   } else if (v.strokeOrder.length > 0) {
     d.appendChild(section(handwritingHeading(v, false), orderedListOf(v.strokeOrder)));
   }
@@ -826,7 +826,7 @@ function renderPractice(): HTMLElement {
       : `✗ Not quite — that sound is ${q.targetGlyph}`;
     reveal.appendChild(verdict);
     // show the answer's decomposition, reusing the browse detail
-    reveal.appendChild(renderDetail(views[q.targetIndex]!));
+    reveal.appendChild(renderDetail(views[q.targetIndex]!, SCRIPTS[questionScript]!.script));
     const next = el("button", "next");
     next.textContent = "Next →";
     next.onclick = () => {
@@ -1883,7 +1883,7 @@ function render(): void {
     const siblings = syllabary ? crossScriptSiblings(active.sound, data.script, SCRIPTS) : [];
     const body = el("div", "body");
     body.dataset.script = data.script;
-    body.append(matrix ?? renderGrid(views, data.direction), renderDetail(active, siblings));
+    body.append(matrix ?? renderGrid(views, data.direction), renderDetail(active, data.script, siblings));
     app!.appendChild(body);
   } else {
     if (!question) startPractice();
@@ -2003,8 +2003,8 @@ const DUCTUS_FONT_URLS = new Map<string, string>([
 ]);
 const ductusFontPromises = new Map<string, Promise<Font | null>>();
 
-function ductusFont(glyph: string): Promise<Font | null> {
-  const letter = ductusFor(glyph);
+function ductusFont(glyph: string, script: string): Promise<Font | null> {
+  const letter = ductusFor(glyph, script);
   const fontPath = letter && verifiedLetterFont(glyph, letter.source.url);
   const url = fontPath && DUCTUS_FONT_URLS.get(fontPath);
   if (!url) return Promise.resolve(null);
@@ -2028,12 +2028,12 @@ function ductusFont(glyph: string): Promise<Font | null> {
  * been found in it. If either never happens, the prose simply stays. That is
  * the whole fallback story: the richer view is additive, never load-bearing.
  */
-function renderDuctusSection(v: LetterView): HTMLElement {
-  const letter = ductusFor(v.glyph)!;
+function renderDuctusSection(v: LetterView, script: string): HTMLElement {
+  const letter = ductusFor(v.glyph, script)!;
   const holder = el("div", "ductus");
   holder.appendChild(orderedListOf(v.strokeOrder));
 
-  void ductusFont(letter.glyph).then((font) => {
+  void ductusFont(letter.glyph, script).then((font) => {
     const glyph = font?.glyphFor(letter.glyph);
     if (!glyph || glyph.contours.length === 0) return; // keep the prose
     const strip = ductusFilmstrip(letter, { path: glyph.path, bounds: boundsOf(glyph.contours) });
