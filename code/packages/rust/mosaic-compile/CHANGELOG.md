@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Changed - Compose emits native links
+
+The Compose backend now lowers `HostLink` to `LinkAnnotation.Url` for external
+navigation and `LinkAnnotation.Clickable` for in-app routing. Package-authored
+navigation can dispatch typed loop item/index payloads while retaining native
+link semantics and platform URI opening without app-owned glue.
+
 ### Changed - strict native control properties are capability-checked
 
 `mosaic-compile pkg --profile native-complete` now rejects authored tri-state

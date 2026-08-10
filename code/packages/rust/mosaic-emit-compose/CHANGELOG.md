@@ -7,6 +7,11 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `HostLink` now lowers to Compose's native annotated-text link API. External
+  links open through the platform `UriHandler`; internal links retain link
+  semantics while dispatching Mosaic events, including item/index payloads
+  inside `For`. Generated links receive theme-aware visible styling and need no
+  application-owned URL adapter.
 - `HostTooltip` now lowers to Compose Foundation's cross-platform
   `BasicTooltipBox`, including native overlay placement and dismissal, Material
   surface chrome, literal/slot/expression text, and assistive-technology
