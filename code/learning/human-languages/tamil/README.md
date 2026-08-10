@@ -99,12 +99,15 @@ through.
   native நலம்), and விடை (*viḍai*) — which the Dravidian dictionary files
   in the **same entry as வீடு**, so the arc walks in through the house and out
   through the leave on one root. In the book, Chapters 35–38.
-- **The script strand, W01–W18** ([`lessons/TA-W*`](./lessons/)): 22 lessons
+- **The script strand, W01–W19** ([`lessons/TA-W*`](./lessons/)): 23 lessons
   marked `delivery: script`, one after roughly every third speaking lesson from
-  Chapter 4 to Chapter 37. They teach curves, the abugida, retroflexion, the
+  Chapter 4 to Chapter 38. They teach curves, the abugida, retroflexion, the
   three Tamil n letters, the puḷḷi, the vowel signs, and then spell — one word
   per lesson — words the learner has already been saying, from **வணக்கம்** to
-  **தமிழ்**. Chapters 1–3 hold no writing lesson at all, on purpose.
+  **மூன்று**. Chapters 1–3 hold no writing lesson at all, on purpose. The strand
+  ends there because it runs out of room, not because the script is finished:
+  thirteen glyphs the Chapter 7 numbers use — ஏ, ஐ, ஒ and the ten Tamil digits
+  ௧–௰ — are still never taught, and there is no chapter left to teach them in.
 
 ---
 

@@ -222,7 +222,8 @@ describe("corpus snapshot", () => {
     // +4: TA-W10..TA-W13, the Tamil writing strand's extension, all sit at pre-A1.
     // +3 more: TA-W14/15/16, closing chapters 4-5, sit there too.
     // +2: TA-W17-read-unavu and TA-W18-read-uur.
-    expect(summary.byLevel["pre-A1"]).toBe(877);
+    // +1: TA-W19-read-muunru, the strand's last available slot, likewise pre-A1.
+    expect(summary.byLevel["pre-A1"]).toBe(878);
     // Chapter 10 adds singular ir and possessives at A1. Chapter 11 adds one more
     // definite-reference lesson there; its other work is A2. Chapter 12 adds its
     // newly mapped terminal checkpoints at A2 on SPINE-SAY-WHAT-I-DO.
@@ -299,7 +300,9 @@ describe("corpus snapshot", () => {
     // +3: TA-W14-read-pesu, TA-W15-read-po and TA-W16-read-tamizh, likewise the only
     // lessons that join.
     // +2: TA-W17-read-unavu and TA-W18-read-uur, the only lessons that join.
-    expect(ramp).toHaveLength(1186);
+    // +1: TA-W19-read-muunru, again measured as a set difference — the only lesson
+    // that joins, not inferred from the total.
+    expect(ramp).toHaveLength(1187);
     expect(ramp.length).toBeLessThan(lessons.length);
   });
 });
