@@ -804,6 +804,8 @@ code/packages/rust/vault-pm-domain       product record model and merge policy
 code/packages/rust/vault-pm-storage      VaultObjectStore contract + fixtures
 code/packages/rust/vault-pm-repository   immutable DAG, publication, sync, GC
 code/packages/rust/vault-pm-application  use cases and redacted view models
+code/packages/rust/vault-pm-application-storage-core
+                                         durable bootstrap/owner-state adapters
 code/packages/rust/vault-pm-cli          product parser/driver/renderer
 code/programs/rust/vault-pm-cli          executable composition root
 ```
@@ -1392,6 +1394,12 @@ changelog, focused build, and downstream validation.
    7f. completed stable payload-free VLT-PM05 `Locked` error and compact
        locked/unlocked lifecycle boundary, including failure-stable in-place
        unlock and synchronous live-session drop on idempotent lock.
+8a. `vault-pm-application-storage-core`: durable injected-backend adapters for
+    immutable signed-bootstrap generations, an atomic latest-generation
+    pointer, and exact owner-private local-state compare-exchange. The adapter
+    owns no filesystem path or platform policy; Phase 1A composes it over a
+    separately permission-checked `FsStorageBackend` root and retains the
+    single-writer process rule required by `storage-core` conditions.
 9. `vault-pm-cli` + real executable and pseudo-terminal E2E suite.
 10. Crash/fault matrix and local restore drill.
 
