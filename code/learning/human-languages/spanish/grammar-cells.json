@@ -1,0 +1,2052 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "note": "HL10 section 5. Spanish's filling of core/grammar-slots.json, with the ordering a learner climbs. `prerequisites` is what makes this a ramp rather than a list: singular before plural one person at a time, -ar before -er before -ir, tenses in acquisition order anchored at the 1SG conjugation-1 cell, the present subjunctive hanging off the present indicative 1SG where its stem actually comes from, and compounds requiring both the participle and the auxiliary's own finite cell. REGULAR CELLS ONLY -- the irregular and stem-changing overlays are HL-C91 and are NOT counted here. Generated; do not hand-edit.",
+  "conjugationClasses": {
+    "CONJ1": "-ar",
+    "CONJ2": "-er",
+    "CONJ3": "-ir"
+  },
+  "counts": {
+    "regularCells": 231,
+    "productive": 213,
+    "receptiveOnly": 18
+  },
+  "cells": [
+    {
+      "id": "ES-CELL-IND-PRES-1SG-CONJ1",
+      "slot": "SLOT-IND-PRES-1SG-CONJ1",
+      "prerequisites": [],
+      "conjugationEnding": "-ar",
+      "spanishName": "presente de indicativo"
+    },
+    {
+      "id": "ES-CELL-IND-PRES-1SG-CONJ2",
+      "slot": "SLOT-IND-PRES-1SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-PRES-1SG-CONJ1"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "presente de indicativo"
+    },
+    {
+      "id": "ES-CELL-IND-PRES-1SG-CONJ3",
+      "slot": "SLOT-IND-PRES-1SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-PRES-1SG-CONJ2"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "presente de indicativo"
+    },
+    {
+      "id": "ES-CELL-IND-PRES-2SG-CONJ1",
+      "slot": "SLOT-IND-PRES-2SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-PRES-1SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "presente de indicativo"
+    },
+    {
+      "id": "ES-CELL-IND-PRES-2SG-CONJ2",
+      "slot": "SLOT-IND-PRES-2SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-PRES-1SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "presente de indicativo"
+    },
+    {
+      "id": "ES-CELL-IND-PRES-2SG-CONJ3",
+      "slot": "SLOT-IND-PRES-2SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-PRES-1SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "presente de indicativo"
+    },
+    {
+      "id": "ES-CELL-IND-PRES-3SG-CONJ1",
+      "slot": "SLOT-IND-PRES-3SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-PRES-2SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "presente de indicativo"
+    },
+    {
+      "id": "ES-CELL-IND-PRES-3SG-CONJ2",
+      "slot": "SLOT-IND-PRES-3SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-PRES-2SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "presente de indicativo"
+    },
+    {
+      "id": "ES-CELL-IND-PRES-3SG-CONJ3",
+      "slot": "SLOT-IND-PRES-3SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-PRES-2SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "presente de indicativo"
+    },
+    {
+      "id": "ES-CELL-IND-PRES-1PL-CONJ1",
+      "slot": "SLOT-IND-PRES-1PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-PRES-3SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "presente de indicativo"
+    },
+    {
+      "id": "ES-CELL-IND-PRES-1PL-CONJ2",
+      "slot": "SLOT-IND-PRES-1PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-PRES-3SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "presente de indicativo"
+    },
+    {
+      "id": "ES-CELL-IND-PRES-1PL-CONJ3",
+      "slot": "SLOT-IND-PRES-1PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-PRES-3SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "presente de indicativo"
+    },
+    {
+      "id": "ES-CELL-IND-PRES-2PL-CONJ1",
+      "slot": "SLOT-IND-PRES-2PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-PRES-1PL-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "presente de indicativo"
+    },
+    {
+      "id": "ES-CELL-IND-PRES-2PL-CONJ2",
+      "slot": "SLOT-IND-PRES-2PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-PRES-1PL-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "presente de indicativo"
+    },
+    {
+      "id": "ES-CELL-IND-PRES-2PL-CONJ3",
+      "slot": "SLOT-IND-PRES-2PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-PRES-1PL-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "presente de indicativo"
+    },
+    {
+      "id": "ES-CELL-IND-PRES-3PL-CONJ1",
+      "slot": "SLOT-IND-PRES-3PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-PRES-2PL-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "presente de indicativo"
+    },
+    {
+      "id": "ES-CELL-IND-PRES-3PL-CONJ2",
+      "slot": "SLOT-IND-PRES-3PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-PRES-2PL-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "presente de indicativo"
+    },
+    {
+      "id": "ES-CELL-IND-PRES-3PL-CONJ3",
+      "slot": "SLOT-IND-PRES-3PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-PRES-2PL-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "presente de indicativo"
+    },
+    {
+      "id": "ES-CELL-IND-PRET-1SG-CONJ1",
+      "slot": "SLOT-IND-PRET-1SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-PRES-1SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "preterito indefinido"
+    },
+    {
+      "id": "ES-CELL-IND-PRET-1SG-CONJ2",
+      "slot": "SLOT-IND-PRET-1SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-PRET-1SG-CONJ1"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "preterito indefinido"
+    },
+    {
+      "id": "ES-CELL-IND-PRET-1SG-CONJ3",
+      "slot": "SLOT-IND-PRET-1SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-PRET-1SG-CONJ2"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "preterito indefinido"
+    },
+    {
+      "id": "ES-CELL-IND-PRET-2SG-CONJ1",
+      "slot": "SLOT-IND-PRET-2SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-PRET-1SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "preterito indefinido"
+    },
+    {
+      "id": "ES-CELL-IND-PRET-2SG-CONJ2",
+      "slot": "SLOT-IND-PRET-2SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-PRET-1SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "preterito indefinido"
+    },
+    {
+      "id": "ES-CELL-IND-PRET-2SG-CONJ3",
+      "slot": "SLOT-IND-PRET-2SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-PRET-1SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "preterito indefinido"
+    },
+    {
+      "id": "ES-CELL-IND-PRET-3SG-CONJ1",
+      "slot": "SLOT-IND-PRET-3SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-PRET-2SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "preterito indefinido"
+    },
+    {
+      "id": "ES-CELL-IND-PRET-3SG-CONJ2",
+      "slot": "SLOT-IND-PRET-3SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-PRET-2SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "preterito indefinido"
+    },
+    {
+      "id": "ES-CELL-IND-PRET-3SG-CONJ3",
+      "slot": "SLOT-IND-PRET-3SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-PRET-2SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "preterito indefinido"
+    },
+    {
+      "id": "ES-CELL-IND-PRET-1PL-CONJ1",
+      "slot": "SLOT-IND-PRET-1PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-PRET-3SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "preterito indefinido"
+    },
+    {
+      "id": "ES-CELL-IND-PRET-1PL-CONJ2",
+      "slot": "SLOT-IND-PRET-1PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-PRET-3SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "preterito indefinido"
+    },
+    {
+      "id": "ES-CELL-IND-PRET-1PL-CONJ3",
+      "slot": "SLOT-IND-PRET-1PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-PRET-3SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "preterito indefinido"
+    },
+    {
+      "id": "ES-CELL-IND-PRET-2PL-CONJ1",
+      "slot": "SLOT-IND-PRET-2PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-PRET-1PL-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "preterito indefinido"
+    },
+    {
+      "id": "ES-CELL-IND-PRET-2PL-CONJ2",
+      "slot": "SLOT-IND-PRET-2PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-PRET-1PL-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "preterito indefinido"
+    },
+    {
+      "id": "ES-CELL-IND-PRET-2PL-CONJ3",
+      "slot": "SLOT-IND-PRET-2PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-PRET-1PL-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "preterito indefinido"
+    },
+    {
+      "id": "ES-CELL-IND-PRET-3PL-CONJ1",
+      "slot": "SLOT-IND-PRET-3PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-PRET-2PL-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "preterito indefinido"
+    },
+    {
+      "id": "ES-CELL-IND-PRET-3PL-CONJ2",
+      "slot": "SLOT-IND-PRET-3PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-PRET-2PL-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "preterito indefinido"
+    },
+    {
+      "id": "ES-CELL-IND-PRET-3PL-CONJ3",
+      "slot": "SLOT-IND-PRET-3PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-PRET-2PL-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "preterito indefinido"
+    },
+    {
+      "id": "ES-CELL-IND-IMPF-1SG-CONJ1",
+      "slot": "SLOT-IND-IMPF-1SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-PRET-1SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "preterito imperfecto"
+    },
+    {
+      "id": "ES-CELL-IND-IMPF-1SG-CONJ2",
+      "slot": "SLOT-IND-IMPF-1SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-IMPF-1SG-CONJ1"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "preterito imperfecto"
+    },
+    {
+      "id": "ES-CELL-IND-IMPF-1SG-CONJ3",
+      "slot": "SLOT-IND-IMPF-1SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-IMPF-1SG-CONJ2"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "preterito imperfecto"
+    },
+    {
+      "id": "ES-CELL-IND-IMPF-2SG-CONJ1",
+      "slot": "SLOT-IND-IMPF-2SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-IMPF-1SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "preterito imperfecto"
+    },
+    {
+      "id": "ES-CELL-IND-IMPF-2SG-CONJ2",
+      "slot": "SLOT-IND-IMPF-2SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-IMPF-1SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "preterito imperfecto"
+    },
+    {
+      "id": "ES-CELL-IND-IMPF-2SG-CONJ3",
+      "slot": "SLOT-IND-IMPF-2SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-IMPF-1SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "preterito imperfecto"
+    },
+    {
+      "id": "ES-CELL-IND-IMPF-3SG-CONJ1",
+      "slot": "SLOT-IND-IMPF-3SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-IMPF-2SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "preterito imperfecto"
+    },
+    {
+      "id": "ES-CELL-IND-IMPF-3SG-CONJ2",
+      "slot": "SLOT-IND-IMPF-3SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-IMPF-2SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "preterito imperfecto"
+    },
+    {
+      "id": "ES-CELL-IND-IMPF-3SG-CONJ3",
+      "slot": "SLOT-IND-IMPF-3SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-IMPF-2SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "preterito imperfecto"
+    },
+    {
+      "id": "ES-CELL-IND-IMPF-1PL-CONJ1",
+      "slot": "SLOT-IND-IMPF-1PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-IMPF-3SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "preterito imperfecto"
+    },
+    {
+      "id": "ES-CELL-IND-IMPF-1PL-CONJ2",
+      "slot": "SLOT-IND-IMPF-1PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-IMPF-3SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "preterito imperfecto"
+    },
+    {
+      "id": "ES-CELL-IND-IMPF-1PL-CONJ3",
+      "slot": "SLOT-IND-IMPF-1PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-IMPF-3SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "preterito imperfecto"
+    },
+    {
+      "id": "ES-CELL-IND-IMPF-2PL-CONJ1",
+      "slot": "SLOT-IND-IMPF-2PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-IMPF-1PL-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "preterito imperfecto"
+    },
+    {
+      "id": "ES-CELL-IND-IMPF-2PL-CONJ2",
+      "slot": "SLOT-IND-IMPF-2PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-IMPF-1PL-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "preterito imperfecto"
+    },
+    {
+      "id": "ES-CELL-IND-IMPF-2PL-CONJ3",
+      "slot": "SLOT-IND-IMPF-2PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-IMPF-1PL-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "preterito imperfecto"
+    },
+    {
+      "id": "ES-CELL-IND-IMPF-3PL-CONJ1",
+      "slot": "SLOT-IND-IMPF-3PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-IMPF-2PL-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "preterito imperfecto"
+    },
+    {
+      "id": "ES-CELL-IND-IMPF-3PL-CONJ2",
+      "slot": "SLOT-IND-IMPF-3PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-IMPF-2PL-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "preterito imperfecto"
+    },
+    {
+      "id": "ES-CELL-IND-IMPF-3PL-CONJ3",
+      "slot": "SLOT-IND-IMPF-3PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-IMPF-2PL-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "preterito imperfecto"
+    },
+    {
+      "id": "ES-CELL-IND-FUT-1SG-CONJ1",
+      "slot": "SLOT-IND-FUT-1SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-IMPF-1SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "futuro simple"
+    },
+    {
+      "id": "ES-CELL-IND-FUT-1SG-CONJ2",
+      "slot": "SLOT-IND-FUT-1SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-FUT-1SG-CONJ1"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "futuro simple"
+    },
+    {
+      "id": "ES-CELL-IND-FUT-1SG-CONJ3",
+      "slot": "SLOT-IND-FUT-1SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-FUT-1SG-CONJ2"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "futuro simple"
+    },
+    {
+      "id": "ES-CELL-IND-FUT-2SG-CONJ1",
+      "slot": "SLOT-IND-FUT-2SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-FUT-1SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "futuro simple"
+    },
+    {
+      "id": "ES-CELL-IND-FUT-2SG-CONJ2",
+      "slot": "SLOT-IND-FUT-2SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-FUT-1SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "futuro simple"
+    },
+    {
+      "id": "ES-CELL-IND-FUT-2SG-CONJ3",
+      "slot": "SLOT-IND-FUT-2SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-FUT-1SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "futuro simple"
+    },
+    {
+      "id": "ES-CELL-IND-FUT-3SG-CONJ1",
+      "slot": "SLOT-IND-FUT-3SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-FUT-2SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "futuro simple"
+    },
+    {
+      "id": "ES-CELL-IND-FUT-3SG-CONJ2",
+      "slot": "SLOT-IND-FUT-3SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-FUT-2SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "futuro simple"
+    },
+    {
+      "id": "ES-CELL-IND-FUT-3SG-CONJ3",
+      "slot": "SLOT-IND-FUT-3SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-FUT-2SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "futuro simple"
+    },
+    {
+      "id": "ES-CELL-IND-FUT-1PL-CONJ1",
+      "slot": "SLOT-IND-FUT-1PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-FUT-3SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "futuro simple"
+    },
+    {
+      "id": "ES-CELL-IND-FUT-1PL-CONJ2",
+      "slot": "SLOT-IND-FUT-1PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-FUT-3SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "futuro simple"
+    },
+    {
+      "id": "ES-CELL-IND-FUT-1PL-CONJ3",
+      "slot": "SLOT-IND-FUT-1PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-FUT-3SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "futuro simple"
+    },
+    {
+      "id": "ES-CELL-IND-FUT-2PL-CONJ1",
+      "slot": "SLOT-IND-FUT-2PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-FUT-1PL-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "futuro simple"
+    },
+    {
+      "id": "ES-CELL-IND-FUT-2PL-CONJ2",
+      "slot": "SLOT-IND-FUT-2PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-FUT-1PL-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "futuro simple"
+    },
+    {
+      "id": "ES-CELL-IND-FUT-2PL-CONJ3",
+      "slot": "SLOT-IND-FUT-2PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-FUT-1PL-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "futuro simple"
+    },
+    {
+      "id": "ES-CELL-IND-FUT-3PL-CONJ1",
+      "slot": "SLOT-IND-FUT-3PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-FUT-2PL-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "futuro simple"
+    },
+    {
+      "id": "ES-CELL-IND-FUT-3PL-CONJ2",
+      "slot": "SLOT-IND-FUT-3PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-FUT-2PL-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "futuro simple"
+    },
+    {
+      "id": "ES-CELL-IND-FUT-3PL-CONJ3",
+      "slot": "SLOT-IND-FUT-3PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-FUT-2PL-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "futuro simple"
+    },
+    {
+      "id": "ES-CELL-IND-COND-1SG-CONJ1",
+      "slot": "SLOT-IND-COND-1SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-FUT-1SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "condicional simple"
+    },
+    {
+      "id": "ES-CELL-IND-COND-1SG-CONJ2",
+      "slot": "SLOT-IND-COND-1SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-COND-1SG-CONJ1"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "condicional simple"
+    },
+    {
+      "id": "ES-CELL-IND-COND-1SG-CONJ3",
+      "slot": "SLOT-IND-COND-1SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-COND-1SG-CONJ2"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "condicional simple"
+    },
+    {
+      "id": "ES-CELL-IND-COND-2SG-CONJ1",
+      "slot": "SLOT-IND-COND-2SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-COND-1SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "condicional simple"
+    },
+    {
+      "id": "ES-CELL-IND-COND-2SG-CONJ2",
+      "slot": "SLOT-IND-COND-2SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-COND-1SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "condicional simple"
+    },
+    {
+      "id": "ES-CELL-IND-COND-2SG-CONJ3",
+      "slot": "SLOT-IND-COND-2SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-COND-1SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "condicional simple"
+    },
+    {
+      "id": "ES-CELL-IND-COND-3SG-CONJ1",
+      "slot": "SLOT-IND-COND-3SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-COND-2SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "condicional simple"
+    },
+    {
+      "id": "ES-CELL-IND-COND-3SG-CONJ2",
+      "slot": "SLOT-IND-COND-3SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-COND-2SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "condicional simple"
+    },
+    {
+      "id": "ES-CELL-IND-COND-3SG-CONJ3",
+      "slot": "SLOT-IND-COND-3SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-COND-2SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "condicional simple"
+    },
+    {
+      "id": "ES-CELL-IND-COND-1PL-CONJ1",
+      "slot": "SLOT-IND-COND-1PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-COND-3SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "condicional simple"
+    },
+    {
+      "id": "ES-CELL-IND-COND-1PL-CONJ2",
+      "slot": "SLOT-IND-COND-1PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-COND-3SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "condicional simple"
+    },
+    {
+      "id": "ES-CELL-IND-COND-1PL-CONJ3",
+      "slot": "SLOT-IND-COND-1PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-COND-3SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "condicional simple"
+    },
+    {
+      "id": "ES-CELL-IND-COND-2PL-CONJ1",
+      "slot": "SLOT-IND-COND-2PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-COND-1PL-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "condicional simple"
+    },
+    {
+      "id": "ES-CELL-IND-COND-2PL-CONJ2",
+      "slot": "SLOT-IND-COND-2PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-COND-1PL-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "condicional simple"
+    },
+    {
+      "id": "ES-CELL-IND-COND-2PL-CONJ3",
+      "slot": "SLOT-IND-COND-2PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-COND-1PL-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "condicional simple"
+    },
+    {
+      "id": "ES-CELL-IND-COND-3PL-CONJ1",
+      "slot": "SLOT-IND-COND-3PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-COND-2PL-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "condicional simple"
+    },
+    {
+      "id": "ES-CELL-IND-COND-3PL-CONJ2",
+      "slot": "SLOT-IND-COND-3PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-COND-2PL-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "condicional simple"
+    },
+    {
+      "id": "ES-CELL-IND-COND-3PL-CONJ3",
+      "slot": "SLOT-IND-COND-3PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-COND-2PL-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "condicional simple"
+    },
+    {
+      "id": "ES-CELL-SBJ-PRES-1SG-CONJ1",
+      "slot": "SLOT-SBJ-PRES-1SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-PRES-1SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "presente de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-PRES-1SG-CONJ2",
+      "slot": "SLOT-SBJ-PRES-1SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-SBJ-PRES-1SG-CONJ1"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "presente de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-PRES-1SG-CONJ3",
+      "slot": "SLOT-SBJ-PRES-1SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-SBJ-PRES-1SG-CONJ2"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "presente de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-PRES-2SG-CONJ1",
+      "slot": "SLOT-SBJ-PRES-2SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-SBJ-PRES-1SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "presente de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-PRES-2SG-CONJ2",
+      "slot": "SLOT-SBJ-PRES-2SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-SBJ-PRES-1SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "presente de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-PRES-2SG-CONJ3",
+      "slot": "SLOT-SBJ-PRES-2SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-SBJ-PRES-1SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "presente de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-PRES-3SG-CONJ1",
+      "slot": "SLOT-SBJ-PRES-3SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-SBJ-PRES-2SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "presente de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-PRES-3SG-CONJ2",
+      "slot": "SLOT-SBJ-PRES-3SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-SBJ-PRES-2SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "presente de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-PRES-3SG-CONJ3",
+      "slot": "SLOT-SBJ-PRES-3SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-SBJ-PRES-2SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "presente de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-PRES-1PL-CONJ1",
+      "slot": "SLOT-SBJ-PRES-1PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-SBJ-PRES-3SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "presente de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-PRES-1PL-CONJ2",
+      "slot": "SLOT-SBJ-PRES-1PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-SBJ-PRES-3SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "presente de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-PRES-1PL-CONJ3",
+      "slot": "SLOT-SBJ-PRES-1PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-SBJ-PRES-3SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "presente de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-PRES-2PL-CONJ1",
+      "slot": "SLOT-SBJ-PRES-2PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-SBJ-PRES-1PL-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "presente de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-PRES-2PL-CONJ2",
+      "slot": "SLOT-SBJ-PRES-2PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-SBJ-PRES-1PL-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "presente de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-PRES-2PL-CONJ3",
+      "slot": "SLOT-SBJ-PRES-2PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-SBJ-PRES-1PL-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "presente de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-PRES-3PL-CONJ1",
+      "slot": "SLOT-SBJ-PRES-3PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-SBJ-PRES-2PL-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "presente de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-PRES-3PL-CONJ2",
+      "slot": "SLOT-SBJ-PRES-3PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-SBJ-PRES-2PL-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "presente de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-PRES-3PL-CONJ3",
+      "slot": "SLOT-SBJ-PRES-3PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-SBJ-PRES-2PL-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "presente de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-IMPF-1SG-CONJ1",
+      "slot": "SLOT-SBJ-IMPF-1SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-PRET-3PL-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "imperfecto de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-IMPF-1SG-CONJ2",
+      "slot": "SLOT-SBJ-IMPF-1SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-SBJ-IMPF-1SG-CONJ1"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "imperfecto de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-IMPF-1SG-CONJ3",
+      "slot": "SLOT-SBJ-IMPF-1SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-SBJ-IMPF-1SG-CONJ2"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "imperfecto de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-IMPF-2SG-CONJ1",
+      "slot": "SLOT-SBJ-IMPF-2SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-SBJ-IMPF-1SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "imperfecto de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-IMPF-2SG-CONJ2",
+      "slot": "SLOT-SBJ-IMPF-2SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-SBJ-IMPF-1SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "imperfecto de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-IMPF-2SG-CONJ3",
+      "slot": "SLOT-SBJ-IMPF-2SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-SBJ-IMPF-1SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "imperfecto de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-IMPF-3SG-CONJ1",
+      "slot": "SLOT-SBJ-IMPF-3SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-SBJ-IMPF-2SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "imperfecto de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-IMPF-3SG-CONJ2",
+      "slot": "SLOT-SBJ-IMPF-3SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-SBJ-IMPF-2SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "imperfecto de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-IMPF-3SG-CONJ3",
+      "slot": "SLOT-SBJ-IMPF-3SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-SBJ-IMPF-2SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "imperfecto de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-IMPF-1PL-CONJ1",
+      "slot": "SLOT-SBJ-IMPF-1PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-SBJ-IMPF-3SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "imperfecto de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-IMPF-1PL-CONJ2",
+      "slot": "SLOT-SBJ-IMPF-1PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-SBJ-IMPF-3SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "imperfecto de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-IMPF-1PL-CONJ3",
+      "slot": "SLOT-SBJ-IMPF-1PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-SBJ-IMPF-3SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "imperfecto de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-IMPF-2PL-CONJ1",
+      "slot": "SLOT-SBJ-IMPF-2PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-SBJ-IMPF-1PL-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "imperfecto de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-IMPF-2PL-CONJ2",
+      "slot": "SLOT-SBJ-IMPF-2PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-SBJ-IMPF-1PL-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "imperfecto de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-IMPF-2PL-CONJ3",
+      "slot": "SLOT-SBJ-IMPF-2PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-SBJ-IMPF-1PL-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "imperfecto de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-IMPF-3PL-CONJ1",
+      "slot": "SLOT-SBJ-IMPF-3PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-SBJ-IMPF-2PL-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "imperfecto de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-IMPF-3PL-CONJ2",
+      "slot": "SLOT-SBJ-IMPF-3PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-SBJ-IMPF-2PL-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "imperfecto de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-IMPF-3PL-CONJ3",
+      "slot": "SLOT-SBJ-IMPF-3PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-SBJ-IMPF-2PL-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "imperfecto de subjuntivo"
+    },
+    {
+      "id": "ES-CELL-SBJ-FUT-1SG-CONJ1",
+      "slot": "SLOT-SBJ-FUT-1SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-SBJ-IMPF-1SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "futuro de subjuntivo",
+      "productive": false,
+      "receptiveOnlyBecause": "survives in legal and proverbial register only; a learner must recognise it and is never asked to produce it"
+    },
+    {
+      "id": "ES-CELL-SBJ-FUT-1SG-CONJ2",
+      "slot": "SLOT-SBJ-FUT-1SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-SBJ-FUT-1SG-CONJ1"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "futuro de subjuntivo",
+      "productive": false,
+      "receptiveOnlyBecause": "survives in legal and proverbial register only; a learner must recognise it and is never asked to produce it"
+    },
+    {
+      "id": "ES-CELL-SBJ-FUT-1SG-CONJ3",
+      "slot": "SLOT-SBJ-FUT-1SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-SBJ-FUT-1SG-CONJ2"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "futuro de subjuntivo",
+      "productive": false,
+      "receptiveOnlyBecause": "survives in legal and proverbial register only; a learner must recognise it and is never asked to produce it"
+    },
+    {
+      "id": "ES-CELL-SBJ-FUT-2SG-CONJ1",
+      "slot": "SLOT-SBJ-FUT-2SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-SBJ-FUT-1SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "futuro de subjuntivo",
+      "productive": false,
+      "receptiveOnlyBecause": "survives in legal and proverbial register only; a learner must recognise it and is never asked to produce it"
+    },
+    {
+      "id": "ES-CELL-SBJ-FUT-2SG-CONJ2",
+      "slot": "SLOT-SBJ-FUT-2SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-SBJ-FUT-1SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "futuro de subjuntivo",
+      "productive": false,
+      "receptiveOnlyBecause": "survives in legal and proverbial register only; a learner must recognise it and is never asked to produce it"
+    },
+    {
+      "id": "ES-CELL-SBJ-FUT-2SG-CONJ3",
+      "slot": "SLOT-SBJ-FUT-2SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-SBJ-FUT-1SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "futuro de subjuntivo",
+      "productive": false,
+      "receptiveOnlyBecause": "survives in legal and proverbial register only; a learner must recognise it and is never asked to produce it"
+    },
+    {
+      "id": "ES-CELL-SBJ-FUT-3SG-CONJ1",
+      "slot": "SLOT-SBJ-FUT-3SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-SBJ-FUT-2SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "futuro de subjuntivo",
+      "productive": false,
+      "receptiveOnlyBecause": "survives in legal and proverbial register only; a learner must recognise it and is never asked to produce it"
+    },
+    {
+      "id": "ES-CELL-SBJ-FUT-3SG-CONJ2",
+      "slot": "SLOT-SBJ-FUT-3SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-SBJ-FUT-2SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "futuro de subjuntivo",
+      "productive": false,
+      "receptiveOnlyBecause": "survives in legal and proverbial register only; a learner must recognise it and is never asked to produce it"
+    },
+    {
+      "id": "ES-CELL-SBJ-FUT-3SG-CONJ3",
+      "slot": "SLOT-SBJ-FUT-3SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-SBJ-FUT-2SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "futuro de subjuntivo",
+      "productive": false,
+      "receptiveOnlyBecause": "survives in legal and proverbial register only; a learner must recognise it and is never asked to produce it"
+    },
+    {
+      "id": "ES-CELL-SBJ-FUT-1PL-CONJ1",
+      "slot": "SLOT-SBJ-FUT-1PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-SBJ-FUT-3SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "futuro de subjuntivo",
+      "productive": false,
+      "receptiveOnlyBecause": "survives in legal and proverbial register only; a learner must recognise it and is never asked to produce it"
+    },
+    {
+      "id": "ES-CELL-SBJ-FUT-1PL-CONJ2",
+      "slot": "SLOT-SBJ-FUT-1PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-SBJ-FUT-3SG-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "futuro de subjuntivo",
+      "productive": false,
+      "receptiveOnlyBecause": "survives in legal and proverbial register only; a learner must recognise it and is never asked to produce it"
+    },
+    {
+      "id": "ES-CELL-SBJ-FUT-1PL-CONJ3",
+      "slot": "SLOT-SBJ-FUT-1PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-SBJ-FUT-3SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "futuro de subjuntivo",
+      "productive": false,
+      "receptiveOnlyBecause": "survives in legal and proverbial register only; a learner must recognise it and is never asked to produce it"
+    },
+    {
+      "id": "ES-CELL-SBJ-FUT-2PL-CONJ1",
+      "slot": "SLOT-SBJ-FUT-2PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-SBJ-FUT-1PL-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "futuro de subjuntivo",
+      "productive": false,
+      "receptiveOnlyBecause": "survives in legal and proverbial register only; a learner must recognise it and is never asked to produce it"
+    },
+    {
+      "id": "ES-CELL-SBJ-FUT-2PL-CONJ2",
+      "slot": "SLOT-SBJ-FUT-2PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-SBJ-FUT-1PL-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "futuro de subjuntivo",
+      "productive": false,
+      "receptiveOnlyBecause": "survives in legal and proverbial register only; a learner must recognise it and is never asked to produce it"
+    },
+    {
+      "id": "ES-CELL-SBJ-FUT-2PL-CONJ3",
+      "slot": "SLOT-SBJ-FUT-2PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-SBJ-FUT-1PL-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "futuro de subjuntivo",
+      "productive": false,
+      "receptiveOnlyBecause": "survives in legal and proverbial register only; a learner must recognise it and is never asked to produce it"
+    },
+    {
+      "id": "ES-CELL-SBJ-FUT-3PL-CONJ1",
+      "slot": "SLOT-SBJ-FUT-3PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-SBJ-FUT-2PL-CONJ1"
+      ],
+      "conjugationEnding": "-ar",
+      "spanishName": "futuro de subjuntivo",
+      "productive": false,
+      "receptiveOnlyBecause": "survives in legal and proverbial register only; a learner must recognise it and is never asked to produce it"
+    },
+    {
+      "id": "ES-CELL-SBJ-FUT-3PL-CONJ2",
+      "slot": "SLOT-SBJ-FUT-3PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-SBJ-FUT-2PL-CONJ2"
+      ],
+      "conjugationEnding": "-er",
+      "spanishName": "futuro de subjuntivo",
+      "productive": false,
+      "receptiveOnlyBecause": "survives in legal and proverbial register only; a learner must recognise it and is never asked to produce it"
+    },
+    {
+      "id": "ES-CELL-SBJ-FUT-3PL-CONJ3",
+      "slot": "SLOT-SBJ-FUT-3PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-SBJ-FUT-2PL-CONJ3"
+      ],
+      "conjugationEnding": "-ir",
+      "spanishName": "futuro de subjuntivo",
+      "productive": false,
+      "receptiveOnlyBecause": "survives in legal and proverbial register only; a learner must recognise it and is never asked to produce it"
+    },
+    {
+      "id": "ES-CELL-IMP-AFF-2SG-CONJ1",
+      "slot": "SLOT-IMP-AFF-2SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IND-PRES-3SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar"
+    },
+    {
+      "id": "ES-CELL-IMP-AFF-2SG-CONJ2",
+      "slot": "SLOT-IMP-AFF-2SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IND-PRES-3SG-CONJ2"
+      ],
+      "conjugationEnding": "-er"
+    },
+    {
+      "id": "ES-CELL-IMP-AFF-2SG-CONJ3",
+      "slot": "SLOT-IMP-AFF-2SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IND-PRES-3SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir"
+    },
+    {
+      "id": "ES-CELL-IMP-NEG-2SG-CONJ1",
+      "slot": "SLOT-IMP-NEG-2SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-2SG-CONJ1",
+        "ES-CELL-SBJ-PRES-2SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar"
+    },
+    {
+      "id": "ES-CELL-IMP-NEG-2SG-CONJ2",
+      "slot": "SLOT-IMP-NEG-2SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-2SG-CONJ2",
+        "ES-CELL-SBJ-PRES-2SG-CONJ2"
+      ],
+      "conjugationEnding": "-er"
+    },
+    {
+      "id": "ES-CELL-IMP-NEG-2SG-CONJ3",
+      "slot": "SLOT-IMP-NEG-2SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-2SG-CONJ3",
+        "ES-CELL-SBJ-PRES-2SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir"
+    },
+    {
+      "id": "ES-CELL-IMP-AFF-3SG-CONJ1",
+      "slot": "SLOT-IMP-AFF-3SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-2SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar"
+    },
+    {
+      "id": "ES-CELL-IMP-AFF-3SG-CONJ2",
+      "slot": "SLOT-IMP-AFF-3SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-2SG-CONJ2"
+      ],
+      "conjugationEnding": "-er"
+    },
+    {
+      "id": "ES-CELL-IMP-AFF-3SG-CONJ3",
+      "slot": "SLOT-IMP-AFF-3SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-2SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir"
+    },
+    {
+      "id": "ES-CELL-IMP-NEG-3SG-CONJ1",
+      "slot": "SLOT-IMP-NEG-3SG-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-3SG-CONJ1",
+        "ES-CELL-SBJ-PRES-3SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar"
+    },
+    {
+      "id": "ES-CELL-IMP-NEG-3SG-CONJ2",
+      "slot": "SLOT-IMP-NEG-3SG-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-3SG-CONJ2",
+        "ES-CELL-SBJ-PRES-3SG-CONJ2"
+      ],
+      "conjugationEnding": "-er"
+    },
+    {
+      "id": "ES-CELL-IMP-NEG-3SG-CONJ3",
+      "slot": "SLOT-IMP-NEG-3SG-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-3SG-CONJ3",
+        "ES-CELL-SBJ-PRES-3SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir"
+    },
+    {
+      "id": "ES-CELL-IMP-AFF-1PL-CONJ1",
+      "slot": "SLOT-IMP-AFF-1PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-3SG-CONJ1"
+      ],
+      "conjugationEnding": "-ar"
+    },
+    {
+      "id": "ES-CELL-IMP-AFF-1PL-CONJ2",
+      "slot": "SLOT-IMP-AFF-1PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-3SG-CONJ2"
+      ],
+      "conjugationEnding": "-er"
+    },
+    {
+      "id": "ES-CELL-IMP-AFF-1PL-CONJ3",
+      "slot": "SLOT-IMP-AFF-1PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-3SG-CONJ3"
+      ],
+      "conjugationEnding": "-ir"
+    },
+    {
+      "id": "ES-CELL-IMP-NEG-1PL-CONJ1",
+      "slot": "SLOT-IMP-NEG-1PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-1PL-CONJ1",
+        "ES-CELL-SBJ-PRES-1PL-CONJ1"
+      ],
+      "conjugationEnding": "-ar"
+    },
+    {
+      "id": "ES-CELL-IMP-NEG-1PL-CONJ2",
+      "slot": "SLOT-IMP-NEG-1PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-1PL-CONJ2",
+        "ES-CELL-SBJ-PRES-1PL-CONJ2"
+      ],
+      "conjugationEnding": "-er"
+    },
+    {
+      "id": "ES-CELL-IMP-NEG-1PL-CONJ3",
+      "slot": "SLOT-IMP-NEG-1PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-1PL-CONJ3",
+        "ES-CELL-SBJ-PRES-1PL-CONJ3"
+      ],
+      "conjugationEnding": "-ir"
+    },
+    {
+      "id": "ES-CELL-IMP-AFF-2PL-CONJ1",
+      "slot": "SLOT-IMP-AFF-2PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-1PL-CONJ1"
+      ],
+      "conjugationEnding": "-ar"
+    },
+    {
+      "id": "ES-CELL-IMP-AFF-2PL-CONJ2",
+      "slot": "SLOT-IMP-AFF-2PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-1PL-CONJ2"
+      ],
+      "conjugationEnding": "-er"
+    },
+    {
+      "id": "ES-CELL-IMP-AFF-2PL-CONJ3",
+      "slot": "SLOT-IMP-AFF-2PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-1PL-CONJ3"
+      ],
+      "conjugationEnding": "-ir"
+    },
+    {
+      "id": "ES-CELL-IMP-NEG-2PL-CONJ1",
+      "slot": "SLOT-IMP-NEG-2PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-2PL-CONJ1",
+        "ES-CELL-SBJ-PRES-2PL-CONJ1"
+      ],
+      "conjugationEnding": "-ar"
+    },
+    {
+      "id": "ES-CELL-IMP-NEG-2PL-CONJ2",
+      "slot": "SLOT-IMP-NEG-2PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-2PL-CONJ2",
+        "ES-CELL-SBJ-PRES-2PL-CONJ2"
+      ],
+      "conjugationEnding": "-er"
+    },
+    {
+      "id": "ES-CELL-IMP-NEG-2PL-CONJ3",
+      "slot": "SLOT-IMP-NEG-2PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-2PL-CONJ3",
+        "ES-CELL-SBJ-PRES-2PL-CONJ3"
+      ],
+      "conjugationEnding": "-ir"
+    },
+    {
+      "id": "ES-CELL-IMP-AFF-3PL-CONJ1",
+      "slot": "SLOT-IMP-AFF-3PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-2PL-CONJ1"
+      ],
+      "conjugationEnding": "-ar"
+    },
+    {
+      "id": "ES-CELL-IMP-AFF-3PL-CONJ2",
+      "slot": "SLOT-IMP-AFF-3PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-2PL-CONJ2"
+      ],
+      "conjugationEnding": "-er"
+    },
+    {
+      "id": "ES-CELL-IMP-AFF-3PL-CONJ3",
+      "slot": "SLOT-IMP-AFF-3PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-2PL-CONJ3"
+      ],
+      "conjugationEnding": "-ir"
+    },
+    {
+      "id": "ES-CELL-IMP-NEG-3PL-CONJ1",
+      "slot": "SLOT-IMP-NEG-3PL-CONJ1",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-3PL-CONJ1",
+        "ES-CELL-SBJ-PRES-3PL-CONJ1"
+      ],
+      "conjugationEnding": "-ar"
+    },
+    {
+      "id": "ES-CELL-IMP-NEG-3PL-CONJ2",
+      "slot": "SLOT-IMP-NEG-3PL-CONJ2",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-3PL-CONJ2",
+        "ES-CELL-SBJ-PRES-3PL-CONJ2"
+      ],
+      "conjugationEnding": "-er"
+    },
+    {
+      "id": "ES-CELL-IMP-NEG-3PL-CONJ3",
+      "slot": "SLOT-IMP-NEG-3PL-CONJ3",
+      "prerequisites": [
+        "ES-CELL-IMP-AFF-3PL-CONJ3",
+        "ES-CELL-SBJ-PRES-3PL-CONJ3"
+      ],
+      "conjugationEnding": "-ir"
+    },
+    {
+      "id": "ES-CELL-PERF-PRES-1SG",
+      "slot": "SLOT-PERF-PRES-1SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-PRES-1SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-PRES-2SG",
+      "slot": "SLOT-PERF-PRES-2SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-PRES-2SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-PRES-3SG",
+      "slot": "SLOT-PERF-PRES-3SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-PRES-3SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-PRES-1PL",
+      "slot": "SLOT-PERF-PRES-1PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-PRES-1PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-PRES-2PL",
+      "slot": "SLOT-PERF-PRES-2PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-PRES-2PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-PRES-3PL",
+      "slot": "SLOT-PERF-PRES-3PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-PRES-3PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-PAST-1SG",
+      "slot": "SLOT-PERF-PAST-1SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-IMPF-1SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-PAST-2SG",
+      "slot": "SLOT-PERF-PAST-2SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-IMPF-2SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-PAST-3SG",
+      "slot": "SLOT-PERF-PAST-3SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-IMPF-3SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-PAST-1PL",
+      "slot": "SLOT-PERF-PAST-1PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-IMPF-1PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-PAST-2PL",
+      "slot": "SLOT-PERF-PAST-2PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-IMPF-2PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-PAST-3PL",
+      "slot": "SLOT-PERF-PAST-3PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-IMPF-3PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-PRET-1SG",
+      "slot": "SLOT-PERF-PRET-1SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-PRET-1SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-PRET-2SG",
+      "slot": "SLOT-PERF-PRET-2SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-PRET-2SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-PRET-3SG",
+      "slot": "SLOT-PERF-PRET-3SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-PRET-3SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-PRET-1PL",
+      "slot": "SLOT-PERF-PRET-1PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-PRET-1PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-PRET-2PL",
+      "slot": "SLOT-PERF-PRET-2PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-PRET-2PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-PRET-3PL",
+      "slot": "SLOT-PERF-PRET-3PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-PRET-3PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-FUT-1SG",
+      "slot": "SLOT-PERF-FUT-1SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-FUT-1SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-FUT-2SG",
+      "slot": "SLOT-PERF-FUT-2SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-FUT-2SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-FUT-3SG",
+      "slot": "SLOT-PERF-FUT-3SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-FUT-3SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-FUT-1PL",
+      "slot": "SLOT-PERF-FUT-1PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-FUT-1PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-FUT-2PL",
+      "slot": "SLOT-PERF-FUT-2PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-FUT-2PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-FUT-3PL",
+      "slot": "SLOT-PERF-FUT-3PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-FUT-3PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-COND-1SG",
+      "slot": "SLOT-PERF-COND-1SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-COND-1SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-COND-2SG",
+      "slot": "SLOT-PERF-COND-2SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-COND-2SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-COND-3SG",
+      "slot": "SLOT-PERF-COND-3SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-COND-3SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-COND-1PL",
+      "slot": "SLOT-PERF-COND-1PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-COND-1PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-COND-2PL",
+      "slot": "SLOT-PERF-COND-2PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-COND-2PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-COND-3PL",
+      "slot": "SLOT-PERF-COND-3PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-IND-COND-3PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-SBJ-PRES-1SG",
+      "slot": "SLOT-PERF-SBJ-PRES-1SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-SBJ-PRES-1SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-SBJ-PRES-2SG",
+      "slot": "SLOT-PERF-SBJ-PRES-2SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-SBJ-PRES-2SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-SBJ-PRES-3SG",
+      "slot": "SLOT-PERF-SBJ-PRES-3SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-SBJ-PRES-3SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-SBJ-PRES-1PL",
+      "slot": "SLOT-PERF-SBJ-PRES-1PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-SBJ-PRES-1PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-SBJ-PRES-2PL",
+      "slot": "SLOT-PERF-SBJ-PRES-2PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-SBJ-PRES-2PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-SBJ-PRES-3PL",
+      "slot": "SLOT-PERF-SBJ-PRES-3PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-SBJ-PRES-3PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-SBJ-PAST-1SG",
+      "slot": "SLOT-PERF-SBJ-PAST-1SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-SBJ-IMPF-1SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-SBJ-PAST-2SG",
+      "slot": "SLOT-PERF-SBJ-PAST-2SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-SBJ-IMPF-2SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-SBJ-PAST-3SG",
+      "slot": "SLOT-PERF-SBJ-PAST-3SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-SBJ-IMPF-3SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-SBJ-PAST-1PL",
+      "slot": "SLOT-PERF-SBJ-PAST-1PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-SBJ-IMPF-1PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-SBJ-PAST-2PL",
+      "slot": "SLOT-PERF-SBJ-PAST-2PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-SBJ-IMPF-2PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-SBJ-PAST-3PL",
+      "slot": "SLOT-PERF-SBJ-PAST-3PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-SBJ-IMPF-3PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-SBJ-FUT-1SG",
+      "slot": "SLOT-PERF-SBJ-FUT-1SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-SBJ-FUT-1SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-SBJ-FUT-2SG",
+      "slot": "SLOT-PERF-SBJ-FUT-2SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-SBJ-FUT-2SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-SBJ-FUT-3SG",
+      "slot": "SLOT-PERF-SBJ-FUT-3SG",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-SBJ-FUT-3SG-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-SBJ-FUT-1PL",
+      "slot": "SLOT-PERF-SBJ-FUT-1PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-SBJ-FUT-1PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-SBJ-FUT-2PL",
+      "slot": "SLOT-PERF-SBJ-FUT-2PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-SBJ-FUT-2PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-PERF-SBJ-FUT-3PL",
+      "slot": "SLOT-PERF-SBJ-FUT-3PL",
+      "prerequisites": [
+        "ES-CELL-PART-CONJ1",
+        "ES-CELL-SBJ-FUT-3PL-CONJ2"
+      ]
+    },
+    {
+      "id": "ES-CELL-INF-CONJ1",
+      "slot": "SLOT-INF-CONJ1",
+      "prerequisites": [],
+      "conjugationEnding": "-ar"
+    },
+    {
+      "id": "ES-CELL-INF-CONJ2",
+      "slot": "SLOT-INF-CONJ2",
+      "prerequisites": [],
+      "conjugationEnding": "-er"
+    },
+    {
+      "id": "ES-CELL-INF-CONJ3",
+      "slot": "SLOT-INF-CONJ3",
+      "prerequisites": [],
+      "conjugationEnding": "-ir"
+    },
+    {
+      "id": "ES-CELL-GER-CONJ1",
+      "slot": "SLOT-GER-CONJ1",
+      "prerequisites": [
+        "ES-CELL-INF-CONJ1"
+      ],
+      "conjugationEnding": "-ar"
+    },
+    {
+      "id": "ES-CELL-GER-CONJ2",
+      "slot": "SLOT-GER-CONJ2",
+      "prerequisites": [
+        "ES-CELL-INF-CONJ2"
+      ],
+      "conjugationEnding": "-er"
+    },
+    {
+      "id": "ES-CELL-GER-CONJ3",
+      "slot": "SLOT-GER-CONJ3",
+      "prerequisites": [
+        "ES-CELL-INF-CONJ3"
+      ],
+      "conjugationEnding": "-ir"
+    },
+    {
+      "id": "ES-CELL-PART-CONJ1",
+      "slot": "SLOT-PART-CONJ1",
+      "prerequisites": [
+        "ES-CELL-INF-CONJ1"
+      ],
+      "conjugationEnding": "-ar"
+    },
+    {
+      "id": "ES-CELL-PART-CONJ2",
+      "slot": "SLOT-PART-CONJ2",
+      "prerequisites": [
+        "ES-CELL-INF-CONJ2"
+      ],
+      "conjugationEnding": "-er"
+    },
+    {
+      "id": "ES-CELL-PART-CONJ3",
+      "slot": "SLOT-PART-CONJ3",
+      "prerequisites": [
+        "ES-CELL-INF-CONJ3"
+      ],
+      "conjugationEnding": "-ir"
+    }
+  ]
+}
