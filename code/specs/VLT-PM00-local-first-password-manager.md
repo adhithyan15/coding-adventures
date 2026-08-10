@@ -1315,7 +1315,11 @@ changelog, focused build, and downstream validation.
        live revision is reachable through bounded current-head history, copying
        its authenticated document into a new one-parent revision, and reusing
        exact crash-resumable publication without rewinding repository heads;
-   7b-4. explicit conflict-resolution mutation workflows;
+   7b-4a. completed redacted current-conflict inspection and explicit
+       choose-candidate resolution, publishing every retained candidate as a
+       causal parent;
+   7b-4b. user-authored merged-document conflict resolution after explicit
+       field reveal;
    7c. bounded history traversal and explicit zeroizing field reveal;
    7d. authenticated portable export and restore/import preparation; and
    7e. audit, status, and doctor workflows; and
