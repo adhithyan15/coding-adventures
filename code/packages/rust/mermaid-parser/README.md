@@ -47,13 +47,15 @@ Both single-line accessibility statements and multiline `accDescr` blocks
 lower to PaintScene metadata.
 Newlines and semicolons are interchangeable sequence statement terminators,
 including inside control blocks.
+Sequence boxes and rect highlights accept `rgb`, `rgba`, `hsl`, and `hsla`;
+HSL colors normalize to RGB so native backends receive portable paint values.
 All Mermaid 11.16.1 solid/dotted, normal/reverse filled and stick half-arrow
 forms preserve their line style, half orientation, and endpoint through Paint.
 Central connection markers before and/or after an arrow preserve source,
 destination, and dual endpoint semantics through layout and Paint.
 `autonumber` supports Mermaid 11.15+ decimal start and increment values with
 up to two decimal places.
-Nested `rect` background highlights preserve their declared `rgb`/`rgba` fills
+Nested `rect` background highlights preserve their functional-color fills
 instead of being treated as labeled control frames.
 Inline participant configurations support Mermaid's `type` and `alias` fields,
 including boundary, control, entity, database, collections, and queue symbols.

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.19.0
+
+- Parse HSL sequence box and rect colors and normalize them to backend-safe RGB.
+- Preserve complete functional colors containing internal whitespace.
+
 ## 0.18.0
 
 - Accept semicolon terminators between sequence statements and block contents.
