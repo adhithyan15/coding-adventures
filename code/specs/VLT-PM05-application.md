@@ -124,7 +124,8 @@ The state contains no passphrase or unwrapped root/device key. It may contain:
 
 - pinned bootstrap ID and authority fingerprint;
 - VLT-PM04 head pins;
-- current device ID and encrypted device/authority secret state;
+- current device ID, pinned encrypted certificate object ID and exact frame,
+  and encrypted device/authority secret state;
 - the last consumed device counter;
 - a prepared initialization journal; or
 - one exact pending publication journal.
@@ -186,6 +187,14 @@ The application implements VLT-PM04 `RepositoryVerifier` with the unlocked
 profile. It decrypts commit frames as `Commit`, authority-verifies the encrypted
 device certificate, and verifies commit/announcement signatures. Unknown,
 revoked, cross-vault, or unauthenticated devices fail closed.
+
+Phase 1A constructs the verifier from exactly one locally pinned encrypted
+device certificate frame and its expected object ID, then authority-verifies
+the certificate and accepts only that certificate ID and device ID. Retaining
+the exact frame in owner-private state breaks the pre-repository verification
+cycle without trusting the provider. The multi-device enrollment slice
+replaces the fixed authorized set and adds revocation state without weakening
+this constructor or adding an unchecked verification path.
 
 ## 5. Bootstrap and local secret state
 
