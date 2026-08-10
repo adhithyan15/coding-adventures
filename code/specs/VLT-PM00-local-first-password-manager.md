@@ -1320,7 +1320,9 @@ changelog, focused build, and downstream validation.
        causal parent;
    7b-4b. user-authored merged-document conflict resolution after explicit
        field reveal;
-   7c. bounded history traversal and explicit zeroizing field reveal;
+   7c-1. completed bounded reachable live-revision reveal into a non-printable
+       owned zeroizing document wrapper;
+   7c-2. host-facing field selection and explicit copy/reveal policy adapters;
    7d. authenticated portable export and restore/import preparation; and
    7e. audit, status, and doctor workflows; and
    7f. close the remaining VLT-PM05 `Locked` error and explicit lock-state

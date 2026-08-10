@@ -2,6 +2,19 @@
 
 All notable changes to this package are documented here.
 
+## [0.19.0] - 2026-08-09
+
+### Added
+
+- Add explicit reveal for one exact reachable live revision, returning its
+  authenticated document in a non-printable owned zeroizing wrapper.
+
+### Security
+
+- Reuse bounded verified current-head history traversal, reject tombstones and
+  unreachable revisions, and never select a current or conflict candidate
+  implicitly.
+
 ## [0.18.0] - 2026-08-09
 
 ### Added
