@@ -74,10 +74,19 @@ why the same "mosstyle can't vary one part's background per data value"
 limitation that blocked Calendar doesn't block this.
 
 One grid cell renders per calendar day in the visible span — for a
-multi-year project that's a few hundred elements, not thousands; no
-artificial cap is added. If a real multi-year project ever makes this
-a measured problem, that's a virtualization concern for a later pass,
-not a reason to withhold the grid now.
+multi-year project that's a few hundred elements, not thousands, so no
+cap was needed for realistic use. **Revised after `/security-review`
+flagged the actual bound**: nothing constrains `span` itself beyond
+"realistic" — the due-date composer's `isoToDays` (`main.tsx`) accepts
+any 4-digit year, so a single typo reaches a multi-million-day span
+with no malice required, which would iterate and render that many DOM
+elements. `buildTimeline()` now caps grid generation at `MAX_GRID_DAYS`
+(10,000 days, ~27 years — generous over any real project) and simply
+skips the day-grid past that; the bars and the scale caption still
+render normally, only the per-day ruler is omitted. A genuine
+virtualization pass is still the right answer if a real multi-year
+project ever makes even the capped case feel sparse, but that's
+unrelated to this fix — this fix is purely the DoS bound.
 
 ## Wiring summary
 

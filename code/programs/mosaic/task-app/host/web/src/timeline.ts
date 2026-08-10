@@ -67,6 +67,18 @@ const MIN_BAR_FRACTION = 0.004;
 
 const DAY_MS = 86_400_000;
 
+/**
+ * The day-grid renders one element per calendar day in the span — reasonable
+ * for the years-long projects this app is actually for, but nothing bounds
+ * `span` itself: a single typo in the due-date composer (`main.tsx`'s
+ * `isoToDays` accepts any 4-digit year, e.g. a "0202" for "2026") reaches a
+ * multi-million-day span with no malice required. Past this cap, the grid is
+ * skipped — the bars and the scale caption above them still render — rather
+ * than iterating millions of times and asking the DOM to hold that many
+ * elements. ~27 years is generous headroom over any real project's length.
+ */
+const MAX_GRID_DAYS = 10_000;
+
 /** `days since epoch` → `YYYY-MM-DD`, or `"—"` for a date JavaScript can't represent. */
 export function dayToIso(days: number): string {
   if (!Number.isFinite(days)) return "—";
@@ -107,11 +119,14 @@ export function buildTimeline(bars: readonly GanttBar[], today = NaN): TimelineV
   // Saturday) is enough for weekend shading; there's no per-project week-start
   // setting wired through here yet (ProjectSettings.weekStart exists but nothing
   // in the host reads it today — a pre-existing gap, not something this widens).
+  // See MAX_GRID_DAYS above for why this loop is bounded.
   const grid: TimelineGridCell[] = [];
-  for (let day = first; day <= last; day += 1) {
-    const weekday = new Date(day * DAY_MS).getUTCDay();
-    const isWeekend = weekday === 0 || weekday === 6;
-    grid.push([dayWidth, isWeekend ? "weekend" : "", day === today ? "today" : ""]);
+  if (span <= MAX_GRID_DAYS) {
+    for (let day = first; day <= last; day += 1) {
+      const weekday = new Date(day * DAY_MS).getUTCDay();
+      const isWeekend = weekday === 0 || weekday === 6;
+      grid.push([dayWidth, isWeekend ? "weekend" : "", day === today ? "today" : ""]);
+    }
   }
 
   return {

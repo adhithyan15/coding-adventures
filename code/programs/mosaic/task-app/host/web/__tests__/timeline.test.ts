@@ -115,6 +115,17 @@ describe("timeline geometry", () => {
     expect(() => buildTimeline(many)).not.toThrow();
   });
 
+  it("skips the day-grid, but still renders bars and a scale, past MAX_GRID_DAYS", () => {
+    // A single typo in the due-date composer (any 4-digit year) reaches a
+    // multi-million-day span with no malice required — the grid must not try
+    // to iterate or render that many elements. The bars/scale still work:
+    // only the per-day ruler is skipped.
+    const view = buildTimeline([bar("Short", 0, 1), bar("Far future", 20_000, 20_001)]);
+    expect(view.grid).toHaveLength(0);
+    expect(view.rows).toHaveLength(2);
+    expect(view.scale).toContain("20002 days");
+  });
+
   // ---- richer Gantt: day-grid, milestones, percent-complete, tooltips ----
 
   it("builds one grid cell per calendar day, each the same width as a one-day bar", () => {
