@@ -107,3 +107,16 @@ landed and why, not a semver-tracked API.
   shape (mass sits between two constant factors once velocity is bound), left for a later pass to
   keep this change scoped to one law. New manifest objective `adj.math.algebra.rearrange_work`.
   New e2e test `formula_energy_work_e2e.rs` (3 tests — this library had none before).
+- `physics/mechanics-laws.adj` — a fourth Wave 3 rung-0 CAS-wiring pair (ADJ-FORMULA-LIBRARIES
+  FL-10, §3D): `mass_from_force` and `acceleration_from_force`, solving the SAME cited NASA
+  `F = m a` equation as the forward `force` formula for a different unknown. Named each new
+  symbolic's target distinctly from the forward formula's plain parameter names
+  (`mass_from_force`, not `mass`) — the same collision-avoidance discipline established by
+  `kinematics.adj`/`energy-work.adj`'s companions — so both new solves coexist with the original
+  forward example in one query file. This library's other two laws already have their solve
+  directions covered elsewhere in the physics track (`electricity.adj`'s
+  `resistance_from_ohms_law` for Ohm's law; `density.adj`'s own forward `mass(density, volume)`
+  for density), and average speed is left for a later pass, so this pair closes the one remaining
+  gap in `mechanics-laws.adj` itself. New manifest objective
+  `adj.math.algebra.rearrange_mechanics_force`. New e2e test `formula_mechanics_force_e2e.rs`
+  (3 tests — this library had none before).

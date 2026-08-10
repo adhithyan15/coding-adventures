@@ -31,6 +31,21 @@
 % falls back to an encyclopedia (Wikipedia) for the clean V = IR product form →
 % `consensus`. Provenance travels per-formula, so the tiers differ by law.
 %
+% This library also carries a rung-0 CAS-wiring pair (ADJ-FORMULA-LIBRARIES FL-10,
+% §3D — a Wave 3 continuation): `mass_from_force` and `acceleration_from_force`
+% solve the SAME cited NASA equation (F = m·a) as the forward `force` formula for
+% a different unknown, through `cas-solve`'s real linear-equation solver — the
+% exact discipline `electricity.adj`'s `resistance_from_ohms_law` and
+% `energy-work.adj`'s `force_from_work`/`distance_from_work` already established.
+% Each new symbolic names its OWN target finding (`mass_from_force`, not `mass`)
+% rather than reusing the forward formula's plain parameter name, so both new
+% solves coexist with the original forward example in one query file — no
+% target-collision, no file-splitting needed. Ohm's law and density already have
+% their own solve directions covered elsewhere in the physics track
+% (`electricity.adj`'s `resistance_from_ohms_law`; `density.adj`'s own forward
+% `mass(density, volume)`), and average speed is left for a later pass, so this
+% pair closes the one remaining gap in this particular library.
+%
 % Run a worked consumer (from a directory it can resolve this import from):
 %     adj-lang-cli mechanics-laws.query.adj
 % ============================================================================
@@ -63,6 +78,8 @@ dictionary physics_vocab {
     define mass         : finding  surface "mass", "m"                                         % mass, e.g. kg
     define acceleration : finding  surface "acceleration", "a", "rate of change of velocity"   % length / time²
     define force        : finding  surface "force", "net force", "F"                           % mass · length / time² (newtons)
+    define mass_from_force         : finding  surface "missing mass", "unknown mass"
+    define acceleration_from_force : finding  surface "missing acceleration", "unknown acceleration"
 
     % --- electricity: Ohm's law, V = I·R ---
     define current      : finding  surface "current", "electric current", "I"                  % electric current (amperes)
@@ -95,6 +112,20 @@ formulabook physics_laws {
     % acceleration.  F = m · a.  Source: NASA Glenn Research Center, Beginners'
     % Guide to Aeronautics (primary .gov physics reference) → authoritative.
     formula force(mass, acceleration) = mass * acceleration
+        source "The second law then reduces to the more familiar product of a mass and an acceleration: F = m · a"
+        locator "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/newtons-laws-of-motion/"
+        trust authoritative
+
+    % Newton's second law again, SOLVED FOR MASS instead of computed forward —
+    % the same cited equation, only which quantity is bound and which is unknown
+    % differs.
+    symbolic mass_from_force(force, acceleration) { force == mass_from_force * acceleration } for mass_from_force
+        source "The second law then reduces to the more familiar product of a mass and an acceleration: F = m · a"
+        locator "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/newtons-laws-of-motion/"
+        trust authoritative
+
+    % Newton's second law again, SOLVED FOR ACCELERATION. The same cited equation.
+    symbolic acceleration_from_force(force, mass) { force == mass * acceleration_from_force } for acceleration_from_force
         source "The second law then reduces to the more familiar product of a mass and an acceleration: F = m · a"
         locator "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/newtons-laws-of-motion/"
         trust authoritative

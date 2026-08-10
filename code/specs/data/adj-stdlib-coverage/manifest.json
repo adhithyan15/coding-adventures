@@ -1217,6 +1217,21 @@
       "source_cas_hashes": [],
       "benchmark_paths": [],
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.math.algebra.rearrange_mechanics_force",
+      "title": "Solve F = m a for mass or acceleration, given the force and the other quantity",
+      "band": "9-12",
+      "domain": "mathematics",
+      "competency": "compute",
+      "coverage_roots": ["ccss.math"],
+      "standards": [],
+      "prerequisites": ["adj.science.physics.mechanics_laws"],
+      "libraries": ["code/specs/data/adj-formula-stdlib/physics/mechanics-laws.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     }
   ]
 }
