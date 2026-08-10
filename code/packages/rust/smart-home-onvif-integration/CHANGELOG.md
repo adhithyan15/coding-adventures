@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.1
+
+- Move supplied usernames and passwords into zeroizing storage before any
+  validation can return an error.
+
 ## 0.3.0
 
 - Preserved canonical host and pinned socket review across snapshot/stream

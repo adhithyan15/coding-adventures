@@ -499,8 +499,8 @@ impl OnvifCredentials {
         username: impl Into<String>,
         password: impl Into<String>,
     ) -> Result<Self, OnvifError> {
-        let username = username.into();
-        let password = password.into();
+        let username = Zeroizing::new(username.into());
+        let password = Zeroizing::new(password.into());
         if username.trim().is_empty() || password.is_empty() {
             return Err(OnvifError::Validation(
                 "ONVIF username and password must not be empty".to_string(),
@@ -510,10 +510,7 @@ impl OnvifCredentials {
             return Err(OnvifOriginViolation::SizeLimit.into());
         }
         validate_onvif_size("credential", password.len())?;
-        Ok(Self {
-            username: Zeroizing::new(username),
-            password: Zeroizing::new(password),
-        })
+        Ok(Self { username, password })
     }
 }
 

@@ -1555,6 +1555,41 @@ claiming that an existing vendor pairing actor has adopted it:
   composition. Other vendor credential-provisioning paths must reuse this
   durable protocol and prove their own exact pairing and secret-input boundary.
 
+## Current ONVIF Credential Pairing Slice
+
+This slice makes ONVIF the first externally supplied camera credential to use
+the completed pairing transaction composition:
+
+- `smart-home-onvif-pairing-service` accepts only the exact pending pairing
+  session, D23 principal, expected durable runtime revision, and completion
+  time. Usernames, passwords, secret paths, and Vault references never enter
+  actor messages.
+- The production input is configured by its host for one exact bridge and reads
+  each credential once through the race-resistant, owner-only, exact-length
+  secret-file boundary. Returned bytes and parsed strings remain zeroizing and
+  the input refuses reuse or another bridge.
+- Human Approval succeeds before either secret file is opened, network I/O is
+  attempted, or durable state is written. The pending session must name an
+  ONVIF bridge with one exact WS-Discovery endpoint-reference identifier and a
+  stored device-service address.
+- The native verifier re-reviews that address, pins its resolved LAN socket,
+  requires certificate-verifying HTTPS, and completes authenticated ONVIF
+  device and media inspection before the credential envelope can be sealed.
+- The service writes the same bounded versioned envelope consumed by the
+  read-only ONVIF snapshot host, but only at a transaction-owned opaque
+  reference. Runtime completion uses expected-revision CAS, startup resolves
+  every pending journal, successful commits replace actor state from the
+  durable snapshot, and replacement cleanup remains bound to the captured
+  Vault revision.
+- Tests prove successful envelope installation without durable secret
+  exposure, denial and stale-revision failure before secret input, one-shot
+  owner-only file handling, secret-free actor messages, interrupted-commit
+  restart recovery, and cleanup-drift refusal.
+- Snapshot delivery remains strictly read-only and cannot implicitly create or
+  replace credentials. ZoneMinder, Axis, Reolink, and Synology must each prove
+  their own exact pairing identity and input lifetime before reusing this
+  composition.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
@@ -1566,22 +1601,24 @@ JSON sessions independently, but does not document how a secure session binds
 to that image request; the only documented direct URL credentials require
 disabling secure sessions and are rejected. Frigate snapshot delivery remains
 blocked on a cookie-capable media authentication boundary. Revision-guarded
-D23 pairing completion and its recoverable cross-store journal are now
-available, and the Hue production actor now proves D23 principal propagation,
-durable runtime revision ownership, startup recovery, and actor-state
-replacement through the coordinator. The strongest next post-merge audit is
-explicit ONVIF credential provisioning: it must identify a host-owned secret
-input boundary that keeps supplied credentials zeroizing and out of actor
-messages, journals, runtime state, reports, and logs before the existing ONVIF
-snapshot host may receive an automatically installed opaque reference.
+D23 pairing completion, its recoverable cross-store journal, and production Hue
+and ONVIF compositions are now available. ONVIF proves bounded host-owned
+secret input, D23 principal propagation, authenticated exact-bridge inspection,
+durable runtime revision ownership, startup recovery, actor-state replacement,
+and revision-bound cleanup without turning snapshot delivery into a writer. The
+strongest next post-merge audit is explicit ZoneMinder credential provisioning;
+its API-login and installed-monitor contracts are concrete, but its pairing
+identity and secret-input ownership must be proven independently before code is
+selected.
 
-1. Audit explicit ONVIF credential provisioning against the completed Hue
-   transaction composition. Require exact D23 pairing authorization, a bounded
-   host-owned zeroizing secret-input boundary, transaction-owned opaque
-   references, expected-revision runtime CAS, startup recovery, replacement
-   cleanup, and exact installed-bridge correspondence. Do not make snapshot
-   delivery an implicit credential writer and do not assume this slice is
-   executable until the secret-input owner is concrete.
+1. Audit explicit ZoneMinder credential provisioning against the completed
+   transaction composition. Require exact D23 pairing authorization, one
+   bounded host-owned zeroizing credential input for the installed ZoneMinder
+   bridge, authenticated API 2.0 login and monitor correspondence before write,
+   transaction-owned opaque references, expected-revision runtime CAS, startup
+   recovery, and exact replacement cleanup. Snapshot delivery must remain a
+   read-only consumer, and reusable access/refresh tokens must not enter the
+   pairing envelope.
 2. Add authenticated AirGradient MQTT only after official firmware removes
    plaintext credential logging and one-shot Vault-leased credential injection
    can be proven without request-plan or normalized-state exposure.
