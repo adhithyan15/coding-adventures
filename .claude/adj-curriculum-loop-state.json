@@ -19,7 +19,7 @@
   },
   "active_pr": null,
   "last_manifest_check": {
-    "objectives": 87,
+    "objectives": 88,
     "coverage_roots": 6,
     "valid": true,
     "checked_at": "2026-08-10"
@@ -153,12 +153,12 @@
     },
     {
       "id": "wave2-k8-science-foundations",
-      "title": "K-8 science: observation/measurement through causal-explanation family -- large, needs dedicated spec-first design pass",
-      "status": "pending",
+      "title": "K-8 science: observation/measurement through causal-explanation family -- large, open-ended, being built one small citable slice at a time",
+      "status": "in_progress",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Reprioritization pass 2026-08-07: ADJ-STDLIB-COVERAGE.md 5.1 names observation and measurement, causal explanations, experiments, models, matter/energy systems, heredity, ecosystems, Earth processes, and engineering design as Major Gaps. Some of this (matter/energy systems, some measurement) may compose cleanly from existing physics/chemistry formula libraries already shipped (Wave 0 backfilled 13 physics libraries); other parts (causal explanations, experimental design, models) are qualitative/procedural, not obviously formula-shaped, similar to the literacy gap above. Needs its own research pass to split 'formula-composable now' from 'needs new capability' before being picked up -- do not assume it is as tractable as the math micro-gaps without checking."
+      "branch": "feat/adj-wave2-k8-science-heat-phase-change",
+      "pr_number": 10441,
+      "notes": "SLICE 1 SHIPPED 2026-08-10, PR #10441 merged 2026-08-10T15:40:33Z. Superseding the earlier 2026-08-07 'needs its own research pass to split formula-composable from needs-new-capability' assessment below (kept for history) -- following the exact same scoping-pass pattern that unblocked wave2-k8-literacy-foundations one cycle earlier. The scoping pass found this gap WAS tractable without new engine capability: 'causal explanations' (one of the named Major Gaps) is exactly what `table`+`rule` composition already expresses -- the SAME pattern `shape-composition.adj` and `word-families.adj` established. Found strong prior art already shipped: TWO existing states-of-matter libraries (`chemistry/states-of-matter.adj` state->container-behavior, `physics/states-of-matter.adj` phase-change-direction->name) that only LABEL, never CAUSE. Shipped the first slice: `adj-facts-stdlib/physics/heat-causes-phase-change.adj` -- a new `heat_direction(change, direction)` table (4 rows: which everyday phase changes heat flows in/out for) composed via a `rule` with the ALREADY-SHIPPED `phase_change_name` table from the sibling `states-of-matter.adj` to DERIVE `causes_phase_change(direction, name)` -- a genuine CROSS-FILE composition (not just within one file), reusing the SAME LibreTexts source `states-of-matter.adj` already cited (avoided fresh sourcing work entirely). Grounds NGSS 2-PS1-4. Deliberately scoped to the four transitions (melting, freezing, vaporization, condensation) the cited sentence names directly, NOT sublimation/deposition (same source lacks a parallel heat-direction sentence for those). New manifest objective adj.science.k2.heat_causes_phase_change (band K-2 matching NGSS 2-PS1-4's actual grade level -- note 'K-8' is NOT a valid band value in this manifest's schema, caught by validation; valid bands are K-2/3-5/6-8/9-12/pre-clinical/clinical/licensure -- uses the `infer` competency for a rule-derived fact, mirroring `adj.math.k2.spatial_composition`'s precedent, the first science-domain manifest entry to do so). New e2e test facts_heatphasechange_e2e.rs (2 tests). Security review passed. Left status 'in_progress', NOT 'done' -- this is slice 1 of an open-ended, large gap (observation/measurement, experiments, models, matter/energy systems, heredity, ecosystems, Earth processes, engineering design ALL still unaddressed); future cycles should keep composing existing prior-art libraries into new causal/derived facts the same way, or add new small citable observation/measurement tables, verifying any new rule pattern empirically first every time. ORIGINAL 2026-08-07 assessment (superseded on the tractability question for THIS SPECIFIC sub-gap, kept for the broader-scope framing which is still accurate): 'ADJ-STDLIB-COVERAGE.md 5.1 names observation and measurement, causal explanations, experiments, models, matter/energy systems, heredity, ecosystems, Earth processes, and engineering design as Major Gaps. Some of this may compose cleanly from existing physics/chemistry formula libraries already shipped; other parts (experimental design, models) are qualitative/procedural, not obviously formula-shaped.' Experimental design and formal 'models' (as opposed to simple causal chains) remain a genuinely open question for a future scoping pass."
     },
     {
       "id": "wave2-k8-word-problem-schemas",
