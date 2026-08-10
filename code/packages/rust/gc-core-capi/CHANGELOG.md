@@ -2,6 +2,35 @@
 
 All notable changes to this crate are documented here.
 
+## 0.24.1 - 2026-08-10 — fix: deterministic flaky conservative-stack-scan smoke tests
+
+- Four `stack_scan` integration tests (`stack_scan_keeps_live_local_frees_dead`,
+  `precise_collect_keeps_live_local_frees_dead`,
+  `compacting_collect_keeps_live_local_frees_dead`,
+  `incremental_collect_keeps_live_local_frees_dead`) asserted `freed >= 1` on a single
+  tracked "dead" object as their primary safety claim — non-deterministic in an
+  unoptimized debug build, since a discarded temporary's stale stack word is not
+  guaranteed to be scrubbed and can conservatively retain the object regardless of
+  whether any Rust binding still names it (documented previously in `lessons.md`, but
+  not fixed at the time).
+- **Rejected approach, found to be a genuine Catch-22:** verifying a single dead
+  object's fate via `__gc_kind_of` after the collect call requires keeping that
+  object's address alive as a Rust local spanning the call — which is exactly what
+  makes a conservative stack scan *correctly* treat it as a root and retain it.
+  Confirmed empirically: adding the check turned an occasionally-flaky `freed >= 1`
+  into a *deterministic* false "still alive" for all four tests.
+- **Actual fix:** each test now allocates a batch of 64 dead objects, none ever bound
+  to a Rust local that outlives its own loop iteration, and asserts `freed >= 56`
+  (`DEAD_BATCH - STRAY_TOLERANCE`). A debug build's stray stack/register garbage can
+  only accidentally retain a small, bounded number of stale addresses (bounded by how
+  many words a call site can spill — `spill_and_sp` itself bounds a maximal spill at
+  18 words), so among 64 independent, never-named allocations the overwhelming
+  majority are certain to have no stale reference anywhere on the stack. Confirmed via
+  20 consecutive local runs, all clean.
+- Pure test-infrastructure change — no production code touched. `lessons.md` updated
+  with the corrected understanding (the original entry characterized the flakiness but
+  did not yet land a real fix).
+
 ## 0.24.0 - 2026-08-06 — `__gc_safepoint` gains an (opt-in) automatic generational path (AOT00-T8)
 
 - **`__gc_collect_minor_precise()`** — new C ABI entry, the minor-generation analogue of

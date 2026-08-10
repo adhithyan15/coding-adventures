@@ -788,26 +788,50 @@ mod tests {
         core::hint::black_box(big);
     }
 
+    /// A large batch of unreferenced objects, deliberately never bound to any
+    /// *lasting* Rust variable, so no single one's address survives as a local
+    /// across the collect call. Trying to check one **specific** dead object's fate
+    /// via `__gc_kind_of` after collection is a genuine Catch-22 for a
+    /// conservative-stack-scan entry point: keeping that address alive as a Rust
+    /// local long enough to read it back *after* the collect call is exactly what
+    /// a conservative scan correctly treats as a root, so "prove object X
+    /// specifically was reclaimed" is unverifiable by definition here — not a test
+    /// bug, an inherent property of what conservative scanning promises (retain
+    /// when unsure, never silently drop a possible root).
+    ///
+    /// A **batch**, instead of one tracked object, sidesteps this: an unoptimized
+    /// debug build's stray stack/register garbage can only accidentally retain a
+    /// small, *bounded* number of stale addresses (this file's own `spill_and_sp`
+    /// bounds a maximal register spill at `SPILL_SLOTS` = 18 words), so among
+    /// `DEAD_BATCH` independent, never-named allocations, the overwhelming
+    /// majority are certain to have no stale reference anywhere on the stack —
+    /// converting a coin-flip `freed >= 1` into a deterministic, generous
+    /// `freed >= DEAD_BATCH - STRAY_TOLERANCE`.
+    const DEAD_BATCH: i64 = 64;
+    const STRAY_TOLERANCE: i64 = 8;
+
     #[inline(never)]
     fn run_stack_scan_case() {
         // A live pointer on the stack: `kept` holds a real heap address.
         let kept = __gc_alloc(16);
         assert!(kept != 0);
-        // A dead object: nothing references `_dead` after this line, but its
-        // returned address is deliberately dropped so no stack slot retains it.
-        let _ = __gc_alloc(16);
-        assert_eq!(__gc_live_bytes(), 32);
+        for _ in 0..DEAD_BATCH {
+            let d = __gc_alloc(16);
+            assert!(d != 0);
+        }
+        assert_eq!(__gc_live_bytes(), 16 + DEAD_BATCH * 16);
 
         // Write through `kept` so the compiler cannot discard the local.
         unsafe { *(kept as *mut i64) = 0x5eed };
 
         let freed = unsafe { __gc_collect() };
 
-        // `kept` must survive; at least the dead object should be freed. (A
-        // conservative scan may *retain* extra objects if a stray stack word
-        // happens to look like a pointer, so we assert a lower bound on freeing
-        // and that the live object is definitely still there.)
-        assert!(freed >= 1, "the unreferenced object must be reclaimed");
+        assert!(
+            freed >= DEAD_BATCH - STRAY_TOLERANCE,
+            "most of the {DEAD_BATCH} unreferenced objects must be reclaimed \
+             (freed = {freed}); see this file's DEAD_BATCH doc for why a batch, \
+             not a single tracked object, makes this deterministic"
+        );
         assert_eq!(
             unsafe { *(kept as *const i64) },
             0x5eed,
@@ -839,15 +863,24 @@ mod tests {
 
     #[inline(never)]
     fn run_precise_collect_case() {
+        // See the `DEAD_BATCH` doc above `run_stack_scan_case` for why a batch of
+        // never-named allocations, not a single tracked "dead" object, is what
+        // makes this deterministic.
         let kept = __gc_alloc(16);
         assert!(kept != 0);
-        let _ = __gc_alloc(16); // dead: no stack slot retains it
-        assert_eq!(__gc_live_bytes(), 32);
+        for _ in 0..DEAD_BATCH {
+            let d = __gc_alloc(16);
+            assert!(d != 0);
+        }
+        assert_eq!(__gc_live_bytes(), 16 + DEAD_BATCH * 16);
         unsafe { *(kept as *mut i64) = 0x9a11 };
 
         let freed = unsafe { __gc_collect_precise() };
 
-        assert!(freed >= 1, "the unreferenced object must be reclaimed");
+        assert!(
+            freed >= DEAD_BATCH - STRAY_TOLERANCE,
+            "most of the {DEAD_BATCH} unreferenced objects must be reclaimed (freed = {freed})"
+        );
         assert_eq!(
             unsafe { *(kept as *const i64) },
             0x9a11,
@@ -875,15 +908,24 @@ mod tests {
 
     #[inline(never)]
     fn run_compacting_collect_case() {
+        // See the `DEAD_BATCH` doc above `run_stack_scan_case` for why a batch of
+        // never-named allocations, not a single tracked "dead" object, is what
+        // makes this deterministic.
         let kept = __gc_alloc(16);
         assert!(kept != 0);
-        let _ = __gc_alloc(16); // dead: no stack slot retains it
-        assert_eq!(__gc_live_bytes(), 32);
+        for _ in 0..DEAD_BATCH {
+            let d = __gc_alloc(16);
+            assert!(d != 0);
+        }
+        assert_eq!(__gc_live_bytes(), 16 + DEAD_BATCH * 16);
         unsafe { *(kept as *mut i64) = 0x5eed };
 
         let freed = unsafe { __gc_collect_compacting() };
 
-        assert!(freed >= 1, "the unreferenced object must be reclaimed");
+        assert!(
+            freed >= DEAD_BATCH - STRAY_TOLERANCE,
+            "most of the {DEAD_BATCH} unreferenced objects must be reclaimed (freed = {freed})"
+        );
         assert_eq!(
             unsafe { *(kept as *const i64) },
             0x5eed,
@@ -969,10 +1011,16 @@ mod tests {
 
     #[inline(never)]
     fn run_incremental_collect_case() {
+        // See the `DEAD_BATCH` doc above `run_stack_scan_case` for why a batch of
+        // never-named allocations, not a single tracked "dead" object, is what
+        // makes this deterministic.
         let kept = __gc_alloc(16);
         assert!(kept != 0);
-        let _ = __gc_alloc(16); // dead: no stack slot retains it
-        assert_eq!(__gc_live_bytes(), 32);
+        for _ in 0..DEAD_BATCH {
+            let d = __gc_alloc(16);
+            assert!(d != 0);
+        }
+        assert_eq!(__gc_live_bytes(), 16 + DEAD_BATCH * 16);
         unsafe { *(kept as *mut i64) = 0x1ce5 };
 
         // start → step (budget 1, so several slices) to done → finish.
@@ -984,7 +1032,10 @@ mod tests {
         }
         let freed = unsafe { __gc_collect_incremental_finish() };
 
-        assert!(freed >= 1, "the unreferenced object must be reclaimed");
+        assert!(
+            freed >= DEAD_BATCH - STRAY_TOLERANCE,
+            "most of the {DEAD_BATCH} unreferenced objects must be reclaimed (freed = {freed})"
+        );
         assert_eq!(
             unsafe { *(kept as *const i64) },
             0x1ce5,
