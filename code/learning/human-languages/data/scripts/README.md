@@ -199,9 +199,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   that **س** body first, then place the lower-left, lower-right, and centered
   upper dots as three separately lifted strokes. The learner path preserves the
   chapter's two-below/one-above arrangement, centered dots, and optional
-  toothless body. The remaining **203** prose part orders across eight scripts
-(`arabic` 21, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33,
-`hebrew` 22, `japanese` 34, `urdu-nastaliq` 8) are explicitly **unverified for
+  toothless body. Urdu **ک** returns to Chapter 1: both independent animations
+  and the prose write the main-line stem, flatter bowl, and pronounced final
+  hook in one run, then lift once for the long downward slash from the upper
+  right toward the stem. The learner path preserves the explicit warning not to
+  write kāf in one penstroke. The remaining **202** prose part orders across
+eight scripts (`arabic` 21, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33,
+`hebrew` 22, `japanese` 34, `urdu-nastaliq` 7) are explicitly **unverified for
 pen lifts**. The data validator rejects a lift count without a citation (or a
 citation without a count), and Language Ladder's ductus test proves every verified
 claim has the same cited, font-checked path. That closes `HL-C19`; future entries

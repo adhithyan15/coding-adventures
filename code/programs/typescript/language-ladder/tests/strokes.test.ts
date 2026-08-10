@@ -29,6 +29,7 @@ const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
 const URDU_SIN = DUCTUS[ductusKey("urdu-nastaliq", "س")];
 const URDU_SHIN = DUCTUS[ductusKey("urdu-nastaliq", "ش")];
+const URDU_KAF = DUCTUS[ductusKey("urdu-nastaliq", "ک")];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
@@ -322,6 +323,21 @@ describe("handwriting ductus", () => {
     expect(upper[0].y).toBeGreaterThan(lowerRight[0].y);
   });
 
+  it("Urdu independent ک writes its main-line body before the separately lifted slash", () => {
+    expect(URDU_KAF.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_KAF)).toBe(1);
+    expect(URDU_KAF.strokes).toHaveLength(2);
+    expect(URDU_KAF.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    const stem = URDU_KAF.strokes[0].segments[0].path;
+    const bowl = URDU_KAF.strokes[0].segments[1].path;
+    const slash = URDU_KAF.strokes[1].segments[0].path;
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+    expect(bowl[0]).toEqual(stem.at(-1));
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+    expect(slash[0].x).toBeGreaterThan(slash.at(-1)!.x);
+    expect(slash[0].y).toBeGreaterThan(slash.at(-1)!.y);
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -600,6 +616,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /standard toothed sīn body first.*lower-left dot.*lower-right dot.*centered upper dot.*four strokes.*three pen lifts.*two below.*nestled.*optional long gentle curve.*dots stay centered.*Noto Naskh.*Nastaliq/i,
+    );
+  });
+
+  it("Urdu independent ک traces to Zer o Zabar's body-first two-stroke animations", () => {
+    const src = URDU_KAF.source;
+    expect(src.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/be-kaf-and-short-vowels/",
+    );
+    expect(src.citation).toMatch(
+      /Zer o Zabar.*independent ک.*calligraphic and handwriting animations.*Kāf instructions.*Northwestern/i,
+    );
+    expect(src.variation).toMatch(
+      /two separate pen strokes.*stem.*main line.*right to left.*flatter bowl.*pronounced final hook.*lift once.*upper right.*long downward slash.*not to write kāf in one penstroke.*flatter than be.*Noto Naskh.*rather than Arabic ك.*Nastaliq/i,
     );
   });
 

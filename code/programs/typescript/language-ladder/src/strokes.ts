@@ -235,6 +235,9 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // Urdu ش repeats that complete body before three separate dot strokes: lower
 // left, lower right, then the centered upper dot. The chapter keeps the same
 // optional toothless body while requiring the dots to remain centered above.
+// Urdu ک writes the independent main-line body first: descend the stem, sweep
+// left through its flatter bowl, and finish with the hook. After one lift, the
+// long upper-right slash descends toward the stem as a separate stroke.
 // The adjacent ب starts at the bowl's right lip, sweeps right-to-left through
 // its shallow dip, then lifts once before placing the separate dot below.
 // After the intervening Persian-added پ row, ت repeats the same bowl, lifts to
@@ -540,6 +543,62 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: urduAlphabetSource("ش"),
+  },
+  [ductusKey("urdu-nastaliq", "ک")]: {
+    script: "urdu-nastaliq",
+    glyph: "ک",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the independent stem downward",
+            path: [
+              { x: 620, y: 250 },
+              { x: 622, y: 200 },
+              { x: 620, y: 150 },
+            ],
+          },
+          {
+            label: "flow right to left through the flatter bowl and finish with the hook without lifting",
+            path: [
+              { x: 620, y: 150 },
+              { x: 570, y: 100 },
+              { x: 500, y: 65 },
+              { x: 400, y: 40 },
+              { x: 300, y: 35 },
+              { x: 210, y: 50 },
+              { x: 140, y: 85 },
+              { x: 95, y: 125 },
+              { x: 95, y: 185 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the long slash down from the upper right toward the stem",
+            path: [
+              { x: 680, y: 625 },
+              { x: 600, y: 590 },
+              { x: 520, y: 550 },
+              { x: 440, y: 510 },
+              { x: 365, y: 470 },
+              { x: 335, y: 425 },
+              { x: 355, y: 400 },
+              { x: 390, y: 380 },
+              { x: 425, y: 360 },
+              { x: 460, y: 340 },
+              { x: 480, y: 320 },
+              { x: 520, y: 300 },
+              { x: 540, y: 280 },
+              { x: 560, y: 260 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: urduAlphabetSource("ک"),
   },
   "ب": {
     script: "perso-arabic",
