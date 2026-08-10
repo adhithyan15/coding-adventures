@@ -80,6 +80,11 @@ Pipeline mode supports the text/native emitter family (`react`, `html`,
 `webcomponent`, `swiftui`, `qt`, `xaml`, `compose`, and `flutter`). The `paint` backend
 remains legacy single-file only.
 
+When a layout contains `pkg::package::Component`, pipeline mode resolves that
+component and merges its MSL defaults before the consumer's own styles. This is
+the same composition path used by package mode, so reusable controls keep their
+authored appearance in every backend.
+
 Package mode compiles a Mosaic package directory that contains
 `mosaic-package.toml` plus `src/*.mil`, `src/*.mll`, and optional `src/*.msl`
 files:

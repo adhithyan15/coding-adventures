@@ -23,6 +23,10 @@ the requested backend and writes a backend-shaped artifact tree:
 It is the library underneath the `mosaic-compile pkg <root> --backend <name>
 --output <dir>` CLI subcommand.
 
+`compose_component` is the canonical in-memory entry point shared by package
+builds and standalone three-file compilation. It returns the compiled model,
+resolved layout, and merged style definition without selecting a backend.
+
 Package references such as `pkg::mosaic-pkg-card::Card` are inlined before
 backend emission. Styles from referenced packages are compiled and merged first,
 then the consuming package's style is applied, so apps get reusable component
@@ -81,7 +85,8 @@ so a fresh emitted project is runnable without a separate build step.
 ## Boundaries
 
 - Cross-package layout inlining lives in `mosaic-package-resolver`; this crate
-  coordinates that resolver during artifact builds.
+  coordinates layout resolution and dependency-style composition for every
+  compile entry point.
 - Emitters stay backend-owned. This crate consumes their public
   `from_pipeline(interface, layout, style)` entry points.
 

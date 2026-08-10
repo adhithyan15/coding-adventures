@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased] - shared package composition
+
+- Added `compose_component` and `compose_component_with_model` as the canonical
+  MIL/MLL/MSL composition API: qualified layouts are resolved and dependency
+  styles are merged before backend emission.
+- Package component artifacts and generated project shells now consume that
+  shared result instead of maintaining duplicate compilation pipelines.
+
 ## [Unreleased] - reproducible XAML SDK selection
 
 - XAML package shells now preserve the emitter's `global.json`, keeping WinUI

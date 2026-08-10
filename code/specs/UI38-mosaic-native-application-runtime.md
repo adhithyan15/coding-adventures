@@ -315,9 +315,9 @@ unblocks multiple downstream targets; never count source generation as completio
   its lint configuration, and omit unused authored `For` bindings.
 - [x] Complete Compose TaskApp Kotlin typing: normalize Mosaic value truthiness
   in boolean positions and supply required native input commit payloads.
-- [ ] Route every compile entry point through one package-composition pipeline;
-  standalone `mosaic-compile` currently inlines dependency layouts without merging
-  their MSL, while the artifact builder merges both layout and style.
+- [x] Route every compile entry point through one package-composition pipeline;
+  standalone and package builds now consume the same resolved layout and merged
+  dependency-style IR before selecting a backend.
 - [ ] Type-check the complete generated Trestle application on every target, not
   only focused fixtures; the complete package-expanded TaskApp now passes the
   Swift compiler and SwiftPM linker with type-correct truthiness, collision-safe
