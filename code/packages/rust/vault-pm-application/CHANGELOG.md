@@ -2,6 +2,26 @@
 
 All notable changes to this package are documented here.
 
+## [0.13.0] - 2026-08-09
+
+### Added
+
+- Add one new item from an unlocked session using a caller-filled 256-byte
+  CSPRNG block for its item identity and three encrypted object frames.
+- Construct a parentless revision, complete rewritten catalog, signed commit
+  over every current head, signed announcement, and exact expected new pins.
+
+### Security
+
+- Consume the unlocked session and owned document/randomness on every return
+  path so stale pins and mutation inputs cannot remain available to callers.
+- Compare-exchange the exact `Active -> PendingPublication -> Active` owner
+  states around repository publication, accept only byte-identical ambiguous
+  winners, and retain a replayable journal across provider or final-local-write
+  interruption.
+- Reject mismatched generated identities, existing IDs, stale repository
+  heads, invalid documents, and counter overflow before publication.
+
 ## [0.12.0] - 2026-08-09
 
 ### Added
