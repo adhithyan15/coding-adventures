@@ -10,6 +10,7 @@
 mod codec;
 mod crypto;
 mod initialize;
+mod open;
 mod repository;
 mod state;
 mod verifier;
@@ -28,6 +29,7 @@ pub use initialize::{
     GenerationZeroPolicyV1, GenerationZeroRandomness, PreparedGenerationZero,
     GENERATION_ZERO_RANDOM_BYTES,
 };
+pub use open::{open_active_vault, UnlockedVaultV1};
 pub use repository::{
     ApplicationRepository, ApplicationRepositoryError, ApplicationRepositoryFactory,
     V1ApplicationRepositoryFactory,

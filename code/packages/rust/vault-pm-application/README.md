@@ -34,10 +34,18 @@ the first external write, performs idempotent bootstrap and repository work,
 verifies the exact resulting pins, and compare-exchanges to `Active`. A retry
 after any failure rehydrates and reuses the same signed and randomized journal.
 
+Stable active vaults can also be reopened from only their durable locator and
+injected stores. Reopen strictly decodes local state, requires the exact latest
+authority-signed bootstrap pinned locally, authenticates the passphrase root
+wrap, reproduces every persisted public identity from encrypted local seeds,
+derives the opaque repository address, and performs a complete repository open
+relative to non-empty local head pins. The returned session owns wipe-on-drop
+keys and exposes only identities, pins, and the payload-free verified report.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
-credential store, or entropy source. Active open/unlock, pending-publication
-recovery, and session workflows land in the next slices. There is no unchecked
+credential store, or entropy source. Pending-publication recovery and catalog
+session workflows land in the next slices. There is no unchecked
 repository verification path: construction decrypts and
 authority-verifies the exact locally pinned certificate frame and object ID,
 and commits and announcements must match that vault, device, certificate ID,
@@ -45,7 +53,7 @@ and Ed25519 key.
 
 ## Verification
 
-The package has 47 tests covering exact canonical and cryptographic vectors,
+The package has 51 tests covering exact canonical and cryptographic vectors,
 lossless removed-value persistence, live and tombstone revisions, catalog
 bounds and ordering, cross-kind and cross-vault rejection, AEAD tampering,
 authority/device/certificate binding, Ed25519 signature rejection, closed
@@ -53,9 +61,7 @@ parser failures, crash-state relationship checks, diagnostic redaction, and
 explicit key wiping. Repository tests additionally exercise initialization,
 publication, verified open/read/history, every injected provider operation,
 constructor paths, and complete error translation. The exact Tarpaulin result
-under its LLVM engine is 1,386 of 1,431 production lines (96.86%); the
-generation-zero preparation, rehydration, and completion module covers 365 of
-378 lines.
+under its LLVM engine is 1,443 of 1,510 production lines (95.56%).
 
 ## Development
 

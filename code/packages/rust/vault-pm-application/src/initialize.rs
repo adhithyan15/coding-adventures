@@ -10,7 +10,7 @@ use coding_adventures_argon2id::{argon2id, Options as Argon2idOptions};
 use coding_adventures_chacha20_poly1305::{
     xchacha20_poly1305_aead_decrypt, xchacha20_poly1305_aead_encrypt,
 };
-use coding_adventures_ed25519::{generate_keypair, sign};
+use coding_adventures_ed25519::{generate_keypair, is_valid_public_key, sign, verify};
 use coding_adventures_vault_pm_format::{
     AeadEnvelopeV1, AnnouncementV1, Argon2idParametersV1, BootstrapV1, CommitV1,
     DeviceCertificateV1, DeviceId, PublicKey, Signature, VaultId, CRYPTO_SUITE_V1,
@@ -147,6 +147,13 @@ pub struct PreparedGenerationZero {
     owner_state: LocalVaultStateV1,
     repository_address: RepositoryAddress,
     verifier: V1SingleDeviceVerifier,
+}
+
+pub(crate) struct UnlockedActiveMaterial {
+    pub repository_address: RepositoryAddress,
+    pub keys: V1Keys,
+    pub local_secret: LocalSecretV1,
+    pub verifier: V1SingleDeviceVerifier,
 }
 
 impl PreparedGenerationZero {
@@ -395,10 +402,46 @@ pub fn rehydrate_prepared_init(
         return Err(ApplicationError::InvalidInput);
     };
     let active = prepared.intended_active();
-    let bootstrap = BootstrapV1::decode(prepared.bootstrap())
+    let material = unlock_active_material(passphrase, active, prepared.bootstrap())?;
+
+    Ok(PreparedGenerationZero {
+        bootstrap_locator: active.bootstrap_locator(),
+        owner_state,
+        repository_address: material.repository_address,
+        verifier: material.verifier,
+    })
+}
+
+pub(crate) fn unlock_active_material(
+    passphrase: Zeroizing<Vec<u8>>,
+    active: &ActiveStateV1,
+    exact_bootstrap: &[u8],
+) -> Result<UnlockedActiveMaterial, ApplicationError> {
+    let bootstrap =
+        BootstrapV1::decode(exact_bootstrap).map_err(|_| ApplicationError::IntegrityFailure)?;
+    let bootstrap_id = bootstrap
+        .id()
         .map_err(|_| ApplicationError::IntegrityFailure)?;
+    let bootstrap_preimage = bootstrap
+        .signing_preimage()
+        .map_err(|_| ApplicationError::IntegrityFailure)?;
+    if !is_valid_public_key(bootstrap.authority_public_key.as_bytes())
+        || !verify(
+            &bootstrap_preimage,
+            bootstrap.signature.as_bytes(),
+            bootstrap.authority_public_key.as_bytes(),
+        )
+        || bootstrap_id != active.bootstrap_id()
+        || bootstrap.vault_id != active.vault_id()
+        || AuthorityFingerprint::for_public_key(bootstrap.authority_public_key)
+            != active.authority_fingerprint()
+    {
+        return Err(ApplicationError::IntegrityFailure);
+    }
+
     let vault_root_key = unwrap_root_key(&passphrase, &bootstrap)?;
     let keys = V1Keys::derive(bootstrap.vault_id, &vault_root_key)?;
+    let verifier_keys = V1Keys::derive(bootstrap.vault_id, &vault_root_key)?;
     let repository_address = RepositoryAddress::derive(keys.locator_key());
     let local_secret = open_local_secret(&keys, active.local_secret())?;
 
@@ -437,16 +480,16 @@ pub fn rehydrate_prepared_init(
     }
 
     let verifier = V1SingleDeviceVerifier::authorize(
-        keys,
+        verifier_keys,
         authority_public,
         active.device_certificate_id(),
         active.device_certificate_frame(),
     )?;
 
-    Ok(PreparedGenerationZero {
-        bootstrap_locator: active.bootstrap_locator(),
-        owner_state,
+    Ok(UnlockedActiveMaterial {
         repository_address,
+        keys,
+        local_secret,
         verifier,
     })
 }
