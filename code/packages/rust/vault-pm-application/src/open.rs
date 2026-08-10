@@ -1,5 +1,8 @@
 use crate::initialize::{unlock_active_material, UnlockedActiveMaterial};
-use crate::mutation::{add_item, replace_item, AddItemRandomnessV1, ReplaceItemRandomnessV1};
+use crate::mutation::{
+    add_item, delete_item, replace_item, AddItemRandomnessV1, DeleteItemRandomnessV1,
+    ReplaceItemRandomnessV1,
+};
 use crate::search::SearchProjectionV1;
 use crate::{
     open_object, ActiveStateV1, ApplicationError, ApplicationRepository,
@@ -200,6 +203,37 @@ impl UnlockedVaultV1 {
             self._repository.as_ref(),
             expected_revision,
             document,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+        )
+    }
+
+    /// Delete the sole expected current live revision by publishing a causal
+    /// tombstone and return the resulting durable active owner state.
+    ///
+    /// A revision absent from the current catalog returns `NotFound`; a
+    /// conflicted or already-tombstoned target returns `ConflictRequired`.
+    /// Advisory deletion and commit times are supplied separately and do not
+    /// establish causality. The session and randomness are consumed on every
+    /// return path.
+    pub fn delete_item(
+        self,
+        expected_revision: RevisionId,
+        deleted_at_ms: u64,
+        wall_time_ms: u64,
+        randomness: DeleteItemRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        delete_item(
+            &self.active,
+            &self.report,
+            &self.current_catalog.items,
+            &self._keys,
+            &self._local_secret,
+            self._repository.as_ref(),
+            expected_revision,
+            deleted_at_ms,
             wall_time_ms,
             randomness,
             local_state_store,
@@ -474,7 +508,7 @@ mod tests {
         complete_generation_zero, encode_item_revision, encode_signed_commit,
         prepare_generation_zero, seal_object, CatalogV1, GenerationZeroPolicyV1,
         GenerationZeroRandomness, ObjectKind, ObjectRandomness, PublicationJournalV1,
-        V1ApplicationRepositoryFactory, V1Keys, ADD_ITEM_RANDOM_BYTES,
+        V1ApplicationRepositoryFactory, V1Keys, ADD_ITEM_RANDOM_BYTES, DELETE_ITEM_RANDOM_BYTES,
         GENERATION_ZERO_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
     };
     use coding_adventures_ed25519::{generate_keypair, sign};
@@ -621,6 +655,14 @@ mod tests {
             *byte = (index as u8).wrapping_mul(29).wrapping_add(seed);
         }
         ReplaceItemRandomnessV1::new(bytes)
+    }
+
+    fn delete_item_randomness(seed: u8) -> DeleteItemRandomnessV1 {
+        let mut bytes = [0; DELETE_ITEM_RANDOM_BYTES];
+        for (index, byte) in bytes.iter_mut().enumerate() {
+            *byte = (index as u8).wrapping_mul(31).wrapping_add(seed);
+        }
+        DeleteItemRandomnessV1::new(bytes)
     }
 
     fn new_login_document(item_id: ItemId, title: &str, password: &str) -> ItemDocument {
@@ -1954,6 +1996,127 @@ mod tests {
         assert_eq!(
             local.0.lock().unwrap().as_deref(),
             Some(exact_item.as_slice())
+        );
+    }
+
+    #[test]
+    fn delete_item_publishes_one_parent_tombstone_and_rejects_repeat_delete() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let add_randomness = add_item_randomness(0x21);
+        let item_id = add_randomness.item_id();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .add_item(
+            new_login_document(item_id, "Delete me", "secret"),
+            450,
+            add_randomness,
+            &local,
+        )
+        .unwrap();
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let expected_revision = session.current_catalog.items[&item_id][0].revision_id();
+        let prior_heads = session.local_pins().clone();
+        let active = session
+            .delete_item(
+                expected_revision,
+                451,
+                452,
+                delete_item_randomness(0x31),
+                &local,
+            )
+            .unwrap();
+        assert_eq!(active.last_device_counter(), 3);
+
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.item_count(), 1);
+        assert_eq!(reopened.search_item_count(), 0);
+        assert_eq!(reopened.get_item(item_id).unwrap(), None);
+        assert!(reopened.list_items().unwrap().is_empty());
+        let [candidate] = reopened.current_catalog.items[&item_id].as_slice() else {
+            panic!("deletion must become the sole current candidate")
+        };
+        assert_eq!(
+            candidate.causal_parents(),
+            &BTreeSet::from([expected_revision])
+        );
+        let ItemState::Tombstone(tombstone) = candidate.state() else {
+            panic!("deletion must materialize a tombstone")
+        };
+        assert_eq!(tombstone.item_id, item_id);
+        assert_eq!(tombstone.deleted_at_ms, 451);
+        let tombstone_revision = candidate.revision_id();
+        let head = *reopened.open_report().heads().iter().next().unwrap();
+        let commit = reopened._repository.read_commit(head).unwrap();
+        assert_eq!(
+            commit.parents(),
+            prior_heads.iter().copied().collect::<Vec<_>>()
+        );
+        assert_eq!(commit.added_objects().len(), 2);
+        assert_eq!(commit.wall_time_ms(), 452);
+        let exact_deleted = local.0.lock().unwrap().clone().unwrap();
+        assert_eq!(
+            reopened.delete_item(
+                tombstone_revision,
+                453,
+                454,
+                delete_item_randomness(0x41),
+                &local,
+            ),
+            Err(ApplicationError::ConflictRequired)
+        );
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_deleted.as_slice())
+        );
+    }
+
+    #[test]
+    fn delete_item_rejects_missing_revision_before_cas() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+
+        assert_eq!(
+            open_active_vault(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap()
+            .delete_item(
+                RevisionId::new([0x51; 32]),
+                455,
+                456,
+                delete_item_randomness(0x51),
+                &local,
+            ),
+            Err(ApplicationError::NotFound)
+        );
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_active.as_slice())
         );
     }
 

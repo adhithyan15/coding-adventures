@@ -1304,7 +1304,11 @@ changelog, focused build, and downstream validation.
        expected current live revision, preserving immutable identity fields
        and unrelated catalog candidates, creating exact one-parent causality,
        and reusing the crash-resumable publication state machine;
-   7b-1. delete, restore, and explicit conflict-resolution mutation workflows;
+   7b-1. completed delete mutation workflow, locating the sole expected current
+       live revision, producing a one-parent tombstone, retaining it for later
+       history/restore while omitting it from ordinary views, and reusing exact
+       crash-resumable publication;
+   7b-2. restore and explicit conflict-resolution mutation workflows;
    7c. bounded history traversal and explicit zeroizing field reveal;
    7d. authenticated portable export and restore/import preparation; and
    7e. audit, status, and doctor workflows; and

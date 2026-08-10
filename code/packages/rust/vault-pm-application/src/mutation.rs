@@ -6,7 +6,7 @@ use crate::{
 };
 use coding_adventures_ed25519::{generate_keypair, sign};
 use coding_adventures_vault_pm_domain::{
-    ItemCandidate, ItemDocument, ItemId, ItemState, RevisionId,
+    ItemCandidate, ItemDocument, ItemId, ItemState, RevisionId, Tombstone,
 };
 use coding_adventures_vault_pm_format::{AnnouncementV1, CommitV1, Signature};
 use coding_adventures_vault_pm_repository::{OpenReport, PinnedHeads};
@@ -21,6 +21,8 @@ const OBJECT_RANDOM_BYTES: usize = 32 + 24 + 24;
 pub const ADD_ITEM_RANDOM_BYTES: usize = ITEM_ID_BYTES + 3 * OBJECT_RANDOM_BYTES;
 /// Exact caller-filled CSPRNG bytes consumed by one replace-item mutation.
 pub const REPLACE_ITEM_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES;
+/// Exact caller-filled CSPRNG bytes consumed by one delete-item mutation.
+pub const DELETE_ITEM_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES;
 
 /// Owned wipe-on-drop entropy for one item ID and three encrypted frames.
 pub struct AddItemRandomnessV1 {
@@ -88,6 +90,36 @@ impl Drop for ReplaceItemRandomnessV1 {
 impl Debug for ReplaceItemRandomnessV1 {
     fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
         formatter.write_str("ReplaceItemRandomnessV1(<redacted>)")
+    }
+}
+
+/// Owned wipe-on-drop entropy for the three encrypted deletion frames.
+pub struct DeleteItemRandomnessV1 {
+    bytes: [u8; DELETE_ITEM_RANDOM_BYTES],
+}
+
+impl DeleteItemRandomnessV1 {
+    /// Take one exact block filled by the host's cryptographic entropy source.
+    pub const fn new(bytes: [u8; DELETE_ITEM_RANDOM_BYTES]) -> Self {
+        Self { bytes }
+    }
+}
+
+impl Zeroize for DeleteItemRandomnessV1 {
+    fn zeroize(&mut self) {
+        self.bytes.zeroize();
+    }
+}
+
+impl Drop for DeleteItemRandomnessV1 {
+    fn drop(&mut self) {
+        self.zeroize();
+    }
+}
+
+impl Debug for DeleteItemRandomnessV1 {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter.write_str("DeleteItemRandomnessV1(<redacted>)")
     }
 }
 
@@ -178,6 +210,57 @@ pub(crate) fn replace_item(
         local_secret,
         document.id(),
         ItemState::Live(Box::new(document)),
+        &BTreeSet::from([expected_revision]),
+        wall_time_ms,
+        &randomness.bytes,
+    )?;
+    publish_mutation(active, repository, publication, local_state_store)
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn delete_item(
+    active: &ActiveStateV1,
+    report: &OpenReport,
+    current_items: &BTreeMap<ItemId, Vec<ItemCandidate>>,
+    keys: &V1Keys,
+    local_secret: &LocalSecretV1,
+    repository: &dyn ApplicationRepository,
+    expected_revision: RevisionId,
+    deleted_at_ms: u64,
+    wall_time_ms: u64,
+    randomness: DeleteItemRandomnessV1,
+    local_state_store: &dyn LocalStateStore,
+) -> Result<ActiveStateV1, ApplicationError> {
+    if report.heads() != active.pinned_heads() {
+        return Err(ApplicationError::ConcurrentHost);
+    }
+    let (item_id, candidates) = current_items
+        .iter()
+        .find(|(_, candidates)| {
+            candidates
+                .iter()
+                .any(|candidate| candidate.revision_id() == expected_revision)
+        })
+        .ok_or(ApplicationError::NotFound)?;
+    let [candidate] = candidates.as_slice() else {
+        return Err(ApplicationError::ConflictRequired);
+    };
+    if candidate.revision_id() != expected_revision
+        || !matches!(candidate.state(), ItemState::Live(_))
+    {
+        return Err(ApplicationError::ConflictRequired);
+    }
+
+    let publication = prepare_item_publication(
+        active,
+        current_items,
+        keys,
+        local_secret,
+        *item_id,
+        ItemState::Tombstone(Tombstone {
+            item_id: *item_id,
+            deleted_at_ms,
+        }),
         &BTreeSet::from([expected_revision]),
         wall_time_ms,
         &randomness.bytes,
@@ -424,6 +507,20 @@ mod tests {
             "ReplaceItemRandomnessV1(<redacted>)"
         );
         assert!(randomness.bytes.iter().all(|byte| *byte == 0xa5));
+
+        randomness.zeroize();
+        assert!(randomness.bytes.iter().all(|byte| *byte == 0));
+    }
+
+    #[test]
+    fn delete_item_randomness_redacts_and_zeroizes() {
+        let mut randomness = DeleteItemRandomnessV1::new([0x3c; DELETE_ITEM_RANDOM_BYTES]);
+
+        assert_eq!(
+            format!("{randomness:?}"),
+            "DeleteItemRandomnessV1(<redacted>)"
+        );
+        assert!(randomness.bytes.iter().all(|byte| *byte == 0x3c));
 
         randomness.zeroize();
         assert!(randomness.bytes.iter().all(|byte| *byte == 0));
