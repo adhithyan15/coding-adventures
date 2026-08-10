@@ -6,6 +6,10 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Repeated `option` and `optgroup` start tags processed with an open `select`
+  now report the current-Standard parse error when implied-end-tag recovery
+  closes a scoped option or group. The legacy html5lib rows exercise this DOM
+  recovery without declaring the branch error.
 - HTML `p` and `br` start tags recovered from seeded foreign fragment contexts
   now report the foreign-content breakout parse error. This closes the final
   malformed tree-construction case that previously emitted no diagnostic.
