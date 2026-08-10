@@ -68,6 +68,7 @@ jobs:
       needs_mosaic_xaml_windows: ${{ steps.mosaic-xaml-windows.outputs.required }}
       needs_mosaic_swift_runtime: ${{ steps.mosaic-swift-runtime.outputs.required }}
       needs_mosaic_qt_runtime: ${{ steps.mosaic-qt-runtime.outputs.required }}
+      needs_mosaic_flutter_runtime: ${{ steps.mosaic-flutter-runtime.outputs.required }}
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
       build_shards: ${{ steps.detect.outputs.build_shards }}
@@ -131,6 +132,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_xaml_windows_ci_acceptance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_swift_runtime_ci_acceptance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_qt_runtime_ci_acceptance.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_flutter_runtime_ci_acceptance.py'
           python3 code/scripts/build_tool_conformance.py validate-corpus
           python3 code/scripts/build_tool_conformance_execution.py validate-contract
           python3 code/scripts/package_parity_report.py --format json --fail-on-collisions > /tmp/package-parity-report.json
@@ -248,6 +250,15 @@ jobs:
         shell: bash
         run: |
           python3 code/scripts/mosaic_qt_runtime_ci_acceptance.py \
+            build-plan.json \
+            --repo-root . \
+            --diff-base "${{ steps.diff-base.outputs.base }}" >> "$GITHUB_OUTPUT"
+
+      - name: Detect Mosaic Flutter runtime acceptance
+        id: mosaic-flutter-runtime
+        shell: bash
+        run: |
+          python3 code/scripts/mosaic_flutter_runtime_ci_acceptance.py \
             build-plan.json \
             --repo-root . \
             --diff-base "${{ steps.diff-base.outputs.base }}" >> "$GITHUB_OUTPUT"
@@ -552,7 +563,7 @@ jobs:
           clang --version | head -1
 
       - name: Set up Rust
-        if: needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_xaml_windows == 'true' || needs.detect.outputs.needs_mosaic_swift_runtime == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true'
+        if: needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_xaml_windows == 'true' || needs.detect.outputs.needs_mosaic_swift_runtime == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true' || needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
         # Uses the `stable` channel (matching the rest of this repo's Rust CI).
         # NOTE on the -clippy gate: clippy adds/tightens lints on each stable
         # release, so a new Rust release can surface new lints on `main` — treat
@@ -598,7 +609,7 @@ jobs:
           version-type: strict
 
       - name: Set up Dart
-        if: needs.detect.outputs.needs_dart == 'true'
+        if: needs.detect.outputs.needs_dart == 'true' || needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
         uses: dart-lang/setup-dart@v1
 
       - name: Set up Swift (Windows)
@@ -970,6 +981,29 @@ jobs:
           cmake --build "$harness/build" --config Release --parallel
           export MOSAIC_APP_LIBRARY="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.so"
           "$harness/build/mosaic_qt_runtime_conformance"
+
+      - name: Round-trip Rust engine through standard Flutter binding
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
+        shell: bash
+        timeout-minutes: 10
+        run: |
+          set -euo pipefail
+          output="$RUNNER_TEMP/mosaic-flutter-taskapp"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend flutter --output "$output" --emit-project
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
+
+          harness="$RUNNER_TEMP/mosaic-flutter-runtime-conformance"
+          cp -R code/packages/rust/mosaic-app-bindings/conformance/flutter "$harness"
+          mkdir -p "$harness/lib"
+          cp "$output/flutter/lib/mosaic_host.dart" "$harness/lib/mosaic_host.dart"
+
+          export MOSAIC_APP_LIBRARY="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.so"
+          (
+            cd "$harness"
+            dart pub get
+            dart analyze
+            dart run bin/conformance.dart
+          )
 
       - name: Build complete Mosaic TaskApp WinUI shell
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
