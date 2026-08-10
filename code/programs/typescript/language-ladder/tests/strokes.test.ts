@@ -26,6 +26,7 @@ const load = (name: string) => {
 const tamil = () => parseFont(load("NotoSansTamil-Static.ttf"));
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
+const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
@@ -279,6 +280,18 @@ describe("handwriting ductus", () => {
     expect(bowl[0].y).toBeGreaterThan(bowl.at(-1)!.y);
   });
 
+  it("Urdu independent ر joins its downward line directly to the leftward curve", () => {
+    expect(URDU_RE.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_RE)).toBe(0);
+    expect(URDU_RE.strokes).toHaveLength(1);
+    expect(URDU_RE.strokes[0].segments).toHaveLength(2);
+    const down = URDU_RE.strokes[0].segments[0].path;
+    const curve = URDU_RE.strokes[0].segments[1].path;
+    expect(down[0].y).toBeGreaterThan(down.at(-1)!.y);
+    expect(curve[0]).toEqual(down.at(-1));
+    expect(curve[0].x).toBeGreaterThan(curve.at(-1)!.x);
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -519,6 +532,17 @@ describe("handwriting ductus", () => {
     expect(src.citation).toMatch(/Zer o Zabar.*independent ج.*flat-head.*Northwestern/i);
     expect(src.variation).toMatch(
       /dot below first.*lifts once.*pointed hooked head.*one continuous stroke.*pointed rather than rounded.*flat-head.*purely aesthetic.*Noto Naskh.*Nastaliq/i,
+    );
+  });
+
+  it("Urdu independent ر traces to Zer o Zabar's downward-then-leftward animation", () => {
+    const src = URDU_RE.source;
+    expect(src.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/dal-re-and-waw/",
+    );
+    expect(src.citation).toMatch(/Zer o Zabar.*independent ر.*Re instructions.*Northwestern/i);
+    expect(src.variation).toMatch(
+      /one uninterrupted stroke.*downward line.*curve to the left.*final form.*lower left.*final re rises in Naskh.*not in Nastaliq.*Noto Naskh.*Nastaliq/i,
     );
   });
 
