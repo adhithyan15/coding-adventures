@@ -69,3 +69,18 @@ landed and why, not a semver-tracked API.
   CAS-provenance track). No new formula, no new citation, no engine change: `surface` synonyms are
   a decomposer-facing hint only, not engine-parsed, so the change is covered by the existing
   formulas' own test suites.
+- `mathematics/geometry-formulas.adj` — four rung-0 CAS-wiring companions (ADJ-FORMULA-LIBRARIES
+  FL-10, §3D — the Wave 3 opener): `width_from_rectangle_area`, `height_from_triangle_area`,
+  `side_from_square_perimeter`, `width_from_rectangle_perimeter`. Each solves the SAME cited
+  equation as its forward `formula` sibling for a different unknown, through `cas-solve`'s real
+  linear-equation solver (the exact discipline `electricity.adj`'s `resistance_from_ohms_law`
+  already established) — no new citations, each reuses its forward formula's own verified
+  MathWorld source. `square_area`'s inverse (side from area) is deliberately absent: it is
+  quadratic in the target, and rung-0's solver is linear-only, so attempting it is a clean
+  `SymbolicNonLinear` compile error (added as a regression test, not worked around). New query
+  companions `geometry-formulas-solve.query.adj` and `geometry-formulas-solve-perimeter.query.adj`
+  (split across two programs: a `symbolic`'s target may not already be observed anywhere in the
+  same compiled program, and two of the four solves share a target name — `width` — so they cannot
+  coexist in one program even in the right order). New manifest objective
+  `adj.math.algebra.rearrange_geometry_formulas`. New e2e test
+  `formula_geometry_algebra_e2e.rs` (5 tests, including the nonlinear-boundary regression).
