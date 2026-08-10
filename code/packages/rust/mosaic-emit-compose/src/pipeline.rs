@@ -137,6 +137,25 @@ pub fn from_pipeline(
     writeln!(out, "import androidx.compose.ui.unit.sp").unwrap();
     writeln!(out).unwrap();
 
+    // Mosaic conditions use value truthiness, while Kotlin requires a
+    // statically typed Boolean. Keep the helper file-private so separately
+    // emitted component files can coexist in the same package without a
+    // public declaration collision.
+    writeln!(
+        out,
+        "private fun _mosaicTruthy(value: Any?): Boolean = when (value) {{"
+    )
+    .unwrap();
+    writeln!(out, "    null -> false").unwrap();
+    writeln!(out, "    is Boolean -> value").unwrap();
+    writeln!(out, "    is Number -> value.toDouble() != 0.0").unwrap();
+    writeln!(out, "    is String -> value.isNotEmpty()").unwrap();
+    writeln!(out, "    is Collection<*> -> value.isNotEmpty()").unwrap();
+    writeln!(out, "    is Map<*, *> -> value.isNotEmpty()").unwrap();
+    writeln!(out, "    else -> true").unwrap();
+    writeln!(out, "}}").unwrap();
+    writeln!(out).unwrap();
+
     out.push_str(&emit_event_sealed_class(&name, &component.emits)?);
     writeln!(out).unwrap();
     out.push_str(&emit_composable_function(
@@ -579,11 +598,14 @@ fn collect_state_layers<'a>(
             continue;
         }
         let cond_expr = match &prop.value {
-            LayoutPropValue::Expr(t) => t.clone(),
+            LayoutPropValue::Expr(t) => format!("(_mosaicTruthy({t}))"),
             LayoutPropValue::SlotRef(s) => {
-                format!("{} == true", to_camel_case_first_lower(s))
+                format!("(_mosaicTruthy({}))", to_camel_case_first_lower(s))
             }
-            LayoutPropValue::Keyword(k) => k.clone(),
+            LayoutPropValue::Keyword(k) if k == "true" || k == "false" => {
+                format!("({k})")
+            }
+            LayoutPropValue::Keyword(k) => format!("(_mosaicTruthy({k}))"),
             // EmitRef / Number / String don't make sense as boolean
             // predicates — drop the whole layer.
             _ => continue,
@@ -1827,13 +1849,15 @@ fn emit_if_compose(
 
     let cond_expr = match when {
         Some(LayoutPropValue::SlotRef(s)) => {
-            format!("{} == true", to_camel_case_first_lower(s))
+            format!("_mosaicTruthy({})", to_camel_case_first_lower(s))
         }
-        Some(LayoutPropValue::Expr(e)) => e.trim().to_string(),
-        Some(LayoutPropValue::Keyword(k)) => to_camel_case_first_lower(k),
-        Some(LayoutPropValue::String(s)) => format!("\"{s}\""),
-        Some(LayoutPropValue::Number(n)) => format!("{n}"),
-        Some(LayoutPropValue::EmitRef(name)) => name.clone(),
+        Some(LayoutPropValue::Expr(e)) => format!("_mosaicTruthy({})", e.trim()),
+        Some(LayoutPropValue::Keyword(k)) => {
+            format!("_mosaicTruthy({})", to_camel_case_first_lower(k))
+        }
+        Some(LayoutPropValue::String(s)) => format!("_mosaicTruthy(\"{s}\")"),
+        Some(LayoutPropValue::Number(n)) => format!("_mosaicTruthy({n})"),
+        Some(LayoutPropValue::EmitRef(name)) => format!("_mosaicTruthy({name})"),
         None => "false".to_string(),
     };
 
@@ -1972,7 +1996,10 @@ fn emit_host_input(
         writeln!(out, "{inner}onValueChange = {{ }},").unwrap();
     }
 
-    // onCommit — a payloadless "the user finished editing" event (Enter). Compose
+    // onCommit — "the user finished editing" (Enter). A zero-argument event is
+    // dispatched as a data object; a one-argument event receives the input's
+    // current controlled value. This supports both toolkit inputs and native
+    // editing primitives such as Grid.Cell's `onCommit(value: text)`. Compose
     // has no free-standing submit on a BasicTextField, so wire it to the soft
     // keyboard's Done IME action and make the field single-line, so Enter (soft or
     // hardware keyboard) fires the commit instead of inserting a newline. Without
@@ -1982,6 +2009,22 @@ fn emit_host_input(
     if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
         let case = pascalize(&strip_on_prefix(emit_name));
         validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
+        let emit = emits.iter().find(|e| e.name == *emit_name);
+        let dispatch_call = match emit.and_then(|e| e.params.first()) {
+            None => format!("{component_name}Event.{case}"),
+            Some(param) => {
+                let payload = match &param.r#type {
+                    EmitPayloadType::Text
+                    | EmitPayloadType::Color
+                    | EmitPayloadType::Component(_) => value_expr.clone(),
+                    EmitPayloadType::Number => {
+                        format!("({value_expr}).toDoubleOrNull() ?: 0.0")
+                    }
+                    EmitPayloadType::Bool => format!("_mosaicTruthy({value_expr})"),
+                };
+                format!("{component_name}Event.{case}({payload})")
+            }
+        };
         if !multiline {
             writeln!(out, "{inner}singleLine = true,").unwrap();
         }
@@ -1992,7 +2035,7 @@ fn emit_host_input(
         .unwrap();
         writeln!(
             out,
-            "{inner}keyboardActions = KeyboardActions(onDone = {{ dispatch({component_name}Event.{case}) }}),"
+            "{inner}keyboardActions = KeyboardActions(onDone = {{ dispatch({dispatch_call}) }}),"
         )
         .unwrap();
     }
@@ -2008,7 +2051,7 @@ fn emit_host_input(
     if let Some(slot) = find_slot_ref_prop(node, "read-only") {
         let camel = to_camel_case_first_lower(slot);
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-        writeln!(out, "{inner}enabled = {camel} != true,").unwrap();
+        writeln!(out, "{inner}enabled = !_mosaicTruthy({camel}),").unwrap();
     }
 
     writeln!(out, "{pad})").unwrap();
@@ -2498,9 +2541,9 @@ fn bool_prop_expr(
         Some(LayoutPropValue::SlotRef(slot)) => {
             let camel = to_camel_case_first_lower(slot);
             validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-            Ok(format!("{camel} == true"))
+            Ok(format!("_mosaicTruthy({camel})"))
         }
-        Some(LayoutPropValue::Expr(expr)) => Ok(expr.clone()),
+        Some(LayoutPropValue::Expr(expr)) => Ok(format!("_mosaicTruthy({expr})")),
         _ => Ok(default.to_string()),
     }
 }
@@ -2512,9 +2555,9 @@ fn disabled_prop_enabled_expr(node: &LayoutNode) -> Result<Option<String>, Pipel
         Some(LayoutPropValue::SlotRef(slot)) => {
             let camel = to_camel_case_first_lower(slot);
             validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-            Ok(Some(format!("{camel} != true")))
+            Ok(Some(format!("!_mosaicTruthy({camel})")))
         }
-        Some(LayoutPropValue::Expr(expr)) => Ok(Some(format!("!({expr})"))),
+        Some(LayoutPropValue::Expr(expr)) => Ok(Some(format!("!_mosaicTruthy({expr})"))),
         _ => Ok(None),
     }
 }
@@ -3153,7 +3196,40 @@ mod tests {
             out.contains("FormulaBarEvent.FormulaChange(v)"),
             "expected real dispatch call, got:\n{out}"
         );
-        assert!(out.contains("enabled = readOnly != true,"));
+        assert!(out.contains("enabled = !_mosaicTruthy(readOnly),"));
+    }
+
+    #[test]
+    fn host_input_commit_supplies_current_value_to_single_payload_event() {
+        let m = component(
+            "Cell",
+            vec![slot("edit-value", SlotType::Text, true)],
+            vec![emit_decl(
+                "onCommit",
+                vec![param("value", EmitPayloadType::Text)],
+            )],
+        );
+        let l = layout(
+            "Cell",
+            node(
+                "HostInput",
+                vec![
+                    slot_prop("value", "edit-value"),
+                    LayoutProp {
+                        name: "onCommit".into(),
+                        value: LayoutPropValue::EmitRef("onCommit".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Cell"))
+            .expect("emit input commit payload")
+            .output;
+
+        assert!(out.contains(
+            "keyboardActions = KeyboardActions(onDone = { dispatch(CellEvent.Commit(editValue)) }),"
+        ));
     }
 
     #[test]
@@ -3336,7 +3412,7 @@ mod tests {
         );
         let out = from_pipeline(&m, &l, &empty_style("Bar")).unwrap().output;
         assert!(
-            out.contains("enabled = navigationDisabled != true,"),
+            out.contains("enabled = !_mosaicTruthy(navigationDisabled),"),
             "got:\n{out}"
         );
         assert!(
@@ -3643,7 +3719,7 @@ mod tests {
         assert!(out.contains("import androidx.compose.material.Checkbox"));
         assert!(out.contains("Row(modifier = Modifier.fillMaxWidth()) {"));
         assert!(out.contains("Checkbox("));
-        assert!(out.contains("checked = buryNewValue == true,"));
+        assert!(out.contains("checked = _mosaicTruthy(buryNewValue),"));
         assert!(out.contains(
             "onCheckedChange = { checked -> dispatch(DeckOptionsEvent.BuryNewSiblingsChange(checked)) },"
         ));
@@ -3703,7 +3779,7 @@ mod tests {
         assert!(out.contains("import androidx.compose.material.RadioButton"));
         assert!(out.contains("Row(modifier = Modifier.fillMaxWidth()) {"));
         assert!(out.contains("RadioButton("));
-        assert!(out.contains("selected = suspendSelected == true,"));
+        assert!(out.contains("selected = _mosaicTruthy(suspendSelected),"));
         assert!(out
             .contains("onClick = { dispatch(DeckOptionsEvent.LeechActionChange(\"suspend\")) },"));
         assert!(out.contains("enabled = true,"));
@@ -3888,7 +3964,7 @@ mod tests {
         let l = layout("X", node("Column", vec![], vec![if_node, else_node]));
         let m = component("X", vec![], vec![]);
         let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
-        assert!(out.contains("if (a == 1) {"));
+        assert!(out.contains("if (_mosaicTruthy(a == 1)) {"));
         assert!(out.contains("} else {"));
         assert!(out.contains("\"yes\""));
         assert!(out.contains("\"no\""));
@@ -3915,7 +3991,7 @@ mod tests {
         let m = component("X", vec![slot("visible", SlotType::Bool, false)], vec![]);
         let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
         assert!(out.contains("visible: Boolean?,"));
-        assert!(out.contains("if (visible == true) {"));
+        assert!(out.contains("if (_mosaicTruthy(visible)) {"));
     }
 
     /// `when: true` literal folds at compile time — the else branch
@@ -4026,8 +4102,8 @@ mod tests {
         let out = from_pipeline(&m, &l, &s).unwrap().output;
         assert!(
             out.contains(
-                ".background(if ( r == editRow && c == editCol ) Color(0xFF1F4F3F) \
-                 else if ( r == selectedRow && c == selectedCol ) Color(0xFF264F78) \
+                ".background(if (_mosaicTruthy(( r == editRow && c == editCol ))) Color(0xFF1F4F3F) \
+                 else if (_mosaicTruthy(( r == selectedRow && c == selectedCol ))) Color(0xFF264F78) \
                  else Color.Transparent)"
             ),
             "expected folded state background, got:\n{out}"
@@ -4076,7 +4152,7 @@ mod tests {
         let out = from_pipeline(&m, &l, &s).unwrap().output;
         assert!(
             out.contains(
-                "color = if ( r == selectedRow && c == selectedCol ) \
+                "color = if (_mosaicTruthy(( r == selectedRow && c == selectedCol ))) \
                  Color(0xFFFFFFFF) else Color(0xFFCCCCCC)"
             ),
             "expected selected→white / base→inherited-#cccccc, got:\n{out}"

@@ -77,7 +77,7 @@ FLAGS:
 ```
 
 Pipeline mode supports the text/native emitter family (`react`, `html`,
-`webcomponent`, `swiftui`, `qt`, `xaml`, and `flutter`). The `paint` backend
+`webcomponent`, `swiftui`, `qt`, `xaml`, `compose`, and `flutter`). The `paint` backend
 remains legacy single-file only.
 
 Package mode compiles a Mosaic package directory that contains
@@ -87,7 +87,7 @@ files:
 ```text
 mosaic-compile pkg <PACKAGE_ROOT> --backend <BACKEND> --output <DIR> [--emit-project]
 
-BACKEND: react | swiftui | qt | xaml | webcomponent | html | flutter
+BACKEND: react | swiftui | qt | xaml | compose | webcomponent | html | flutter
 ```
 
 `--emit-project` asks the package builder to write the selected backend's
