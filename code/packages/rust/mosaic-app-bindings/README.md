@@ -38,3 +38,6 @@ platform's conventional `mosaic_app` dynamic-library names.
 For Qt/QML, set `MOSAIC_APP_LIBRARY` to the application library path or package
 it under the platform's conventional `mosaic_app` name. The generated QObject
 host uses only Qt Core APIs and is installed automatically by the artifact builder.
+Linux CI compiles the exact host from a complete generated TaskApp project with
+the shared `mosaic-app-conformance` library, then verifies startup, semantic
+dispatch, snapshot/restore, buffer ownership, and teardown without a display.

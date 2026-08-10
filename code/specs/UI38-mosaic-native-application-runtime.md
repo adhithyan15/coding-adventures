@@ -306,8 +306,10 @@ unblocks multiple downstream targets; never count source generation as completio
     typed props, semantic dispatch, revised props, buffers, and teardown.
   - [x] SwiftUI/Foundation loads the shared Rust conformance dylib and round-trips
     startup, dispatch, snapshot/restore, notification, and teardown in macOS CI.
-  - [ ] Promote the same shared Rust fixture through Qt/QML, Compose, and Flutter
-    standard bindings.
+  - [x] Qt/QML loads the shared Rust conformance library and round-trips startup,
+    dispatch, snapshot/restore, buffers, and teardown in headless Linux CI.
+  - [ ] Promote the same shared Rust fixture through Compose and Flutter standard
+    bindings.
 - [x] Gate the complete package-expanded XAML TaskApp on GitHub-hosted Windows
   with real WinUI compilation and executable production.
   - [x] Allocate `For` row-view-model and projection names per loop rather than

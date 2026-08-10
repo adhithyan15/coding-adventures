@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Execute the generated Qt/QML host against the shared Rust conformance library
+  in headless Linux CI, covering startup, dispatch, snapshot/restore, buffer
+  ownership, and teardown through the real ABI.
 - Execute the generated SwiftUI binding and C loader against the shared Rust
   conformance dylib in macOS CI, covering startup, dispatch, snapshot/restore,
   prop-change notification, buffer ownership, and teardown through the real ABI.
