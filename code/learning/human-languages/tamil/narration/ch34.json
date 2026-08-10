@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Four Verbs Between People",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0afe185a93c0169e",
+  "sourceHash": "fnv1a64:7389731691de483a",
   "lessons": [
     {
       "id": "TA-C34-edu",
@@ -362,6 +362,191 @@
             {
               "kind": "speech",
               "text": "What two English verbs is kēḷ, and what happens to its ள் before an ending? (Ask and hear; it hardens to ட்.) Which verb taught you to expect a second stem, and what is kēḷvi? (வா, built on varu-; a question.) Which register do these lessons teach, and how do you ask politely? (Standard spoken kēṭkiṟēṉ; kēḷungaḷ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W14-read-pesu",
+      "sequence": 995,
+      "title": "பேசு (pēsu) — the long partner of ெ",
+      "headword": "பேசு",
+      "romanization": "pēsu",
+      "gloss": "the long-e sign, and the third short-and-long pair",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:20e9fcd487bbd15c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: the ே sign",
+          "Script you'll notice: build the word"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: the ே sign and Script you'll notice: build the word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Twice now a Tamil vowel has come in a short and a long version: அ and ஆ, ி and ீ. For அ/ஆ the script data even says the long one is the short one plus a tail; for ி/ீ it says nothing, and the pairing is the lesson's. Here is a third pair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: the ே sign",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ே is the sign for long ē, and it is the long partner of the ெ you met in பெயர். Like ெ, it is written to the left of its consonant and spoken after it."
+            },
+            {
+              "kind": "speech",
+              "text": "ப + ே becomes பே, said pē."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "sign",
+                "sound",
+                "where it is written"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "sign: ெ. sound: short e. where it is written: to the left.",
+                "sign: ே. sound: long ē. where it is written: to the left.",
+                "sign: ை. sound: ai. where it is written: to the left."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three left-standing signs now. The evidence is the same as it was for ெ: the script data describes ை and has no entry for ெ or ே at all, so both the shared position and the short/long pairing are stated from the pattern these signs share, not from a source for either one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script you'll notice: build the word",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "piece: பே, pē — ப with the ே sign on its left, ப from பெயர்.",
+                "piece: சு, su — ச with the ு sign, ச from சரி, ு from இருக்கிறீர்கள்."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "பே, சு becomes பேசு (pēsu)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, one new sign, and its two signs pull in opposite directions on the page: ே stands before its letter, ு joins after it. பேசு (pēsu) is \"speak\" — the verb every lesson so far has been in service of."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "பே — then பேசு (pēsu)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பே** — then **பேசு**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"pēsu\" — \"speak\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"pēsu\" — \"speak\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "பெ and பே — the short sign and the long one, both on the left",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: **பெ** and **பே** — the short sign and the long one, both on the left]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "பே and சு — a sign before, a sign after, inside one word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: **பே** and **சு** — a sign before, a sign after, inside one word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "தமிழ் பேசு (pēsu) — \"speak Tamil,\" both words off the page",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **தமிழ் பேசு** — \"speak Tamil,\" both words off the page]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read பேசு (pēsu). Which side of its consonant is ே written on? (The left — like ெ and ை.) Which sign is its short partner? (ெ, as in பெயர்.) What is the ச doing here — is it s or ch? (Either; one letter covers both, and position picks.) Next: the verb for helping."
             }
           ]
         }

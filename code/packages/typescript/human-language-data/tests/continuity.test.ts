@@ -387,7 +387,8 @@ describe("the real corpus", () => {
     // Chapter 18 does the same across eight teaching steps before its checkpoint.
     // +9: the four lessons that extend the Tamil writing strand to chapters 2-3's
     // glyphs introduce 2 + 3 + 2 + 2 atoms (TA-W10/11/12/13).
-    expect(report.summary.atomsTaught).toBe(2640);
+    // +6 more: TA-W14/15/16 close chapters 4-5's glyphs at 2 atoms each.
+    expect(report.summary.atomsTaught).toBe(2646);
     // +2, and it goes UP, which is worth stating plainly. Three of the five new atoms
     // are TA-W09's and nothing follows TA-W09, so they are orphans by construction:
     // PA-YA-01, E-SIGN-02, READ-PEYAR-03. TA-W08's two are revisited by TA-W09.
@@ -408,6 +409,11 @@ describe("the real corpus", () => {
     // Three in, two out. AA-SIGN-01, II-SIGN-01, NGA-LLA-01 and READ-NAAN-02 never become
     // orphans at all, because each later strand lesson declares — and genuinely assesses
     // — the earlier letters its own word is built from.
+    // The chapters 4-5 tranche then moves this number NOT AT ALL, the first time
+    // extending the strand has been free. Two in — READ-TAMIZH-02 and TA-ZHA-01,
+    // TA-W16's, orphans by construction because nothing follows it. Two out — TTA-01
+    // and U-SIGN-01, which TA-W16 and TA-W14 genuinely re-use (the ட/த contrast, and
+    // the ு of சு).
     expect(report.summary.atomsNeverRevisited).toBe(470);
     expect(report.summary.neverRevisitedPercent).toBe(18);
 
@@ -480,7 +486,12 @@ describe("the real corpus", () => {
     // Chapter 15 removes one more net leak by deferring every plural form and using
     // only already-declared café, en, bien, and Madrid in its singular examples.
     // Chapter 18 removes one more by deferring its untaught clause-frame examples.
-    expect(report.summary.forwardReferences).toBe(425);
+    // -2, and both are Tamil leaks this change closes rather than Spanish ones. Both
+    // were chapter 4-5 lessons quoting a verb in SCRIPT that chapter 32 teaches, ~27
+    // chapters later: TA-C05-vaazh spelled வாழ் out of வா, and TA-C04-naalai glossed
+    // பார்க்கலாம் from பார். Neither word moved; both are now named in romanization,
+    // which is what a speaking-first lesson should have been doing anyway.
+    expect(report.summary.forwardReferences).toBe(423);
 
     // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
     // day as 766 -> 749. The absolute figures drift as main lands lessons; what the
@@ -542,7 +553,9 @@ describe("the real corpus", () => {
     // outside a 1-3 window. The TENTH is not new and is worth naming: interleaving a
     // writing lesson at chapter 29 pushes TA-LEX-AFTERNOON-BOUNDARY-01's reinforcement
     // past R1 ([R2,R3] -> [R1,R2,R3]). No atom gains R1 reinforcement here.
-    expect(report.summary.missedByWindow.R1).toBe(874);
+    // +6 for chapters 4-5: all six of TA-W14/15/16's atoms miss R1 and nothing leaves,
+    // the same cadence arithmetic as above.
+    expect(report.summary.missedByWindow.R1).toBe(880);
     // +2 net, and the composition is the interesting part: all FIVE new atoms miss R2
     // as well, offset by THREE pre-existing atoms that TA-W09 pulls back into it.
     // TA-W09 sits 12 lessons after TA-W06 and 8 after TA-W07, both inside R2's 5-15
@@ -575,7 +588,14 @@ describe("the real corpus", () => {
     // as the new lessons land between them. Note E-SIGN-02 does NOT leave R2: TA-W10
     // re-uses it, which is what takes it out of the orphan set above, but at a distance
     // R2 does not count. Four in, three out.
-    expect(report.summary.missedByWindow.R2).toBe(1800);
+    // Chapters 4-5 add +4. All SIX new atoms miss R2 this time, and the reason is worth
+    // recording because it is a consequence of ordering, not of authoring: TA-W16 was
+    // moved ahead of TA-W14/W15 so it lands before TA-C33-ezhutu, which already takes
+    // ழ and த apart. That puts consecutive strand lessons 4 apart — outside R1's 1-3,
+    // but also short of R2's 5-15 — so nothing any of the three introduces can be
+    // reinforced at R2 distance by the next one. TWO leave: TTA-01 and U-SIGN-01, both
+    // genuinely re-used far enough back to land inside the window. Six in, two out.
+    expect(report.summary.missedByWindow.R2).toBe(1804);
   });
 
   it("shows what a declared reading order was worth", () => {

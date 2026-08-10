@@ -881,7 +881,8 @@ describe("corpus regression", () => {
       // Chapter 18 replaces ten legacy lessons with nine bounded steps.
       // +4: TA-W10-read-naan, TA-W11-read-niingal, TA-W12-read-eppadi and
       // TA-W13-read-irukkirirgal extend the writing strand over chapters 2-3's glyphs.
-      totalLessons: 1684,
+      // +3: TA-W14-read-pesu, TA-W15-read-po and TA-W16-read-tamizh close chapters 4-5.
+      totalLessons: 1687,
       // Chapters 10 and 13 replace wide legacy tables with small singular-only
       // comparisons, so three more lessons move from sight to voice.
       // All seven Chapter-16 teaching steps are voice-first. Generating the book
@@ -889,7 +890,8 @@ describe("corpus regression", () => {
       // so their same person-by-person comparisons now use speakable bullet rows.
       // All eight Chapter-17 lessons remain voice-first.
       // +6, and it is the same six lessons that leave `sight` below.
-      voice: 1106,
+      // +8, the eight chapter 4-5 lessons that drop their inline script sections.
+      voice: 1114,
       // -3 sight / +3 voice: TA-C02-en, -enna and -peyar dropped their "The letters in
       // this word" sections once TA-W08 and TA-W09 gave those glyphs a home in the
       // strand. Verified against the GENERATED manifest, not the source — all three now
@@ -905,7 +907,11 @@ describe("corpus regression", () => {
       // GENERATED manifest: every one flips reasons ["script-block"] ->
       // ["no-visual-dependency"] and its detachableSegments list empties, so the
       // script teaching genuinely left the lesson rather than a heading being renamed.
-      sight: 516,
+      // -8 sight / +8 voice, the ch04/ch05 repeat of the same move: TA-C04-po,
+      // -poy-varugiren, -naalai, -mindum-sandippom and TA-C05-pesu, -velai-sey, -vaazh,
+      // -naan-tamizh-pesugiren all flip ["script-block"] -> ["no-visual-dependency"]
+      // with an empty detachableSegments, verified against the GENERATED manifest.
+      sight: 508,
       // +3 pen: the Tamil ch1 writing lessons. Rule 1 in src/modality.ts derives
       // this from the lesson TYPE alone — it says outright that it does not look at
       // the body — so all three record reasons ["writing-type","script-block"], and
@@ -915,9 +921,11 @@ describe("corpus regression", () => {
       // +2: both new lessons are writing lessons.
       // +4: TA-W10..TA-W13 are `type: writing` too, so rule 1 makes them pen even
       // though all four are reading-only and give no stroke order.
-      pen: 62,
+      // +3: TA-W14/15/16 are `type: writing` too.
+      pen: 65,
       // +6: exactly the six lessons that moved sight -> voice; no other lesson changes.
-      drivableLessons: 1106,
+      // +8: exactly the eight lessons that moved sight -> voice.
+      drivableLessons: 1114,
       drivablePercent: 66,
       trackCount: 22,
       chapterCount: 513,
@@ -961,7 +969,10 @@ describe("corpus regression", () => {
       // the 3:1 cadence puts TA-W10 between its two speaking lessons rather than after
       // them — the same mid-chapter placement TA-W06 already has in chapter 18. Chapters
       // 27/29/31 take their writing lesson after the prefix, so they hold at 1/1/2.
-      drivablePrefixTotal: 918,
+      // +6, and only two chapters move, both upward this time: Tamil chapter 4 gains 4
+      // and chapter 5 gains 2. Nothing is lost, because TA-W14/15/16 are placed to skip
+      // chapter 32 — see the ramp test for why — so no chapter's prefix is cut short.
+      drivablePrefixTotal: 924,
       // -2: chapters 21 and 23 each take a writing lesson and stop being ear-only.
       // Spreading the strand cannot happen without landing a pen lesson somewhere.
       // Spanish Chapters 10 and 13 are now fully drivable from their canonical ASTs.
@@ -979,7 +990,8 @@ describe("corpus regression", () => {
       // Tamil chapter 2, Spanish chapter 13, and Spanish chapter 18 can now start by ear.
       // -1: Tamil chapter 3 alone. It was unstartable because its first lesson needed
       // eyes; it now starts by ear. No other chapter moves.
-      unstartableChapters: 139,
+      // -2 more: Tamil chapters 4 and 5 now start by ear as well.
+      unstartableChapters: 137,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
     });

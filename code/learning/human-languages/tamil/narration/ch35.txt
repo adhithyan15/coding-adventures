@@ -1,8 +1,8 @@
 Tamil, chapter 35: Arriving at a House.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 வீடு (vīḍu) — "house," and the place the greeting happens.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -48,7 +48,46 @@ Wrap-up Recall.
 Why does one Tamil word do two English jobs here, and which letter opens both vīḍu and vaṇakkam? (House and home are not split; and வ.) What does Kannada put at the front instead of v, and is it a one-off? (b — bīḍu; regular, from the seventh century on.) Is the Tamil word for "release" the same root as the house? (Yes — both under விடு, "to let go.")
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
+போ (pō) — one sign, two marks.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: the ோ sign and Script you'll notice: build the word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Every vowel sign so far has been one mark in one place: before the consonant, above it, or after it. This one is in two places at once, and you already own both halves.
+
+Script you'll notice: the ோ sign.
+ோ is the sign for long ō, and it wraps its consonant: a hook on the left, a stroke on the right, one vowel.
+Those two halves are not a guess. The Unicode Character Database gives ோ a canonical decomposition, and it is exactly the two signs you have:
+ோ = ே (the long-ē hook, written left) + ா (the long-ā stroke, written right).
+So this is not one more mark to memorise. It is the sign you learned last lesson and the sign you learned in நான், put around the same letter — read the letter in the middle, and say the vowel once.
+Be exact about what that citation settles. A canonical decomposition says the character is composed of those two, for text processing; it says nothing about how either half is drawn or where it lands. tamil.json has no entry for ோ at all. So take the composition from Unicode and the placement — hook left, stroke right — from the page in front of you.
+
+Script you'll notice: build the word.
+[a table of 2 rows, read aloud]
+piece: ப, pa, from பெயர்.
+piece: ோ, long ō, wrapped around it, this lesson.
+ப + ோ becomes போ (pō).
+One letter and one wrapped sign, and the whole word is two marks on the page. போ is "go" — the போ inside pōy varugiṟēṉ, "I'll go and come back," the farewell chapter 1 closes on and chapter 4 takes apart.
+
+Guided Practice.
+[pause 1 second]
+[your turn — read: பே — then போ (pō) — the hook alone, then the hook with the stroke]
+[pause 8 seconds for the answer]
+[your turn — say: "pō" — "go"]
+[pause 8 seconds for the answer]
+[your turn — contrast: பே, பா, போ (pō) — left only, right only, both at once]
+[pause 8 seconds for the answer]
+[your turn — read: பேசு again, and notice its ே is the same hook]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Read போ (pō). Which two signs is ோ made of, and where does each one sit? (ே on the left, ா on the right.) How many vowels do you say when you read it? (One — the two marks are one sign.) Which of its halves did you meet in நான்? (ா.) Next: the word for a door.
+
+
+Lesson 3 of 5.
 கதவு (kadavu) — "door," and a word Tamil never gave up.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -88,7 +127,7 @@ Wrap-up Recall.
 Say "the house door," then explain why the க is hard and the த soft when neither changed shape. (Vīṭṭuk kadavu; Tamil marks no voicing — position decides.) Which of kadavu and kabāḍam would you hear at somebody's house, and where did the other come from? (Kadavu; kabāḍam is Sanskrit, and stays literary.) Does keeping both mean Tamil refuses to borrow? (No — it borrows without evicting.)
 
 
-Lesson 3 of 4.
+Lesson 4 of 5.
 அறை (aṟai) — "room," and Tamil's second r.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -132,7 +171,7 @@ Wrap-up Recall.
 Say "a room of the house," and name which of Tamil's two r-letters is in aṟai and where else you have read it. (Vīṭṭu aṟai; ற, the hard one, in நன்றி.) Where is ற made, and what must your tongue not do? (At the ridge behind the teeth — do not curl it back.) If many speakers merge the two r's, why bother? (Because the spelling does not merge.)
 
 
-Lesson 4 of 4.
+Lesson 5 of 5.
 நாற்காலி (nāṟkāli) — "chair," counted out in legs.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.

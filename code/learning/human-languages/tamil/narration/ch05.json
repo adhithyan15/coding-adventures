@@ -3,8 +3,8 @@
   "language": "tamil",
   "chapter": 5,
   "title": "The First Verbs",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0718a395630b7532",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:e673ee026212e7ec",
   "lessons": [
     {
       "id": "TA-C05-pesu",
@@ -14,22 +14,13 @@
       "romanization": "",
       "gloss": "to speak",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3ef5e5538b5a60d",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:fb566b65a21c956b",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -50,17 +41,6 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ப (pa) + ே (the long-ē sign) + சு (su) becomes பேசு (pēsu)."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
@@ -79,7 +59,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "grammar",
           "title": "Grammar Lens: stem + tense + person",
           "segments": [
@@ -90,7 +70,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -130,7 +110,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -156,22 +136,13 @@
       "romanization": "",
       "gloss": "I speak Tamil",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea295f6dbc121380",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:c8fbce5b84c6ca12",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -192,28 +163,21 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "தமிழ் (tamiḻ): த (ta) + மி (mi) + ழ் (ḻ) — that last letter, ழ, is the famous Tamil ḻ, a curled retroflex sound between \"r,\" \"l,\" and \"zh,\" found in almost no other language on earth. It is so identified with the language that Tamil is sometimes called \"the ḻ language.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "etymology",
           "title": "The sentence, taken apart",
           "segments": [
             {
               "kind": "speech",
               "text": "நான் தமிழ் பேசுகிறேன் = நான் (nāṉ, \"I\") + தமிழ் (tamiḻ, \"Tamil,\" the object) + பேசுகிறேன் (pēsugiṟēṉ, \"speak\") — \"I Tamil speak,\" the verb last as always. The name தமிழ் (tamiḻ) is native, of debated but clearly Dravidian origin (often linked to a sense of \"sweetness / one's own speech\"); it names one of the oldest living literary languages in the world, with poetry two thousand years old still read today."
+            },
+            {
+              "kind": "speech",
+              "text": "That final sound is worth dwelling on. The ḻ of tamiḻ is a curled retroflex sitting somewhere between an r, an l and a zh — rare enough among the world's languages that Tamil is sometimes called \"the ḻ language.\" Getting it approximately right matters more than getting it perfect; nobody will mistake what you mean."
             }
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "grammar",
           "title": "Grammar Lens: no gender on \"I speak\"",
           "segments": [
@@ -224,7 +188,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -264,7 +228,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -473,22 +437,13 @@
       "romanization": "",
       "gloss": "to live, to flourish",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c25a4a6426c60568",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:897c0df3eca3c5a6",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -509,17 +464,6 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "வா (vā) + ழ் (ḻ, the retroflex you just met in tamiḻ) becomes வாழ் (vāḻ)."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
@@ -534,7 +478,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "grammar",
           "title": "Grammar Lens: same engine, new verb",
           "segments": [
@@ -545,7 +489,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -585,7 +529,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -611,22 +555,13 @@
       "romanization": "",
       "gloss": "to work (lit. \"work-do\")",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64528b6911be0db6",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:41f470fad02f3716",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -647,17 +582,6 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "வேலை (vēlai, \"work\"): வே (vē) + லை (lai). செய் (sey, \"do\"): செ (se) + ய் (y)."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
@@ -688,7 +612,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "grammar",
           "title": "Grammar Lens: noun + செய் = a new verb",
           "segments": [
@@ -699,7 +623,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -739,7 +663,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

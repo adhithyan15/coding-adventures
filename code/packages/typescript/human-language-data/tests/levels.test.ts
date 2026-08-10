@@ -220,7 +220,8 @@ describe("corpus snapshot", () => {
     // +2: Spanish Chapter 9 maps its identity and ser/estar contrast lessons onto
     // the existing pre-A1 social spine.
     // +4: TA-W10..TA-W13, the Tamil writing strand's extension, all sit at pre-A1.
-    expect(summary.byLevel["pre-A1"]).toBe(872);
+    // +3 more: TA-W14/15/16, closing chapters 4-5, sit there too.
+    expect(summary.byLevel["pre-A1"]).toBe(875);
     // Chapter 10 adds singular ir and possessives at A1. Chapter 11 adds one more
     // definite-reference lesson there; its other work is A2. Chapter 12 adds its
     // newly mapped terminal checkpoints at A2 on SPINE-SAY-WHAT-I-DO.
@@ -294,7 +295,9 @@ describe("corpus snapshot", () => {
     // +4, measured as a set difference against the pre-change corpus rather than inferred
     // from the total: TA-W10-read-naan, TA-W11-read-niingal, TA-W12-read-eppadi and
     // TA-W13-read-irukkirirgal are the only lessons that join.
-    expect(ramp).toHaveLength(1181);
+    // +3: TA-W14-read-pesu, TA-W15-read-po and TA-W16-read-tamizh, likewise the only
+    // lessons that join.
+    expect(ramp).toHaveLength(1184);
     expect(ramp.length).toBeLessThan(lessons.length);
   });
 });

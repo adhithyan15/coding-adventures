@@ -4043,11 +4043,12 @@
     {
       "language": "tamil",
       "chapter": 33,
-      "sourceHash": "fnv1a64:3bc295a90be3325d",
+      "sourceHash": "fnv1a64:c9ee25acee4c3a7f",
       "lessonIds": [
         "TA-C33-ninai",
         "TA-C33-puri",
         "TA-C33-padi",
+        "TA-W16-read-tamizh",
         "TA-C33-ezhutu"
       ],
       "tex": "tamil/book/chapters/ch33-verbs-of-the-mind.tex"
@@ -4055,10 +4056,11 @@
     {
       "language": "tamil",
       "chapter": 34,
-      "sourceHash": "fnv1a64:913881ac8f00f9b0",
+      "sourceHash": "fnv1a64:a11a552c200636de",
       "lessonIds": [
         "TA-C34-edu",
         "TA-C34-kel",
+        "TA-W14-read-pesu",
         "TA-C34-utavu",
         "TA-C34-pidi"
       ],
@@ -4067,9 +4069,10 @@
     {
       "language": "tamil",
       "chapter": 35,
-      "sourceHash": "fnv1a64:cc781feef9dd0947",
+      "sourceHash": "fnv1a64:65a207deb9f6b6df",
       "lessonIds": [
         "TA-C35-veedu",
+        "TA-W15-read-po",
         "TA-C35-kadavu",
         "TA-C35-arai",
         "TA-C35-naarkaali"

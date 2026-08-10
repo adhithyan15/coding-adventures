@@ -7,7 +7,7 @@ headword: வேலை செய்
 gloss: to work (lit. "work-do")
 concept_tag: TA-VERB-SEY
 prerequisites: [TA-C05-pesu]
-sounds: [long-e, ai-sign]
+sounds: [long-e]
 roots: [sey-do-dravidian, velai-work-dravidian]
 est_minutes: 4
 reviews_of: [TA-C05-pesu, TA-C05-vaazh]
@@ -19,11 +19,6 @@ reviews_of: [TA-C05-pesu, TA-C05-vaazh]
 
 [PAUSE 2s] The last verb of the chapter — and, like Hindi's *karnā*, it is a
 "do" verb that builds a hundred others.
-
-## The letters in this word
-
-**வேலை** (*vēlai*, "work"): **வே** (*vē*) + **லை** (*lai*). **செய்** (*sey*,
-"do"): **செ** (*se*) + **ய்** (*y*).
 
 ## The word, taken apart
 

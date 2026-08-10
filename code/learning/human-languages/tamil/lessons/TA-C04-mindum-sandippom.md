@@ -20,11 +20,6 @@ reviews_of: [TA-C04-naalai]
 [PAUSE 2s] A warmer, open-ended goodbye — and a chance to see Tamil's two
 vocabularies side by side.
 
-## The letters in this word
-
-**மீண்டும்** (*mīṇḍum*): note the retroflex cluster **ண்ட** (*ṇḍ*). **சந்திப்போம்**
-(*sandippōm*): **சந்தி** (*sandi*) + **-ப்போம்** (*-ppōm*, "we will").
-
 ## The word, taken apart
 
 **மீண்டும் சந்திப்போம்** = **மீண்டும்** (*mīṇḍum*, "again") + **சந்திப்போம்**
@@ -32,10 +27,12 @@ vocabularies side by side.
 these two words:
 
 - **மீண்டும்** (*mīṇḍum*, "again") is **native Dravidian**, from *mīḷ* ("to
-  return").
+  return"). Say it *mīṇ-ḍum*: the *ṇḍ* in the middle is a retroflex pair, both
+  halves made with the tongue curled back, and it is one gesture rather than two.
 - **சந்தி** (*sandi*, "to meet, a junction") is a **Sanskrit** loan — from
   *sandhi* ("a joining, union"), the very word Sanskrit grammar uses for how
-  sounds join at a word-boundary.
+  sounds join at a word-boundary. The ending on it is *-ppōm*, "we will," so
+  *sandippōm* is "we will meet."
 
 So even a goodbye shows Tamil's balance: an ancient Dravidian core (*mīṇḍum*)
 beside a Sanskrit borrowing (*sandi*) — the recurring thread of this whole track.

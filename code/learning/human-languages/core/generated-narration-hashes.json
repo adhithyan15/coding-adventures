@@ -7087,7 +7087,7 @@
     {
       "language": "tamil",
       "chapter": 4,
-      "sourceHash": "fnv1a64:ac8d1a3a89c18c13",
+      "sourceHash": "fnv1a64:a5a6cf8447b604ca",
       "lessonIds": [
         "TA-C04-po",
         "TA-C04-poy-varugiren",
@@ -7096,17 +7096,17 @@
         "TA-W01-curves-va-ka",
         "TA-C04-practice"
       ],
-      "voiceLessons": 1,
-      "drivablePrefix": 0,
+      "voiceLessons": 5,
+      "drivablePrefix": 4,
       "text": "tamil/narration/ch04.txt",
       "json": "tamil/narration/ch04.json",
-      "textHash": "fnv1a64:e5095270ae59ea43",
-      "jsonHash": "fnv1a64:4fdf4e9833823a52"
+      "textHash": "fnv1a64:82b53ce6bf0c7508",
+      "jsonHash": "fnv1a64:e64a303e793a3fef"
     },
     {
       "language": "tamil",
       "chapter": 5,
-      "sourceHash": "fnv1a64:0718a395630b7532",
+      "sourceHash": "fnv1a64:e673ee026212e7ec",
       "lessonIds": [
         "TA-C05-pesu",
         "TA-C05-naan-tamizh-pesugiren",
@@ -7115,12 +7115,12 @@
         "TA-C05-velai-sey",
         "TA-C05-practice"
       ],
-      "voiceLessons": 1,
-      "drivablePrefix": 0,
+      "voiceLessons": 5,
+      "drivablePrefix": 2,
       "text": "tamil/narration/ch05.txt",
       "json": "tamil/narration/ch05.json",
-      "textHash": "fnv1a64:75cb0e6472b4e312",
-      "jsonHash": "fnv1a64:d069e67cf6116dd0"
+      "textHash": "fnv1a64:4942146a0615affe",
+      "jsonHash": "fnv1a64:9c706cca35666885"
     },
     {
       "language": "tamil",
@@ -7540,27 +7540,29 @@
     {
       "language": "tamil",
       "chapter": 33,
-      "sourceHash": "fnv1a64:87330318c12938c6",
+      "sourceHash": "fnv1a64:1692ee153a91024f",
       "lessonIds": [
         "TA-C33-ninai",
         "TA-C33-puri",
         "TA-C33-padi",
+        "TA-W16-read-tamizh",
         "TA-C33-ezhutu"
       ],
       "voiceLessons": 0,
       "drivablePrefix": 0,
       "text": "tamil/narration/ch33.txt",
       "json": "tamil/narration/ch33.json",
-      "textHash": "fnv1a64:d5d28e2aea496fd2",
-      "jsonHash": "fnv1a64:a7856dd949e95471"
+      "textHash": "fnv1a64:70dee08f58a6d6a0",
+      "jsonHash": "fnv1a64:dc9c376c15fc5184"
     },
     {
       "language": "tamil",
       "chapter": 34,
-      "sourceHash": "fnv1a64:0afe185a93c0169e",
+      "sourceHash": "fnv1a64:7389731691de483a",
       "lessonIds": [
         "TA-C34-edu",
         "TA-C34-kel",
+        "TA-W14-read-pesu",
         "TA-C34-utavu",
         "TA-C34-pidi"
       ],
@@ -7568,15 +7570,16 @@
       "drivablePrefix": 0,
       "text": "tamil/narration/ch34.txt",
       "json": "tamil/narration/ch34.json",
-      "textHash": "fnv1a64:3b698d59bb660735",
-      "jsonHash": "fnv1a64:157d4fcd23ee1fbb"
+      "textHash": "fnv1a64:df1589ac7e6aa906",
+      "jsonHash": "fnv1a64:f2f3abc0dc06540e"
     },
     {
       "language": "tamil",
       "chapter": 35,
-      "sourceHash": "fnv1a64:c26956daee7bf61d",
+      "sourceHash": "fnv1a64:ef59f7e86d3ed65d",
       "lessonIds": [
         "TA-C35-veedu",
+        "TA-W15-read-po",
         "TA-C35-kadavu",
         "TA-C35-arai",
         "TA-C35-naarkaali"
@@ -7585,8 +7588,8 @@
       "drivablePrefix": 0,
       "text": "tamil/narration/ch35.txt",
       "json": "tamil/narration/ch35.json",
-      "textHash": "fnv1a64:73c0cbf33267d147",
-      "jsonHash": "fnv1a64:c720257d941123fc"
+      "textHash": "fnv1a64:eb692dab7ce74c09",
+      "jsonHash": "fnv1a64:8701f8e9b5e65685"
     },
     {
       "language": "tamil",

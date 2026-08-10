@@ -20,13 +20,6 @@ reviews_of: [TA-C05-pesu, TA-C03-naan]
 [PAUSE 2s] Your first full, moving sentence — and it names the language itself,
 with a sound almost no other language has.
 
-## The letters in this word
-
-**தமிழ்** (*tamiḻ*): **த** (*ta*) + **மி** (*mi*) + **ழ்** (*ḻ*) — that last
-letter, **ழ**, is the famous Tamil **ḻ**, a curled retroflex sound between "r,"
-"l," and "zh," found in almost no other language on earth. It is so identified
-with the language that Tamil is sometimes called "the *ḻ* language."
-
 ## The sentence, taken apart
 
 **நான் தமிழ் பேசுகிறேன்** = **நான்** (*nāṉ*, "I") + **தமிழ்** (*tamiḻ*, "Tamil,"
@@ -35,6 +28,12 @@ verb last as always. The name **தமிழ்** (*tamiḻ*) is native, of deba
 clearly Dravidian origin (often linked to a sense of "sweetness / one's own
 speech"); it names one of the oldest living literary languages in the world, with
 poetry two thousand years old still read today.
+
+That final sound is worth dwelling on. The *ḻ* of *tamiḻ* is a curled retroflex
+sitting somewhere between an *r*, an *l* and a *zh* — rare enough among the
+world's languages that Tamil is sometimes called "the *ḻ* language." Getting it
+approximately right matters more than getting it perfect; nobody will mistake
+what you mean.
 
 ## Grammar Lens: no gender on "I speak"
 
