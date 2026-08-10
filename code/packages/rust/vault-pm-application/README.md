@@ -66,10 +66,24 @@ returns a partial list, and every candidate remains available for later
 resolution. Returned lists are deterministic by exact item-ID bytes and their
 display metadata is wiped on drop by the domain view types.
 
+Authenticated reopen also builds a session-owned, rebuildable search
+projection. The application admits only the VLT-PM05 allowlist of redacted
+titles/labels, usernames, URLs, services, database hosts, and present tags;
+secret and non-allowlisted fields never enter it. Owned queries are limited to
+1–256 UTF-8 bytes, reject control characters, and are normalized with Unicode
+lowercase plus NFC. The trigram primitive accelerates eligible searches, while
+exact post-filtering and bounded fallbacks preserve correct substring behavior
+for each whitespace-delimited token, including short queries and unusually
+large safe metadata. Results can apply one
+explicit collection filter and are always re-ordered by normalized title,
+schema, and item-ID bytes. Conflicts fail the complete search closed, ordinary
+diagnostics expose only an indexed-item count, and dropping the unlocked
+session clears the accelerator and wipes normalized metadata.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
-credential store, or entropy source. Search projection and mutation workflows
-land in the next slices. There is no unchecked
+credential store, or entropy source. Mutation, history, export, audit, and
+doctor workflows land in the next slices. There is no unchecked
 repository verification path: construction decrypts and
 authority-verifies the exact locally pinned certificate frame and object ID,
 and commits and announcements must match that vault, device, certificate ID,
@@ -87,7 +101,11 @@ catalog materialization plus dangling current-revision, missing-parent, and
 cross-item rejection. Repository tests exercise initialization, publication,
 verified open/read/history, every injected provider operation, constructor
 paths, and complete error translation.
-The exact Tarpaulin LLVM result is 1,580 of 1,647 production lines (95.93%).
+Search tests cover Unicode normalization, short queries, oversized safe-field
+fallback, exact collection filters, deterministic product ordering, every
+record schema's allowlist/denylist, secret exclusion, query/result bounds, and
+conflict closure. The exact Tarpaulin LLVM result is 1,748 of 1,827 production
+lines (95.68%).
 
 ## Development
 

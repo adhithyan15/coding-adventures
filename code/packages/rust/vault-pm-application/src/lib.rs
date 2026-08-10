@@ -12,6 +12,7 @@ mod crypto;
 mod initialize;
 mod open;
 mod repository;
+mod search;
 mod state;
 mod verifier;
 
