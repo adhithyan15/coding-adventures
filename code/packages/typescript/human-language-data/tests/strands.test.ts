@@ -175,6 +175,62 @@ describe("renderStrandSummary", () => {
   });
 });
 
+describe("hostile spine shapes (security review, HL-C80)", () => {
+  // A gate whose job is making defects visible must not be silenceable by the data
+  // it inspects. Each case below was found by adversarial review and confirmed to
+  // misbehave before the fix.
+
+  it("does not let a prototype-named stage forge a covered stage", () => {
+    // `stage in byStage` walked the prototype chain, so "toString" passed the
+    // membership test, read the inherited FUNCTION, and `+= 1` wrote
+    // "function toString() { [native code] }1" into the count. That string is not
+    // === 0, so missingStages reported the stage as COVERED. The gate reported
+    // clean BECAUSE of the crafted name.
+    const s = summarizeStrands(
+      spine([node({ id: "SPINE-X", strand: "FUNCTION", stage: "toString" as never })]),
+      12,
+    );
+    const fn = s.strands.find((c) => c.strand === "FUNCTION")!;
+    for (const value of Object.values(fn.byStage)) {
+      expect(typeof value).toBe("number");
+    }
+    // Every real stage is still correctly reported as unreached.
+    expect(fn.missingStages).toContain("A1");
+    expect(fn.missingStages).toContain("C2");
+  });
+
+  it("keeps buckets free of inherited keys entirely", () => {
+    const s = summarizeStrands(spine([node({ id: "SPINE-X" })]), 12);
+    const fn = s.strands.find((c) => c.strand === "FUNCTION")!;
+    expect(Object.getPrototypeOf(fn.byStage)).toBeNull();
+    expect(("toString" as string) in fn.byStage).toBe(false);
+  });
+
+  it("does not pollute Object.prototype from a __proto__ stage name", () => {
+    summarizeStrands(
+      spine([node({ id: "SPINE-X", stage: "__proto__" as never })]),
+      12,
+    );
+    expect(({} as Record<string, unknown>).polluted).toBeUndefined();
+    expect(Object.prototype.toString).toBe(Object.prototype.toString);
+  });
+
+  it.each([
+    ["strands is an object", { strands: { length: 3 } as never }],
+    ["strands is a string", { strands: "FUNCTION" as never }],
+    ["stages is a string", { stages: "A1" as never }],
+    ["nodes is absent", { nodes: undefined as never }],
+    ["nodes holds null", { nodes: [null] as never }],
+  ])("survives malformed JSON: %s", (_label, over) => {
+    // These each threw an uncaught TypeError out of the CLI before the shape
+    // guards, surfacing as a Node stack trace with absolute filesystem paths.
+    const bad = spine([node({ id: "SPINE-X" })], over);
+    expect(() => summarizeStrands(bad, 12)).not.toThrow();
+    expect(() => strandDefects(bad)).not.toThrow();
+    expect(() => nodeSizeDefects(bad, 12)).not.toThrow();
+  });
+});
+
 describe("the committed corpus", () => {
   it("gives every spine node a declared strand", () => {
     expect(strandDefects(loadCurriculumSpine())).toEqual([]);

@@ -97,14 +97,20 @@ export const NODE_CONCEPT_TARGET = 6;
  * strands existed.
  */
 export function declaredStrands(spine: CurriculumSpine): readonly string[] {
-  return spine.strands && spine.strands.length > 0 ? spine.strands : CURRICULUM_STRANDS;
+  // Array.isArray, not truthiness: a spine.json whose `strands` is an object or a
+  // bare string is malformed data, and without this guard it reaches a `for...of`
+  // or a `.map` and throws an uncaught TypeError out of the CLI. `loadChapterPolicy`
+  // already shape-validates its budgets; this is the same contract.
+  if (!Array.isArray(spine.strands) || spine.strands.length === 0) return CURRICULUM_STRANDS;
+  return spine.strands;
 }
 
 /** Every node must name exactly one strand, and it must be one that was declared. */
 export function strandDefects(spine: CurriculumSpine): StrandDefect[] {
   const allowed = new Set(declaredStrands(spine));
   const out: StrandDefect[] = [];
-  for (const node of spine.nodes) {
+  for (const node of Array.isArray(spine.nodes) ? spine.nodes : []) {
+    if (node === null || typeof node !== "object") continue;
     const strand = (node as SpineNode).strand as string | undefined;
     if (strand === undefined || strand === null || strand === "") {
       out.push({
@@ -139,7 +145,8 @@ export function nodeSizeDefects(
   maxNewAtomsPerChapter: number,
 ): NodeSizeDefect[] {
   const out: NodeSizeDefect[] = [];
-  for (const node of spine.nodes) {
+  for (const node of Array.isArray(spine.nodes) ? spine.nodes : []) {
+    if (node === null || typeof node !== "object") continue;
     const concepts = node.concepts?.length ?? 0;
     if (concepts <= NODE_CONCEPT_TARGET) continue;
     out.push({
@@ -161,21 +168,31 @@ export function summarizeStrands(
   spine: CurriculumSpine,
   maxNewAtomsPerChapter: number,
 ): StrandSummary {
-  const stages = spine.stages ?? [];
+  const stages = Array.isArray(spine.stages) ? spine.stages : [];
+  const nodes = Array.isArray(spine.nodes) ? spine.nodes : [];
   const allowed = declaredStrands(spine);
 
   const counts = new Map<string, { nodes: number; byStage: Record<string, number> }>();
   // Seeded from the DECLARED list, not from the nodes present, or a strand with
   // zero nodes would simply not appear -- which is precisely the finding.
   for (const strand of allowed) {
-    counts.set(strand, {
-      nodes: 0,
-      byStage: Object.fromEntries(stages.map((stage) => [stage, 0])),
-    });
+    // Object.create(null), NOT Object.fromEntries. A plain object inherits from
+    // Object.prototype, and the membership test below used to be `in`, which walks
+    // the prototype chain: a node declaring `stage: "toString"` passed the check,
+    // read the inherited FUNCTION, and `+= 1` wrote the string
+    // "function toString() { [native code] }1" into the counts. That string then
+    // failed the `=== 0` test in missingStages, so the stage was reported as
+    // COVERED. A gate that reports clean because of a crafted stage name is worse
+    // than no gate, which is why this is a null-prototype map and an own-property
+    // check rather than a comment saying "stages are trusted".
+    const byStage: Record<string, number> = Object.create(null) as Record<string, number>;
+    for (const stage of stages) byStage[stage] = 0;
+    counts.set(strand, { nodes: 0, byStage });
   }
 
   let largest: { nodeId: string; concepts: number } | null = null;
-  for (const node of spine.nodes) {
+  for (const node of nodes) {
+    if (node === null || typeof node !== "object") continue;
     const concepts = node.concepts?.length ?? 0;
     if (largest === null || concepts > largest.concepts) {
       largest = { nodeId: node.id, concepts };
@@ -185,7 +202,9 @@ export function summarizeStrands(
     const bucket = counts.get(strand);
     if (bucket === undefined) continue; // an unknown strand is a defect, not a count
     bucket.nodes += 1;
-    if (node.stage in bucket.byStage) bucket.byStage[node.stage] += 1;
+    if (Object.prototype.hasOwnProperty.call(bucket.byStage, node.stage)) {
+      bucket.byStage[node.stage] += 1;
+    }
   }
 
   const strandCounts: StrandCount[] = allowed.map((strand) => {
@@ -203,7 +222,7 @@ export function summarizeStrands(
     emptyStrands: strandCounts.filter((s) => s.nodes === 0).map((s) => s.strand),
     defects: strandDefects(spine),
     nodeSizeDefects: nodeSizeDefects(spine, maxNewAtomsPerChapter),
-    totalNodes: spine.nodes.length,
+    totalNodes: nodes.length,
     largestNode: largest,
   };
 }
