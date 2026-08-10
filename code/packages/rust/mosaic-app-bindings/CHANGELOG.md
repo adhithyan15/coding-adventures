@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `MosaicRuntimeHost.loadRequired()` for strict SwiftUI shells that must
+  fail explicitly when the Rust application runtime cannot be loaded.
 - Add `MosaicHost.loadRequired()` for strict Flutter shells that must fail
   explicitly when the Rust application runtime cannot be loaded.
 - Execute the generated Compose/JNA host against the shared Rust conformance

@@ -306,7 +306,8 @@ unblocks multiple downstream targets; never count source generation as completio
   - [x] Make Compose and Flutter `native-complete` project shells require the
     standard Rust runtime and runtime-provided props, with no optional-host or
     sample-data path.
-  - [ ] Repeat the runtime-required shell policy for SwiftUI, XAML, and Qt.
+  - [x] Repeat the runtime-required shell policy for SwiftUI.
+  - [ ] Repeat the runtime-required shell policy for XAML and Qt.
   - [ ] Inventory ignored properties, events, styles, effects, and accessibility
     metadata across every native emitter, and add the equivalent package setting.
     - [ ] Define a serializable native-view reference contract for `node` and

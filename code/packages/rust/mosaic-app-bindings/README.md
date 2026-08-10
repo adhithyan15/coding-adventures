@@ -23,6 +23,8 @@ and teardown on the JVM.
 For SwiftUI, set `MOSAIC_APP_LIBRARY` to the application dylib path. Without an
 explicit path the loader first checks symbols linked into the process, then tries
 `libmosaic_app.dylib` and `mosaic_app.dylib`.
+Strict generated shells call `MosaicRuntimeHost.loadRequired()` so a missing
+Rust library fails at startup rather than silently entering preview mode.
 macOS CI compiles the exact binding and C loader from a complete generated
 TaskApp project with the shared `mosaic-app-conformance` dylib, then verifies
 startup, semantic dispatch, snapshot/restore, notification, buffer ownership,

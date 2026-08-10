@@ -199,6 +199,8 @@ mod tests {
             dispatch < commit,
             "sequence must commit only after dispatch succeeds"
         );
+        assert!(source.contains("static func loadRequired() -> MosaicRuntimeHost"));
+        assert!(source.contains("native-complete requires the Mosaic Rust application runtime"));
     }
 
     #[test]

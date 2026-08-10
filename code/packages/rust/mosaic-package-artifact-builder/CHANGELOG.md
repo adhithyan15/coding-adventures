@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased] - native-complete SwiftUI runtime shell
+
+- SwiftUI project shells emitted under `BuildProfile::NativeComplete` now
+  require Mosaic's standard Foundation/C runtime binding and its initial props
+  before mounting the generated view.
+- Strict SwiftUI shells omit reflection-host, event-print, and generated sample
+  paths while permissive output remains backward-compatible.
+- macOS runtime CI builds a zero-degradation strict SwiftPM project in addition
+  to round-tripping the standard binding.
+
 ## [Unreleased] - native-complete Flutter runtime shell
 
 - Flutter project shells emitted under `BuildProfile::NativeComplete` now
