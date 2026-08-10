@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 22,
-    "totalLessons": 1690,
+    "totalLessons": 1694,
     "authoredBooks": 22,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -28,12 +28,12 @@
     "lessonsOpeningMultipleScripts": 5,
     "lessonsWithoutSequence": 477,
     "forwardReviews": 267,
-    "atomsNeverRevisited": 472,
-    "forwardReferences": 423,
+    "atomsNeverRevisited": 474,
+    "forwardReferences": 424,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 29,
     "chapterGateCleanTracks": 12,
-    "drivableLessons": 1528,
+    "drivableLessons": 1531,
     "drivablePercent": 90,
     "chaptersWithoutDrivablePrefix": 40,
     "unexplainedModalityOverrides": 0
@@ -1049,7 +1049,8 @@
           35,
           36,
           37,
-          38
+          38,
+          39
         ],
         "bookChapters": [
           1,
@@ -1089,7 +1090,8 @@
           35,
           36,
           37,
-          38
+          38,
+          39
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -1827,10 +1829,10 @@
       {
         "language": "tamil",
         "status": "mixed",
-        "lessonCount": 128,
+        "lessonCount": 132,
         "versions": {
           "1": 33,
-          "2": 95
+          "2": 99
         }
       },
       {
@@ -2329,8 +2331,8 @@
       },
       {
         "language": "tamil",
-        "bookChapters": 38,
-        "declaredChapters": 38,
+        "bookChapters": 39,
+        "declaredChapters": 39,
         "missingCapability": 0,
         "findings": 8,
         "clean": false
@@ -2353,8 +2355,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 513,
-      "declaredChapters": 513,
+      "bookChapters": 514,
+      "declaredChapters": 514,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 29,
@@ -2366,11 +2368,11 @@
     }
   },
   "levels": {
-    "totalLessons": 1690,
+    "totalLessons": 1694,
     "byLevel": {
-      "pre-A1": 878,
+      "pre-A1": 879,
       "A1": 309,
-      "A2": 409,
+      "A2": 412,
       "B1": 8,
       "B2": 0,
       "C1": 0,
@@ -2666,11 +2668,11 @@
       },
       {
         "language": "tamil",
-        "lessonCount": 128,
+        "lessonCount": 132,
         "byLevel": {
-          "pre-A1": 80,
+          "pre-A1": 81,
           "A1": 30,
-          "A2": 14,
+          "A2": 17,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -3323,8 +3325,8 @@
       },
       {
         "language": "tamil",
-        "lessonCount": 128,
-        "measurable": 95,
+        "lessonCount": 132,
+        "measurable": 99,
         "unmeasurable": 33,
         "lessonViolations": 1,
         "chapterViolations": 0
@@ -4275,7 +4277,7 @@
           "language": "tamil",
           "script": "tamil",
           "latinScript": false,
-          "lessonCount": 128,
+          "lessonCount": 132,
           "totalGlyphs": 51,
           "lessonViolations": 5,
           "systemViolations": 0,
@@ -12056,6 +12058,19 @@
         "revisits": 0
       },
       {
+        "atom": "TA-ETYMON-MANNIKKAVUM-02",
+        "language": "tamil",
+        "introducedBy": "TA-C09-mannikkavum",
+        "introducedAt": 49,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "TA-ETYMON-NUMBERS-6-10-FAMILY-02",
         "language": "tamil",
         "introducedBy": "TA-C07-numbers-6-10-family",
@@ -12067,19 +12082,6 @@
           "R4"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "TA-GRAMMAR-DATIVE-SUBJECT-02",
-        "language": "tamil",
-        "introducedBy": "TA-C06-dative-subject",
-        "introducedAt": 38,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
       },
       {
         "atom": "TA-GRAMMAR-DATIVE-SUBJECT-FAMILY-01",
@@ -12119,6 +12121,32 @@
           "R4"
         ],
         "revisits": 0
+      },
+      {
+        "atom": "TA-PRAGMATICS-VAARA-KIZHAMAI-02",
+        "language": "tamil",
+        "introducedBy": "TA-C10-vaara-kizhamai",
+        "introducedAt": 51,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "TA-SCRIPT-SORRY-REGISTER-02",
+        "language": "tamil",
+        "introducedBy": "TA-C09-sorry-register",
+        "introducedAt": 50,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "TA-SOUND-NUMBERS-1-5-FAMILY-02",
@@ -17450,14 +17478,14 @@
         "revisits": 0
       },
       {
-        "atom": "TA-ETYMON-MANNIKKAVUM-02",
+        "atom": "TA-ETYMON-MANNIKKAVUM-01",
         "language": "tamil",
         "introducedBy": "TA-C09-mannikkavum",
         "introducedAt": 49,
         "missed": [
-          "R1",
           "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
         "revisits": 2
       },
@@ -17570,6 +17598,18 @@
         "revisits": 3
       },
       {
+        "atom": "TA-GRAMMAR-DATIVE-SUBJECT-02",
+        "language": "tamil",
+        "introducedBy": "TA-C06-dative-subject",
+        "introducedAt": 38,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "TA-GRAMMAR-MANI-HOMOPHONE-TIME-02",
         "language": "tamil",
         "introducedBy": "TA-C18-mani-homophone-time",
@@ -17582,6 +17622,18 @@
         "revisits": 0
       },
       {
+        "atom": "TA-GRAMMAR-VAARA-KIZHAMAI-01",
+        "language": "tamil",
+        "introducedBy": "TA-C10-vaara-kizhamai",
+        "introducedAt": 51,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "TA-LEX-AFTERNOON-BOUNDARY-01",
         "language": "tamil",
         "introducedBy": "TA-C28-afternoon-boundary",
@@ -17592,18 +17644,6 @@
           "R3"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "TA-LEX-DATIVE-SUBJECT-01",
-        "language": "tamil",
-        "introducedBy": "TA-C06-dative-subject",
-        "introducedAt": 38,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 3
       },
       {
         "atom": "TA-LEX-DAY-FAMILY-REGISTER-02",
@@ -17666,18 +17706,6 @@
         "revisits": 0
       },
       {
-        "atom": "TA-LEX-NUMBERS-1-5-01",
-        "language": "tamil",
-        "introducedBy": "TA-C07-numbers-1-5",
-        "introducedAt": 41,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "TA-LEX-NUMBERS-6-10-01",
         "language": "tamil",
         "introducedBy": "TA-C07-numbers-6-10",
@@ -17730,6 +17758,18 @@
         "language": "tamil",
         "introducedBy": "TA-C20-vaanilai",
         "introducedAt": 70,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "TA-LEX-VIRUMBU-03",
+        "language": "tamil",
+        "introducedBy": "TA-C34-pidi",
+        "introducedAt": 108,
         "missed": [
           "R1",
           "R2",
@@ -17810,22 +17850,22 @@
         "revisits": 0
       },
       {
+        "atom": "TA-PRAGMATICS-SORRY-REGISTER-01",
+        "language": "tamil",
+        "introducedBy": "TA-C09-sorry-register",
+        "introducedAt": 50,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "TA-PRAGMATICS-THAMIZH-MAADANGAL-02",
         "language": "tamil",
         "introducedBy": "TA-C16-thamizh-maadangal",
         "introducedAt": 59,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "TA-PRAGMATICS-VAARA-KIZHAMAI-02",
-        "language": "tamil",
-        "introducedBy": "TA-C10-vaara-kizhamai",
-        "introducedAt": 51,
         "missed": [
           "R1",
           "R2",
@@ -17855,7 +17895,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 4
+        "revisits": 6
       },
       {
         "atom": "TA-SCRIPT-ABUGIDA-VA-KA-03",
@@ -17882,28 +17922,16 @@
         "revisits": 2
       },
       {
-        "atom": "TA-SCRIPT-EE-SIGN-01",
+        "atom": "TA-SCRIPT-OO-SIGN-01",
         "language": "tamil",
-        "introducedBy": "TA-W14-read-pesu",
-        "introducedAt": 106,
+        "introducedBy": "TA-W15-read-po",
+        "introducedAt": 110,
         "missed": [
           "R1",
           "R2",
           "R3"
         ],
-        "revisits": 1
-      },
-      {
-        "atom": "TA-SCRIPT-INDEPENDENT-VOWEL-E-01",
-        "language": "tamil",
-        "introducedBy": "TA-W08-read-en",
-        "introducedAt": 72,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
+        "revisits": 0
       },
       {
         "atom": "TA-SCRIPT-PLEASE-REGISTER-02",
@@ -17978,6 +18006,18 @@
         "revisits": 0
       },
       {
+        "atom": "TA-SCRIPT-READ-PO-02",
+        "language": "tamil",
+        "introducedBy": "TA-W15-read-po",
+        "introducedAt": 110,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "TA-SCRIPT-READ-QUESTION-02",
         "language": "tamil",
         "introducedBy": "TA-W13-read-irukkirirgal",
@@ -18000,18 +18040,6 @@
           "R3"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "TA-SCRIPT-SORRY-REGISTER-02",
-        "language": "tamil",
-        "introducedBy": "TA-C09-sorry-register",
-        "introducedAt": 50,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
       },
       {
         "atom": "TA-SCRIPT-TA-ZHA-01",
@@ -18050,6 +18078,18 @@
         "revisits": 0
       },
       {
+        "atom": "TA-SCRIPT-WRITE-VANAKKAM-01",
+        "language": "tamil",
+        "introducedBy": "TA-W03-write-vanakkam",
+        "introducedAt": 48,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "TA-SOUND-EZHUTU-02",
         "language": "tamil",
         "introducedBy": "TA-C33-ezhutu",
@@ -18071,7 +18111,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "TA-SOUND-MA-RETROFLEX-NA-03",
@@ -26228,6 +26268,17 @@
         "revisits": 1
       },
       {
+        "atom": "TA-ETYMON-KADAVU-02",
+        "language": "tamil",
+        "introducedBy": "TA-C35-kadavu",
+        "introducedAt": 111,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "TA-ETYMON-KEL-02",
         "language": "tamil",
         "introducedBy": "TA-C34-kel",
@@ -26270,17 +26321,6 @@
           "R3"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "TA-ETYMON-MANNIKKAVUM-01",
-        "language": "tamil",
-        "introducedBy": "TA-C09-mannikkavum",
-        "introducedAt": 49,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
       },
       {
         "atom": "TA-ETYMON-MATIYA-VANAKKAM-01",
@@ -26338,6 +26378,17 @@
         "revisits": 1
       },
       {
+        "atom": "TA-ETYMON-VIDAI-02",
+        "language": "tamil",
+        "introducedBy": "TA-C38-vidai",
+        "introducedAt": 126,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "TA-GRAMMAR-AGE-REGISTER-GRAMMAR-02",
         "language": "tamil",
         "introducedBy": "TA-C19-age-register-grammar",
@@ -26346,7 +26397,7 @@
           "R1",
           "R2"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "TA-GRAMMAR-DATIVE-STACKING-01",
@@ -26368,7 +26419,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 2
+        "revisits": 5
       },
       {
         "atom": "TA-GRAMMAR-PIDI-02",
@@ -26379,7 +26430,7 @@
           "R1",
           "R2"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "TA-GRAMMAR-VAA-02",
@@ -26393,15 +26444,15 @@
         "revisits": 1
       },
       {
-        "atom": "TA-GRAMMAR-VAARA-KIZHAMAI-01",
+        "atom": "TA-LEX-DATIVE-SUBJECT-01",
         "language": "tamil",
-        "introducedBy": "TA-C10-vaara-kizhamai",
-        "introducedAt": 51,
+        "introducedBy": "TA-C06-dative-subject",
+        "introducedAt": 38,
         "missed": [
           "R2",
           "R3"
         ],
-        "revisits": 1
+        "revisits": 4
       },
       {
         "atom": "TA-LEX-DAY-FAMILY-REGISTER-01",
@@ -26470,6 +26521,17 @@
         "revisits": 1
       },
       {
+        "atom": "TA-LEX-KADAVU-01",
+        "language": "tamil",
+        "introducedBy": "TA-C35-kadavu",
+        "introducedAt": 111,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "TA-LEX-KEL-01",
         "language": "tamil",
         "introducedBy": "TA-C34-kel",
@@ -26496,6 +26558,17 @@
         "language": "tamil",
         "introducedBy": "TA-C33-ninai",
         "introducedAt": 99,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-NUMBERS-1-5-01",
+        "language": "tamil",
+        "introducedBy": "TA-C07-numbers-1-5",
+        "introducedAt": 41,
         "missed": [
           "R2",
           "R3"
@@ -26613,10 +26686,21 @@
         "revisits": 2
       },
       {
-        "atom": "TA-LEX-VIRUMBU-03",
+        "atom": "TA-LEX-VEEDU-01",
         "language": "tamil",
-        "introducedBy": "TA-C34-pidi",
-        "introducedAt": 108,
+        "introducedBy": "TA-C35-veedu",
+        "introducedAt": 109,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "TA-LEX-VIDAI-01",
+        "language": "tamil",
+        "introducedBy": "TA-C38-vidai",
+        "introducedAt": 126,
         "missed": [
           "R1",
           "R2"
@@ -26657,17 +26741,6 @@
         "revisits": 3
       },
       {
-        "atom": "TA-PRAGMATICS-SORRY-REGISTER-01",
-        "language": "tamil",
-        "introducedBy": "TA-C09-sorry-register",
-        "introducedAt": 50,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "TA-PRAGMATICS-THANNEER-ARISI-03",
         "language": "tamil",
         "introducedBy": "TA-C15-thanneer-arisi",
@@ -26683,6 +26756,17 @@
         "language": "tamil",
         "introducedBy": "TA-W09-read-peyar",
         "introducedAt": 76,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "TA-SCRIPT-EE-SIGN-01",
+        "language": "tamil",
+        "introducedBy": "TA-W14-read-pesu",
+        "introducedAt": 106,
         "missed": [
           "R1",
           "R2"
@@ -26712,6 +26796,17 @@
         "revisits": 5
       },
       {
+        "atom": "TA-SCRIPT-INDEPENDENT-VOWEL-E-01",
+        "language": "tamil",
+        "introducedBy": "TA-W08-read-en",
+        "introducedAt": 72,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "TA-SCRIPT-MA-RETROFLEX-NA-01",
         "language": "tamil",
         "introducedBy": "TA-W02-ma-retroflex-na",
@@ -26720,7 +26815,7 @@
           "R1",
           "R3"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "TA-SCRIPT-MA-RETROFLEX-NA-02",
@@ -26734,28 +26829,6 @@
         "revisits": 5
       },
       {
-        "atom": "TA-SCRIPT-NGA-LLA-01",
-        "language": "tamil",
-        "introducedBy": "TA-W11-read-niingal",
-        "introducedAt": 84,
-        "missed": [
-          "R1",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "TA-SCRIPT-OO-SIGN-01",
-        "language": "tamil",
-        "introducedBy": "TA-W15-read-po",
-        "introducedAt": 110,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "TA-SCRIPT-READ-NIINGAL-03",
         "language": "tamil",
         "introducedBy": "TA-W11-read-niingal",
@@ -26765,17 +26838,6 @@
           "R3"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "TA-SCRIPT-READ-PO-02",
-        "language": "tamil",
-        "introducedBy": "TA-W15-read-po",
-        "introducedAt": 110,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
       },
       {
         "atom": "TA-SCRIPT-READ-UNAVU-02",
@@ -26797,18 +26859,7 @@
           "R1",
           "R2"
         ],
-        "revisits": 5
-      },
-      {
-        "atom": "TA-SCRIPT-TTA-01",
-        "language": "tamil",
-        "introducedBy": "TA-W12-read-eppadi",
-        "introducedAt": 88,
-        "missed": [
-          "R1",
-          "R3"
-        ],
-        "revisits": 1
+        "revisits": 6
       },
       {
         "atom": "TA-SCRIPT-VOWEL-SIGNS-NANDRI-01",
@@ -26819,7 +26870,7 @@
           "R1",
           "R2"
         ],
-        "revisits": 7
+        "revisits": 8
       },
       {
         "atom": "TA-SCRIPT-VOWEL-SIGNS-NANDRI-02",
@@ -26830,18 +26881,7 @@
           "R1",
           "R2"
         ],
-        "revisits": 4
-      },
-      {
-        "atom": "TA-SCRIPT-WRITE-VANAKKAM-01",
-        "language": "tamil",
-        "introducedBy": "TA-W03-write-vanakkam",
-        "introducedAt": 48,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "TA-SOUND-ABUGIDA-VA-KA-04",
@@ -34977,16 +35017,6 @@
         "revisits": 2
       },
       {
-        "atom": "TA-ETYMON-KADAVU-02",
-        "language": "tamil",
-        "introducedBy": "TA-C35-kadavu",
-        "introducedAt": 111,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "TA-ETYMON-MANI-HOMOPHONE-TIME-01",
         "language": "tamil",
         "introducedBy": "TA-C18-mani-homophone-time",
@@ -35037,6 +35067,16 @@
         "revisits": 2
       },
       {
+        "atom": "TA-ETYMON-SUGAM-02",
+        "language": "tamil",
+        "introducedBy": "TA-C38-sugam",
+        "introducedAt": 125,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "TA-ETYMON-TENEER-02",
         "language": "tamil",
         "introducedBy": "TA-C36-teneer",
@@ -35047,14 +35087,24 @@
         "revisits": 2
       },
       {
-        "atom": "TA-ETYMON-VIDAI-02",
+        "atom": "TA-ETYMON-UDAMBU-02",
         "language": "tamil",
-        "introducedBy": "TA-C38-vidai",
-        "introducedAt": 126,
+        "introducedBy": "TA-C38-udambu",
+        "introducedAt": 124,
         "missed": [
-          "R1"
+          "R2"
         ],
-        "revisits": 0
+        "revisits": 1
+      },
+      {
+        "atom": "TA-ETYMON-VEEDU-02",
+        "language": "tamil",
+        "introducedBy": "TA-C35-veedu",
+        "introducedAt": 109,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 4
       },
       {
         "atom": "TA-GRAMMAR-AGE-REGISTER-GRAMMAR-01",
@@ -35065,6 +35115,16 @@
           "R2"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "TA-GRAMMAR-EVVALAVU-VS-ETHANAI-02",
+        "language": "tamil",
+        "introducedBy": "TA-C39-evvalavu",
+        "introducedAt": 129,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 0
       },
       {
         "atom": "TA-GRAMMAR-IRU-02",
@@ -35087,6 +35147,16 @@
         "revisits": 1
       },
       {
+        "atom": "TA-GRAMMAR-ORU-ATTRIBUTIVE-02",
+        "language": "tamil",
+        "introducedBy": "TA-C39-oru",
+        "introducedAt": 130,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "TA-GRAMMAR-PAAR-02",
         "language": "tamil",
         "introducedBy": "TA-C32-paar",
@@ -35105,26 +35175,6 @@
           "R3"
         ],
         "revisits": 6
-      },
-      {
-        "atom": "TA-GRAMMAR-PURI-02",
-        "language": "tamil",
-        "introducedBy": "TA-C33-puri",
-        "introducedAt": 100,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "TA-GRAMMAR-TERI-02",
-        "language": "tamil",
-        "introducedBy": "TA-C32-teri",
-        "introducedAt": 98,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
       },
       {
         "atom": "TA-LEX-ARAI-01",
@@ -35157,14 +35207,24 @@
         "revisits": 2
       },
       {
-        "atom": "TA-LEX-KADAVU-01",
+        "atom": "TA-LEX-IVAR-EN-NANBAR-01",
         "language": "tamil",
-        "introducedBy": "TA-C35-kadavu",
-        "introducedAt": 111,
+        "introducedBy": "TA-C37-ivar-en-nanbar",
+        "introducedAt": 123,
         "missed": [
           "R2"
         ],
-        "revisits": 2
+        "revisits": 1
+      },
+      {
+        "atom": "TA-LEX-ORU-01",
+        "language": "tamil",
+        "introducedBy": "TA-C39-oru",
+        "introducedAt": 130,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 0
       },
       {
         "atom": "TA-LEX-PAAL-01",
@@ -35184,17 +35244,17 @@
         "missed": [
           "R2"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
-        "atom": "TA-LEX-PURI-01",
+        "atom": "TA-LEX-SUGAM-01",
         "language": "tamil",
-        "introducedBy": "TA-C33-puri",
-        "introducedAt": 100,
+        "introducedBy": "TA-C38-sugam",
+        "introducedAt": 125,
         "missed": [
-          "R3"
+          "R2"
         ],
-        "revisits": 5
+        "revisits": 1
       },
       {
         "atom": "TA-LEX-THANNEER-ARISI-01",
@@ -35204,7 +35264,17 @@
         "missed": [
           "R2"
         ],
-        "revisits": 4
+        "revisits": 5
+      },
+      {
+        "atom": "TA-LEX-UDAMBU-01",
+        "language": "tamil",
+        "introducedBy": "TA-C38-udambu",
+        "introducedAt": 124,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "TA-LEX-VAA-01",
@@ -35224,27 +35294,17 @@
         "missed": [
           "R2"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
-        "atom": "TA-LEX-VEEDU-01",
+        "atom": "TA-PRAGMATICS-IVAR-EN-NANBAR-02",
         "language": "tamil",
-        "introducedBy": "TA-C35-veedu",
-        "introducedAt": 109,
+        "introducedBy": "TA-C37-ivar-en-nanbar",
+        "introducedAt": 123,
         "missed": [
           "R2"
         ],
-        "revisits": 4
-      },
-      {
-        "atom": "TA-LEX-VIDAI-01",
-        "language": "tamil",
-        "introducedBy": "TA-C38-vidai",
-        "introducedAt": 126,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "TA-SCRIPT-AA-SIGN-01",
@@ -35264,7 +35324,7 @@
         "missed": [
           "R1"
         ],
-        "revisits": 5
+        "revisits": 7
       },
       {
         "atom": "TA-SCRIPT-I-SIGN-WRITE-NANDRI-01",
@@ -35307,6 +35367,16 @@
         "revisits": 6
       },
       {
+        "atom": "TA-SCRIPT-NGA-LLA-01",
+        "language": "tamil",
+        "introducedBy": "TA-W11-read-niingal",
+        "introducedAt": 84,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "TA-SCRIPT-PA-YA-01",
         "language": "tamil",
         "introducedBy": "TA-W09-read-peyar",
@@ -35324,7 +35394,17 @@
         "missed": [
           "R1"
         ],
-        "revisits": 16
+        "revisits": 19
+      },
+      {
+        "atom": "TA-SCRIPT-READ-MUUNRU-02",
+        "language": "tamil",
+        "introducedBy": "TA-W19-read-muunru",
+        "introducedAt": 127,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 1
       },
       {
         "atom": "TA-SCRIPT-READ-NAAN-02",
@@ -35347,6 +35427,16 @@
         "revisits": 1
       },
       {
+        "atom": "TA-SCRIPT-TTA-01",
+        "language": "tamil",
+        "introducedBy": "TA-W12-read-eppadi",
+        "introducedAt": 88,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "TA-SCRIPT-U-SIGN-01",
         "language": "tamil",
         "introducedBy": "TA-W13-read-irukkirirgal",
@@ -35354,7 +35444,7 @@
         "missed": [
           "R1"
         ],
-        "revisits": 3
+        "revisits": 7
       },
       {
         "atom": "TA-SCRIPT-U-VOWEL-01",
@@ -35365,6 +35455,16 @@
           "R1"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "TA-SCRIPT-UU-SIGN-01",
+        "language": "tamil",
+        "introducedBy": "TA-W19-read-muunru",
+        "introducedAt": 127,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 1
       },
       {
         "atom": "TA-SCRIPT-UU-VOWEL-01",
@@ -36305,6 +36405,14 @@
         "word": "latte",
         "taughtBy": "IT-C22-latte",
         "lessonsEarly": 69
+      },
+      {
+        "lessonId": "TA-C18-mani-homophone-time",
+        "language": "tamil",
+        "position": 65,
+        "word": "ஒரு",
+        "taughtBy": "TA-C39-oru",
+        "lessonsEarly": 65
       },
       {
         "lessonId": "PT-C04-ate-logo",
@@ -39796,13 +39904,13 @@
       },
       {
         "language": "tamil",
-        "lessonCount": 128,
+        "lessonCount": 132,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 189,
-        "atomsNeverRevisited": 44,
-        "forwardReferences": 10
+        "atomsTaught": 197,
+        "atomsNeverRevisited": 46,
+        "forwardReferences": 11
       },
       {
         "language": "telugu",
@@ -39830,16 +39938,16 @@
       "tracksWithUnorderedLessons": 17,
       "forwardPrerequisites": 225,
       "forwardReviews": 267,
-      "atomsTaught": 2652,
-      "atomsNeverRevisited": 472,
+      "atomsTaught": 2660,
+      "atomsNeverRevisited": 474,
       "neverRevisitedPercent": 18,
       "missedByWindow": {
-        "R1": 886,
-        "R2": 1808,
+        "R1": 891,
+        "R2": 1816,
         "R3": 1309,
-        "R4": 243
+        "R4": 247
       },
-      "forwardReferences": 423
+      "forwardReferences": 424
     }
   },
   "levelGate": {
@@ -40267,11 +40375,11 @@
           },
           {
             "criterion": "reinforcement",
-            "detail": "18 atom(s) at or below pre-A1 are revisited fewer than twice (9 etymology hook(s) waived)",
-            "shortfall": 18
+            "detail": "21 atom(s) at or below pre-A1 are revisited fewer than twice (12 etymology hook(s) waived)",
+            "shortfall": 21
           }
         ],
-        "vocabulary": 83
+        "vocabulary": 86
       },
       {
         "language": "telugu",
@@ -40338,11 +40446,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 1690,
+    "totalLessons": 1694,
     "voice": 1114,
-    "sight": 508,
-    "pen": 68,
-    "coreVoice": 1528,
+    "sight": 511,
+    "pen": 69,
+    "coreVoice": 1531,
     "lessonsWithWritingSegments": 0,
     "drivablePercent": 90,
     "tracks": [
@@ -46684,13 +46792,13 @@
       },
       {
         "language": "tamil",
-        "lessonCount": 128,
+        "lessonCount": 132,
         "voice": 76,
-        "sight": 29,
-        "pen": 23,
-        "coreVoice": 100,
+        "sight": 32,
+        "pen": 24,
+        "coreVoice": 103,
         "drivablePercent": 78,
-        "drivablePrefixTotal": 76,
+        "drivablePrefixTotal": 79,
         "chapters": [
           {
             "language": "tamil",
@@ -47264,6 +47372,21 @@
             ],
             "drivablePrefix": 3,
             "firstNonVoiceLesson": "TA-W19-read-muunru"
+          },
+          {
+            "language": "tamil",
+            "chapter": 39,
+            "lessonCount": 4,
+            "voice": 0,
+            "sight": 3,
+            "pen": 1,
+            "coreVoice": 3,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": "TA-W20-read-onru"
           }
         ]
       },
