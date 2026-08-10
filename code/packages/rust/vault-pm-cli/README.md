@@ -3,8 +3,9 @@
 This crate is the first real composition layer for the local-first password
 manager. It owns strict parsing, stable exit classes, redacted rendering, and
 the bounded `init`, locked `status`/`doctor`, authenticated `audit verify`, and
-opt-in full `doctor --unlock` workflows. The executable is a thin caller of
-this package.
+opt-in full `doctor --unlock` workflows. It now also owns the first usable item
+vertical: authenticated login creation plus durable redacted list/show. The
+executable is a thin caller of this package.
 
 The driver composes the existing storage-neutral application over separately
 permission-checked application-state and encrypted-object filesystem roots.
@@ -28,6 +29,13 @@ synchronously drop the live session before rendering. Their projections contain
 only closed labels or aggregate verification counts, with no paths, locators,
 providers, identities, or cryptographic details. No command accepts a
 passphrase through argv, stdin, environment, configuration, or URL.
+
+`item add login` unlocks once, collects bounded fields from the controlling
+terminal, obtains fresh mutation and metadata identities from OS entropy, and
+consumes the session through the crash-resumable application mutation.
+`item list` and `item show ITEM` reopen in separate one-shot sessions and
+render only escaped redacted projections; the password and notes body are
+never available to the renderer.
 
 ## Verification
 

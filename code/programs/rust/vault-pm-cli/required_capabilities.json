@@ -13,7 +13,7 @@
       "category": "fs",
       "action": "write",
       "target": "platform-resolved owner-private vault-pm roots",
-      "justification": "Composes the audited local host and filesystem storage adapters to persist durable local vault state."
+      "justification": "Composes the audited local host and filesystem storage adapters to persist durable local vault and encrypted item state."
     },
     {
       "category": "fs",
@@ -25,13 +25,13 @@
       "category": "ffi",
       "action": "call",
       "target": "controlling terminal and operating-system entropy APIs",
-      "justification": "Collects hidden passphrases from the controlling terminal and fills generation-zero randomness from the OS CSPRNG."
+      "justification": "Collects bounded login fields and hidden secrets from the controlling terminal and fills generation-zero and item randomness from the OS CSPRNG."
     },
     {
       "category": "time",
       "action": "read",
       "target": "system wall clock",
-      "justification": "Supplies an advisory generation-zero timestamp."
+      "justification": "Supplies advisory generation-zero and item mutation timestamps."
     },
     {
       "category": "stdout",

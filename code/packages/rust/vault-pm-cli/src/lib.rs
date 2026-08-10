@@ -5,22 +5,28 @@
 
 use coding_adventures_storage_fs::FsStorageBackend;
 use coding_adventures_vault_pm_application::{
-    complete_generation_zero, prepare_generation_zero, rehydrate_prepared_init, ApplicationError,
-    AuditVerificationV1, BootstrapLocator, GenerationZeroPolicyV1, GenerationZeroRandomness,
-    LocalStateStore, LocalStateStoreError, LocalVaultStateV1, V1ApplicationRepositoryFactory,
-    VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1, GENERATION_ZERO_RANDOM_BYTES,
+    complete_generation_zero, prepare_generation_zero, rehydrate_prepared_init,
+    AddItemRandomnessV1, ApplicationError, AuditVerificationV1, BootstrapLocator,
+    GenerationZeroPolicyV1, GenerationZeroRandomness, LocalStateStore, LocalStateStoreError,
+    LocalVaultStateV1, V1ApplicationRepositoryFactory, VaultAccessV1, VaultDoctorStateV1,
+    VaultStatusStateV1, ADD_ITEM_RANDOM_BYTES, GENERATION_ZERO_RANDOM_BYTES,
 };
 use coding_adventures_vault_pm_application_storage_core::StorageCoreApplicationStore;
 use coding_adventures_vault_pm_cli_host::{
-    CliHostError, ControllingTerminal, OsEntropy, SecretPrompt,
+    CliHostError, ControllingTerminal, OsEntropy, SecretPrompt, TextPrompt,
 };
 use coding_adventures_vault_pm_config::{
     parse_config, render_config, ConfigName, CredentialRef, StorageConfigV1, StorageKind,
     StorageLocation, VaultConfigV1, VaultLocator as ConfigVaultLocator, VaultPmConfigV1,
     DEFAULT_AUTO_LOCK_SECONDS, DEFAULT_CLIPBOARD_CLEAR_SECONDS,
 };
+use coding_adventures_vault_pm_domain::{
+    ContentType, ItemDocument, ItemId, LwwRegister, ObservedSet, OperationId, RedactedItemView,
+    RedactedRecordView,
+};
 use coding_adventures_vault_pm_local_host::{LocalHostError, LocalVaultPaths, LocalWriterGuard};
 use coding_adventures_vault_pm_storage_storage_core::StorageCoreObjectStore;
+use coding_adventures_vault_records::{AnyRecord, Login, LOGIN_V1};
 use coding_adventures_zeroize::Zeroizing;
 use core::fmt::{self, Debug, Formatter};
 use std::collections::BTreeMap;
@@ -32,7 +38,8 @@ const DEFAULT_STORAGE_NAME: &str = "local";
 const PRODUCTION_KDF_MEMORY_KIB: u32 = 64 * 1024;
 const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm status [--json]\n  vault-pm audit verify\n  vault-pm doctor [--unlock]\n";
+const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm status [--json]\n  vault-pm audit verify\n  vault-pm doctor [--unlock]\n  vault-pm item add login\n  vault-pm item list\n  vault-pm item show ITEM\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -113,6 +120,18 @@ pub trait CliHost {
     /// Collect the existing passphrase for recovery or one-shot unlock.
     fn read_existing_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, HostError>;
 
+    /// Collect a login title from the controlling terminal.
+    fn read_login_title(&self) -> Result<Zeroizing<String>, HostError>;
+
+    /// Collect a login username from the controlling terminal.
+    fn read_login_username(&self) -> Result<Zeroizing<String>, HostError>;
+
+    /// Collect an optional primary login URL from the controlling terminal.
+    fn read_login_url(&self) -> Result<Option<Zeroizing<String>>, HostError>;
+
+    /// Collect a login password with terminal echo disabled.
+    fn read_login_password(&self) -> Result<Zeroizing<String>, HostError>;
+
     /// Fill the entire generation-zero randomness block.
     fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError>;
 
@@ -153,6 +172,35 @@ impl CliHost for NativeCliHost {
         ControllingTerminal
             .read_secret(SecretPrompt::Unlock)
             .map_err(map_native_cli_host)
+    }
+
+    fn read_login_title(&self) -> Result<Zeroizing<String>, HostError> {
+        ControllingTerminal
+            .read_text(TextPrompt::LoginTitle)
+            .map_err(map_native_cli_host)
+    }
+
+    fn read_login_username(&self) -> Result<Zeroizing<String>, HostError> {
+        ControllingTerminal
+            .read_text(TextPrompt::LoginUsername)
+            .map_err(map_native_cli_host)
+    }
+
+    fn read_login_url(&self) -> Result<Option<Zeroizing<String>>, HostError> {
+        let value = ControllingTerminal
+            .read_text(TextPrompt::LoginUrl)
+            .map_err(map_native_cli_host)?;
+        Ok((!value.is_empty()).then_some(value))
+    }
+
+    fn read_login_password(&self) -> Result<Zeroizing<String>, HostError> {
+        let bytes = ControllingTerminal
+            .read_secret(SecretPrompt::LoginPassword)
+            .map_err(map_native_cli_host)?;
+        core::str::from_utf8(&bytes).map_err(|_| HostError::Invalid)?;
+        Ok(Zeroizing::new(
+            String::from_utf8(bytes.into_inner()).expect("UTF-8 was validated before ownership"),
+        ))
     }
 
     fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError> {
@@ -210,6 +258,11 @@ enum Command {
     Doctor {
         unlock: bool,
     },
+    ItemAddLogin,
+    ItemList,
+    ItemShow {
+        item_id: ItemId,
+    },
     Help,
 }
 
@@ -238,6 +291,18 @@ where
             Ok(Command::AuditVerify)
         }
         "doctor" => parse_doctor(&values[1..]),
+        "item" => parse_item(&values[1..]),
+        _ => Err(CliFailure::InvalidCommand),
+    }
+}
+
+fn parse_item(arguments: &[String]) -> Result<Command, CliFailure> {
+    match arguments {
+        [action, kind] if action == "add" && kind == "login" => Ok(Command::ItemAddLogin),
+        [action] if action == "list" => Ok(Command::ItemList),
+        [action, item] if action == "show" => Ok(Command::ItemShow {
+            item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
+        }),
         _ => Err(CliFailure::InvalidCommand),
     }
 }
@@ -289,8 +354,181 @@ fn execute(command: Command, host: &dyn CliHost) -> Result<CliOutput, CliFailure
         Command::Status { json } => status(prepared.paths(), &writer, json),
         Command::AuditVerify => audit_verify(host, prepared.paths(), &writer),
         Command::Doctor { unlock } => doctor(host, prepared.paths(), &writer, unlock),
+        Command::ItemAddLogin => item_add_login(host, prepared.paths(), &writer),
+        Command::ItemList => item_list(host, prepared.paths(), &writer),
+        Command::ItemShow { item_id } => item_show(host, prepared.paths(), &writer, item_id),
         Command::Help => unreachable!("help returns before host access"),
     }
+}
+
+fn authenticated_access(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+) -> Result<(VaultAccessV1, StorageCoreApplicationStore<FsStorageBackend>), CliFailure> {
+    let exact_config = writer
+        .load_config()
+        .map_err(map_local_host)?
+        .ok_or(CliFailure::InvalidCommand)?;
+    let config = decode_config(&exact_config)?;
+    let vault = configured_vault(paths, &config)?;
+    let locator = application_locator(vault.locator());
+    let application_store = application_store(paths);
+    let repository_factory = repository_factory(paths);
+    let mut access = VaultAccessV1::locked(locator);
+    let passphrase = host.read_existing_passphrase().map_err(map_host)?;
+    access
+        .unlock(
+            passphrase,
+            &application_store,
+            &application_store,
+            &repository_factory,
+        )
+        .map_err(map_application)?;
+    Ok((access, application_store))
+}
+
+fn item_add_login(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+) -> Result<CliOutput, CliFailure> {
+    let (access, application_store) = authenticated_access(host, paths, writer)?;
+    let title = host.read_login_title().map_err(map_host)?;
+    let username = host.read_login_username().map_err(map_host)?;
+    let password = host.read_login_password().map_err(map_host)?;
+    let url = host.read_login_url().map_err(map_host)?;
+    let now_ms = host.now_ms().map_err(map_host)?;
+    let mut mutation_random = [0_u8; ADD_ITEM_RANDOM_BYTES];
+    host.fill_entropy(&mut mutation_random).map_err(map_host)?;
+    let randomness = AddItemRandomnessV1::new(mutation_random);
+    let item_id = randomness.item_id();
+    let mut operation_random = [0_u8; ITEM_OPERATION_RANDOM_BYTES];
+    host.fill_entropy(&mut operation_random).map_err(map_host)?;
+    let document = ItemDocument::new(
+        item_id,
+        ContentType::new(LOGIN_V1).map_err(|_| CliFailure::Internal)?,
+        now_ms,
+        now_ms,
+        LwwRegister::new(false, now_ms, OperationId::new(operation_random)),
+        ObservedSet::new(),
+        ObservedSet::new(),
+        AnyRecord::Login(Login {
+            title: title.into_inner(),
+            username: username.into_inner(),
+            password: password.into_inner(),
+            urls: url.into_iter().map(Zeroizing::into_inner).collect(),
+            notes: None,
+        }),
+        ObservedSet::new(),
+    )
+    .map_err(|_| CliFailure::InvalidCommand)?;
+    access
+        .into_unlocked()
+        .map_err(map_application)?
+        .add_item(document, now_ms, randomness, &application_store)
+        .map_err(map_application)?;
+    Ok(CliOutput::success(format!(
+        "Item added: {}\n",
+        item_id.to_user_string()
+    )))
+}
+
+fn item_list(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+) -> Result<CliOutput, CliFailure> {
+    let (mut access, _) = authenticated_access(host, paths, writer)?;
+    let result = access
+        .as_unlocked()
+        .and_then(|session| session.list_items());
+    access.lock();
+    let items = result.map_err(map_application)?;
+    if items.is_empty() {
+        return Ok(CliOutput::success("No items.\n"));
+    }
+    let mut output = String::new();
+    for item in items {
+        output.push_str(&item.item_id.to_user_string());
+        output.push('\t');
+        output.push_str(item.schema.as_str());
+        output.push('\t');
+        output.push_str(&quoted(record_title(&item.record)));
+        output.push('\n');
+    }
+    Ok(CliOutput::success(output))
+}
+
+fn item_show(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    item_id: ItemId,
+) -> Result<CliOutput, CliFailure> {
+    let (mut access, _) = authenticated_access(host, paths, writer)?;
+    let result = access
+        .as_unlocked()
+        .and_then(|session| session.get_item(item_id));
+    access.lock();
+    let item = result
+        .map_err(map_application)?
+        .ok_or(CliFailure::NotFound)?;
+    render_item(item)
+}
+
+fn record_title(record: &RedactedRecordView) -> &str {
+    match record {
+        RedactedRecordView::Login { title, .. }
+        | RedactedRecordView::SecureNote { title, .. }
+        | RedactedRecordView::Card { title, .. } => title,
+        RedactedRecordView::TotpSeed { label, .. }
+        | RedactedRecordView::ApiKey { label, .. }
+        | RedactedRecordView::DatabaseCredential { label, .. } => label,
+        RedactedRecordView::Opaque { content_type, .. } => content_type.as_str(),
+    }
+}
+
+fn render_item(item: RedactedItemView) -> Result<CliOutput, CliFailure> {
+    let (title, username, urls, has_notes) = match &item.record {
+        RedactedRecordView::Login {
+            title,
+            username,
+            urls,
+            has_notes,
+            ..
+        } => (title, username, urls, *has_notes),
+        _ => return Err(CliFailure::Unsupported),
+    };
+    let mut output = format!(
+        "Item: {}\nType: {}\nTitle: {}\nUsername: {}\n",
+        item.item_id.to_user_string(),
+        item.schema.as_str(),
+        quoted(title),
+        quoted(username),
+    );
+    if urls.is_empty() {
+        output.push_str("URL: none\n");
+    } else {
+        for url in urls {
+            output.push_str("URL: ");
+            output.push_str(&quoted(url));
+            output.push('\n');
+        }
+    }
+    output.push_str("Password: <redacted>\nNotes: ");
+    output.push_str(if has_notes { "present\n" } else { "absent\n" });
+    output.push_str(if item.favorite {
+        "Favorite: yes\n"
+    } else {
+        "Favorite: no\n"
+    });
+    output.push_str(&format!("Updated: {}\n", item.updated_at_ms));
+    Ok(CliOutput::success(output))
+}
+
+fn quoted(value: &str) -> String {
+    format!("{value:?}")
 }
 
 fn init(
@@ -709,12 +947,15 @@ fn map_native_cli_host(error: CliHostError) -> HostError {
         CliHostError::EmptySecret
         | CliHostError::SecretTooLong
         | CliHostError::SecretMismatch
+        | CliHostError::EmptyText
+        | CliHostError::InvalidText
         | CliHostError::InvalidEntropyRequest => HostError::Invalid,
         CliHostError::UnsupportedPlatform => HostError::Unsupported,
         CliHostError::TerminalUnavailable
         | CliHostError::TerminalAccessFailed
         | CliHostError::TerminalModeFailed
         | CliHostError::SecretInputFailed
+        | CliHostError::TextInputFailed
         | CliHostError::EntropyUnavailable => HostError::Unavailable,
     }
 }
@@ -794,6 +1035,7 @@ mod tests {
     struct TestHost {
         paths: LocalVaultPaths,
         secrets: Mutex<VecDeque<Vec<u8>>>,
+        texts: Mutex<VecDeque<String>>,
     }
 
     impl TestHost {
@@ -801,11 +1043,33 @@ mod tests {
             Self {
                 paths,
                 secrets: Mutex::new(secrets.into_iter().collect()),
+                texts: Mutex::new(VecDeque::new()),
+            }
+        }
+
+        fn with_texts(
+            paths: LocalVaultPaths,
+            secrets: impl IntoIterator<Item = Vec<u8>>,
+            texts: impl IntoIterator<Item = String>,
+        ) -> Self {
+            Self {
+                paths,
+                secrets: Mutex::new(secrets.into_iter().collect()),
+                texts: Mutex::new(texts.into_iter().collect()),
             }
         }
 
         fn secret(&self) -> Result<Zeroizing<Vec<u8>>, HostError> {
             self.secrets
+                .lock()
+                .unwrap()
+                .pop_front()
+                .map(Zeroizing::new)
+                .ok_or(HostError::Unavailable)
+        }
+
+        fn text(&self) -> Result<Zeroizing<String>, HostError> {
+            self.texts
                 .lock()
                 .unwrap()
                 .pop_front()
@@ -825,6 +1089,25 @@ mod tests {
 
         fn read_existing_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, HostError> {
             self.secret()
+        }
+
+        fn read_login_title(&self) -> Result<Zeroizing<String>, HostError> {
+            self.text()
+        }
+
+        fn read_login_username(&self) -> Result<Zeroizing<String>, HostError> {
+            self.text()
+        }
+
+        fn read_login_url(&self) -> Result<Option<Zeroizing<String>>, HostError> {
+            self.text()
+                .map(|value| (!value.is_empty()).then_some(value))
+        }
+
+        fn read_login_password(&self) -> Result<Zeroizing<String>, HostError> {
+            let value = self.secret()?;
+            let text = core::str::from_utf8(&value).map_err(|_| HostError::Invalid)?;
+            Ok(Zeroizing::new(text.to_owned()))
         }
 
         fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError> {
@@ -855,6 +1138,9 @@ mod tests {
             vec!["doctor", "--unlock", "extra"],
             vec!["audit"],
             vec!["audit", "verify", "extra"],
+            vec!["item", "add", "login", "--password", "secret"],
+            vec!["item", "list", "extra"],
+            vec!["item", "show", "not-an-item-id"],
             vec!["unlock"],
         ] {
             let output = run(arguments, &host);
@@ -862,6 +1148,20 @@ mod tests {
             assert_eq!(output.stderr(), "vault-pm: invalid command\n");
         }
         assert!(!root.0.join("config").exists());
+    }
+
+    #[test]
+    fn item_show_parser_requires_the_canonical_item_id() {
+        let item_id = ItemId::new([0x5a; 16]);
+        let canonical = item_id.to_user_string();
+        assert_eq!(
+            parse(["item", "show", canonical.as_str()]),
+            Ok(Command::ItemShow { item_id })
+        );
+        assert_eq!(
+            parse(["item", "show", canonical.to_lowercase().as_str()]),
+            Err(CliFailure::InvalidCommand)
+        );
     }
 
     #[test]
@@ -915,6 +1215,78 @@ mod tests {
 
         let locked = TestHost::new(paths, []);
         assert_eq!(run(["status"], &locked).stdout(), "Status: locked\n");
+    }
+
+    #[test]
+    fn login_add_list_and_show_survive_restart_without_rendering_password() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"correct horse battery staple".to_vec();
+        let password = b"item password must stay secret".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let add_host = TestHost::with_texts(
+            paths.clone(),
+            [passphrase.clone(), password.clone()],
+            [
+                "Example account".to_string(),
+                "ada@example.test".to_string(),
+                "https://example.test".to_string(),
+            ],
+        );
+        let added = run(["item", "add", "login"], &add_host);
+        assert_eq!(added.exit_code(), ExitCode::Success, "{added:?}");
+        let expected_id =
+            ItemId::new([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]).to_user_string();
+        assert_eq!(added.stdout(), format!("Item added: {expected_id}\n"));
+        assert!(!added.stdout().contains("item password"));
+
+        let list_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let listed = run(["item", "list"], &list_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert_eq!(
+            listed.stdout(),
+            format!("{expected_id}\t{LOGIN_V1}\t\"Example account\"\n")
+        );
+        assert!(!listed.stdout().contains("item password"));
+
+        let show_host = TestHost::new(paths, [passphrase]);
+        let shown = run(["item", "show", expected_id.as_str()], &show_host);
+        assert_eq!(shown.exit_code(), ExitCode::Success, "{shown:?}");
+        assert_eq!(
+            shown.stdout(),
+            format!(
+                "Item: {expected_id}\nType: {LOGIN_V1}\nTitle: \"Example account\"\nUsername: \"ada@example.test\"\nURL: \"https://example.test\"\nPassword: <redacted>\nNotes: absent\nFavorite: no\nUpdated: 1700000000000\n"
+            )
+        );
+        assert!(!shown
+            .stdout()
+            .contains(core::str::from_utf8(&password).unwrap()));
+    }
+
+    #[test]
+    fn item_reads_fail_closed_for_missing_items_and_wrong_passphrases() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let init_host = TestHost::new(paths.clone(), [b"correct passphrase".to_vec()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let empty = TestHost::new(paths.clone(), [b"correct passphrase".to_vec()]);
+        let list = run(["item", "list"], &empty);
+        assert_eq!(list.exit_code(), ExitCode::Success);
+        assert_eq!(list.stdout(), "No items.\n");
+
+        let wrong = TestHost::new(paths.clone(), [b"wrong passphrase".to_vec()]);
+        let list = run(["item", "list"], &wrong);
+        assert_eq!(list.exit_code(), ExitCode::Locked);
+        assert!(list.stdout().is_empty());
+
+        let missing_id = ItemId::new([0x55; 16]).to_user_string();
+        let correct = TestHost::new(paths, [b"correct passphrase".to_vec()]);
+        let show = run(["item", "show", missing_id.as_str()], &correct);
+        assert_eq!(show.exit_code(), ExitCode::NotFound);
+        assert_eq!(show.stderr(), "vault-pm: not found\n");
     }
 
     #[test]

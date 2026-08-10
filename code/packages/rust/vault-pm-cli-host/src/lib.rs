@@ -14,8 +14,10 @@ mod platform;
 #[path = "windows.rs"]
 mod platform;
 
-/// Maximum accepted UTF-8 passphrase bytes.
+/// Maximum accepted UTF-8 passphrase or item-secret bytes.
 pub const MAX_SECRET_BYTES: usize = 1_024;
+/// Maximum accepted UTF-8 bytes for one echoed item field.
+pub const MAX_TEXT_BYTES: usize = 2_048;
 
 /// Stable, payload-free native CLI host failures.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -32,6 +34,12 @@ pub enum CliHostError {
     EmptySecret,
     /// The collected secret exceeded [`MAX_SECRET_BYTES`].
     SecretTooLong,
+    /// Echoed text input ended or failed before a complete line was read.
+    TextInputFailed,
+    /// A required echoed text field was empty.
+    EmptyText,
+    /// Echoed text was invalid UTF-8, contained controls, or exceeded its bound.
+    InvalidText,
     /// Two independently collected new-passphrase values did not match.
     SecretMismatch,
     /// The caller requested an empty entropy buffer.
@@ -51,11 +59,47 @@ impl Display for CliHostError {
             Self::SecretInputFailed => "vault-pm CLI host: secret input failed",
             Self::EmptySecret => "vault-pm CLI host: empty secret",
             Self::SecretTooLong => "vault-pm CLI host: secret too long",
+            Self::TextInputFailed => "vault-pm CLI host: text input failed",
+            Self::EmptyText => "vault-pm CLI host: empty text",
+            Self::InvalidText => "vault-pm CLI host: invalid text",
             Self::SecretMismatch => "vault-pm CLI host: secrets do not match",
             Self::InvalidEntropyRequest => "vault-pm CLI host: invalid entropy request",
             Self::EntropyUnavailable => "vault-pm CLI host: OS entropy unavailable",
             Self::UnsupportedPlatform => "vault-pm CLI host: unsupported platform",
         })
+    }
+}
+
+/// Fixed echoed prompts that can never contain caller-controlled text.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TextPrompt {
+    /// Required login display title.
+    LoginTitle,
+    /// Optional login username or account handle.
+    LoginUsername,
+    /// Optional primary login URL.
+    LoginUrl,
+}
+
+impl TextPrompt {
+    fn message(self) -> &'static str {
+        match self {
+            Self::LoginTitle => "Title: ",
+            Self::LoginUsername => "Username: ",
+            Self::LoginUrl => "URL (optional): ",
+        }
+    }
+
+    const fn max_bytes(self) -> usize {
+        match self {
+            Self::LoginTitle => 256,
+            Self::LoginUsername => 1_024,
+            Self::LoginUrl => MAX_TEXT_BYTES,
+        }
+    }
+
+    const fn allows_empty(self) -> bool {
+        matches!(self, Self::LoginUsername | Self::LoginUrl)
     }
 }
 
@@ -74,6 +118,8 @@ pub enum SecretPrompt {
     ExportPassphrase,
     /// Open a portable export using its distinct passphrase.
     ImportPassphrase,
+    /// Collect a login item's password without terminal echo.
+    LoginPassword,
 }
 
 impl SecretPrompt {
@@ -84,6 +130,7 @@ impl SecretPrompt {
             Self::ConfirmPassphrase => "Confirm vault passphrase: ",
             Self::ExportPassphrase => "Export passphrase: ",
             Self::ImportPassphrase => "Import passphrase: ",
+            Self::LoginPassword => "Password: ",
         }
     }
 }
@@ -111,6 +158,20 @@ impl ControllingTerminal {
     pub fn read_new_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, CliHostError> {
         confirm_new_passphrase(|prompt| self.read_secret(prompt))
     }
+
+    /// Read one bounded UTF-8 field without changing the terminal's echo mode.
+    pub fn read_text(&self, prompt: TextPrompt) -> Result<Zeroizing<String>, CliHostError> {
+        #[cfg(any(unix, windows))]
+        {
+            let bytes = platform::read_text(prompt.message(), prompt.max_bytes())?;
+            validate_text(bytes, prompt.allows_empty())
+        }
+        #[cfg(not(any(unix, windows)))]
+        {
+            let _ = prompt;
+            Err(CliHostError::UnsupportedPlatform)
+        }
+    }
 }
 
 /// Stateless cryptographic entropy adapter backed by the repository OS CSPRNG.
@@ -135,6 +196,20 @@ fn validate_secret(secret: Zeroizing<Vec<u8>>) -> Result<Zeroizing<Vec<u8>>, Cli
     } else {
         Ok(secret)
     }
+}
+
+fn validate_text(
+    bytes: Zeroizing<Vec<u8>>,
+    allows_empty: bool,
+) -> Result<Zeroizing<String>, CliHostError> {
+    if bytes.is_empty() && !allows_empty {
+        return Err(CliHostError::EmptyText);
+    }
+    let text = core::str::from_utf8(&bytes).map_err(|_| CliHostError::InvalidText)?;
+    if text.chars().any(char::is_control) {
+        return Err(CliHostError::InvalidText);
+    }
+    Ok(Zeroizing::new(text.to_owned()))
 }
 
 fn confirm_new_passphrase<F>(mut read: F) -> Result<Zeroizing<Vec<u8>>, CliHostError>
@@ -173,6 +248,13 @@ mod tests {
             SecretPrompt::ImportPassphrase.message(),
             "Import passphrase: "
         );
+        assert_eq!(SecretPrompt::LoginPassword.message(), "Password: ");
+        assert_eq!(TextPrompt::LoginTitle.message(), "Title: ");
+        assert_eq!(TextPrompt::LoginUsername.message(), "Username: ");
+        assert_eq!(TextPrompt::LoginUrl.message(), "URL (optional): ");
+        assert!(!TextPrompt::LoginTitle.allows_empty());
+        assert!(TextPrompt::LoginUsername.allows_empty());
+        assert!(TextPrompt::LoginUrl.allows_empty());
         let expected = [
             (
                 CliHostError::TerminalUnavailable,
@@ -199,6 +281,12 @@ mod tests {
                 CliHostError::SecretMismatch,
                 "vault-pm CLI host: secrets do not match",
             ),
+            (
+                CliHostError::TextInputFailed,
+                "vault-pm CLI host: text input failed",
+            ),
+            (CliHostError::EmptyText, "vault-pm CLI host: empty text"),
+            (CliHostError::InvalidText, "vault-pm CLI host: invalid text"),
             (
                 CliHostError::InvalidEntropyRequest,
                 "vault-pm CLI host: invalid entropy request",
@@ -230,6 +318,30 @@ mod tests {
         assert_eq!(
             &*validate_secret(Zeroizing::new(vec![b'x'; MAX_SECRET_BYTES])).unwrap(),
             &vec![b'x'; MAX_SECRET_BYTES]
+        );
+    }
+
+    #[test]
+    fn text_validation_enforces_utf8_controls_and_empty_policy() {
+        assert!(matches!(
+            validate_text(Zeroizing::new(Vec::new()), false),
+            Err(CliHostError::EmptyText)
+        ));
+        assert_eq!(
+            &*validate_text(Zeroizing::new(Vec::new()), true).unwrap(),
+            ""
+        );
+        assert!(matches!(
+            validate_text(Zeroizing::new(vec![0xff]), false),
+            Err(CliHostError::InvalidText)
+        ));
+        assert!(matches!(
+            validate_text(Zeroizing::new(b"line\nbreak".to_vec()), false),
+            Err(CliHostError::InvalidText)
+        ));
+        assert_eq!(
+            &*validate_text(Zeroizing::new("Ada 🐎".as_bytes().to_vec()), false).unwrap(),
+            "Ada 🐎"
         );
     }
 

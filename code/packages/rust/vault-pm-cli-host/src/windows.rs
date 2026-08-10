@@ -54,6 +54,22 @@ pub(super) fn read_secret(
     Ok(secret)
 }
 
+pub(super) fn read_text(
+    prompt: &str,
+    max_bytes: usize,
+) -> Result<Zeroizing<Vec<u8>>, CliHostError> {
+    let input = open_console(CONSOLE_INPUT, GENERIC_READ | GENERIC_WRITE)?;
+    let output = open_console(CONSOLE_OUTPUT, GENERIC_READ | GENERIC_WRITE)?;
+    verify_console(&input)?;
+    verify_console(&output)?;
+    write_console(&output, prompt)?;
+    read_bounded_line(&input, max_bytes).map_err(|error| match error {
+        CliHostError::SecretInputFailed => CliHostError::TextInputFailed,
+        CliHostError::SecretTooLong => CliHostError::InvalidText,
+        other => other,
+    })
+}
+
 fn open_console(name: &[u16], access: u32) -> Result<OwnedHandle, CliHostError> {
     let raw = unsafe {
         CreateFileW(
@@ -134,13 +150,17 @@ fn read_bounded_line(
         }
     }
     if too_long {
-        finish_line(units, true)
+        finish_line(units, true, max_bytes)
     } else {
-        finish_line(units, false)
+        finish_line(units, false, max_bytes)
     }
 }
 
-fn finish_line(units: WideSecret, too_long: bool) -> Result<Zeroizing<Vec<u8>>, CliHostError> {
+fn finish_line(
+    units: WideSecret,
+    too_long: bool,
+    max_bytes: usize,
+) -> Result<Zeroizing<Vec<u8>>, CliHostError> {
     if too_long {
         return Err(CliHostError::SecretTooLong);
     }
@@ -149,6 +169,9 @@ fn finish_line(units: WideSecret, too_long: bool) -> Result<Zeroizing<Vec<u8>>, 
         let character = decoded.map_err(|_| CliHostError::SecretInputFailed)?;
         let mut encoded = Zeroizing::new([0u8; 4]);
         output.extend_from_slice(character.encode_utf8(&mut *encoded).as_bytes());
+        if output.len() > max_bytes {
+            return Err(CliHostError::SecretTooLong);
+        }
     }
     Ok(output)
 }
@@ -229,7 +252,7 @@ mod tests {
     fn utf16_console_input_becomes_utf8_passphrase_bytes() {
         let units: Vec<u16> = "correct horse 🐎".encode_utf16().collect();
         assert_eq!(
-            &*finish_line(WideSecret(units), false).unwrap(),
+            &*finish_line(WideSecret(units), false, 64).unwrap(),
             "correct horse 🐎".as_bytes()
         );
     }
@@ -237,11 +260,15 @@ mod tests {
     #[test]
     fn invalid_or_oversized_console_input_fails_closed() {
         assert!(matches!(
-            finish_line(WideSecret(vec![0xd800]), false),
+            finish_line(WideSecret(vec![0xd800]), false, 64),
             Err(CliHostError::SecretInputFailed)
         ));
         assert!(matches!(
-            finish_line(WideSecret(Vec::new()), true),
+            finish_line(WideSecret(Vec::new()), true, 64),
+            Err(CliHostError::SecretTooLong)
+        ));
+        assert!(matches!(
+            finish_line(WideSecret("horse".encode_utf16().collect()), false, 4),
             Err(CliHostError::SecretTooLong)
         ));
     }

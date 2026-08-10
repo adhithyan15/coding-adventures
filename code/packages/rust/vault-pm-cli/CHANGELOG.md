@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added strict `item add login`, `item list`, and `item show ITEM` commands.
+- Added controlling-terminal item input, fresh mutation identities, durable
+  application publication, escaped redacted rendering, and restart coverage.
 - Added one-shot authenticated `audit verify` with aggregate-only output.
 - Added opt-in full repository health verification through `doctor --unlock`.
 - Added strict parser, wrong-passphrase, synchronous re-lock, and real-process

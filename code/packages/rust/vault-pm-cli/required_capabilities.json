@@ -13,7 +13,7 @@
       "category": "fs",
       "action": "write",
       "target": "platform-resolved owner-private vault-pm roots",
-      "justification": "Persists atomic configuration, crash-resumable owner journals, signed bootstraps, and encrypted immutable repository objects during initialization."
+      "justification": "Persists atomic configuration, crash-resumable owner journals, signed bootstraps, and encrypted immutable repository objects during initialization and item mutation."
     },
     {
       "category": "fs",
@@ -25,7 +25,7 @@
       "category": "time",
       "action": "read",
       "target": "system wall clock",
-      "justification": "Supplies the advisory generation-zero certificate and commit timestamp."
+      "justification": "Supplies advisory generation-zero and item mutation timestamps."
     }
   ],
   "justification": "Product composition package; terminal and entropy capabilities remain delegated to rust/vault-pm-cli-host."
