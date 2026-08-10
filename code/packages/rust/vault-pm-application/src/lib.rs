@@ -11,6 +11,7 @@ mod codec;
 mod crypto;
 mod disclosure;
 mod initialize;
+mod lifecycle;
 mod mutation;
 mod open;
 mod repository;
@@ -35,6 +36,7 @@ pub use initialize::{
     GenerationZeroPolicyV1, GenerationZeroRandomness, PreparedGenerationZero,
     GENERATION_ZERO_RANDOM_BYTES,
 };
+pub use lifecycle::{LockedVaultV1, VaultAccessV1};
 pub use mutation::{
     AddItemRandomnessV1, DeleteItemRandomnessV1, ReplaceItemRandomnessV1,
     ResolveItemConflictRandomnessV1, RestoreItemRandomnessV1, ADD_ITEM_RANDOM_BYTES,
@@ -64,6 +66,8 @@ pub enum ApplicationError {
     NotInitialized,
     /// Owner state already exists and cannot be replaced by initialization.
     AlreadyInitialized,
+    /// An operation requires a live authenticated vault session.
+    Locked,
     /// Passphrase authentication or its indistinguishable root-wrap check failed.
     AuthenticationFailed,
     /// Caller input violates a V1 precondition.
@@ -91,6 +95,7 @@ impl ApplicationError {
         match self {
             Self::NotInitialized => "NotInitialized",
             Self::AlreadyInitialized => "AlreadyInitialized",
+            Self::Locked => "Locked",
             Self::AuthenticationFailed => "AuthenticationFailed",
             Self::InvalidInput => "InvalidInput",
             Self::NotFound => "NotFound",

@@ -133,6 +133,10 @@ pub struct UnlockedVaultV1 {
 }
 
 impl UnlockedVaultV1 {
+    pub(crate) const fn bootstrap_locator(&self) -> BootstrapLocator {
+        self.active.bootstrap_locator()
+    }
+
     /// Return the authenticated vault identity.
     pub const fn vault_id(&self) -> VaultId {
         self.active.vault_id()
@@ -1460,6 +1464,75 @@ mod tests {
             format!("{session:?}"),
             "UnlockedVaultV1 { local_pin_count: 1, verified_head_count: 1, item_count: 0, candidate_count: 0, conflicted_item_count: 0, search_item_count: 0, .. }"
         );
+    }
+
+    #[test]
+    fn lifecycle_retains_locked_state_on_failure_and_drops_session_on_lock() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let locked = crate::LockedVaultV1::new(locator);
+        assert_eq!(locked.locator(), locator);
+        assert_eq!(format!("{locked:?}"), "LockedVaultV1(<locked>)");
+
+        let mut access = crate::VaultAccessV1::locked(locator);
+        assert!(access.is_locked());
+        assert!(!access.is_unlocked());
+        assert!(matches!(
+            access.as_unlocked(),
+            Err(ApplicationError::Locked)
+        ));
+        assert_eq!(format!("{access:?}"), "VaultAccessV1::Locked(<redacted>)");
+
+        assert_eq!(
+            access.unlock(
+                Zeroizing::new(b"wrong".to_vec()),
+                &local,
+                &bootstrap,
+                &factory,
+            ),
+            Err(ApplicationError::AuthenticationFailed)
+        );
+        assert!(access.is_locked());
+
+        access
+            .unlock(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap();
+        assert!(access.is_unlocked());
+        assert_eq!(access.as_unlocked().unwrap().item_count(), 0);
+        assert_eq!(format!("{access:?}"), "VaultAccessV1::Unlocked(<redacted>)");
+        assert_eq!(
+            access.unlock(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                &local,
+                &bootstrap,
+                &factory,
+            ),
+            Err(ApplicationError::InvalidInput)
+        );
+        assert!(access.is_unlocked());
+
+        access.lock();
+        assert!(access.is_locked());
+        access.lock();
+        assert!(matches!(
+            access.into_unlocked(),
+            Err(ApplicationError::Locked)
+        ));
+
+        let mut access = crate::VaultAccessV1::locked(locator);
+        access
+            .unlock(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap();
+        assert_eq!(access.into_unlocked().unwrap().item_count(), 0);
     }
 
     #[test]

@@ -2,6 +2,23 @@
 
 All notable changes to this package are documented here.
 
+## [0.21.0] - 2026-08-10
+
+### Added
+
+- Add the stable payload-free `Locked` application error class.
+- Add a compact `VaultAccessV1` lifecycle boundary with explicit locked and
+  unlocked states, in-place authenticated unlock, session access, and lock.
+
+### Security
+
+- Failed unlock attempts leave the lifecycle object locked and immediately
+  drop temporary key material.
+- Locking synchronously replaces and drops the live session, wiping its keys,
+  local secrets, decrypted records, and search projection before returning.
+- Lifecycle diagnostics reveal only locked or unlocked state and omit the
+  locator, vault identity, item metadata, and live-session counts.
+
 ## [0.20.0] - 2026-08-10
 
 ### Added

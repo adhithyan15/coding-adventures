@@ -509,6 +509,13 @@ root wrap. Bootstrap rollback, pin withholding, signature failure, graph
 equivocation, wrong object kind, malformed domain state, or cross-vault data is
 `IntegrityFailure`.
 
+Long-lived hosts retain an explicit locked/unlocked lifecycle boundary rather
+than a nullable session. Session access while locked returns `Locked`. Unlock
+changes the state only after the complete verified open succeeds, so every
+failure leaves it locked. Lock synchronously replaces and drops the live
+session before returning; repeated lock is idempotent. Timers, terminal-loss
+signals, prompts, and process lifecycle remain host authorities.
+
 Phase 1A does not auto-accept a provider view when pins are absent. The only
 automatic first pin is the receipt from the locally prepared generation-zero
 publication. Device enrollment defines the later fresh-device ceremony.

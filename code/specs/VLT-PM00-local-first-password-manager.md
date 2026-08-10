@@ -1328,8 +1328,9 @@ changelog, focused build, and downstream validation.
    7c-3. host clipboard adapter with ownership-aware timed clear;
    7d. authenticated portable export and restore/import preparation; and
    7e. audit, status, and doctor workflows; and
-   7f. close the remaining VLT-PM05 `Locked` error and explicit lock-state
-       boundary before CLI composition.
+   7f. completed stable payload-free VLT-PM05 `Locked` error and compact
+       locked/unlocked lifecycle boundary, including failure-stable in-place
+       unlock and synchronous live-session drop on idempotent lock.
 9. `vault-pm-cli` + real executable and pseudo-terminal E2E suite.
 10. Crash/fault matrix and local restore drill.
 

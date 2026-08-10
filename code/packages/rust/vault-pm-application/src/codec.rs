@@ -1148,6 +1148,7 @@ mod tests {
         for (error, label) in [
             (ApplicationError::NotInitialized, "NotInitialized"),
             (ApplicationError::AlreadyInitialized, "AlreadyInitialized"),
+            (ApplicationError::Locked, "Locked"),
             (
                 ApplicationError::AuthenticationFailed,
                 "AuthenticationFailed",
