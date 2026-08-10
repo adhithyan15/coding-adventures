@@ -1128,6 +1128,55 @@ fn emit_compound_call(out: &mut String, dst: &str, e: &Expr, indent: usize) {
                 return;
             }
         }
+        // SIR28 §2: `__sys_write__` whose VALUE args (not `stream`/
+        // `terminator`/`unpack_arrays`, which are always simple literals —
+        // see `emit_builtin_simple`'s arm) contain a compound expression, so
+        // the whole call is non-simple and lands here. Mirrors the `raise`
+        // arm above: intercept before the generic hoist-every-arg loop,
+        // hoist ONLY the trailing values (each independently, preserving
+        // per-value evaluation order), and emit the literal stream/
+        // terminator/unpack_arrays codes directly — never through a hoisted
+        // temp, which would lose their compile-time-known values.
+        if name == "__sys_write__" {
+            if let (
+                Some(Expr::StrLit { value: stream, .. }),
+                Some(Expr::StrLit { value: term, .. }),
+                Some(Expr::BoolLit { value: unpack, .. }),
+            ) = (args.first(), args.get(1), args.get(2))
+            {
+                if let (Some(sc), Some(tc)) = (stream_code(stream), terminator_code(term)) {
+                    let values = &args[3..];
+                    let _ = writeln!(out, "{pad}{{");
+                    let inner = indent + 1;
+                    let ipad = indent_str(inner);
+                    let mut names = Vec::with_capacity(values.len());
+                    for a in values {
+                        let t = format!("_sir_a{}", fresh_id());
+                        if is_simple(a) {
+                            let _ = write!(out, "{ipad}SirValue {t} = ");
+                            emit_expr(out, a, inner);
+                            out.push_str(";\n");
+                        } else {
+                            let _ = writeln!(out, "{ipad}SirValue {t};");
+                            emit_assign(out, &t, a, inner);
+                        }
+                        names.push(t);
+                    }
+                    let _ = write!(
+                        out,
+                        "{ipad}{dst} = _sir_write({sc}, {tc}, {}, {}",
+                        *unpack as u8,
+                        names.len()
+                    );
+                    for n in &names {
+                        let _ = write!(out, ", {n}");
+                    }
+                    out.push_str(");\n");
+                    let _ = writeln!(out, "{pad}}}");
+                    return;
+                }
+            }
+        }
     }
     let _ = writeln!(out, "{pad}{{");
     let inner = indent + 1;
@@ -1737,6 +1786,38 @@ fn emit_builtin_simple(out: &mut String, name: &str, args: &[Expr], indent: usiz
         out.push_str("_sir_self()");
         return;
     }
+    // SIR28 §2: the console-output primitive `print`/`puts` generalize into.
+    // `args = [StrLit(stream), StrLit(terminator), BoolLit(unpack_arrays),
+    // ...values]`.  `semantic-ir`'s validator (SIR28 §3.1) already guarantees
+    // `stream`/`terminator` are `StrLit`s from the closed set SIR28 §2.1
+    // defines and `unpack_arrays` is a `BoolLit` — `stream_code`/
+    // `terminator_code` below fall back to `_sir_unknown_builtin` rather than
+    // panicking on an out-of-band value anyway (defense in depth, matching
+    // every other reserved-envelope arm here), but should never actually
+    // observe one in a validated module. Both codes are baked in as C INT
+    // LITERALS the emitter itself chose — never source-derived text reaching
+    // a dynamic file-handle/dispatch lookup.
+    if name == "__sys_write__" {
+        if let (
+            Some(Expr::StrLit { value: stream, .. }),
+            Some(Expr::StrLit { value: term, .. }),
+            Some(Expr::BoolLit { value: unpack, .. }),
+        ) = (args.first(), args.get(1), args.get(2))
+        {
+            if let (Some(sc), Some(tc)) = (stream_code(stream), terminator_code(term)) {
+                let values = &args[3..];
+                let _ = write!(out, "_sir_write({sc}, {tc}, {}, {}", *unpack as u8, values.len());
+                for a in values {
+                    out.push_str(", ");
+                    emit_expr(out, a, indent);
+                }
+                out.push(')');
+                return;
+            }
+        }
+        let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
+        return;
+    }
     // Variadic-shaped builtins take (count, args...).
     if let Some(helper) = variadic_helper(name) {
         let _ = write!(out, "{}({}", helper, args.len());
@@ -1813,6 +1894,29 @@ fn emit_builtin_with_names(out: &mut String, name: &str, names: &[String]) {
         return;
     }
     let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
+}
+
+/// SIR28 §2.1: `__sys_write__`'s `stream` arg → `_sir_write`'s `stream` int
+/// parameter (0 = stdout, 1 = stderr). `None` for anything outside the
+/// closed set the validator already enforces.
+fn stream_code(stream: &str) -> Option<u8> {
+    match stream {
+        "stdout" => Some(0),
+        "stderr" => Some(1),
+        _ => None,
+    }
+}
+
+/// SIR28 §2.1: `__sys_write__`'s `terminator` arg → `_sir_write`'s
+/// `terminator` int parameter (0 = none, 1 = per_value, 2 = once). `None`
+/// for anything outside the closed set the validator already enforces.
+fn terminator_code(terminator: &str) -> Option<u8> {
+    match terminator {
+        "none" => Some(0),
+        "per_value" => Some(1),
+        "once" => Some(2),
+        _ => None,
+    }
 }
 
 /// Builtins that take `(int count, ...)`.
@@ -1951,6 +2055,11 @@ fn is_supported_builtin(name: &str) -> bool {
                 | "__class_method__"
                 | "__include__"
                 | "__extend__"
+                // SIR28: shape already fully validated by `semantic-ir`'s
+                // validator (SIR28 §3.1, `check_sys_write_args`) before this
+                // structural gate ever runs — no additional shape check
+                // needed here, matching `__self__`/`__include__`/`__extend__`.
+                | "__sys_write__"
         )
 }
 
