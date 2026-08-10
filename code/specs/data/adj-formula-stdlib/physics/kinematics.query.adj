@@ -29,3 +29,17 @@ observe time(3)                                      % "…for 3 seconds…"    
 observe mass(4)                                      % "…a 4 kg cart…"             (span cited)
 observe velocity(5)                                  % "…moving at 5 m/s…"         (span cited)
 ? momentum(mass, velocity)                           % engine → 20 (p = m·v, NASA Glenn, authoritative)
+
+% --- v = u + at, SOLVED FOR ACCELERATION (rung-0 CAS-wiring, FL-10). "A car
+% starting at 5 m/s reaches 20 m/s after 3 s. What was its acceleration?" ---
+observe final_velocity(20)                            % "…reaches 20 m/s…"          (span cited)
+observe initial_velocity(5)                           % "…starting at 5 m/s…"       (span cited)
+observe time(3)                                       % "…after 3 s…"               (span cited)
+? acceleration_from_final_velocity(final_velocity, initial_velocity, time)   % engine → 5 (OpenStax, authoritative)
+
+% --- v = u + at, SOLVED FOR TIME. "A car starting at 5 m/s accelerates at
+% 2 m/s² until it reaches 20 m/s. How long did that take?" ---
+observe final_velocity(20)                            % "…reaches 20 m/s…"          (span cited)
+observe initial_velocity(5)                            % "…starting at 5 m/s…"      (span cited)
+observe acceleration(2)                               % "…accelerates at 2 m/s²…"   (span cited)
+? time_from_final_velocity(final_velocity, initial_velocity, acceleration)   % engine → 7.5 (OpenStax, authoritative)

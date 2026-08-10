@@ -84,3 +84,15 @@ landed and why, not a semver-tracked API.
   coexist in one program even in the right order). New manifest objective
   `adj.math.algebra.rearrange_geometry_formulas`. New e2e test
   `formula_geometry_algebra_e2e.rs` (5 tests, including the nonlinear-boundary regression).
+- `physics/kinematics.adj` — two more rung-0 CAS-wiring companions (ADJ-FORMULA-LIBRARIES FL-10,
+  §3D): `acceleration_from_final_velocity` and `time_from_final_velocity`, solving the SAME cited
+  OpenStax `v = u + at` equation as the forward `final_velocity` formula for a different unknown.
+  Unlike `geometry-formulas.adj`'s four companions, these name their OWN target findings
+  (`acceleration_from_final_velocity`/`time_from_final_velocity`) rather than reusing the plain
+  `acceleration`/`time` findings the forward formula's own parameters use — confirmed empirically
+  that this sidesteps the target-already-observed collision entirely (no query-file split needed
+  this time: both new solves and the original forward examples coexist in one extended
+  `kinematics.query.adj`). The third possible unknown (initial velocity) is deliberately left for
+  later, to keep this change scoped to the two rearrangements a first course actually drills. New
+  manifest objective `adj.math.algebra.rearrange_kinematics`. Extended the existing
+  `formula_kinematics_e2e.rs` with 2 new tests rather than adding a new test file.
