@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Exposed reversible item delete/restore and extended the real-process PTY
+  suite through tombstone observation and exact historical restoration.
 - Exposed redacted revision history listing and extended the PTY suite through
   canonical newest-first history after a durable edit.
 - Exposed revision-safe login edit and extended the PTY restart suite through

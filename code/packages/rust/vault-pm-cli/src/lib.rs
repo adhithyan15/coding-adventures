@@ -7,11 +7,12 @@ use coding_adventures_storage_fs::FsStorageBackend;
 use coding_adventures_vault_pm_application::{
     complete_generation_zero, prepare_generation_zero, rehydrate_prepared_init,
     AddItemRandomnessV1, ApplicationError, AuditVerificationV1, BootstrapLocator,
-    GenerationZeroPolicyV1, GenerationZeroRandomness, ItemHistoryViewV1, LocalStateStore,
-    LocalStateStoreError, LocalVaultStateV1, ReplaceItemRandomnessV1,
-    V1ApplicationRepositoryFactory, VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1,
-    ADD_ITEM_RANDOM_BYTES, DEFAULT_ITEM_HISTORY_LIMIT, GENERATION_ZERO_RANDOM_BYTES,
-    REPLACE_ITEM_RANDOM_BYTES,
+    DeleteItemRandomnessV1, GenerationZeroPolicyV1, GenerationZeroRandomness, ItemHistoryViewV1,
+    LocalStateStore, LocalStateStoreError, LocalVaultStateV1, ReplaceItemRandomnessV1,
+    RestoreItemRandomnessV1, V1ApplicationRepositoryFactory, VaultAccessV1, VaultDoctorStateV1,
+    VaultStatusStateV1, ADD_ITEM_RANDOM_BYTES, DEFAULT_ITEM_HISTORY_LIMIT,
+    DELETE_ITEM_RANDOM_BYTES, GENERATION_ZERO_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
+    RESTORE_ITEM_RANDOM_BYTES,
 };
 use coding_adventures_vault_pm_application_storage_core::StorageCoreApplicationStore;
 use coding_adventures_vault_pm_cli_host::{
@@ -24,7 +25,7 @@ use coding_adventures_vault_pm_config::{
 };
 use coding_adventures_vault_pm_domain::{
     ContentType, ItemDocument, ItemId, LwwRegister, ObservedSet, OperationId, RedactedItemView,
-    RedactedRecordView,
+    RedactedRecordView, RevisionId,
 };
 use coding_adventures_vault_pm_local_host::{LocalHostError, LocalVaultPaths, LocalWriterGuard};
 use coding_adventures_vault_pm_storage_storage_core::StorageCoreObjectStore;
@@ -41,7 +42,7 @@ const PRODUCTION_KDF_MEMORY_KIB: u32 = 64 * 1024;
 const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm status [--json]\n  vault-pm audit verify\n  vault-pm doctor [--unlock]\n  vault-pm item add login\n  vault-pm item edit ITEM\n  vault-pm item list\n  vault-pm item show ITEM\n  vault-pm history list ITEM\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm status [--json]\n  vault-pm audit verify\n  vault-pm doctor [--unlock]\n  vault-pm item add login\n  vault-pm item edit ITEM\n  vault-pm item delete ITEM\n  vault-pm item list\n  vault-pm item show ITEM\n  vault-pm history list ITEM\n  vault-pm history restore ITEM REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -264,12 +265,19 @@ enum Command {
     ItemEdit {
         item_id: ItemId,
     },
+    ItemDelete {
+        item_id: ItemId,
+    },
     ItemList,
     ItemShow {
         item_id: ItemId,
     },
     HistoryList {
         item_id: ItemId,
+    },
+    HistoryRestore {
+        item_id: ItemId,
+        revision_id: RevisionId,
     },
     Help,
 }
@@ -310,6 +318,11 @@ fn parse_history(arguments: &[String]) -> Result<Command, CliFailure> {
         [action, item] if action == "list" => Ok(Command::HistoryList {
             item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
         }),
+        [action, item, revision] if action == "restore" => Ok(Command::HistoryRestore {
+            item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
+            revision_id: RevisionId::from_user_string(revision)
+                .map_err(|_| CliFailure::InvalidCommand)?,
+        }),
         _ => Err(CliFailure::InvalidCommand),
     }
 }
@@ -318,6 +331,9 @@ fn parse_item(arguments: &[String]) -> Result<Command, CliFailure> {
     match arguments {
         [action, kind] if action == "add" && kind == "login" => Ok(Command::ItemAddLogin),
         [action, item] if action == "edit" => Ok(Command::ItemEdit {
+            item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
+        }),
+        [action, item] if action == "delete" => Ok(Command::ItemDelete {
             item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
         }),
         [action] if action == "list" => Ok(Command::ItemList),
@@ -377,9 +393,14 @@ fn execute(command: Command, host: &dyn CliHost) -> Result<CliOutput, CliFailure
         Command::Doctor { unlock } => doctor(host, prepared.paths(), &writer, unlock),
         Command::ItemAddLogin => item_add_login(host, prepared.paths(), &writer),
         Command::ItemEdit { item_id } => item_edit_login(host, prepared.paths(), &writer, item_id),
+        Command::ItemDelete { item_id } => item_delete(host, prepared.paths(), &writer, item_id),
         Command::ItemList => item_list(host, prepared.paths(), &writer),
         Command::ItemShow { item_id } => item_show(host, prepared.paths(), &writer, item_id),
         Command::HistoryList { item_id } => history_list(host, prepared.paths(), &writer, item_id),
+        Command::HistoryRestore {
+            item_id,
+            revision_id,
+        } => history_restore(host, prepared.paths(), &writer, item_id, revision_id),
         Command::Help => unreachable!("help returns before host access"),
     }
 }
@@ -566,6 +587,39 @@ fn item_show(
     render_item(item)
 }
 
+fn item_delete(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    item_id: ItemId,
+) -> Result<CliOutput, CliFailure> {
+    let (access, application_store) = authenticated_access(host, paths, writer)?;
+    let expected_revision = access
+        .as_unlocked()
+        .map_err(map_application)?
+        .current_item_revision(item_id)
+        .map_err(map_application)?
+        .ok_or(CliFailure::NotFound)?;
+    let now_ms = host.now_ms().map_err(map_host)?;
+    let mut mutation_random = [0_u8; DELETE_ITEM_RANDOM_BYTES];
+    host.fill_entropy(&mut mutation_random).map_err(map_host)?;
+    access
+        .into_unlocked()
+        .map_err(map_application)?
+        .delete_item(
+            expected_revision,
+            now_ms,
+            now_ms,
+            DeleteItemRandomnessV1::new(mutation_random),
+            &application_store,
+        )
+        .map_err(map_application)?;
+    Ok(CliOutput::success(format!(
+        "Item deleted: {}\n",
+        item_id.to_user_string()
+    )))
+}
+
 fn history_list(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
@@ -606,6 +660,45 @@ fn render_history(history: Vec<ItemHistoryViewV1>) -> Result<CliOutput, CliFailu
         output.push('\n');
     }
     Ok(CliOutput::success(output))
+}
+
+fn history_restore(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    item_id: ItemId,
+    revision_id: RevisionId,
+) -> Result<CliOutput, CliFailure> {
+    let (access, application_store) = authenticated_access(host, paths, writer)?;
+    let selected = access
+        .as_unlocked()
+        .map_err(map_application)?
+        .item_history(item_id, DEFAULT_ITEM_HISTORY_LIMIT)
+        .map_err(map_application)?
+        .into_iter()
+        .find(|candidate| candidate.revision_id() == revision_id)
+        .ok_or(CliFailure::NotFound)?;
+    if selected.is_deleted() {
+        return Err(CliFailure::InvalidCommand);
+    }
+    drop(selected);
+    let now_ms = host.now_ms().map_err(map_host)?;
+    let mut mutation_random = [0_u8; RESTORE_ITEM_RANDOM_BYTES];
+    host.fill_entropy(&mut mutation_random).map_err(map_host)?;
+    access
+        .into_unlocked()
+        .map_err(map_application)?
+        .restore_item(
+            revision_id,
+            now_ms,
+            RestoreItemRandomnessV1::new(mutation_random),
+            &application_store,
+        )
+        .map_err(map_application)?;
+    Ok(CliOutput::success(format!(
+        "Item restored: {}\n",
+        item_id.to_user_string()
+    )))
 }
 
 fn record_title(record: &RedactedRecordView) -> &str {
@@ -1102,7 +1195,6 @@ fn map_native_local_host(error: LocalHostError) -> HostError {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use coding_adventures_vault_pm_domain::RevisionId;
     use std::collections::VecDeque;
     use std::fs;
     use std::path::PathBuf;
@@ -1272,11 +1364,13 @@ mod tests {
             vec!["audit", "verify", "extra"],
             vec!["item", "add", "login", "--password", "secret"],
             vec!["item", "edit", "not-an-item-id"],
+            vec!["item", "delete", "not-an-item-id"],
             vec!["item", "list", "extra"],
             vec!["item", "show", "not-an-item-id"],
             vec!["history"],
             vec!["history", "list", "not-an-item-id"],
             vec!["history", "list", "not-an-item-id", "extra"],
+            vec!["history", "restore", "not-an-item-id", "not-a-revision"],
             vec!["unlock"],
         ] {
             let output = run(arguments, &host);
@@ -1303,8 +1397,30 @@ mod tests {
             Ok(Command::ItemEdit { item_id })
         );
         assert_eq!(
+            parse(["item", "delete", canonical.as_str()]),
+            Ok(Command::ItemDelete { item_id })
+        );
+        assert_eq!(
             parse(["history", "list", canonical.as_str()]),
             Ok(Command::HistoryList { item_id })
+        );
+        let revision_id = RevisionId::new([0x6b; 32]);
+        let revision = revision_id.to_user_string();
+        assert_eq!(
+            parse(["history", "restore", canonical.as_str(), revision.as_str(),]),
+            Ok(Command::HistoryRestore {
+                item_id,
+                revision_id,
+            })
+        );
+        assert_eq!(
+            parse([
+                "history",
+                "restore",
+                canonical.as_str(),
+                revision.to_lowercase().as_str(),
+            ]),
+            Err(CliFailure::InvalidCommand)
         );
     }
 
@@ -1445,6 +1561,7 @@ mod tests {
         assert!(lines[0].ends_with("vault/login/v1\t\"Updated account\""));
         assert!(lines[1].contains("\tlive\tparents=0\tupdated=1700000000000\t"));
         assert!(lines[1].ends_with("vault/login/v1\t\"Example account\""));
+        let original_revision = lines[1].split('\t').next().unwrap().to_owned();
         for line in lines {
             let revision = line.split('\t').next().unwrap();
             assert!(RevisionId::from_user_string(revision).is_ok());
@@ -1455,10 +1572,77 @@ mod tests {
                 .contains(core::str::from_utf8(secret).unwrap()));
         }
 
+        let delete_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let deleted = run(["item", "delete", expected_id.as_str()], &delete_host);
+        assert_eq!(deleted.exit_code(), ExitCode::Success, "{deleted:?}");
+        assert_eq!(deleted.stdout(), format!("Item deleted: {expected_id}\n"));
+
+        let deleted_show_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let deleted_show = run(["item", "show", expected_id.as_str()], &deleted_show_host);
+        assert_eq!(deleted_show.exit_code(), ExitCode::NotFound);
+
+        let repeated_delete_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let repeated_delete = run(
+            ["item", "delete", expected_id.as_str()],
+            &repeated_delete_host,
+        );
+        assert_eq!(repeated_delete.exit_code(), ExitCode::NotFound);
+        assert!(repeated_delete.stdout().is_empty());
+
+        let deleted_history_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let deleted_history = run(
+            ["history", "list", expected_id.as_str()],
+            &deleted_history_host,
+        );
+        assert_eq!(deleted_history.exit_code(), ExitCode::Success);
+        let deleted_lines = deleted_history.stdout().lines().collect::<Vec<_>>();
+        assert_eq!(deleted_lines.len(), 3);
+        assert!(deleted_lines[0].contains("\tdeleted\tparents=1\tdeleted="));
+        let tombstone_revision = deleted_lines[0].split('\t').next().unwrap();
+
+        let tombstone_restore_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let tombstone_restore = run(
+            [
+                "history",
+                "restore",
+                expected_id.as_str(),
+                tombstone_revision,
+            ],
+            &tombstone_restore_host,
+        );
+        assert_eq!(tombstone_restore.exit_code(), ExitCode::InvalidInput);
+        assert!(tombstone_restore.stdout().is_empty());
+
+        let restore_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let restored = run(
+            [
+                "history",
+                "restore",
+                expected_id.as_str(),
+                original_revision.as_str(),
+            ],
+            &restore_host,
+        );
+        assert_eq!(restored.exit_code(), ExitCode::Success, "{restored:?}");
+        assert_eq!(restored.stdout(), format!("Item restored: {expected_id}\n"));
+
+        let restored_show_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let restored_show = run(["item", "show", expected_id.as_str()], &restored_show_host);
+        assert_eq!(restored_show.exit_code(), ExitCode::Success);
+        assert!(restored_show
+            .stdout()
+            .contains("Title: \"Example account\""));
+        assert!(restored_show.stdout().contains("Password: <redacted>"));
+        for secret in [&password, &updated_password] {
+            assert!(!restored_show
+                .stdout()
+                .contains(core::str::from_utf8(secret).unwrap()));
+        }
+
         let audit_host = TestHost::new(paths, [passphrase]);
         let audit = run(["audit", "verify"], &audit_host);
         assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
-        assert!(audit.stdout().contains("revisions=2 items=1"));
+        assert!(audit.stdout().contains("revisions=4 items=1"));
     }
 
     #[test]
@@ -1489,6 +1673,25 @@ mod tests {
         assert_eq!(history.exit_code(), ExitCode::Locked);
         assert!(history.stdout().is_empty());
 
+        let wrong = TestHost::new(paths.clone(), [b"wrong passphrase".to_vec()]);
+        let delete = run(["item", "delete", missing_id.as_str()], &wrong);
+        assert_eq!(delete.exit_code(), ExitCode::Locked);
+        assert!(delete.stdout().is_empty());
+
+        let missing_revision = RevisionId::new([0x56; 32]).to_user_string();
+        let wrong = TestHost::new(paths.clone(), [b"wrong passphrase".to_vec()]);
+        let restore = run(
+            [
+                "history",
+                "restore",
+                missing_id.as_str(),
+                missing_revision.as_str(),
+            ],
+            &wrong,
+        );
+        assert_eq!(restore.exit_code(), ExitCode::Locked);
+        assert!(restore.stdout().is_empty());
+
         let correct = TestHost::new(paths, [b"correct passphrase".to_vec()]);
         let show = run(["item", "show", missing_id.as_str()], &correct);
         assert_eq!(show.exit_code(), ExitCode::NotFound);
@@ -1503,6 +1706,24 @@ mod tests {
         let history = run(["history", "list", missing_id.as_str()], &correct);
         assert_eq!(history.exit_code(), ExitCode::NotFound);
         assert_eq!(history.stderr(), "vault-pm: not found\n");
+
+        let correct = TestHost::new(root.paths(), [b"correct passphrase".to_vec()]);
+        let delete = run(["item", "delete", missing_id.as_str()], &correct);
+        assert_eq!(delete.exit_code(), ExitCode::NotFound);
+        assert_eq!(delete.stderr(), "vault-pm: not found\n");
+
+        let correct = TestHost::new(root.paths(), [b"correct passphrase".to_vec()]);
+        let restore = run(
+            [
+                "history",
+                "restore",
+                missing_id.as_str(),
+                missing_revision.as_str(),
+            ],
+            &correct,
+        );
+        assert_eq!(restore.exit_code(), ExitCode::NotFound);
+        assert_eq!(restore.stderr(), "vault-pm: not found\n");
     }
 
     #[test]

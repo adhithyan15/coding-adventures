@@ -8,7 +8,9 @@ vertical: authenticated login creation plus durable redacted list/show. The
 same one-shot boundary now supports revision-safe login replacement. The
 newest-first `history list ITEM` projection exposes canonical revision
 selectors plus safe causal metadata without opening historical secrets. The
-executable is a thin caller of this package.
+same selectors now support reversible `item delete ITEM` and
+`history restore ITEM REVISION`. The executable is a thin caller of this
+package.
 
 The driver composes the existing storage-neutral application over separately
 permission-checked application-state and encrypted-object filesystem roots.
@@ -52,6 +54,14 @@ advisory timestamp, and—only for live revisions—the schema and escaped title
 Passwords and notes bodies never enter the redacted projection; usernames,
 URLs, paths, object frames, and cryptographic details are never emitted by the
 history renderer.
+
+`item delete ITEM` resolves the authenticated sole current live revision and
+consumes the session through an immutable causal-tombstone mutation.
+`history restore ITEM REVISION` first binds the exact canonical live revision
+to that item's bounded redacted history, then consumes the session while the
+application independently authenticates and copies it into a new current
+revision. Neither operation erases history, rewinds repository heads, or emits
+secret-bearing metadata.
 
 ## Verification
 

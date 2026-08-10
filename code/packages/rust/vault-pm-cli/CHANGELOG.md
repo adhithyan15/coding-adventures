@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added reversible authenticated `item delete ITEM` and
+  `history restore ITEM REVISION` mutations with strict item-bound selectors,
+  causal tombstones, and restore-as-new-revision semantics.
 - Added authenticated `history list ITEM` with canonical revision selectors,
   newest-first causal metadata, and redacted record titles.
 - Added revision-safe `item edit ITEM` for complete login-field replacement
