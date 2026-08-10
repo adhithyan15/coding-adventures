@@ -1065,4 +1065,5 @@ members = [
   "vault-pm-repository",
   "vault-pm-application",
   "vault-pm-application-storage-core",
+  "vault-pm-local-host",
 ]
