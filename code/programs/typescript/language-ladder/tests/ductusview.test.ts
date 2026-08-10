@@ -90,6 +90,8 @@ const URDU_KAF = ductusFor("ک", "urdu-nastaliq")!;
 const urduKafOutline = naskhOutline("ک");
 const URDU_LAM = ductusFor("ل", "urdu-nastaliq")!;
 const urduLamOutline = naskhOutline("ل");
+const URDU_MIM = ductusFor("م", "urdu-nastaliq")!;
+const urduMimOutline = naskhOutline("م");
 const PERSIAN_BEH = DUCTUS["ب"];
 const persianBehOutline = naskhOutline("ب");
 const PERSIAN_TEH = DUCTUS["ت"];
@@ -117,7 +119,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds all eleven authored Tamil letters, nine Persian letters, and Urdu ا, ج, ر, س, ش, ک, and ل", () => {
+  it("finds all eleven authored Tamil letters, nine Persian letters, and Urdu ا, ج, ر, س, ش, ک, ل, and م", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -150,6 +152,8 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("ک", "perso-arabic")).toBeUndefined();
     expect(ductusFor("ل", "urdu-nastaliq")?.glyph).toBe("ل");
     expect(ductusFor("ل", "perso-arabic")?.glyph).toBe("ل");
+    expect(ductusFor("م", "urdu-nastaliq")?.glyph).toBe("م");
+    expect(ductusFor("م", "perso-arabic")?.glyph).toBe("م");
   });
 
   it("keeps the shared Persian and Urdu ا independently addressable", () => {
@@ -168,6 +172,15 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(urdu?.script).toBe("urdu-nastaliq");
     expect(persian?.source.url).not.toBe(urdu?.source.url);
     expect(ductusFor("س", "arabic")).toBeUndefined();
+  });
+
+  it("keeps the shared Persian and Urdu م independently addressable", () => {
+    const persian = ductusFor("م", "perso-arabic");
+    const urdu = ductusFor("م", "urdu-nastaliq");
+    expect(persian?.script).toBe("perso-arabic");
+    expect(urdu?.script).toBe("urdu-nastaliq");
+    expect(persian?.source.url).not.toBe(urdu?.source.url);
+    expect(ductusFor("م", "arabic")).toBeUndefined();
   });
 
   it("returns undefined for a letter nobody has authored a stroke order for", () => {
@@ -859,6 +872,41 @@ describe("Urdu ل — its upright continues through a below-baseline bowl", () =
     expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(URDU_LAM.strokes[0], 1),
+    );
+  });
+});
+
+describe("Urdu م — its round head flows into the below-baseline tail", () => {
+  const steps = ductusSteps(URDU_MIM);
+  const strip = ductusFilmstrip(URDU_MIM, urduMimOutline);
+
+  it("keeps the head and tail in one sourced pen-down run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "shape the round head",
+      "continue down the tail below the baseline without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    const head = URDU_MIM.strokes[0].segments[0].path;
+    const tail = URDU_MIM.strokes[0].segments[1].path;
+    expect(tail[0]).toEqual(head.at(-1));
+    expect(Math.min(...tail.map((point) => point.y))).toBeLessThan(0);
+  });
+
+  it("reports two movements in one unbroken stroke", () => {
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("finishes the Noto Naskh path without a completed-stroke overlay", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      urduMimOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(URDU_MIM.strokes[0], 1),
     );
   });
 });
