@@ -1,0 +1,58 @@
+% ============================================================================
+% volcano-type — three named types of volcano and what each actually is
+% (adj-facts-stdlib, GEOLOGY).
+% ============================================================================
+% Not every volcano looks the same: a cinder cone is the simplest kind, a
+% shield volcano is built almost entirely of fluid lava flows, and a
+% composite volcano (a stratovolcano) is one of the grandest mountain-
+% building kinds. Recall is a binding query:
+%
+%     ? volcano_type(shield_volcano, $D)   % built_almost_entirely_of_fluid_lava_flows
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `volcano_type(type, description)` carrying the source citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% description WITH its source, on the CPU, with zero model calls, and
+% abstains on a volcano-related term that is not one of these three. The
+% query also runs BACKWARD — bind a description and recall the type it
+% names:
+%
+%     ? volcano_type($T, is_the_simplest_type_of_volcano)   % cinder_cone
+%
+% The three volcano types, as a little truth table:
+%
+%     type                 description                                       quote (verbatim)
+%     -------------------  ------------------------------------------------  --------------------------------------------------------------------------------
+%     cinder_cone           is_the_simplest_type_of_volcano                   "Cinder cones are the simplest type of volcano."
+%     shield_volcano        built_almost_entirely_of_fluid_lava_flows         "Shield volcanoes are built almost entirely of fluid lava flows."
+%     composite_volcano     also_called_a_stratovolcano                       "Some of the Earth's grandest mountains are composite volcanoes—sometimes called stratovolcanoes."
+%
+% Provenance: quoted verbatim from USGS's "About Volcanoes" page, which
+% introduces each of these three types in its own complete sentence before
+% going on to further description. WebFetch-verified before writing
+% (twice — the second pass specifically confirmed each sentence's exact
+% wording and where it actually ends, since a first-pass fetch can
+% misjudge where a source sentence stops). `trust authoritative` — USGS is
+% a primary .gov source, the same tier the sibling `rock-type.adj`/
+% `mineral-hardness.adj` (the other libraries in this directory) already
+% use for their USGS citations. A volcano-related term that is NOT one of
+% these three — "lava_dome", a real term the same page also names, but one
+% the source ITSELF explicitly disclaims as not a type: "A volcano can
+% host many lava domes over a long period of time, so these are
+% technically not a 'volcano type' but rather an eruption phenomenon." —
+% is deliberately NOT a row, so a recall ABSTAINS on it rather than
+% inventing a description. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table volcano_type {
+    columns type, description
+
+    row (cinder_cone, is_the_simplest_type_of_volcano)
+    row (shield_volcano, built_almost_entirely_of_fluid_lava_flows)
+    row (composite_volcano, also_called_a_stratovolcano)
+
+    source "Shield volcanoes are built almost entirely of fluid lava flows."
+    locator "https://www.usgs.gov/programs/VHP/about-volcanoes"
+    trust authoritative
+}

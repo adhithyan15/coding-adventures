@@ -1,0 +1,14 @@
+% ============================================================================
+% volcano-type.query.adj — worked recall over the volcano-type library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is this volcano
+% type?" (direct) or "which type matches this description?" (reverse) —
+% it states no fact of its own — it only `import`s the grounded table and
+% asks binding queries.
+% ============================================================================
+
+import "volcano-type.adj"
+
+? volcano_type(shield_volcano, $D)                                     % expect built_almost_entirely_of_fluid_lava_flows (direct)
+? volcano_type($T, is_the_simplest_type_of_volcano)                   % expect cinder_cone (reverse)
+? volcano_type(lava_dome, $D)                                          % expect abstain -- the source itself says this is technically not a "volcano type" but an eruption phenomenon
