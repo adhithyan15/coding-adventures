@@ -1,8 +1,14 @@
-import { describe, expect, it } from "vitest";
-import { actualChapterHash, bookHashStatus, expectedBookHash } from "../src/bookhashes.ts";
+import { beforeAll, describe, expect, it } from "vitest";
+import { actualChapterHash, bookHashStatus, expectedBookHash, whenBookHashesReady } from "../src/bookhashes.ts";
 import { REAL_LESSONS } from "./real-lessons.ts";
 
 const loadLessons = () => REAL_LESSONS;
+
+// The manifest is loaded lazily so it stays out of the app's eager chunk.
+// Every assertion below reads it, so wait for it once before any of them run.
+beforeAll(async () => {
+  await whenBookHashesReady();
+});
 
 describe("generated book source hashes", () => {
   it.each([

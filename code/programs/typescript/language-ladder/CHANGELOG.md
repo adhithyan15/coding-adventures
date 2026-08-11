@@ -10,6 +10,20 @@
   the printed form's two runs explicit.
 - Queue the adjacent Tav demonstration as the final Hebrew inventory entry.
 
+### Fixed — the eager bundle, and the check that could not see it (HL-C110)
+
+- Load the book-hash manifest (136 kB) and all 22 chapter ledgers (580 kB)
+  **lazily**. They were statically imported to compute one diagnostic word in a
+  metadata line, and together they were the largest eager chunk in the app.
+- Add `whenBookHashesReady()`; the status reads `not-generated` until the data
+  lands, and `main.ts` re-renders when it does.
+- Derive the eager chunk set from `dist/index.html` — the entry script plus
+  every `modulepreload` — instead of a hardcoded name pattern that went stale
+  the moment a chunk became lazy.
+- Refuse to report on a stale `dist/`: if any source or corpus file is newer
+  than the built entry HTML, `check:bundle` exits non-zero.
+- Largest eager chunk: 497,216 bytes against the 500,000 ceiling.
+
 ### Changed — Spanish runs 1..135 (HL-C105)
 
 - Re-pin the Spanish book-hash table for the five double-object chapters
