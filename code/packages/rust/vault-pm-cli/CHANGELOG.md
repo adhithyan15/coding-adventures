@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Reserve create time, identities, and audit-failure entropy before unlock so
+  active-epoch item prompt failures become durable traceable `ItemCreate`
+  events before their CLI error is returned.
 - Added authenticated `audit list` and canonical `audit show TRACE`; both
   publish one durable `AuditRead` before rendering verified trace-aware rows.
 - Added closed canonical trace parsing, bounded newest-first output, audited

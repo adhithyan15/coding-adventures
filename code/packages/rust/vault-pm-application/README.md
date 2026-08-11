@@ -32,7 +32,10 @@ their own successful `AuditRead` event first, re-verify the complete newly
 advanced chain, and return a bounded newest-first secret-free projection or an
 exact trace lookup. The projection includes stable item and revision selectors
 only for this explicit surface; default debug output redacts every stable
-identity. CLI rendering remains a later slice. It also defines the
+identity. An authenticated host-side item-create input failure can now consume
+the unlocked session through a dedicated boundary that publishes a failed
+`ItemCreate` event against the already-reserved item identity before returning
+control to the host. CLI rendering remains a later slice. It also defines the
 exact canonical
 `PreparedInit -> Active -> PendingPublication -> Active` owner-state machine,
 retry-stable publication journals, encrypted local-secret custody, and

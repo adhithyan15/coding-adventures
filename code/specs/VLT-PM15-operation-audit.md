@@ -214,6 +214,10 @@ Authenticated failures or denials publish an audit-only event before returning
 the closed error when the unlocked session and repository remain healthy. If
 the event cannot be published, the operation returns storage/integrity failure
 and emits no result that could be confused with a completed access or effect.
+An interactive create reserves its item identity, trace entropy, and advisory
+time before authentication. A later form or terminal failure is therefore a
+valid item-scoped failed `ItemCreate` event even though no record document or
+revision was created.
 
 ## 9. Verification
 
@@ -247,6 +251,9 @@ parse -> lock writer -> unlock -> resolve exact operation facts
 
 For a successful mutation, operation facts and the event are prepared together
 and published atomically. Output follows durable active-state installation.
+For interactive create, host time and entropy preflight precede unlock; after
+unlock, a form failure consumes the session through an audit-only failed
+`ItemCreate` publication before its closed host error is returned.
 
 An audit-history command logs its own access first and then reads from the new
 active state, so the returned view may include the access event that authorized

@@ -1504,6 +1504,11 @@ changelog, focused build, and downstream validation.
 9b-2c-5c-2. completed CLI audit list/show with canonical trace-aware rendering,
              audited missing lookups, tamper-with-no-output enforcement,
              ambiguous-provider recovery, and real-process PTY acceptance.
+9b-2c-5d. completed active-epoch item-create host-failure enforcement: item,
+           mutation, metadata, trace, and audit-publication randomness are
+           reserved before authentication; later prompt failures publish a
+           failed item-scoped `ItemCreate` before their CLI error, with
+           real-process trace lookup acceptance.
 9b-2c-4c-1. completed production application boundary for a single durable,
              crash-resumable pre-audit-vault migration epoch.
 9b-2c-4c-2. completed explicit authenticated CLI audit migration after every
