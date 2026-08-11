@@ -1757,6 +1757,21 @@
       "source_cas_hashes": [],
       "benchmark_paths": [],
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.literacy.k2.synonym_pair",
+      "title": "Recall a synonym of a common word",
+      "band": "K-2",
+      "domain": "literacy",
+      "competency": "recall",
+      "coverage_roots": ["ccss.ela"],
+      "standards": [],
+      "prerequisites": [],
+      "libraries": ["code/specs/data/adj-facts-stdlib/language/synonyms.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     }
   ]
 }

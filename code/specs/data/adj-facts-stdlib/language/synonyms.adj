@@ -1,0 +1,61 @@
+% ============================================================================
+% synonyms — a common word and a word that means the same thing (synonym)
+% (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% A sibling library to `opposites.adj`: many words come in pairs that mean
+% the SAME thing, not the opposite. HAPPY and CHEERFUL both describe feeling
+% good. The word for "means the same as" is a SYNONYM. This tiny library
+% records a handful of clean word→synonym pairs so an ADJ program can recall
+% them, each one cited to a dictionary. Recall is a binding query:
+%
+%     ? synonym(happy, $Word)      % cheerful
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `synonym(word, synonym)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% synonym WITH its source, on the CPU, with zero model calls, and ABSTAINS on
+% any word not in the table (it never invents a synonym it cannot cite).
+%
+% The pairs, as a truth table:
+%
+%     word    synonym    read as…
+%     ------  ---------  ------------------------------
+%     happy   cheerful   "a synonym of happy is cheerful"
+%     smart   bright     "a synonym of smart is bright"
+%     quick   fast       "a synonym of quick is fast"
+%
+% Only ONE direction is shipped per pair (word → its synonym). A query like
+% `? synonym(cheerful, $W)` therefore ABSTAINS: the honest-abstention property
+% is deliberate — the table answers only what its source explicitly lists,
+% and a word with no shipped synonym (e.g. `purple`) returns no invented
+% answer. (This mirrors `opposites.adj`'s own one-direction convention.)
+%
+% Provenance — nothing here is from memory. Each pair is copied from the
+% English Wiktionary entry for the FIRST word, whose "Synonyms" line lists
+% the synonym verbatim. The per-pair citable spans (quoted exactly as
+% printed) are:
+%
+%     happy  → en.wiktionary.org/wiki/happy  "cheerful, content, delighted, elated, exultant, glad, joyful, jubilant, merry"
+%     smart  → en.wiktionary.org/wiki/smart  "bright, capable, sophisticated, witty"  (sense: exhibiting social ability or cleverness)
+%     quick  → en.wiktionary.org/wiki/quick  "fast, speedy, rapid, swift"  (sense: moving with speed)
+%
+% The single `source` span below is the clearest one (the `happy` entry); the
+% `locator` points at that entry, and each remaining pair's own page + verbatim
+% span is quoted above so every row is independently checkable. `trust
+% consensus` — a dictionary is a secondary reference, not a primary authority,
+% the same tier `opposites.adj` already established for the same Wiktionary
+% source. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table synonym {
+    columns word, synonym
+
+    row (happy, cheerful)
+    row (smart, bright)
+    row (quick, fast)
+
+    source "cheerful, content, delighted, elated, exultant, glad, joyful, jubilant, merry"
+    locator "https://en.wiktionary.org/wiki/happy"
+    trust consensus
+}
