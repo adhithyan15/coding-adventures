@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Arabic independent-shiin ductus (HL-C09AR)
+
+- Render **ش** in five evidence-aligned frames: two joined body movements,
+  followed by the lower-left, lower-right, and centered upper dots.
+- Keep the source's four pen-down runs, three lifts, and two-way-connector
+  context explicit while fitting the vendored Noto Naskh outline.
+- Preserve Arabic provenance independently of Urdu **ش**, with the same page's
+  directly linked Saad MOV queued next.
+
 ### Added — cited Arabic independent-seen ductus (HL-C09AQ)
 
 - Render **س** in two evidence-aligned frames: three close teeth shaped

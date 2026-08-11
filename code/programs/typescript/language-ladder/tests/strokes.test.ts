@@ -33,6 +33,7 @@ const ARABIC_KHAA = DUCTUS[ductusKey("arabic", "خ")];
 const ARABIC_DAAL = DUCTUS[ductusKey("arabic", "د")];
 const ARABIC_RAA = DUCTUS[ductusKey("arabic", "ر")];
 const ARABIC_SEEN = DUCTUS[ductusKey("arabic", "س")];
+const ARABIC_SHIIN = DUCTUS[ductusKey("arabic", "ش")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
@@ -552,6 +553,22 @@ describe("handwriting ductus", () => {
     expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
   });
 
+  it("Arabic independent ش writes its body before three separately lifted dots", () => {
+    expect(ARABIC_SHIIN.script).toBe("arabic");
+    expect(penLifts(ARABIC_SHIIN)).toBe(3);
+    expect(ARABIC_SHIIN.strokes).toHaveLength(4);
+    expect(ARABIC_SHIIN.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 1, 1]);
+    const teeth = ARABIC_SHIIN.strokes[0].segments[0].path;
+    const bowl = ARABIC_SHIIN.strokes[0].segments[1].path;
+    expect(teeth.at(-1)).toEqual(bowl[0]);
+    const [lowerLeft, lowerRight, upper] = ARABIC_SHIIN.strokes.slice(1).map(
+      (stroke) => stroke.segments[0].path,
+    );
+    expect(lowerLeft[0].x).toBeLessThan(lowerRight[0].x);
+    expect(upper[0].y).toBeGreaterThan(lowerLeft[0].y);
+    expect(upper[0].y).toBeGreaterThan(lowerRight[0].y);
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -930,6 +947,20 @@ describe("handwriting ductus", () => {
     );
     expect(src.url).not.toBe(DUCTUS["س"].source.url);
     expect(src.url).not.toBe(URDU_SIN.source.url);
+  });
+
+  it("Arabic independent ش traces its body-first dots to the University of Oregon", () => {
+    const src = ARABIC_SHIIN.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/%D8%B3-%D8%B4-%D8%B5-%D8%B6/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet: س ش ص ض.*Shiin.*00:00.7–00:03.0.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /FullSizeRender-7.mov.*body-first.*one continuous pen-down run.*00:00.7–00:02.2.*three close teeth.*right to left.*final bowl.*lower-left dot.*00:02.4–00:02.5.*lower-right dot.*00:02.7–00:02.8.*centered upper dot.*00:02.9–00:03.0.*two-way connector.*contextual shapes.*four-stroke.*three-lift.*Noto Naskh.*scoped to Arabic.*Urdu ش source.*same Unicode glyph/i,
+    );
+    expect(src.url).not.toBe(URDU_SHIN.source.url);
   });
 
   it("Urdu independent ج traces to Zer o Zabar's dot-first pointed-head animation", () => {
