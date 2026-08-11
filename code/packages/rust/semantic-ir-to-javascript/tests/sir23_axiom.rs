@@ -76,10 +76,19 @@ fn bc(name: &str, args: Vec<Expr>) -> Expr {
 
 /// A statement that prints `arg`'s EVALUATED value — the harness-only
 /// observability pattern every sibling SIR23 oracle/integration test in
-/// this crate uses (`emit.rs`'s `pick_print_of_sym23_root` arm).
+/// this crate uses (`emit.rs`'s `pick_sys_write_of_sym23_root` arm,
+/// SIR28 §7's successor to the pre-SIR28 `pick_print_of_sym23_root`).
 fn print(arg: Expr) -> Stmt {
     Stmt::ExprStmt {
-        expr: bc("print", vec![arg]),
+        expr: bc(
+            "__sys_write__",
+            vec![
+                Expr::StrLit { value: "stdout".into(), span: sp() },
+                Expr::StrLit { value: "once".into(), span: sp() },
+                Expr::BoolLit { value: false, span: sp() },
+                arg,
+            ],
+        ),
         span: sp(),
     }
 }
@@ -132,7 +141,11 @@ fn assign(name: &str, value: Expr) -> Expr {
 fn module_with_main(stmts: Vec<Stmt>, value: Expr) -> Module {
     Module {
         name: "sir23_axiom".into(),
-        manifest: FeatureManifest::from_features(&[Feature::SymbolicExpr]),
+        manifest: FeatureManifest::from_features(&[
+            Feature::SymbolicExpr,
+            Feature::ConsoleIO,
+            Feature::Strings,
+        ]),
         imports: vec![],
         exports: vec![],
         functions: vec![Function {
