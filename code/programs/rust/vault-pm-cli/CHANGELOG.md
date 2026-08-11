@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Extended the real-process PTY audit ceremony through an invalid item-create
+  prompt and exact trace selection of its durable failed event.
 - Exposed authenticated `audit list` and `audit show TRACE`, and extended the
   real-process PTY suite through trace selection plus later verification that
   both audit-history accesses became durable.

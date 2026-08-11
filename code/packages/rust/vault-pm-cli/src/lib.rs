@@ -466,11 +466,6 @@ fn item_add_login(
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
 ) -> Result<CliOutput, CliFailure> {
-    let (access, application_store) = authenticated_access(host, paths, writer)?;
-    let title = host.read_login_title().map_err(map_host)?;
-    let username = host.read_login_username().map_err(map_host)?;
-    let password = host.read_login_password().map_err(map_host)?;
-    let url = host.read_login_url().map_err(map_host)?;
     let now_ms = host.now_ms().map_err(map_host)?;
     let mut mutation_random = [0_u8; ADD_ITEM_RANDOM_BYTES];
     host.fill_entropy(&mut mutation_random).map_err(map_host)?;
@@ -478,7 +473,41 @@ fn item_add_login(
     let item_id = randomness.item_id();
     let mut operation_random = [0_u8; ITEM_OPERATION_RANDOM_BYTES];
     host.fill_entropy(&mut operation_random).map_err(map_host)?;
-    let document = ItemDocument::new(
+    let mut failure_random = [0_u8; AUDITED_ACCESS_RANDOM_BYTES];
+    host.fill_entropy(&mut failure_random).map_err(map_host)?;
+    let failure_randomness = AuditedAccessRandomnessV1::new(failure_random);
+    let (access, application_store) = authenticated_access(host, paths, writer)?;
+    let audit_enabled = access
+        .as_unlocked()
+        .map_err(map_application)?
+        .audit_enabled();
+    let input = (|| {
+        Ok::<_, HostError>((
+            host.read_login_title()?,
+            host.read_login_username()?,
+            host.read_login_password()?,
+            host.read_login_url()?,
+        ))
+    })();
+    let (title, username, password, url) = match input {
+        Ok(input) => input,
+        Err(error) => {
+            if audit_enabled {
+                access
+                    .into_unlocked()
+                    .map_err(map_application)?
+                    .record_audited_item_create_host_failure(
+                        randomness,
+                        now_ms,
+                        failure_randomness,
+                        &application_store,
+                    )
+                    .map_err(map_application)?;
+            }
+            return Err(map_host(error));
+        }
+    };
+    let document = match ItemDocument::new(
         item_id,
         ContentType::new(LOGIN_V1).map_err(|_| CliFailure::Internal)?,
         now_ms,
@@ -494,8 +523,24 @@ fn item_add_login(
             notes: None,
         }),
         ObservedSet::new(),
-    )
-    .map_err(|_| CliFailure::InvalidCommand)?;
+    ) {
+        Ok(document) => document,
+        Err(_) => {
+            if audit_enabled {
+                access
+                    .into_unlocked()
+                    .map_err(map_application)?
+                    .record_audited_item_create_host_failure(
+                        randomness,
+                        now_ms,
+                        failure_randomness,
+                        &application_store,
+                    )
+                    .map_err(map_application)?;
+            }
+            return Err(CliFailure::InvalidCommand);
+        }
+    };
     access
         .into_unlocked()
         .map_err(map_application)?
@@ -1910,6 +1955,34 @@ mod tests {
             final_audit.stdout().contains("audit_events=6"),
             "{final_audit:?}"
         );
+    }
+
+    #[test]
+    fn active_epoch_records_item_create_prompt_failure_before_returning() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"audited create failure passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        activate_test_audit_epoch(&paths, passphrase.clone());
+
+        let failed_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let failed = run(["item", "add", "login"], &failed_host);
+        assert_eq!(failed.exit_code(), ExitCode::Provider, "{failed:?}");
+        assert!(failed.stdout().is_empty());
+
+        let list_host = TestHost::with_entropy_seed(paths, [passphrase], 2);
+        let audit = run(["audit", "list"], &list_host);
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        let expected_item =
+            ItemId::new([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]).to_user_string();
+        assert!(
+            audit.stdout().contains(&format!(
+                "action=item_create\toutcome=failed\ttime=1700000000000\titem={expected_item}"
+            )),
+            "{audit:?}"
+        );
+        assert!(!audit.stdout().contains("audited create failure passphrase"));
     }
 
     #[test]

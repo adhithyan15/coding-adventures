@@ -64,6 +64,10 @@ the audit-history surface itself requires that epoch.
 `item add login` unlocks once, collects bounded fields from the controlling
 terminal, obtains fresh mutation and metadata identities from OS entropy, and
 consumes the session through the crash-resumable application mutation.
+Time, the item identity, mutation entropy, and audit-failure entropy are
+reserved before authentication; after an active-epoch unlock, any item-form
+prompt failure publishes a failed traceable `ItemCreate` event before its
+closed CLI error becomes observable.
 `item list` and `item show ITEM` reopen in separate one-shot sessions and
 render only escaped redacted projections; the password and notes body are
 never available to the renderer. In an active epoch, both commands first make

@@ -1142,6 +1142,35 @@ impl UnlockedVaultV1 {
         )
     }
 
+    /// Durably record a host-side failure while collecting a new item.
+    ///
+    /// The caller must reserve the complete add-item randomness before
+    /// authentication. This boundary derives and binds the item identity from
+    /// that owned block, then wipes the unused mutation material. No partially
+    /// collected record field crosses the boundary. The session is consumed,
+    /// and the closed failure becomes observable only after its audit-only
+    /// commit is durable.
+    pub fn record_audited_item_create_host_failure(
+        self,
+        add_randomness: AddItemRandomnessV1,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        self.require_audit_epoch()?;
+        let item_id = add_randomness.item_id();
+        let audited = self.finish_audited_access(
+            AuditActionV1::ItemCreate,
+            Some(item_id),
+            None,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+            Err::<(), _>(ApplicationError::InvalidInput),
+        )?;
+        Ok(audited.into_parts().0)
+    }
+
     /// Replace the sole expected current live revision and return the resulting
     /// durable active owner state.
     ///
@@ -6988,6 +7017,65 @@ mod tests {
             local.0.lock().unwrap().as_deref(),
             Some(exact_item.as_slice())
         );
+    }
+
+    #[test]
+    fn audited_item_create_host_failure_is_durable_and_traceable() {
+        let (locator, local, bootstrap, factory) = initialized();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .activate_audit_epoch(430, audited_access_randomness(0x61), &local)
+        .unwrap();
+
+        let add_randomness = add_item_randomness(0x62);
+        let item_id = add_randomness.item_id();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .record_audited_item_create_host_failure(
+            add_randomness,
+            431,
+            audited_access_randomness(0x63),
+            &local,
+        )
+        .unwrap();
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemCreate,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+        let event_head = session.active.audit_event_head().unwrap();
+        let object = session._repository.read_object(event_head).unwrap();
+        let plaintext =
+            open_object(&session._keys, ObjectKind::AuditEvent, object.frame()).unwrap();
+        let event = decode_signed_audit_event(&plaintext).unwrap();
+        assert_eq!(event.event().trace_id(), audited_access_trace(0x63));
+        assert_eq!(event.event().timestamp_ms(), 431);
+        assert_eq!(session.active.last_device_counter(), 3);
     }
 
     #[test]

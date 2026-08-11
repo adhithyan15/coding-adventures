@@ -213,6 +213,12 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     );
     assert_transcript_excludes_secrets(&enable_transcript);
 
+    let (failed_add_status, failed_add_transcript) = run_empty_title_add_in_pty(&home);
+    assert_eq!(failed_add_status.code(), Some(2));
+    assert!(failed_add_transcript.contains("Title: "));
+    assert!(failed_add_transcript.contains("vault-pm: invalid command"));
+    assert_transcript_excludes_secrets(&failed_add_transcript);
+
     let (failed_edit_status, failed_edit_transcript) = run_empty_title_edit_in_pty(&home, &item_id);
     assert_eq!(failed_edit_status.code(), Some(2));
     assert!(failed_edit_transcript.contains("Title: "));
@@ -222,7 +228,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     let (post_failure_status, post_failure_transcript) = run_unlock_in_pty(
         &home,
         &["audit", "verify"],
-        b"commits=7 catalogs=5 revisions=4 items=1 audit_events=2",
+        b"commits=8 catalogs=5 revisions=4 items=1 audit_events=3",
     );
     assert!(
         post_failure_status.success(),
@@ -233,16 +239,33 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     let (audit_list_status, audit_list_transcript) = run_unlock_in_pty(
         &home,
         &["audit", "list"],
-        b"action=item_update\toutcome=failed",
+        b"action=item_create\toutcome=failed",
     );
     assert!(
         audit_list_status.success(),
         "audit list failed: {audit_list_transcript}"
     );
+    assert!(
+        audit_list_transcript.contains("action=item_create\toutcome=failed"),
+        "{audit_list_transcript}"
+    );
     assert!(audit_list_transcript.contains("action=audit_read\toutcome=succeeded"));
     assert!(audit_list_transcript.contains("action=vault_verify\toutcome=succeeded"));
     assert_transcript_excludes_secrets(&audit_list_transcript);
+    let failed_add_trace = extract_audit_trace(&audit_list_transcript, "item_create");
     let failed_edit_trace = extract_audit_trace(&audit_list_transcript, "item_update");
+
+    let (add_show_status, add_show_transcript) = run_unlock_in_pty(
+        &home,
+        &["audit", "show", &failed_add_trace],
+        b"action=item_create\toutcome=failed",
+    );
+    assert!(
+        add_show_status.success(),
+        "audit create show failed: {add_show_transcript}"
+    );
+    assert!(add_show_transcript.contains(&failed_add_trace));
+    assert_transcript_excludes_secrets(&add_show_transcript);
 
     let (audit_show_status, audit_show_transcript) = run_unlock_in_pty(
         &home,
@@ -257,7 +280,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert_transcript_excludes_secrets(&audit_show_transcript);
 
     let (final_audit_status, final_audit_transcript) =
-        run_unlock_in_pty(&home, &["audit", "verify"], b"audit_events=5");
+        run_unlock_in_pty(&home, &["audit", "verify"], b"audit_events=7");
     assert!(
         final_audit_status.success(),
         "final audit verification failed: {final_audit_transcript}"
@@ -294,9 +317,17 @@ fn run_edit_login_in_pty(home: &TestHome, item_id: &str) -> (ExitStatus, String)
 }
 
 fn run_empty_title_edit_in_pty(home: &TestHome, item_id: &str) -> (ExitStatus, String) {
+    run_empty_title_form_in_pty(home, &["item", "edit", item_id])
+}
+
+fn run_empty_title_add_in_pty(home: &TestHome) -> (ExitStatus, String) {
+    run_empty_title_form_in_pty(home, &["item", "add", "login"])
+}
+
+fn run_empty_title_form_in_pty(home: &TestHome, arguments: &[&str]) -> (ExitStatus, String) {
     let (mut master, slave) = open_pty();
     let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
-    command.args(["item", "edit", item_id]);
+    command.args(arguments);
     home.configure(&mut command);
     command
         .stdin(Stdio::piped())

@@ -2,6 +2,18 @@
 
 All notable changes to this package are documented here.
 
+## [0.45.0] - 2026-08-11
+
+### Added
+
+- Add a session-consuming boundary that records an authenticated host-side
+  item-create failure against its already-reserved item identity.
+
+### Security
+
+- Publish the failed `ItemCreate` event and its fresh trace through the
+  audit-only journal before the caller can expose a prompt failure.
+
 ## [0.44.0] - 2026-08-11
 
 ### Added
