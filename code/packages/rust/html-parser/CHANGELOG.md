@@ -6,6 +6,10 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Start tags rejected at a template-driven column-group boundary now report
+  the required parse error while remaining ignored. Additional columns,
+  nested templates, columns outside templates, and ordinary `colgroup`
+  recovery retain their existing diagnostic behavior.
 - Matching HTML `template` end tags now thoroughly generate implied end tags
   and report the required parse error when a non-template element remains
   current. Directly current templates, implied descendants, foreign

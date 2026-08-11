@@ -155,6 +155,13 @@ Prioritized work items:
    `template.dat`'s mismatched-template evidence while leaving implied
    descendants, directly current templates, foreign template-named elements,
    and synthetic template fragment contexts quiet.
+   Start tags rejected after a template-owned `col` now report the
+   in-column-group parse error before remaining ignored, matching WPT
+   `template.dat`'s `<template><col><div>` and `<template><col><colgroup>`
+   evidence while leaving additional columns, nested templates, columns
+   outside templates, and ordinary `colgroup` recovery on their existing
+   paths. The closely related non-whitespace character-token branch after a
+   template-owned `col` remains the leading template audit candidate.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases
