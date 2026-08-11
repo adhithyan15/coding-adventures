@@ -1,6 +1,9 @@
 # @version 1
+# @case_insensitive true
 # Mermaid 11.16.1 sequence diagram token grammar.
 # Derived from packages/mermaid/src/diagrams/sequence/parser/sequenceDiagram.jison.
+
+case_sensitive: false
 
 skip:
   WHITESPACE            = /[ \t]+/

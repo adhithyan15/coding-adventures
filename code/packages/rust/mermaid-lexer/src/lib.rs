@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.22.0";
+pub const VERSION: &str = "0.23.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -98,6 +98,89 @@ pub fn tokenize_mermaid_sequence(source: &str) -> Vec<Token> {
     let mut tokens = lexer
         .tokenize()
         .unwrap_or_else(|e| panic!("Mermaid sequence tokenization failed: {e}"));
+    let grammar = parse_token_grammar(SEQUENCE_TOKEN_GRAMMAR_SOURCE)
+        .expect("sequence.tokens was already validated while creating the lexer");
+    let statement_keywords = [
+        "participant",
+        "actor",
+        "create",
+        "destroy",
+        "link",
+        "links",
+        "properties",
+        "details",
+        "accTitle",
+        "accDescr",
+        "box",
+        "activate",
+        "deactivate",
+        "note",
+        "title",
+        "autonumber",
+        "loop",
+        "rect",
+        "opt",
+        "alt",
+        "else",
+        "par",
+        "par_over",
+        "and",
+        "critical",
+        "option",
+        "break",
+        "end",
+    ];
+    let mut line_start = true;
+    let mut context: Option<String> = None;
+    for token in &mut tokens {
+        let token_name = token.type_name.as_deref();
+        if matches!(
+            token.type_,
+            lexer::token::TokenType::Newline | lexer::token::TokenType::Semicolon
+        ) {
+            line_start = true;
+            context = None;
+            continue;
+        }
+        if token_name == Some("HEADER") {
+            line_start = false;
+            continue;
+        }
+        let keyword = grammar
+            .keywords
+            .iter()
+            .find(|keyword| keyword.eq_ignore_ascii_case(&token.value))
+            .cloned();
+        if line_start {
+            if let Some(keyword) =
+                keyword.filter(|value| statement_keywords.contains(&value.as_str()))
+            {
+                token.value.clone_from(&keyword);
+                context = Some(keyword);
+            }
+            line_start = false;
+        } else if let Some(keyword) = keyword {
+            let allowed = match context.as_deref() {
+                Some("create") => matches!(keyword.as_str(), "participant" | "actor"),
+                Some("participant" | "actor") => keyword == "as",
+                Some("note") => matches!(keyword.as_str(), "left" | "right" | "over"),
+                Some("note-placement") => keyword == "of",
+                Some("autonumber") => keyword == "off",
+                _ => false,
+            };
+            if allowed {
+                token.value.clone_from(&keyword);
+                context = match (context.as_deref(), keyword.as_str()) {
+                    (Some("create"), "participant" | "actor") => Some(keyword),
+                    (Some("note"), "left" | "right") => Some("note-placement".to_string()),
+                    _ => None,
+                };
+            }
+        }
+        if token.type_name.as_deref() == Some("WRAP_DIRECTIVE") {
+            token.value.make_ascii_lowercase();
+        }
+    }
     tokens.retain(|token| token.type_name.as_deref() != Some("HASH_COMMENT"));
     tokens
 }
@@ -113,7 +196,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.22.0");
+        assert_eq!(VERSION, "0.23.0");
     }
 
     #[test]
@@ -294,6 +377,21 @@ mod tests {
         assert!(values.contains(&"+"));
         assert!(values.contains(&"note"));
         assert!(values.contains(&"Ready"));
+    }
+
+    #[test]
+    fn tokenizes_sequence_keywords_case_insensitively() {
+        let tokens = tokenize_mermaid_sequence(
+            "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nNoTe RiGhT Of A: WRAP: Ready\n",
+        );
+        let values: Vec<&str> = tokens.iter().map(|token| token.value.as_str()).collect();
+
+        assert!(values.contains(&"participant"));
+        assert!(values.contains(&"as"));
+        assert!(values.contains(&"note"));
+        assert!(values.contains(&"right"));
+        assert!(values.contains(&"of"));
+        assert!(values.contains(&"wrap:"));
     }
 
     #[test]

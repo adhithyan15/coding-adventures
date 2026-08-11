@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.27.0";
+pub const VERSION: &str = "0.28.0";
 
 use std::collections::HashMap;
 
@@ -2755,7 +2755,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.27.0");
+        assert_eq!(crate::VERSION, "0.28.0");
     }
 
     #[test]

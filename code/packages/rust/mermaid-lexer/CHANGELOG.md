@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.23.0
+
+- Match and canonicalize Mermaid 11.16.1 sequence keywords case-insensitively.
+
 ## 0.22.0
 
 - Skip Mermaid 11.16.1 sequence `#` comments while preserving numeric and named entities.
