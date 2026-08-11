@@ -2158,6 +2158,7 @@ fn emit_event_union(component: &str, emits: &[EmitDecl]) -> Result<String, Pipel
         // expresses in TypeScript. Hosts importing `{Component}Event`
         // therefore get the same "no events can fire" signal.
         writeln!(out, "enum {component}Event {{}}").unwrap();
+        out.push_str(&emit_event_wire_extension(component, emits)?);
         return Ok(out);
     }
     writeln!(out, "enum {component}Event {{").unwrap();
@@ -5559,6 +5560,10 @@ mod tests {
             .unwrap()
             .output;
         assert!(out.contains("enum BtnEvent {}"));
+        assert!(out.contains("extension BtnEvent {"));
+        assert!(out.contains("var mosaicName: String"));
+        assert!(out.contains("var mosaicEnvelope: [String: Any]"));
+        assert!(out.contains("switch self {"));
     }
 
     // ---------------------------------------------------------------------

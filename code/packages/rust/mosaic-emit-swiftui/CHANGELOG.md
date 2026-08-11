@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - empty-event project shells
+
+Components with no authored events keep their uninhabited event enum but now
+emit the standard wire helpers with exhaustive empty switches. Generated host
+state can therefore type-check its unreachable dispatch seam, allowing minimal
+Rust-driven SwiftUI packages to compile through SwiftPM.
+
 ### Added - native icons and progress
 
 `Icon` now lowers semantic glyph names to SF Symbols with authored or default

@@ -972,8 +972,8 @@ jobs:
           cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
           runtime_library="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.dylib"
 
-          bundled_output="$RUNNER_TEMP/mosaic-swift-native-complete-rating-controls"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend swiftui --output "$bundled_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          bundled_output="$RUNNER_TEMP/mosaic-swift-bundled-conformance"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-app-conformance/package --backend swiftui --output "$bundled_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$bundled_output/swiftui/mosaic-degradations.json"
           swift build --package-path "$bundled_output/swiftui"
           swift_bin="$(swift build --package-path "$bundled_output/swiftui" --show-bin-path)"
