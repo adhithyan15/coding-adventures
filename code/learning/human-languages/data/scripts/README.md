@@ -346,9 +346,12 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   verifies printed **ו** as one stroke: draw the small head left-to-right, then
   turn directly down the stem without lifting. Its two-frame path follows Noto
   Sans Hebrew and excludes the lesson's later vowel marks from the base letter's
-  zero-lift count. The remaining **171** prose
+  zero-lift count. The Zayin/Heit lesson then verifies handwritten **ז** as one
+  rounded run: rise briefly to the right, then curve down and around the base
+  without lifting. Its two-frame block-font adaptation keeps Zayin distinct from
+  both mirrored handwritten Gimel and the narrower Vav. The remaining **170** prose
   part orders across seven scripts
-  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 16,
+  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 15,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every

@@ -30,6 +30,7 @@ const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
 const HEBREW_DALET = DUCTUS[ductusKey("hebrew", "ד")];
 const HEBREW_HEI = DUCTUS[ductusKey("hebrew", "ה")];
 const HEBREW_VAV = DUCTUS[ductusKey("hebrew", "ו")];
+const HEBREW_ZAYIN = DUCTUS[ductusKey("hebrew", "ז")];
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
@@ -271,6 +272,18 @@ describe("handwriting ductus", () => {
     expect(HEBREW_VAV.strokes.map((stroke) => stroke.segments.length)).toEqual([2]);
     const head = HEBREW_VAV.strokes[0].segments[0].path;
     const stem = HEBREW_VAV.strokes[0].segments[1].path;
+    expect(head[0].x).toBeLessThan(head.at(-1)!.x);
+    expect(stem[0]).toEqual(head.at(-1));
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+  });
+
+  it("Hebrew ז joins its short head directly to its curved stem", () => {
+    expect(HEBREW_ZAYIN.script).toBe("hebrew");
+    expect(penLifts(HEBREW_ZAYIN)).toBe(0);
+    expect(HEBREW_ZAYIN.strokes).toHaveLength(1);
+    expect(HEBREW_ZAYIN.strokes.map((stroke) => stroke.segments.length)).toEqual([2]);
+    const head = HEBREW_ZAYIN.strokes[0].segments[0].path;
+    const stem = HEBREW_ZAYIN.strokes[0].segments[1].path;
     expect(head[0].x).toBeLessThan(head.at(-1)!.x);
     expect(stem[0]).toEqual(head.at(-1));
     expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
@@ -903,6 +916,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ו", HEBREW_VAV.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
+    expect(verifiedLetterFont("ז", HEBREW_ZAYIN.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
     expect(verifiedLetterFont("ம", DUCTUS["ம"].source.url)).toBe(
       "_fonts/NotoSansTamil-Static.ttf",
     );
@@ -1001,6 +1017,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /handwritten Vav.*top to bottom.*00:57.3–00:58.2.*printed form.*01:08.6–01:09.8.*head runs left-to-right.*vertical stem without lifting.*one stroke from top to bottom.*01:00.0–01:02.5.*print version.*small difference.*01:03.6–01:10.9.*Noto Sans Hebrew.*Hirik and Shuruk.*vowel marks.*not part of base U\+05D5.*zero-lift body count/i,
+    );
+  });
+
+  it("Hebrew ז preserves its rounded handwritten run on the block outline", () => {
+    const src = HEBREW_ZAYIN.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=XTqG_1dsFSU");
+    expect(src.citation).toMatch(
+      /Hebrew Writing.*Zayin and Heit.*00:44.0–00:45.4.*HebrewPod101/i,
+    );
+    expect(src.variation).toMatch(
+      /rounded handwritten Zayin.*one uninterrupted run.*00:44.0–00:45.4.*opening rises to the right.*curves down the right side.*around the base without lifting.*mirror image.*handwritten Gimel.*00:49.9–00:55.7.*facing directions.*01:00.1–01:05.0.*printed form.*angular.*not to write Zayin like Vav.*01:17.6–01:24.2.*left-to-right start.*continuous descent.*Noto Sans Hebrew/i,
     );
   });
 

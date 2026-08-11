@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Hebrew Zayin ductus (HL-C09BJ)
+
+- Render **ז** in two evidence-aligned frames: draw the short head left-to-right
+  and continue down through the curved stem without lifting.
+- Preserve the source's rounded handwritten single run while adapting it to Noto
+  Sans Hebrew and recording its contrast with mirrored Gimel and narrower Vav.
+- Queue the same lesson's Heit demonstration next.
+
 ### Added — cited Hebrew Vav ductus (HL-C09BI)
 
 - Render **ו** in two evidence-aligned frames: draw the small head left-to-right
