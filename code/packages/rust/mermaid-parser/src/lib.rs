@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.38.0";
+pub const VERSION: &str = "0.39.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -2023,23 +2023,29 @@ fn take_sequence_actor_ref(cursor: &mut TokenCursor) -> Result<String, ParseErro
 }
 
 fn take_sequence_line_text(cursor: &mut TokenCursor) -> String {
-    let mut words = Vec::new();
+    let mut text = String::new();
+    let mut previous_end_column = None;
     while !cursor.at_eof() && !matches!(token_name(cursor.current()), "NEWLINE" | "SEMICOLON") {
         let token = cursor.advance();
-        if token_name(token) == "ENTITY" {
+        if let Some(previous_end) = previous_end_column {
+            let gap = token.column.saturating_sub(previous_end);
+            text.extend(std::iter::repeat_n(' ', gap));
+        }
+        let value = if token_name(token) == "ENTITY" {
             let inner = token.value.trim_start_matches('#').trim_end_matches(';');
             let html_entity = if inner.chars().all(|character| character.is_ascii_digit()) {
                 format!("&#{inner};")
             } else {
                 format!("&{inner};")
             };
-            words.push(commonmark_parser::entities::decode_entity(&html_entity));
+            commonmark_parser::entities::decode_entity(&html_entity)
         } else {
-            words.push(token.value.clone());
-        }
+            token.value.clone()
+        };
+        text.push_str(&value);
+        previous_end_column = Some(token.column + token.value.chars().count());
     }
-    let text = words
-        .join(" ")
+    let text = text
         .replace("<br/>", "\n")
         .replace("<br />", "\n")
         .replace("<br>", "\n");
@@ -3895,6 +3901,29 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn sequence_preserves_punctuation_and_keywords_in_semantic_text() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nAlice->Bob: -:<>, end + @value\nnote right of Bob: -:<>, end\nloop -:<>, end\nBob-->Alice: retry->now\nend\n",
+        )
+        .unwrap();
+        let labels: Vec<_> = diagram
+            .events
+            .iter()
+            .filter_map(|event| match event {
+                SequenceEvent::Message { label, .. }
+                | SequenceEvent::Note { text: label, .. }
+                | SequenceEvent::BlockStart { label, .. } => Some(label.as_str()),
+                _ => None,
+            })
+            .collect();
+
+        assert_eq!(
+            labels,
+            vec!["-:<>, end + @value", "-:<>, end", "-:<>, end", "retry->now"]
+        );
+    }
+
+    #[test]
     fn sequence_converts_html_breaks_to_semantic_newlines() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\nAlice->>Bob: First line<br/>Second line\nnote over Alice,Bob: Note one<br />Note two\n",
@@ -4056,7 +4085,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.38.0");
+        assert_eq!(crate::VERSION, "0.39.0");
     }
 
     #[test]
