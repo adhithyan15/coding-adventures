@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Hebrew Dalet ductus (HL-C09BG)
+
+- Render **ד** in two evidence-aligned frames: draw the top bar left-to-right,
+  then continue around the sharp right heel and down without lifting.
+- Preserve the source's explicit one-curve, zero-lift cursive order while
+  recording its adaptation to Noto Sans Hebrew's angular block outline.
+- Queue the series' dedicated Hei lesson next.
+
 ### Added — cited Hebrew Gimel ductus (HL-C09BF)
 
 - Render **ג** in four evidence-aligned frames: join the short top bar, right

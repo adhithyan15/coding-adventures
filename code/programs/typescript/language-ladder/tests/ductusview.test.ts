@@ -85,6 +85,8 @@ const HEBREW_BET = ductusFor("ב", "hebrew")!;
 const hebrewBetOutline = hebrewOutline("ב");
 const HEBREW_GIMEL = ductusFor("ג", "hebrew")!;
 const hebrewGimelOutline = hebrewOutline("ג");
+const HEBREW_DALET = ductusFor("ד", "hebrew")!;
+const hebrewDaletOutline = hebrewOutline("ד");
 const PERSIAN_ALEF = DUCTUS["ا"];
 const persianAlefOutline = naskhOutline("ا");
 const ARABIC_ALEF = ductusFor("ا", "arabic")!;
@@ -835,6 +837,34 @@ describe("Hebrew ג — its joined top and right leg precede the lifted left leg
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(HEBREW_GIMEL.strokes[1], 1),
+    );
+  });
+});
+
+describe("Hebrew ד — one sourced curve fitted to the angular block outline", () => {
+  const steps = ductusSteps(HEBREW_DALET);
+  const strip = ductusFilmstrip(HEBREW_DALET, hebrewDaletOutline);
+
+  it("keeps the top bar and right descent in one pen-down run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the top bar from left to right",
+      "continue around the sharp right corner and down without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("draws the continuous path over Noto Sans Hebrew without a completed-stroke overlay", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewDaletOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_DALET.strokes[0], 2),
     );
   });
 });
