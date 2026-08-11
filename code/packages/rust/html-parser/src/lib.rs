@@ -6963,6 +6963,20 @@ impl HtmlParser {
             ));
             return;
         }
+        if name == "tr"
+            && self.first_authored_open_template_index().is_some()
+            && self.current_namespace().is_none()
+            && self.current_element_is("template")
+            && !self.has_open_element("table")
+            && (self.current_last_child_element_is("td")
+                || self.current_last_child_element_is("th"))
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-row-end-tag-in-template-table-mode",
+                "end tag `</tr>` was ignored because no table row was in scope",
+            ));
+            return;
+        }
         if name == "b" && self.adopt_b_end_tag_across_cite_div() {
             return;
         }
@@ -34509,6 +34523,47 @@ mod tests {
                 .unwrap();
         assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-table-end-tag-in-template-table-mode"
+        }));
+    }
+
+    #[test]
+    fn reports_row_end_tags_rejected_after_template_owned_cells() {
+        for source in [
+            "<!doctype html><template><td></td></tr></template>",
+            "<!doctype html><template><th></th></tr></template>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "unexpected-row-end-tag-in-template-table-mode",
+                    "end tag `</tr>` was ignored because no table row was in scope",
+                )]
+            );
+            assert_eq!(
+                output.document,
+                parse_html(&source.replace("</tr>", "")).unwrap()
+            );
+        }
+
+        for source in [
+            "<!doctype html><table><tr><td>x</td></tr></table>",
+            "<!doctype html><template><tr><td>x</td></tr></template>",
+            "<!doctype html><template><td></td><template></tr></template></template>",
+            "<!doctype html><svg><template><td></td></tr></template></svg>",
+            "<!doctype html><div></tr></div>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-row-end-tag-in-template-table-mode"
+            }));
+        }
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<td></td></tr>", "template")
+                .unwrap();
+        assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-row-end-tag-in-template-table-mode"
         }));
     }
 

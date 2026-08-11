@@ -914,6 +914,7 @@ fn build_package_inner(
         if let Some(first_component) = components_built.first() {
             let shell_artifacts = emit_project_shell(ProjectShellOptions {
                 component: first_component,
+                components: &components_built,
                 src_dir: &src_dir,
                 backend_dir: &backend_dir,
                 backend: opts.backend,
@@ -1135,6 +1136,7 @@ fn unsafe_path_err(kind: &'static str, path: &str) -> BuildError {
 /// Unifying the two paths is queued as UI32-M.1.
 struct ProjectShellOptions<'a> {
     component: &'a str,
+    components: &'a [String],
     src_dir: &'a Path,
     backend_dir: &'a Path,
     backend: Backend,
@@ -1147,6 +1149,7 @@ struct ProjectShellOptions<'a> {
 fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, BuildError> {
     let ProjectShellOptions {
         component,
+        components,
         src_dir,
         backend_dir,
         backend,
@@ -1387,13 +1390,6 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         }
         Backend::Compose => {
             let require_runtime = profile == Some(BuildProfile::NativeComplete);
-            let r = mosaic_emit_compose::pipeline::from_pipeline(
-                &mosmodel_out.component,
-                &layout_out.def,
-                &style_def,
-            )
-            .map_err(|e| pipeline_emit_err(component, e))?;
-            let component_source = r.output;
             let flat: [(&str, String); 3] = [
                 (
                     "settings.gradle.kts",
@@ -1422,9 +1418,18 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             )?;
             written.push(main_nested);
 
-            let component_nested = backend_dir.join(format!("src/main/kotlin/{component}.kt"));
-            write_file(&component_nested, component_source.as_bytes())?;
-            written.push(component_nested);
+            // A package shell is also the package's native compile boundary.
+            // Keep every exported component in Gradle's source set, even
+            // though Main.kt mounts only the first export. Otherwise a broken
+            // sibling artifact can ship because Gradle never sees it.
+            for exported_component in components {
+                let component_source =
+                    read_to_string(&backend_dir.join(format!("{exported_component}.kt")))?;
+                let component_nested =
+                    backend_dir.join(format!("src/main/kotlin/{exported_component}.kt"));
+                write_file(&component_nested, component_source.as_bytes())?;
+                written.push(component_nested);
+            }
 
             let host_nested = backend_dir.join("src/main/kotlin/MosaicRuntimeHost.kt");
             write_file(
@@ -6058,6 +6063,35 @@ version = "1"
         let readme = fs::read_to_string(dir.join("README.md")).expect("README.md");
         assert!(readme.contains("Compose Desktop shell"));
         assert!(readme.contains("standard binding loads the Rust application library"));
+    }
+
+    #[test]
+    fn compose_project_shell_includes_every_exported_component_in_source_set() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid", "Cell", "Column"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Compose,
+            emit_project: true,
+            theme: None,
+        })
+        .expect("multi-component Compose package build");
+
+        let dir = out.path().join("compose");
+        for component in ["Grid", "Cell", "Column"] {
+            let artifact = dir.join(format!("{component}.kt"));
+            let source_set_copy = dir.join(format!("src/main/kotlin/{component}.kt"));
+            assert_eq!(
+                fs::read_to_string(&artifact).expect("top-level Compose artifact"),
+                fs::read_to_string(&source_set_copy).expect("Gradle source-set copy"),
+                "{component} must participate in the generated Gradle build"
+            );
+            assert!(
+                result.artifacts.iter().any(|path| path == &source_set_copy),
+                "{component} source-set copy must be reported as an artifact"
+            );
+        }
     }
 
     #[test]

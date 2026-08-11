@@ -36,6 +36,7 @@ const ARABIC_SEEN = DUCTUS[ductusKey("arabic", "س")];
 const ARABIC_SHIIN = DUCTUS[ductusKey("arabic", "ش")];
 const ARABIC_SAAD = DUCTUS[ductusKey("arabic", "ص")];
 const ARABIC_DAAD = DUCTUS[ductusKey("arabic", "ض")];
+const ARABIC_AYN = DUCTUS[ductusKey("arabic", "ع")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
@@ -603,6 +604,19 @@ describe("handwriting ductus", () => {
     expect(dot[0]).toEqual(dot.at(-1));
   });
 
+  it("Arabic independent ع joins its open head directly to the lower bowl", () => {
+    expect(ARABIC_AYN.script).toBe("arabic");
+    expect(penLifts(ARABIC_AYN)).toBe(0);
+    expect(ARABIC_AYN.strokes).toHaveLength(1);
+    expect(ARABIC_AYN.strokes[0].segments).toHaveLength(2);
+    const head = ARABIC_AYN.strokes[0].segments[0].path;
+    const bowl = ARABIC_AYN.strokes[0].segments[1].path;
+    expect(head[0].x).toBeGreaterThan(Math.min(...head.map((point) => point.x)));
+    expect(head.at(-1)).toEqual(bowl[0]);
+    expect(Math.min(...bowl.map((point) => point.y))).toBeLessThan(bowl[0].y);
+    expect(bowl.at(-1)!.x).toBeGreaterThan(bowl[0].x);
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -1020,6 +1034,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /embedded Panopto Daad lesson.*three pen-down runs.*00:43.1–00:46.3.*00:43.1–00:45.0.*lower-left junction.*oval clockwise.*short shoulder.*without lifting.*one lift.*00:45.2–00:45.4.*baseline junction.*trailing bowl.*second lift.*upper dot last.*00:46.0–00:46.3.*FullSizeRender-5.mov.*HTTP 403.*accessible embedded primary lesson.*embedded Saad lesson.*direct Saad clip.*same two body runs.*two-way connector.*contextual shapes.*three-stroke.*two-lift.*Noto Naskh.*independently evidenced.*Saad/i,
+    );
+  });
+
+  it("Arabic independent ع traces its unbroken head and bowl to the Oregon MOV", () => {
+    const src = ARABIC_AYN.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/%D8%B9-%D8%BA/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet ع غ.*Ayn.*00:03.1–00:04.0.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /directly linked ayn.mov.*one continuous pen-down run.*00:03.1–00:04.0.*00:03.1–00:03.5.*upper-right tip.*sweeps left.*hooks downward.*open head.*without lifting.*00:03.5–00:04.0.*left side.*lower bowl.*floor.*finishes toward the right.*two-way connector.*contextual shapes.*one-stroke.*zero-lift.*Noto Naskh.*distinct from.*Ghayn.*upper dot/i,
     );
   });
 

@@ -1076,6 +1076,10 @@ jobs:
           export MOSAIC_APP_LIBRARY="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.so"
           gradle --no-daemon --stacktrace -p "$harness" run
 
+          toolkit_output="$RUNNER_TEMP/mosaic-compose-toolkit"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend compose --output "$toolkit_output" --emit-project
+          gradle --no-daemon --stacktrace -p "$toolkit_output/compose" compileKotlin
+
           strict_output="$RUNNER_TEMP/mosaic-compose-native-complete-rating-controls"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend compose --output "$strict_output" --emit-project --profile native-complete
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/compose/mosaic-degradations.json"

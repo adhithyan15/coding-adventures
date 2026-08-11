@@ -406,10 +406,11 @@ unblocks multiple downstream targets; never count source generation as completio
   - [x] Lower `Icon` through the native font-glyph stack, with semantic
     `spinner` mapped to an accessible `CircularProgressIndicator`; all 23
     toolkit components now emit for Compose.
-  - [ ] Make the Compose package project type-check every emitted component,
-    not only the first copied entry component. A manual whole-toolkit compile
-    now exposes Accordion passing `List<String>` to `Text(String)` as the next
-    concrete Kotlin typing blocker.
+  - [x] Make the Compose package project type-check every emitted component,
+    not only the first mounted entry component. Every export is now copied into
+    Gradle's source set, Accordion projects `bodies[i]` through Compose's native
+    integer loop-index shadow, and Linux CI compiles the complete 23-component
+    toolkit project.
 - [ ] Enforce accessible names, focus, keyboard actions, scaling, contrast, and
   reduced-motion behavior in the strict profile.
 

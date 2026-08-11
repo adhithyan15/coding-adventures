@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased] - complete Compose package source set
+
+- Generated Compose project shells now copy every exported component into the
+  Gradle Kotlin source set while continuing to mount the first export as the
+  application entry component.
+- Whole-package Kotlin compilation can no longer miss a broken sibling
+  component that was emitted only as a top-level distribution artifact.
+
 ## [Unreleased] - ignored native control property inventory
 
 - Native-complete analysis now reports stable, property-level degradations for
