@@ -25,6 +25,7 @@ const load = (name: string) => {
 };
 const tamil = () => parseFont(load("NotoSansTamil-Static.ttf"));
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
+const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
@@ -448,6 +449,14 @@ describe("handwriting ductus", () => {
     expect(path[0].y).toBeGreaterThan(path.at(-1)!.y);
   });
 
+  it("Arabic independent ب sweeps right-to-left, then lifts once for the dot", () => {
+    expect(penLifts(ARABIC_BAA)).toBe(1);
+    expect(ARABIC_BAA.strokes).toHaveLength(2);
+    expect(ARABIC_BAA.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1]);
+    const bowl = penPath(ARABIC_BAA.strokes[0]);
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -584,6 +593,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ا", ARABIC_ALEF.source.url)).toBe(
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
+    expect(verifiedLetterFont("ب", ARABIC_BAA.source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
+    );
     expect(verifiedLetterFont("و", "https://example.invalid/wrong-source")).toBeUndefined();
   });
 
@@ -694,6 +706,18 @@ describe("handwriting ductus", () => {
     );
     expect(src.url).not.toBe(DUCTUS["ا"].source.url);
     expect(src.url).not.toBe(URDU_ALEF.source.url);
+  });
+
+  it("Arabic independent ب traces to the University of Oregon's bowl-first video", () => {
+    const src = ARABIC_BAA.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/alphabet-%D8%A8/",
+    );
+    expect(src.citation).toMatch(/Introduction to Arabic.*Alphabet ا ب.*Baa.*00:02–00:04.*Oregon/i);
+    expect(src.variation).toMatch(
+      /upper-right tip.*right-to-left.*shallow bowl.*left tip.*lifting once.*dot below.*two-way connector.*contextual shapes.*Noto Naskh.*Arabic provenance.*Persian/i,
+    );
+    expect(src.url).not.toBe(DUCTUS["ب"].source.url);
   });
 
   it("Urdu independent ج traces to Zer o Zabar's dot-first pointed-head animation", () => {

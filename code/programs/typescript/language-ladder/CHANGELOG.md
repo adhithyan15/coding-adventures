@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Arabic independent-baa ductus (HL-C09AI)
+
+- Verify independent **ب** from the University of Oregon's adjacent video as a
+  continuous right-to-left bowl followed by one lift and the dot below.
+- Preserve the lesson's two-way-connector context and isolate Arabic provenance
+  from the Persian record for the same Unicode glyph.
+- Render a real two-frame filmstrip whose source, prose, Noto Naskh geometry,
+  one-lift summary, and Arabic-scoped identity agree.
+
 ### Added — cited Arabic independent-alif ductus (HL-C09AH)
 
 - Verify independent **ا** from the University of Oregon's *Introduction to
