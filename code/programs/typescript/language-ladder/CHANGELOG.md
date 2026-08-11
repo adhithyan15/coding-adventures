@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Hebrew Tav ductus (HL-C09BY)
+
+- Render **ת** in four evidence-aligned frames: draw the top bar and right side
+  together, then lift once for the separate left leg and its small foot.
+- Preserve the adjacent purple cursive form's continuous retrace and right arch
+  while keeping the printed form's two runs explicit.
+- Close the Hebrew inventory and reprioritize to the smallest actionable script.
+
 ### Added — cited Hebrew Shin ductus (HL-C09BX)
 
 - Render **ש** in three evidence-aligned frames: descend the right branch and

@@ -409,11 +409,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   left through the base, and climbs the left branch in one run, then lifts once
   for the middle branch descending into the base. Its three-frame Noto Sans
   Hebrew path preserves the adjacent purple cursive form's compact one-run loop.
-  The adjacent Tav demonstration is the final outstanding Hebrew target.
-  The remaining **156** prose
-  part orders across seven scripts
-  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 1,
-  `japanese` 34) are explicitly **unverified for pen lifts**.
+  Printed **ת** closes the Hebrew inventory: its top bar travels left-to-right
+  and continues down the right side in one run, then one lift precedes the
+  separate left leg and its small leftward foot. Its four-frame Noto Sans
+  Hebrew path preserves the adjacent purple cursive form's one-run retracing
+  stem and right arch. The remaining **155** prose part orders across six
+  scripts (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28,
+  `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
   verified claim has the same cited, font-checked path. That closes `HL-C19`;

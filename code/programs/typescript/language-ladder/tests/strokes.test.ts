@@ -45,6 +45,7 @@ const HEBREW_TSADI = DUCTUS[ductusKey("hebrew", "צ")];
 const HEBREW_QOF = DUCTUS[ductusKey("hebrew", "ק")];
 const HEBREW_RESH = DUCTUS[ductusKey("hebrew", "ר")];
 const HEBREW_SHIN = DUCTUS[ductusKey("hebrew", "ש")];
+const HEBREW_TAV = DUCTUS[ductusKey("hebrew", "ת")];
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
@@ -523,6 +524,23 @@ describe("handwriting ductus", () => {
     expect(left[0]).toEqual(outer.at(-1));
     expect(left[0].y).toBeLessThan(left.at(-1)!.y);
     expect(middle[0].y).toBeGreaterThan(middle.at(-1)!.y);
+  });
+
+  it("Hebrew ת joins its top and right side before the lifted left leg", () => {
+    expect(HEBREW_TAV.script).toBe("hebrew");
+    expect(penLifts(HEBREW_TAV)).toBe(1);
+    expect(HEBREW_TAV.strokes).toHaveLength(2);
+    expect(HEBREW_TAV.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 2]);
+    const top = HEBREW_TAV.strokes[0].segments[0].path;
+    const right = HEBREW_TAV.strokes[0].segments[1].path;
+    const leg = HEBREW_TAV.strokes[1].segments[0].path;
+    const foot = HEBREW_TAV.strokes[1].segments[1].path;
+    expect(top[0].x).toBeLessThan(top.at(-1)!.x);
+    expect(right[0]).toEqual(top.at(-1));
+    expect(right[0].y).toBeGreaterThan(right.at(-1)!.y);
+    expect(leg[0].y).toBeGreaterThan(leg.at(-1)!.y);
+    expect(foot[0]).toEqual(leg.at(-1));
+    expect(foot[0].x).toBeGreaterThan(foot.at(-1)!.x);
   });
 
   it("அ lifts once before its separate right upright (two strokes)", () => {
@@ -1197,6 +1215,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ש", HEBREW_SHIN.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
+    expect(verifiedLetterFont("ת", HEBREW_TAV.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
     expect(verifiedLetterFont("ம", DUCTUS["ம"].source.url)).toBe(
       "_fonts/NotoSansTamil-Static.ttf",
     );
@@ -1460,6 +1481,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /printed Shin.*two runs.*03:34.0–03:36.3.*top of the right branch.*descends.*outer U-shaped base.*climbs the left branch.*without lifting.*one lift.*descends the middle branch.*cursive Shin.*purple.*one rounded inward loop.*short rightward exit.*03:39.2–03:40.2.*without lifting.*Noto Sans Hebrew.*one-run cursive variation/i,
+    );
+  });
+
+  it("Hebrew ת traces its two-run printed form and records the cursive retrace", () => {
+    const src = HEBREW_TAV.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=8wi_uPY9uZA");
+    expect(src.citation).toMatch(
+      /How to write the Hebrew alphabet in print and cursive.*03:45.2–03:47.3.*Aural Writing.*8 June 2022/i,
+    );
+    expect(src.variation).toMatch(
+      /printed Tav.*two runs.*03:45.2–03:47.3.*top bar.*left-to-right.*right side.*without lifting.*one lift.*separate left leg.*curves left.*small foot.*cursive Tav.*purple.*one continuous run.*03:49.0–03:50.9.*descend the left stem.*curl left.*retrace.*climb.*arch right.*short right side.*without lifting.*Noto Sans Hebrew.*one-run cursive variation/i,
     );
   });
 

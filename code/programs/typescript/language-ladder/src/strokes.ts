@@ -1405,6 +1405,71 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: hebrewAlphabetSource("ש"),
   },
+  // Printed Tav joins its top bar to the right side, then lifts once for the
+  // separate left leg and foot. The purple cursive form instead retraces its
+  // left stem and arches into the right side in one continuous run.
+  [ductusKey("hebrew", "ת")]: {
+    script: "hebrew",
+    glyph: "ת",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top bar from left to right",
+            path: [
+              { x: 65, y: 555 },
+              { x: 130, y: 555 },
+              { x: 210, y: 555 },
+              { x: 300, y: 555 },
+              { x: 390, y: 555 },
+              { x: 430, y: 550 },
+            ],
+          },
+          {
+            label: "continue down the right side without lifting",
+            path: [
+              { x: 430, y: 550 },
+              { x: 490, y: 535 },
+              { x: 535, y: 500 },
+              { x: 560, y: 450 },
+              { x: 565, y: 380 },
+              { x: 565, y: 280 },
+              { x: 565, y: 170 },
+              { x: 565, y: 70 },
+              { x: 565, y: 20 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend the separate left leg",
+            path: [
+              { x: 195, y: 520 },
+              { x: 195, y: 450 },
+              { x: 195, y: 360 },
+              { x: 195, y: 270 },
+              { x: 195, y: 180 },
+              { x: 185, y: 120 },
+            ],
+          },
+          {
+            label: "curve left into the small foot without lifting",
+            path: [
+              { x: 185, y: 120 },
+              { x: 165, y: 80 },
+              { x: 135, y: 50 },
+              { x: 100, y: 38 },
+              { x: 70, y: 42 },
+              { x: 50, y: 55 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ת"),
+  },
   "ا": {
     script: "perso-arabic",
     glyph: "ا",
