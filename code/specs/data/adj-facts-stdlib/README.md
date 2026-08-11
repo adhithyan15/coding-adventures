@@ -61,6 +61,7 @@ per rotation, in parallel):
 | `astronomy/` | stellar spectral class letter → the color NASA assigns it (o → blue, g → yellow, m → red) | NASA Science (authoritative) |
 | `astronomy/` | galaxy type → defining shape NASA states (spiral → spiral_arms, elliptical → round_to_oval, irregular → unusual_shapes) | NASA Science (authoritative) |
 | `astronomy/` | celestial-object type → defining property (star → gives_off_light, planet → revolves_around_star, moon → orbits_planet, comet → frozen_gases_and_dust, asteroid → rocky) | NASA StarChild / NASA Science (authoritative) |
+| `astronomy/` | solar eclipse type → what it actually is (`solar_eclipse_type(type, description)`, total_solar_eclipse/annular_solar_eclipse/partial_solar_eclipse → completely_blocking_the_face_of_the_sun/moon_at_or_near_its_farthest_point_from_earth/sun_moon_and_earth_not_perfectly_lined_up) — picked via the mandatory full-tree-grep-before-scoping check, confirming zero prior coverage; honest abstention on `hybrid_solar_eclipse` (a real type the source covers, but whose own explanation takes two sentences rather than one clean sentence, and not one of these three tabled here) | NASA "Types of Solar Eclipses" (authoritative; see `solar-eclipse-type.adj`'s header) |
 | `chemistry/` | element → atomic number | PubChem / NIH |
 | `chemistry/` | common substance → approximate pH | LibreTexts (consensus) |
 | `chemistry/` | element → periodic-table group family | Wikipedia (consensus) |
