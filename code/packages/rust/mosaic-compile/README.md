@@ -99,12 +99,15 @@ BACKEND: react | swiftui | qt | xaml | compose | webcomponent | html | flutter
 runnable shell next to the component artifacts, such as a WinUI/XAML project or
 a Qt/CMake project.
 
-For Compose, Qt, SwiftUI, and XAML distributions, `--runtime-library` selects an
-already-built target Rust application library. Compose and Qt accept `.dylib`,
-`.so`, or `.dll`; SwiftUI requires `.dylib`; XAML requires `.dll`. Mosaic copies
-it into the generated project's native application resources and the standard
-binding resolves it relative to the installed app. The option requires
-`--emit-project`; strict Compose, Qt, SwiftUI, and XAML project builds require it.
+For Compose, Flutter, Qt, SwiftUI, and XAML distributions, `--runtime-library`
+selects an already-built target Rust application library. Compose, Flutter, and
+Qt accept `.dylib`, `.so`, or `.dll`; SwiftUI requires `.dylib`; XAML requires
+`.dll`. Mosaic copies it into the generated project's native application
+resources and the standard binding resolves it relative to the installed app.
+Flutter uses Dart's stable build-hook/code-asset packaging contract and therefore
+requires Flutter 3.38+ and Dart 3.10+ when a runtime is bundled. The option
+requires `--emit-project`; strict project builds on all five native backends
+require it.
 
 Package mode defaults to `--profile permissive`, which emits the package plus a
 machine-readable `<backend>/mosaic-degradations.json`. Use

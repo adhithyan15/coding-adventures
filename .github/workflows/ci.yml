@@ -627,7 +627,7 @@ jobs:
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.32.0'
+          flutter-version: '3.44.0'
           channel: stable
           cache: true
 
@@ -1071,33 +1071,36 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get install -y libgtk-3-dev
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
+          runtime_library="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.so"
           output="$RUNNER_TEMP/mosaic-flutter-taskapp"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend flutter --output "$output" --emit-project --profile native-complete
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend flutter --output "$output" --emit-project --profile native-complete --runtime-library "$runtime_library"
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$output/flutter/mosaic-degradations.json"
           (
             cd "$output/flutter"
             flutter create --platforms=linux --project-name mosaic_taskapp_acceptance .
             flutter pub get
-            dart analyze lib
+            dart analyze lib hook/build.dart
             flutter build linux --debug
           )
-          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
 
-          harness="$RUNNER_TEMP/mosaic-flutter-runtime-conformance"
-          cp -R code/packages/rust/mosaic-app-bindings/conformance/flutter "$harness"
-          mkdir -p "$harness/lib"
-          cp "$output/flutter/lib/mosaic_host.dart" "$harness/lib/mosaic_host.dart"
+          bundled_runtime="$(find "$output/flutter/build/linux" -type f -name 'libmosaic_app.so' -print -quit)"
+          test -n "$bundled_runtime"
+          cmp "$runtime_library" "$bundled_runtime"
 
-          export MOSAIC_APP_LIBRARY="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.so"
+          mkdir -p "$output/flutter/bin"
+          sed 's|package:mosaic_flutter_runtime_conformance/mosaic_host.dart|package:mosaic_task_app/mosaic_host.dart|' \
+            code/packages/rust/mosaic-app-bindings/conformance/flutter/bin/conformance.dart \
+            > "$output/flutter/bin/mosaic_runtime_conformance.dart"
           (
-            cd "$harness"
-            dart pub get
-            dart analyze
-            dart run bin/conformance.dart
+            cd "$output/flutter"
+            unset MOSAIC_APP_LIBRARY
+            dart analyze bin/mosaic_runtime_conformance.dart
+            dart run bin/mosaic_runtime_conformance.dart
           )
 
           strict_output="$RUNNER_TEMP/mosaic-flutter-native-complete-rating-controls"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend flutter --output "$strict_output" --emit-project --profile native-complete
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend flutter --output "$strict_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/flutter/mosaic-degradations.json"
           (
             cd "$strict_output/flutter"
@@ -1127,7 +1130,7 @@ jobs:
           )
 
           table_output="$RUNNER_TEMP/mosaic-flutter-data-grid"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/data-grid --backend flutter --output "$table_output" --emit-project --profile native-complete
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/data-grid --backend flutter --output "$table_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$table_output/flutter/mosaic-degradations.json"
           (
             cd "$table_output/flutter"

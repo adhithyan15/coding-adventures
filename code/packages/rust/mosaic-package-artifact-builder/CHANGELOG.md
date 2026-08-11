@@ -1,5 +1,16 @@
 # Changelog
 
+## [Unreleased] - Flutter Rust engine bundling
+
+- Flutter project shells accept a selected target Rust cdylib, copy it under
+  Mosaic's conventional name, and register it through a generated stable Dart
+  build hook as a bundled code asset.
+- Strict Flutter builds report `runtime.library-not-bundled` and stop before
+  application emission when no engine was selected.
+- Native acceptance builds the generated Flutter app, verifies the installed
+  engine, and runs the standard binding conformance without
+  `MOSAIC_APP_LIBRARY`.
+
 ## [Unreleased] - SwiftUI Rust engine bundling
 
 - SwiftUI project shells accept a selected target Rust dylib and copy it into

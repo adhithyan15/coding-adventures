@@ -323,7 +323,11 @@ unblocks multiple downstream targets; never count source generation as completio
     `Runtime` resource bundle, resolves it through `Bundle.module`, and rejects
     strict installable builds that omit it. macOS CI verifies the bundled bytes
     and complete standard-binding conformance without an injected library path.
-  - [ ] Repeat the packaging contract for Flutter.
+  - [x] Flutter accepts an explicit target `cdylib`, registers the conventional
+    runtime through a generated stable Dart build hook, and lets Flutter package
+    it as a platform-native code asset. Strict installable builds reject a
+    missing selection; CI builds the native app, verifies the installed engine,
+    and runs the complete standard-binding conformance without an injected path.
 - [x] Make SwiftUI project shells compile components with an empty event enum by
   emitting unreachable but type-correct wire helpers with exhaustive empty
   switches; macOS CI builds the canonical no-event conformance app through
