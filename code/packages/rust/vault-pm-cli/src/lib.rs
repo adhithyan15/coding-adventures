@@ -30,7 +30,7 @@ use coding_adventures_vault_pm_domain::{
 };
 use coding_adventures_vault_pm_local_host::{LocalHostError, LocalVaultPaths, LocalWriterGuard};
 use coding_adventures_vault_pm_storage_storage_core::StorageCoreObjectStore;
-use coding_adventures_vault_records::{AnyRecord, Login, LOGIN_V1};
+use coding_adventures_vault_records::{AnyRecord, Login, SecureNote, LOGIN_V1, SECURE_NOTE_V1};
 use coding_adventures_zeroize::Zeroizing;
 use core::fmt::{self, Debug, Formatter};
 use std::collections::BTreeMap;
@@ -43,7 +43,7 @@ const PRODUCTION_KDF_MEMORY_KIB: u32 = 64 * 1024;
 const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm status [--json]\n  vault-pm audit enable\n  vault-pm audit verify\n  vault-pm audit list\n  vault-pm audit show TRACE\n  vault-pm doctor [--unlock]\n  vault-pm item add login\n  vault-pm item edit ITEM\n  vault-pm item delete ITEM\n  vault-pm item list\n  vault-pm item show ITEM\n  vault-pm history list ITEM\n  vault-pm history restore ITEM REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm status [--json]\n  vault-pm audit enable\n  vault-pm audit verify\n  vault-pm audit list\n  vault-pm audit show TRACE\n  vault-pm doctor [--unlock]\n  vault-pm item add login\n  vault-pm item add secure-note\n  vault-pm item edit ITEM\n  vault-pm item delete ITEM\n  vault-pm item list\n  vault-pm item show ITEM\n  vault-pm history list ITEM\n  vault-pm history restore ITEM REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -136,6 +136,12 @@ pub trait CliHost {
     /// Collect a login password with terminal echo disabled.
     fn read_login_password(&self) -> Result<Zeroizing<String>, HostError>;
 
+    /// Collect a secure-note title from the controlling terminal.
+    fn read_secure_note_title(&self) -> Result<Zeroizing<String>, HostError>;
+
+    /// Collect a secure-note body with terminal echo disabled.
+    fn read_secure_note_body(&self) -> Result<Zeroizing<String>, HostError>;
+
     /// Fill the entire generation-zero randomness block.
     fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError>;
 
@@ -198,13 +204,17 @@ impl CliHost for NativeCliHost {
     }
 
     fn read_login_password(&self) -> Result<Zeroizing<String>, HostError> {
-        let bytes = ControllingTerminal
-            .read_secret(SecretPrompt::LoginPassword)
-            .map_err(map_native_cli_host)?;
-        core::str::from_utf8(&bytes).map_err(|_| HostError::Invalid)?;
-        Ok(Zeroizing::new(
-            String::from_utf8(bytes.into_inner()).expect("UTF-8 was validated before ownership"),
-        ))
+        self.read_utf8_secret(SecretPrompt::LoginPassword)
+    }
+
+    fn read_secure_note_title(&self) -> Result<Zeroizing<String>, HostError> {
+        ControllingTerminal
+            .read_text(TextPrompt::SecureNoteTitle)
+            .map_err(map_native_cli_host)
+    }
+
+    fn read_secure_note_body(&self) -> Result<Zeroizing<String>, HostError> {
+        self.read_utf8_secret(SecretPrompt::SecureNoteBody)
     }
 
     fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError> {
@@ -224,6 +234,18 @@ impl CliHost for NativeCliHost {
             PRODUCTION_KDF_ITERATIONS,
             PRODUCTION_KDF_LANES,
         )
+    }
+}
+
+impl NativeCliHost {
+    fn read_utf8_secret(&self, prompt: SecretPrompt) -> Result<Zeroizing<String>, HostError> {
+        let bytes = ControllingTerminal
+            .read_secret(prompt)
+            .map_err(map_native_cli_host)?;
+        core::str::from_utf8(&bytes).map_err(|_| HostError::Invalid)?;
+        Ok(Zeroizing::new(
+            String::from_utf8(bytes.into_inner()).expect("UTF-8 was validated before ownership"),
+        ))
     }
 }
 
@@ -268,6 +290,7 @@ enum Command {
         unlock: bool,
     },
     ItemAddLogin,
+    ItemAddSecureNote,
     ItemEdit {
         item_id: ItemId,
     },
@@ -347,6 +370,9 @@ fn parse_history(arguments: &[String]) -> Result<Command, CliFailure> {
 fn parse_item(arguments: &[String]) -> Result<Command, CliFailure> {
     match arguments {
         [action, kind] if action == "add" && kind == "login" => Ok(Command::ItemAddLogin),
+        [action, kind] if action == "add" && kind == "secure-note" => {
+            Ok(Command::ItemAddSecureNote)
+        }
         [action, item] if action == "edit" => Ok(Command::ItemEdit {
             item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
         }),
@@ -412,6 +438,7 @@ fn execute(command: Command, host: &dyn CliHost) -> Result<CliOutput, CliFailure
         Command::AuditShow { trace_id } => audit_show(host, prepared.paths(), &writer, trace_id),
         Command::Doctor { unlock } => doctor(host, prepared.paths(), &writer, unlock),
         Command::ItemAddLogin => item_add_login(host, prepared.paths(), &writer),
+        Command::ItemAddSecureNote => item_add_secure_note(host, prepared.paths(), &writer),
         Command::ItemEdit { item_id } => item_edit_login(host, prepared.paths(), &writer, item_id),
         Command::ItemDelete { item_id } => item_delete(host, prepared.paths(), &writer, item_id),
         Command::ItemList => item_list(host, prepared.paths(), &writer),
@@ -461,11 +488,76 @@ fn audited_access_inputs(
     Ok((wall_time_ms, AuditedAccessRandomnessV1::new(random)))
 }
 
-fn item_add_login(
+struct ItemCreateContext {
+    access: VaultAccessV1,
+    application_store: StorageCoreApplicationStore<FsStorageBackend>,
+    now_ms: u64,
+    randomness: AddItemRandomnessV1,
+    item_id: ItemId,
+    favorite_operation: OperationId,
+    failure_randomness: AuditedAccessRandomnessV1,
+    audit_enabled: bool,
+}
+
+impl ItemCreateContext {
+    fn document(
+        &self,
+        content_type: &'static str,
+        record: AnyRecord,
+    ) -> Result<ItemDocument, CliFailure> {
+        ItemDocument::new(
+            self.item_id,
+            ContentType::new(content_type).map_err(|_| CliFailure::Internal)?,
+            self.now_ms,
+            self.now_ms,
+            LwwRegister::new(false, self.now_ms, self.favorite_operation),
+            ObservedSet::new(),
+            ObservedSet::new(),
+            record,
+            ObservedSet::new(),
+        )
+        .map_err(|_| CliFailure::InvalidCommand)
+    }
+
+    fn fail(self, error: CliFailure) -> Result<CliOutput, CliFailure> {
+        if self.audit_enabled {
+            self.access
+                .into_unlocked()
+                .map_err(map_application)?
+                .record_audited_item_create_host_failure(
+                    self.randomness,
+                    self.now_ms,
+                    self.failure_randomness,
+                    &self.application_store,
+                )
+                .map_err(map_application)?;
+        }
+        Err(error)
+    }
+
+    fn complete(self, document: ItemDocument) -> Result<CliOutput, CliFailure> {
+        self.access
+            .into_unlocked()
+            .map_err(map_application)?
+            .add_item(
+                document,
+                self.now_ms,
+                self.randomness,
+                &self.application_store,
+            )
+            .map_err(map_application)?;
+        Ok(CliOutput::success(format!(
+            "Item added: {}\n",
+            self.item_id.to_user_string()
+        )))
+    }
+}
+
+fn prepare_item_create(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
-) -> Result<CliOutput, CliFailure> {
+) -> Result<ItemCreateContext, CliFailure> {
     let now_ms = host.now_ms().map_err(map_host)?;
     let mut mutation_random = [0_u8; ADD_ITEM_RANDOM_BYTES];
     host.fill_entropy(&mut mutation_random).map_err(map_host)?;
@@ -481,6 +573,24 @@ fn item_add_login(
         .as_unlocked()
         .map_err(map_application)?
         .audit_enabled();
+    Ok(ItemCreateContext {
+        access,
+        application_store,
+        now_ms,
+        randomness,
+        item_id,
+        favorite_operation: OperationId::new(operation_random),
+        failure_randomness,
+        audit_enabled,
+    })
+}
+
+fn item_add_login(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+) -> Result<CliOutput, CliFailure> {
+    let context = prepare_item_create(host, paths, writer)?;
     let input = (|| {
         Ok::<_, HostError>((
             host.read_login_title()?,
@@ -491,30 +601,10 @@ fn item_add_login(
     })();
     let (title, username, password, url) = match input {
         Ok(input) => input,
-        Err(error) => {
-            if audit_enabled {
-                access
-                    .into_unlocked()
-                    .map_err(map_application)?
-                    .record_audited_item_create_host_failure(
-                        randomness,
-                        now_ms,
-                        failure_randomness,
-                        &application_store,
-                    )
-                    .map_err(map_application)?;
-            }
-            return Err(map_host(error));
-        }
+        Err(error) => return context.fail(map_host(error)),
     };
-    let document = match ItemDocument::new(
-        item_id,
-        ContentType::new(LOGIN_V1).map_err(|_| CliFailure::Internal)?,
-        now_ms,
-        now_ms,
-        LwwRegister::new(false, now_ms, OperationId::new(operation_random)),
-        ObservedSet::new(),
-        ObservedSet::new(),
+    let document = context.document(
+        LOGIN_V1,
         AnyRecord::Login(Login {
             title: title.into_inner(),
             username: username.into_inner(),
@@ -522,34 +612,42 @@ fn item_add_login(
             urls: url.into_iter().map(Zeroizing::into_inner).collect(),
             notes: None,
         }),
-        ObservedSet::new(),
-    ) {
+    );
+    let document = match document {
         Ok(document) => document,
-        Err(_) => {
-            if audit_enabled {
-                access
-                    .into_unlocked()
-                    .map_err(map_application)?
-                    .record_audited_item_create_host_failure(
-                        randomness,
-                        now_ms,
-                        failure_randomness,
-                        &application_store,
-                    )
-                    .map_err(map_application)?;
-            }
-            return Err(CliFailure::InvalidCommand);
-        }
+        Err(error) => return context.fail(error),
     };
-    access
-        .into_unlocked()
-        .map_err(map_application)?
-        .add_item(document, now_ms, randomness, &application_store)
-        .map_err(map_application)?;
-    Ok(CliOutput::success(format!(
-        "Item added: {}\n",
-        item_id.to_user_string()
-    )))
+    context.complete(document)
+}
+
+fn item_add_secure_note(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+) -> Result<CliOutput, CliFailure> {
+    let context = prepare_item_create(host, paths, writer)?;
+    let input = (|| {
+        Ok::<_, HostError>((
+            host.read_secure_note_title()?,
+            host.read_secure_note_body()?,
+        ))
+    })();
+    let (title, body) = match input {
+        Ok(input) => input,
+        Err(error) => return context.fail(map_host(error)),
+    };
+    let document = context.document(
+        SECURE_NOTE_V1,
+        AnyRecord::SecureNote(SecureNote {
+            title: title.into_inner(),
+            body: body.into_inner(),
+        }),
+    );
+    let document = match document {
+        Ok(document) => document,
+        Err(error) => return context.fail(error),
+    };
+    context.complete(document)
 }
 
 fn item_list(
@@ -888,34 +986,43 @@ fn record_title(record: &RedactedRecordView) -> &str {
 }
 
 fn render_item(item: RedactedItemView) -> Result<CliOutput, CliFailure> {
-    let (title, username, urls, has_notes) = match &item.record {
+    let mut output = format!(
+        "Item: {}\nType: {}\n",
+        item.item_id.to_user_string(),
+        item.schema.as_str(),
+    );
+    match &item.record {
         RedactedRecordView::Login {
             title,
             username,
             urls,
             has_notes,
             ..
-        } => (title, username, urls, *has_notes),
-        _ => return Err(CliFailure::Unsupported),
-    };
-    let mut output = format!(
-        "Item: {}\nType: {}\nTitle: {}\nUsername: {}\n",
-        item.item_id.to_user_string(),
-        item.schema.as_str(),
-        quoted(title),
-        quoted(username),
-    );
-    if urls.is_empty() {
-        output.push_str("URL: none\n");
-    } else {
-        for url in urls {
-            output.push_str("URL: ");
-            output.push_str(&quoted(url));
+        } => {
+            output.push_str("Title: ");
+            output.push_str(&quoted(title));
+            output.push_str("\nUsername: ");
+            output.push_str(&quoted(username));
             output.push('\n');
+            if urls.is_empty() {
+                output.push_str("URL: none\n");
+            } else {
+                for url in urls {
+                    output.push_str("URL: ");
+                    output.push_str(&quoted(url));
+                    output.push('\n');
+                }
+            }
+            output.push_str("Password: <redacted>\nNotes: ");
+            output.push_str(if *has_notes { "present\n" } else { "absent\n" });
         }
+        RedactedRecordView::SecureNote { title, .. } => {
+            output.push_str("Title: ");
+            output.push_str(&quoted(title));
+            output.push_str("\nBody: <redacted>\n");
+        }
+        _ => return Err(CliFailure::Unsupported),
     }
-    output.push_str("Password: <redacted>\nNotes: ");
-    output.push_str(if has_notes { "present\n" } else { "absent\n" });
     output.push_str(if item.favorite {
         "Favorite: yes\n"
     } else {
@@ -1655,6 +1762,16 @@ mod tests {
             Ok(Zeroizing::new(text.to_owned()))
         }
 
+        fn read_secure_note_title(&self) -> Result<Zeroizing<String>, HostError> {
+            self.text()
+        }
+
+        fn read_secure_note_body(&self) -> Result<Zeroizing<String>, HostError> {
+            let value = self.secret()?;
+            let text = core::str::from_utf8(&value).map_err(|_| HostError::Invalid)?;
+            Ok(Zeroizing::new(text.to_owned()))
+        }
+
         fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError> {
             for (index, byte) in output.iter_mut().enumerate() {
                 *byte = u8::try_from(index % 251)
@@ -1703,6 +1820,7 @@ mod tests {
             vec!["audit", "show", "not-a-trace"],
             vec!["audit", "show", "not-a-trace", "extra"],
             vec!["item", "add", "login", "--password", "secret"],
+            vec!["item", "add", "secure-note", "--body", "secret"],
             vec!["item", "edit", "not-an-item-id"],
             vec!["item", "delete", "not-an-item-id"],
             vec!["item", "list", "extra"],
@@ -2332,6 +2450,68 @@ mod tests {
         let audit = run(["audit", "verify"], &audit_host);
         assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
         assert!(audit.stdout().contains("revisions=4 items=1"));
+    }
+
+    #[test]
+    fn secure_note_create_list_show_and_audit_never_render_the_body() {
+        assert_eq!(
+            parse(["item", "add", "secure-note"]),
+            Ok(Command::ItemAddSecureNote)
+        );
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"secure note passphrase".to_vec();
+        let body = b"recovery phrase that must remain hidden".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        activate_test_audit_epoch(&paths, passphrase.clone());
+
+        let add_host = TestHost::with_texts(
+            paths.clone(),
+            [passphrase.clone(), body.clone()],
+            ["Recovery note".to_owned()],
+        );
+        let added = run(["item", "add", "secure-note"], &add_host);
+        assert_eq!(added.exit_code(), ExitCode::Success, "{added:?}");
+        let item_id =
+            ItemId::new([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]).to_user_string();
+        assert_eq!(added.stdout(), format!("Item added: {item_id}\n"));
+        assert!(!added.stdout().contains("recovery phrase"));
+
+        let list_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let listed = run(["item", "list"], &list_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert_eq!(
+            listed.stdout(),
+            format!("{item_id}\t{SECURE_NOTE_V1}\t\"Recovery note\"\n")
+        );
+
+        let show_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let shown = run(["item", "show", item_id.as_str()], &show_host);
+        assert_eq!(shown.exit_code(), ExitCode::Success, "{shown:?}");
+        assert_eq!(
+            shown.stdout(),
+            format!(
+                "Item: {item_id}\nType: {SECURE_NOTE_V1}\nTitle: \"Recovery note\"\nBody: <redacted>\nFavorite: no\nUpdated: 1700000000000\n"
+            )
+        );
+        assert!(!shown
+            .stdout()
+            .contains(core::str::from_utf8(&body).unwrap()));
+
+        let audit_host = TestHost::with_entropy_seed(paths, [passphrase], 2);
+        let audit = run(["audit", "list"], &audit_host);
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        assert!(
+            audit.stdout().contains(&format!(
+                "action=item_create\toutcome=succeeded\ttime=1700000000000\titem={item_id}"
+            )),
+            "{audit:?}"
+        );
+        assert!(!audit.stdout().contains("Recovery note"));
+        assert!(!audit
+            .stdout()
+            .contains(core::str::from_utf8(&body).unwrap()));
     }
 
     #[test]

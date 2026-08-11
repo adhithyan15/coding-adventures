@@ -59,7 +59,8 @@ nonzero bits fail before path or terminal access.
 
 The following are rejected:
 
-- every item kind other than `login`;
+- every kind spelling in this command branch other than `login` (the separate
+  `secure-note` branch is specified by VLT-PM16);
 - missing, duplicate, or trailing positionals;
 - inline title, username, URL, password, JSON, environment, file, or file
   descriptor inputs;
@@ -192,7 +193,8 @@ Each URL has its own fixed `URL:` line; an empty list renders `URL: none`.
 Title, username, and URLs use the same escaped quoted syntax. Password bytes,
 notes text, revision IDs, collection/tag/attachment identities, paths,
 locators, and provider details are never included. A non-login view returns
-the stable unsupported class until its exact renderer is specified.
+the stable unsupported class until its exact renderer is specified; VLT-PM16
+later specifies the secure-note renderer without changing this login grammar.
 
 ## 8. Output and failure contract
 

@@ -16,6 +16,7 @@ vault-pm audit list
 vault-pm audit show TRACE
 vault-pm doctor [--unlock]
 vault-pm item add login
+vault-pm item add secure-note
 vault-pm item edit ITEM
 vault-pm item delete ITEM
 vault-pm item list

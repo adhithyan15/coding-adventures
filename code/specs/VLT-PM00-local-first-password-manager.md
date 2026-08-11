@@ -872,7 +872,7 @@ vault-pm init [--vault NAME] [--storage NAME]
 vault-pm status [--json]
 vault-pm shell
 
-vault-pm item add login|note|card|totp|custom
+vault-pm item add login|secure-note|card|totp|custom
 vault-pm item show ITEM [--field FIELD] [--copy|--reveal]
 vault-pm item edit ITEM
 vault-pm item list [--collection ID] [--tag TAG]
@@ -1517,7 +1517,11 @@ changelog, focused build, and downstream validation.
              is durable before its process error.
 9b-3a-1. revision-safe authenticated login replacement using
          `VLT-PM12-cli-login-replace.md`.
-9b-3a-2. remaining record creation plus richer notes/multiple-URL editing.
+9b-3a-2a. completed secure-note creation and redacted read through shared
+           audited create/list/show boundaries, using
+           `VLT-PM16-cli-secure-note-create.md`.
+9b-3a-2b. remaining first-party record creation plus richer login notes and
+           multiple-URL editing.
 9b-3b-1. reversible authenticated item deletion and exact historical restore
          using `VLT-PM14-cli-delete-restore.md`.
 9b-3b-2. explicit authenticated current-conflict resolution.
@@ -1582,13 +1586,15 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   `VLT-PM06-local-host.md`, `VLT-PM07-config.md`, `VLT-PM08-cli-host.md`,
   `VLT-PM09-cli-bootstrap.md`, `VLT-PM10-cli-authenticated-verification.md`,
   `VLT-PM11-cli-login-create-read.md`, `VLT-PM12-cli-login-replace.md`,
-  `VLT-PM13-cli-history-list.md`, `VLT-PM14-cli-delete-restore.md`, and
-  `VLT-PM15-operation-audit.md` —
+  `VLT-PM13-cli-history-list.md`, `VLT-PM14-cli-delete-restore.md`,
+  `VLT-PM15-operation-audit.md`, and
+  `VLT-PM16-cli-secure-note-create.md` —
   product repository wire,
   object-store, domain, verified-DAG, application, local-host, configuration,
   terminal/entropy, executable composition, authenticated verification, and
   first CRUD vertical, revision-safe replacement, redacted history, and
-  reversible delete/restore, and first-class operation-audit contracts.
+  reversible delete/restore, first-class operation-audit contracts, and
+  secure-note CLI composition.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.

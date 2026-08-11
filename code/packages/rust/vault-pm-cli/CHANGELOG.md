@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Added audited `item add secure-note` with a hidden bounded body prompt and
+  explicit list/show rendering that never receives or prints body plaintext.
+- Centralized login and secure-note creation on one preflight, durable failure,
+  document, and completion path so future record kinds inherit the same audit
+  ordering.
 - Reserve create time, identities, and audit-failure entropy before unlock so
   active-epoch item prompt failures become durable traceable `ItemCreate`
   events before their CLI error is returned.
