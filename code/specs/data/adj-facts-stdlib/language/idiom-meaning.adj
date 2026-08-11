@@ -1,0 +1,57 @@
+% ============================================================================
+% idiom-meaning — common English idioms and what they actually mean
+% (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% A THIRTEENTH literacy sub-skill library in this loop's sweep, and a
+% genuinely new figurative-language skill beyond CCSS RF.K.2's five parts
+% and the phonics/spelling/whole-text/vocabulary slices already shipped: an
+% idiom's literal words do NOT give its meaning — "piece of cake" has
+% nothing to do with dessert. Recall is a binding query:
+%
+%     ? idiom_meaning(piece_of_cake, $M)
+%       % very_easy_to_do
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `idiom_meaning(idiom, meaning)` carrying the source citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns
+% the meaning WITH its source, on the CPU, with zero model calls, and
+% abstains on any idiom not one of these three source-cited examples. The
+% query also runs BACKWARD — bind a meaning and recall which idiom carries
+% it:
+%
+%     ? idiom_meaning($I, feeling_slightly_ill)
+%       % under_the_weather
+%
+% Provenance: quoted verbatim from Oxford International English's "30
+% Useful English Idiomatic Expressions & Their Meanings" article, which
+% states a one-sentence definition for each idiom:
+%
+%     idiom               meaning                    rule (verbatim)
+%     -----------------   ------------------------   -------------------------------------------------------------
+%     piece_of_cake       very_easy_to_do             "Something very easy to do."
+%     break_the_ice       start_a_conversation        "To start a conversation or make people feel more comfortable."
+%     under_the_weather   feeling_slightly_ill        "Feeling slightly ill."
+%
+% WebFetch-verified before writing. `trust consensus` — a language-education
+% organization site, not a primary government or research-institution
+% source, the same tier this stdlib already reserves for its other
+% non-.gov language sources (e.g. 7ESL's past-tense -ed article,
+% Speakspeak's plural-ending article). An idiom not one of these three —
+% e.g. `raining_cats_and_dogs`, a real, well-known idiom, but not one of
+% this source's own cited examples — is deliberately NOT a row, so a
+% recall ABSTAINS on it rather than inventing a meaning. (See
+% ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table idiom_meaning {
+    columns idiom, meaning
+
+    row (piece_of_cake, very_easy_to_do)
+    row (break_the_ice, start_a_conversation)
+    row (under_the_weather, feeling_slightly_ill)
+
+    source "Something very easy to do."
+    locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    trust consensus
+}

@@ -1,0 +1,14 @@
+% ============================================================================
+% idiom-meaning.query.adj — worked recall over the idiom-meaning library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does this idiom
+% mean?" (direct) or "which idiom has this meaning?" (reverse) — it states
+% no fact of its own — it only `import`s the grounded table and asks
+% binding queries.
+% ============================================================================
+
+import "idiom-meaning.adj"
+
+? idiom_meaning(piece_of_cake, $M)              % expect very_easy_to_do (direct)
+? idiom_meaning($I, feeling_slightly_ill)       % expect under_the_weather (reverse)
+? idiom_meaning(raining_cats_and_dogs, $M)      % expect abstain -- a real idiom, but not one of the three tabled examples
