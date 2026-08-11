@@ -1,54 +1,34 @@
-Spanish, chapter 69: Green and Yellow.
-2 lessons. All 2 can be done entirely by ear.
+Spanish, chapter 69: Noon and Midnight.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-verde — the colour named after being alive.
+Lesson 1 of 1.
+mediodía, medianoche — noon and midnight, spelled out in full.
 
 Warm-up.
 [pause 2 seconds]
-After azul's long journey from Afghanistan, here is a colour that stayed exactly where it started. It is also the one that names a process rather than a thing.
+Two hours that don't get a number — they get a name. And Spanish keeps that name far more transparent than its French cousin does.
 
-The word, taken apart: verde.
-verde ("green") from Latin viridis (worn down through virdis), which comes from the verb virēre, "to be green, to flourish, to be vigorous."
-So the adjective is built on a verb of thriving. Latin did not name the colour of leaves; it named what leaves are doing, and let the colour follow. The same root gives vigour its neighbours in English: verdant, verdure, and the green-tinged verdigris ("green of Greece").
-One careful non-connection: verde is not a cousin of English green. Green comes from a completely separate Germanic root, tied to grow and grass — which, funnily enough, is the same idea arrived at independently. Two families, two words, one metaphor: green is the colour of things that are growing.
+The two words, taken apart.
+[a table of 2 rows, read aloud]
+Spanish: mediodía. from Latin: medius diēs. literally: "mid-day" (medio "middle" + día "day").
+Spanish: medianoche. from Latin: media nox. literally: "mid-night" (media "middle" + noche "night").
+Both halves are fully alive, ordinary Spanish words on their own: medio/media ("middle" — cousin of English medium, mid, middle) and día/noche ("day/night," words you already know). Compare French, which took the same Latin phrase down a bumpier road: minuit's second half, -nuit, is still the plain, everyday French word for "night" — just as recognizable as Spanish's noche. But midi's second half, -di, wore down into an opaque fragment: the ordinary French word for "day" is jour, not di — that piece survives only as a fossil, tucked inside weekday names like lundi and mardi. So the erosion split unevenly: French kept "night" transparent and lost "day," while Spanish kept both.
+They don't need horas the way a normal Spanish time (son las tres) never does either — they simply stand in for the hour on their own:
+Es mediodía. — "It is noon." Es medianoche. — "It is midnight."
+(Fun aside: English noon comes from Latin nōna hōra, "the ninth hour" — originally mid-afternoon, it drifted earlier over the centuries to mean midday. Spanish kept the tidier, transparent "mid-day" instead.)
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "verde" — green]
+[your turn — say: "mediodía" (noon), "medianoche" (midnight)]
 [pause 8 seconds for the answer]
-[your turn — say: the root — "virēre, to flourish" becomes "verde"]
+[your turn — say: break them — "medio + día", "media + noche" — both halves still ordinary words]
 [pause 8 seconds for the answer]
-[your turn — say: "verde" then English "verdant" — and not "green"]
+[your turn — say: "Es mediodía. Es medianoche." — they stand in for the hour]
+[pause 8 seconds for the answer]
+[your turn — say: the contrast — French kept "night" (nuit) but wore "day" down to a fossil (-di)]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Latin verb gives verde, and what does it mean? (Virēre, "to be green, to flourish.") Is verde related to English green? (No — green is Germanic, from the same family as grow and grass; the two languages reached the same metaphor separately.) Next: a colour that is not named after a colour at all.
-
-
-Lesson 2 of 2.
-amarillo — the colour that started as a taste.
-
-Warm-up.
-[pause 2 seconds]
-Verde was exactly what you would expect from Latin. This one is not. Latin had three perfectly good words for yellow, and Spanish took none of them.
-
-The word, taken apart: amarillo.
-amarillo ("yellow") does not trace to flāvus, gilvus or lūteus — Latin's actual yellow words. It comes from Late Latin amarellus, "a little bitter," a diminutive of amarus, "bitter."
-A colour named after a taste. The bridge is medicine: yellow was the colour of bile and of jaundice (which Spanish still calls ictericia, but which folk speech long tied to bitterness), and of a great many bitter-tasting plants. A word meaning "somewhat bitter" came to mean "the yellowish look of a bitter thing," then simply "yellowish," and by Spanish's Golden Age it had dropped the taste entirely and kept only the colour.
-You can still check the family in a living word: amargo ("bitter") is amarillo's cousin, straight from the same amarus. Say them together and the shared amar- is right there.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "verde, amarillo" — green and yellow]
-[pause 8 seconds for the answer]
-[your turn — say: "amarillo, amargo" — hear the shared amar-]
-[pause 8 seconds for the answer]
-[your turn — say: the path — "a little bitter" becomes "yellowish" becomes "yellow"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Does amarillo come from a Latin word for yellow? (No — from amarellus, "a little bitter," a diminutive of amarus.) What everyday Spanish word is its cousin? (Amargo, "bitter.") And verde? (From virēre, "to flourish" — a colour named after being alive, as this one is named after a taste.)
+What do mediodía and medianoche literally mean, and from what Latin? ("Mid-day" from medius diēs; "mid-night" from media nox.) Are both halves still recognizable, ordinary Spanish words? (Yes — medio/ media "middle," día/noche "day/night.") Did French erode its phrase evenly? (No — French's -nuit stayed just as transparent as Spanish's noche, but its -di wore down to an opaque fossil, since the everyday French word for "day" is actually jour.) How do you say "it is noon"? (Es mediodía.)

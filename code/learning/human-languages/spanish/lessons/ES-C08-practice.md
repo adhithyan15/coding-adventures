@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C08-practice
 spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 820
-chapter: 29
+chapter: 34
 type: practice-mix
 headword: (practice)
 gloss: counting, having, and asking or answering age

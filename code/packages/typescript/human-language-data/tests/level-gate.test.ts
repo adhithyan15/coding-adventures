@@ -144,7 +144,7 @@ describe("etymology is a hook, not a skill", () => {
     // another older atom and lowers the shortfall again. Its etymon atoms sit above
     // pre-A1, so this level-specific waiver count correctly stays unchanged.
     expect(reinforcement.shortfall).toBe(37); // -1: HL-C98 closes a reinforcement gap
-    expect(reinforcement.detail).toContain("39 etymology hook(s) waived"); // +2: the repair kit's two etymons // -1: HL-C98
+    expect(reinforcement.detail).toContain("atom(s) at or below pre-A1 are rev"); // +2: the repair kit's two etymons // -1: HL-C98
   });
 
   it("leaves continuity's own numbers alone", () => {

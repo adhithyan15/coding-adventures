@@ -1,98 +1,96 @@
-Spanish, chapter 42: Synthesis --- You Can Hear Which Past It Is.
+Spanish, chapter 42: Review --- Six Verbs, One Ending.
 2 lessons. All 2 can be done entirely by ear.
 
 
 Lesson 1 of 2.
-Practice — six singular patterns, no hidden vocabulary.
+Review — six verbs, one ending.
 
 Warm-up.
 [pause 2 seconds]
-This checkpoint adds nothing. Retrieve only the three singular persons of each learned row. Every word in the short sentences is already known.
+Nothing new in this chapter. Say the yo forms of the three verbs you have just met: poner, salir, venir.
 
-Grammar Lens: the complete frame for this chapter.
-Regular rows:
-yo: hablé, comí, viví.
-tú: hablaste, comiste, viviste.
-él / ella / usted: habló, comió, vivió.
-Strong rows:
-yo: tuve, hice, estuve.
-tú: tuviste, hiciste, estuviste.
-él / ella / usted: tuvo, hizo, estuvo.
-The -er and -ir rows share -í, -iste, -ió. The three strong rows share -e, -iste, -o, but their stems must be learned: tuv-, hic-/hiz-, estuv-. Plural persons, more strong verbs, and new time or setting vocabulary remain outside this checkpoint.
+What you've built.
+The set is closed. Six of the commonest verbs in Spanish put an unexpected -go on the yo form and nowhere else:
+[a table of 6 rows, read aloud]
+verb: tener. yo: tengo. and the rest behaves: normally.
+verb: hacer. yo: hago. and the rest behaves: normally.
+verb: decir. yo: digo. and the rest behaves: normally.
+verb: poner. yo: pongo. and the rest behaves: normally.
+verb: salir. yo: salgo. and the rest behaves: normally.
+verb: venir. yo: vengo. and the rest behaves: normally.
+Six verbs, one oddity, and it lives in exactly one slot. That is a much smaller thing to carry than "six irregular verbs."
 
-Grammar Lens: let spelling show the stress.
-Regular comí, comió, viví, vivió carry written accents for final stress.
-Strong tuve, tuvo, hice, hizo, estuve, estuvo carry no written accents; stress remains in the strong stem.
-Comiste and viviste need no accent because their ordinary stress is already next to last.
-
-The histories, taken apart.
-The regular -er/-ir endings continue Latin perfect material reshaped across Romance. Tuve and hice continue older strong-perfect histories, also reshaped rather than copied letter for letter. Estuve shows especially clear analogical remodeling beside the -uv- family of tuve.
+The word, taken apart.
+Here is what the six chapters could not show you separately.
+They are not a family. Nobody decided these six belonged together. They came from different Latin verbs, by different routes, and arrived at the same ending by accident — a g that was already in some of the stems, and a sound change that pulled the others into line behind them.
+The club is a result, not a rule. Spanish learners are taught "the -go verbs" as though someone had drawn up a membership list; what actually happened is that six unrelated words drifted into the same shape and then reinforced each other.
+That is worth knowing for a practical reason: it tells you the list is closed. A pattern with a cause keeps recruiting. A pattern that is an accident stops.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “hablé, comí, viví”]
+[your turn — say: all six yo forms in one breath — tengo, hago, digo, pongo, salgo, vengo]
 [pause 8 seconds for the answer]
-[your turn — say: “tuve, hice, estuve”]
+[your turn — say: for each, the plain infinitive it came from]
 [pause 8 seconds for the answer]
-[your turn — say: “Hice café. Viví en Madrid. Estuve bien.”]
-[pause 8 seconds for the answer]
-[your turn — say: “comí and comió have accents; tuve and tuvo do not”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Give the learned yo past forms of hablar, comer, and vivir, in that order.
-[question — say your answer, then pause 9 seconds]
-Give the learned yo past forms of tener, hacer, and estar, in that order.
-[question — say your answer, then pause 7 seconds]
-Say 'I made coffee' in Spanish.
-[question — say your answer, then pause 7 seconds]
-Say 'I lived in Madrid' in Spanish.
-[question — say your answer, then pause 7 seconds]
-Say 'I was well' as a completed event in Spanish.
-[question — say your answer, then pause 7 seconds]
-Which pair carries written accents: comí/comió or tuve/tuvo?
-[question — say your answer, then pause 7 seconds]
-Which learned form is especially described as analogically remodeled beside tuve: comí, hice, or estuve?
+[repeat that twice]
+Until the six run together as one list.
+[question — say your answer, then pause 8 seconds]
+How many verbs are in the -go set?
+[question — say your answer, then pause 8 seconds]
+Which slot does the -go appear in?
+[question — say your answer, then pause 10 seconds]
+Are these six related to each other?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the regular comer and vivir sets. (Comí, comiste, comió; viví, viviste, vivió.) Give the three strong sets. (Tuve, tuviste, tuvo; hice, hiciste, hizo; estuve, estuviste, estuvo.) Which rows share endings? (-er/-ir share one regular set; the strong rows share another.) The next chapter can add a new past contrast without borrowing any plural form here.
+How many verbs take -go? (Six.) In how many slots? (One — the yo form.) And why does the list not grow? (Because it was never a rule — six unrelated verbs happened to converge.)
 
 
 Lesson 2 of 2.
-Synthesis — you can hear which past it is.
+Practice — putting, leaving, and coming in the singular.
 
 Warm-up.
 [pause 2 seconds]
-Nothing new in this chapter. Say comí, then tuve.
+This checkpoint adds nothing. Retrieve the three bounded singular sets first. Only then widen the memory comparison from three learned yo forms to six.
 
-Grammar Lens: the stress tells you everything.
-Say those two again and listen to where your voice lifts.
-comí — the stress lands on the ending. tuve — the stress lands on the stem.
-That is not a detail. It is the whole difference between the two kinds of past in this chapter, and it is audible before you know anything else about the verb.
-Endings stressed becomes the regular preterite. It needs a written accent, because Spanish marks a stressed final vowel: comí, viví.
-Stem stressed becomes a strong preterite. It needs no accent at all: tuve, hice, estuve.
-So the accent is not extra spelling to remember. It is the stress, written down. If a preterite has no accent, the stress moved back onto the stem, and you are looking at one of the strong ones.
+Grammar Lens: the complete frame for this chapter.
+putting or placing: pongo, pones, pone.
+leaving or going out: salgo, sales, sale.
+coming: vengo, vienes, viene.
+known-word contrast: Salgo de Madrid. Vengo de Madrid.
+known singular comparison: vengo / tengo, vienes / tienes, viene / tiene.
+Now that all three new verbs have been taught, the learned yo comparison can grow to exactly tengo, hago, digo, pongo, salgo, vengo. It remains a retrieval aid, not a rule for predicting any unseen verb.
+Plural persons, full boot diagrams, reflexive clothing expressions, house and table nouns, clock times, dinner vocabulary, and other unseen contexts remain outside this checkpoint.
 
-What you've built.
-The two kinds have two histories.
-The regular preterite is Spanish doing what Spanish does: one set of endings, and — as in the present and the imperfect — -er and -ir agreeing with each other rather than going separate ways.
-The strong preterites are older. They are Latin's own perfect, carried through with the stress where Latin had put it, on verbs used too heavily ever to be rebuilt. Which is the same reason the imperfect has only three irregulars: the words people say constantly are the ones that keep their odd shapes.
+The words, taken apart — retrieve the history.
+poner continues Latin pōnere, the placing family of position.
+salir continues Latin salīre, the leaping family of salient.
+venir continues Latin venīre, the coming family of convene.
+different inherited histories and analogy let the six known yo forms converge on -go; the shared shape does not make a productive prediction rule.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: comí, viví — and feel the lift on the last syllable]
+[your turn — say: “pongo, pones, pone”]
 [pause 8 seconds for the answer]
-[your turn — say: tuve, hice, estuve — and feel it move back]
+[your turn — say: “salgo, sales, sale”]
 [pause 8 seconds for the answer]
-[repeat that twice]
-Until you can place a preterite by ear before you place it by rule.
+[your turn — say: “vengo, vienes, viene”]
+[pause 8 seconds for the answer]
+[your turn — say: “tengo, hago, digo, pongo, salgo, vengo”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the learned singular forms of poner: yo, tú, then usted.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular forms of salir: yo, tú, then usted.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular forms of venir: yo, tú, then usted.
+[question — say your answer, then pause 11 seconds]
+Say 'I leave Madrid; I come from Madrid' in Spanish.
+[question — say your answer, then pause 12 seconds]
+Give the learned yo forms of tener, hacer, decir, poner, salir, and venir, in that order.
 [question — say your answer, then pause 10 seconds]
-A preterite with no written accent. Where is the stress, and which kind is it?
-[question — say your answer, then pause 10 seconds]
-Why does comi carry an accent when tuve does not?
-[question — say your answer, then pause 8 seconds]
-In the regular preterite, do -er and -ir take the same endings?
+Match each Spanish verb to one English cousin: poner, salir, venir.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Where does the stress fall in a strong preterite? (On the stem.) What does a missing accent tell you? (That it is one of the strong ones.) And why do the strong ones exist at all? (They are Latin's own perfect, kept intact on verbs used too much to be rebuilt.)
+Give all three new singular sets. (Pongo, pones, pone; salgo, sales, sale; vengo, vienes, viene.) Which six learned yo forms now share -go? (Tengo, hago, digo, pongo, salgo, vengo.) Why is the list a memory aid rather than a prediction rule? (Different histories converged on one shape.) The next chapter may now introduce a new time frame without borrowing any plural form from this chapter.
