@@ -176,8 +176,10 @@ read, just like a local string.
 
 Direct real literals also use the shared string output path, preserving their
 source spelling and an exact unary `+` or `-` without requiring a runtime `f64`
-formatter. Real variables and computed real expressions remain explicit type
-errors.
+formatter. An arithmetic conditional whose leaves are all direct real literals
+branches to the selected source-spelled string at run time. Real variables,
+computed real expressions, and conditionals with a computed leaf remain
+explicit type errors.
 
 Proper procedures now lower as side-effecting IIR `void` functions when called
 in statement position. They can write enclosing scalar or array globals and use

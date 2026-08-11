@@ -1,5 +1,12 @@
 # Changelog — `lang-aot`
 
+## 0.220.71 - 2026-08-11 (ALGOL conditional real-literal output — seven backends)
+
+The LANG matrix now proves runtime selection between signed real-literal output
+leaves on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT. ALGOL lowers the
+condition to typed control flow and each selected leaf to shared string output,
+avoiding a runtime f64 formatter while computed or runtime leaves fail closed.
+
 ## 0.220.70 - 2026-08-11 (ALGOL signed real-literal output — seven backends)
 
 An ALGOL `output(-4.25, +2.5)` matrix cell now prints `-4.25+2.5` on Native
