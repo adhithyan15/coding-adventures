@@ -26,6 +26,7 @@ detection, and COSE-Key / WebAuthn-PRF.
 - `cbor_encode` — canonical bytes into a malloc'd buffer (caller frees).
 - `cbor_decode` — a `CborStatus` code + an owned value tree.
 - `cbor_equal` — deep structural equality.
+- `cbor_status_message` — a static, payload-blind diagnostic for every status.
 
 ## Design notes
 
@@ -41,6 +42,10 @@ detection, and COSE-Key / WebAuthn-PRF.
   — so hostile inputs cannot exhaust the stack or force a giant allocation.
 - **Overflow-guarded allocation** throughout (growable arrays cap doubling
   below `SIZE_MAX`).
+- **Checked encoder.** Encoding rejects duplicate encoded map keys, nesting
+  beyond `CBOR_MAX_ENCODE_DEPTH` (128), and items beyond
+  `CBOR_MAX_ENCODED_SIZE` (1 MiB). Error returns leave the output pointer null
+  and length zero.
 
 ## Usage
 
@@ -67,3 +72,7 @@ sh BUILD           # POSIX: GCC and/or Clang via the shared iso-harness
 
 Compiles under GCC, Clang and MSVC with `-pedantic-errors` / `/permissive-` and
 warnings-as-errors.
+
+The portable test consumes the checked-in
+[`canonical-cbor-v1`](../../../specs/fixtures/canonical-cbor-v1/README.md)
+projection shared with the C++ and Rust implementations.

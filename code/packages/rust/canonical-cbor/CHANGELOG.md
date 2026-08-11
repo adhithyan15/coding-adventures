@@ -5,6 +5,21 @@ All notable changes to this package are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Added `try_encode` and transactional `try_encode_into` APIs with stable,
+  payload-blind errors for duplicate encoded map keys, excessive nesting, and
+  output beyond the 1 MiB item limit.
+- Added direct execution of all language-neutral `canonical-cbor-v1` vectors,
+  including exact boundary encodings and every closed rejection class.
+
+### Changed
+
+- `encode` and `encode_into` now delegate to the same checked encoder, so the
+  legacy convenience API can no longer emit duplicate-key or unbounded items.
+
 ## [0.1.0] — 2026-05-04
 
 ### Added

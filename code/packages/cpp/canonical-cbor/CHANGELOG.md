@@ -4,6 +4,18 @@ All notable changes to the C++ `canonical-cbor` package are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Added
+
+- Added the shared `canonical-cbor-v1` portable conformance suite, static
+  payload-blind diagnostics, and checked encode limits for nesting and output.
+
+### Changed
+
+- Encoding now rejects duplicate encoded map keys, nesting beyond 128 levels,
+  and items beyond 1 MiB with closed `CborError` values.
+
 ## [0.1.0] - 2026-07-12
 
 ### Added
