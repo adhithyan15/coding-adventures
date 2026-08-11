@@ -135,6 +135,15 @@ hosted backend. Later optional services may provide device discovery, sharing
 invitations, event delivery, recovery witnesses, or managed storage, but the
 file formats and clients must remain usable without them.
 
+### 3.9 Audit before effect or disclosure
+
+Every authenticated high-level edit or access produces one privacy-safe,
+device-signed, encrypted operation event. A mutation becomes active atomically
+with its event. A read or reveal is not returned to its host until its audit-only
+commit is durable. Audit failure therefore fails the operation closed instead
+of silently creating an untraceable effect or disclosure. The shared contract
+is `VLT-PM15-operation-audit.md`.
+
 ## 4. Delivery milestones
 
 | Phase | Deliverable | Storage | Client surface | Independently useful result |
@@ -246,7 +255,7 @@ and merge semantics are shared even when the host execution model differs.
 | multi-recipient wrapping | `vault-recipients` | passphrase and X25519 wraps | signed recipient/device registry and revocation ceremony |
 | authentication | `vault-auth` | password and TOTP factors | WebAuthn/FIDO2-PRF and replay state where enabled |
 | policy | `vault-policy` | local RBAC/decorators | product action/resource vocabulary |
-| audit | `vault-audit` | canonical signed chain | persistent encrypted segments and cross-device chain semantics |
+| audit | `vault-audit`, `vault-pm-audit` | generic signed chain plus closed product operation events | encrypted repository integration, access enforcement, and cross-device witnesses |
 | sync | `vault-sync` | version vectors, conflict types, OR-set | persistent signed commit DAG and no-loss conflict archive |
 | history | `vault-revisions` | retention and restore semantics | repository-backed encrypted implementation |
 | search | `vault-search` | local trigram/BM25 index | rebuildable index projection and field policy per record type |
@@ -1434,6 +1443,11 @@ changelog, focused build, and downstream validation.
 9b-2b-1. redacted authenticated revision history listing using
          `VLT-PM13-cli-history-list.md`.
 9b-2b-2. redacted authenticated search plus non-login show renderers.
+9b-2c-1. completed storage-neutral signed operation-audit event primitive using
+         `VLT-PM15-operation-audit.md`.
+9b-2c-2. encrypted repository audit objects, migration epoch, atomic mutation
+         publication, and complete event verification.
+9b-2c-3. fail-closed access-event publication plus redacted audit list/show.
 9b-3a-1. revision-safe authenticated login replacement using
          `VLT-PM12-cli-login-replace.md`.
 9b-3a-2. remaining record creation plus richer notes/multiple-URL editing.
@@ -1501,12 +1515,13 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   `VLT-PM06-local-host.md`, `VLT-PM07-config.md`, `VLT-PM08-cli-host.md`,
   `VLT-PM09-cli-bootstrap.md`, `VLT-PM10-cli-authenticated-verification.md`,
   `VLT-PM11-cli-login-create-read.md`, `VLT-PM12-cli-login-replace.md`,
-  `VLT-PM13-cli-history-list.md`, and `VLT-PM14-cli-delete-restore.md` —
+  `VLT-PM13-cli-history-list.md`, `VLT-PM14-cli-delete-restore.md`, and
+  `VLT-PM15-operation-audit.md` —
   product repository wire,
   object-store, domain, verified-DAG, application, local-host, configuration,
   terminal/entropy, executable composition, authenticated verification, and
   first CRUD vertical, revision-safe replacement, redacted history, and
-  reversible delete/restore contracts.
+  reversible delete/restore, and first-class operation-audit contracts.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.
