@@ -183,8 +183,9 @@ Finite literal-only addition, subtraction, multiplication, and division are
 evaluated by the frontend and printed through the same string path. Zero
 divisors, non-finite results, real variables, and conditionals with a non-static
 leaf remain explicit type errors. Real literal bases also accept the existing
-capped nonnegative integer-literal exponent chains; other exponent shapes still
-require runtime real formatting.
+capped nonnegative integer-literal exponent chains or one explicitly signed
+integer-literal exponent in `-64..=64`; other exponent shapes still require
+runtime real formatting.
 
 Proper procedures now lower as side-effecting IIR `void` functions when called
 in statement position. They can write enclosing scalar or array globals and use
