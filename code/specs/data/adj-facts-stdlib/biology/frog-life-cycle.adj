@@ -1,0 +1,64 @@
+% ============================================================================
+% frog-life-cycle — each stage of the frog's life cycle as a NUMBER (1-3),
+% the position in the ordered sequence (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A sibling library to the already-shipped `monarch-life-cycle.adj` — the
+% SAME plain numbered life-cycle-stage recall shape, applied to a DIFFERENT
+% organism. Frogs undergo metamorphosis just like monarch butterflies, but
+% through a distinct sequence of named stages. Recall is a binding query:
+%
+%     ? frog_life_stage(tadpole, $N)   % 2
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `frog_life_stage(stage, order)` carrying the source citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% position WITH its source, on the CPU, with zero model calls, and abstains
+% on a word that is not one of the three stages the source names. The query
+% also runs BACKWARD — bind a number and recall the stage:
+%
+%     ? frog_life_stage($S, 1)   % egg
+%
+% The three stages IN ORDER, as a little truth table:
+%
+%     stage     order   a beginner's cue
+%     -------   -----   --------------------------------------------
+%     egg       1        laid in water, clumped together as frogspawn
+%     tadpole   2        hatches with a tail and gills, lives in water
+%     frog      3        fully grown, breathes with lungs, hops on land
+%
+% Provenance: quoted verbatim from National Geographic Kids UK's "The Frog
+% Life Cycle for Kids" page, which names the three stages under numbered
+% headings — the ordinal reading is the row order, the same discipline
+% `biology/monarch-life-cycle.adj` already established for a source's own
+% numbered enumeration:
+%
+%   egg -> 1: "Stage 1: Extraordinary eggs"
+%   tadpole -> 2: "Stage 2: Teeny tadpoles!"
+%   frog -> 3: "Stage 3: Fully-grown frog!"
+%
+% WebFetch-verified TWICE for consistency before writing, both fetches
+% returning the SAME three numbered headings verbatim. `trust consensus` —
+% National Geographic Kids is a reputable, widely-cited children's science
+% publisher, the same tier this stdlib already reserves for other
+% National Geographic sources (see `animal-habitat.adj`,
+% `rainforest-layer.adj`). The source's own narrative describes legs
+% developing DURING the tadpole stage, but gives that transition no
+% separate numbered heading, so this table deliberately does NOT invent a
+% fourth "froglet" row the source never numbers. A word that is NOT one of
+% these three stages — `adult` (the source's own heading says "frog," not
+% "adult") — is deliberately NOT a row, so a recall ABSTAINS on it rather
+% than inventing a position. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table frog_life_stage {
+    columns stage, order
+
+    row (egg, 1)
+    row (tadpole, 2)
+    row (frog, 3)
+
+    source "Stage 1: Extraordinary eggs"
+    locator "https://www.natgeokids.com/uk/discover/science/nature/frog-life-cycle/"
+    trust consensus
+}
