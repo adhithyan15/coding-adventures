@@ -132,6 +132,10 @@ Prioritized work items:
    active now report the general in-table parse error, matching WPT
    `tests8.dat` evidence while leaving the same endings outside tables and
    inside cells quiet.
+   `center` end tags processed while table foster parenting is active now
+   report the general in-table parse error alongside non-current end-tag
+   recovery, matching WPT `tricky01.dat` while leaving centers outside tables
+   and inside cells quiet.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases
