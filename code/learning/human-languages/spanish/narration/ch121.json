@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 121,
-  "title": "Dog and Cat",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ee6d7fd4c182c23f",
+  "title": "Water, Wine, and Bread",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:d5040c0d1afad901",
   "lessons": [
     {
-      "id": "ES-C32-gato",
-      "sequence": 1740,
-      "title": "gato — the word that travelled with the animal",
-      "headword": "gato",
-      "romanization": "gato",
-      "gloss": "cat — a word that travelled out of Africa with the animal, pushing Latin's own fēlēs aside",
+      "id": "ES-C26-agua",
+      "sequence": 1610,
+      "title": "el agua — water, and an article that is not what it looks like",
+      "headword": "el agua",
+      "romanization": "el agua",
+      "gloss": "water — a word that barely changed from Latin, and takes el without ever stopping being feminine",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37506cac9dcc141f",
+      "sourceHash": "fnv1a64:24c333d346f711ed",
       "notice": null,
       "blocks": [
         {
@@ -35,163 +35,56 @@
             },
             {
               "kind": "speech",
-              "text": "Some etymologies can be followed all the way home. This one runs from your mouth back to ancient Egypt, and every step of it is documented."
+              "text": "One of the least changed words in Spanish, carrying one of its most misunderstood rules. The \"masculine\" article on this feminine noun is not a mistake and not an exception to gender."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The word, taken apart: gato",
+          "title": "The word, taken apart: agua",
           "segments": [
             {
               "kind": "speech",
-              "text": "gato (\"cat\") from Latin cattus. But cattus was not Classical Latin's word for cat. That was fēlēs, which survives today only in the scientific name Felis catus and in English feline."
+              "text": "agua (\"water\") from Latin aqua — almost unchanged in two thousand years. Compare French, where the very same word was worn all the way down to a bare \"eau,\" just the sound \"oh.\" Same starting point, same span of time, wildly different amounts of erosion: how fast a language wears its words down is not fixed."
             },
             {
               "kind": "speech",
-              "text": "Cattus entered Latin later, arriving with the animal itself as domestic cats spread along Roman trade routes from where they were domesticated — Egypt, around 2000 BCE. The word is most likely Afro-Asiatic in origin (compare Nubian kadis, \"cat\")."
-            },
-            {
-              "kind": "speech",
-              "text": "So word and creature travelled together, out of Africa into Europe, and the newcomer pushed fēlēs out almost everywhere: Spanish gato, Italian gatto, French chat, Old Irish cat, Welsh cath, English cat. When a thing arrives from abroad, its name usually arrives with it."
+              "text": "English kept the whole Latin word too, but as a learned borrowing rather than an inherited everyday one: aquatic, aquarium, aqueduct, aqualung."
             }
           ]
         },
         {
           "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"el gato\" — the cat",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"el gato\" — the cat]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the trail — \"kadis, cattus, gato\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the trail — \"kadis, cattus, gato\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the word it replaced — \"fēlēs,\" now only in \"feline\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the word it replaced — \"fēlēs,\" now only in \"feline\"]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What was Classical Latin's actual word for cat, and where does it survive? (Fēlēs — in Felis catus and English feline.) Where did cattus most likely come from? (An Afro-Asiatic word, travelling with the domesticated cat out of Egypt.) Next: the other animal in this chapter, whose history nobody can trace at all."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C32-perro",
-      "sequence": 1750,
-      "title": "perro — the word nobody can explain",
-      "headword": "perro",
-      "romanization": "perro",
-      "gloss": "dog — a genuinely unsolved etymology, and the Latin word it pushed out",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:f10b89373e876cd7",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Gato could be traced all the way to Egypt. Perro is the opposite kind of word, and it is worth knowing that such words exist: completely ordinary, used a thousand times a day, and nobody knows where it came from."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: perro",
+          "type": "grammar",
+          "title": "Grammar Lens: el agua's article and gender",
           "segments": [
             {
               "kind": "speech",
-              "text": "perro (\"dog\"). Roll the rr: PEH-rro."
+              "text": "Notice: el agua, not la agua — yet agua is genuinely feminine. You can prove it: el agua fría, \"the cold water,\" keeps the feminine adjective ending, and the plural is las aguas, never los aguas."
             },
             {
               "kind": "speech",
-              "text": "The word Spanish should have inherited is canis — the same root as English canine, French chien, Italian cane. And it did survive, as the now-archaic Spanish can (still readable in old poetry and in canino). But at some point perro pushed can almost entirely out of everyday use — and perro itself has no agreed origin."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: an honestly open question",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Three serious proposals, none confirmed:"
+              "text": "The rule is phonological, not grammatical. Spanish swaps la for el directly before a singular feminine noun beginning with a stressed a-sound, to avoid running two identical vowels together (la agua). It is the same instinct that makes English pick \"an apple\" over \"a apple.\""
             },
             {
               "kind": "table",
               "headers": [
-                "proposal",
-                "the case for it",
-                "the problem"
+                "",
+                "singular",
+                "plural"
               ],
               "columns": 3,
               "rowCount": 3,
               "utterances": [
-                "proposal: onomatopoeia — a growl, or a shepherd's call \"perr, perr\". the case for it: matches how herding calls become names elsewhere. the problem: no early written evidence.",
-                "proposal: pre-Roman Iberian substrate. the case for it: the -rro ending is a known marker of likely pre-Latin words in Spanish. the problem: the substrate languages are barely recorded.",
-                "proposal: Persian persus, a hunting-dog breed. the case for it: such breeds did spread in the late Empire. the problem: the sound match is loose."
+                "the water. singular: el agua. plural: las aguas.",
+                "the eagle. singular: el águila. plural: las águilas.",
+                "the axe. singular: el hacha. plural: las hachas."
               ]
             },
             {
               "kind": "speech",
-              "text": "Notice what makes this a good open question rather than a shrug: each proposal predicts different evidence, and the evidence needed simply has not survived. Perro remains one of Spanish's genuinely unsolved puzzles, and a useful reminder that \"we don't know\" is a real answer in etymology, not a gap in your notes."
+              "text": "Only the article changes. The noun's gender never moves."
             }
           ]
         },
@@ -209,29 +102,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"el perro, el gato\" — dog and cat",
+              "instruction": "\"el agua\" — water, feminine, but takes el",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"el perro, el gato\" — dog and cat]"
+              "source": "[YOU SAY: \"el agua\" — water, feminine, but takes *el*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"can\" — the archaic word perro replaced, from Latin canis",
+              "instruction": "the proof — \"el agua fría\" and \"las aguas\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"can\" — the archaic word *perro* replaced, from Latin *canis*]"
+              "source": "[YOU SAY: the proof — \"el agua fría\" and \"las aguas\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the contrast — \"gato, traced to Egypt; perro, unsolved\"",
+              "instruction": "the contrast — \"agua\" barely changed; French's \"eau\" wore all the way down",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the contrast — \"gato, traced to Egypt; perro, unsolved\"]"
+              "source": "[YOU SAY: the contrast — \"agua\" barely changed; French's \"eau\" wore all the way down]"
             }
           ]
         },
@@ -248,7 +141,253 @@
             },
             {
               "kind": "speech",
-              "text": "What archaic Spanish word did perro replace, and what is its Latin source? (Can, from canis — the root of English canine.) Does perro have a confirmed etymology? (No — onomatopoeic, pre-Latin substrate and Persian proposals all remain unconfirmed.) And gato's origin, by contrast? (Traceable — Latin cattus, probably Afro-Asiatic, travelling out of Egypt.)"
+              "text": "Is agua masculine or feminine? (Feminine — el replaces la only because agua begins with a stressed a.) How would you prove it? (El agua fría; las aguas.) How does Spanish's erosion of aqua compare with French's? (Much less — Spanish kept nearly the whole word; French wore it to \"eau.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C26-vino",
+      "sequence": 1620,
+      "title": "el vino — one word, three separate arrivals in English",
+      "headword": "el vino",
+      "romanization": "el vino",
+      "gloss": "wine — one Latin root that reached English by three separate roads, plus one English built at home",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:31ea60f5ffa76198",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The second drink is grammatically boring — plain masculine, plain el vino, no stressed-a trick. Its history makes up for that."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: vino",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vino (\"wine\") from Latin vīnum — which held its shape well, as French's vin did too."
+            },
+            {
+              "kind": "speech",
+              "text": "English shares the very same root by more than one road, and the roads are worth separating, because they show three different ways a word can travel:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "English word",
+                "how it got there"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "English word: wine. how it got there: vīnum borrowed directly into old Germanic, very early.",
+                "English word: vine, vinegar. how it got there: borrowed centuries later, secondhand via French (vin + aigre, \"sour wine\").",
+                "English word: vineyard. how it got there: not borrowed at all — English built it at home from the already-borrowed wine plus native yard."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So wine and vine are the same Latin word twice, arriving a thousand years apart by different routes, and vineyard is a homemade compound made out of the first arrival. One Latin noun; three English histories."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el agua, el vino\" — the two drinks",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el agua, el vino\" — the two drinks]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vino\" then English \"wine, vine, vinegar\" — one root, three roads",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vino\" then English \"wine, vine, vinegar\" — one root, three roads]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What Latin word gives vino? (Vīnum.) Name three English cousins and say how each arrived. (Wine — direct, early, into Germanic; vine/vinegar — later, via French; vineyard — built at home from wine plus yard.) And why is it el agua but las aguas? (The el is a sound rule for a stressed a, singular only.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C26-pan",
+      "sequence": 1630,
+      "title": "el pan — bread, and the friend who shares it",
+      "headword": "el pan",
+      "romanization": "el pan",
+      "gloss": "bread — and the compañero who shares it with you",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:12d6fe4836e47c62",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish's word for bread hides the same lovely word-story you'd find in English's \"companion\" — except Spanish kept both halves, the bread and the friendship."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: pan",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pan (\"bread\") from Latin pānis. Masculine: el pan."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: bread and friendship",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The Latin root pān- (\"bread\") gives Spanish its own word for a close friend:"
+            },
+            {
+              "kind": "speech",
+              "text": "compañero / compañera (\"companion, friend, partner\") from com- (\"with\")."
+            },
+            {
+              "kind": "speech",
+              "text": "pānis — literally \"one you share bread with.\" Spanish built this word from the very same recipe as English companion and company (which come from the identical Latin pieces) — but where English only kept the friendship sense, Spanish still visibly uses the same root for the actual bread (pan) too."
+            },
+            {
+              "kind": "speech",
+              "text": "panadería (\"bakery\") and panadero (\"baker\") — both transparently built on pan."
+            },
+            {
+              "kind": "speech",
+              "text": "So pan and compañero are the same word-family doing double duty in Spanish: name the food, and name the friend you'd share it with."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el pan\" — bread",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el pan\" — bread]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"compañero\" — literally, one you share bread with",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"compañero\" — literally, one you share bread with]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"panadería, panadero\" — bakery, baker",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"panadería, panadero\" — bakery, baker]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give \"bread\" with its article. (El pan.) What does compañero literally mean, and what's it built from? (\"One you share bread with\" — com- + pānis.) Does English keep this same double meaning? (No — English's companion only kept the friendship sense; Spanish still uses the same root for the actual bread, pan, too.)"
             }
           ]
         }

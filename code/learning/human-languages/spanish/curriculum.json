@@ -1279,6 +1279,78 @@
       "after": []
     },
     {
+      "id": "ES-PATH-042-CMD-TU",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C50-habla"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-042-CMD-TU"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-042-CMD-EIGHT",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C50-ocho-cortos"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-042-CMD-EIGHT"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-042-CMD-NEG",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C50-no-hables"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-042-CMD-NEG"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-042-CMD-USTED",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C50-hable-usted"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-042-CMD-USTED"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-042-REVIEW-CMD",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C50-repaso-mandatos"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-042-REVIEW-CMD"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-042-SYNTH-CMD",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C50-sintesis-pedir-bien"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-042-SYNTH-CMD"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-018",
       "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
       "lessons": [
@@ -1696,6 +1768,12 @@
         "ES-PATH-030-SALIR-CH13",
         "ES-PATH-030-VENIR-CH13",
         "ES-PATH-030-CONSOLIDATION-CH13",
+        "ES-PATH-042-CMD-TU",
+        "ES-PATH-042-CMD-EIGHT",
+        "ES-PATH-042-CMD-NEG",
+        "ES-PATH-042-CMD-USTED",
+        "ES-PATH-042-REVIEW-CMD",
+        "ES-PATH-042-SYNTH-CMD",
         "ES-PATH-031",
         "ES-PATH-032",
         "ES-PATH-033",
@@ -3525,6 +3603,72 @@
       "prerequisites": [],
       "lessons": [
         "ES-C49-sintesis-dos-orillas"
+      ]
+    },
+    {
+      "id": "ES-EXT-042-CMD-TU",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C50-habla"
+      ]
+    },
+    {
+      "id": "ES-EXT-042-CMD-EIGHT",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C50-ocho-cortos"
+      ]
+    },
+    {
+      "id": "ES-EXT-042-CMD-NEG",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C50-no-hables"
+      ]
+    },
+    {
+      "id": "ES-EXT-042-CMD-USTED",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C50-hable-usted"
+      ]
+    },
+    {
+      "id": "ES-EXT-042-REVIEW-CMD",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C50-repaso-mandatos"
+      ]
+    },
+    {
+      "id": "ES-EXT-042-SYNTH-CMD",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C50-sintesis-pedir-bien"
       ]
     }
   ]

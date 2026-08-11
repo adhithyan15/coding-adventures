@@ -2,33 +2,31 @@
   "version": 1,
   "language": "spanish",
   "chapter": 110,
-  "title": "Days of the Week",
+  "title": "Di, Haz, Ve, Pon, Ten, Sal, Se, Ven",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c344c1b12929e08c",
+  "sourceHash": "fnv1a64:f0194189127a4366",
   "lessons": [
     {
-      "id": "ES-C21-lunes-viernes",
-      "sequence": 1490,
-      "title": "lunes to viernes — the planets of the week, worn down",
-      "headword": "lunes, martes, miércoles, jueves, viernes",
-      "romanization": "lunes, martes, miércoles, jueves, viernes",
-      "gloss": "the weekdays (Monday–Friday) — worn-down planet-god names",
+      "id": "ES-C50-ocho-cortos",
+      "sequence": 1388,
+      "title": "di, haz, ve, pon, ten, sal, sé, ven",
+      "headword": "di · haz · ve · pon · ten · sal · sé · ven",
+      "romanization": "di · haz · ve · pon · ten · sal · sé · ven",
+      "gloss": "the eight irregular commands — and every one of them is a single syllable, for a reason",
       "script": "latin",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "wide-table"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:4224a8263469ddc8",
+      "sourceHash": "fnv1a64:891c85f2d3ff8654",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes for one table that cannot be read aloud"
+          "your eyes, because the lesson points at something written down"
         ],
-        "waitUntilStopped": [
-          "The words, taken apart: the planet weekdays"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The words, taken apart: the planet weekdays until you have stopped, and I will say so again when we reach it."
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
       },
       "blocks": [
         {
@@ -44,35 +42,46 @@
             },
             {
               "kind": "speech",
-              "text": "The Romans mapped the seven-day week onto the seven visible \"wandering stars\" — the planet-gods. Spanish kept that map, but handled the word \"day\" differently from its Romance cousins: where French still spells out \"-di\" (day) on every weekday, Spanish mostly just dropped it."
+              "text": "By last chapter's rule, \"say it\" should be dice. It is not. There are exactly eight of these, and once you see them together you will not need to memorise the list."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The words, taken apart: the planet weekdays",
+          "type": "grammar",
+          "title": "Grammar Lens: eight, all one syllable",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Each weekday began life as \"[planet-god]'s diēs (day).\" In Vulgar Latin, diēs was simply dropped as a separate word in most of these — what survived is just the planet's own Latin genitive form. That's why martes, jueves, viernes already end in ‑s: not because diēs wore down into one, but because Martis, Iovis, Veneris — the planets' own genitive forms — end in ‑s in Latin already. Lunes has no such ‑s to inherit (lūnae doesn't end in one), so it likely picked up the ending by analogy with its four siblings:"
-            },
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
+              "kind": "table",
               "headers": [
-                "Spanish",
-                "from Latin",
-                "planet-god",
-                "English echo"
+                "verb",
+                "command",
+                ""
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, planet-god, English echo. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 8,
+              "utterances": [
+                "verb: decir. command: di, say.",
+                "verb: hacer. command: haz, do, make.",
+                "verb: ir. command: ve, go.",
+                "verb: poner. command: pon, put.",
+                "verb: tener. command: ten, have, hold.",
+                "verb: salir. command: sal, leave.",
+                "verb: ser. command: sé, be.",
+                "verb: venir. command: ven, come."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Compare French, which keeps diēs as its own visible syllable on every day — lundi, mardi, jeudi — while Spanish dropped it from four of its five weekdays. miércoles is the odd one out: some historians of the language think its extra \"‑coles\" is a genuine surviving trace of diēs itself (fused in and reshaped) — though the exact sound changes are debated, unlike the plainer, better-understood story for its four siblings."
+              "text": "Read the middle column down. Every single one is one syllable, and most are two or three letters. No other set of forms in Spanish is this short."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the fact worth carrying, and it has a cause. A command is the sentence you shout, the sentence you say in a hurry, the sentence you interrupt somebody with. Words used that way get worn down harder than words used calmly — and these eight are the commonest verbs in the language, so they had the most use to be worn by."
+            },
+            {
+              "kind": "speech",
+              "text": "So the list is not eight arbitrary exceptions. It is what the eight most-shouted verbs look like after two thousand years of being shouted."
             }
           ]
         },
@@ -90,178 +99,85 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"lunes, martes, miércoles, jueves, viernes\" — the work week",
+              "instruction": "all eight in one breath — \"di, haz, ve, pon, ten, sal, sé, ven\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"lunes, martes, miércoles, jueves, viernes\" — the work week]"
+              "source": "[YOU SAY: all eight in one breath — \"di, haz, ve, pon, ten, sal, sé, ven\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "each as \"[planet]'s day, worn down\" — \"lunes = Moon, jueves = Jupiter\"",
+              "instruction": "each one as if calling across a room",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: each as \"[planet]'s day, worn down\" — \"lunes = Moon, jueves = Jupiter\"]"
+              "source": "[YOU SAY: each one as if calling across a room]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the bridge — \"martes / Tuesday, both the war-god's day (Mars / Tiw)\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the bridge — \"martes / Tuesday, both the war-god's day (Mars / Tiw)\"]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
               "kind": "speech",
-              "text": "Recall the weekday family:"
+              "text": "Until the list is a rhythm rather than eight facts."
             },
             {
-              "kind": "speech",
-              "text": "What did every Spanish weekday begin life as? (\"[Planet-god]'s diēs (day)\" — the same Latin phrase French keeps more visibly with -di.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Why do martes, jueves, viernes end in -s, and where does lunes get its -s from? (From the planet's own Latin genitive — Martis/Iovis/ Veneris already end in -s; lunes likely picked it up by analogy, since lūnae has no -s of its own.)"
-            },
-            {
-              "kind": "speech",
-              "text": "What's debated about miércoles? (Whether its \"‑coles\" is a genuine surviving trace of diēs — unlike the plainer, better-understood story for its four siblings.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Why do martes and Tuesday line up? (They name the same day for the war-god: Mars in Latin, Tiw in Germanic.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C21-sabado-domingo",
-      "sequence": 1500,
-      "title": "sábado and domingo — the week's religious edge",
-      "headword": "sábado, domingo",
-      "romanization": "sábado, domingo",
-      "gloss": "the weekend (Saturday, Sunday) — where religion overwrote astronomy",
-      "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "wide-table"
-      ],
-      "sourceHash": "fnv1a64:d3cc00b6bd7aef52",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The two days, taken apart"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The two days, taken apart until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Five days named for planets — then two that broke the pattern entirely. The weekend is where religion overwrote astronomy, and Spanish keeps both rewrites in plain view."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The two days, taken apart",
-          "segments": [
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 2,
-              "headers": [
-                "Spanish",
-                "from Latin",
-                "meaning",
-                "note"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-ocho-cortos-list",
+              "prompt": "Give the eight irregular tu commands.",
+              "assesses": [
+                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 2 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, meaning, note. Come back and look at it when you have stopped."
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "di, haz, ve, pon, ten, sal, se, ven",
+                "di haz ve pon ten sal sé ven"
+              ],
+              "feedback": {
+                "correct": "Eight, and every one a single syllable.",
+                "incorrect": "di, haz, ve, pon, ten, sal, se, ven."
+              }
             },
             {
-              "kind": "speech",
-              "text": "Two different rewrites:"
-            },
-            {
-              "kind": "speech",
-              "text": "sábado would have been \"Saturn's day\" (as English Saturday still is — the one weekday English kept a Roman god for). Instead, Latin Christians borrowed the Jewish Sabbath (Sabbatum from Hebrew shabbāt), and it became sábado. So English Saturday and Spanish sábado are the same day, two different names — the planet vs. the Sabbath."
-            },
-            {
-              "kind": "speech",
-              "text": "domingo drops Sun-worship entirely: where English keeps Sunday, Spanish made it diēs Dominica, \"the Lord's day\" (Dominus becomes English dominion, dominate, dame). Spanish kept domingo recognizably close to Dominica — compare French's more worn-down dimanche, where the di- (day) fossil jumped to the front of the word."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the full week — \"lunes, martes, miércoles, jueves, viernes, sábado, domingo\"",
-              "spoken": true,
-              "scored": false,
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-ocho-cortos-come",
+              "prompt": "Tell somebody to come.",
+              "assesses": [
+                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT",
+                "ES-LEX-VENIR"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: the full week — \"lunes, martes, miércoles, jueves, viernes, sábado, domingo\"]"
+              "acceptedResponses": [
+                "ven",
+                "¡ven!"
+              ],
+              "feedback": {
+                "correct": "Ven.",
+                "incorrect": "Ven — from venir."
+              }
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"sábado = Sabbath, domingo = the Lord's day\" — religion, not planets",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"sábado = Sabbath, domingo = the Lord's day\" — religion, not planets]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pair-ups — \"sábado / Saturday (Sabbath vs. Saturn)\", \"domingo / Sunday (Lord vs. Sun)\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pair-ups — \"sábado / Saturday (Sabbath vs. Saturn)\", \"domingo / Sunday (Lord vs. Sun)\"]"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-ocho-cortos-why",
+              "prompt": "Why are these eight so much shorter than every other verb form?",
+              "assesses": [
+                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "commands are shouted and hurried, so they wore down most",
+                "because they are the most used and most shouted",
+                "frequency and hurry"
+              ],
+              "feedback": {
+                "correct": "What the most-shouted verbs look like after two thousand years.",
+                "incorrect": "A command is shouted and hurried, and these are the commonest verbs — the most use, so the most wear."
+              }
             }
           ]
         },
@@ -278,7 +194,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give all seven Spanish days. (Lunes … domingo.) Where does sábado come from, and its English contrast? (The Sabbath, Sabbatum; English kept Saturday = Saturn's day.) What does domingo mean literally? (\"The Lord's day,\" diēs Dominica.)"
+              "text": "How many irregular tú commands are there? (Eight.) What do they all have in common besides being irregular? (One syllable each.) Next: how to tell somebody not to do something — and you already have that form too."
             }
           ]
         }

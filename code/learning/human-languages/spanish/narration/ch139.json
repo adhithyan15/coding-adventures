@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 139,
-  "title": "Traer --- Bringing, and Latin for Dragging",
+  "title": "Review --- Three Verbs That Behave",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7df8e95755a11ed7",
+  "sourceHash": "fnv1a64:0b6d60ece7123e20",
   "lessons": [
     {
-      "id": "ES-C39-traer",
-      "sequence": 1980,
-      "title": "traer — \"to bring\", and the direction baked into it",
-      "headword": "traer",
-      "romanization": "traer",
-      "gloss": "to bring — Latin's word for dragging, and a verb with a direction built into it",
+      "id": "ES-C35-repaso-tres",
+      "sequence": 1844,
+      "title": "Review — three verbs that behave",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — three ordinary verbs, and what \"ordinary\" is about to mean",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7fd0ad6c8253989c",
+      "sourceHash": "fnv1a64:495a8d4d71b5f2e2",
       "notice": null,
       "blocks": [
         {
@@ -35,92 +35,58 @@
             },
             {
               "kind": "speech",
-              "text": "Me levanto, and now estoy de pie. Up, and carrying something. The verb for that has a direction inside it that English leaves open."
+              "text": "Nothing new here. Name the three verbs of the last three chapters: to take, to ask, to help."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "r-tap — one flick of the tongue: tra-ER, two beats."
+              "text": "All three work the way you expect, and it is worth naming that out loud before the next chapter, where one does not."
             },
             {
               "kind": "speech",
-              "text": "g-hard — the g of traigo is hard, as in English go."
+              "text": "In each of them, you are the one doing it. You take. You ask. You help. The person doing the verb is the person the sentence is about — exactly as in English, and exactly as in every verb you have met since hablo."
+            },
+            {
+              "kind": "speech",
+              "text": "Hold on to that. It is about to be worth money."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: traer",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "traer (\"to bring\") from Latin trahere, \"to drag, to pull\". Bringing started out as hauling."
+              "text": "Three origins, three very different kinds of story:"
             },
             {
               "kind": "speech",
-              "text": "Latin built a second stem, tract-, and English helped itself to both: tractor, traction, attract, contract, subtract, extract, distract, retract — and abstract, abs- + trahere, something \"dragged away\" from anything particular."
+              "text": "ayudar is the tidy one. Latin adiūtāre becomes English aid. Same word, two roads, and you can still hear it."
             },
             {
               "kind": "speech",
-              "text": "Then the worn-down half, through French: trace, train (what is dragged along behind), trail, portray from prōtrahere, \"to draw forth\", and retreat from retrahere, \"to draw back\"."
+              "text": "preguntar is the reshaped one — percontārī, to sound a depth with a pole. Asking as measuring how deep something goes."
+            },
+            {
+              "kind": "speech",
+              "text": "tomar is the honest gap. It has no agreed origin at all. The verb Latin actually handed down for \"take\" was coger, and coger turned coarse across much of Latin America — so an everyday word had to come from somewhere, and nobody is sure where."
+            },
+            {
+              "kind": "speech",
+              "text": "Not every word has a clean story. A course that pretended otherwise would be inventing them."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the hard g, for the second time",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form"
-              ],
-              "columns": 2,
-              "rowCount": 5,
-              "utterances": [
-                "person: yo. form: traigo.",
-                "person: tú. form: traes.",
-                "person: él/ella/usted. form: trae.",
-                "person: nosotros. form: traemos.",
-                "person: ellos/ustedes. form: traen."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Oír grew a hard -g- in oigo and nowhere else in its present. Traer does the identical thing: traigo, and then four ordinary -er endings. One club, two members so far, and neither one announces itself."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: here, or away",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "English lets one verb wander: bring me the bread, bring it to the café — same word, opposite journeys. Spanish will not."
-            },
-            {
-              "kind": "speech",
-              "text": "Traer moves a thing toward you. Llevar moves it away. Traigo el pan is the bread arriving here; llevo el pan is the bread leaving with me. You choose by where you are standing, never by what you are carrying."
-            },
-            {
-              "kind": "speech",
-              "text": "And llevar from Latin levāre, \"to raise\" — the verb already behind levantarse. To carry a load was first to lift it."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -133,43 +99,79 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"traigo, traes, trae, traemos, traen\"",
+              "instruction": "the three verbs, then one sentence with each",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"traigo, traes, trae, traemos, traen\"]"
+              "source": "[YOU SAY: the three verbs, then one sentence with each]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Traigo el pan\" then \"Llevo el pan\" — here, then away",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Traigo el pan\" then \"Llevo el pan\" — here, then away]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"oigo\" then \"traigo\" — the same hard g",
-              "spoken": true,
-              "scored": false,
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C35-repaso-tres-aid",
+              "prompt": "Which of the three is the same word as English aid?",
+              "assesses": [
+                "ES-ETYMON-AYUDAR-06"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"oigo\" then \"traigo\" — the same hard g]"
+              "acceptedResponses": [
+                "ayudar",
+                "ayudar (to help)",
+                "help"
+              ],
+              "feedback": {
+                "correct": "Yes — adiutare, straight through to aid.",
+                "incorrect": "ayudar, from adiutare."
+              }
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"traer\" then English \"tractor, attract, abstract\"",
-              "spoken": true,
-              "scored": false,
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C35-repaso-tres-nostory",
+              "prompt": "Which of the three has no agreed etymology at all?",
+              "assesses": [
+                "ES-LEX-TOMAR-01"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"traer\" then English \"tractor, attract, abstract\"]"
+              "acceptedResponses": [
+                "tomar",
+                "tomar (to take)",
+                "take"
+              ],
+              "feedback": {
+                "correct": "Yes — nobody is sure. That is an honest answer, not a missing one.",
+                "incorrect": "tomar. Its origin is genuinely unsettled."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C35-repaso-tres-who",
+              "prompt": "In all three verbs, who is the sentence about — the one doing it, or the thing done?",
+              "assesses": [
+                "ES-LEX-PREGUNTAR-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "the one doing it",
+                "the doer",
+                "the person doing it",
+                "the subject does it"
+              ],
+              "feedback": {
+                "correct": "Right. Remember that for the next chapter.",
+                "incorrect": "The one doing it — which is about to stop being true."
+              }
             }
           ]
         },
         {
-          "index": 6,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -181,7 +183,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which way does traer carry a thing, and which verb goes the other way? (Toward you; llevar.) What did trahere mean, and name two English words from it. (To drag; tractor, attract, abstract, retreat.) Which form of traer misbehaves, and which verb showed you that same misbehaviour first? (Traigo; oigo.) And say you are standing. (Estoy de pie.)"
+              "text": "Which one has no settled origin? (Tomar.) In all three, who is the sentence about? (The one doing it.) Next chapter: a verb where that stops being true."
             }
           ]
         }

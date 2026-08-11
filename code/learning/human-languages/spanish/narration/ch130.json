@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 130,
-  "title": "Tomar — Taking, and a Word With No Past",
+  "title": "Pensar — Thinking Is Weighing",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1df2cc25cd8bbb2f",
+  "sourceHash": "fnv1a64:bdd5db7728b2b926",
   "lessons": [
     {
-      "id": "ES-C35-tomar",
-      "sequence": 1820,
-      "title": "tomar — \"to take\", and nobody knows where it came from",
-      "headword": "tomar",
-      "romanization": "tomar",
-      "gloss": "to take (and, across Latin America, to drink) — an everyday word with no settled origin",
+      "id": "ES-C34-pensar",
+      "sequence": 1780,
+      "title": "pensar — \"to think\", and it started out meaning \"to weigh\"",
+      "headword": "pensar",
+      "romanization": "pensar",
+      "gloss": "to think — at root \"to weigh\", and a stem-changer that breaks e becomes ie",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d1a84f634eeccbc",
+      "sourceHash": "fnv1a64:487823bbd9067436",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every verb so far ran straight back to a Latin root you could name. Here is one that does not — and the gap is the useful part."
+              "text": "You can already run an -ar verb: hablo, hablas, habla. Here is one that takes those same endings and then cracks its stem in the middle, the way querer did."
             }
           ]
         },
@@ -46,45 +46,86 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "r-tap — one soft tap of the tongue: to-MAR."
+              "text": "diphthong-ie — under stress the e breaks open: pienso = PYEN-so."
             },
             {
               "kind": "speech",
-              "text": "vowel-o — a short, pure o, with no English glide toward ow."
+              "text": "The s is always a clear hissing s, never an English z buzz."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: tomar",
+          "title": "The word, taken apart: pensar",
           "segments": [
             {
               "kind": "speech",
-              "text": "tomar (\"to take\") is a plain -ar verb: tomo, tomas, toma, tomamos, toman. It is one of the most common verbs in the language, and its origin is genuinely unsettled."
+              "text": "pensar (\"to think\") from Latin pēnsāre, \"to weigh\" — the repeating form of pendere, \"to hang, to weigh out\". A Roman hung goods on a balance; the same verb slid across to weighing an idea."
             },
             {
               "kind": "speech",
-              "text": "The leading proposal derives it from Latin autumāre, \"to take as, to assert\", worn down through an intermediate tumar; a rival one points to a pre-Roman Iberian word Latin never recorded. Neither is proved, and careful dictionaries say so. \"We don't know\" is a real answer in etymology."
+              "text": "English kept the whole family, and most of it still smells of money and scales:"
             },
             {
               "kind": "speech",
-              "text": "It carries a second everyday sense across Latin America: to drink. A waiter asking ¿Qué vas a tomar? is asking what you would like."
+              "text": "pensive — turning something over on the balance."
+            },
+            {
+              "kind": "speech",
+              "text": "compensate — com- \"together\" + weigh: settle one weight against another."
+            },
+            {
+              "kind": "speech",
+              "text": "expense, dispense, pension — payments were literally weighed out."
+            },
+            {
+              "kind": "speech",
+              "text": "peso — a coin whose name simply means \"a weight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "pansy — from French pensée, \"a thought\"."
+            },
+            {
+              "kind": "speech",
+              "text": "English reaches for the same picture without noticing it: you weigh your options, and an argument carries weight."
             }
           ]
         },
         {
           "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: the verb Latin did leave, and how to handle it",
+          "type": "grammar",
+          "title": "Grammar Lens: the same endings, a broken stem",
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin's own \"gather up\" verb survived perfectly well: coger from colligere, which is com- (\"together\") + legere — the very root you met in leer. English took that same Latin word twice: collect straight from the Latin, and coil by way of French."
+              "text": "The endings are the ordinary -ar set. Only the stressed e changes:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "form",
+                "stem"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "person: yo. form: pienso. stem: broken.",
+                "person: tú. form: piensas. stem: broken.",
+                "person: él/ella/usted. form: piensa. stem: broken.",
+                "person: nosotros. form: pensamos. stem: plain.",
+                "person: ellos/ustedes. form: piensan. stem: broken."
+              ]
             },
             {
               "kind": "speech",
-              "text": "In Spain coger is the plain everyday word: coger el autobús, catch the bus. In much of Latin America — Argentina, Mexico and well beyond — it is coarse slang for sex, and using it innocently will derail a conversation. Tomar is safe on both sides of the Atlantic, which is a large part of why it won."
+              "text": "Pensamos keeps the plain e because there the stress lands on the ending, not the stem — exactly the rule querer taught you."
+            },
+            {
+              "kind": "speech",
+              "text": "Two small habits come with the verb: pensar en something means \"think about\" it (pienso en ti), and pensar followed by a bare infinitive means \"plan to\" (pienso hablar — I mean to speak)."
             }
           ]
         },
@@ -102,38 +143,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"tomo, tomas, toma, tomamos, toman\"",
+              "instruction": "\"pensar\" then the set — \"pienso, piensas, piensa, pensamos, piensan\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"tomo, tomas, toma, tomamos, toman\"]"
+              "source": "[YOU SAY: \"pensar\" then the set — \"pienso, piensas, piensa, pensamos, piensan\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Tomo un café\" — I'll have a coffee",
+              "instruction": "\"Pienso en ti\" — I am thinking of you",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tomo un café\" — I'll have a coffee]"
+              "source": "[YOU SAY: \"Pienso en ti\" — I am thinking of you]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Tomo el autobús\" — the safe way to say it anywhere",
+              "instruction": "\"pensar\" then English \"pensive, compensate, peso\" — the weighing family",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tomo el autobús\" — the safe way to say it anywhere]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"coger\" then English \"collect, coil\" — one root, and one place to be careful",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"coger\" then English \"collect, coil\" — one root, and one place to be careful]"
+              "source": "[YOU SAY: \"pensar\" then English \"pensive, compensate, peso\" — the weighing family]"
             }
           ]
         },
@@ -150,7 +182,7 @@
             },
             {
               "kind": "speech",
-              "text": "Does tomar have a confirmed etymology? (No — autumāre and a pre-Roman source are both unproved.) What Latin verb gives coger, and which root sits inside it? (Colligere, holding legere, \"to gather\", from leer.) Why reach for tomar instead? (Coger is coarse slang across much of Latin America.) Next: preguntar, and the two different asks."
+              "text": "What did pēnsāre mean literally, and name two English cousins. (To weigh; pensive, compensate, expense, peso.) Which form keeps the plain e, and why? (Pensamos — the stress falls on the ending.) Which little word follows pensar for \"think about\"? (En.) Next: entender, which cracks the same way."
             }
           ]
         }

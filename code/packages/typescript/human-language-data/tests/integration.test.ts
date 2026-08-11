@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(146); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(152); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -640,6 +640,25 @@ describe("real curriculum", () => {
       "ES-C49-sintesis-dos-orillas-now",
       "ES-C49-sintesis-dos-orillas-split",
       "ES-C49-sintesis-dos-orillas-wrong",
+      "ES-C50-habla-emperor",
+      "ES-C50-habla-rule",
+      "ES-C50-habla-say",
+      "ES-C50-hable-usted-grid",
+      "ES-C50-hable-usted-say",
+      "ES-C50-hable-usted-why",
+      "ES-C50-no-hables-eat",
+      "ES-C50-no-hables-say",
+      "ES-C50-no-hables-why",
+      "ES-C50-ocho-cortos-come",
+      "ES-C50-ocho-cortos-list",
+      "ES-C50-ocho-cortos-why",
+      "ES-C50-repaso-mandatos-cost",
+      "ES-C50-repaso-mandatos-grid",
+      "ES-C50-repaso-mandatos-odd",
+      "ES-C50-sintesis-pedir-bien-friend",
+      "ES-C50-sintesis-pedir-bien-mistake",
+      "ES-C50-sintesis-pedir-bien-stranger",
+      "ES-C50-sintesis-pedir-bien-where",
       "ES-W03-question-span-roberto-outside",
       "FA-C02-esm-e-man-sara",
       "FA-C03-chist-fusion",

@@ -19,6 +19,11 @@
   two pen lifts, and close-last rule.
 - Reduce Chinese's remaining verified-ductus inventory to 21 entries.
 
+### Changed — Spanish runs 1..152 (HL-C105)
+
+- Re-pin the Spanish book-hash table for the six command chapters inserted at
+  109; chapters after them shift by six.
+
 ### Added — cited Chinese 亻 ductus (HL-C09CA)
 
 - Render **亻** in two source-aligned frames: draw the long left-falling piě,

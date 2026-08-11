@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C26-pan
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 1630
-chapter: 115
+chapter: 121
 type: word
 headword: el pan
 gloss: bread — and the compañero who shares it with you
