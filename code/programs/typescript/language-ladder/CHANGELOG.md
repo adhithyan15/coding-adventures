@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Hebrew Gimel ductus (HL-C09BF)
+
+- Render **ג** in four evidence-aligned frames: join the short top bar, right
+  stem, and short lower-right leg, then restart once for the longer left leg.
+- Keep the source's printed two-stroke, one-lift order explicit while recording
+  its visibly different rounded cursive Gimel as a handwriting variation.
+- Queue the same lesson's one-curve Dalet demonstration next.
+
 ### Added — cited Hebrew Bet ductus (HL-C09BE)
 
 - Render **ב** in three evidence-aligned frames: draw the top bar into the right
