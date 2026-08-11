@@ -11,8 +11,13 @@ use smart_home_automation_runtime::{
     AutomationError, AutomationEvaluationReport, AutomationTriggerInput, SmartHomeAutomationRuntime,
 };
 use smart_home_core::AgentId;
-use smart_home_runtime::SmartHomeRuntime;
-use smart_home_runtime_store::{RuntimeStoreError, SmartHomeRuntimeStore};
+use smart_home_runtime::{
+    RuntimeCompletePairingToolOutput, RuntimeCompletePairingToolRequest, RuntimeError,
+    SmartHomeRuntime,
+};
+use smart_home_runtime_store::{
+    RestoredSmartHomeRuntime, RuntimeStoreError, SmartHomeRuntimeStore,
+};
 use std::convert::Infallible;
 use std::fmt;
 use std::sync::{Arc, Mutex, MutexGuard};
@@ -246,6 +251,42 @@ impl<B: StorageBackend> SmartHomeControllerRuntime<B> {
         Ok(self.lock_durable()?.last_saved_at_ms)
     }
 
+    /// Clone one coherent durable controller snapshot for an adapter.
+    pub fn durable_snapshot(
+        &self,
+    ) -> Result<Option<RestoredSmartHomeRuntime>, ControllerPersistenceError> {
+        let runtime = self
+            .runtime
+            .lock()
+            .map_err(|_| ControllerPersistenceError::LockPoisoned("runtime"))?;
+        let automations = self
+            .automations
+            .lock()
+            .map_err(|_| ControllerPersistenceError::LockPoisoned("automation runtime"))?;
+        let durable = self.lock_durable()?;
+        let Some(revision) = durable.revision.clone() else {
+            return Ok(None);
+        };
+        let saved_at_ms = durable.last_saved_at_ms.ok_or_else(|| {
+            ControllerPersistenceError::RuntimeStore(RuntimeStoreError::Decode(
+                "controller revision has no saved timestamp".to_string(),
+            ))
+        })?;
+        Ok(Some(RestoredSmartHomeRuntime {
+            runtime: runtime.clone(),
+            automation_definitions: automations
+                .durable_definitions()
+                .map_err(ControllerPersistenceError::Automation)?,
+            automation_state: Some(
+                automations
+                    .snapshot_json()
+                    .map_err(ControllerPersistenceError::Automation)?,
+            ),
+            saved_at_ms,
+            revision,
+        }))
+    }
+
     /// Mutate cloned state, persist it, then atomically publish both candidates.
     ///
     /// Callback and persistence failures discard the candidates, leaving both
@@ -318,6 +359,31 @@ impl<B: StorageBackend> SmartHomeControllerRuntime<B> {
             value,
             revision,
             saved_at_ms,
+        })
+    }
+
+    /// Complete one D23 pairing session through the central transaction.
+    pub fn complete_pairing(
+        &self,
+        principal_id: AgentId,
+        request: RuntimeCompletePairingToolRequest,
+        expected_revision: Revision,
+    ) -> Result<
+        ControllerCommit<(
+            RuntimeCompletePairingToolOutput,
+            Option<smart_home_core::VaultRef>,
+        )>,
+        ControllerTransactionError<RuntimeError>,
+    > {
+        let completed_at_ms = request.completion.completed_at_ms;
+        self.transaction_at_revision(&expected_revision, completed_at_ms, move |runtime, _| {
+            let previous_vault_ref = runtime
+                .pairing_session(&request.completion.session_id)
+                .and_then(|session| runtime.registry().bridge(&session.bridge_id))
+                .and_then(|bridge| bridge.auth_ref.clone());
+            let output =
+                runtime.execute_complete_pairing_tool(principal_id, request, completed_at_ms)?;
+            Ok((output, previous_vault_ref))
         })
     }
 
@@ -639,6 +705,55 @@ mod tests {
         );
         assert_eq!(controller.revision().unwrap(), revision_before);
         assert_eq!(controller.last_saved_at_ms().unwrap(), Some(1));
+    }
+
+    #[test]
+    fn exact_revision_gate_rejects_before_mutation_and_preserves_coherent_snapshot() {
+        let controller =
+            SmartHomeControllerRuntime::restore(InMemoryStorageBackend::new()).unwrap();
+        let baseline = controller
+            .transaction(1, |runtime, automations| {
+                runtime.upsert_bridge(bridge("baseline")).unwrap();
+                automations
+                    .upsert_definition(automation("baseline-rule"))
+                    .unwrap();
+                Ok::<_, Infallible>(())
+            })
+            .unwrap();
+        let mutation_called = AtomicBool::new(false);
+
+        let stale_revision = Revision::new("stale-revision").unwrap();
+        let result = controller.transaction_at_revision(&stale_revision, 2, |runtime, _| {
+            mutation_called.store(true, Ordering::SeqCst);
+            runtime.upsert_bridge(bridge("must-not-publish")).unwrap();
+            Ok::<_, Infallible>(())
+        });
+
+        assert!(matches!(
+            result,
+            Err(ControllerTransactionError::RevisionConflict {
+                actual: Some(actual),
+                ..
+            }) if actual == baseline.revision
+        ));
+        assert!(!mutation_called.load(Ordering::SeqCst));
+        let snapshot = controller.durable_snapshot().unwrap().unwrap();
+        assert_eq!(snapshot.revision, baseline.revision);
+        assert!(snapshot
+            .runtime
+            .registry()
+            .bridge(&BridgeId::trusted("baseline"))
+            .is_some());
+        assert!(snapshot
+            .runtime
+            .registry()
+            .bridge(&BridgeId::trusted("must-not-publish"))
+            .is_none());
+        assert_eq!(snapshot.automation_definitions.len(), 1);
+        assert_eq!(
+            snapshot.automation_definitions[0].automation_id,
+            "baseline-rule"
+        );
     }
 
     #[test]

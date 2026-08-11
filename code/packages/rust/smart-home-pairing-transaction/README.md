@@ -15,6 +15,12 @@ durable, the previous credential is deleted only at the revision captured
 before the transaction began. Partial runtime references are retained for
 inspection and never trigger credential deletion.
 
+`PairingRuntimeAuthority` keeps that recovery protocol independent of runtime
+ownership. Existing pairing services can continue through
+`SmartHomeRuntimeStore`, while centrally composed services transact through
+`SmartHomeControllerRuntime` so a successful pairing publishes into the same
+live revision observed by discovery, automations, and Home Assistant adapters.
+
 Journal records contain identifiers, opaque Vault references, revisions,
 authorization identity, timestamps, and completion metadata. Credential bytes,
 ciphertext, keys, nonces, and authentication material never enter the journal.

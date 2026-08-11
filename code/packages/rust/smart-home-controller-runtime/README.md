@@ -19,7 +19,12 @@ compare-and-swap boundary while sharing the central runtime owner.
 HTTP adapters that already hold the shared mutexes can use
 `runtime_persistence_adapter()` and `automation_persistence_adapter()` without
 recursively locking the supplied runtime values. Native workers can use
-`transaction()`, `evaluate_automations()`, or `tick()`.
+`transaction()`, `evaluate_automations()`, or `tick()`. Services that must
+validate a caller-supplied revision can use `transaction_at_revision()`;
+pairing services use `complete_pairing()` so the D23 mutation, durable save,
+and shared-state publication remain one central transaction. A
+`durable_snapshot()` read returns runtime and automation state from one
+coherent controller revision.
 
 ```bash
 bash BUILD

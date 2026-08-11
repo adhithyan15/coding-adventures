@@ -3,14 +3,15 @@
 Actor-owned Hue bridge pairing over real LAN HTTP/TLS with recoverable durable
 credential installation.
 
-The service restores its actor runtime from `smart-home-runtime-store` and
+The service receives the shared `SmartHomeControllerRuntime` authority and
 resolves every pending `smart-home-pairing-transaction` journal before it can
 accept a request. Each schema-v2 request carries the exact D23 principal and
 expected durable runtime revision. Authorization is checked before LAN or
 secret-storage activity, and the coordinator then seals the returned
-application key, commits the complete runtime snapshot with CAS, cleans any
-captured previous credential at its exact revision, and returns the committed
-snapshot for actor-state replacement.
+application key, commits through the exact central revision, and cleans any
+captured previous credential at its exact revision. Successful completion is
+immediately visible through the controller's discovery, automation, and Home
+Assistant-compatible runtime handles; the actor keeps no private runtime copy.
 
 Raw application and client keys remain in zeroizing process-local values and
 the sealed Vault payload. Runtime state, journals, events, actor snapshots,
