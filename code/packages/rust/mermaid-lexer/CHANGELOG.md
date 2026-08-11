@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.32.0
+
+- Tokenize multiline state note terminators and floating-note strings.
+
 ## 0.31.0
 
 - Tokenize attached state note keywords from the pinned Mermaid grammar.

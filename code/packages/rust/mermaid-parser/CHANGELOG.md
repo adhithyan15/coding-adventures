@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.53.0
+
+- Parse multiline attached notes and quoted floating notes into graph note IR.
+
 ## 0.52.0
 
 - Parse single-line state notes into note nodes and note-association edges in graph IR.

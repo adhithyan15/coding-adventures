@@ -112,7 +112,7 @@ direction, and `[*]` start/end edge states. It lowers into the shared graph IR,
 graph layout, and backend-neutral
 PaintScene instructions, with a Metal-to-PNG fixture. Choice pseudostates accept
 both `<<choice>>` and `[[choice]]` and lower to graph-IR diamonds. Composite
-states, multiline and floating notes, concurrency, click metadata, and
+states, notes inside composite states, concurrency, click metadata, and
 accessibility metadata remain explicit gaps, so the family is marked partial.
 Fork and join pseudostates accept both upstream marker spellings and lower to a
 compact backend-neutral graph-IR bar shape rendered by existing rectangle Paint
@@ -125,9 +125,11 @@ assignments that precede their declaration. The `:::` shorthand applies named
 classes to standalone states and either endpoint of a transition, including
 start/end pseudostates. Styling inside composite states remains a compatibility
 gap until composite state structure is represented in semantic IR.
-Single-line `note left of` and `note right of` statements lower to semantic note
-nodes and note-association edges. Graph layout reserves note geometry, and the
-Paint lowering emits folded note and dashed connector paths for every backend.
+Single-line and `end note` multiline `note left of`/`note right of` statements
+lower to semantic note nodes and note-association edges. Quoted `note ... as`
+statements lower to standalone note nodes. Graph layout reserves line-aware note
+geometry, and the Paint lowering emits folded note and dashed connector paths
+for every backend.
 
 ### Sequence Native Slice
 

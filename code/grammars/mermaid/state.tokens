@@ -1,4 +1,4 @@
-# @version 7
+# @version 8
 # @case_insensitive true
 # Mermaid 11.16.1 state diagram token grammar, derived from stateDiagram.jison.
 
@@ -11,6 +11,7 @@ skip:
 NEWLINE      = /\r?\n/
 SEMICOLON    = ";"
 HEADER       = /stateDiagram(?:-v2)?/
+END_NOTE     = /end[ \t]+note(?:\r?\n|;|$)/
 ARROW        = "-->"
 EDGE_STATE   = "[*]"
 CHOICE       = /(?:<<choice>>|\[\[choice\]\])/

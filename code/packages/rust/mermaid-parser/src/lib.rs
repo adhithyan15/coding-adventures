@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.52.0";
+pub const VERSION: &str = "0.53.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1106,6 +1106,20 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
             }
         } else if cursor.current().value.eq_ignore_ascii_case("note") {
             cursor.advance();
+            if token_name(cursor.current()) == "STRING" {
+                let text = strip_state_string(&cursor.advance().value);
+                if !cursor.current().value.eq_ignore_ascii_case("as") {
+                    return Err(token_error(
+                        cursor.current(),
+                        "expected as before floating state note identifier",
+                    ));
+                }
+                cursor.advance();
+                let note_id = take_state_ref(&mut cursor)?;
+                upsert_state_note_node(&mut nodes, &mut node_indices, note_id, text);
+                cursor.skip_terminators();
+                continue;
+            }
             let note_is_left = if cursor.current().value.eq_ignore_ascii_case("left") {
                 cursor.advance();
                 true
@@ -1126,10 +1140,17 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
             }
             cursor.advance();
             let state_id = take_state_ref(&mut cursor)?;
-            cursor.consume_if("COLON").ok_or_else(|| {
-                token_error(cursor.current(), "expected ':' before state note text")
-            })?;
-            let text = take_state_text(&mut cursor);
+            let text = if cursor.consume_if("COLON").is_some() {
+                take_state_text(&mut cursor)
+            } else {
+                cursor.consume_if("NEWLINE").ok_or_else(|| {
+                    token_error(
+                        cursor.current(),
+                        "expected ':' or newline before state note text",
+                    )
+                })?;
+                take_state_multiline_note_text(&mut cursor)?
+            };
             if !node_indices.contains_key(&state_id) {
                 upsert_state_node(
                     &mut nodes,
@@ -1140,16 +1161,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
             }
             let note_id = format!("__state_note_{note_index}");
             note_index += 1;
-            upsert_state_node(&mut nodes, &mut node_indices, note_id.clone(), text);
-            let note = &mut nodes[node_indices[&note_id]];
-            note.shape = Some(DiagramShape::Note);
-            note.style = Some(DiagramStyle {
-                fill: Some("#fff7cc".into()),
-                stroke: Some("#a16207".into()),
-                text_color: Some("#713f12".into()),
-                corner_radius: Some(0.0),
-                ..Default::default()
-            });
+            upsert_state_note_node(&mut nodes, &mut node_indices, note_id.clone(), text);
             let (from, to) = if note_is_left {
                 (note_id, state_id)
             } else {
@@ -1370,6 +1382,24 @@ fn upsert_state_node(
     });
 }
 
+fn upsert_state_note_node(
+    nodes: &mut Vec<GraphNode>,
+    node_indices: &mut HashMap<String, usize>,
+    id: String,
+    text: String,
+) {
+    upsert_state_node(nodes, node_indices, id.clone(), text);
+    let note = &mut nodes[node_indices[&id]];
+    note.shape = Some(DiagramShape::Note);
+    note.style = Some(DiagramStyle {
+        fill: Some("#fff7cc".into()),
+        stroke: Some("#a16207".into()),
+        text_color: Some("#713f12".into()),
+        corner_radius: Some(0.0),
+        ..Default::default()
+    });
+}
+
 fn apply_state_style(
     style: &mut DiagramStyle,
     property: &str,
@@ -1470,6 +1500,42 @@ fn take_state_text(cursor: &mut TokenCursor) -> String {
         }
     }
     text
+}
+
+fn take_state_multiline_note_text(cursor: &mut TokenCursor) -> Result<String, ParseError> {
+    let mut lines = Vec::new();
+    while !cursor.at_eof() && token_name(cursor.current()) != "END_NOTE" {
+        if cursor.consume_if("NEWLINE").is_some() {
+            lines.push(String::new());
+            continue;
+        }
+        let mut line = String::new();
+        while !cursor.at_eof() && !matches!(token_name(cursor.current()), "NEWLINE" | "END_NOTE") {
+            let token = cursor.advance();
+            let value = if token_name(token) == "STRING" {
+                strip_state_string(&token.value)
+            } else {
+                token.value.clone()
+            };
+            if token_name(token) == "COMMA" {
+                line.push(',');
+            } else {
+                if !line.is_empty() && !line.ends_with(',') {
+                    line.push(' ');
+                }
+                line.push_str(&value);
+            }
+        }
+        lines.push(line);
+        cursor.consume_if("NEWLINE");
+    }
+    cursor
+        .consume_if("END_NOTE")
+        .ok_or_else(|| token_error(cursor.current(), "expected end note terminator"))?;
+    while lines.last().is_some_and(String::is_empty) {
+        lines.pop();
+    }
+    Ok(lines.join("\n"))
 }
 
 fn strip_state_string(value: &str) -> String {
@@ -4215,6 +4281,36 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_parses_multiline_and_floating_notes() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nReady --> Running\nnote right of Running\nFirst line\nSecond line\nend note\nnote \"Detached reminder\" as Reminder\n",
+        )
+        .expect("multiline and floating state notes should parse");
+
+        let attached = diagram
+            .nodes
+            .iter()
+            .find(|node| node.id.starts_with("__state_note_"))
+            .unwrap();
+        assert_eq!(attached.label.text, "First line\nSecond line");
+        let floating = diagram
+            .nodes
+            .iter()
+            .find(|node| node.id == "Reminder")
+            .unwrap();
+        assert_eq!(floating.shape, Some(DiagramShape::Note));
+        assert_eq!(floating.label.text, "Detached reminder");
+        assert_eq!(
+            diagram
+                .edges
+                .iter()
+                .filter(|edge| edge.kind == EdgeKind::NoteAssociation)
+                .count(),
+            1
+        );
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -4985,7 +5081,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.52.0");
+        assert_eq!(crate::VERSION, "0.53.0");
     }
 
     #[test]
