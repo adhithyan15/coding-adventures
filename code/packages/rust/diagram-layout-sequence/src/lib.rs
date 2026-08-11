@@ -3,11 +3,12 @@
 use std::collections::{HashMap, HashSet};
 
 use diagram_ir::{
-    LayoutedSequenceDiagram, LayoutedSequenceItem, SequenceBlockKind, SequenceDiagram,
-    SequenceEvent, SequenceNotePlacement, SequenceParticipantKind, SequenceTextWrap,
+    LayoutedSequenceDiagram, LayoutedSequenceItem, SequenceBlockKind, SequenceCentralConnection,
+    SequenceDiagram, SequenceEvent, SequenceNotePlacement, SequenceParticipantKind,
+    SequenceTextWrap,
 };
 
-pub const VERSION: &str = "0.24.0";
+pub const VERSION: &str = "0.25.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -280,9 +281,21 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     message_number =
                         ((message_number + message_number_step) * 100.0).round() / 100.0;
                 }
+                match central_connection {
+                    SequenceCentralConnection::Source => {
+                        open_activation(&mut activation_starts, from, message_y);
+                    }
+                    SequenceCentralConnection::Destination => {
+                        open_activation(&mut activation_starts, to, message_y);
+                    }
+                    SequenceCentralConnection::Both => {
+                        open_activation(&mut activation_starts, from, message_y);
+                        open_activation(&mut activation_starts, to, message_y);
+                    }
+                    SequenceCentralConnection::None => {}
+                }
                 if *activate {
-                    let starts = activation_starts.entry(to.clone()).or_default();
-                    starts.push((message_y, starts.len()));
+                    open_activation(&mut activation_starts, to, message_y);
                 }
                 if *deactivate {
                     close_activation(&mut items, &mut activation_starts, from, from_x, message_y);
@@ -654,6 +667,11 @@ fn close_activation(
     }
 }
 
+fn open_activation(starts: &mut HashMap<String, Vec<(f64, usize)>>, participant: &str, y: f64) {
+    let participant_starts = starts.entry(participant.to_string()).or_default();
+    participant_starts.push((y, participant_starts.len()));
+}
+
 fn activation_x(center: f64, depth: usize) -> f64 {
     center - ACTIVATION_W / 2.0 + depth as f64 * NESTED_ACTIVATION_OFFSET
 }
@@ -977,6 +995,15 @@ mod tests {
                 ..
             }
         )));
+        let activated: HashSet<_> = layout
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedSequenceItem::Activation { participant, .. } => Some(participant.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(activated, HashSet::from(["Alice", "Bob"]));
     }
 
     #[test]
