@@ -311,11 +311,11 @@
       "blocking": false,
       "counts": {
         "duplicate_destination": 0,
-        "font_substitution": 0,
+        "font_substitution": 2,
         "hyperref_warning": 0,
         "missing_character": 0,
-        "overfull": 10,
-        "underfull": 7
+        "overfull": 11,
+        "underfull": 8
       },
       "improvements": [],
       "log": "code/learning/human-languages/spanish/book/book.log",
