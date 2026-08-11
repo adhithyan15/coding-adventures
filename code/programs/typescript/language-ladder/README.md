@@ -173,7 +173,7 @@ sitting upside down on a correct letter.
 all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —, all
 thirteen Urdu starter entries — ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, ی, and ے —,
 and all eighteen Arabic starter letters — ا, ب, ت, ج, ح, خ, د, ر, س, ش, ص, ض, ع, ك, ل, ه, و, and ي —
-and Hebrew א, ב, ג, ד, ה, ו, ז, and ח
+and Hebrew א, ב, ג, ד, ה, ו, ז, ח, and ט
 have authored pen paths today.**
 `DUCTUS` admits no letter without a citation
 for its stroke order, and hand-drawing a letter is forbidden
@@ -412,6 +412,11 @@ bar continues directly down the right side, then one lift precedes the joined
 left leg from top to bottom. The source explicitly contrasts rounded handwriting
 with sharper print, so the learner path follows the Noto Sans Hebrew block outline
 while preserving the handwritten variation in its citation metadata.
+The Tet/Yod lesson adds a four-frame printed **ט** filmstrip: the left side
+descends into the rightward base, then one lift precedes the lower-right restart,
+bottom-up right side, and inward hook. The source calls that bottom-up movement
+unusual and shows the rounded handwritten form as one continuous run, so the
+learner path keeps the print order on Noto Sans Hebrew without losing the variant.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

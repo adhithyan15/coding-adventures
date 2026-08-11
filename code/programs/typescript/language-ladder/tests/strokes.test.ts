@@ -32,6 +32,7 @@ const HEBREW_HEI = DUCTUS[ductusKey("hebrew", "ה")];
 const HEBREW_VAV = DUCTUS[ductusKey("hebrew", "ו")];
 const HEBREW_ZAYIN = DUCTUS[ductusKey("hebrew", "ז")];
 const HEBREW_HEIT = DUCTUS[ductusKey("hebrew", "ח")];
+const HEBREW_TET = DUCTUS[ductusKey("hebrew", "ט")];
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
@@ -302,6 +303,24 @@ describe("handwriting ductus", () => {
     expect(down[0]).toEqual(top.at(-1));
     expect(down[0].y).toBeGreaterThan(down.at(-1)!.y);
     expect(joined[0].y).toBeGreaterThan(joined.at(-1)!.y);
+  });
+
+  it("Hebrew ט draws its left-and-base body before the bottom-up hooked side", () => {
+    expect(HEBREW_TET.script).toBe("hebrew");
+    expect(penLifts(HEBREW_TET)).toBe(1);
+    expect(HEBREW_TET.strokes).toHaveLength(2);
+    expect(HEBREW_TET.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 2]);
+    const left = HEBREW_TET.strokes[0].segments[0].path;
+    const base = HEBREW_TET.strokes[0].segments[1].path;
+    const right = HEBREW_TET.strokes[1].segments[0].path;
+    const hook = HEBREW_TET.strokes[1].segments[1].path;
+    expect(left[0].y).toBeGreaterThan(left.at(-1)!.y);
+    expect(base[0]).toEqual(left.at(-1));
+    expect(base[0].x).toBeLessThan(base.at(-1)!.x);
+    expect(right[0]).toEqual(base.at(-1));
+    expect(right[0].y).toBeLessThan(right.at(-1)!.y);
+    expect(hook[0]).toEqual(right.at(-1));
+    expect(hook.at(-1)!.x).toBeLessThan(hook[0].x);
   });
 
   it("அ lifts once before its separate right upright (two strokes)", () => {
@@ -937,6 +956,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ח", HEBREW_HEIT.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
+    expect(verifiedLetterFont("ט", HEBREW_TET.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
     expect(verifiedLetterFont("ம", DUCTUS["ம"].source.url)).toBe(
       "_fonts/NotoSansTamil-Static.ttf",
     );
@@ -1057,6 +1079,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /rounded handwritten Heit.*02:35.7–02:36.9.*arched top.*right side.*one lift.*left leg.*top junction.*printed demonstration.*top bar left-to-right.*right side.*02:44.6–02:45.3.*lifts once.*joined left leg top-to-bottom.*02:45.6–02:46.3.*handwriting corners round.*02:39.0–02:41.6.*print version sharper.*02:47.9–02:52.5.*Noto Sans Hebrew.*rounded handwriting variation/i,
+    );
+  });
+
+  it("Hebrew ט traces its printed bowl before the unusual bottom-up hook", () => {
+    const src = HEBREW_TET.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=NBUtBPVKchk");
+    expect(src.citation).toMatch(
+      /Hebrew Writing #6.*Tet and Yod.*00:54.2–00:56.3.*HebrewPod101/i,
+    );
+    expect(src.variation).toMatch(
+      /rounded handwritten Tet.*00:44.9–00:46.0.*start at the bottom.*left curve.*right side.*curl inward.*unusual.*bottom up.*00:47.4–00:51.1.*printed demonstration.*left side top-to-bottom.*base.*00:54.2–00:55.4.*lifts once.*lower-right.*climbs the right side.*inward hook.*00:55.7–00:56.3.*rounding the printed corners.*handwritten form.*00:57.5–01:02.3.*Noto Sans Hebrew.*bottom-up handwritten variation/i,
     );
   });
 

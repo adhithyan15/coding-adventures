@@ -755,6 +755,67 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: hebrewAlphabetSource("ח"),
   },
+  // Printed Tet uses an L-shaped left-and-base stroke, then restarts at the
+  // lower right and climbs before turning inward. The source's rounded
+  // handwriting preserves that unusual bottom-up finish as one continuous run.
+  [ductusKey("hebrew", "ט")]: {
+    script: "hebrew",
+    glyph: "ט",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the left side from top to bottom",
+            path: [
+              { x: 103, y: 560 },
+              { x: 103, y: 480 },
+              { x: 103, y: 380 },
+              { x: 103, y: 270 },
+              { x: 125, y: 170 },
+            ],
+          },
+          {
+            label: "continue around the bottom from left to right without lifting",
+            path: [
+              { x: 125, y: 170 },
+              { x: 160, y: 90 },
+              { x: 235, y: 35 },
+              { x: 315, y: 25 },
+              { x: 400, y: 45 },
+              { x: 470, y: 105 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, restart at the lower-right, and climb the right side",
+            path: [
+              { x: 470, y: 105 },
+              { x: 515, y: 170 },
+              { x: 537, y: 250 },
+              { x: 537, y: 330 },
+              { x: 530, y: 420 },
+              { x: 500, y: 495 },
+              { x: 455, y: 545 },
+            ],
+          },
+          {
+            label: "turn down-left into the inward hook without lifting",
+            path: [
+              { x: 455, y: 545 },
+              { x: 410, y: 560 },
+              { x: 365, y: 557 },
+              { x: 330, y: 540 },
+              { x: 315, y: 530 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ט"),
+  },
   "ا": {
     script: "perso-arabic",
     glyph: "ا",
