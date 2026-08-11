@@ -426,6 +426,56 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: hebrewAlphabetSource("א"),
   },
+  // The same lesson's block-style Bet joins the top bar directly to the right
+  // descent, then lifts once before drawing the baseline left-to-right. Its
+  // later dagesh is an optional mark and is not part of base U+05D1 here.
+  [ductusKey("hebrew", "ב")]: {
+    script: "hebrew",
+    glyph: "ב",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top bar from left to right",
+            path: [
+              { x: 90, y: 555 },
+              { x: 170, y: 555 },
+              { x: 260, y: 555 },
+              { x: 330, y: 540 },
+              { x: 390, y: 500 },
+              { x: 415, y: 430 },
+            ],
+          },
+          {
+            label: "continue down the right side without lifting",
+            path: [
+              { x: 415, y: 430 },
+              { x: 415, y: 330 },
+              { x: 415, y: 220 },
+              { x: 415, y: 100 },
+              { x: 415, y: 40 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the baseline from left to right",
+            path: [
+              { x: 50, y: 40 },
+              { x: 150, y: 40 },
+              { x: 250, y: 40 },
+              { x: 350, y: 40 },
+              { x: 450, y: 40 },
+              { x: 520, y: 40 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ב"),
+  },
   "ا": {
     script: "perso-arabic",
     glyph: "ا",

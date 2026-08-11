@@ -173,7 +173,7 @@ sitting upside down on a correct letter.
 all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —, all
 thirteen Urdu starter entries — ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, ی, and ے —,
 and all eighteen Arabic starter letters — ا, ب, ت, ج, ح, خ, د, ر, س, ش, ص, ض, ع, ك, ل, ه, و, and ي —
-and Hebrew א
+and Hebrew א and ב
 have authored pen paths today.**
 `DUCTUS` admits no letter without a citation
 for its stroke order, and hand-drawing a letter is forbidden
@@ -375,6 +375,11 @@ through the crossing and down the lower-left leg. The source's compact,
 X-like handwritten form differs from Noto Sans Hebrew's block Alef, so the
 variation note records that adaptation while the same geometry gates keep both
 pen-down runs on the vendored outline.
+The same lesson's second, block-style **ב** adds another three-frame filmstrip:
+its top bar travels left-to-right and turns directly down the right side, then
+one lift precedes the left-to-right baseline. The lesson places an optional
+dagesh afterward, but base U+05D1's path and one-lift count correctly exclude
+that separate sound-changing mark.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
