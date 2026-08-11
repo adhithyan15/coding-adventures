@@ -34,26 +34,48 @@ pub fn swift_runtime_binding() -> SwiftRuntimeBinding {
 
 /// Connect an emitted SwiftUI shell to the standard runtime before its legacy
 /// reflection-based host fallback.
-pub fn swift_app_with_runtime_binding(app_swift: &str) -> String {
-    app_swift.replacen(
+pub fn swift_app_with_runtime_binding(app_swift: &str, bundle_runtime: bool) -> String {
+    let with_binding = app_swift.replacen(
         "self.bridge = MosaicHostBridge.load()",
         "self.bridge = MosaicRuntimeHost.load() ?? MosaicHostBridge.load()",
         1,
-    )
+    );
+    if !bundle_runtime {
+        return with_binding;
+    }
+    let runtime_path = "Bundle.module.url(forResource: \"libmosaic_app\", withExtension: \"dylib\", subdirectory: \"Runtime\")?.path";
+    with_binding
+        .replace(
+            "MosaicRuntimeHost.loadRequired()",
+            &format!("MosaicRuntimeHost.loadRequired(libraryPath: {runtime_path})"),
+        )
+        .replace(
+            "MosaicRuntimeHost.load()",
+            &format!("MosaicRuntimeHost.load(libraryPath: {runtime_path})"),
+        )
 }
 
 /// Add the generated C loader target to an emitted Swift package manifest.
-pub fn swift_package_with_runtime_binding(package_swift: &str) -> String {
+pub fn swift_package_with_runtime_binding(package_swift: &str, bundle_runtime: bool) -> String {
     let with_target = package_swift.replacen(
         "  targets: [\n    .executableTarget(",
         "  targets: [\n    .target(\n      name: \"CMosaicRuntime\",\n      path: \"Sources/CMosaicRuntime\",\n      publicHeadersPath: \"include\"\n    ),\n    .executableTarget(",
         1,
     );
-    with_target.replacen(
+    let with_binding = with_target.replacen(
         "      name: \"App\",\n      path: \"Sources/App\"",
         "      name: \"App\",\n      dependencies: [\"CMosaicRuntime\"],\n      path: \"Sources/App\"",
         1,
-    )
+    );
+    if bundle_runtime {
+        with_binding.replacen(
+            "      path: \"Sources/App\"",
+            "      path: \"Sources/App\",\n      resources: [.copy(\"Runtime\")]",
+            1,
+        )
+    } else {
+        with_binding
+    }
 }
 
 /// Generate the standard XAML/.NET host binding for the requested C# namespace.
@@ -217,7 +239,8 @@ mod tests {
             dispatch < commit,
             "sequence must commit only after dispatch succeeds"
         );
-        assert!(source.contains("static func loadRequired() -> MosaicRuntimeHost"));
+        assert!(source
+            .contains("static func loadRequired(libraryPath: String? = nil) -> MosaicRuntimeHost"));
         assert!(source.contains("native-complete requires the Mosaic Rust application runtime"));
     }
 
@@ -225,14 +248,33 @@ mod tests {
     fn swift_shell_patches_install_the_runtime_before_legacy_fallback() {
         let app = swift_app_with_runtime_binding(
             "init() {\n    self.bridge = MosaicHostBridge.load()\n  }",
+            false,
         );
         assert!(app.contains("MosaicRuntimeHost.load() ?? MosaicHostBridge.load()"));
 
         let package = swift_package_with_runtime_binding(
             "  targets: [\n    .executableTarget(\n      name: \"App\",\n      path: \"Sources/App\"\n    ),\n  ]",
+            false,
         );
         assert!(package.contains("name: \"CMosaicRuntime\""));
         assert!(package.contains("dependencies: [\"CMosaicRuntime\"]"));
+    }
+
+    #[test]
+    fn swift_shell_patches_resolve_a_bundled_runtime_resource() {
+        let strict_app = swift_app_with_runtime_binding(
+            "init() {\n    self.bridge = MosaicRuntimeHost.loadRequired()\n  }",
+            true,
+        );
+        assert!(strict_app.contains(
+            "MosaicRuntimeHost.loadRequired(libraryPath: Bundle.module.url(forResource: \"libmosaic_app\", withExtension: \"dylib\", subdirectory: \"Runtime\")?.path)"
+        ));
+
+        let package = swift_package_with_runtime_binding(
+            "  targets: [\n    .executableTarget(\n      name: \"App\",\n      path: \"Sources/App\"\n    ),\n  ]",
+            true,
+        );
+        assert!(package.contains("resources: [.copy(\"Runtime\")]"));
     }
 
     #[test]

@@ -35,15 +35,17 @@ The Windows lane verifies the selected engine copied beside the generated WinUI
 executable, then runs the exact .NET binding from that app-relative directory
 with the override removed.
 
-For SwiftUI, set `MOSAIC_APP_LIBRARY` to the application dylib path. Without an
-explicit path the loader first checks symbols linked into the process, then tries
+Generated SwiftUI packages copy the selected application dylib into SwiftPM's
+`Runtime` resource bundle and pass its `Bundle.module` path to the standard
+loader. `MOSAIC_APP_LIBRARY` remains the explicit development override. Without
+either path the loader checks symbols linked into the process, then tries
 `libmosaic_app.dylib` and `mosaic_app.dylib`.
 Strict generated shells call `MosaicRuntimeHost.loadRequired()` so a missing
 Rust library fails at startup rather than silently entering preview mode.
-macOS CI compiles the exact binding and C loader from a complete generated
-TaskApp project with the shared `mosaic-app-conformance` dylib, then verifies
-startup, semantic dispatch, snapshot/restore, notification, buffer ownership,
-and teardown.
+macOS CI verifies that the selected `mosaic-app-conformance` dylib reaches the
+SwiftPM resource bundle byte-for-byte, then compiles the exact binding and C
+loader and verifies startup, semantic dispatch, snapshot/restore, notification,
+buffer ownership, and teardown without `MOSAIC_APP_LIBRARY`.
 
 For XAML, set `MOSAIC_APP_LIBRARY` to the application DLL path or place
 `mosaic_app.dll` beside the emitted project. The project copies native DLLs next

@@ -125,14 +125,24 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
             "cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance",
             workflow,
         )
+        self.assertIn('--runtime-library "$runtime_library"', workflow)
+        self.assertIn(
+            "find \"$swift_bin\" -type f -path '*/Runtime/libmosaic_app.dylib'",
+            workflow,
+        )
+        self.assertIn('cmp "$runtime_library" "$installed_runtime"', workflow)
         self.assertIn("Sources/App/MosaicRuntimeHost.swift", workflow)
         self.assertIn("Sources/CMosaicRuntime/CMosaicRuntime.c", workflow)
-        self.assertIn("swift run --package-path \"$harness\" Conformance", workflow)
+        self.assertIn(
+            'env -u MOSAIC_APP_LIBRARY swift run --package-path "$harness" '
+            'Conformance --library "$installed_runtime"',
+            workflow,
+        )
         self.assertIn("mosaic-swift-native-complete-rating-controls", workflow)
         self.assertIn("mosaic-pkg-rating-controls", workflow)
         self.assertIn(
-            '--backend swiftui --output "$strict_output" '
-            "--emit-project --profile native-complete",
+            '--backend swiftui --output "$bundled_output" '
+            '--emit-project --profile native-complete --runtime-library "$runtime_library"',
             workflow,
         )
         self.assertIn(
@@ -140,7 +150,7 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
             workflow,
         )
         self.assertIn(
-            'swift build --package-path "$strict_output/swiftui"', workflow
+            'swift build --package-path "$bundled_output/swiftui"', workflow
         )
         self.assertIn("MOSAIC_APP_LIBRARY", workflow)
 

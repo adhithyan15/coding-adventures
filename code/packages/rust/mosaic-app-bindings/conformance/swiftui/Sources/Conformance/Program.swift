@@ -31,8 +31,8 @@ private func props(_ update: NSDictionary, _ assertion: String) -> NSDictionary 
   return value
 }
 
-private func run() {
-  guard let host = MosaicRuntimeHost.load() else {
+private func run(libraryPath: String?) {
+  guard let host = MosaicRuntimeHost.load(libraryPath: libraryPath) else {
     fatalError("standard SwiftUI binding did not load the Rust app")
   }
   defer { host.close() }
@@ -76,6 +76,15 @@ private func run() {
 @main
 private enum ConformanceMain {
   static func main() {
-    run()
+    let arguments = Array(CommandLine.arguments.dropFirst())
+    let libraryPath: String?
+    if arguments.isEmpty {
+      libraryPath = nil
+    } else if arguments.count == 2, arguments[0] == "--library" {
+      libraryPath = arguments[1]
+    } else {
+      fatalError("usage: Conformance [--library <path>]")
+    }
+    run(libraryPath: libraryPath)
   }
 }

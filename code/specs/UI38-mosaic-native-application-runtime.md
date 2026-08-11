@@ -319,7 +319,15 @@ unblocks multiple downstream targets; never count source generation as completio
     strict builds that omit it. Windows CI verifies the output bytes and runs
     the complete standard-binding conformance without an injected path. Visible
     WinUI launch remains tracked separately on an interactive Windows worker.
-  - [ ] Repeat the packaging contract for SwiftUI and Flutter.
+  - [x] SwiftUI accepts an explicit target Rust dylib, copies it into SwiftPM's
+    `Runtime` resource bundle, resolves it through `Bundle.module`, and rejects
+    strict installable builds that omit it. macOS CI verifies the bundled bytes
+    and complete standard-binding conformance without an injected library path.
+  - [ ] Repeat the packaging contract for Flutter.
+- [ ] Make SwiftUI project shells compile components with an empty event enum;
+  the host-state dispatch method currently references `mosaicEnvelope` and
+  `mosaicName` helpers that are emitted only when the component declares an
+  event.
 - [ ] Add `native-complete` capability/degradation analysis to the compiler.
   - [x] Add a package-builder API and CLI profile with deterministic,
     package-expanded degradation reports and pre-emission strict rejection.
