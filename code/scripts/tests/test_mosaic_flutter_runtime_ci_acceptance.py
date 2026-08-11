@@ -116,6 +116,7 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("timeout-minutes: 15", workflow)
         self.assertIn("uses: subosito/flutter-action@v2", workflow)
         self.assertIn("flutter-version: '3.24.0'", workflow)
+        self.assertIn("sudo apt-get install -y libgtk-3-dev", workflow)
         self.assertIn("--backend flutter --output \"$output\" --emit-project", workflow)
         self.assertIn(
             "cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance",

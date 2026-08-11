@@ -1042,6 +1042,7 @@ jobs:
         timeout-minutes: 15
         run: |
           set -euo pipefail
+          sudo apt-get install -y libgtk-3-dev
           output="$RUNNER_TEMP/mosaic-flutter-taskapp"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend flutter --output "$output" --emit-project
           cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
