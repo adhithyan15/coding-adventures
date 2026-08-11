@@ -106,6 +106,8 @@ const ARABIC_KAF = ductusFor("ك", "arabic")!;
 const arabicKafOutline = naskhOutline("ك");
 const ARABIC_LAM = ductusFor("ل", "arabic")!;
 const arabicLamOutline = naskhOutline("ل");
+const ARABIC_YAA = ductusFor("ي", "arabic")!;
+const arabicYaaOutline = naskhOutline("ي");
 const URDU_ALEF = ductusFor("ا", "urdu-nastaliq")!;
 const urduAlefOutline = naskhOutline("ا");
 const URDU_JIM = ductusFor("ج", "urdu-nastaliq")!;
@@ -159,7 +161,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds eleven Tamil letters, nine Persian letters, fifteen Arabic letters, and thirteen Urdu letters", () => {
+  it("finds eleven Tamil letters, nine Persian letters, sixteen Arabic letters, and thirteen Urdu letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -189,6 +191,7 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("ع", "arabic")?.glyph).toBe("ع");
     expect(ductusFor("ك", "arabic")?.glyph).toBe("ك");
     expect(ductusFor("ل", "arabic")?.glyph).toBe("ل");
+    expect(ductusFor("ي", "arabic")?.glyph).toBe("ي");
     expect(ductusFor("ا", "urdu-nastaliq")?.glyph).toBe("ا");
     expect(ductusFor("ج", "urdu-nastaliq")?.glyph).toBe("ج");
     expect(ductusFor("ج", "perso-arabic")).toBeUndefined();
@@ -1205,6 +1208,41 @@ describe("Arabic ل — its upright continues through the leftward base bowl", (
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(ARABIC_LAM.strokes[0], 1),
+    );
+  });
+});
+
+describe("Arabic ي — its independent bowl precedes the two lower dots", () => {
+  const steps = ductusSteps(ARABIC_YAA);
+  const strip = ductusFilmstrip(ARABIC_YAA, arabicYaaOutline);
+
+  it("shows the sourced body and left-then-right dot order", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend from the upper right into the independent bowl",
+      "sweep left through the bowl without lifting",
+      "lift, then place the lower-left dot",
+      "lift again, then place the lower-right dot",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 2]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 4 movements");
+  });
+
+  it("draws Noto Naskh and keeps the completed body and first dot behind the second", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicYaaOutline.path,
+    );
+    const done = paths.filter((path) => path.attrs.class === "ductus__done");
+    expect(done).toHaveLength(2);
+    expect(done.map((path) => path.attrs.d)).toEqual([
+      penPathD(ARABIC_YAA.strokes[0], 1),
+      penPathD(ARABIC_YAA.strokes[1], 1),
+    ]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_YAA.strokes[2], 1),
     );
   });
 });

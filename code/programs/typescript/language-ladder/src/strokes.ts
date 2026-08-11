@@ -1202,6 +1202,80 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: arabicAlphabetSource("ل"),
   },
+  // Arabic ي (U+064A) shares the isolated bowl skeleton with Urdu ی (U+06CC),
+  // but keeps its own source and adds the two lower dots observed in yaa.mov.
+  [ductusKey("arabic", "ي")]: {
+    script: "arabic",
+    glyph: "ي",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend from the upper right into the independent bowl",
+            path: [
+              { x: 548, y: 285 },
+              { x: 510, y: 288 },
+              { x: 472, y: 270 },
+              { x: 430, y: 238 },
+              { x: 395, y: 205 },
+              { x: 365, y: 168 },
+              { x: 345, y: 125 },
+              { x: 330, y: 82 },
+              { x: 340, y: 45 },
+              { x: 375, y: 25 },
+              { x: 420, y: 8 },
+              { x: 470, y: -2 },
+              { x: 520, y: -24 },
+              { x: 555, y: -55 },
+            ],
+          },
+          {
+            label: "sweep left through the bowl without lifting",
+            path: [
+              { x: 555, y: -55 },
+              { x: 535, y: -98 },
+              { x: 495, y: -145 },
+              { x: 445, y: -188 },
+              { x: 390, y: -218 },
+              { x: 325, y: -238 },
+              { x: 255, y: -238 },
+              { x: 190, y: -218 },
+              { x: 140, y: -180 },
+              { x: 105, y: -130 },
+              { x: 90, y: -78 },
+              { x: 94, y: -25 },
+              { x: 105, y: 28 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then place the lower-left dot",
+            path: [
+              { x: 150, y: -373 },
+              { x: 198, y: -323 },
+              { x: 245, y: -370 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again, then place the lower-right dot",
+            path: [
+              { x: 300, y: -360 },
+              { x: 352, y: -310 },
+              { x: 400, y: -356 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ي"),
+  },
   [ductusKey("urdu-nastaliq", "ج")]: {
     script: "urdu-nastaliq",
     glyph: "ج",
