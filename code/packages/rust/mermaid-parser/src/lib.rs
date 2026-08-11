@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.30.0";
+pub const VERSION: &str = "0.31.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1331,7 +1331,7 @@ fn parse_sequence_participant_config(
         .ok_or_else(|| token_error(token, "invalid sequence participant configuration"))?;
     let mut kind = None;
     let mut alias = None;
-    for field in inner.split(',') {
+    for field in split_sequence_config_fields(inner) {
         let field = field.trim();
         if field.is_empty() {
             continue;
@@ -1365,6 +1365,42 @@ fn parse_sequence_participant_config(
         }
     }
     Ok((kind, alias))
+}
+
+fn split_sequence_config_fields(input: &str) -> Vec<&str> {
+    let mut fields = Vec::new();
+    let mut start = 0;
+    let mut quote = None;
+    let mut escaped = false;
+    let mut depth = 0_u32;
+    for (index, character) in input.char_indices() {
+        if escaped {
+            escaped = false;
+            continue;
+        }
+        if quote.is_some() && character == '\\' {
+            escaped = true;
+            continue;
+        }
+        if let Some(delimiter) = quote {
+            if character == delimiter {
+                quote = None;
+            }
+            continue;
+        }
+        match character {
+            '\'' | '"' => quote = Some(character),
+            '{' | '[' | '(' => depth += 1,
+            '}' | ']' | ')' => depth = depth.saturating_sub(1),
+            ',' if depth == 0 => {
+                fields.push(&input[start..index]);
+                start = index + character.len_utf8();
+            }
+            _ => {}
+        }
+    }
+    fields.push(&input[start..]);
+    fields
 }
 
 fn trim_sequence_config_string(value: &str) -> &str {
@@ -3339,7 +3375,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     #[test]
     fn sequence_parses_participant_stereotypes_and_alias_precedence() {
         let diagram = parse_sequence_diagram(
-            "sequenceDiagram\nparticipant API@{ \"type\": \"boundary\", \"alias\": \"Internal\" } as Public API\nparticipant C@{ type: control }\nparticipant E@{ type: entity }\nparticipant DB@{ type: 'database', alias: 'Ledger' }\nparticipant L@{ type: collections }\nparticipant Q@{ type: queue }\n",
+            "sequenceDiagram\nparticipant API@{ \"type\": \"boundary\", \"alias\": \"Internal\" } as Public API\nparticipant C@{ type: control }\nparticipant E@{ type: entity }\nparticipant DB@{ type: 'database', alias: 'Ledger, primary' }\nparticipant L@{ type: collections }\nparticipant Q@{ type: queue }\n",
         )
         .unwrap();
         assert_eq!(
@@ -3359,7 +3395,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
             diagram.participants[3].kind,
             SequenceParticipantKind::Database
         );
-        assert_eq!(diagram.participants[3].label.text, "Ledger");
+        assert_eq!(diagram.participants[3].label.text, "Ledger, primary");
         assert_eq!(
             diagram.participants[4].kind,
             SequenceParticipantKind::Collections
@@ -3751,7 +3787,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.30.0");
+        assert_eq!(crate::VERSION, "0.31.0");
     }
 
     #[test]
