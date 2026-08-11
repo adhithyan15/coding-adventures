@@ -1,0 +1,15 @@
+% ============================================================================
+% superlative-adjective-rule.query.adj — worked recall over the
+% superlative-adjective-rule library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does this
+% superlative rule require?" (direct) or "which rule requires this?"
+% (reverse) — it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries.
+% ============================================================================
+
+import "superlative-adjective-rule.adj"
+
+? superlative_adjective_rule(adjective_ending_in_y, $D)   % expect change_y_to_i_before_est (direct)
+? superlative_adjective_rule($R, add_est_suffix)          % expect one_syllable_adjective (reverse)
+? superlative_adjective_rule(three_or_more_syllable_adjective, $D)   % expect abstain -- a real rule the source covers (use "most" instead), but not one of the three tabled here
