@@ -27,8 +27,12 @@ export now use that same boundary, including failed export-input attempts.
 Exact current-revision capabilities, whole secret-bearing documents, and
 schema-specific secret fields are also held until their succeeded, denied, or
 failed event is durable. The production migration boundary can start one
-explicit audit epoch; CLI adoption and exposure plus redacted audit history
-rendering remain later slices. It also defines the
+explicit audit epoch. Explicit authenticated audit-history reads now publish
+their own successful `AuditRead` event first, re-verify the complete newly
+advanced chain, and return a bounded newest-first secret-free projection or an
+exact trace lookup. The projection includes stable item and revision selectors
+only for this explicit surface; default debug output redacts every stable
+identity. CLI rendering remains a later slice. It also defines the
 exact canonical
 `PreparedInit -> Active -> PendingPublication -> Active` owner-state machine,
 retry-stable publication journals, encrypted local-secret custody, and
