@@ -1199,6 +1199,59 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: hebrewAlphabetSource("פ"),
   },
+  // Printed Tsadi draws its long left diagonal into the returning base, then
+  // lifts once for the short upper-right arm. Its cursive counterpart compresses
+  // those branches into one compact rounded run.
+  [ductusKey("hebrew", "צ")]: {
+    script: "hebrew",
+    glyph: "צ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the long diagonal from the upper left",
+            path: [
+              { x: 100, y: 560 },
+              { x: 145, y: 505 },
+              { x: 195, y: 430 },
+              { x: 245, y: 350 },
+              { x: 295, y: 270 },
+              { x: 345, y: 185 },
+              { x: 395, y: 100 },
+              { x: 440, y: 40 },
+            ],
+          },
+          {
+            label: "turn left along the base without lifting",
+            path: [
+              { x: 440, y: 40 },
+              { x: 350, y: 38 },
+              { x: 250, y: 38 },
+              { x: 150, y: 38 },
+              { x: 55, y: 38 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then curve the upper-right arm down-left into the junction",
+            path: [
+              { x: 460, y: 560 },
+              { x: 458, y: 505 },
+              { x: 448, y: 450 },
+              { x: 430, y: 390 },
+              { x: 405, y: 335 },
+              { x: 375, y: 285 },
+              { x: 345, y: 260 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("צ"),
+  },
   "ا": {
     script: "perso-arabic",
     glyph: "ا",

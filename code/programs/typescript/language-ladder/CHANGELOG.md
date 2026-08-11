@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Hebrew Tsadi ductus (HL-C09BU)
+
+- Render **צ** in three evidence-aligned frames: descend the long diagonal into
+  the leftward base, then lift once for the short upper-right arm.
+- Preserve the adjacent purple cursive form's compact one-run shape while
+  keeping the printed form's lift explicit.
+- Record that intervening final Tsadi is already a form, then queue the later
+  Qof demonstration as the next counted inventory entry.
+
 ### Added — cited Hebrew Pe ductus (HL-C09BT)
 
 - Render **פ** in four evidence-aligned frames: draw the top, right side, and
