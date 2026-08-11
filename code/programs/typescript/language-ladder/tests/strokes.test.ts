@@ -37,6 +37,7 @@ const ARABIC_SHIIN = DUCTUS[ductusKey("arabic", "ش")];
 const ARABIC_SAAD = DUCTUS[ductusKey("arabic", "ص")];
 const ARABIC_DAAD = DUCTUS[ductusKey("arabic", "ض")];
 const ARABIC_AYN = DUCTUS[ductusKey("arabic", "ع")];
+const ARABIC_KAF = DUCTUS[ductusKey("arabic", "ك")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
@@ -617,6 +618,21 @@ describe("handwriting ductus", () => {
     expect(bowl.at(-1)!.x).toBeGreaterThan(bowl[0].x);
   });
 
+  it("Arabic independent ك turns along its base before lifting for the inner arm", () => {
+    expect(ARABIC_KAF.script).toBe("arabic");
+    expect(penLifts(ARABIC_KAF)).toBe(1);
+    expect(ARABIC_KAF.strokes).toHaveLength(2);
+    expect(ARABIC_KAF.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    const upright = ARABIC_KAF.strokes[0].segments[0].path;
+    const base = ARABIC_KAF.strokes[0].segments[1].path;
+    expect(upright[0].y).toBeGreaterThan(upright.at(-1)!.y);
+    expect(upright.at(-1)).toEqual(base[0]);
+    expect(base[0].x).toBeGreaterThan(base.at(-1)!.x);
+    const inner = ARABIC_KAF.strokes[1].segments[0].path;
+    expect(inner[0].x).toBeGreaterThan(inner.at(-1)!.x);
+    expect(inner[0].y).toBeGreaterThan(inner.at(-1)!.y);
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -1048,6 +1064,21 @@ describe("handwriting ductus", () => {
     expect(src.variation).toMatch(
       /directly linked ayn.mov.*one continuous pen-down run.*00:03.1–00:04.0.*00:03.1–00:03.5.*upper-right tip.*sweeps left.*hooks downward.*open head.*without lifting.*00:03.5–00:04.0.*left side.*lower bowl.*floor.*finishes toward the right.*two-way connector.*contextual shapes.*one-stroke.*zero-lift.*Noto Naskh.*distinct from.*Ghayn.*upper dot/i,
     );
+  });
+
+  it("Arabic independent ك traces its joined outer body and restarted inner arm to the Oregon MOV", () => {
+    const src = ARABIC_KAF.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/alphabet-%d9%82-%d9%84-%d9%85/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet ي ك ل.*Kaf.*00:11.8–00:13.4.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /directly linked kaf.mov.*two pen-down runs.*00:11.8–00:12.9.*main upright.*turns left.*baseline.*without lifting.*one lift.*00:13.2–00:13.4.*upper right.*inner arm.*down-left.*two-way connector.*contextual shapes.*two-stroke.*one-lift.*Noto Naskh.*Arabic-scoped ك.*distinct from Urdu ک.*different Unicode glyph.*separate source-backed fallback order/i,
+    );
+    expect(src.url).not.toBe(URDU_KAF.source.url);
+    expect(ARABIC_KAF.glyph).not.toBe(URDU_KAF.glyph);
   });
 
   it("Urdu independent ج traces to Zer o Zabar's dot-first pointed-head animation", () => {

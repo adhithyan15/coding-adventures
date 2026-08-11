@@ -172,7 +172,7 @@ sitting upside down on a correct letter.
 **All eleven starter Tamil letters — அ, ஆ, இ, க, ம, வ, ல, ற, ன, ண, and ந —,
 all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —, all
 thirteen Urdu starter entries — ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, ی, and ے —,
-and all thirteen Arabic starter letters — ا, ب, ت, ج, ح, خ, د, ر, س, ش, ص, ض, and ع —
+and all fourteen Arabic starter letters — ا, ب, ت, ج, ح, خ, د, ر, س, ش, ص, ض, ع, and ك —
 have authored pen paths today.**
 `DUCTUS` admits no letter without a citation
 for its stroke order, and hand-drawing a letter is forbidden
@@ -338,6 +338,12 @@ next page's directly linked `ayn.mov` then verifies **ع** independently at
 00:03.1–00:04.0: it shapes the open head from the upper-right tip and flows
 directly down and around the lower bowl. The two-frame filmstrip preserves that
 one-stroke, zero-lift order and keeps Ayn distinct from adjacent dotted Ghayn.
+The `Alphabet ي ك ل` page's directly linked `kaf.mov` then verifies **ك**
+independently at 00:11.8–00:13.4: its first run descends the main upright and
+turns left along the baseline, then one lift precedes the inner arm drawn from
+upper right down-left. The three-frame filmstrip preserves that two-stroke order
+while keeping Arabic Kaf distinct from Urdu **ک**'s different Unicode glyph and
+source-backed fallback path.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
