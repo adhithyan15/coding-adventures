@@ -383,9 +383,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   down the right side, sweep left along the base, then climb the left side to
   close without lifting. Its four-frame path preserves the adjacent purple
   cursive form's rounder oval while keeping the demonstrated zero-lift order.
-  The remaining **162** prose
+  Printed **ע** then descends the right branch into the base, sweeps left, and
+  turns back to climb the left branch without lifting. Its three-frame path
+  preserves the adjacent purple cursive form's compact loop while fitting the
+  demonstrated one-run order to Noto Sans Hebrew.
+  The remaining **161** prose
   part orders across seven scripts
-  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 7,
+  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 6,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every

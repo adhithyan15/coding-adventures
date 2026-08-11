@@ -1092,6 +1092,52 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: hebrewAlphabetSource("ס"),
   },
+  // Printed Ayin descends its right branch into the base, sweeps left, then
+  // turns back to climb the left branch in one uninterrupted run.
+  [ductusKey("hebrew", "ע")]: {
+    script: "hebrew",
+    glyph: "ע",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the right branch and curve left into the base",
+            path: [
+              { x: 500, y: 560 },
+              { x: 495, y: 455 },
+              { x: 475, y: 335 },
+              { x: 440, y: 225 },
+              { x: 390, y: 145 },
+              { x: 330, y: 85 },
+              { x: 250, y: 45 },
+            ],
+          },
+          {
+            label: "sweep left along the base without lifting",
+            path: [
+              { x: 250, y: 45 },
+              { x: 190, y: 25 },
+              { x: 125, y: 15 },
+              { x: 70, y: 10 },
+            ],
+          },
+          {
+            label: "turn back and climb the left branch without lifting",
+            path: [
+              { x: 70, y: 10 },
+              { x: 145, y: 35 },
+              { x: 205, y: 80 },
+              { x: 210, y: 165 },
+              { x: 180, y: 285 },
+              { x: 150, y: 410 },
+              { x: 115, y: 560 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ע"),
+  },
   "ا": {
     script: "perso-arabic",
     glyph: "ا",
