@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased] - complete SwiftUI package source set
+
+- Generated SwiftUI project shells now copy every exported view into the
+  SwiftPM application target while continuing to mount the first export.
+- Whole-package Swift compilation can no longer miss a broken sibling view
+  that was emitted only as a top-level distribution artifact.
+
 ## [Unreleased] - complete Compose package source set
 
 - Generated Compose project shells now copy every exported component into the

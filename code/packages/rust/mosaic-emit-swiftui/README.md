@@ -113,6 +113,7 @@ does not install automatic press tracking.
 | `Text`           | `Text("literal")` or `Text(slotName)`         |
 | `Spacer`         | `Spacer()`                                    |
 | `Image`          | `Image(systemName: "...")` placeholder        |
+| `Icon`           | SF Symbols, or `ProgressView` for `spinner`    |
 | `Divider`        | `Divider()`                                   |
 | `Stack`          | `ZStack { ... }` *(v0.2.0; UI29 kernel)*      |
 | `HostScroll`     | `ScrollView { ... }` *(v0.2.0; UI29 kernel)*  |
@@ -196,7 +197,7 @@ business logic.
 - `HostTable` lowers to a structural `VStack` of `HStack` rows (see
   primitive table above); the data-driven `SwiftUI.Table` form waits on
   a follow-up that wires `For`-inside-table.
-- `Icon`, `Grid` (v2), legacy `Scroll` / `Input` (pre-UI29 names) — return
+- `Grid` (v2) and legacy `Scroll` (pre-UI29 name) — return
   `UnknownPrimitive` errors today; each lands in its own follow-up.
 - `connects` wiring (gesture / event modifiers beyond what `HostButton` /
   `HostInput` already wire).

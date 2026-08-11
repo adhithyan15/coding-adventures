@@ -411,6 +411,11 @@ unblocks multiple downstream targets; never count source generation as completio
     Gradle's source set, Accordion projects `bodies[i]` through Compose's native
     integer loop-index shadow, and Linux CI compiles the complete 23-component
     toolkit project.
+  - [x] Lower `Icon` to SF Symbols on SwiftUI, with semantic `spinner` mapped
+    to an accessible native `ProgressView` and runtime glyph/label support.
+  - [x] Make the SwiftUI package project type-check every exported view.
+    Accordion collection access uses the native `ForEach` integer shadow and
+    macOS CI builds the complete 23-component toolkit through SwiftPM.
 - [ ] Enforce accessible names, focus, keyboard actions, scaling, contrast, and
   reduced-motion behavior in the strict profile.
 

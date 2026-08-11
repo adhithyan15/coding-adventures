@@ -1506,7 +1506,6 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 &sw_opts,
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
-            let component_source = r.output.clone();
             if let Some(proj) = r.project {
                 let package_swift =
                     mosaic_app_bindings::swift_package_with_runtime_binding(&proj.package_swift);
@@ -1547,9 +1546,18 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 write_file(&runtime_loader, runtime_binding.loader_c.as_bytes())?;
                 written.push(runtime_loader);
 
-                let component_nested = backend_dir.join(format!("Sources/App/{component}.swift"));
-                write_file(&component_nested, component_source.as_bytes())?;
-                written.push(component_nested);
+                // SwiftPM must type-check the complete package, not only the
+                // first export mounted by App.swift. Mirror every exported
+                // view into the application target while retaining the flat
+                // distribution artifacts for Mosaic package consumers.
+                for exported_component in components {
+                    let component_source =
+                        read_to_string(&backend_dir.join(format!("{exported_component}.swift")))?;
+                    let component_nested =
+                        backend_dir.join(format!("Sources/App/{exported_component}.swift"));
+                    write_file(&component_nested, component_source.as_bytes())?;
+                    written.push(component_nested);
+                }
             }
         }
         Backend::Xaml => {
@@ -5988,6 +5996,35 @@ version = "1"
             .expect("CMosaicRuntime.c");
         assert!(loader.contains("dlsym(runtime->library, symbol)"));
         assert!(loader.contains("mosaic_app_restore"));
+    }
+
+    #[test]
+    fn swiftui_project_shell_includes_every_exported_component_in_source_set() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid", "Cell", "Column"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::SwiftUI,
+            emit_project: true,
+            theme: None,
+        })
+        .expect("multi-component SwiftUI package build");
+
+        let dir = out.path().join("swiftui");
+        for component in ["Grid", "Cell", "Column"] {
+            let artifact = dir.join(format!("{component}.swift"));
+            let source_set_copy = dir.join(format!("Sources/App/{component}.swift"));
+            assert_eq!(
+                fs::read_to_string(&artifact).expect("top-level SwiftUI artifact"),
+                fs::read_to_string(&source_set_copy).expect("SwiftPM source-set copy"),
+                "{component} must participate in the generated SwiftPM build"
+            );
+            assert!(
+                result.artifacts.iter().any(|path| path == &source_set_copy),
+                "{component} source-set copy must be reported as an artifact"
+            );
+        }
     }
 
     #[test]
