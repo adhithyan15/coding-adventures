@@ -139,6 +139,8 @@ of the current activation bar, including a bar opened by that message. Paint
 ordering keeps those message paths and arrowheads above activation rectangles.
 Self-messages on active participants anchor to the outer edge of the current
 activation stack rather than falling back to the lifeline center.
+Their source and destination tips remain distinct through Paint lowering so
+reverse and bidirectional arrowheads and central markers use the correct ends.
 Explicit activation and deactivation statements update that stack without
 creating synthetic event rows or vertical gaps.
 Explicit and message-suffix deactivation is validated against that semantic

@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.33.0";
+pub const VERSION: &str = "0.34.0";
 
 use std::collections::HashMap;
 
@@ -1302,7 +1302,15 @@ where
             number,
         } = item
         {
-            let (commands, start, end, label_x, label_width) = if (*from_x - *to_x).abs() < 0.1 {
+            let (
+                commands,
+                source_previous,
+                source_tip,
+                destination_previous,
+                destination_tip,
+                label_x,
+                label_width,
+            ) = if (*from_x - *to_x).abs() < 0.1 {
                 let loop_width = 46.0;
                 (
                     vec![
@@ -1322,6 +1330,11 @@ where
                     ],
                     Point {
                         x: *from_x + loop_width,
+                        y: *y,
+                    },
+                    Point { x: *from_x, y: *y },
+                    Point {
+                        x: *from_x + loop_width,
                         y: *y + 26.0,
                     },
                     Point {
@@ -1338,6 +1351,8 @@ where
                         PathCommand::MoveTo { x: *from_x, y: *y },
                         PathCommand::LineTo { x: *to_x, y: *y },
                     ],
+                    Point { x: *to_x, y: *y },
+                    Point { x: *from_x, y: *y },
                     Point { x: *from_x, y: *y },
                     Point { x: *to_x, y: *y },
                     left,
@@ -1367,18 +1382,22 @@ where
                     | SequenceArrowhead::ReverseStickBottom
             );
             if reverse {
-                instructions.extend(sequence_arrowhead(&end, &start, arrowhead));
+                instructions.extend(sequence_arrowhead(&source_previous, &source_tip, arrowhead));
             } else {
-                instructions.extend(sequence_arrowhead(&start, &end, arrowhead));
+                instructions.extend(sequence_arrowhead(
+                    &destination_previous,
+                    &destination_tip,
+                    arrowhead,
+                ));
             }
             if *bidirectional {
-                instructions.extend(sequence_arrowhead(&end, &start, arrowhead));
+                instructions.extend(sequence_arrowhead(&source_previous, &source_tip, arrowhead));
             }
             for point in match central_connection {
                 SequenceCentralConnection::None => vec![],
-                SequenceCentralConnection::Source => vec![start],
-                SequenceCentralConnection::Destination => vec![end],
-                SequenceCentralConnection::Both => vec![start, end],
+                SequenceCentralConnection::Source => vec![source_tip],
+                SequenceCentralConnection::Destination => vec![destination_tip],
+                SequenceCentralConnection::Both => vec![source_tip, destination_tip],
             } {
                 central_markers.push(point);
             }
@@ -2852,7 +2871,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.33.0");
+        assert_eq!(crate::VERSION, "0.34.0");
     }
 
     #[test]
@@ -2904,6 +2923,43 @@ mod tests {
             .unwrap();
 
         assert!(activation_index < message_index);
+    }
+
+    #[test]
+    fn sequence_self_connection_markers_use_lifeline_endpoints() {
+        let diagram = LayoutedSequenceDiagram {
+            width: 180.0,
+            height: 140.0,
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            items: vec![LayoutedSequenceItem::Message {
+                from_x: 64.0,
+                to_x: 64.0,
+                y: 60.0,
+                label: "self".into(),
+                label_height: 16.0,
+                line_style: SequenceLineStyle::Solid,
+                arrowhead: SequenceArrowhead::Filled,
+                bidirectional: false,
+                central_connection: SequenceCentralConnection::Both,
+                number: None,
+            }],
+        };
+        let (shaper, metrics, resolver) = (FakeShaper, FakeMetrics, FakeResolver);
+        let scene = diagram_to_paint_sequence(&diagram, &make_opts(&shaper, &metrics, &resolver));
+        let markers: Vec<_> = scene
+            .instructions
+            .iter()
+            .filter_map(|instruction| match instruction {
+                PaintInstruction::Ellipse(ellipse) if ellipse.rx == 5.0 && ellipse.ry == 5.0 => {
+                    Some((ellipse.cx, ellipse.cy))
+                }
+                _ => None,
+            })
+            .collect();
+
+        assert_eq!(markers, vec![(64.0, 60.0), (64.0, 86.0)]);
     }
 
     #[test]
