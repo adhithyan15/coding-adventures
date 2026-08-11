@@ -21,8 +21,8 @@ exact upstream commits used for the latest completed audit.
 
 ## Prioritized Queue
 
-The 2026-08-09 upstream audit at WPT
-`54f8f933629e7c010ae98a246729af01f8abcda5` and html5lib-tests
+The 2026-08-10 upstream audit at WPT
+`2517845b612a4290cfef50ec259efcf9a2806011` and html5lib-tests
 `224991ec10db04f056a89eed8b0bd8695fd2950e` covered all 1,934 WPT
 tree-construction cases and all 6,806 html5lib tokenizer cases with zero missing
 signatures and zero normalized skips. DOM output is complete, but diagnostic
@@ -110,6 +110,10 @@ Prioritized work items:
    parse error before foster parenting, matching WPT `tests7.dat` and
    `webkit02.dat` evidence while preserving the specialized hidden-input path
    and leaving inputs inside cells quiet.
+   `select` start tags processed directly in table structure now report the
+   general in-table parse error before foster parenting, matching WPT
+   `tests10.dat`, `tests17.dat`, `tests18.dat`, and `webkit01.dat` evidence while
+   leaving selects outside tables and inside cells quiet.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases
