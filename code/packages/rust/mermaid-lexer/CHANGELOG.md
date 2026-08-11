@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.22.0
+
+- Skip Mermaid 11.16.1 sequence `#` comments while preserving numeric and named entities.
+
 ## 0.21.0
 
 - Tokenize sequence `wrap:` and `nowrap:` directives atomically.

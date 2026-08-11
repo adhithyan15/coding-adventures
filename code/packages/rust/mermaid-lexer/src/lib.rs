@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.21.0";
+pub const VERSION: &str = "0.22.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -95,9 +95,11 @@ pub fn tokenize_mermaid_c4(source: &str) -> Vec<Token> {
 
 pub fn tokenize_mermaid_sequence(source: &str) -> Vec<Token> {
     let mut lexer = create_mermaid_sequence_lexer(source);
-    lexer
+    let mut tokens = lexer
         .tokenize()
-        .unwrap_or_else(|e| panic!("Mermaid sequence tokenization failed: {e}"))
+        .unwrap_or_else(|e| panic!("Mermaid sequence tokenization failed: {e}"));
+    tokens.retain(|token| token.type_name.as_deref() != Some("HASH_COMMENT"));
+    tokens
 }
 
 #[cfg(test)]
@@ -111,7 +113,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.21.0");
+        assert_eq!(VERSION, "0.22.0");
     }
 
     #[test]
@@ -485,6 +487,15 @@ A\\-B: reverse stick bottom
     }
 
     #[test]
+    fn skips_sequence_hash_comments_without_dropping_entities() {
+        let tokens = tokenize_mermaid_sequence(
+            "sequenceDiagram\n# heading comment\nA->>B: I #9829; diagrams # trailing comment\n",
+        );
+        assert!(!tokens.iter().any(|token| token.value.contains("comment")));
+        assert!(tokens.iter().any(|token| token.value == "#9829;"));
+    }
+
+    #[test]
     fn tokenizes_sequence_line_break_variants() {
         let tokens = tokenize_mermaid_sequence(
             "sequenceDiagram\nAlice->>Bob: One<br>Two<br/>Three<br />Four\n",
@@ -526,12 +537,6 @@ A\\-B: reverse stick bottom
         let tokens = tokenize_mermaid_sequence(
             "sequenceDiagram\nparticipant Customer-Portal\nCustomer-Portal->>Order-Service: Submit\n",
         );
-        assert_eq!(
-            tokens
-                .iter()
-                .filter(|token| token.value == "-")
-                .count(),
-            3
-        );
+        assert_eq!(tokens.iter().filter(|token| token.value == "-").count(), 3);
     }
 }
