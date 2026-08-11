@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 24,
-  "title": "Synthesis --- Asking, and Answering",
+  "title": "Vivir --- the Family That Costs Nothing",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f2dabdd1fdd6197f",
+  "sourceHash": "fnv1a64:655ab6be8d819d8d",
   "lessons": [
     {
-      "id": "ES-C07-sintesis-preguntar",
-      "sequence": 660,
-      "title": "Synthesis — asking, and answering",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — three verb families and two question words become a conversation",
+      "id": "ES-C07-vivir",
+      "sequence": 600,
+      "title": "vivir — \"to live,\" and the third family (that's barely new)",
+      "headword": "vivir",
+      "romanization": "vivir",
+      "gloss": "to live — your first -ir verb, and a family that asks you to learn nothing new",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e755b9f265587bb2",
+      "sourceHash": "fnv1a64:14b8eda3e60b2f0f",
       "notice": null,
       "blocks": [
         {
@@ -35,50 +35,77 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new in this chapter. Say \"I eat\" and \"I live.\" (Como. Vivo.)"
+              "text": "The third and last verb family: -ir, and vivir (\"to live\") is your first. Here's the punchline — in the present tense, -ir is almost identical to -er. You've nearly finished learning the whole regular present."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Something quietly enormous happened over the last four chapters, and it is worth saying out loud before you use it."
+              "text": "v-b — Spanish v = a soft b: vivir ≈ bee-BEER."
             },
             {
               "kind": "speech",
-              "text": "Spanish has three verb families. You now hold the singular of all three. That is not three facts — it is a machine: hand it any regular verb you meet for the rest of your life, and you can already say what you do with it, what a friend does, and what somebody else does."
-            },
-            {
-              "kind": "speech",
-              "text": "Two question words turn that machine outward. ¿Qué? asks what. ¿Dónde? asks where. With them, the forms stop being an exercise and start being a conversation."
+              "text": "r-tap — one tap on the final r."
             }
           ]
         },
         {
           "index": 2,
-          "type": "input",
-          "title": "The exchange",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "— ¿Qué bebes? — Bebo café. ¿Y tú? — Yo también. ¿Dónde vives? — Vivo en Madrid."
+              "text": "vivir comes from Latin vīvere, \"to live\" — one of the most alive roots in English:"
             },
             {
               "kind": "speech",
-              "text": "Four lines, and every single word in them is something you built yourself. No new vocabulary was needed to get here — only the endings, one slot at a time."
+              "text": "vivid — \"full of life.\""
             },
             {
               "kind": "speech",
-              "text": "Notice what the questions cost: nothing. You did not learn a question form. You put ¿qué? or ¿dónde? in front of a verb you already had."
+              "text": "survive (super-vīvere, \"to live beyond\"), revive (\"live again\")."
+            },
+            {
+              "kind": "speech",
+              "text": "vivacious, convivial (\"living together\" — sociable), viva!, vivarium. (And vīta, \"life,\" gives vital, vitamin.)"
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the family that costs nothing",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The third family is the shortest lesson in this book, and it is short because of a fact rather than a shortcut."
+            },
+            {
+              "kind": "speech",
+              "text": "In the singular, the -ir endings are the -er endings. Not similar. The same three:"
+            },
+            {
+              "kind": "speech",
+              "text": "vivo, vives, vive — -o, -es, -e, exactly as como, comes, come."
+            },
+            {
+              "kind": "speech",
+              "text": "So the third family asks you to learn no new form at all. You already built these three endings one at a time in the last chapter; here they are, doing the same work on a different verb."
+            },
+            {
+              "kind": "speech",
+              "text": "The two families do part company later, in the plural — and when they do, you will meet that difference on its own. It is not needed now, and mentioning it here would be borrowing trouble."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -91,95 +118,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the exchange above, both parts, without stopping",
+              "instruction": "\"vivir\" — bee-BEER",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the exchange above, both parts, without stopping]"
+              "source": "[YOU SAY: \"vivir\" — *bee-BEER*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "it again, swapping in comes for bebes",
+              "instruction": "\"como, comes, come\" then \"vivo, vives, vive\" — identical endings",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: it again, swapping in *comes* for *bebes*]"
+              "source": "[YOU SAY: \"como, comes, come\" then \"vivo, vives, vive\" — identical endings]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Run it until the question and the answer arrive together."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-sintesis-preguntar-what",
-              "prompt": "Ask a friend what they eat.",
-              "assesses": [
-                "ES-LEX-QUE",
-                "ES-GRAMMAR-ER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "que comes",
-                "¿que comes?",
-                "qué comes",
-                "que comes tu"
-              ],
-              "feedback": {
-                "correct": "Yes — the question word, then the tu form.",
-                "incorrect": "Que comes. The question word goes in front of the form you already have."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-sintesis-preguntar-where",
-              "prompt": "Ask a friend where they live.",
-              "assesses": [
-                "ES-LEX-DONDE",
-                "ES-GRAMMAR-IR-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "donde vives",
-                "¿donde vives?",
-                "dónde vives"
-              ],
-              "feedback": {
-                "correct": "Yes.",
-                "incorrect": "Donde vives."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-sintesis-preguntar-families",
-              "prompt": "How many verb families do you now hold in the singular?",
-              "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-SINGULAR",
-                "ES-GRAMMAR-IR-PRESENT-SINGULAR"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vivir\" then English \"vivid, survive, revive\" — the vīvere family",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "three",
-                "3",
-                "all three"
-              ],
-              "feedback": {
-                "correct": "All three — and that covers every regular verb.",
-                "incorrect": "Three: -ar, -er and -ir."
-              }
+              "source": "[YOU SAY: \"vivir\" then English \"vivid, survive, revive\" — the *vīvere* family]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -191,7 +157,27 @@
             },
             {
               "kind": "speech",
-              "text": "How many verb families do you hold? (Three — and that is all of them.) What did the question words cost you? (Nothing — they sit in front of forms you already had.) Ask where somebody lives. (¿Dónde vives?)"
+              "text": "What Latin verb is vivir from, and two English cousins? (vīvere — vivid, survive.) In the singular, how do -er and -ir endings compare? (They are identical: -o / -es / -e.) Say \"I live.\" (Vivo.) Next: a second verb in this family, and two words for asking questions."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C07-vivir-singular-forms",
+              "prompt": "Give the three singular forms of vivir in order: I, tú, usted.",
+              "assesses": [
+                "ES-LEX-VIVIR",
+                "ES-GRAMMAR-IR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "vivo, vives, vive",
+                "vivo vives vive",
+                "vivo / vives / vive"
+              ],
+              "feedback": {
+                "correct": "Right: vivir gives vivo, vives, vive.",
+                "incorrect": "For these singular forms, -ir uses -o, -es, -e: vivo, vives, vive."
+              }
             }
           ]
         }

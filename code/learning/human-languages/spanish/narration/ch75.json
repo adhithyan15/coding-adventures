@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 75,
-  "title": "Waiting, Answering, Buying",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:ed27a582c8bb7be8",
+  "title": "Review --- All Four Stem Changes",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:afef50c7e905359d",
   "lessons": [
     {
-      "id": "ES-C40-esperar",
-      "sequence": 1850,
-      "title": "esperar — one verb for waiting, hoping and expecting",
-      "headword": "esperar",
-      "romanization": "esperar",
-      "gloss": "to wait — and to hope, and to expect, all in one verb",
+      "id": "ES-C39-repaso-cambios",
+      "sequence": 1843,
+      "title": "Review — the four stem changes, all of them",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — the stem-change system, now complete, and the one pattern with a single member",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:516bebdc07d319a0",
+      "sourceHash": "fnv1a64:b6e98d1dd04d77c5",
       "notice": null,
       "blocks": [
         {
@@ -35,378 +35,66 @@
             },
             {
               "kind": "speech",
-              "text": "Four verbs that each did something odd to themselves — juego the strangest of them. Here is one that does nothing odd at all, and is still the hardest word in these two chapters."
+              "text": "Nothing new in this chapter. Say a verb whose stem breaks under stress — any one you have met."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "st-no-e — the e- is a run-up: es-pe-RAR, never spe-."
+              "text": "Something finished in the last two chapters and it is worth stopping for."
             },
             {
               "kind": "speech",
-              "text": "r-tap — one flick for the r in the middle."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: esperar",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "esperar from Latin spērāre, \"to hope\", from spēs, \"hope\". That front e- is the same run-up that turned scrībere into escribir and studēre into estudiar: Spanish will not start a word with s plus a consonant."
-            },
-            {
-              "kind": "speech",
-              "text": "English took the root by its negative: despair from dēspērāre, dē- + spērāre — literally to un-hope — and with it desperate, and desperado, which English shaped from Spanish desesperado. Prosper is traditionally read as prō + spēs, \"according to one's hope\", though that reading is the traditional one rather than a settled one."
-            },
-            {
-              "kind": "speech",
-              "text": "Spanish keeps the hope in plain sight: la esperanza. So does Esperanto — its inventor published as Doktoro Esperanto, \"Doctor One-Who-Hopes\"."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: three English verbs, one Spanish word",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "Spanish",
-                "what it means"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "Espero a María means I am waiting for María.",
-                "Espero el pan means I am expecting the bread.",
-                "Espero que sí means I hope so."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "One verb, three English words, and nothing in the Spanish tells them apart. Context does all of it, and a learner has to stop translating and start reading the situation. Hope and expect were never far from waiting: to wait for a thing is to think it is coming."
-            },
-            {
-              "kind": "speech",
-              "text": "Note the small a before a person, the same one that stands in conozco a María. And after three chapters of cracking stems, esperar is perfectly regular: espero, esperas, espera, esperamos, esperan."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"espero, esperas, espera, esperamos, esperan\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"espero, esperas, espera, esperamos, esperan\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Espero a María\" then \"Espero el pan\" then \"Espero que sí\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Espero a María\" then \"Espero el pan\" then \"Espero que sí\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"spērāre, esperanza\" then English \"despair, desperate\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"spērāre, esperanza\" then English \"despair, desperate\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the three English verbs esperar covers. (Wait, hope, expect.) What does dēspērāre take apart into? (Dē- + spērāre, to un-hope.) Name two other Spanish verbs whose e- is a run-up, with their Latin roots. (Escribir from scrībere, estudiar from studēre.) Would you use conocer or saber for a city? (Conocer.) And what did the -sc- inside cognōscere mark? (Beginning — to come to know.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C40-contestar",
-      "sequence": 1860,
-      "title": "contestar — \"to answer\", from a Roman courtroom",
-      "headword": "contestar",
-      "romanization": "contestar",
-      "gloss": "to answer — a Roman courtroom word that English turned into a fight and Spanish turned into a reply",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:ff466cb66a3de1f2",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Pregunto pushes the pole down to sound the water. Espero waits. Now the other half of a conversation — and a word that began as an oath."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "s-clear — a clean s in the middle: con-tes-TAR."
-            },
-            {
-              "kind": "speech",
-              "text": "stress-final — the beat lands on the last syllable, with no written accent."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: contestar",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "contestar (\"to answer\") from Latin contestārī, \"to call witnesses\": com- + testārī, from testis, \"a witness\". In Roman law, contestārī lītem was the formal opening of a lawsuit — both sides calling their witnesses so the argument could begin."
-            },
-            {
-              "kind": "speech",
-              "text": "From that one act the two languages walked in opposite directions. English kept the fight: to contest a thing is to dispute it. Spanish kept the reply — first \"say back what the other side said\", then simply answer."
-            },
-            {
-              "kind": "speech",
-              "text": "The testis family is shared: testify, testimony, testament, attest, protest, detest."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: contestar and responder",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Spanish has a second answering verb, and it is built on a different promise."
-            },
-            {
-              "kind": "speech",
-              "text": "responder from Latin respondēre, re- + spondēre, \"to pledge solemnly\". Answering is pledging back. English holds that whole branch: respond, response, responsible, sponsor, and spouse, from spōnsus, \"one who has been pledged\"."
+              "text": "Spanish has four stem-change patterns. Not five, not a dozen — four. You met the first two long ago with querer and poder, and the last two in the chapters you have just finished. That is the whole system, and you now hold all of it:"
             },
             {
               "kind": "table",
               "headers": [
-                "verb",
-                "where it lives"
+                "the change",
+                "the verb that taught it",
+                "what breaks"
               ],
-              "columns": 2,
-              "rowCount": 2,
+              "columns": 3,
+              "rowCount": 4,
               "utterances": [
-                "verb: contestar. where it lives: the everyday one: a question, the phone, a letter.",
-                "verb: responder. where it lives: weightier — responding to something."
+                "the change: e becomes ie. the verb that taught it: querer. what breaks: becomes quiero.",
+                "the change: o becomes ue. the verb that taught it: poder. what breaks: becomes puedo.",
+                "the change: e becomes i. the verb that taught it: conseguir. what breaks: becomes consigo.",
+                "the change: u becomes ue. the verb that taught it: jugar. what breaks: becomes juego."
               ]
             },
             {
               "kind": "speech",
-              "text": "Both are regular, one -ar and one -er: contesto, contestas, contesta, contestamos, contestan; respondo, respondes, responde. The noun is the odd part: the answer is la respuesta, borrowed from responder, never from contestar."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"contesto, contestas, contesta, contestamos, contestan\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"contesto, contestas, contesta, contestamos, contestan\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Te pregunto la hora y me contestas\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Te pregunto la hora y me contestas\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"testis, testify, contest\" then \"contestar\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"testis, testify, contest\" then \"contestar\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What did contestārī mean literally, and what did English make of it? (To call witnesses; contest.) What does respondēre take apart into? (Re- + spondēre, to pledge back.) Which verb asks for information and which asks for a thing? (Preguntar; pedir.) And name the three English verbs inside esperar. (Wait, hope, expect.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C40-comprar",
-      "sequence": 1870,
-      "title": "comprar — \"to buy\", and a cousin that is not one",
-      "headword": "comprar",
-      "romanization": "comprar",
-      "gloss": "to buy — from Latin's \"get ready, procure\", and not from the verb behind English compare",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:1860dc25673faf2a",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You can ask, answer and wait. Now pay for the bread, with a verb whose obvious English relative turns out to be a stranger."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "pr-cluster — -pr- is one beat: kom-PRAR, never kom-pe-rar."
-            },
-            {
-              "kind": "speech",
-              "text": "vowel-o — a short pure o, with no glide toward ow."
+              "text": "This table is allowed here because every row in it is something you can already do. It is a picture of the ground you hold, not a list to memorise."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: comprar",
+          "type": "grammar",
+          "title": "Grammar Lens: the pattern with one member",
           "segments": [
             {
               "kind": "speech",
-              "text": "comprar (\"to buy\") from Latin comparāre: com- + parāre, \"to make ready, to furnish, to procure\". Latin already used it for buying — you procured a thing — and the middle syllable wore away, comparāre to comprar."
+              "text": "The fourth row is strange, and worth knowing precisely."
             },
             {
               "kind": "speech",
-              "text": "Parāre stocked English well: prepare, repair, apparatus, apparel, separate, parade, and emperor, from imperāre, \"to give orders\". Spanish keeps preparar, and parar, \"to stop\"."
+              "text": "u becomes ue happens in exactly one verb in the entire language: jugar."
             },
             {
               "kind": "speech",
-              "text": "That com- is the same one already inside compañero — \"the one you share bread with\" — and inside conseguir, conocer and contestar."
+              "text": "Not \"mostly one.\" One. Every other Spanish verb with a u in its stem leaves it alone. So you are not learning a pattern here so much as a single fact with a pattern's shape — which is easier, not harder, and is the kind of thing a course should tell you instead of letting you brace for more."
             }
           ]
         },
         {
           "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: the lookalike",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "English compare looks like the obvious relative. It is not one."
-            },
-            {
-              "kind": "speech",
-              "text": "Latin had two verbs spelled comparāre. One is com- + parāre, \"procure\", and Spanish comprar comes from it. The other is built on compār, \"equal, matched\", and means \"to set side by side\" — that is the one English compare comes from. Two different words that fell together in spelling."
-            },
-            {
-              "kind": "speech",
-              "text": "Comprender is a stranger too: it is comprehendere, \"to seize together\". Same prefix, unrelated second halves. A resemblance is a question, never an answer."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -419,43 +107,95 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"compro, compras, compra, compramos, compran\"",
+              "instruction": "one verb from each of the four rows",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"compro, compras, compra, compramos, compran\"]"
+              "source": "[YOU SAY: one verb from each of the four rows]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Compro el pan y el vino\"",
+              "instruction": "the four changes themselves, as sounds — e-ie, o-ue, e-i, u-ue",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Compro el pan y el vino\"]"
+              "source": "[YOU SAY: the four changes themselves, as sounds — *e-ie, o-ue, e-i, u-ue*]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Un café, por favor\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Un café, por favor\"]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"parāre, prepare, repair\" then \"comprar\"",
-              "spoken": true,
-              "scored": false,
+              "kind": "speech",
+              "text": "Until naming the pattern is faster than working it out."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C39-repaso-cambios-count",
+              "prompt": "How many stem-change patterns does Spanish have in total?",
+              "assesses": [
+                "ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"parāre, prepare, repair\" then \"comprar\"]"
+              "acceptedResponses": [
+                "four",
+                "4",
+                "cuatro"
+              ],
+              "feedback": {
+                "correct": "Four — and you now hold all of them.",
+                "incorrect": "Four: e-ie, o-ue, e-i, u-ue."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C39-repaso-cambios-only",
+              "prompt": "Which pattern belongs to exactly one verb, and which verb?",
+              "assesses": [
+                "ES-GRAMMAR-STEM-U-UE-09",
+                "ES-LEX-JUGAR-07"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "u to ue, jugar",
+                "u-ue, jugar",
+                "jugar, u to ue",
+                "jugar"
+              ],
+              "feedback": {
+                "correct": "Yes — jugar is the only u-ue verb in Spanish.",
+                "incorrect": "u to ue, and the verb is jugar. It is the only one."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C39-repaso-cambios-ei",
+              "prompt": "Which change does conseguir make?",
+              "assesses": [
+                "ES-GRAMMAR-STEM-E-I-06",
+                "ES-LEX-CONSEGUIR-04"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "e to i",
+                "e-i",
+                "e becomes i",
+                "consigo"
+              ],
+              "feedback": {
+                "correct": "Yes — conseguir becomes consigo.",
+                "incorrect": "e to i: conseguir, consigo."
+              }
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -467,7 +207,7 @@
             },
             {
               "kind": "speech",
-              "text": "Run the chapter: espero, contesto, compro — three verbs that break nothing, whose difficulty is meaning. Give each root and what it meant. (Spērāre to hope, contestārī to call witnesses, comparāre to procure.) Is English compare a relative of comprar? (No — a different Latin comparāre, built on compār, \"equal\".) Now buy: compro el pan, el vino y un café, por favor — then say what pānis gave compañero, which English words vīnum reached, why café is masculine, and what por favor is word for word. (One who shares bread; wine, vine, vinegar; café arrived as a masculine loan out of Arabic qahwa; \"for a favour\".) And which verb gets a thing by following it? (Conseguir.)"
+              "text": "How many stem-change patterns are there? (Four — and that is all of them.) Which one has a single member? (u becomes ue, only jugar.) Next chapter is not about forms at all — it is about three places where English gives you one word and Spanish makes you choose."
             }
           ]
         }

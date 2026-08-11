@@ -1,161 +1,211 @@
-Spanish, chapter 27: Going, and the Future You Can Already Say.
-4 lessons. All 4 can be done entirely by ear.
+Spanish, chapter 27: Numbers, and How Old You Are.
+5 lessons. All 5 can be done entirely by ear.
 
 
-Lesson 1 of 4.
-ir — “to go,” from more than one historical stem.
+Lesson 1 of 5.
+uno, dos, tres, cuatro, cinco — counting to five.
 
 Warm-up.
 [pause 2 seconds]
-You already match different verb forms with tú and usted, and you can ask ¿Dónde…?, “Where…?” Today, add one new verb and only its three singular-person forms.
+Numbers are among the most reusable words in any language. Spanish keeps them close enough to Latin that English cousins can help you remember them. This lesson asks for only five: uno, dos, tres, cuatro, cinco.
 
 Sounds you'll need.
-vowel-i — ir is one clear syllable, like ear without a glide.
-diphthong-oy — voy ends with the sound in English boy.
+diphthong-ue — cuatro begins KWA-.
+r-tap — give tres and cuatro one light tap, not an English r.
 
-The word, taken apart.
-ir means “to go.” Its infinitive descends from Latin īre, also “to go.” The present forms below followed a different Latin verb, vādere, “to go forward” or “advance.” English invade and evade preserve that vad- family.
-One modern verb built from historically different stems is called suppletive. English does the same thing when go changes to went, an old form borrowed from wend.
+The numbers, taken apart.
+[a table of 5 rows, read aloud]
+Spanish: uno (1). Latin source: ūnus. English memory hook: unit, unique.
+Spanish: dos (2). Latin source: duo. English memory hook: duo, dual.
+Spanish: tres (3). Latin source: trēs. English memory hook: trio, triple.
+Spanish: cuatro (4). Latin source: quattuor. English memory hook: quart, quarter.
+Spanish: cinco (5). Latin source: quīnque. English memory hook: quintet, quintuplet.
+The spellings changed, but the family resemblance remains. Cinco and quintet both descend from quīnque; Spanish changed the opening sound while English borrowed a more visibly Latin form.
 
-Grammar Lens: only three forms today.
-[a table of 3 rows, read aloud]
-person: yo. present of ir: voy.
-person: tú. present of ir: vas.
-person: él / ella / usted. present of ir: va.
-Say the small set as voy, vas, va. The plural forms are deliberately left for a later lesson.
-The known question word now gives you a useful prompt:
-¿Dónde va usted? — “Where are you going?”
+Grammar Lens: uno becomes un or una.
+When uno stands alone, it means “one.” Before a noun it shortens:
+un before a masculine noun: un café — one coffee / a coffee.
+una before a feminine noun: una noche — one night / a night.
+This shortening is called apocope: the end drops away. Spanish uses the same forms for “one” and “a/an”; context supplies the difference.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “ir — voy, vas, va”]
+[your turn — say: “uno, dos, tres, cuatro, cinco” — once up, once down]
 [pause 8 seconds for the answer]
-[your turn — say: “¿Dónde va usted?”]
+[your turn — say: “uno/unit, dos/duo, tres/trio, cuatro/quart, cinco/quintet”]
 [pause 8 seconds for the answer]
-[your turn — say: “īre gives ir; vādere gives the present set”]
+[your turn — say: “un café, una noche” — hear uno shorten]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 10 seconds]
-Give the three learned singular present forms of ir: yo, tú, then él/ella/usted.
+Write the Spanish numbers 1 through 5 in order.
 [question — say your answer, then pause 8 seconds]
-Complete the formal question: ¿Dónde ___ usted?
+Say 'one coffee' in Spanish.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does ir mean? (“To go.”) Give the three forms learned today. (Voy, vas, va.) Why do they look unlike ir? (The infinitive and present set come through different Latin stems.) Next: place a and a known infinitive after this small set to talk about what is coming.
+Give 1–5 in Spanish. (Uno, dos, tres, cuatro, cinco.) Which English word helps you remember cinco? (Quintet, through Latin quīnque.) What happens to uno before a noun? (It becomes un or una.) Next: six through ten.
 
 
-Lesson 2 of 4.
-voy a + infinitive — moving toward the near future.
+Lesson 2 of 5.
+seis, siete, ocho, nueve, diez — and the calendar's old count.
 
 Warm-up.
 [pause 2 seconds]
-You know voy, vas, va and the infinitives hablar, comer, vivir. This lesson joins those owned pieces with one short new word.
+You can count to five. Add one small set and you reach ten: seis, siete, ocho, nueve, diez. Four English month names will help hold the last four in memory.
 
-The word, taken apart — a.
-Spanish a means “to” or “toward.” It descends from Latin ad, “toward,” which English keeps in words such as advance.
-Movement toward a place easily becomes movement toward a future event. English uses the same picture in “I am going to speak.” Spanish keeps a visible: voy a hablar.
+Sounds you'll need.
+diphthong-ie — siete begins SYE-.
+diphthong-ue — nueve begins NWE-.
 
-Grammar Lens: ir + a + an unchanged infinitive.
-[a table of 3 rows, read aloud]
-person: yo. near-future frame: voy a hablar. meaning: I am going to speak.
-person: tú. near-future frame: vas a comer. meaning: you are going to eat.
-person: usted. near-future frame: va a vivir. meaning: you are going to live.
-Only ir changes for the person. The second verb stays in its known dictionary form: hablar, comer, or vivir. No new plural person or infinitive is hidden in the pattern.
+The numbers, taken apart.
+[a table of 5 rows, read aloud]
+Spanish: seis (6). Latin source: sex. English memory hook: sextet.
+Spanish: siete (7). Latin source: septem. English memory hook: September, septet.
+Spanish: ocho (8). Latin source: octō. English memory hook: October, octave.
+Spanish: nueve (9). Latin source: novem. English memory hook: November.
+Spanish: diez (10). Latin source: decem. English memory hook: December, decimal.
+Say the chain aloud: siete–September, ocho–October, nueve–November, diez–December. It is a memory path, not a second list to memorize.
+
+Why it's said this way: why September says “seven”.
+The month names preserve an old Roman count in which March was first: September through December occupied positions seven through ten. When January and February stood before March, those names shifted to positions nine through twelve but kept their old numbers.
+One tempting story is wrong: July and August were not new months inserted into the middle. The existing months Quintilis and Sextilis were later renamed for Julius Caesar and Augustus. The calendar moved; the numbered names stayed.
+Numbers above ten belong to a later chapter. For now, stop cleanly at diez.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “voy a hablar”]
+[your turn — say: count from uno through diez]
 [pause 8 seconds for the answer]
-[your turn — say: “vas a comer”]
+[your turn — say: “siete/September, ocho/October, nueve/November, diez/December”]
 [pause 8 seconds for the answer]
-[your turn — say: “va a vivir”]
-[pause 8 seconds for the answer]
+[question — say your answer, then pause 10 seconds]
+Write the Spanish numbers 6 through 10 in order.
 [question — say your answer, then pause 8 seconds]
-Say 'I am going to speak' in Spanish.
-[question — say your answer, then pause 8 seconds]
-Say 'You are going to eat' to one friend in Spanish.
+Were July and August inserted into the Roman calendar or were older months renamed?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is the frame? (Ir in the present + a + an infinitive.) Does the second verb change for the person? (No.) What idea connects physical going with future time? (Motion toward a destination becomes motion toward an event.) Next: say whose already-known café it is.
+Give 6–10. (Seis, siete, ocho, nueve, diez.) Why does December carry the old word for ten? (The month names preserve a March-first count.) What happened to Quintilis and Sextilis? (They were renamed July and August.) Next: the verb tener, “to have.”
 
 
-Lesson 3 of 4.
-mi, tu, su — whose café?
+Lesson 3 of 5.
+tener — “to have,” with two visible changes.
 
 Warm-up.
 [pause 2 seconds]
-You already know café, and you distinguish informal tú from formal usted. Now put one small ownership word before that one known noun.
+Regular comer gave you como, comes, come. The common verb tener, “to have,” belongs to the same -er family, but its three singular forms change in two places. Learn only those three today.
 
-The words, taken apart.
-[a table of 3 rows, read aloud]
-Spanish: mi. Latin source: meus. meaning in today's frame: my.
-Spanish: tu. Latin source: tuus. meaning in today's frame: your, to one informal tú.
-Spanish: su. Latin source: suus. meaning in today's frame: your, to formal usted; also his or her.
-English my helps recall mi. Older English thy, “your,” helps recall Latin tuus and Spanish tu. The ownership word tu has no written accent; the person word tú that you already know keeps its accent.
+Sounds you'll need.
+diphthong-ie — tienes begins TYE-.
+r-tap — one light tap at the end of tener.
 
-Grammar Lens: put the ownership word before the noun.
+The word, taken apart.
+tener descends from Latin tenēre, “to hold or keep.” Having is, at root, holding. English borrowed the same root many times:
+tenant, tenure, tenacious — holding land, office, or position.
+contain, retain, maintain, sustain — holding together, back, in hand, or up.
+When you see -tain in English, think of Spanish tener.
+
+Grammar Lens: the three singular forms.
 [a table of 3 rows, read aloud]
-mi café means my coffee.
-tu café means your coffee, informal.
-su café means your coffee, formal; or his or her coffee.
-The situation tells you which person su points to. Every noun phrase in this lesson is singular. Forms used before plural things are left for a later step, so there is no new number pattern to learn here.
+person: yo. regular comer: como. irregular tener: tengo.
+person: tú. regular comer: comes. irregular tener: tienes.
+person: él / ella / usted. regular comer: come. irregular tener: tiene.
+Two small changes do all the work:
+yo adds g: tengo, not teno.
+The other two singular forms change e becomes ie: tienes, tiene.
+Later chapters will expand both patterns. For now, hold only tengo, tienes, tiene — the same three-person frame you already use for regular verbs.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “mi café”]
+[your turn — say: “tener — tengo, tienes, tiene”]
 [pause 8 seconds for the answer]
-[your turn — say: “tu café” to tú]
+[your turn — say: “tener / tenant / retain” — the shared idea is hold]
 [pause 8 seconds for the answer]
-[your turn — say: “su café” to usted]
+[your turn — say: compare “como, comes, come” with “tengo, tienes, tiene”]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 7 seconds]
-Say 'my coffee' in Spanish.
-[question — say your answer, then pause 8 seconds]
-Addressing usted, say 'your coffee' in Spanish.
+[question — say your answer, then pause 10 seconds]
+Give the yo, tú, and él/ella forms of tener, in that order.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three ownership words. (Mi, tu, su.) Where do they go? (Before the noun.) Which one addresses usted? (Su.) Which Latin sources sit behind them? (Meus, tuus, suus.) Next: retrieve the chapter without adding a new word, form, or noun.
+What did Latin tenēre mean? (“To hold.”) Give the three singular forms. (Tengo, tienes, tiene.) What are the two changes? (g appears in tengo; e becomes ie in tienes/tiene.) Next: use them to ask and answer about age.
 
 
-Lesson 4 of 4.
-Practice — going, approaching events, and ownership.
+Lesson 4 of 5.
+¿Cuántos años tienes? — asking age.
 
 Warm-up.
 [pause 2 seconds]
-This checkpoint adds nothing. Retrieve voy, vas, va; build the near future with a and a known infinitive; then put mi, tu, or su before the known noun café.
+You now have tengo, tienes, tiene and the numbers one through ten. Put them together and you can ask or answer age. Spanish frames age as something you have.
 
-Grammar Lens: the complete small chapter frame.
-ir, singular: voy, vas, va.
-near future: voy a hablar, vas a comer, va a vivir.
-ownership before one singular known noun: mi café, tu café, su café.
-Plural person forms of ir and possessives before plural nouns remain deferred.
+The phrase, taken apart.
+¿Cuántos años tienes? “How old are you?” — literally, “How many years do you have?”
+cuántos means “how many.” Latin quantus, “how much,” also gives English quantity, quantum, quantify.
+años means “years.” Latin annus also gives annual and anniversary. Its doubled nn became Spanish ñ, exactly as your script lesson showed.
+tienes is the tú form of tener.
+Keep the marks visible: opening ¿, the accent in cuántos, and the letter ñ in años each carries information.
 
-The word, taken apart — retrieve the history.
-ir continues Latin īre, while voy, vas, va continue vādere.
-a continues Latin ad, “toward”; motion toward a goal became motion toward a coming event.
-mi, tu, su continue Latin meus, tuus, suus.
+Grammar Lens: Spanish “has” years.
+English says “I am ten years old.” Spanish says:
+— ¿Cuántos años tienes? — Tengo diez años.
+The reusable frame is Tengo + number + años. Use a number you already know: Tengo ocho años, Tengo nueve años, Tengo diez años. Larger numbers wait until their own lesson; the grammar does not change.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “voy, vas, va”]
+[your turn — say: “¿Cuántos años tienes?”]
 [pause 8 seconds for the answer]
-[your turn — say: “voy a hablar, vas a comer, va a vivir”]
+[your turn — say: “Tengo ocho años. Tengo nueve años. Tengo diez años.”]
 [pause 8 seconds for the answer]
-[your turn — say: “mi café, tu café, su café”]
+[question — say your answer, then pause 9 seconds]
+Ask one friend 'How old are you?' in Spanish.
+[question — say your answer, then pause 8 seconds]
+Answer 'I am eight years old' using the Spanish age frame.
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does the question literally ask? (“How many years do you have?”) Which verb carries age? (Tener.) How do cuántos and años connect to English? (Quantus becomes quantity; annus becomes annual.) Next: combine counting, tener, and age in one short exchange.
+
+
+Lesson 5 of 5.
+Practice — counting, having, and age.
+
+Warm-up.
+[pause 2 seconds]
+This checkpoint asks for three small moves: count to ten, choose the right singular form of tener, and use the age frame. Everything here has already appeared.
+
+Grammar Lens: count and conjugate.
+Count: uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve, diez.
+Change person: tengo, tienes, tiene.
+Remember the roots: quīnque helps with cinco; decem helps with diez; tenēre, “hold,” helps with tener.
+Keep the calendar correction: July and August were renamed, not inserted.
+
+The exchange — use only what you know.
+— Hola. ¿Cómo te llamas? — Me llamo Ana. ¿Cuántos años tienes? — Tengo diez años. ¿Y tú? — Tengo nueve años.
+The exchange reuses the name question you already know, then adds exactly one new capability: age with tener.
+
+What you've built this chapter.
+uno through diez, with Latin and English hooks instead of an isolated list.
+un / una before a noun, where standalone uno shortens.
+tengo, tienes, tiene, the three singular forms of tener.
+¿Cuántos años tienes? — Tengo … años, with quantus/quantity and annus/annual showing where the words came from.
+Numbers above ten and the plural forms of tener remain deliberately deferred.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: count 1–10 up, then down]
+[pause 8 seconds for the answer]
+[your turn — say: “tengo, tienes, tiene”]
+[pause 8 seconds for the answer]
+[your turn — say: ask and answer age with a number from 1–10]
 [pause 8 seconds for the answer]
 [repeat that twice]
-“Voy a hablar. Su café.”
-[question — say your answer, then pause 9 seconds]
-Give the learned singular forms of ir: yo, tú, then usted.
-[question — say your answer, then pause 9 seconds]
-Ask formal you 'Where are you going?' in Spanish.
+“¿Cuántos años tienes? — Tengo nueve años.”
+[question — say your answer, then pause 15 seconds]
+Write the Spanish numbers 1 through 10 in order.
+[question — say your answer, then pause 10 seconds]
+Give the three learned singular forms of tener: yo, tú, then él/ella.
 [question — say your answer, then pause 8 seconds]
-Say 'I am going to speak' in Spanish.
-[question — say your answer, then pause 8 seconds]
-Addressing usted, say 'your coffee' in Spanish.
+Answer ¿Cuántos años tienes? with nine years.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the singular ir set. (Voy, vas, va.) Build “You are going to eat” for one friend. (Vas a comer.) Say “my coffee” and formal “your coffee.” (Mi café; su café.) Chapter 11 can now extend the grammar from this small, closed frontier.
+Count to ten. Give the three singular forms of tener. Ask “How old are you?” and answer with a number you learned. You can now move from a name exchange into one concrete personal detail. Next: the two Spanish ways to say “to be,” introduced one contrast at a time.

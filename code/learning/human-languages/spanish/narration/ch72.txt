@@ -1,41 +1,42 @@
-Spanish, chapter 72: Conocer --- Coming to Know.
+Spanish, chapter 72: Conseguir --- Getting Is Following Until You Have It.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-conocer — "to meet", because knowing has a first moment.
+conseguir — "to get", by following a thing until you have it.
 
 Warm-up.
 [pause 2 seconds]
-Juego — the one u becomes ue in the language. Now the chapter's last verb, and its oddity is not in the vowel but in what the word means.
+Traigo carries a thing that is already yours. Coger grabs what is in front of you. This verb is for the getting that took some work.
 
 Sounds you'll need.
-soft-c — conoces has a soft second c: a th in Spain, an s elsewhere.
-k-hard — but conozco is ko-NOTH-ko, soft then hard, back to back.
+g-hard — the gu in conseguir is one hard g; the u is silent.
+s-clear — a clean hissing s: con-se-GEER.
 
-The word, taken apart: conocer.
-conocer from Latin cognōscere, com- + (g)nōscere. Its -sc- is Latin's "begin to" marker, so nōscere was never "to know" — it was "to come to know". Latin said nōvī, "I have come to know", for actually knowing a thing.
-Spanish built its verb from the beginning half. That is the whole lesson: conocer a alguien is to meet someone, and Spanish puts a small a before a person who is the object — conozco a María.
-The root fills English: cognition, recognize, incognito, and through French notice, notion, notorious and noble, "the knowable one". English know and ken are its Germanic siblings — the same standing that padre has beside English father, neither one borrowed from the other.
+The word, taken apart: conseguir.
+conseguir ("to get, to obtain, to manage to") from Latin cōnsequī: com- ("along with") + sequī, "to follow". You got a thing by following it until it was yours.
+Sequī is one of Latin's great English suppliers: sequence, sequel, consequence, subsequent, consecutive; second, from secundus, "the one following"; execute and prosecute; obsequious, following someone about; and through French, pursue, ensue and suit.
+Spanish also keeps the formal partner obtener from obtinēre, "to hold onto" — English obtain. It behaves exactly like tener, so its yo-form is obtengo. Conseguir is the everyday one.
 
-Grammar Lens: conocer and saber.
-[a table of 2 rows, read aloud]
-what you know: a person, a city, a book. verb: conocer.
-what you know: a fact, or how to do something. verb: saber.
-English says know for both. Spanish will not: conocer is being acquainted — you have met the thing. Saber is having the information. Conozco Madrid means I have been there; sé dónde está means I have the fact.
-The yo-form keeps a hard cluster the rest lost: conozco, conoces, conoce, conocemos, conocen. Every -cer verb after a vowel does the same, and it is a third kind of odd yo-form beside traigo and oigo.
+Grammar Lens: the third crack, and a silent u that leaves.
+[a table of 5 rows, read aloud]
+person: yo. form: consigo.
+person: tú. form: consigues.
+person: él/ella/usted. form: consigue.
+person: nosotros. form: conseguimos.
+person: ellos/ustedes. form: consiguen.
+You have met dormir breaking o becomes ue and pido quietly breaking e becomes i. Here is that third pattern in full: stress on the stem turns e into i, and conseguimos stays plain because the stress moved to the ending.
+Now the spelling. Spanish writes gu only to keep a g hard in front of e and i. Once the e becomes i, there is nothing in front to guard against, so the u has no job and goes: consigo, not consiguo. Two changes, one form, and only one of them is a sound.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "conozco, conoces, conoce, conocemos, conocen"]
+[your turn — say: "consigo, consigues, consigue, conseguimos, consiguen"]
 [pause 8 seconds for the answer]
-[your turn — say: "Conozco a María" then "Conozco Madrid"]
+[your turn — say: "Traigo el café" then "Consigo el café" — carried, then obtained]
 [pause 8 seconds for the answer]
-[your turn — say: "traigo, consigo, juego, conozco" — the chapter's four yo-forms]
-[pause 8 seconds for the answer]
-[your turn — say: "padre, father" then "conocer, know" — siblings, not borrowings]
+[your turn — say: "sequī, sequence, second" then "conseguir"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say the chapter's four verbs in the yo, then say what each one does to itself. (Traigo grows a hard g; consigo breaks e becomes i and loses a silent u; juego breaks u becomes ue, alone in the language; conozco keeps a hard cluster.) Name their four Latin roots and what each meant. (Trahere to drag, cōnsequī to follow, iocārī to joke, cognōscere to begin to know.) Which verb do you use for a person, and which for a fact? (Conocer; saber.) And which of the four moves a thing toward you? (Traer — llevar goes away.)
+What did sequī mean, and name two English words from it. (To follow; sequence, second, consequence, pursue.) Why is it consigo and not consiguo? (The u only guards a hard g before e and i.) Name the three stem cracks you now have, with a verb for each. (Cerrar e becomes ie, dormir o becomes ue, conseguir e becomes i.) And which Latin verb is behind traer? (Trahere.)

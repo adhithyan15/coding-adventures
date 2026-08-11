@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C07-como
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 583
-chapter: 21
+chapter: 23
 type: grammar
 headword: como
 gloss: "I eat" — the form you can already build, and the word that does three jobs

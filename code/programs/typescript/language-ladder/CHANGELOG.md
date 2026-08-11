@@ -11,6 +11,11 @@
 - Preserve Arabic Lam independently of the existing Persian and Urdu records
   for the same Unicode glyph, and queue the page's directly linked **ي** source.
 
+### Changed — Spanish runs 1..78 (HL-C99)
+
+- Regenerate the `bookhashes` chapter-lesson pin: `trabajar` and `estudiar` took
+  a chapter each, so old Spanish chapters 21–76 shifted to 23–78.
+
 ### Added — cited Arabic independent-kaf ductus (HL-C09AV)
 
 - Render **ك** in three evidence-aligned frames: descend the main upright, turn

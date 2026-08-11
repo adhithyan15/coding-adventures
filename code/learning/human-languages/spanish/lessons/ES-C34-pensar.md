@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C34-pensar
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 1610
-chapter: 54
+chapter: 56
 type: word
 headword: pensar
 gloss: to think — at root "to weigh", and a stem-changer that breaks e→ie

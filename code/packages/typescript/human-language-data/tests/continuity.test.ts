@@ -792,11 +792,12 @@ describe("the real corpus", () => {
     // Chapter 7 -> 15 after HL-C94 split the four over-budget opening chapters;
     // 17 -> 21 after HL-C98 gave the first paradigm one cell per chapter. HL-C99d
     // then split chapter 21 itself: it is now the `comer` chapter alone, one -er
-    // cell per lesson, and vivir/beber/que/donde moved into chapters 22-23.
+    // cell per lesson, and vivir/beber/que/donde moved into their own chapters.
+    // 21 -> 23 after HL-C99f gave trabajar and estudiar a chapter each.
     // The lesson ids are stable slugs and deliberately do NOT renumber with it.
     const { lessons } = loadEverything();
     const chapter = lessons
-      .filter((lesson) => lesson.language === "spanish" && lesson.realization.chapter === 21)
+      .filter((lesson) => lesson.language === "spanish" && lesson.realization.chapter === 23)
       .sort((a, b) => Number(a.frontmatter.sequence) - Number(b.frontmatter.sequence))
       .map((lesson) => lesson.realization.lessonId);
     expect(chapter).toEqual([
