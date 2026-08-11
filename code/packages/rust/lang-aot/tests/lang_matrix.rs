@@ -1211,6 +1211,22 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(2),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — the canonical generated grammar permits conditional
+    // expressions and designators to recurse in either branch. Both nested
+    // then branches choose their inner else arm, producing 40 and jumping to
+    // `good`; the final addition returns 42 on every standard backend.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; boolean outer, inner; \
+               outer := true; inner := false; \
+               result := if outer then if inner then 1 else 40 else 0; \
+               goto if outer then if inner then bad else good else bad; \
+               bad: result := 0; goto done; \
+               good: result := result + 2; done: end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a nested declaration may override a standard function only
     // within its block. The final `abs` call must resolve back to the built-in,
     // rather than leaking the nested typed sibling through compiler metadata.
@@ -5706,6 +5722,36 @@ fn matrix_every_proven_cell_agrees() {
         }
     }
     eprintln!("lang-matrix: {ran} proven cells exercised");
+}
+
+#[test]
+fn algol_canonical_conditional_branches_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("result := if outer then if inner")
+                && program.src.contains("goto if outer then if inner")
+        })
+        .expect("the canonical conditional-branch ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but canonical conditional branches did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
 }
 
 /// Focused regression for the cross-backend runtime-string ordering path. The

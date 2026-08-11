@@ -721,6 +721,11 @@ backend immediately) come before the enabler-dependent items.
   `SIN`, `COS`, `LOG`, `EXP`, and `RND` still need a cross-backend math helper — deferred.
 
 ### ALGOL 60
+- ✅ **AL-grammar-sync** — the checked-in Rust parser artifact is generated from
+  the canonical `code/grammars/algol/algol60.grammar` after the compiler gained
+  support for its dedicated scalar `own_decl` node and fully recursive
+  conditional expression and designational branches. A program nesting a
+  conditional in each then branch runs on all seven standard backends.
 - ✅ **AL1** — real arithmetic + `/` (algol-iir-compiler 0.4.0): `real` → IIR `f64`, `REAL_LIT`
   → `Operand::Float`, `+`/`-`/`*`/unary-minus over reals emit the `f64` hint, `/` is real
   division, real comparisons compare at `f64` width; `div`/`mod` stay integer-only; integer
