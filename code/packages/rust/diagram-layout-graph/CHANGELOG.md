@@ -1,5 +1,9 @@
 # Changelog — diagram-layout-graph
 
+## 0.5.0
+
+- Forward graph node links and tooltips for backend hit-test metadata.
+
 ## 0.4.0
 
 - Forward graph accessibility metadata into layout IR for backend export.

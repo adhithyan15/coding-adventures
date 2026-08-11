@@ -1,4 +1,4 @@
-# @version 9
+# @version 10
 # @case_insensitive true
 # Mermaid 11.16.1 state diagram token grammar, derived from stateDiagram.jison.
 
@@ -35,6 +35,8 @@ keywords:
   classDef
   class
   note
+  click
+  href
   left
   right
   of

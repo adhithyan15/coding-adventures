@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.33.0";
+pub const VERSION: &str = "0.34.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -208,7 +208,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.33.0");
+        assert_eq!(VERSION, "0.34.0");
     }
 
     #[test]
@@ -335,6 +335,25 @@ mod tests {
             );
         }
         assert!(tokens.iter().any(|token| token.value == "}"));
+    }
+
+    #[test]
+    fn tokenizes_state_click_links() {
+        let tokens = tokenize_mermaid_state(
+            "stateDiagram-v2\nclick Ready \"https://example.com\" \"Open ready state\"\nclick Running href \"https://example.com/run\"\n",
+        );
+        assert_eq!(
+            tokens.iter().filter(|token| token.value == "click").count(),
+            2
+        );
+        assert!(tokens.iter().any(|token| token.value == "href"));
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| token.type_ == TokenType::String)
+                .count(),
+            3
+        );
     }
 
     #[test]

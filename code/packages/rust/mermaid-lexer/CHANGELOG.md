@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.34.0
+
+- Tokenize state click links, href markers, URLs, and tooltips.
+
 ## 0.33.0
 
 - Tokenize state accessibility titles and single-line or multiline descriptions.

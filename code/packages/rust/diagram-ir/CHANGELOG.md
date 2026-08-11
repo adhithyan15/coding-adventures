@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.27.0
+
+- Preserve graph node links and optional tooltips through semantic and layout IR.
+
 ## 0.26.0
 
 - Preserve graph-family accessibility titles and descriptions through semantic and layout IR.

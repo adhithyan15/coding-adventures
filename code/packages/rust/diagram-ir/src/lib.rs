@@ -1,6 +1,6 @@
-//! diagram-ir v0.26.0 - DG00/DG04 semantic IR
+//! diagram-ir v0.27.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.26.0";
+pub const VERSION: &str = "0.27.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -109,11 +109,19 @@ pub struct GraphEdge {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub struct GraphLink {
+    pub node_id: String,
+    pub url: String,
+    pub tooltip: Option<String>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct GraphDiagram {
     pub direction: DiagramDirection,
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
+    pub links: Vec<GraphLink>,
     pub nodes: Vec<GraphNode>,
     pub edges: Vec<GraphEdge>,
 }
@@ -154,6 +162,7 @@ pub struct LayoutedGraphDiagram {
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
+    pub links: Vec<GraphLink>,
     pub width: f64,
     pub height: f64,
     pub nodes: Vec<LayoutedGraphNode>,
@@ -964,7 +973,7 @@ mod tests {
 
     #[test]
     fn version_is_0_24_0() {
-        assert_eq!(VERSION, "0.26.0");
+        assert_eq!(VERSION, "0.27.0");
     }
     #[test]
     fn default_direction_is_tb() {
@@ -1024,6 +1033,7 @@ mod tests {
             title: Some("G".into()),
             accessibility_title: None,
             accessibility_description: None,
+            links: Vec::new(),
             nodes: vec![node],
             edges: vec![edge],
         };

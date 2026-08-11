@@ -487,6 +487,19 @@ where
     if let Some(description) = &diagram.accessibility_description {
         metadata.insert("accessibility.description".into(), description.clone());
     }
+    for link in &diagram.links {
+        let prefix = format!("graph.node.{}.link", link.node_id);
+        metadata.insert(format!("{prefix}.url"), link.url.clone());
+        if let Some(tooltip) = &link.tooltip {
+            metadata.insert(format!("{prefix}.tooltip"), tooltip.clone());
+        }
+        if let Some(node) = diagram.nodes.iter().find(|node| node.id == link.node_id) {
+            metadata.insert(
+                format!("{prefix}.bounds"),
+                format!("{},{},{},{}", node.x, node.y, node.width, node.height),
+            );
+        }
+    }
 
     let bg = options.background;
     PaintScene {
@@ -2848,6 +2861,7 @@ mod tests {
             title: None,
             accessibility_title: None,
             accessibility_description: None,
+            links: Vec::new(),
             width: 400.0,
             height: 200.0,
             nodes: vec![
@@ -3236,6 +3250,29 @@ mod tests {
             metadata["accessibility.description"],
             "Ready transitions to running"
         );
+    }
+
+    #[test]
+    fn graph_node_links_reach_paint_scene_hit_test_metadata() {
+        let mut layout = simple_layout();
+        layout.links.push(diagram_ir::GraphLink {
+            node_id: "A".into(),
+            url: "https://example.com/ready".into(),
+            tooltip: Some("Open ready state".into()),
+        });
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let scene = diagram_to_paint(&layout, &opts);
+        let metadata = scene.metadata.unwrap();
+
+        assert_eq!(
+            metadata["graph.node.A.link.url"],
+            "https://example.com/ready"
+        );
+        assert_eq!(metadata["graph.node.A.link.tooltip"], "Open ready state");
+        assert!(metadata.contains_key("graph.node.A.link.bounds"));
     }
 
     #[test]
