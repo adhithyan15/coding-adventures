@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.25.0
+
+- Add a grammar-driven Mermaid 11.16.1 state-diagram lexer for declarations, transitions, directions, and edge states.
+
 ## 0.23.0
 
 - Match and canonicalize Mermaid 11.16.1 sequence keywords case-insensitively.

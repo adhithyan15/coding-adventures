@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.45.0
+
+- Parse an initial grammar-backed Mermaid 11.16.1 state-diagram slice into graph IR for native layout and Paint lowering.
+
 ## 0.44.0
 
 - Blank leading YAML front matter before sequence grammar parsing while preserving source line positions.

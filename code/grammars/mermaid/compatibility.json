@@ -37,8 +37,8 @@
     {
       "id": "state",
       "headers": ["stateDiagram", "stateDiagram-v2"],
-      "status": "detected",
-      "ir": "state",
+      "status": "partial",
+      "ir": "graph",
       "smoke_source": "stateDiagram-v2\n[*] --> Ready"
     },
     {

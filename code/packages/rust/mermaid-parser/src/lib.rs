@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.43.0";
+pub const VERSION: &str = "0.45.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -19,6 +19,7 @@ use lexer::token::{Token, TokenType};
 use mermaid_lexer::{
     tokenize_mermaid, tokenize_mermaid_c4, tokenize_mermaid_er, tokenize_mermaid_gitgraph,
     tokenize_mermaid_pie, tokenize_mermaid_sankey, tokenize_mermaid_sequence,
+    tokenize_mermaid_state,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -32,6 +33,8 @@ const ER_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermai
 const C4_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/c4.grammar");
 const SEQUENCE_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/sequence.grammar");
+const STATE_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/state.grammar");
 
 /// Recursion-depth cap for the Mermaid [`GrammarParser`] — see
 /// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
@@ -253,6 +256,19 @@ pub fn parse_mermaid_sequence_ast(source: &str) -> Result<GrammarASTNode, ParseE
     let tokens = tokenize_mermaid_sequence(&preprocessed.source);
     let grammar = parse_parser_grammar(SEQUENCE_PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|e| panic!("Failed to parse sequence.grammar: {e}"));
+    let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
+    parser.parse().map_err(|e| ParseError {
+        message: e.message,
+        line: e.token.line,
+        col: e.token.column,
+    })
+}
+
+pub fn parse_mermaid_state_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
+    let preprocessed = preprocess_mermaid_source(source)?;
+    let tokens = tokenize_mermaid_state(&preprocessed.source);
+    let grammar = parse_parser_grammar(STATE_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|e| panic!("Failed to parse state.grammar: {e}"));
     let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
     parser.parse().map_err(|e| ParseError {
         message: e.message,
@@ -541,6 +557,7 @@ impl MermaidDiagramType {
                 | Self::GitGraph
                 | Self::Pie
                 | Self::Sequence
+                | Self::State
                 | Self::Sankey
                 | Self::XyChart
         )
@@ -627,6 +644,7 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
         MermaidDiagramType::Sequence => {
             parse_sequence_diagram(source).map(MermaidDiagram::Sequence)
         }
+        MermaidDiagramType::State => parse_state_diagram(source).map(MermaidDiagram::Graph),
         MermaidDiagramType::Sankey => parse_sankey(source).map(MermaidDiagram::Chart),
         MermaidDiagramType::GitGraph => parse_gitgraph(source).map(|git| {
             MermaidDiagram::Temporal(TemporalDiagram {
@@ -1016,6 +1034,178 @@ fn parse_data_list(s: &str) -> Vec<f64> {
         .split(',')
         .filter_map(|x| x.trim().parse().ok())
         .collect()
+}
+
+// ── state parser ─────────────────────────────────────────────────────────
+
+/// Parse the graph-compatible core of Mermaid state diagrams.
+///
+/// This first slice covers state declarations, aliases, transitions, labels,
+/// directions, and start/end edge states. Composite states, notes, choices,
+/// forks, joins, and styling remain explicit compatibility gaps.
+pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
+    let preprocessed = preprocess_mermaid_source(source)?;
+    parse_mermaid_state_ast(&preprocessed.source)?;
+    let mut cursor = TokenCursor::new(tokenize_mermaid_state(&preprocessed.source));
+    cursor.skip_terminators();
+    cursor
+        .consume_if("HEADER")
+        .ok_or_else(|| token_error(cursor.current(), "expected stateDiagram header"))?;
+    cursor.skip_terminators();
+
+    let mut direction = DiagramDirection::Tb;
+    let mut nodes = Vec::new();
+    let mut node_indices = HashMap::new();
+    let mut edges = Vec::new();
+    let mut pseudo_index = 0;
+
+    while !cursor.at_eof() {
+        if cursor.current().value.eq_ignore_ascii_case("direction") {
+            cursor.advance();
+            let token = cursor
+                .consume_if("DIRECTION")
+                .ok_or_else(|| token_error(cursor.current(), "expected state direction"))?;
+            direction = match token.value.to_ascii_uppercase().as_str() {
+                "TB" => DiagramDirection::Tb,
+                "BT" => DiagramDirection::Bt,
+                "LR" => DiagramDirection::Lr,
+                "RL" => DiagramDirection::Rl,
+                _ => unreachable!("state.tokens restricts direction values"),
+            };
+        } else if cursor.current().value.eq_ignore_ascii_case("state") {
+            cursor.advance();
+            let (id, label) = if token_name(cursor.current()) == "STRING" {
+                let label = strip_state_string(&cursor.advance().value);
+                if !cursor.current().value.eq_ignore_ascii_case("as") {
+                    return Err(token_error(
+                        cursor.current(),
+                        "expected state alias keyword as",
+                    ));
+                }
+                cursor.advance();
+                (take_state_ref(&mut cursor)?, label)
+            } else {
+                let id = take_state_ref(&mut cursor)?;
+                let label = if cursor.consume_if("COLON").is_some() {
+                    take_state_text(&mut cursor)
+                } else {
+                    id.clone()
+                };
+                (id, label)
+            };
+            upsert_state_node(&mut nodes, &mut node_indices, id, label);
+        } else {
+            let from = take_state_endpoint(
+                &mut cursor,
+                true,
+                &mut pseudo_index,
+                &mut nodes,
+                &mut node_indices,
+            )?;
+            cursor
+                .consume_if("ARROW")
+                .ok_or_else(|| token_error(cursor.current(), "expected state transition arrow"))?;
+            let to = take_state_endpoint(
+                &mut cursor,
+                false,
+                &mut pseudo_index,
+                &mut nodes,
+                &mut node_indices,
+            )?;
+            let label = cursor
+                .consume_if("COLON")
+                .map(|_| DiagramLabel::new(take_state_text(&mut cursor)));
+            edges.push(GraphEdge {
+                id: None,
+                from,
+                to,
+                label,
+                kind: EdgeKind::Directed,
+                style: None,
+            });
+        }
+        cursor.skip_terminators();
+    }
+
+    Ok(GraphDiagram {
+        direction,
+        title: None,
+        nodes,
+        edges,
+    })
+}
+
+fn take_state_ref(cursor: &mut TokenCursor) -> Result<String, ParseError> {
+    if matches!(token_name(cursor.current()), "ID" | "WORD") {
+        Ok(cursor.advance().value.clone())
+    } else {
+        Err(token_error(cursor.current(), "expected state identifier"))
+    }
+}
+
+fn take_state_endpoint(
+    cursor: &mut TokenCursor,
+    source: bool,
+    pseudo_index: &mut usize,
+    nodes: &mut Vec<GraphNode>,
+    node_indices: &mut HashMap<String, usize>,
+) -> Result<String, ParseError> {
+    if cursor.consume_if("EDGE_STATE").is_some() {
+        let role = if source { "start" } else { "end" };
+        let id = format!("__state_{role}_{}", *pseudo_index);
+        *pseudo_index += 1;
+        upsert_state_node(nodes, node_indices, id.clone(), String::new());
+        nodes[node_indices[&id]].shape = Some(DiagramShape::Ellipse);
+        Ok(id)
+    } else {
+        let id = take_state_ref(cursor)?;
+        if !node_indices.contains_key(&id) {
+            upsert_state_node(nodes, node_indices, id.clone(), id.clone());
+        }
+        Ok(id)
+    }
+}
+
+fn upsert_state_node(
+    nodes: &mut Vec<GraphNode>,
+    node_indices: &mut HashMap<String, usize>,
+    id: String,
+    label: String,
+) {
+    if let Some(&index) = node_indices.get(&id) {
+        if !label.is_empty() {
+            nodes[index].label = DiagramLabel::new(label);
+        }
+        return;
+    }
+    node_indices.insert(id.clone(), nodes.len());
+    nodes.push(GraphNode {
+        id,
+        label: DiagramLabel::new(label),
+        shape: Some(DiagramShape::RoundedRect),
+        style: None,
+    });
+}
+
+fn take_state_text(cursor: &mut TokenCursor) -> String {
+    let mut parts = Vec::new();
+    while !cursor.at_eof() && !matches!(token_name(cursor.current()), "NEWLINE" | "SEMICOLON") {
+        let token = cursor.advance();
+        parts.push(if token_name(token) == "STRING" {
+            strip_state_string(&token.value)
+        } else {
+            token.value.clone()
+        });
+    }
+    parts.join(" ")
+}
+
+fn strip_state_string(value: &str) -> String {
+    value
+        .strip_prefix('"')
+        .and_then(|value| value.strip_suffix('"'))
+        .unwrap_or(value)
+        .to_string()
 }
 
 // ── sequence parser ──────────────────────────────────────────────────────
@@ -3555,6 +3745,48 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_parses_graph_compatible_core() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\ndirection LR\nstate \"Still waiting\" as Still\n[*] --> Still\nStill --> Moving: begin motion\nMoving --> [*]: stop\n",
+        )
+        .expect("state core should parse");
+
+        assert_eq!(diagram.direction, DiagramDirection::Lr);
+        assert_eq!(diagram.nodes.len(), 4);
+        assert_eq!(diagram.edges.len(), 3);
+        assert_eq!(
+            diagram
+                .nodes
+                .iter()
+                .find(|node| node.id == "Still")
+                .unwrap()
+                .label
+                .text,
+            "Still waiting"
+        );
+        assert_eq!(
+            diagram.edges[1].label.as_ref().unwrap().text,
+            "begin motion"
+        );
+        assert_eq!(
+            diagram
+                .nodes
+                .iter()
+                .filter(|node| node.shape == Some(DiagramShape::Ellipse))
+                .count(),
+            2
+        );
+    }
+
+    #[test]
+    fn dispatch_state_to_graph_ir() {
+        match parse_any_mermaid("stateDiagram\nReady --> Running").unwrap() {
+            MermaidDiagram::Graph(diagram) => assert_eq!(diagram.edges.len(), 1),
+            _ => panic!("expected graph-compatible state diagram"),
+        }
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -4325,7 +4557,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.43.0");
+        assert_eq!(crate::VERSION, "0.45.0");
     }
 
     #[test]

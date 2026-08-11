@@ -23,7 +23,7 @@ mod apple {
     use layout_ir::font_spec;
     use mermaid_parser::{
         parse_c4_diagram, parse_er_diagram, parse_gitgraph, parse_pie, parse_sankey,
-        parse_sequence_diagram, parse_to_diagram as parse_mermaid_to_diagram,
+        parse_sequence_diagram, parse_state_diagram, parse_to_diagram as parse_mermaid_to_diagram,
     };
     use paint_codec_png::write_png;
     use paint_metal::render;
@@ -151,6 +151,41 @@ mod apple {
             glyph_runs > 0,
             "expected at least one PaintGlyphRun from shaping pipeline"
         );
+    }
+
+    #[test]
+    fn render_mermaid_state_to_png() {
+        let graph = parse_state_diagram(
+            "stateDiagram-v2\ndirection LR\n[*] --> Ready\nReady --> Running: start\nRunning --> [*]: stop\n",
+        )
+        .expect("Mermaid state parse failed");
+        let layout = layout_graph_diagram(&graph, None, None);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color {
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                    a: 255,
+                },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 14.0),
+                title_font: font_spec("Helvetica", 18.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_state_e2e.png").expect("PNG write failed");
+
+        assert!(pixels.width > 0);
+        assert!(pixels.height > 0);
+        assert!(!scene.instructions.is_empty());
     }
 
     #[test]

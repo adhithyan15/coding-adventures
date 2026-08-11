@@ -103,6 +103,16 @@ Sharing a domain IR does not require sharing a source AST. For example,
 Sequence Diagram and ZenUML should have different parsers but may lower into
 the same participant/message/lifeline IR.
 
+### State Native Slice
+
+The initial Mermaid 11.16.1 state slice is grammar-backed and covers
+`stateDiagram`/`stateDiagram-v2` headers, simple declarations and quoted
+aliases, labeled transitions, document direction, and `[*]` start/end edge
+states. It lowers into the shared graph IR, graph layout, and backend-neutral
+PaintScene instructions, with a Metal-to-PNG fixture. Composite states, notes,
+choices, forks, joins, concurrency, click metadata, accessibility metadata, and
+state styling remain explicit gaps, so the family is marked partial.
+
 ### Sequence Native Slice
 
 The first sequence vertical slice is grammar-backed and covers participant and
