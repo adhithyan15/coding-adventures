@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.51.0
+
+- Resolve state `:::` class shorthand on standalone states and transition endpoints.
+
 ## 0.50.0
 
 - Parse state `classDef` and `class` statements and resolve reusable styles into graph IR.

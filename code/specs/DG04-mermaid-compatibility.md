@@ -121,8 +121,10 @@ Inline `style` statements preserve fill, stroke, text color, and stroke width
 through graph IR, layout style resolution, and backend-neutral Paint geometry
 and glyph instructions. Named `classDef` declarations and comma-delimited
 `class` assignments resolve the same properties into graph IR, including
-assignments that precede their declaration. Default classes and `:::` shorthand
-remain compatibility gaps.
+assignments that precede their declaration. The `:::` shorthand applies named
+classes to standalone states and either endpoint of a transition, including
+start/end pseudostates. Styling inside composite states remains a compatibility
+gap until composite state structure is represented in semantic IR.
 
 ### Sequence Native Slice
 
