@@ -44,6 +44,7 @@ const HEBREW_PE = DUCTUS[ductusKey("hebrew", "פ")];
 const HEBREW_TSADI = DUCTUS[ductusKey("hebrew", "צ")];
 const HEBREW_QOF = DUCTUS[ductusKey("hebrew", "ק")];
 const HEBREW_RESH = DUCTUS[ductusKey("hebrew", "ר")];
+const HEBREW_SHIN = DUCTUS[ductusKey("hebrew", "ש")];
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
@@ -507,6 +508,21 @@ describe("handwriting ductus", () => {
     expect(top[0].x).toBeLessThan(top.at(-1)!.x);
     expect(side[0]).toEqual(top.at(-1));
     expect(side[0].y).toBeGreaterThan(side.at(-1)!.y);
+  });
+
+  it("Hebrew ש draws its outer bowl before the lifted middle branch", () => {
+    expect(HEBREW_SHIN.script).toBe("hebrew");
+    expect(penLifts(HEBREW_SHIN)).toBe(1);
+    expect(HEBREW_SHIN.strokes).toHaveLength(2);
+    expect(HEBREW_SHIN.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    const outer = HEBREW_SHIN.strokes[0].segments[0].path;
+    const left = HEBREW_SHIN.strokes[0].segments[1].path;
+    const middle = HEBREW_SHIN.strokes[1].segments[0].path;
+    expect(outer[0].y).toBeGreaterThan(outer.at(-1)!.y);
+    expect(outer[0].x).toBeGreaterThan(outer.at(-1)!.x);
+    expect(left[0]).toEqual(outer.at(-1));
+    expect(left[0].y).toBeLessThan(left.at(-1)!.y);
+    expect(middle[0].y).toBeGreaterThan(middle.at(-1)!.y);
   });
 
   it("அ lifts once before its separate right upright (two strokes)", () => {
@@ -1178,6 +1194,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ר", HEBREW_RESH.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
+    expect(verifiedLetterFont("ש", HEBREW_SHIN.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
     expect(verifiedLetterFont("ம", DUCTUS["ம"].source.url)).toBe(
       "_fonts/NotoSansTamil-Static.ttf",
     );
@@ -1430,6 +1449,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /printed Resh.*one continuous run.*03:26.2–03:27.1.*top bar.*left-to-right.*rounds the top-right corner.*right side.*without lifting.*cursive Resh.*purple.*rounder hook.*03:29.3–03:30.0.*without lifting.*Noto Sans Hebrew.*one-run cursive variation/i,
+    );
+  });
+
+  it("Hebrew ש traces its two-run printed form and records the cursive loop", () => {
+    const src = HEBREW_SHIN.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=8wi_uPY9uZA");
+    expect(src.citation).toMatch(
+      /How to write the Hebrew alphabet in print and cursive.*03:34.0–03:36.3.*Aural Writing.*8 June 2022/i,
+    );
+    expect(src.variation).toMatch(
+      /printed Shin.*two runs.*03:34.0–03:36.3.*top of the right branch.*descends.*outer U-shaped base.*climbs the left branch.*without lifting.*one lift.*descends the middle branch.*cursive Shin.*purple.*one rounded inward loop.*short rightward exit.*03:39.2–03:40.2.*without lifting.*Noto Sans Hebrew.*one-run cursive variation/i,
     );
   });
 
