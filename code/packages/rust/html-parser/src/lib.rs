@@ -7731,10 +7731,11 @@ impl HtmlParser {
     fn apply_interactive_implied_contexts(&mut self, incoming_name: &str) -> bool {
         match incoming_name {
             "a" => {
-                if self.current_empty_element_is("a")
-                    && !self.current_parent_element_is(|name| name == "p")
-                {
-                    return true;
+                if self.has_active_html_anchor() {
+                    self.diagnostics.push(ParserDiagnostic::new(
+                        "nested-anchor-start-tag",
+                        "start tag `<a>` triggered adoption-agency recovery for an active anchor",
+                    ));
                 }
                 let consumes_pending_anchor = !self.has_open_table_context()
                     && !matches!(self.current_element_name(), Some("p"));
@@ -7777,6 +7778,16 @@ impl HtmlParser {
             }
             _ => false,
         }
+    }
+
+    fn has_active_html_anchor(&self) -> bool {
+        self.pending_formatting_reconstruction
+            .iter()
+            .any(|(name, _)| name == "a")
+            || self.open_elements.iter().any(|path| {
+                element_ref_at_path(&self.document, path)
+                    .is_some_and(|element| element.namespace.is_none() && element.name == "a")
+            })
     }
 
     fn apply_select_implied_contexts(&mut self, incoming_name: &str) -> bool {
@@ -9168,19 +9179,6 @@ impl HtmlParser {
             .is_some_and(|element| {
                 element.name == name && element.attributes.is_empty() && element.children.is_empty()
             })
-    }
-
-    fn current_parent_element_is(&self, predicate: impl FnOnce(&str) -> bool) -> bool {
-        let Some(path) = self.open_elements.last() else {
-            return false;
-        };
-        let Some((_, parent_path)) = path.split_last() else {
-            return false;
-        };
-        if parent_path.is_empty() {
-            return false;
-        }
-        element_at_path(&self.document, parent_path).is_some_and(predicate)
     }
 
     fn current_last_child_element_is(&self, name: &str) -> bool {
@@ -34369,6 +34367,53 @@ mod tests {
                 diagnostic.code != "unexpected-formatting-end-tag-without-open-element"
             }));
         }
+    }
+
+    #[test]
+    fn reports_repeated_anchor_start_tag_recovery() {
+        let output = parse_html_with_diagnostics(
+            "<!doctype html><a><div><style></style><address><a>",
+        )
+        .unwrap();
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![
+                ParserDiagnostic::new(
+                    "nested-anchor-start-tag",
+                    "start tag `<a>` triggered adoption-agency recovery for an active anchor"
+                ),
+                ParserDiagnostic::new(
+                    "eof-with-unclosed-elements",
+                    "end of file was reached with disallowed open elements"
+                ),
+            ]
+        );
+
+        let document_body = body(&output.document);
+        assert_eq!(document_body.children.len(), 2);
+        assert_eq!(element(&document_body.children[0]).name, "a");
+        let div = element(&document_body.children[1]);
+        assert_eq!(div.name, "div");
+        assert_eq!(element(&div.children[0]).name, "a");
+        let address = element(&div.children[1]);
+        assert_eq!(address.name, "address");
+        assert_eq!(address.children.len(), 2);
+        assert!(address.children.iter().all(|child| {
+            let anchor = element(child);
+            anchor.name == "a" && anchor.children.is_empty()
+        }));
+
+        let adjacent = parse_html_with_diagnostics("<!doctype html><a></a><a>").unwrap();
+        assert!(adjacent
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "nested-anchor-start-tag"));
+
+        let foreign = parse_html_with_diagnostics("<!doctype html><svg><a><a>").unwrap();
+        assert!(foreign
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "nested-anchor-start-tag"));
     }
 
     #[test]
