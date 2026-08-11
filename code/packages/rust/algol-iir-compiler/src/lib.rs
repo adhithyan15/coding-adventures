@@ -6030,6 +6030,18 @@ fn literal_signed_integer_exponent(node: &GrammarASTNode) -> Option<i32> {
     None
 }
 
+fn literal_integral_real_exponent(node: &GrammarASTNode) -> Option<i32> {
+    let value = expr_real_literal_text(node)?.parse::<f64>().ok()?;
+    if !value.is_finite()
+        || value.fract() != 0.0
+        || value < -(MAX_POW_UNROLL_EXPONENT as f64)
+        || value > MAX_POW_UNROLL_EXPONENT as f64
+    {
+        return None;
+    }
+    Some(value as i32)
+}
+
 fn expr_string_literal(node: &GrammarASTNode) -> Option<String> {
     let tokens = direct_tokens(node);
     if tokens.len() == 1 && tokens[0].effective_type_name() == "STRING_LIT" {
@@ -6112,9 +6124,12 @@ fn expr_static_real_arithmetic_value(node: &GrammarASTNode) -> Option<f64> {
         let exponent = literal_nonneg_integer_power_chain(exponents)
             .map(|value| value as i32)
             .or_else(|| {
-                (exponents.len() == 1)
-                    .then(|| literal_signed_integer_exponent(exponents[0]))
-                    .flatten()
+                if exponents.len() == 1 {
+                    literal_signed_integer_exponent(exponents[0])
+                        .or_else(|| literal_integral_real_exponent(exponents[0]))
+                } else {
+                    None
+                }
             })?;
         let base = expr_static_real_arithmetic_value(base)?;
         let mut value = 1.0;
@@ -7196,8 +7211,9 @@ mod tests {
     #[test]
     fn al4_print_static_real_power_rejects_unbounded_exponents() {
         for source in [
-            "begin print(2.0 ^ 2.0) end",
+            "begin print(2.0 ^ 0.5) end",
             "begin print(2.0 ^ 65) end",
+            "begin print(2.0 ^ 65.0) end",
         ] {
             let err = compile_source(source, "test")
                 .expect_err("unbounded static real power must require runtime formatting");
@@ -7227,6 +7243,23 @@ mod tests {
         let err = compile_source("begin print(0.0 ^ (-1)) end", "test")
             .expect_err("zero to a negative power must fail closed");
         assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_real_integral_real_exponent() {
+        let module = compile_source("begin print(2.0 ^ 3.0, 2.0 ^ (-3.0)) end", "test")
+            .expect("static integral real exponents compile");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["8", "0.125"]);
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
     }
 
     #[test]
