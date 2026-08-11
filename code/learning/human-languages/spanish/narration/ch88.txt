@@ -1,41 +1,47 @@
-Spanish, chapter 88: Conocer --- Coming to Know.
+Spanish, chapter 88: Jugar --- Playing Was Joking.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-conocer — "to meet", because knowing has a first moment.
+jugar — "to play", and the only verb of its kind.
 
 Warm-up.
 [pause 2 seconds]
-Juego — the one u becomes ue in the language. Now the chapter's last verb, and its oddity is not in the vowel but in what the word means.
+Consigo cracked its e to i. Here is a verb that cracks a vowel no other verb in Spanish cracks — and it started life as a joke.
 
 Sounds you'll need.
-soft-c — conoces has a soft second c: a th in Spain, an s elsewhere.
-k-hard — but conozco is ko-NOTH-ko, soft then hard, back to back.
+j-jota — the j is scraped at the back of the throat: khoo-GAR.
+diphthong-ue — juego is three beats, KHWE-go.
 
-The word, taken apart: conocer.
-conocer from Latin cognōscere, com- + (g)nōscere. Its -sc- is Latin's "begin to" marker, so nōscere was never "to know" — it was "to come to know". Latin said nōvī, "I have come to know", for actually knowing a thing.
-Spanish built its verb from the beginning half. That is the whole lesson: conocer a alguien is to meet someone, and Spanish puts a small a before a person who is the object — conozco a María.
-The root fills English: cognition, recognize, incognito, and through French notice, notion, notorious and noble, "the knowable one". English know and ken are its Germanic siblings — the same standing that padre has beside English father, neither one borrowed from the other.
+The word, taken apart: jugar.
+jugar ("to play") from Latin iocārī, "to joke, to jest", built on the noun iocus, "a joke". Playing and joking were one word, and Spanish kept the joking one for both.
+English holds iocus in several shapes: joke; through French jocular; juggler, from ioculātor, an entertainer; and jeopardy, from Old French jeu parti, "an evenly divided game" — a position so balanced that either side might lose. The Spanish family stays close: el juego, a game; el juguete, a toy.
 
-Grammar Lens: conocer and saber.
-[a table of 2 rows, read aloud]
-what you know: a person, a city, a book. verb: conocer.
-what you know: a fact, or how to do something. verb: saber.
-English says know for both. Spanish will not: conocer is being acquainted — you have met the thing. Saber is having the information. Conozco Madrid means I have been there; sé dónde está means I have the fact.
-The yo-form keeps a hard cluster the rest lost: conozco, conoces, conoce, conocemos, conocen. Every -cer verb after a vowel does the same, and it is a third kind of odd yo-form beside traigo and oigo.
+Why it's said this way: the play-verb Spanish let go.
+Latin's ordinary word for playing was lūdere, and Spanish dropped it exactly as it dropped claudere for shutting doors. English kept the whole family instead: illusion, allude, elude, delude, collude, prelude, interlude, ludicrous.
+Claudere and lūdere tell one story: the large English family belongs to the Latin verb Spanish walked away from.
+
+Grammar Lens: the fourth crack, with one member.
+[a table of 5 rows, read aloud]
+person: yo. form: juego.
+person: tú. form: juegas.
+person: él/ella/usted. form: juega.
+person: nosotros. form: jugamos.
+person: ellos/ustedes. form: juegan.
+Dormir breaks o becomes ue. Jugar breaks u becomes ue, and it is the only verb in Spanish that does: the o of iocārī had already slid irregularly to u, so the crack landed on a vowel no other verb offers. Jugamos stays plain, because the stress moves to the ending.
+One more habit: Spanish plays at a thing rather than simply playing it. El fútbol is football, and you say juego al fútbol, with a + el fused into al. With a companion rather than a game it is con: juego con el perro, I play with the dog.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "conozco, conoces, conoce, conocemos, conocen"]
+[your turn — say: "juego, juegas, juega, jugamos, juegan"]
 [pause 8 seconds for the answer]
-[your turn — say: "Conozco a María" then "Conozco Madrid"]
+[your turn — say: "Juego con el perro"]
 [pause 8 seconds for the answer]
-[your turn — say: "traigo, consigo, juego, conozco" — the chapter's four yo-forms]
+[your turn — say: "duermo" then "juego" — o to ue, then u to ue]
 [pause 8 seconds for the answer]
-[your turn — say: "padre, father" then "conocer, know" — siblings, not borrowings]
+[your turn — say: "iocus, joke, jocular, juggler"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say the chapter's four verbs in the yo, then say what each one does to itself. (Traigo grows a hard g; consigo breaks e becomes i and loses a silent u; juego breaks u becomes ue, alone in the language; conozco keeps a hard cluster.) Name their four Latin roots and what each meant. (Trahere to drag, cōnsequī to follow, iocārī to joke, cognōscere to begin to know.) Which verb do you use for a person, and which for a fact? (Conocer; saber.) And which of the four moves a thing toward you? (Traer — llevar goes away.)
+What did iocārī mean, and which English words carry it? (To joke; joke, jocular, juggler, jeopardy.) What is unusual about juego among Spanish verbs? (U becomes ue, and no other verb does it.) Which two Latin verbs did Spanish drop while English kept their families? (Claudere and lūdere.) And which vowel does conseguir break? (E to i.)

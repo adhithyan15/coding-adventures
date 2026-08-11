@@ -45,6 +45,8 @@ describe("generated book source hashes", () => {
     // preterites, and a synthesis. Spanish runs 1..91.
     // HL-C100 inserted un/una as a new chapter 3 - the indefinite article had
     // never been taught anywhere. Spanish runs 1..92.
+    // HL-C100 added a synthesis chapter after the fourteen-chapter vocabulary
+    // run - the first place those nouns are combined. Spanish runs 1..93.
     [1, 7],
     [2, 6],
     [3, 3],
@@ -126,17 +128,18 @@ describe("generated book source hashes", () => {
     [79, 1],
     [80, 1],
     [81, 1],
-    [82, 4],
+    [82, 1],
     [83, 4],
     [84, 4],
-    [85, 1],
+    [85, 4],
     [86, 1],
     [87, 1],
     [88, 1],
     [89, 1],
     [90, 1],
-    [91, 3],
-    [92, 4],
+    [91, 1],
+    [92, 3],
+    [93, 4],
   ])("matches the browser-loaded Spanish Chapter %i AST across %i lessons", (chapter, count) => {
     const lessons = loadLessons();
     const expected = expectedBookHash("spanish", chapter);

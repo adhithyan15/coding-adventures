@@ -2670,117 +2670,122 @@
     {
       "language": "spanish",
       "chapter": 70,
-      "output": "spanish/book/chapters/ch70-pensar.tex"
+      "output": "spanish/book/chapters/ch70-synthesis-describing.tex"
     },
     {
       "language": "spanish",
       "chapter": 71,
-      "output": "spanish/book/chapters/ch71-entender.tex"
+      "output": "spanish/book/chapters/ch71-pensar.tex"
     },
     {
       "language": "spanish",
       "chapter": 72,
-      "output": "spanish/book/chapters/ch72-leer.tex"
+      "output": "spanish/book/chapters/ch72-entender.tex"
     },
     {
       "language": "spanish",
       "chapter": 73,
-      "output": "spanish/book/chapters/ch73-escribir.tex"
+      "output": "spanish/book/chapters/ch73-leer.tex"
     },
     {
       "language": "spanish",
       "chapter": 74,
-      "output": "spanish/book/chapters/ch74-review-verbs-of-mind.tex"
+      "output": "spanish/book/chapters/ch74-escribir.tex"
     },
     {
       "language": "spanish",
       "chapter": 75,
-      "output": "spanish/book/chapters/ch75-synthesis-verbs-of-mind.tex"
+      "output": "spanish/book/chapters/ch75-review-verbs-of-mind.tex"
     },
     {
       "language": "spanish",
       "chapter": 76,
-      "output": "spanish/book/chapters/ch76-tomar.tex"
+      "output": "spanish/book/chapters/ch76-synthesis-verbs-of-mind.tex"
     },
     {
       "language": "spanish",
       "chapter": 77,
-      "output": "spanish/book/chapters/ch77-preguntar.tex"
+      "output": "spanish/book/chapters/ch77-tomar.tex"
     },
     {
       "language": "spanish",
       "chapter": 78,
-      "output": "spanish/book/chapters/ch78-ayudar.tex"
+      "output": "spanish/book/chapters/ch78-preguntar.tex"
     },
     {
       "language": "spanish",
       "chapter": 79,
-      "output": "spanish/book/chapters/ch79-review-ordinary-verbs.tex"
+      "output": "spanish/book/chapters/ch79-ayudar.tex"
     },
     {
       "language": "spanish",
       "chapter": 80,
-      "output": "spanish/book/chapters/ch80-gustar.tex"
+      "output": "spanish/book/chapters/ch80-review-ordinary-verbs.tex"
     },
     {
       "language": "spanish",
       "chapter": 81,
-      "output": "spanish/book/chapters/ch81-synthesis-gustar.tex"
+      "output": "spanish/book/chapters/ch81-gustar.tex"
     },
     {
       "language": "spanish",
       "chapter": 82,
-      "output": "spanish/book/chapters/ch82-hear-sleep-walk-run.tex"
+      "output": "spanish/book/chapters/ch82-synthesis-gustar.tex"
     },
     {
       "language": "spanish",
       "chapter": 83,
-      "output": "spanish/book/chapters/ch83-open-close-sit-stand.tex"
+      "output": "spanish/book/chapters/ch83-hear-sleep-walk-run.tex"
     },
     {
       "language": "spanish",
       "chapter": 84,
-      "output": "spanish/book/chapters/ch84-narrating.tex"
+      "output": "spanish/book/chapters/ch84-open-close-sit-stand.tex"
     },
     {
       "language": "spanish",
       "chapter": 85,
-      "output": "spanish/book/chapters/ch85-traer.tex"
+      "output": "spanish/book/chapters/ch85-narrating.tex"
     },
     {
       "language": "spanish",
       "chapter": 86,
-      "output": "spanish/book/chapters/ch86-conseguir.tex"
+      "output": "spanish/book/chapters/ch86-traer.tex"
     },
     {
       "language": "spanish",
       "chapter": 87,
-      "output": "spanish/book/chapters/ch87-jugar.tex"
+      "output": "spanish/book/chapters/ch87-conseguir.tex"
     },
     {
       "language": "spanish",
       "chapter": 88,
-      "output": "spanish/book/chapters/ch88-conocer.tex"
+      "output": "spanish/book/chapters/ch88-jugar.tex"
     },
     {
       "language": "spanish",
       "chapter": 89,
-      "output": "spanish/book/chapters/ch89-review-stem-changes.tex"
+      "output": "spanish/book/chapters/ch89-conocer.tex"
     },
     {
       "language": "spanish",
       "chapter": 90,
-      "output": "spanish/book/chapters/ch90-synthesis-verb-splits.tex"
+      "output": "spanish/book/chapters/ch90-review-stem-changes.tex"
     },
     {
       "language": "spanish",
       "chapter": 91,
-      "output": "spanish/book/chapters/ch91-wait-answer-buy.tex"
+      "output": "spanish/book/chapters/ch91-synthesis-verb-splits.tex"
     },
     {
       "language": "spanish",
       "chapter": 92,
-      "output": "spanish/book/chapters/ch92-giving-reasons.tex"
+      "output": "spanish/book/chapters/ch92-wait-answer-buy.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 93,
+      "output": "spanish/book/chapters/ch93-giving-reasons.tex"
     },
     {
       "language": "tamil",
