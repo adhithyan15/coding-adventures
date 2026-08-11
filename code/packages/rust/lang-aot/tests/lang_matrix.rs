@@ -2151,6 +2151,24 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — labels obey lexical block scope. The first nested `goto outer`
+    // resolves forward to the inner label; after that block exits, the same
+    // spelling resolves to the outer label and completes the result as 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result, phase; phase := 0; goto outer; \
+               outer: if phase = 0 then \
+                 begin phase := 1; \
+                   begin integer marker; marker := 0; goto outer; \
+                         outer: result := 20 + marker; goto innerdone; \
+                         innerdone: end; \
+                   goto outer end \
+               else begin result := result + 22; goto done end; \
+               done: end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — *real (f64) arithmetic* + a real comparison (LANG-FULL AL1 /
     // enabler E3, phase 1).  `r := 2.5 * 2.0` computes in IEEE-754 double
     // (`5.0`), then `if r = 5.0` folds a real equality to the integer exit code
@@ -7012,6 +7030,37 @@ fn algol_switch_shadowing_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but switch-shadowing execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_label_shadowing_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("phase := 0; goto outer")
+                && program.src.contains("outer: result := 20 + marker")
+                && program.src.contains("result := result + 22")
+        })
+        .expect("the ALGOL label-shadowing program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but label-shadowing execution did not complete"
             );
             continue;
         };
