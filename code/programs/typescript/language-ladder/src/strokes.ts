@@ -482,6 +482,82 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: chineseCharacterSource("亻"),
   },
+  // 口 establishes the first Chinese joined corner in the authored inventory:
+  // descend the left side, join the top and right side in one héngzhé run, then
+  // close the bottom last. The flat Noto fit preserves those three source runs.
+  [ductusKey("chinese", "口")]: {
+    script: "chinese",
+    glyph: "口",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the left vertical shù stroke from top to bottom",
+            path: [
+              { x: 166, y: 700 },
+              { x: 166, y: 620 },
+              { x: 166, y: 530 },
+              { x: 166, y: 440 },
+              { x: 166, y: 350 },
+              { x: 166, y: 260 },
+              { x: 166, y: 170 },
+              { x: 166, y: 80 },
+              { x: 166, y: -35 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the top bar from left to right",
+            path: [
+              { x: 166, y: 700 },
+              { x: 260, y: 700 },
+              { x: 360, y: 700 },
+              { x: 470, y: 700 },
+              { x: 580, y: 700 },
+              { x: 690, y: 700 },
+              { x: 785, y: 700 },
+              { x: 835, y: 700 },
+            ],
+          },
+          {
+            label: "turn the corner without lifting and descend the right side",
+            path: [
+              { x: 835, y: 700 },
+              { x: 835, y: 610 },
+              { x: 835, y: 520 },
+              { x: 835, y: 430 },
+              { x: 835, y: 340 },
+              { x: 835, y: 250 },
+              { x: 835, y: 160 },
+              { x: 835, y: 70 },
+              { x: 835, y: -30 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then close the bottom from left to right",
+            path: [
+              { x: 166, y: 70 },
+              { x: 260, y: 70 },
+              { x: 360, y: 70 },
+              { x: 470, y: 70 },
+              { x: 580, y: 70 },
+              { x: 690, y: 70 },
+              { x: 785, y: 70 },
+              { x: 835, y: 70 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("口"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

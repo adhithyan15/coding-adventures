@@ -26,6 +26,7 @@ const load = (name: string) => {
 const tamil = () => parseFont(load("NotoSansTamil-Static.ttf"));
 const CHINESE_REN = DUCTUS[ductusKey("chinese", "人")];
 const CHINESE_PERSON_RADICAL = DUCTUS[ductusKey("chinese", "亻")];
+const CHINESE_MOUTH = DUCTUS[ductusKey("chinese", "口")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -265,6 +266,22 @@ describe("handwriting ductus", () => {
     expect(left[0].x).toBeGreaterThan(left.at(-1)!.x);
     expect(vertical[0].y).toBeGreaterThan(vertical.at(-1)!.y);
     expect(vertical[0].x).toBe(vertical.at(-1)!.x);
+  });
+
+  it("Chinese 口 descends the left, joins the top and right, then closes the bottom", () => {
+    expect(CHINESE_MOUTH.script).toBe("chinese");
+    expect(penLifts(CHINESE_MOUTH)).toBe(2);
+    expect(CHINESE_MOUTH.strokes).toHaveLength(3);
+    expect(CHINESE_MOUTH.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 2, 1]);
+    const left = CHINESE_MOUTH.strokes[0].segments[0].path;
+    const top = CHINESE_MOUTH.strokes[1].segments[0].path;
+    const right = CHINESE_MOUTH.strokes[1].segments[1].path;
+    const bottom = CHINESE_MOUTH.strokes[2].segments[0].path;
+    expect(left[0].y).toBeGreaterThan(left.at(-1)!.y);
+    expect(top[0].x).toBeLessThan(top.at(-1)!.x);
+    expect(top.at(-1)).toEqual(right[0]);
+    expect(right[0].y).toBeGreaterThan(right.at(-1)!.y);
+    expect(bottom[0].x).toBeLessThan(bottom.at(-1)!.x);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -1186,6 +1203,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("亻", CHINESE_PERSON_RADICAL.source.url)).toBe(
       "_fonts/NotoSansSC-Subset.ttf",
     );
+    expect(verifiedLetterFont("口", CHINESE_MOUTH.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -1314,6 +1334,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /PRC-order dataset.*two ordered strokes.*Median 1.*upper right.*bends slightly right.*descends down-left.*median 2.*central junction.*moves slightly down-right.*descends vertically.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*one intervening pen lift.*Arphic-derived source graphics/i,
+    );
+  });
+
+  it("Chinese 口 traces its three-run closing order to the pinned PRC-order dataset", () => {
+    const src = CHINESE_MOUTH.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%8F%A3.json",
+    );
+    expect(src.citation).toMatch(
+      /Hanzi Writer Data 口\.json.*ordered stroke paths and medians 1–3.*snapshot 68d10a4.*updated from Make Me a Hanzi.*22 June 2019/i,
+    );
+    expect(src.variation).toMatch(
+      /PRC-order dataset.*three ordered strokes.*Median 1.*upper left.*descends the left side.*median 2.*upper left.*crosses the top from left to right.*turns without lifting.*descends the right side.*median 3.*lower left.*closes the bottom from left to right.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*joined corner.*two intervening pen lifts.*Arphic-derived source graphics/i,
     );
   });
 

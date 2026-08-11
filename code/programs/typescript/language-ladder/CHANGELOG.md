@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Chinese 口 ductus (HL-C09CB)
+
+- Render **口** in four source-aligned frames: left side, top bar, the joined
+  turn down the right side, and a separately closing bottom bar.
+- Fit all three source runs to Noto Sans SC while preserving the héngzhé corner,
+  two pen lifts, and close-last rule.
+- Reduce Chinese's remaining verified-ductus inventory to 21 entries.
+
 ### Added — cited Chinese 亻 ductus (HL-C09CA)
 
 - Render **亻** in two source-aligned frames: draw the long left-falling piě,
