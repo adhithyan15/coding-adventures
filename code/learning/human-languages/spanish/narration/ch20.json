@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 20,
-  "title": "Going, and the Future You Can Already Say",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:98e7e9a84fd0dfb1",
+  "title": "More -ar Verbs",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9353e4f4aab14a3d",
   "lessons": [
     {
-      "id": "ES-C10-ir",
-      "sequence": 880,
-      "title": "ir — “to go,” from more than one historical stem",
-      "headword": "ir",
-      "romanization": "ir",
-      "gloss": "to go — with the three singular present forms voy, vas, and va",
+      "id": "ES-C06-trabajar",
+      "sequence": 530,
+      "title": "trabajar — \"to work,\" and it once meant torture",
+      "headword": "trabajar",
+      "romanization": "trabajar",
+      "gloss": "to work (a second -ar verb — same pattern)",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16277cd2bd3c5520",
+      "sourceHash": "fnv1a64:e0ea18edd00b4f75",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already match different verb forms with tú and usted, and you can ask ¿Dónde…?, “Where…?” Today, add one new verb and only its three singular-person forms."
+              "text": "A second -ar verb — snap it into the exact template you just learned. And trabajar has the darkest, best etymology in this chapter: it began as a word for torture, and it's the secret origin of English travel."
             }
           ]
         },
@@ -46,11 +46,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "vowel-i — ir is one clear syllable, like ear without a glide."
+              "text": "j-jota — the j is a raspy h-from-the-throat (the jota): trabajar = tra-ba-HAR."
             },
             {
               "kind": "speech",
-              "text": "diphthong-oy — voy ends with the sound in English boy."
+              "text": "r-tap, b-soft — tapped r, soft b."
             }
           ]
         },
@@ -61,44 +61,53 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ir means “to go.” Its infinitive descends from Latin īre, also “to go.” The present forms below followed a different Latin verb, vādere, “to go forward” or “advance.” English invade and evade preserve that vad- family."
+              "text": "trabajar comes from Vulgar Latin tripaliāre, \"to torture\" — from tripalium, a Roman instrument of torture made of three stakes (tri- \"three\" + pālus \"stake,\" the root of English pale and impale)."
             },
             {
               "kind": "speech",
-              "text": "One modern verb built from historically different stems is called suppletive. English does the same thing when go changes to went, an old form borrowed from wend."
+              "text": "The chain of meaning is grimly logical: torture becomes torment / suffering becomes hard toil becomes just work. And English took the very same word down a parallel road:"
+            },
+            {
+              "kind": "speech",
+              "text": "travail — painful, laborious effort (and the pains of childbirth)."
+            },
+            {
+              "kind": "speech",
+              "text": "travel — yes: journeying was once such an ordeal that \"travail\" (toil) became travel (to make a journey). Every time you travel, you're etymologically being tortured."
+            },
+            {
+              "kind": "speech",
+              "text": "So even plain trabajo, “I work,” hides the old idea of toil as torment — a dark little joke inside an everyday verb."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: only three forms today",
+          "title": "Grammar Lens: same -ar template",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "Drop -ar, add the ending — identical to hablar:"
+            },
             {
               "kind": "table",
               "headers": [
                 "person",
-                "present of ir"
+                "form",
+                "meaning"
               ],
-              "columns": 2,
+              "columns": 3,
               "rowCount": 3,
               "utterances": [
-                "person: yo. present of ir: voy.",
-                "person: tú. present of ir: vas.",
-                "person: él / ella / usted. present of ir: va."
+                "person: I (ending carries the subject). form: trabajo. meaning: I work.",
+                "person: tú. form: trabajas. meaning: you work.",
+                "person: usted. form: trabaja. meaning: you (formal) work."
               ]
             },
             {
               "kind": "speech",
-              "text": "Say the small set as voy, vas, va. The plural forms are deliberately left for a later lesson."
-            },
-            {
-              "kind": "speech",
-              "text": "The known question word now gives you a useful prompt:"
-            },
-            {
-              "kind": "speech",
-              "text": "¿Dónde va usted? — “Where are you going?”"
+              "text": "Notice you didn't learn a new ending — that's the point. One template, every regular -ar verb."
             }
           ]
         },
@@ -116,70 +125,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“ir — voy, vas, va”",
+              "instruction": "\"trabajar\" — tra-ba-HAR, raspy j",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “ir — voy, vas, va”]"
+              "source": "[YOU SAY: \"trabajar\" — *tra-ba-HAR*, raspy *j*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“¿Dónde va usted?”",
+              "instruction": "\"trabajo, trabajas, trabaja\" — same endings as hablo/hablas/habla",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “¿Dónde va usted?”]"
+              "source": "[YOU SAY: \"trabajo, trabajas, trabaja\" — same endings as *hablo/hablas/habla*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“īre gives ir; vādere gives the present set”",
+              "instruction": "\"trabajar\" becomes travail becomes travel — torture became a journey",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “īre gives ir; vādere gives the present set”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-ir-singular-forms",
-              "prompt": "Give the three learned singular present forms of ir: yo, tú, then él/ella/usted.",
-              "assesses": [
-                "ES-LEX-IR",
-                "ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "voy, vas, va",
-                "voy vas va",
-                "voy / vas / va"
-              ],
-              "feedback": {
-                "correct": "Right: voy, vas, va.",
-                "incorrect": "Use the three singular forms: voy, vas, va."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-ir-formal-question",
-              "prompt": "Complete the formal question: ¿Dónde ___ usted?",
-              "assesses": [
-                "ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR",
-                "ES-LEX-DONDE",
-                "ES-LEX-USTED"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "va",
-                "¿dónde va usted?",
-                "donde va usted?"
-              ],
-              "feedback": {
-                "correct": "Right: usted takes va — ¿Dónde va usted?",
-                "incorrect": "Usted uses the third-person singular form va."
-              }
+              "source": "[YOU SAY: \"trabajar\" → travail → travel — torture became a journey]"
             }
           ]
         },
@@ -196,26 +164,26 @@
             },
             {
               "kind": "speech",
-              "text": "What does ir mean? (“To go.”) Give the three forms learned today. (Voy, vas, va.) Why do they look unlike ir? (The infinitive and present set come through different Latin stems.) Next: place a and a known infinitive after this small set to talk about what is coming."
+              "text": "What did trabajar originally mean, and from what device? (\"To torture,\" from tripalium, a three-stake tool.) What two English words come from the same root? (Travail and travel.) How do you say \"I work\"? (Trabajo — same -o ending.) Next: estudiar, \"to study.\""
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C10-ir-a-futuro",
-      "sequence": 890,
-      "title": "voy a + infinitive — moving toward the near future",
-      "headword": "voy a + infinitive",
-      "romanization": "voy a + infinitive",
-      "gloss": "I am going to… — the near future with ir, a, and a known infinitive",
+      "id": "ES-C06-estudiar",
+      "sequence": 540,
+      "title": "estudiar — \"to study,\" and the eagerness inside it",
+      "headword": "estudiar",
+      "romanization": "estudiar",
+      "gloss": "to study (a third -ar verb — the pattern is automatic now)",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:522390415f366e35",
+      "sourceHash": "fnv1a64:2b3a23c3c54eacf4",
       "notice": null,
       "blocks": [
         {
@@ -231,53 +199,88 @@
             },
             {
               "kind": "speech",
-              "text": "You know voy, vas, va and the infinitives hablar, comer, vivir. This lesson joins those owned pieces with one short new word."
+              "text": "Your third -ar verb. By now the pattern should feel automatic — that's exactly what we want. estudiar also hides a nicer feeling than the classroom suggests: at root it means eagerness."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart — a",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Spanish a means “to” or “toward.” It descends from Latin ad, “toward,” which English keeps in words such as advance."
+              "text": "st-no-e — Spanish props up st- with an e: es-tudiar (the same reflex behind estar, España, escuela). es-too-DYAR."
             },
             {
               "kind": "speech",
-              "text": "Movement toward a place easily becomes movement toward a future event. English uses the same picture in “I am going to speak.” Spanish keeps a visible: voy a hablar."
+              "text": "diphthong-io — the -iar glides: es-too-DYAR."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: ir + a + an unchanged infinitive",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "estudiar comes from Latin studēre, \"to be eager, to apply oneself zealously.\" A studium was zeal, enthusiasm, devotion — only later \"study.\" So to study is, at heart, to throw yourself eagerly at something."
+            },
+            {
+              "kind": "speech",
+              "text": "That studēre is everywhere in English:"
+            },
+            {
+              "kind": "speech",
+              "text": "student — literally \"one who is eager.\""
+            },
+            {
+              "kind": "speech",
+              "text": "studio, studious, study — the place, the trait, the act."
+            },
+            {
+              "kind": "speech",
+              "text": "Italian studio and the musical studio keep the \"devoted practice\" sense."
+            },
+            {
+              "kind": "speech",
+              "text": "So Estudio español is \"I devote myself eagerly to Spanish\" — a nicer picture than mere schoolwork."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the template holds",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Drop -ar, add the ending — for the third time:"
+            },
             {
               "kind": "table",
               "headers": [
                 "person",
-                "near-future frame",
+                "form",
                 "meaning"
               ],
               "columns": 3,
               "rowCount": 3,
               "utterances": [
-                "person: yo. near-future frame: voy a hablar. meaning: I am going to speak.",
-                "person: tú. near-future frame: vas a comer. meaning: you are going to eat.",
-                "person: usted. near-future frame: va a vivir. meaning: you are going to live."
+                "person: I (ending carries the subject). form: estudio. meaning: I study.",
+                "person: tú. form: estudias. meaning: you study.",
+                "person: usted. form: estudia. meaning: you (formal) study."
               ]
             },
             {
               "kind": "speech",
-              "text": "Only ir changes for the person. The second verb stays in its known dictionary form: hablar, comer, or vivir. No new plural person or infinitive is hidden in the pattern."
+              "text": "Three verbs, one pattern: hablo, trabajo, estudio. The singular regular -ar present is now reusable rather than memorized verb by verb."
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -290,75 +293,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“voy a hablar”",
+              "instruction": "\"estudiar\" — es-too-DYAR",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “voy a hablar”]"
+              "source": "[YOU SAY: \"estudiar\" — *es-too-DYAR*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“vas a comer”",
+              "instruction": "\"estudio, estudias, estudia\" — the now-familiar endings",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “vas a comer”]"
+              "source": "[YOU SAY: \"estudio, estudias, estudia\" — the now-familiar endings]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“va a vivir”",
+              "instruction": "\"estudiar\" then English \"student, studio\" — the studēre \"eagerness\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “va a vivir”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-ir-a-futuro-voy-hablar",
-              "prompt": "Say 'I am going to speak' in Spanish.",
-              "assesses": [
-                "ES-LEX-A",
-                "ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE",
-                "ES-LEX-HABLAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "voy a hablar.",
-                "voy a hablar"
-              ],
-              "feedback": {
-                "correct": "Right: Voy a hablar.",
-                "incorrect": "Use voy + a + the unchanged infinitive hablar."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-ir-a-futuro-vas-comer",
-              "prompt": "Say 'You are going to eat' to one friend in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR",
-                "ES-LEX-A",
-                "ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE",
-                "ES-LEX-COMER"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "vas a comer.",
-                "vas a comer"
-              ],
-              "feedback": {
-                "correct": "Right: Vas a comer.",
-                "incorrect": "Use the tú form vas, then a, then comer."
-              }
+              "source": "[YOU SAY: \"estudiar\" then English \"student, studio\" — the *studēre* \"eagerness\"]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -370,26 +332,26 @@
             },
             {
               "kind": "speech",
-              "text": "What is the frame? (Ir in the present + a + an infinitive.) Does the second verb change for the person? (No.) What idea connects physical going with future time? (Motion toward a destination becomes motion toward an event.) Next: say whose already-known café it is."
+              "text": "What did studēre originally mean? (\"To be eager / apply oneself.\") Its English cousins? (Student, studio, studious.) Say \"I study\" — and notice it uses the same -o as hablo and trabajo. (Estudio.) Next: put a verb and a noun together into your first real sentence."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C10-mi-tu-su",
-      "sequence": 900,
-      "title": "mi, tu, su — whose café?",
-      "headword": "mi, tu, su",
-      "romanization": "mi, tu, su",
-      "gloss": "my, your informal, and your formal or his or her — before a singular noun",
+      "id": "ES-C06-espanol",
+      "sequence": 550,
+      "title": "español — the word for the language",
+      "headword": "español",
+      "romanization": "español",
+      "gloss": "\"Spanish\" — the language, the people, and the Roman name for the peninsula underneath it",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f10eee7bb8d91b60",
+      "sourceHash": "fnv1a64:6ca181aa844e1969",
       "notice": null,
       "blocks": [
         {
@@ -405,58 +367,172 @@
             },
             {
               "kind": "speech",
-              "text": "You already know café, and you distinguish informal tú from formal usted. Now put one small ownership word before that one known noun."
+              "text": "You have practised writing this word's ñ. Now find out what is inside it — because español is not a Spanish-made word at all."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The words, taken apart",
+          "title": "The word, taken apart — español",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "Spanish",
-                "Latin source",
-                "meaning in today's frame"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "Spanish: mi. Latin source: meus. meaning in today's frame: my.",
-                "Spanish: tu. Latin source: tuus. meaning in today's frame: your, to one informal tú.",
-                "Spanish: su. Latin source: suus. meaning in today's frame: your, to formal usted; also his or her."
-              ]
+              "kind": "speech",
+              "text": "español = \"Spanish\" — both the language and a Spaniard — from Hispania, the Roman name for the Iberian peninsula. The path Hispania becomes hispaniolus becomes español wore the word down, and there is the ñ again, exactly the -ni- squeeze you met in the writing lesson (Hispaniolus becomes españ-ol). Say it es-pa-NYOL."
             },
             {
               "kind": "speech",
-              "text": "English my helps recall mi. Older English thy, “your,” helps recall Latin tuus and Spanish tu. The ownership word tu has no written accent; the person word tú that you already know keeps its accent."
+              "text": "Two footnotes worth having:"
+            },
+            {
+              "kind": "speech",
+              "text": "English Spanish, Hispanic and Hispania are all the same root, so the English and Spanish names for the language are cousins, not translations of each other."
+            },
+            {
+              "kind": "speech",
+              "text": "Hispania itself may go back through Latin to a Phoenician name for the coast, often read as \"land of hyraxes\" (or rabbits) — the Phoenicians having met an unfamiliar animal and reached for the nearest word they had."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"español\" — es-pa-NYOL",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"español\" — *es-pa-NYOL*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the path — \"Hispania, hispaniolus, español\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the path — \"Hispania, hispaniolus, español\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"español\" then English \"Hispanic\" — same root",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"español\" then English \"Hispanic\" — same root]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does español come from? (Hispania, the Roman name for Iberia.) What letter does its ending bring back, and from what Latin sequence? (ñ, from -ni- in Hispaniolus.) Next: put it behind a verb and build your first sentence."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C06-hablo-espanol",
+      "sequence": 560,
+      "title": "Hablo español — your first real sentence",
+      "headword": "Hablo español",
+      "romanization": "Hablo español",
+      "gloss": "your first sentence built from parts — and the rule that languages take no article",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0132b20432c6c02",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is the moment this book has been building to. You take a verb you conjugated yourself and a noun you took apart yourself, and make a sentence nobody handed you pre-assembled."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built — the sentence assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Snap two things you already own together:"
+            },
+            {
+              "kind": "speech",
+              "text": "Hablo (I speak, from hablar) + español (Spanish) = Hablo español."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a complete, grammatical Spanish sentence, and notice what is not in it: no separate subject word. The -o of hablo already says \"I\" — the pro-drop you just learned, doing real work in a real sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "Now swap the pieces and watch it generate:"
+            },
+            {
+              "kind": "speech",
+              "text": "Estudio español. — \"I study Spanish.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Trabajo. — \"I work.\""
+            },
+            {
+              "kind": "speech",
+              "text": "¿Hablas español? — \"Do you speak Spanish?\" (the ¿? pair opening and closing the question, as in the writing lesson)."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: put the ownership word before the noun",
+          "title": "Grammar Lens: languages go bare",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "phrase",
-                "meaning"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "mi café means my coffee.",
-                "tu café means your coffee, informal.",
-                "su café means your coffee, formal; or his or her coffee."
-              ]
+              "kind": "speech",
+              "text": "One more thing missing from hablo español: no \"the,\" no \"a.\" After a verb like hablar or estudiar, a language name takes no article — hablo español, never hablo el español."
             },
             {
               "kind": "speech",
-              "text": "The situation tells you which person su points to. Every noun phrase in this lesson is singular. Forms used before plural things are left for a later step, so there is no new number pattern to learn here."
+              "text": "This matters because Spanish otherwise loves its articles far more than English does (me gusta el café, \"I like coffee\"). So this is a genuine exception you have to hold onto, and the rule of thumb is narrow: right after hablar, the language goes bare."
             }
           ]
         },
@@ -474,75 +550,53 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“mi café”",
+              "instruction": "\"Hablo español\" — AH-bloh es-pa-NYOL",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “mi café”]"
+              "source": "[YOU SAY: \"Hablo español\" — *AH-bloh es-pa-NYOL*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“tu café” to tú",
+              "instruction": "swap the verb — \"Estudio español\", \"Trabajo\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “tu café” to *tú*]"
+              "source": "[YOU SAY: swap the verb — \"Estudio español\", \"Trabajo\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“su café” to usted",
+              "instruction": "ask it — \"¿Hablas español?\" (raise the pitch; ¿ opens it)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “su café” to *usted*]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-mi-tu-su-my-coffee",
-              "prompt": "Say 'my coffee' in Spanish.",
-              "assesses": [
-                "ES-LEX-POSSESSIVES-MI-TU-SU",
-                "ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN",
-                "ES-LEX-CAFE"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "mi café",
-                "mi cafe"
-              ],
-              "feedback": {
-                "correct": "Right: mi café.",
-                "incorrect": "Put mi before the known noun café."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-mi-tu-su-formal-your-coffee",
-              "prompt": "Addressing usted, say 'your coffee' in Spanish.",
-              "assesses": [
-                "ES-LEX-POSSESSIVES-MI-TU-SU",
-                "ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN",
-                "ES-LEX-CAFE",
-                "ES-REGISTER-TU-USTED"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "su café",
-                "su cafe"
-              ],
-              "feedback": {
-                "correct": "Right: formal usted pairs here with su café.",
-                "incorrect": "For formal usted, put su before café."
-              }
+              "source": "[YOU SAY: ask it — \"¿Hablas español?\" (raise the pitch; ¿ opens it)]"
             }
           ]
         },
         {
           "index": 4,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You met no long ago as the answer. It has a second job, and now you have a sentence to try it on: put no directly in front of the verb and the whole thing flips."
+            },
+            {
+              "kind": "speech",
+              "text": "Hablo español becomes No hablo español."
+            },
+            {
+              "kind": "speech",
+              "text": "That is all there is to it. English needs a helper — do not — and Spanish needs nothing: one small word, in front, and the sentence means its opposite."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -554,26 +608,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three ownership words. (Mi, tu, su.) Where do they go? (Before the noun.) Which one addresses usted? (Su.) Which Latin sources sit behind them? (Meus, tuus, suus.) Next: retrieve the chapter without adding a new word, form, or noun."
+              "text": "Say \"I speak Spanish,\" then \"I study Spanish.\" (Hablo español; estudio español.) Why is there no separate subject word? (The -o ending carries \"I.\") Why no \"the\" before español? (Languages take no article after a verb like hablar.) You just built a sentence from parts — that is the whole game from here."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C10-practice",
-      "sequence": 910,
-      "title": "Practice — going, approaching events, and ownership",
+      "id": "ES-C06-practice",
+      "sequence": 570,
+      "title": "Practice — making sentences with -ar verbs",
       "headword": "(practice)",
       "romanization": "(practice)",
-      "gloss": "singular ir, the near future, and mi, tu, or su before café",
+      "gloss": "your first sentences — the -ar present tense in action",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e85dc23372f8663",
+      "sourceHash": "fnv1a64:3b9e9ea3dbcbfac7",
       "notice": null,
       "blocks": [
         {
@@ -589,54 +643,79 @@
             },
             {
               "kind": "speech",
-              "text": "This checkpoint adds nothing. Retrieve voy, vas, va; build the near future with a and a known infinitive; then put mi, tu, or su before the known noun café."
+              "text": "A milestone chapter: for the first time you're not reciting fixed phrases, you're building sentences from a pattern. Drill the three verbs through the endings until hablo / hablas / habla is automatic."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the complete small chapter frame",
+          "title": "Grammar Lens: conjugate on command",
           "segments": [
             {
-              "kind": "speech",
-              "text": "ir, singular: voy, vas, va."
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
             },
             {
               "kind": "speech",
-              "text": "near future: voy a hablar, vas a comer, va a vivir."
+              "text": "Run each verb through the three singular jobs you know: the ending alone for I becomes tú becomes usted:"
             },
             {
               "kind": "speech",
-              "text": "ownership before one singular known noun: mi café, tu café, su café."
+              "text": "hablar: hablo, hablas, habla."
             },
             {
               "kind": "speech",
-              "text": "Plural person forms of ir and possessives before plural nouns remain deferred."
+              "text": "trabajar: trabajo, trabajas, trabaja."
+            },
+            {
+              "kind": "speech",
+              "text": "estudiar: estudio, estudias, estudia."
+            },
+            {
+              "kind": "speech",
+              "text": "Same three endings (-o / -as / -a) every time — that's the whole regular -ar present, singular."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — retrieve the history",
+          "type": "input",
+          "title": "The exchange — say something real",
           "segments": [
             {
               "kind": "speech",
-              "text": "ir continues Latin īre, while voy, vas, va continue vādere."
-            },
-            {
-              "kind": "speech",
-              "text": "a continues Latin ad, “toward”; motion toward a goal became motion toward a coming event."
-            },
-            {
-              "kind": "speech",
-              "text": "mi, tu, su continue Latin meus, tuus, suus."
+              "text": "— ¿Hablas español? — Hablo español. — ¿Estudias español? — Estudio español. — Café, por favor. — ¡Gracias! — De nada."
             }
           ]
         },
         {
           "index": 3,
+          "type": "notice",
+          "title": "What you've built this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "por favor — please ( from \"for a favour\"), completing gracias / de nada / por favor."
+            },
+            {
+              "kind": "speech",
+              "text": "the singular regular -ar pattern — drop -ar, add -o / -as / -a: the template behind hablar, trabajar, and estudiar."
+            },
+            {
+              "kind": "speech",
+              "text": "hablar ( from fābula, fable; the f becomes h law), trabajar ( from tripalium, torture becomes travail/travel), estudiar ( from studēre, eagerness becomes student)."
+            },
+            {
+              "kind": "speech",
+              "text": "Hablo español — your first self-assembled sentence (pro-drop, no article)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -649,29 +728,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“voy, vas, va”",
+              "instruction": "conjugate all three verbs for I / tú / usted, without stopping",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “voy, vas, va”]"
+              "source": "[YOU SAY: conjugate all three verbs for I / tú / usted, without stopping]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“voy a hablar, vas a comer, va a vivir”",
+              "instruction": "answer “¿Hablas español?” and “¿Estudias español?” about yourself",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “voy a hablar, vas a comer, va a vivir”]"
+              "source": "[YOU SAY: answer “¿Hablas español?” and “¿Estudias español?” about yourself]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“mi café, tu café, su café”",
+              "instruction": "request “Café, por favor” and run the full gracias/de nada loop",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “mi café, tu café, su café”]"
+              "source": "[YOU SAY: request “Café, por favor” and run the full gracias/de nada loop]"
             },
             {
               "kind": "repeat",
@@ -680,95 +759,12 @@
             },
             {
               "kind": "speech",
-              "text": "“Voy a hablar. Su café.”"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-practice-ir-forms",
-              "prompt": "Give the learned singular forms of ir: yo, tú, then usted.",
-              "assesses": [
-                "ES-LEX-IR",
-                "ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "voy, vas, va",
-                "voy vas va",
-                "voy / vas / va"
-              ],
-              "feedback": {
-                "correct": "Right: voy, vas, va.",
-                "incorrect": "Retrieve only the learned singular set: voy, vas, va."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-practice-formal-going",
-              "prompt": "Ask formal you 'Where are you going?' in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR",
-                "ES-LEX-DONDE",
-                "ES-LEX-USTED"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "¿dónde va usted?",
-                "dónde va usted?",
-                "donde va usted?",
-                "¿donde va usted?"
-              ],
-              "feedback": {
-                "correct": "Right: ¿Dónde va usted?",
-                "incorrect": "Use dónde with the usted form va."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-practice-near-future",
-              "prompt": "Say 'I am going to speak' in Spanish.",
-              "assesses": [
-                "ES-LEX-A",
-                "ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE",
-                "ES-LEX-HABLAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "voy a hablar.",
-                "voy a hablar"
-              ],
-              "feedback": {
-                "correct": "Right: Voy a hablar.",
-                "incorrect": "Use voy + a + hablar."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-practice-possessive",
-              "prompt": "Addressing usted, say 'your coffee' in Spanish.",
-              "assesses": [
-                "ES-LEX-POSSESSIVES-MI-TU-SU",
-                "ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN",
-                "ES-LEX-CAFE",
-                "ES-REGISTER-TU-USTED"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "su café",
-                "su cafe"
-              ],
-              "feedback": {
-                "correct": "Right: su café.",
-                "incorrect": "Formal usted uses su before café."
-              }
+              "text": "Ask and answer “¿Hablas español? — Hablo español.”"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -780,7 +776,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the singular ir set. (Voy, vas, va.) Build “You are going to eat” for one friend. (Vas a comer.) Say “my coffee” and formal “your coffee.” (Mi café; su café.) Chapter 11 can now extend the grammar from this small, closed frontier."
+              "text": "What are the three singular -ar endings? (-o / -as / -a.) Give the “I” form of all three verbs. (Hablo, trabajo, estudio.) Why does Hablo español need no separate subject word? (The -o carries “I.”) You can now generate sentences — this book stops handing you phrases and starts handing you rules. Next chapter adds the -er/-ir verb families."
             }
           ]
         }

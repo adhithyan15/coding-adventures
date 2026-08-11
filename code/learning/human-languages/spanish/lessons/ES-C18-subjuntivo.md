@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C18-subjuntivo
 spine_node: SPINE-SAY-WHAT-I-WANT
 sequence: 1184
-chapter: 28
+chapter: 32
 type: grammar
 headword: hable · hables · hable
 gloss: the singular present subjunctive of hablar

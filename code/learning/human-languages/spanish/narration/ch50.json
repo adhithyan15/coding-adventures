@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 50,
-  "title": "Saying Why",
+  "title": "Opening, Closing, Sitting Down, Standing Up",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ca3f82676a6ea6e5",
+  "sourceHash": "fnv1a64:d40a2f4937135321",
   "lessons": [
     {
-      "id": "ES-C41-creer",
-      "sequence": 1880,
-      "title": "creer — to put your heart somewhere",
-      "headword": "creer",
-      "romanization": "creer",
-      "gloss": "to believe, to think — putting your heart somewhere, where pensar weighs it up",
+      "id": "ES-C37-abrir",
+      "sequence": 1730,
+      "title": "abrir — \"to open\", and the one part of it that misbehaves",
+      "headword": "abrir",
+      "romanization": "abrir",
+      "gloss": "to open — a regular -ir verb with one irregular part, the participle abierto",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95d5ad5de8e610c2",
+      "sourceHash": "fnv1a64:cfa9826bb5123856",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have pensar — to think, and underneath it pēnsāre, \"to weigh\". Spanish has a second verb for the inside of your head, and it does a different job. Where pensar weighs, this one commits."
+              "text": "Say corro and camino once — two verbs that gave you no trouble. This one is nearly as easy, and its one misbehaving piece is a word you will read on a shop door before you ever say it."
             }
           ]
         },
@@ -46,84 +46,61 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "hiatus-ee — the two e's do not merge: creer = kreh-EHR, two beats."
+              "text": "b-soft — between vowels the b barely closes the lips: a-BREER."
             },
             {
               "kind": "speech",
-              "text": "r-tap — a single flick, not the rolled rr."
+              "text": "r-tap — a single flick for the final r."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: creer",
+          "title": "The word, taken apart: abrir",
           "segments": [
             {
               "kind": "speech",
-              "text": "creer = \"to believe\", and in everyday use \"to think\" in the sense of hold an opinion."
+              "text": "abrir (\"to open\") from Latin aperīre, \"to open, to uncover\". The p softened to b between vowels on the way into Spanish — the slide that turned sapere into saber and lupus into lobo."
             },
             {
               "kind": "speech",
-              "text": "It comes from Latin crēdere, \"to entrust, to believe\" — and crēdere is a compound so old that Latin had already forgotten it was one. It is PIE ḱred-dʰeh₁-: \"to put ḱred-\"."
+              "text": "English took the root through two doors and does not notice they are one word:"
             },
             {
               "kind": "speech",
-              "text": "What is that first half? Traditionally, the heart word — the root of Latin cor, cordis and of English heart. Be honest that the step is disputed: that root normally appears as ḱḗr, never ḱred-. The compound is not in doubt; only what it was built on."
+              "text": "straight from Latin apertūra: aperture, the opening a lens makes."
             },
             {
               "kind": "speech",
-              "text": "Taking the traditional reading:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "from crēdere",
-                "from cor, cordis"
-              ],
-              "columns": 2,
-              "rowCount": 2,
-              "utterances": [
-                "from crēdere: credit, creed, credo. from cor, cordis: cordial, courage.",
-                "from crēdere: credential, incredible. from cor, cordis: record, accord, discord."
-              ]
+              "text": "through French ovrir and its participle overt: overt (\"out in the open\") and overture, an opera's opening."
             },
             {
               "kind": "speech",
-              "text": "To record is to bring something back to the cor — for a Roman the seat of memory, not of feeling. To have courage is to have heart."
+              "text": "aperitif, a drink that opens the appetite; Spanish, el aperitivo."
+            },
+            {
+              "kind": "speech",
+              "text": "The cousin that is not one. April looks like it belongs here — the opening month. That is old folk etymology and is not accepted: the better proposals point at an Etruscan Apru, borrowed from Aphrodite, or at an Italic word meaning \"the next one\". A hook this pretty is the kind to check."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: creer que",
+          "title": "Grammar Lens: regular everywhere but the participle",
           "segments": [
             {
               "kind": "speech",
-              "text": "Creer almost always drags a que behind it, and then a whole clause:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                ""
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "Creo que llueve., I think it's raining.",
-                "Creo que hace frío., I think it's cold.",
-                "No creo que llueva., I don't think it's raining."
-              ]
+              "text": "In the present, abrir is a plain -ir verb, the family escribir belongs to: abro, abres, abre, abrimos, abren. Nothing breaks, nothing grows."
             },
             {
               "kind": "speech",
-              "text": "Look hard at that third row. Creo que llueve — but no creo que llueva. Negating creer flips the clause into the subjunctive from chapter eighteen: stop vouching for something and Spanish stops using the tense that states facts."
+              "text": "The past participle is where the irregularity lives. A regular -ir verb would give abrido. Spanish says abierto, straight down from Latin apertum, keeping the e that broke to ie under stress long ago."
             },
             {
               "kind": "speech",
-              "text": "Pienso is the weighing; creo is where it landed. Treat that as a way to feel the difference, not a rule — both take que and a clause, and a speaker may use either. But creo que is the ordinary opening for an opinion."
+              "text": "You will meet that participle long before the tense it belongs to, because it is a word on doors: ABIERTO on the sign, está abierto for \"it is open now\". Escribir does the same with escrito. Both refuse the regular ending because both inherited a Latin participle whole."
             }
           ]
         },
@@ -141,38 +118,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"creer\" — kreh-EHR, two beats, not one",
+              "instruction": "\"abro, abres, abre, abrimos, abren\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"creer\" — *kreh-EHR*, two beats, not one]"
+              "source": "[YOU SAY: \"abro, abres, abre, abrimos, abren\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Creo que llueve.\"",
+              "instruction": "\"Abro el libro\" then \"Está abierto\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Creo que llueve.\"]"
+              "source": "[YOU SAY: \"Abro el libro\" then \"Está abierto\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pair — \"pienso\" (I weigh) then \"creo\" (I hold)",
+              "instruction": "\"abrir\" then English \"aperture, overt, overture\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"pienso\" (I weigh) then \"creo\" (I hold)]"
+              "source": "[YOU SAY: \"abrir\" then English \"aperture, overt, overture\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"creer\" then English \"credit, creed, cordial, record\"",
+              "instruction": "\"correr\" then English \"current, curriculum\" — still there from before",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"creer\" then English \"credit, creed, cordial, record\"]"
+              "source": "[YOU SAY: \"correr\" then English \"current, curriculum\" — still there from before]"
             }
           ]
         },
@@ -189,30 +166,26 @@
             },
             {
               "kind": "speech",
-              "text": "What shape is crēdere, under the surface? (A compound — ḱred-."
-            },
-            {
-              "kind": "speech",
-              "text": "dʰeh₁-, \"to put ḱred-\".) What is the traditional reading of that first half, and why hedge it? (Heart — but the heart root is ḱḗr, never ḱred-, so the step is disputed.) Pensar weighs; what does creer do? (It lands — it holds the opinion the weighing produced.)"
+              "text": "What is the past participle of abrir, and what would a regular verb have given? (Abierto; abrido.) Name two English words from aperīre. (Aperture, overt, overture, aperitif.) Is April one? (No — folk etymology.) Which other verb keeps an inherited Latin participle? (Escribir becomes escrito.) And which Latin verb is behind correr? (Currere.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C41-asi-que",
-      "sequence": 1890,
-      "title": "así que — \"so\", and a word you have been saying since yes",
-      "headword": "así que",
-      "romanization": "así que",
-      "gloss": "thus, in that way — and with que after it, \"so\"; built on the same sīc that gave you sí",
+      "id": "ES-C37-cerrar",
+      "sequence": 1740,
+      "title": "cerrar — \"to close\", from the bar across the door",
+      "headword": "cerrar",
+      "romanization": "cerrar",
+      "gloss": "to close — from the bar dropped across a door, not from the Latin verb English inherited",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eda8eb77f5190ece",
+      "sourceHash": "fnv1a64:7c8c7d5473977208",
       "notice": null,
       "blocks": [
         {
@@ -228,7 +201,7 @@
             },
             {
               "kind": "speech",
-              "text": "Porque runs from a claim back to its reason. This runs the other way — from the reason forward to what follows. Same two facts, opposite arrow, and you need both to explain anything."
+              "text": "Abro, abres, abre — and the sign saying ABIERTO. Here is the sign on the other side of the day, and a verb that cracks its stem."
             }
           ]
         },
@@ -239,76 +212,77 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "s-clear — a clean hiss in así, never a z buzz."
+              "text": "soft-c — c before e is soft: a th across most of Spain, an s across Latin America."
             },
             {
               "kind": "speech",
-              "text": "k-hard — qu is a plain k; the u is silent."
+              "text": "rolled-rr — the double r is fully trilled: se-RRAR."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The phrase, taken apart: así que",
+          "title": "The word, taken apart: cerrar",
           "segments": [
             {
               "kind": "speech",
-              "text": "así = \"so, thus, in that way\". así que = \"so, and therefore\"."
+              "text": "cerrar (\"to close\") from Late Latin serāre, \"to bolt, to fasten\", from the noun sera: the bar you drop across a door. Closing here is a physical object being put in place, not an abstraction."
             },
             {
               "kind": "speech",
-              "text": "Así is Latin sīc, \"thus\" — with an a- that Spanish added later, the same one it put on apenas and afuera. And you have met sīc before: it is the whole of Spanish sí, \"yes\". Latin sīc meant \"thus, in this way\", and saying thus in answer to a question is how a language gets a word for yes."
-            },
-            {
-              "kind": "speech",
-              "text": "So sí and así are the same Latin adverb, one bare and one with the a- attached. English borrowed it raw and never translated it: sic, the mark an editor puts after a quoted mistake — \"thus it stood\"."
+              "text": "Its Romance siblings kept the pressure: Italian serrare, French serrer, \"to squeeze, to tighten\". English holds one of that branch, serried, as in ranks pressed shut against each other. Reference works generally connect sera to Latin serere, \"to join in a row\", which would make series and insert distant relatives — usual, but not certain."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the two arrows",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: the road Spanish did not take",
           "segments": [
             {
               "kind": "speech",
-              "text": "The pair is worth drilling as a pair, because they carry the same two facts in opposite orders:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                ""
-              ],
-              "columns": 2,
-              "rowCount": 2,
-              "utterances": [
-                "No corro porque llueve., I'm not running because it's raining.",
-                "Llueve, así que no corro., It's raining, so I'm not running."
-              ]
+              "text": "Latin had a perfectly good verb for closing: claudere. English is full of it — close, closet, closure, clause, cloister, include, exclude, conclude, recluse."
             },
             {
               "kind": "speech",
-              "text": "Porque points backwards to the cause. Así que points forwards to the consequence. Which you reach for depends only on which fact you want to say first — and that is a choice about emphasis, not about grammar."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                ""
-              ],
-              "columns": 2,
-              "rowCount": 2,
-              "utterances": [
-                "Hace frío, así que bebo café., It's cold, so I drink coffee.",
-                "Creo que llueve, así que leo., I think it's raining, so I read."
-              ]
+              "text": "Spanish let it go. For shutting a door it took serāre instead, and kept claudere only in words scholars borrowed back much later: incluir, excluir, concluir, clausura. That inversion is worth sitting with: the bigger English family belongs to the verb Spanish gave up. A cousin web maps what each language kept, and these two kept opposite halves."
             }
           ]
         },
         {
           "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: e becomes ie, and the sign on the door",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "form"
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "person: yo. form: cierro.",
+                "person: tú. form: cierras.",
+                "person: él/ella/usted. form: cierra.",
+                "person: nosotros. form: cerramos.",
+                "person: ellos/ustedes. form: cierran."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Dormir broke o becomes ue. Cerrar breaks e becomes ie — the same boot, the other vowel, the same trigger: stress on the stem. Cerramos is plain because there the stress moves to the ending."
+            },
+            {
+              "kind": "speech",
+              "text": "Its participle, unlike abierto, is regular: cerrado. The two signs on one door are built differently — abierto inherited whole from Latin, cerrado made by rule."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -321,43 +295,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"sí\" then \"así\" — the same Latin word, one with an a- on the front",
+              "instruction": "\"cierro, cierras, cierra, cerramos, cierran\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"sí\" then \"así\" — the same Latin word, one with an *a-* on the front]"
+              "source": "[YOU SAY: \"cierro, cierras, cierra, cerramos, cierran\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Llueve, así que no corro.\"",
+              "instruction": "\"Abro el libro\" then \"Cierro el libro\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Llueve, así que no corro.\"]"
+              "source": "[YOU SAY: \"Abro el libro\" then \"Cierro el libro\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the same two facts the other way — \"No corro porque llueve.\"",
+              "instruction": "\"ABIERTO\" then \"CERRADO\" — the two signs",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the same two facts the other way — \"No corro porque llueve.\"]"
+              "source": "[YOU SAY: \"ABIERTO\" then \"CERRADO\" — the two signs]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Creo que hace frío, así que bebo café.\"",
+              "instruction": "\"aperīre, aperture\" then \"serāre, serried\" — the two doors' roots",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Creo que hace frío, así que bebo café.\"]"
+              "source": "[YOU SAY: \"aperīre, aperture\" then \"serāre, serried\" — the two doors' roots]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -369,26 +343,26 @@
             },
             {
               "kind": "speech",
-              "text": "Which Latin adverb is hiding in both sí and así? (Sīc, \"thus\".) Which way does porque point, and which way así que? (Porque backwards to the cause; así que forwards to the consequence.) What does an editor's sic mean? (Thus it stood — the same word, borrowed whole.)"
+              "text": "What was a sera, and does cerrar come from claudere? (The bar dropped across a door; and no — Spanish kept claudere only in incluir, excluir, concluir.) Which form of cerrar keeps its plain e, and why? (Cerramos — the stress moves to the ending, as in dormimos.) Which participle is irregular, abierto or cerrado? (Abierto.) And what did intendere, behind entender, mean literally? (To stretch toward.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C41-deber",
-      "sequence": 1900,
-      "title": "deber — to owe, and therefore to ought",
-      "headword": "deber",
-      "romanization": "deber",
-      "gloss": "should, ought to — and to owe, because the word is literally \"to have something from someone\"",
+      "id": "ES-C37-sentarse",
+      "sequence": 1750,
+      "title": "sentarse — \"to seat oneself\", which is how Spanish thinks about sitting down",
+      "headword": "sentarse",
+      "romanization": "sentarse",
+      "gloss": "to sit down — literally \"to seat oneself\", the reflexive that lands the action back on you",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f70349dc434781a6",
+      "sourceHash": "fnv1a64:45347f722dc1d3cb",
       "notice": null,
       "blocks": [
         {
@@ -404,7 +378,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can now say what you think and what follows from it. This verb adds the third move in any explanation: what somebody ought to do about it. It gets there from an unexpected direction — money."
+              "text": "Two things in hand. Cierro — the e cracking to ie. And me llamo, \"I call myself\", where the little me bounced the action back onto you. This verb needs both at once."
             }
           ]
         },
@@ -415,60 +389,41 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "b-soft — between vowels the b softens: deber = deh-BEHR."
+              "text": "diphthong-ie — the stressed e breaks: me siento = me SYEN-to."
             },
             {
               "kind": "speech",
-              "text": "r-tap — one flick at the end, not a roll."
+              "text": "s-clear — a clean hissing s, never a z buzz."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: deber",
+          "title": "The word, taken apart: sentarse",
           "segments": [
             {
               "kind": "speech",
-              "text": "deber does two jobs: \"to owe\", and \"ought to, should\"."
+              "text": "sentar from Vulgar Latin sedentāre, built not on the Latin verb but on its present participle: sedēns, \"sitting\", from sedēre, \"to sit\". Spanish made a new verb out of being in a sitting state."
             },
             {
               "kind": "speech",
-              "text": "Latin dēbēre explains both, because it is a compound: dē- (\"from\") plus habēre (\"to have\"). To dēbēre something is to have it from someone — which is exactly what owing is. You are holding what is theirs."
+              "text": "Sedēre is one of the great English suppliers, and hardly any descendant still looks like sitting: sedentary, sediment, sedate; session and siege (an army sitting down outside a city); preside, reside; assess, obsess, possess. By way of Greek hedra, \"seat\", it also gives cathedral and chair."
             },
             {
               "kind": "speech",
-              "text": "English helped itself to this verb four times over — three of them from the participle dēbitum rather than the verb — and the spellings record each route:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "English",
-                "how it came"
-              ],
-              "columns": 2,
-              "rowCount": 4,
-              "utterances": [
-                "English: debt. how it came: through French, then re-spelled to show the Latin b.",
-                "English: debit. how it came: straight from Latin bookkeeping.",
-                "English: due. how it came: through French deü, the b worn away.",
-                "English: duty. how it came: built on due."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "One more came the long way round, and not by borrowing. French turned dēbēre into devoir, \"duty\". English translated the phrase mettre en devoir — to put oneself under an obligation — half-way, as put in dever, and the last two words later fused into endeavour."
+              "text": "Then the other branch. English sit, seat, settle, saddle and nest come down from the very same root, sed-, through Germanic rather than Latin. Neither borrowed from the other: they are siblings, exactly as padre and father are, each branch reshaping the sounds its own way."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: debo + infinitive",
+          "title": "Grammar Lens: seating someone, and seating yourself",
           "segments": [
             {
               "kind": "speech",
-              "text": "Deber is regular, and for \"ought to\" it takes a bare infinitive straight after it — no que, no preposition:"
+              "text": "Plain sentar means to seat somebody else. To sit down yourself, you send the action back with the pronoun that made me llamo \"I call myself\":"
             },
             {
               "kind": "table",
@@ -479,20 +434,20 @@
               "columns": 2,
               "rowCount": 5,
               "utterances": [
-                "person: yo. form: debo.",
-                "person: tú. form: debes.",
-                "person: él/ella/usted. form: debe.",
-                "person: nosotros. form: debemos.",
-                "person: ellos/ustedes. form: deben."
+                "person: yo. form: me siento.",
+                "person: tú. form: te sientas.",
+                "person: él/ella/usted. form: se sienta.",
+                "person: nosotros. form: nos sentamos.",
+                "person: ellos/ustedes. form: se sientan."
               ]
             },
             {
               "kind": "speech",
-              "text": "Debo estudiar. — I ought to study. Llueve, así que debo leer. — It's raining, so I ought to read."
+              "text": "Two patterns run at once, and you have both. The pronoun changes with the person — me, te, se, nos, se — and the stem breaks e becomes ie wherever the stress lands on it, leaving nos sentamos plain. The pronoun stands before a conjugated verb and clips onto an infinitive, hence the name sentarse."
             },
             {
               "kind": "speech",
-              "text": "The obligation is softer than a command and firmer than a wish, which is the register an explanation usually wants."
+              "text": "Two verbs, one shape. Me siento is also the yo-form of sentirse, \"to feel\": me siento bien is \"I feel fine\". Only what follows tells them apart."
             }
           ]
         },
@@ -510,47 +465,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"debo, debes, debe, debemos, deben\"",
+              "instruction": "\"me siento, te sientas, se sienta, nos sentamos, se sientan\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"debo, debes, debe, debemos, deben\"]"
+              "source": "[YOU SAY: \"me siento, te sientas, se sienta, nos sentamos, se sientan\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Debo trabajar.\"",
+              "instruction": "\"me llamo\" then \"me siento\" — the same little me, twice",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Debo trabajar.\"]"
+              "source": "[YOU SAY: \"me llamo\" then \"me siento\" — the same little me, twice]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Hace frío, así que debo beber café.\"",
+              "instruction": "\"Cierro el libro y me siento\" — I close the book and sit down",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Hace frío, así que debo beber café.\"]"
+              "source": "[YOU SAY: \"Cierro el libro y me siento\" — I close the book and sit down]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Creo que llueve, así que debo leer.\"",
+              "instruction": "\"sentarse\" then English \"session, sedentary, preside\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Creo que llueve, así que debo leer.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"deber\" then English \"debt, debit, due, duty\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"deber\" then English \"debt, debit, due, duty\"]"
+              "source": "[YOU SAY: \"sentarse\" then English \"session, sedentary, preside\"]"
             }
           ]
         },
@@ -567,26 +513,26 @@
             },
             {
               "kind": "speech",
-              "text": "What two Latin pieces build dēbēre, and what do they say together? (Dē- + habēre — \"to have from someone\", which is owing.) Name two of the four English words it became. (Any of debt, debit, due, duty.) What follows debo — a que, or a bare infinitive? (A bare infinitive: debo estudiar.)"
+              "text": "What does sentarse say literally, and which Latin form was it built on? (To seat oneself; the participle sedēns.) Are English sit and Latin sedēre parent and child, or siblings? (Siblings — separate branches of one root, like father and padre.) Which form keeps its plain e, and what was a sera? (Nos sentamos; the bar across a door.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C41-explicar",
-      "sequence": 1910,
-      "title": "explicar — to unfold",
-      "headword": "explicar",
-      "romanization": "explicar",
-      "gloss": "to explain — literally to unfold, and the verb that names what this whole chapter has been building",
+      "id": "ES-C37-levantarse",
+      "sequence": 1760,
+      "title": "levantarse — \"to raise oneself\", and how Spanish says \"stand\"",
+      "headword": "levantarse",
+      "romanization": "levantarse",
+      "gloss": "to get up, to stand up — \"to raise oneself\", built from a participle exactly as sentarse was",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da0f2ce554d44adf",
+      "sourceHash": "fnv1a64:c6db49d6690bd8c2",
       "notice": null,
       "blocks": [
         {
@@ -602,7 +548,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three pieces are in your hands: creo que to state an opinion, así que to run forward to what follows, debo to say what ought to happen. This lesson puts all three in a row, under the verb that names the act."
+              "text": "Me siento put you in the chair, the little me bouncing the action back onto you. Now get out of it. The pronoun works the same way; this time the stem does not crack at all."
             }
           ]
         },
@@ -613,67 +559,63 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "k-hard — c before a is a hard k: explicar = eks-plee-KAR."
+              "text": "v-b — Spanish v and b are one sound: le-ban-TAR."
             },
             {
               "kind": "speech",
-              "text": "l-clear — a clean l in the pl, no vowel slipped in between."
+              "text": "nasal-n — a clean n before the t, not swallowed."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: explicar",
+          "title": "The word, taken apart: levantarse",
           "segments": [
             {
               "kind": "speech",
-              "text": "explicar = Latin explicāre: ex- (\"out\") + plicāre (\"to fold\"). To explain is to unfold — something was folded shut, and you open it."
+              "text": "levantar from Vulgar Latin levantāre, from levāns, the present participle of levāre, \"to raise, to lighten\" — itself from levis, \"light, not heavy\"."
             },
             {
               "kind": "speech",
-              "text": "Plicāre is one of the great suppliers of English. Some came from Latin directly, some through French, and the sound changed on the way:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "straight from Latin",
-                "through French"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "straight from Latin: explicate. through French: explicit, application.",
-                "straight from Latin: complicated (com- + fold). through French: employ, deploy.",
-                "straight from Latin: duplicate. through French: display — a doublet of deploy."
-              ]
+              "text": "Notice the shape: a Latin present participle, made into a new verb — the identical recipe that gave sentar from sedēns. Spanish built both of its body-position verbs out of a word for the state rather than the act."
             },
             {
               "kind": "speech",
-              "text": "And simple is sim-plex — \"one-fold\". Something simple has been folded only once. Something complicated has been folded together, over and over, which is why it needs unfolding. The metaphor is consistent all the way down, and Spanish keeps it in the plainest verb of the set."
+              "text": "Levāre is everywhere in English: lever, elevate, elevator for raising; levity, levitate, alleviate, relieve for lightening; leaven, what raises the bread, and levy, a tax raised. And the Levant, from French levant, \"rising\": from western Europe it lay where the sun came up. English light, the opposite of heavy, is the Germanic cousin of levis, as sit is of sedēre."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: the shape of an explanation",
+          "title": "Grammar Lens: raising a thing, raising yourself, standing still",
           "segments": [
             {
               "kind": "speech",
-              "text": "Explicar is regular — it takes the plain -ar endings of hablar, with no stem change at all: explico, explicas, explica, explicamos, explican. (Contar, back in chapter 38, breaks its o to ue; this one does not, and there is nothing to remember.)"
+              "text": "Levantar on its own raises something else. Levantarse raises you:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Spanish",
+                "what it means"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "Levanto la mano means I raise my hand.",
+                "Levanto la cabeza means I lift my head.",
+                "Me levanto means I get up, I stand up."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Here is a whole explanation, with every piece something this book has taught:"
+              "text": "The endings are ordinary -ar throughout — me levanto, te levantas, se levanta, nos levantamos, se levantan — and nothing breaks. So the chapter has now shown its two features apart: sentarse is reflexive and a stem-changer; levantarse is reflexive only."
             },
             {
               "kind": "speech",
-              "text": "— ¿Por qué no corres? — Creo que llueve. No corro porque llueve, así que leo. Debo estudiar. — Why aren't you running? — I think it's raining. I'm not running because it's raining, so I read. I ought to study."
-            },
-            {
-              "kind": "speech",
-              "text": "Four moves, four words: an opinion (creo que), a cause (porque), a consequence (así que), an obligation (debo). That is what an explanation is made of, and you can now build one in either direction — cause first or claim first — because porque and así que let you choose."
+              "text": "For standing as a state, Spanish uses no verb. It says estar de pie — \"to be on foot\", el pie being the foot. English's single \"stand\" splits in two: me levanto for getting up, estoy de pie for being up."
             }
           ]
         },
@@ -691,38 +633,47 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"explico, explicas, explica, explicamos, explican\"",
+              "instruction": "\"me levanto, te levantas, se levanta, nos levantamos, se levantan\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"explico, explicas, explica, explicamos, explican\"]"
+              "source": "[YOU SAY: \"me levanto, te levantas, se levanta, nos levantamos, se levantan\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Explico bien.\" — I explain well.",
+              "instruction": "\"Levanto la mano\" then \"Levanto la cabeza\" then \"Me levanto\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Explico bien.\" — I explain well.]"
+              "source": "[YOU SAY: \"Levanto la mano\" then \"Levanto la cabeza\" then \"Me levanto\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four moves — \"Creo que llueve, porque hace frío, así que debo leer.\"",
+              "instruction": "\"Estoy de pie\" — I am standing",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four moves — \"Creo que llueve, porque hace frío, así que debo leer.\"]"
+              "source": "[YOU SAY: \"Estoy de pie\" — I am standing]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"explicar\" then English \"explicit, complicated, simple, display\"",
+              "instruction": "\"Abro el libro, me siento, cierro el libro, me levanto\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"explicar\" then English \"explicit, complicated, simple, display\"]"
+              "source": "[YOU SAY: \"Abro el libro, me siento, cierro el libro, me levanto\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"levantar\" then English \"lever, elevate, Levant\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"levantar\" then English \"lever, elevate, Levant\"]"
             }
           ]
         },
@@ -739,7 +690,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does explicāre literally say? (To fold out — ex- + plicāre.) What is simple, folded? (Once — sim-plex; complicated is folded together, again and again.) Name the four moves of an explanation and the word for each. (Opinion creo que, cause porque, consequence así que, obligation debo.)"
+              "text": "Say the chapter's four verbs, then say how you are standing. (Abro, cierro, me siento, me levanto; estoy de pie.) What do sentar and levantar share in their making, and which also breaks its stem? (Both from a Latin present participle, sedēns and levāns; sentarse breaks e becomes ie.) Name the two roots on that door, and which participle is irregular. (Aperīre and serāre — not claudere; abierto.) Why la mano? (Manus was feminine in Latin.)"
             }
           ]
         }

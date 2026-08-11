@@ -1,5 +1,5 @@
-Spanish, chapter 15: Your First Verb.
-3 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+Spanish, chapter 15: Your First Verb, and the Form That Means I.
+3 lessons. All 3 can be done entirely by ear.
 
 
 Lesson 1 of 3.
@@ -7,7 +7,7 @@ hablar — "to speak," which used to mean "to tell tales".
 
 Warm-up.
 [pause 2 seconds]
-Fixed phrases got you this far. Hablar ("to speak") is the first verb you will take apart and put back together. Today: the word itself. Next lesson: the pattern it unlocks.
+Fixed phrases got you this far. Hablar ("to speak") is the first verb you will take apart and put back together. Today: the word itself. Next lesson: one ending, and it becomes about you.
 
 Sounds you'll need.
 silent-h — the h is completely silent: hablar = ah-BLAR. (Spanish h never makes a sound.)
@@ -30,64 +30,77 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Latin word is hablar from, and what English word shares it? (Fābulārī from fābula — fable.) What happened to its initial Latin f-? (It weakened away, leaving the written but silent Spanish h-.) Next: the ending pattern that turns this one verb into a machine.
+What Latin word is hablar from, and what English word shares it? (Fābulārī from fābula — fable.) What happened to its initial Latin f-? (It weakened away, leaving the written but silent Spanish h-.) Next: swap the -ar for one letter, and hablar becomes I speak.
 
 
 Lesson 2 of 3.
-hablo, hablas, habla — one ending swap, three sentences.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: the -ar present tense until you have stopped, and I will say so again when we reach it.
+hablo — "I speak".
 
 Warm-up.
 [pause 2 seconds]
-Hablar is one word. Swap its last two letters and it becomes "I speak," or a question to a friend, or a polite question to a stranger. This is the biggest single piece of leverage in this book so far.
+What is the word for "to speak"? (Hablar.) Say it once.
 
 You'll want to know first.
-hablar — the verb and its fābula root.
-tú or usted — which forms usted takes.
+hablar — the verb, and the fābula behind it.
 
-Grammar Lens: the -ar present tense.
-Hablar belongs to the -ar family. To make the three singular forms you need now: drop the -ar, then add the ending for the person.
-There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: person, ending, hablar, which gives:, meaning. Come back and look at it when you have stopped.
-The usted row is the same he/she form you were warned about back in Chapter 3 — it turns up here for real. This same template fits every regular -ar verb, so learning it once buys you every -ar verb you will ever meet.
+Grammar Lens: change the ending, change who is speaking.
+Hablar is the naming form — "to speak." It is not yet about anybody.
+To make it about you, take off the -ar and put -o in its place:
+hablar becomes hablo — I speak.
+That is the whole operation. One ending, swapped.
+And notice what you did not have to do: you did not add a word for I. The -o is already carrying it.
 
-Grammar Lens: pro-drop.
-Look at hablo again. The -o already says "I." Saying yo hablo is not wrong, but it is like saying "I, I speak" — Spanish normally leaves the subject pronoun out entirely.
-That is called pro-drop, and it is only possible because the endings are distinct enough to carry the information by themselves. English endings are worn down to almost nothing (speak, speak, speaks), so English must keep its pronouns. Spanish endings did not wear down, so Spanish can throw the pronoun away. One word, hablo, is a complete sentence.
+The word, taken apart.
+The -o is old and it is nearly untouched. Latin marked "I" on a verb with -ō, a long o: amō, "I love." Two thousand years later Spanish still marks "I" with exactly that letter.
+Most of Latin's endings wore down on the way to Spanish. This one did not. When you say hablo, the last sound in your mouth is the same one a Roman used to say I.
+Worth noticing. English gave up. Speak is speak whoever is doing it, which is why English cannot let go of its pronouns. You will meet that difference properly in the very next lesson.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the pattern — "hablo, hablas, habla" (I / tú / usted)]
+[your turn — say: "hablo"]
 [pause 8 seconds for the answer]
-[your turn — say: "hablo" alone, and notice it is already a whole sentence]
+[your turn — say: "hablo" again, and hear that the -o is the part meaning I]
 [pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Turn hablar into I speak.
+[question — say your answer, then pause 8 seconds]
+Which single letter is doing the work of the word I?
 
 Wrap-up Recall.
 [pause 3 seconds]
-How do you build the three singular forms of an -ar verb? (Drop -ar, add -o / -as / -a.) Which one goes with usted, and why is it the he/she form? (Habla — usted takes third-person forms.) Why is no subject pronoun needed? (Pro-drop — the ending already carries the subject.) Next: trabajar, "to work," straight into the same slot.
+How do you turn hablar into "I speak"? (Drop -ar, add -o.) Which Latin ending is that -o? (-ō — the same one.) Next: why hablo is already a complete sentence.
 
 
 Lesson 3 of 3.
-Your first verb — putting it together.
+hablo — one word, one whole sentence.
 
 Warm-up.
 [pause 2 seconds]
-One verb, three people, and the endings that carry them. Nothing new in this lesson — only what you already have.
+Say "I speak" in Spanish. (Hablo.) Now count the words you said.
 
-The exchange.
-hablo — I speak. hablas — you speak. habla — he or she speaks.
+Grammar Lens: the pronoun you never needed.
+One word. And it is a complete, ordinary, grammatical Spanish sentence.
+English needs two — I and speak — because English's ending is doing no work. Spanish needs one, because the -o already said I in the previous lesson.
+Spanish does have a word for I. You will meet it. But putting it in front of hablo is a little like saying "I, I speak" — the information is already there, and repeating it is something Spanish does only when it wants to make a point.
+The habit to build now. When you want to say I speak, say hablo. Not two words. One.
 
-What you've built.
-You can say who is doing the speaking without a separate word for I or you.
+The word, taken apart.
+This is not Spanish being clever. It is English having lost something.
+Old English marked its verbs properly — ic sprece, þū sprecest, hē spricþ. Those endings were as distinct as Spanish's are. Then English wore them down until almost nothing was left: today speak, speak, speak, speak, speaks. Four of the five are identical.
+Once the endings stopped telling you who was speaking, the pronoun had to, and English could never put it down again.
+Spanish kept its endings. So Spanish kept the choice.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the whole exchange, both parts, without stopping]
+[your turn — say: "hablo" — one word, and stop there]
 [pause 8 seconds for the answer]
-[your turn — say: it again, faster, and let it sound like speech rather than recital]
+[your turn — say: it as an answer to a real question, as if someone just asked whether you speak]
 [pause 8 seconds for the answer]
-[repeat that twice]
+[question — say your answer, then pause 8 seconds]
+How many words does Spanish need to say I speak?
+[question — say your answer, then pause 10 seconds]
+Why must English say the word I, when Spanish need not?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Run it once more from memory. If a word does not come, go back one lesson rather than pushing on — this chapter is short on purpose.
+How many words is "I speak"? (One — hablo.) What is the name for leaving the pronoun out? (Pro-drop.) Why can't English do it? (Its endings wore away, so only the pronoun is left to carry the person.) Next chapter: the same verb, aimed at somebody else.

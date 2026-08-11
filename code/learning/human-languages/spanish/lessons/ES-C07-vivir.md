@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C07-vivir
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 590
-chapter: 17
+chapter: 21
 type: word
 headword: vivir
 gloss: to live (your first -ir verb)

@@ -2,89 +2,86 @@
 schema_version: 2
 id: ES-C06-ar-presente
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 520
-chapter: 15
-type: word
-headword: hablo, hablas, habla
-gloss: the -ar present-tense template, and why Spanish leaves the subject pronoun out
+sequence: 524
+chapter: 18
+type: practice-mix
+headword: hablo · hablas · habla
+gloss: review — the three forms you already own, put side by side for the first time
 concept_tag: ES-GRAMMAR-AR-PRESENT
-prerequisites: [ES-C06-hablar, ES-C03-tu-usted-register]
-sounds: [r-tap, v-b]
-roots: [fabulari-latin]
+prerequisites: [ES-C06-habla]
+sounds: []
+roots: []
+etymology_hook: "nothing new here — this chapter only lines up what the last three chapters bought"
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ES-LEX-HABLAR, ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED, ES-GRAMMAR-USTED-THIRD-PERSON, ES-GRAMMAR-FIRST-PERSON-VERB]
+  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-1SG, ES-GRAMMAR-AR-PRESENT-2SG, ES-GRAMMAR-AR-PRESENT-3SG, ES-GRAMMAR-PRO-DROP, ES-GRAMMAR-USTED-THIRD-PERSON]
 introduces:
-  knowledge: [ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP]
+  knowledge: [ES-GRAMMAR-AR-PRESENT-SINGULAR]
 practises:
-  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-USTED-THIRD-PERSON, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP]
+  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-1SG, ES-GRAMMAR-AR-PRESENT-2SG, ES-GRAMMAR-AR-PRESENT-3SG, ES-GRAMMAR-PRO-DROP, ES-GRAMMAR-USTED-THIRD-PERSON, ES-GRAMMAR-AR-PRESENT-SINGULAR]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
-strands: [meaning-input, meaning-output, language-focus]
+strands: [meaning-input, meaning-output, language-focus, fluency]
 register: neutral
 variety: general
-reviews_of: [ES-C06-hablar, ES-C03-tu-usted-register]
+reviews_of: [ES-C06-hablo, ES-C06-pro-drop, ES-C06-hablas, ES-C06-habla]
 ---
 
-# hablo, hablas, habla — one ending swap, three sentences
+# Review — the three forms, side by side
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HABLAR] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-PRESENT-1SG, ES-GRAMMAR-AR-PRESENT-2SG, ES-GRAMMAR-AR-PRESENT-3SG, ES-LEX-HABLAR] -->
 
-[PAUSE 2s] *Hablar* is one word. Swap its last two letters and it becomes
-"I speak," or a question to a friend, or a polite question to a stranger.
-This is the biggest single piece of leverage in
-this book so far.
+[PAUSE 2s] Nothing new in this chapter. Not one word. Say the three forms you
+already have, in any order they come.
 
-## You'll want to know first
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+## Grammar Lens: the table you have earned
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-AR-PRESENT-SINGULAR]; assesses=[ES-GRAMMAR-AR-PRESENT-1SG, ES-GRAMMAR-AR-PRESENT-2SG, ES-GRAMMAR-AR-PRESENT-3SG, ES-GRAMMAR-USTED-THIRD-PERSON] -->
 
-- [hablar](./ES-C06-hablar.md) — the verb and its *fābula* root.
-- [tú *or* usted](./ES-C03-tu-usted-register.md) — which forms *usted* takes.
+Three chapters, one form each. Now — and only now — they are worth seeing
+together:
 
-## Grammar Lens: the -ar present tense
-<!-- hl-knowledge: introduces=[ES-GRAMMAR-AR-PRESENT-SINGULAR]; assesses=[ES-GRAMMAR-USTED-THIRD-PERSON] -->
-
-**Hablar** belongs to the **-ar** family. To make the three singular forms
-you need now: **drop the -ar**, then add the ending for the person.
-
-| person | ending | *hablar* → | meaning |
+| who | ending | *hablar* → | meaning |
 |---|---|---|---|
 | I | **-o** | **hablo** | I speak |
-| tú (you, informal) | **-as** | **hablas** | you speak |
-| usted (you, formal) | **-a** | **habla** | you speak |
+| tú | **-as** | **hablas** | you speak (a friend) |
+| él · ella · usted | **-a** | **habla** | he/she speaks · you speak (polite) |
 
-The *usted* row is the same *he/she* form you were warned about back in
-Chapter 3 — it turns up here for real. **This same template fits every
-regular -ar verb**, so learning it once buys you every *-ar* verb you will
-ever meet.
+A table like this one at the *start* would have been three things at once and
+you would have memorised it. Arriving here, it is a picture of something you
+can already do.
 
-## Grammar Lens: pro-drop
-<!-- hl-knowledge: introduces=[ES-GRAMMAR-PRO-DROP]; assesses=[] -->
+**This is the whole engine.** Every regular **-ar** verb in Spanish — and
+there are thousands — runs on these three endings. You have not learned one
+verb. You have learned the pattern that fits all of them.
 
-Look at **hablo** again. The **-o** already says "I." Saying *yo hablo* is
-not wrong, but it is like saying "I, I speak" — Spanish normally leaves the
-subject pronoun out entirely.
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP] -->
 
-That is called **pro-drop**, and it is only possible because the endings are
-distinct enough to carry the information by themselves. English endings are
-worn down to almost nothing (*speak, speak, speaks*), so English **must**
-keep its pronouns. Spanish endings did not wear down, so Spanish can throw
-the pronoun away. One word, *hablo*, is a complete sentence.
+- Say what **you** do — *hablo*.
+- Ask or state what a **friend** does — *hablas*.
+- Say what **someone else** does, or address someone **politely** — *habla*.
+- Do all three **without a pronoun**, because the ending carries it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HABLAR, ES-GRAMMAR-USTED-THIRD-PERSON, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-AR-PRESENT-1SG, ES-GRAMMAR-AR-PRESENT-2SG, ES-GRAMMAR-AR-PRESENT-3SG] -->
+
+<!-- hl-activity: {"id": "ES-C06-ar-presente-mix-1", "kind": "text", "assesses": ["ES-GRAMMAR-AR-PRESENT-1SG"], "prompt": "I speak.", "answer": "hablo", "feedback": {"correct": "Yes.", "incorrect": "hablo — the -o is I."}, "response_seconds": 6, "accepted": ["yo hablo"]} -->
+<!-- hl-activity: {"id": "ES-C06-ar-presente-mix-2", "kind": "text", "assesses": ["ES-GRAMMAR-AR-PRESENT-3SG"], "prompt": "She speaks.", "answer": "habla", "feedback": {"correct": "Yes.", "incorrect": "habla — the -a covers he, she, and polite you."}, "response_seconds": 6, "accepted": ["ella habla"]} -->
+<!-- hl-activity: {"id": "ES-C06-ar-presente-mix-3", "kind": "text", "assesses": ["ES-GRAMMAR-AR-PRESENT-2SG"], "prompt": "You speak, to a friend.", "answer": "hablas", "feedback": {"correct": "Yes.", "incorrect": "hablas — the -as is tu."}, "response_seconds": 6, "accepted": ["tu hablas"]} -->
 
 [PAUSE 1s]
-- [YOU SAY: the pattern — "hablo, hablas, habla" (I / tú / usted)]
-- [YOU SAY: "hablo" alone, and notice it is already a whole sentence]
+
+- [YOU SAY: all three in order — "hablo, hablas, habla"]
+- [YOU SAY: them out of order, as prompted: *she* · *I* · *a friend* · *politely*]
+
+[REPEAT x2] Until the ending arrives before you have to think about it.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HABLAR, ES-GRAMMAR-USTED-THIRD-PERSON, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP] -->
 
-[PAUSE 3s] How do you build the three singular forms of an *-ar* verb?
-(**Drop -ar**, add **-o / -as / -a**.) Which one goes with *usted*, and why
-is it the he/she form? (**Habla** — *usted* takes third-person forms.) Why
-is no subject pronoun needed? (**Pro-drop** — the ending already carries the
-subject.) Next: **trabajar**, "to work," straight into the same slot.
+[PAUSE 3s] Three endings — name them. (**-o**, **-as**, **-a**.) How many
+regular *-ar* verbs does this pattern fit? (**All of them**.) Next chapter you
+will not learn anything either — you will *use* this to say something you
+actually mean.
