@@ -101,6 +101,32 @@ export const MAX_ETYMOLOGY_HOOK = 120;
  * concept ids, so a tag like `constructor` or `toString` must NOT resolve to an
  * inherited Object member and sneak past validation as "canonical".
  */
+/**
+ * Strip control characters from a corpus-derived string before it reaches a
+ * report line.
+ *
+ * WHY THIS EXISTS
+ *
+ * Every gate in this package interpolates author-written ids and messages into
+ * lines written to stdout: lesson ids, node ids, root slugs, finding text. A
+ * lesson id carrying an ANSI escape rewrites its own line in a terminal, so a
+ * crafted id can erase the very defect line a reviewer is reading to decide
+ * whether the corpus is sound. These reports exist to make problems visible; a
+ * report that can be edited by its own subject does not.
+ *
+ * Removed rather than escaped. The reports are read by humans, not parsed, so a
+ * visible \u001b adds noise without adding information, and the case that
+ * matters is a string that should never have carried a control character at
+ * all. Tab and newline are kept: they are ordinary layout, and the render
+ * helpers control their own line breaks.
+ */
+export function stripControlCharacters(value: string): string {
+  return value.replace(
+    /[\u0000-\u0008\u000b-\u001f\u007f-\u009f]/g,
+    "",
+  );
+}
+
 export function hasOwn(obj: object, key: string): boolean {
   return Object.prototype.hasOwnProperty.call(obj, key);
 }

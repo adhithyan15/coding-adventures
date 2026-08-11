@@ -53,6 +53,7 @@
 
 import type { ParsedLesson } from "./parse.js";
 import { frontmatterList } from "./ramp.js";
+import { stripControlCharacters as clean } from "./constants.js";
 
 export type RootNamespace = "roots" | "etymon-atom";
 
@@ -236,12 +237,12 @@ export function renderRootLedger(ledger: RootLedger): string[] {
   const worst = ledger.entries.filter((e) => e.payoffCount === 0).slice(0, 3);
   if (worst.length > 0) {
     lines.push(
-      `  taught once and never returned to: ${worst.map((e) => `${e.root} (${e.introducedBy})`).join(", ")}`,
+      `  taught once and never returned to: ${worst.map((e) => `${clean(e.root)} (${clean(e.introducedBy)})`).join(", ")}`,
     );
   }
   const best = [...ledger.entries].sort((a, b) => b.payoffCount - a.payoffCount)[0];
   if (best !== undefined && best.payoffCount > 0) {
-    lines.push(`  best-spent root: ${best.root} with ${best.payoffCount} payoffs`);
+    lines.push(`  best-spent root: ${clean(best.root)} with ${best.payoffCount} payoffs`);
   }
   return lines;
 }

@@ -40,6 +40,7 @@ import {
   type CurriculumStrand,
   type SpineNode,
 } from "./types.js";
+import { stripControlCharacters as clean } from "./constants.js";
 
 /** One node that cannot be placed on a ladder. */
 export interface StrandDefect {
@@ -231,24 +232,24 @@ export function summarizeStrands(
 export function renderStrandSummary(summary: StrandSummary): string[] {
   const lines: string[] = [];
   const spread = summary.strands
-    .map((s) => `${s.strand} ${s.nodes}`)
+    .map((s) => `${clean(s.strand)} ${s.nodes}`)
     .join(", ");
   lines.push(`strands: ${summary.totalNodes} nodes across ${summary.strands.length} strands -- ${spread}`);
 
   if (summary.emptyStrands.length > 0) {
     lines.push(
-      `  strands with no nodes: ${summary.emptyStrands.join(", ")} ` +
+      `  strands with no nodes: ${summary.emptyStrands.map(clean).join(", ")} ` +
         `(declared as ladders, not yet climbed)`,
     );
   }
   for (const defect of summary.defects) {
-    lines.push(`  ${defect.nodeId}: ${defect.detail}`);
+    lines.push(`  ${clean(defect.nodeId)}: ${clean(defect.detail)}`);
   }
   const overCeiling = summary.nodeSizeDefects.filter((d) => d.severity === "over-ceiling");
   if (overCeiling.length > 0) {
     lines.push(
       `  nodes above the chapter atom ceiling: ${overCeiling.length} ` +
-        `(worst ${overCeiling[0]!.nodeId} at ${overCeiling[0]!.concepts} concepts) ` +
+        `(worst ${clean(overCeiling[0]!.nodeId)} at ${overCeiling[0]!.concepts} concepts) ` +
         `-- no single chapter can realize these`,
     );
   }

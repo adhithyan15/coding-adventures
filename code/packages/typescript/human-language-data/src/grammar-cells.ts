@@ -38,6 +38,7 @@
 
 import type { ParsedLesson } from "./parse.js";
 import type { GrammarCell, GrammarSlotInventory, TrackGrammarCells } from "./types.js";
+import { stripControlCharacters as clean } from "./constants.js";
 
 export interface CellGraphDefect {
   cellId: string;
@@ -281,22 +282,22 @@ export function renderCellCoverage(
   const total = (Array.isArray(track.cells) ? track.cells : []).length;
   const slotTotal = (Array.isArray(slots.slots) ? slots.slots : []).length;
   const lines = [
-    `grammar cells (${track.language}): ${coverage.taught.length} of ${total} regular cells taught ` +
+    `grammar cells (${clean(track.language)}): ${coverage.taught.length} of ${total} regular cells taught ` +
       `(${coverage.taughtPercent}%), against ${slotTotal} universal slots`,
   ];
   if (coverage.untaught.length > 0) {
     lines.push(
-      `  next unstarted cells in dependency order: ${coverage.untaught.slice(0, 3).join(", ")}`,
+      `  next unstarted cells in dependency order: ${coverage.untaught.slice(0, 3).map(clean).join(", ")}`,
     );
   }
   for (const item of coverage.overBudget) {
-    lines.push(`  ${item.lessonId}: teaches ${item.cells} cells, budget is ${item.budget}`);
+    lines.push(`  ${clean(item.lessonId)}: teaches ${item.cells} cells, budget is ${item.budget}`);
   }
   for (const item of coverage.outOfOrder.slice(0, 5)) {
-    lines.push(`  ${item.lessonId}: teaches ${item.cellId} before ${item.missingPrerequisite}`);
+    lines.push(`  ${clean(item.lessonId)}: teaches ${clean(item.cellId)} before ${clean(item.missingPrerequisite)}`);
   }
   for (const item of coverage.unknownDeclarations.slice(0, 5)) {
-    lines.push(`  ${item.lessonId}: declares unknown cell ${item.cellId}`);
+    lines.push(`  ${clean(item.lessonId)}: declares unknown cell ${clean(item.cellId)}`);
   }
   return lines;
 }

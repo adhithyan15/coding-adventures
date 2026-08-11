@@ -13,6 +13,7 @@ import type {
   TrackChapters,
 } from "./types.js";
 import { summarizeModality, type ModalityOptions, type ModalitySummary } from "./modality.js";
+import { stripControlCharacters as clean } from "./constants.js";
 
 export const DURATION_THRESHOLD_SECONDS = 300;
 
@@ -690,7 +691,7 @@ function renderModalitySection(modality: CurriculumGapReport["modality"]): strin
 
   lines.push("", `Modality findings (report-only): ${modality.findings.length}`);
   for (const finding of modality.findings.slice(0, 20)) {
-    lines.push(`  ${finding.code}: ${finding.message}`);
+    lines.push(`  ${clean(finding.code)}: ${clean(finding.message)}`);
   }
   return lines;
 }
