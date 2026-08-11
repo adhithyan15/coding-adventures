@@ -8,7 +8,7 @@ use diagram_ir::{
     SequenceTextWrap,
 };
 
-pub const VERSION: &str = "0.28.0";
+pub const VERSION: &str = "0.29.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -112,6 +112,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
     let mut centers = HashMap::new();
     let mut lifeline_starts = HashMap::new();
     let mut lifeline_ends = HashMap::new();
+    let mut footer_positions = HashMap::new();
     let mut items = Vec::new();
     let mut x = MARGIN;
     let mut lane_lefts = Vec::with_capacity(lane_widths.len());
@@ -234,7 +235,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 );
                 let label_height = 16.0 * label.lines().count().max(1) as f64;
                 let message_y = y + label_height + 6.0;
-                let from_x =
+                let mut from_x =
                     activation_endpoint(&activation_starts, from, from_center_x, to_center_x);
                 let mut to_x =
                     activation_endpoint(&activation_starts, to, to_center_x, from_center_x);
@@ -274,6 +275,36 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     // The opening message points at the bar that starts on this line.
                     to_x =
                         endpoint_at_box_edge(to_center_x, from_center_x, ACTIVATION_W / 2.0 - 1.0);
+                }
+                if let Some(participant) = destroyed_participant {
+                    if let Some(lane_index) = diagram
+                        .participants
+                        .iter()
+                        .position(|item| item.id == participant)
+                    {
+                        let definition = &diagram.participants[lane_index];
+                        let box_width = (lane_widths[lane_index] - 24.0).max(100.0);
+                        let footer_height = participant_header_height(
+                            &definition.kind,
+                            line_count(&participant_labels[lane_index]),
+                        );
+                        footer_positions
+                            .insert(participant.to_string(), message_y - footer_height / 2.0);
+                        if participant == from {
+                            from_x = endpoint_at_box_edge(
+                                from_center_x,
+                                to_center_x,
+                                box_width / 2.0 + 3.0,
+                            );
+                        }
+                        if participant == to {
+                            to_x = endpoint_at_box_edge(
+                                to_center_x,
+                                from_center_x,
+                                box_width / 2.0 + 3.0,
+                            );
+                        }
+                    }
                 }
                 items.push(LayoutedSequenceItem::Message {
                     from_x,
@@ -317,14 +348,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     );
                 }
                 if let Some(participant) = destroyed_participant {
-                    if let Some(&center) = centers.get(participant) {
-                        items.push(LayoutedSequenceItem::Destruction {
-                            participant: participant.to_string(),
-                            x: center,
-                            y: message_y,
-                        });
-                        lifeline_ends.insert(participant.to_string(), message_y);
-                    }
+                    lifeline_ends.insert(participant.to_string(), message_y);
                 }
                 y = message_y + EVENT_H;
             }
@@ -400,12 +424,19 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 ) {
                     continue;
                 }
-                if let Some(&center) = centers.get(participant) {
-                    items.push(LayoutedSequenceItem::Destruction {
-                        participant: participant.clone(),
-                        x: center,
-                        y,
-                    });
+                if centers.contains_key(participant) {
+                    let footer_height = diagram
+                        .participants
+                        .iter()
+                        .position(|item| item.id == *participant)
+                        .map(|index| {
+                            participant_header_height(
+                                &diagram.participants[index].kind,
+                                line_count(&participant_labels[index]),
+                            )
+                        })
+                        .unwrap_or(header_height);
+                    footer_positions.insert(participant.clone(), y - footer_height / 2.0);
                     lifeline_ends.insert(participant.clone(), y);
                 }
                 y += EVENT_H / 2.0;
@@ -552,7 +583,10 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
             properties: participant.properties.clone(),
             details_reference: participant.details_reference.clone(),
             x: center - box_width / 2.0,
-            y: footer_y,
+            y: footer_positions
+                .get(&participant.id)
+                .copied()
+                .unwrap_or(footer_y),
             width: box_width,
             height: footer_height,
         });
@@ -1487,6 +1521,18 @@ mod tests {
                     activate: false,
                     deactivate: false,
                 },
+                SequenceEvent::Message {
+                    from: "Worker".into(),
+                    to: "Alice".into(),
+                    label: "Stop".into(),
+                    wrap: SequenceTextWrap::Default,
+                    line_style: SequenceLineStyle::Solid,
+                    arrowhead: SequenceArrowhead::Cross,
+                    bidirectional: false,
+                    central_connection: SequenceCentralConnection::None,
+                    activate: false,
+                    deactivate: false,
+                },
                 SequenceEvent::ParticipantDestroyed {
                     participant: "Worker".into(),
                 },
@@ -1531,23 +1577,41 @@ mod tests {
                 _ => None,
             })
             .unwrap();
-        let destruction_y = layout
+        let (footer_x, footer_y, footer_height) = layout
             .items
             .iter()
             .find_map(|item| match item {
-                LayoutedSequenceItem::Destruction { participant, y, .. }
-                    if participant == "Worker" =>
-                {
-                    Some(*y)
-                }
+                LayoutedSequenceItem::ParticipantBox {
+                    id,
+                    mirrored: true,
+                    x,
+                    y,
+                    height,
+                    ..
+                } if id == "Worker" => Some((*x, *y, *height)),
+                _ => None,
+            })
+            .unwrap();
+        let (stop_from_x, stop_y) = layout
+            .items
+            .iter()
+            .find_map(|item| match item {
+                LayoutedSequenceItem::Message {
+                    label, from_x, y, ..
+                } if label == "Stop" => Some((*from_x, *y)),
                 _ => None,
             })
             .unwrap();
         assert_eq!(worker_box_y + worker_box_height / 2.0, message_y);
         assert_eq!(message_to_x, worker_box_x - 3.0);
         assert_eq!(lifeline_y1, worker_box_y + worker_box_height);
-        assert_eq!(lifeline_y2, destruction_y);
-        assert_eq!(destruction_y, message_y);
+        assert_eq!(footer_y + footer_height / 2.0, stop_y);
+        assert_eq!(stop_from_x, footer_x - 3.0);
+        assert_eq!(lifeline_y2, stop_y);
+        assert!(!layout
+            .items
+            .iter()
+            .any(|item| matches!(item, LayoutedSequenceItem::Destruction { .. })));
         assert!(worker_box_y > HEADER_Y);
     }
 

@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.34.0";
+pub const VERSION: &str = "0.35.0";
 
 use std::collections::HashMap;
 
@@ -1419,37 +1419,6 @@ where
 
     for item in &diagram.items {
         match item {
-            LayoutedSequenceItem::Destruction { x, y, .. } => {
-                instructions.push(PaintInstruction::Path(PaintPath {
-                    base: PaintBase::default(),
-                    commands: vec![
-                        PathCommand::MoveTo {
-                            x: *x - 7.0,
-                            y: *y - 7.0,
-                        },
-                        PathCommand::LineTo {
-                            x: *x + 7.0,
-                            y: *y + 7.0,
-                        },
-                        PathCommand::MoveTo {
-                            x: *x + 7.0,
-                            y: *y - 7.0,
-                        },
-                        PathCommand::LineTo {
-                            x: *x - 7.0,
-                            y: *y + 7.0,
-                        },
-                    ],
-                    fill: None,
-                    fill_rule: None,
-                    stroke: Some("#dc2626".into()),
-                    stroke_width: Some(2.0),
-                    stroke_cap: Some(StrokeCap::Round),
-                    stroke_join: None,
-                    stroke_dash: None,
-                    stroke_dash_offset: None,
-                }));
-            }
             LayoutedSequenceItem::Note {
                 x,
                 y,
@@ -2871,7 +2840,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.34.0");
+        assert_eq!(crate::VERSION, "0.35.0");
     }
 
     #[test]
