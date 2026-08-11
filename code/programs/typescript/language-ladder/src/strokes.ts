@@ -274,6 +274,11 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // The same page's Arabic ل clip keeps the tall upright and leftward base bowl
 // in one pen-down run. Its scoped source remains distinct from the Persian and
 // Urdu records even though all three share the same Unicode glyph and outline.
+// The later Arabic ه clip starts at the independent form's upper right, closes
+// its lower counter, threads through the centre into the upper-right counter,
+// then sweeps left along the baseline without lifting. The compact handwritten
+// order is fitted to Noto Naskh's wider two-counter outline and remains scoped
+// independently from the Persian record for the same Unicode glyph.
 // Persian ا opens UT Austin's freehand alphabet demonstration: one vertical
 // movement travels from the top to the baseline. The lesson presents the
 // alphabet right-to-left, while this isolated non-connector remains one stroke.
@@ -1201,6 +1206,73 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: arabicAlphabetSource("ل"),
+  },
+  [ductusKey("arabic", "ه")]: {
+    script: "arabic",
+    glyph: "ه",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "curve down-left and close the lower counter",
+            path: [
+              { x: 315, y: 400 },
+              { x: 285, y: 375 },
+              { x: 255, y: 350 },
+              { x: 230, y: 325 },
+              { x: 205, y: 300 },
+              { x: 190, y: 260 },
+              { x: 190, y: 210 },
+              { x: 205, y: 165 },
+              { x: 235, y: 125 },
+              { x: 275, y: 105 },
+              { x: 320, y: 110 },
+              { x: 355, y: 135 },
+              { x: 380, y: 175 },
+              { x: 390, y: 225 },
+              { x: 380, y: 275 },
+              { x: 355, y: 320 },
+              { x: 315, y: 355 },
+            ],
+          },
+          {
+            label: "thread through the centre and close the upper-right counter without lifting",
+            path: [
+              { x: 315, y: 355 },
+              { x: 360, y: 355 },
+              { x: 410, y: 340 },
+              { x: 455, y: 315 },
+              { x: 500, y: 275 },
+              { x: 535, y: 225 },
+              { x: 555, y: 170 },
+              { x: 555, y: 115 },
+              { x: 535, y: 70 },
+              { x: 535, y: 50 },
+              { x: 500, y: 40 },
+              { x: 455, y: 30 },
+              { x: 415, y: 45 },
+              { x: 385, y: 75 },
+              { x: 365, y: 100 },
+            ],
+          },
+          {
+            label: "sweep left along the baseline without lifting",
+            path: [
+              { x: 365, y: 100 },
+              { x: 345, y: 75 },
+              { x: 310, y: 65 },
+              { x: 270, y: 65 },
+              { x: 225, y: 70 },
+              { x: 175, y: 65 },
+              { x: 120, y: 65 },
+              { x: 70, y: 65 },
+              { x: 25, y: 65 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ه"),
   },
   // Arabic ي (U+064A) shares the isolated bowl skeleton with Urdu ی (U+06CC),
   // but keeps its own source and adds the two lower dots observed in yaa.mov.

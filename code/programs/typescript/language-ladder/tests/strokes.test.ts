@@ -39,6 +39,7 @@ const ARABIC_DAAD = DUCTUS[ductusKey("arabic", "ض")];
 const ARABIC_AYN = DUCTUS[ductusKey("arabic", "ع")];
 const ARABIC_KAF = DUCTUS[ductusKey("arabic", "ك")];
 const ARABIC_LAM = DUCTUS[ductusKey("arabic", "ل")];
+const ARABIC_HEH = DUCTUS[ductusKey("arabic", "ه")];
 const ARABIC_YAA = DUCTUS[ductusKey("arabic", "ي")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
@@ -649,6 +650,21 @@ describe("handwriting ductus", () => {
     expect(bowl.at(-1)!.y).toBeGreaterThan(Math.min(...bowl.map((point) => point.y)));
   });
 
+  it("Arabic independent ه closes both counters before its leftward baseline sweep", () => {
+    expect(ARABIC_HEH.script).toBe("arabic");
+    expect(penLifts(ARABIC_HEH)).toBe(0);
+    expect(ARABIC_HEH.strokes).toHaveLength(1);
+    expect(ARABIC_HEH.strokes[0].segments).toHaveLength(3);
+    const lower = ARABIC_HEH.strokes[0].segments[0].path;
+    const upperRight = ARABIC_HEH.strokes[0].segments[1].path;
+    const baseline = ARABIC_HEH.strokes[0].segments[2].path;
+    expect(Math.min(...lower.map((point) => point.y))).toBeLessThan(lower[0].y);
+    expect(lower.at(-1)).toEqual(upperRight[0]);
+    expect(Math.max(...upperRight.map((point) => point.x))).toBeGreaterThan(upperRight[0].x);
+    expect(upperRight.at(-1)).toEqual(baseline[0]);
+    expect(baseline[0].x).toBeGreaterThan(baseline.at(-1)!.x);
+  });
+
   it("Arabic independent ي completes its bowl before the lower-left and lower-right dots", () => {
     expect(ARABIC_YAA.script).toBe("arabic");
     expect(penLifts(ARABIC_YAA)).toBe(2);
@@ -1151,6 +1167,21 @@ describe("handwriting ductus", () => {
     );
     expect(src.url).not.toBe(URDU_YE.source.url);
     expect(ARABIC_YAA.glyph).not.toBe(URDU_YE.glyph);
+  });
+
+  it("Arabic independent ه traces its two counters and baseline sweep to the Oregon MOV", () => {
+    const src = ARABIC_HEH.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/%d9%87-%d9%88-%d9%8a/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet ه و ي.*Heh.*00:04.9–00:06.0.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /directly linked letter-haa.mov.*one continuous pen-down run.*00:04.9–00:06.0.*upper right.*00:04.9–00:05.4.*down-left.*lower counter.*without lifting.*centre.*upper-right counter.*00:05.4–00:05.7.*baseline.*00:06.0.*two-way connector.*contextual shapes.*one-stroke.*zero-lift.*Noto Naskh.*Arabic ه.*script-scoped provenance.*Persian.*same Unicode glyph/i,
+    );
+    expect(src.url).not.toBe(DUCTUS["ه"].source.url);
+    expect(ARABIC_HEH.glyph).toBe(DUCTUS["ه"].glyph);
   });
 
   it("Urdu independent ج traces to Zer o Zabar's dot-first pointed-head animation", () => {
