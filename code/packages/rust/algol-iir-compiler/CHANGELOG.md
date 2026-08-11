@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.101.0 — 2026-08-11 — static real division output
+
+Finite literal-only real division now completes the bounded arithmetic output
+evaluator. Quotients use the existing shared string path, while zero divisors,
+non-finite results, and runtime operands fail closed without introducing a
+runtime `f64` formatter ABI.
+
 ## 0.100.0 — 2026-08-11 — static real multiplication output
 
 Finite literal-only real multiplication now joins addition and subtraction in
