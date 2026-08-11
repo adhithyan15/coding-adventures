@@ -190,6 +190,32 @@ impl UnlockedVaultV1 {
         crate::audit::audit_verify(&self.active, &self._keys, self._repository.as_ref())
     }
 
+    /// Re-verify the complete reachable vault and release its aggregate report
+    /// only after the verification-access event and next owner state are
+    /// durable.
+    ///
+    /// A verification failure is recorded as a failed authenticated attempt
+    /// when the repository remains able to publish the event. Publication
+    /// failure supersedes and withholds both the report and original error.
+    pub fn audited_verify(
+        self,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<crate::AuditVerificationV1>, ApplicationError> {
+        self.require_audit_epoch()?;
+        let operation = self.audit_verify();
+        self.finish_audited_access(
+            AuditActionV1::VaultVerify,
+            None,
+            None,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+            operation,
+        )
+    }
+
     /// Build one canonical authenticated encrypted snapshot for host persistence.
     ///
     /// The passphrase must be collected separately from the live vault
@@ -211,6 +237,74 @@ impl UnlockedVaultV1 {
             passphrase,
             policy,
             randomness,
+        )
+    }
+
+    /// Build and release one encrypted portable artifact only after its export
+    /// access event and next owner state are durable.
+    ///
+    /// The separately collected passphrase and export randomness retain their
+    /// existing owned wipe-on-drop behavior. Invalid export inputs are audited
+    /// as failed attempts; audit-publication failure withholds the encrypted
+    /// artifact and original operation error.
+    #[allow(clippy::too_many_arguments)]
+    pub fn audited_export_portable_with_passphrase(
+        self,
+        exact_bootstrap: &[u8],
+        passphrase: Zeroizing<Vec<u8>>,
+        policy: crate::PortableExportPolicyV1,
+        export_randomness: crate::PortableExportRandomnessV1,
+        wall_time_ms: u64,
+        audit_randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<crate::PortableExportArtifactV1>, ApplicationError>
+    {
+        self.require_audit_epoch()?;
+        let operation = self.export_portable_with_passphrase(
+            exact_bootstrap,
+            passphrase,
+            policy,
+            export_randomness,
+        );
+        self.finish_audited_access(
+            AuditActionV1::PortableExport,
+            None,
+            None,
+            wall_time_ms,
+            audit_randomness,
+            local_state_store,
+            operation,
+        )
+    }
+
+    /// Run authenticated low-resolution diagnostics and release the coarse
+    /// report only after its access event and next owner state are durable.
+    ///
+    /// Diagnostic health is report data rather than operation failure: a
+    /// completed diagnostic is a successful access even when its coarse state
+    /// reports an unavailable or unhealthy dependency. If audit publication
+    /// fails, no diagnostic report is released.
+    pub fn audited_doctor(
+        self,
+        local_state_store: &dyn LocalStateStore,
+        bootstrap_store: &dyn BootstrapStore,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+    ) -> Result<crate::AuditedAccessResultV1<crate::VaultDoctorReportV1>, ApplicationError> {
+        self.require_audit_epoch()?;
+        let access = crate::VaultAccessV1::Unlocked(Box::new(self));
+        let report = access.doctor(local_state_store, bootstrap_store);
+        let session = access
+            .into_unlocked()
+            .map_err(|_| ApplicationError::InternalInvariant)?;
+        session.finish_audited_access(
+            AuditActionV1::VaultDiagnose,
+            None,
+            None,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+            Ok(report),
         )
     }
 
@@ -2648,6 +2742,160 @@ mod tests {
         assert_eq!(report.commit_count(), 8);
         assert_eq!(report.catalog_count(), 2);
         assert_eq!(report.audit_event_count(), 6);
+    }
+
+    #[test]
+    fn audited_verification_diagnostics_and_export_form_one_exact_chain() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_bootstrap = bootstrap.0.lock().unwrap().clone().unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        activate_audit_epoch_for_test(
+            &session.active,
+            &session._keys,
+            &session._local_secret,
+            session._repository.as_ref(),
+            730,
+            None,
+            None,
+            [0xd1; AUDIT_ONLY_TEST_RANDOM_BYTES],
+            &local,
+        )
+        .unwrap();
+        drop(session);
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let (_, verification) = session
+            .audited_verify(731, audited_access_randomness(0xd2), &local)
+            .unwrap()
+            .into_parts();
+        let verification = verification.unwrap();
+        assert_eq!(verification.commit_count(), 2);
+        assert_eq!(verification.catalog_count(), 1);
+        assert_eq!(verification.audit_event_count(), 1);
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::VaultVerify,
+                AuditOutcomeV1::Succeeded,
+                None,
+                None,
+            )
+        );
+
+        let (_, diagnosis) = session
+            .audited_doctor(&local, &bootstrap, 732, audited_access_randomness(0xd3))
+            .unwrap()
+            .into_parts();
+        assert_eq!(
+            diagnosis.unwrap().state(),
+            crate::VaultDoctorStateV1::Healthy
+        );
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::VaultDiagnose,
+                AuditOutcomeV1::Succeeded,
+                None,
+                None,
+            )
+        );
+
+        let policy = crate::PortableExportPolicyV1::new(8 * 1024, 1, 1).unwrap();
+        let (_, exported) = session
+            .audited_export_portable_with_passphrase(
+                &exact_bootstrap,
+                Zeroizing::new(b"separate export passphrase".to_vec()),
+                policy,
+                crate::PortableExportRandomnessV1::new([0xd4; crate::PORTABLE_EXPORT_RANDOM_BYTES]),
+                733,
+                audited_access_randomness(0xd5),
+                &local,
+            )
+            .unwrap()
+            .into_parts();
+        assert!(!exported.unwrap().as_bytes().is_empty());
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::PortableExport,
+                AuditOutcomeV1::Succeeded,
+                None,
+                None,
+            )
+        );
+
+        let (_, rejected) = session
+            .audited_export_portable_with_passphrase(
+                &exact_bootstrap,
+                Zeroizing::new(Vec::new()),
+                policy,
+                crate::PortableExportRandomnessV1::new([0xd6; crate::PORTABLE_EXPORT_RANDOM_BYTES]),
+                734,
+                audited_access_randomness(0xd7),
+                &local,
+            )
+            .unwrap()
+            .into_parts();
+        assert!(matches!(rejected, Err(ApplicationError::InvalidInput)));
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::PortableExport,
+                AuditOutcomeV1::Failed,
+                None,
+                None,
+            )
+        );
+        let report = session.audit_verify().unwrap();
+        assert_eq!(report.commit_count(), 6);
+        assert_eq!(report.catalog_count(), 1);
+        assert_eq!(report.audit_event_count(), 5);
     }
 
     #[test]
