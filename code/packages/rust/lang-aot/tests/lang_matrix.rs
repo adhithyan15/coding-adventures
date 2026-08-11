@@ -1384,6 +1384,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("4.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a local real assigned from a finite static expression keeps
+    // its canonical value text along a straight-line path. Reassignment,
+    // control flow, calls, captured globals, and genuinely runtime expressions
+    // still require the deferred portable f64 formatter.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real x; x := 2.0 * 2.25; output(x) end",
+        expect: Expect::Stdout("4.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — exact unary signs stay attached to direct real literals while
     // the bounded source-spelling path continues to reject computed reals.
     Prog {
@@ -6038,6 +6049,35 @@ fn algol_real_literal_output_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but ALGOL real-literal output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_straight_line_static_real_variable_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("x := 2.0 * 2.25; output(x)")
+        })
+        .expect("the static real-variable program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but static real-variable output did not complete"
             );
             continue;
         };

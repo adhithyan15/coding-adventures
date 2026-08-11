@@ -181,8 +181,11 @@ branches to the selected source-spelled string at run time. Exact parentheses
 around a direct signed literal are ignored while preserving that spelling.
 Finite literal-only addition, subtraction, multiplication, and division are
 evaluated by the frontend and printed through the same string path. Zero
-divisors, non-finite results, real variables, and conditionals with a non-static
-leaf remain explicit type errors. Real literal bases also accept the existing
+divisors, non-finite results, and conditionals with a non-static leaf remain
+explicit type errors. A local real scalar assigned one of these finite static
+expressions can also print its canonical decimal value while execution remains
+straight-line; labels, branches, loops, gotos, calls, dynamic reassignment, and
+captured globals invalidate that shortcut. Real literal bases also accept the existing
 capped nonnegative integer-literal exponent chains or one explicitly signed
 integer literal in `-64..=64`. A single real-literal exponent is also accepted
 when its value is exactly integral and within that cap; other exponent shapes

@@ -514,6 +514,12 @@ struct Compiler {
     /// a literal-only model, this also covers runtime results such as a string
     /// procedure call copied into a scalar local.
     initialized_string_slots: HashSet<String>,
+    /// Canonical text for local real scalars assigned a finite compile-time
+    /// expression along a straight-line path. This deliberately stops tracking
+    /// at control flow or procedure calls; a general runtime f64 formatter is
+    /// still required once the source value can vary at run time.
+    static_real_slots: HashMap<String, String>,
+    static_real_tracking_disabled: bool,
 }
 
 impl Default for Compiler {
@@ -551,6 +557,8 @@ impl Default for Compiler {
             switch_expansion_steps: 0,
             block_captured: HashSet::new(),
             initialized_string_slots: HashSet::new(),
+            static_real_slots: HashMap::new(),
+            static_real_tracking_disabled: false,
         }
     }
 }
@@ -1770,6 +1778,9 @@ impl Compiler {
         let saved_switch_expansion_steps = std::mem::replace(&mut self.switch_expansion_steps, 0);
         let saved_initialized_string_slots =
             std::mem::take(&mut self.initialized_string_slots);
+        let saved_static_real_slots = std::mem::take(&mut self.static_real_slots);
+        let saved_static_real_tracking_disabled =
+            std::mem::replace(&mut self.static_real_tracking_disabled, true);
         let saved_scopes = std::mem::replace(&mut self.scopes, vec![HashMap::new()]);
         let saved_by_name_bindings =
             std::mem::replace(&mut self.by_name_bindings, by_name_bindings);
@@ -2007,6 +2018,8 @@ impl Compiler {
         self.switch_scope_names = saved_switch_scope_names;
         self.switch_expansion_steps = saved_switch_expansion_steps;
         self.initialized_string_slots = saved_initialized_string_slots;
+        self.static_real_slots = saved_static_real_slots;
+        self.static_real_tracking_disabled = saved_static_real_tracking_disabled;
         self.scopes = saved_scopes;
         self.by_name_bindings = saved_by_name_bindings;
         self.procedure_bindings = saved_procedure_bindings;
@@ -2118,6 +2131,7 @@ impl Compiler {
     /// slot that holds the result.  Used from `emit_expr`.
     fn emit_proc_call(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
         self.set_loc(node);
+        self.disable_static_real_tracking();
         self.emit_call_common(node, true)?.ok_or_else(|| {
             CompileError::Type("proper procedure call has no return value".into())
         })
@@ -2140,6 +2154,7 @@ impl Compiler {
         if self.try_emit_standard_output_stmt(&target_source_name, node)? {
             return Ok(());
         }
+        self.disable_static_real_tracking();
         self.emit_call_common(node, false)?;
         Ok(())
     }
@@ -2194,6 +2209,12 @@ impl Compiler {
 
             if let Some(var_name) = expr_variable_name(actual) {
                 let binding = self.require_var(&var_name)?;
+                if binding.ty == ScalarType::Real && !binding.is_global {
+                    if let Some(text) = self.static_real_slots.get(&binding.slot).cloned() {
+                        self.emit_standard_output_literal(&text);
+                        continue;
+                    }
+                }
                 if binding.ty == ScalarType::String
                     && !binding.is_global
                     && !self.initialized_string_slots.contains(&binding.slot)
@@ -2422,6 +2443,11 @@ impl Compiler {
         self.emit_label(&false_label);
         self.emit_standard_output_literal("false");
         self.emit_label(&end_label);
+    }
+
+    fn disable_static_real_tracking(&mut self) {
+        self.static_real_slots.clear();
+        self.static_real_tracking_disabled = true;
     }
 
     fn emit_standard_output_literal(&mut self, literal: &str) {
@@ -3703,6 +3729,9 @@ impl Compiler {
         self.set_loc(node);
 
         let children = direct_nodes(node);
+        if children.iter().any(|node| node.rule_name == "label") {
+            self.disable_static_real_tracking();
+        }
         for label in children.iter().filter(|node| node.rule_name == "label") {
             let source_name = self.label_name(label)?;
             let name = self.labels.get(&source_name).cloned().ok_or_else(|| {
@@ -3770,6 +3799,11 @@ impl Compiler {
         }
         let expr = first_direct_node(node, "expression")
             .ok_or_else(|| CompileError::Malformed("assign_stmt has no expression".into()))?;
+        let static_real_text = (!self.static_real_tracking_disabled)
+            .then(|| self.static_real_arithmetic_value(expr))
+            .flatten()
+            .filter(|value| value.is_finite())
+            .map(|value| value.to_string());
 
         if let Some(literal) = expr_string_literal(expr) {
             let mut saw_string_target = false;
@@ -4021,6 +4055,14 @@ impl Compiler {
                 self.initialized_string_slots.insert(binding.slot.clone());
                 continue;
             }
+            if binding.ty == ScalarType::Real && !binding.is_global {
+                if let Some(text) = &static_real_text {
+                    self.static_real_slots
+                        .insert(binding.slot.clone(), text.clone());
+                } else {
+                    self.static_real_slots.remove(&binding.slot);
+                }
+            }
             if binding.is_global {
                 // E6: a captured block scalar is a module global.
                 self.emit(IIRInstr::new(
@@ -4043,6 +4085,7 @@ impl Compiler {
 
     fn emit_goto(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
+        self.disable_static_real_tracking();
         let desig = first_direct_node(node, "desig_expr")
             .ok_or_else(|| CompileError::Malformed("goto_stmt has no desig_expr".into()))?;
         self.emit_desig_jump(desig)
@@ -4321,6 +4364,7 @@ impl Compiler {
 
     fn emit_cond_stmt(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
+        self.disable_static_real_tracking();
         let children = direct_nodes(node);
         let cond_node = children
             .iter()
@@ -4378,6 +4422,7 @@ impl Compiler {
 
     fn emit_for(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
+        self.disable_static_real_tracking();
         let target = first_direct_node(node, "variable")
             .ok_or_else(|| CompileError::Malformed("for_stmt missing loop variable".into()))?;
         let var_ty = self.for_target_type(target)?;
@@ -7133,13 +7178,37 @@ mod tests {
     }
 
     #[test]
-    fn al4_print_runtime_real_rejects_without_formatter_abi() {
-        let err = compile_source("begin real x; x := 4.2; print(x) end", "test")
-            .expect_err("runtime real output still needs a portable formatter");
+    fn al4_print_straight_line_static_real_variable() {
+        let module = compile_source("begin real x; x := 4.2; print(x) end", "test")
+            .expect("a straight-line static real assignment has deterministic output text");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "4.2")
+        }));
+    }
+
+    #[test]
+    fn al4_print_reassigned_dynamic_real_still_rejects_without_formatter_abi() {
+        let err = compile_source(
+            "begin real x; x := 4.2; x := sin(1.0); print(x) end",
+            "test",
+        )
+        .expect_err("a dynamically reassigned real still needs a portable formatter");
         assert!(
             format!("{err:?}").contains("cannot print a real value"),
             "expected a real-type rejection, got: {err:?}"
         );
+    }
+
+    #[test]
+    fn al4_print_real_tracking_stops_at_statement_control_flow() {
+        let err = compile_source(
+            "begin real x; boolean flag; x := 4.2; flag := false; if flag then x := 1.0 else x := 2.0; print(x) end",
+            "test",
+        )
+        .expect_err("branch-selected scalar values still need runtime formatting");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]

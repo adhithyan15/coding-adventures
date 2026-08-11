@@ -853,9 +853,12 @@ backend immediately) come before the enabler-dependent items.
   columns. Arithmetic conditionals whose leaves are all direct real literals
   branch to the selected source-spelled string at run time on those columns,
   exact parentheses around a signed direct literal preserve that spelling, and
-  finite literal-only addition/subtraction is evaluated at compile time before
-  entering the string path. General computed/runtime `f64` formatting remains a
-  follow-up requiring a portable typed formatter ABI.
+  finite literal-only arithmetic is evaluated at compile time before entering
+  the string path. A local real scalar assigned one of those static expressions
+  can now print its canonical value along a straight-line path on all seven
+  columns; labels, branches, loops, gotos, calls, dynamic reassignment, and
+  captured globals invalidate the tracked value. General computed/runtime
+  `f64` formatting remains a follow-up requiring a portable typed formatter ABI.
   Unicode-aware BEAM strings remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.
   `switch s := a1,a2,a3; … goto s[3]` ⇒ exit 49, **verified by running** across
