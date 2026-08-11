@@ -108,9 +108,11 @@ ancestry with no new machinery.
 every arg, including the `stream`/`terminator` literals (already validated
 against a closed set by `semantic-ir`'s validator), is an ordinary Ruby
 argument, and `sir_write` branches on them at Ruby runtime (no compile-time
-literal extraction needed, unlike the C/Go/Rust backends). Generalizes the
-existing `sir_print`/`sir_puts` — still present, still used by bare
-`"print"`/`"puts"` — into one function. Not yet emitted by any frontend — see
+literal extraction needed, unlike the C/Go/Rust backends). This is now the
+ONLY console-output primitive the backend emits — bare `"print"`/`"puts"`
+`BuiltinCall`s and the `sir_print`/`sir_puts` runtime functions that used
+to implement them were removed once every frontend finished migrating to
+`__sys_write__` (SIR28 §7) — see
 [SIR28](../../../specs/SIR28-syscall-primitives.md).
 Rejects `TailCalls`, `Intrinsics`, and every not-yet-wired feature (array
 indexing / slicing via `IndexGet` — `NDArrays`; array-pattern destructuring;
