@@ -1467,9 +1467,15 @@ changelog, focused build, and downstream validation.
             audited item-list proof: the session is consumed; success and
             post-authentication failure publish before release; publication
             failure exposes neither and retains exact recovery state.
-9b-2c-5b-2. extend that boundary across application
-            show/history/search/verify/diagnose/export and later secret
-            disclosure paths, including succeeded, denied, and failed outcomes.
+9b-2c-5b-2a. completed application redacted show/search/history/current-conflict
+              access boundaries over the shared publish-before-release path,
+              including selected-revision binding, `NotFound`, invalid input,
+              conflict, and repository-failure outcomes.
+9b-2c-5b-2b. extend that boundary across application verify, diagnose, and
+              portable export operations.
+9b-2c-5b-2c. close secret disclosure and exact current-revision capability
+              access, including succeeded, denied, and failed outcomes without
+              exposing a secret or mutation capability before publication.
 9b-2c-5b-3. adopt only audited application access methods in every
             authenticated CLI path, with output strictly after durable owner
             activation and real-process failure-ordering acceptance.
