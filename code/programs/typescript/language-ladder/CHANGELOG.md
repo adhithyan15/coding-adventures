@@ -2,6 +2,7 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+
 ### Added — cited Arabic independent-ayn ductus (HL-C09AU)
 
 - Render **ع** in two evidence-aligned frames: shape its open head from the
@@ -10,6 +11,12 @@
   two-way-connector context explicit while fitting the vendored Noto Naskh outline.
 - Preserve Ayn independently of adjacent dotted Ghayn and queue the directly
   linked independent **ك** source next.
+
+### Changed — Spanish runs 1..69 (HL-C99)
+
+- Regenerate the `bookhashes` chapter-lesson pin: chapter 62 split into six, so
+  old Spanish chapters 63–64 shifted to 68–69.
+- Eager bundle 480,127 / 500,000 bytes.
 
 ### Added — cited Arabic independent-daad ductus (HL-C09AT)
 

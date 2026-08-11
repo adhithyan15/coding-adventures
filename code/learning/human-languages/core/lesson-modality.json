@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:18ab08116186e5fd",
+  "sourceHash": "fnv1a64:fd8012a1c8e9e645",
   "summary": {
-    "totalLessons": 1716,
-    "voice": 1136,
+    "totalLessons": 1718,
+    "voice": 1138,
     "sight": 511,
     "pen": 69,
-    "drivableLessons": 1136,
+    "drivableLessons": 1138,
     "drivablePercent": 66,
     "trackCount": 22,
-    "chapterCount": 537,
-    "drivablePrefixTotal": 950,
-    "fullyDrivableChapters": 346,
+    "chapterCount": 542,
+    "drivablePrefixTotal": 952,
+    "fullyDrivableChapters": 351,
     "unstartableChapters": 141,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -6754,12 +6754,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 210,
-      "voice": 195,
+      "lessonCount": 212,
+      "voice": 197,
       "sight": 8,
       "pen": 7,
       "drivablePercent": 93,
-      "drivablePrefixTotal": 183,
+      "drivablePrefixTotal": 185,
       "modalities": [
         "voice",
         "sight",
@@ -7859,25 +7859,102 @@
         },
         {
           "chapter": 62,
-          "lessonCount": 4,
-          "voice": 4,
+          "lessonCount": 1,
+          "voice": 1,
           "sight": 0,
           "pen": 0,
           "modalities": [
             "voice"
           ],
-          "drivablePrefix": 4,
+          "drivablePrefix": 1,
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
-            "ES-C39-traer",
-            "ES-C39-conseguir",
-            "ES-C39-jugar",
-            "ES-C39-conocer"
+            "ES-C39-traer"
           ]
         },
         {
           "chapter": 63,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C39-conseguir"
+          ]
+        },
+        {
+          "chapter": 64,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C39-jugar"
+          ]
+        },
+        {
+          "chapter": 65,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C39-conocer"
+          ]
+        },
+        {
+          "chapter": 66,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C39-repaso-cambios"
+          ]
+        },
+        {
+          "chapter": 67,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C39-sintesis-elegir"
+          ]
+        },
+        {
+          "chapter": 68,
           "lessonCount": 3,
           "voice": 3,
           "sight": 0,
@@ -7895,7 +7972,7 @@
           ]
         },
         {
-          "chapter": 64,
+          "chapter": 69,
           "lessonCount": 4,
           "voice": 4,
           "sight": 0,
@@ -36711,7 +36788,7 @@
     {
       "id": "ES-C39-conseguir",
       "language": "spanish",
-      "chapter": 62,
+      "chapter": 63,
       "sequence": 1820,
       "modality": "voice",
       "derived": "voice",
@@ -36724,12 +36801,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:74a63ba617084b62"
+      "sourceHash": "fnv1a64:58e26190a3422bb9"
     },
     {
       "id": "ES-C39-jugar",
       "language": "spanish",
-      "chapter": 62,
+      "chapter": 64,
       "sequence": 1830,
       "modality": "voice",
       "derived": "voice",
@@ -36742,12 +36819,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cd56092b1fb83162"
+      "sourceHash": "fnv1a64:26a45cc301bc7db4"
     },
     {
       "id": "ES-C39-conocer",
       "language": "spanish",
-      "chapter": 62,
+      "chapter": 65,
       "sequence": 1840,
       "modality": "voice",
       "derived": "voice",
@@ -36760,12 +36837,48 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d0e0560f07fc6ae5"
+      "sourceHash": "fnv1a64:4819bcc4d086ad3a"
+    },
+    {
+      "id": "ES-C39-repaso-cambios",
+      "language": "spanish",
+      "chapter": 66,
+      "sequence": 1843,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:55865a97f518fee1"
+    },
+    {
+      "id": "ES-C39-sintesis-elegir",
+      "language": "spanish",
+      "chapter": 67,
+      "sequence": 1846,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c3037e736695a231"
     },
     {
       "id": "ES-C40-esperar",
       "language": "spanish",
-      "chapter": 63,
+      "chapter": 68,
       "sequence": 1850,
       "modality": "voice",
       "derived": "voice",
@@ -36778,12 +36891,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a76acc7e8dbbaae3"
+      "sourceHash": "fnv1a64:6c248e20dd0a92ca"
     },
     {
       "id": "ES-C40-contestar",
       "language": "spanish",
-      "chapter": 63,
+      "chapter": 68,
       "sequence": 1860,
       "modality": "voice",
       "derived": "voice",
@@ -36796,12 +36909,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:40c34f08cae8b34f"
+      "sourceHash": "fnv1a64:81d849e74138d22c"
     },
     {
       "id": "ES-C40-comprar",
       "language": "spanish",
-      "chapter": 63,
+      "chapter": 68,
       "sequence": 1870,
       "modality": "voice",
       "derived": "voice",
@@ -36814,12 +36927,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c3f4827dd3a22e3b"
+      "sourceHash": "fnv1a64:de3b45a9ab7d45e4"
     },
     {
       "id": "ES-C41-creer",
       "language": "spanish",
-      "chapter": 64,
+      "chapter": 69,
       "sequence": 1880,
       "modality": "voice",
       "derived": "voice",
@@ -36832,12 +36945,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:614f31a06628c469"
+      "sourceHash": "fnv1a64:940d2154eea416a2"
     },
     {
       "id": "ES-C41-asi-que",
       "language": "spanish",
-      "chapter": 64,
+      "chapter": 69,
       "sequence": 1890,
       "modality": "voice",
       "derived": "voice",
@@ -36850,12 +36963,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d60119c33ed9678f"
+      "sourceHash": "fnv1a64:966a517b9b6490ae"
     },
     {
       "id": "ES-C41-deber",
       "language": "spanish",
-      "chapter": 64,
+      "chapter": 69,
       "sequence": 1900,
       "modality": "voice",
       "derived": "voice",
@@ -36868,12 +36981,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:00c5ec6228ef6e07"
+      "sourceHash": "fnv1a64:86f5b8f73c0d2806"
     },
     {
       "id": "ES-C41-explicar",
       "language": "spanish",
-      "chapter": 64,
+      "chapter": 69,
       "sequence": 1910,
       "modality": "voice",
       "derived": "voice",
@@ -36886,7 +36999,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c6d502d8fed4e436"
+      "sourceHash": "fnv1a64:7f45f70d14dd08bf"
     },
     {
       "id": "TA-C01-vanakkam",

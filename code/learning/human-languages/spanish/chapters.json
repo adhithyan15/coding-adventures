@@ -1383,37 +1383,120 @@
     },
     {
       "chapter": 62,
-      "title": "Bringing, Getting, Playing, Meeting",
-      "label": "ch:spanish-bring-get-play-meet",
-      "canDo": "I can say I bring, get, play and meet in Spanish, and name what each verb does to its yo-form or its stem: traigo grows a hard g, consigo breaks e to i and drops a silent u, juego breaks u to ue alone in the language, and conozco keeps a cluster the other forms lost.",
+      "title": "Traer --- Bringing, and Latin for Dragging",
+      "label": "ch:spanish-traer",
+      "canDo": "I can say what I bring, and choose traer over llevar by where I am standing.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C39-traer",
+        "kind": "task",
+        "summary": "trahere, to drag - the root under tractor, attract and abstract.",
+        "assesses": [
+          "ES-LEX-TRAER-01",
+          "ES-ETYMON-TRAER-02",
+          "ES-GRAMMAR-TRAER-LLEVAR-03"
+        ]
+      }
+    },
+    {
+      "chapter": 63,
+      "title": "Conseguir --- Getting Is Following Until You Have It",
+      "label": "ch:spanish-conseguir",
+      "canDo": "I can say what I get, and make the e-to-i stem change.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C39-conseguir",
+        "kind": "task",
+        "summary": "consequi, to follow after - the root of sequence and consequence.",
+        "assesses": [
+          "ES-LEX-CONSEGUIR-04",
+          "ES-ETYMON-CONSEGUIR-05",
+          "ES-GRAMMAR-STEM-E-I-06"
+        ]
+      }
+    },
+    {
+      "chapter": 64,
+      "title": "Jugar --- Playing Was Joking",
+      "label": "ch:spanish-jugar",
+      "canDo": "I can say what I play, with the only u-to-ue verb in Spanish.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C39-jugar",
+        "kind": "task",
+        "summary": "iocari, to joke - and Latin's own play-verb ludere left Spanish entirely.",
+        "assesses": [
+          "ES-LEX-JUGAR-07",
+          "ES-ETYMON-JUGAR-08",
+          "ES-GRAMMAR-STEM-U-UE-09"
+        ]
+      }
+    },
+    {
+      "chapter": 65,
+      "title": "Conocer --- Coming to Know",
+      "label": "ch:spanish-conocer",
+      "canDo": "I can say who and what I am acquainted with, and choose conocer over saber.",
       "spineNodes": [
         "SPINE-SAY-WHAT-I-DO"
       ],
       "payoff": {
         "lesson": "ES-C39-conocer",
         "kind": "task",
-        "summary": "Run the chapter's four verbs in the yo-form — traigo, consigo, juego, conozco — and say what each one does to itself, then name its Latin root and what that root meant: trahere to drag, cōnsequī to follow, iocārī to joke, cognōscere to begin to know. Choose conocer for a person and saber for a fact, and say which of the four carries a thing toward you rather than away. The chapter also reaches back for oigo, the yo-form that first grew a hard g, and for padre beside English father, the model for saying that Spanish and English words can be siblings rather than borrowings.",
+        "summary": "cognoscere, whose -sc- means BEGIN to know; English know is its Germanic sibling.",
         "assesses": [
-          "ES-LEX-TRAER-01",
-          "ES-ETYMON-TRAER-02",
-          "ES-GRAMMAR-TRAER-LLEVAR-03",
-          "ES-LEX-CONSEGUIR-04",
-          "ES-ETYMON-CONSEGUIR-05",
-          "ES-GRAMMAR-STEM-E-I-06",
-          "ES-LEX-JUGAR-07",
-          "ES-ETYMON-JUGAR-08",
-          "ES-GRAMMAR-STEM-U-UE-09",
           "ES-LEX-CONOCER-10",
           "ES-ETYMON-CONOCER-11",
-          "ES-GRAMMAR-CONOCER-SABER-12",
-          "ES-GRAMMAR-OIR-Y-03",
-          "ES-LEX-PARENTS-01",
-          "ES-ETYMON-PARENTS-02"
+          "ES-GRAMMAR-CONOCER-SABER-12"
         ]
       }
     },
     {
-      "chapter": 63,
+      "chapter": 66,
+      "title": "Review --- All Four Stem Changes",
+      "label": "ch:spanish-review-stem-changes",
+      "canDo": "I can name all four stem-change patterns and the single verb that owns one of them.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C39-repaso-cambios",
+        "kind": "dialogue",
+        "summary": "The system closes at four - and u-to-ue has exactly one member.",
+        "assesses": [
+          "ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR",
+          "ES-GRAMMAR-STEM-E-I-06",
+          "ES-GRAMMAR-STEM-U-UE-09"
+        ]
+      }
+    },
+    {
+      "chapter": 67,
+      "title": "Synthesis --- The Choices English Never Makes You Make",
+      "label": "ch:spanish-synthesis-verb-splits",
+      "canDo": "I can choose correctly between three verb pairs where English offers only one word.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C39-sintesis-elegir",
+        "kind": "dialogue",
+        "summary": "preguntar/pedir, traer/llevar, conocer/saber - the decision carries the meaning.",
+        "assesses": [
+          "ES-GRAMMAR-TRAER-LLEVAR-03",
+          "ES-GRAMMAR-CONOCER-SABER-12",
+          "ES-GRAMMAR-ASK-SPLIT-04"
+        ]
+      }
+    },
+    {
+      "chapter": 68,
       "title": "Waiting, Answering, Buying",
       "label": "ch:spanish-wait-answer-buy",
       "canDo": "I can say I wait, answer and buy in Spanish — three verbs whose endings never surprise me — and I know that esperar alone carries wait, hope and expect, so context does the work English hands to three separate verbs.",
@@ -1448,7 +1531,7 @@
       }
     },
     {
-      "chapter": 64,
+      "chapter": 69,
       "title": "Saying Why",
       "label": "ch:spanish-giving-reasons",
       "canDo": "I can give a reason for what I think and what I plan — stating an opinion with creo que, running forward to its consequence with así que, and naming an obligation with debo.",

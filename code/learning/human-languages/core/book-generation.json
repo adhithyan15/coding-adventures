@@ -2630,17 +2630,42 @@
     {
       "language": "spanish",
       "chapter": 62,
-      "output": "spanish/book/chapters/ch62-bring-get-play-meet.tex"
+      "output": "spanish/book/chapters/ch62-traer.tex"
     },
     {
       "language": "spanish",
       "chapter": 63,
-      "output": "spanish/book/chapters/ch63-wait-answer-buy.tex"
+      "output": "spanish/book/chapters/ch63-conseguir.tex"
     },
     {
       "language": "spanish",
       "chapter": 64,
-      "output": "spanish/book/chapters/ch64-giving-reasons.tex"
+      "output": "spanish/book/chapters/ch64-jugar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 65,
+      "output": "spanish/book/chapters/ch65-conocer.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 66,
+      "output": "spanish/book/chapters/ch66-review-stem-changes.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 67,
+      "output": "spanish/book/chapters/ch67-synthesis-verb-splits.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 68,
+      "output": "spanish/book/chapters/ch68-wait-answer-buy.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 69,
+      "output": "spanish/book/chapters/ch69-giving-reasons.tex"
     },
     {
       "language": "tamil",

@@ -24,6 +24,8 @@ describe("generated book source hashes", () => {
     // and a synthesis chapter, so Spanish runs 1..59 and old 48..54 -> 53..59.
     // HL-C99b split chapter 53 (tomar/preguntar/ayudar/gustar) into six, so
     // Spanish runs 1..64 and old 54..59 -> 59..64.
+    // HL-C99c split chapter 62 (traer/conseguir/jugar/conocer) into six, so
+    // Spanish runs 1..69 and old 63..64 -> 68..69.
     [1, 7],
     [2, 6],
     [3, 4],
@@ -85,9 +87,14 @@ describe("generated book source hashes", () => {
     [59, 4],
     [60, 4],
     [61, 4],
-    [62, 4],
-    [63, 3],
-    [64, 4],
+    [62, 1],
+    [63, 1],
+    [64, 1],
+    [65, 1],
+    [66, 1],
+    [67, 1],
+    [68, 3],
+    [69, 4],
   ])("matches the browser-loaded Spanish Chapter %i AST across %i lessons", (chapter, count) => {
     const lessons = loadLessons();
     const expected = expectedBookHash("spanish", chapter);
