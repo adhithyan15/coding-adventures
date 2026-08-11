@@ -725,6 +725,93 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: chineseCharacterSource("子"),
   },
+  // 日 starts with the left side, then joins the top bar to the right side in
+  // one héngzhé stroke. The inside bar precedes a separately closing bottom.
+  [ductusKey("chinese", "日")]: {
+    script: "chinese",
+    glyph: "日",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the left vertical shù from top to bottom",
+            path: [
+              { x: 214, y: 735 },
+              { x: 214, y: 630 },
+              { x: 214, y: 520 },
+              { x: 214, y: 410 },
+              { x: 214, y: 300 },
+              { x: 214, y: 190 },
+              { x: 214, y: 80 },
+              { x: 214, y: 0 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the top horizontal héng from left to right",
+            path: [
+              { x: 214, y: 735 },
+              { x: 310, y: 735 },
+              { x: 410, y: 735 },
+              { x: 510, y: 735 },
+              { x: 610, y: 735 },
+              { x: 710, y: 735 },
+              { x: 792, y: 735 },
+            ],
+          },
+          {
+            label: "turn without lifting and descend the right side",
+            path: [
+              { x: 792, y: 735 },
+              { x: 792, y: 630 },
+              { x: 792, y: 520 },
+              { x: 792, y: 410 },
+              { x: 792, y: 300 },
+              { x: 792, y: 190 },
+              { x: 792, y: 80 },
+              { x: 792, y: 0 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the middle horizontal héng from left to right",
+            path: [
+              { x: 214, y: 389 },
+              { x: 310, y: 389 },
+              { x: 410, y: 389 },
+              { x: 510, y: 389 },
+              { x: 610, y: 389 },
+              { x: 710, y: 389 },
+              { x: 792, y: 389 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then close the bottom horizontal héng from left to right",
+            path: [
+              { x: 214, y: 33 },
+              { x: 310, y: 33 },
+              { x: 410, y: 33 },
+              { x: 510, y: 33 },
+              { x: 610, y: 33 },
+              { x: 710, y: 33 },
+              { x: 792, y: 33 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("日"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

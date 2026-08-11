@@ -431,8 +431,12 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   and two lifts distinct. Chinese **子** then adds two joined turns: draw the
   top horizontal and sweep down-left without lifting, lift for the central
   descent and its leftward base hook, then lift again for the middle horizontal.
-  Its five-frame Noto Sans SC path keeps both turns visible. The remaining
-  **150** prose part orders across six scripts (`arabic` 3, `chinese` 19,
+  Its five-frame Noto Sans SC path keeps both turns visible. Chinese **日**
+  follows the same box family with one added inside bar: descend
+  the left side, lift for the joined top-and-right héngzhé, lift for the middle
+  horizontal, then lift once more to close the bottom. Its five-frame Noto Sans
+  SC path makes the inside-before-close rule visible. The remaining **149**
+  prose part orders across six scripts (`arabic` 3, `chinese` 18,
   `cyrillic` 33, `devanagari` 28,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a

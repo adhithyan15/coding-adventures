@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Chinese 日 ductus (HL-C09CE)
+
+- Render **日** in five source-aligned frames: descend the left side, cross the
+  top and turn down the right without lifting, draw the middle, then close.
+- Fit all four source runs to Noto Sans SC while preserving the joined corner,
+  three pen lifts, and the inside-before-close rule.
+- Reduce Chinese's remaining verified-ductus inventory to 18 entries.
+
 ### Added — cited Chinese 子 ductus (HL-C09CD)
 
 - Render **子** in five source-aligned frames: cross the top and turn down-left,
