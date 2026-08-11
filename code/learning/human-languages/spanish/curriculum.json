@@ -853,6 +853,66 @@
       "after": []
     },
     {
+      "id": "ES-PATH-003-LE",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C46-le"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-003-LE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-003-LES",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C46-les"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-003-LES"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-003-WHICH",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C46-cual-pide"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-003-WHICH"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-003-REVIEW-IO",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C46-repaso-dos-sistemas"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-003-REVIEW-IO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-003-SYNTH-IO",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C46-sintesis-dar-y-decir"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-003-SYNTH-IO"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-038-SER-IR-PRETERITE-CH14",
       "spine_node": "SPINE-TALK-ABOUT-PAST",
       "lessons": [
@@ -1404,6 +1464,11 @@
         "ES-PATH-003-OS",
         "ES-PATH-003-REVIEW-8",
         "ES-PATH-003-SYNTH-8",
+        "ES-PATH-003-LE",
+        "ES-PATH-003-LES",
+        "ES-PATH-003-WHICH",
+        "ES-PATH-003-REVIEW-IO",
+        "ES-PATH-003-SYNTH-IO",
         "ES-PATH-020",
         "ES-PATH-027"
       ],
@@ -3021,6 +3086,61 @@
       "prerequisites": [],
       "lessons": [
         "ES-C45-sintesis-sin-repetir"
+      ]
+    },
+    {
+      "id": "ES-EXT-003-LE",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C46-le"
+      ]
+    },
+    {
+      "id": "ES-EXT-003-LES",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C46-les"
+      ]
+    },
+    {
+      "id": "ES-EXT-003-WHICH",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C46-cual-pide"
+      ]
+    },
+    {
+      "id": "ES-EXT-003-REVIEW-IO",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C46-repaso-dos-sistemas"
+      ]
+    },
+    {
+      "id": "ES-EXT-003-SYNTH-IO",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C46-sintesis-dar-y-decir"
       ]
     }
   ]

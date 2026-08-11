@@ -18,6 +18,11 @@
   the printed form's continuous motion explicit.
 - Queue the adjacent Shin demonstration as the next counted inventory entry.
 
+### Changed — Spanish runs 1..130 (HL-C105)
+
+- Re-pin the Spanish book-hash table for the five indirect-object chapters
+  inserted at 71; chapters after them shift by five.
+
 ### Added — cited Hebrew Qof ductus (HL-C09BV)
 
 - Render **ק** in three evidence-aligned frames: draw the top and slanted right

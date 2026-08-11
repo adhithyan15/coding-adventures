@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 97,
-  "title": "Telling Time",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:996a653d558c2ed1",
+  "title": "Head and Hand",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:f640425471a2bc5d",
   "lessons": [
     {
-      "id": "ES-C29-la-hora",
-      "sequence": 1580,
-      "title": "la hora — Spanish's barely-changed Latin hour",
-      "headword": "la hora",
-      "romanization": "la hora",
-      "gloss": "hour / o'clock — telling the time, and a word Spanish inherited almost unchanged from Latin",
+      "id": "ES-C24-cabeza",
+      "sequence": 1520,
+      "title": "la cabeza — \"the head\"",
+      "headword": "la cabeza",
+      "romanization": "la cabeza",
+      "gloss": "the head — Spanish KEPT Latin's real word, unlike French, which replaced it with slang for \"pot\"",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62426979afcb7b01",
+      "sourceHash": "fnv1a64:c98e19f47f32f361",
       "notice": null,
       "blocks": [
         {
@@ -35,53 +35,202 @@
             },
             {
               "kind": "speech",
-              "text": "You've now seen this Latin word take three different paths: French wore it down to heure, German borrowed it centuries later as Uhr. Spanish's path is the simplest of all — it barely changed."
+              "text": "Spanish's word for \"head\" is the boring, expected one — and that's exactly what makes it interesting, once you see what French did instead."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: hora",
+          "type": "input",
+          "title": "You'll want to know: la cabeza",
           "segments": [
             {
               "kind": "speech",
-              "text": "hora from Latin hōra from Greek hṓrā, \"a season, a time of day\" (the Greek goddesses of the seasons were the Hōrai). Spanish kept the word almost exactly as Latin had it — just a silent h in spelling, a fossil of a Latin h that was already weak and barely pronounced by the time Spanish inherited the word (the same non-story as French heure or English hour's silent h). Be careful not to confuse this with hijo and hacer's silent h — those come from a completely different, later Spanish sound change (Latin f- becomes Old Spanish aspirated h- becomes eventual silence), not from an already-weak Latin h the way hora's is. Two different roads to the same \"silent letter\" result. Compare its cousins: French wore hōra down further to heure; German didn't inherit the word at all, but borrowed it later as Uhr; English took the same Latin hōra and made hour."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "language",
-                "word",
-                "what happened"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "language: Spanish. word: hora. what happened: inherited almost unchanged, just a silent h.",
-                "language: French. word: heure. what happened: inherited, but worn down further.",
-                "language: German. word: Uhr. what happened: not inherited — borrowed later, separately.",
-                "language: English. word: hour. what happened: inherited via French, silent h."
-              ]
+              "text": "la cabeza — the head. Feminine, so la."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: Son las and telling time",
+          "type": "etymology",
+          "title": "The word, taken apart: caput",
           "segments": [
             {
               "kind": "speech",
-              "text": "Spanish uses ser (\"to be\") plus the feminine plural article (agreeing with the unspoken horas) to tell time — and famously switches number for \"one\":"
+              "text": "Latin's word for \"head\" was caput. Spanish's cabeza comes straight from it (by way of Vulgar Latin capitia), and caput shows up all over English too:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "English",
+                "literally"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "English: captain. literally: the \"head\" of a ship/unit.",
+                "English: capital. literally: the \"head\" city, or \"head\" sum of money.",
+                "English: decapitate. literally: to remove the head.",
+                "English: capitulate. literally: to arrange under \"headings\" — hence, to yield."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: French made a different choice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "French had the exact same Latin word available — and dropped it. French tête (\"head\") comes instead from testa, Latin for an earthenware pot: Roman soldiers joked about the skull the way English speakers say \"noggin\" (a small mug), and in Gaul that joke eventually replaced the real word entirely. Spanish never made that swap — cabeza is caput, plain and simple, still standing after two thousand years."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"la cabeza\" — the head",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"la cabeza\" — the head]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"me duele la cabeza\" — \"my head hurts\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"me duele la cabeza\" — \"my head hurts\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English family — \"captain, capital, decapitate\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English family — \"captain, capital, decapitate\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast — Spanish kept caput; French swapped it for a pot joke",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast — Spanish kept caput; French swapped it for a pot joke]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
             },
             {
               "kind": "speech",
-              "text": "Es la una. — \"It is one o'clock.\" (singular — la una, \"the one\") Son las dos. — \"It is two o'clock.\" (plural — las dos, \"the two\") Son las diez. — \"It is ten o'clock.\""
+              "text": "Say \"the head.\" (La cabeza — feminine.) What Latin word is it from? (Caput.) Give an English word from the same root. (Captain, capital, decapitate...) What did French do instead? (Replaced caput with testa, \"pot\" — soldiers' slang for the skull that took over completely.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C24-mano",
+      "sequence": 1530,
+      "title": "la mano — \"the hand\"",
+      "headword": "la mano",
+      "romanization": "la mano",
+      "gloss": "the hand — feminine despite ending in -o, Spanish's most famous gender exception",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cea8cb49e16f1e68",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
             },
             {
               "kind": "speech",
-              "text": "Literally \"it is the one\" / \"they are the two/ten\" — the hour count itself is implied by the article and number, without needing to say hora(s) at all in everyday speech (unlike French's il est deux heures, which spells out \"hours\" every time)."
+              "text": "You've been trusting \"-o words are masculine, -a words are feminine\" since your first chapters. Here's the word that breaks it — and everyone learning Spanish has to memorize this one by name."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: la mano and its gender",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la mano — the hand. Feminine, despite ending in -o."
+            },
+            {
+              "kind": "speech",
+              "text": "Almost every Spanish noun ending in -o is masculine (el libro, el gato...). Mano is the single most common exception, and it's actually doubly irregular. Latin manus (\"hand\") belonged to the 4th declension — a group of -us nouns that were mostly masculine (frūctus \"fruit,\" exercitus \"army,\" senātus \"senate\"). Manus was one of a small handful of exceptions that were feminine instead (alongside domus \"house\" and anus \"old woman\"). So mano broke the rule twice over: an exception within Latin's own mostly-masculine 4th declension, and then an exception again against Spanish's usual -o = masculine pattern."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: manus",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Mano comes from Latin manus, \"hand\" — and that root is buried inside an enormous number of English words:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "English",
+                "literally"
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "English: manual. literally: done by hand.",
+                "English: manufacture. literally: made by hand (manus + facere, \"to make\").",
+                "English: manuscript. literally: written by hand (manus + scrībere).",
+                "English: maintain. literally: hold in the hand (manū tenēre).",
+                "English: manage. literally: to handle."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Manufacture is worth pausing on: it literally means \"made by hand\" — and today it names precisely the opposite."
             }
           ]
         },
@@ -99,29 +248,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hora\" — silent h, a fossil of an already-weak Latin h",
+              "instruction": "\"la mano\" — feminine, despite the -o",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hora\" — silent h, a fossil of an already-weak Latin h]"
+              "source": "[YOU SAY: \"la mano\" — feminine, despite the -o]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Es la una. Son las dos. Son las diez.\"",
+              "instruction": "\"me duele la mano\" — \"my hand hurts\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Es la una. Son las dos. Son las diez.\"]"
+              "source": "[YOU SAY: \"me duele la mano\" — \"my hand hurts\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hora / heure / hour\" — one Latin root, three different fates",
+              "instruction": "the family — \"manual, manufacture, maintain — all a hand\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hora / heure / hour\" — one Latin root, three different fates]"
+              "source": "[YOU SAY: the family — \"manual, manufacture, maintain — all a hand\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the irony — \"manufacture = made by hand\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the irony — \"manufacture = made by hand\"]"
             }
           ]
         },
@@ -138,7 +296,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin (and Greek) word is hora from? (hōra from Greek hṓrā.) How did Spanish's path differ from French's and German's? (Spanish inherited it almost unchanged; French wore it down further to heure; German didn't inherit it at all and borrowed Uhr separately, much later.) How do you say \"it is one o'clock\" vs. \"it is two o'clock\"? (Es la una — singular; Son las dos — plural.)"
+              "text": "Say \"the hand,\" and name its gender. (La mano — feminine, despite ending in -o.) Why is mano feminine when most -o words aren't? (It's doubly irregular — Latin's 4th declension, where manus belongs, was mostly masculine; manus was one of a few feminine exceptions there, and then an exception again against Spanish's usual -o=masculine rule.) Give an English word built on manus. (Manual, manufacture, manuscript, maintain, manage.)"
             }
           ]
         }

@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C21-sabado-domingo
 spine_node: SPINE-TIME-OF-DAY
-sequence: 1420
-chapter: 89
+sequence: 1440
+chapter: 94
 type: word
 headword: sábado, domingo
 gloss: the weekend (Saturday, Sunday) — where religion overwrote astronomy

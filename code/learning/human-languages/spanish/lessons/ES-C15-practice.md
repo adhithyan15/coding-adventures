@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C15-practice
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1195
-chapter: 74
+sequence: 1215
+chapter: 79
 type: practice-mix
 headword: (practice)
 gloss: a singular checkpoint for regular and strong completed-past patterns

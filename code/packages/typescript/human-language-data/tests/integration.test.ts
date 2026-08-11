@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(125); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(130); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -569,6 +569,23 @@ describe("real curriculum", () => {
       "ES-C45-sintesis-sin-repetir-cost",
       "ES-C45-sintesis-sin-repetir-meals",
       "ES-C45-sintesis-sin-repetir-us",
+      "ES-C46-cual-pide-have",
+      "ES-C46-cual-pide-leismo",
+      "ES-C46-cual-pide-speak",
+      "ES-C46-cual-pide-test",
+      "ES-C46-le-case",
+      "ES-C46-le-gender",
+      "ES-C46-le-say",
+      "ES-C46-les-count",
+      "ES-C46-les-same",
+      "ES-C46-les-say",
+      "ES-C46-repaso-dos-sistemas-count",
+      "ES-C46-repaso-dos-sistemas-indirect",
+      "ES-C46-repaso-dos-sistemas-row",
+      "ES-C46-sintesis-dar-y-decir-book",
+      "ES-C46-sintesis-dar-y-decir-person",
+      "ES-C46-sintesis-dar-y-decir-plural",
+      "ES-C46-sintesis-dar-y-decir-what",
       "ES-W03-question-span-roberto-outside",
       "FA-C02-esm-e-man-sara",
       "FA-C03-chist-fusion",

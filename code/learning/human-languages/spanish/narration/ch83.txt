@@ -1,35 +1,94 @@
-Spanish, chapter 83: Wanting, Not Asserting.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 83: Synthesis --- Three Exceptions, and No Others.
+2 lessons. All 2 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-Hablas español, Quiero que hables español — fact or wanted event?
+Lesson 1 of 2.
+Practice — keep the past open or close it.
 
 Warm-up.
 [pause 2 seconds]
-Hablas español can assert “You speak Spanish.” Now compare Quiero que hables español — “I want you to speak Spanish.” Hables does not report what is true. It presents the speaking as wanted and not yet asserted. That meaning contrast is the first small doorway into the subjunctive.
+This checkpoint adds no vocabulary and no plural persons. Retrieve the seven learned singular rows, then choose whether a known sentence presents the past as completed or leaves it open as background, progress, or habit.
 
-Grammar Lens: count the doers.
-[a table of 2 rows, read aloud]
-meaning: I want to speak Spanish. Spanish: Quiero hablar español. doers: one: I want; I speak.
-meaning: I want you to speak Spanish. Spanish: Quiero que hables español. doers: two: I want; you speak.
-With one doer, keep the known infinitive hablar. With a different doer for the wanted event, use que and the new form hables. This is a bounded pattern for querer, not a rule for every clause in Spanish.
+Grammar Lens: the complete frame for this chapter.
+Regular rows:
+yo: hablaba, comía, vivía.
+tú: hablabas, comías, vivías.
+él / ella / usted: hablaba, comía, vivía.
+The three special rows:
+yo: era, iba, veía.
+tú: eras, ibas, veías.
+él / ella / usted: era, iba, veía.
+The first and third forms match in every learned row. Comer and vivir share -ía, -ías, -ía. Ver keeps ve- before that material. Plural persons remain outside this checkpoint.
+
+Grammar Lens: one scene, two frames.
+Hablé español. — completed event. Hablaba español. — open, background, or habitual speaking.
+Viví en Madrid. — completed stretch. Vivía en Madrid. — we stand inside that past stretch.
+Fui a Madrid. — completed trip. Iba a Madrid. — motion was in progress or habitual.
+The tense does not mechanically report how long something lasted. It frames the past from a different viewpoint.
+
+The histories, taken apart.
+-aba continues the Latin -ābam family. -ía continues material from the -ēbam family after several Romance changes. Era continues eram; iba continues ībam from īre; and veía keeps the ve- shape also visible in Old Spanish veer. These are historical bridges, not recipes for generating unlearned forms.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “Hablas español.”]
+[your turn — say: “hablaba, comía, vivía”]
 [pause 8 seconds for the answer]
-[your turn — say: “Quiero hablar español.”]
+[your turn — say: “era, iba, veía”]
 [pause 8 seconds for the answer]
-[your turn — say: “Quiero que hables español.”]
+[your turn — say: “Hablé / hablaba, viví / vivía, fui / iba”]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 6 seconds]
-Which form asserts that one friend speaks: hablas or hables?
-[question — say your answer, then pause 8 seconds]
-Say 'I want to speak Spanish' in Spanish.
 [question — say your answer, then pause 9 seconds]
-Say 'I want you to speak Spanish' to one friend.
+Give the imperfect yo forms of hablar, comer, and vivir, in that order.
+[question — say your answer, then pause 9 seconds]
+Give the imperfect yo forms of ser, ir, and ver, in that order.
+[question — say your answer, then pause 7 seconds]
+Say 'I was speaking Spanish' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Say 'I was living in Madrid' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Say 'I was going to Madrid' in Spanish.
+[question — say your answer, then pause 6 seconds]
+Choose the open past: comí or comía.
+[question — say your answer, then pause 10 seconds]
+Match the three forms to their historical bridges: era, iba, veía — eram, ībam, veer.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which form asserts the event? (Hablas.) Which presents it as wanted? (Hables, after quiero que.) What happens when the wanter and the speaker are the same? (Use the infinitive: Quiero hablar.) Next, build the three singular -ar forms one piece at a time.
+Give the six yo forms. (Hablaba, comía, vivía, era, iba, veía.) Which two regular classes share a row? (-er and -ir.) What is the core contrast? (The preterite presents a completed event; the imperfect leaves past action open, habitual, in progress, or in the background.) Chapter 17 can now build on -ía without borrowing a plural form here.
+
+
+Lesson 2 of 2.
+Synthesis — three exceptions, and no others.
+
+Warm-up.
+[pause 2 seconds]
+Nothing new in this chapter. Say hablaba, then comía.
+
+What you've built.
+Here is the fact that no single lesson of this chapter could give you, and it is worth more than any of them.
+The imperfect has exactly three irregular verbs in the entire language. Ser, ir, ver. That is the complete list — not "the common ones", not "to start with". Three.
+Every other Spanish verb, without exception, takes -aba or -ía and behaves. After the preterite, which has a strong stem for what feels like every verb worth using, this is a tense that simply lets you get on with it.
+So the honest instruction for the imperfect is short: learn era, iba and veía, and stop worrying.
+
+The word, taken apart.
+And the three are not random. They are the most used verbs in the language — to be, to go, to see — worn straight through from Latin erat and ibat without ever being tidied up.
+That is how irregularity works everywhere: a form survives unchanged because it is said constantly, and speakers never have to reach for a rule to rebuild it. Rare verbs get regularised precisely because nobody remembers them well enough to keep the odd shape alive.
+The exceptions are the words you use most. That is not bad luck — it is the reason they are exceptions.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: era, iba, veía — the whole irregular inventory, in one breath]
+[pause 8 seconds for the answer]
+[your turn — say: hablaba, comía, vivía — and notice nothing surprises you]
+[pause 8 seconds for the answer]
+[repeat that twice]
+[question — say your answer, then pause 8 seconds]
+How many irregular verbs does the imperfect have in the whole language?
+[question — say your answer, then pause 10 seconds]
+Name them.
+[question — say your answer, then pause 10 seconds]
+Why are those three the irregular ones?
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many irregular imperfects are there? (Three — and that is all.) Which verbs? (Ser, ir, ver.) And why those three? (Because they are the ones people say constantly, so the old forms were never worn into a rule.)
