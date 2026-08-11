@@ -5,6 +5,19 @@ this file.
 
 ## [Unreleased]
 
+### Added - native accessible dynamic tables
+
+Canonical UI31 tables now lower dynamic header, row, and cell `For` loops to
+Flutter's native `DataTable`, `DataColumn`, `DataRow`, and `DataCell` widgets.
+This restores the platform table semantics that the former nested
+`Column`/`Row` visual fallback could not expose while preserving editable cell
+content, event dispatch, stable row keys, authored cell styling, and RTL.
+Unsupported table shapes deliberately retain the visual fallback so strict
+capability analysis continues to report them rather than making a false
+accessibility claim. The generated Flutter floor is now 3.32, the first stable
+release with explicit table/row/cell semantic roles; generated runtime helpers
+are also analyzer-clean on Dart 3.12.
+
 ### Added - native accessible drag and drop
 
 `HostDraggable` and `HostDropTarget` now lower to Flutter's native
@@ -136,7 +149,7 @@ composition shape). Total tests: 57 (was 49, +8).
 
 L5 of UI32 ([spec PR #4286](https://github.com/adhithyan15/coding-adventures/pull/4286); L2 React #4297, L3 HTML #4309, L4 WebComponent #4315). `mosaic-compile --backend flutter --emit-project` now produces a flutter-create-shaped scaffold alongside the component `.dart`:
 
-- `pubspec.yaml` — pinned Flutter SDK `>=3.24.0 <4.0.0` + Dart `>=3.5.0 <4.0.0` per UI32 §3.6.3. Dart pub package name follows snake_case rules (§3.6.2 Flutter row) — auto-derived as `mosaic_{snake(name)}` (e.g., `ProfileCard` → `mosaic_profile_card`).
+- `pubspec.yaml` — pinned Flutter SDK `>=3.32.0 <4.0.0` + Dart `>=3.5.0 <4.0.0` per UI32 §3.6.3. Dart pub package name follows snake_case rules (§3.6.2 Flutter row) — auto-derived as `mosaic_{snake(name)}` (e.g., `ProfileCard` → `mosaic_profile_card`).
 - `lib/main.dart` — `MaterialApp` shell that mounts the component as `Scaffold.body`'s `Center(child: <Component>())`. Imports the component package-locally from `lib/{Component}.dart`, which keeps the generated shell valid under Dart's package-boundary rules.
 - `README.md` — `flutter pub get && flutter run` recipe + file map.
 

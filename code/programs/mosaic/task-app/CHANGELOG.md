@@ -4,6 +4,14 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - first zero-degradation native-complete backend
+
+The package-expanded TaskApp now passes Flutter's `native-complete` profile
+with no known degradations. Its spreadsheet view is emitted with native
+`DataTable` semantics, its board and calendar retain native accessible drag and
+drop, the generated shell requires the standard Rust application runtime, and
+CI analyzes and builds the complete output as a native Flutter desktop app.
+
 ### Added - icon/SVG assets: pill dot, progress ring, real theme-toggle icon, group-count badge, composer plus, brand mark
 
 Closes most of the "Icon/SVG assets" line of the design-fidelity gap

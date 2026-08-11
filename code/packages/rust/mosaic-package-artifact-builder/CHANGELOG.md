@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased] - Flutter native table capability
+
+- Native-complete analysis recognizes the canonical UI31/Grid shape as a
+  semantic Flutter table now that the emitter produces `DataTable`/
+  `DataColumn`/`DataRow`/`DataCell` widgets.
+- Unsupported or structurally ambiguous Flutter HostTable trees retain the
+  stable `accessibility.table-semantics-missing` degradation.
+- The complete package-expanded TaskApp is now a zero-degradation strict
+  Flutter build and is compiled as a native desktop application in CI.
+
 ## [Unreleased] - Flutter native drag capability
 
 - Native-complete analysis no longer reports Flutter `HostDraggable` and

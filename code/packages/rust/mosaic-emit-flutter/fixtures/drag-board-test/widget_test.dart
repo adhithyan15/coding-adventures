@@ -58,7 +58,7 @@ void main() {
     final semanticsNode = tester.getSemantics(draggableText);
     final semanticsData = semanticsNode.getSemanticsData();
     expect(semanticsData.hasAction(SemanticsAction.tap), isTrue);
-    // Flutter 3.24-compatible semantics action injection.
+    // Flutter 3.32-compatible semantics action injection.
     // ignore: deprecated_member_use
     tester.binding.pipelineOwner.semanticsOwner!
         .performAction(semanticsNode.id, SemanticsAction.tap);

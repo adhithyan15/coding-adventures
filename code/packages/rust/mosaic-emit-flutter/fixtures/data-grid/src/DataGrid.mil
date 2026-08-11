@@ -1,0 +1,4 @@
+component DataGrid {
+  slot headers : list<text> ;
+  slot rows : list<list<text>> ;
+}

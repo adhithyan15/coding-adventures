@@ -328,8 +328,11 @@ unblocks multiple downstream targets; never count source generation as completio
   - [ ] Remove every reported TaskApp degradation on all five native backends.
     - [x] Remove Flutter's four inert drag/drop reports by lowering UI35 to
       native `Draggable`/`DragTarget` widgets with equivalent keyboard and
-      screen-reader operation. Flutter TaskApp now retains only the separate
-      table-semantics degradation.
+      screen-reader operation.
+    - [x] Remove Flutter's final table-semantics degradation by lowering the
+      canonical dynamic UI31/Grid shape to native `DataTable` primitives.
+      The full package-expanded TaskApp now passes Flutter's strict profile,
+      whole-project Dart analysis, and a native desktop build in CI.
 - [ ] Add launch-and-dispatch conformance fixtures for every native backend.
   - [x] XAML/.NET loads the shared Rust conformance DLL and round-trips startup,
     typed props, semantic dispatch, revised props, buffers, and teardown.

@@ -142,8 +142,11 @@ See `CHANGELOG.md` for the full feature matrix. The headline:
   Spacer / Divider / Icon), and the most-used host primitives
   (HostInput / HostButton / HostCheckbox / HostRadio / HostScroll)
   are wired with a passing test each.
-- ✅ HostTable and For/If/Else lower to native Flutter widget trees; Mosaic
-  truthiness is normalized for Dart boolean positions.
+- ✅ Canonical UI31 HostTable compositions lower dynamic `For`-driven headers,
+  rows, and cells to Flutter's native `DataTable` family; unsupported table
+  shapes keep an explicitly reported visual fallback. For/If/Else lower to
+  native Flutter widget trees, and Mosaic truthiness is normalized for Dart
+  boolean positions.
 - ✅ HostDraggable and HostDropTarget lower to Flutter's native
   `Draggable`/`DragTarget` widgets with touch/pointer input, Space/Enter grab and
   drop, arrow-key target movement, Escape cancellation, screen-reader
