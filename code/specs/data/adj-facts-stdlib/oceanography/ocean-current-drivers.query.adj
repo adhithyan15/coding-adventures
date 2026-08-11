@@ -1,0 +1,15 @@
+% ============================================================================
+% ocean-current-drivers.query.adj — worked recall over the
+% ocean-current-drivers library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what drives this
+% current?" (direct) or "which current does this driver cause?" (reverse)
+% — it states no fact of its own — it only `import`s the grounded table
+% and asks binding queries.
+% ============================================================================
+
+import "ocean-current-drivers.adj"
+
+? ocean_current_driver(wind_driven_currents, $D)   % expect wind (direct: what drives wind-driven currents?)
+? ocean_current_driver($C, tides)                  % expect tidal_currents (reverse: which current does tides drive?)
+? ocean_current_driver(gulf_stream, $D)            % expect abstain -- a real named current the source mentions, but not one of the three driver categories tabled here

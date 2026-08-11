@@ -1,0 +1,67 @@
+% ============================================================================
+% ocean-current-drivers — each of three named ocean-current categories and
+% the physical driver that creates it (adj-facts-stdlib, OCEANOGRAPHY).
+% ============================================================================
+% A sibling library to `ocean-zones.adj` — a DIFFERENT oceanography axis
+% (what MOVES the water, not how deep light reaches). Ocean currents are
+% classified by what drives them: tides drive tidal currents, wind drives
+% near-surface currents, and density differences (from temperature and
+% salinity) drive the deep, slow global circulation. Recall is a binding
+% query:
+%
+%     ? ocean_current_driver(wind_driven_currents, $D)   % wind
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `ocean_current_driver(current_type, driver)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the driver WITH its source, on the CPU, with zero model
+% calls, and abstains on a current type that is not one of these three. The
+% query also runs BACKWARD — bind a driver and recall the current type it
+% causes:
+%
+%     ? ocean_current_driver($C, tides)   % tidal_currents
+%
+% The three current types, as a little truth table:
+%
+%     current_type              driver                                       quote (verbatim)
+%     -------------------------  -------------------------------------------  --------------------------------------------------------------------------------
+%     tidal_currents             tides                                        "Tides create a current in the oceans, which are strongest near the shore, and
+%                                                                                in bays and estuaries along the coast."
+%     wind_driven_currents       wind                                         "Winds drive currents that are at or near the ocean's surface."
+%     thermohaline_circulation   density_differences_from_temperature_and_    "This is a process driven by density differences in water due to temperature
+%                                 salinity                                     (thermo) and salinity (haline) variations in different parts of the ocean."
+%
+% Provenance: quoted verbatim from NOAA National Ocean Service's "What is a
+% current?" page, which numbers exactly these three driving mechanisms as
+% its own answer to that question, each in its own paragraph. This is a
+% MULTI-SOURCE-STYLE table (see `animal-survival-adaptation.adj`) in the
+% sense that each row's quote comes from a different paragraph of the same
+% page rather than a single shared sentence — this `table`'s own `source`
+% field carries the first row's (tidal_currents) quote; the other two rows'
+% quotes are documented above in this header's truth table and are
+% independently checkable against the same `locator`. WebFetch-verified
+% before writing (twice, across two cycles of this loop). `trust
+% authoritative` — NOAA is a primary .gov source, the same tier the sibling
+% `ocean-observing-instruments.adj` (the other library in this directory)
+% already uses for its NOAA citations, distinct from the `consensus` tier
+% `ocean-zones.adj` uses for its non-.gov WHOI citation. A current example
+% that is NOT one of these three driver categories — `gulf_stream`, a real,
+% specific named current the same page mentions ("The warm Gulf Stream, for
+% instance, brings milder winter weather to Bergen, Norway, than to New
+% York") but not a row here, since it names a PARTICULAR current, not a
+% DRIVER category — is deliberately NOT a row, so a recall ABSTAINS on it
+% rather than inventing a driver. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table ocean_current_driver {
+    columns current_type, driver
+
+    row (tidal_currents, tides)
+    row (wind_driven_currents, wind)
+    row (thermohaline_circulation, density_differences_from_temperature_and_salinity)
+
+    source "Tides create a current in the oceans, which are strongest near the shore, and in bays and estuaries along the coast."
+    locator "https://oceanservice.noaa.gov/facts/current.html"
+    trust authoritative
+}
