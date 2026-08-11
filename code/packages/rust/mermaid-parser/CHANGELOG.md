@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.33.0
+
+- Parse Mermaid 11.16.1 sequence headers and keywords case-insensitively.
+
 ## 0.32.0
 
 - Decode Mermaid 11.16.1 YAML/JSON-schema escapes in quoted sequence participant configuration values.

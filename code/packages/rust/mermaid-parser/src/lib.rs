@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.32.0";
+pub const VERSION: &str = "0.33.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -562,9 +562,11 @@ pub enum MermaidDiagram {
 /// unsupported by [`parse_any_mermaid`] while its semantic IR is implemented.
 pub fn detect_mermaid_type(source: &str) -> Result<MermaidDiagramType, ParseError> {
     let first = first_keyword(source);
+    if first.eq_ignore_ascii_case("sequenceDiagram") {
+        return Ok(MermaidDiagramType::Sequence);
+    }
     let diagram_type = match first.as_str() {
         "flowchart" | "graph" | "flowchart-elk" => MermaidDiagramType::Flowchart,
-        "sequenceDiagram" => MermaidDiagramType::Sequence,
         "classDiagram" | "classDiagram-v2" => MermaidDiagramType::Class,
         "stateDiagram" | "stateDiagram-v2" => MermaidDiagramType::State,
         "erDiagram" => MermaidDiagramType::Er,
@@ -3278,6 +3280,34 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn sequence_parses_case_insensitive_keywords() {
+        let diagram = parse_any_mermaid(
+            "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
+        )
+        .expect("mixed-case sequence syntax should parse");
+        let MermaidDiagram::Sequence(diagram) = diagram else {
+            panic!("expected sequence diagram");
+        };
+
+        assert_eq!(diagram.participants[0].label.text, "Alice");
+        assert!(matches!(
+            diagram.events[1],
+            SequenceEvent::Activation { active: true, .. }
+        ));
+        assert!(matches!(
+            diagram.events[2],
+            SequenceEvent::Note {
+                wrap: SequenceTextWrap::Wrap,
+                ..
+            }
+        ));
+        assert!(matches!(
+            diagram.events[3],
+            SequenceEvent::Activation { active: false, .. }
+        ));
+    }
+
+    #[test]
     fn sequence_parses_nested_control_blocks_and_branches() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\nalt Authorized\nAlice->>Bob: Submit\nloop Retry\nBob-->>Alice: Pending\nend\nelse Rejected\nBob-->>Alice: Denied\nend\n",
@@ -3807,7 +3837,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.32.0");
+        assert_eq!(crate::VERSION, "0.33.0");
     }
 
     #[test]

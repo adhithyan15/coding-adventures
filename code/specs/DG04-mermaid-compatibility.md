@@ -173,6 +173,9 @@ Automatic numbering preserves Mermaid 11.15+ decimal start and increment
 values through semantic IR, layout, and shaped Paint labels.
 Nested `rect` background highlights carry RGB/RGBA fills and normalized HSL/HSLA
 fills through semantic block events, layout frames, and Paint.
+Sequence headers, statement keywords, placements, and control words match
+case-insensitively as required by Mermaid 11.16.1's Jison lexer, while actor IDs
+and user-authored text retain their original case through semantic IR and Paint.
 
 ### Structural Groups
 
