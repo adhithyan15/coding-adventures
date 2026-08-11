@@ -4417,6 +4417,8 @@ pub struct RuntimeDurableSnapshot {
     pub optimistic_states: Vec<StateSnapshot>,
     pub desired_states: Vec<DesiredEntityState>,
     #[serde(default)]
+    pub discovery_records: Vec<DiscoveryRecord>,
+    #[serde(default)]
     pub discovery_workers: Vec<ScheduledDiscoveryWorker>,
 }
 
@@ -4456,6 +4458,7 @@ impl SmartHomeRuntime {
             pairing_sessions: self.pairing_sessions.values().cloned().collect(),
             optimistic_states: self.optimistic_states.values().cloned().collect(),
             desired_states: self.desired_states.values().cloned().collect(),
+            discovery_records: self.discovery.records().cloned().collect(),
             discovery_workers: self.discovery_scheduler.workers.values().cloned().collect(),
         }
     }
@@ -4722,6 +4725,7 @@ impl SmartHomeRuntime {
             pairing_sessions,
             optimistic_states,
             desired_states,
+            discovery_records,
             discovery_workers,
         } = snapshot;
         let mut runtime = Self::new();
@@ -4765,6 +4769,9 @@ impl SmartHomeRuntime {
         }
         for desired_state in desired_states {
             runtime.upsert_desired_state(desired_state)?;
+        }
+        for record in discovery_records {
+            runtime.discovery.record(record);
         }
         for worker in discovery_workers {
             runtime.register_discovery_worker_schedule(worker)?;
@@ -7463,9 +7470,11 @@ mod tests {
     }
 
     #[test]
-    fn durable_snapshot_restores_discovery_worker_schedules() {
+    fn durable_snapshot_restores_discovery_records_and_worker_schedules() {
         let mut runtime = SmartHomeRuntime::new();
         let worker = hue_mdns_discovery_worker(1_100).with_retry_backoff(500, 2_000, 2);
+        let record = hue_discovery_record("001788fffeabcdef", 1_000);
+        runtime.record_discovery(record.clone()).unwrap();
         runtime
             .register_discovery_worker_schedule(worker.clone())
             .unwrap();
@@ -7477,6 +7486,27 @@ mod tests {
             restored.discovery_worker_schedule(&worker.worker_id),
             Some(&worker)
         );
+        assert_eq!(
+            restored
+                .discovery()
+                .get(&record.integration_id, &record.native_bridge_id),
+            Some(&record)
+        );
+    }
+
+    #[test]
+    fn older_durable_snapshots_default_missing_discovery_state() {
+        let mut value = serde_json::to_value(SmartHomeRuntime::new().durable_snapshot()).unwrap();
+        let object = value.as_object_mut().unwrap();
+        object.remove("discovery_records");
+        object.remove("discovery_workers");
+
+        let snapshot: RuntimeDurableSnapshot = serde_json::from_value(value).unwrap();
+        let restored = SmartHomeRuntime::restore_durable_snapshot(snapshot).unwrap();
+        assert_eq!(restored.discovery_record_count(), 0);
+        assert!(restored
+            .query_discovery_worker_schedules(&DiscoveryWorkerQuery::new())
+            .is_empty());
     }
 
     fn device_runtime_event(event_id: &str, at_ms: u64) -> RuntimeEvent {

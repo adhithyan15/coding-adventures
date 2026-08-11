@@ -468,6 +468,26 @@ executable, restart-safe rules runtime:
   idempotency across snapshot restore, durable state validation, and the full
   create-preview-execute-audit HTTP lifecycle.
 
+## Current Production Hue Discovery Composition Slice
+
+This slice runs the existing Hue discovery stack inside the production local
+controller without creating another D23 runtime owner:
+
+- `smart-home-local-controller --hue-mdns-interface NAME` explicitly enables a
+  Hue DNS-SD worker for one selected local interface; discovery remains off by
+  default so controller startup never assumes a network device name.
+- The production process installs `smart-home-discovery-service` in an actor
+  system with the UDP mDNS executor and Hue report adapter, while every schedule
+  registration and run result commits through the same
+  `smart-home-controller-runtime` used by HTTP and automations.
+- Repeated startup preserves existing cadence and retry pressure when the
+  configured worker is unchanged, while an intentional interface change
+  replaces its configuration through a serialized central transaction.
+- `RuntimeDurableSnapshot` now retains normalized discovery records as well as
+  worker schedules, so accepted Hue observations and their bridge candidates
+  survive process replacement. Missing discovery fields still deserialize as
+  empty for backward compatibility with older snapshots.
+
 ## Current Z-Wave Runtime Integration Slice
 
 This slice connects the repository's Z-Wave protocol stack to the normalized
