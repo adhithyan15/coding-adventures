@@ -307,8 +307,12 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   run at 00:01.9–00:02.4: descend the tall upright, turn left through the base
   bowl, and rise at its outer edge without lifting. Its two-frame path keeps
   Arabic Lam distinct from the Persian and Urdu records for the same Unicode
-  glyph. The remaining **180**
-  prose part orders across seven scripts (`arabic` 6,
+  glyph. The directly linked `yaa.mov` verifies independent **ي** at
+  00:33.2–00:35.0: descend and sweep left through its shallow bowl without
+  lifting, then place the lower-left and lower-right dots in separate runs.
+  Its four-frame path keeps Arabic Yaa U+064A distinct from Urdu Ye U+06CC,
+  whose independent body has no lower dots. The remaining **179**
+  prose part orders across seven scripts (`arabic` 5,
   `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 22,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
