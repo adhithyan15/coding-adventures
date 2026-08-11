@@ -1,0 +1,14 @@
+% ============================================================================
+% simile-meaning.query.adj — worked recall over the simile-meaning library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does this
+% simile mean?" (direct) or "which simile means this?" (reverse) — it
+% states no fact of its own — it only `import`s the grounded table and
+% asks binding queries.
+% ============================================================================
+
+import "simile-meaning.adj"
+
+? simile_meaning(as_brave_as_a_lion, $M)          % expect extremely_courageous (direct)
+? simile_meaning($S, free_or_unrestricted)        % expect as_free_as_a_bird (reverse)
+? simile_meaning(as_busy_as_a_bee, $M)            % expect abstain -- a real simile, but not one of the three tabled examples
