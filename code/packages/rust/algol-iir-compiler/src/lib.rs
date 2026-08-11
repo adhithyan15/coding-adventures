@@ -2146,9 +2146,9 @@ impl Compiler {
 
     /// ALGOL 60's report leaves input/output in implementation-defined
     /// procedures; this LANG-FULL AL4 foothold recognises undeclared statement
-    /// calls named `print` or `output` and lowers string or integer arguments to
-    /// the shared stdout primitives. A user-declared procedure of the same name
-    /// still wins, matching the standard-function override policy.
+    /// calls named `print` or `output` and lowers string, integer, or boolean
+    /// arguments to shared stdout primitives. A user-declared procedure of the
+    /// same name still wins, matching the standard-function override policy.
     fn try_emit_standard_output_stmt(
         &mut self,
         name: &str,
@@ -2205,7 +2205,8 @@ impl Compiler {
             // `print_str` of a runtime string on all seven columns, so — unlike
             // the literal/variable fast paths above — no literal-backing is
             // required. Integer expressions use the shared numeric stdout
-            // builtin; other result types remain explicit type errors.
+            // builtin, while booleans select typed string literals. Real
+            // formatting remains an explicit type error.
             let value = self.emit_expr(actual)?;
             self.emit_standard_output_value(name, value)?;
         }
@@ -2234,7 +2235,8 @@ impl Compiler {
                 ],
                 "void",
             )),
-            ScalarType::Real | ScalarType::Boolean => {
+            ScalarType::Boolean => self.emit_standard_output_boolean(value.slot),
+            ScalarType::Real => {
                 return Err(CompileError::Type(format!(
                     "standard output procedure {name:?} cannot print a {} value",
                     value.ty.name()
@@ -2242,6 +2244,43 @@ impl Compiler {
             }
         }
         Ok(())
+    }
+
+    fn emit_standard_output_boolean(&mut self, value_slot: String) {
+        let false_label = self.fresh_label("output_boolean_false");
+        let end_label = self.fresh_label("output_boolean_end");
+        self.emit(IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var(value_slot), Operand::Var(false_label.clone())],
+            "void",
+        ));
+        self.emit_standard_output_literal("true");
+        self.emit(IIRInstr::new(
+            "jmp",
+            None,
+            vec![Operand::Var(end_label.clone())],
+            "void",
+        ));
+        self.emit_label(&false_label);
+        self.emit_standard_output_literal("false");
+        self.emit_label(&end_label);
+    }
+
+    fn emit_standard_output_literal(&mut self, literal: &str) {
+        let slot = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "str_const",
+            Some(slot.clone()),
+            vec![Operand::Str(literal.to_string())],
+            "str",
+        ));
+        self.emit(IIRInstr::new(
+            "print_str",
+            None,
+            vec![Operand::Var(slot)],
+            "void",
+        ));
     }
 
     /// Materialize ALGOL call-by-value semantics for an array actual.
@@ -6692,6 +6731,26 @@ mod tests {
             }),
             "integer output should reuse the cross-backend print_i64 builtin"
         );
+    }
+
+    #[test]
+    fn al4_print_boolean_expression_lowers_to_typed_string_branches() {
+        let module = compile_source(
+            "begin boolean flag; flag := true; print(flag and true) end",
+            "test",
+        )
+        .expect("boolean output compiles");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["true", "false"] {
+            assert!(
+                main.instructions.iter().any(|instr| {
+                    instr.op == "str_const"
+                        && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+                }),
+                "boolean output should materialize the {expected:?} branch"
+            );
+        }
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
     }
 
     #[test]
