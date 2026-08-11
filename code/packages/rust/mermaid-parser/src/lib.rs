@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.27.0";
+pub const VERSION: &str = "0.28.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1367,11 +1367,12 @@ fn parse_sequence_participant_box(
     participant_indices: &mut HashMap<String, usize>,
 ) -> Result<(), ParseError> {
     cursor.advance();
-    let (fill, label) = parse_sequence_box_header(&take_sequence_line_text(cursor));
+    let (fill, label, label_wrap) = parse_sequence_box_header(&take_sequence_line_text(cursor));
     let group_id = format!("box-{}", diagram.participant_groups.len() + 1);
     diagram.participant_groups.push(SequenceParticipantGroup {
         id: group_id.clone(),
         label,
+        label_wrap,
         fill,
     });
     cursor.skip_terminators();
@@ -1394,10 +1395,10 @@ fn parse_sequence_participant_box(
     Ok(())
 }
 
-fn parse_sequence_box_header(raw: &str) -> (Option<String>, Option<String>) {
+fn parse_sequence_box_header(raw: &str) -> (Option<String>, Option<String>, SequenceTextWrap) {
     let raw = raw.trim();
     if raw.is_empty() {
-        return (None, None);
+        return (None, None, SequenceTextWrap::Default);
     }
     let lower = raw.to_ascii_lowercase();
     let function_color = ["rgb(", "rgba(", "hsl(", "hsla("]
@@ -1432,12 +1433,23 @@ fn parse_sequence_box_header(raw: &str) -> (Option<String>, Option<String>) {
             | "yellow"
     );
     if function_color || is_named_color {
-        let label = raw[split..].trim();
+        let (label, wrap) = split_sequence_wrap_directive(raw[split..].trim());
         let fill =
             (!first.eq_ignore_ascii_case("transparent")).then(|| normalize_sequence_color(first));
-        (fill, (!label.is_empty()).then(|| label.to_string()))
+        (fill, (!label.is_empty()).then(|| label.to_string()), wrap)
     } else {
-        (None, Some(raw.to_string()))
+        let (label, wrap) = split_sequence_wrap_directive(raw);
+        (None, (!label.is_empty()).then(|| label.to_string()), wrap)
+    }
+}
+
+fn split_sequence_wrap_directive(raw: &str) -> (&str, SequenceTextWrap) {
+    if let Some(label) = raw.strip_prefix("nowrap:") {
+        (label.trim(), SequenceTextWrap::NoWrap)
+    } else if let Some(label) = raw.strip_prefix("wrap:") {
+        (label.trim(), SequenceTextWrap::Wrap)
+    } else {
+        (raw, SequenceTextWrap::Default)
     }
 }
 
@@ -3276,6 +3288,30 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn sequence_preserves_participant_box_wrap_directives() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nbox hsl(180, 100%, 50%) wrap: A deliberately detailed client application tier\nparticipant API\nend\nbox nowrap: Core services\nparticipant DB\nend\n",
+        )
+        .unwrap();
+        assert_eq!(
+            diagram.participant_groups[0].label.as_deref(),
+            Some("A deliberately detailed client application tier")
+        );
+        assert_eq!(
+            diagram.participant_groups[0].label_wrap,
+            SequenceTextWrap::Wrap
+        );
+        assert_eq!(
+            diagram.participant_groups[1].label.as_deref(),
+            Some("Core services")
+        );
+        assert_eq!(
+            diagram.participant_groups[1].label_wrap,
+            SequenceTextWrap::NoWrap
+        );
+    }
+
+    #[test]
     fn sequence_rejects_messages_inside_participant_boxes() {
         let error = parse_sequence_diagram(
             "sequenceDiagram\nbox Services\nparticipant API\nAPI->>DB: Query\nend\n",
@@ -3652,7 +3688,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.27.0");
+        assert_eq!(crate::VERSION, "0.28.0");
     }
 
     #[test]

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Shape resolved multiline sequence participant-box labels without backend soft rewrapping.
 - Shape resolved multiline sequence participant aliases without backend soft rewrapping.
 - Shape resolved multiline sequence control labels without backend soft rewrapping.
 - Validate hyphenated sequence actor IDs through the native Metal PNG pipeline.

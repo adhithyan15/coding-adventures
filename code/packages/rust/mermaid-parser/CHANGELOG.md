@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.28.0
+
+- Preserve `wrap:` and `nowrap:` directives on sequence participant-box labels.
+
 ## 0.27.0
 
 - Preserve `wrap:` and `nowrap:` directives on sequence participant aliases.
