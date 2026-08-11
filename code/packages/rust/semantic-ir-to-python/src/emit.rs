@@ -1725,20 +1725,16 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "pair?" => "_sir_is_pair",
         "number?" => "_sir_is_number",
         "symbol?" => "_sir_is_symbol",
-        "print" => "_sir_print",
-        // `_sir_puts` is variadic (`sir_puts(*args)`), so `_sir_puts(a, b)`
-        // forwards every argument (Ruby `puts a, b`).
-        "puts" => "_sir_puts",
-        // SIR28 §2: the console-output primitive `print`/`puts` generalize
-        // into. `args = [StrLit(stream), StrLit(terminator),
+        // SIR28 §2: the console-output primitive every frontend now emits
+        // in place of the old bare `print`/`puts` (SIR28 §7 removed the
+        // dead bare-name path). `args = [StrLit(stream), StrLit(terminator),
         // BoolLit(unpack_arrays), ...values]`, already validated by
         // `semantic-ir`'s validator (SIR28 §3.1) against a closed set.
         // `_sir_write` is variadic-after-3-fixed
         // (`sir_write(stream, terminator, unpack_arrays, *values)`), so a
         // plain `emit_args` (no special literal extraction, unlike the
         // C/Go/Rust backends) is correct: Python branches on the
-        // stream/terminator strings at runtime, exactly like `print`/`puts`
-        // above.
+        // stream/terminator strings at runtime.
         "__sys_write__" => "_sir_write",
         "global_set" => "_sir_global_set",
         "global_get" => "_sir_global_get",

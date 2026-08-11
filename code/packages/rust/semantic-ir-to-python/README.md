@@ -69,11 +69,12 @@ Accepts: `Closures`, `Pairs`, `Symbols`, `Strings`, `DynamicTyping`,
 "none"|"per_value"|"once", unpack_arrays, ...values)` → `_sir_write(...)`
 — a plain pass-through (no compile-time literal extraction, unlike the
 C/Go/Rust backends): Python branches on the `stream`/`terminator` strings
-at runtime, exactly like `print`/`puts`. `_sir_write` lives in
-`coding-adventures-sir-runtime-core` and generalizes the existing
-`sir_print`/`sir_puts` — still present, still used by bare
-`"print"`/`"puts"` — into one function. Not yet emitted by any frontend —
-see [SIR28](../../../specs/SIR28-syscall-primitives.md).
+at runtime. `_sir_write` lives in `coding-adventures-sir-runtime-core` and
+is now the ONLY console-output primitive the backend emits — bare
+`"print"`/`"puts"` `BuiltinCall`s and the `sir_print`/`sir_puts` functions
+that used to implement them were removed once every frontend finished
+migrating to `__sys_write__` (SIR28 §7) — see
+[SIR28](../../../specs/SIR28-syscall-primitives.md).
 
 Rejects: `TailCalls` (CPython has no TCO), `Intrinsics` (empty
 whitelist).

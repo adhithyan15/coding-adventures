@@ -90,10 +90,9 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // object, `raise`, and ordered rescue-clause class matching come from
     // `coding-adventures-sir-runtime-exceptions`.  Per code/specs/sir-runtime.md.
     Feature::Exceptions,
-    // `Feature::ConsoleIO` (SIR28) — `__sys_write__`, the reserved
-    // console-output primitive `print`/`puts` will migrate to. Additive:
-    // nothing emits it yet, so this declares acceptance ahead of any
-    // frontend using it.
+    // `Feature::ConsoleIO` (SIR28) — `__sys_write__`, the general
+    // console-output primitive every frontend now emits in place of the
+    // old bare `print`/`puts` (SIR28 §7 removed the dead bare-name path).
     Feature::ConsoleIO,
 ];
 
@@ -485,8 +484,13 @@ mod tests {
         };
         let print_call = |inner: Expr| Stmt::ExprStmt {
             expr: Expr::BuiltinCall {
-                name: "print".into(),
-                args: vec![inner],
+                name: "__sys_write__".into(),
+                args: vec![
+                    Expr::StrLit { value: "stdout".into(), span: s() },
+                    Expr::StrLit { value: "once".into(), span: s() },
+                    Expr::BoolLit { value: false, span: s() },
+                    inner,
+                ],
                 effects: EffectSet::PURE,
                 span: s(),
             },
@@ -515,6 +519,8 @@ mod tests {
         let m = Module {
             name: "demo".into(),
             manifest: FeatureManifest::from_features(&[
+                Feature::ConsoleIO,
+                Feature::Strings,
                 Feature::DefaultParams,
                 Feature::DynamicTyping,
             ]),
@@ -595,7 +601,8 @@ mod tests {
         );
         if let Some(stdout) = run_emitted_python(&a.source) {
             // 15→range(R), "hill"→regex(X), 5→Integer(I), 3.5→else(O).
-            // `_sir_print` terminates each line with a newline.
+            // `print` lowers to `_sir_write(..., "none", ...)`, which does
+            // NOT newline-terminate — the branches concatenate into "RXIO".
             assert_eq!(stdout, "RXIO", "case-equality dispatch produced wrong branches");
         }
     }
@@ -684,8 +691,13 @@ mod tests {
             span: s(),
         };
         let print_stmt = Expr::BuiltinCall {
-            name: "print".into(),
-            args: vec![dispatch_speak],
+            name: "__sys_write__".into(),
+            args: vec![
+                Expr::StrLit { value: "stdout".into(), span: s() },
+                Expr::StrLit { value: "once".into(), span: s() },
+                Expr::BoolLit { value: false, span: s() },
+                dispatch_speak,
+            ],
             effects: EffectSet::PURE,
             span: s(),
         };
@@ -712,6 +724,7 @@ mod tests {
         let m = Module {
             name: "demo".into(),
             manifest: FeatureManifest::from_features(&[
+                Feature::ConsoleIO,
                 Feature::Classes,
                 Feature::Closures,
                 Feature::Strings,
@@ -2067,8 +2080,13 @@ mod tests {
     fn kw_module(main_value_call: Expr) -> Module {
         let print_stmt = semantic_ir::Stmt::ExprStmt {
             expr: Expr::BuiltinCall {
-                name: "print".into(),
-                args: vec![main_value_call],
+                name: "__sys_write__".into(),
+                args: vec![
+                    Expr::StrLit { value: "stdout".into(), span: s() },
+                    Expr::StrLit { value: "once".into(), span: s() },
+                    Expr::BoolLit { value: false, span: s() },
+                    main_value_call,
+                ],
                 effects: EffectSet::PURE,
                 span: s(),
             },
@@ -2087,6 +2105,7 @@ mod tests {
         Module {
             name: "demo".into(),
             manifest: FeatureManifest::from_features(&[
+                Feature::ConsoleIO,
                 Feature::KeywordParams,
                 Feature::DefaultParams,
                 Feature::Strings,
@@ -2169,8 +2188,13 @@ mod tests {
         };
         let print_stmt = semantic_ir::Stmt::ExprStmt {
             expr: Expr::BuiltinCall {
-                name: "print".into(),
-                args: vec![call],
+                name: "__sys_write__".into(),
+                args: vec![
+                    Expr::StrLit { value: "stdout".into(), span: s() },
+                    Expr::StrLit { value: "once".into(), span: s() },
+                    Expr::BoolLit { value: false, span: s() },
+                    call,
+                ],
                 effects: EffectSet::PURE,
                 span: s(),
             },
@@ -2189,6 +2213,7 @@ mod tests {
         let m = Module {
             name: "demo".into(),
             manifest: FeatureManifest::from_features(&[
+                Feature::ConsoleIO,
                 Feature::KeywordParams,
                 Feature::Strings,
                 Feature::DynamicTyping,
@@ -2519,8 +2544,7 @@ mod tests {
 
     // ── SIR28 §2: `__sys_write__` ───────────────────────────────────────
     //
-    // No frontend emits `__sys_write__` yet (that's SIR28 Slices 4-6), so
-    // these hand-build a `Module` directly, one per stream/terminator/
+    // These hand-build a `Module` directly, one per stream/terminator/
     // unpack_arrays combination SIR28 §2.1 defines, execute it through a
     // real interpreter via `run_emitted_python`, and assert stdout/stderr.
 

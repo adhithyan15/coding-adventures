@@ -15,8 +15,8 @@ prelude into every file:
 | `truthy(v)` | SIR truthiness is **false/nil-only** — `0`, `""`, `[]`, `{}` are *truthy*, unlike Python's `bool()`. |
 | `Symbol` / `intern` | Interned identity objects; Python has no symbol type. |
 | `Pair` / `cons` / `car` / `cdr` | Lisp cons cells; no native type. |
-| `eq`, `to_display`, `print` | Symbol-aware equality and Lisp/Ruby display (`nil`, `#t`/`#f`). |
-| `sir_puts` (`puts`) | Ruby `puts`: per-arg line, arrays flattened element-per-line, no double trailing newline, no-arg → one newline. |
+| `eq`, `to_display` | Symbol-aware equality and Lisp/Ruby display (`nil`, `#t`/`#f`). |
+| `sir_write` (`__sys_write__` — SIR28) | The general console-output primitive every frontend lowers `print`/`puts`/`console.log`/etc. to, parameterized by `stream`/`terminator`/`unpack_arrays` instead of one hard-coded newline policy per source language. |
 | `add`/`sub`/`mul`/`div`, `lt`/`gt` | Variadic folds with Ruby's polymorphic operators. `div` mirrors Ruby's `/` split (SIR21 §E3): `Integer / Integer` **floors** toward −∞ (`-7 / 2 == -4`, via Python's `//`), while a float operand **true-divides** (`7.0 / 2 == 3.5`). `add`/`mul` are **polymorphic** like Ruby's `+`/`*`: `add` concatenates strings (`"a"+"b"`) and arrays (`[1]+[2]`) as well as summing numbers; `mul` repeats strings (`"ab"*3`) and arrays (`[0]*3`) and joins arrays with a string separator (`[1,2]*", " → "1, 2"`). **`div` by zero raises a typed `ZeroDivisionError`** (T1) — Python's native fault is re-raised as a rescue-matchable `SirError`, so `begin; 1/0; rescue ZeroDivisionError; end` catches it. |
 | `Closure`/`apply`/`make_closure`, global store, builtin dispatch | Uniform closure handles + SIR `Globals`. |
 
@@ -34,7 +34,7 @@ def add(a, b):
 xs = [1, 2, 3]
 i = 0
 while _sir.truthy(i < len(xs)):
-    _sir.print(xs[i])
+    _sir.sir_write("stdout", "once", False, xs[i])
     i = i + 1
 ```
 
