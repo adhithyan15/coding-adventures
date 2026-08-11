@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.22.0";
+pub const VERSION: &str = "0.23.0";
 
 use std::collections::HashMap;
 
@@ -1493,31 +1493,31 @@ where
                     kind,
                     SequenceParticipantKind::Participant | SequenceParticipantKind::Actor
                 );
-                instructions.push(PaintInstruction::Rect(PaintRect {
-                    base: PaintBase::default(),
-                    x: *x,
-                    y: *y,
-                    width: *width,
-                    height: *height,
-                    fill: Some(match kind {
-                        SequenceParticipantKind::Participant => "#eff6ff".into(),
-                        SequenceParticipantKind::Actor => "#f0fdf4".into(),
-                        _ => "#f0fdfa".into(),
-                    }),
-                    stroke: Some(match kind {
-                        SequenceParticipantKind::Participant => "#2563eb".into(),
-                        SequenceParticipantKind::Actor => "#16a34a".into(),
-                        _ => "#0f766e".into(),
-                    }),
-                    stroke_width: Some(1.5),
-                    corner_radius: Some(match kind {
-                        SequenceParticipantKind::Participant => 5.0,
-                        SequenceParticipantKind::Actor => *height / 2.0,
-                        _ => 5.0,
-                    }),
-                    stroke_dash: None,
-                    stroke_dash_offset: None,
-                }));
+                if kind == &SequenceParticipantKind::Actor {
+                    instructions.extend(sequence_actor_symbol(*x + *width / 2.0, *y + 19.0));
+                } else {
+                    instructions.push(PaintInstruction::Rect(PaintRect {
+                        base: PaintBase::default(),
+                        x: *x,
+                        y: *y,
+                        width: *width,
+                        height: *height,
+                        fill: Some(if kind == &SequenceParticipantKind::Participant {
+                            "#eff6ff".into()
+                        } else {
+                            "#f0fdfa".into()
+                        }),
+                        stroke: Some(if kind == &SequenceParticipantKind::Participant {
+                            "#2563eb".into()
+                        } else {
+                            "#0f766e".into()
+                        }),
+                        stroke_width: Some(1.5),
+                        corner_radius: Some(5.0),
+                        stroke_dash: None,
+                        stroke_dash_offset: None,
+                    }));
+                }
                 if specialized {
                     instructions.extend(sequence_participant_icon(
                         kind,
@@ -1528,7 +1528,11 @@ where
                 text_children.push(text_node_no_wrap(
                     label,
                     *x + if specialized { 44.0 } else { 8.0 },
-                    *y + 11.0,
+                    if kind == &SequenceParticipantKind::Actor {
+                        *y + *height - *label_height - 4.0
+                    } else {
+                        *y + 11.0
+                    },
                     *width - if specialized { 50.0 } else { 16.0 },
                     (*label_height + 4.0).min(*height - 12.0),
                     label_font.clone(),
@@ -1625,6 +1629,50 @@ fn sequence_block_name(kind: &SequenceBlockKind) -> &'static str {
         SequenceBlockKind::Critical => "critical",
         SequenceBlockKind::Break => "break",
     }
+}
+
+fn sequence_actor_symbol(cx: f64, cy: f64) -> Vec<PaintInstruction> {
+    vec![
+        PaintInstruction::Ellipse(PaintEllipse {
+            base: PaintBase::default(),
+            cx,
+            cy: cy - 10.0,
+            rx: 5.0,
+            ry: 5.0,
+            fill: Some("#ffffff".into()),
+            stroke: Some("#16a34a".into()),
+            stroke_width: Some(1.5),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }),
+        PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: cx, y: cy - 5.0 },
+                PathCommand::LineTo { x: cx, y: cy + 8.0 },
+                PathCommand::MoveTo { x: cx - 9.0, y: cy },
+                PathCommand::LineTo { x: cx + 9.0, y: cy },
+                PathCommand::MoveTo { x: cx, y: cy + 8.0 },
+                PathCommand::LineTo {
+                    x: cx - 8.0,
+                    y: cy + 17.0,
+                },
+                PathCommand::MoveTo { x: cx, y: cy + 8.0 },
+                PathCommand::LineTo {
+                    x: cx + 8.0,
+                    y: cy + 17.0,
+                },
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#16a34a".into()),
+            stroke_width: Some(1.5),
+            stroke_cap: Some(StrokeCap::Round),
+            stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }),
+    ]
 }
 
 fn sequence_participant_icon(
@@ -2704,7 +2752,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.22.0");
+        assert_eq!(crate::VERSION, "0.23.0");
     }
 
     #[test]
@@ -2720,6 +2768,17 @@ mod tests {
         for kind in kinds {
             assert!(!sequence_participant_icon(&kind, 20.0, 20.0).is_empty());
         }
+    }
+
+    #[test]
+    fn sequence_actor_emits_backend_neutral_stick_figure_geometry() {
+        let instructions = sequence_actor_symbol(20.0, 24.0);
+        assert!(matches!(instructions[0], PaintInstruction::Ellipse(_)));
+        assert!(matches!(instructions[1], PaintInstruction::Path(_)));
+        let PaintInstruction::Path(path) = &instructions[1] else {
+            unreachable!();
+        };
+        assert_eq!(path.commands.len(), 8);
     }
 
     #[test]

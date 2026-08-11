@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.19.0 - 2026-08-11
+
+- Reserve deterministic sequence header geometry for UML actor symbols.
+
 ## 0.18.0 - 2026-08-11
 
 - Apply ordered sequence autonumber visibility changes and counter resets during layout.
