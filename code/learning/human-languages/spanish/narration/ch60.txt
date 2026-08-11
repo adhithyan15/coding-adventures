@@ -1,45 +1,35 @@
-Spanish, chapter 60: Synthesis --- Claiming, and Not Claiming.
-1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Spanish, chapter 60: Wanting, Not Asserting.
+1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-Synthesis — claiming, and not claiming.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Hablas español, Quiero que hables español — fact or wanted event?
 
 Warm-up.
 [pause 2 seconds]
-Nothing new in this chapter. Say hablas, then hables.
+Hablas español can assert “You speak Spanish.” Now compare Quiero que hables español — “I want you to speak Spanish.” Hables does not report what is true. It presents the speaking as wanted and not yet asserted. That meaning contrast is the first small doorway into the subjunctive.
 
-Grammar Lens: what the second one is actually doing.
-Those two forms are not two tenses. They are two stances.
-Hablas español. — I am telling you this is so. Quiero que hables español. — I am not telling you anything is so.
-In the first, you put a fact on the table and stood behind it. In the second, nothing has been claimed at all: the speaking has not happened, and might not. The mood is the difference, and the difference is about what you are willing to assert.
-That is the whole of it, and it is worth holding onto, because every remaining use of this mood — and there are many — is a version of the same move. Wishing, doubting, denying, hoping: none of them puts a fact on the table.
-Indicative: this is so. Subjunctive: I am not saying this is so.
-
-The exchange.
-— ¿Hablas español? — Ana quiere que hable español. — Ojalá hables mucho.
-Three lines, three stances. The first asks about a fact. The second reports somebody's wish, so nothing is asserted. The third wishes it outright.
-
-What you've built.
-Ojalá deserves a last look, because it explains itself.
-It is Arabic — wa-šā' allāh, "and may God will it" — carried into Spanish over eight centuries of al-Andalus and kept long after the religion behind it stopped being the speaker's. A Spanish speaker saying ojalá today is uttering a prayer in a language they do not speak, to a God the sentence no longer names.
-And it can only ever take this mood. Of course it can: a thing God has yet to will is, by definition, not a fact you can assert.
+Grammar Lens: count the doers.
+[a table of 2 rows, read aloud]
+meaning: I want to speak Spanish. Spanish: Quiero hablar español. doers: one: I want; I speak.
+meaning: I want you to speak Spanish. Spanish: Quiero que hables español. doers: two: I want; you speak.
+With one doer, keep the known infinitive hablar. With a different doer for the wanted event, use que and the new form hables. This is a bounded pattern for querer, not a rule for every clause in Spanish.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the three-line exchange, and name the stance of each line]
+[your turn — say: “Hablas español.”]
 [pause 8 seconds for the answer]
-[repeat that twice]
-Until choosing the mood feels like choosing what you mean.
+[your turn — say: “Quiero hablar español.”]
+[pause 8 seconds for the answer]
+[your turn — say: “Quiero que hables español.”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 6 seconds]
+Which form asserts that one friend speaks: hablas or hables?
 [question — say your answer, then pause 8 seconds]
-You are stating a fact about a friend: you speak Spanish. Hablas or hables?
-[question — say your answer, then pause 8 seconds]
-Now you only wish it were so. Which form follows ojala?
-[question — say your answer, then pause 10 seconds]
-What did ojala originally mean, and in which language?
+Say 'I want to speak Spanish' in Spanish.
+[question — say your answer, then pause 9 seconds]
+Say 'I want you to speak Spanish' to one friend.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does the indicative do that the subjunctive does not? (Claim that something is so.) Why can ojalá never take the indicative? (Because a thing not yet willed is not a fact.) And what language is ojalá? (Arabic — a prayer that outlived the religion behind it.)
+Which form asserts the event? (Hablas.) Which presents it as wanted? (Hables, after quiero que.) What happens when the wanter and the speaker are the same? (Use the infinitive: Quiero hablar.) Next, build the three singular -ar forms one piece at a time.

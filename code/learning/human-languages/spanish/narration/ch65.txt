@@ -1,76 +1,62 @@
-Spanish, chapter 65: Head and Hand.
+Spanish, chapter 65: Lo Siento.
 2 lessons. All 2 can be done entirely by ear.
 
 
 Lesson 1 of 2.
-la cabeza — "the head".
+lo siento — "I'm sorry," i.e. "I feel it".
 
 Warm-up.
 [pause 2 seconds]
-Spanish's word for "head" is the boring, expected one — and that's exactly what makes it interesting, once you see what French did instead.
+You already know por favor, "please." The next courtesy phrase is lo siento. Spanish does not say "I am sorry" as an adjective; it says something closer to "I feel this."
 
-You'll want to know: la cabeza.
-la cabeza — the head. Feminine, so la.
-
-The word, taken apart: caput.
-Latin's word for "head" was caput. Spanish's cabeza comes straight from it (by way of Vulgar Latin capitia), and caput shows up all over English too:
-[a table of 4 rows, read aloud]
-English: captain. literally: the "head" of a ship/unit.
-English: capital. literally: the "head" city, or "head" sum of money.
-English: decapitate. literally: to remove the head.
-English: capitulate. literally: to arrange under "headings" — hence, to yield.
-
-Why it's said this way: French made a different choice.
-French had the exact same Latin word available — and dropped it. French tête ("head") comes instead from testa, Latin for an earthenware pot: Roman soldiers joked about the skull the way English speakers say "noggin" (a small mug), and in Gaul that joke eventually replaced the real word entirely. Spanish never made that swap — cabeza is caput, plain and simple, still standing after two thousand years.
+The phrase, taken apart.
+lo = "it" — a neuter pronoun. It does not point at any noun; it points at the situation itself. Spanish keeps this one leftover neuter slot precisely for "the whole business, unnamed."
+siento = "I feel," from sentir, "to feel," from Latin sentīre. That root gave English a whole family: sentiment, sense, consent ("feel together"), resent ("feel back at"), and sentence (originally an opinion, something felt).
+So lo siento is literally "I feel it." You are naming a feeling — regret, sympathy — rather than declaring a state about yourself. That is why it stretches so easily: lo siento mucho, "I feel it a lot," works both for stepping on someone's foot and for hearing that their father died.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "la cabeza" — the head]
+[your turn — say: "siento" — I feel — then "lo siento," I feel it / I'm sorry]
 [pause 8 seconds for the answer]
-[your turn — say: "me duele la cabeza" — "my head hurts"]
+[your turn — say: "lo siento mucho" — I'm so sorry]
 [pause 8 seconds for the answer]
-[your turn — say: the English family — "captain, capital, decapitate"]
-[pause 8 seconds for the answer]
-[your turn — say: the contrast — Spanish kept caput; French swapped it for a pot joke]
+[your turn — say: "siento" then English "sentiment, sense, consent"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "the head." (La cabeza — feminine.) What Latin word is it from? (Caput.) Give an English word from the same root. (Captain, capital, decapitate...) What did French do instead? (Replaced caput with testa, "pot" — soldiers' slang for the skull that took over completely.)
+What does lo siento literally mean? ("I feel it" — siento, "I feel," from Latin sentīre.) What is the lo pointing at? (The situation, not a noun — it is the neuter "it.") Next: Spanish's other word for sorry, and when it is the right one.
 
 
 Lesson 2 of 2.
-la mano — "the hand".
+perdón — the sorry that asks for something back.
 
 Warm-up.
 [pause 2 seconds]
-You've been trusting "-o words are masculine, -a words are feminine" since your first chapters. Here's the word that breaks it — and everyone learning Spanish has to memorize this one by name.
+Lo siento names a feeling. Spanish keeps a second word for a different job — one that is not about your feelings at all, but about something you want from the other person.
 
-Grammar Lens: la mano and its gender.
-la mano — the hand. Feminine, despite ending in -o.
-Almost every Spanish noun ending in -o is masculine (el libro, el gato...). Mano is the single most common exception, and it's actually doubly irregular. Latin manus ("hand") belonged to the 4th declension — a group of -us nouns that were mostly masculine (frūctus "fruit," exercitus "army," senātus "senate"). Manus was one of a small handful of exceptions that were feminine instead (alongside domus "house" and anus "old woman"). So mano broke the rule twice over: an exception within Latin's own mostly-masculine 4th declension, and then an exception again against Spanish's usual -o = masculine pattern.
+The word, taken apart.
+perdón ("pardon"), from the verb perdonar — Latin per- ("thoroughly") + dōnāre ("to give"). Literally: "to give completely."
+That dōnāre is English's donate, donor, and condone; the per- is the same intensifier in perfect ("thoroughly made") and perturb. So forgiveness, in Latin's picture of it, is a gift given all the way — you hand over the debt rather than keeping a share of it.
 
-The word, taken apart: manus.
-Mano comes from Latin manus, "hand" — and that root is buried inside an enormous number of English words:
-[a table of 5 rows, read aloud]
-English: manual. literally: done by hand.
-English: manufacture. literally: made by hand (manus + facere, "to make").
-English: manuscript. literally: written by hand (manus + scrībere).
-English: maintain. literally: hold in the hand (manū tenēre).
-English: manage. literally: to handle.
-Manufacture is worth pausing on: it literally means "made by hand" — and today it names precisely the opposite.
+Why it's said this way: which one to reach for.
+The two are not interchangeable, and the difference follows straight from the etymologies:
+[a table of 3 rows, read aloud]
+literally. lo siento: "I feel it". perdón: "give [it] completely".
+points at. lo siento: your feeling. perdón: their forgiveness.
+use for. lo siento: regret, sympathy. perdón: fault, or getting past someone.
+So perdón is what you say to squeeze through a crowd or catch a waiter's eye (English "excuse me"), and to ask forgiveness for something you did — often stronger than lo siento. Lo siento leans toward "I'm sorry that happened," including things that are nobody's fault at all.
+Be honest about the edges: native speakers use whichever fits, the boundary is soft, and mixing them is not a real mistake — just a shade off.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "la mano" — feminine, despite the -o]
+[your turn — say: "perdón" — pardon / excuse me]
 [pause 8 seconds for the answer]
-[your turn — say: "me duele la mano" — "my hand hurts"]
+[your turn — say: the pair — "lo siento" for regret, "perdón" for fault]
 [pause 8 seconds for the answer]
-[your turn — say: the family — "manual, manufacture, maintain — all a hand"]
-[pause 8 seconds for the answer]
-[your turn — say: the irony — "manufacture = made by hand"]
+[your turn — say: "perdón" then English "donate, condone" — the dōnāre root]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "the hand," and name its gender. (La mano — feminine, despite ending in -o.) Why is mano feminine when most -o words aren't? (It's doubly irregular — Latin's 4th declension, where manus belongs, was mostly masculine; manus was one of a few feminine exceptions there, and then an exception again against Spanish's usual -o=masculine rule.) Give an English word built on manus. (Manual, manufacture, manuscript, maintain, manage.)
+What do the two halves of perdonar mean? (Per-, "thoroughly," plus dōnāre, "to give" — to give completely.) Which word do you use to get past someone in a corridor? (Perdón.) Which leans toward sympathy rather than fault? (Lo siento — "I feel it.")

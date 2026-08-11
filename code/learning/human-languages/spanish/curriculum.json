@@ -307,7 +307,12 @@
         "ES-C07-hablan",
         "ES-C07-hablais",
         "ES-C07-repaso-presente-completo",
-        "ES-C07-sintesis-dos-continentes"
+        "ES-C07-sintesis-dos-continentes",
+        "ES-C07-comemos",
+        "ES-C07-vivimos",
+        "ES-C07-comeis-vivis",
+        "ES-C07-comen-viven",
+        "ES-C07-repaso-tres-familias"
       ],
       "before": [],
       "inline": [
@@ -2489,7 +2494,12 @@
         "ES-C07-hablan",
         "ES-C07-hablais",
         "ES-C07-repaso-presente-completo",
-        "ES-C07-sintesis-dos-continentes"
+        "ES-C07-sintesis-dos-continentes",
+        "ES-C07-comemos",
+        "ES-C07-vivimos",
+        "ES-C07-comeis-vivis",
+        "ES-C07-comen-viven",
+        "ES-C07-repaso-tres-familias"
       ]
     }
   ]
