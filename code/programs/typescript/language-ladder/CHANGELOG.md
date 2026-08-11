@@ -10,6 +10,11 @@
   narrow N-like handwritten alternative.
 - Queue the independently published Nun lesson (`3gYCaDgB-Nk`) next.
 
+### Changed — Spanish runs 1..115 (HL-C106, HL-C105)
+
+- Re-pin the Spanish book-hash table for the three noun chapters and the five
+  object-pronoun chapters inserted at 53; chapters after them shift by eight.
+
 ### Added — cited Hebrew Lamed ductus (HL-C09BO)
 
 - Render **ל** in three evidence-aligned frames: descend the tall left stroke,

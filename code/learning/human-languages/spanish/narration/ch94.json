@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 94,
-  "title": "Review --- Three Verbs That Behave",
+  "title": "Entender — Understanding Is Stretching Toward",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9a8fd7f30408eac8",
+  "sourceHash": "fnv1a64:6dbf081302c77a94",
   "lessons": [
     {
-      "id": "ES-C35-repaso-tres",
-      "sequence": 1704,
-      "title": "Review — three verbs that behave",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — three ordinary verbs, and what \"ordinary\" is about to mean",
+      "id": "ES-C34-entender",
+      "sequence": 1670,
+      "title": "entender — \"to understand\", built out of stretching",
+      "headword": "entender",
+      "romanization": "entender",
+      "gloss": "to understand — literally \"to stretch toward\"; the second e becomes ie stem-changer",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d795c614fa1b384b",
+      "sourceHash": "fnv1a64:fad5c00cdc0bb547",
       "notice": null,
       "blocks": [
         {
@@ -35,58 +35,93 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new here. Name the three verbs of the last three chapters: to take, to ask, to help."
+              "text": "Pensar broke its stem under stress. So does this one — and you have already been using it. No entiendo has been in your mouth since the repair kit, where you learned it as one frozen block. This is the verb it came from."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "All three work the way you expect, and it is worth naming that out loud before the next chapter, where one does not."
+              "text": "diphthong-ie — entiendo = en-TYEN-do."
             },
             {
               "kind": "speech",
-              "text": "In each of them, you are the one doing it. You take. You ask. You help. The person doing the verb is the person the sentence is about — exactly as in English, and exactly as in every verb you have met since hablo."
-            },
-            {
-              "kind": "speech",
-              "text": "Hold on to that. It is about to be worth money."
+              "text": "d-soft — the d between vowels is soft, close to the th of English this."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart",
+          "title": "The word, taken apart: entender",
           "segments": [
             {
               "kind": "speech",
-              "text": "Three origins, three very different kinds of story:"
+              "text": "entender (\"to understand\") from Latin intendere: in- (\"toward\") + tendere (\"to stretch\"). Understanding something was stretching your attention toward it — leaning in."
             },
             {
               "kind": "speech",
-              "text": "ayudar is the tidy one. Latin adiūtāre becomes English aid. Same word, two roads, and you can still hear it."
+              "text": "tendere stretches right across English:"
             },
             {
               "kind": "speech",
-              "text": "preguntar is the reshaped one — percontārī, to sound a depth with a pole. Asking as measuring how deep something goes."
+              "text": "intend, intent, intense, intention — the very same in- + stretch."
             },
             {
               "kind": "speech",
-              "text": "tomar is the honest gap. It has no agreed origin at all. The verb Latin actually handed down for \"take\" was coger, and coger turned coarse across much of Latin America — so an everyday word had to come from somewhere, and nobody is sure where."
+              "text": "attend, attention — ad- \"toward\", stretch that way."
             },
             {
               "kind": "speech",
-              "text": "Not every word has a clean story. A course that pretended otherwise would be inventing them."
+              "text": "extend, contend, pretend, tension, tendon, and tent, which is stretched cloth."
+            },
+            {
+              "kind": "speech",
+              "text": "So entiendo and I intend are the same two Latin pieces landing in different places: Spanish went to \"I grasp it\", English to \"I mean to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Careful with a false friend. Spanish pretender is not English pretend. It means \"to aim at, to be after\" — pretende ser médico, \"he means to become a doctor\". Same pieces, different landing."
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: an -er verb that cracks, and a calmer twin",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ordinary -er endings, stressed e broken to ie:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "form",
+                "stem"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "person: yo. form: entiendo. stem: broken.",
+                "person: tú. form: entiendes. stem: broken.",
+                "person: nosotros. form: entendemos. stem: plain.",
+                "person: ellos/ustedes. form: entienden. stem: broken."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish has a second verb for this job: comprender from Latin comprehendere, \"to seize together\" ( becomes English comprehend, apprehend, comprehensive). It is a plain -er verb with no crack at all: comprendo, comprendes, comprende. Both mean \"understand\". Entender is the everyday one; comprender leans a little more formal, and more toward grasping a whole thing than catching a word."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,79 +134,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three verbs, then one sentence with each",
+              "instruction": "\"No entiendo\" — I don't understand",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three verbs, then one sentence with each]"
+              "source": "[YOU SAY: \"No entiendo\" — I don't understand]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C35-repaso-tres-aid",
-              "prompt": "Which of the three is the same word as English aid?",
-              "assesses": [
-                "ES-ETYMON-AYUDAR-06"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"entiendo, entiendes, entendemos, entienden\"",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "ayudar",
-                "ayudar (to help)",
-                "help"
-              ],
-              "feedback": {
-                "correct": "Yes — adiutare, straight through to aid.",
-                "incorrect": "ayudar, from adiutare."
-              }
+              "source": "[YOU SAY: \"entiendo, entiendes, entendemos, entienden\"]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C35-repaso-tres-nostory",
-              "prompt": "Which of the three has no agreed etymology at all?",
-              "assesses": [
-                "ES-LEX-TOMAR-01"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"pienso\" then \"entiendo\" — the same crack, twice",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "tomar",
-                "tomar (to take)",
-                "take"
-              ],
-              "feedback": {
-                "correct": "Yes — nobody is sure. That is an honest answer, not a missing one.",
-                "incorrect": "tomar. Its origin is genuinely unsettled."
-              }
+              "source": "[YOU SAY: \"pienso\" then \"entiendo\" — the same crack, twice]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C35-repaso-tres-who",
-              "prompt": "In all three verbs, who is the sentence about — the one doing it, or the thing done?",
-              "assesses": [
-                "ES-LEX-PREGUNTAR-03"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "the one doing it",
-                "the doer",
-                "the person doing it",
-                "the subject does it"
-              ],
-              "feedback": {
-                "correct": "Right. Remember that for the next chapter.",
-                "incorrect": "The one doing it — which is about to stop being true."
-              }
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"entender\" then English \"intend, intense, attention\" — the stretching family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"entender\" then English \"intend, intense, attention\" — the stretching family]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -183,7 +182,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which one has no settled origin? (Tomar.) In all three, who is the sentence about? (The one doing it.) Next chapter: a verb where that stops being true."
+              "text": "What does tendere mean, and what does in- add? (To stretch; \"toward\".) Give the yo and nosotros forms. (Entiendo, entendemos.) Of entender and comprender, which one breaks its stem? (Entender.) And what does Spanish pretender mean? (To aim at, not to pretend.) Next: leer."
             }
           ]
         }

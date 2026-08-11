@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C39-conseguir
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1850
-chapter: 101
+sequence: 1870
+chapter: 109
 type: word
 headword: conseguir
 gloss: to get, to obtain — getting as following a thing until you have it

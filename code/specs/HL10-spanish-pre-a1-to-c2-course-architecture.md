@@ -443,6 +443,41 @@ per lesson, `-er`/`-ir` shared where they genuinely share (§5.2a), a review
 chapter when the paradigm closes, and a synthesis where the choice becomes
 communicative.
 
+### 5.4b The noun famine
+
+Measured 2026-08-11, while trying to author rung 13 (object pronouns) and
+discovering there was nothing to build it out of.
+
+> **At chapter 53 the reader holds 75 lexical atoms, and the concrete nouns
+> among them are `café`, `día`, `noche`, `tarde` and `mañana`.** Every other
+> noun in the course — *pan*, *agua*, *vino*, *hermano*, *padre*, *mano*,
+> *cabeza*, *gato*, *perro* — is introduced at **chapter 78 or later**.
+
+At the same point the reader already holds `NOUN-GENDER`, `NOUN-NUMBER`,
+`DEFINITE-ARTICLES`, and both indefinite articles. **The course teaches the
+entire apparatus for handling nouns and withholds the nouns.**
+
+This is the same failure as the missing indefinite article (HL-C104) and the
+missing plural articles, and it has the same cause: the grammar rungs were
+authored as a ladder while vocabulary was left to arrive incidentally, as
+whatever a grammar lesson happened to need for an example.
+
+Two consequences are now rules, not observations:
+
+1. **A structure that operates on a category needs members of that category
+   already taught.** An object pronoun replaces a noun; authoring one before any
+   ordinary noun exists is not a gentle ramp, it is a rung with no wood in it.
+2. **Vocabulary is a strand with its own ordering obligation**, not a byproduct
+   of grammar examples. When a grammar rung is scheduled, the nouns and verbs it
+   will need are part of its prerequisites and must be checked the same way a
+   grammar atom is.
+
+The remedy applied at chapter 53 is deliberately small and general: one
+feminine noun, one masculine noun, and one noun *derived* from a verb the
+reader already holds (*comer* → *comida*), so that from that point every
+gender-dependent rule has two plain test cases to run against and the reader
+has seen that nouns can be built rather than only received.
+
 ### 5.5 Polysemy is not vocabulary
 
 `maxNewSensesPerLesson: 1`. Spanish's high-frequency verbs are polysemous monsters

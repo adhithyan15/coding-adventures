@@ -1,47 +1,36 @@
-Spanish, chapter 87: Leer — Reading Is Gathering.
+Spanish, chapter 87: Telling Time.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-leer — "to read", and before that, "to gather".
+la hora — Spanish's barely-changed Latin hour.
 
 Warm-up.
 [pause 2 seconds]
-Two cracked verbs down. Here is a calm one — nothing breaks in the middle. The only difficulty is in your mouth: two e's in a row that must stay two.
+You've now seen this Latin word take three different paths: French wore it down to heure, German borrowed it centuries later as Uhr. Spanish's path is the simplest of all — it barely changed.
 
-Sounds you'll need.
-hiatus-ee — leer is two syllables, le-ER, never one long English ee.
-leo is likewise two beats, LE-o.
+The word, taken apart: hora.
+hora from Latin hōra from Greek hṓrā, "a season, a time of day" (the Greek goddesses of the seasons were the Hōrai). Spanish kept the word almost exactly as Latin had it — just a silent h in spelling, a fossil of a Latin h that was already weak and barely pronounced by the time Spanish inherited the word (the same non-story as French heure or English hour's silent h). Be careful not to confuse this with hijo and hacer's silent h — those come from a completely different, later Spanish sound change (Latin f- becomes Old Spanish aspirated h- becomes eventual silence), not from an already-weak Latin h the way hora's is. Two different roads to the same "silent letter" result. Compare its cousins: French wore hōra down further to heure; German didn't inherit the word at all, but borrowed it later as Uhr; English took the same Latin hōra and made hour.
+[a table of 4 rows, read aloud]
+language: Spanish. word: hora. what happened: inherited almost unchanged, just a silent h.
+language: French. word: heure. what happened: inherited, but worn down further.
+language: German. word: Uhr. what happened: not inherited — borrowed later, separately.
+language: English. word: hour. what happened: inherited via French, silent h.
 
-The word, taken apart: leer.
-leer ("to read") from Latin legere, "to gather, to pick out, to choose" — and only afterwards "to read". A reader picks letters out of a row the way a farmhand picks olives off a branch.
-That gathering root runs through an enormous amount of English:
-legible, legend ("things to be read"), lecture, lectern, and worn right down, lesson.
-built with prefixes: collect (col- "together"), select (se- "apart"), elect (e- "out"), intellect (inter- "between" — choosing between things).
-diligent and elegant, both of which meant "picking carefully".
-One honest limit: Greek légein ("to speak, to gather") — which gives English logic, dialogue, catalogue — is a cousin of legere from the same ancient root, not its parent. Same family, separate journeys.
-
-Grammar Lens: a plain -er verb, with a mouthful.
-Nothing irregular happens. Drop -er, add the ordinary endings:
-[a table of 5 rows, read aloud]
-person: yo. form: leo. said: LE-o.
-person: tú. form: lees. said: LE-es.
-person: él/ella/usted. form: lee. said: LE-e.
-person: nosotros. form: leemos. said: le-E-mos.
-person: ellos/ustedes. form: leen. said: LE-en.
-Every one of those is a syllable longer than an English speaker expects. Give each e its own beat and the word comes out right.
+Grammar Lens: Son las and telling time.
+Spanish uses ser ("to be") plus the feminine plural article (agreeing with the unspoken horas) to tell time — and famously switches number for "one":
+Es la una. — "It is one o'clock." (singular — la una, "the one") Son las dos. — "It is two o'clock." (plural — las dos, "the two") Son las diez. — "It is ten o'clock."
+Literally "it is the one" / "they are the two/ten" — the hour count itself is implied by the article and number, without needing to say hora(s) at all in everyday speech (unlike French's il est deux heures, which spells out "hours" every time).
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "leer" — le-ER, two beats]
+[your turn — say: "hora" — silent h, a fossil of an already-weak Latin h]
 [pause 8 seconds for the answer]
-[your turn — say: "Leo un libro" — I read a book]
+[your turn — say: "Es la una. Son las dos. Son las diez."]
 [pause 8 seconds for the answer]
-[your turn — say: "No entiendo" then "Leo, pero no entiendo" — I read, but I don't understand]
-[pause 8 seconds for the answer]
-[your turn — say: "leer" then English "legible, collect, select, elect"]
+[your turn — say: "hora / heure / hour" — one Latin root, three different fates]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What did legere mean before it meant "to read"? (To gather, to pick out.) Give two English words built on it with a prefix. (Collect, select, elect, intellect.) How many syllables in leo? (Two — LE-o.) Next: escribir, the other half of literacy.
+What Latin (and Greek) word is hora from? (hōra from Greek hṓrā.) How did Spanish's path differ from French's and German's? (Spanish inherited it almost unchanged; French wore it down further to heure; German didn't inherit it at all and borrowed Uhr separately, much later.) How do you say "it is one o'clock" vs. "it is two o'clock"? (Es la una — singular; Son las dos — plural.)

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 73,
-  "title": "Parents and Siblings",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:45b4c475f3bae2ed",
+  "title": "Wanting, Not Asserting",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:852b037e92a94e29",
   "lessons": [
     {
-      "id": "ES-C23-padre-madre",
-      "sequence": 1410,
-      "title": "el padre, la madre — among the oldest words there are",
-      "headword": "el padre, la madre",
-      "romanization": "el padre, la madre",
-      "gloss": "father and mother — among the oldest reconstructible words in the whole family",
+      "id": "ES-C18-quiero-que",
+      "sequence": 1230,
+      "title": "Hablas español, Quiero que hables español — fact or wanted event?",
+      "headword": "Hablas español · Quiero que hables español",
+      "romanization": "Hablas español · Quiero que hables español",
+      "gloss": "an asserted event beside a wanted, not-yet-real event",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77dc91fd7a48ea76",
+      "sourceHash": "fnv1a64:85bed013b1cb052e",
       "notice": null,
       "blocks": [
         {
@@ -35,56 +35,37 @@
             },
             {
               "kind": "speech",
-              "text": "\"Father\" and \"mother\" are some of the oldest reconstructible words in human language — older than Latin, older than Rome. Spanish kept them close to the Latin original, and they are secretly the same words as English father and mother."
+              "text": "Hablas español can assert “You speak Spanish.” Now compare Quiero que hables español — “I want you to speak Spanish.” Hables does not report what is true. It presents the speaking as wanted and not yet asserted. That meaning contrast is the first small doorway into the subjunctive."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The words, taken apart: padre and madre",
+          "type": "grammar",
+          "title": "Grammar Lens: count the doers",
           "segments": [
-            {
-              "kind": "speech",
-              "text": "el padre (\"father\") from Latin pater from PIE ph₂tḗr."
-            },
-            {
-              "kind": "speech",
-              "text": "la madre (\"mother\") from Latin māter from PIE méh₂tēr."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: the English sound-law",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Padre and English father both descend independently from the same PIE word — they're siblings, not parent and child. Latin (and Spanish after it) kept the original p and t largely intact; the Germanic branch that gave English took a separate road through Grimm's Law, which shifted the inherited p becomes f and t becomes th:"
-            },
             {
               "kind": "table",
               "headers": [
-                "PIE ancestor",
-                "Latin becomes Spanish",
-                "Germanic becomes English"
+                "meaning",
+                "Spanish",
+                "doers"
               ],
               "columns": 3,
               "rowCount": 2,
               "utterances": [
-                "PIE ancestor: ph₂tḗr. Latin becomes Spanish: pater becomes padre. Germanic becomes English: father.",
-                "PIE ancestor: méh₂tēr. Latin becomes Spanish: māter becomes madre. Germanic becomes English: mother."
+                "meaning: I want to speak Spanish. Spanish: Quiero hablar español. doers: one: I want; I speak.",
+                "meaning: I want you to speak Spanish. Spanish: Quiero que hables español. doers: two: I want; you speak."
               ]
             },
             {
               "kind": "speech",
-              "text": "So padre and father aren't lookalikes borrowed late, and neither one comes from the other — they're the same inherited PIE word, one branch keeping the p, the other shifting it to f. The Latin root also gives Spanish and English their \"of a parent\" adjectives: paternal, paternidad, patrón and maternal, maternidad. (A further Latin-only offshoot, māter becomes māteria, \"the stuff a tree-mother produces,\" gives Spanish materia and, separately, matriz — \"womb\" — via Latin mātrix.)"
+              "text": "With one doer, keep the known infinitive hablar. With a different doer for the wanted event, use que and the new form hables. This is a bounded pattern for querer, not a rule for every clause in Spanish."
             }
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -97,299 +78,94 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"el padre, la madre\"",
+              "instruction": "“Hablas español.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"el padre, la madre\"]"
+              "source": "[YOU SAY: “Hablas español.”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the sound-law — \"padre keeps p; father shifts to f — same word\"",
+              "instruction": "“Quiero hablar español.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the sound-law — \"padre keeps p; father shifts to f — same word\"]"
+              "source": "[YOU SAY: “Quiero hablar español.”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"padre becomes paternal; madre becomes maternal\"",
+              "instruction": "“Quiero que hables español.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"padre → paternal; madre → maternal\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
+              "source": "[YOU SAY: “Quiero que hables español.”]"
             },
             {
-              "kind": "speech",
-              "text": "Give \"father\" and \"mother\" with their articles. (el padre, la madre.) Does padre turn into English father directly? (No — both descend independently from the same PIE word; the Germanic branch shifted p becomes f and t becomes th via Grimm's Law, while Latin/Spanish kept the original sounds.) Name an English cousin of each. (padre becomes paternal; madre becomes maternal.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C23-hermano-hermana",
-      "sequence": 1420,
-      "title": "el hermano, la hermana — brother and sister, from a different word entirely",
-      "headword": "el hermano, la hermana",
-      "romanization": "el hermano, la hermana",
-      "gloss": "brother and sister — NOT from frater/soror, but from an adjective meaning \"of the same seed\"",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:5a1d02c932a77ff7",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You might expect Spanish \"brother\" to come from Latin frāter, the way French's frère does. It does not. Spanish's siblings took a completely different word — one about seeds."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The words, taken apart: hermano and hermana",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Classical Latin could say frāter germānus, literally \"a brother of the same stock/blood\" — distinguishing a full brother from a half-brother, or from a \"brother\" in some looser sense."
-            },
-            {
-              "kind": "speech",
-              "text": "Then something ordinary and strange happened: in everyday Latin the adjective took over the whole job and the noun quietly dropped out. (English does this all the time — a mobile phone becomes a mobile, a cellular telephone becomes a cell.) What survived is the modifier:"
-            },
-            {
-              "kind": "speech",
-              "text": "el hermano (\"brother\") from Latin germānus."
-            },
-            {
-              "kind": "speech",
-              "text": "la hermana (\"sister\") from Latin germāna."
-            },
-            {
-              "kind": "speech",
-              "text": "So Spanish's everyday word for brother is, grammatically, a leftover adjective."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: where germanus comes from",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Germānus traces back to germen, \"sprout, bud, seed\" — the same root that gives English germ, germinate, and germane (originally \"closely related,\" from the same seed, before it loosened into just \"relevant\")."
-            },
-            {
-              "kind": "speech",
-              "text": "So calling someone your hermano is, at the etymological root, calling them \"sprung from the same seed.\" (And no, this has nothing to do with Germany — that name is a separate, unrelated puzzle.)"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"el hermano, la hermana\" — brother, sister",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"el hermano, la hermana\" — brother, sister]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the root chain — \"germen, seed\" becomes \"germānus, of the same seed\" becomes \"hermano\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the root chain — \"germen, seed\" → \"germānus, of the same seed\" → \"hermano\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hermano\" then English \"germinate, germane\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hermano\" then English \"germinate, germane\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Does Spanish hermano come from Latin frāter? (No — from germānus, \"of the same stock/seed,\" an adjective that swallowed the noun frāter it used to modify.) What does its root germen mean, and what English words share it? (Seed, sprout — germ, germinate, germane.) Next: the silent h on the front, which is not the h you think it is."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C23-hermano-hache",
-      "sequence": 1430,
-      "title": "the h in hermano — a letter that was never spoken",
-      "headword": "hermano ← *ermano*",
-      "romanization": "hermano ← *ermano*",
-      "gloss": "the h on hermano is not the h on hijo — one was spoken for centuries, the other never was",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:b0437d83df4e6ff9",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Germānus starts with a g. Hermano starts with an h. Something has to explain that — and the obvious explanation is the wrong one."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "el hermano, la hermana — the words and the germen root."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: two different silent h's",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "You may already know that Spanish often turns a Latin initial f into a silent h — filius becomes hijo (\"son\"), facere becomes hacer (\"to do\"). Hermano is not that, and the difference is worth getting right."
-            },
-            {
-              "kind": "speech",
-              "text": "Germānus is stressed on its third syllable (ger-MĀ-nus), which leaves the opening ger- unstressed. Latin's g before a front vowel had already softened toward a y-like sound in everyday speech — and in that unstressed position it simply fell away entirely, giving Old Spanish ermano, with no h at all. That is the form actually recorded centuries ago."
-            },
-            {
-              "kind": "speech",
-              "text": "The h you see today was added later, in spelling only, to mark the word's old link to Latin g-. Compare:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "word",
-                "what happened to the sound",
-                "was the h ever spoken?"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-quiero-que-meaning",
+              "prompt": "Which form asserts that one friend speaks: hablas or hables?",
+              "assesses": [
+                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
+                "ES-GRAMMAR-AR-PRESENT-SINGULAR"
               ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "word: hijo, hacer. what happened to the sound: Latin f- becomes a real breathy h. was the h ever spoken?: yes, for centuries.",
-                "word: hermano. what happened to the sound: Latin g- simply dropped. was the h ever spoken?: no, never."
-              ]
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "hablas"
+              ],
+              "feedback": {
+                "correct": "Right: hablas can assert the event.",
+                "incorrect": "Use indicative hablas for the asserted event; hables is the wanted form here."
+              }
             },
             {
-              "kind": "speech",
-              "text": "Same silent letter today; two completely different backstories, only one of which involves a sound at all."
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-quiero-que-one-doer",
+              "prompt": "Say 'I want to speak Spanish' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
+                "ES-LEX-QUERER",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "quiero hablar español.",
+                "quiero hablar español"
+              ],
+              "feedback": {
+                "correct": "Right: one doer keeps the infinitive hablar.",
+                "incorrect": "Use known quiero plus the infinitive: Quiero hablar español."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-quiero-que-two-doers",
+              "prompt": "Say 'I want you to speak Spanish' to one friend.",
+              "assesses": [
+                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
+                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
+                "ES-LEX-QUE",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "quiero que hables español.",
+                "quiero que hables español"
+              ],
+              "feedback": {
+                "correct": "Right: two doers give quiero que hables.",
+                "incorrect": "Join the wanted event with que and use hables: Quiero que hables español."
+              }
             }
           ]
         },
         {
           "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"germānus\" then \"ermano\" then \"hermano\" — the three stages",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"germānus\" then \"ermano\" then \"hermano\" — the three stages]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the honest distinction — hijo/hacer's h was once truly spoken; hermano's h never was",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the honest distinction — hijo/hacer's *h* was once truly spoken; hermano's *h* never was]"
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -401,7 +177,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is hermano's h the same kind of change as hijo's or hacer's? (No.) What actually happened to germānus's opening? (Its g dropped away in an unstressed syllable, giving Old Spanish ermano.) So where did the h come from? (Spelling — added later to mark the Latin link, never pronounced.)"
+              "text": "Which form asserts the event? (Hablas.) Which presents it as wanted? (Hables, after quiero que.) What happens when the wanter and the speaker are the same? (Use the infinitive: Quiero hablar.) Next, build the three singular -ar forms one piece at a time."
             }
           ]
         }

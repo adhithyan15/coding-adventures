@@ -1,42 +1,47 @@
-Spanish, chapter 101: Conseguir --- Getting Is Following Until You Have It.
+Spanish, chapter 101: Ayudar — the Same Word as Aid.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-conseguir — "to get", by following a thing until you have it.
+ayudar — "to help", and it is English "aid" in disguise.
 
 Warm-up.
 [pause 2 seconds]
-Traigo carries a thing that is already yours. Coger grabs what is in front of you. This verb is for the getting that took some work.
+You can ask a question now. The next thing to ask for is a hand — and this verb is one you already own in English without knowing it.
 
 Sounds you'll need.
-g-hard — the gu in conseguir is one hard g; the u is silent.
-s-clear — a clean hissing s: con-se-GEER.
+vowel-a — a clean, open a: a-yoo-DAR.
+r-tap — one tap at the end, not an English r.
 
-The word, taken apart: conseguir.
-conseguir ("to get, to obtain, to manage to") from Latin cōnsequī: com- ("along with") + sequī, "to follow". You got a thing by following it until it was yours.
-Sequī is one of Latin's great English suppliers: sequence, sequel, consequence, subsequent, consecutive; second, from secundus, "the one following"; execute and prosecute; obsequious, following someone about; and through French, pursue, ensue and suit.
-Spanish also keeps the formal partner obtener from obtinēre, "to hold onto" — English obtain. It behaves exactly like tener, so its yo-form is obtengo. Conseguir is the everyday one.
+The word, taken apart: ayudar.
+ayudar ("to help") from Latin adiūtāre, the repeating form of adiuvāre: ad- ("toward") + iuvāre ("to help, to delight"). To help was to move toward someone.
+English borrowed that identical verb through Old French aidier and calls it aid. So ayudar and aid are not merely cousins — they are the same word by two different roads. The family came with it:
+aide, and aide-de-camp, an officer who helps.
+adjutant — the officer whose whole job is assisting.
+adjuvant — a substance that helps another drug work.
+coadjutor — one who helps alongside.
+The shape change is a rule, not an accident. Latin -di- before a vowel turned into Spanish y: adiūtāre becomes ayudar, hodiē becomes hoy ("today"), podium becomes poyo. Once you have that, the word stops looking arbitrary.
 
-Grammar Lens: the third crack, and a silent u that leaves.
-[a table of 5 rows, read aloud]
-person: yo. form: consigo.
-person: tú. form: consigues.
-person: él/ella/usted. form: consigue.
-person: nosotros. form: conseguimos.
-person: ellos/ustedes. form: consiguen.
-You have met dormir breaking o becomes ue and pido quietly breaking e becomes i. Here is that third pattern in full: stress on the stem turns e into i, and conseguimos stays plain because the stress moved to the ending.
-Now the spelling. Spanish writes gu only to keep a g hard in front of e and i. Once the e becomes i, there is nothing in front to guard against, so the u has no job and goes: consigo, not consiguo. Two changes, one form, and only one of them is a sound.
+Grammar Lens: a plain -ar verb, and how to ask for a hand.
+Nothing breaks; the endings are the ones you started with:
+[a table of 4 rows, read aloud]
+person: yo. form: ayudo. meaning: I help.
+person: tú. form: ayudas. meaning: you help.
+person: nosotros. form: ayudamos. meaning: we help.
+person: ellos/ustedes. form: ayudan. meaning: they help.
+Its noun is la ayuda (fem.), "help" — the word on relief packages worldwide. Two sentences worth owning: ¿Me ayudas? ("will you help me?" — Spanish uses the plain present where English needs will) and, politely, ¿Puedo ayudarle?
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "consigo, consigues, consigue, conseguimos, consiguen"]
+[your turn — say: "ayudo, ayudas, ayudamos, ayudan"]
 [pause 8 seconds for the answer]
-[your turn — say: "Traigo el café" then "Consigo el café" — carried, then obtained]
+[your turn — say: "¿Me ayudas?" — will you help me?]
 [pause 8 seconds for the answer]
-[your turn — say: "sequī, sequence, second" then "conseguir"]
+[your turn — say: "Te pregunto" then "Me ayudas" — I ask you, you help me]
+[pause 8 seconds for the answer]
+[your turn — say: "ayudar" then English "aid, adjutant, adjuvant" — one word, two roads]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What did sequī mean, and name two English words from it. (To follow; sequence, second, consequence, pursue.) Why is it consigo and not consiguo? (The u only guards a hard g before e and i.) Name the three stem cracks you now have, with a verb for each. (Cerrar e becomes ie, dormir o becomes ue, conseguir e becomes i.) And which Latin verb is behind traer? (Trahere.)
+What two Latin pieces build adiuvāre? (Ad- "toward" + iuvāre "to help".) What everyday English word is ayudar, arriving by French? (Aid.) What sound-law turned adiūtāre into ayudar, and which other word shows it? (Latin -di- became Spanish y; hodiē becomes hoy.) Next: gustar, the verb that runs backwards.

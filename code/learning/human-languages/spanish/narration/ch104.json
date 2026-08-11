@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 104,
-  "title": "Review --- All Four Stem Changes",
+  "title": "Synthesis --- What You Like, and Who Does the Liking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:252b26a8892e718b",
+  "sourceHash": "fnv1a64:afcf226272740637",
   "lessons": [
     {
-      "id": "ES-C39-repaso-cambios",
-      "sequence": 1873,
-      "title": "Review — the four stem changes, all of them",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — the stem-change system, now complete, and the one pattern with a single member",
+      "id": "ES-C35-sintesis-gustar",
+      "sequence": 1734,
+      "title": "Synthesis — what you like, and who is doing the liking",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — saying what you like, in a language that refuses to let you own it",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca8d041722802699",
+      "sourceHash": "fnv1a64:1e4de84e15ea990b",
       "notice": null,
       "blocks": [
         {
@@ -35,66 +35,61 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new in this chapter. Say a verb whose stem breaks under stress — any one you have met."
+              "text": "Say \"I like coffee\" in Spanish. Then answer this: in that sentence, which word is the subject?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "grammar",
+          "title": "Grammar Lens: the sentence that will not let you be the subject",
           "segments": [
             {
               "kind": "speech",
-              "text": "Something finished in the last two chapters and it is worth stopping for."
+              "text": "Me gusta el café. The coffee is the subject. The coffee does the pleasing. You are the one it happens to."
             },
             {
               "kind": "speech",
-              "text": "Spanish has four stem-change patterns. Not five, not a dozen — four. You met the first two long ago with querer and poder, and the last two in the chapters you have just finished. That is the whole system, and you now hold all of it:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "the change",
-                "the verb that taught it",
-                "what breaks"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "the change: e becomes ie. the verb that taught it: querer. what breaks: becomes quiero.",
-                "the change: o becomes ue. the verb that taught it: poder. what breaks: becomes puedo.",
-                "the change: e becomes i. the verb that taught it: conseguir. what breaks: becomes consigo.",
-                "the change: u becomes ue. the verb that taught it: jugar. what breaks: becomes juego."
-              ]
+              "text": "English puts you in charge: I like coffee — I am the subject, the coffee just sits there. Spanish reverses it."
             },
             {
               "kind": "speech",
-              "text": "This table is allowed here because every row in it is something you can already do. It is a picture of the ground you hold, not a list to memorise."
+              "text": "Two chapters ago, all three verbs were about the one doing it. That is why this chapter had to sit next to them."
+            },
+            {
+              "kind": "speech",
+              "text": "Translate I like word by word and you build a sentence Spanish does not have — which is why this is a chapter about saying an idea, not a word."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the pattern with one member",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "The fourth row is strange, and worth knowing precisely."
+              "text": "— ¿Te gusta el café? — Sí, me gusta mucho. ¿Y a ti? — A mí también. Mucho gusto."
             },
             {
               "kind": "speech",
-              "text": "u becomes ue happens in exactly one verb in the entire language: jugar."
-            },
-            {
-              "kind": "speech",
-              "text": "Not \"mostly one.\" One. Every other Spanish verb with a u in its stem leaves it alone. So you are not learning a pattern here so much as a single fact with a pattern's shape — which is easier, not harder, and is the kind of thing a course should tell you instead of letting you brace for more."
+              "text": "That last line is a joke you can now get. Mucho gusto — the phrase you learned long ago for \"pleased to meet you\" — is the same word. It has always meant much pleasure. You have been saying gustar's noun since your third conversation in this book."
             }
           ]
         },
         {
           "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Gustar is Latin gustāre, to taste — English gusto, disgust. Liking, in Spanish, started at the tongue."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -107,20 +102,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "one verb from each of the four rows",
+              "instruction": "the exchange above, both parts",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: one verb from each of the four rows]"
+              "source": "[YOU SAY: the exchange above, both parts]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four changes themselves, as sounds — e-ie, o-ue, e-i, u-ue",
+              "instruction": "it again, and as you say me gusta, notice that you are not the subject",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four changes themselves, as sounds — *e-ie, o-ue, e-i, u-ue*]"
+              "source": "[YOU SAY: it again, and as you say *me gusta*, notice that you are **not** the subject]"
             },
             {
               "kind": "repeat",
@@ -129,73 +124,71 @@
             },
             {
               "kind": "speech",
-              "text": "Until naming the pattern is faster than working it out."
+              "text": "Until me gusta arrives without translating I like first."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C39-repaso-cambios-count",
-              "prompt": "How many stem-change patterns does Spanish have in total?",
+              "id": "ES-C35-sintesis-gustar-subject",
+              "prompt": "In me gusta el cafe, what is the subject?",
               "assesses": [
-                "ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "four",
-                "4",
-                "cuatro"
-              ],
-              "feedback": {
-                "correct": "Four — and you now hold all of them.",
-                "incorrect": "Four: e-ie, o-ue, e-i, u-ue."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C39-repaso-cambios-only",
-              "prompt": "Which pattern belongs to exactly one verb, and which verb?",
-              "assesses": [
-                "ES-GRAMMAR-STEM-U-UE-09",
-                "ES-LEX-JUGAR-07"
+                "ES-GRAMMAR-GUSTAR-INVERSION-09"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "u to ue, jugar",
-                "u-ue, jugar",
-                "jugar, u to ue",
-                "jugar"
+                "el cafe",
+                "the coffee",
+                "cafe",
+                "el café"
               ],
               "feedback": {
-                "correct": "Yes — jugar is the only u-ue verb in Spanish.",
-                "incorrect": "u to ue, and the verb is jugar. It is the only one."
+                "correct": "Yes — the coffee does the pleasing.",
+                "incorrect": "El cafe. It is the one doing the pleasing; you receive it."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C39-repaso-cambios-ei",
-              "prompt": "Which change does conseguir make?",
+              "id": "ES-C35-sintesis-gustar-taste",
+              "prompt": "What did gustar originally mean?",
               "assesses": [
-                "ES-GRAMMAR-STEM-E-I-06",
-                "ES-LEX-CONSEGUIR-04"
+                "ES-ETYMON-GUSTAR-08"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "e to i",
-                "e-i",
-                "e becomes i",
-                "consigo"
+                "to taste",
+                "taste",
+                "tasting"
               ],
               "feedback": {
-                "correct": "Yes — conseguir becomes consigo.",
-                "incorrect": "e to i: conseguir, consigo."
+                "correct": "Yes — gustare, and English kept it in gusto and disgust.",
+                "incorrect": "To taste — from Latin gustare."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C35-sintesis-gustar-joke",
+              "prompt": "Which phrase you learned long ago is built from this same word?",
+              "assesses": [
+                "ES-LEX-GUSTO",
+                "ES-LEX-GUSTAR-07"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "mucho gusto",
+                "gusto",
+                "much pleasure"
+              ],
+              "feedback": {
+                "correct": "Yes — mucho gusto has always meant much pleasure.",
+                "incorrect": "Mucho gusto — you have been saying gustar's noun since your third conversation."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -207,7 +200,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many stem-change patterns are there? (Four — and that is all of them.) Which one has a single member? (u becomes ue, only jugar.) Next chapter is not about forms at all — it is about three places where English gives you one word and Spanish makes you choose."
+              "text": "Who is the subject of me gusta el café? (El café.) What did gustar mean first? (To taste.) And what has mucho gusto meant all along? (Much pleasure — the same word.)"
             }
           ]
         }

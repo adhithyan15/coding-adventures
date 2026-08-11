@@ -1,34 +1,92 @@
-Spanish, chapter 75: The Seasons.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 75: The Subjunctive Built From the Yo Form.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-la primavera, el verano, el otoño, el invierno — three plain, one surprising.
+Lesson 1 of 3.
+quiera, quieras, quiera — keep the change you know.
 
 Warm-up.
 [pause 2 seconds]
-Three of Spanish's four seasons are exactly what you'd expect from Latin. The fourth hides a genuine surprise: its meaning itself drifted from one season to another.
+Present quiero already carries the stressed e becomes ie change. Remove -o to get quier-, then add the -er/-ir subjunctive endings:
+[a table of 3 rows, read aloud]
+person: yo. present subjunctive: quiera.
+person: tú. present subjunctive: quieras.
+person: él / ella / usted. present subjunctive: quiera.
+Say only this bounded singular row: quiera, quieras, quiera.
 
-The words, taken apart: three straightforward seasons.
-la primavera ("spring") from Latin prīma vēra, literally "first spring" (vēr, "spring," + prīma, "first"). Italian still says the identical phrase, primavera, unchanged. (Old French once said primevère too, before switching to printemps.)
-el otoño ("autumn") from Latin autumnus — the same root behind French automne and English autumn itself.
-el invierno ("winter") from Latin hībernum (tempus), "the wintry [season]" — the same root as French hiver and English hibernate, "to spend the winter."
-
-Why it's said this way: verano.
-You might expect verano ("summer") to come from Latin aestas, "heat" — the way French été does. It doesn't. The standard account (per Spanish etymological dictionaries) traces verano to Latin vērānum (tempus), "of spring" — built on the very same vēr, "spring," behind primavera.
-So how did a word meaning "spring-ish" end up naming summer? The honest answer is a shift in meaning over time, not a sound change — though the exact story is murkier than a tidy one-line explanation. The traditional, simplified account says that as primavera ("first spring") rose to become the standard word for spring, verano's meaning drifted forward into the season right after, summer; the fuller picture likely also involves Vulgar Latin agricultural usage (a "vernal" grazing or working period that stretched from late spring into early summer), so the drift may not be purely a case of one word simply vacating a job for the other. Either way, two Spanish words both rooted in vēr, "spring," ended up naming two different seasons.
+Grammar Lens: one known verb, one inherited stem.
+You are not learning a new list of stem-changing verbs. You are carrying one known change into one known row. Quiero que quieras hablar español means “I want you to want to speak Spanish.” The sentence is deliberately narrow: no new person noun, object, or plural form.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "primavera, verano, otoño, invierno" — the four seasons]
-[pause 8 seconds for the answer]
-[your turn — say: "primavera = prima vera, first spring"]
-[pause 8 seconds for the answer]
-[your turn — say: the surprise — "verano ALSO comes from vēr, 'spring' — but its meaning moved to summer"]
-[pause 8 seconds for the answer]
-[your turn — say: "invierno hibernate"]
-[pause 8 seconds for the answer]
+Carry only the known quier- stem into this row.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular subjunctive forms of querer: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 6 seconds]
+Which known present yo form gives the stem quier-?
+[question — say your answer, then pause 7 seconds]
+Complete 'Quiero que ___ hablar español' for one friend.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does primavera literally mean? ("First spring" — prīma vēra.) Does verano come from Latin aestas, like French été? (No — from vērānum, "of spring," the same vēr root as primavera; its meaning shifted toward summer over time — traditionally linked to primavera taking over the job of naming spring, though the fuller history is murkier than that alone.) What English word is invierno the cousin of? (Hibernate.)
+Give the three forms. (Quiera, quieras, quiera.) Which old change stays visible? (e becomes ie.) Where did the stem come from? (Known quiero, minus -o.)
+
+
+Lesson 2 of 3.
+pueda, puedas, pueda — one more known stem change.
+
+Warm-up.
+[pause 2 seconds]
+Present puedo already carries o becomes ue. Remove -o to get pued-, then add the same a row:
+[a table of 3 rows, read aloud]
+person: yo. present subjunctive: pueda.
+person: tú. present subjunctive: puedas.
+person: él / ella / usted. present subjunctive: pueda.
+Say pueda, puedas, pueda. No other poder forms enter today.
+
+Grammar Lens: use it immediately.
+Quiero que puedas hablar español means “I want you to be able to speak Spanish.” Every word was already known except the single form puedas. This is the gentle pattern: learn one row, then spend it in the next sentence.
+
+Guided Practice.
+[pause 1 second]
+Carry only the known pued- stem into this row.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular subjunctive forms of poder: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 6 seconds]
+Which known present yo form gives the stem pued-?
+[question — say your answer, then pause 10 seconds]
+Say 'I want you to be able to speak Spanish' to one friend.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three forms. (Pueda, puedas, pueda.) Which old change stays visible? (o becomes ue.) Which form addresses one friend after quiero que? (Puedas.)
+
+
+Lesson 3 of 3.
+haga, hagas, haga — hago lends its stem.
+
+Warm-up.
+[pause 2 seconds]
+The known present yo form is hago. Remove -o and keep hag-:
+[a table of 3 rows, read aloud]
+person: yo. present subjunctive: haga.
+person: tú. present subjunctive: hagas.
+person: él / ella / usted. present subjunctive: haga.
+Say haga, hagas, haga. Only hacer enters this lesson; other special stems wait for later chapters.
+
+Grammar Lens: spend the new form.
+Haces café can assert “you make coffee.” Quiero que hagas café says “I want you to make coffee.” The g is not a fresh exception: it was already in hago, the present form that supplied the stem.
+
+Guided Practice.
+[pause 1 second]
+Carry only the known hag- stem into this row.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular subjunctive forms of hacer: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 6 seconds]
+Which known present yo form gives the stem hag-?
+[question — say your answer, then pause 9 seconds]
+Say 'I want you to make coffee' to one friend.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three forms. (Haga, hagas, haga.) Where does hag- come from? (Known hago, minus -o.) Say the wanted event. (Quiero que hagas café.)

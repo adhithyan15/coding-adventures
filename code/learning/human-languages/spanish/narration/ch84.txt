@@ -1,43 +1,95 @@
-Spanish, chapter 84: Synthesis --- Saying Something About Your Own Life.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 84: Water, Wine, and Bread.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-Synthesis — saying something about your own life.
+Lesson 1 of 3.
+el agua — water, and an article that is not what it looks like.
 
 Warm-up.
 [pause 2 seconds]
-Nothing new in this chapter. Say the words for dog and for black.
+One of the least changed words in Spanish, carrying one of its most misunderstood rules. The "masculine" article on this feminine noun is not a mistake and not an exception to gender.
 
-What you've built.
-Something has been accumulating quietly for fourteen chapters and has never once been put to work.
-You have six colours. Parents and brothers and sisters. A head and a hand. Water, wine and bread. The seasons, the months, the hours. Hot weather and cold. Numbers to twenty. A dog and a cat.
-That is not a vocabulary list any more. It is enough to describe the room you are sitting in, and this chapter is the first that asks you to.
+The word, taken apart: agua.
+agua ("water") from Latin aqua — almost unchanged in two thousand years. Compare French, where the very same word was worn all the way down to a bare "eau," just the sound "oh." Same starting point, same span of time, wildly different amounts of erosion: how fast a language wears its words down is not fixed.
+English kept the whole Latin word too, but as a learned borrowing rather than an inherited everyday one: aquatic, aquarium, aqueduct, aqualung.
 
-Grammar Lens: the word that made this possible.
-Notice which article you need here, because it is not the one you have used most.
-el perro — the dog. A particular one. The one we were talking about. un perro — a dog. Any dog. One you are mentioning for the first time.
-Describing your own life means introducing things your listener does not know about yet — and that is exactly the job un does. Almost every sentence below needs it.
-
-The exchange.
-— ¿Tienes un perro? — Sí, tengo un perro negro. ¿Y tú? — Tengo un gato blanco.
-Every word in those three lines is one you built yourself, across fourteen chapters that never asked you to combine them. Nothing here is new. What is new is that it is a conversation rather than a list.
+Grammar Lens: el agua's article and gender.
+Notice: el agua, not la agua — yet agua is genuinely feminine. You can prove it: el agua fría, "the cold water," keeps the feminine adjective ending, and the plural is las aguas, never los aguas.
+The rule is phonological, not grammatical. Spanish swaps la for el directly before a singular feminine noun beginning with a stressed a-sound, to avoid running two identical vowels together (la agua). It is the same instinct that makes English pick "an apple" over "a apple."
+[a table of 3 rows, read aloud]
+the water. singular: el agua. plural: las aguas.
+the eagle. singular: el águila. plural: las águilas.
+the axe. singular: el hacha. plural: las hachas.
+Only the article changes. The noun's gender never moves.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the exchange above, both parts]
+[your turn — say: "el agua" — water, feminine, but takes el]
 [pause 8 seconds for the answer]
-[your turn — say: it again about a real animal you know, with a real colour]
+[your turn — say: the proof — "el agua fría" and "las aguas"]
 [pause 8 seconds for the answer]
-[repeat that twice]
-Until you are describing rather than translating.
-[question — say your answer, then pause 10 seconds]
-Say I have a black dog.
-[question — say your answer, then pause 10 seconds]
-You are mentioning your cat for the first time. Un gato or el gato?
-[question — say your answer, then pause 8 seconds]
-Say it is cold.
+[your turn — say: the contrast — "agua" barely changed; French's "eau" wore all the way down]
+[pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which article introduces something your listener does not yet know about? (Un.) And which points at something you have both already mentioned? (El.) Say one true sentence about an animal, with its colour.
+Is agua masculine or feminine? (Feminine — el replaces la only because agua begins with a stressed a.) How would you prove it? (El agua fría; las aguas.) How does Spanish's erosion of aqua compare with French's? (Much less — Spanish kept nearly the whole word; French wore it to "eau.")
+
+
+Lesson 2 of 3.
+el vino — one word, three separate arrivals in English.
+
+Warm-up.
+[pause 2 seconds]
+The second drink is grammatically boring — plain masculine, plain el vino, no stressed-a trick. Its history makes up for that.
+
+The word, taken apart: vino.
+vino ("wine") from Latin vīnum — which held its shape well, as French's vin did too.
+English shares the very same root by more than one road, and the roads are worth separating, because they show three different ways a word can travel:
+[a table of 3 rows, read aloud]
+English word: wine. how it got there: vīnum borrowed directly into old Germanic, very early.
+English word: vine, vinegar. how it got there: borrowed centuries later, secondhand via French (vin + aigre, "sour wine").
+English word: vineyard. how it got there: not borrowed at all — English built it at home from the already-borrowed wine plus native yard.
+So wine and vine are the same Latin word twice, arriving a thousand years apart by different routes, and vineyard is a homemade compound made out of the first arrival. One Latin noun; three English histories.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "el agua, el vino" — the two drinks]
+[pause 8 seconds for the answer]
+[your turn — say: "vino" then English "wine, vine, vinegar" — one root, three roads]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What Latin word gives vino? (Vīnum.) Name three English cousins and say how each arrived. (Wine — direct, early, into Germanic; vine/vinegar — later, via French; vineyard — built at home from wine plus yard.) And why is it el agua but las aguas? (The el is a sound rule for a stressed a, singular only.)
+
+
+Lesson 3 of 3.
+el pan — bread, and the friend who shares it.
+
+Warm-up.
+[pause 2 seconds]
+Spanish's word for bread hides the same lovely word-story you'd find in English's "companion" — except Spanish kept both halves, the bread and the friendship.
+
+The word, taken apart: pan.
+el pan ("bread") from Latin pānis. Masculine: el pan.
+
+Why it's said this way: bread and friendship.
+The Latin root pān- ("bread") gives Spanish its own word for a close friend:
+compañero / compañera ("companion, friend, partner") from com- ("with").
+pānis — literally "one you share bread with." Spanish built this word from the very same recipe as English companion and company (which come from the identical Latin pieces) — but where English only kept the friendship sense, Spanish still visibly uses the same root for the actual bread (pan) too.
+panadería ("bakery") and panadero ("baker") — both transparently built on pan.
+So pan and compañero are the same word-family doing double duty in Spanish: name the food, and name the friend you'd share it with.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "el pan" — bread]
+[pause 8 seconds for the answer]
+[your turn — say: "compañero" — literally, one you share bread with]
+[pause 8 seconds for the answer]
+[your turn — say: "panadería, panadero" — bakery, baker]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give "bread" with its article. (El pan.) What does compañero literally mean, and what's it built from? ("One you share bread with" — com- + pānis.) Does English keep this same double meaning? (No — English's companion only kept the friendship sense; Spanish still uses the same root for the actual bread, pan, too.)

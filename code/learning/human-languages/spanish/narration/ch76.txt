@@ -1,95 +1,81 @@
-Spanish, chapter 76: Water, Wine, and Bread.
-3 lessons. All 3 can be done entirely by ear.
+Spanish, chapter 76: Ojala --- a Prayer That Outlived Its Religion.
+2 lessons. All 2 can be done entirely by ear.
 
 
-Lesson 1 of 3.
-el agua — water, and an article that is not what it looks like.
-
-Warm-up.
-[pause 2 seconds]
-One of the least changed words in Spanish, carrying one of its most misunderstood rules. The "masculine" article on this feminine noun is not a mistake and not an exception to gender.
-
-The word, taken apart: agua.
-agua ("water") from Latin aqua — almost unchanged in two thousand years. Compare French, where the very same word was worn all the way down to a bare "eau," just the sound "oh." Same starting point, same span of time, wildly different amounts of erosion: how fast a language wears its words down is not fixed.
-English kept the whole Latin word too, but as a learned borrowing rather than an inherited everyday one: aquatic, aquarium, aqueduct, aqualung.
-
-Grammar Lens: el agua's article and gender.
-Notice: el agua, not la agua — yet agua is genuinely feminine. You can prove it: el agua fría, "the cold water," keeps the feminine adjective ending, and the plural is las aguas, never los aguas.
-The rule is phonological, not grammatical. Spanish swaps la for el directly before a singular feminine noun beginning with a stressed a-sound, to avoid running two identical vowels together (la agua). It is the same instinct that makes English pick "an apple" over "a apple."
-[a table of 3 rows, read aloud]
-the water. singular: el agua. plural: las aguas.
-the eagle. singular: el águila. plural: las águilas.
-the axe. singular: el hacha. plural: las hachas.
-Only the article changes. The noun's gender never moves.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "el agua" — water, feminine, but takes el]
-[pause 8 seconds for the answer]
-[your turn — say: the proof — "el agua fría" and "las aguas"]
-[pause 8 seconds for the answer]
-[your turn — say: the contrast — "agua" barely changed; French's "eau" wore all the way down]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Is agua masculine or feminine? (Feminine — el replaces la only because agua begins with a stressed a.) How would you prove it? (El agua fría; las aguas.) How does Spanish's erosion of aqua compare with French's? (Much less — Spanish kept nearly the whole word; French wore it to "eau.")
-
-
-Lesson 2 of 3.
-el vino — one word, three separate arrivals in English.
+Lesson 1 of 2.
+ojalá + subjunctive — a wish borrowed through Arabic.
 
 Warm-up.
 [pause 2 seconds]
-The second drink is grammatically boring — plain masculine, plain el vino, no stressed-a trick. Its history makes up for that.
+Ojalá hables español means “I hope you speak Spanish” or “May you speak Spanish.” Ojalá expresses the wish by itself. It needs neither a main verb nor que before the subjunctive. Keep the first frame tiny:
+Ojalá + subjunctive.
+That is a usable modern pattern. It does not make the Arabic source phrase new Spanish vocabulary.
 
-The word, taken apart: vino.
-vino ("wine") from Latin vīnum — which held its shape well, as French's vin did too.
-English shares the very same root by more than one road, and the roads are worth separating, because they show three different ways a word can travel:
-[a table of 3 rows, read aloud]
-English word: wine. how it got there: vīnum borrowed directly into old Germanic, very early.
-English word: vine, vinegar. how it got there: borrowed centuries later, secondhand via French (vin + aigre, "sour wine").
-English word: vineyard. how it got there: not borrowed at all — English built it at home from the already-borrowed wine plus native yard.
-So wine and vine are the same Latin word twice, arriving a thousand years apart by different routes, and vineyard is a homemade compound made out of the first arrival. One Latin noun; three English histories.
+The wish-word, taken apart.
+The Real Academia Española records ojalá from Hispanic Arabic wa šá lláh, “and God has willed.” Long contact in al-Andalus carried the expression into Spanish, where its sound and grammatical life changed. You met another Arabic-derived function word in hasta. The historical phrase explains a route; only modern ojalá is available for your Spanish sentences.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "el agua, el vino" — the two drinks]
-[pause 8 seconds for the answer]
-[your turn — say: "vino" then English "wine, vine, vinegar" — one root, three roads]
-[pause 8 seconds for the answer]
+Use only modern ojalá as the Spanish trigger.
+[question — say your answer, then pause 9 seconds]
+Say 'I hope you speak Spanish' to one friend using ojalá.
+[question — say your answer, then pause 5 seconds]
+Does the learned ojalá frame require que before hables? Answer yes or no.
+[question — say your answer, then pause 7 seconds]
+Through which historical language variety did Spanish receive ojalá?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Latin word gives vino? (Vīnum.) Name three English cousins and say how each arrived. (Wine — direct, early, into Germanic; vine/vinegar — later, via French; vineyard — built at home from wine plus yard.) And why is it el agua but las aguas? (The el is a sound rule for a stressed a, singular only.)
+What follows ojalá in the learned frame? (The subjunctive.) Does it need que? (No.) Which historical language variety carried the word into Spanish? (Hispanic Arabic.) Is the older Arabic phrase usable as new Spanish vocabulary here? (No.)
 
 
-Lesson 3 of 3.
-el pan — bread, and the friend who shares it.
+Lesson 2 of 2.
+Practice — assert the event or want it.
 
 Warm-up.
 [pause 2 seconds]
-Spanish's word for bread hides the same lovely word-story you'd find in English's "companion" — except Spanish kept both halves, the bread and the friendship.
+This checkpoint adds no vocabulary, plural person, object pronoun, or new clause frame. First decide whether the event is asserted or wanted. Then retrieve only the singular rows you learned.
 
-The word, taken apart: pan.
-el pan ("bread") from Latin pānis. Masculine: el pan.
+Grammar Lens: the bounded map.
+[a table of 6 rows, read aloud]
+verb: hablar. yo / él / ella / usted: hable. tú: hables.
+verb: comer. yo / él / ella / usted: coma. tú: comas.
+verb: vivir. yo / él / ella / usted: viva. tú: vivas.
+verb: querer. yo / él / ella / usted: quiera. tú: quieras.
+verb: poder. yo / él / ella / usted: pueda. tú: puedas.
+verb: hacer. yo / él / ella / usted: haga. tú: hagas.
+The repeated outer form is not a missing row: first- and third-person singular match. Every plural form waits.
 
-Why it's said this way: bread and friendship.
-The Latin root pān- ("bread") gives Spanish its own word for a close friend:
-compañero / compañera ("companion, friend, partner") from com- ("with").
-pānis — literally "one you share bread with." Spanish built this word from the very same recipe as English companion and company (which come from the identical Latin pieces) — but where English only kept the friendship sense, Spanish still visibly uses the same root for the actual bread (pan) too.
-panadería ("bakery") and panadero ("baker") — both transparently built on pan.
-So pan and compañero are the same word-family doing double duty in Spanish: name the food, and name the friend you'd share it with.
+Grammar Lens: two safe triggers.
+Same doer: Quiero hablar español.
+Different doer: Quiero que hables español.
+Wish by itself: Ojalá hables español.
+Do not extend these two frames to every emotion, doubt, command, or conjunction yet. More triggers belong in later micro-lessons.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "el pan" — bread]
-[pause 8 seconds for the answer]
-[your turn — say: "compañero" — literally, one you share bread with]
-[pause 8 seconds for the answer]
-[your turn — say: "panadería, panadero" — bakery, baker]
-[pause 8 seconds for the answer]
+Decide the meaning first; then retrieve only the learned form.
+[question — say your answer, then pause 5 seconds]
+Choose the wanted-event form: hablas or hables.
+[question — say your answer, then pause 11 seconds]
+Give the pair 'I want to speak Spanish; I want you to speak Spanish.'
+[question — say your answer, then pause 9 seconds]
+Give the tú subjunctive forms of hablar, comer, and vivir, in that order.
+[question — say your answer, then pause 6 seconds]
+Which present-person form supplies the stem in this chapter's recipe?
+[question — say your answer, then pause 9 seconds]
+Give the learned singular subjunctive row of querer.
+[question — say your answer, then pause 10 seconds]
+Say 'I want you to be able to speak Spanish' to one friend.
+[question — say your answer, then pause 9 seconds]
+Say 'I want you to make coffee' to one friend.
+[question — say your answer, then pause 9 seconds]
+Say 'I hope you live in Madrid' to one friend using ojalá.
+[question — say your answer, then pause 7 seconds]
+What does the Latin source subiūnctīvus help you picture?
+[question — say your answer, then pause 7 seconds]
+Name the historical language variety through which ojalá entered Spanish.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give "bread" with its article. (El pan.) What does compañero literally mean, and what's it built from? ("One you share bread with" — com- + pānis.) Does English keep this same double meaning? (No — English's companion only kept the friendship sense; Spanish still uses the same root for the actual bread, pan, too.)
+What is the first meaning choice? (Asserted event or wanted event.) Give the three regular tú forms. (Hables, comas, vivas.) Give the three bounded special tú forms. (Quieras, puedas, hagas.) Name the two safe triggers. (Quiero que for a different doer; ojalá for a wish.) What still waits? (Plural persons, additional irregular verbs, and additional subjunctive triggers.)

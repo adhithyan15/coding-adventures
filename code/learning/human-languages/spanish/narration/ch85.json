@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 85,
-  "title": "Pensar — Thinking Is Weighing",
+  "title": "The Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:80d81e5414fc5da2",
+  "sourceHash": "fnv1a64:cfcab9ed6ace8bf2",
   "lessons": [
     {
-      "id": "ES-C34-pensar",
-      "sequence": 1640,
-      "title": "pensar — \"to think\", and it started out meaning \"to weigh\"",
-      "headword": "pensar",
-      "romanization": "pensar",
-      "gloss": "to think — at root \"to weigh\", and a stem-changer that breaks e becomes ie",
+      "id": "ES-C27-los-meses",
+      "sequence": 1520,
+      "title": "los meses — the calendar's gods and Caesars",
+      "headword": "los meses",
+      "romanization": "los meses",
+      "gloss": "the months — Roman gods and emperors, marching almost unchanged from Latin",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ad2286d9bb36160",
+      "sourceHash": "fnv1a64:159ba5e830cdb853",
       "notice": null,
       "blocks": [
         {
@@ -35,102 +35,55 @@
             },
             {
               "kind": "speech",
-              "text": "You can already run an -ar verb: hablo, hablas, habla. Here is one that takes those same endings and then cracks its stem in the middle, the way querer did."
+              "text": "Spanish's twelve months are a procession of Roman gods and emperors, barely changed from Latin. Two things you already know pay off immediately: marzo is the war-god you met in martes, and septiembre–diciembre are the Latin numbers 7–10 from the counting chapters."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "etymology",
+          "title": "The months, taken apart",
           "segments": [
             {
-              "kind": "speech",
-              "text": "diphthong-ie — under stress the e breaks open: pienso = PYEN-so."
+              "kind": "table",
+              "headers": [
+                "Spanish",
+                "from Latin",
+                "who / what"
+              ],
+              "columns": 3,
+              "rowCount": 12,
+              "utterances": [
+                "Spanish: enero. from Latin: Iānuārius. who / what: Janus, the two-faced god of doors & beginnings.",
+                "Spanish: febrero. from Latin: Februārius. who / what: Februa, the Roman purification festival.",
+                "Spanish: marzo. from Latin: Martius. who / what: Mars, the war-god — the same Mars as martes (Tuesday)!",
+                "Spanish: abril. from Latin: Aprīlis. who / what: perhaps aperīre, \"to open\" (buds opening).",
+                "Spanish: mayo. from Latin: Māius. who / what: Maia, goddess of growth.",
+                "Spanish: junio. from Latin: Iūnius. who / what: Juno, queen of the gods.",
+                "Spanish: julio. from Latin: Iūlius. who / what: originally Quīntīlis, \"the 5th [month]\" — renamed for Julius Caesar after his death.",
+                "Spanish: agosto. from Latin: Augustus. who / what: originally Sextīlis, \"the 6th [month]\" — renamed for the emperor Augustus.",
+                "Spanish: septiembre. from Latin: september. who / what: \"7th\" (septem).",
+                "Spanish: octubre. from Latin: octōber. who / what: \"8th\" (octō).",
+                "Spanish: noviembre. from Latin: november. who / what: \"9th\" (novem).",
+                "Spanish: diciembre. from Latin: december. who / what: \"10th\" (decem)."
+              ]
             },
             {
               "kind": "speech",
-              "text": "The s is always a clear hissing s, never an English z buzz."
+              "text": "Two payoffs land at once:"
+            },
+            {
+              "kind": "speech",
+              "text": "marzo = Mars = martes. The month and the weekday honor the same war-god — Martius (his month) and Martis diēs (his day). Spot one, you know the other."
+            },
+            {
+              "kind": "speech",
+              "text": "The 7–10 months. Septiembre through diciembre still carry septem, octō, novem, decem — because the old Roman year originally began in March, with September genuinely the 7th month. Centuries before Caesar, two new months (Januarius, Februarius) were added at the front to cover the winter, which pushed every later month's number out of step with its name — September became the 9th month while still being named \"7th.\" Julius and Augustus had nothing to do with that shift: they simply got two already-existing months — Quintilis and Sextilis, literally \"5th\" and \"6th\" — renamed in their honor after the fact. The names stuck; the months themselves were never new."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: pensar",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "pensar (\"to think\") from Latin pēnsāre, \"to weigh\" — the repeating form of pendere, \"to hang, to weigh out\". A Roman hung goods on a balance; the same verb slid across to weighing an idea."
-            },
-            {
-              "kind": "speech",
-              "text": "English kept the whole family, and most of it still smells of money and scales:"
-            },
-            {
-              "kind": "speech",
-              "text": "pensive — turning something over on the balance."
-            },
-            {
-              "kind": "speech",
-              "text": "compensate — com- \"together\" + weigh: settle one weight against another."
-            },
-            {
-              "kind": "speech",
-              "text": "expense, dispense, pension — payments were literally weighed out."
-            },
-            {
-              "kind": "speech",
-              "text": "peso — a coin whose name simply means \"a weight\"."
-            },
-            {
-              "kind": "speech",
-              "text": "pansy — from French pensée, \"a thought\"."
-            },
-            {
-              "kind": "speech",
-              "text": "English reaches for the same picture without noticing it: you weigh your options, and an argument carries weight."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the same endings, a broken stem",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The endings are the ordinary -ar set. Only the stressed e changes:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form",
-                "stem"
-              ],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "person: yo. form: pienso. stem: broken.",
-                "person: tú. form: piensas. stem: broken.",
-                "person: él/ella/usted. form: piensa. stem: broken.",
-                "person: nosotros. form: pensamos. stem: plain.",
-                "person: ellos/ustedes. form: piensan. stem: broken."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Pensamos keeps the plain e because there the stress lands on the ending, not the stem — exactly the rule querer taught you."
-            },
-            {
-              "kind": "speech",
-              "text": "Two small habits come with the verb: pensar en something means \"think about\" it (pienso en ti), and pensar followed by a bare infinitive means \"plan to\" (pienso hablar — I mean to speak)."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -143,34 +96,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pensar\" then the set — \"pienso, piensas, piensa, pensamos, piensan\"",
+              "instruction": "the twelve — \"enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pensar\" then the set — \"pienso, piensas, piensa, pensamos, piensan\"]"
+              "source": "[YOU SAY: the twelve — \"enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Pienso en ti\" — I am thinking of you",
+              "instruction": "the tie-back — \"marzo / martes — both Mars, the war-god\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Pienso en ti\" — I am thinking of you]"
+              "source": "[YOU SAY: the tie-back — \"marzo / martes — both Mars, the war-god\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pensar\" then English \"pensive, compensate, peso\" — the weighing family",
+              "instruction": "\"septiembre = 7, diciembre = 10\" — the old March-start year",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pensar\" then English \"pensive, compensate, peso\" — the weighing family]"
+              "source": "[YOU SAY: \"septiembre = 7, diciembre = 10\" — the old March-start year]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -182,7 +135,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did pēnsāre mean literally, and name two English cousins. (To weigh; pensive, compensate, expense, peso.) Which form keeps the plain e, and why? (Pensamos — the stress falls on the ending.) Which little word follows pensar for \"think about\"? (En.) Next: entender, which cracks the same way."
+              "text": "Which god links marzo and martes? (Mars, the war-god — his month and his day.) Why is diciembre Latin for \"ten\"? (The Roman year began in March, and adding January/February at the front later pushed every month's number out of step with its name.) Did Julius Caesar and Augustus add new months to the calendar? (No — julio and agosto were already-existing months, Quintilis and Sextilis (\"5th\"/\"6th\"), simply renamed in their honor.)"
             }
           ]
         }

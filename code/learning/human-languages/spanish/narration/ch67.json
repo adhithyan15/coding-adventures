@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 67,
-  "title": "The Subjunctive Built From the Yo Form",
+  "title": "The Only Three Irregulars",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:7d5965144e5c91df",
+  "sourceHash": "fnv1a64:829e7c848194bde1",
   "lessons": [
     {
-      "id": "ES-C18-querer-subjuntivo",
-      "sequence": 1226,
-      "title": "quiera, quieras, quiera — keep the change you know",
-      "headword": "quiera · quieras · quiera",
-      "romanization": "quiera · quieras · quiera",
-      "gloss": "the singular present subjunctive of querer",
+      "id": "ES-C16-ser-imperfecto",
+      "sequence": 1176,
+      "title": "era — an old root in an open past",
+      "headword": "era",
+      "romanization": "era",
+      "gloss": "the singular imperfect of ser — era, eras, era",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15d05e98f3cdc675",
+      "sourceHash": "fnv1a64:1c7b66f1e55d5352",
       "notice": null,
       "blocks": [
         {
@@ -35,41 +35,48 @@
             },
             {
               "kind": "speech",
-              "text": "Present quiero already carries the stressed e becomes ie change. Remove -o to get quier-, then add the -er/-ir subjunctive endings:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "present subjunctive"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. present subjunctive: quiera.",
-                "person: tú. present subjunctive: quieras.",
-                "person: él / ella / usted. present subjunctive: quiera."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Say only this bounded singular row: quiera, quieras, quiera."
+              "text": "You know present soy, eres, es and completed-past fui, fuiste, fue. The open or background past of ser uses a different short stem: era."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: one known verb, one inherited stem",
+          "title": "Grammar Lens: the singular ser row",
           "segments": [
             {
+              "kind": "table",
+              "headers": [
+                "person",
+                "open or background past"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. open or background past: era.",
+                "person: tú. open or background past: eras.",
+                "person: él / ella / usted. open or background past: era."
+              ]
+            },
+            {
               "kind": "speech",
-              "text": "You are not learning a new list of stem-changing verbs. You are carrying one known change into one known row. Quiero que quieras hablar español means “I want you to want to speak Spanish.” The sentence is deliberately narrow: no new person noun, object, or plural form."
+              "text": "Say era, eras, era. The first and third forms match, just as they did in the regular imperfect rows. ¿Era usted? asks “Was it you?” without adding a new noun. Plural persons wait."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The root, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Era continues Latin eram, an old form in the esse family. That is the family already connected to Spanish ser and English essence. The preterite fue comes from another historical set, so era / fue is a real contrast inside one modern verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -80,72 +87,93 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Carry only the known quier- stem into this row."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“era, eras, era”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “era, eras, era”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“¿Era usted?”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “¿Era usted?”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“era comes from Latin eram”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “era comes from Latin eram”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C18-querer-subjuntivo-forms",
-              "prompt": "Give the learned singular subjunctive forms of querer: yo, tú, then él/ella/usted.",
+              "id": "ES-C16-ser-imperfecto-singular-forms",
+              "prompt": "Give the learned singular imperfect forms of ser: yo, tú, then él/ella/usted.",
               "assesses": [
-                "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
-                "ES-LEX-QUERER"
+                "ES-LEX-SER",
+                "ES-GRAMMAR-SER-IMPERFECT-SINGULAR"
               ],
-              "responseSeconds": 9,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "quiera, quieras, quiera",
-                "quiera quieras quiera",
-                "quiera / quieras / quiera"
+                "era, eras, era",
+                "era eras era",
+                "era / eras / era"
               ],
               "feedback": {
-                "correct": "Right: quiera, quieras, quiera.",
-                "incorrect": "Keep quier- and add -a, -as, -a."
+                "correct": "Right: era, eras, era.",
+                "incorrect": "Retrieve the short row era, eras, era."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C18-querer-subjuntivo-stem",
-              "prompt": "Which known present yo form gives the stem quier-?",
+              "id": "ES-C16-ser-imperfecto-era-fue",
+              "prompt": "Which ser form presents a background past: era or fue?",
               "assesses": [
-                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
-                "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP"
-              ],
-              "responseSeconds": 6,
-              "acceptedResponses": [
-                "quiero"
-              ],
-              "feedback": {
-                "correct": "Right: remove -o from quiero.",
-                "incorrect": "Start from the learned yo form quiero."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-querer-subjuntivo-wanted",
-              "prompt": "Complete 'Quiero que ___ hablar español' for one friend.",
-              "assesses": [
-                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
-                "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
-                "ES-LEX-HABLAR",
-                "ES-LEX-ESPANOL"
+                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR",
+                "ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL",
+                "ES-GRAMMAR-SER-IMPERFECT-SINGULAR"
               ],
               "responseSeconds": 7,
               "acceptedResponses": [
-                "quieras"
+                "era"
               ],
               "feedback": {
-                "correct": "Right: Quiero que quieras hablar español.",
-                "incorrect": "Use the tú subjunctive of querer: quieras."
+                "correct": "Right: era supplies the background or open past.",
+                "incorrect": "Fue presents a bounded event; era supplies background."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-ser-imperfecto-history",
+              "prompt": "Which Latin form stands directly behind Spanish era: eram or ībam?",
+              "assesses": [
+                "ES-ETYMON-ERA",
+                "ES-ETYMON-ESSE-SEDERE"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "eram"
+              ],
+              "feedback": {
+                "correct": "Right: Spanish era continues Latin eram.",
+                "incorrect": "Eram belongs to the esse family; ībam stands behind iba."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -157,26 +185,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three forms. (Quiera, quieras, quiera.) Which old change stays visible? (e becomes ie.) Where did the stem come from? (Known quiero, minus -o.)"
+              "text": "Give the three learned ser forms. (Era, eras, era.) Which past form supplies background, era or fue? (Era.) Which Latin form stands behind it? (Eram.) Next: follow ir back toward its own older verb."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C18-poder-subjuntivo",
-      "sequence": 1230,
-      "title": "pueda, puedas, pueda — one more known stem change",
-      "headword": "pueda · puedas · pueda",
-      "romanization": "pueda · puedas · pueda",
-      "gloss": "the singular present subjunctive of poder",
+      "id": "ES-C16-ir-imperfecto",
+      "sequence": 1180,
+      "title": "iba — ir returns to its inherited past",
+      "headword": "iba",
+      "romanization": "iba",
+      "gloss": "the singular imperfect of ir — iba, ibas, iba",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2502330acb613da9",
+      "sourceHash": "fnv1a64:3492b61cabebe406",
       "notice": null,
       "blocks": [
         {
@@ -192,41 +220,48 @@
             },
             {
               "kind": "speech",
-              "text": "Present puedo already carries o becomes ue. Remove -o to get pued-, then add the same a row:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "present subjunctive"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. present subjunctive: pueda.",
-                "person: tú. present subjunctive: puedas.",
-                "person: él / ella / usted. present subjunctive: pueda."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Say pueda, puedas, pueda. No other poder forms enter today."
+              "text": "Present voy and completed-past fui came from different historical sets. For an open or habitual past, ir gives you iba — “I was going” or “I used to go.”"
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: use it immediately",
+          "title": "Grammar Lens: the singular ir row",
           "segments": [
             {
+              "kind": "table",
+              "headers": [
+                "person",
+                "open or habitual past"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. open or habitual past: iba.",
+                "person: tú. open or habitual past: ibas.",
+                "person: él / ella / usted. open or habitual past: iba."
+              ]
+            },
+            {
               "kind": "speech",
-              "text": "Quiero que puedas hablar español means “I want you to be able to speak Spanish.” Every word was already known except the single form puedas. This is the gentle pattern: learn one row, then spend it in the next sentence."
+              "text": "Say iba, ibas, iba. Reuse the destination frame: Iba a Madrid — “I was going to Madrid” or “I used to go to Madrid.” Plural persons wait."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Iba continues Latin ībam, from īre, the inherited verb behind the Spanish infinitive ir. Present voy contains material associated with vādere, while preterite fui comes from the Latin “be” perfect family. These sources help explain the three learned sets; they do not mean that every form in every tense can be assigned to one source by a three-box rule."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -237,73 +272,95 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Carry only the known pued- stem into this row."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“iba, ibas, iba”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “iba, ibas, iba”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Fui a Madrid. Iba a Madrid.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Fui a Madrid. Iba a Madrid.”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“iba continues ībam from īre”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “iba continues ībam from īre”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C18-poder-subjuntivo-forms",
-              "prompt": "Give the learned singular subjunctive forms of poder: yo, tú, then él/ella/usted.",
+              "id": "ES-C16-ir-imperfecto-singular-forms",
+              "prompt": "Give the learned singular imperfect forms of ir: yo, tú, then él/ella/usted.",
               "assesses": [
-                "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
-                "ES-LEX-PODER"
+                "ES-LEX-IR",
+                "ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR"
               ],
-              "responseSeconds": 9,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "pueda, puedas, pueda",
-                "pueda puedas pueda",
-                "pueda / puedas / pueda"
+                "iba, ibas, iba",
+                "iba ibas iba",
+                "iba / ibas / iba"
               ],
               "feedback": {
-                "correct": "Right: pueda, puedas, pueda.",
-                "incorrect": "Keep pued- and add -a, -as, -a."
+                "correct": "Right: iba, ibas, iba.",
+                "incorrect": "Retrieve the short row iba, ibas, iba."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C18-poder-subjuntivo-stem",
-              "prompt": "Which known present yo form gives the stem pued-?",
+              "id": "ES-C16-ir-imperfecto-iba-madrid",
+              "prompt": "Say 'I was going to Madrid' in Spanish.",
               "assesses": [
-                "ES-GRAMMAR-PODER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
-                "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP"
+                "ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR",
+                "ES-LEX-IR",
+                "ES-LEX-A"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "iba a madrid.",
+                "iba a madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Iba a Madrid.",
+                "incorrect": "Use imperfect iba, then known a Madrid."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-ir-imperfecto-history",
+              "prompt": "Which inherited Latin verb stands behind iba: īre or vidēre?",
+              "assesses": [
+                "ES-ETYMON-IBA",
+                "ES-ETYMON-IRE-VADERE"
               ],
               "responseSeconds": 6,
               "acceptedResponses": [
-                "puedo"
+                "īre",
+                "ire"
               ],
               "feedback": {
-                "correct": "Right: remove -o from puedo.",
-                "incorrect": "Start from the learned yo form puedo."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-poder-subjuntivo-wanted",
-              "prompt": "Say 'I want you to be able to speak Spanish' to one friend.",
-              "assesses": [
-                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
-                "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
-                "ES-LEX-HABLAR",
-                "ES-LEX-ESPANOL"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "quiero que puedas hablar español.",
-                "quiero que puedas hablar español"
-              ],
-              "feedback": {
-                "correct": "Right: Quiero que puedas hablar español.",
-                "incorrect": "Use quiero que plus puedas, then known hablar español."
+                "correct": "Right: iba continues ībam from īre.",
+                "incorrect": "Choose the motion verb īre; vidēre means 'see'."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -315,26 +372,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three forms. (Pueda, puedas, pueda.) Which old change stays visible? (o becomes ue.) Which form addresses one friend after quiero que? (Puedas.)"
+              "text": "Give the three learned forms. (Iba, ibas, iba.) Say “I was going to Madrid.” (Iba a Madrid.) Which Latin form stands behind iba? (Ībam, from īre.) Next: put newly learned ver into the same past."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C18-hacer-subjuntivo",
-      "sequence": 1234,
-      "title": "haga, hagas, haga — hago lends its stem",
-      "headword": "haga · hagas · haga",
-      "romanization": "haga · hagas · haga",
-      "gloss": "the singular present subjunctive of hacer",
+      "id": "ES-C16-ver-imperfecto",
+      "sequence": 1184,
+      "title": "veía — keep the extra e you already met",
+      "headword": "veía",
+      "romanization": "veía",
+      "gloss": "the singular imperfect of ver — veía, veías, veía",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76f90df0feacefe3",
+      "sourceHash": "fnv1a64:c6e907fd1c40fb37",
       "notice": null,
       "blocks": [
         {
@@ -350,41 +407,48 @@
             },
             {
               "kind": "speech",
-              "text": "The known present yo form is hago. Remove -o and keep hag-:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "present subjunctive"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. present subjunctive: haga.",
-                "person: tú. present subjunctive: hagas.",
-                "person: él / ella / usted. present subjunctive: haga."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Say haga, hagas, haga. Only hacer enters this lesson; other special stems wait for later chapters."
+              "text": "You learned ver before its past: veo, ves, ve. Its imperfect keeps ve- and adds the familiar -ía row. That gives veía — “I was seeing” or “I used to see.”"
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: spend the new form",
+          "title": "Grammar Lens: the singular ver row",
           "segments": [
             {
+              "kind": "table",
+              "headers": [
+                "person",
+                "open or habitual past"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. open or habitual past: veía.",
+                "person: tú. open or habitual past: veías.",
+                "person: él / ella / usted. open or habitual past: veía."
+              ]
+            },
+            {
               "kind": "speech",
-              "text": "Haces café can assert “you make coffee.” Quiero que hagas café says “I want you to make coffee.” The g is not a fresh exception: it was already in hago, the present form that supplied the stem."
+              "text": "Say veía, veías, veía. Keep í-a in separate syllables. Plural persons wait."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The extra e, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Old Spanish veer displays the ve- shape clearly. The imperfect veía preserves that vowel before the familiar -ía material. It is useful to call this an exceptional learned row, but not to pretend that ver was already known before this chapter or that the history is merely “regular plus one letter.”"
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,73 +459,93 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Carry only the known hag- stem into this row."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“veía, veías, veía”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “veía, veías, veía”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Veo café. Veía café.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Veo café. Veía café.”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“veer helps explain ve-”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “veer helps explain ve-”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C18-hacer-subjuntivo-forms",
-              "prompt": "Give the learned singular subjunctive forms of hacer: yo, tú, then él/ella/usted.",
+              "id": "ES-C16-ver-imperfecto-singular-forms",
+              "prompt": "Give the learned singular imperfect forms of ver: yo, tú, then él/ella/usted.",
               "assesses": [
-                "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR",
-                "ES-LEX-HACER"
+                "ES-LEX-VER",
+                "ES-GRAMMAR-VER-IMPERFECT-SINGULAR"
               ],
-              "responseSeconds": 9,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "haga, hagas, haga",
-                "haga hagas haga",
-                "haga / hagas / haga"
+                "veía, veías, veía",
+                "veía veías veía",
+                "veía / veías / veía"
               ],
               "feedback": {
-                "correct": "Right: haga, hagas, haga.",
-                "incorrect": "Keep hag- from hago and add -a, -as, -a."
+                "correct": "Right: veía, veías, veía.",
+                "incorrect": "Keep ve- and retrieve -ía, -ías, -ía."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C18-hacer-subjuntivo-stem",
-              "prompt": "Which known present yo form gives the stem hag-?",
+              "id": "ES-C16-ver-imperfecto-veo-veia",
+              "prompt": "Which sentence means 'I was seeing coffee': Veo café or Veía café?",
               "assesses": [
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR",
-                "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP"
-              ],
-              "responseSeconds": 6,
-              "acceptedResponses": [
-                "hago"
-              ],
-              "feedback": {
-                "correct": "Right: remove -o from hago.",
-                "incorrect": "The stem comes from the learned yo form hago."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-hacer-subjuntivo-wanted",
-              "prompt": "Say 'I want you to make coffee' to one friend.",
-              "assesses": [
-                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
-                "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR",
+                "ES-GRAMMAR-VER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-VER-IMPERFECT-SINGULAR",
                 "ES-LEX-CAFE"
               ],
-              "responseSeconds": 9,
+              "responseSeconds": 7,
               "acceptedResponses": [
-                "quiero que hagas café.",
-                "quiero que hagas café",
-                "quiero que hagas cafe"
+                "veía café."
               ],
               "feedback": {
-                "correct": "Right: Quiero que hagas café.",
-                "incorrect": "Use quiero que plus hagas, then known café."
+                "correct": "Right: Veía café uses the open past.",
+                "incorrect": "Veo is present; veía is the imperfect."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-ver-imperfecto-extra-e",
+              "prompt": "Which earlier Spanish form makes the extra e of veía easier to see: veer or ir?",
+              "assesses": [
+                "ES-ETYMON-VER-VIDERE",
+                "ES-GRAMMAR-VER-IMPERFECT-SINGULAR"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "veer"
+              ],
+              "feedback": {
+                "correct": "Right: Old Spanish veer displays the ve- shape.",
+                "incorrect": "Choose veer, the earlier form in the vidēre family."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -473,7 +557,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three forms. (Haga, hagas, haga.) Where does hag- come from? (Known hago, minus -o.) Say the wanted event. (Quiero que hagas café.)"
+              "text": "Give the three learned forms. (Veía, veías, veía.) Which vowel stays before -ía? (e.) Which earlier form displays it? (Veer.) Next: retrieve every row of this chapter and make a few bounded contrasts."
             }
           ]
         }

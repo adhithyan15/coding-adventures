@@ -1,41 +1,50 @@
-Spanish, chapter 103: Conocer --- Coming to Know.
+Spanish, chapter 103: Gustar — the Verb Built the Other Way Round.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-conocer — "to meet", because knowing has a first moment.
+gustar — the verb that runs backwards.
 
 Warm-up.
 [pause 2 seconds]
-Juego — the one u becomes ue in the language. Now the chapter's last verb, and its oddity is not in the vowel but in what the word means.
+Back in the introductions you learned mucho gusto — "much pleasure". Here is the verb that noun belongs to, assembled the opposite way round from English. It is the single thing in Spanish that trips English speakers up hardest.
 
 Sounds you'll need.
-soft-c — conoces has a soft second c: a th in Spain, an s elsewhere.
-k-hard — but conozco is ko-NOTH-ko, soft then hard, back to back.
+g-hard — a hard g before u: goos-TAR.
+s-clear — a clean hissing s, never a z buzz.
 
-The word, taken apart: conocer.
-conocer from Latin cognōscere, com- + (g)nōscere. Its -sc- is Latin's "begin to" marker, so nōscere was never "to know" — it was "to come to know". Latin said nōvī, "I have come to know", for actually knowing a thing.
-Spanish built its verb from the beginning half. That is the whole lesson: conocer a alguien is to meet someone, and Spanish puts a small a before a person who is the object — conozco a María.
-The root fills English: cognition, recognize, incognito, and through French notice, notion, notorious and noble, "the knowable one". English know and ken are its Germanic siblings — the same standing that padre has beside English father, neither one borrowed from the other.
+The word, taken apart: gustar.
+gustar from Latin gustāre, "to taste". English kept the root and stayed close to the tongue:
+gusto — doing something with relish, that is, with a taste for it.
+gustatory — of the sense of taste.
+disgust — dis- "away" + taste: what you spit back out.
+degustation, a tasting menu; and through French, ragout.
+Spanish's own el gusto — the gusto of mucho gusto — still holds both senses: taste on the tongue, and pleasure taken in a thing. The verb followed the second: gustar means "to please".
 
-Grammar Lens: conocer and saber.
-[a table of 2 rows, read aloud]
-what you know: a person, a city, a book. verb: conocer.
-what you know: a fact, or how to do something. verb: saber.
-English says know for both. Spanish will not: conocer is being acquainted — you have met the thing. Saber is having the information. Conozco Madrid means I have been there; sé dónde está means I have the fact.
-The yo-form keeps a hard cluster the rest lost: conozco, conoces, conoce, conocemos, conocen. Every -cer verb after a vowel does the same, and it is a third kind of odd yo-form beside traigo and oigo.
+Grammar Lens: the thing you like is the subject.
+English says I like the book: the liker is the subject. Spanish has no such sentence. It says Me gusta el libro — "the book is pleasing to me".
+Everything follows from that:
+el libro is the subject, which is why the verb is gusta, third person.
+me is the person it happens to, not the one doing anything.
+So the verb agrees with the thing, never with you:
+[a table of 3 rows, read aloud]
+what you mean: I like the book. Spanish: Me gusta el libro. why: one book, so gusta.
+what you mean: I like books. Spanish: Me gustan los libros. why: many books, so gustan.
+what you mean: I like reading. Spanish: Me gusta leer. why: one action, so gusta.
+To change who is pleased, change the little word in front, not the verb: me (to me), te (to you), le (to him, her, usted), nos (to us), les (to them).
+Careful. There is no yo gusto el libro. Yo gusto is a real sentence — it means "I am pleasing" — just not the one you were reaching for.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "conozco, conoces, conoce, conocemos, conocen"]
+[your turn — say: "Me gusta el café" then "Me gustan los libros" — the verb follows the thing]
 [pause 8 seconds for the answer]
-[your turn — say: "Conozco a María" then "Conozco Madrid"]
+[your turn — say: "Te gusta tomar café" — you like drinking coffee]
 [pause 8 seconds for the answer]
-[your turn — say: "traigo, consigo, juego, conozco" — the chapter's four yo-forms]
+[your turn — say: "Me gusta ayudar" — I like helping]
 [pause 8 seconds for the answer]
-[your turn — say: "padre, father" then "conocer, know" — siblings, not borrowings]
+[your turn — say: "gustar" then English "gusto, disgust, gustatory" — the tasting family]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say the chapter's four verbs in the yo, then say what each one does to itself. (Traigo grows a hard g; consigo breaks e becomes i and loses a silent u; juego breaks u becomes ue, alone in the language; conozco keeps a hard cluster.) Name their four Latin roots and what each meant. (Trahere to drag, cōnsequī to follow, iocārī to joke, cognōscere to begin to know.) Which verb do you use for a person, and which for a fact? (Conocer; saber.) And which of the four moves a thing toward you? (Traer — llevar goes away.)
+In me gusta el libro, what is the subject? (El libro.) Why is it me gustan los libros? (The verb agrees with los libros, which is plural.) What did gustāre mean, and name an English cousin. (To taste; gusto, disgust.) And what would yo gusto actually mean? (I am pleasing.)
