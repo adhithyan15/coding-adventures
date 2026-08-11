@@ -5179,6 +5179,12 @@ impl HtmlParser {
             && name != "col"
             && name != "template"
         {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-start-tag-in-template-column-group",
+                format!(
+                    "start tag `<{name}>` was ignored at a template column-group boundary"
+                ),
+            ));
             return;
         }
 
@@ -34205,6 +34211,43 @@ mod tests {
                     .parser_diagnostics
                     .iter()
                     .all(|diagnostic| diagnostic.code != "mismatched-template-end-tag"),
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+        }
+    }
+
+    #[test]
+    fn reports_start_tags_rejected_at_a_template_column_group_boundary() {
+        for name in ["div", "colgroup"] {
+            let source = format!("<!doctype html><template><col><{name}></template>");
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "unexpected-start-tag-in-template-column-group",
+                    format!(
+                        "start tag `<{name}>` was ignored at a template column-group boundary"
+                    ),
+                )],
+                "source {source:?}"
+            );
+
+            let control = parse_html("<!doctype html><template><col></template>").unwrap();
+            assert_eq!(output.document, control);
+        }
+
+        for source in [
+            "<!doctype html><template><col><col></template>",
+            "<!doctype html><template><col><template></template></template>",
+            "<!doctype html><div><col><div></div>",
+            "<!doctype html><table><colgroup><col><div></div></table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-start-tag-in-template-column-group"
+                }),
                 "source {source:?}: {:?}",
                 output.parser_diagnostics
             );
