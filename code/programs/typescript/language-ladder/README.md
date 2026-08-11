@@ -172,9 +172,9 @@ sitting upside down on a correct letter.
 **All eleven starter Tamil letters — அ, ஆ, இ, க, ம, வ, ல, ற, ன, ண, and ந —,
 all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —, all
 thirteen Urdu starter entries — ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, ی, and ے —,
-and all eighteen Arabic starter letters — ا, ب, ت, ج, ح, خ, د, ر, س, ش, ص, ض, ع, ك, ل, ه, و, and ي —
-and all twenty-two Hebrew starter letters א, ב, ג, ד, ה, ו, ז, ח, ט, י, כ, ל,
-מ, נ, ס, ע, פ, צ, ק, ר, ש, and ת
+all eighteen Arabic starter letters — ا, ب, ت, ج, ح, خ, د, ر, س, ش, ص, ض, ع, ك, ل, ه, و, and ي —,
+all twenty-two Hebrew starter letters א, ב, ג, ד, ה, ו, ז, ח, ט, י, כ, ל,
+מ, נ, ס, ע, פ, צ, ק, ר, ש, and ת, and Chinese 人
 have authored pen paths today.**
 `DUCTUS` admits no letter without a citation
 for its stroke order, and hand-drawing a letter is forbidden
@@ -467,6 +467,10 @@ Its printed **ת** demonstration adds a four-frame filmstrip: the top bar travel
 left-to-right and continues down the right side, then one lift precedes the
 separate left leg and its small leftward foot. The adjacent purple cursive Tav
 retraces its left stem and arches into the right side in one continuous run.
+Hanzi Writer Data then opens Chinese with a two-frame **人** filmstrip: its
+pinned, Make Me a Hanzi-derived PRC record orders the left-falling stroke before
+the separately started right-falling stroke. The learner path fits those two
+source medians to Noto Sans SC without changing their direction or one lift.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

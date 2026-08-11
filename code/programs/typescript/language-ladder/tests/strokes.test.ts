@@ -24,6 +24,7 @@ const load = (name: string) => {
   return b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength) as ArrayBuffer;
 };
 const tamil = () => parseFont(load("NotoSansTamil-Static.ttf"));
+const CHINESE_REN = DUCTUS[ductusKey("chinese", "人")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -237,6 +238,19 @@ describe("handwriting ductus", () => {
   it("ம is written without lifting the pen (one stroke)", () => {
     expect(penLifts(DUCTUS["ம"])).toBe(0);
     expect(DUCTUS["ம"].strokes).toHaveLength(1);
+  });
+
+  it("Chinese 人 draws the left-falling stroke before the lifted right-falling stroke", () => {
+    expect(CHINESE_REN.script).toBe("chinese");
+    expect(penLifts(CHINESE_REN)).toBe(1);
+    expect(CHINESE_REN.strokes).toHaveLength(2);
+    expect(CHINESE_REN.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1]);
+    const left = CHINESE_REN.strokes[0].segments[0].path;
+    const right = CHINESE_REN.strokes[1].segments[0].path;
+    expect(left[0].y).toBeGreaterThan(left.at(-1)!.y);
+    expect(left[0].x).toBeGreaterThan(left.at(-1)!.x);
+    expect(right[0].y).toBeGreaterThan(right.at(-1)!.y);
+    expect(right[0].x).toBeLessThan(right.at(-1)!.x);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -1152,6 +1166,9 @@ describe("handwriting ductus", () => {
   });
 
   it("routes each verified ductus to the owning script font", () => {
+    expect(verifiedLetterFont("人", CHINESE_REN.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -1255,6 +1272,19 @@ describe("handwriting ductus", () => {
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
     expect(verifiedLetterFont("و", "https://example.invalid/wrong-source")).toBeUndefined();
+  });
+
+  it("Chinese 人 traces its two medians to the pinned PRC-order dataset", () => {
+    const src = CHINESE_REN.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E4%BA%BA.json",
+    );
+    expect(src.citation).toMatch(
+      /Hanzi Writer Data 人\.json.*ordered stroke paths and medians 1–2.*snapshot 68d10a4.*updated from Make Me a Hanzi.*22 June 2019/i,
+    );
+    expect(src.variation).toMatch(
+      /PRC-order dataset.*two ordered strokes.*Median 1.*upper centre.*descends down-left.*median 2.*central junction.*descends down-right.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*one intervening pen lift.*Arphic-derived source graphics/i,
+    );
   });
 
   it("Hebrew א traces its two-run order to the dedicated HebrewPod101 lesson", () => {
