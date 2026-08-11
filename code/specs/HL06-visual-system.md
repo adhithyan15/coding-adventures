@@ -223,6 +223,34 @@ track that has a baseline but whose `book.log` has vanished *does* fail, because
 otherwise deleting a file would quietly switch that track's gate off. The full scan is
 also published beside the books as `latex-warnings.json`.
 
+### Building locally, before the push (HL-C109)
+
+The gate above is the right backstop and the wrong place to *discover* a broken page.
+By the time CI reports an overfull box the change is already pushed, and the defect it
+found may have been on `main` for weeks.
+
+A typesetting defect is invisible to every other gate in this repo. When the table of
+contents began overflowing its chapter-number box — `book.cls` reserves `1.5em`, and a
+three-digit bold chapter number needs more — the lesson suites, the drift checks, the
+book-hash pins and the bundle ceiling all stayed green, on 21 broken lines. None of
+them renders a page. **Only a real XeLaTeX run can see this class of bug.**
+
+So `code/scripts/build-books-locally.sh` builds any or all books exactly as CI does
+(SVG figures converted with `rsvg-convert` first), and exits non-zero on any overfull
+box, underfull box, or missing glyph. **Run it before pushing anything that touches a
+lesson, a book target, or a preamble.**
+
+The script also carries the one-time macOS setup, because the failure mode there is
+silent rather than loud: a Homebrew TeX Live does not register its OpenType fonts with
+the system font database, and XeLaTeX resolves `\setmainfont{Latin Modern Roman}` by
+*name*. Unregistered, every font falls back to `nullfont` and the log fills with half a
+million `Missing character` lines while still producing a PDF-shaped file.
+
+One rule governs every fix made in response to this script: **change how the page is
+typeset, never how it is reported.** `\tolerance` and `\emergencystretch` change how a
+paragraph is broken and are fair game; `\hbadness` and `\hfuzz` change only what TeX
+prints, and raising them would leave the CI scanner reading a muted log.
+
 ## Acceptance criteria
 
 The visual system is complete when every non-Latin track prints a stroke-order figure

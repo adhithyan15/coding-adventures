@@ -36,7 +36,7 @@
 \usepackage{array}
 \setlength{\tabcolsep}{5pt}
 \usepackage[hidelinks]{hyperref}
-\usepackage{titlesec}
+\usepackage[raggedright]{titlesec}
 \input{../../_shared/visual.tex}
 
 \usepackage{polyglossia}
@@ -119,10 +119,84 @@
 }
 
 \titleformat{\chapter}[display]
-  {\normalfont\Large\bfseries}{Chapter \thechapter}{10pt}{\huge}
+  {\normalfont\Large\bfseries}{Chapter \thechapter}{10pt}{\huge\raggedright}
 
 % Chapter opening (HL09 §8): what the reader will be able to do by the end.
 % Generated from the HL05 capability ledger, never hand-written.
 \newenvironment{chapteropening}%
-  {\begin{quote}\itshape\small}%
+  {\begin{quote}\itshape\small\raggedright}%
   {\end{quote}\par\medskip}
+
+% ---------------------------------------------------------------------------
+% Table-of-contents number width (HL-C109).
+%
+% `book.cls` reserves 1.5em for a chapter number in the table of contents:
+%
+%     \newcommand*\l@chapter[2]{... \setlength\@tempdima{1.5em} ...}
+%
+% That is enough for two digits and not for three. At 10.95pt bold, "100" is
+% 2.46pt wider than the box, so the number runs into its own title and TeX
+% reports an overfull \hbox for every such line. A track notices nothing until
+% it crosses a hundred chapters -- and then the bug arrives all at once, one
+% line per chapter, which is exactly how it surfaced here.
+%
+% Below is `book.cls`'s own \l@chapter with a single number changed: 1.5em
+% becomes 2.8em, which holds four bold digits with room to spare. A course that
+% reached 100 chapters can reach 1000, and the fix should not need revisiting
+% then. The section and subsection indents move by the same amount so the
+% columns still line up under the widened chapter number.
+\makeatletter
+\renewcommand*\l@chapter[2]{%
+  \ifnum \c@tocdepth >\m@ne
+    \addpenalty{-\@highpenalty}%
+    \vskip 1.0em \@plus\p@
+    \setlength\@tempdima{2.8em}%
+    \begingroup
+      \parindent \z@ \rightskip \@pnumwidth
+      \parfillskip -\@pnumwidth
+      \leavevmode \bfseries
+      \advance\leftskip\@tempdima
+      \hskip -\leftskip
+      #1\nobreak\hfil
+      \nobreak\hb@xt@\@pnumwidth{\hss #2%
+                                 \kern-\p@\kern\p@}\par
+      \penalty\@highpenalty
+    \endgroup
+  \fi}
+\renewcommand*\l@section{\@dottedtocline{1}{2.8em}{3.2em}}
+\renewcommand*\l@subsection{\@dottedtocline{2}{6.0em}{4.1em}}
+\makeatother
+
+% ---------------------------------------------------------------------------
+% Line-breaking tolerance (HL-C109).
+%
+% These books mix ordinary prose with tokens TeX cannot break: lesson ids
+% (ES-C14-practice), slash-separated form lists (fui/fuiste/fue), and Latin
+% etymons carrying macrons that a modern language's hyphenation patterns will
+% not touch. Inside a narrow measure -- a quote block or a list item -- one such
+% token forces the previous line to stretch, and TeX reports an underfull hbox.
+%
+% \tolerance and \emergencystretch change how a paragraph is BROKEN, not how it
+% is reported: TeX may accept a looser line early enough to find a break
+% sequence that avoids a very loose one, and gets a final pass with extra
+% stretchability instead of an overfull line. \hbadness and \hfuzz are
+% deliberately left at their defaults -- raising those would silence the
+% warnings rather than fix the paragraphs, and the CI log scanner would then be
+% reading a muted log.
+\tolerance=2000
+\emergencystretch=2em
+
+% ---------------------------------------------------------------------------
+% Running heads (HL-C109).
+%
+% Chapter titles here are deliberately descriptive -- "Answering, Meeting, and
+% Three Ways to Play" -- and `book.cls` puts the whole title into the verso
+% running head as one unbreakable line. Past a certain length it simply
+% overflows the text block, once per verso page for the length of the chapter,
+% which is how a single long title produced four identical overfull boxes.
+%
+% The head shows "Chapter N" instead. That keeps it useful and stable, and it
+% cannot overflow no matter what a chapter is called. Spanish has done this for
+% a while; this is the same rule, applied to every track.
+\renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection}}
