@@ -2,12 +2,13 @@
 
 ## Unreleased
 
-### Added - Compose native artifacts bundle their Rust engine
+### Added - Compose and Qt native artifacts bundle their Rust engine
 
 Package mode accepts `--runtime-library <target cdylib>`. Compose copies the
-selected `.dylib`, `.so`, or `.dll` into the generated native distribution's
-platform resources, and `--profile native-complete --emit-project` rejects a
-Compose build that omits the engine.
+selected `.dylib`, `.so`, or `.dll` into platform resources; Qt copies it beside
+the native executable and into the CMake install tree. Their standard bindings
+resolve the app-relative engine, and `--profile native-complete --emit-project`
+rejects a Compose or Qt build that omits it.
 
 ### Fixed - Flutter project shells compile complete packages
 
@@ -70,7 +71,7 @@ package-expanded property path instead of allowing the emitter to ignore it.
 
 ### Changed - strict Qt shells require Rust
 
-`mosaic-compile pkg --backend qt --emit-project --profile native-complete`
+`mosaic-compile pkg --backend qt --emit-project --profile native-complete --runtime-library <target cdylib>`
 now emits a runtime-required Qt application shell. It validates the standard
 QObject binding and required MIL props before QML construction, maps runtime
 props to generated QML names, and contains no optional-host event path.

@@ -527,21 +527,32 @@ pub fn compose_component_with_model(
 // Public entry point
 // ===========================================================================
 
-fn compose_runtime_destination(path: &Path) -> Result<(&'static str, &'static str), BuildError> {
+fn runtime_file_name(path: &Path) -> Result<&'static str, BuildError> {
     let extension = path
         .extension()
         .and_then(|value| value.to_str())
         .unwrap_or_default()
         .to_ascii_lowercase();
     match extension.as_str() {
-        "dylib" => Ok(("macos", "libmosaic_app.dylib")),
-        "so" => Ok(("linux", "libmosaic_app.so")),
-        "dll" => Ok(("windows", "mosaic_app.dll")),
+        "dylib" => Ok("libmosaic_app.dylib"),
+        "so" => Ok("libmosaic_app.so"),
+        "dll" => Ok("mosaic_app.dll"),
         _ => Err(BuildError::InvalidRuntimeLibrary {
             path: path.to_path_buf(),
             reason: "expected a target cdylib ending in .dylib, .so, or .dll".to_string(),
         }),
     }
+}
+
+fn compose_runtime_destination(path: &Path) -> Result<(&'static str, &'static str), BuildError> {
+    let file_name = runtime_file_name(path)?;
+    let platform = match file_name {
+        "libmosaic_app.dylib" => "macos",
+        "libmosaic_app.so" => "linux",
+        "mosaic_app.dll" => "windows",
+        _ => unreachable!("runtime_file_name returned an unknown conventional name"),
+    };
+    Ok((platform, file_name))
 }
 
 fn validate_runtime_library_selection(
@@ -551,11 +562,12 @@ fn validate_runtime_library_selection(
     let Some(path) = runtime_library else {
         return Ok(());
     };
-    if opts.backend != Backend::Compose {
+    if !matches!(opts.backend, Backend::Compose | Backend::Qt) {
         return Err(BuildError::InvalidRuntimeLibrary {
             path: path.to_path_buf(),
-            reason: "runtime bundling is currently implemented only for the Compose backend"
-                .to_string(),
+            reason:
+                "runtime bundling is currently implemented only for the Compose and Qt backends"
+                    .to_string(),
         });
     }
     if !opts.emit_project {
@@ -564,7 +576,7 @@ fn validate_runtime_library_selection(
             reason: "--runtime-library requires --emit-project".to_string(),
         });
     }
-    compose_runtime_destination(path)?;
+    runtime_file_name(path)?;
     if !path.is_file() {
         return Err(BuildError::InvalidRuntimeLibrary {
             path: path.to_path_buf(),
@@ -591,6 +603,16 @@ fn install_compose_runtime_library(
     Ok(target)
 }
 
+fn install_qt_runtime_library(source: &Path, backend_dir: &Path) -> Result<PathBuf, BuildError> {
+    let target = backend_dir.join("runtime").join(runtime_file_name(source)?);
+    let bytes = fs::read(source).map_err(|error| BuildError::InvalidRuntimeLibrary {
+        path: source.to_path_buf(),
+        reason: format!("cannot read selected file: {error}"),
+    })?;
+    write_file(&target, &bytes)?;
+    Ok(target)
+}
+
 /// Analyze and build a package under an explicit completion profile.
 ///
 /// Unlike the legacy [`build_package`] entry point, this always writes a
@@ -607,9 +629,9 @@ pub fn build_package_with_profile(
 /// Analyze and build a package while bundling one target-specific Rust
 /// application engine into the generated native project.
 ///
-/// Compose is the first supported packaging backend. The selected library must
-/// be a `.dylib`, `.so`, or `.dll`; its suffix chooses the target resource
-/// directory and the emitted copy receives Mosaic's conventional runtime name.
+/// Compose and Qt are the supported packaging backends. The selected library
+/// must be a `.dylib`, `.so`, or `.dll`; its suffix chooses the target resource
+/// location and the emitted copy receives Mosaic's conventional runtime name.
 pub fn build_package_with_profile_and_runtime(
     opts: &BuildOptions,
     profile: BuildProfile,
@@ -704,7 +726,7 @@ pub fn analyze_package_degradations_with_runtime(
 
     if profile == BuildProfile::NativeComplete
         && opts.emit_project
-        && opts.backend == Backend::Compose
+        && matches!(opts.backend, Backend::Compose | Backend::Qt)
         && runtime_library.is_none()
     {
         degradations.push(Degradation {
@@ -719,8 +741,14 @@ pub fn analyze_package_degradations_with_runtime(
             variant: None,
             layout_path: "$project".to_string(),
             primitive: None,
-            reason: "native-complete Compose artifacts must bundle the selected Rust application engine; pass --runtime-library <target cdylib>"
-                .to_string(),
+            reason: format!(
+                "native-complete {} artifacts must bundle the selected Rust application engine; pass --runtime-library <target cdylib>",
+                match opts.backend {
+                    Backend::Compose => "Compose",
+                    Backend::Qt => "Qt",
+                    _ => unreachable!("runtime bundling degradation is native-backend scoped"),
+                }
+            ),
         });
     }
 
@@ -1106,11 +1134,13 @@ fn build_package_inner(
     // The explicitly selected engine is the final write to its conventional
     // destination. A package-owned generic host asset cannot silently replace
     // the runtime the caller chose at the packaging boundary.
-    if opts.backend == Backend::Compose {
-        if let Some(source) = runtime_library {
-            let target = install_compose_runtime_library(source, &backend_dir)?;
-            artifacts.push(target);
-        }
+    if let Some(source) = runtime_library {
+        let target = match opts.backend {
+            Backend::Compose => install_compose_runtime_library(source, &backend_dir)?,
+            Backend::Qt => install_qt_runtime_library(source, &backend_dir)?,
+            _ => unreachable!("runtime library selection was validated before emission"),
+        };
+        artifacts.push(target);
     }
 
     Ok(BuildResult {
@@ -1644,22 +1674,33 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 )?;
             }
             if let Some(proj) = r.project {
-                let cmake_lists =
-                    qt_cmake_with_package_exports(&proj.cmake_lists, component, components);
+                let bundled_runtime = runtime_library.map(runtime_file_name).transpose()?;
+                let cmake_lists = qt_cmake_with_package_exports(
+                    &proj.cmake_lists,
+                    component,
+                    components,
+                    bundled_runtime,
+                );
                 let runtime_binding = mosaic_app_bindings::qt_runtime_binding();
                 let contract = if require_runtime {
                     " In the native-complete profile the binding and Rust runtime are mandatory; startup validates required MIL props before constructing QML and exits explicitly if the contract is unavailable."
                 } else {
                     ""
                 };
+                let runtime_distribution = if let Some(file_name) = bundled_runtime {
+                    format!(
+                        "The selected target Rust engine is copied to `runtime/{file_name}`. CMake copies it next to the native executable, includes it in the install tree, and the standard binding resolves that app-relative file before global lookup; no environment variable or global library install is required."
+                    )
+                } else {
+                    "No Rust engine was bundled. For development, set `MOSAIC_APP_LIBRARY` to the Rust application library path, or place it beside the executable under Mosaic's conventional `mosaic_app` name. Strict installable builds should be regenerated with `--runtime-library <target cdylib>`.".to_string()
+                };
                 let readme = format!(
                     "{}\n## Rust application runtime\n\nThis project includes Mosaic's standard \
-                     Qt binding. Set `MOSAIC_APP_LIBRARY` to the Rust application library \
-                     path, or package it under the conventional `mosaic_app` name. The \
-                     generated host owns the application handle, event sequence, snapshots, \
-                     returned buffers, and teardown. Explicit package host assets may replace \
-                     `MosaicHost.h/.cpp` when specialized platform integration is required.{}\n",
-                    proj.readme, contract
+                     Qt binding. {} The generated host owns the application handle, event \
+                     sequence, snapshots, returned buffers, and teardown. Explicit package \
+                     host assets may replace `MosaicHost.h/.cpp` when specialized platform \
+                     integration is required.{}\n",
+                    proj.readme, runtime_distribution, contract
                 );
                 // Qt's qmldir shell file would conflict with the
                 // step-5 qmldir (the module descriptor). The shell's
@@ -1801,13 +1842,38 @@ fn qt_cmake_with_package_exports(
     generated: &str,
     mounted_component: &str,
     components: &[String],
+    bundled_runtime: Option<&str>,
 ) -> String {
     let marker = format!("  QML_FILES {mounted_component}.qml\n");
     let mut source_set = String::from("  QML_FILES\n");
     for component in components {
         writeln!(source_set, "    {component}.qml").unwrap();
     }
-    generated.replacen(&marker, &source_set, 1)
+    let mut cmake = generated.replacen(&marker, &source_set, 1);
+    if let Some(file_name) = bundled_runtime {
+        write!(
+            cmake,
+            concat!(
+                "\n# Mosaic's selected Rust application engine is part of the native artifact.\n",
+                "set(MOSAIC_APP_RUNTIME_SOURCE \"${{CMAKE_CURRENT_SOURCE_DIR}}/runtime/{file_name}\")\n",
+                "add_custom_command(TARGET {mounted_component} POST_BUILD\n",
+                "  COMMAND ${{CMAKE_COMMAND}} -E copy_if_different\n",
+                "    \"${{MOSAIC_APP_RUNTIME_SOURCE}}\"\n",
+                "    \"$<TARGET_FILE_DIR:{mounted_component}>/{file_name}\"\n",
+                ")\n",
+                "include(GNUInstallDirs)\n",
+                "install(TARGETS {mounted_component}\n",
+                "  BUNDLE DESTINATION .\n",
+                "  RUNTIME DESTINATION \"${{CMAKE_INSTALL_BINDIR}}\"\n",
+                ")\n",
+                "install(FILES \"${{MOSAIC_APP_RUNTIME_SOURCE}}\" DESTINATION \"${{CMAKE_INSTALL_BINDIR}}\")\n",
+            ),
+            file_name = file_name,
+            mounted_component = mounted_component,
+        )
+        .expect("write Qt runtime packaging CMake");
+    }
+    cmake
 }
 
 fn build_electron_package_json(
@@ -4315,10 +4381,10 @@ layout NativeEvents {
             BuildProfile::Permissive,
             Some(&dylib),
         )
-        .expect_err("the first packaging slice is Compose-only");
+        .expect_err("SwiftUI runtime packaging is not implemented yet");
         assert!(backend_error
             .to_string()
-            .contains("currently implemented only for the Compose backend"));
+            .contains("currently implemented only for the Compose and Qt backends"));
     }
 
     #[test]
@@ -4495,8 +4561,10 @@ layout NativeEvents {
             "layout Card { Text [ root ] ( content : slot: app-title ) }\n",
         )
         .unwrap();
+        let runtime = pkg.path().join("libmosaic_app_conformance.so");
+        fs::write(&runtime, b"mosaic-qt-test-runtime").unwrap();
         let out = TempDir::new().unwrap();
-        let result = build_package_with_profile(
+        let result = build_package_with_profile_and_runtime(
             &BuildOptions {
                 package_root: pkg.path().to_path_buf(),
                 output_root: out.path().to_path_buf(),
@@ -4505,6 +4573,7 @@ layout NativeEvents {
                 theme: None,
             },
             BuildProfile::NativeComplete,
+            Some(&runtime),
         )
         .expect("native-complete Qt shell");
 
@@ -4529,6 +4598,17 @@ layout NativeEvents {
         let cmake = fs::read_to_string(out.path().join("qt/CMakeLists.txt")).unwrap();
         assert!(cmake.contains("target_sources(Card PRIVATE MosaicHost.cpp MosaicHost.h)"));
         assert!(!cmake.contains("if(EXISTS \"${CMAKE_CURRENT_SOURCE_DIR}/MosaicHost.cpp\")"));
+        assert!(cmake.contains(
+            "set(MOSAIC_APP_RUNTIME_SOURCE \"${CMAKE_CURRENT_SOURCE_DIR}/runtime/libmosaic_app.so\")"
+        ));
+        assert!(cmake.contains("$<TARGET_FILE_DIR:Card>/libmosaic_app.so"));
+        assert!(cmake.contains("install(TARGETS Card"));
+        assert!(cmake.contains("BUNDLE DESTINATION ."));
+        assert!(cmake.contains("DESTINATION \"${CMAKE_INSTALL_BINDIR}\""));
+
+        let bundled = out.path().join("qt/runtime/libmosaic_app.so");
+        assert_eq!(fs::read(&bundled).unwrap(), b"mosaic-qt-test-runtime");
+        assert!(result.artifacts.contains(&bundled));
 
         let host = fs::read_to_string(out.path().join("qt/MosaicHost.cpp")).unwrap();
         assert!(host.contains("void MosaicHost::requireRuntime() const"));
@@ -4537,6 +4617,40 @@ layout NativeEvents {
         let readme = fs::read_to_string(out.path().join("qt/README.md")).unwrap();
         assert!(readme.contains("Native-complete runtime contract"));
         assert!(readme.contains("runtime are mandatory"));
+        assert!(readme.contains("copied to `runtime/libmosaic_app.so`"));
+        assert!(readme.contains("includes it in the install tree"));
+        assert!(readme.contains("no environment variable or global library install is required"));
+    }
+
+    #[test]
+    fn native_complete_qt_project_reports_an_unbundled_runtime() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        let out = TempDir::new().unwrap();
+        let error = build_package_with_profile(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Qt,
+                emit_project: true,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect_err("strict Qt install artifacts must select their Rust engine");
+
+        assert!(matches!(
+            error,
+            BuildError::NativeIncomplete {
+                backend: Backend::Qt,
+                degradation_count: 1,
+                ..
+            }
+        ));
+        let report = fs::read_to_string(out.path().join("qt/mosaic-degradations.json"))
+            .expect("strict degradation report");
+        assert!(report.contains("runtime.library-not-bundled"));
+        assert!(report.contains("native-complete Qt artifacts"));
+        assert!(!out.path().join("qt/CMakeLists.txt").exists());
     }
 
     #[test]

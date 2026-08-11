@@ -308,7 +308,12 @@ unblocks multiple downstream targets; never count source generation as completio
     Rust engine plus Mosaic conformance package compile, package, and launch as
     a macOS `.app` without an injected library path; Linux CI verifies the same
     installed-resource bytes and runtime round trip.
-  - [ ] Repeat the packaging contract for SwiftUI, Qt, XAML, and Flutter.
+  - [x] Qt accepts an explicit target `cdylib`, copies it beside the CMake-built
+    executable and into the install tree, resolves it from the application
+    directory, and rejects strict installable builds that omit it. Linux CI
+    verifies the installed bytes, launches the generated QML application, and
+    runs the complete standard-binding conformance without an injected path.
+  - [ ] Repeat the packaging contract for SwiftUI, XAML, and Flutter.
 - [ ] Add `native-complete` capability/degradation analysis to the compiler.
   - [x] Add a package-builder API and CLI profile with deterministic,
     package-expanded degradation reports and pre-emission strict rejection.

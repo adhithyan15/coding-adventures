@@ -993,23 +993,47 @@ jobs:
       - name: Round-trip Rust engine through standard Qt binding
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_qt_runtime == 'true'
         shell: bash
-        timeout-minutes: 10
+        timeout-minutes: 15
         run: |
           set -euo pipefail
-          output="$RUNNER_TEMP/mosaic-qt-taskapp"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend qt --output "$output" --emit-project
           cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
+          runtime_library="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.so"
+
+          bundled_output="$RUNNER_TEMP/mosaic-qt-bundled-conformance"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-app-conformance/package --backend qt --output "$bundled_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$bundled_output/qt/mosaic-degradations.json"
+          cmake -S "$bundled_output/qt" -B "$bundled_output/qt/build" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$bundled_output/install"
+          cmake --build "$bundled_output/qt/build" --config Release --parallel
+          cmake --install "$bundled_output/qt/build" --config Release
+
+          installed_runtime="$(find "$bundled_output/install" -type f -name libmosaic_app.so -print -quit)"
+          test -n "$installed_runtime"
+          cmp "$runtime_library" "$installed_runtime"
+
+          installed_app="$(dirname "$installed_runtime")/Counter"
+          bundled_log="$RUNNER_TEMP/mosaic-qt-bundled-launch.log"
+          set +e
+          env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen \
+            timeout 5s "$installed_app" >"$bundled_log" 2>&1
+          bundled_status=$?
+          set -e
+          test "$bundled_status" -eq 124
+          ! grep -F "Mosaic Rust runtime unavailable" "$bundled_log"
 
           harness="$RUNNER_TEMP/mosaic-qt-runtime-conformance"
           cp -R code/packages/rust/mosaic-app-bindings/conformance/qt "$harness"
-          cp "$output/qt/MosaicHost.cpp" "$harness/MosaicHost.cpp"
-          cp "$output/qt/MosaicHost.h" "$harness/MosaicHost.h"
+          cp "$bundled_output/qt/MosaicHost.cpp" "$harness/MosaicHost.cpp"
+          cp "$bundled_output/qt/MosaicHost.h" "$harness/MosaicHost.h"
 
           cmake -S "$harness" -B "$harness/build" -DCMAKE_BUILD_TYPE=Release
           cmake --build "$harness/build" --config Release --parallel
-          export MOSAIC_APP_LIBRARY="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.so"
-          "$harness/build/mosaic_qt_runtime_conformance"
-          "$harness/build/mosaic_qt_runtime_conformance" --expect-missing-prop-failure
+          installed_harness="$(dirname "$installed_runtime")/mosaic_qt_runtime_conformance"
+          cp "$harness/build/mosaic_qt_runtime_conformance" "$installed_harness"
+          (
+            cd /
+            env -u MOSAIC_APP_LIBRARY "$installed_harness"
+            env -u MOSAIC_APP_LIBRARY "$installed_harness" --expect-missing-prop-failure
+          )
 
           toolkit_output="$RUNNER_TEMP/mosaic-qt-toolkit"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend qt --output "$toolkit_output" --emit-project
@@ -1020,7 +1044,7 @@ jobs:
             "$harness/build/mosaic_qt_runtime_conformance" --expect-required-failure
 
           strict_output="$RUNNER_TEMP/mosaic-qt-native-complete-rating-controls"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend qt --output "$strict_output" --emit-project --profile native-complete
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend qt --output "$strict_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/qt/mosaic-degradations.json"
           cmake -S "$strict_output/qt" -B "$strict_output/qt/build" -DCMAKE_BUILD_TYPE=Release
           cmake --build "$strict_output/qt/build" --config Release --parallel

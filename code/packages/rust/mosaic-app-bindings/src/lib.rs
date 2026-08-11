@@ -188,6 +188,19 @@ mod tests {
     }
 
     #[test]
+    fn qt_binding_prefers_the_application_relative_runtime() {
+        let source = qt_runtime_binding().source;
+        assert!(source.contains("QCoreApplication::applicationDirPath()"));
+        assert!(source.contains("QDir(QCoreApplication::applicationDirPath()).filePath(fileName)"));
+        let bundled = source.find("return {bundled, fileName").unwrap();
+        let global = source.find("QStringLiteral(\"mosaic_app\")").unwrap();
+        assert!(
+            bundled < global,
+            "the app-relative path must precede global lookup"
+        );
+    }
+
+    #[test]
     fn swift_binding_uses_the_shared_protocol_and_commits_successful_sequences() {
         let source = swift_runtime_binding().host_swift;
         assert!(source.contains(&format!(

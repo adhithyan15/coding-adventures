@@ -18,6 +18,13 @@ QT_CONFORMANCE = (
     / "conformance"
     / "qt"
 )
+QT_PACKAGE = (
+    Path(__file__).resolve().parents[2]
+    / "packages"
+    / "rust"
+    / "mosaic-app-conformance"
+    / "package"
+)
 SPEC = importlib.util.spec_from_file_location("mosaic_qt_runtime_ci_acceptance", SCRIPT)
 assert SPEC is not None and SPEC.loader is not None
 MODULE = importlib.util.module_from_spec(SPEC)
@@ -109,15 +116,23 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
         )
         self.assertIn("Round-trip Rust engine through standard Qt binding", workflow)
         self.assertIn("needs_mosaic_qt_runtime == 'true'", workflow)
-        self.assertIn("timeout-minutes: 10", workflow)
-        self.assertIn("--backend qt --output \"$output\" --emit-project", workflow)
+        self.assertIn("timeout-minutes: 15", workflow)
+        self.assertIn(
+            "--backend qt --output \"$bundled_output\" --emit-project --profile native-complete",
+            workflow,
+        )
         self.assertIn(
             "cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance",
             workflow,
         )
         self.assertIn("qt/MosaicHost.cpp", workflow)
         self.assertIn("cmake --build \"$harness/build\"", workflow)
-        self.assertIn("MOSAIC_APP_LIBRARY", workflow)
+        self.assertIn("--runtime-library \"$runtime_library\"", workflow)
+        self.assertIn("cmake --install \"$bundled_output/qt/build\"", workflow)
+        self.assertIn("find \"$bundled_output/install\"", workflow)
+        self.assertIn("cmp \"$runtime_library\" \"$installed_runtime\"", workflow)
+        self.assertIn("env -u MOSAIC_APP_LIBRARY", workflow)
+        self.assertIn("installed_harness", workflow)
         self.assertIn("--expect-missing-prop-failure", workflow)
         self.assertIn("--expect-required-failure", workflow)
         self.assertIn("mosaic-qt-toolkit", workflow)
@@ -145,6 +160,11 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
         cmake = (QT_CONFORMANCE / "CMakeLists.txt").read_text(encoding="utf-8")
         self.assertIn("Qt6::Core", cmake)
         self.assertIn("CMAKE_AUTOMOC", cmake)
+
+    def test_conformance_engine_has_a_real_mosaic_package(self) -> None:
+        self.assertTrue((QT_PACKAGE / "mosaic-package.toml").is_file())
+        for suffix in ("mil", "mll", "msl"):
+            self.assertTrue((QT_PACKAGE / "src" / f"Counter.{suffix}").is_file())
 
 
 if __name__ == "__main__":

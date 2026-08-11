@@ -17,11 +17,17 @@ variable to a library name or absolute path. The conventional fallback name is
 `mosaic_app`. Generated Compose native distributions add an app-relative lookup
 before that conventional fallback: `compose.application.resources.dir` plus
 `libmosaic_app.dylib`, `libmosaic_app.so`, or `mosaic_app.dll`.
+Generated Qt applications likewise check `QCoreApplication::applicationDirPath()`
+for the conventional target filename before global lookup, so the CMake build and
+install trees can carry the selected Rust engine without an environment override.
 Linux CI compiles the exact Compose/JNA binding from a generated strict package,
 verifies the selected `mosaic-app-conformance` library was installed in that
 resource directory byte-for-byte, then exercises startup, semantic dispatch,
 snapshot/restore, notification, buffer ownership, and teardown without
 `MOSAIC_APP_LIBRARY`.
+The Qt lane performs the equivalent byte-for-byte install check, launches the
+generated QML application, and runs the full standard-binding conformance binary
+from the install directory with `MOSAIC_APP_LIBRARY` unset.
 
 For SwiftUI, set `MOSAIC_APP_LIBRARY` to the application dylib path. Without an
 explicit path the loader first checks symbols linked into the process, then tries
