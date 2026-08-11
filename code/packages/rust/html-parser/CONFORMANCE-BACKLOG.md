@@ -166,12 +166,18 @@ Prioritized work items:
    whitespace is retained, while ordinary content, real column groups and
    cells, nested templates, foreign template-named elements, and synthetic
    template fragment contexts keep their existing diagnostic behavior.
-   The next evidence-backed template boundary is a `colgroup` end tag after a
-   template-owned `col`: WPT `template.dat`'s
-   `<template><col></colgroup>` row declares the in-column-group parse error,
-   while the parser currently ignores the unmatched end tag silently. Audit
-   that specialized branch and its real-column-group, foreign, and synthetic
-   fragment controls before moving to adoption agency.
+   `colgroup` and `col` end tags rejected after a template-owned `col` now
+   report the in-column-group parse error while remaining ignored, matching
+   WPT `template.dat`'s `<template><col></colgroup>` and template-owned
+   `</col>` evidence. Matching real `colgroup` closure, `template` closure,
+   ordinary in-body recovery, foreign template-named elements, and synthetic
+   template fragment contexts remain on their existing diagnostic paths.
+   The next evidence-backed template boundary is an unrelated end tag after a
+   template-owned `col`: WPT `template.dat`'s `<template><col></div>` row
+   declares the in-column-group anything-else parse error, while the parser
+   currently ignores the unmatched end tag silently. Audit that general branch
+   and its ordinary in-body, foreign, and synthetic fragment controls before
+   moving to adoption agency.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases

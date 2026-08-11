@@ -6928,6 +6928,20 @@ impl HtmlParser {
         } else if self.current_namespace().is_some() && !self.current_element_is(name) {
             return;
         }
+        if self.first_authored_open_template_index().is_some()
+            && self.current_namespace().is_none()
+            && self.current_element_is("template")
+            && self.current_last_child_element_is("col")
+            && matches!(name, "col" | "colgroup")
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-end-tag-in-template-column-group",
+                format!(
+                    "end tag `</{name}>` was ignored at a template column-group boundary"
+                ),
+            ));
+            return;
+        }
         if name == "b" && self.adopt_b_end_tag_across_cite_div() {
             return;
         }
@@ -34307,6 +34321,61 @@ mod tests {
         assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-character-in-template-column-group"
         }));
+    }
+
+    #[test]
+    fn reports_end_tags_rejected_at_a_template_column_group_boundary() {
+        for (source, name) in [
+            (
+                "<!doctype html><template><col></colgroup></template>",
+                "colgroup",
+            ),
+            ("<!doctype html><template><col></col></template>", "col"),
+            (
+                "<!doctype html><table><colgroup><template><col></col></template></colgroup></table>",
+                "col",
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "unexpected-end-tag-in-template-column-group",
+                    format!(
+                        "end tag `</{name}>` was ignored at a template column-group boundary"
+                    ),
+                )],
+                "source {source:?}"
+            );
+
+            let control = parse_html(&source.replace(&format!("</{name}>"), "")).unwrap();
+            assert_eq!(output.document, control, "source {source:?}");
+        }
+
+        for source in [
+            "<!doctype html><table><colgroup><col></colgroup></table>",
+            "<!doctype html><template><col></template>",
+            "<!doctype html><div></span></div>",
+            "<!doctype html><template><div><col></col></div></template>",
+            "<!doctype html><svg><template><col></col></template></svg>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-end-tag-in-template-column-group"
+                }),
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+        }
+
+        for source in ["<col></colgroup>", "<col></col>"] {
+            let fragment =
+                parse_html_fragment_for_context_with_diagnostics(source, "template").unwrap();
+            assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-end-tag-in-template-column-group"
+            }));
+        }
     }
 
     #[test]
