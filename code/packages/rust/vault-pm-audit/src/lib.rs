@@ -63,6 +63,29 @@ pub enum AuditActionV1 {
 }
 
 impl AuditActionV1 {
+    /// Return the stable lowercase label used by redacted audit surfaces.
+    pub const fn label(self) -> &'static str {
+        match self {
+            Self::AuditEpochStart => "audit_epoch_start",
+            Self::VaultInitialize => "vault_initialize",
+            Self::VaultVerify => "vault_verify",
+            Self::VaultDiagnose => "vault_diagnose",
+            Self::AuditRead => "audit_read",
+            Self::ItemCreate => "item_create",
+            Self::ItemList => "item_list",
+            Self::ItemRead => "item_read",
+            Self::ItemUpdate => "item_update",
+            Self::ItemDelete => "item_delete",
+            Self::ItemRestore => "item_restore",
+            Self::ItemHistoryRead => "item_history_read",
+            Self::ItemSearch => "item_search",
+            Self::ItemConflictResolve => "item_conflict_resolve",
+            Self::ItemConflictMerge => "item_conflict_merge",
+            Self::PortableImport => "portable_import",
+            Self::PortableExport => "portable_export",
+        }
+    }
+
     const fn code(self) -> u64 {
         match self {
             Self::AuditEpochStart => 1,
@@ -163,6 +186,15 @@ pub enum AuditOutcomeV1 {
 }
 
 impl AuditOutcomeV1 {
+    /// Return the stable lowercase label used by redacted audit surfaces.
+    pub const fn label(self) -> &'static str {
+        match self {
+            Self::Succeeded => "succeeded",
+            Self::Denied => "denied",
+            Self::Failed => "failed",
+        }
+    }
+
     const fn code(self) -> u64 {
         match self {
             Self::Succeeded => 1,
@@ -694,6 +726,38 @@ mod tests {
         assert_eq!(decoded.event().item_id(), Some(item(4)));
         assert_eq!(decoded.event().selected_revision(), Some(revision(5)));
         assert_eq!(decoded.event().basis_heads(), &[head(7), head(8)]);
+        assert_eq!(decoded.event().action().label(), "item_read");
+        assert_eq!(decoded.event().outcome().label(), "succeeded");
+    }
+
+    #[test]
+    fn redacted_surface_labels_are_stable_and_complete() {
+        let actions = [
+            (AuditActionV1::AuditEpochStart, "audit_epoch_start"),
+            (AuditActionV1::VaultInitialize, "vault_initialize"),
+            (AuditActionV1::VaultVerify, "vault_verify"),
+            (AuditActionV1::VaultDiagnose, "vault_diagnose"),
+            (AuditActionV1::AuditRead, "audit_read"),
+            (AuditActionV1::ItemCreate, "item_create"),
+            (AuditActionV1::ItemList, "item_list"),
+            (AuditActionV1::ItemRead, "item_read"),
+            (AuditActionV1::ItemUpdate, "item_update"),
+            (AuditActionV1::ItemDelete, "item_delete"),
+            (AuditActionV1::ItemRestore, "item_restore"),
+            (AuditActionV1::ItemHistoryRead, "item_history_read"),
+            (AuditActionV1::ItemSearch, "item_search"),
+            (AuditActionV1::ItemConflictResolve, "item_conflict_resolve"),
+            (AuditActionV1::ItemConflictMerge, "item_conflict_merge"),
+            (AuditActionV1::PortableImport, "portable_import"),
+            (AuditActionV1::PortableExport, "portable_export"),
+        ];
+        for (action, label) in actions {
+            assert_eq!(action.label(), label);
+        }
+
+        assert_eq!(AuditOutcomeV1::Succeeded.label(), "succeeded");
+        assert_eq!(AuditOutcomeV1::Denied.label(), "denied");
+        assert_eq!(AuditOutcomeV1::Failed.label(), "failed");
     }
 
     #[test]

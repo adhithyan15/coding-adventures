@@ -25,7 +25,9 @@ mod status;
 mod verifier;
 
 pub use access::AuditedAccessResultV1;
-pub use audit::AuditVerificationV1;
+pub use audit::{
+    AuditEventViewV1, AuditVerificationV1, DEFAULT_AUDIT_HISTORY_LIMIT, MAX_AUDIT_HISTORY_LIMIT,
+};
 pub use codec::{
     decode_device_certificate, decode_item_revision, decode_signed_audit_event,
     decode_signed_commit, encode_device_certificate, encode_item_revision,

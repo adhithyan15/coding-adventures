@@ -2,6 +2,23 @@
 
 All notable changes to this package are documented here.
 
+## [0.44.0] - 2026-08-11
+
+### Added
+
+- Add bounded newest-first projections for complete verified operation-audit
+  history and exact trace lookup.
+- Expose only the trace, counter, action, outcome, optional item/revision
+  selectors, and advisory time required by an explicit audit surface.
+
+### Security
+
+- Publish one successful `AuditRead` event before re-verifying and returning
+  either history result, so the authorizing access can appear in its own view
+  without recursive self-auditing.
+- Reject invalid list bounds without writing, and keep stable identities out of
+  default debug output.
+
 ## [0.43.0] - 2026-08-11
 
 ### Added

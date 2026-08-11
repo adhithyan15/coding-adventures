@@ -9,3 +9,5 @@
   signature verification without storage, clock, entropy, or host coupling.
 - Added a distinct authored conflict-merge action so an event never invents a
   single selected revision for a merge that intentionally retains all parents.
+- Added stable lowercase action and outcome labels for explicit redacted audit
+  surfaces without changing the canonical signed representation.

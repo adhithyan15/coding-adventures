@@ -16,7 +16,8 @@ use crate::{
 };
 use coding_adventures_vault_pm_audit::{AuditActionV1, AuditOutcomeV1};
 use coding_adventures_vault_pm_domain::{
-    CollectionId, ItemCandidate, ItemDocument, ItemId, ItemState, RedactedItemView, RevisionId,
+    CollectionId, ItemCandidate, ItemDocument, ItemId, ItemState, OperationId, RedactedItemView,
+    RevisionId,
 };
 use coding_adventures_vault_pm_format::{DeviceId, ObjectId, VaultId};
 use coding_adventures_vault_pm_repository::{OpenReport, PinnedHeads};
@@ -426,6 +427,76 @@ impl UnlockedVaultV1 {
             local_state_store,
             operation,
         )
+    }
+
+    /// Return newest-first redacted audit history after logging this access.
+    ///
+    /// The limit must be between one and
+    /// [`crate::MAX_AUDIT_HISTORY_LIMIT`], inclusive. The session is consumed
+    /// and a successful vault-scoped `AuditRead` event is made durable first.
+    /// The application then re-verifies and projects the complete chain from
+    /// that newly advanced owner state, so the returned bounded view includes
+    /// the event that authorized it without recursively auditing itself.
+    pub fn audited_audit_history(
+        self,
+        limit: usize,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<Vec<crate::AuditEventViewV1>>, ApplicationError> {
+        self.require_audit_epoch()?;
+        if limit == 0 || limit > crate::MAX_AUDIT_HISTORY_LIMIT {
+            return Err(ApplicationError::BoundExceeded);
+        }
+        let active = publish_audited_access(
+            &self.active,
+            &self._keys,
+            &self._local_secret,
+            self._repository.as_ref(),
+            AuditActionV1::AuditRead,
+            AuditOutcomeV1::Succeeded,
+            None,
+            None,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+        )?;
+        let operation =
+            crate::audit::audit_history(&active, &self._keys, self._repository.as_ref(), limit);
+        Ok(crate::AuditedAccessResultV1::new(active, operation))
+    }
+
+    /// Return one redacted event selected by trace after logging this access.
+    ///
+    /// The successful `AuditRead` access event is published before the exact
+    /// newly advanced chain is re-verified. `None` is a successful redacted
+    /// lookup with no matching trace. The returned view never contains vault,
+    /// device, repository, provider, path, signature, or secret payload data.
+    pub fn audited_audit_event(
+        self,
+        trace_id: OperationId,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<Option<crate::AuditEventViewV1>>, ApplicationError>
+    {
+        self.require_audit_epoch()?;
+        let active = publish_audited_access(
+            &self.active,
+            &self._keys,
+            &self._local_secret,
+            self._repository.as_ref(),
+            AuditActionV1::AuditRead,
+            AuditOutcomeV1::Succeeded,
+            None,
+            None,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+        )?;
+        let operation =
+            crate::audit::audit_event(&active, &self._keys, self._repository.as_ref(), trace_id);
+        Ok(crate::AuditedAccessResultV1::new(active, operation))
     }
 
     /// Build one canonical authenticated encrypted snapshot for host persistence.
@@ -2218,6 +2289,14 @@ mod tests {
         AuditedAccessRandomnessV1::new(bytes)
     }
 
+    fn audited_access_trace(seed: u8) -> OperationId {
+        let mut bytes = [0; 32];
+        for (index, byte) in bytes.iter_mut().enumerate() {
+            *byte = (index as u8).wrapping_mul(43).wrapping_add(seed);
+        }
+        OperationId::new(bytes)
+    }
+
     fn latest_audit_facts(
         session: &UnlockedVaultV1,
     ) -> (
@@ -2942,6 +3021,136 @@ mod tests {
             Err(ApplicationError::InvalidInput)
         ));
         assert_eq!(*local.0.lock().unwrap(), Some(exact_active));
+    }
+
+    #[test]
+    fn audit_history_logs_itself_before_bounded_list_and_trace_lookup() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        session
+            .activate_audit_epoch(704, audited_access_randomness(0xac), &local)
+            .unwrap();
+
+        let exact_epoch = local.0.lock().unwrap().clone().unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert!(matches!(
+            session.audited_audit_history(0, 705, audited_access_randomness(0xad), &local),
+            Err(ApplicationError::BoundExceeded)
+        ));
+        assert_eq!(*local.0.lock().unwrap(), Some(exact_epoch.clone()));
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert!(matches!(
+            session.audited_audit_history(
+                crate::MAX_AUDIT_HISTORY_LIMIT + 1,
+                705,
+                audited_access_randomness(0xad),
+                &local,
+            ),
+            Err(ApplicationError::BoundExceeded)
+        ));
+        assert_eq!(*local.0.lock().unwrap(), Some(exact_epoch));
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let listed = session
+            .audited_audit_history(1, 706, audited_access_randomness(0xae), &local)
+            .unwrap();
+        assert_eq!(listed.active_state().last_device_counter(), 3);
+        let views = listed.into_operation().unwrap();
+        assert_eq!(views.len(), 1);
+        let own_access = &views[0];
+        assert_eq!(own_access.trace_id(), audited_access_trace(0xae));
+        assert_eq!(own_access.device_counter(), 3);
+        assert_eq!(own_access.action(), AuditActionV1::AuditRead);
+        assert_eq!(own_access.action().label(), "audit_read");
+        assert_eq!(own_access.outcome(), AuditOutcomeV1::Succeeded);
+        assert_eq!(own_access.timestamp_ms(), 706);
+        assert_eq!(own_access.item_id(), None);
+        assert_eq!(own_access.selected_revision(), None);
+        assert_eq!(own_access.result_revision(), None);
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let shown = session
+            .audited_audit_event(
+                audited_access_trace(0xac),
+                707,
+                audited_access_randomness(0xaf),
+                &local,
+            )
+            .unwrap();
+        assert_eq!(shown.active_state().last_device_counter(), 4);
+        let epoch = shown.into_operation().unwrap().unwrap();
+        assert_eq!(epoch.trace_id(), audited_access_trace(0xac));
+        assert_eq!(epoch.device_counter(), 2);
+        assert_eq!(epoch.action(), AuditActionV1::AuditEpochStart);
+        assert_eq!(epoch.outcome(), AuditOutcomeV1::Succeeded);
+        assert_eq!(epoch.timestamp_ms(), 704);
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let missing = session
+            .audited_audit_event(
+                OperationId::new([0xff; 32]),
+                708,
+                audited_access_randomness(0xb0),
+                &local,
+            )
+            .unwrap();
+        assert!(missing.operation_succeeded());
+        assert!(missing.into_operation().unwrap().is_none());
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let report = session.audit_verify().unwrap();
+        assert_eq!(report.commit_count(), 5);
+        assert_eq!(report.audit_event_count(), 4);
     }
 
     #[test]
