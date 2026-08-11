@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Render depth-offset nested sequence activation bars through backend-neutral rectangles.
 - Validate resumed, two-decimal sequence autonumber counters through Metal PNG rendering.
 - Validate mixed-case sequence syntax through Metal PNG rendering.
 - Validate escaped participant configuration aliases through Metal PNG rendering.

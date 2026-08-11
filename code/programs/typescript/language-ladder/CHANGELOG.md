@@ -2,6 +2,16 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+
+### Added — cited Arabic independent-saad ductus (HL-C09AS)
+
+- Render **ص** in three evidence-aligned frames: its clockwise oval, the joined
+  rise into the short shoulder, and the separately restarted trailing bowl.
+- Keep the source's two pen-down runs, one lift, and two-way-connector context
+  explicit while fitting the vendored Noto Naskh outline.
+- Preserve Saad's evidence independently of adjacent Seen and Shiin, with the
+  same page's directly linked Daad MOV queued next.
+
 ### Changed — Spanish runs 1..54 (HL-C98)
 
 - Regenerate the `bookhashes` chapter-lesson pin from the lesson files: the
@@ -10,6 +20,7 @@
   lives in the consumer, so the data package's own suite passes while this one
   fails — which is exactly why the app is built in CI.
 - Eager bundle 478,900 / 500,000 bytes.
+
 ### Added — cited Arabic independent-shiin ductus (HL-C09AR)
 
 - Render **ش** in five evidence-aligned frames: two joined body movements,

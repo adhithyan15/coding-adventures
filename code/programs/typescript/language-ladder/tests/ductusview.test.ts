@@ -96,6 +96,8 @@ const ARABIC_SEEN = ductusFor("س", "arabic")!;
 const arabicSeenOutline = naskhOutline("س");
 const ARABIC_SHIIN = ductusFor("ش", "arabic")!;
 const arabicShiinOutline = naskhOutline("ش");
+const ARABIC_SAAD = ductusFor("ص", "arabic")!;
+const arabicSaadOutline = naskhOutline("ص");
 const URDU_ALEF = ductusFor("ا", "urdu-nastaliq")!;
 const urduAlefOutline = naskhOutline("ا");
 const URDU_JIM = ductusFor("ج", "urdu-nastaliq")!;
@@ -149,7 +151,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds eleven Tamil letters, nine Persian letters, ten Arabic letters, and thirteen Urdu letters", () => {
+  it("finds eleven Tamil letters, nine Persian letters, eleven Arabic letters, and thirteen Urdu letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -174,6 +176,7 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("ب", "arabic")?.glyph).toBe("ب");
     expect(ductusFor("س", "arabic")?.glyph).toBe("س");
     expect(ductusFor("ش", "arabic")?.glyph).toBe("ش");
+    expect(ductusFor("ص", "arabic")?.glyph).toBe("ص");
     expect(ductusFor("ا", "urdu-nastaliq")?.glyph).toBe("ا");
     expect(ductusFor("ج", "urdu-nastaliq")?.glyph).toBe("ج");
     expect(ductusFor("ج", "perso-arabic")).toBeUndefined();
@@ -1039,6 +1042,37 @@ describe("Arabic ش — a complete س body followed by three dots", () => {
     ]);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(ARABIC_SHIIN.strokes[3], 1),
+    );
+  });
+});
+
+describe("Arabic ص — an oval and shoulder followed by a lifted bowl", () => {
+  const steps = ductusSteps(ARABIC_SAAD);
+  const strip = ductusFilmstrip(ARABIC_SAAD, arabicSaadOutline);
+
+  it("shows the joined oval and shoulder before restarting for the bowl", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "close the oval clockwise from its lower-left junction",
+      "turn left and rise into the short shoulder without lifting",
+      "lift, restart at the baseline junction, and sweep through the trailing bowl",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+  });
+
+  it("draws Noto Naskh and preserves the completed body during the bowl", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicSaadOutline.path,
+    );
+    const done = paths.filter((path) => path.attrs.class === "ductus__done");
+    expect(done).toHaveLength(1);
+    expect(done[0].attrs.d).toBe(penPathD(ARABIC_SAAD.strokes[0], 1));
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_SAAD.strokes[1], 1),
     );
   });
 });
