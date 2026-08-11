@@ -253,10 +253,12 @@ Prioritized work items:
    matching WPT `adoption01.dat`'s `<a><svg><tr><input></a>` evidence. Continue
    Repeated HTML anchor start tags now report before the existing adoption
    recovery and preserve both anchors required by WPT `adoption02.dat`'s
-   `<a><div><style></style><address><a>` row. Continue the fresh algorithm audit
-   across the remaining active-formatting-list branches, including foreign end
-   tags with no matching HTML formatting ancestor and repeated anchors
-   reprocessed through table foster parenting.
+   `<a><div><style></style><address><a>` row. Repeated anchors reprocessed
+   through table foster parenting now additionally report both the repeated
+   start and out-of-table-scope adoption errors declared by `tests1.dat` and
+   `template.dat`, while preserving the existing fostered DOM. Continue the
+   fresh algorithm audit across the remaining active-formatting-list branches,
+   including foreign end tags with no matching HTML formatting ancestor.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.

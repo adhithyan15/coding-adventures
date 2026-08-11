@@ -6458,6 +6458,16 @@ impl HtmlParser {
                     "formatting start tag `<{incoming_name}>` in a table context was foster parented"
                 ),
             ));
+            if incoming_name == "a" && self.has_active_html_anchor() {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "nested-anchor-start-tag",
+                    "start tag `<a>` triggered adoption-agency recovery for an active anchor",
+                ));
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "formatting-element-not-in-table-scope",
+                    "active anchor was outside table scope during adoption-agency recovery",
+                ));
+            }
         }
 
         if !self.current_element_is_table_structure()
@@ -34516,6 +34526,61 @@ mod tests {
                 diagnostic.code != "unexpected-formatting-start-tag-in-table"
             }));
         }
+    }
+
+    #[test]
+    fn reports_repeated_anchor_recovery_from_table_foster_parenting() {
+        for source in [
+            "<!doctype html><a><table><a></table>",
+            "<!doctype html><template><a><table><a></template>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.windows(3).any(|diagnostics| {
+                diagnostics
+                    == [
+                        ParserDiagnostic::new(
+                            "unexpected-formatting-start-tag-in-table",
+                            "formatting start tag `<a>` in a table context was foster parented",
+                        ),
+                        ParserDiagnostic::new(
+                            "nested-anchor-start-tag",
+                            "start tag `<a>` triggered adoption-agency recovery for an active anchor",
+                        ),
+                        ParserDiagnostic::new(
+                            "formatting-element-not-in-table-scope",
+                            "active anchor was outside table scope during adoption-agency recovery",
+                        ),
+                    ]
+            }), "source {source:?}");
+        }
+
+        let document = parse_html("<a><table><a></table><p><a><div><a>").unwrap();
+        let document_body = body(&document);
+        let outer_anchor = element(&document_body.children[0]);
+        assert_eq!(outer_anchor.name, "a");
+        assert_eq!(element(&outer_anchor.children[0]).name, "a");
+        assert_eq!(element(&outer_anchor.children[1]).name, "table");
+
+        let first = parse_html_with_diagnostics("<!doctype html><table><a>x</table>").unwrap();
+        assert!(first.parser_diagnostics.iter().all(|diagnostic| {
+            !matches!(
+                diagnostic.code.as_str(),
+                "nested-anchor-start-tag" | "formatting-element-not-in-table-scope"
+            )
+        }));
+
+        let cell = parse_html_with_diagnostics(
+            "<!doctype html><table><tr><td><a>one<a>two</table>",
+        )
+        .unwrap();
+        assert!(cell
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "nested-anchor-start-tag"));
+        assert!(cell.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "formatting-element-not-in-table-scope"
+                && diagnostic.code != "unexpected-formatting-start-tag-in-table"
+        }));
     }
 
     #[test]
