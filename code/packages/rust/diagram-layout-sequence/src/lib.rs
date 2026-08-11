@@ -7,7 +7,7 @@ use diagram_ir::{
     SequenceEvent, SequenceNotePlacement, SequenceParticipantKind, SequenceTextWrap,
 };
 
-pub const VERSION: &str = "0.21.0";
+pub const VERSION: &str = "0.22.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -16,6 +16,7 @@ const MIN_LANE_W: f64 = 150.0;
 const EVENT_H: f64 = 58.0;
 const NOTE_H: f64 = 38.0;
 const ACTIVATION_W: f64 = 12.0;
+const NESTED_ACTIVATION_OFFSET: f64 = 4.0;
 const BLOCK_HEADER_H: f64 = 48.0;
 const BLOCK_BRANCH_H: f64 = 48.0;
 const BLOCK_BOTTOM_PAD: f64 = 14.0;
@@ -145,7 +146,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
 
     let event_start = header_y + header_height + 36.0;
     let mut y = event_start;
-    let mut activation_starts: HashMap<String, Vec<f64>> = HashMap::new();
+    let mut activation_starts: HashMap<String, Vec<(f64, usize)>> = HashMap::new();
     let has_auto_number_events = diagram
         .events
         .iter()
@@ -226,10 +227,8 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                         ((message_number + message_number_step) * 100.0).round() / 100.0;
                 }
                 if *activate {
-                    activation_starts
-                        .entry(to.clone())
-                        .or_default()
-                        .push(message_y);
+                    let starts = activation_starts.entry(to.clone()).or_default();
+                    starts.push((message_y, starts.len()));
                 }
                 if *deactivate {
                     close_activation(&mut items, &mut activation_starts, from, from_x, message_y);
@@ -244,10 +243,8 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     continue;
                 };
                 if *active {
-                    activation_starts
-                        .entry(participant.clone())
-                        .or_default()
-                        .push(y);
+                    let starts = activation_starts.entry(participant.clone()).or_default();
+                    starts.push((y, starts.len()));
                 } else {
                     close_activation(
                         &mut items,
@@ -486,10 +483,10 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     .unwrap_or(footer_y),
             });
             if let Some(starts) = activation_starts.remove(&participant.id) {
-                for start in starts {
+                for (start, depth) in starts {
                     items.push(LayoutedSequenceItem::Activation {
                         participant: participant.id.clone(),
-                        x: center - ACTIVATION_W / 2.0,
+                        x: activation_x(center, depth),
                         y1: start,
                         y2: footer_y,
                     });
@@ -556,19 +553,23 @@ fn wrap_sequence_line(line: &str, max_chars: usize) -> Vec<String> {
 
 fn close_activation(
     items: &mut Vec<LayoutedSequenceItem>,
-    starts: &mut HashMap<String, Vec<f64>>,
+    starts: &mut HashMap<String, Vec<(f64, usize)>>,
     participant: &str,
     center: f64,
     y: f64,
 ) {
-    if let Some(start) = starts.get_mut(participant).and_then(Vec::pop) {
+    if let Some((start, depth)) = starts.get_mut(participant).and_then(Vec::pop) {
         items.push(LayoutedSequenceItem::Activation {
             participant: participant.to_string(),
-            x: center - ACTIVATION_W / 2.0,
+            x: activation_x(center, depth),
             y1: start,
             y2: y,
         });
     }
+}
+
+fn activation_x(center: f64, depth: usize) -> f64 {
+    center - ACTIVATION_W / 2.0 + depth as f64 * NESTED_ACTIVATION_OFFSET
 }
 
 #[cfg(test)]
@@ -908,6 +909,55 @@ mod tests {
         assert!(layout.items.iter().any(
             |item| matches!(item, LayoutedSequenceItem::Activation { y1, y2, .. } if y2 > y1)
         ));
+    }
+
+    #[test]
+    fn offsets_nested_activation_bars_by_stack_depth() {
+        let diagram = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
+            participants: vec![participant("Bob")],
+            participant_groups: vec![],
+            events: vec![
+                SequenceEvent::Activation {
+                    participant: "Bob".into(),
+                    active: true,
+                },
+                SequenceEvent::Activation {
+                    participant: "Bob".into(),
+                    active: true,
+                },
+                SequenceEvent::Activation {
+                    participant: "Bob".into(),
+                    active: false,
+                },
+                SequenceEvent::Activation {
+                    participant: "Bob".into(),
+                    active: false,
+                },
+            ],
+        };
+        let mut activations: Vec<_> = layout_sequence_diagram(&diagram)
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedSequenceItem::Activation { x, y1, y2, .. } => Some((*x, *y1, *y2)),
+                _ => None,
+            })
+            .collect();
+        activations.sort_by(|left, right| left.0.total_cmp(&right.0));
+
+        assert_eq!(activations.len(), 2);
+        assert_eq!(
+            activations[1].0 - activations[0].0,
+            NESTED_ACTIVATION_OFFSET
+        );
+        assert!(activations[0].1 < activations[1].1);
+        assert!(activations[0].2 > activations[1].2);
     }
 
     #[test]
