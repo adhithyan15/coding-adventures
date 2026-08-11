@@ -522,6 +522,14 @@ fn test_goto_program() {
 }
 
 #[test]
+fn test_report_style_go_to_program() {
+    let ast = parse_algol("begin boolean choose; choose := true; go to if choose then yes else no; yes: ; no: end");
+    assert_program_root(&ast);
+    assert!(find_rule(&ast, "goto_stmt"), "Expected goto_stmt");
+    assert!(find_rule(&ast, "desig_expr"), "Expected conditional designator");
+}
+
+#[test]
 fn test_multiple_labels_on_one_statement() {
     let ast = parse_algol("begin first: second: halt end");
     assert_program_root(&ast);

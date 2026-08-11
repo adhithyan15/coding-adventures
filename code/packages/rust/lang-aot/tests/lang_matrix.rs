@@ -1211,6 +1211,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(2),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — report-style `go to` feeds the same runtime-selected
+    // designational-expression lowering as the single-word `goto` spelling.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; boolean choose; choose := true; \
+               go to if choose then yes else no; \
+               no: result := 1; go to done; yes: result := 42; done: end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — dummy statements consume no tokens and perform no work. This
     // exercises leading/consecutive/trailing separators, an empty then arm, an
     // empty for body, and a labeled empty statement before returning 42.
@@ -7040,6 +7051,35 @@ fn algol_switch_designator_elements_run_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but switch designator execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_report_style_go_to_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("go to if choose then yes else no")
+        })
+        .expect("the ALGOL report-style go-to program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but report-style go-to execution did not complete"
             );
             continue;
         };

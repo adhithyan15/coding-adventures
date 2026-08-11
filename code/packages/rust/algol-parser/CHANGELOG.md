@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2026-08-11
+
+### Added
+
+- **Report-style `go to`.** The checked-in Rust grammar artifact now accepts
+  the ALGOL report's two-word `go to` spelling alongside `goto`, with the same
+  label, switch, and conditional designational expressions.
+
 ## [0.5.0] - 2026-08-11
 
 ### Added
