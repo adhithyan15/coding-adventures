@@ -172,12 +172,19 @@ Prioritized work items:
    `</col>` evidence. Matching real `colgroup` closure, `template` closure,
    ordinary in-body recovery, foreign template-named elements, and synthetic
    template fragment contexts remain on their existing diagnostic paths.
-   The next evidence-backed template boundary is an unrelated end tag after a
-   template-owned `col`: WPT `template.dat`'s `<template><col></div>` row
-   declares the in-column-group anything-else parse error, while the parser
-   currently ignores the unmatched end tag silently. Audit that general branch
-   and its ordinary in-body, foreign, and synthetic fragment controls before
-   moving to adoption agency.
+   Unrelated end tags rejected after a template-owned `col` now report the
+   in-column-group anything-else parse error while remaining ignored, matching
+   WPT `template.dat`'s `<template><col></div>` evidence. The dedicated
+   `colgroup` and `col` endings retain the same diagnostic, while `template`
+   closure, ordinary in-body recovery, real column groups, foreign content,
+   and synthetic template fragment contexts remain on their existing paths.
+   The next evidence-backed template table-state boundary is a table-section
+   start after a template-owned row or cell: WPT `template.dat` declares errors
+   for both `<template><tr></tr><tbody>` and
+   `<template><td></td><tbody>`, while the parser's specialized recovery branch
+   currently ignores those starts silently. Audit that family and its normal
+   table, nested-template, and synthetic fragment controls before moving to
+   adoption agency.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases

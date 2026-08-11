@@ -6932,7 +6932,7 @@ impl HtmlParser {
             && self.current_namespace().is_none()
             && self.current_element_is("template")
             && self.current_last_child_element_is("col")
-            && matches!(name, "col" | "colgroup")
+            && name != "template"
         {
             self.diagnostics.push(ParserDiagnostic::new(
                 "unexpected-end-tag-in-template-column-group",
@@ -34335,6 +34335,12 @@ mod tests {
                 "<!doctype html><table><colgroup><template><col></col></template></colgroup></table>",
                 "col",
             ),
+            ("<!doctype html><template><col></div></template>", "div"),
+            ("<!doctype html><template><col></br></template>", "br"),
+            (
+                "<!doctype html><table><colgroup><template><col></span></template></colgroup></table>",
+                "span",
+            ),
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert_eq!(
@@ -34369,7 +34375,7 @@ mod tests {
             );
         }
 
-        for source in ["<col></colgroup>", "<col></col>"] {
+        for source in ["<col></colgroup>", "<col></col>", "<col></div>"] {
             let fragment =
                 parse_html_fragment_for_context_with_diagnostics(source, "template").unwrap();
             assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
