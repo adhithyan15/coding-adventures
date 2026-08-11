@@ -421,8 +421,11 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   Chinese **亻** follows from its own pinned record: draw the long left-falling
   stroke, lift once, then descend the vertical from the central junction. Its
   two-frame path fits the narrow Noto Sans SC radical independently instead of
-  mechanically squeezing 人. The remaining **153** prose part orders across six
-  scripts (`arabic` 3, `chinese` 22, `cyrillic` 33, `devanagari` 28,
+  mechanically squeezing 人. Chinese **口** next establishes a joined corner:
+  descend the left side, lift for the top bar and right side in one continuous
+  héngzhé run, then lift and close the bottom left-to-right. Its four-frame Noto
+  Sans SC path makes the close-last rule visible. The remaining **152** prose
+  part orders across six scripts (`arabic` 3, `chinese` 21, `cyrillic` 33, `devanagari` 28,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every

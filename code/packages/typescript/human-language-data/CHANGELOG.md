@@ -4,6 +4,13 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - source-verified Chinese 口 (HL-C09CB)
+
+- Verify 口 from its pinned Hanzi Writer Data record as three ordered runs:
+  left side, joined top-and-right héngzhé, then the closing bottom bar.
+- Preserve the joined corner and close-last rule in a two-lift Noto Sans SC fit.
+- Reduce measured HL-C09 debt to 152 entries; Chinese has 21 outstanding.
+
 ### Added - source-verified Chinese 亻 (HL-C09CA)
 
 - Verify the compressed person radical from its own pinned Hanzi Writer Data

@@ -88,6 +88,8 @@ const CHINESE_REN = ductusFor("人", "chinese")!;
 const chineseRenOutline = chineseOutline("人");
 const CHINESE_PERSON_RADICAL = ductusFor("亻", "chinese")!;
 const chinesePersonRadicalOutline = chineseOutline("亻");
+const CHINESE_MOUTH = ductusFor("口", "chinese")!;
+const chineseMouthOutline = chineseOutline("口");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -848,6 +850,38 @@ describe("Chinese 亻 — a cited falling stroke followed by a vertical", () => 
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CHINESE_PERSON_RADICAL.strokes[1], 1),
+    );
+  });
+});
+
+describe("Chinese 口 — a cited three-run box that closes last", () => {
+  const steps = ductusSteps(CHINESE_MOUTH);
+  const strip = ductusFilmstrip(CHINESE_MOUTH, chineseMouthOutline);
+
+  it("shows the joined top-right corner before the separately closing bottom", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the left vertical shù stroke from top to bottom",
+      "lift, then draw the top bar from left to right",
+      "turn the corner without lifting and descend the right side",
+      "lift, then close the bottom from left to right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 1, 2]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 4 movements");
+  });
+
+  it("draws the exact Noto Sans SC box with the first two runs behind the closing bottom", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      chineseMouthOutline.path,
+    );
+    expect(
+      paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d),
+    ).toEqual([penPathD(CHINESE_MOUTH.strokes[0], 1), penPathD(CHINESE_MOUTH.strokes[1], 1)]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_MOUTH.strokes[2], 1),
     );
   });
 });
