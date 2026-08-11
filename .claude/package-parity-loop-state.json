@@ -11,18 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 10612,
+  "active_pr": 10751,
   "last_inventory": {
-    "revision": "6c3b19b27b35312320c9b141855c3afa3da0159c",
+    "revision": "44dc4b563ef10df895ce100d827a1abc6ddca323",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1299,
-    "implementation_package_slots": 4455,
+    "implementation_identities": 1300,
+    "implementation_package_slots": 4456,
     "high_consensus_packages": 173,
     "high_consensus_missing_slots": 269,
-    "singleton_packages": 849,
-    "singleton_missing_slots": 11886,
-    "rust_singletons": 653,
+    "singleton_packages": 850,
+    "singleton_missing_slots": 11900,
+    "rust_singletons": 654,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -937,11 +937,18 @@
     {
       "id": "build-tool-python-haskell-gradle-field-aware-resolution",
       "title": "Make Python Cabal and Gradle resolution field-aware",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-python-ecosystem-scoped-alias-resolution"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Discovered in the post-#10564 security review. Python currently scans whole Cabal files and line-matches Gradle, so comments, descriptive fields, block-comment examples, and multiline includeBuild declarations can create or hide dependency edges even though the shared Haskell, Java, and Kotlin field-aware fixtures already define the closed behavior. Consume those fixtures and prove exact graph equality with the Go oracle before exposing these lanes through the Python language filter."
+      "branch": "codex/python-haskell-gradle-field-aware-resolution",
+      "pr_number": 10751,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/10751",
+      "pr_opened_at": "2026-08-11T16:24:56Z",
+      "selection_revision": "96f58be046bb130d59e988f6199c4bb819533156",
+      "selection_notes": "Selected after PR #10612 merged externally and a collision-clean refresh classified the new Frigate snapshot host. Although canonical-CBOR became dependency-ready, its fourteen-lane umbrella needs decomposition before review. This bounded, authority-free resolver repair closes a real affected-plan trust boundary and directly unlocks safe Haskell, Java, and Kotlin filtering.",
+      "implementation_revision": "af71eed4c2f54765220147a71b27db45b1b50a9a",
+      "validation_notes": "After rebasing onto identity-neutral 44dc4b563e, Python passes 364 tests with 89.18% total coverage and 91% resolver coverage under Python 3.12.13 through both identical BUILD front doors. The changed resolver passes MyPy, scoped Ruff, and Bandit; the repository's pre-existing full Python lint and Bandit findings remain outside this tranche. The schema and runner pass 59 tests plus 52 subtests. Go passes all packages, vet, module verification, trimpath build, and the strengthened Haskell/Gradle fixture consumers. Exact Python-versus-Go equality holds for 206 Haskell nodes/487 edges, 129 Java nodes/186 edges, and 133 Kotlin nodes/166 edges; focused affected-closure tests reject comment, string, cross-lane, absolute, interpolated, ambiguous-manifest, duplicate, and self-selection paths. State graph, credential-pattern, diff, and collision gates pass at 1,300 identities, 4,456 slots, 850 singletons, 11,900 singleton gaps, 654 Rust singletons, zero collisions, and zero unknown buckets.",
+      "publication_notes": "Ready-for-review PR #10751 opened from af71eed4c2. GitHub reports it open, non-draft, and mergeable; CI and CodeQL checks are queued, so the loop is monitor-only until they finish.",
+      "notes": "Discovered in the post-#10564 security review. Python currently scans whole Cabal files and line-matches Gradle, so comments, descriptive fields, block-comment examples, and multiline includeBuild declarations can create or hide dependency edges even though the shared Haskell, Java, and Kotlin field-aware fixtures already define the closed behavior. Consume those fixtures, register plain directory and declared Cabal aliases, reject ambiguous manifests, and prove exact graph equality with the Go oracle before exposing these lanes through the Python language filter."
     },
     {
       "id": "build-tool-python-plan-atomic-overwrite-windows",
@@ -1462,7 +1469,7 @@
       "depends_on": ["smart-home-camera-media-security-boundary-hardening"],
       "branch": null,
       "pr_number": null,
-      "notes": "Extract and fixture deterministic grant decisions, generation-bound lease state, TTLs, quotas, audit projection, and error classification behind injected authenticated context, time, nonce, and media transport. Expand only this authority-free core through established lanes; keep native media I/O and session hosting outside the denominator. Merged PR #10225 preserves this portable policy boundary by injecting one native media executor; endpoint validation, grant and lease state, bounds, authentication choice, response classification, image-signature checks, and redaction remain fixture-owned here while transport stays native. Merged PR #10229 adds fixtures for authorization before Vault resolution or network I/O, entity, purpose, TTL, and endpoint validation, lease issue and redemption, and credential cleanup on every return path. Merged PRs #10237, #10248, #10255, and #10267 add deterministic ZoneMinder, Synology, Axis, and Reolink evidence for exact grant-before-Vault-and-network ordering, installed-entity and endpoint validation, generation-bound camera-media lease issuance and redemption, bounded snapshot delivery, and cleanup on every result."
+      "notes": "Extract and fixture deterministic grant decisions, generation-bound lease state, TTLs, quotas, audit projection, and error classification behind injected authenticated context, time, nonce, and media transport. Expand only this authority-free core through established lanes; keep native media I/O and session hosting outside the denominator. Merged PR #10225 preserves this portable policy boundary by injecting one native media executor; endpoint validation, grant and lease state, bounds, authentication choice, response classification, image-signature checks, and redaction remain fixture-owned here while transport stays native. Merged PR #10229 adds fixtures for authorization before Vault resolution or network I/O, entity, purpose, TTL, and endpoint validation, lease issue and redemption, and credential cleanup on every return path. Merged PRs #10237, #10248, #10255, and #10267 add deterministic ZoneMinder, Synology, Axis, and Reolink evidence for exact grant-before-Vault-and-network ordering, installed-entity and endpoint validation, generation-bound camera-media lease issuance and redemption, bounded snapshot delivery, and cleanup on every result. Merged PR #10602 adds the Frigate snapshot host's deterministic approval-before-secret-and-network ordering, installed-camera and reviewed-origin validation, bounded JPEG envelope, explicit logout, cleanup, and stable error evidence; transport, TLS, credentials, Vault, time, entropy, and runtime approval remain native-authority concerns."
     },
     {
       "id": "smart-home-onvif-portable-core-conformance",
@@ -2089,7 +2096,18 @@
       "depends_on": ["rust-network-substrate-capability-truthfulness", "smart-home-lan-http-native-executor-consolidation"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-clean 7eb07ead inventory after smart-home-frigate-integration landed as a Rust-only production NVR adapter. The crate owns concrete TCP and platform-TLS transport, credential-referenced authenticated HTTPS login, bounded JWT-cookie handling, Vault identity, endpoint policy, and SmartHomeRuntime authorization, so it is not an all-language portable target. Review the minimum truthful connect/TLS/credential/runtime authority and platform evidence; keep bounded Frigate response validation, health projection, request planning, and redaction semantics in shared portable contracts where reusable; and record the residual adapter as a native-runtime exception. This review is excluded from autonomous delivery selection by parity policy."
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-clean 7eb07ead inventory after smart-home-frigate-integration landed as a Rust-only production NVR adapter. The crate owns concrete TCP and platform-TLS transport, credential-referenced authenticated HTTPS login, bounded JWT-cookie handling, Vault identity, endpoint policy, and SmartHomeRuntime authorization, so it is not an all-language portable target. Merged PR #10602 adds deterministic installed-camera, request, ordering, bounds, cleanup, and error evidence that belongs in the shared camera-media core while leaving transport, TLS, credential, Vault, clock, entropy, and runtime approval authority native. Review the minimum truthful connect/TLS/credential/runtime authority and platform evidence; keep bounded Frigate response validation, health projection, request planning, and redaction semantics in shared portable contracts where reusable; and record the residual adapter as a native-runtime exception. This review is excluded from autonomous delivery selection by parity policy."
+    },
+    {
+      "id": "smart-home-frigate-snapshot-host-native-authority-review",
+      "title": "Review the authorized Frigate snapshot host native-authority exception",
+      "status": "pending",
+      "depends_on": ["smart-home-camera-media-portable-core-conformance", "smart-home-frigate-native-authority-review", "vault-leases-native-authority-review", "vault-sealed-store-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-clean 96f58be inventory after merged PR #10602 added the Rust-only smart-home-frigate-snapshot-host without required_capabilities.json. The concrete D23 host composes Human Approval, Vault and SealedStore secret reads, SystemTime, OS CSPRNG, reviewed-address-pinned TCP/TLS, login-cookie-JPEG-logout sequencing, credential custody, and cleanup, so it is not an all-language portable target. Review truthful Vault, time, entropy, network, TLS, credential, runtime, origin-pinning, cleanup, zeroization, redaction, and platform evidence. Keep deterministic installed-identity, request, envelope, ordering, bounds, and stable error behavior in the camera-media portable core."
     },
     {
       "id": "chief-daemon-keyring-native-authority-review",
@@ -2775,12 +2793,14 @@
     {
       "id": "canonical-cbor-language-neutral-conformance",
       "title": "Define language-neutral canonical CBOR conformance",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/canonical-cbor-language-neutral-conformance",
       "pr_number": 10612,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/10612",
       "pr_opened_at": "2026-08-11T07:19:38Z",
+      "merged_at": "2026-08-11T15:54:23Z",
+      "merge_revision": "431a8fcc829724507cc50f707ec9b7c0f8c39824",
       "implementation_revision": "b79cf1b87f1a22359880d34b21aaed6b34fca794",
       "selection_revision": "2a6dab3ae0d871aaef97c656c90a90fd6715d3f4",
       "selection_notes": "Selected after external merge of PR #10564, a collision-clean identity-neutral refresh, and classification of the SIR28 and GC work. This dependency-free pure contract has the highest bounded leverage: it unlocks fourteen-lane canonical-CBOR parity, both Vault format roots, and the wider Vault application and CLI chain without overlapping any live PR.",
@@ -2793,10 +2813,119 @@
       "id": "canonical-cbor-established-lane-parity",
       "title": "Port canonical CBOR across established lanes",
       "status": "pending",
+      "depends_on": ["canonical-cbor-dotnet-lane-parity", "canonical-cbor-dart-lane-parity", "canonical-cbor-elixir-lane-parity", "canonical-cbor-go-lane-parity", "canonical-cbor-haskell-lane-parity", "canonical-cbor-jvm-lane-parity", "canonical-cbor-lua-lane-parity", "canonical-cbor-perl-lane-parity", "canonical-cbor-python-lane-parity", "canonical-cbor-ruby-lane-parity", "canonical-cbor-swift-lane-parity", "canonical-cbor-typescript-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Completion umbrella for the fourteen established lanes that currently lack canonical CBOR. The post-#10612 security review found this too broad for one review unit, so selectable per-lane children now own delivery; paired .NET and JVM children share their toolchain and fixture harness. This umbrella unblocks only after every child merges, then releases both Vault format roots and the wider Vault application and CLI chain."
+    },
+    {
+      "id": "canonical-cbor-dotnet-lane-parity",
+      "title": "Port canonical CBOR to the C# and F# lanes",
+      "status": "pending",
       "depends_on": ["canonical-cbor-language-neutral-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Implement the closed canonical-CBOR behavior contract in the fourteen established lanes that currently lack it. This pure foundation directly unblocks both vault-pm-format and vault-records, which feed the wider Vault application and CLI dependency chain."
+      "notes": "Implement CBR01 and the closed canonical-cbor-v1 corpus for the paired .NET lanes with native tests, build metadata, documentation, capability metadata, and exact cross-lane output equality."
+    },
+    {
+      "id": "canonical-cbor-dart-lane-parity",
+      "title": "Port canonical CBOR to Dart",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the closed canonical-CBOR contract in Dart and consume every language-neutral case."
+    },
+    {
+      "id": "canonical-cbor-elixir-lane-parity",
+      "title": "Port canonical CBOR to Elixir",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the closed canonical-CBOR contract in Elixir and consume every language-neutral case."
+    },
+    {
+      "id": "canonical-cbor-go-lane-parity",
+      "title": "Port canonical CBOR to Go",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the closed canonical-CBOR contract in Go and consume every language-neutral case."
+    },
+    {
+      "id": "canonical-cbor-haskell-lane-parity",
+      "title": "Port canonical CBOR to Haskell",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the closed canonical-CBOR contract in Haskell and consume every language-neutral case."
+    },
+    {
+      "id": "canonical-cbor-jvm-lane-parity",
+      "title": "Port canonical CBOR to the Java and Kotlin lanes",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement CBR01 and the closed canonical-cbor-v1 corpus for the paired JVM lanes with native tests, build metadata, documentation, capability metadata, and exact cross-lane output equality."
+    },
+    {
+      "id": "canonical-cbor-lua-lane-parity",
+      "title": "Port canonical CBOR to Lua",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the closed canonical-CBOR contract in Lua and consume every language-neutral case."
+    },
+    {
+      "id": "canonical-cbor-perl-lane-parity",
+      "title": "Port canonical CBOR to Perl",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the closed canonical-CBOR contract in Perl and consume every language-neutral case."
+    },
+    {
+      "id": "canonical-cbor-python-lane-parity",
+      "title": "Port canonical CBOR to Python",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the closed canonical-CBOR contract in Python and consume every language-neutral case."
+    },
+    {
+      "id": "canonical-cbor-ruby-lane-parity",
+      "title": "Port canonical CBOR to Ruby",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the closed canonical-CBOR contract in Ruby and consume every language-neutral case."
+    },
+    {
+      "id": "canonical-cbor-swift-lane-parity",
+      "title": "Port canonical CBOR to Swift",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the closed canonical-CBOR contract in Swift and consume every language-neutral case."
+    },
+    {
+      "id": "canonical-cbor-typescript-lane-parity",
+      "title": "Port canonical CBOR to TypeScript",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the closed canonical-CBOR contract in TypeScript and consume every language-neutral case."
     },
     {
       "id": "vault-pm-audit-portable-conformance",

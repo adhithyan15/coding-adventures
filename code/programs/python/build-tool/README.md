@@ -58,6 +58,14 @@ an intentional cross-language dependency only with its exact qualified identity:
 Unknown, unqualified, and self-referential comment entries are ignored. Library
 packages retain priority over same-named programs within one ecosystem.
 
+Haskell resolution accepts exactly one root Cabal manifest and reads only its
+`build-depends` fields. Plain directory names, the legacy
+`coding-adventures-` form, and the declared Cabal package name are aliases in
+the Haskell scope. Java and Kotlin resolution scans real multiline
+`includeBuild("...")` calls outside nested comments and example strings, then
+normalizes their relative paths lexically against already discovered roots in
+the same language. Referenced targets are never opened or followed.
+
 ## Installation
 
 ```bash

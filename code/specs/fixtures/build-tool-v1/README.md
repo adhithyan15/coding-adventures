@@ -45,6 +45,9 @@ The 58-case bootstrap corpus covers every process-free v1 domain:
   positive UTF-8 plus fail-closed invalid-UTF-8 Lua rockspec resolution;
 - ecosystem-scoped same-name aliases across Lua, Perl, Python, and Haskell,
   with only exact qualified BUILD comments admitting cross-language edges;
+- field-aware Cabal and Gradle resolution, including plain and declared Cabal
+  names, ambiguous-manifest rejection, multiline composite builds, lexical
+  same-lane path matching, duplicate collapse, and nested-comment examples;
 - deterministic diamond graph levels;
 - the build-plan distinction between `affected_packages: null` and `[]`; and
 - fail-closed rejection of a future plan version;
