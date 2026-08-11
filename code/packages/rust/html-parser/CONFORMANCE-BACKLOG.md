@@ -205,7 +205,11 @@ Prioritized work items:
    existing ignored-token DOM behavior, matching WPT `template.dat`'s
    `<template><div><tr>` evidence. Valid template table sequences, nested
    templates, real tables, foreign content, ordinary outside-template content,
-   and synthetic template fragments remain on their existing paths. A `tr`
+   and synthetic template fragments remain on their existing paths. The same
+   parse error is now reported when the intervening in-body element has already
+   closed and the authored template is current again, while the row remains
+   ignored. Continue auditing the adjacent table-only starts at that restored
+   template-current boundary. A `tr`
    start after non-whitespace template text now follows the still-active
    template insertion mode into the table-body row transition instead of being
    silently discarded, preserving the authored text before the row. Whitespace,
