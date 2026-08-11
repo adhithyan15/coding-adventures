@@ -1192,9 +1192,39 @@ impl Compiler {
             )));
         }
 
+        // A flat-only bounds check is insufficient for multiple dimensions:
+        // A[1, 3] can otherwise alias A[2, 1] in a 2x2 row-major array. Recover
+        // each dimension's size from the flat length and adjacent strides, and
+        // route an invalid coordinate to the first index beyond the array. The
+        // following array_get/array_set then uses its ordinary backend bounds
+        // trap, without extending the rank-specific descriptor ABI.
+        let descriptor_global = binding.is_global.then(|| binding.slot.clone());
+        if binding.is_global {
+            let handle = self.fresh_temp();
+            self.emit(IIRInstr::new(
+                "global_load",
+                Some(handle.clone()),
+                vec![Operand::Str(binding.slot.clone())],
+                make_array_type(binding.ty.iir()),
+            ));
+            binding.slot = handle;
+            binding.is_global = false;
+        }
+        let length = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "array_len",
+            Some(length.clone()),
+            vec![Operand::Var(binding.slot.clone())],
+            "i64",
+        ));
+        let zero = self.emit_const(ScalarType::Integer, Operand::Int(0));
+        let invalid_label = self.fresh_label("array_coordinate_invalid");
+        let done_label = self.fresh_label("array_coordinate_checked");
+
         // Compute flat 0-based index: Σ_d (sub[d] − lower[d]) * stride[d].
         // Accumulate into `flat`; start with None meaning "haven't written yet".
         let mut flat: Option<String> = None;
+        let mut previous_stride: Option<String> = None;
 
         for (dim_index, (dim, sub_node)) in info.dims.iter().zip(subs).enumerate() {
             let idx = self.emit_expr(sub_node)?;
@@ -1207,13 +1237,13 @@ impl Compiler {
             // diff = sub − lower. A captured array owns its bound metadata in
             // module globals, because the procedure body has a fresh register
             // frame and cannot directly see the declaring block's temporaries.
-            let lower_slot = if binding.is_global {
+            let lower_slot = if let Some(global_slot) = &descriptor_global {
                 let slot = self.fresh_temp();
                 self.emit(IIRInstr::new(
                     "global_load",
                     Some(slot.clone()),
                     vec![Operand::Str(array_dim_global_name(
-                        &binding.slot,
+                        global_slot,
                         dim_index,
                         "lower",
                     ))],
@@ -1231,29 +1261,99 @@ impl Compiler {
                 "i64",
             ));
 
-            // contrib = diff * stride  (or just diff when stride = 1, last dim)
-            let contrib = if let Some(stride) = &dim.stride_slot {
-                let stride_slot = if binding.is_global {
+            let stride_slot = if dim.stride_slot.is_some() {
+                if let Some(global_slot) = &descriptor_global {
                     let slot = self.fresh_temp();
                     self.emit(IIRInstr::new(
                         "global_load",
                         Some(slot.clone()),
                         vec![Operand::Str(array_dim_global_name(
-                            &binding.slot,
+                            global_slot,
                             dim_index,
                             "stride",
                         ))],
                         "i64",
                     ));
-                    slot
+                    Some(slot)
                 } else {
-                    stride.clone()
-                };
+                    dim.stride_slot.clone()
+                }
+            } else {
+                None
+            };
+            let dimension_size = match (&previous_stride, &stride_slot) {
+                (None, None) => length.clone(),
+                (None, Some(stride)) => {
+                    let size = self.fresh_temp();
+                    self.emit(IIRInstr::new(
+                        "div",
+                        Some(size.clone()),
+                        vec![Operand::Var(length.clone()), Operand::Var(stride.clone())],
+                        "i64",
+                    ));
+                    size
+                }
+                (Some(previous), None) => previous.clone(),
+                (Some(previous), Some(stride)) => {
+                    let size = self.fresh_temp();
+                    self.emit(IIRInstr::new(
+                        "div",
+                        Some(size.clone()),
+                        vec![Operand::Var(previous.clone()), Operand::Var(stride.clone())],
+                        "i64",
+                    ));
+                    size
+                }
+            };
+
+            let negative = self.fresh_temp();
+            self.emit(IIRInstr::new(
+                "cmp_lt",
+                Some(negative.clone()),
+                vec![Operand::Var(diff.clone()), Operand::Var(zero.clone())],
+                "i64",
+            ));
+            let nonnegative_label = self.fresh_label("array_coordinate_nonnegative");
+            self.emit(IIRInstr::new(
+                "jmp_if_false",
+                None,
+                vec![
+                    Operand::Var(negative),
+                    Operand::Var(nonnegative_label.clone()),
+                ],
+                "void",
+            ));
+            self.emit(IIRInstr::new(
+                "jmp",
+                None,
+                vec![Operand::Var(invalid_label.clone())],
+                "void",
+            ));
+            self.emit_label(&nonnegative_label);
+            let within_dimension = self.fresh_temp();
+            self.emit(IIRInstr::new(
+                "cmp_lt",
+                Some(within_dimension.clone()),
+                vec![Operand::Var(diff.clone()), Operand::Var(dimension_size)],
+                "i64",
+            ));
+            self.emit(IIRInstr::new(
+                "jmp_if_false",
+                None,
+                vec![
+                    Operand::Var(within_dimension),
+                    Operand::Var(invalid_label.clone()),
+                ],
+                "void",
+            ));
+
+            // contrib = diff * stride  (or just diff when stride = 1, last dim)
+            let contrib = if let Some(stride_slot) = &stride_slot {
                 let prod = self.fresh_temp();
                 self.emit(IIRInstr::new(
                     "mul",
                     Some(prod.clone()),
-                    vec![Operand::Var(diff), Operand::Var(stride_slot)],
+                    vec![Operand::Var(diff), Operand::Var(stride_slot.clone())],
                     "i64",
                 ));
                 prod
@@ -1274,20 +1374,24 @@ impl Compiler {
             } else {
                 contrib // first (or only) dimension: flat = contrib
             });
+            previous_stride = stride_slot;
         }
 
         let flat = flat.expect("dims is always non-empty");
-        if binding.is_global {
-            let handle = self.fresh_temp();
-            self.emit(IIRInstr::new(
-                "global_load",
-                Some(handle.clone()),
-                vec![Operand::Str(binding.slot.clone())],
-                make_array_type(binding.ty.iir()),
-            ));
-            binding.slot = handle;
-            binding.is_global = false;
-        }
+        self.emit(IIRInstr::new(
+            "jmp",
+            None,
+            vec![Operand::Var(done_label.clone())],
+            "void",
+        ));
+        self.emit_label(&invalid_label);
+        self.emit(IIRInstr::new(
+            "mov",
+            Some(flat.clone()),
+            vec![Operand::Var(length)],
+            "i64",
+        ));
+        self.emit_label(&done_label);
         Ok((binding, flat))
     }
 
@@ -9436,6 +9540,33 @@ mod tests {
         assert!(
             matches!(err, CompileError::Runtime(_)),
             "out-of-bounds read should trap at run time, got {err:?}"
+        );
+    }
+
+    /// Each coordinate is checked before flattening, so an invalid column
+    /// cannot alias the next row's first valid cell.
+    #[test]
+    fn multidimensional_cross_coordinate_read_traps() {
+        let src = "begin integer array A[1:2, 1:2]; integer result; \
+                   A[2,1] := 42; result := A[1,3] end";
+        let err = execute_source(src, "test").unwrap_err();
+        assert!(
+            matches!(err, CompileError::Runtime(_)),
+            "cross-coordinate read should trap instead of aliasing A[2,1], got {err:?}"
+        );
+    }
+
+    /// Array formals recover per-dimension sizes from the existing flat length
+    /// and stride descriptor, with no additional procedure arguments.
+    #[test]
+    fn multidimensional_formal_cross_coordinate_write_traps() {
+        let src = "begin integer array A[1:2, 1:2]; integer result; \
+                   procedure overwrite(a); integer array a; a[1,3] := 42; \
+                   overwrite(A); result := 0 end";
+        let err = execute_source(src, "test").unwrap_err();
+        assert!(
+            matches!(err, CompileError::Runtime(_)),
+            "cross-coordinate formal write should trap instead of aliasing A[2,1], got {err:?}"
         );
     }
 

@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.220.65 - 2026-08-11 (ALGOL multidimensional coordinate bounds — seven-backend matrix)
+
+The matrix now proves that an out-of-range second coordinate cannot alias the
+next valid row after row-major flattening. Native AOT, LLVM, WASM, JVM, CLR,
+VM, and JIT all fail closed through their existing array bounds traps.
+
 ## 0.220.64 - 2026-08-11 (ALGOL array value copies — seven-backend matrix)
 
 One- and two-dimensional boolean-array matrix cells now prove true ALGOL
