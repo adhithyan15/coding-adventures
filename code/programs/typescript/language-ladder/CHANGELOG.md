@@ -12,6 +12,12 @@
 - Preserve Arabic Waw independently of the existing Persian record for the same
   Unicode glyph, and queue source recovery for independent Arabic **م** next.
 
+### Changed — Spanish runs 1..89 (HL-C100)
+
+- Regenerate the `bookhashes` chapter-lesson pin: the imperfect split into four,
+  so old Spanish chapters 41–86 shifted to 44–89.
+- Eager bundle 482,224 / 500,000 bytes.
+
 ### Changed — Spanish runs 1..86 (HL-C100)
 
 - Regenerate the `bookhashes` chapter-lesson pin: the subjunctive chapter split

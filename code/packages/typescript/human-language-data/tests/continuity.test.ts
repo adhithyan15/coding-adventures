@@ -771,7 +771,7 @@ describe("the real corpus", () => {
       // Chapter 16 replaces three legacy lessons with eight bounded steps;
       // Chapter 17 replaces four legacy lessons with eight bounded steps.
       // Chapter 18 replaces ten legacy lessons with nine bounded steps.
-      lessonCount: 221, // +4: HL-C98 // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +8 payoff lessons // +1 ES-C03-vos, +1 ES-C02-concordancia
+      lessonCount: 222, // +4: HL-C98 // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +8 payoff lessons // +1 ES-C03-vos, +1 ES-C02-concordancia
       lessonsWithoutSequence: 0,
       forwardPrerequisites: 0,
       // Chapters 9, 10, and 13 each add nine atoms, Chapter 11 adds eleven, and
