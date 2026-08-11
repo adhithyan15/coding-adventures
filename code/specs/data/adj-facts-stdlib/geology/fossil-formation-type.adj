@@ -1,0 +1,57 @@
+% ============================================================================
+% fossil-formation-type — three named ways a fossil can form and what each
+% actually is (adj-facts-stdlib, GEOLOGY).
+% ============================================================================
+% Fossils are not all preserved the same way: an insect trapped in tree sap
+% hardens into amber, a cast/mold fossil is the shape an organism left
+% behind, and permineralization replaces the organism with mineral deposits
+% that form a cast of it. Recall is a binding query:
+%
+%     ? fossil_formation_type(amber, $D)   % preserved_in_hardened_tree_sap
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `fossil_formation_type(type, description)` carrying the source citation,
+% so the lookup above is the ordinary SLD binding query — the engine
+% returns the description WITH its source, on the CPU, with zero model
+% calls, and abstains on a formation type that is not one of these three.
+% The query also runs BACKWARD — bind a description and recall the
+% formation type it names:
+%
+%     ? fossil_formation_type($T, impression_of_a_living_organism)   % cast_or_mold
+%
+% The three formation types, as a little truth table:
+%
+%     type                description                                    quote (verbatim)
+%     ------------------  ---------------------------------------------  --------------------------------------------------------------------------------
+%     amber                preserved_in_hardened_tree_sap                 "Full body insect fossils can be found preserved in hardened tree sap called amber."
+%     cast_or_mold          impression_of_a_living_organism                "A cast or a mold fossil is an impression of a living organism."
+%     permineralization     mineral_deposits_form_a_cast_of_the_organism   "Permineralization is when mineral deposits form a cast of the organism."
+%
+% Provenance: quoted verbatim from Ducksters' "Earth Science for Kids:
+% Fossils" page, which describes each of these three formation types in its
+% own short sentence. WebFetch-verified before writing (twice). `trust
+% consensus` — Ducksters is a reputable non-.gov educational source, the
+% same tier `ocean-zones.adj` uses for its WHOI citation, distinct from the
+% `authoritative` tier used for primary .gov sources like NOAA. A formation
+% type that is NOT one of these three — `freezing`, a real preservation
+% method the same page mentions ("Some fossils are preserved in ice.") but
+% not a row here, since it only gets a single bare sentence rather than the
+% fuller description style used for the three tabled here — is deliberately
+% NOT a row, so a recall ABSTAINS on it rather than inventing a
+% description. NPS's "How Fossils Form" page was investigated first and
+% deprioritized: it mentions fossil types but lacks clean one-sentence
+% definitions per type, unlike Ducksters. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table fossil_formation_type {
+    columns type, description
+
+    row (amber, preserved_in_hardened_tree_sap)
+    row (cast_or_mold, impression_of_a_living_organism)
+    row (permineralization, mineral_deposits_form_a_cast_of_the_organism)
+
+    source "Full body insect fossils can be found preserved in hardened tree sap called amber."
+    locator "https://www.ducksters.com/science/earth_science/fossils.php"
+    trust consensus
+}
