@@ -1,6 +1,6 @@
-//! diagram-ir v0.23.0 - DG00/DG04 semantic IR
+//! diagram-ir v0.24.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.23.0";
+pub const VERSION: &str = "0.24.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -14,6 +14,7 @@ pub enum DiagramDirection {
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramShape {
     Rect,
+    Bar,
     #[default]
     RoundedRect,
     Ellipse,
@@ -956,8 +957,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn version_is_0_23_0() {
-        assert_eq!(VERSION, "0.23.0");
+    fn version_is_0_24_0() {
+        assert_eq!(VERSION, "0.24.0");
     }
     #[test]
     fn default_direction_is_tb() {

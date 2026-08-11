@@ -6,13 +6,14 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.47.0";
+pub const VERSION: &str = "0.48.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
 
 use diagram_ir::{
-    DiagramDirection, DiagramLabel, DiagramShape, EdgeKind, GraphDiagram, GraphEdge, GraphNode,
+    DiagramDirection, DiagramLabel, DiagramShape, DiagramStyle, EdgeKind, GraphDiagram, GraphEdge,
+    GraphNode,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
@@ -1091,6 +1092,19 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                     let node = &mut nodes[node_indices[&id]];
                     node.label = DiagramLabel::new("");
                     node.shape = Some(DiagramShape::Diamond);
+                    cursor.skip_terminators();
+                    continue;
+                }
+                if cursor.consume_if("FORK_JOIN").is_some() {
+                    upsert_state_node(&mut nodes, &mut node_indices, id.clone(), String::new());
+                    let node = &mut nodes[node_indices[&id]];
+                    node.label = DiagramLabel::new("");
+                    node.shape = Some(DiagramShape::Bar);
+                    node.style = Some(DiagramStyle {
+                        fill: Some("#111827".into()),
+                        stroke: Some("#111827".into()),
+                        ..Default::default()
+                    });
                     cursor.skip_terminators();
                     continue;
                 }
@@ -3833,6 +3847,23 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_parses_fork_and_join_pseudostates() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nstate WorkFork <<fork>>\nstate WorkJoin [[join]]\nReady --> WorkFork\nWorkFork --> Running\nRunning --> WorkJoin\n",
+        )
+        .expect("fork and join pseudostates should parse");
+
+        for id in ["WorkFork", "WorkJoin"] {
+            let node = diagram.nodes.iter().find(|node| node.id == id).unwrap();
+            assert_eq!(node.shape, Some(DiagramShape::Bar));
+            assert_eq!(
+                node.style.as_ref().unwrap().fill.as_deref(),
+                Some("#111827")
+            );
+        }
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -4603,7 +4634,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.47.0");
+        assert_eq!(crate::VERSION, "0.48.0");
     }
 
     #[test]

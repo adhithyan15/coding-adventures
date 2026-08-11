@@ -112,8 +112,11 @@ direction, and `[*]` start/end edge states. It lowers into the shared graph IR,
 graph layout, and backend-neutral
 PaintScene instructions, with a Metal-to-PNG fixture. Choice pseudostates accept
 both `<<choice>>` and `[[choice]]` and lower to graph-IR diamonds. Composite
-states, notes, forks, joins, concurrency, click metadata, accessibility metadata, and
+states, notes, concurrency, click metadata, accessibility metadata, and
 state styling remain explicit gaps, so the family is marked partial.
+Fork and join pseudostates accept both upstream marker spellings and lower to a
+compact backend-neutral graph-IR bar shape rendered by existing rectangle Paint
+instructions.
 
 ### Sequence Native Slice
 

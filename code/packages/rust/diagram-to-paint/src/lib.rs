@@ -118,7 +118,7 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
                 stroke_dash_offset: None,
             })
         }
-        DiagramShape::Rect => PaintInstruction::Rect(PaintRect {
+        DiagramShape::Rect | DiagramShape::Bar => PaintInstruction::Rect(PaintRect {
             base: PaintBase::default(),
             x: node.x,
             y: node.y,
