@@ -1,5 +1,48 @@
 # Changelog — gc-core
 
+## 0.34.0 — 2026-08-11 — `should_compact_minor`: moving-minor pacing (AOT00-T9 §5, PR-5)
+
+- **New `FlatHeap::should_compact_minor()`** — whether a paced minor collection
+  that's already been decided (via `should_collect_minor`) should also **compact**
+  (evacuate its young survivors into a compact arena via `collect_minor_compacting`,
+  instead of sweeping them in place). The last piece of AOT00-T9's own §5, marked
+  optional follow-up when PR-4 landed — see that spec's updated status banner.
+- **Deliberately does not reuse `AdaptivePolicy::evaluate`'s single top-priority
+  pick**, unlike `should_compact`/`should_collect_minor` themselves. `evaluate`
+  returns one mutually-exclusive recommendation (Incremental, then Generational,
+  then Compacting) — so on any cycle where `should_collect_minor` has already
+  observed `evaluate` recommend Generational, that same call can *never* also
+  recommend Compacting; re-asking it here would be structurally unable to ever
+  answer "yes". Instead this checks the narrower, independent question
+  "is fragmentation alone over `AdaptivePolicy`'s configured threshold" — reusing
+  that policy's own `compacting_fragmentation_threshold`/`min_cycles_before_advice`
+  fields, so a tuned policy still governs both signals identically, just as two
+  independent sub-questions instead of one priority pick. A low survival ratio and
+  high fragmentation can legitimately hold at once — that combination is exactly
+  what this method exists to detect, not a conflict to arbitrate away (proven by
+  `should_collect_minor_outranks_should_compact`, the existing test showing
+  `should_compact` itself must lose that exact race).
+- Pure policy, like its siblings: names no roots, runs no collection, and does not
+  itself gate on `auto_minor` — the caller is expected to have already gone through
+  `should_collect_minor`'s gate (or an equivalent one) first.
+- **`auto_minor`'s field/`set_auto_minor` doc comments updated** (AOT00-T9 §7): (a)
+  corrected a now-stale claim that native-AOT/LLVM code generators don't emit the
+  write barrier — `field_store`/`array_set` now do, on all three native backends,
+  though that alone hasn't been shown *sufficient* (no exhaustive per-backend
+  mutation-site audit has run); (b) documented the strengthened barrier-fidelity
+  obligation a *moving* minor cycle imposes versus a non-moving one (per
+  `collect_minor_compacting`'s own Safety doc and `AOT00-T9-moving-minor-collector.md`
+  §7's residual-dependency note) — `should_compact_minor`/`collect_minor_compacting`
+  share the exact same `auto_minor` flag, so an embedder attesting is attesting to
+  the stricter bar too, not just the non-moving case.
+- 2 new unit tests: the fragmentation-independent-of-generational-signal proof
+  (mirroring `should_collect_minor_outranks_should_compact`'s own scenario, but
+  showing `should_compact_minor` correctly answers "yes" where `should_compact`
+  answers "no"), and a contract pin that `should_compact_minor` doesn't itself gate
+  on `auto_minor`.
+- Verification: `cargo test`/`clippy` clean (162 tests, up from 160); the two new
+  tests confirmed Miri-clean (`cargo +nightly miri test should_compact_minor`).
+
 ## 0.33.2 — 2026-08-10 — harden the incremental-mark reentrancy guard (security fix)
 
 - **The 11 `mark_in_progress` reentrancy guards across `flat_heap.rs` were

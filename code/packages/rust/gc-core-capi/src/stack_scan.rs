@@ -376,7 +376,8 @@ pub unsafe extern "C" fn __gc_collect_minor() -> i64 {
 /// A **paced** collect: if the heap has reached its adaptive threshold
 /// ([`gc_core::FlatHeap::should_collect`]), run a collection — **precise**
 /// roots when [`__gc_collect_precise`] can provide them, upgraded to a **minor**
-/// cycle ([`__gc_collect_minor_precise`]) when
+/// cycle ([`__gc_collect_minor_precise`], or [`__gc_collect_minor_compacting`] when
+/// [`gc_core::FlatHeap::should_compact_minor`] also fires — AOT00-T9 §5, PR-5) when
 /// [`gc_core::FlatHeap::should_collect_minor`] says the survival-ratio signal
 /// warrants it (AOT00-T8), or to a **compacting** cycle
 /// ([`__gc_collect_compacting`]) when [`gc_core::FlatHeap::should_compact`] says
@@ -390,27 +391,35 @@ pub unsafe extern "C" fn __gc_collect_minor() -> i64 {
 /// cost stays proportional to allocation, and a tight allocation loop can never
 /// starve the collector (the twig_gc.c comment's original motivation).
 ///
-/// **The minor branch requires an explicit attestation** ([`__gc_set_auto_minor`]) —
-/// unlike every other branch here, it is *not* on by default. A minor collection's
-/// soundness depends entirely on the remembered set being complete (every old→young
-/// reference store must have called [`__gc_write_barrier`]), which this crate cannot
-/// verify a given embedder's compiled output actually does; [`gc_core::FlatHeap::
-/// should_collect_minor`] hardcodes `false` until [`gc_core::FlatHeap::set_auto_minor`]
-/// is called, so this branch is unreachable — and `__gc_safepoint`'s behavior is
-/// byte-for-byte what it was before AOT00-T8 — until an embedder opts in.
+/// **The minor branches require an explicit attestation** ([`__gc_set_auto_minor`]) —
+/// unlike the plain/compacting full-scope branches, they are *not* on by default. A
+/// minor collection's soundness depends entirely on the remembered set being
+/// complete (every old→young reference store must have called
+/// [`__gc_write_barrier`]), which this crate cannot verify a given embedder's
+/// compiled output actually does; [`gc_core::FlatHeap::should_collect_minor`]
+/// hardcodes `false` until [`gc_core::FlatHeap::set_auto_minor`] is called, so both
+/// minor branches are unreachable — and `__gc_safepoint`'s behavior is byte-for-byte
+/// what it was before AOT00-T8 — until an embedder opts in. The moving-minor branch
+/// carries a *strictly stronger* version of this same obligation — see
+/// [`__gc_collect_minor_compacting`]'s own doc — but shares the identical attestation
+/// flag; there is no separate opt-in for it.
 ///
-/// **Priority order** (minor, then compacting, then plain precise) mirrors
-/// [`gc_core::policy::AdaptivePolicy`]'s own stated priority: `should_collect_minor`
-/// only answers `true` when Generational is the policy's single top-priority
-/// recommendation (Incremental — the only higher-priority signal — isn't
-/// auto-enactable at a single safepoint call, see `AOT00-T8-adaptive-safepoint-
-/// scheduling.md` §1), and `should_collect_minor`/`should_compact` are mutually
-/// exclusive by the same construction, so checking minor first never masks a
-/// legitimate compacting signal — it only defers to a higher-priority one, exactly
-/// as `should_compact`'s own doc comment already describes for pause-time.
+/// **Priority/dispatch order** (minor scope decided first, then moving-vs-plain
+/// within whichever scope won) mirrors [`gc_core::policy::AdaptivePolicy`]'s own
+/// stated priority for the *scope* choice: `should_collect_minor` only answers
+/// `true` when Generational is the policy's single top-priority recommendation
+/// (Incremental — the only higher-priority signal — isn't auto-enactable at a
+/// single safepoint call, see `AOT00-T8-adaptive-safepoint-scheduling.md` §1), and
+/// `should_collect_minor`/`should_compact` are mutually exclusive by the same
+/// construction, so checking minor first never masks a legitimate full-compacting
+/// signal — it only defers to a higher-priority one, exactly as `should_compact`'s
+/// own doc comment already describes for pause-time. The moving-vs-plain choice
+/// *within* a scope is a genuinely independent second axis, not another rung of that
+/// same priority ladder — see [`gc_core::FlatHeap::should_compact_minor`]'s own doc
+/// for why it deliberately does not reuse `AdaptivePolicy::evaluate`'s single pick.
 ///
 /// **Always calling the precise/minor/compacting entry points is sound, not just an
-/// optimisation opportunity:** all three degrade *exactly* to this function's old
+/// optimisation opportunity:** all four degrade *exactly* to this function's old
 /// fully-conservative behaviour when no stack maps are registered yet (see
 /// their own doc comments — an unmapped frame becomes a conservative region
 /// tiling its span, so nothing is missed and nothing unsound is moved). A
@@ -431,7 +440,11 @@ pub unsafe extern "C" fn __gc_safepoint() -> i64 {
         return 0;
     }
     if with_heap(|h| h.should_collect_minor()) {
-        __gc_collect_minor_precise()
+        if with_heap(|h| h.should_compact_minor()) {
+            __gc_collect_minor_compacting()
+        } else {
+            __gc_collect_minor_precise()
+        }
     } else if with_heap(|h| h.should_compact()) {
         __gc_collect_compacting()
     } else {
@@ -744,6 +757,76 @@ pub unsafe extern "C" fn __gc_collect_compacting() -> i64 {
     freed
 }
 
+/// A **minor** (young-generation-only) collection rooted precisely at this thread's
+/// stack that also **compacts** — evacuates its young survivors into a compact arena
+/// instead of sweeping them in place (AOT00-T9 §5, PR-5). It is to
+/// [`gc_core::FlatHeap::collect_minor_compacting`] exactly what [`__gc_collect_compacting`]
+/// is to `collect_compacting`, and shares [`__gc_collect_minor_precise`]'s identical
+/// frame-pointer walk and attestation gate — the moving-minor cell in the same 2×2
+/// (moving × generational-scope) this file's other three compacting/minor entries fill
+/// the other three cells of.
+///
+/// **Requires [`__gc_set_auto_minor`] attestation, same as [`__gc_collect_minor_precise`]
+/// — and for a strictly stronger reason.** A non-moving minor cycle tolerates an
+/// occasional missed [`__gc_write_barrier`] call as long as the child it would have
+/// recorded is independently reachable; a *moving* minor cycle does not have that slack
+/// (see [`gc_core::FlatHeap::collect_minor_compacting`]'s own Safety doc, and
+/// `AOT00-T9-moving-minor-collector.md` §7's residual-dependency note). Gating here, on
+/// the exact same [`gc_core::FlatHeap::auto_minor`] flag `__gc_collect_minor_precise`
+/// already requires, does not by itself prove an attesting embedder's coverage meets
+/// this stronger bar — that responsibility still rests with whoever calls
+/// [`__gc_set_auto_minor`] — but it does mean an *unattested* caller can never reach the
+/// moving path either, exactly mirroring the non-moving case.
+///
+/// With no stack maps registered this degrades to exactly [`__gc_collect_minor_precise`]
+/// (every frame becomes one conservative region tiling `[sp, base)`, so nothing is
+/// precisely reachable and therefore nothing is movable) — the same safe degradation
+/// `__gc_collect_compacting` has relative to `__gc_collect_precise`. A failed stack-base
+/// detection collects nothing this cycle — bias-to-leak, identical to every other collect
+/// entry here.
+///
+/// Returns the number of objects reclaimed (genuinely-dead only; a relocated survivor is
+/// not a free — see `collect_minor_compacting`). `0` if unattested or the stack range
+/// can't be trusted.
+///
+/// # Safety
+///
+/// Same contract as [`__gc_collect_minor_precise`] / [`__gc_collect_compacting`]: sound to
+/// call from any thread that owns its stack; must not run while another thread mutates the
+/// same heap. Every old→young reference store the embedder's compiled output performs must
+/// have called [`__gc_write_barrier`] — the strengthened obligation this function's own doc
+/// above describes.
+#[no_mangle]
+#[inline(never)]
+pub unsafe extern "C" fn __gc_collect_minor_compacting() -> i64 {
+    if !with_heap(|h| h.auto_minor()) {
+        return 0;
+    }
+    // Spill callee-saved registers into a stack buffer (in this frame), then SP.
+    let mut regs = [0usize; SPILL_SLOTS];
+    let sp = spill_and_sp(regs.as_mut_ptr());
+    // Capture this frame's frame pointer — the walk's unwind anchor.
+    let fp = current_fp();
+    let base = stack_base();
+
+    // Same trustworthy-range gate as every other precise entry (bias-to-leak).
+    let freed = if base != 0 && sp < base && base - sp <= MAX_STACK_SCAN {
+        let mut slots: Vec<usize> = Vec::new();
+        let mut regions: Vec<(*const u8, usize)> = Vec::new();
+        crate::precise_walk::build_precise_roots(fp, sp, base, &mut slots, &mut regions);
+        regions.push((
+            regs.as_ptr() as *const u8,
+            SPILL_SLOTS * core::mem::size_of::<usize>(),
+        ));
+        with_heap(|h| h.collect_minor_compacting(&slots, &regions).freed as i64)
+    } else {
+        0
+    };
+
+    core::hint::black_box(&regs);
+    freed
+}
+
 /// Upper bound on how many bytes of stack a single conservative scan will walk
 /// (256 MiB). A corrupt or absurd `base` (far above `sp`) would otherwise make
 /// `collect_region` read hundreds of GB and appear to hang — an
@@ -1016,6 +1099,78 @@ mod tests {
             "the unrooted OLD object survives — a minor cycle never scans/frees the old generation"
         );
         assert_eq!(__gc_collection_count(), 2, "minor collections count too");
+        core::hint::black_box(kept);
+    }
+
+    /// `__gc_collect_minor_compacting` without `__gc_set_auto_minor` attestation is a
+    /// safe no-op — mirrors the exact property `__gc_collect_minor_precise` itself
+    /// enforces (security-review hardening). Collects nothing (freed == 0) and does
+    /// not bump the collection count, regardless of how much garbage is present.
+    #[test]
+    fn minor_compacting_collect_is_a_noop_without_attestation() {
+        let _guard = crate::TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        __gc_reset();
+        assert!(!with_heap(|h| h.auto_minor()), "unattested by default after reset");
+        let garbage = __gc_alloc(16);
+        assert!(garbage != 0);
+        let freed = unsafe { __gc_collect_minor_compacting() };
+        assert_eq!(freed, 0, "unattested: no collection runs at all");
+        assert_eq!(__gc_collection_count(), 0, "unattested: collection count untouched");
+        __gc_reset();
+    }
+
+    /// End-to-end smoke test for the argument-less **moving-minor** entry
+    /// `__gc_collect_minor_compacting` (AOT00-T9 §5, PR-5): the same asm-capture →
+    /// frame-pointer-walk path `__gc_collect_minor_precise` uses, now driving
+    /// `collect_minor_compacting`. Mirrors `minor_precise_collect_keeps_live_local_
+    /// and_retains_old`'s exact shape — same two properties matter here: a
+    /// stack-rooted young local survives (its VALUE intact, whether or not it
+    /// physically relocated — this test doesn't assert on the address, only the
+    /// contents, since with no stack maps registered nothing is precisely reachable
+    /// and this degrades to exactly `__gc_collect_minor_precise`, matching that
+    /// function's own doc), and a genuinely unreachable OLD-generation object
+    /// survives too, because a minor cycle — moving or not — never scans or frees
+    /// the old generation.
+    #[test]
+    fn minor_compacting_collect_keeps_live_local_and_retains_old() {
+        let _guard = crate::TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        __gc_reset();
+        run_minor_compacting_collect_case();
+        __gc_reset();
+    }
+
+    #[inline(never)]
+    fn run_minor_compacting_collect_case() {
+        // Same probe-kind trick as run_minor_precise_collect_case's own doc explains.
+        let probe_kind = unsafe { crate::__gc_register_kind(core::ptr::null(), 0) } as u16;
+
+        // Tenure an object to the old generation, then orphan it.
+        let old = crate::__gc_alloc_kind(16, probe_kind);
+        assert!(old != 0);
+        let _ = unsafe { __gc_collect() }; // stack-rooted at this call -> tenured
+        assert_eq!(__gc_collection_count(), 1);
+
+        let kept = __gc_alloc(16); // young, rooted through the collect below
+        assert!(kept != 0);
+        unsafe { *(kept as *mut i64) = 0x0ff1ce };
+
+        crate::__gc_set_auto_minor(1);
+        let _freed = unsafe { __gc_collect_minor_compacting() };
+
+        assert_eq!(
+            unsafe { *(kept as *const i64) },
+            0x0ff1ce,
+            "the stack-rooted young object's contents survive the moving-minor collect \
+             (with no stack maps registered nothing is movable, so it stays in place, but \
+             this asserts on the value, not the address, so it holds either way)"
+        );
+        assert_eq!(
+            unsafe { crate::__gc_kind_of(old) },
+            probe_kind as i64,
+            "the unrooted OLD object survives — a minor cycle, moving or not, never \
+             scans/frees the old generation"
+        );
+        assert_eq!(__gc_collection_count(), 2, "minor-compacting collections count too");
         core::hint::black_box(kept);
     }
 

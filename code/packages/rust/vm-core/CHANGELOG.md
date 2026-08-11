@@ -1,5 +1,52 @@
 # Changelog — vm-core
 
+## [0.24.0] — 2026-08-11 (`run_safepoint` opts into moving-minor collection, AOT00-T9 §5 PR-5 follow-up)
+
+`gc-core` 0.34.0 (AOT00-T9 §5, PR-5) added `FlatHeap::should_compact_minor` — a
+paced-collection-pacing predicate answering "should an already-decided minor cycle
+also compact" (evacuate its young survivors into a compact arena, via
+`collect_minor_compacting`, instead of sweeping them in place). This wires it into
+`run_safepoint`, the same call site 0.23.0 wired `should_collect_minor` into:
+
+- **`run_safepoint`** now checks `ctx.heap.should_compact_minor()` inside the
+  already-existing `should_collect_minor()` branch, calling `collect_minor_compacting`
+  instead of `collect_minor_mixed` when it fires. The scope decision (minor vs full)
+  is unchanged from 0.23.0/0.20.0 — this only decides moving-vs-plain *within*
+  whichever scope already won.
+- **No new attestation.** `should_compact_minor`/`collect_minor_compacting` share
+  the exact same `set_auto_minor(true)` flag `VMCore::new()` already sets at
+  construction — there is no separate opt-in for the moving path. That flag now
+  carries a strictly stronger obligation (per `collect_minor_compacting`'s own
+  Safety doc: a barrier-missed old→young store is tolerable for a non-moving minor
+  cycle but not a moving one), which `handle_gc_field_store`'s existing
+  unconditional-on-every-reference-store barrier call already satisfies — no code
+  change needed there, just a documentation note on `run_safepoint`'s own doc
+  comment.
+- **Not yet load-bearing for relocation.** Every `gc_alloc`'d object in vm-core is
+  registered under kind 0 (opaque/conservative) — there is no IIR op that registers
+  a movable kind on this heap — so under `classify_mobility`'s `movable = precise ∧
+  ¬pinned ∧ kind≠0` rule, nothing vm-core allocates is ever movable today.
+  `collect_minor_compacting` therefore degrades to byte-for-byte the same
+  freed/survived counts `collect_minor_mixed` would produce, exactly as
+  `should_compact`'s own pre-existing (0.20.0-era) wiring into this same safepoint
+  has always degraded, for the identical reason. This is sound (pin-when-unsure),
+  not a correctness gap — relocation correctness itself is proven where it belongs,
+  in `gc-core`'s own already-reviewed `collect_minor_compacting` test suite
+  (AOT00-T9 PR-2 through PR-4), against kind-registered objects a real, non-vm-core
+  root set can move.
+- New test `safepoint_stays_minor_scoped_when_should_compact_minor_also_fires`
+  (`tests/gc_heap.rs`) — the execution-level analogue of `gc-core`'s own
+  `should_compact_minor_follows_fragmentation_independent_of_the_generational_signal`.
+  Engineers a real allocation/collection sequence that trips BOTH
+  `should_collect_minor` (low EMA survival ratio) and `should_compact_minor` (high
+  fragmentation) simultaneously, and proves the safepoint still stays MINOR-scoped
+  (an unrooted, tenured old object survives) rather than escalating to a full
+  collect just because both signals fired at once. Confirmed load-bearing by
+  reverting the branch to call `collect_compacting` (full scope) and observing the
+  predicted failure (the old object gets reclaimed).
+- Verification: `cargo test` clean (`gc_heap.rs` 14 tests, up from 13; 108 total
+  across all vm-core test binaries); `cargo clippy --all-targets` clean.
+
 ## [0.23.0] — 2026-08-07 (`run_safepoint` opts into automatic minor collection, AOT00-T8 follow-up)
 
 `gc-core` 0.28.0 (AOT00-T8) added `FlatHeap::should_collect_minor` — an automatic

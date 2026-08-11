@@ -375,3 +375,77 @@ fn safepoint_over_threshold_picks_minor_when_policy_recommends_it() {
          would have reclaimed both, since neither is rooted)"
     );
 }
+
+/// AOT00-T9 §5 (PR-5): when the fragmentation signal driving `should_compact_minor`
+/// is *also* independently over threshold at the moment of a paced minor collection,
+/// the safepoint must still stay MINOR-scoped (`collect_minor_compacting`, which
+/// evacuates the young generation into a compact arena) — never escalate to a
+/// FULL scope (`collect_compacting`) just because both a low-survival and a
+/// high-fragmentation signal happen to be true at once. This is the execution-level
+/// analogue of `gc-core`'s own unit test
+/// `should_compact_minor_follows_fragmentation_independent_of_the_generational_signal`,
+/// and mirrors this file's own `safepoint_over_threshold_picks_minor_when_policy_
+/// recommends_it` (same "unrooted OLD object's survival is the only signal that can
+/// distinguish minor from full scope" proof), engineered here to also deliberately
+/// cross the fragmentation threshold rather than relying on it firing incidentally.
+///
+/// **What this does NOT (and today, cannot) prove:** that the collection *moved*
+/// anything. `handle_gc_alloc` always allocates under kind 0 (opaque/conservative —
+/// vm-core exposes no IIR op to register a movable kind), so under
+/// `classify_mobility`'s `movable = precise ∧ ¬pinned ∧ kind≠0` rule nothing vm-core
+/// allocates is ever movable — `collect_minor_compacting` degrades to byte-for-byte
+/// the same observable freed/survived counts as `collect_minor_mixed` would produce,
+/// exactly as `should_compact`'s own pre-existing (already-shipped) wiring into this
+/// same safepoint has always degraded for the identical reason. Relocation
+/// correctness itself is proven where it belongs — `gc-core`'s own already-reviewed
+/// `collect_minor_compacting` test suite (AOT00-T9 PR-2 through PR-4), with
+/// kind-registered objects a conservative-stack-scan-free precise root set can
+/// actually move. What's left to prove at this layer, and what this test proves, is
+/// that the *dispatch* — not the primitive — got the scope right.
+#[test]
+fn safepoint_stays_minor_scoped_when_should_compact_minor_also_fires() {
+    let mut instrs = Vec::new();
+    // Five batches of 10 pure-garbage objects each, one full `gc_collect` per
+    // batch: each cycle's heap_size_before=10, survived=0, heap_size_after=0.
+    // peak_heap_size settles at 10; fragmentation = (10-0)/10 = 1.0 every cycle
+    // (well past the 0.40 threshold); EMA survival ratio stays exactly 0 (well
+    // under the 0.15 threshold); after 5 cycles, total_collections=5 satisfies
+    // AdaptivePolicy's min_cycles_before_advice for BOTH signals.
+    for _ in 0..5 {
+        for _ in 0..10 {
+            instrs.push(ins("gc_alloc", Some("garbage"), vec![], "ref<pair>"));
+            instrs.push(ins("const", Some("garbage"), vec![Operand::Int(0)], "i64"));
+        }
+        instrs.push(ins("gc_collect", None, vec![], "void"));
+    }
+    // Tenure `old` alongside one more garbage object (6th collect): sr = 1/2 = 0.5
+    // this cycle, EMA lands at 0.8*0 + 0.2*0.5 = 0.1 (under 0.15 — should_collect_minor
+    // fires); peak_heap_size stays 10 (unchanged, since before=2 < 10), heap_size_after=1,
+    // fragmentation = (10-1)/10 = 0.9 (well over 0.40 — should_compact_minor fires too).
+    instrs.push(ins("gc_alloc", Some("old"), vec![], "ref<pair>"));
+    instrs.push(ins("gc_alloc", Some("garbage"), vec![], "ref<pair>"));
+    instrs.push(ins("const", Some("garbage"), vec![Operand::Int(0)], "i64"));
+    instrs.push(ins("gc_collect", None, vec![], "void"));
+    // Orphan `old` (now tenured) — no further collect runs before the final
+    // safepoint, so nothing else can reclaim it in the meantime.
+    instrs.push(ins("const", Some("old"), vec![Operand::Int(0)], "i64"));
+    // A large, unrooted YOUNG block crosses the 1 MiB threshold.
+    instrs.push(ins("gc_alloc", Some("big"), vec![Operand::Int(1_100_000)], "ref<bytes>"));
+    instrs.push(ins("const", Some("big"), vec![Operand::Int(0)], "i64"));
+    instrs.push(ins("safepoint", None, vec![], "void"));
+    instrs.push(ins("const", Some("done"), vec![Operand::Int(1)], "i64"));
+    instrs.push(ins("ret", None, vec![Operand::Var("done".into())], "i64"));
+
+    let (result, vm) = run_with_vm(instrs);
+    assert_eq!(result, Some(Value::Int(1)));
+    assert_eq!(vm.gc_heap().collection_count(), 7, "the final safepoint ran exactly one more cycle");
+    assert_eq!(
+        vm.gc_heap().object_count(),
+        1,
+        "the unrooted young block was reclaimed but the unrooted OLD object survived — \
+         proving the safepoint stayed MINOR-scoped even though should_compact_minor's own \
+         fragmentation signal was also independently over threshold; a scope-escalation bug \
+         (routing to full collect_compacting instead of collect_minor_compacting) would have \
+         reclaimed the old object too, since neither it nor the big block is rooted"
+    );
+}

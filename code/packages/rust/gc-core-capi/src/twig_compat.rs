@@ -28,8 +28,8 @@
 
 use crate::stack_scan::{
     __gc_collect, __gc_collect_compacting, __gc_collect_incremental_finish,
-    __gc_collect_incremental_start, __gc_collect_incremental_step, __gc_collect_minor_precise,
-    __gc_collect_precise, __gc_safepoint,
+    __gc_collect_incremental_start, __gc_collect_incremental_step, __gc_collect_minor_compacting,
+    __gc_collect_minor_precise, __gc_collect_precise, __gc_safepoint,
 };
 use crate::{
     __gc_alloc, __gc_alloc_kind, __gc_collection_count, __gc_kind_of, __gc_live_bytes,
@@ -238,6 +238,30 @@ pub extern "C" fn __twig_gc_set_auto_minor(on: i64) {
 #[inline(never)]
 pub unsafe extern "C" fn __twig_gc_collect_minor_precise() -> i64 {
     unsafe { __gc_collect_minor_precise() }
+}
+
+/// `__twig_gc_collect_minor_compacting()` → [`__gc_collect_minor_compacting`]. A **minor**
+/// (young-generation-only) collection rooted precisely at the caller's stack that also
+/// **compacts** — evacuates its young survivors into a compact arena instead of sweeping
+/// them in place (AOT00-T9 §5, PR-5). Returns the freed-object count.
+///
+/// **Requires [`__gc_set_auto_minor`] attestation, same as
+/// [`__twig_gc_collect_minor_precise`] — and for a strictly stronger reason**, per
+/// [`__gc_collect_minor_compacting`]'s own doc (a moving minor cycle's barrier-fidelity
+/// obligation is stricter than a non-moving one's). Unattested, this alias is a safe
+/// no-op (collects nothing, returns `0`). Test-only seam for now, added alongside its
+/// sibling to let an end-to-end test drive a real moving-minor collection (after
+/// attesting) and prove a young survivor both relocates and stays reachable through a
+/// remembered-set edge.
+///
+/// # Safety
+///
+/// Same contract as [`__gc_collect_minor_compacting`]: the calling thread must own its
+/// stack; it must not run while another thread mutates the same heap.
+#[no_mangle]
+#[inline(never)]
+pub unsafe extern "C" fn __twig_gc_collect_minor_compacting() -> i64 {
+    unsafe { __gc_collect_minor_compacting() }
 }
 
 /// `__twig_gc_kind_of(ptr)` → [`__gc_kind_of`]. Returns the kind id of the live heap
