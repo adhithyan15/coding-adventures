@@ -1,38 +1,49 @@
-Spanish, chapter 53: Tomar — Taking, and a Word With No Past.
+Spanish, chapter 53: Escribir — Writing Is Scratching.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-tomar — "to take", and nobody knows where it came from.
+escribir — "to write", which once meant "to scratch".
 
 Warm-up.
 [pause 2 seconds]
-Every verb so far ran straight back to a Latin root you could name. Here is one that does not — and the gap is the useful part.
+Leer gathers letters off a page. This is the other half of the same skill — and its root remembers a time when writing was done with a sharp point in wax.
 
 Sounds you'll need.
-r-tap — one soft tap of the tongue: to-MAR.
-vowel-o — a short, pure o, with no English glide toward ow.
+st-no-e — Spanish will not begin a word with sc-, sp-, st-, so it props one up with an e-: es-cri-BIR.
+b-soft — between vowels the b is soft, lips barely touching.
 
-The word, taken apart: tomar.
-tomar ("to take") is a plain -ar verb: tomo, tomas, toma, tomamos, toman. It is one of the most common verbs in the language, and its origin is genuinely unsettled.
-The leading proposal derives it from Latin autumāre, "to take as, to assert", worn down through an intermediate tumar; a rival one points to a pre-Roman Iberian word Latin never recorded. Neither is proved, and careful dictionaries say so. "We don't know" is a real answer in etymology.
-It carries a second everyday sense across Latin America: to drink. A waiter asking ¿Qué vas a tomar? is asking what you would like.
+The word, taken apart: escribir.
+escribir ("to write") from Latin scrībere, whose first sense was "to scratch, to incise". Writing was cutting a line into wax or stone before it was ever ink on paper.
+The English family is huge, and every member still works with a pen:
+scribe, scribble, script, scripture.
+describe (de- "down") and description; prescribe (prae- "before") and prescription; subscribe (sub- "under" — you signed at the bottom); inscription; transcript; postscript.
+manuscript — manus "hand" + scriptum: written by hand.
+conscription — being written into an army.
+The Spanish past participle is escrito ("written"), which is English script wearing different clothes.
 
-Why it's said this way: the verb Latin did leave, and how to handle it.
-Latin's own "gather up" verb survived perfectly well: coger from colligere, which is com- ("together") + legere — the very root you met in leer. English took that same Latin word twice: collect straight from the Latin, and coil by way of French.
-In Spain coger is the plain everyday word: coger el autobús, catch the bus. In much of Latin America — Argentina, Mexico and well beyond — it is coarse slang for sex, and using it innocently will derail a conversation. Tomar is safe on both sides of the Atlantic, which is a large part of why it won.
+Grammar Lens: an -ir verb, and a productive spelling rule.
+Escribir is a plain -ir verb, the family vivir opened:
+[a table of 5 rows, read aloud]
+person: yo. form: escribo. ending: -o.
+person: tú. form: escribes. ending: -es.
+person: él/ella/usted. form: escribe. ending: -e.
+person: nosotros. form: escribimos. ending: -imos.
+person: ellos/ustedes. form: escriben. ending: -en.
+That propped-up e- is a rule you can run yourself, not a quirk of one word: Latin schola became escuela, spatha became espada (sword), stāre became estar, Hispānia became España. It is also why a Spanish speaker learning English says eh-Spain.
+Now you can state a plan out loud: Pienso escribir — "I mean to write."
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "tomo, tomas, toma, tomamos, toman"]
+[your turn — say: "escribo, escribes, escribe, escribimos, escriben"]
 [pause 8 seconds for the answer]
-[your turn — say: "Tomo un café" — I'll have a coffee]
+[your turn — say: "Leo y escribo español" — I read and write Spanish]
 [pause 8 seconds for the answer]
-[your turn — say: "Tomo el autobús" — the safe way to say it anywhere]
+[your turn — say: "Pienso escribir" — I mean to write]
 [pause 8 seconds for the answer]
-[your turn — say: "coger" then English "collect, coil" — one root, and one place to be careful]
+[your turn — say: "escribir" then English "scribe, describe, manuscript" — the scratching family]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Does tomar have a confirmed etymology? (No — autumāre and a pre-Roman source are both unproved.) What Latin verb gives coger, and which root sits inside it? (Colligere, holding legere, "to gather", from leer.) Why reach for tomar instead? (Coger is coarse slang across much of Latin America.) Next: preguntar, and the two different asks.
+What did scrībere mean first? (To scratch, to incise.) Why does Spanish say escuela and España? (It refuses to open a word with sc- or sp-, so it props an e- in front.) Say "I read and write Spanish". (Leo y escribo español.) And what does legere mean, from the lesson before? (To gather, to pick out.) Next chapter: taking, asking, helping — and a verb that runs backwards.

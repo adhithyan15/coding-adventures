@@ -230,7 +230,7 @@ describe("corpus snapshot", () => {
     // Chapter 10 adds singular ir and possessives at A1. Chapter 11 adds one more
     // definite-reference lesson there; its other work is A2. Chapter 12 adds its
     // newly mapped terminal checkpoints at A2 on SPINE-SAY-WHAT-I-DO.
-    expect(summary.byLevel.A1).toBe(310); // +1: ES-C02-concordancia sits on SPINE-TIME-OF-DAY
+    expect(summary.byLevel.A1).toBe(311); // +1: ES-C02-concordancia sits on SPINE-TIME-OF-DAY
     // Chapter 15's split adds three more mapped A2 lessons without changing its node.
     // Chapter 16's split adds five more mapped A2 lessons on the same node.
     // Chapter 17's split adds four more mapped A2 lessons on the same node.
@@ -238,7 +238,7 @@ describe("corpus snapshot", () => {
     // +3: TA-C39-vendum, TA-C39-evvalavu and TA-C39-oru. Tamil's curriculum.json had
     // already declared SPINE-SAY-WHAT-I-WANT with an empty segment list and VERB-WANT
     // in `omits`; chapter 39 realizes the node, so the omission is removed with it.
-    expect(summary.byLevel.A2).toBe(418); // +39: Spanish chapters 11-18 plus prerequisite closure
+    expect(summary.byLevel.A2).toBe(422); // +39: Spanish chapters 11-18 plus prerequisite closure
     // 8, not 0: Spanish chapters 38 and 41 realize SPINE-NARRATE-EVENTS and
     // SPINE-GIVE-REASONS, four lessons each — the only B1 nodes any track has touched.
     // B2-C2 remain authored-but-unrealized, in every track.
@@ -310,7 +310,7 @@ describe("corpus snapshot", () => {
     // that joins, not inferred from the total.
     // +1, measured as a set difference: TA-W20-read-onru is the only lesson that
     // joins. The three A2 speaking lessons are above the A1 cut and do not.
-    expect(ramp).toHaveLength(1206); // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14
+    expect(ramp).toHaveLength(1207); // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14
     expect(ramp.length).toBeLessThan(lessons.length);
   });
 });

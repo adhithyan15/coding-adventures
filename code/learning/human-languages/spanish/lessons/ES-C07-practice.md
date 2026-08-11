@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C07-practice
 spine_node: SPINE-ASK-LOCATION
-sequence: 630
-chapter: 21
+sequence: 650
+chapter: 23
 type: practice-mix
 headword: (practice)
 gloss: asking and answering with the three regular singular verb patterns
