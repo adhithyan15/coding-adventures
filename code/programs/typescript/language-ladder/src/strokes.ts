@@ -249,6 +249,10 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // descends down-right through its curved shoulder, and turns left along the
 // baseline in the same pen-down run. Its one-way-connector context stays
 // explicit, but the path does not infer motion from a contextual form.
+// The same page's Arabic ر clip begins at the independent form's upper tip,
+// descends through its short stroke, and sweeps left through the lower curve
+// without lifting. Its scoped source stays distinct from Urdu ر even though
+// both paths fit the same vendored Noto Naskh glyph.
 // Persian ا opens UT Austin's freehand alphabet demonstration: one vertical
 // movement travels from the top to the baseline. The lesson presents the
 // alphabet right-to-left, while this isolated non-connector remains one stroke.
@@ -743,6 +747,44 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: arabicAlphabetSource("د"),
+  },
+  [ductusKey("arabic", "ر")]: {
+    script: "arabic",
+    glyph: "ر",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "begin at the upper tip and descend through the short stroke",
+            path: [
+              { x: 250, y: 320 },
+              { x: 248, y: 280 },
+              { x: 255, y: 235 },
+              { x: 270, y: 190 },
+              { x: 287, y: 145 },
+              { x: 300, y: 95 },
+              { x: 304, y: 48 },
+            ],
+          },
+          {
+            label: "sweep left through the lower curve without lifting",
+            path: [
+              { x: 304, y: 48 },
+              { x: 298, y: 8 },
+              { x: 284, y: -30 },
+              { x: 260, y: -68 },
+              { x: 226, y: -103 },
+              { x: 185, y: -130 },
+              { x: 140, y: -146 },
+              { x: 95, y: -151 },
+              { x: 52, y: -147 },
+              { x: 10, y: -136 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ر"),
   },
   [ductusKey("urdu-nastaliq", "ج")]: {
     script: "urdu-nastaliq",
