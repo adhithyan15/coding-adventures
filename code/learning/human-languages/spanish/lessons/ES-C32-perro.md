@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C32-perro
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1590
-chapter: 79
+sequence: 1610
+chapter: 81
 type: word
 headword: perro
 gloss: dog — a genuinely unsolved etymology, and the Latin word it pushed out

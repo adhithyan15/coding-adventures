@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 59,
-  "title": "The Conditional --- Saying What Would Happen",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:3644411c0d5eed8c",
+  "title": "Synthesis --- Three Exceptions, and No Others",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:a57af1ea7923e9b4",
   "lessons": [
     {
-      "id": "ES-C17-condicional",
-      "sequence": 1162,
-      "title": "hablaría — the whole infinitive meets -ía",
-      "headword": "hablaría",
-      "romanization": "hablaría",
-      "gloss": "the singular conditional of hablar — hablaría, hablarías, hablaría",
+      "id": "ES-C16-practice",
+      "sequence": 1168,
+      "title": "Practice — keep the past open or close it",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "a singular checkpoint for the open past and the completed-past contrast",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac582bc5a290d733",
+      "sourceHash": "fnv1a64:c9cfcd35d97f8f2d",
       "notice": null,
       "blocks": [
         {
@@ -35,47 +35,360 @@
             },
             {
               "kind": "speech",
-              "text": "Hablaré español places speaking in the future. Hablaría español means “I would speak Spanish” in an imagined or conditional situation. Today the situation can remain unstated; learn the form and its core “would” meaning first."
+              "text": "This checkpoint adds no vocabulary and no plural persons. Retrieve the seven learned singular rows, then choose whether a known sentence presents the past as completed or leaves it open as background, progress, or habit."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: three familiar persons",
+          "title": "Grammar Lens: the complete frame for this chapter",
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep hablar whole, then add the learned singular conditional endings:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "conditional"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. conditional: hablaría.",
-                "person: tú. conditional: hablarías.",
-                "person: él / ella / usted. conditional: hablaría."
-              ]
+              "text": "Regular rows:"
             },
             {
               "kind": "speech",
-              "text": "Say hablaría, hablarías, hablaría. The first and third forms match. The accent keeps í-a in separate syllables, just as it did in comía. Plural persons wait."
+              "text": "yo: hablaba, comía, vivía."
+            },
+            {
+              "kind": "speech",
+              "text": "tú: hablabas, comías, vivías."
+            },
+            {
+              "kind": "speech",
+              "text": "él / ella / usted: hablaba, comía, vivía."
+            },
+            {
+              "kind": "speech",
+              "text": "The three special rows:"
+            },
+            {
+              "kind": "speech",
+              "text": "yo: era, iba, veía."
+            },
+            {
+              "kind": "speech",
+              "text": "tú: eras, ibas, veías."
+            },
+            {
+              "kind": "speech",
+              "text": "él / ella / usted: era, iba, veía."
+            },
+            {
+              "kind": "speech",
+              "text": "The first and third forms match in every learned row. Comer and vivir share -ía, -ías, -ía. Ver keeps ve- before that material. Plural persons remain outside this checkpoint."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one scene, two frames",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hablé español. — completed event. Hablaba español. — open, background, or habitual speaking."
+            },
+            {
+              "kind": "speech",
+              "text": "Viví en Madrid. — completed stretch. Vivía en Madrid. — we stand inside that past stretch."
+            },
+            {
+              "kind": "speech",
+              "text": "Fui a Madrid. — completed trip. Iba a Madrid. — motion was in progress or habitual."
+            },
+            {
+              "kind": "speech",
+              "text": "The tense does not mechanically report how long something lasted. It frames the past from a different viewpoint."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The histories, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-aba continues the Latin -ābam family. -ía continues material from the -ēbam family after several Romance changes. Era continues eram; iba continues ībam from īre; and veía keeps the ve- shape also visible in Old Spanish veer. These are historical bridges, not recipes for generating unlearned forms."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“hablaba, comía, vivía”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “hablaba, comía, vivía”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“era, iba, veía”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “era, iba, veía”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Hablé / hablaba, viví / vivía, fui / iba”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Hablé / hablaba · viví / vivía · fui / iba”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-practice-regular-yo-forms",
+              "prompt": "Give the imperfect yo forms of hablar, comer, and vivir, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-AR-IMPERFECT-SINGULAR",
+                "ES-GRAMMAR-ER-IMPERFECT-SINGULAR",
+                "ES-GRAMMAR-IR-IMPERFECT-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "hablaba, comía, vivía",
+                "hablaba comía vivía",
+                "hablaba / comía / vivía"
+              ],
+              "feedback": {
+                "correct": "Right: hablaba, comía, vivía.",
+                "incorrect": "Retrieve hablaba, then the shared -ía forms comía and vivía."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-practice-short-yo-forms",
+              "prompt": "Give the imperfect yo forms of ser, ir, and ver, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-SER-IMPERFECT-SINGULAR",
+                "ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR",
+                "ES-GRAMMAR-VER-IMPERFECT-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "era, iba, veía",
+                "era iba veía",
+                "era / iba / veía"
+              ],
+              "feedback": {
+                "correct": "Right: era, iba, veía.",
+                "incorrect": "Retrieve the three learned rows: era, iba, veía."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-practice-hablaba-espanol",
+              "prompt": "Say 'I was speaking Spanish' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL",
+                "ES-GRAMMAR-AR-IMPERFECT-SINGULAR",
+                "ES-LEX-HABLAR"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "hablaba español.",
+                "hablaba español"
+              ],
+              "feedback": {
+                "correct": "Right: Hablaba español.",
+                "incorrect": "Use imperfect hablaba, then known español."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-practice-vivia-madrid",
+              "prompt": "Say 'I was living in Madrid' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-IR-IMPERFECT-SINGULAR",
+                "ES-LEX-VIVIR",
+                "ES-LEX-EN"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "vivía en madrid.",
+                "vivía en madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Vivía en Madrid.",
+                "incorrect": "Use imperfect vivía, then known en Madrid."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-practice-iba-madrid",
+              "prompt": "Say 'I was going to Madrid' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR",
+                "ES-LEX-IR",
+                "ES-LEX-A"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "iba a madrid.",
+                "iba a madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Iba a Madrid.",
+                "incorrect": "Use imperfect iba, then known a Madrid."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-practice-comi-comia",
+              "prompt": "Choose the open past: comí or comía.",
+              "assesses": [
+                "ES-GRAMMAR-ER-PRETERITE-SINGULAR",
+                "ES-GRAMMAR-ER-IMPERFECT-SINGULAR",
+                "ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "comía"
+              ],
+              "feedback": {
+                "correct": "Right: comía leaves the eating open or habitual.",
+                "incorrect": "Comí closes the event; comía leaves it open."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-practice-history-match",
+              "prompt": "Match the three forms to their historical bridges: era, iba, veía — eram, ībam, veer.",
+              "assesses": [
+                "ES-ETYMON-ERA",
+                "ES-ETYMON-IBA",
+                "ES-ETYMON-VER-VIDERE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "era—eram; iba—ībam; veía—veer",
+                "era eram iba ībam veía veer",
+                "era-eram, iba-ībam, veía-veer"
+              ],
+              "feedback": {
+                "correct": "Right: era—eram, iba—ībam, veía—veer.",
+                "incorrect": "Pair the visible shapes: era—eram, iba—ībam, veía—veer."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the six yo forms. (Hablaba, comía, vivía, era, iba, veía.) Which two regular classes share a row? (-er and -ir.) What is the core contrast? (The preterite presents a completed event; the imperfect leaves past action open, habitual, in progress, or in the background.) Chapter 17 can now build on -ía without borrowing a plural form here."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C16-sintesis-imperfecto",
+      "sequence": 1169,
+      "title": "Synthesis — three exceptions, and no others",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — the kindest tense in Spanish, and the three verbs that break it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d1d877440118a9d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new in this chapter. Say hablaba, then comía."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here is the fact that no single lesson of this chapter could give you, and it is worth more than any of them."
+            },
+            {
+              "kind": "speech",
+              "text": "The imperfect has exactly three irregular verbs in the entire language. Ser, ir, ver. That is the complete list — not \"the common ones\", not \"to start with\". Three."
+            },
+            {
+              "kind": "speech",
+              "text": "Every other Spanish verb, without exception, takes -aba or -ía and behaves. After the preterite, which has a strong stem for what feels like every verb worth using, this is a tense that simply lets you get on with it."
+            },
+            {
+              "kind": "speech",
+              "text": "So the honest instruction for the imperfect is short: learn era, iba and veía, and stop worrying."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The second weld, taken apart",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "The conditional developed from an infinitive beside past or imperfect forms of the same “have” verb that helped form the Romance future. That is why the whole infinitive remains visible again and why the endings resemble the -ía row. The history passes through older Romance forms; modern hablaría is not made by attaching the complete modern word había."
+              "text": "And the three are not random. They are the most used verbs in the language — to be, to go, to see — worn straight through from Latin erat and ibat without ever being tidied up."
+            },
+            {
+              "kind": "speech",
+              "text": "That is how irregularity works everywhere: a form survives unchanged because it is said constantly, and speakers never have to reach for a rule to rebuild it. Rare verbs get regularised precisely because nobody remembers them well enough to keep the odd shape alive."
+            },
+            {
+              "kind": "speech",
+              "text": "The exceptions are the words you use most. That is not bad luck — it is the reason they are exceptions."
             }
           ]
         },
@@ -93,89 +406,86 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“hablaría, hablarías, hablaría”",
+              "instruction": "era, iba, veía — the whole irregular inventory, in one breath",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “hablaría, hablarías, hablaría”]"
+              "source": "[YOU SAY: *era*, *iba*, *veía* — the whole irregular inventory, in one breath]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Hablaré español. Hablaría español.”",
+              "instruction": "hablaba, comía, vivía — and notice nothing surprises you",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Hablaré español. Hablaría español.”]"
+              "source": "[YOU SAY: *hablaba*, *comía*, *vivía* — and notice nothing surprises you]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“ha-bla-rí-a”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “ha-bla-rí-a”]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C17-condicional-singular-forms",
-              "prompt": "Give the learned singular conditional forms of hablar: yo, tú, then él/ella/usted.",
+              "id": "ES-C16-sintesis-imperfecto-count",
+              "prompt": "How many irregular verbs does the imperfect have in the whole language?",
               "assesses": [
-                "ES-GRAMMAR-AR-CONDITIONAL-SINGULAR",
-                "ES-LEX-HABLAR"
+                "ES-GRAMMAR-SER-IMPERFECT-SINGULAR"
               ],
-              "responseSeconds": 9,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "hablaría, hablarías, hablaría",
-                "hablaría hablarías hablaría",
-                "hablaría / hablarías / hablaría"
+                "three",
+                "3",
+                "tres",
+                "only three"
               ],
               "feedback": {
-                "correct": "Right: hablaría, hablarías, hablaría.",
-                "incorrect": "Keep hablar whole and add -ía, -ías, -ía."
+                "correct": "Three, and that is the complete list.",
+                "incorrect": "Three: ser, ir, ver."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C17-condicional-hablaria-espanol",
-              "prompt": "Say 'I would speak Spanish' in Spanish.",
+              "id": "ES-C16-sintesis-imperfecto-which",
+              "prompt": "Name them.",
               "assesses": [
-                "ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL",
-                "ES-GRAMMAR-AR-CONDITIONAL-SINGULAR",
-                "ES-LEX-HABLAR",
-                "ES-LEX-ESPANOL"
+                "ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR",
+                "ES-GRAMMAR-VER-IMPERFECT-SINGULAR"
               ],
-              "responseSeconds": 7,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "hablaría español.",
-                "hablaría español"
+                "ser, ir, ver",
+                "era, iba, veia",
+                "ser ir ver",
+                "to be, to go, to see"
               ],
               "feedback": {
-                "correct": "Right: Hablaría español.",
-                "incorrect": "Use the yo conditional hablaría before known español."
+                "correct": "Yes — era, iba, veia.",
+                "incorrect": "ser, ir and ver: era, iba, veia."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C17-condicional-syllables",
-              "prompt": "Write hablaría with the final three syllables separated.",
+              "id": "ES-C16-sintesis-imperfecto-why",
+              "prompt": "Why are those three the irregular ones?",
               "assesses": [
-                "ES-GRAMMAR-AR-CONDITIONAL-SINGULAR",
-                "ES-SOUND-WRITTEN-ACCENT"
+                "ES-ETYMON-ERA",
+                "ES-ETYMON-IBA"
               ],
-              "responseSeconds": 7,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "ha-bla-rí-a",
-                "habla-rí-a",
-                "rí-a"
+                "they are the most used verbs, so they were never regularised",
+                "because they are used constantly",
+                "most common verbs",
+                "they were never tidied up"
               ],
               "feedback": {
-                "correct": "Right: the accent keeps rí-a apart.",
-                "incorrect": "The accented í stays separate from a: ha-bla-rí-a."
+                "correct": "Right — heavy use preserves an odd shape; rare verbs get regularised.",
+                "incorrect": "Because they are used constantly. Heavy use keeps an old form alive."
               }
             }
           ]
@@ -193,375 +503,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three learned forms. (Hablaría, hablarías, hablaría.) What is the core meaning? (“Would speak.”) Which older construction stands behind the row? (An infinitive plus past forms of haber.) Next: give comer the same ending set."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C17-comer-condicional",
-      "sequence": 1166,
-      "title": "comería — keep -er before “would”",
-      "headword": "comería",
-      "romanization": "comería",
-      "gloss": "the singular conditional of comer — comería, comerías, comería",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:877da7c28c21dbe5",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Comeré means “I will eat.” Keep comer whole and exchange the future ending for -ía: comería — “I would eat.”"
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the singular -er row",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "conditional"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. conditional: comería.",
-                "person: tú. conditional: comerías.",
-                "person: él / ella / usted. conditional: comería."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Say comería, comerías, comería. Compare hablaría / comería: one bounded ending set serves both complete infinitives. Plural persons wait."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“comería, comerías, comería”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “comería, comerías, comería”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“comeré, comería”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “comeré, comería”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“hablaría, comería”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “hablaría, comería”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C17-comer-condicional-singular-forms",
-              "prompt": "Give the learned singular conditional forms of comer: yo, tú, then él/ella/usted.",
-              "assesses": [
-                "ES-GRAMMAR-ER-CONDITIONAL-SINGULAR",
-                "ES-LEX-COMER"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "comería, comerías, comería",
-                "comería comerías comería",
-                "comería / comerías / comería"
-              ],
-              "feedback": {
-                "correct": "Right: comería, comerías, comería.",
-                "incorrect": "Keep comer whole and add -ía, -ías, -ía."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C17-comer-condicional-future-pair",
-              "prompt": "Give the yo pair 'I will eat; I would eat' in Spanish.",
-              "assesses": [
-                "ES-PATTERN-ER-FUTURE-SINGULAR",
-                "ES-GRAMMAR-ER-CONDITIONAL-SINGULAR",
-                "ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "comeré; comería.",
-                "comeré comería",
-                "comeré / comería"
-              ],
-              "feedback": {
-                "correct": "Right: comeré; comería.",
-                "incorrect": "Keep comer and contrast future -é with conditional -ía."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C17-comer-condicional-shared-endings",
-              "prompt": "Which endings do hablaría and comería share across the learned singular row?",
-              "assesses": [
-                "ES-GRAMMAR-AR-CONDITIONAL-SINGULAR",
-                "ES-GRAMMAR-ER-CONDITIONAL-SINGULAR"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "-ía, -ías, -ía",
-                "ía ías ía",
-                "-ía -ías -ía"
-              ],
-              "feedback": {
-                "correct": "Right: -ía, -ías, -ía serve both infinitives.",
-                "incorrect": "Read the final pieces: hablaría/comería, hablarías/comerías, hablaría/comería."
-              }
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the three learned forms. (Comería, comerías, comería.) Which piece stays whole? (Comer.) Which endings match hablaría? (-ía, -ías, -ía.) Next: complete the regular pattern with vivir."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C17-vivir-condicional",
-      "sequence": 1170,
-      "title": "viviría — the regular conditional closes its small frame",
-      "headword": "viviría",
-      "romanization": "viviría",
-      "gloss": "the singular conditional of vivir — viviría, vivirías, viviría",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:2f7c139d44dcdc69",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You can move from comeré to comería. Apply the same move to viviré: viviría — “I would live.”"
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the singular -ir row",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "conditional"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. conditional: viviría.",
-                "person: tú. conditional: vivirías.",
-                "person: él / ella / usted. conditional: viviría."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Say viviría, vivirías, viviría. The complete regular frame is now hablaría, comería, viviría. Plural persons wait."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: meaning with known words",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Viviría en Madrid says “I would live in Madrid.” The lesson adds no new place or preposition."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“viviría, vivirías, viviría”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “viviría, vivirías, viviría”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“hablaría, comería, viviría”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “hablaría, comería, viviría”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Viviría en Madrid.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Viviría en Madrid.”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C17-vivir-condicional-singular-forms",
-              "prompt": "Give the learned singular conditional forms of vivir: yo, tú, then él/ella/usted.",
-              "assesses": [
-                "ES-GRAMMAR-IR-CONDITIONAL-SINGULAR",
-                "ES-LEX-VIVIR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "viviría, vivirías, viviría",
-                "viviría vivirías viviría",
-                "viviría / vivirías / viviría"
-              ],
-              "feedback": {
-                "correct": "Right: viviría, vivirías, viviría.",
-                "incorrect": "Keep vivir whole and add -ía, -ías, -ía."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C17-vivir-condicional-madrid",
-              "prompt": "Say 'I would live in Madrid' in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL",
-                "ES-GRAMMAR-IR-CONDITIONAL-SINGULAR",
-                "ES-LEX-VIVIR",
-                "ES-LEX-EN"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "viviría en madrid.",
-                "viviría en madrid"
-              ],
-              "feedback": {
-                "correct": "Right: Viviría en Madrid.",
-                "incorrect": "Use viviría, then known en Madrid."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C17-vivir-condicional-three-yo",
-              "prompt": "Give the conditional yo forms of hablar, comer, and vivir, in that order.",
-              "assesses": [
-                "ES-GRAMMAR-AR-CONDITIONAL-SINGULAR",
-                "ES-GRAMMAR-ER-CONDITIONAL-SINGULAR",
-                "ES-GRAMMAR-IR-CONDITIONAL-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "hablaría, comería, viviría",
-                "hablaría comería viviría",
-                "hablaría / comería / viviría"
-              ],
-              "feedback": {
-                "correct": "Right: hablaría, comería, viviría.",
-                "incorrect": "Keep each infinitive whole and add -ía."
-              }
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the three vivir forms. (Viviría, vivirías, viviría.) Which regular verb families share the ending row? (All three.) Next: three already-known verbs change the stem but keep both sets of endings."
+              "text": "How many irregular imperfects are there? (Three — and that is all.) Which verbs? (Ser, ir, ver.) And why those three? (Because they are the ones people say constantly, so the old forms were never worn into a rule.)"
             }
           ]
         }

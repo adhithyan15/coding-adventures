@@ -1,129 +1,133 @@
-Spanish, chapter 52: The Strong Preterites.
+Spanish, chapter 52: The Preterite --- Your First Past Tense.
 3 lessons. All 3 can be done entirely by ear.
 
 
 Lesson 1 of 3.
-tuve — let the strong stem carry the stress.
+fui — one past set shared by ser and ir.
 
 Warm-up.
 [pause 2 seconds]
-You know present tengo, tienes, tiene. Its completed past changes the stem to tuv- and uses tuve, tuviste, tuvo. Unlike comí and comió, none of these three forms carries a written accent.
+You already use ser for identity and ir for going. Spanish now gives both verbs one completed-past set. This lesson keeps the same three singular persons you know: fui, fuiste, fue.
 
-Grammar Lens: one strong singular pattern.
+Grammar Lens: three singular forms, two verbs.
 [a table of 3 rows, read aloud]
-person: yo. present: tengo. completed past: tuve.
-person: tú. present: tienes. completed past: tuviste.
-person: él / ella / usted. present: tiene. completed past: tuvo.
-The strong stem tuv- takes -e, -iste, -o. Say tuve, tuviste, tuvo. Stress remains in the stem, so normal spelling needs no accent mark. Reuse known café:
-Tuve café. — “I had coffee.”
-¿Tuviste café? — “Did you have coffee?”
-Tuvo café. — “He, she, or you-formal had coffee.”
-“Strong” describes the stem-stressed historical pattern. It does not mean that the meaning is forceful. Plural endings wait.
+person: yo. completed past of ser or ir: fui.
+person: tú. completed past of ser or ir: fuiste.
+person: él / ella / usted. completed past of ser or ir: fue.
+Say fui, fuiste, fue. Each form can belong to either verb. The surrounding words decide which meaning is possible:
+Fui a Madrid. — “I went to Madrid.” The known a plus a destination points to ir.
+Fue Roberto. — “It was Roberto.” Identification points to ser.
+Fui and fue are one-syllable words, so standard Spanish spelling gives them no written accent. Plural forms wait until a later lesson.
 
-The stem, taken apart.
-Tener continues Latin tenēre. Its past also belongs to an older strong history associated with Latin tenuī. Spanish sound change and analogy reshaped that material into the tuv- family. Tenuī becomes tuve is therefore a historical relationship, not a promise that every letter passed across intact.
+The form, taken apart.
+The shared set continues the Latin perfect family of “be,” including Latin fuī, “I have been.” Sound change and analogy reshaped the inherited forms. Spanish ir then came to share this past family with ser: a case of suppletion, where one verb draws forms from more than one historical root. English go / went uses the same broad strategy, although not the same words.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “tuve, tuviste, tuvo”]
+[your turn — say: “fui, fuiste, fue”]
 [pause 8 seconds for the answer]
-[your turn — say: “Tuve café.”]
+[your turn — say: “Fui a Madrid.”]
 [pause 8 seconds for the answer]
-[your turn — say: “comí has final stress; tuve has stem stress”]
+[your turn — say: “Fue Roberto — identification, so ser.”]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 9 seconds]
-Give the singular completed-past forms of tener: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 7 seconds]
-Say 'I had coffee' in Spanish.
+Give the shared singular preterite forms of ser and ir: yo, tú, then él/ella/usted.
 [question — say your answer, then pause 8 seconds]
-Which phrase best describes tuve: a letter-for-letter copy of tenuī, or a historically reshaped strong form?
+Say 'I went to Madrid' in Spanish.
+[question — say your answer, then pause 6 seconds]
+In 'Fue Roberto', which verb does fue express?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three learned tener forms. (Tuve, tuviste, tuvo.) Which endings attach to tuv-? (-e, -iste, -o.) Why are there no written accents? (The strong stem carries the stress.) What shaped tuve historically? (Older strong-perfect material, sound change, and analogy.) Next: reuse the strong endings with hacer.
+Give the three shared forms. (Fui, fuiste, fue.) Which two verbs share them? (Ser and ir.) What decides the meaning? (Context.) What older family supplied the forms? (The Latin perfect family of “be.”) Next, reuse the known verb hablar to build a regular singular past.
 
 
 Lesson 2 of 3.
-hice — the strong pattern with one third-person swerve.
+hablé — a regular singular past from a known verb.
 
 Warm-up.
 [pause 2 seconds]
-You know present hago, haces, hace and strong past tuve, tuviste, tuvo. Hacer reuses the strong endings: hice, hiciste, hizo. Watch the third form: the stem is hiz- there, not hic-.
+You know hablar and its present singular hablo, hablas, habla. To say that the speaking was completed, keep habl- and learn three new endings: hablé, hablaste, habló.
 
-Grammar Lens: hacer in the completed past.
+Grammar Lens: present beside completed past.
 [a table of 3 rows, read aloud]
-person: yo. completed past: hice. stem plus ending: hic- + -e.
-person: tú. completed past: hiciste. stem plus ending: hic- + -iste.
-person: él / ella / usted. completed past: hizo. stem plus ending: hiz- + -o.
-Say hice, hiciste, hizo. These are strong, stem-stressed forms with no written accents. Hizo is an irregular stem alternation inside this family; it is not a general rule that c must become z before o. Reuse known café:
-Hice café. — “I made coffee.”
-¿Hiciste café? — “Did you make coffee?”
-Hizo café. — “He, she, or you-formal made coffee.”
+person: yo. present: hablo. completed past: hablé.
+person: tú. present: hablas. completed past: hablaste.
+person: él / ella / usted. present: habla. completed past: habló.
+Say hablé, hablaste, habló. This is a complete singular pattern, not a preview of plural forms. Notice the exact changes:
+hablo becomes hablé changes the final vowel and moves stress to the end.
+hablas becomes hablaste adds the past ending -aste.
+habla becomes habló changes the final vowel and moves stress to the end.
 
-The form, taken apart.
-Hacer continues Latin facere, and hice continues the history of its strong perfect fēcī. Long sound changes help explain Spanish h- and the changed vowel and consonant; this is not a direct spelling recipe. The pattern links hice historically to strong tuve, while each verb keeps its own stem.
+Grammar Lens: two accents, one natural stress pattern.
+The written accents in hablé and habló show final stress. Without those marks, words ending in a vowel normally stress the next-to-last syllable. Hablaste already follows that ordinary pattern — blas is next to last — so it needs no written accent. The mark records the stress; it is not the only change that makes a form past.
+Now reuse known words:
+Hablé español. — “I spoke Spanish.”
+¿Hablaste español? — “Did you speak Spanish?”
+Habló español. — “He, she, or you-formal spoke Spanish.”
+
+The endings, taken apart.
+The regular -ar past continues material from the Latin first-conjugation perfect, visible in forms such as amāvī, amāvistī, amāvit. Centuries of sound change and analogy produced the Spanish family -é, -aste, -ó. The history explains a family resemblance; it is not one tidy letter-by-letter erosion for every modern ending.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “hice, hiciste, hizo”]
+[your turn — say: “hablé, hablaste, habló”]
 [pause 8 seconds for the answer]
-[your turn — say: “Hice café.”]
+[your turn — say: “Hablo español. Hablé español.”]
 [pause 8 seconds for the answer]
-[your turn — say: “hizo is a learned hiz- alternation, not a general c-before-o rule”]
+[your turn — say: “hablé and habló carry written accents; hablaste does not”]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Give the singular completed-past forms of hacer: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 7 seconds]
-Say 'I made coffee' in Spanish.
-[question — say your answer, then pause 7 seconds]
-Which Latin strong-perfect form lies behind the historical development of hice?
+[question — say your answer, then pause 10 seconds]
+Give the singular completed-past forms of hablar: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 8 seconds]
+Say 'I spoke Spanish' in Spanish.
+[question — say your answer, then pause 6 seconds]
+Which form means 'I spoke' as a completed event: hablo or hablé?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three learned hacer forms. (Hice, hiciste, hizo.) What changes in the third form? (Hic- becomes hiz-.) Is that a general c-before-o spelling rule? (No; learn it inside this irregular family.) What older form lies behind hice? (Latin fēcī, through substantial historical change.) Next: add strong estar without adding plural forms.
+Give the three learned past forms. (Hablé, hablaste, habló.) Which two carry written accents, and why? (Hablé and habló; the marks show final stress.) What older family lies behind the endings? (The Latin first-conjugation perfect.) Next: choose between the two past patterns using only known words.
 
 
 Lesson 3 of 3.
-estuve — a third known verb joins the strong pattern.
+Practice — two singular ways to talk about a completed past.
 
 Warm-up.
 [pause 2 seconds]
-You know present estoy, estás, está and the strong past pairs tuve, tuviste, tuvo and hice, hiciste, hizo. Now use the same strong endings with estuv-: estuve, estuviste, estuvo.
+This checkpoint adds nothing. Retrieve the shared singular set and the regular hablar set, then use context and spelling to keep them apart.
 
-Grammar Lens: estar in the completed past.
-[a table of 3 rows, read aloud]
-person: yo. completed past: estuve.
-person: tú. completed past: estuviste.
-person: él / ella / usted. completed past: estuvo.
-Say estuve, estuviste, estuvo. The strong stem estuv- takes -e, -iste, -o. These forms carry no written accents. Reuse known bien:
-Estuve bien. — “I was well.”
-¿Estuviste bien? — “Were you well?”
-Estuvo bien. — “He, she, or you-formal was well.”
+Grammar Lens: the complete frame for this chapter.
+shared past of ser and ir: fui, fuiste, fue.
+regular past of hablar: hablé, hablaste, habló.
+context: Fui a Madrid expresses ir; Fue Roberto expresses ser.
+time contrast: Hablo español is present; Hablé español is completed past.
+spelling: hablé and habló show final stress with a written accent; hablaste needs none.
+Plural persons, additional past-tense verb classes, new time words, and new place or person vocabulary wait for later lessons.
 
-Grammar Lens: three strong singular rows.
-yo: tuve, hice, estuve.
-tú: tuviste, hiciste, estuviste.
-él / ella / usted: tuvo, hizo, estuvo.
-All three rows use the learned strong endings. Only hacer changes its stem shape from hic- to hiz- before third-person -o. Plural forms and other irregular verbs still wait.
-
-The -uv- shape, taken apart.
-Estar grew from a Romance verb related to Latin stāre, “stand.” But modern estuve is not a direct, tidy wearing-down of Latin stetī. Historical analogy helped reshape its past beside other strong forms, including the -uv- pattern visible in tuve. This explains the family resemblance without pretending that each modern letter came straight from one Latin form.
+The two histories, taken apart.
+The fui family continues Latin perfect “be” material and became shared by ser and ir. The regular -ar endings continue Latin first-conjugation perfect material, reshaped by sound change and analogy.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “estuve, estuviste, estuvo”]
+[your turn — say: “fui, fuiste, fue”]
 [pause 8 seconds for the answer]
-[your turn — say: “Estuve bien.”]
+[your turn — say: “hablé, hablaste, habló”]
 [pause 8 seconds for the answer]
-[your turn — say: “tuve and estuve share -uv- through historical analogy”]
+[your turn — say: “Fui a Madrid. Fue Roberto.”]
 [pause 8 seconds for the answer]
+[your turn — say: “Hablo español. Hablé español.”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Give the three learned forms shared by ser and ir.
 [question — say your answer, then pause 9 seconds]
-Give the singular completed-past forms of estar: yo, tú, then él/ella/usted.
+Give the three learned completed-past forms of hablar.
 [question — say your answer, then pause 7 seconds]
-Say 'I was well' as a completed past statement in Spanish.
-[question — say your answer, then pause 6 seconds]
-Which known strong form helped shape the family resemblance in estuve: tuve or hice?
+Which sentence uses the shared form as ir, 'to go': Fui a Madrid or Fue Roberto?
+[question — say your answer, then pause 10 seconds]
+Give 'I speak Spanish' and then 'I spoke Spanish.'
+[question — say your answer, then pause 7 seconds]
+Which two of hablé, hablaste, habló carry written accents?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three learned estar forms. (Estuve, estuviste, estuvo.) Which known strong verb shares their -uv- shape? (Tener: tuve.) Why should estuve not be shown as a direct wearing-down of stetī? (Analogy reshaped the Spanish family.) Next: retrieve all six bounded patterns.
+Give both singular sets. (Fui, fuiste, fue; hablé, hablaste, habló.) How does context separate ser from ir? (A destination points to going; identification points to being.) Which regular forms carry written accents? (Hablé and habló.) The next chapter can add another past family without borrowing plural forms or unseen vocabulary from this checkpoint.

@@ -1,63 +1,45 @@
-Spanish, chapter 68: Days of the Week.
-2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Spanish, chapter 68: Synthesis --- Claiming, and Not Claiming.
+1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 2.
-lunes to viernes — the planets of the week, worn down.
+Lesson 1 of 1.
+Synthesis — claiming, and not claiming.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The words, taken apart: the planet weekdays until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The Romans mapped the seven-day week onto the seven visible "wandering stars" — the planet-gods. Spanish kept that map, but handled the word "day" differently from its Romance cousins: where French still spells out "-di" (day) on every weekday, Spanish mostly just dropped it.
-
-The words, taken apart: the planet weekdays.
-Each weekday began life as "[planet-god]'s diēs (day)." In Vulgar Latin, diēs was simply dropped as a separate word in most of these — what survived is just the planet's own Latin genitive form. That's why martes, jueves, viernes already end in ‑s: not because diēs wore down into one, but because Martis, Iovis, Veneris — the planets' own genitive forms — end in ‑s in Latin already. Lunes has no such ‑s to inherit (lūnae doesn't end in one), so it likely picked up the ending by analogy with its four siblings:
-There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, planet-god, English echo. Come back and look at it when you have stopped.
-Compare French, which keeps diēs as its own visible syllable on every day — lundi, mardi, jeudi — while Spanish dropped it from four of its five weekdays. miércoles is the odd one out: some historians of the language think its extra "‑coles" is a genuine surviving trace of diēs itself (fused in and reshaped) — though the exact sound changes are debated, unlike the plainer, better-understood story for its four siblings.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "lunes, martes, miércoles, jueves, viernes" — the work week]
-[pause 8 seconds for the answer]
-[your turn — say: each as "[planet]'s day, worn down" — "lunes = Moon, jueves = Jupiter"]
-[pause 8 seconds for the answer]
-[your turn — say: the bridge — "martes / Tuesday, both the war-god's day (Mars / Tiw)"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Recall the weekday family:
-What did every Spanish weekday begin life as? ("[Planet-god]'s diēs (day)" — the same Latin phrase French keeps more visibly with -di.)
-Why do martes, jueves, viernes end in -s, and where does lunes get its -s from? (From the planet's own Latin genitive — Martis/Iovis/ Veneris already end in -s; lunes likely picked it up by analogy, since lūnae has no -s of its own.)
-What's debated about miércoles? (Whether its "‑coles" is a genuine surviving trace of diēs — unlike the plainer, better-understood story for its four siblings.)
-Why do martes and Tuesday line up? (They name the same day for the war-god: Mars in Latin, Tiw in Germanic.)
-
-
-Lesson 2 of 2.
-sábado and domingo — the week's religious edge.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The two days, taken apart until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-Five days named for planets — then two that broke the pattern entirely. The weekend is where religion overwrote astronomy, and Spanish keeps both rewrites in plain view.
+Nothing new in this chapter. Say hablas, then hables.
 
-The two days, taken apart.
-There is a table here I cannot read to you — 4 columns and 2 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, meaning, note. Come back and look at it when you have stopped.
-Two different rewrites:
-sábado would have been "Saturn's day" (as English Saturday still is — the one weekday English kept a Roman god for). Instead, Latin Christians borrowed the Jewish Sabbath (Sabbatum from Hebrew shabbāt), and it became sábado. So English Saturday and Spanish sábado are the same day, two different names — the planet vs. the Sabbath.
-domingo drops Sun-worship entirely: where English keeps Sunday, Spanish made it diēs Dominica, "the Lord's day" (Dominus becomes English dominion, dominate, dame). Spanish kept domingo recognizably close to Dominica — compare French's more worn-down dimanche, where the di- (day) fossil jumped to the front of the word.
+Grammar Lens: what the second one is actually doing.
+Those two forms are not two tenses. They are two stances.
+Hablas español. — I am telling you this is so. Quiero que hables español. — I am not telling you anything is so.
+In the first, you put a fact on the table and stood behind it. In the second, nothing has been claimed at all: the speaking has not happened, and might not. The mood is the difference, and the difference is about what you are willing to assert.
+That is the whole of it, and it is worth holding onto, because every remaining use of this mood — and there are many — is a version of the same move. Wishing, doubting, denying, hoping: none of them puts a fact on the table.
+Indicative: this is so. Subjunctive: I am not saying this is so.
+
+The exchange.
+— ¿Hablas español? — Ana quiere que hable español. — Ojalá hables mucho.
+Three lines, three stances. The first asks about a fact. The second reports somebody's wish, so nothing is asserted. The third wishes it outright.
+
+What you've built.
+Ojalá deserves a last look, because it explains itself.
+It is Arabic — wa-šā' allāh, "and may God will it" — carried into Spanish over eight centuries of al-Andalus and kept long after the religion behind it stopped being the speaker's. A Spanish speaker saying ojalá today is uttering a prayer in a language they do not speak, to a God the sentence no longer names.
+And it can only ever take this mood. Of course it can: a thing God has yet to will is, by definition, not a fact you can assert.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the full week — "lunes, martes, miércoles, jueves, viernes, sábado, domingo"]
+[your turn — say: the three-line exchange, and name the stance of each line]
 [pause 8 seconds for the answer]
-[your turn — say: "sábado = Sabbath, domingo = the Lord's day" — religion, not planets]
-[pause 8 seconds for the answer]
-[your turn — say: the pair-ups — "sábado / Saturday (Sabbath vs. Saturn)", "domingo / Sunday (Lord vs. Sun)"]
-[pause 8 seconds for the answer]
+[repeat that twice]
+Until choosing the mood feels like choosing what you mean.
+[question — say your answer, then pause 8 seconds]
+You are stating a fact about a friend: you speak Spanish. Hablas or hables?
+[question — say your answer, then pause 8 seconds]
+Now you only wish it were so. Which form follows ojala?
+[question — say your answer, then pause 10 seconds]
+What did ojala originally mean, and in which language?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give all seven Spanish days. (Lunes … domingo.) Where does sábado come from, and its English contrast? (The Sabbath, Sabbatum; English kept Saturday = Saturn's day.) What does domingo mean literally? ("The Lord's day," diēs Dominica.)
+What does the indicative do that the subjunctive does not? (Claim that something is so.) Why can ojalá never take the indicative? (Because a thing not yet willed is not a fact.) And what language is ojalá? (Arabic — a prayer that outlived the religion behind it.)

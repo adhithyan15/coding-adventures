@@ -1,47 +1,38 @@
-Spanish, chapter 90: Ayudar — the Same Word as Aid.
+Spanish, chapter 90: Tomar — Taking, and a Word With No Past.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-ayudar — "to help", and it is English "aid" in disguise.
+tomar — "to take", and nobody knows where it came from.
 
 Warm-up.
 [pause 2 seconds]
-You can ask a question now. The next thing to ask for is a hand — and this verb is one you already own in English without knowing it.
+Every verb so far ran straight back to a Latin root you could name. Here is one that does not — and the gap is the useful part.
 
 Sounds you'll need.
-vowel-a — a clean, open a: a-yoo-DAR.
-r-tap — one tap at the end, not an English r.
+r-tap — one soft tap of the tongue: to-MAR.
+vowel-o — a short, pure o, with no English glide toward ow.
 
-The word, taken apart: ayudar.
-ayudar ("to help") from Latin adiūtāre, the repeating form of adiuvāre: ad- ("toward") + iuvāre ("to help, to delight"). To help was to move toward someone.
-English borrowed that identical verb through Old French aidier and calls it aid. So ayudar and aid are not merely cousins — they are the same word by two different roads. The family came with it:
-aide, and aide-de-camp, an officer who helps.
-adjutant — the officer whose whole job is assisting.
-adjuvant — a substance that helps another drug work.
-coadjutor — one who helps alongside.
-The shape change is a rule, not an accident. Latin -di- before a vowel turned into Spanish y: adiūtāre becomes ayudar, hodiē becomes hoy ("today"), podium becomes poyo. Once you have that, the word stops looking arbitrary.
+The word, taken apart: tomar.
+tomar ("to take") is a plain -ar verb: tomo, tomas, toma, tomamos, toman. It is one of the most common verbs in the language, and its origin is genuinely unsettled.
+The leading proposal derives it from Latin autumāre, "to take as, to assert", worn down through an intermediate tumar; a rival one points to a pre-Roman Iberian word Latin never recorded. Neither is proved, and careful dictionaries say so. "We don't know" is a real answer in etymology.
+It carries a second everyday sense across Latin America: to drink. A waiter asking ¿Qué vas a tomar? is asking what you would like.
 
-Grammar Lens: a plain -ar verb, and how to ask for a hand.
-Nothing breaks; the endings are the ones you started with:
-[a table of 4 rows, read aloud]
-person: yo. form: ayudo. meaning: I help.
-person: tú. form: ayudas. meaning: you help.
-person: nosotros. form: ayudamos. meaning: we help.
-person: ellos/ustedes. form: ayudan. meaning: they help.
-Its noun is la ayuda (fem.), "help" — the word on relief packages worldwide. Two sentences worth owning: ¿Me ayudas? ("will you help me?" — Spanish uses the plain present where English needs will) and, politely, ¿Puedo ayudarle?
+Why it's said this way: the verb Latin did leave, and how to handle it.
+Latin's own "gather up" verb survived perfectly well: coger from colligere, which is com- ("together") + legere — the very root you met in leer. English took that same Latin word twice: collect straight from the Latin, and coil by way of French.
+In Spain coger is the plain everyday word: coger el autobús, catch the bus. In much of Latin America — Argentina, Mexico and well beyond — it is coarse slang for sex, and using it innocently will derail a conversation. Tomar is safe on both sides of the Atlantic, which is a large part of why it won.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ayudo, ayudas, ayudamos, ayudan"]
+[your turn — say: "tomo, tomas, toma, tomamos, toman"]
 [pause 8 seconds for the answer]
-[your turn — say: "¿Me ayudas?" — will you help me?]
+[your turn — say: "Tomo un café" — I'll have a coffee]
 [pause 8 seconds for the answer]
-[your turn — say: "Te pregunto" then "Me ayudas" — I ask you, you help me]
+[your turn — say: "Tomo el autobús" — the safe way to say it anywhere]
 [pause 8 seconds for the answer]
-[your turn — say: "ayudar" then English "aid, adjutant, adjuvant" — one word, two roads]
+[your turn — say: "coger" then English "collect, coil" — one root, and one place to be careful]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What two Latin pieces build adiuvāre? (Ad- "toward" + iuvāre "to help".) What everyday English word is ayudar, arriving by French? (Aid.) What sound-law turned adiūtāre into ayudar, and which other word shows it? (Latin -di- became Spanish y; hodiē becomes hoy.) Next: gustar, the verb that runs backwards.
+Does tomar have a confirmed etymology? (No — autumāre and a pre-Roman source are both unproved.) What Latin verb gives coger, and which root sits inside it? (Colligere, holding legere, "to gather", from leer.) Why reach for tomar instead? (Coger is coarse slang across much of Latin America.) Next: preguntar, and the two different asks.

@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(104); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(106); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -249,7 +249,12 @@ describe("real curriculum", () => {
       "ES-C08-practice-age-nine",
       "ES-C08-practice-count-ten",
       "ES-C08-practice-tener-singular",
+      "ES-C08-tenemos-form",
+      "ES-C08-tenemos-why",
       "ES-C08-tener-singular-forms",
+      "ES-C08-tienen-boot",
+      "ES-C08-tienen-form",
+      "ES-C08-tienen-rule",
       "ES-C09-esta-en-ana",
       "ES-C09-esta-en-ask-formal",
       "ES-C09-estais-form",
@@ -290,6 +295,12 @@ describe("real curriculum", () => {
       "ES-C10-practice-ir-forms",
       "ES-C10-practice-near-future",
       "ES-C10-practice-possessive",
+      "ES-C10-vamos-english",
+      "ES-C10-vamos-form",
+      "ES-C10-vamos-why",
+      "ES-C10-van-form",
+      "ES-C10-van-four",
+      "ES-C10-van-lesson",
       "ES-C11-nuestro-our-day",
       "ES-C11-nuestro-our-night",
       "ES-C11-poder-can-eat",

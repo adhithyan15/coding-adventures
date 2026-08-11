@@ -338,10 +338,14 @@
       "id": "ES-PATH-030-TENER",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "ES-C08-tener"
+        "ES-C08-tener",
+        "ES-C08-tenemos",
+        "ES-C08-tienen"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "ES-EXT-030-TENER-PLURAL"
+      ],
       "after": []
     },
     {
@@ -421,11 +425,14 @@
       "id": "ES-PATH-015-IR",
       "spine_node": "SPINE-ASK-LOCATION",
       "lessons": [
-        "ES-C10-ir"
+        "ES-C10-ir",
+        "ES-C10-vamos",
+        "ES-C10-van"
       ],
       "before": [],
       "inline": [
-        "ES-EXT-015-IR"
+        "ES-EXT-015-IR",
+        "ES-EXT-015-IR-PLURAL"
       ],
       "after": []
     },
@@ -2539,6 +2546,30 @@
         "ES-C09-estan",
         "ES-C09-estais",
         "ES-C09-repaso-ser-estar"
+      ]
+    },
+    {
+      "id": "ES-EXT-030-TENER-PLURAL",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C08-tenemos",
+        "ES-C08-tienen"
+      ]
+    },
+    {
+      "id": "ES-EXT-015-IR-PLURAL",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C10-vamos",
+        "ES-C10-van"
       ]
     }
   ]

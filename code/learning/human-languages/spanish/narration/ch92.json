@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 92,
-  "title": "Gustar — the Verb Built the Other Way Round",
+  "title": "Ayudar — the Same Word as Aid",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b57dc0985d1903a3",
+  "sourceHash": "fnv1a64:881e1554aedbcb04",
   "lessons": [
     {
-      "id": "ES-C35-gustar",
-      "sequence": 1690,
-      "title": "gustar — the verb that runs backwards",
-      "headword": "gustar",
-      "romanization": "gustar",
-      "gloss": "to please — the verb English calls \"to like\", built the other way round",
+      "id": "ES-C35-ayudar",
+      "sequence": 1700,
+      "title": "ayudar — \"to help\", and it is English \"aid\" in disguise",
+      "headword": "ayudar",
+      "romanization": "ayudar",
+      "gloss": "to help — literally the same word as English \"aid\", arriving by a different road",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b59bde29a8c013d2",
+      "sourceHash": "fnv1a64:39058ade760dd0cb",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Back in the introductions you learned mucho gusto — \"much pleasure\". Here is the verb that noun belongs to, assembled the opposite way round from English. It is the single thing in Spanish that trips English speakers up hardest."
+              "text": "You can ask a question now. The next thing to ask for is a hand — and this verb is one you already own in English without knowing it."
             }
           ]
         },
@@ -46,92 +46,77 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "g-hard — a hard g before u: goos-TAR."
+              "text": "vowel-a — a clean, open a: a-yoo-DAR."
             },
             {
               "kind": "speech",
-              "text": "s-clear — a clean hissing s, never a z buzz."
+              "text": "r-tap — one tap at the end, not an English r."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: gustar",
+          "title": "The word, taken apart: ayudar",
           "segments": [
             {
               "kind": "speech",
-              "text": "gustar from Latin gustāre, \"to taste\". English kept the root and stayed close to the tongue:"
+              "text": "ayudar (\"to help\") from Latin adiūtāre, the repeating form of adiuvāre: ad- (\"toward\") + iuvāre (\"to help, to delight\"). To help was to move toward someone."
             },
             {
               "kind": "speech",
-              "text": "gusto — doing something with relish, that is, with a taste for it."
+              "text": "English borrowed that identical verb through Old French aidier and calls it aid. So ayudar and aid are not merely cousins — they are the same word by two different roads. The family came with it:"
             },
             {
               "kind": "speech",
-              "text": "gustatory — of the sense of taste."
+              "text": "aide, and aide-de-camp, an officer who helps."
             },
             {
               "kind": "speech",
-              "text": "disgust — dis- \"away\" + taste: what you spit back out."
+              "text": "adjutant — the officer whose whole job is assisting."
             },
             {
               "kind": "speech",
-              "text": "degustation, a tasting menu; and through French, ragout."
+              "text": "adjuvant — a substance that helps another drug work."
             },
             {
               "kind": "speech",
-              "text": "Spanish's own el gusto — the gusto of mucho gusto — still holds both senses: taste on the tongue, and pleasure taken in a thing. The verb followed the second: gustar means \"to please\"."
+              "text": "coadjutor — one who helps alongside."
+            },
+            {
+              "kind": "speech",
+              "text": "The shape change is a rule, not an accident. Latin -di- before a vowel turned into Spanish y: adiūtāre becomes ayudar, hodiē becomes hoy (\"today\"), podium becomes poyo. Once you have that, the word stops looking arbitrary."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: the thing you like is the subject",
+          "title": "Grammar Lens: a plain -ar verb, and how to ask for a hand",
           "segments": [
             {
               "kind": "speech",
-              "text": "English says I like the book: the liker is the subject. Spanish has no such sentence. It says Me gusta el libro — \"the book is pleasing to me\"."
-            },
-            {
-              "kind": "speech",
-              "text": "Everything follows from that:"
-            },
-            {
-              "kind": "speech",
-              "text": "el libro is the subject, which is why the verb is gusta, third person."
-            },
-            {
-              "kind": "speech",
-              "text": "me is the person it happens to, not the one doing anything."
-            },
-            {
-              "kind": "speech",
-              "text": "So the verb agrees with the thing, never with you:"
+              "text": "Nothing breaks; the endings are the ones you started with:"
             },
             {
               "kind": "table",
               "headers": [
-                "what you mean",
-                "Spanish",
-                "why"
+                "person",
+                "form",
+                "meaning"
               ],
               "columns": 3,
-              "rowCount": 3,
+              "rowCount": 4,
               "utterances": [
-                "what you mean: I like the book. Spanish: Me gusta el libro. why: one book, so gusta.",
-                "what you mean: I like books. Spanish: Me gustan los libros. why: many books, so gustan.",
-                "what you mean: I like reading. Spanish: Me gusta leer. why: one action, so gusta."
+                "person: yo. form: ayudo. meaning: I help.",
+                "person: tú. form: ayudas. meaning: you help.",
+                "person: nosotros. form: ayudamos. meaning: we help.",
+                "person: ellos/ustedes. form: ayudan. meaning: they help."
               ]
             },
             {
               "kind": "speech",
-              "text": "To change who is pleased, change the little word in front, not the verb: me (to me), te (to you), le (to him, her, usted), nos (to us), les (to them)."
-            },
-            {
-              "kind": "speech",
-              "text": "Careful. There is no yo gusto el libro. Yo gusto is a real sentence — it means \"I am pleasing\" — just not the one you were reaching for."
+              "text": "Its noun is la ayuda (fem.), \"help\" — the word on relief packages worldwide. Two sentences worth owning: ¿Me ayudas? (\"will you help me?\" — Spanish uses the plain present where English needs will) and, politely, ¿Puedo ayudarle?"
             }
           ]
         },
@@ -149,38 +134,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Me gusta el café\" then \"Me gustan los libros\" — the verb follows the thing",
+              "instruction": "\"ayudo, ayudas, ayudamos, ayudan\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Me gusta el café\" then \"Me gustan los libros\" — the verb follows the thing]"
+              "source": "[YOU SAY: \"ayudo, ayudas, ayudamos, ayudan\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Te gusta tomar café\" — you like drinking coffee",
+              "instruction": "\"¿Me ayudas?\" — will you help me?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Te gusta tomar café\" — you like drinking coffee]"
+              "source": "[YOU SAY: \"¿Me ayudas?\" — will you help me?]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Me gusta ayudar\" — I like helping",
+              "instruction": "\"Te pregunto\" then \"Me ayudas\" — I ask you, you help me",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Me gusta ayudar\" — I like helping]"
+              "source": "[YOU SAY: \"Te pregunto\" then \"Me ayudas\" — I ask you, you help me]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"gustar\" then English \"gusto, disgust, gustatory\" — the tasting family",
+              "instruction": "\"ayudar\" then English \"aid, adjutant, adjuvant\" — one word, two roads",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"gustar\" then English \"gusto, disgust, gustatory\" — the tasting family]"
+              "source": "[YOU SAY: \"ayudar\" then English \"aid, adjutant, adjuvant\" — one word, two roads]"
             }
           ]
         },
@@ -197,7 +182,7 @@
             },
             {
               "kind": "speech",
-              "text": "In me gusta el libro, what is the subject? (El libro.) Why is it me gustan los libros? (The verb agrees with los libros, which is plural.) What did gustāre mean, and name an English cousin. (To taste; gusto, disgust.) And what would yo gusto actually mean? (I am pleasing.)"
+              "text": "What two Latin pieces build adiuvāre? (Ad- \"toward\" + iuvāre \"to help\".) What everyday English word is ayudar, arriving by French? (Aid.) What sound-law turned adiūtāre into ayudar, and which other word shows it? (Latin -di- became Spanish y; hodiē becomes hoy.) Next: gustar, the verb that runs backwards."
             }
           ]
         }

@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C36-caminar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1720
-chapter: 94
+sequence: 1740
+chapter: 96
 type: word
 headword: caminar
 gloss: to walk — built on a Celtic word for a path, beside andar, whose own past is unsettled

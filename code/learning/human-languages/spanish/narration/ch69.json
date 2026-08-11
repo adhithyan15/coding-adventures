@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 69,
-  "title": "Black, White, Red, and Blue",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ddae2ec5d8ffb5b6",
+  "title": "Lo Siento",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:f12badfb234160bd",
   "lessons": [
     {
-      "id": "ES-C22-negro-blanco",
-      "sequence": 1350,
-      "title": "negro, blanco — two colours, and one of their histories",
-      "headword": "negro, blanco",
-      "romanization": "negro, blanco",
-      "gloss": "black and white — the two words, and the straight-line Latin history of the first one",
+      "id": "ES-C20-lo-siento",
+      "sequence": 1330,
+      "title": "lo siento — \"I'm sorry,\" i.e. \"I feel it\"",
+      "headword": "lo siento",
+      "romanization": "lo siento",
+      "gloss": "I'm sorry — literally \"I feel it,\" a naming of the feeling rather than a claim about yourself",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38c454f8482ff9b2",
+      "sourceHash": "fnv1a64:912939eb325ba32d",
       "notice": null,
       "blocks": [
         {
@@ -35,42 +35,31 @@
             },
             {
               "kind": "speech",
-              "text": "Two colours you can put to work immediately. One of them has the most ordinary history imaginable. The other does not — which is why it gets its own lesson next."
+              "text": "You already know por favor, \"please.\" The next courtesy phrase is lo siento. Spanish does not say \"I am sorry\" as an adjective; it says something closer to \"I feel this.\""
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The words, taken apart: negro",
+          "title": "The phrase, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "negro (\"black\") from Latin niger. Nothing surprising: the same Latin root gives English denigrate (\"to blacken someone's name\") and the rest of the Romance family's words for black — French noir, Italian nero, Portuguese negro. Latin's word for black stayed put, in every daughter language."
+              "text": "lo = \"it\" — a neuter pronoun. It does not point at any noun; it points at the situation itself. Spanish keeps this one leftover neuter slot precisely for \"the whole business, unnamed.\""
             },
             {
               "kind": "speech",
-              "text": "Hold that in mind as the baseline. It is what a colour word normally does."
+              "text": "siento = \"I feel,\" from sentir, \"to feel,\" from Latin sentīre. That root gave English a whole family: sentiment, sense, consent (\"feel together\"), resent (\"feel back at\"), and sentence (originally an opinion, something felt)."
+            },
+            {
+              "kind": "speech",
+              "text": "So lo siento is literally \"I feel it.\" You are naming a feeling — regret, sympathy — rather than declaring a state about yourself. That is why it stretches so easily: lo siento mucho, \"I feel it a lot,\" works both for stepping on someone's foot and for hearing that their father died."
             }
           ]
         },
         {
           "index": 2,
-          "type": "input",
-          "title": "The two words in use",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "blanco (\"white\") is the pair to it: el gato negro, el gato blanco. Both behave like any Spanish adjective — they follow the noun and agree with it (la casa blanca)."
-            },
-            {
-              "kind": "speech",
-              "text": "But hear what you would have expected and did not get. Latin's word for white was albus, and by the negro pattern Spanish \"white\" should be something like albo. It is not. Where blanco actually came from — and what became of albus — is the next lesson."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -83,34 +72,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"negro, blanco\"",
+              "instruction": "\"siento\" — I feel — then \"lo siento,\" I feel it / I'm sorry",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"negro, blanco\"]"
+              "source": "[YOU SAY: \"siento\" — I feel — then \"lo siento,\" I feel it / I'm sorry]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "with a noun — \"el gato negro, la casa blanca\"",
+              "instruction": "\"lo siento mucho\" — I'm so sorry",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: with a noun — \"el gato negro, la casa blanca\"]"
+              "source": "[YOU SAY: \"lo siento mucho\" — I'm so sorry]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"negro\" then English \"denigrate\" — the niger root",
+              "instruction": "\"siento\" then English \"sentiment, sense, consent\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"negro\" then English \"denigrate\" — the *niger* root]"
+              "source": "[YOU SAY: \"siento\" then English \"sentiment, sense, consent\"]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -122,26 +111,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say black and white. (Negro, blanco.) Where does negro come from, and what English word shares it? (Latin niger — denigrate.) What would you have expected Spanish's \"white\" to be, given Latin albus? (Something like albo — and it isn't. That is next lesson's puzzle.)"
+              "text": "What does lo siento literally mean? (\"I feel it\" — siento, \"I feel,\" from Latin sentīre.) What is the lo pointing at? (The situation, not a noun — it is the neuter \"it.\") Next: Spanish's other word for sorry, and when it is the right one."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C22-blanco-germanico",
-      "sequence": 1360,
-      "title": "blanco — the colour Spanish did not inherit",
-      "headword": "blanco ← *blank",
-      "romanization": "blanco ← *blank",
-      "gloss": "white is a Germanic loan, not a Latin inheritance — and Latin's own albus is still around, just not as a colour",
+      "id": "ES-C20-perdon",
+      "sequence": 1340,
+      "title": "perdón — the sorry that asks for something back",
+      "headword": "perdón",
+      "romanization": "perdón",
+      "gloss": "the other sorry — \"give completely\" — for fault and for getting past people, where lo siento is for regret",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3739ef1317390e0b",
+      "sourceHash": "fnv1a64:549e3bd590f42d34",
       "notice": null,
       "blocks": [
         {
@@ -157,301 +146,56 @@
             },
             {
               "kind": "speech",
-              "text": "Negro came straight down from Latin, like almost every other everyday word you have met. Blanco did not come down at all. It walked in."
+              "text": "Lo siento names a feeling. Spanish keeps a second word for a different job — one that is not about your feelings at all, but about something you want from the other person."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "negro, blanco — the two colour words."
+              "text": "perdón (\"pardon\"), from the verb perdonar — Latin per- (\"thoroughly\") + dōnāre (\"to give\"). Literally: \"to give completely.\""
+            },
+            {
+              "kind": "speech",
+              "text": "That dōnāre is English's donate, donor, and condone; the per- is the same intensifier in perfect (\"thoroughly made\") and perturb. So forgiveness, in Latin's picture of it, is a gift given all the way — you hand over the debt rather than keeping a share of it."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: blanco",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "blanco comes from Germanic blank — \"shining, gleaming.\" It is a loan, traditionally attributed to contact with the Visigoths, the Germanic people who ruled Spain for centuries after Rome collapsed."
-            },
-            {
-              "kind": "speech",
-              "text": "Be careful how firmly you hold that last part: no surviving Gothic text actually preserves this word, so the Visigothic route is a plausible traditional account, not a documented one. What is well attested is the parallel case next door — French took the very same Germanic word (blanc) from a different Germanic people, the Franks. Two Romance sisters, the same borrowed word for white, two separate borrowings."
-            },
-            {
-              "kind": "speech",
-              "text": "Why would a borrowed word beat Latin's own? Because blank was not a pale word: it meant bright, gleaming. Colour terms lose out to vivid ones all the time — English's own bright is doing the same job in \"bright white.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "culture-pragmatics",
-          "title": "Why it's said this way: where albus went",
+          "title": "Why it's said this way: which one to reach for",
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin's white did not vanish. It stopped being the everyday word and survived in corners:"
+              "text": "The two are not interchangeable, and the difference follows straight from the etymologies:"
             },
             {
               "kind": "table",
               "headers": [
-                "word",
-                "meaning",
-                "the white inside"
+                "",
+                "lo siento",
+                "perdón"
               ],
               "columns": 3,
-              "rowCount": 4,
+              "rowCount": 3,
               "utterances": [
-                "word: alba. meaning: dawn. the white inside: the sky going white.",
-                "word: albo (rare, poetic). meaning: white, pale. the white inside: a fossil, mostly literary now.",
-                "word: álbum (Eng. album). meaning: album. the white inside: a blank white tablet.",
-                "word: albino. meaning: albino. the white inside: white-skinned."
+                "literally. lo siento: \"I feel it\". perdón: \"give [it] completely\".",
+                "points at. lo siento: your feeling. perdón: their forgiveness.",
+                "use for. lo siento: regret, sympathy. perdón: fault, or getting past someone."
               ]
             },
             {
               "kind": "speech",
-              "text": "That is the normal fate of a displaced word: not death, but retreat into technical and poetic corners. El alba is still every Spanish speaker's word for dawn."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pairing — \"negro from Latin, blanco from Germanic\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pairing — \"negro from Latin, blanco from Germanic\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"el alba\" — dawn — and hear the old Latin white inside it",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"el alba\" — dawn — and hear the old Latin white inside it]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"blanco\" then French \"blanc\" — the same loan, twice over",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"blanco\" then French \"blanc\" — the same loan, twice over]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
+              "text": "So perdón is what you say to squeeze through a crowd or catch a waiter's eye (English \"excuse me\"), and to ask forgiveness for something you did — often stronger than lo siento. Lo siento leans toward \"I'm sorry that happened,\" including things that are nobody's fault at all."
             },
             {
               "kind": "speech",
-              "text": "Where does blanco come from, and what did it mean? (Germanic blank, \"shining\" — traditionally linked to the Visigoths, though not directly attested.) Which other language borrowed the same word, from whom? (French blanc, from the Franks.) Where did Latin's albus end up? (In alba \"dawn,\" álbum, albino — no longer the everyday colour word.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C22-rojo",
-      "sequence": 1370,
-      "title": "rojo — the same family as red, by a different branch",
-      "headword": "rojo",
-      "romanization": "rojo",
-      "gloss": "red — a cousin of French rouge and English red, but by a different branch of the same very old family",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:1aa3dec4e479f5a2",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "So far the sorting has been simple: negro inherited, blanco borrowed. Rojo needs a third box — inherited, yes, but not from the word you would guess."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: rojo",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "rojo (\"red\") from Latin russus, an everyday, expressive Latin word for red. That is a different specific Latin word from the one behind French rouge ( from rubeus). Latin had several reds and the daughter languages did not all pick the same one."
-            },
-            {
-              "kind": "speech",
-              "text": "Both russus and rubeus, though, descend from the very same ancient root: PIE h₁rewdʰ- — which is also the root of English red, rust, ruddy, and of Latin ruber itself (English rubric, once written in red ink)."
-            },
-            {
-              "kind": "speech",
-              "text": "So rojo, rouge and red are cousins, not copies: three descendants of one very old family, arriving by three different branches. Nobody borrowed this one from anybody."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"rojo\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"rojo\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the cousins — \"rojo, rouge, red\", three branches, one root",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the cousins — \"rojo · rouge · red\", three branches, one root]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the three so far — \"negro inherited, blanco borrowed, rojo cousin\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the three so far — \"negro inherited, blanco borrowed, rojo cousin\"]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Is rojo from the same Latin word as French rouge? (No — rojo from russus, rouge from rubeus.) Are they related at all? (Yes — cousins, via the shared PIE root h₁rewdʰ-, which also gives English red.) Next: the one colour in this chapter that came from outside Europe entirely."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C22-azul",
-      "sequence": 1380,
-      "title": "azul — a stone from Afghanistan, in your everyday vocabulary",
-      "headword": "azul",
-      "romanization": "azul",
-      "gloss": "blue — an Arabic loan that became the plain everyday word, where French's cousin stayed poetic",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:94f983d9a6687dee",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Three colours in, three different histories: inherited, borrowed from a neighbour, inherited by a different branch. The fourth comes from outside the Indo-European family altogether."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: azul",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "azul (\"blue\") from Arabic لازورد (lāzaward), \"lapis lazuli\" — the deep blue stone, mined for centuries in what is now Afghanistan and ground into the most expensive pigment in the medieval world. Spanish picked the word up during the centuries of Arabic-speaking rule in Iberia (al-Andalus). English has the same source at one more remove, in azure, and the stone keeps its own name: lazuli."
-            },
-            {
-              "kind": "speech",
-              "text": "So Spanish's word for blue is, underneath, the name of a rock — which is common for blue. Blue is the last basic colour term most languages acquire, and when they do, they usually name it after the thing that was reliably that colour."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: everyday here, poetic there",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Here is the contrast worth keeping. French has azur too — but only as a secondary, poetic word (the sky's blue, the Côte d'Azur); its everyday blue is the Germanic loan bleu. In Spanish it is the reverse: azul is the plain, unremarkable, everyday word, with no Germanic rival competing for the job at all."
-            },
-            {
-              "kind": "speech",
-              "text": "Same borrowed word, two languages, opposite outcomes — a reminder that where a word came from tells you nothing about how ordinary it now feels."
+              "text": "Be honest about the edges: native speakers use whichever fits, the boundary is soft, and mixing them is not a real mistake — just a shade off."
             }
           ]
         },
@@ -469,29 +213,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all four — \"negro, blanco, rojo, azul\"",
+              "instruction": "\"perdón\" — pardon / excuse me",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all four — \"negro, blanco, rojo, azul\"]"
+              "source": "[YOU SAY: \"perdón\" — pardon / excuse me]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "sort them — \"negro inherited, blanco Germanic, rojo cousin of red, azul Arabic\"",
+              "instruction": "the pair — \"lo siento\" for regret, \"perdón\" for fault",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: sort them — \"negro inherited, blanco Germanic, rojo cousin of red, azul Arabic\"]"
+              "source": "[YOU SAY: the pair — \"lo siento\" for regret, \"perdón\" for fault]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"azul\" then English \"azure\" — the same lapis lazuli",
+              "instruction": "\"perdón\" then English \"donate, condone\" — the dōnāre root",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"azul\" then English \"azure\" — the same lapis lazuli]"
+              "source": "[YOU SAY: \"perdón\" then English \"donate, condone\" — the *dōnāre* root]"
             }
           ]
         },
@@ -508,7 +252,7 @@
             },
             {
               "kind": "speech",
-              "text": "Name the four colours and sort them by origin. (Negro — Latin niger; blanco — Germanic blank; rojo — Latin russus, cousin of red; azul — Arabic lāzaward.) What did lāzaward actually name? (Lapis lazuli, the stone.) How does azul's role differ from French azur's? (Azul is Spanish's everyday blue; French's azur is only poetic, with bleu doing the daily work.)"
+              "text": "What do the two halves of perdonar mean? (Per-, \"thoroughly,\" plus dōnāre, \"to give\" — to give completely.) Which word do you use to get past someone in a corridor? (Perdón.) Which leans toward sympathy rather than fault? (Lo siento — \"I feel it.\")"
             }
           ]
         }

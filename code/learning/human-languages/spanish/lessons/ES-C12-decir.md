@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C12-decir
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 990
-chapter: 44
+sequence: 1010
+chapter: 46
 type: word
 headword: decir
 gloss: to say or tell — with the singular present forms digo, dices, and dice

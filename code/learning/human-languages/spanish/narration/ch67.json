@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 67,
-  "title": "Lo Siento",
+  "title": "Ojala --- a Prayer That Outlived Its Religion",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6320d2c8be7ece74",
+  "sourceHash": "fnv1a64:10372f6ce9d8a5c1",
   "lessons": [
     {
-      "id": "ES-C20-lo-siento",
-      "sequence": 1310,
-      "title": "lo siento — \"I'm sorry,\" i.e. \"I feel it\"",
-      "headword": "lo siento",
-      "romanization": "lo siento",
-      "gloss": "I'm sorry — literally \"I feel it,\" a naming of the feeling rather than a claim about yourself",
+      "id": "ES-C18-ojala",
+      "sequence": 1238,
+      "title": "ojalá + subjunctive — a wish borrowed through Arabic",
+      "headword": "ojalá + subjunctive",
+      "romanization": "ojalá + subjunctive",
+      "gloss": "a wish trigger borrowed through Hispanic Arabic",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da4d0d4a3fff875d",
+      "sourceHash": "fnv1a64:9353d3a6d83bf66d",
       "notice": null,
       "blocks": [
         {
@@ -35,26 +35,26 @@
             },
             {
               "kind": "speech",
-              "text": "You already know por favor, \"please.\" The next courtesy phrase is lo siento. Spanish does not say \"I am sorry\" as an adjective; it says something closer to \"I feel this.\""
+              "text": "Ojalá hables español means “I hope you speak Spanish” or “May you speak Spanish.” Ojalá expresses the wish by itself. It needs neither a main verb nor que before the subjunctive. Keep the first frame tiny:"
+            },
+            {
+              "kind": "speech",
+              "text": "Ojalá + subjunctive."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a usable modern pattern. It does not make the Arabic source phrase new Spanish vocabulary."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The phrase, taken apart",
+          "title": "The wish-word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "lo = \"it\" — a neuter pronoun. It does not point at any noun; it points at the situation itself. Spanish keeps this one leftover neuter slot precisely for \"the whole business, unnamed.\""
-            },
-            {
-              "kind": "speech",
-              "text": "siento = \"I feel,\" from sentir, \"to feel,\" from Latin sentīre. That root gave English a whole family: sentiment, sense, consent (\"feel together\"), resent (\"feel back at\"), and sentence (originally an opinion, something felt)."
-            },
-            {
-              "kind": "speech",
-              "text": "So lo siento is literally \"I feel it.\" You are naming a feeling — regret, sympathy — rather than declaring a state about yourself. That is why it stretches so easily: lo siento mucho, \"I feel it a lot,\" works both for stepping on someone's foot and for hearing that their father died."
+              "text": "The Real Academia Española records ojalá from Hispanic Arabic wa šá lláh, “and God has willed.” Long contact in al-Andalus carried the expression into Spanish, where its sound and grammatical life changed. You met another Arabic-derived function word in hasta. The historical phrase explains a route; only modern ojalá is available for your Spanish sentences."
             }
           ]
         },
@@ -70,31 +70,67 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"siento\" — I feel — then \"lo siento,\" I feel it / I'm sorry",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"siento\" — I feel — then \"lo siento,\" I feel it / I'm sorry]"
+              "kind": "speech",
+              "text": "Use only modern ojalá as the Spanish trigger."
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"lo siento mucho\" — I'm so sorry",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"lo siento mucho\" — I'm so sorry]"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-ojala-trigger",
+              "prompt": "Say 'I hope you speak Spanish' to one friend using ojalá.",
+              "assesses": [
+                "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER",
+                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "ojalá hables español.",
+                "ojalá hables español",
+                "ojala hables espanol"
+              ],
+              "feedback": {
+                "correct": "Right: Ojalá hables español.",
+                "incorrect": "Use ojalá directly before the tú subjunctive hables."
+              }
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"siento\" then English \"sentiment, sense, consent\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"siento\" then English \"sentiment, sense, consent\"]"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-ojala-no-que",
+              "prompt": "Does the learned ojalá frame require que before hables? Answer yes or no.",
+              "assesses": [
+                "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER"
+              ],
+              "responseSeconds": 5,
+              "acceptedResponses": [
+                "no"
+              ],
+              "feedback": {
+                "correct": "Right: ojalá directly licenses the subjunctive in this frame.",
+                "incorrect": "No: say Ojalá hables, without que."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-ojala-source",
+              "prompt": "Through which historical language variety did Spanish receive ojalá?",
+              "assesses": [
+                "ES-ETYMON-OJALA-HISPANIC-ARABIC"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "hispanic arabic",
+                "arabic",
+                "andalusi arabic",
+                "hispano-arabic"
+              ],
+              "feedback": {
+                "correct": "Right: the recorded route is through Hispanic Arabic.",
+                "incorrect": "The historical route named here is Hispanic Arabic."
+              }
             }
           ]
         },
@@ -111,26 +147,26 @@
             },
             {
               "kind": "speech",
-              "text": "What does lo siento literally mean? (\"I feel it\" — siento, \"I feel,\" from Latin sentīre.) What is the lo pointing at? (The situation, not a noun — it is the neuter \"it.\") Next: Spanish's other word for sorry, and when it is the right one."
+              "text": "What follows ojalá in the learned frame? (The subjunctive.) Does it need que? (No.) Which historical language variety carried the word into Spanish? (Hispanic Arabic.) Is the older Arabic phrase usable as new Spanish vocabulary here? (No.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C20-perdon",
-      "sequence": 1320,
-      "title": "perdón — the sorry that asks for something back",
-      "headword": "perdón",
-      "romanization": "perdón",
-      "gloss": "the other sorry — \"give completely\" — for fault and for getting past people, where lo siento is for regret",
+      "id": "ES-C18-practice",
+      "sequence": 1242,
+      "title": "Practice — assert the event or want it",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "a singular checkpoint for wanted events and the present subjunctive",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a606a6301458af4",
+      "sourceHash": "fnv1a64:dc5f64c86f1caa41",
       "notice": null,
       "blocks": [
         {
@@ -146,56 +182,59 @@
             },
             {
               "kind": "speech",
-              "text": "Lo siento names a feeling. Spanish keeps a second word for a different job — one that is not about your feelings at all, but about something you want from the other person."
+              "text": "This checkpoint adds no vocabulary, plural person, object pronoun, or new clause frame. First decide whether the event is asserted or wanted. Then retrieve only the singular rows you learned."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: the bounded map",
           "segments": [
             {
-              "kind": "speech",
-              "text": "perdón (\"pardon\"), from the verb perdonar — Latin per- (\"thoroughly\") + dōnāre (\"to give\"). Literally: \"to give completely.\""
+              "kind": "table",
+              "headers": [
+                "verb",
+                "yo / él / ella / usted",
+                "tú"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "verb: hablar. yo / él / ella / usted: hable. tú: hables.",
+                "verb: comer. yo / él / ella / usted: coma. tú: comas.",
+                "verb: vivir. yo / él / ella / usted: viva. tú: vivas.",
+                "verb: querer. yo / él / ella / usted: quiera. tú: quieras.",
+                "verb: poder. yo / él / ella / usted: pueda. tú: puedas.",
+                "verb: hacer. yo / él / ella / usted: haga. tú: hagas."
+              ]
             },
             {
               "kind": "speech",
-              "text": "That dōnāre is English's donate, donor, and condone; the per- is the same intensifier in perfect (\"thoroughly made\") and perturb. So forgiveness, in Latin's picture of it, is a gift given all the way — you hand over the debt rather than keeping a share of it."
+              "text": "The repeated outer form is not a missing row: first- and third-person singular match. Every plural form waits."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: which one to reach for",
+          "type": "grammar",
+          "title": "Grammar Lens: two safe triggers",
           "segments": [
             {
               "kind": "speech",
-              "text": "The two are not interchangeable, and the difference follows straight from the etymologies:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "lo siento",
-                "perdón"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "literally. lo siento: \"I feel it\". perdón: \"give [it] completely\".",
-                "points at. lo siento: your feeling. perdón: their forgiveness.",
-                "use for. lo siento: regret, sympathy. perdón: fault, or getting past someone."
-              ]
+              "text": "Same doer: Quiero hablar español."
             },
             {
               "kind": "speech",
-              "text": "So perdón is what you say to squeeze through a crowd or catch a waiter's eye (English \"excuse me\"), and to ask forgiveness for something you did — often stronger than lo siento. Lo siento leans toward \"I'm sorry that happened,\" including things that are nobody's fault at all."
+              "text": "Different doer: Quiero que hables español."
             },
             {
               "kind": "speech",
-              "text": "Be honest about the edges: native speakers use whichever fits, the boundary is soft, and mixing them is not a real mistake — just a shade off."
+              "text": "Wish by itself: Ojalá hables español."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not extend these two frames to every emotion, doubt, command, or conjunction yet. More triggers belong in later micro-lessons."
             }
           ]
         },
@@ -211,31 +250,210 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"perdón\" — pardon / excuse me",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"perdón\" — pardon / excuse me]"
+              "kind": "speech",
+              "text": "Decide the meaning first; then retrieve only the learned form."
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pair — \"lo siento\" for regret, \"perdón\" for fault",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"lo siento\" for regret, \"perdón\" for fault]"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-fact-wanted",
+              "prompt": "Choose the wanted-event form: hablas or hables.",
+              "assesses": [
+                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
+                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR"
+              ],
+              "responseSeconds": 5,
+              "acceptedResponses": [
+                "hables"
+              ],
+              "feedback": {
+                "correct": "Right: hables is the wanted-event form in this chapter.",
+                "incorrect": "Hablas can assert; hables follows the learned wish frame."
+              }
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"perdón\" then English \"donate, condone\" — the dōnāre root",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"perdón\" then English \"donate, condone\" — the *dōnāre* root]"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-one-two",
+              "prompt": "Give the pair 'I want to speak Spanish; I want you to speak Spanish.'",
+              "assesses": [
+                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 11,
+              "acceptedResponses": [
+                "quiero hablar español; quiero que hables español.",
+                "quiero hablar español quiero que hables español",
+                "quiero hablar español / quiero que hables español"
+              ],
+              "feedback": {
+                "correct": "Right: one doer uses hablar; two use que hables.",
+                "incorrect": "Use Quiero hablar español, then Quiero que hables español."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-regular-rows",
+              "prompt": "Give the tú subjunctive forms of hablar, comer, and vivir, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR",
+                "ES-GRAMMAR-ER-SUBJUNCTIVE-SINGULAR",
+                "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "hables, comas, vivas",
+                "hables comas vivas",
+                "hables / comas / vivas"
+              ],
+              "feedback": {
+                "correct": "Right: hables, comas, vivas.",
+                "incorrect": "Retrieve the three tú forms: hable-s, coma-s, viva-s."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-yo-stem",
+              "prompt": "Which present-person form supplies the stem in this chapter's recipe?",
+              "assesses": [
+                "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "the yo form",
+                "yo",
+                "present yo form"
+              ],
+              "feedback": {
+                "correct": "Right: start from the present yo form.",
+                "incorrect": "The recipe begins with the present yo form."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-querer",
+              "prompt": "Give the learned singular subjunctive row of querer.",
+              "assesses": [
+                "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-QUERER"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "quiera, quieras, quiera",
+                "quiera quieras quiera",
+                "quiera / quieras / quiera"
+              ],
+              "feedback": {
+                "correct": "Right: quiera, quieras, quiera.",
+                "incorrect": "Keep quier- and add -a, -as, -a."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-poder",
+              "prompt": "Say 'I want you to be able to speak Spanish' to one friend.",
+              "assesses": [
+                "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-PODER",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "quiero que puedas hablar español.",
+                "quiero que puedas hablar español"
+              ],
+              "feedback": {
+                "correct": "Right: Quiero que puedas hablar español.",
+                "incorrect": "Use quiero que plus puedas, then hablar español."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-hacer",
+              "prompt": "Say 'I want you to make coffee' to one friend.",
+              "assesses": [
+                "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-HACER",
+                "ES-LEX-CAFE"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "quiero que hagas café.",
+                "quiero que hagas café",
+                "quiero que hagas cafe"
+              ],
+              "feedback": {
+                "correct": "Right: Quiero que hagas café.",
+                "incorrect": "Use quiero que plus hagas, then café."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-ojala",
+              "prompt": "Say 'I hope you live in Madrid' to one friend using ojalá.",
+              "assesses": [
+                "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER",
+                "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-VIVIR",
+                "ES-LEX-EN"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "ojalá vivas en madrid.",
+                "ojalá vivas en madrid",
+                "ojala vivas en madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Ojalá vivas en Madrid.",
+                "incorrect": "Use ojalá directly before vivas en Madrid."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-subjunctive-name",
+              "prompt": "What does the Latin source subiūnctīvus help you picture?",
+              "assesses": [
+                "ES-ETYMON-SUBJUNCTIVE-SUBIUNCTIVUS"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "a clause subjoined or joined under another",
+                "subjoined",
+                "joined under"
+              ],
+              "feedback": {
+                "correct": "Right: a subjoined clause.",
+                "incorrect": "It carries the idea of being subjoined, or joined under another."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-ojala-source",
+              "prompt": "Name the historical language variety through which ojalá entered Spanish.",
+              "assesses": [
+                "ES-ETYMON-OJALA-HISPANIC-ARABIC"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "hispanic arabic",
+                "arabic",
+                "andalusi arabic",
+                "hispano-arabic"
+              ],
+              "feedback": {
+                "correct": "Right: Hispanic Arabic.",
+                "incorrect": "The route recorded here is Hispanic Arabic."
+              }
             }
           ]
         },
@@ -252,7 +470,7 @@
             },
             {
               "kind": "speech",
-              "text": "What do the two halves of perdonar mean? (Per-, \"thoroughly,\" plus dōnāre, \"to give\" — to give completely.) Which word do you use to get past someone in a corridor? (Perdón.) Which leans toward sympathy rather than fault? (Lo siento — \"I feel it.\")"
+              "text": "What is the first meaning choice? (Asserted event or wanted event.) Give the three regular tú forms. (Hables, comas, vivas.) Give the three bounded special tú forms. (Quieras, puedas, hagas.) Name the two safe triggers. (Quiero que for a different doer; ojalá for a wish.) What still waits? (Plural persons, additional irregular verbs, and additional subjunctive triggers.)"
             }
           ]
         }

@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C34-escribir
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1650
-chapter: 85
+sequence: 1670
+chapter: 87
 type: word
 headword: escribir
 gloss: to write — from a Latin verb meaning "to scratch", and the reason Spanish puts an e- in front

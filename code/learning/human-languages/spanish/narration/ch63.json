@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 63,
-  "title": "The Subjunctive, Regular",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:e2f63eaa755a9994",
+  "title": "Synthesis --- Promising, and Supposing",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:98238c34196b4af5",
   "lessons": [
     {
-      "id": "ES-C18-subjuntivo",
-      "sequence": 1194,
-      "title": "hable, hables, hable — the singular -ar row",
-      "headword": "hable · hables · hable",
-      "romanization": "hable · hables · hable",
-      "gloss": "the singular present subjunctive of hablar",
+      "id": "ES-C17-sintesis-futuro-condicional",
+      "sequence": 1202,
+      "title": "Synthesis — promising, and supposing",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — one stem, two endings, and the difference between promising and supposing",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:044d49ee880e020a",
+      "sourceHash": "fnv1a64:16c0fbcc4a062547",
       "notice": null,
       "blocks": [
         {
@@ -35,206 +35,73 @@
             },
             {
               "kind": "speech",
-              "text": "You already used hables for one friend. Today add only the other two singular slots:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "present subjunctive"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. present subjunctive: hable.",
-                "person: tú. present subjunctive: hables.",
-                "person: él / ella / usted. present subjunctive: hable."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Plural forms wait. Say the small row: hable, hables, hable."
+              "text": "Nothing new in this chapter. Say hablaré, then hablaría."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the yo stem, then a vowel swap",
+          "title": "Grammar Lens: the two endings are one word, twice",
           "segments": [
             {
               "kind": "speech",
-              "text": "Start from present hablo. Remove -o to reveal habl-. Regular -ar verbs then use e in these subjunctive endings: -e, -es, -e. The family vowel has swapped from the familiar a to e. This recipe will matter later because a verb's special present yo stem can travel with it."
+              "text": "Three chapters ago you were told where these endings came from. Now it is worth seeing what that fact buys you."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are the verb haber — Latin habēre, \"to have\" — glued onto the back of the infinitive. Romance speakers stopped saying \"I have to speak\" as two words and fused it into one:"
+            },
+            {
+              "kind": "speech",
+              "text": "hablar + he (I have) becomes hablaré — I will speak. hablar + había (I had) becomes hablaría — I would speak."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the entire difference between the two tenses: the same auxiliary, once in the present and once in the past. Not two systems to learn — one system, looked at from two moments."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The name, taken apart",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "Spanish subjuntivo descends from Latin subiūnctīvus, “subjoined,” from sub- “under” plus iungere “join.” English join, junction, and conjunction belong to the same word family; yoke is a more distant cousin. The name helps you picture the wanted clause joined under quiero que. It is history, not a complete usage rule."
+              "text": "And the meaning follows from the grammar rather than being extra to it."
+            },
+            {
+              "kind": "speech",
+              "text": "Having to do something now is a commitment: hablaré is a promise, or a prediction you are standing behind. Having had to do it is a supposition — the obligation sits in a past that never arrived, so hablaría is hypothetical."
+            },
+            {
+              "kind": "speech",
+              "text": "Promise from the present. Suppose from the past."
+            },
+            {
+              "kind": "speech",
+              "text": "English hides the same move: will is the present of an old verb meaning to want, and would is its past. Will/would is the same pair as -é/-ía."
             }
           ]
         },
         {
           "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
+              "kind": "speech",
+              "text": "— ¿Hablarás español en Madrid? — Sí, hablaré español. — ¿Y sin práctica? — Hablaría español, pero no bien."
             },
             {
               "kind": "speech",
-              "text": "Build each answer only from the learned singular row."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-subjuntivo-forms",
-              "prompt": "Give the learned singular present-subjunctive forms of hablar: yo, tú, then él/ella/usted.",
-              "assesses": [
-                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR",
-                "ES-LEX-HABLAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "hable, hables, hable",
-                "hable hables hable",
-                "hable / hables / hable"
-              ],
-              "feedback": {
-                "correct": "Right: hable, hables, hable.",
-                "incorrect": "Use the e-family row: hable, hables, hable."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-subjuntivo-recipe",
-              "prompt": "Which present form gives the stem for regular hable: hablo or habla?",
-              "assesses": [
-                "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP"
-              ],
-              "responseSeconds": 6,
-              "acceptedResponses": [
-                "hablo"
-              ],
-              "feedback": {
-                "correct": "Right: remove -o from hablo to get habl-.",
-                "incorrect": "Start from the present yo form hablo, then remove -o."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-subjuntivo-name",
-              "prompt": "What joining idea sits inside the Latin source of subjuntivo?",
-              "assesses": [
-                "ES-ETYMON-SUBJUNCTIVE-SUBIUNCTIVUS"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "subjoined or joined under",
-                "subjoined",
-                "joined under"
-              ],
-              "feedback": {
-                "correct": "Right: subiūnctīvus carries the idea 'subjoined.'",
-                "incorrect": "Think of a clause joined under another: subjoined."
-              }
+              "text": "One letter-run apart, and the second speaker has moved from a commitment to a guess without changing a single other word."
             }
           ]
         },
         {
           "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the three forms. (Hable, hables, hable.) Which present form supplies the stem? (Hablo.) What did the family vowel do? (a becomes e.) What does the name remember? (A clause subjoined, or joined under another.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C18-comer-subjuntivo",
-      "sequence": 1198,
-      "title": "coma, comas, coma — let -er cross to a",
-      "headword": "coma · comas · coma",
-      "romanization": "coma · comas · coma",
-      "gloss": "the singular present subjunctive of comer",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:468e6fdbe1c1ef1b",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Start from como, remove -o, and keep com-. A regular -er verb crosses to the a family:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "present subjunctive"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. present subjunctive: coma.",
-                "person: tú. present subjunctive: comas.",
-                "person: él / ella / usted. present subjunctive: coma."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Say only the singular row: coma, comas, coma."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: meaning before machinery",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Comes can assert “you eat.” Quiero que comas presents your eating as what I want. The e becomes a contrast helps you hear the two meanings. It does not mean that every a form is subjunctive; use the learned frame as a whole."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -245,72 +112,86 @@
               "source": "[PAUSE 1s]"
             },
             {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hablaré then hablaría, and hear a promise turn into a guess",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hablaré* then *hablaría*, and hear a promise turn into a guess]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
               "kind": "speech",
-              "text": "Keep comer inside the learned singular frame."
+              "text": "Until the choice is about what you mean, not which ending it was."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C18-comer-subjuntivo-forms",
-              "prompt": "Give the learned singular subjunctive forms of comer: yo, tú, then él/ella/usted.",
+              "id": "ES-C17-sintesis-futuro-condicional-promise",
+              "prompt": "You are committing to it. I will speak: which form?",
               "assesses": [
-                "ES-GRAMMAR-ER-SUBJUNCTIVE-SINGULAR",
-                "ES-LEX-COMER"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "coma, comas, coma",
-                "coma comas coma",
-                "coma / comas / coma"
-              ],
-              "feedback": {
-                "correct": "Right: coma, comas, coma.",
-                "incorrect": "Use the a-family row: coma, comas, coma."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-comer-subjuntivo-fact-wish",
-              "prompt": "Which form belongs after quiero que for one friend: comes or comas?",
-              "assesses": [
-                "ES-GRAMMAR-ER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-ER-SUBJUNCTIVE-SINGULAR",
-                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED"
-              ],
-              "responseSeconds": 6,
-              "acceptedResponses": [
-                "comas"
-              ],
-              "feedback": {
-                "correct": "Right: quiero que comas presents the eating as wanted.",
-                "incorrect": "Use subjunctive comas after the learned trigger quiero que."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-comer-subjuntivo-wanted",
-              "prompt": "Say 'I want you to eat' to one friend.",
-              "assesses": [
-                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
-                "ES-GRAMMAR-ER-SUBJUNCTIVE-SINGULAR",
-                "ES-LEX-COMER"
+                "ES-GRAMMAR-AR-FUTURE-SINGULAR"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "quiero que comas.",
-                "quiero que comas"
+                "hablare",
+                "hablaré",
+                "yo hablare"
               ],
               "feedback": {
-                "correct": "Right: Quiero que comas.",
-                "incorrect": "Use the two-doer frame quiero que plus comas."
+                "correct": "Yes — the future is the promise.",
+                "incorrect": "hablare. The present auxiliary means you are standing behind it."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-sintesis-futuro-condicional-suppose",
+              "prompt": "Now you are only supposing. I would speak: which form?",
+              "assesses": [
+                "ES-GRAMMAR-AR-CONDITIONAL-SINGULAR",
+                "ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "hablaria",
+                "hablaría",
+                "yo hablaria"
+              ],
+              "feedback": {
+                "correct": "Yes — the past auxiliary makes it hypothetical.",
+                "incorrect": "hablaria."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-sintesis-futuro-condicional-why",
+              "prompt": "What single word is glued onto the infinitive in BOTH tenses?",
+              "assesses": [
+                "ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "haber",
+                "habere",
+                "the verb to have",
+                "have"
+              ],
+              "feedback": {
+                "correct": "Yes — once in the present, once in the past. That is the only difference.",
+                "incorrect": "haber, from Latin habere. Present gives the future; past gives the conditional."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -322,178 +203,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three forms. (Coma, comas, coma.) Which form asserts “you eat”? (Comes.) Which belongs after quiero que? (Comas.) Next, test whether regular -ir behaves differently."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C18-vivir-subjuntivo",
-      "sequence": 1202,
-      "title": "viva, vivas, viva — -ir joins -er",
-      "headword": "viva · vivas · viva",
-      "romanization": "viva · vivas · viva",
-      "gloss": "the singular present subjunctive of vivir",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:254ef0223dc20b62",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Start from vivo, remove -o, then add the same a endings you just used with comer:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "present subjunctive"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. present subjunctive: viva.",
-                "person: tú. present subjunctive: vivas.",
-                "person: él / ella / usted. present subjunctive: viva."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Regular -er and -ir match in this singular row:"
-            },
-            {
-              "kind": "speech",
-              "text": "comer: coma, comas, coma."
-            },
-            {
-              "kind": "speech",
-              "text": "vivir: viva, vivas, viva."
-            },
-            {
-              "kind": "speech",
-              "text": "Plural differences wait."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: meaning in a known frame",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Vives en Madrid asserts where one friend lives. Quiero que vivas en Madrid makes that living a wanted event. Nothing new is being smuggled into the sentence: en and Madrid have appeared in the earlier location frame."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Keep vivir inside the learned singular frame."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-vivir-subjuntivo-forms",
-              "prompt": "Give the learned singular subjunctive forms of vivir: yo, tú, then él/ella/usted.",
-              "assesses": [
-                "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR",
-                "ES-LEX-VIVIR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "viva, vivas, viva",
-                "viva vivas viva",
-                "viva / vivas / viva"
-              ],
-              "feedback": {
-                "correct": "Right: viva, vivas, viva.",
-                "incorrect": "Use the a-family row: viva, vivas, viva."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-vivir-subjuntivo-er-ir-match",
-              "prompt": "Which two regular verb families share -a, -as, -a here?",
-              "assesses": [
-                "ES-GRAMMAR-ER-SUBJUNCTIVE-SINGULAR",
-                "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "-er and -ir",
-                "er and ir",
-                "-er / -ir"
-              ],
-              "feedback": {
-                "correct": "Right: regular -er and -ir match in the learned singular row.",
-                "incorrect": "Coma and viva reveal the pair: -er and -ir."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-vivir-subjuntivo-wanted",
-              "prompt": "Say 'I want you to live in Madrid' to one friend.",
-              "assesses": [
-                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
-                "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR",
-                "ES-LEX-VIVIR",
-                "ES-LEX-EN"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "quiero que vivas en madrid.",
-                "quiero que vivas en madrid"
-              ],
-              "feedback": {
-                "correct": "Right: Quiero que vivas en Madrid.",
-                "incorrect": "Use quiero que plus the tú subjunctive vivas, then en Madrid."
-              }
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the three forms. (Viva, vivas, viva.) Which regular family matches -ir here? (-er.) Which form fits one friend after quiero que? (Vivas.)"
+              "text": "What is glued onto the infinitive in both tenses? (Haber — the verb to have.) Which one is a promise, and which a supposition? (-é the promise, -ía the supposition.) And what is the English pair that works the same way? (Will and would — a present and a past of one old verb.)"
             }
           ]
         }

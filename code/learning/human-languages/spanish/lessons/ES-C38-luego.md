@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C38-luego
 spine_node: SPINE-NARRATE-EVENTS
-sequence: 1780
-chapter: 96
+sequence: 1800
+chapter: 98
 type: word
 headword: luego
 gloss: then, next — a word you already own from hasta luego, now doing a second job: joining two events in order
