@@ -8,7 +8,7 @@ use diagram_ir::{
     SequenceTextWrap,
 };
 
-pub const VERSION: &str = "0.25.0";
+pub const VERSION: &str = "0.26.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -199,7 +199,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 activate,
                 deactivate,
             } => {
-                let Some(&from_x) = centers.get(from) else {
+                let Some(&from_center_x) = centers.get(from) else {
                     continue;
                 };
                 let Some(&to_center_x) = centers.get(to) else {
@@ -228,13 +228,16 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 let label = wrap_sequence_text(
                     label,
                     wrap,
-                    (to_center_x - from_x)
+                    (to_center_x - from_center_x)
                         .abs()
                         .clamp(80.0, WRAPPED_TEXT_MAX_WIDTH),
                 );
                 let label_height = 16.0 * label.lines().count().max(1) as f64;
                 let message_y = y + label_height + 6.0;
-                let mut to_x = to_center_x;
+                let from_x =
+                    activation_endpoint(&activation_starts, from, from_center_x, to_center_x);
+                let mut to_x =
+                    activation_endpoint(&activation_starts, to, to_center_x, from_center_x);
                 if let Some(participant) = created_receiver {
                     let lane_index = diagram
                         .participants
@@ -263,7 +266,14 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                         height: created_header_height,
                     });
                     lifeline_starts.insert(participant.to_string(), box_y + created_header_height);
-                    to_x = endpoint_at_box_edge(to_center_x, from_x, box_width / 2.0 + 3.0);
+                    to_x = endpoint_at_box_edge(to_center_x, from_center_x, box_width / 2.0 + 3.0);
+                } else if *activate
+                    && activation_starts.get(to).is_none_or(Vec::is_empty)
+                    && from_center_x != to_center_x
+                {
+                    // The opening message points at the bar that starts on this line.
+                    to_x =
+                        endpoint_at_box_edge(to_center_x, from_center_x, ACTIVATION_W / 2.0 - 1.0);
                 }
                 items.push(LayoutedSequenceItem::Message {
                     from_x,
@@ -298,7 +308,13 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     open_activation(&mut activation_starts, to, message_y);
                 }
                 if *deactivate {
-                    close_activation(&mut items, &mut activation_starts, from, from_x, message_y);
+                    close_activation(
+                        &mut items,
+                        &mut activation_starts,
+                        from,
+                        from_center_x,
+                        message_y,
+                    );
                 }
                 if let Some(participant) = destroyed_participant {
                     if let Some(&center) = centers.get(participant) {
@@ -676,6 +692,27 @@ fn activation_x(center: f64, depth: usize) -> f64 {
     center - ACTIVATION_W / 2.0 + depth as f64 * NESTED_ACTIVATION_OFFSET
 }
 
+fn activation_endpoint(
+    starts: &HashMap<String, Vec<(f64, usize)>>,
+    participant: &str,
+    center: f64,
+    other: f64,
+) -> f64 {
+    let Some(depth) = starts
+        .get(participant)
+        .and_then(|participant_starts| participant_starts.len().checked_sub(1))
+    else {
+        return center;
+    };
+    if center < other {
+        activation_x(center, depth) + ACTIVATION_W
+    } else if center > other {
+        activation_x(center, 0)
+    } else {
+        center
+    }
+}
+
 fn endpoint_at_box_edge(center: f64, other: f64, offset: f64) -> f64 {
     if other < center {
         center - offset
@@ -705,6 +742,21 @@ mod tests {
             links: vec![],
             properties: vec![],
             details_reference: None,
+        }
+    }
+
+    fn message(from: &str, to: &str, label: &str) -> SequenceEvent {
+        SequenceEvent::Message {
+            from: from.into(),
+            to: to.into(),
+            label: label.into(),
+            wrap: SequenceTextWrap::Default,
+            line_style: SequenceLineStyle::Solid,
+            arrowhead: SequenceArrowhead::Filled,
+            bidirectional: false,
+            central_connection: SequenceCentralConnection::None,
+            activate: false,
+            deactivate: false,
         }
     }
 
@@ -1081,6 +1133,94 @@ mod tests {
         );
         assert!(activations[0].1 < activations[1].1);
         assert!(activations[0].2 > activations[1].2);
+    }
+
+    #[test]
+    fn active_messages_terminate_at_activation_edges() {
+        let diagram = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
+            participants: vec![participant("Alice"), participant("Bob")],
+            participant_groups: vec![],
+            events: vec![
+                SequenceEvent::Activation {
+                    participant: "Alice".into(),
+                    active: true,
+                },
+                SequenceEvent::Activation {
+                    participant: "Bob".into(),
+                    active: true,
+                },
+                message("Alice", "Bob", "right"),
+                message("Bob", "Alice", "left"),
+            ],
+        };
+        let layout = layout_sequence_diagram(&diagram);
+        let centers: HashMap<_, _> = layout
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedSequenceItem::Lifeline { participant, x, .. } => {
+                    Some((participant.as_str(), *x))
+                }
+                _ => None,
+            })
+            .collect();
+        let messages: HashMap<_, _> = layout
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedSequenceItem::Message {
+                    label,
+                    from_x,
+                    to_x,
+                    ..
+                } => Some((label.as_str(), (*from_x, *to_x))),
+                _ => None,
+            })
+            .collect();
+
+        assert!(messages["right"].0 > centers["Alice"]);
+        assert!(messages["right"].1 < centers["Bob"]);
+        assert!(messages["left"].0 < centers["Bob"]);
+        assert!(messages["left"].1 > centers["Alice"]);
+    }
+
+    #[test]
+    fn opening_message_terminates_at_new_activation_edge() {
+        let mut opening = message("Alice", "Bob", "open");
+        let SequenceEvent::Message { activate, .. } = &mut opening else {
+            unreachable!();
+        };
+        *activate = true;
+        let diagram = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
+            participants: vec![participant("Alice"), participant("Bob")],
+            participant_groups: vec![],
+            events: vec![opening],
+        };
+        let layout = layout_sequence_diagram(&diagram);
+        let bob_x = layout.items.iter().find_map(|item| match item {
+            LayoutedSequenceItem::Lifeline { participant, x, .. } if participant == "Bob" => {
+                Some(*x)
+            }
+            _ => None,
+        });
+        let to_x = layout.items.iter().find_map(|item| match item {
+            LayoutedSequenceItem::Message { to_x, .. } => Some(*to_x),
+            _ => None,
+        });
+
+        assert_eq!(bob_x.unwrap() - to_x.unwrap(), ACTIVATION_W / 2.0 - 1.0);
     }
 
     #[test]

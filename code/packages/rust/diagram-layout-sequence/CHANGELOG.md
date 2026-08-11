@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.26.0 - 2026-08-11
+
+- Terminate sequence messages at active activation-bar edges, including the bar opened by a message suffix.
+
 ## 0.22.0 - 2026-08-11
 
 - Offset nested sequence activation bars by semantic stack depth instead of painting them directly on top of one another.
