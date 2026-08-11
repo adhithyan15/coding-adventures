@@ -4,6 +4,15 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - native accessible tables
+
+Canonical dynamic `HostTable` layouts now lower to Qt Quick `TableView` and
+`HorizontalHeaderView`, backed by a generated `QAbstractTableModel` adapter for
+MIL header and nested-row slots. Delegates expose table, column-header, and cell
+accessibility roles plus pointer, keyboard, and assistive activation with the
+authored row/column payload. Unsupported table structures keep the existing
+structural fallback.
+
 ### Added - native accessible drag and drop
 
 `HostDraggable` and `HostDropTarget` now lower to Qt Quick's native

@@ -5,18 +5,14 @@ pipeline IR (`.mil`, `.mll`, `.msl`) produced by `mosmodel-compiler`,
 `moslayout-compiler`, and `mosstyle-compiler`, and emits a `.qml` source
 string describing the component as a tree of Qt Quick elements.
 
-> **This crate emits QML, not C++.** Qt has two surface layers a Mosaic
-> backend could target — QML (declarative) and C++ widgets (imperative).
-> The first cut targets QML because its shape closely matches the
+> **This crate emits QML components with a small generated C++ shell.** Qt has
+> two surface layers a Mosaic backend could target — QML (declarative) and C++
+> widgets (imperative). The component surface stays in QML because it closely matches the
 > React/SwiftUI emitters: a tree of elements with `property` declarations
 > (analogous to React props) and `signal` declarations (analogous to
-> event callbacks). UI28 §4.5 sketches a richer C++ path for the
-> `Cell` / `Column` / `Grid v3` primitives using
-> `QStyledItemDelegate` / `QAbstractTableModel` / `QTableView`; that
-> mapping is **deferred to a follow-up PR**. The QML equivalent — the
-> `TableView` element from `QtQuick.Controls` — will likely be the
-> chosen target for the next cut, since it keeps the backend in one
-> consistent surface.
+> event callbacks). Canonical dynamic tables use QML `TableView` and
+> `HorizontalHeaderView`; the generated shell contributes a focused
+> `QAbstractTableModel` adapter for MIL nested-list slots.
 
 ## Pipeline position
 
@@ -219,21 +215,14 @@ lowerCamelCase. The emitter converts:
 
 ## What is NOT in this PR (deferred follow-ups)
 
-Several Mosaic features are accepted but not yet emitted:
-
-- **No `If` or `For` lowering.** Two primitives in UI29's kernel still
-  wait on grammar PRs (U29-G1, U29-G2). Today a layout node with `tag
-  = "If"` or `"For"` returns `UnknownPrimitive`.
-- **`HostTable` lowers structurally, not as a true `TableView`.** This
-  PR adds `HostTable` + `HostTableHead`/`Body`/`Foot`/`ColGroup` as a
-  `ColumnLayout` of `RowLayout` rows — header cells get `font.bold:
-  true` and a `Rectangle` separates head from body. A full `TableView`
-  + `QAbstractTableModel` integration is a follow-up gated on `For`.
-- **No `Cell` / data-`Column` / `Grid v3` lowering.** UI28 §2 introduces
-  a richer Grid model. UI28 §4.5 sketches a Qt mapping in C++
-  (`QStyledItemDelegate` / `QAbstractTableModel` / `QTableView`); the
-  QML equivalent is the `TableView` element from `QtQuick.Controls`.
-  Both are deferred. The Column conflict (UI28 §2.2: layout-Column vs.
+Several Mosaic features remain intentionally conservative:
+- **Non-canonical `HostTable` shapes retain a structural fallback.** The
+  reusable Grid package's exact dynamic header/body-loop shape uses native
+  `TableView` semantics. Arbitrary tables, footers, and ambiguous loop shapes
+  remain a `ColumnLayout` of `RowLayout` rows and are reported as a native
+  accessibility degradation.
+- **No standalone data-`Column` / Grid-v3 lowering.** The Column conflict
+  (UI28 §2.2: layout-Column vs.
   data-Column, the same ambiguity SwiftUI faces) is documented inline
   in `pipeline.rs::primitive_to_qml` and will be resolved by context-
   sensitive lowering once the data primitives land.
@@ -278,7 +267,11 @@ Each deferred item is intentionally a focused, additive PR.
   `onClicked`.
 - `HostScroll` lowers to `ScrollView { ... children ... }`.
 - The versionless `QtQuick.Controls` import is added only when needed.
-- `If` and `For` still return `UnknownPrimitive` (deferred).
+- `If` and `For` lower to conditional `Loader`s and model-backed delegates.
+- Canonical dynamic `HostTable` lowers to `HorizontalHeaderView` + `TableView`
+  backed by a shell-injected `QAbstractTableModel`; cells expose table roles,
+  keyboard focus, assistive activation, and row/column navigation payloads.
+- Unsupported `HostTable` shapes retain the structural fallback.
 - `HostTable` lowers to an empty `ColumnLayout { spacing: 0 }` when
   bare.
 - `HostTableHead` rows emit `RowLayout`s with `font.bold: true` cells.

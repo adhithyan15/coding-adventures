@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased] - Qt native table capability
+
+- Native-complete analysis recognizes the canonical UI31/Grid structure when
+  the Qt emitter supplies `TableView`, `HorizontalHeaderView`, and a generated
+  `QAbstractTableModel` adapter.
+- Unsupported or structurally ambiguous Qt HostTable trees retain the stable
+  `accessibility.table-semantics-missing` degradation.
+- Permissive TaskApp Qt acceptance now reports only the sample-runtime fallback
+  before compiling and launching the generated native application.
+
 ## [Unreleased] - Qt native drag capability
 
 - Native-complete analysis no longer reports Qt `HostDraggable` and

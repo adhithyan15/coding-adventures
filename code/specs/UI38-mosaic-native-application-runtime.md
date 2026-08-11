@@ -384,6 +384,11 @@ unblocks multiple downstream targets; never count source generation as completio
       accepted-only lifecycle outcomes, one drop-payload path, and Qt 6.8
       accessibility announcements. Complete TaskApp Qt CI now compiles and
       launches the generated app with only table semantics left to close.
+    - [x] Remove Qt's final table-semantics degradation by adapting the
+      canonical dynamic UI31/Grid shape to `QAbstractTableModel`, `TableView`,
+      and `HorizontalHeaderView`, with accessible cell activation carrying the
+      existing row/column navigation payload. Permissive TaskApp Qt acceptance
+      now retains only the sample-runtime fallback.
 - [ ] Add launch-and-dispatch conformance fixtures for every native backend.
   - [x] XAML/.NET loads the shared Rust conformance DLL and round-trips startup,
     typed props, semantic dispatch, revised props, buffers, and teardown.

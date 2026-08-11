@@ -43,18 +43,17 @@
 //! | `HostButton`  | `Button { text: ...; enabled: ...; onClicked: ... }` (Controls 2.15)        |
 //! | `HostScroll`  | `ScrollView { ... children ... }`                                           |
 //! | `HostDialog`  | `Popup { modal: ...; visible: ...; closePolicy: ...; contentItem: ColumnLayout { ... } }` (Controls 2.15) |
-//! | `HostTable`   | `ColumnLayout { ... }` of `RowLayout` rows (first-cut shape — see `emit_host_table_qml` for the deferred true-`TableView` lowering) |
+//! | `HostTable`   | Canonical dynamic Grid shapes use `TableView` + `HorizontalHeaderView`; other shapes retain the structural layout fallback |
 //! | `For`         | `Repeater { model: <coll>; delegate: Item { property var <as>: modelData; <children> } }` — see `emit_for_qml` |
 //! | `If`/`Else`   | `Loader { active: <cond>; sourceComponent: Component { ... } }` pairs — see `emit_if_qml` |
 //!
 //! ## What this emitter does NOT yet do
 //!
 //! See the module-level doc on the crate root (`src/lib.rs`). The short list:
-//! Cell/data-Column/Grid v3 primitives (UI28 §2); `connects` wiring from
-//! `EmitRef` props to `signal` emissions inside the tree; and mosstyle
-//! inlining into element attributes. `HostTable` lowers to a structural
-//! `ColumnLayout`+`RowLayout` shape today (true `TableView` +
-//! `QAbstractTableModel` integration is a follow-up).
+//! Cell/data-Column/Grid v3 primitives (UI28 §2) outside the canonical Grid
+//! package shape, and general `connects` wiring from `EmitRef` props to signal
+//! emissions on arbitrary non-host nodes. Canonical dynamic HostTable layouts
+//! use a generated `QAbstractTableModel` shell and native QML `TableView`.
 //!
 //! ## Why the root is always `Item`
 //!
@@ -250,6 +249,7 @@ pub fn from_pipeline_with_options(
         Some(build_qt_project_files(
             &component.component_name,
             &interface.slots,
+            count_native_table_models(&layout.root),
             options,
         ))
     } else {
@@ -270,7 +270,12 @@ pub fn from_pipeline_with_options(
 /// `validate_component_name` upstream as ASCII identifier shape).
 /// The qmldir module name follows the QML PascalCase convention,
 /// which the upstream-validated component name already satisfies.
-fn build_qt_project_files(name: &str, slots: &[SlotDecl], options: &EmitOptions) -> ProjectFiles {
+fn build_qt_project_files(
+    name: &str,
+    slots: &[SlotDecl],
+    native_table_count: usize,
+    options: &EmitOptions,
+) -> ProjectFiles {
     // Single-component QML module name: `Mosaic.<Component>`.
     // (The artifact-builder's `qmldir_module_name` derives from
     // package name; the single-component CLI path has no package
@@ -278,7 +283,13 @@ fn build_qt_project_files(name: &str, slots: &[SlotDecl], options: &EmitOptions)
     let module_name = format!("Mosaic.{name}");
     ProjectFiles {
         cmake_lists: build_cmake_lists(name, &module_name, options),
-        main_cpp: build_main_cpp(name, &module_name, slots, options.require_runtime),
+        main_cpp: build_main_cpp(
+            name,
+            &module_name,
+            slots,
+            native_table_count,
+            options.require_runtime,
+        ),
         qmldir: build_qmldir(name, &module_name),
         readme: build_qt_readme(name, &module_name, options.require_runtime),
     }
@@ -315,10 +326,132 @@ fn build_cmake_lists(name: &str, module_name: &str, options: &EmitOptions) -> St
     )
 }
 
+fn push_native_table_model_includes(out: &mut String, native_table_count: usize) {
+    if native_table_count == 0 {
+        return;
+    }
+    out.push_str("#include <QAbstractTableModel>\n");
+    out.push_str("#include <QByteArray>\n");
+    out.push_str("#include <QHash>\n");
+    out.push_str("#include <QModelIndex>\n");
+    out.push_str("#include <QVariantList>\n");
+    out.push_str("#include <QVariantMap>\n");
+}
+
+fn push_native_table_model_class(out: &mut String, native_table_count: usize) {
+    if native_table_count == 0 {
+        return;
+    }
+    out.push_str(
+        r#"
+class MosaicTableModel final : public QAbstractTableModel
+{
+  Q_OBJECT
+  Q_PROPERTY(QVariantList headers READ headers WRITE setHeaders NOTIFY headersChanged)
+  Q_PROPERTY(QVariantList rows READ rows WRITE setRows NOTIFY rowsChanged)
+
+public:
+  explicit MosaicTableModel(QObject *parent = nullptr) : QAbstractTableModel(parent) {}
+
+  QVariantList headers() const { return headers_; }
+  QVariantList rows() const { return rows_; }
+
+  void setHeaders(const QVariantList &headers)
+  {
+    if (headers_ == headers) return;
+    beginResetModel();
+    headers_ = headers;
+    endResetModel();
+    emit headersChanged();
+  }
+
+  void setRows(const QVariantList &rows)
+  {
+    if (rows_ == rows) return;
+    beginResetModel();
+    rows_ = rows;
+    endResetModel();
+    emit rowsChanged();
+  }
+
+  int rowCount(const QModelIndex &parent = QModelIndex()) const override
+  {
+    return parent.isValid() ? 0 : rows_.size();
+  }
+
+  int columnCount(const QModelIndex &parent = QModelIndex()) const override
+  {
+    return parent.isValid() ? 0 : headers_.size();
+  }
+
+  QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override
+  {
+    if (!index.isValid() || role != Qt::DisplayRole || index.row() >= rows_.size()) return {};
+    const QVariantList row = rows_.at(index.row()).toList();
+    return index.column() < row.size() ? row.at(index.column()) : QVariant{};
+  }
+
+  QVariant headerData(int section, Qt::Orientation orientation,
+                      int role = Qt::DisplayRole) const override
+  {
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole && section < headers_.size()) {
+      return headers_.at(section);
+    }
+    return QAbstractTableModel::headerData(section, orientation, role);
+  }
+
+  QHash<int, QByteArray> roleNames() const override
+  {
+    return {{Qt::DisplayRole, QByteArrayLiteral("display")}};
+  }
+
+signals:
+  void headersChanged();
+  void rowsChanged();
+
+private:
+  QVariantList headers_;
+  QVariantList rows_;
+};
+
+"#,
+    );
+}
+
+fn push_native_table_model_setup(out: &mut String, indent: &str, native_table_count: usize) {
+    if native_table_count == 0 {
+        return;
+    }
+    writeln!(out, "{indent}QVariantList mosaicNativeTableModels;").unwrap();
+    writeln!(
+        out,
+        "{indent}mosaicNativeTableModels.reserve({native_table_count});"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{indent}for (int index = 0; index < {native_table_count}; ++index) {{"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{indent}  mosaicNativeTableModels.append(QVariant::fromValue(static_cast<QObject *>(new MosaicTableModel(&view))));"
+    )
+    .unwrap();
+    writeln!(out, "{indent}}}").unwrap();
+}
+
+fn push_main_moc(out: &mut String, native_table_count: usize) {
+    if native_table_count > 0 {
+        out.push_str("\n#include \"main.moc\"\n");
+    }
+}
+
 fn build_main_cpp(
     name: &str,
     module_name: &str,
     slots: &[SlotDecl],
+    native_table_count: usize,
     require_runtime: bool,
 ) -> String {
     let module_name_slash = module_name.replace('.', "/");
@@ -327,6 +460,7 @@ fn build_main_cpp(
     if require_runtime {
         out.push_str("#include \"MosaicHost.h\"\n\n");
         out.push_str("#include <QApplication>\n");
+        push_native_table_model_includes(&mut out, native_table_count);
         out.push_str("#include <QDebug>\n");
         out.push_str("#include <QQuickItem>\n");
         out.push_str("#include <QQuickStyle>\n");
@@ -337,6 +471,7 @@ fn build_main_cpp(
         out.push_str("#include <QtGlobal>\n\n");
         out.push_str("#include <cstdlib>\n");
         out.push_str("#include <stdexcept>\n\n");
+        push_native_table_model_class(&mut out, native_table_count);
         out.push_str("int main(int argc, char *argv[])\n{\n");
         out.push_str("  if (qEnvironmentVariableIsEmpty(\"QT_QUICK_CONTROLS_STYLE\")) {\n");
         out.push_str("    QQuickStyle::setStyle(QStringLiteral(\"Basic\"));\n  }\n");
@@ -369,8 +504,12 @@ fn build_main_cpp(
         out.push_str("    view.setResizeMode(QQuickView::SizeRootObjectToView);\n");
         writeln!(out, "    view.setTitle(QStringLiteral(\"{name}\"));").unwrap();
         out.push_str("    view.resize(1100, 800);\n");
+        push_native_table_model_setup(&mut out, "    ", native_table_count);
         out.push_str("    auto initialProperties = mosaicHost.propsRequired();\n");
         out.push_str("    initialProperties.insert(QStringLiteral(\"mosaicHost\"), QVariant::fromValue(static_cast<QObject *>(&mosaicHost)));\n");
+        if native_table_count > 0 {
+            out.push_str("    initialProperties.insert(QStringLiteral(\"mosaicNativeTableModels\"), mosaicNativeTableModels);\n");
+        }
         out.push_str("    view.setInitialProperties(initialProperties);\n");
         writeln!(
             out,
@@ -388,9 +527,11 @@ fn build_main_cpp(
         out.push_str("  } catch (const std::exception &exception) {\n");
         out.push_str("    qCritical().noquote() << exception.what();\n");
         out.push_str("    return EXIT_FAILURE;\n  }\n}\n");
+        push_main_moc(&mut out, native_table_count);
         return out;
     }
     out.push_str("#include <QApplication>\n");
+    push_native_table_model_includes(&mut out, native_table_count);
     out.push_str("#include <QMetaObject>\n");
     out.push_str("#include <QObject>\n");
     out.push_str("#include <QQuickItem>\n");
@@ -405,6 +546,7 @@ fn build_main_cpp(
     out.push_str("#else\n");
     out.push_str("#define MOSAIC_HAS_HOST 0\n");
     out.push_str("#endif\n\n");
+    push_native_table_model_class(&mut out, native_table_count);
     out.push_str("int main(int argc, char *argv[])\n");
     out.push_str("{\n");
     out.push_str("  if (qEnvironmentVariableIsEmpty(\"QT_QUICK_CONTROLS_STYLE\")) {\n");
@@ -418,6 +560,12 @@ fn build_main_cpp(
     out.push_str("  view.setResizeMode(QQuickView::SizeRootObjectToView);\n");
     writeln!(out, "  view.setTitle(QStringLiteral(\"{name}\"));").unwrap();
     out.push_str("  view.resize(1100, 800);\n\n");
+    push_native_table_model_setup(&mut out, "  ", native_table_count);
+    if native_table_count > 0 {
+        out.push_str("  QVariantMap initialProperties;\n");
+        out.push_str("  initialProperties.insert(QStringLiteral(\"mosaicNativeTableModels\"), mosaicNativeTableModels);\n");
+        out.push_str("  view.setInitialProperties(initialProperties);\n\n");
+    }
     out.push_str("  // Load the Item component into a visible Qt Quick view from the\n");
     out.push_str("  // embedded module. The qrc:// path is set up by qt_add_qml_module in\n");
     writeln!(
@@ -454,6 +602,7 @@ fn build_main_cpp(
     out.push_str("  view.show();\n");
     out.push_str("  return app.exec();\n");
     out.push_str("}\n");
+    push_main_moc(&mut out, native_table_count);
     out
 }
 
@@ -591,6 +740,10 @@ struct EmitCtx<'a> {
     /// way to author a QML `id`, so this namespace cannot collide with slots,
     /// emits, part names, or expressions.
     next_drag_id: Rc<Cell<usize>>,
+    /// Monotonic index into the native table-model list installed by the
+    /// generated Qt shell. Only canonical dynamic HostTable shapes consume an
+    /// index; unsupported shapes retain the structural fallback.
+    next_table_id: Rc<Cell<usize>>,
 }
 
 /// Table-level style defaults that cascade down to cells (the `sheet`
@@ -1193,6 +1346,7 @@ fn from_pipeline_with_runtime_policy(
     }
 
     let name = &interface.component;
+    let native_table_count = count_native_table_models(&layout.root);
     let signal_names = allocate_qml_signal_names(interface)?;
     let mut out = String::new();
 
@@ -1224,6 +1378,9 @@ fn from_pipeline_with_runtime_policy(
         writeln!(out, "    required property var mosaicHost").unwrap();
     } else {
         writeln!(out, "    property var mosaicHost: null").unwrap();
+    }
+    if native_table_count > 0 {
+        writeln!(out, "    property var mosaicNativeTableModels: []").unwrap();
     }
     writeln!(out, "    property var lastHostIntent: null").unwrap();
     writeln!(out).unwrap();
@@ -1343,6 +1500,7 @@ fn from_pipeline_with_runtime_policy(
         inherited: InheritedStyle::default(),
         cell_fill_children: false,
         next_drag_id: Rc::new(Cell::new(0)),
+        next_table_id: Rc::new(Cell::new(0)),
     };
     writeln!(out).unwrap();
     out.push_str(&emit_qml_tree(&layout.root, 1, &ctx)?);
@@ -3721,6 +3879,9 @@ fn build_dialog_title_text_line(node: &LayoutNode) -> Option<String> {
 /// NOT here because it lowers to a plain `Text` element with rich-
 /// text + onLinkActivated, not a QtQuick.Controls widget.
 fn tree_needs_controls_import(node: &LayoutNode) -> bool {
+    if node.tag == "HostTable" && host_table_has_native_semantics(node) {
+        return true;
+    }
     if node.tag == "Input"
         && (find_keyword_prop(node, "multiline") == Some("true")
             || build_placeholder_text_attribute(node).is_some())
@@ -3741,6 +3902,465 @@ fn tree_needs_controls_import(node: &LayoutNode) -> bool {
             | "HostNumberInput"
             | "Icon"
     ) || node.children.iter().any(tree_needs_controls_import)
+}
+
+/// The exact dynamic table shape emitted by the reusable Mosaic Grid package.
+///
+/// Keeping this structural match conservative is important: the artifact
+/// builder uses the same predicate to decide whether Qt has native table
+/// semantics, so an unsupported author-defined HostTable must retain its
+/// accessibility degradation instead of silently clearing it.
+struct QtNativeTableShape<'a> {
+    header_collection: String,
+    header_alias: String,
+    header_index: String,
+    header_cell: &'a LayoutNode,
+    row_collection: String,
+    row_alias: String,
+    row_index: String,
+    cell_alias: String,
+    cell_index: String,
+    body_cell: &'a LayoutNode,
+}
+
+fn qml_table_collection_expr(node: &LayoutNode) -> Option<String> {
+    let value = &node.props.iter().find(|prop| prop.name == "each")?.value;
+    match value {
+        LayoutPropValue::SlotRef(slot) | LayoutPropValue::Keyword(slot) => {
+            let identifier = to_camel_case_first_lower(slot);
+            is_safe_identifier(&identifier).then_some(identifier)
+        }
+        LayoutPropValue::Expr(expression) => Some(format!("({})", expression.trim())),
+        LayoutPropValue::String(_) | LayoutPropValue::Number(_) | LayoutPropValue::EmitRef(_) => {
+            None
+        }
+    }
+}
+
+fn qml_table_binding(node: &LayoutNode, prop: &str) -> Option<String> {
+    let identifier = to_camel_case_first_lower(find_keyword_prop(node, prop)?);
+    is_safe_identifier(&identifier).then_some(identifier)
+}
+
+fn qt_native_table_shape(host_table: &LayoutNode) -> Option<QtNativeTableShape<'_>> {
+    if host_table.tag != "HostTable"
+        || host_table.children.iter().any(|child| {
+            !matches!(
+                child.tag.as_str(),
+                "HostTableColGroup" | "HostTableHead" | "HostTableBody"
+            )
+        })
+    {
+        return None;
+    }
+
+    let mut heads = host_table
+        .children
+        .iter()
+        .filter(|child| child.tag == "HostTableHead");
+    let head = heads.next()?;
+    if heads.next().is_some() {
+        return None;
+    }
+    let mut bodies = host_table
+        .children
+        .iter()
+        .filter(|child| child.tag == "HostTableBody");
+    let body = bodies.next()?;
+    if bodies.next().is_some() {
+        return None;
+    }
+
+    let [header_row] = head.children.as_slice() else {
+        return None;
+    };
+    let [header_cells] = header_row.children.as_slice() else {
+        return None;
+    };
+    let [header_cell] = header_cells.children.as_slice() else {
+        return None;
+    };
+    let [body_rows] = body.children.as_slice() else {
+        return None;
+    };
+    let [body_row] = body_rows.children.as_slice() else {
+        return None;
+    };
+    let [body_cells] = body_row.children.as_slice() else {
+        return None;
+    };
+    let [body_cell] = body_cells.children.as_slice() else {
+        return None;
+    };
+
+    if header_row.tag != "Row"
+        || header_cells.tag != "For"
+        || header_cell.tag != "Box"
+        || body_rows.tag != "For"
+        || body_row.tag != "Row"
+        || body_cells.tag != "For"
+        || body_cell.tag != "Box"
+        || layout_contains_tag(header_cell, "HostTable")
+        || layout_contains_tag(body_cell, "HostTable")
+    {
+        return None;
+    }
+
+    let header_collection = qml_table_collection_expr(header_cells)?;
+    let header_alias = qml_table_binding(header_cells, "as")?;
+    let header_index = qml_table_binding(header_cells, "index")?;
+    let row_collection = qml_table_collection_expr(body_rows)?;
+    let row_alias = qml_table_binding(body_rows, "as")?;
+    let row_index = qml_table_binding(body_rows, "index")?;
+    let cell_alias = qml_table_binding(body_cells, "as")?;
+    let cell_index = qml_table_binding(body_cells, "index")?;
+
+    // The inner loop must iterate the outer row. A different collection may
+    // look similar but cannot be represented by the generated 2-D model.
+    let inner_collection = qml_table_collection_expr(body_cells)?;
+    if inner_collection != row_alias {
+        return None;
+    }
+
+    let delegate_bindings = [
+        header_alias.as_str(),
+        header_index.as_str(),
+        row_index.as_str(),
+        cell_alias.as_str(),
+        cell_index.as_str(),
+    ];
+    if delegate_bindings.iter().any(|binding| {
+        matches!(
+            *binding,
+            "row" | "column" | "display" | "model" | "modelData" | "nativeModel" | "mosaicRoot"
+        )
+    }) || matches!(
+        row_alias.as_str(),
+        "column" | "display" | "model" | "modelData" | "nativeModel" | "mosaicRoot"
+    ) {
+        return None;
+    }
+
+    Some(QtNativeTableShape {
+        header_collection,
+        header_alias,
+        header_index,
+        header_cell,
+        row_collection,
+        row_alias,
+        row_index,
+        cell_alias,
+        cell_index,
+        body_cell,
+    })
+}
+
+/// Returns whether Qt can lower this HostTable to a real TableView backed by
+/// QAbstractTableModel. Package capability analysis calls this same predicate.
+pub fn host_table_has_native_semantics(host_table: &LayoutNode) -> bool {
+    qt_native_table_shape(host_table).is_some()
+}
+
+fn count_native_table_models(node: &LayoutNode) -> usize {
+    usize::from(node.tag == "HostTable" && host_table_has_native_semantics(node))
+        + node
+            .children
+            .iter()
+            .map(count_native_table_models)
+            .sum::<usize>()
+}
+
+fn emit_table_direction_qml(out: &mut String, node: &LayoutNode, pad: &str) {
+    if let Some(slot) = find_slot_ref_prop(node, "dir") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            writeln!(out, "{pad}LayoutMirroring.enabled: {camel}").unwrap();
+            writeln!(out, "{pad}LayoutMirroring.childrenInherit: true").unwrap();
+        }
+    } else if let Some(kw) = find_keyword_prop(node, "dir") {
+        match kw {
+            "rtl" => {
+                writeln!(out, "{pad}LayoutMirroring.enabled: true").unwrap();
+                writeln!(out, "{pad}LayoutMirroring.childrenInherit: true").unwrap();
+            }
+            "ltr" => {
+                writeln!(out, "{pad}LayoutMirroring.enabled: false").unwrap();
+            }
+            "auto" => {}
+            _ => {}
+        }
+    }
+}
+
+fn qml_table_payload_expr(node: &LayoutNode, name: &str) -> Option<String> {
+    let value = &node.props.iter().find(|prop| prop.name == name)?.value;
+    match value {
+        LayoutPropValue::SlotRef(slot) | LayoutPropValue::Keyword(slot) => {
+            let identifier = to_camel_case_first_lower(slot);
+            is_safe_identifier(&identifier).then_some(identifier)
+        }
+        LayoutPropValue::Expr(expression) => Some(format!("({})", expression.trim())),
+        LayoutPropValue::String(value) => Some(format!("\"{}\"", escape_qml_string(value))),
+        LayoutPropValue::Number(value) => Some(value.to_string()),
+        LayoutPropValue::EmitRef(_) => None,
+    }
+}
+
+fn qml_table_cell_activation(
+    node: &LayoutNode,
+    ctx: &EmitCtx,
+) -> Result<Option<String>, PipelineEmitError> {
+    let Some(emit_name) =
+        find_emit_ref_prop(node, "onClick").or_else(|| find_emit_ref_prop(node, "onTap"))
+    else {
+        return Ok(None);
+    };
+    let Some(emit) = ctx.emits.iter().find(|emit| emit.name == emit_name) else {
+        return Ok(None);
+    };
+    let mut args = Vec::with_capacity(emit.params.len());
+    for param in &emit.params {
+        let Some(value) = qml_table_payload_expr(node, &param.name) else {
+            return Ok(None);
+        };
+        args.push(value);
+    }
+    Ok(Some(format!(
+        "{}({})",
+        qml_signal_name(emit_name, ctx.signal_names)?,
+        args.join(", ")
+    )))
+}
+
+fn emit_native_host_table_qml(
+    node: &LayoutNode,
+    shape: QtNativeTableShape<'_>,
+    depth: usize,
+    ctx: &EmitCtx,
+) -> Result<String, PipelineEmitError> {
+    let table_index = ctx.next_table_id.get();
+    ctx.next_table_id.set(table_index + 1);
+    let table_id = format!("mosaicTable{table_index}");
+    let view_id = format!("mosaicTableView{table_index}");
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let nested = "    ".repeat(depth + 2);
+    let delegate = "    ".repeat(depth + 3);
+    let delegate_inner = "    ".repeat(depth + 4);
+    let component_inner = "    ".repeat(depth + 5);
+    let width_slot = discover_col_widths_slot(node);
+    let width_expr = width_slot
+        .as_deref()
+        .map(|slot| format!("({slot}.length > column && Number({slot}[column]) > 0 ? Number({slot}[column]) : 120)"))
+        .unwrap_or_else(|| "120".to_string());
+
+    let inherited = match &node.part_name {
+        Some(part) => {
+            let sheet: &[StyleProp] = ctx
+                .part_styles
+                .get(part)
+                .map(|v| v.as_slice())
+                .unwrap_or(&[]);
+            InheritedStyle {
+                background: style_prop(sheet, "background")
+                    .or_else(|| style_prop(sheet, "background-color"))
+                    .and_then(qml_hex_color_or_none),
+                color: style_prop(sheet, "color").and_then(qml_hex_color_or_none),
+                font_family_mono: style_prop(sheet, "font-family")
+                    .map(|v| v.trim() == "monospace")
+                    .unwrap_or(false),
+                font_pixel_size: style_prop(sheet, "font-size").and_then(qml_font_pixel_size),
+            }
+        }
+        None => ctx.inherited.clone(),
+    };
+    let table_ctx = EmitCtx {
+        col_widths_slot: width_slot,
+        inherited,
+        ..ctx.clone()
+    };
+    let body_activation = qml_table_cell_activation(shape.body_cell, ctx)?;
+
+    let mut out = String::new();
+    writeln!(out, "{pad}ColumnLayout {{").unwrap();
+    writeln!(out, "{inner}id: {table_id}").unwrap();
+    writeln!(out, "{inner}spacing: 0").unwrap();
+    writeln!(out, "{inner}Layout.fillWidth: true").unwrap();
+    writeln!(out, "{inner}property var nativeModel: mosaicRoot.mosaicNativeTableModels.length > {table_index} ? mosaicRoot.mosaicNativeTableModels[{table_index}] : null").unwrap();
+    emit_table_direction_qml(&mut out, node, &inner);
+    writeln!(out, "{inner}Binding {{").unwrap();
+    writeln!(out, "{nested}target: {table_id}.nativeModel").unwrap();
+    writeln!(out, "{nested}property: \"headers\"").unwrap();
+    writeln!(out, "{nested}value: {}", shape.header_collection).unwrap();
+    writeln!(out, "{nested}when: {table_id}.nativeModel !== null").unwrap();
+    writeln!(out, "{inner}}}").unwrap();
+    writeln!(out, "{inner}Binding {{").unwrap();
+    writeln!(out, "{nested}target: {table_id}.nativeModel").unwrap();
+    writeln!(out, "{nested}property: \"rows\"").unwrap();
+    writeln!(out, "{nested}value: {}", shape.row_collection).unwrap();
+    writeln!(out, "{nested}when: {table_id}.nativeModel !== null").unwrap();
+    writeln!(out, "{inner}}}").unwrap();
+
+    writeln!(out, "{inner}Loader {{").unwrap();
+    writeln!(out, "{nested}Layout.fillWidth: true").unwrap();
+    writeln!(out, "{nested}active: {table_id}.nativeModel !== null").unwrap();
+    writeln!(out, "{nested}sourceComponent: Component {{").unwrap();
+    writeln!(out, "{delegate}ColumnLayout {{").unwrap();
+    writeln!(out, "{delegate_inner}spacing: 0").unwrap();
+    writeln!(out, "{delegate_inner}HorizontalHeaderView {{").unwrap();
+    writeln!(out, "{component_inner}Layout.fillWidth: true").unwrap();
+    writeln!(out, "{component_inner}syncView: {view_id}").unwrap();
+    writeln!(out, "{component_inner}delegate: Item {{").unwrap();
+    writeln!(out, "{component_inner}    required property int column").unwrap();
+    writeln!(out, "{component_inner}    required property var display").unwrap();
+    writeln!(
+        out,
+        "{component_inner}    property var {}: display",
+        shape.header_alias
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{component_inner}    property int {}: column",
+        shape.header_index
+    )
+    .unwrap();
+    writeln!(out, "{component_inner}    implicitWidth: {width_expr}").unwrap();
+    writeln!(
+        out,
+        "{component_inner}    implicitHeight: Math.max(36, childrenRect.height)"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{component_inner}    Accessible.role: Accessible.ColumnHeader"
+    )
+    .unwrap();
+    writeln!(out, "{component_inner}    Accessible.name: String(display)").unwrap();
+    out.push_str(&emit_qml_tree(
+        shape.header_cell,
+        depth + 6,
+        &table_ctx.with_for(shape.header_alias.clone(), Some(shape.header_index.clone())),
+    )?);
+    writeln!(out, "{component_inner}}}").unwrap();
+    writeln!(out, "{delegate_inner}}}").unwrap();
+    writeln!(out, "{delegate_inner}TableView {{").unwrap();
+    writeln!(out, "{component_inner}id: {view_id}").unwrap();
+    writeln!(out, "{component_inner}Layout.fillWidth: true").unwrap();
+    writeln!(
+        out,
+        "{component_inner}implicitHeight: Math.max(36, {}.length * 36)",
+        shape.row_collection
+    )
+    .unwrap();
+    writeln!(out, "{component_inner}clip: true").unwrap();
+    writeln!(
+        out,
+        "{component_inner}boundsBehavior: Flickable.StopAtBounds"
+    )
+    .unwrap();
+    writeln!(out, "{component_inner}keyNavigationEnabled: true").unwrap();
+    writeln!(out, "{component_inner}model: {table_id}.nativeModel").unwrap();
+    writeln!(
+        out,
+        "{component_inner}columnWidthProvider: function(column) {{ return {width_expr}; }}"
+    )
+    .unwrap();
+    writeln!(out, "{component_inner}Accessible.role: Accessible.Table").unwrap();
+    writeln!(out, "{component_inner}delegate: Item {{").unwrap();
+    writeln!(out, "{component_inner}    required property int row").unwrap();
+    writeln!(out, "{component_inner}    required property int column").unwrap();
+    writeln!(out, "{component_inner}    required property var display").unwrap();
+    if shape.row_alias != "row" {
+        writeln!(
+            out,
+            "{component_inner}    property var {}: {}[row]",
+            shape.row_alias, shape.row_collection
+        )
+        .unwrap();
+    }
+    writeln!(
+        out,
+        "{component_inner}    property int {}: row",
+        shape.row_index
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{component_inner}    property var {}: display",
+        shape.cell_alias
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{component_inner}    property int {}: column",
+        shape.cell_index
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{component_inner}    implicitWidth: {view_id}.columnWidthProvider(column)"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{component_inner}    implicitHeight: Math.max(36, childrenRect.height)"
+    )
+    .unwrap();
+    writeln!(out, "{component_inner}    activeFocusOnTab: true").unwrap();
+    writeln!(out, "{component_inner}    Accessible.role: Accessible.Cell").unwrap();
+    writeln!(out, "{component_inner}    Accessible.name: String(display)").unwrap();
+    writeln!(out, "{component_inner}    Accessible.focusable: true").unwrap();
+    if let Some(activation) = &body_activation {
+        writeln!(
+            out,
+            "{component_inner}    Accessible.onPressAction: {{ {activation} }}"
+        )
+        .unwrap();
+        writeln!(
+            out,
+            "{component_inner}    Keys.onReturnPressed: {{ {activation}; event.accepted = true }}"
+        )
+        .unwrap();
+        writeln!(
+            out,
+            "{component_inner}    Keys.onEnterPressed: {{ {activation}; event.accepted = true }}"
+        )
+        .unwrap();
+        writeln!(
+            out,
+            "{component_inner}    Keys.onSpacePressed: {{ {activation}; event.accepted = true }}"
+        )
+        .unwrap();
+        writeln!(out, "{component_inner}    TapHandler {{").unwrap();
+        writeln!(
+            out,
+            "{component_inner}        onTapped: {{ parent.forceActiveFocus(); {activation} }}"
+        )
+        .unwrap();
+        writeln!(out, "{component_inner}    }}").unwrap();
+    }
+    let body_ctx = table_ctx
+        .with_for(shape.row_alias.clone(), Some(shape.row_index.clone()))
+        .with_for(shape.cell_alias.clone(), Some(shape.cell_index.clone()));
+    out.push_str(&emit_qml_tree(shape.body_cell, depth + 6, &body_ctx)?);
+    writeln!(out, "{component_inner}}}").unwrap();
+    writeln!(out, "{delegate_inner}}}").unwrap();
+    writeln!(out, "{delegate}}}").unwrap();
+    writeln!(out, "{nested}}}").unwrap();
+    writeln!(out, "{inner}}}").unwrap();
+
+    // A component-only QML preview has no C++ shell and therefore no model.
+    // Keep the established structural rendering available in that environment.
+    writeln!(out, "{inner}Loader {{").unwrap();
+    writeln!(out, "{nested}Layout.fillWidth: true").unwrap();
+    writeln!(out, "{nested}active: {table_id}.nativeModel === null").unwrap();
+    writeln!(out, "{nested}sourceComponent: Component {{").unwrap();
+    out.push_str(&emit_host_table_fallback_qml(node, depth + 3, ctx)?);
+    writeln!(out, "{nested}}}").unwrap();
+    writeln!(out, "{inner}}}").unwrap();
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
 }
 
 /// Lower a `HostTable` node to a QML `ColumnLayout` of `RowLayout` rows.
@@ -3790,6 +4410,17 @@ fn tree_needs_controls_import(node: &LayoutNode) -> bool {
 /// styling integration for table parts is a follow-up. Tests assert
 /// that its presence does not break emission.
 fn emit_host_table_qml(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx,
+) -> Result<String, PipelineEmitError> {
+    if let Some(shape) = qt_native_table_shape(node) {
+        return emit_native_host_table_qml(node, shape, depth, ctx);
+    }
+    emit_host_table_fallback_qml(node, depth, ctx)
+}
+
+fn emit_host_table_fallback_qml(
     node: &LayoutNode,
     depth: usize,
     ctx: &EmitCtx,
@@ -3861,30 +4492,7 @@ fn emit_host_table_qml(
     // attribute position because it never reaches the format string.
     // Slot refs run through `is_safe_identifier` so the binding
     // identifier stays syntactically clean QML.
-    if let Some(slot) = find_slot_ref_prop(node, "dir") {
-        let camel = to_camel_case_first_lower(slot);
-        if is_safe_identifier(&camel) {
-            writeln!(out, "{inner_pad}LayoutMirroring.enabled: {camel}").unwrap();
-            writeln!(out, "{inner_pad}LayoutMirroring.childrenInherit: true").unwrap();
-        }
-    } else if let Some(kw) = find_keyword_prop(node, "dir") {
-        match kw {
-            "rtl" => {
-                writeln!(out, "{inner_pad}LayoutMirroring.enabled: true").unwrap();
-                writeln!(out, "{inner_pad}LayoutMirroring.childrenInherit: true").unwrap();
-            }
-            "ltr" => {
-                writeln!(out, "{inner_pad}LayoutMirroring.enabled: false").unwrap();
-            }
-            // `auto` is the spec-mandated "let the host decide"
-            // keyword. QML has no `auto` enum — the right behaviour
-            // is to NOT emit the attached property so any ancestor's
-            // `LayoutMirroring` (typically the Window root's) flows
-            // through unchanged.
-            "auto" => {}
-            _ => {}
-        }
-    }
+    emit_table_direction_qml(&mut out, node, &inner_pad);
 
     // Track whether we've already emitted the head→body divider. The
     // divider sits between head and the first non-head section (body or
@@ -6783,6 +7391,105 @@ mod tests {
         }
     }
 
+    fn canonical_native_table_layout() -> LayoutDef {
+        let for_node =
+            |each: LayoutPropValue, as_name: &str, index: &str, child: LayoutNode| LayoutNode {
+                tag: "For".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "each".to_string(),
+                        value: each,
+                    },
+                    LayoutProp {
+                        name: "as".to_string(),
+                        value: LayoutPropValue::Keyword(as_name.to_string()),
+                    },
+                    LayoutProp {
+                        name: "index".to_string(),
+                        value: LayoutPropValue::Keyword(index.to_string()),
+                    },
+                ],
+                children: vec![child],
+            };
+        let header_cell = LayoutNode {
+            tag: "Box".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: vec![LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::Expr("h".to_string()),
+                }],
+                children: Vec::new(),
+            }],
+        };
+        let body_cell = LayoutNode {
+            tag: "Box".to_string(),
+            part_name: None,
+            props: vec![
+                LayoutProp {
+                    name: "onClick".to_string(),
+                    value: LayoutPropValue::EmitRef("onNavigate".to_string()),
+                },
+                LayoutProp {
+                    name: "row".to_string(),
+                    value: LayoutPropValue::Expr("r".to_string()),
+                },
+                LayoutProp {
+                    name: "col".to_string(),
+                    value: LayoutPropValue::Expr("c".to_string()),
+                },
+            ],
+            children: vec![LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::Expr("v".to_string()),
+                }],
+                children: Vec::new(),
+            }],
+        };
+        let header_for = for_node(
+            LayoutPropValue::SlotRef("headers".to_string()),
+            "h",
+            "ch",
+            header_cell,
+        );
+        let body_cells = for_node(
+            LayoutPropValue::Keyword("row".to_string()),
+            "v",
+            "c",
+            body_cell,
+        );
+        let body_rows = for_node(
+            LayoutPropValue::SlotRef("rows".to_string()),
+            "row",
+            "r",
+            LayoutNode {
+                tag: "Row".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![body_cells],
+            },
+        );
+        host_table(vec![
+            section(
+                "HostTableHead",
+                vec![LayoutNode {
+                    tag: "Row".to_string(),
+                    part_name: None,
+                    props: Vec::new(),
+                    children: vec![header_for],
+                }],
+            ),
+            section("HostTableBody", vec![body_rows]),
+        ])
+    }
+
     /// Count substring occurrences (helper for "exactly N divider Rectangles"
     /// style assertions).
     fn count_occurrences(s: &str, needle: &str) -> usize {
@@ -6820,6 +7527,106 @@ mod tests {
             "unexpected divider in empty HostTable:\n{}",
             result.output
         );
+    }
+
+    #[test]
+    fn canonical_host_table_emits_native_model_semantics_and_activation() {
+        let m = component(
+            "X",
+            vec![
+                slot(
+                    "headers",
+                    SlotType::List(Box::new(ListInnerType::Text)),
+                    true,
+                ),
+                slot(
+                    "rows",
+                    SlotType::List(Box::new(ListInnerType::List(Box::new(ListInnerType::Text)))),
+                    true,
+                ),
+            ],
+            vec![emit_decl(
+                "onNavigate",
+                vec![
+                    param("row", EmitPayloadType::Number),
+                    param("col", EmitPayloadType::Number),
+                ],
+            )],
+        );
+        let layout = canonical_native_table_layout();
+        assert!(host_table_has_native_semantics(&layout.root));
+
+        let result = from_pipeline_with_options(
+            &m,
+            &layout,
+            &empty_style("X"),
+            &EmitOptions {
+                emit_project: true,
+                ..EmitOptions::default()
+            },
+        )
+        .unwrap();
+        assert!(result.output.contains("import QtQuick.Controls"));
+        assert!(result.output.contains("HorizontalHeaderView {"));
+        assert!(result.output.contains("TableView {"));
+        assert!(result.output.contains("Accessible.role: Accessible.Table"));
+        assert!(result.output.contains("Accessible.role: Accessible.Cell"));
+        assert!(result.output.contains("Keys.onReturnPressed:"));
+        assert!(result.output.contains("TapHandler {"));
+        assert!(result.output.contains("navigate((r), (c))"));
+        assert!(result
+            .output
+            .contains("active: mosaicTable0.nativeModel === null"));
+
+        let project = result.project.expect("project files");
+        assert!(project.main_cpp.contains("class MosaicTableModel final"));
+        assert!(project.main_cpp.contains("QAbstractTableModel"));
+        assert!(project.main_cpp.contains("headerData("));
+        assert!(project
+            .main_cpp
+            .contains("mosaicNativeTableModels.reserve(1)"));
+        assert!(project.main_cpp.contains("#include \"main.moc\""));
+    }
+
+    #[test]
+    fn native_host_table_shape_rejects_unsupported_foot_and_inner_collection() {
+        let mut with_foot = canonical_native_table_layout();
+        with_foot
+            .root
+            .children
+            .push(section("HostTableFoot", Vec::new()));
+        assert!(!host_table_has_native_semantics(&with_foot.root));
+
+        let mut wrong_inner_collection = canonical_native_table_layout();
+        let inner_for =
+            &mut wrong_inner_collection.root.children[1].children[0].children[0].children[0];
+        inner_for
+            .props
+            .iter_mut()
+            .find(|prop| prop.name == "each")
+            .unwrap()
+            .value = LayoutPropValue::SlotRef("headers".to_string());
+        assert!(!host_table_has_native_semantics(
+            &wrong_inner_collection.root
+        ));
+
+        let m = component("X", vec![], vec![]);
+        let result = from_pipeline_with_options(
+            &m,
+            &host_table(Vec::new()),
+            &empty_style("X"),
+            &EmitOptions {
+                emit_project: true,
+                ..EmitOptions::default()
+            },
+        )
+        .unwrap();
+        assert!(!result.output.contains("mosaicNativeTableModels"));
+        assert!(!result
+            .project
+            .unwrap()
+            .main_cpp
+            .contains("QAbstractTableModel"));
     }
 
     // -------- Test 28: HostTableHead emits bold RowLayout cells --------

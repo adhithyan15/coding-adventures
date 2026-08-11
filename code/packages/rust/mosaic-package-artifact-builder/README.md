@@ -32,8 +32,8 @@ same report but rejects the build before application artifacts are emitted when
 the selected backend has a known degradation.
 
 The inventory identifies passive drag/drop lowerings on SwiftUI and XAML,
-native table lowerings without table semantics (excluding Flutter's
-canonical UI31/Grid shape, which uses native `DataTable` semantics), Flutter's
+native table lowerings without table semantics (excluding canonical UI31/Grid
+shapes on Flutter, Compose, and Qt), Flutter's
 dialog placeholder and missing URL effect
 host, ignored tri-state checkbox and radio-group properties, XAML dialog state
 that still requires code-behind, ignored XAML/SwiftUI dialog lifecycle events,
@@ -52,7 +52,9 @@ accepted-drop, component-scoping, and announcement contracts. SwiftUI and XAML
 remain explicit degradations until they ship equivalent behavior.
 
 The package-expanded TaskApp is the full strict-profile proof point for Flutter
-and Compose. Both outputs have no known degradations and require the standard
+and Compose. Qt's same table is now native and accessible; its permissive
+acceptance report retains only the sample-runtime fallback. The strict Flutter
+and Compose outputs have no known degradations and require the standard
 Rust runtime. Flutter passes whole-project Dart analysis and a native desktop
 build; Compose passes Kotlin compilation and native desktop distribution
 packaging. This does not close the cross-backend milestone; Qt, SwiftUI, and

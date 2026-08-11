@@ -60,22 +60,14 @@
 //!    dispatch: a host application that loads the QML file sets the
 //!    properties and connects handlers to the signals.
 //!
-//! ## What is NOT in this first pass
+//! ## Table integration
 //!
-//! - **No `Cell` / `Column` (data) / `Grid v3` lowering** — UI28 §2 introduces
-//!   a richer Grid model. The Qt mapping per UI28 §4.5 uses `QStyledItemDelegate`
-//!   / `QAbstractTableModel` / `QTableView`, all of which are C++. The QML
-//!   equivalent is `TableView` from `QtQuick.Controls`, which is a different
-//!   shape. Both are deferred to a follow-up PR that explicitly chooses
-//!   between them; see the README for the planned approach.
-//! - **No `connects` wiring** — the moslayout `EmitRef` shape is parsed but
-//!   not yet attached to JSX-style event handlers in QML. Today a `signal`
-//!   is declared but never emitted from the layout tree.
-//! - **No style inlining** — the mosstyle `StyleDef` is accepted now so the
-//!   public signature is stable, but its properties are not yet inlined into
-//!   QML element attributes.
-//!
-//! Each is a focused, additive follow-up.
+//! The canonical dynamic `HostTable` structure emitted by Mosaic's reusable
+//! Grid package lowers to QML `TableView` + `HorizontalHeaderView`. Generated
+//! project shells install a small `QAbstractTableModel` that adapts MIL's
+//! nested-list slots to Qt's two-dimensional model interface. Unsupported
+//! author-defined table structures retain the structural layout fallback and
+//! remain explicit native-completeness degradations.
 
 pub mod pipeline;
 
