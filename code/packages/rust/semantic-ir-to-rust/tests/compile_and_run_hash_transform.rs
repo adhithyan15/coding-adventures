@@ -73,8 +73,13 @@ fn map_lit(entries: Vec<(Expr, Expr)>) -> Expr {
 fn print_stmt(expr: Expr) -> Stmt {
     Stmt::ExprStmt {
         expr: Expr::BuiltinCall {
-            name: "print".into(),
-            args: vec![expr],
+            name: "__sys_write__".into(),
+            args: vec![
+                Expr::StrLit { value: "stdout".into(), span: s() },
+                Expr::StrLit { value: "once".into(), span: s() },
+                Expr::BoolLit { value: false, span: s() },
+                expr,
+            ],
             effects: EffectSet::PURE.with(Effect::MayPrint),
             span: s(),
         },
@@ -119,7 +124,7 @@ fn demo_module(main_stmts: Vec<Stmt>, block_fns: Vec<Function>) -> Module {
 
     Module {
         name: "hash_transform_demo".into(),
-        manifest: FeatureManifest::from_features(&[
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, 
             Feature::Maps,
             Feature::Sequences,
             Feature::Strings,

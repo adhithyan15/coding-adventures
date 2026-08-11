@@ -61,7 +61,11 @@ fn call(name: &str, args: Vec<Expr>, eff: EffectSet) -> Expr {
 
 fn print_stmt(e: Expr) -> Stmt {
     Stmt::ExprStmt {
-        expr: call("print", vec![e], EffectSet::PURE.with(Effect::MayPrint)),
+        expr: call(
+            "__sys_write__",
+            vec![slit("stdout"), slit("once"), Expr::BoolLit { value: false, span: s() }, e],
+            EffectSet::PURE.with(Effect::MayPrint),
+        ),
         span: s(),
     }
 }
@@ -99,7 +103,7 @@ fn module_from_main(stmts: Vec<Stmt>, features: &[Feature]) -> Module {
         metadata: Metadata::new(),
         span: s(),
     };
-    let mut feats = vec![Feature::Exceptions, Feature::Strings];
+    let mut feats = vec![Feature::ConsoleIO, Feature::Exceptions, Feature::Strings];
     feats.extend_from_slice(features);
     Module {
         name: "exc_demo".into(),

@@ -21,7 +21,8 @@
 use std::process::Command;
 
 use semantic_ir::{
-    Block, Effect, EffectSet, Expr, Function, FeatureManifest, Metadata, Module, Span, Stmt,
+    Block, Effect, EffectSet, Expr, Feature, Function, FeatureManifest, Metadata, Module, Span,
+    Stmt,
 };
 use semantic_ir_to_rust::compile;
 
@@ -34,10 +35,16 @@ fn blit(v: bool) -> Expr {
 }
 
 fn puts_stmt(args: Vec<Expr>) -> Stmt {
+    let mut sys_args = vec![
+        Expr::StrLit { value: "stdout".into(), span: s() },
+        Expr::StrLit { value: "per_value".into(), span: s() },
+        Expr::BoolLit { value: true, span: s() },
+    ];
+    sys_args.extend(args);
     Stmt::ExprStmt {
         expr: Expr::BuiltinCall {
-            name: "puts".into(),
-            args,
+            name: "__sys_write__".into(),
+            args: sys_args,
             effects: EffectSet::PURE.with(Effect::MayPrint),
             span: s(),
         },
@@ -50,7 +57,7 @@ fn bool_module(source_language: &str) -> Module {
     let stmts = vec![puts_stmt(vec![blit(true)]), puts_stmt(vec![blit(false)])];
     Module {
         name: "display_bool".into(),
-        manifest: FeatureManifest::from_features(&[]),
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Strings]),
         imports: vec![],
         exports: vec![],
         functions: vec![Function {

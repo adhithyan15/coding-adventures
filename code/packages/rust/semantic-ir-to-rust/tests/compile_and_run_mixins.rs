@@ -76,7 +76,13 @@ fn ivar_set_stmt(name: &str, value: Expr) -> Stmt {
 }
 
 fn print_stmt(e: Expr) -> Stmt {
-    Stmt::ExprStmt { expr: call("print", vec![e]), span: s() }
+    Stmt::ExprStmt {
+        expr: call(
+            "__sys_write__",
+            vec![slit("stdout"), slit("once"), Expr::BoolLit { value: false, span: s() }, e],
+        ),
+        span: s(),
+    }
 }
 
 fn expr_stmt(e: Expr) -> Stmt {
@@ -154,7 +160,7 @@ fn mixin_module(mut functions: Vec<Function>, main_stmts: Vec<Stmt>, extra: &[Fe
         span: s(),
     };
     functions.push(main_fn);
-    let mut feats = vec![
+    let mut feats = vec![Feature::ConsoleIO, 
         Feature::Classes,
         Feature::Modules,
         Feature::InstanceVars,

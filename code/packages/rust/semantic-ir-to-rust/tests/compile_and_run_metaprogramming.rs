@@ -77,7 +77,10 @@ fn param(name: &str) -> Expr {
 
 fn print_stmt(expr: Expr) -> Stmt {
     Stmt::ExprStmt {
-        expr: call("print", vec![expr]),
+        expr: call(
+            "__sys_write__",
+            vec![slit("stdout"), slit("once"), Expr::BoolLit { value: false, span: s() }, expr],
+        ),
         span: s(),
     }
 }
@@ -122,7 +125,7 @@ fn demo_module(main_stmts: Vec<Stmt>, mut fns: Vec<Function>, features: &[Featur
         span: s(),
     };
     fns.insert(0, main);
-    let mut feats = vec![
+    let mut feats = vec![Feature::ConsoleIO, 
         Feature::Sequences,
         Feature::Strings,
         Feature::Symbols,
