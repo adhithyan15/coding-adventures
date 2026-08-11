@@ -6273,6 +6273,14 @@ where
     if let Some(value) = static_call_value(node) {
         return value.is_finite().then_some(value);
     }
+    let tokens = direct_tokens(node);
+    if tokens.len() == 1 && tokens[0].effective_type_name() == "INTEGER_LIT" {
+        let value = tokens[0].value.parse::<i64>().ok()?;
+        if value.unsigned_abs() <= 9_007_199_254_740_992_u64 {
+            return Some(value as f64);
+        }
+        return None;
+    }
     if let Some(literal) = expr_real_literal_text(node) {
         return literal.parse::<f64>().ok().filter(|value| value.is_finite());
     }
@@ -7255,6 +7263,32 @@ mod tests {
             .instructions
             .iter()
             .all(|instr| !matches!(instr.op.as_str(), "mul" | "add")));
+    }
+
+    #[test]
+    fn al4_print_static_mixed_integer_real_expression() {
+        let module = compile_source(
+            "begin real x; x := 40; print(x + 2.5, -2 + 4.5) end",
+            "test",
+        )
+        .expect("exact integer literals widen in static real expressions");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["42.5", "2.5"]);
+    }
+
+    #[test]
+    fn al4_print_static_mixed_integer_rejects_inexact_widening() {
+        let err = compile_source("begin print(9007199254740993 + 0.5) end", "test")
+            .expect_err("an inexact integer-to-real widening must fail closed");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]

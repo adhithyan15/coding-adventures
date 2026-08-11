@@ -858,7 +858,9 @@ backend immediately) come before the enabler-dependent items.
   can now print its canonical value along a straight-line path on all seven
   columns. Straight-line copies preserve independent snapshots across later
   source reassignment, and tracked locals may feed the bounded finite
-  arithmetic and exact standard-function evaluator; labels, branches, loops, gotos, calls, dynamic
+  arithmetic and exact standard-function evaluator. Integer literals within
+  binary64's exact range may widen into that evaluator; larger values fail
+  closed. Labels, branches, loops, gotos, calls, dynamic
   reassignment, and captured globals invalidate the tracked value. General computed/runtime
   `f64` formatting remains a follow-up requiring a portable typed formatter ABI.
   Unicode-aware BEAM strings remain.
