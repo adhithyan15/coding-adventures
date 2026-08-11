@@ -27,6 +27,7 @@ const tamil = () => parseFont(load("NotoSansTamil-Static.ttf"));
 const CHINESE_REN = DUCTUS[ductusKey("chinese", "人")];
 const CHINESE_PERSON_RADICAL = DUCTUS[ductusKey("chinese", "亻")];
 const CHINESE_MOUTH = DUCTUS[ductusKey("chinese", "口")];
+const CHINESE_WOMAN = DUCTUS[ductusKey("chinese", "女")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -282,6 +283,25 @@ describe("handwriting ductus", () => {
     expect(top.at(-1)).toEqual(right[0]);
     expect(right[0].y).toBeGreaterThan(right.at(-1)!.y);
     expect(bottom[0].x).toBeLessThan(bottom.at(-1)!.x);
+  });
+
+  it("Chinese 女 keeps its first bend joined before the falling and horizontal strokes", () => {
+    expect(CHINESE_WOMAN.script).toBe("chinese");
+    expect(penLifts(CHINESE_WOMAN)).toBe(2);
+    expect(CHINESE_WOMAN.strokes).toHaveLength(3);
+    expect(CHINESE_WOMAN.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 1]);
+    const descent = CHINESE_WOMAN.strokes[0].segments[0].path;
+    const sweep = CHINESE_WOMAN.strokes[0].segments[1].path;
+    const falling = CHINESE_WOMAN.strokes[1].segments[0].path;
+    const horizontal = CHINESE_WOMAN.strokes[2].segments[0].path;
+    expect(descent[0].y).toBeGreaterThan(descent.at(-1)!.y);
+    expect(descent[0].x).toBeGreaterThan(descent.at(-1)!.x);
+    expect(descent.at(-1)).toEqual(sweep[0]);
+    expect(sweep[0].x).toBeLessThan(sweep.at(-1)!.x);
+    expect(sweep[0].y).toBeGreaterThan(sweep.at(-1)!.y);
+    expect(falling[0].x).toBeGreaterThan(falling.at(-1)!.x);
+    expect(falling[0].y).toBeGreaterThan(falling.at(-1)!.y);
+    expect(horizontal[0].x).toBeLessThan(horizontal.at(-1)!.x);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -1206,6 +1226,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("口", CHINESE_MOUTH.source.url)).toBe(
       "_fonts/NotoSansSC-Subset.ttf",
     );
+    expect(verifiedLetterFont("女", CHINESE_WOMAN.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -1347,6 +1370,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /PRC-order dataset.*three ordered strokes.*Median 1.*upper left.*descends the left side.*median 2.*upper left.*crosses the top from left to right.*turns without lifting.*descends the right side.*median 3.*lower left.*closes the bottom from left to right.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*joined corner.*two intervening pen lifts.*Arphic-derived source graphics/i,
+    );
+  });
+
+  it("Chinese 女 traces its bent first run and two lifted strokes to the pinned PRC-order dataset", () => {
+    const src = CHINESE_WOMAN.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%A5%B3.json",
+    );
+    expect(src.citation).toMatch(
+      /Hanzi Writer Data 女\.json.*ordered stroke paths and medians 1–3.*snapshot 68d10a4.*updated from Make Me a Hanzi.*22 June 2019/i,
+    );
+    expect(src.variation).toMatch(
+      /PRC-order dataset.*three ordered strokes.*Median 1.*upper centre.*short down-right entry.*bends down-left.*lower-left junction.*turns without lifting.*sweeps down-right.*median 2.*upper right.*falls down-left.*median 3.*left edge.*crosses the middle from left to right.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*first stroke's internal turn.*two intervening pen lifts.*Arphic-derived source graphics/i,
     );
   });
 
