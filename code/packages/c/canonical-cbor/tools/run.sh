@@ -17,7 +17,8 @@ if [ ! -f "$HARNESS/lib/iso-lib.sh" ]; then
 fi
 
 # Include both this package's headers and the harness's (for iso_test.h).
-ISO_INCLUDE="include $HARNESS/include"
+FIXTURE="$d/code/specs/fixtures/canonical-cbor-v1"
+ISO_INCLUDE="include $HARNESS/include $FIXTURE"
 export ISO_INCLUDE
 
 # On Linux CI both gcc and clang are installed — require both so the pure-ISO
@@ -29,3 +30,4 @@ fi
 
 . "$HARNESS/lib/iso-lib.sh"
 iso_build_and_run c canonical_cbor-tests tests/canonical_cbor_test.c src/canonical_cbor.c
+iso_build_and_run c canonical_cbor-portable-conformance tests/portable_conformance_test.c src/canonical_cbor.c

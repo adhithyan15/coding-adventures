@@ -22,6 +22,7 @@ floats, opaque tags, no `undefined`.
 - `encode(v)` → `std::vector<std::uint8_t>` of canonical bytes.
 - `decode(bytes)` → `CborValue`; throws `CborException` (carrying a `CborError`)
   on any violation of the canonical profile.
+- `error_message(error)` returns a static, payload-blind diagnostic.
 
 ## Design notes
 
@@ -33,6 +34,9 @@ floats, opaque tags, no `undefined`.
 - **Security-hardened decoder** (matching the Rust crate): recursion depth is
   capped (`MAX_DECODE_DEPTH`), declared lengths are bounded by the remaining
   input before allocating, and cursor arithmetic is overflow-checked.
+- **Checked encoder.** Encoding rejects duplicate encoded map keys, nesting
+  beyond `MAX_ENCODE_DEPTH` (128), and items beyond
+  `MAX_ENCODED_SIZE` (1 MiB).
 
 ## Usage
 
@@ -54,3 +58,7 @@ sh BUILD           # POSIX: g++ and/or clang++ via the shared iso-harness
 
 Compiles under GCC, Clang and MSVC with `-pedantic-errors` / `/permissive-` and
 warnings-as-errors.
+
+The portable test consumes the checked-in
+[`canonical-cbor-v1`](../../../specs/fixtures/canonical-cbor-v1/README.md)
+projection shared with the C and Rust implementations.

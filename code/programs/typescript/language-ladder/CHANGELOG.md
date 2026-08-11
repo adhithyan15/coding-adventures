@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Hebrew Kaf ductus (HL-C09BN)
+
+- Render **כ** in three evidence-aligned frames: draw the top bar left-to-right,
+  continue down the rounded right side, and turn left along the base without lifting.
+- Keep the source's one-stroke printed corners explicit while preserving its
+  rounded handwritten half-circle alternative.
+- Queue the series' Lamed/Mem lesson (`CBU6aSCcPrE`) next.
+
 ### Added — cited Hebrew Yod ductus (HL-C09BM)
 
 - Render **י** in two evidence-aligned frames: draw its tiny head left-to-right

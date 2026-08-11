@@ -145,7 +145,7 @@ impl CborValue {
 // 2. Errors
 // ─────────────────────────────────────────────────────────────────────
 
-/// Errors returned by [`decode`].
+/// Errors returned by [`try_encode`] and [`decode`].
 ///
 /// Display strings are sourced from literals in this crate — never
 /// from persisted bytes — so a malicious input can't inject error
@@ -189,6 +189,13 @@ pub enum CborError {
     /// `usize` on this platform). Either truncation or a DoS
     /// attempt — either way the input is invalid.
     LengthTooLarge,
+    /// Two map keys have identical canonical encodings. Emitting either value
+    /// would create bytes that the strict decoder rejects as ambiguous.
+    DuplicateMapKey,
+    /// Encoder recursion exceeded [`MAX_ENCODE_DEPTH`].
+    EncodeTooDeep,
+    /// The complete encoded item would exceed [`MAX_ENCODED_SIZE`].
+    EncodeTooLarge,
 }
 
 impl core::fmt::Display for CborError {
@@ -197,14 +204,31 @@ impl core::fmt::Display for CborError {
             CborError::UnexpectedEof => "canonical-cbor: unexpected end of input",
             CborError::TrailingBytes => "canonical-cbor: trailing bytes after decoded item",
             CborError::Reserved => "canonical-cbor: reserved additional-info value (28/29/30)",
-            CborError::Indefinite => "canonical-cbor: indefinite-length items rejected by canonical profile",
+            CborError::Indefinite => {
+                "canonical-cbor: indefinite-length items rejected by canonical profile"
+            }
             CborError::NonMinimalInteger => "canonical-cbor: integer not in smallest-form encoding",
             CborError::InvalidUtf8 => "canonical-cbor: text string is not valid UTF-8",
-            CborError::NonCanonicalMapOrder => "canonical-cbor: map keys not in length-first canonical order or duplicated",
-            CborError::UnsupportedSimple => "canonical-cbor: unsupported simple value (only true / false / null permitted)",
-            CborError::FloatNotSupported => "canonical-cbor: floats are not supported in this version",
+            CborError::NonCanonicalMapOrder => {
+                "canonical-cbor: map keys not in length-first canonical order or duplicated"
+            }
+            CborError::UnsupportedSimple => {
+                "canonical-cbor: unsupported simple value (only true / false / null permitted)"
+            }
+            CborError::FloatNotSupported => {
+                "canonical-cbor: floats are not supported in this version"
+            }
             CborError::TooDeep => "canonical-cbor: nesting depth exceeded the configured maximum",
-            CborError::LengthTooLarge => "canonical-cbor: length / count exceeds the remaining bytes or platform usize",
+            CborError::LengthTooLarge => {
+                "canonical-cbor: length / count exceeds the remaining bytes or platform usize"
+            }
+            CborError::DuplicateMapKey => "canonical-cbor: duplicate canonical map key",
+            CborError::EncodeTooDeep => {
+                "canonical-cbor: encode nesting depth exceeded the configured maximum"
+            }
+            CborError::EncodeTooLarge => {
+                "canonical-cbor: encoded item exceeds the configured maximum"
+            }
         };
         write!(f, "{}", s)
     }
@@ -223,34 +247,71 @@ impl std::error::Error for CborError {}
 //
 // For canonical encoding, we always pick the SHORTEST form that fits.
 
+/// Maximum recursion depth accepted by the checked encoder.
+pub const MAX_ENCODE_DEPTH: usize = 128;
+
+/// Maximum number of bytes in one encoded v1 item.
+pub const MAX_ENCODED_SIZE: usize = 1_048_576;
+
 /// Encode a [`CborValue`] into canonical CBOR bytes.
 ///
 /// The output is deterministic: the same input value always produces
 /// the same bytes. Map entries are sorted length-first then bytewise
 /// at encode time; the caller can pass them in any order.
+///
+/// This source-compatible convenience wrapper delegates to [`try_encode`] and
+/// panics with a static literal if the value violates the portable contract.
+/// New code that handles untrusted or constructed values should call
+/// [`try_encode`] directly.
 pub fn encode(v: &CborValue) -> Vec<u8> {
-    let mut out = Vec::new();
-    encode_into(v, &mut out);
-    out
+    try_encode(v).expect("canonical-cbor: checked encoding failed")
 }
 
-/// Same as [`encode`] but writes into a caller-provided buffer.
+/// Checked canonical encoding with portable duplicate, depth, and size limits.
+///
+/// No bytes are returned on failure.
+pub fn try_encode(v: &CborValue) -> Result<Vec<u8>, CborError> {
+    let mut out = Vec::new();
+    encode_into_checked(v, &mut out, 0)?;
+    Ok(out)
+}
+
+/// Same as [`encode`] but appends to a caller-provided buffer.
+///
+/// The buffer remains unchanged if validation fails before this compatibility
+/// wrapper panics.
 pub fn encode_into(v: &CborValue, out: &mut Vec<u8>) {
+    let encoded = try_encode(v).expect("canonical-cbor: checked encoding failed");
+    out.extend_from_slice(&encoded);
+}
+
+/// Checked append-oriented encoding. The destination remains unchanged on
+/// failure.
+pub fn try_encode_into(v: &CborValue, out: &mut Vec<u8>) -> Result<(), CborError> {
+    let encoded = try_encode(v)?;
+    out.extend_from_slice(&encoded);
+    Ok(())
+}
+
+fn encode_into_checked(v: &CborValue, out: &mut Vec<u8>, depth: usize) -> Result<(), CborError> {
+    if depth > MAX_ENCODE_DEPTH {
+        return Err(CborError::EncodeTooDeep);
+    }
     match v {
-        CborValue::Unsigned(n) => write_type_and_argument(out, 0, *n),
-        CborValue::Negative(n) => write_type_and_argument(out, 1, *n),
+        CborValue::Unsigned(n) => write_type_and_argument(out, 0, *n)?,
+        CborValue::Negative(n) => write_type_and_argument(out, 1, *n)?,
         CborValue::Bytes(b) => {
-            write_type_and_argument(out, 2, b.len() as u64);
-            out.extend_from_slice(b);
+            write_type_and_argument(out, 2, b.len() as u64)?;
+            extend_checked(out, b)?;
         }
         CborValue::Text(s) => {
-            write_type_and_argument(out, 3, s.len() as u64);
-            out.extend_from_slice(s.as_bytes());
+            write_type_and_argument(out, 3, s.len() as u64)?;
+            extend_checked(out, s.as_bytes())?;
         }
         CborValue::Array(items) => {
-            write_type_and_argument(out, 4, items.len() as u64);
+            write_type_and_argument(out, 4, items.len() as u64)?;
             for item in items {
-                encode_into(item, out);
+                encode_into_checked(item, out, depth + 1)?;
             }
         }
         CborValue::Map(entries) => {
@@ -261,28 +322,31 @@ pub fn encode_into(v: &CborValue, out: &mut Vec<u8>) {
             // so we don't double-encode keys. Memory overhead is one
             // pass over the map, which is acceptable for vault records
             // (small) and reasonable for everything else.
-            let mut encoded: Vec<(Vec<u8>, &CborValue)> = entries
-                .iter()
-                .map(|(k, v)| (encode(k), v))
-                .collect();
+            let mut encoded: Vec<(Vec<u8>, &CborValue)> = Vec::with_capacity(entries.len());
+            for (key, value) in entries {
+                let mut key_bytes = Vec::new();
+                encode_into_checked(key, &mut key_bytes, depth + 1)?;
+                encoded.push((key_bytes, value));
+            }
             encoded.sort_by(length_first_lex);
-            // Note: duplicates among the encoded keys are NOT detected
-            // here; the encoder is permissive on input. The decoder
-            // rejects duplicates. Most callers should pre-check.
-            write_type_and_argument(out, 5, encoded.len() as u64);
+            if encoded.windows(2).any(|pair| pair[0].0 == pair[1].0) {
+                return Err(CborError::DuplicateMapKey);
+            }
+            write_type_and_argument(out, 5, encoded.len() as u64)?;
             for (k_bytes, v_ref) in &encoded {
-                out.extend_from_slice(k_bytes);
-                encode_into(v_ref, out);
+                extend_checked(out, k_bytes)?;
+                encode_into_checked(v_ref, out, depth + 1)?;
             }
         }
         CborValue::Tag(tag, inner) => {
-            write_type_and_argument(out, 6, *tag);
-            encode_into(inner, out);
+            write_type_and_argument(out, 6, *tag)?;
+            encode_into_checked(inner, out, depth + 1)?;
         }
-        CborValue::Bool(false) => out.push(0xF4), // major 7, info 20
-        CborValue::Bool(true) => out.push(0xF5),  // major 7, info 21
-        CborValue::Null => out.push(0xF6),        // major 7, info 22
+        CborValue::Bool(false) => push_checked(out, 0xF4)?,
+        CborValue::Bool(true) => push_checked(out, 0xF5)?,
+        CborValue::Null => push_checked(out, 0xF6)?,
     }
+    Ok(())
 }
 
 /// Length-first then bytewise lex comparator on encoded-key bytes.
@@ -295,24 +359,45 @@ fn length_first_lex(a: &(Vec<u8>, &CborValue), b: &(Vec<u8>, &CborValue)) -> Ord
 
 /// Write a CBOR header byte plus its big-endian argument in the
 /// shortest form that fits.
-fn write_type_and_argument(out: &mut Vec<u8>, major: u8, arg: u64) {
+fn write_type_and_argument(out: &mut Vec<u8>, major: u8, arg: u64) -> Result<(), CborError> {
     debug_assert!(major <= 7);
     let mt = major << 5;
     if arg <= 23 {
-        out.push(mt | arg as u8);
+        push_checked(out, mt | arg as u8)?;
     } else if arg <= 0xFF {
-        out.push(mt | 24);
-        out.push(arg as u8);
+        push_checked(out, mt | 24)?;
+        push_checked(out, arg as u8)?;
     } else if arg <= 0xFFFF {
-        out.push(mt | 25);
-        out.extend_from_slice(&(arg as u16).to_be_bytes());
+        push_checked(out, mt | 25)?;
+        extend_checked(out, &(arg as u16).to_be_bytes())?;
     } else if arg <= 0xFFFF_FFFF {
-        out.push(mt | 26);
-        out.extend_from_slice(&(arg as u32).to_be_bytes());
+        push_checked(out, mt | 26)?;
+        extend_checked(out, &(arg as u32).to_be_bytes())?;
     } else {
-        out.push(mt | 27);
-        out.extend_from_slice(&arg.to_be_bytes());
+        push_checked(out, mt | 27)?;
+        extend_checked(out, &arg.to_be_bytes())?;
     }
+    Ok(())
+}
+
+fn push_checked(out: &mut Vec<u8>, byte: u8) -> Result<(), CborError> {
+    if out.len() >= MAX_ENCODED_SIZE {
+        return Err(CborError::EncodeTooLarge);
+    }
+    out.push(byte);
+    Ok(())
+}
+
+fn extend_checked(out: &mut Vec<u8>, bytes: &[u8]) -> Result<(), CborError> {
+    let new_len = out
+        .len()
+        .checked_add(bytes.len())
+        .ok_or(CborError::EncodeTooLarge)?;
+    if new_len > MAX_ENCODED_SIZE {
+        return Err(CborError::EncodeTooLarge);
+    }
+    out.extend_from_slice(bytes);
+    Ok(())
 }
 
 // ─────────────────────────────────────────────────────────────────────
@@ -806,14 +891,20 @@ mod tests {
         // Same map but b before a. Since both keys encode to length 2,
         // decoder must reject "0x61 b" preceding "0x61 a".
         let bytes = vec![0xA2, 0x61, b'b', 0x02, 0x61, b'a', 0x01];
-        assert!(matches!(decode(&bytes), Err(CborError::NonCanonicalMapOrder)));
+        assert!(matches!(
+            decode(&bytes),
+            Err(CborError::NonCanonicalMapOrder)
+        ));
     }
 
     #[test]
     fn decode_rejects_duplicate_map_keys() {
         // Two entries with the same key "a".
         let bytes = vec![0xA2, 0x61, b'a', 0x01, 0x61, b'a', 0x02];
-        assert!(matches!(decode(&bytes), Err(CborError::NonCanonicalMapOrder)));
+        assert!(matches!(
+            decode(&bytes),
+            Err(CborError::NonCanonicalMapOrder)
+        ));
     }
 
     // --- Round-trip ---
@@ -828,10 +919,7 @@ mod tests {
             (CborValue::text("count"), CborValue::Unsigned(42)),
             (
                 CborValue::text("tags"),
-                CborValue::Array(vec![
-                    CborValue::text("urgent"),
-                    CborValue::text("draft"),
-                ]),
+                CborValue::Array(vec![CborValue::text("urgent"), CborValue::text("draft")]),
             ),
             (
                 CborValue::text("meta"),
@@ -985,8 +1073,9 @@ mod tests {
         // Build a map of 100 keys, shuffled, and assert encode is
         // deterministic regardless of input order.
         let n = 100;
-        let mut entries: Vec<(CborValue, CborValue)> =
-            (0..n).map(|i| (CborValue::Unsigned(i), CborValue::Unsigned(i * 7))).collect();
+        let mut entries: Vec<(CborValue, CborValue)> = (0..n)
+            .map(|i| (CborValue::Unsigned(i), CborValue::Unsigned(i * 7)))
+            .collect();
         let mut shuffled = entries.clone();
         shuffled.reverse();
         let bytes_a = encode(&CborValue::Map(entries.clone()));
@@ -1023,7 +1112,11 @@ mod tests {
 
     #[test]
     fn simple_values_roundtrip() {
-        for v in [CborValue::Bool(false), CborValue::Bool(true), CborValue::Null] {
+        for v in [
+            CborValue::Bool(false),
+            CborValue::Bool(true),
+            CborValue::Null,
+        ] {
             let bytes = encode(&v);
             let back = decode(&bytes).unwrap();
             assert_eq!(back, v);
@@ -1077,10 +1170,7 @@ mod tests {
         // worth of declared elements. Comfortably above the
         // smallest-form threshold (so passes that gate) and
         // comfortably above any realistic remaining-bytes count.
-        let bytes = vec![
-            0x9B, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00,
-        ];
+        let bytes = vec![0x9B, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
         match decode(&bytes) {
             Err(CborError::LengthTooLarge) => {}
             other => panic!("expected LengthTooLarge, got {:?}", other),
@@ -1090,8 +1180,7 @@ mod tests {
     #[test]
     fn decode_rejects_map_with_oversized_length() {
         let bytes = vec![
-            0xBB, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00,
+            0xBB, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         ];
         match decode(&bytes) {
             Err(CborError::LengthTooLarge) => {}
@@ -1141,6 +1230,9 @@ mod tests {
             CborError::FloatNotSupported,
             CborError::TooDeep,
             CborError::LengthTooLarge,
+            CborError::DuplicateMapKey,
+            CborError::EncodeTooDeep,
+            CborError::EncodeTooLarge,
         ]
         .iter()
         .map(|e| e.to_string())

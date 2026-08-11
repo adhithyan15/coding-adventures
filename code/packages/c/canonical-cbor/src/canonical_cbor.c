@@ -193,6 +193,28 @@ int cbor_equal(const CborValue *a, const CborValue *b) {
     return 0;
 }
 
+const char *cbor_status_message(CborStatus status) {
+    switch (status) {
+        case CBOR_OK: return "canonical-cbor: ok";
+        case CBOR_ERR_UNEXPECTED_EOF: return "canonical-cbor: unexpected end of input";
+        case CBOR_ERR_TRAILING_BYTES: return "canonical-cbor: trailing bytes after decoded item";
+        case CBOR_ERR_RESERVED: return "canonical-cbor: reserved additional-info value";
+        case CBOR_ERR_INDEFINITE: return "canonical-cbor: indefinite-length item rejected";
+        case CBOR_ERR_NON_MINIMAL_INTEGER: return "canonical-cbor: argument is not smallest-form";
+        case CBOR_ERR_INVALID_UTF8: return "canonical-cbor: text is not valid UTF-8";
+        case CBOR_ERR_NON_CANONICAL_MAP_ORDER: return "canonical-cbor: map order is not canonical";
+        case CBOR_ERR_UNSUPPORTED_SIMPLE: return "canonical-cbor: unsupported simple value";
+        case CBOR_ERR_FLOAT_NOT_SUPPORTED: return "canonical-cbor: floats are not supported";
+        case CBOR_ERR_TOO_DEEP: return "canonical-cbor: decode nesting depth exceeded";
+        case CBOR_ERR_LENGTH_TOO_LARGE: return "canonical-cbor: declared length is too large";
+        case CBOR_ERR_DUPLICATE_MAP_KEY: return "canonical-cbor: duplicate canonical map key";
+        case CBOR_ERR_ENCODE_TOO_DEEP: return "canonical-cbor: encode nesting depth exceeded";
+        case CBOR_ERR_ENCODE_TOO_LARGE: return "canonical-cbor: encoded item is too large";
+        case CBOR_ERR_ALLOC: return "canonical-cbor: allocation failed";
+    }
+    return "canonical-cbor: unknown status";
+}
+
 /* ── Encoder ──────────────────────────────────────────────────────────────*/
 
 /* A growable byte buffer used to build encoded output. */
@@ -202,10 +224,11 @@ typedef struct {
     size_t cap;
 } ByteBuf;
 
-static int bb_reserve(ByteBuf *b, size_t extra) {
-    if (extra > ((size_t)-1) - b->len) return 0; /* len+extra overflow */
+static CborStatus bb_reserve(ByteBuf *b, size_t extra) {
+    if (extra > ((size_t)-1) - b->len) return CBOR_ERR_ENCODE_TOO_LARGE;
     size_t need = b->len + extra;
-    if (need <= b->cap) return 1;
+    if (need > CBOR_MAX_ENCODED_SIZE) return CBOR_ERR_ENCODE_TOO_LARGE;
+    if (need <= b->cap) return CBOR_OK;
     size_t nc = b->cap ? b->cap : 16;
     while (nc < need) {
         if (nc > ((size_t)-1) / 2) {
@@ -215,46 +238,51 @@ static int bb_reserve(ByteBuf *b, size_t extra) {
         nc *= 2;
     }
     uint8_t *p = (uint8_t *)realloc(b->data, nc);
-    if (p == NULL) return 0;
+    if (p == NULL) return CBOR_ERR_ALLOC;
     b->data = p;
     b->cap = nc;
-    return 1;
+    return CBOR_OK;
 }
 
-static int bb_push(ByteBuf *b, uint8_t byte) {
-    if (!bb_reserve(b, 1)) return 0;
+static CborStatus bb_push(ByteBuf *b, uint8_t byte) {
+    CborStatus status = bb_reserve(b, 1);
+    if (status != CBOR_OK) return status;
     b->data[b->len++] = byte;
-    return 1;
+    return CBOR_OK;
 }
 
-static int bb_extend(ByteBuf *b, const uint8_t *src, size_t n) {
-    if (n == 0) return 1;
-    if (!bb_reserve(b, n)) return 0;
+static CborStatus bb_extend(ByteBuf *b, const uint8_t *src, size_t n) {
+    CborStatus status;
+    if (n == 0) return CBOR_OK;
+    status = bb_reserve(b, n);
+    if (status != CBOR_OK) return status;
     memcpy(b->data + b->len, src, n);
     b->len += n;
-    return 1;
+    return CBOR_OK;
 }
 
 /* Append `nbytes` of `arg` in big-endian order. */
-static int bb_push_be(ByteBuf *b, uint64_t arg, int nbytes) {
-    for (int i = nbytes - 1; i >= 0; i--)
-        if (!bb_push(b, (uint8_t)((arg >> (8 * i)) & 0xFF))) return 0;
-    return 1;
+static CborStatus bb_push_be(ByteBuf *b, uint64_t arg, int nbytes) {
+    for (int i = nbytes - 1; i >= 0; i--) {
+        CborStatus status = bb_push(b, (uint8_t)((arg >> (8 * i)) & 0xFF));
+        if (status != CBOR_OK) return status;
+    }
+    return CBOR_OK;
 }
 
 /* Write a header byte plus its big-endian argument in the shortest form. */
-static int write_type_and_argument(ByteBuf *b, uint8_t major, uint64_t arg) {
+static CborStatus write_type_and_argument(ByteBuf *b, uint8_t major, uint64_t arg) {
     uint8_t mt = (uint8_t)(major << 5);
     if (arg <= 23) return bb_push(b, (uint8_t)(mt | (uint8_t)arg));
-    if (arg <= 0xFF) return bb_push(b, (uint8_t)(mt | 24)) && bb_push_be(b, arg, 1);
-    if (arg <= 0xFFFF)
-        return bb_push(b, (uint8_t)(mt | 25)) && bb_push_be(b, arg, 2);
-    if (arg <= 0xFFFFFFFFu)
-        return bb_push(b, (uint8_t)(mt | 26)) && bb_push_be(b, arg, 4);
-    return bb_push(b, (uint8_t)(mt | 27)) && bb_push_be(b, arg, 8);
+    {
+        uint8_t info = arg <= 0xFF ? 24 : (arg <= 0xFFFF ? 25 : (arg <= 0xFFFFFFFFu ? 26 : 27));
+        int bytes = info == 24 ? 1 : (info == 25 ? 2 : (info == 26 ? 4 : 8));
+        CborStatus status = bb_push(b, (uint8_t)(mt | info));
+        return status == CBOR_OK ? bb_push_be(b, arg, bytes) : status;
+    }
 }
 
-static int encode_into(const CborValue *v, ByteBuf *out);
+static CborStatus encode_into(const CborValue *v, ByteBuf *out, size_t depth);
 
 /* One encoded map key plus a borrowed reference to its value. */
 typedef struct {
@@ -272,23 +300,27 @@ static int enc_key_less(const EncEntry *a, const EncEntry *b) {
 
 /* Encode a map: encode each key, stable-sort length-first, emit. Returns 1 on
  * success, 0 on OOM (all temporary key buffers are freed either way). */
-static int encode_map(const CborValue *v, ByteBuf *out) {
+static int enc_key_equal(const EncEntry *a, const EncEntry *b) {
+    return a->key.len == b->key.len &&
+           (a->key.len == 0 || memcmp(a->key.data, b->key.data, a->key.len) == 0);
+}
+
+static CborStatus encode_map(const CborValue *v, ByteBuf *out, size_t depth) {
     size_t n = v->as.map.len;
     EncEntry *ents = NULL;
     if (n > 0) {
-        if (n > ((size_t)-1) / sizeof(EncEntry)) return 0;
+        if (n > ((size_t)-1) / sizeof(EncEntry)) return CBOR_ERR_ALLOC;
         ents = (EncEntry *)calloc(n, sizeof(EncEntry));
-        if (ents == NULL) return 0;
+        if (ents == NULL) return CBOR_ERR_ALLOC;
     }
-    int ok = 1;
-    for (size_t i = 0; i < n && ok; i++) {
+    CborStatus status = CBOR_OK;
+    for (size_t i = 0; i < n && status == CBOR_OK; i++) {
         ents[i].val = v->as.map.entries[i].val;
-        ok = encode_into(v->as.map.entries[i].key, &ents[i].key);
+        status = encode_into(v->as.map.entries[i].key, &ents[i].key, depth + 1);
     }
-    /* Insertion sort — stable, matching Rust's stable sort_by; maps are small
-     * and this keeps duplicate keys (degenerate input) in their original
-     * relative order exactly as the reference does. */
-    if (ok) {
+    /* Insertion sort is stable, matching Rust's stable sort_by. Maps are small,
+     * and stable ordering makes adjacent duplicate detection deterministic. */
+    if (status == CBOR_OK) {
         for (size_t i = 1; i < n; i++) {
             EncEntry cur = ents[i];
             size_t j = i;
@@ -298,55 +330,71 @@ static int encode_map(const CborValue *v, ByteBuf *out) {
             }
             ents[j] = cur;
         }
-        ok = write_type_and_argument(out, 5, (uint64_t)n);
-        for (size_t i = 0; i < n && ok; i++) {
-            ok = bb_extend(out, ents[i].key.data, ents[i].key.len) &&
-                 encode_into(ents[i].val, out);
+        for (size_t i = 1; i < n; i++) {
+            if (enc_key_equal(&ents[i - 1], &ents[i])) {
+                status = CBOR_ERR_DUPLICATE_MAP_KEY;
+                break;
+            }
+        }
+        if (status == CBOR_OK)
+            status = write_type_and_argument(out, 5, (uint64_t)n);
+        for (size_t i = 0; i < n && status == CBOR_OK; i++) {
+            status = bb_extend(out, ents[i].key.data, ents[i].key.len);
+            if (status == CBOR_OK)
+                status = encode_into(ents[i].val, out, depth + 1);
         }
     }
     for (size_t i = 0; i < n; i++) free(ents[i].key.data);
     free(ents);
-    return ok;
+    return status;
 }
 
-static int encode_into(const CborValue *v, ByteBuf *out) {
+static CborStatus encode_into(const CborValue *v, ByteBuf *out, size_t depth) {
+    CborStatus status;
+    if (depth > CBOR_MAX_ENCODE_DEPTH) return CBOR_ERR_ENCODE_TOO_DEEP;
     switch (v->type) {
         case CBOR_UNSIGNED:
             return write_type_and_argument(out, 0, v->as.u);
         case CBOR_NEGATIVE:
             return write_type_and_argument(out, 1, v->as.u);
         case CBOR_BYTES:
-            return write_type_and_argument(out, 2, (uint64_t)v->as.bytes.len) &&
-                   bb_extend(out, v->as.bytes.data, v->as.bytes.len);
+            status = write_type_and_argument(out, 2, (uint64_t)v->as.bytes.len);
+            return status == CBOR_OK
+                       ? bb_extend(out, v->as.bytes.data, v->as.bytes.len)
+                       : status;
         case CBOR_TEXT:
-            return write_type_and_argument(out, 3, (uint64_t)v->as.bytes.len) &&
-                   bb_extend(out, v->as.bytes.data, v->as.bytes.len);
+            status = write_type_and_argument(out, 3, (uint64_t)v->as.bytes.len);
+            return status == CBOR_OK
+                       ? bb_extend(out, v->as.bytes.data, v->as.bytes.len)
+                       : status;
         case CBOR_ARRAY:
-            if (!write_type_and_argument(out, 4, (uint64_t)v->as.array.len))
-                return 0;
-            for (size_t i = 0; i < v->as.array.len; i++)
-                if (!encode_into(v->as.array.items[i], out)) return 0;
-            return 1;
+            status = write_type_and_argument(out, 4, (uint64_t)v->as.array.len);
+            for (size_t i = 0; i < v->as.array.len && status == CBOR_OK; i++)
+                status = encode_into(v->as.array.items[i], out, depth + 1);
+            return status;
         case CBOR_MAP:
-            return encode_map(v, out);
+            return encode_map(v, out, depth);
         case CBOR_TAG:
-            return write_type_and_argument(out, 6, v->as.tag.number) &&
-                   encode_into(v->as.tag.inner, out);
+            status = write_type_and_argument(out, 6, v->as.tag.number);
+            return status == CBOR_OK
+                       ? encode_into(v->as.tag.inner, out, depth + 1)
+                       : status;
         case CBOR_BOOL:
             return bb_push(out, v->as.boolean ? 0xF5 : 0xF4);
         case CBOR_NULL:
             return bb_push(out, 0xF6);
     }
-    return 0;
+    return CBOR_ERR_ALLOC;
 }
 
 CborStatus cbor_encode(const CborValue *v, uint8_t **out, size_t *out_len) {
     ByteBuf b = {NULL, 0, 0};
     *out = NULL;
     *out_len = 0;
-    if (!encode_into(v, &b)) {
+    CborStatus status = encode_into(v, &b, 0);
+    if (status != CBOR_OK) {
         free(b.data);
-        return CBOR_ERR_ALLOC;
+        return status;
     }
     *out = b.data;
     *out_len = b.len;

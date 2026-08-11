@@ -99,6 +99,8 @@ const HEBREW_TET = ductusFor("ט", "hebrew")!;
 const hebrewTetOutline = hebrewOutline("ט");
 const HEBREW_YOD = ductusFor("י", "hebrew")!;
 const hebrewYodOutline = hebrewOutline("י");
+const HEBREW_KAF = ductusFor("כ", "hebrew")!;
+const hebrewKafOutline = hebrewOutline("כ");
 const PERSIAN_ALEF = DUCTUS["ا"];
 const persianAlefOutline = naskhOutline("ا");
 const ARABIC_ALEF = ductusFor("ا", "arabic")!;
@@ -1055,6 +1057,35 @@ describe("Hebrew י — one tiny joined head-and-stem stroke", () => {
     expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(HEBREW_YOD.strokes[0], 2),
+    );
+  });
+});
+
+describe("Hebrew כ — one continuous sharp-cornered half-circle", () => {
+  const steps = ductusSteps(HEBREW_KAF);
+  const strip = ductusFilmstrip(HEBREW_KAF, hebrewKafOutline);
+
+  it("keeps the top, rounded side, and base in one pen-down run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the top bar from left to right",
+      "continue down the rounded right side without lifting",
+      "turn left along the base without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+
+  it("draws the exact Noto Sans Hebrew Kaf in the final frame", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewKafOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_KAF.strokes[0], 2),
     );
   });
 });
