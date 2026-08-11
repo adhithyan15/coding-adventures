@@ -1309,6 +1309,55 @@ frontend, and #10312 adds lossless retained observed-set persistence to the
 Vault domain owner. These identity-neutral changes do not alter the selected
 Lua tranche.
 
+PR #10317 was merged externally as `75861d6a838a` on August 10. The required
+post-merge refresh at `5415ba120d1a` is collision-clean and contains 1,298
+established identities and 4,454 package slots across the same 15 lanes, with
+173 high-consensus packages and 269 missing slots, 848 singletons and 11,872
+missing singleton slots, 652 Rust singletons, zero canonical collisions, and
+zero unknown buckets. Its exact package-identity delta is twelve one-slot Rust
+singletons, all assigned before the next selection:
+
+- `mosaic-app-conformance` is an applicable-platform native ABI fixture owned
+  by a blocked review over the portable runtime and existing C ABI/generated
+  wrapper owners, not a fifteen-language product algorithm.
+- Axis, ONVIF, Reolink, Synology, and ZoneMinder pairing services are concrete
+  filesystem, entropy, sealed-Vault, actor, vendor-network, and runtime hosts.
+  Five blocked native-authority reviews depend on the portable recoverable
+  pairing transaction and the matching snapshot-host review.
+- `vault-pm-application`, `vault-pm-application-storage-core`, and
+  `vault-pm-config` are empty-capability portable contracts with new fixture and
+  established-lane owners. The application chain remains dependency-blocked;
+  configuration is an unblocked future leaf.
+- `vault-pm-cli-host` and `vault-pm-local-host` have blocked terminal, entropy,
+  filesystem, locking, environment, and FFI reviews. The normalized
+  package/program `vault-pm-cli` identity is split between a portable command
+  contract and a blocked native composition review.
+
+The leverage pass therefore selects the already audited
+`build-file-lua-json-value-transitive-closure`: both of its prerequisites are
+merged, it closes a real one-package Unix/Windows front door, and it is the
+smallest coherent successor to the completed Lattice/parser wave. Vault config
+is queued behind its language-neutral fixture specification; the new native and
+wrapper owners remain excluded from autonomous selection.
+
+The JSON closure must prove more than source-tree tests. Its canonical recipes
+install every unpublished sibling rock in leaf-to-root order with dependency
+fetching disabled, then exercise `json_value.from_string` from the installed
+LuaRocks tree in a neutral directory. Because the current JSON lexer and parser
+walk out of their deployed rocks to read repository grammar files, this tranche
+must also bundle byte-locked Lua projections of the canonical `json.tokens` and
+`json.grammar` fixtures, remove their ambient filesystem claims, and keep drift
+tests as the specification guard. The files under `code/grammars/json/` remain
+the language-neutral source of truth; deployable payloads are generated
+projections, not competing grammars.
+
+The final pre-publication base advanced identity-neutrally through #10512,
+#10513, #10514, #10515, #10516, and #10517 to `fc8be1789c6b`. Those merges
+extend already owned human-language, ADJ, HTML frontend, Mermaid sequence, and
+Language Ladder surfaces, add no package directory, and do not overlap this Lua
+tranche or change its leverage ranking. The collision-checked counts and twelve
+new-owner classification therefore remain exact at the newer revision.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
@@ -1316,7 +1365,7 @@ reviewed native-host exceptions and are not selectable parity work. ONVIF is
 excluded from this parity tranche. Mixed smart-home packages enter the backlog
 only through their portable cores and shared language-neutral fixtures.
 
-The August 9 lane audit at `61cdb3ef14` is:
+The August 10 lane audit at `fc8be1789c6b` is:
 
 | Established lane | Packages present | High-consensus gaps | Rust/Python-core coverage |
 |---|---:|---:|---:|
@@ -1332,7 +1381,7 @@ The August 9 lane audit at `61cdb3ef14` is:
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 1050 | 0 | 100% |
+| Rust | 1062 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
 | TypeScript | 440 | 0 | 82.2% |
 
