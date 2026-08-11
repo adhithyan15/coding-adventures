@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C10-ir-a-futuro
 spine_node: SPINE-TALK-ABOUT-FUTURE
 sequence: 890
-chapter: 31
+chapter: 36
 type: phrase
 headword: voy a + infinitive
 gloss: I am going to… — the near future with ir, a, and a known infinitive

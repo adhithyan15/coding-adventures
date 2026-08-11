@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 42,
-  "title": "Synthesis --- You Can Hear Which Past It Is",
+  "title": "Review --- Six Verbs, One Ending",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:31528799f5af5845",
+  "sourceHash": "fnv1a64:d08909fd0905458c",
   "lessons": [
     {
-      "id": "ES-C15-practice",
-      "sequence": 1105,
-      "title": "Practice — six singular patterns, no hidden vocabulary",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "a singular checkpoint for regular and strong completed-past patterns",
+      "id": "ES-C13-repaso-yo-go",
+      "sequence": 1036,
+      "title": "Review — six verbs, one ending",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — the -go club is complete, and it was never a club to begin with",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:599e50db489fe27b",
+      "sourceHash": "fnv1a64:6241984d0b724ce8",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,214 @@
             },
             {
               "kind": "speech",
-              "text": "This checkpoint adds nothing. Retrieve only the three singular persons of each learned row. Every word in the short sentences is already known."
+              "text": "Nothing new in this chapter. Say the yo forms of the three verbs you have just met: poner, salir, venir."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The set is closed. Six of the commonest verbs in Spanish put an unexpected -go on the yo form and nowhere else:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "yo",
+                "and the rest behaves"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "verb: tener. yo: tengo. and the rest behaves: normally.",
+                "verb: hacer. yo: hago. and the rest behaves: normally.",
+                "verb: decir. yo: digo. and the rest behaves: normally.",
+                "verb: poner. yo: pongo. and the rest behaves: normally.",
+                "verb: salir. yo: salgo. and the rest behaves: normally.",
+                "verb: venir. yo: vengo. and the rest behaves: normally."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Six verbs, one oddity, and it lives in exactly one slot. That is a much smaller thing to carry than \"six irregular verbs.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here is what the six chapters could not show you separately."
+            },
+            {
+              "kind": "speech",
+              "text": "They are not a family. Nobody decided these six belonged together. They came from different Latin verbs, by different routes, and arrived at the same ending by accident — a g that was already in some of the stems, and a sound change that pulled the others into line behind them."
+            },
+            {
+              "kind": "speech",
+              "text": "The club is a result, not a rule. Spanish learners are taught \"the -go verbs\" as though someone had drawn up a membership list; what actually happened is that six unrelated words drifted into the same shape and then reinforced each other."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth knowing for a practical reason: it tells you the list is closed. A pattern with a cause keeps recruiting. A pattern that is an accident stops."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all six yo forms in one breath — tengo, hago, digo, pongo, salgo, vengo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all six *yo* forms in one breath — tengo, hago, digo, pongo, salgo, vengo]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "for each, the plain infinitive it came from",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: for each, the plain infinitive it came from]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until the six run together as one list."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-repaso-yo-go-count",
+              "prompt": "How many verbs are in the -go set?",
+              "assesses": [
+                "ES-GRAMMAR-YO-GO-CONTRAST-LEARNED"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "six",
+                "6",
+                "seis"
+              ],
+              "feedback": {
+                "correct": "Six — and the set is closed.",
+                "incorrect": "Six: tener, hacer, decir, poner, salir, venir."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-repaso-yo-go-slot",
+              "prompt": "Which slot does the -go appear in?",
+              "assesses": [
+                "ES-GRAMMAR-PONER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "the yo slot",
+                "yo",
+                "the i form",
+                "first person"
+              ],
+              "feedback": {
+                "correct": "Only the yo slot. Everything else is regular.",
+                "incorrect": "Only the yo slot."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-repaso-yo-go-why",
+              "prompt": "Are these six related to each other?",
+              "assesses": [
+                "ES-HISTORY-YO-GO-CONVERGENCE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "no, they converged by accident",
+                "no",
+                "they are not a family",
+                "they arrived by different routes"
+              ],
+              "feedback": {
+                "correct": "Right — which is why the list is closed rather than growing.",
+                "incorrect": "No. They came from different Latin verbs and drifted into the same shape."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many verbs take -go? (Six.) In how many slots? (One — the yo form.) And why does the list not grow? (Because it was never a rule — six unrelated verbs happened to converge.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C13-practice",
+      "sequence": 1040,
+      "title": "Practice — putting, leaving, and coming in the singular",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "singular putting, leaving, and coming, plus the six learned yo forms",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ddf232b5196d7ba6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This checkpoint adds nothing. Retrieve the three bounded singular sets first. Only then widen the memory comparison from three learned yo forms to six."
             }
           ]
         },
@@ -46,373 +253,54 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Regular rows:"
+              "text": "putting or placing: pongo, pones, pone."
             },
             {
               "kind": "speech",
-              "text": "yo: hablé, comí, viví."
+              "text": "leaving or going out: salgo, sales, sale."
             },
             {
               "kind": "speech",
-              "text": "tú: hablaste, comiste, viviste."
+              "text": "coming: vengo, vienes, viene."
             },
             {
               "kind": "speech",
-              "text": "él / ella / usted: habló, comió, vivió."
+              "text": "known-word contrast: Salgo de Madrid. Vengo de Madrid."
             },
             {
               "kind": "speech",
-              "text": "Strong rows:"
+              "text": "known singular comparison: vengo / tengo, vienes / tienes, viene / tiene."
             },
             {
               "kind": "speech",
-              "text": "yo: tuve, hice, estuve."
+              "text": "Now that all three new verbs have been taught, the learned yo comparison can grow to exactly tengo, hago, digo, pongo, salgo, vengo. It remains a retrieval aid, not a rule for predicting any unseen verb."
             },
             {
               "kind": "speech",
-              "text": "tú: tuviste, hiciste, estuviste."
-            },
-            {
-              "kind": "speech",
-              "text": "él / ella / usted: tuvo, hizo, estuvo."
-            },
-            {
-              "kind": "speech",
-              "text": "The -er and -ir rows share -í, -iste, -ió. The three strong rows share -e, -iste, -o, but their stems must be learned: tuv-, hic-/hiz-, estuv-. Plural persons, more strong verbs, and new time or setting vocabulary remain outside this checkpoint."
+              "text": "Plural persons, full boot diagrams, reflexive clothing expressions, house and table nouns, clock times, dinner vocabulary, and other unseen contexts remain outside this checkpoint."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: let spelling show the stress",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Regular comí, comió, viví, vivió carry written accents for final stress."
-            },
-            {
-              "kind": "speech",
-              "text": "Strong tuve, tuvo, hice, hizo, estuve, estuvo carry no written accents; stress remains in the strong stem."
-            },
-            {
-              "kind": "speech",
-              "text": "Comiste and viviste need no accent because their ordinary stress is already next to last."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "etymology",
-          "title": "The histories, taken apart",
+          "title": "The words, taken apart — retrieve the history",
           "segments": [
             {
               "kind": "speech",
-              "text": "The regular -er/-ir endings continue Latin perfect material reshaped across Romance. Tuve and hice continue older strong-perfect histories, also reshaped rather than copied letter for letter. Estuve shows especially clear analogical remodeling beside the -uv- family of tuve."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“hablé, comí, viví”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “hablé, comí, viví”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“tuve, hice, estuve”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “tuve, hice, estuve”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Hice café. Viví en Madrid. Estuve bien.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Hice café. Viví en Madrid. Estuve bien.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“comí and comió have accents; tuve and tuvo do not”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “comí and comió have accents; tuve and tuvo do not”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-practice-regular-yo-forms",
-              "prompt": "Give the learned yo past forms of hablar, comer, and vivir, in that order.",
-              "assesses": [
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-ER-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-IR-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE",
-                "ES-LEX-HABLAR",
-                "ES-LEX-COMER",
-                "ES-LEX-VIVIR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "hablé, comí, viví",
-                "hablé comí viví",
-                "hablé / comí / viví"
-              ],
-              "feedback": {
-                "correct": "Right: hablé, comí, viví.",
-                "incorrect": "Retrieve the three regular yo forms: hablé, comí, viví."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-practice-strong-yo-forms",
-              "prompt": "Give the learned yo past forms of tener, hacer, and estar, in that order.",
-              "assesses": [
-                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN",
-                "ES-GRAMMAR-TENER-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-HACER-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR",
-                "ES-LEX-TENER",
-                "ES-LEX-HACER",
-                "ES-LEX-ESTAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "tuve, hice, estuve",
-                "tuve hice estuve",
-                "tuve / hice / estuve"
-              ],
-              "feedback": {
-                "correct": "Right: tuve, hice, estuve.",
-                "incorrect": "Retrieve the three strong yo forms: tuve, hice, estuve."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-practice-hice-cafe",
-              "prompt": "Say 'I made coffee' in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-HACER-PRETERITE-SINGULAR",
-                "ES-LEX-HACER",
-                "ES-LEX-CAFE"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "hice café.",
-                "hice café"
-              ],
-              "feedback": {
-                "correct": "Right: Hice café.",
-                "incorrect": "Use the strong yo form hice, then known café."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-practice-vivi-madrid",
-              "prompt": "Say 'I lived in Madrid' in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-IR-PRETERITE-SINGULAR",
-                "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS",
-                "ES-LEX-VIVIR",
-                "ES-LEX-EN"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "viví en madrid.",
-                "viví en madrid"
-              ],
-              "feedback": {
-                "correct": "Right: Viví en Madrid.",
-                "incorrect": "Use accented viví, then known en Madrid."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-practice-estuve-bien",
-              "prompt": "Say 'I was well' as a completed event in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR",
-                "ES-LEX-ESTAR",
-                "ES-LEX-BIEN"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "estuve bien.",
-                "estuve bien"
-              ],
-              "feedback": {
-                "correct": "Right: Estuve bien.",
-                "incorrect": "Use the strong yo form estuve, then known bien."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-practice-accent-contrast",
-              "prompt": "Which pair carries written accents: comí/comió or tuve/tuvo?",
-              "assesses": [
-                "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS",
-                "ES-GRAMMAR-ER-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "comí and comió",
-                "comí comió",
-                "comí/comió",
-                "comí y comió"
-              ],
-              "feedback": {
-                "correct": "Right: comí and comió mark final stress; tuve and tuvo do not.",
-                "incorrect": "The regular final-stressed pair carries the marks: comí and comió."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-practice-history-match",
-              "prompt": "Which learned form is especially described as analogically remodeled beside tuve: comí, hice, or estuve?",
-              "assesses": [
-                "ES-HISTORY-ER-IR-PRETERITE-LATIN-PERFECT",
-                "ES-ETYMON-TUVE",
-                "ES-ETYMON-HICE",
-                "ES-ETYMON-ESTUVE-ANALOGY"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "estuve"
-              ],
-              "feedback": {
-                "correct": "Right: estuve was analogically remodeled beside the -uv- strong family.",
-                "incorrect": "Look for the form sharing -uv- with tuve: estuve."
-              }
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
+              "text": "poner continues Latin pōnere, the placing family of position."
             },
             {
               "kind": "speech",
-              "text": "Give the regular comer and vivir sets. (Comí, comiste, comió; viví, viviste, vivió.) Give the three strong sets. (Tuve, tuviste, tuvo; hice, hiciste, hizo; estuve, estuviste, estuvo.) Which rows share endings? (-er/-ir share one regular set; the strong rows share another.) The next chapter can add a new past contrast without borrowing any plural form here."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C15-sintesis-preterito",
-      "sequence": 1108,
-      "title": "Synthesis — you can hear which past it is",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — two pasts with two histories, and you can hear which is which",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:a380e1bb69f7ae21",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
+              "text": "salir continues Latin salīre, the leaping family of salient."
             },
             {
               "kind": "speech",
-              "text": "Nothing new in this chapter. Say comí, then tuve."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the stress tells you everything",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Say those two again and listen to where your voice lifts."
+              "text": "venir continues Latin venīre, the coming family of convene."
             },
             {
               "kind": "speech",
-              "text": "comí — the stress lands on the ending. tuve — the stress lands on the stem."
-            },
-            {
-              "kind": "speech",
-              "text": "That is not a detail. It is the whole difference between the two kinds of past in this chapter, and it is audible before you know anything else about the verb."
-            },
-            {
-              "kind": "speech",
-              "text": "Endings stressed becomes the regular preterite. It needs a written accent, because Spanish marks a stressed final vowel: comí, viví."
-            },
-            {
-              "kind": "speech",
-              "text": "Stem stressed becomes a strong preterite. It needs no accent at all: tuve, hice, estuve."
-            },
-            {
-              "kind": "speech",
-              "text": "So the accent is not extra spelling to remember. It is the stress, written down. If a preterite has no accent, the stress moved back onto the stem, and you are looking at one of the strong ones."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "notice",
-          "title": "What you've built",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The two kinds have two histories."
-            },
-            {
-              "kind": "speech",
-              "text": "The regular preterite is Spanish doing what Spanish does: one set of endings, and — as in the present and the imperfect — -er and -ir agreeing with each other rather than going separate ways."
-            },
-            {
-              "kind": "speech",
-              "text": "The strong preterites are older. They are Latin's own perfect, carried through with the stress where Latin had put it, on verbs used too heavily ever to be rebuilt. Which is the same reason the imperfect has only three irregulars: the words people say constantly are the ones that keep their odd shapes."
+              "text": "different inherited histories and analogy let the six known yo forms converge on -go; the shared shape does not make a productive prediction rule."
             }
           ]
         },
@@ -430,88 +318,168 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "comí, viví — and feel the lift on the last syllable",
+              "instruction": "“pongo, pones, pone”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *comí*, *viví* — and feel the lift on the last syllable]"
+              "source": "[YOU SAY: “pongo, pones, pone”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "tuve, hice, estuve — and feel it move back",
+              "instruction": "“salgo, sales, sale”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *tuve*, *hice*, *estuve* — and feel it move back]"
+              "source": "[YOU SAY: “salgo, sales, sale”]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Until you can place a preterite by ear before you place it by rule."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-sintesis-preterito-stress",
-              "prompt": "A preterite with no written accent. Where is the stress, and which kind is it?",
-              "assesses": [
-                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "on the stem, a strong preterite",
-                "stem, strong",
-                "on the stem",
-                "strong preterite"
-              ],
-              "feedback": {
-                "correct": "Yes — no accent means the stress moved back onto the stem.",
-                "incorrect": "On the stem, which makes it a strong preterite."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-sintesis-preterito-accent",
-              "prompt": "Why does comi carry an accent when tuve does not?",
-              "assesses": [
-                "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "the stress is on its final vowel",
-                "because the stress is on the ending",
-                "stressed final vowel",
-                "the ending is stressed"
-              ],
-              "feedback": {
-                "correct": "Right — the accent is the stress, written down.",
-                "incorrect": "Because comi is stressed on its final vowel and tuve is not."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-sintesis-preterito-families",
-              "prompt": "In the regular preterite, do -er and -ir take the same endings?",
-              "assesses": [
-                "ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“vengo, vienes, viene”",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
+              "source": "[YOU SAY: “vengo, vienes, viene”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“tengo, hago, digo, pongo, salgo, vengo”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “tengo, hago, digo, pongo, salgo, vengo”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-practice-poner-forms",
+              "prompt": "Give the learned singular forms of poner: yo, tú, then usted.",
+              "assesses": [
+                "ES-LEX-PONER",
+                "ES-GRAMMAR-PONER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 9,
               "acceptedResponses": [
-                "yes",
-                "yes, the same",
-                "they agree",
-                "identical"
+                "pongo, pones, pone",
+                "pongo pones pone",
+                "pongo / pones / pone"
               ],
               "feedback": {
-                "correct": "Yes — as in the present and the imperfect.",
-                "incorrect": "They do, exactly as in the present and the imperfect."
+                "correct": "Right: pongo, pones, pone.",
+                "incorrect": "Retrieve only the learned singular set: pongo, pones, pone."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-practice-salir-forms",
+              "prompt": "Give the learned singular forms of salir: yo, tú, then usted.",
+              "assesses": [
+                "ES-LEX-SALIR",
+                "ES-GRAMMAR-SALIR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "salgo, sales, sale",
+                "salgo sales sale",
+                "salgo / sales / sale"
+              ],
+              "feedback": {
+                "correct": "Right: salgo, sales, sale.",
+                "incorrect": "Retrieve only the learned singular set: salgo, sales, sale."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-practice-venir-forms",
+              "prompt": "Give the learned singular forms of venir: yo, tú, then usted.",
+              "assesses": [
+                "ES-LEX-VENIR",
+                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "vengo, vienes, viene",
+                "vengo vienes viene",
+                "vengo / vienes / viene"
+              ],
+              "feedback": {
+                "correct": "Right: vengo, vienes, viene.",
+                "incorrect": "Retrieve only the learned singular set: vengo, vienes, viene."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-practice-leave-come",
+              "prompt": "Say 'I leave Madrid; I come from Madrid' in Spanish.",
+              "assesses": [
+                "ES-LEX-SALIR",
+                "ES-GRAMMAR-SALIR-PRESENT-SINGULAR",
+                "ES-LEX-VENIR",
+                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR",
+                "ES-LEX-DE"
+              ],
+              "responseSeconds": 11,
+              "acceptedResponses": [
+                "salgo de madrid; vengo de madrid.",
+                "salgo de madrid. vengo de madrid.",
+                "salgo de madrid, vengo de madrid",
+                "salgo de madrid y vengo de madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Salgo de Madrid; vengo de Madrid.",
+                "incorrect": "Contrast the two learned yo forms: salgo for leave, vengo for come."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-practice-six-yo-forms",
+              "prompt": "Give the learned yo forms of tener, hacer, decir, poner, salir, and venir, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-YO-GO-CONTRAST-LEARNED",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-PONER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-SALIR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "tengo, hago, digo, pongo, salgo, vengo",
+                "tengo hago digo pongo salgo vengo",
+                "tengo / hago / digo / pongo / salgo / vengo"
+              ],
+              "feedback": {
+                "correct": "Right: tengo, hago, digo, pongo, salgo, vengo.",
+                "incorrect": "Retrieve only the six learned forms, in order: tengo, hago, digo, pongo, salgo, vengo."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-practice-root-families",
+              "prompt": "Match each Spanish verb to one English cousin: poner, salir, venir.",
+              "assesses": [
+                "ES-ETYMON-PONERE",
+                "ES-ETYMON-SALIRE",
+                "ES-ETYMON-VENIRE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "poner—position; salir—salient; venir—convene",
+                "poner position salir salient venir convene",
+                "poner: position; salir: salient; venir: convene",
+                "position salient convene"
+              ],
+              "feedback": {
+                "correct": "Right: poner—position; salir—salient; venir—convene.",
+                "incorrect": "Use the placing, leaping, and coming families: position, salient, convene."
               }
             }
           ]
@@ -529,7 +497,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where does the stress fall in a strong preterite? (On the stem.) What does a missing accent tell you? (That it is one of the strong ones.) And why do the strong ones exist at all? (They are Latin's own perfect, kept intact on verbs used too much to be rebuilt.)"
+              "text": "Give all three new singular sets. (Pongo, pones, pone; salgo, sales, sale; vengo, vienes, viene.) Which six learned yo forms now share -go? (Tengo, hago, digo, pongo, salgo, vengo.) Why is the list a memory aid rather than a prediction rule? (Different histories converged on one shape.) The next chapter may now introduce a new time frame without borrowing any plural form from this chapter."
             }
           ]
         }

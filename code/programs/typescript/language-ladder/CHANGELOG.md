@@ -10,6 +10,12 @@
   recording its adaptation to Noto Sans Hebrew's angular block outline.
 - Queue the series' dedicated Hei lesson next.
 
+### Changed — Spanish runs 1..98 (HL-C105)
+
+- Regenerate the `bookhashes` chapter-lesson pin: the `-ar` present plural added
+  five chapters, so old Spanish chapters 29–93 shifted to 34–98.
+- Eager bundle 484,346 / 500,000 bytes.
+
 ### Added — cited Hebrew Gimel ductus (HL-C09BF)
 
 - Render **ג** in four evidence-aligned frames: join the short top bar, right

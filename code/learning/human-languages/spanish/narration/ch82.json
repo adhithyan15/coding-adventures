@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 82,
-  "title": "Synthesis --- What You Like, and Who Does the Liking",
+  "title": "Tomar — Taking, and a Word With No Past",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:20bcfdf30ece0112",
+  "sourceHash": "fnv1a64:89c49fae1af73b78",
   "lessons": [
     {
-      "id": "ES-C35-sintesis-gustar",
-      "sequence": 1684,
-      "title": "Synthesis — what you like, and who is doing the liking",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — saying what you like, in a language that refuses to let you own it",
+      "id": "ES-C35-tomar",
+      "sequence": 1650,
+      "title": "tomar — \"to take\", and nobody knows where it came from",
+      "headword": "tomar",
+      "romanization": "tomar",
+      "gloss": "to take (and, across Latin America, to drink) — an everyday word with no settled origin",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:489d104dfeeb2fe0",
+      "sourceHash": "fnv1a64:8536ac1a6c06e66d",
       "notice": null,
       "blocks": [
         {
@@ -35,56 +35,56 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I like coffee\" in Spanish. Then answer this: in that sentence, which word is the subject?"
+              "text": "Every verb so far ran straight back to a Latin root you could name. Here is one that does not — and the gap is the useful part."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the sentence that will not let you be the subject",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Me gusta el café. The coffee is the subject. The coffee does the pleasing. You are the one it happens to."
+              "text": "r-tap — one soft tap of the tongue: to-MAR."
             },
             {
               "kind": "speech",
-              "text": "English puts you in charge: I like coffee — I am the subject, the coffee just sits there. Spanish reverses it."
-            },
-            {
-              "kind": "speech",
-              "text": "Two chapters ago, all three verbs were about the one doing it. That is why this chapter had to sit next to them."
-            },
-            {
-              "kind": "speech",
-              "text": "Translate I like word by word and you build a sentence Spanish does not have — which is why this is a chapter about saying an idea, not a word."
+              "text": "vowel-o — a short, pure o, with no English glide toward ow."
             }
           ]
         },
         {
           "index": 2,
-          "type": "input",
-          "title": "The exchange",
+          "type": "etymology",
+          "title": "The word, taken apart: tomar",
           "segments": [
             {
               "kind": "speech",
-              "text": "— ¿Te gusta el café? — Sí, me gusta mucho. ¿Y a ti? — A mí también. Mucho gusto."
+              "text": "tomar (\"to take\") is a plain -ar verb: tomo, tomas, toma, tomamos, toman. It is one of the most common verbs in the language, and its origin is genuinely unsettled."
             },
             {
               "kind": "speech",
-              "text": "That last line is a joke you can now get. Mucho gusto — the phrase you learned long ago for \"pleased to meet you\" — is the same word. It has always meant much pleasure. You have been saying gustar's noun since your third conversation in this book."
+              "text": "The leading proposal derives it from Latin autumāre, \"to take as, to assert\", worn down through an intermediate tumar; a rival one points to a pre-Roman Iberian word Latin never recorded. Neither is proved, and careful dictionaries say so. \"We don't know\" is a real answer in etymology."
+            },
+            {
+              "kind": "speech",
+              "text": "It carries a second everyday sense across Latin America: to drink. A waiter asking ¿Qué vas a tomar? is asking what you would like."
             }
           ]
         },
         {
           "index": 3,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: the verb Latin did leave, and how to handle it",
           "segments": [
             {
               "kind": "speech",
-              "text": "Gustar is Latin gustāre, to taste — English gusto, disgust. Liking, in Spanish, started at the tongue."
+              "text": "Latin's own \"gather up\" verb survived perfectly well: coger from colligere, which is com- (\"together\") + legere — the very root you met in leer. English took that same Latin word twice: collect straight from the Latin, and coil by way of French."
+            },
+            {
+              "kind": "speech",
+              "text": "In Spain coger is the plain everyday word: coger el autobús, catch the bus. In much of Latin America — Argentina, Mexico and well beyond — it is coarse slang for sex, and using it innocently will derail a conversation. Tomar is safe on both sides of the Atlantic, which is a large part of why it won."
             }
           ]
         },
@@ -102,88 +102,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the exchange above, both parts",
+              "instruction": "\"tomo, tomas, toma, tomamos, toman\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the exchange above, both parts]"
+              "source": "[YOU SAY: \"tomo, tomas, toma, tomamos, toman\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "it again, and as you say me gusta, notice that you are not the subject",
+              "instruction": "\"Tomo un café\" — I'll have a coffee",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: it again, and as you say *me gusta*, notice that you are **not** the subject]"
+              "source": "[YOU SAY: \"Tomo un café\" — I'll have a coffee]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Until me gusta arrives without translating I like first."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C35-sintesis-gustar-subject",
-              "prompt": "In me gusta el cafe, what is the subject?",
-              "assesses": [
-                "ES-GRAMMAR-GUSTAR-INVERSION-09"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "el cafe",
-                "the coffee",
-                "cafe",
-                "el café"
-              ],
-              "feedback": {
-                "correct": "Yes — the coffee does the pleasing.",
-                "incorrect": "El cafe. It is the one doing the pleasing; you receive it."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C35-sintesis-gustar-taste",
-              "prompt": "What did gustar originally mean?",
-              "assesses": [
-                "ES-ETYMON-GUSTAR-08"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Tomo el autobús\" — the safe way to say it anywhere",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "to taste",
-                "taste",
-                "tasting"
-              ],
-              "feedback": {
-                "correct": "Yes — gustare, and English kept it in gusto and disgust.",
-                "incorrect": "To taste — from Latin gustare."
-              }
+              "source": "[YOU SAY: \"Tomo el autobús\" — the safe way to say it anywhere]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C35-sintesis-gustar-joke",
-              "prompt": "Which phrase you learned long ago is built from this same word?",
-              "assesses": [
-                "ES-LEX-GUSTO",
-                "ES-LEX-GUSTAR-07"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "mucho gusto",
-                "gusto",
-                "much pleasure"
-              ],
-              "feedback": {
-                "correct": "Yes — mucho gusto has always meant much pleasure.",
-                "incorrect": "Mucho gusto — you have been saying gustar's noun since your third conversation."
-              }
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"coger\" then English \"collect, coil\" — one root, and one place to be careful",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"coger\" then English \"collect, coil\" — one root, and one place to be careful]"
             }
           ]
         },
@@ -200,7 +150,7 @@
             },
             {
               "kind": "speech",
-              "text": "Who is the subject of me gusta el café? (El café.) What did gustar mean first? (To taste.) And what has mucho gusto meant all along? (Much pleasure — the same word.)"
+              "text": "Does tomar have a confirmed etymology? (No — autumāre and a pre-Roman source are both unproved.) What Latin verb gives coger, and which root sits inside it? (Colligere, holding legere, \"to gather\", from leer.) Why reach for tomar instead? (Coger is coarse slang across much of Latin America.) Next: preguntar, and the two different asks."
             }
           ]
         }

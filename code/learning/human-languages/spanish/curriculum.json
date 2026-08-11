@@ -302,11 +302,17 @@
       "lessons": [
         "ES-C07-donde",
         "ES-C07-practice",
-        "ES-C07-sintesis-preguntar"
+        "ES-C07-sintesis-preguntar",
+        "ES-C07-hablamos",
+        "ES-C07-hablan",
+        "ES-C07-hablais",
+        "ES-C07-repaso-presente-completo",
+        "ES-C07-sintesis-dos-continentes"
       ],
       "before": [],
       "inline": [
-        "ES-EXT-015-CONSOLIDATION"
+        "ES-EXT-015-CONSOLIDATION",
+        "ES-EXT-015-PRESENT-PLURAL"
       ],
       "after": []
     },
@@ -2469,6 +2475,21 @@
       "prerequisites": [],
       "lessons": [
         "ES-C40-sintesis-describir"
+      ]
+    },
+    {
+      "id": "ES-EXT-015-PRESENT-PLURAL",
+      "stage": "A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C07-hablamos",
+        "ES-C07-hablan",
+        "ES-C07-hablais",
+        "ES-C07-repaso-presente-completo",
+        "ES-C07-sintesis-dos-continentes"
       ]
     }
   ]

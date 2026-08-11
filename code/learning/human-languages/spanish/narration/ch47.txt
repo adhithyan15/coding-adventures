@@ -1,115 +1,98 @@
-Spanish, chapter 47: The Future --- Saying What Will Happen.
-3 lessons. All 3 can be done entirely by ear.
+Spanish, chapter 47: Synthesis --- You Can Hear Which Past It Is.
+2 lessons. All 2 can be done entirely by ear.
 
 
-Lesson 1 of 3.
-hablaré — keep the infinitive, add the future.
-
-Warm-up.
-[pause 2 seconds]
-Voy a hablar español uses the near-future frame you already know. Spanish also has a one-word future: Hablaré español — “I will speak Spanish.” It can present a future prediction or intention without adding a new subject or object.
-
-Grammar Lens: three familiar persons.
-Keep the whole infinitive hablar, then add one ending:
-[a table of 3 rows, read aloud]
-person: yo. simple future: hablaré.
-person: tú. simple future: hablarás.
-person: él / ella / usted. simple future: hablará.
-Say hablaré, hablarás, hablará. Each form has final stress, marked by an accent. Plural persons wait.
-
-The weld, taken apart.
-Late Latin and early Romance used more than one way to speak about the future. One influential construction placed an infinitive beside present forms of Latin habēre, “to have.” Through repeated use and sound change, descendants of those pieces became the endings in forms such as hablaré.
-That history explains why the infinitive remains visible. It does not mean that a modern learner should attach the full modern verb haber, and it does not require the claim that every older future vanished at one moment.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: “hablaré, hablarás, hablará”]
-[pause 8 seconds for the answer]
-[your turn — say: “Voy a hablar español. Hablaré español.”]
-[pause 8 seconds for the answer]
-[your turn — say: “infinitive plus historical habēre material”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Give the learned singular future forms of hablar: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 7 seconds]
-Say 'I will speak Spanish' in Spanish.
-[question — say your answer, then pause 7 seconds]
-Which Latin verb meaning 'to have' contributed material to the Romance future endings?
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three learned forms. (Hablaré, hablarás, hablará.) What stays visible? (The whole infinitive.) What older verb contributed to the endings? (Latin habēre.) Next: test the same endings on comer.
-
-
-Lesson 2 of 3.
-comeré — the same endings keep -er.
+Lesson 1 of 2.
+Practice — six singular patterns, no hidden vocabulary.
 
 Warm-up.
 [pause 2 seconds]
-You built hablaré without removing -ar. Keep comer just as intact: comeré — “I will eat.”
+This checkpoint adds nothing. Retrieve only the three singular persons of each learned row. Every word in the short sentences is already known.
 
-Grammar Lens: the singular -er row.
-[a table of 3 rows, read aloud]
-person: yo. simple future: comeré.
-person: tú. simple future: comerás.
-person: él / ella / usted. simple future: comerá.
-Say comeré, comerás, comerá. Compare hablaré / comeré: the infinitives differ, but the future endings do not. Plural persons wait.
+Grammar Lens: the complete frame for this chapter.
+Regular rows:
+yo: hablé, comí, viví.
+tú: hablaste, comiste, viviste.
+él / ella / usted: habló, comió, vivió.
+Strong rows:
+yo: tuve, hice, estuve.
+tú: tuviste, hiciste, estuviste.
+él / ella / usted: tuvo, hizo, estuvo.
+The -er and -ir rows share -í, -iste, -ió. The three strong rows share -e, -iste, -o, but their stems must be learned: tuv-, hic-/hiz-, estuv-. Plural persons, more strong verbs, and new time or setting vocabulary remain outside this checkpoint.
 
-The ending, taken apart.
-The historical infinitive-plus-habēre construction helps explain the shared endings: the verb-family vowel remains inside hablar or comer, rather than selecting a different ending set.
+Grammar Lens: let spelling show the stress.
+Regular comí, comió, viví, vivió carry written accents for final stress.
+Strong tuve, tuvo, hice, hizo, estuve, estuvo carry no written accents; stress remains in the strong stem.
+Comiste and viviste need no accent because their ordinary stress is already next to last.
+
+The histories, taken apart.
+The regular -er/-ir endings continue Latin perfect material reshaped across Romance. Tuve and hice continue older strong-perfect histories, also reshaped rather than copied letter for letter. Estuve shows especially clear analogical remodeling beside the -uv- family of tuve.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “comeré, comerás, comerá”]
+[your turn — say: “hablé, comí, viví”]
 [pause 8 seconds for the answer]
-[your turn — say: “Hablaré. Comeré.”]
+[your turn — say: “tuve, hice, estuve”]
 [pause 8 seconds for the answer]
-[your turn — say: “Beberé café.”]
+[your turn — say: “Hice café. Viví en Madrid. Estuve bien.”]
+[pause 8 seconds for the answer]
+[your turn — say: “comí and comió have accents; tuve and tuvo do not”]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 9 seconds]
-Give the learned singular future forms of comer: yo, tú, then él/ella/usted.
+Give the learned yo past forms of hablar, comer, and vivir, in that order.
+[question — say your answer, then pause 9 seconds]
+Give the learned yo past forms of tener, hacer, and estar, in that order.
 [question — say your answer, then pause 7 seconds]
-Use the learned -er future pattern to say 'I will drink coffee' in Spanish.
+Say 'I made coffee' in Spanish.
 [question — say your answer, then pause 7 seconds]
-Which endings do hablaré and comeré share across the learned singular row?
+Say 'I lived in Madrid' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Say 'I was well' as a completed event in Spanish.
+[question — say your answer, then pause 7 seconds]
+Which pair carries written accents: comí/comió or tuve/tuvo?
+[question — say your answer, then pause 7 seconds]
+Which learned form is especially described as analogically remodeled beside tuve: comí, hice, or estuve?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three learned forms. (Comeré, comerás, comerá.) Did the -er disappear? (No.) Which endings match hablar? (-é, -ás, -á.) Next: let vivir test the pattern once more.
+Give the regular comer and vivir sets. (Comí, comiste, comió; viví, viviste, vivió.) Give the three strong sets. (Tuve, tuviste, tuvo; hice, hiciste, hizo; estuve, estuviste, estuvo.) Which rows share endings? (-er/-ir share one regular set; the strong rows share another.) The next chapter can add a new past contrast without borrowing any plural form here.
 
 
-Lesson 3 of 3.
-viviré — one future row for three verb families.
+Lesson 2 of 2.
+Synthesis — you can hear which past it is.
 
 Warm-up.
 [pause 2 seconds]
-Hablaré kept -ar. Comeré kept -er. Predict the yo future of vivir before reading on. It is viviré.
+Nothing new in this chapter. Say comí, then tuve.
 
-Grammar Lens: the singular -ir row.
-[a table of 3 rows, read aloud]
-person: yo. simple future: viviré.
-person: tú. simple future: vivirás.
-person: él / ella / usted. simple future: vivirá.
-Say viviré, vivirás, vivirá. Now the bounded pattern is complete: hablaré, comeré, viviré. The same three endings attach to all three whole infinitives. Plural persons wait.
+Grammar Lens: the stress tells you everything.
+Say those two again and listen to where your voice lifts.
+comí — the stress lands on the ending. tuve — the stress lands on the stem.
+That is not a detail. It is the whole difference between the two kinds of past in this chapter, and it is audible before you know anything else about the verb.
+Endings stressed becomes the regular preterite. It needs a written accent, because Spanish marks a stressed final vowel: comí, viví.
+Stem stressed becomes a strong preterite. It needs no accent at all: tuve, hice, estuve.
+So the accent is not extra spelling to remember. It is the stress, written down. If a preterite has no accent, the stress moved back onto the stem, and you are looking at one of the strong ones.
 
-Grammar Lens: meaning with known words.
-Viviré en Madrid says “I will live in Madrid.” Every lexical piece was available before this lesson; only the future form is new.
+What you've built.
+The two kinds have two histories.
+The regular preterite is Spanish doing what Spanish does: one set of endings, and — as in the present and the imperfect — -er and -ir agreeing with each other rather than going separate ways.
+The strong preterites are older. They are Latin's own perfect, carried through with the stress where Latin had put it, on verbs used too heavily ever to be rebuilt. Which is the same reason the imperfect has only three irregulars: the words people say constantly are the ones that keep their odd shapes.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “viviré, vivirás, vivirá”]
+[your turn — say: comí, viví — and feel the lift on the last syllable]
 [pause 8 seconds for the answer]
-[your turn — say: “hablaré, comeré, viviré”]
+[your turn — say: tuve, hice, estuve — and feel it move back]
 [pause 8 seconds for the answer]
-[your turn — say: “Viviré en Madrid.”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Give the learned singular future forms of vivir: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 7 seconds]
-Say 'I will live in Madrid' in Spanish.
-[question — say your answer, then pause 9 seconds]
-Give the future yo forms of hablar, comer, and vivir, in that order.
+[repeat that twice]
+Until you can place a preterite by ear before you place it by rule.
+[question — say your answer, then pause 10 seconds]
+A preterite with no written accent. Where is the stress, and which kind is it?
+[question — say your answer, then pause 10 seconds]
+Why does comi carry an accent when tuve does not?
+[question — say your answer, then pause 8 seconds]
+In the regular preterite, do -er and -ir take the same endings?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three vivir forms. (Viviré, vivirás, vivirá.) Which verb families share the learned endings? (All three: -ar, -er, -ir.) Next: reuse the whole-infinitive frame for “would.”
+Where does the stress fall in a strong preterite? (On the stem.) What does a missing accent tell you? (That it is one of the strong ones.) And why do the strong ones exist at all? (They are Latin's own perfect, kept intact on verbs used too much to be rebuilt.)
