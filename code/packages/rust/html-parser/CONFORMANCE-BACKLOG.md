@@ -277,9 +277,12 @@ Prioritized work items:
    existing adoption recovery, covering WPT `tests26.dat`'s ordinary,
    reconstructed, and foster-parented rows while keeping first starts, open
    marker boundaries, foreign breakout routing, and synthetic fragment
-   contexts on their required paths. Continue the
+   contexts on their required paths. Noah's Ark reconstruction now treats
+   attribute order as insignificant when limiting equivalent formatting
+   entries to the three most recent entries, while preserving entries with
+   distinct attribute values and marker-isolated formatting. Continue the
    fresh algorithm audit across the remaining active-formatting-list branches,
-   especially the inner-loop node replacement limit and Noah's Ark clause.
+   especially the inner-loop node replacement limit.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.

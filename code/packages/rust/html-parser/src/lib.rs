@@ -9671,7 +9671,7 @@ fn trim_formatting_reconstruction_noah_ark(
     for entry in formatting.into_iter().rev() {
         let identical_count = retained
             .iter()
-            .filter(|(name, attributes)| name == &entry.0 && attributes == &entry.1)
+            .filter(|candidate| formatting_entries_are_equivalent(candidate, &entry))
             .count();
         if identical_count < 3 {
             retained.push(entry);
@@ -9679,6 +9679,15 @@ fn trim_formatting_reconstruction_noah_ark(
     }
     retained.reverse();
     retained
+}
+
+fn formatting_entries_are_equivalent(
+    left: &(String, Vec<Attribute>),
+    right: &(String, Vec<Attribute>),
+) -> bool {
+    left.0 == right.0
+        && left.1.len() == right.1.len()
+        && left.1.iter().all(|attribute| right.1.contains(attribute))
 }
 
 fn repair_table_cell_fostered_nobr_adoption(document: &mut Document) {
@@ -31784,6 +31793,36 @@ mod tests {
             element(&paragraph.children[1]).children,
             vec![Node::text(" Italic")]
         );
+    }
+
+    #[test]
+    fn noah_ark_reconstruction_compares_attributes_without_source_order() {
+        let document = parse_html(
+            "<p><font size=4 color=red><font color=red size=4><font size=4 color=red><font color=red size=4><p>X",
+        )
+        .unwrap();
+
+        let second_paragraph = element(&body(&document).children[1]);
+        let mut current = second_paragraph;
+        for _ in 0..3 {
+            current = element(&current.children[0]);
+            assert_eq!(current.name, "font");
+            assert_eq!(current.attribute("size"), Some("4"));
+            assert_eq!(current.attribute("color"), Some("red"));
+        }
+        assert_eq!(current.children, vec![Node::text("X")]);
+
+        let distinct = parse_html(
+            "<p><font size=4 color=blue><font color=red size=4><font size=4 color=red><font color=red size=4><p>X",
+        )
+        .unwrap();
+        let second_paragraph = element(&body(&distinct).children[1]);
+        let mut current = second_paragraph;
+        for _ in 0..4 {
+            current = element(&current.children[0]);
+            assert_eq!(current.name, "font");
+        }
+        assert_eq!(current.children, vec![Node::text("X")]);
     }
 
     #[test]
