@@ -1,175 +1,185 @@
-Spanish, chapter 47: Telling What Happened.
+Spanish, chapter 47: Four Verbs of the Mind.
 4 lessons. All 4 can be done entirely by ear.
 
 
 Lesson 1 of 4.
-luego — a word you already have, doing a job you have not seen it do.
+pensar — "to think", and it started out meaning "to weigh".
 
 Warm-up.
 [pause 2 seconds]
-Nothing new to learn here — you have said luego every time you said hasta luego. What is new is that it can stand alone, between two events, and put them in order.
+You can already run an -ar verb: hablo, hablas, habla. Here is one that takes those same endings and then cracks its stem in the middle, the way querer did.
 
 Sounds you'll need.
-diphthong-ue — ue is one glide, not two syllables.
-g-soft-gw — between vowels the g softens; luego is LWEH-gho, not the hard stop English puts in go.
+diphthong-ie — under stress the e breaks open: pienso = PYEN-so.
+The s is always a clear hissing s, never an English z buzz.
 
-The word, taken apart: luego.
-You already know where it comes from: Latin locō, the ablative of locus, "place" — "in that place", a word about where that slid into a word about when. That is why hasta luego is "until later".
-What you have not been shown is how much else locus is holding up. It gives local, locate, location, locus, allocate, dislocate. And through French lieu, "place", it gives lieutenant — literally the officer holding the place of another.
-A leftover worth knowing. Desde luego means "of course". It was built on an older sense of luego, "immediately", so its literal force was nearer "from this moment on". The bare word has since drifted to "later"; the phrase kept the old sense.
+The word, taken apart: pensar.
+pensar ("to think") from Latin pēnsāre, "to weigh" — the repeating form of pendere, "to hang, to weigh out". A Roman hung goods on a balance; the same verb slid across to weighing an idea.
+English kept the whole family, and most of it still smells of money and scales:
+pensive — turning something over on the balance.
+compensate — com- "together" + weigh: settle one weight against another.
+expense, dispense, pension — payments were literally weighed out.
+peso — a coin whose name simply means "a weight".
+pansy — from French pensée, "a thought".
+English reaches for the same picture without noticing it: you weigh your options, and an argument carries weight.
 
-Grammar Lens: luego between two events.
-Out of the farewell, luego is not glued to a verb. It marks the join between two events and sits at the front of the second:
-[a table of 3 rows, read aloud]
-Me siento. Luego leo., I sit down. Then I read.
-Bebo café y luego escribo., I drink coffee and then I write.
-Me levanto y luego corro., I get up and then I run.
-Two events, in order, with one word doing the ordering — and it is a word you have been saying since chapter five.
+Grammar Lens: the same endings, a broken stem.
+The endings are the ordinary -ar set. Only the stressed e changes:
+[a table of 5 rows, read aloud]
+person: yo. form: pienso. stem: broken.
+person: tú. form: piensas. stem: broken.
+person: él/ella/usted. form: piensa. stem: broken.
+person: nosotros. form: pensamos. stem: plain.
+person: ellos/ustedes. form: piensan. stem: broken.
+Pensamos keeps the plain e because there the stress lands on the ending, not the stem — exactly the rule querer taught you.
+Two small habits come with the verb: pensar en something means "think about" it (pienso en ti), and pensar followed by a bare infinitive means "plan to" (pienso hablar — I mean to speak).
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "hasta luego" then just "luego" — same word, standing alone]
+[your turn — say: "pensar" then the set — "pienso, piensas, piensa, pensamos, piensan"]
 [pause 8 seconds for the answer]
-[your turn — say: "Me siento. Luego leo."]
+[your turn — say: "Pienso en ti" — I am thinking of you]
 [pause 8 seconds for the answer]
-[your turn — say: "Me levanto y luego corro."]
-[pause 8 seconds for the answer]
-[your turn — say: "luego" then English "local, locate, lieutenant"]
+[your turn — say: "pensar" then English "pensive, compensate, peso" — the weighing family]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What job does luego do here that it does not do in hasta luego? (It joins two events in order, instead of sitting inside a fixed farewell.) Which English officer's title hides the same locus? (Lieutenant — the one holding another's place.) Which older sense of luego is frozen inside desde luego? (Immediately — not "later".)
+What did pēnsāre mean literally, and name two English cousins. (To weigh; pensive, compensate, expense, peso.) Which form keeps the plain e, and why? (Pensamos — the stress falls on the ending.) Which little word follows pensar for "think about"? (En.) Next: entender, which cracks the same way.
 
 
 Lesson 2 of 4.
-porque — "because", and the reason a sequence turns into a story.
+entender — "to understand", built out of stretching.
 
 Warm-up.
 [pause 2 seconds]
-With luego you can put two events in order. But order is not yet a story. I sat down, then I read tells nobody why. One more word closes that gap, and it is two words wearing a single coat.
+Pensar broke its stem under stress. So does this one — and it hands you the single most useful sentence a beginner owns: no entiendo, "I don't understand."
 
 Sounds you'll need.
-k-hard — qu before e is a plain k; the u is silent. porque = POR-keh.
-r-tap — a single flick of the tongue, not the rolled rr.
+diphthong-ie — entiendo = en-TYEN-do.
+d-soft — the d between vowels is soft, close to the th of English this.
 
-The word, taken apart: porque.
-porque = por + que, fused.
-por descends from Latin prō, "for, in front of, on behalf of" — the same prō standing at the front of provide, proceed, protect, propose, and surviving whole in the English phrase quid pro quo.
-que descends from Latin quid, "what" — and then quietly took over every job Latin had given quod, without taking its form.
-And this is the good part. That Latin qu- is one branch of the Proto-Indo-European interrogative root kʷo-. The other branch went into Germanic, where kʷ- softened to hw- — Grimm's Law turning a stop into a breath — and came out as English who, what, when, where, why.
-So Spanish que and English what are not borrowed from one another. They are siblings — the same ancient question-word, walked down two different roads. Quid pro quo puts both Latin halves of porque side by side in an English sentence.
+The word, taken apart: entender.
+entender ("to understand") from Latin intendere: in- ("toward") + tendere ("to stretch"). Understanding something was stretching your attention toward it — leaning in.
+tendere stretches right across English:
+intend, intent, intense, intention — the very same in- + stretch.
+attend, attention — ad- "toward", stretch that way.
+extend, contend, pretend, tension, tendon, and tent, which is stretched cloth.
+So entiendo and I intend are the same two Latin pieces landing in different places: Spanish went to "I grasp it", English to "I mean to".
+Careful with a false friend. Spanish pretender is not English pretend. It means "to aim at, to be after" — pretende ser médico, "he means to become a doctor". Same pieces, different landing.
 
-Grammar Lens: porque, por qué, el porqué.
-Three spellings, three jobs, and they are genuinely distinct in writing:
-[a table of 3 rows, read aloud]
-written: porque. stress: one word, no accent. job: because — gives the reason.
-written: por qué. stress: two words, accent on qué. job: why — asks for the reason.
-written: el porqué. stress: one word, accent, with el. job: the reason — a noun.
-¿Por qué te levantas? — Why do you get up? Me levanto porque corro. — I get up because I run. No entiendo el porqué. — I don't understand the reason.
-The accent is not decoration. It marks qué as the questioning one, exactly as it does on other question words.
+Grammar Lens: an -er verb that cracks, and a calmer twin.
+Ordinary -er endings, stressed e broken to ie:
+[a table of 4 rows, read aloud]
+person: yo. form: entiendo. stem: broken.
+person: tú. form: entiendes. stem: broken.
+person: nosotros. form: entendemos. stem: plain.
+person: ellos/ustedes. form: entienden. stem: broken.
+Spanish has a second verb for this job: comprender from Latin comprehendere, "to seize together" ( becomes English comprehend, apprehend, comprehensive). It is a plain -er verb with no crack at all: comprendo, comprendes, comprende. Both mean "understand". Entender is the everyday one; comprender leans a little more formal, and more toward grasping a whole thing than catching a word.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "porque" — POR-keh, silent u]
+[your turn — say: "No entiendo" — I don't understand]
 [pause 8 seconds for the answer]
-[your turn — say: "Me siento porque leo." — I sit down because I read.]
+[your turn — say: "entiendo, entiendes, entendemos, entienden"]
 [pause 8 seconds for the answer]
-[your turn — say: "Me levanto y luego corro, porque hace sol."]
+[your turn — say: "pienso" then "entiendo" — the same crack, twice]
 [pause 8 seconds for the answer]
-[your turn — say: the three shapes — "porque, por qué, el porqué"]
+[your turn — say: "entender" then English "intend, intense, attention" — the stretching family]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What two Latin words are fused inside porque? (prō and quid.) Are Spanish que and English what parent and child, or siblings? (Siblings — Latin qu- and Germanic wh- from one root, kʷo-.) Which of the three spellings asks a question? (Por qué — two words, accent on qué.)
+What does tendere mean, and what does in- add? (To stretch; "toward".) Give the yo and nosotros forms. (Entiendo, entendemos.) Of entender and comprender, which one breaks its stem? (Entender.) And what does Spanish pretender mean? (To aim at, not to pretend.) Next: leer.
 
 
 Lesson 3 of 4.
-llovía / llovió — the same rain, told two ways.
+leer — "to read", and before that, "to gather".
 
 Warm-up.
 [pause 2 seconds]
-You already have both past tenses. The imperfect — hablaba, comía — came in chapter sixteen, with its three irregulars. Nothing here is a new form. What is new is which one to reach for, and that turns out to be the whole trick of telling a story.
+Two cracked verbs down. Here is a calm one — nothing breaks in the middle. The only difficulty is in your mouth: two e's in a row that must stay two.
 
 Sounds you'll need.
-double-l-y — ll is a y glide: llovía = yo-VEE-a.
-accent-i — the accent splits the vowels: llo-VÍ-a, three beats.
+hiatus-ee — leer is two syllables, le-ER, never one long English ee.
+leo is likewise two beats, LE-o.
 
-The word, taken apart: why "imperfect".
-The name is the lesson, and it is worth having.
-Imperfecto is Latin imperfectus: in- ("not") plus perfectus, "carried all the way through" — itself per- ("through") plus facere ("to do, to make"). That facere is everywhere in English: fact, factory, effect, manufacture, and perfect itself, which still means finished through.
-So the imperfect is the not-carried-through tense. Not unfinished in quality — unfinished in time. It shows an action still running, with no edge on it. That is not a label bolted on afterwards; it is a description of the job.
+The word, taken apart: leer.
+leer ("to read") from Latin legere, "to gather, to pick out, to choose" — and only afterwards "to read". A reader picks letters out of a row the way a farmhand picks olives off a branch.
+That gathering root runs through an enormous amount of English:
+legible, legend ("things to be read"), lecture, lectern, and worn right down, lesson.
+built with prefixes: collect (col- "together"), select (se- "apart"), elect (e- "out"), intellect (inter- "between" — choosing between things).
+diligent and elegant, both of which meant "picking carefully".
+One honest limit: Greek légein ("to speak, to gather") — which gives English logic, dialogue, catalogue — is a cousin of legere from the same ancient root, not its parent. Same family, separate journeys.
 
-Grammar Lens: the scene and the events.
-Take one fact — it rained — and watch the tense decide what kind of fact it is:
-[a table of 2 rows, read aloud]
-Llovía., It was raining. (no edge — the weather that day).
-Llovió., It rained. (edged — a thing that happened).
-Neither is more correct. They answer different questions. A told story needs both, in a division of labour that never varies:
-The imperfect paints the scene — what was going on, what things were like. The preterite drops the events into it — what then happened.
-Llovía. Luego me levanté. — It was raining (scene). Then I got up (event).
-English has no separate form for this, which is the only reason it feels hard. English leans on was ‑ing and used to and lets context carry the rest. Spanish decided it once, in the ending.
+Grammar Lens: a plain -er verb, with a mouthful.
+Nothing irregular happens. Drop -er, add the ordinary endings:
+[a table of 5 rows, read aloud]
+person: yo. form: leo. said: LE-o.
+person: tú. form: lees. said: LE-es.
+person: él/ella/usted. form: lee. said: LE-e.
+person: nosotros. form: leemos. said: le-E-mos.
+person: ellos/ustedes. form: leen. said: LE-en.
+Every one of those is a syllable longer than an English speaker expects. Give each e its own beat and the word comes out right.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the pair — "llovía" then "llovió"]
+[your turn — say: "leer" — le-ER, two beats]
 [pause 8 seconds for the answer]
-[your turn — say: scene, then event — "Llovía. Luego me levanté."]
+[your turn — say: "Leo un libro" — I read a book]
 [pause 8 seconds for the answer]
-[your turn — say: "No corrí, porque llovía." — the reason is a scene, the running an event]
+[your turn — say: "No entiendo" then "Leo, pero no entiendo" — I read, but I don't understand]
 [pause 8 seconds for the answer]
-[your turn — say: "Comía pan porque llovía."]
+[your turn — say: "leer" then English "legible, collect, select, elect"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does imperfectus literally say, and which English word shares its second half? (Not carried through; perfect — and fact, factory.) In a story, which tense paints the background and which drops in the events? (Imperfect paints; preterite drops in.) Which of llovía and llovió has an edge on it? (Llovió — a thing that happened.)
+What did legere mean before it meant "to read"? (To gather, to pick out.) Give two English words built on it with a prefix. (Collect, select, elect, intellect.) How many syllables in leo? (Two — LE-o.) Next: escribir, the other half of literacy.
 
 
 Lesson 4 of 4.
-contar — to tell a story, which is also to count it up.
+escribir — "to write", which once meant "to scratch".
 
 Warm-up.
 [pause 2 seconds]
-Three pieces are in your hands: luego to order events, porque to explain them, the imperfect to hold the background still. This lesson adds no fourth piece — it puts the three together, under the verb that names the act.
+Leer gathers letters off a page. This is the other half of the same skill — and its root remembers a time when writing was done with a sharp point in wax.
 
 Sounds you'll need.
-diphthong-ue — the stem breaks under stress: cuento = KWEN-to, but contamos stays plain.
-k-hard — c before o is a hard k.
+st-no-e — Spanish will not begin a word with sc-, sp-, st-, so it props one up with an e-: es-cri-BIR.
+b-soft — between vowels the b is soft, lips barely touching.
 
-The word, taken apart: contar.
-contar means to count — and to tell a story. One verb, both jobs, and not a pun.
-It descends from Latin computāre, "to reckon up": com- ("together") plus putāre, which meant "to prune", then "to settle an account", then simply "to reckon". Putāre gives amputate, dispute, deputy; computāre gives count, compute, account.
-English carries the same double sense — to recount an event, to give an account of yourself — but those are the very same word, borrowed through Old French from computāre. Spanish's relatives, not an independent echo.
-The independent echo is tell: Germanic, unrelated, and it also once meant "to count" — hence a bank teller, and all told. Two unrelated languages, one thought: a story is a reckoning-up of events in order.
+The word, taken apart: escribir.
+escribir ("to write") from Latin scrībere, whose first sense was "to scratch, to incise". Writing was cutting a line into wax or stone before it was ever ink on paper.
+The English family is huge, and every member still works with a pen:
+scribe, scribble, script, scripture.
+describe (de- "down") and description; prescribe (prae- "before") and prescription; subscribe (sub- "under" — you signed at the bottom); inscription; transcript; postscript.
+manuscript — manus "hand" + scriptum: written by hand.
+conscription — being written into an army.
+The Spanish past participle is escrito ("written"), which is English script wearing different clothes.
 
-Grammar Lens: the backbone of a told story.
-Contar breaks o to ue under stress:
+Grammar Lens: an -ir verb, and a productive spelling rule.
+Escribir is a plain -ir verb, the family vivir opened:
 [a table of 5 rows, read aloud]
-person: yo. form: cuento.
-person: tú. form: cuentas.
-person: él/ella/usted. form: cuenta.
-person: nosotros. form: contamos.
-person: ellos/ustedes. form: cuentan.
-Here is the shape of a told story:
-Llovía. Me levanté, luego bebí café. No corrí, porque llovía mucho. Me senté y leí. It was raining. I got up, then I drank coffee. I didn't run, because it was raining hard. I sat down and read.
-Watch the two pasts divide the work. Llovía — imperfect, holding the scene still. Me levanté, bebí, me senté, leí — preterite, dropping events in. Luego orders them; porque explains one.
-That is a narration, and every word in it is one this book has taught you.
+person: yo. form: escribo. ending: -o.
+person: tú. form: escribes. ending: -es.
+person: él/ella/usted. form: escribe. ending: -e.
+person: nosotros. form: escribimos. ending: -imos.
+person: ellos/ustedes. form: escriben. ending: -en.
+That propped-up e- is a rule you can run yourself, not a quirk of one word: Latin schola became escuela, spatha became espada (sword), stāre became estar, Hispānia became España. It is also why a Spanish speaker learning English says eh-Spain.
+Now you can state a plan out loud: Pienso escribir — "I mean to write."
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "cuento, cuentas, cuenta, contamos, cuentan"]
+[your turn — say: "escribo, escribes, escribe, escribimos, escriben"]
 [pause 8 seconds for the answer]
-[your turn — say: "Cuento hasta cinco." — I count to five. Same verb.]
+[your turn — say: "Leo y escribo español" — I read and write Spanish]
 [pause 8 seconds for the answer]
-[your turn — say: the scene, then the event — "Llovía. Luego me levanté."]
+[your turn — say: "Pienso escribir" — I mean to write]
 [pause 8 seconds for the answer]
-[your turn — say: the whole thing — "Llovía. Me levanté, luego bebí café. No corrí, porque llovía mucho."]
-[pause 8 seconds for the answer]
-[your turn — say: "contar" then English "count, account, recount, teller"]
+[your turn — say: "escribir" then English "scribe, describe, manuscript" — the scratching family]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Contar does two jobs — which two, and what Latin verb explains both? (Count and tell; computāre, "to reckon up".) Which English word carries the same double sense? (Recount — or an account; and tell itself, as in a bank teller.) In your story, which tense held the rain and which one poured the coffee? (Imperfect llovía; preterite bebí.) Name the two joining words you used. (Luego for order, porque for reason.)
+What did scrībere mean first? (To scratch, to incise.) Why does Spanish say escuela and España? (It refuses to open a word with sc- or sp-, so it props an e- in front.) Say "I read and write Spanish". (Leo y escribo español.) And what does legere mean, from the lesson before? (To gather, to pick out.) Next chapter: taking, asking, helping — and a verb that runs backwards.

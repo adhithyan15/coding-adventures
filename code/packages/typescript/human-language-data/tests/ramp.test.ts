@@ -138,7 +138,7 @@ describe("corpus snapshot", () => {
     // newly measurable teaching lessons carry the corpus across one point, and the
     // five-step Chapter-15 migration carries it across the next. Chapter 18's eight
     // measurable teaching lessons carry the current corpus across another point.
-    expect(report.summary.measurablePercent).toBe(68);
+    expect(report.summary.measurablePercent).toBe(69); // +1: HL-C98
   });
 
   it("names the steepest lesson, which is where a burn-down starts", () => {

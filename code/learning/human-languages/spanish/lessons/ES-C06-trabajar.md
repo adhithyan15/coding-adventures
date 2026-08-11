@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C06-trabajar
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 530
-chapter: 16
+chapter: 20
 type: word
 headword: trabajar
 gloss: to work (a second -ar verb — same pattern)

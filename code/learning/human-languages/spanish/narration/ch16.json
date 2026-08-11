@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 16,
-  "title": "More -ar Verbs",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:07cebefad8c2369a",
+  "title": "Talking to a Friend",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:62f4a45e30c7fc00",
   "lessons": [
     {
-      "id": "ES-C06-trabajar",
-      "sequence": 530,
-      "title": "trabajar — \"to work,\" and it once meant torture",
-      "headword": "trabajar",
-      "romanization": "trabajar",
-      "gloss": "to work (a second -ar verb — same pattern)",
+      "id": "ES-C06-hablas",
+      "sequence": 519,
+      "title": "hablas — \"you speak,\" to someone you know",
+      "headword": "hablas",
+      "romanization": "hablas",
+      "gloss": "\"you speak\" — the same verb, aimed at a friend",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:04cdf15a3b3f70c8",
+      "sourceHash": "fnv1a64:553eed028c986a3b",
       "notice": null,
       "blocks": [
         {
@@ -35,682 +35,64 @@
             },
             {
               "kind": "speech",
-              "text": "A second -ar verb — snap it into the exact template you just learned. And trabajar has the darkest, best etymology in this chapter: it began as a word for torture, and it's the secret origin of English travel."
+              "text": "Say \"I speak.\" (Hablo.) How many words? (One.)"
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "j-jota — the j is a raspy h-from-the-throat (the jota): trabajar = tra-ba-HAR."
-            },
-            {
-              "kind": "speech",
-              "text": "r-tap, b-soft — tapped r, soft b."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "trabajar comes from Vulgar Latin tripaliāre, \"to torture\" — from tripalium, a Roman instrument of torture made of three stakes (tri- \"three\" + pālus \"stake,\" the root of English pale and impale)."
-            },
-            {
-              "kind": "speech",
-              "text": "The chain of meaning is grimly logical: torture becomes torment / suffering becomes hard toil becomes just work. And English took the very same word down a parallel road:"
-            },
-            {
-              "kind": "speech",
-              "text": "travail — painful, laborious effort (and the pains of childbirth)."
-            },
-            {
-              "kind": "speech",
-              "text": "travel — yes: journeying was once such an ordeal that \"travail\" (toil) became travel (to make a journey). Every time you travel, you're etymologically being tortured."
-            },
-            {
-              "kind": "speech",
-              "text": "So even plain trabajo, “I work,” hides the old idea of toil as torment — a dark little joke inside an everyday verb."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: same -ar template",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Drop -ar, add the ending — identical to hablar:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form",
-                "meaning"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "person: I (ending carries the subject). form: trabajo. meaning: I work.",
-                "person: tú. form: trabajas. meaning: you work.",
-                "person: usted. form: trabaja. meaning: you (formal) work."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Notice you didn't learn a new ending — that's the point. One template, every regular -ar verb."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"trabajar\" — tra-ba-HAR, raspy j",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"trabajar\" — *tra-ba-HAR*, raspy *j*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"trabajo, trabajas, trabaja\" — same endings as hablo/hablas/habla",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"trabajo, trabajas, trabaja\" — same endings as *hablo/hablas/habla*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"trabajar\" becomes travail becomes travel — torture became a journey",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"trabajar\" → travail → travel — torture became a journey]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What did trabajar originally mean, and from what device? (\"To torture,\" from tripalium, a three-stake tool.) What two English words come from the same root? (Travail and travel.) How do you say \"I work\"? (Trabajo — same -o ending.) Next: estudiar, \"to study.\""
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C06-estudiar",
-      "sequence": 540,
-      "title": "estudiar — \"to study,\" and the eagerness inside it",
-      "headword": "estudiar",
-      "romanization": "estudiar",
-      "gloss": "to study (a third -ar verb — the pattern is automatic now)",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:433dc5ac19ee7101",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Your third -ar verb. By now the pattern should feel automatic — that's exactly what we want. estudiar also hides a nicer feeling than the classroom suggests: at root it means eagerness."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "st-no-e — Spanish props up st- with an e: es-tudiar (the same reflex behind estar, España, escuela). es-too-DYAR."
-            },
-            {
-              "kind": "speech",
-              "text": "diphthong-io — the -iar glides: es-too-DYAR."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "estudiar comes from Latin studēre, \"to be eager, to apply oneself zealously.\" A studium was zeal, enthusiasm, devotion — only later \"study.\" So to study is, at heart, to throw yourself eagerly at something."
-            },
-            {
-              "kind": "speech",
-              "text": "That studēre is everywhere in English:"
-            },
-            {
-              "kind": "speech",
-              "text": "student — literally \"one who is eager.\""
-            },
-            {
-              "kind": "speech",
-              "text": "studio, studious, study — the place, the trait, the act."
-            },
-            {
-              "kind": "speech",
-              "text": "Italian studio and the musical studio keep the \"devoted practice\" sense."
-            },
-            {
-              "kind": "speech",
-              "text": "So Estudio español is \"I devote myself eagerly to Spanish\" — a nicer picture than mere schoolwork."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the template holds",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Drop -ar, add the ending — for the third time:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form",
-                "meaning"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "person: I (ending carries the subject). form: estudio. meaning: I study.",
-                "person: tú. form: estudias. meaning: you study.",
-                "person: usted. form: estudia. meaning: you (formal) study."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Three verbs, one pattern: hablo, trabajo, estudio. The singular regular -ar present is now reusable rather than memorized verb by verb."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"estudiar\" — es-too-DYAR",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"estudiar\" — *es-too-DYAR*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"estudio, estudias, estudia\" — the now-familiar endings",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"estudio, estudias, estudia\" — the now-familiar endings]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"estudiar\" then English \"student, studio\" — the studēre \"eagerness\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"estudiar\" then English \"student, studio\" — the *studēre* \"eagerness\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What did studēre originally mean? (\"To be eager / apply oneself.\") Its English cousins? (Student, studio, studious.) Say \"I study\" — and notice it uses the same -o as hablo and trabajo. (Estudio.) Next: put a verb and a noun together into your first real sentence."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C06-espanol",
-      "sequence": 550,
-      "title": "español — the word for the language",
-      "headword": "español",
-      "romanization": "español",
-      "gloss": "\"Spanish\" — the language, the people, and the Roman name for the peninsula underneath it",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:e585653712a5d35e",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You have practised writing this word's ñ. Now find out what is inside it — because español is not a Spanish-made word at all."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart — español",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "español = \"Spanish\" — both the language and a Spaniard — from Hispania, the Roman name for the Iberian peninsula. The path Hispania becomes hispaniolus becomes español wore the word down, and there is the ñ again, exactly the -ni- squeeze you met in the writing lesson (Hispaniolus becomes españ-ol). Say it es-pa-NYOL."
-            },
-            {
-              "kind": "speech",
-              "text": "Two footnotes worth having:"
-            },
-            {
-              "kind": "speech",
-              "text": "English Spanish, Hispanic and Hispania are all the same root, so the English and Spanish names for the language are cousins, not translations of each other."
-            },
-            {
-              "kind": "speech",
-              "text": "Hispania itself may go back through Latin to a Phoenician name for the coast, often read as \"land of hyraxes\" (or rabbits) — the Phoenicians having met an unfamiliar animal and reached for the nearest word they had."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"español\" — es-pa-NYOL",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"español\" — *es-pa-NYOL*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the path — \"Hispania, hispaniolus, español\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the path — \"Hispania, hispaniolus, español\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"español\" then English \"Hispanic\" — same root",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"español\" then English \"Hispanic\" — same root]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Where does español come from? (Hispania, the Roman name for Iberia.) What letter does its ending bring back, and from what Latin sequence? (ñ, from -ni- in Hispaniolus.) Next: put it behind a verb and build your first sentence."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C06-hablo-espanol",
-      "sequence": 560,
-      "title": "Hablo español — your first real sentence",
-      "headword": "Hablo español",
-      "romanization": "Hablo español",
-      "gloss": "your first sentence built from parts — and the rule that languages take no article",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:32ff6fca5a68d46b",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "This is the moment this book has been building to. You take a verb you conjugated yourself and a noun you took apart yourself, and make a sentence nobody handed you pre-assembled."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "notice",
-          "title": "What you've built — the sentence assembled",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Snap two things you already own together:"
-            },
-            {
-              "kind": "speech",
-              "text": "Hablo (I speak, from hablar) + español (Spanish) = Hablo español."
-            },
-            {
-              "kind": "speech",
-              "text": "That is a complete, grammatical Spanish sentence, and notice what is not in it: no separate subject word. The -o of hablo already says \"I\" — the pro-drop you just learned, doing real work in a real sentence."
-            },
-            {
-              "kind": "speech",
-              "text": "Now swap the pieces and watch it generate:"
-            },
-            {
-              "kind": "speech",
-              "text": "Estudio español. — \"I study Spanish.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Trabajo. — \"I work.\""
-            },
-            {
-              "kind": "speech",
-              "text": "¿Hablas español? — \"Do you speak Spanish?\" (the ¿? pair opening and closing the question, as in the writing lesson)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: languages go bare",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "One more thing missing from hablo español: no \"the,\" no \"a.\" After a verb like hablar or estudiar, a language name takes no article — hablo español, never hablo el español."
-            },
-            {
-              "kind": "speech",
-              "text": "This matters because Spanish otherwise loves its articles far more than English does (me gusta el café, \"I like coffee\"). So this is a genuine exception you have to hold onto, and the rule of thumb is narrow: right after hablar, the language goes bare."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Hablo español\" — AH-bloh es-pa-NYOL",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Hablo español\" — *AH-bloh es-pa-NYOL*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "swap the verb — \"Estudio español\", \"Trabajo\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: swap the verb — \"Estudio español\", \"Trabajo\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "ask it — \"¿Hablas español?\" (raise the pitch; ¿ opens it)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: ask it — \"¿Hablas español?\" (raise the pitch; ¿ opens it)]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "You met no long ago as the answer. It has a second job, and now you have a sentence to try it on: put no directly in front of the verb and the whole thing flips."
-            },
-            {
-              "kind": "speech",
-              "text": "Hablo español becomes No hablo español."
-            },
-            {
-              "kind": "speech",
-              "text": "That is all there is to it. English needs a helper — do not — and Spanish needs nothing: one small word, in front, and the sentence means its opposite."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"I speak Spanish,\" then \"I study Spanish.\" (Hablo español; estudio español.) Why is there no separate subject word? (The -o ending carries \"I.\") Why no \"the\" before español? (Languages take no article after a verb like hablar.) You just built a sentence from parts — that is the whole game from here."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C06-practice",
-      "sequence": 570,
-      "title": "Practice — making sentences with -ar verbs",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "your first sentences — the -ar present tense in action",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:e46bba0c32e53a14",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "A milestone chapter: for the first time you're not reciting fixed phrases, you're building sentences from a pattern. Drill the three verbs through the endings until hablo / hablas / habla is automatic."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: conjugate on command",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Run each verb through the three singular jobs you know: the ending alone for I becomes tú becomes usted:"
-            },
-            {
-              "kind": "speech",
-              "text": "hablar: hablo, hablas, habla."
-            },
-            {
-              "kind": "speech",
-              "text": "trabajar: trabajo, trabajas, trabaja."
-            },
-            {
-              "kind": "speech",
-              "text": "estudiar: estudio, estudias, estudia."
-            },
-            {
-              "kind": "speech",
-              "text": "Same three endings (-o / -as / -a) every time — that's the whole regular -ar present, singular."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "input",
-          "title": "The exchange — say something real",
+          "title": "You'll want to know first",
           "segments": [
             {
               "kind": "speech",
-              "text": "— ¿Hablas español? — Hablo español. — ¿Estudias español? — Estudio español. — Café, por favor. — ¡Gracias! — De nada."
+              "text": "tú — the \"you\" for a friend, a peer, someone at ease with you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one more letter, and it is about the other person",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Last chapter the ending was -o, and it meant I."
+            },
+            {
+              "kind": "speech",
+              "text": "Swap it for -as and the sentence turns around to face the person you are talking to:"
+            },
+            {
+              "kind": "speech",
+              "text": "hablar becomes hablas — you speak."
+            },
+            {
+              "kind": "speech",
+              "text": "Same verb. Same operation — drop the -ar, add an ending. Only the ending changed, and with it, who the sentence is about."
+            },
+            {
+              "kind": "speech",
+              "text": "This is tú's form: a friend, a peer. And as before, you need no separate word for you. Hablas on its own is the whole sentence."
             }
           ]
         },
         {
           "index": 3,
-          "type": "notice",
-          "title": "What you've built this chapter",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "por favor — please ( from \"for a favour\"), completing gracias / de nada / por favor."
+              "text": "Latin marked you with -ās, and Spanish kept it whole: hablās becomes hablas."
             },
             {
               "kind": "speech",
-              "text": "the singular regular -ar pattern — drop -ar, add -o / -as / -a: the template behind hablar, trabajar, and estudiar."
+              "text": "Here is the piece worth holding on to. English has almost no verb endings left — but it does have one. He speaks. That lonely -s, the last ending standing in English, comes from the very same Latin-and-Germanic habit of putting an s sound on a verb to mark the person."
             },
             {
               "kind": "speech",
-              "text": "hablar ( from fābula, fable; the f becomes h law), trabajar ( from tripalium, torture becomes travail/travel), estudiar ( from studēre, eagerness becomes student)."
-            },
-            {
-              "kind": "speech",
-              "text": "Hablo español — your first self-assembled sentence (pro-drop, no article)."
+              "text": "English kept one s and lost the rest. Spanish kept the whole set. When you learn hablas, you are learning the system English is down to its last piece of."
             }
           ]
         },
@@ -728,38 +110,58 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "conjugate all three verbs for I / tú / usted, without stopping",
+              "instruction": "\"hablas\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: conjugate all three verbs for I / tú / usted, without stopping]"
+              "source": "[YOU SAY: \"hablas\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "answer “¿Hablas español?” and “¿Estudias español?” about yourself",
+              "instruction": "\"hablo\" then \"hablas,\" and feel the sentence turn from you to the other person",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: answer “¿Hablas español?” and “¿Estudias español?” about yourself]"
+              "source": "[YOU SAY: \"hablo\" then \"hablas,\" and feel the sentence turn from you to the other person]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "request “Café, por favor” and run the full gracias/de nada loop",
-              "spoken": true,
-              "scored": false,
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C06-hablas-form",
+              "prompt": "Turn hablar into you speak, to a friend.",
+              "assesses": [
+                "ES-GRAMMAR-AR-PRESENT-2SG"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: request “Café, por favor” and run the full gracias/de nada loop]"
+              "acceptedResponses": [
+                "hablas",
+                "tu hablas"
+              ],
+              "feedback": {
+                "correct": "Right — drop -ar, add -as.",
+                "incorrect": "Drop the -ar and add -as: hablas."
+              }
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Ask and answer “¿Hablas español? — Hablo español.”"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C06-hablas-contrast",
+              "prompt": "Which one means I speak: hablo or hablas?",
+              "assesses": [
+                "ES-GRAMMAR-AR-PRESENT-1SG",
+                "ES-GRAMMAR-AR-PRESENT-2SG"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "hablo",
+                "the first",
+                "hablo means i speak"
+              ],
+              "feedback": {
+                "correct": "Yes — -o is I, -as is you.",
+                "incorrect": "Hablo is I speak. Hablas turns it toward the other person."
+              }
             }
           ]
         },
@@ -776,7 +178,7 @@
             },
             {
               "kind": "speech",
-              "text": "What are the three singular -ar endings? (-o / -as / -a.) Give the “I” form of all three verbs. (Hablo, trabajo, estudio.) Why does Hablo español need no separate subject word? (The -o carries “I.”) You can now generate sentences — this book stops handing you phrases and starts handing you rules. Next chapter adds the -er/-ir verb families."
+              "text": "What is \"you speak,\" to a friend? (Hablas.) Which ending means I, and which means you? (-o and -as.) Which English ending is the last survivor of this system? (The -s in he speaks.) Next chapter: the same verb again, for usted — and for he and she."
             }
           ]
         }

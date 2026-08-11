@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C11-poder
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 930
-chapter: 21
+chapter: 25
 type: word
 headword: poder
 gloss: to be able or can — with the singular present forms puedo, puedes, and puede

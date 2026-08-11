@@ -2,406 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 17,
-  "title": "Eating, Drinking, Living --- the -er and -ir Verbs",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6a93518059cb4bc1",
+  "title": "He, She, and the Polite You",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:65c55939de82c0ec",
   "lessons": [
     {
-      "id": "ES-C07-comer",
-      "sequence": 580,
-      "title": "comer — \"to eat,\" and the second verb family",
-      "headword": "comer",
-      "romanization": "comer",
-      "gloss": "to eat (your first -er verb)",
-      "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "wide-table"
-      ],
-      "sourceHash": "fnv1a64:8dc3f933ff8748a8",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "Grammar Lens: the -er present tense"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: the -er present tense until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Last chapter you learned the -ar verbs. Spanish has two more families — -er and -ir — and here's the good news: they're almost the same. Meet comer (\"to eat\"), your first -er verb."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "r-tap — one soft tap: ko-MER."
-            },
-            {
-              "kind": "speech",
-              "text": "The c before o is a hard k: comer = ko-MER."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "comer comes from Latin comedere, \"to eat up\" — com- (intensifier, \"completely\") + edere, \"to eat.\" That edere is the twin of English eat (both from the same ancient root), and it feeds a small English family:"
-            },
-            {
-              "kind": "speech",
-              "text": "edible — fit to be eaten."
-            },
-            {
-              "kind": "speech",
-              "text": "comestible — a fancy word for food (straight from comedere)."
-            },
-            {
-              "kind": "speech",
-              "text": "English eat itself — the Germanic cousin of Latin edere."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the -er present tense",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The pattern is the -ar one with the a's swapped for e's. Drop -er, add:"
-            },
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 3,
-              "headers": [
-                "person",
-                "-ar was",
-                "-er is",
-                "comer, which gives:"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: person, -ar was, -er is, comer, which gives:. Come back and look at it when you have stopped."
-            },
-            {
-              "kind": "speech",
-              "text": "So the yo form is identical (-o), and tú/él just trade a for e: hablas/habla becomes comes/come. Those are the only three forms this lesson asks you to hold."
-            },
-            {
-              "kind": "speech",
-              "text": "Watch the false friend: como means \"I eat\" and \"like/as\" (como tú, \"like you\") and, with an accent, cómo = \"how?\". Same four letters, three jobs — the accent and context sort them out."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"comer\" — ko-MER",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"comer\" — *ko-MER*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"como, comes, come\" — note the -o/-es/-e endings",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"como, comes, come\" — note the *-o/-es/-e* endings]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"comer\" then English \"edible, comestible, eat\" — the edere family",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"comer\" then English \"edible, comestible, eat\" — the *edere* family]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What Latin verb is comer from, and its English cousins? (comedere from edere — edible, eat.) What are the three singular -er endings? (-o / -es / -e.) How do they differ from -ar? (The tú and usted vowels change from a to e.) Next: your first -ir verb, vivir."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-comer-singular-forms",
-              "prompt": "Give the three singular forms of comer in order: I, tú, usted.",
-              "assesses": [
-                "ES-LEX-COMER",
-                "ES-GRAMMAR-ER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "como, comes, come",
-                "como comes come",
-                "como / comes / come"
-              ],
-              "feedback": {
-                "correct": "Right: comer gives como, comes, come.",
-                "incorrect": "Drop -er and add -o, -es, -e: como, comes, come."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C07-vivir",
-      "sequence": 590,
-      "title": "vivir — \"to live,\" and the third family (that's barely new)",
-      "headword": "vivir",
-      "romanization": "vivir",
-      "gloss": "to live (your first -ir verb)",
-      "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "wide-table"
-      ],
-      "sourceHash": "fnv1a64:dbe660f6b7bb87a4",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "Grammar Lens: the -ir present tense"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: the -ir present tense until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The third and last verb family: -ir, and vivir (\"to live\") is your first. Here's the punchline — in the present tense, -ir is almost identical to -er. You've nearly finished learning the whole regular present."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "v-b — Spanish v = a soft b: vivir ≈ bee-BEER."
-            },
-            {
-              "kind": "speech",
-              "text": "r-tap — one tap on the final r."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "vivir comes from Latin vīvere, \"to live\" — one of the most alive roots in English:"
-            },
-            {
-              "kind": "speech",
-              "text": "vivid — \"full of life.\""
-            },
-            {
-              "kind": "speech",
-              "text": "survive (super-vīvere, \"to live beyond\"), revive (\"live again\")."
-            },
-            {
-              "kind": "speech",
-              "text": "vivacious, convivial (\"living together\" — sociable), viva!, vivarium. (And vīta, \"life,\" gives vital, vitamin.)"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the -ir present tense",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Compare the three families, singular — this is the whole system:"
-            },
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 3,
-              "headers": [
-                "person",
-                "-ar (hablar)",
-                "-er (comer)",
-                "-ir (vivir)"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: person, -ar (hablar), -er (comer), -ir (vivir). Come back and look at it when you have stopped."
-            },
-            {
-              "kind": "speech",
-              "text": "Look: -er and -ir are identical in the singular (-o / -es / -e). They only part company in plural forms, which come later. For now, learning -ir costs you almost nothing."
-            },
-            {
-              "kind": "speech",
-              "text": "Three families, one idea. You can now build the three singular forms of a regular verb from any of the three families."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"vivir\" — bee-BEER",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"vivir\" — *bee-BEER*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"vivo, vives, vive\" — same endings as como, comes, come",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"vivo, vives, vive\" — same endings as *como, comes, come*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"vivir\" then English \"vivid, survive, revive\" — the vīvere family",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"vivir\" then English \"vivid, survive, revive\" — the *vīvere* family]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What Latin verb is vivir from, and two English cousins? (vīvere — vivid, survive.) In the singular, how do -er and -ir endings compare? (They're identical: -o / -es / -e.) Say \"I live.\" (Vivo.) Next: the drink verb, beber."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-vivir-singular-forms",
-              "prompt": "Give the three singular forms of vivir in order: I, tú, usted.",
-              "assesses": [
-                "ES-LEX-VIVIR",
-                "ES-GRAMMAR-IR-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "vivo, vives, vive",
-                "vivo vives vive",
-                "vivo / vives / vive"
-              ],
-              "feedback": {
-                "correct": "Right: vivir gives vivo, vives, vive.",
-                "incorrect": "For these singular forms, -ir uses -o, -es, -e: vivo, vives, vive."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C07-beber",
-      "sequence": 600,
-      "title": "beber — \"to drink,\" and the pattern is yours",
-      "headword": "beber",
-      "romanization": "beber",
-      "gloss": "to drink (another -er verb — cementing the pattern)",
+      "id": "ES-C06-habla",
+      "sequence": 521,
+      "title": "habla — \"he speaks,\" and the polite \"you speak\"",
+      "headword": "habla",
+      "romanization": "habla",
+      "gloss": "\"he speaks,\" \"she speaks\" — and the form usted takes, which is why it matters twice",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fce99552fe2a4b71",
+      "sourceHash": "fnv1a64:83d025a9d14b8727",
       "notice": null,
       "blocks": [
         {
@@ -417,75 +35,64 @@
             },
             {
               "kind": "speech",
-              "text": "One more -er verb to make the pattern automatic — beber, \"to drink.\" Pair it with comer and you can talk about eating and drinking, the heart of any café or restaurant."
+              "text": "Two forms so far. Which means I speak? (Hablo.) Which is you speak, to a friend? (Hablas.)"
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "grammar",
+          "title": "Grammar Lens: take the -s away again",
           "segments": [
             {
               "kind": "speech",
-              "text": "v-b — both b's are the soft Spanish b: be-BER."
+              "text": "Drop the -ar, add just -a:"
+            },
+            {
+              "kind": "speech",
+              "text": "hablar becomes habla — he speaks, she speaks."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the third form, and the third ending: -o, -as, -a."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: the same form does a second job",
           "segments": [
             {
               "kind": "speech",
-              "text": "beber comes from Latin bibere, \"to drink\" — a thirsty little root that soaked into English:"
+              "text": "Back when you met usted, you were told it takes the he/she form of the verb. Here is the first verb where you can actually see it happen."
             },
             {
               "kind": "speech",
-              "text": "beverage — a drink (via Old French bevrage, from bibere)."
+              "text": "usted habla — you speak, politely."
             },
             {
               "kind": "speech",
-              "text": "imbibe — to drink in (in- + bibere)."
+              "text": "The same word, habla, covers he speaks, she speaks, and the respectful you speak. Nothing extra to learn — it is one form doing three jobs, and that is a gift, not a complication."
             },
             {
               "kind": "speech",
-              "text": "bibulous — fond of drinking; bib — the cloth that catches drips; even beer's cousins hover nearby."
+              "text": "Why? Because usted was never a word for you to begin with. It grew out of vuestra merced, \"your grace\" — and your grace is a thing you talk about, not a person you talk to. You would say \"your grace speaks,\" not \"your grace speak.\" The verb form is a fossil of that politeness."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: no new grammar — that's the point",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "beber is a regular -er verb, so it takes the endings you already own:"
-            },
-            {
-              "kind": "table",
-              "headers": [],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "yo, bebo, I drink.",
-                "tú, bebes, you drink.",
-                "él/ella/usted, bebe, he/she drinks / you (formal) drink."
-              ]
+              "text": "Latin's ending here was -at: hablat, \"he speaks.\" Spanish let the final -t fall away, as it let most final consonants fall away, and the bare -a is what was left standing."
             },
             {
               "kind": "speech",
-              "text": "Nothing new to learn — you're just reusing the machine. With the word café from the previous chapter, you can already say:"
-            },
-            {
-              "kind": "speech",
-              "text": "Bebo café. — \"I drink coffee.\""
-            },
-            {
-              "kind": "speech",
-              "text": "One new verb, one known noun, one sentence you built yourself."
+              "text": "French did the same thing and went further — it writes parle but the ending is now silent. Italian kept more: parla. Three languages, one Latin ending, three degrees of wear."
             }
           ]
         },
@@ -503,613 +110,56 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"beber\" — be-BER",
+              "instruction": "\"habla\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"beber\" — *be-BER*]"
+              "source": "[YOU SAY: \"habla\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"bebo, bebes, bebe\" — the familiar -o/-es/-e",
+              "instruction": "it for a friend's brother, then for a stranger you are being polite to — same word both times",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"bebo, bebes, bebe\" — the familiar *-o/-es/-e*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Bebo café\" — \"I drink coffee\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Bebo café\" — \"I drink coffee\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What Latin verb is beber from, and its English cousins? (bibere — beverage, imbibe.) Did beber need any new endings? (No — it's a regular -er verb.) Say \"I drink.\" (Bebo.) Next: start asking — qué, \"what?\""
+              "source": "[YOU SAY: it for a friend's brother, then for a stranger you are being polite to — same word both times]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C07-beber-coffee",
-              "prompt": "Say 'I drink coffee' in Spanish.",
+              "id": "ES-C06-habla-form",
+              "prompt": "Turn hablar into he speaks.",
               "assesses": [
-                "ES-LEX-BEBER",
-                "ES-GRAMMAR-ER-PRESENT-SINGULAR",
-                "ES-LEX-CAFE"
+                "ES-GRAMMAR-AR-PRESENT-3SG"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "bebo café.",
-                "bebo café",
-                "bebo cafe",
-                "bebo cafe."
+                "habla",
+                "el habla"
               ],
               "feedback": {
-                "correct": "Right: Bebo café.",
-                "incorrect": "Use the yo form bebo with the known noun café: Bebo café."
+                "correct": "Right — drop -ar, add -a.",
+                "incorrect": "Drop the -ar and add -a: habla."
               }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C07-que",
-      "sequence": 610,
-      "title": "qué — \"what\", a new question word",
-      "headword": "qué",
-      "romanization": "qué",
-      "gloss": "what? (a new question word for verbs you already know)",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:382e1363572f6fee",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You already know the question word cómo; now ask about a thing. The new question word is qué, \"what\" — and it puts to work two things from your writing chapter: the accent and the ¿?."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "k-hard — qu is a plain hard k (the u is silent): qué = keh."
-            },
-            {
-              "kind": "speech",
-              "text": "accent-mark — the accent on é marks this as the question word (recall the diacrítica: qué = \"what?\"; que = \"that\"). Question words wear the accent."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "qué comes from Latin quid, \"what\" — the neuter of quis, \"who.\" It's a small function word with a few learned English descendants:"
-            },
-            {
-              "kind": "speech",
-              "text": "quiddity — the \"what-ness,\" the essence of a thing."
-            },
-            {
-              "kind": "speech",
-              "text": "quid pro quo — \"what for what,\" this for that."
-            },
-            {
-              "kind": "speech",
-              "text": "the qu- question family it heads in Spanish: qué, quién (who), cuál (which) — Latin's qu- interrogatives, the same wh- instinct as English (Latin qu- and English wh- are ancient cousins)."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: asking with a verb you know",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Put qué in front of a verb, wrap it in ¿?, and you have a real question:"
-            },
-            {
-              "kind": "speech",
-              "text": "¿Qué comes? — \"What are you eating? / What do you eat?\" ¿Qué bebes? — \"What are you drinking?\""
-            },
-            {
-              "kind": "speech",
-              "text": "Remember the opening ¿ (from the writing lesson) warns the reader a question is coming; the accent on qué marks it as the question word. Answer with the verb you already conjugate and a noun you already know: Bebo café. (\"I drink coffee.\")"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"qué\" — keh, silent u",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"qué\" — *keh*, silent *u*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"¿Qué comes?\" / \"¿Qué bebes?\" — ask with verbs you know",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿Qué comes?\" / \"¿Qué bebes?\" — ask with verbs you know]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"qué\" vs \"que\" — the accent marks the question",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"qué\" vs \"que\" — the accent marks the *question*]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What Latin word is qué from? (quid — quiddity, quid pro quo.) Why does qué carry an accent? (It's the question word; que without = \"that.\") Ask \"what are you eating?\" (¿Qué comes?) Next: asking where — dónde."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C07-que-ask-drinking",
-              "prompt": "Ask one friend 'What do you drink?' in Spanish.",
+              "id": "ES-C06-habla-usted",
+              "prompt": "Which form goes with usted: hablas or habla?",
               "assesses": [
-                "ES-LEX-QUE",
-                "ES-LEX-BEBER",
-                "ES-GRAMMAR-ER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-QUESTION-ACCENT",
-                "ES-ORTHOGRAPHY-PUNCTUATION-SPAN"
+                "ES-GRAMMAR-USTED-THIRD-PERSON",
+                "ES-GRAMMAR-AR-PRESENT-3SG"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "¿qué bebes?",
-                "qué bebes?",
-                "¿qué bebes",
-                "qué bebes"
+                "habla",
+                "usted habla"
               ],
               "feedback": {
-                "correct": "Right: ¿Qué bebes?",
-                "incorrect": "Use accented qué, the tú form bebes, and the question marks: ¿Qué bebes?"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C07-donde",
-      "sequence": 620,
-      "title": "dónde — \"where?\"",
-      "headword": "dónde",
-      "romanization": "dónde",
-      "gloss": "where?",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:83c2aaa2a9764f02",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "One more question word, and one more real question you can build: dónde, \"where?\" Pair it with vivir and you can ask the single most common getting-to-know-you question: where do you live?"
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "d-soft — the middle d is soft, near the th of this: DON-deh."
-            },
-            {
-              "kind": "speech",
-              "text": "accent-mark — like qué, the accent on ó marks the question word (dónde = \"where?\"; donde without = \"where,\" a relative — \"the place where\")."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "dónde comes from Latin de unde, literally \"from whence.\" unde meant \"from where,\" and Spanish glued de onto the front and wore the pair down to dónde. (English once had the matching set whence / where / whither — \"from where / at where / to where\"; Spanish keeps that flavour in de dónde \"from where\", dónde \"where\", adónde \"to where\".)"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: your first getting-to-know-you questions",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Two question words + verbs you own = real conversation:"
-            },
-            {
-              "kind": "speech",
-              "text": "¿Dónde vives? — \"Where do you live?\" becomes Vivo en Madrid. ¿Dónde trabajas? — \"Where do you work?\" ¿Qué estudias? — \"What do you study?\""
-            },
-            {
-              "kind": "speech",
-              "text": "Notice the little en (\"in,\" from Latin in) in the answer — the first preposition, slipping in exactly where you need it. You're now trading real questions and answers, not fixed phrases."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"dónde\" — DON-deh, soft d",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"dónde\" — *DON-deh*, soft *d*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"¿Dónde vives?\" — \"Where do you live?\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿Dónde vives?\" — \"Where do you live?\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "answer — \"Vivo en …\" with your city",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: answer — \"Vivo en …\" with your city]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What Latin phrase is dónde from, and what did it mean? (De unde — \"from whence.\") Why the accent? (It marks the question word.) Ask \"where do you live?\" and answer it. (¿Dónde vives? — Vivo en …) Next: put the questions and verbs together in practice."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-donde-live-in-madrid",
-              "prompt": "Say 'I live in Madrid' in Spanish.",
-              "assesses": [
-                "ES-LEX-EN",
-                "ES-LEX-VIVIR",
-                "ES-GRAMMAR-IR-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "vivo en madrid.",
-                "vivo en madrid",
-                "yo vivo en madrid.",
-                "yo vivo en madrid"
-              ],
-              "feedback": {
-                "correct": "Right: Vivo en Madrid.",
-                "incorrect": "Use vivo for 'I live' and en for 'in': Vivo en Madrid."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C07-practice",
-      "sequence": 630,
-      "title": "Practice — asking real questions",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "asking and answering with the three regular singular verb patterns",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:184e3f65e70f1309",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You now have all three verb families and two question words. This is where it becomes a conversation: you can ask and answer, not just recite. Drill until the questions come without thinking."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: three singular patterns",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Conjugate yo becomes tú becomes él/ella — feel how little differs:"
-            },
-            {
-              "kind": "speech",
-              "text": "-ar hablar: hablo, hablas, habla."
-            },
-            {
-              "kind": "speech",
-              "text": "-er comer: como, comes, come."
-            },
-            {
-              "kind": "speech",
-              "text": "-ir vivir: vivo, vives, vive."
-            },
-            {
-              "kind": "speech",
-              "text": "Endings: -ar becomes -o/-as/-a; -er and -ir becomes -o/-es/-e in these three singular forms. The plural forms can wait."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "input",
-          "title": "The exchange — use only what you know",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "— ¿Dónde vives? — Vivo en Sevilla. ¿Y tú? — Vivo en México. — ¿Qué estudias? — Estudio español. ¿Qué bebes? — Bebo café."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "notice",
-          "title": "What you've built this chapter",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "comer / beber (-er), vivir (-ir) — the two remaining verb families; singular endings -o / -es / -e."
-            },
-            {
-              "kind": "speech",
-              "text": "qué ( from quid) and dónde ( from de unde) — your first question words, each wearing the accent and opening with ¿."
-            },
-            {
-              "kind": "speech",
-              "text": "Real questions: ¿Qué comes? ¿Dónde vives? ¿Dónde trabajas? — and the first preposition, en (\"in\"), in the answers."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "conjugate all three families, yo/tú/él, back to back",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: conjugate all three families, yo/tú/él, back to back]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "ask a friend where they live and what they drink; answer both",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: ask a friend where they live and what they drink; answer both]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "ask what they study; answer \"Estudio español\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: ask what they study; answer \"Estudio español\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"¿Dónde vives? — Vivo en … ¿Y tú?\""
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-practice-yo-forms",
-              "prompt": "Give the yo forms of comer, vivir, and beber, in that order.",
-              "assesses": [
-                "ES-LEX-COMER",
-                "ES-GRAMMAR-ER-PRESENT-SINGULAR",
-                "ES-LEX-VIVIR",
-                "ES-GRAMMAR-IR-PRESENT-SINGULAR",
-                "ES-LEX-BEBER"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "como, vivo, bebo",
-                "como vivo bebo",
-                "como / vivo / bebo"
-              ],
-              "feedback": {
-                "correct": "Right: como, vivo, bebo.",
-                "incorrect": "All three yo forms end in -o: como, vivo, bebo."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-practice-ask-what",
-              "prompt": "Ask one friend 'What do you drink?' in Spanish.",
-              "assesses": [
-                "ES-LEX-QUE",
-                "ES-LEX-BEBER",
-                "ES-GRAMMAR-ER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "¿qué bebes?",
-                "qué bebes?",
-                "¿qué bebes",
-                "qué bebes"
-              ],
-              "feedback": {
-                "correct": "Right: ¿Qué bebes?",
-                "incorrect": "Use qué plus the tú form bebes: ¿Qué bebes?"
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-practice-live-in-madrid",
-              "prompt": "Answer 'Where do you live?' with Madrid.",
-              "assesses": [
-                "ES-LEX-VIVIR",
-                "ES-GRAMMAR-IR-PRESENT-SINGULAR",
-                "ES-LEX-EN"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "vivo en madrid.",
-                "vivo en madrid",
-                "yo vivo en madrid.",
-                "yo vivo en madrid"
-              ],
-              "feedback": {
-                "correct": "Right: Vivo en Madrid.",
-                "incorrect": "Use vivo and en: Vivo en Madrid."
+                "correct": "Yes — usted takes the he/she form, habla.",
+                "incorrect": "Usted takes the he/she form: habla. Hablas is for tu."
               }
             }
           ]
@@ -1127,7 +177,7 @@
             },
             {
               "kind": "speech",
-              "text": "What are the singular endings for -er/-ir verbs? (-o / -es / -e.) Give the \"I\" forms of comer, vivir, beber. (Como, vivo, bebo.) Ask \"what do you study?\" and \"where do you live?\" (¿Qué estudias? ¿Dónde vives?) You can now hold a simple back-and-forth — this book is fully in sentence territory. Next: numbers (uno, dos, tres) and telling someone your age and phone."
+              "text": "What is \"he speaks\"? (Habla.) Which form does usted take, and why? (Habla — because usted began as vuestra merced, \"your grace,\" something you talk about.) What did Latin's -at lose? (Its -t.) Next chapter is a review — no new words at all."
             }
           ]
         }

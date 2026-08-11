@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(50);
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(54); // +4: HL-C98
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -170,6 +170,20 @@ describe("real curriculum", () => {
       "ES-C01-genero-gramatical-class-count",
       "ES-C02-concordancia-why-buenas",
       "ES-C02-concordancia-why-buenos",
+      "ES-C06-ar-presente-mix-1",
+      "ES-C06-ar-presente-mix-2",
+      "ES-C06-ar-presente-mix-3",
+      "ES-C06-habla-form",
+      "ES-C06-habla-usted",
+      "ES-C06-hablas-contrast",
+      "ES-C06-hablas-form",
+      "ES-C06-hablo-ending",
+      "ES-C06-hablo-form",
+      "ES-C06-pro-drop-count",
+      "ES-C06-pro-drop-why",
+      "ES-C06-repaso-hablar-friend",
+      "ES-C06-repaso-hablar-polite",
+      "ES-C06-repaso-hablar-self",
       "ES-C07-beber-coffee",
       "ES-C07-comer-singular-forms",
       "ES-C07-donde-live-in-madrid",

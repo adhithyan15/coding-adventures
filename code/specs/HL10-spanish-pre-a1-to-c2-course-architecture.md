@@ -436,6 +436,52 @@ E is only possible because the learner already holds *querer* from rung 11; bloc
 H's surprise only lands because block E built the expectation. That is what "each
 lesson should lead to future lessons" means operationally, and §8.2 measures it.
 
+### 5.7 One verb per chapter
+
+> **A chapter introduces at most one new verb.**
+
+Each verb carries an origin the learner is owed — *hablar* has *fābula*, *comer*
+has *comedere*, *tener* has *tenēre*. A chapter that lands three verbs either
+tells three etymologies at once, which is the info dump §7.3 forbids, or it
+skips two of them, which quietly demotes the etymology strand to decoration on
+whichever word happened to go first.
+
+The rule is not about counting lessons. It is about what a chapter can *owe* a
+reader and still pay. One verb, one origin, one set of forms.
+
+**Measured 2026-08-10:** 12 of Spanish's 19 verb-teaching chapters break this —
+chapters 43, 44 and 48 each teach **four** verbs — and `beber`, `preguntar` and
+`tomar` are taught with no etymology at all. That burn-down is HL-C99.
+
+### 5.8 Review chapters and synthesis chapters
+
+A chapter-final practice *lesson* is not the same thing as a chapter that exists
+to consolidate. Two chapter kinds are therefore first-class:
+
+- A **review chapter** introduces **zero** new atoms. It is where a paradigm
+  table is finally allowed to appear (§5.3), because by then every cell in it is
+  owned. It is usually `sight` rather than `voice`: a table cannot be read aloud,
+  and marking it otherwise would be a lie in the drivability data.
+- A **synthesis chapter** also introduces zero atoms, and exists so the learner
+  *communicates an idea* with what they hold — not recites it. Its test is
+  whether the learner chooses correctly under a real communicative pressure
+  (register, repair, politeness), and it must be **voice-drivable**.
+
+> Language learning is not learning words; it is being able to communicate
+> ideas. A curriculum that only ever teaches has no place where that happens.
+
+**Measured 2026-08-10:** before HL-C98, **none of Spanish's 50 chapters
+introduced zero atoms** — there was no point in the entire course at which the
+learner only consolidated.
+
+**Worked example — the first paradigm (chapters 15–19).** The three singular
+`-ar` present cells were one lesson, `hablo, hablas, habla`, with a three-row
+table on first exposure and pro-drop alongside it. HL-C98 makes it five
+chapters: *hablo* · pro-drop → *hablas* → *habla* → **review** (the table, now
+earned) → **synthesis** (the same conversation held warmly and respectfully,
+where the only thing that changes is one letter). This is the reference shape
+for every paradigm after it.
+
 ---
 
 ## 6. Etymology as a working system
@@ -1072,6 +1118,13 @@ every atom revisited at least twice.
 
 The course, stage by stage. Each block is a run of chapters; lesson counts are
 design targets.
+
+> **Chapter counts are floors, not budgets.** Owner directive, 2026-08-10:
+> *"Don't constrain yourself by the number of chapters in the book. Keep writing
+> as many chapters as you need for a very smooth gentle ramp."* Where the
+> one-cell rule (§5.2), the one-verb rule (§5.7) or a needed review/synthesis
+> chapter (§5.8) pushes a block past its number here, the block grows and the
+> numbering shifts. Lesson **ids** are stable slugs and never renumber with it.
 
 ### 12.1 pre-A1 — 30 chapters, ~180 lessons
 

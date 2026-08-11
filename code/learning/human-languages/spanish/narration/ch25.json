@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 25,
-  "title": "Completing the Preterite --- Three Families, One Question",
-  "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:eb757c685c6bc05b",
+  "title": "Verbs That Break in the Middle --- the Stem Changers",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6324acec9684f48e",
   "lessons": [
     {
-      "id": "ES-C15-comer-preterite",
-      "sequence": 1080,
-      "title": "comí — one regular -er singular past",
-      "headword": "comí",
-      "romanization": "comí",
-      "gloss": "the regular singular -er preterite — comí, comiste, comió",
+      "id": "ES-C11-querer",
+      "sequence": 920,
+      "title": "querer — wanting with one familiar vowel change",
+      "headword": "querer",
+      "romanization": "querer",
+      "gloss": "to want — with the singular present forms quiero, quieres, and quiere",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb1eef1088150703",
+      "sourceHash": "fnv1a64:0556df7d60e49e8c",
       "notice": null,
       "blocks": [
         {
@@ -35,941 +35,82 @@
             },
             {
               "kind": "speech",
-              "text": "You know present como, comes, come and the singular -ar past. To make a completed past from comer, keep com- and learn three forms: comí, comiste, comió."
+              "text": "You already say tienes and tiene, where the middle e opens into ie. Today, reuse that visible change in one useful verb and keep the same three-person frame you already own."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: present beside completed past",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "present",
-                "completed past"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. present: como. completed past: comí.",
-                "person: tú. present: comes. completed past: comiste.",
-                "person: él / ella / usted. present: come. completed past: comió."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Say comí, comiste, comió. Keep the limit visible: these are the same three familiar singular persons. Plural forms wait."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: final stress in two forms",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Comí and comió carry written accents because their stress falls on the final vowel. Comiste follows ordinary next-to-last stress, so it needs no mark. The three forms by themselves make complete utterances:"
+              "text": "diphthong-ie — begin quiero with one smooth kye- syllable."
             },
             {
               "kind": "speech",
-              "text": "Comí. — “I ate.”"
-            },
-            {
-              "kind": "speech",
-              "text": "¿Comiste? — “Did you eat?”"
-            },
-            {
-              "kind": "speech",
-              "text": "Comió. — “He, she, or you-formal ate.”"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The endings, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Spanish comer continues Latin comedere. Its regular past endings also continue Latin perfect material, including forms with -ī, -istī, -it. Sound change and analogy reshaped that material across Romance into Spanish -í, -iste, -ió. The resemblance is real, but it is not one tidy chain in which every modern ending merely drops a letter."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“comí, comiste, comió”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “comí, comiste, comió”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Como. Comí.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Como. Comí.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“comí and comió carry final-stress accents”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “comí and comió carry final-stress accents”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-comer-preterite-singular-forms",
-              "prompt": "Give the singular completed-past forms of comer: yo, tú, then él/ella/usted.",
-              "assesses": [
-                "ES-LEX-COMER",
-                "ES-GRAMMAR-ER-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "comí, comiste, comió",
-                "comí comiste comió",
-                "comí / comiste / comió"
-              ],
-              "feedback": {
-                "correct": "Right: comí, comiste, comió.",
-                "incorrect": "Keep com- and retrieve -í, -iste, -ió."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-comer-preterite-past-choice",
-              "prompt": "Which form means 'I ate' as a completed event: como or comí?",
-              "assesses": [
-                "ES-GRAMMAR-ER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-ER-PRETERITE-SINGULAR",
-                "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS"
-              ],
-              "responseSeconds": 6,
-              "acceptedResponses": [
-                "comí"
-              ],
-              "feedback": {
-                "correct": "Right: comí is completed past.",
-                "incorrect": "Como is present; accented comí is completed past."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-comer-preterite-history",
-              "prompt": "Did Spanish -í, -iste, -ió arise by simple letter-dropping alone, or by sound change plus analogy?",
-              "assesses": [
-                "ES-ETYMON-COMEDERE",
-                "ES-HISTORY-ER-IR-PRETERITE-LATIN-PERFECT"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "sound change plus analogy",
-                "sound change and analogy",
-                "sound change, plus analogy"
-              ],
-              "feedback": {
-                "correct": "Right: the Latin perfect material was reshaped by sound change and analogy.",
-                "incorrect": "The history is a reshaped family, not a one-step letter deletion."
-              }
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the three learned comer forms. (Comí, comiste, comió.) Which carry written accents? (Comí and comió.) What shaped the modern endings? (Latin perfect material, sound change, and analogy.) Next: reuse the same endings with a known -ir verb."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C15-comer-vivir-preterite",
-      "sequence": 1085,
-      "title": "viví — reuse one past pattern with an -ir verb",
-      "headword": "viví",
-      "romanization": "viví",
-      "gloss": "the regular singular -ir preterite — viví, viviste, vivió",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:e25dc8976c29ec3b",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You know present vivo, vives, vive, and you just learned past comí, comiste, comió. Keep viv- and reuse those three past endings: viví, viviste, vivió."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: one -ir singular past",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "present",
-                "completed past"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. present: vivo. completed past: viví.",
-                "person: tú. present: vives. completed past: viviste.",
-                "person: él / ella / usted. present: vive. completed past: vivió."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Say viví, viviste, vivió. Reuse known en for a small contrast:"
-            },
-            {
-              "kind": "speech",
-              "text": "Vivo en Madrid. — “I live in Madrid.”"
-            },
-            {
-              "kind": "speech",
-              "text": "Viví en Madrid. — “I lived in Madrid.”"
-            },
-            {
-              "kind": "speech",
-              "text": "¿Viviste en Madrid? — “Did you live in Madrid?”"
-            },
-            {
-              "kind": "speech",
-              "text": "Vivió en Madrid. — “He, she, or you-formal lived in Madrid.”"
-            },
-            {
-              "kind": "speech",
-              "text": "The written accents in viví and vivió show final stress. Viviste already has ordinary next-to-last stress and needs no mark."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: -er and -ir meet in this past",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "comer",
-                "vivir"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. comer: comí. vivir: viví.",
-                "person: tú. comer: comiste. vivir: viviste.",
-                "person: él / ella / usted. comer: comió. vivir: vivió."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "The shared endings are -í in the first row, -iste in the second, and -ió in the third. The presents differ, but these two singular past rows converge on one ending set. That is a fact about the forms you have learned, not permission to guess plural forms; those wait."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The shared family, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Spanish vivir continues Latin vīvere. Its modern past endings belong to the same Romance history as the comer endings: Latin perfect material was reshaped by sound change and analogy. The shared -iste is a useful family resemblance, not proof of one simple letter-by-letter erosion."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“viví, viviste, vivió”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “viví, viviste, vivió”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Vivo en Madrid. Viví en Madrid.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Vivo en Madrid. Viví en Madrid.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“comí and viví share -í; comió and vivió share -ió”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “comí and viví share -í; comió and vivió share -ió”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-comer-vivir-preterite-vivir-forms",
-              "prompt": "Give the singular completed-past forms of vivir: yo, tú, then él/ella/usted.",
-              "assesses": [
-                "ES-LEX-VIVIR",
-                "ES-GRAMMAR-IR-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "viví, viviste, vivió",
-                "viví viviste vivió",
-                "viví / viviste / vivió"
-              ],
-              "feedback": {
-                "correct": "Right: viví, viviste, vivió.",
-                "incorrect": "Keep viv- and retrieve -í, -iste, -ió."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-comer-vivir-preterite-vivi-madrid",
-              "prompt": "Say 'I lived in Madrid' in Spanish.",
-              "assesses": [
-                "ES-LEX-VIVIR",
-                "ES-GRAMMAR-IR-PRETERITE-SINGULAR",
-                "ES-LEX-EN",
-                "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "viví en madrid.",
-                "viví en madrid"
-              ],
-              "feedback": {
-                "correct": "Right: Viví en Madrid.",
-                "incorrect": "Use past viví with its final accent, then known en Madrid."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-comer-vivir-preterite-shared-endings",
-              "prompt": "Which three singular past endings do comer and vivir share?",
-              "assesses": [
-                "ES-GRAMMAR-ER-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-IR-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE",
-                "ES-HISTORY-ER-IR-PRETERITE-LATIN-PERFECT"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "-í, -iste, -ió",
-                "í iste ió",
-                "-í -iste -ió",
-                "-í / -iste / -ió"
-              ],
-              "feedback": {
-                "correct": "Right: both use -í, -iste, -ió in the learned singular forms.",
-                "incorrect": "Compare comí/comiste/comió with viví/viviste/vivió."
-              }
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the three learned vivir forms. (Viví, viviste, vivió.) Which past endings do comer and vivir share? (-í, -iste, -ió.) Which two carry written accents? (Viví and vivió.) Next, keep the singular limit but let the stem change."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C15-tener-preterite",
-      "sequence": 1090,
-      "title": "tuve — let the strong stem carry the stress",
-      "headword": "tuve",
-      "romanization": "tuve",
-      "gloss": "the strong singular preterite of tener — tuve, tuviste, tuvo",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:59fe767612798093",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You know present tengo, tienes, tiene. Its completed past changes the stem to tuv- and uses tuve, tuviste, tuvo. Unlike comí and comió, none of these three forms carries a written accent."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: one strong singular pattern",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "present",
-                "completed past"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. present: tengo. completed past: tuve.",
-                "person: tú. present: tienes. completed past: tuviste.",
-                "person: él / ella / usted. present: tiene. completed past: tuvo."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "The strong stem tuv- takes -e, -iste, -o. Say tuve, tuviste, tuvo. Stress remains in the stem, so normal spelling needs no accent mark. Reuse known café:"
-            },
-            {
-              "kind": "speech",
-              "text": "Tuve café. — “I had coffee.”"
-            },
-            {
-              "kind": "speech",
-              "text": "¿Tuviste café? — “Did you have coffee?”"
-            },
-            {
-              "kind": "speech",
-              "text": "Tuvo café. — “He, she, or you-formal had coffee.”"
-            },
-            {
-              "kind": "speech",
-              "text": "“Strong” describes the stem-stressed historical pattern. It does not mean that the meaning is forceful. Plural endings wait."
+              "text": "r-tap — end the infinitive querer with one light tap."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The stem, taken apart",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Tener continues Latin tenēre. Its past also belongs to an older strong history associated with Latin tenuī. Spanish sound change and analogy reshaped that material into the tuv- family. Tenuī becomes tuve is therefore a historical relationship, not a promise that every letter passed across intact."
+              "text": "querer means “to want.” With a person as its object, it can also express love, but wanting is the meaning used in this lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "It descends from Latin quaerere, “to seek or ask.” English keeps the same searching idea in query, quest, inquire, and require. Wanting something begins as seeking it."
             }
           ]
         },
         {
           "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“tuve, tuviste, tuvo”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “tuve, tuviste, tuvo”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Tuve café.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Tuve café.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“comí has final stress; tuve has stem stress”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “comí has final stress; tuve has stem stress”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-tener-preterite-singular-forms",
-              "prompt": "Give the singular completed-past forms of tener: yo, tú, then él/ella/usted.",
-              "assesses": [
-                "ES-LEX-TENER",
-                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN",
-                "ES-GRAMMAR-TENER-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "tuve, tuviste, tuvo",
-                "tuve tuviste tuvo",
-                "tuve / tuviste / tuvo"
-              ],
-              "feedback": {
-                "correct": "Right: tuve, tuviste, tuvo.",
-                "incorrect": "Use strong stem tuv- with -e, -iste, -o."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-tener-preterite-tuve-cafe",
-              "prompt": "Say 'I had coffee' in Spanish.",
-              "assesses": [
-                "ES-LEX-TENER",
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-TENER-PRETERITE-SINGULAR",
-                "ES-LEX-CAFE"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "tuve café.",
-                "tuve café"
-              ],
-              "feedback": {
-                "correct": "Right: Tuve café.",
-                "incorrect": "Use completed-past tuve, then known café."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-tener-preterite-history",
-              "prompt": "Which phrase best describes tuve: a letter-for-letter copy of tenuī, or a historically reshaped strong form?",
-              "assesses": [
-                "ES-ETYMON-TENERE",
-                "ES-ETYMON-TUVE",
-                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN",
-                "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "a historically reshaped strong form",
-                "historically reshaped strong form",
-                "a reshaped strong form"
-              ],
-              "feedback": {
-                "correct": "Right: sound change and analogy reshaped the older strong material.",
-                "incorrect": "Treat tenuī and tuve as historically related, not letter-for-letter copies."
-              }
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the three learned tener forms. (Tuve, tuviste, tuvo.) Which endings attach to tuv-? (-e, -iste, -o.) Why are there no written accents? (The strong stem carries the stress.) What shaped tuve historically? (Older strong-perfect material, sound change, and analogy.) Next: reuse the strong endings with hacer."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C15-hacer-preterite",
-      "sequence": 1095,
-      "title": "hice — the strong pattern with one third-person swerve",
-      "headword": "hice",
-      "romanization": "hice",
-      "gloss": "the strong singular preterite of hacer — hice, hiciste, hizo",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:d501993c92d0529c",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You know present hago, haces, hace and strong past tuve, tuviste, tuvo. Hacer reuses the strong endings: hice, hiciste, hizo. Watch the third form: the stem is hiz- there, not hic-."
-            }
-          ]
-        },
-        {
-          "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: hacer in the completed past",
+          "title": "Grammar Lens: only the three singular forms",
           "segments": [
             {
               "kind": "table",
               "headers": [
                 "person",
-                "completed past",
-                "stem plus ending"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. completed past: hice. stem plus ending: hic- + -e.",
-                "person: tú. completed past: hiciste. stem plus ending: hic- + -iste.",
-                "person: él / ella / usted. completed past: hizo. stem plus ending: hiz- + -o."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Say hice, hiciste, hizo. These are strong, stem-stressed forms with no written accents. Hizo is an irregular stem alternation inside this family; it is not a general rule that c must become z before o. Reuse known café:"
-            },
-            {
-              "kind": "speech",
-              "text": "Hice café. — “I made coffee.”"
-            },
-            {
-              "kind": "speech",
-              "text": "¿Hiciste café? — “Did you make coffee?”"
-            },
-            {
-              "kind": "speech",
-              "text": "Hizo café. — “He, she, or you-formal made coffee.”"
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The form, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Hacer continues Latin facere, and hice continues the history of its strong perfect fēcī. Long sound changes help explain Spanish h- and the changed vowel and consonant; this is not a direct spelling recipe. The pattern links hice historically to strong tuve, while each verb keeps its own stem."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“hice, hiciste, hizo”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “hice, hiciste, hizo”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Hice café.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Hice café.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“hizo is a learned hiz- alternation, not a general c-before-o rule”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “hizo is a learned hiz- alternation, not a general c-before-o rule”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-hacer-preterite-singular-forms",
-              "prompt": "Give the singular completed-past forms of hacer: yo, tú, then él/ella/usted.",
-              "assesses": [
-                "ES-LEX-HACER",
-                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN",
-                "ES-GRAMMAR-HACER-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "hice, hiciste, hizo",
-                "hice hiciste hizo",
-                "hice / hiciste / hizo"
-              ],
-              "feedback": {
-                "correct": "Right: hice, hiciste, hizo.",
-                "incorrect": "Use hic- with -e and -iste, then retrieve third-person hizo."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-hacer-preterite-hice-cafe",
-              "prompt": "Say 'I made coffee' in Spanish.",
-              "assesses": [
-                "ES-LEX-HACER",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-HACER-PRETERITE-SINGULAR",
-                "ES-LEX-CAFE"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "hice café.",
-                "hice café"
-              ],
-              "feedback": {
-                "correct": "Right: Hice café.",
-                "incorrect": "Use completed-past hice, then known café."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-hacer-preterite-history",
-              "prompt": "Which Latin strong-perfect form lies behind the historical development of hice?",
-              "assesses": [
-                "ES-ETYMON-FACERE",
-                "ES-ETYMON-HICE",
-                "ES-ETYMON-TUVE",
-                "ES-GRAMMAR-TENER-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "fēcī",
-                "feci"
-              ],
-              "feedback": {
-                "correct": "Right: Latin fēcī lies behind the long development to hice.",
-                "incorrect": "Retrieve the strong perfect of facere: fēcī."
-              }
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the three learned hacer forms. (Hice, hiciste, hizo.) What changes in the third form? (Hic- becomes hiz-.) Is that a general c-before-o spelling rule? (No; learn it inside this irregular family.) What older form lies behind hice? (Latin fēcī, through substantial historical change.) Next: add strong estar without adding plural forms."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C15-preterite-fuertes",
-      "sequence": 1100,
-      "title": "estuve — a third known verb joins the strong pattern",
-      "headword": "estuve",
-      "romanization": "estuve",
-      "gloss": "the strong singular preterite of estar — estuve, estuviste, estuvo",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:67c729a6a034e9a3",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You know present estoy, estás, está and the strong past pairs tuve, tuviste, tuvo and hice, hiciste, hizo. Now use the same strong endings with estuv-: estuve, estuviste, estuvo."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: estar in the completed past",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "completed past"
+                "present of querer"
               ],
               "columns": 2,
               "rowCount": 3,
               "utterances": [
-                "person: yo. completed past: estuve.",
-                "person: tú. completed past: estuviste.",
-                "person: él / ella / usted. completed past: estuvo."
+                "person: yo. present of querer: quiero.",
+                "person: tú. present of querer: quieres.",
+                "person: él / ella / usted. present of querer: quiere."
               ]
             },
             {
               "kind": "speech",
-              "text": "Say estuve, estuviste, estuvo. The strong stem estuv- takes -e, -iste, -o. These forms carry no written accents. Reuse known bien:"
+              "text": "Say the small set as quiero, quieres, quiere. The e becomes ie that you saw in tienes, tiene is visible again. The plural persons are deliberately left for a later step."
             },
             {
               "kind": "speech",
-              "text": "Estuve bien. — “I was well.”"
+              "text": "Place one known infinitive after the form of querer:"
             },
             {
               "kind": "speech",
-              "text": "¿Estuviste bien? — “Were you well?”"
+              "text": "Quiero hablar. — “I want to speak.”"
             },
             {
               "kind": "speech",
-              "text": "Estuvo bien. — “He, she, or you-formal was well.”"
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: three strong singular rows",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "yo: tuve, hice, estuve."
+              "text": "Quieres comer. — “You want to eat.”"
             },
             {
               "kind": "speech",
-              "text": "tú: tuviste, hiciste, estuviste."
+              "text": "Quiere vivir. — “He, she, or formal you wants to live.”"
             },
             {
               "kind": "speech",
-              "text": "él / ella / usted: tuvo, hizo, estuvo."
-            },
-            {
-              "kind": "speech",
-              "text": "All three rows use the learned strong endings. Only hacer changes its stem shape from hic- to hiz- before third-person -o. Plural forms and other irregular verbs still wait."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The -uv- shape, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Estar grew from a Romance verb related to Latin stāre, “stand.” But modern estuve is not a direct, tidy wearing-down of Latin stetī. Historical analogy helped reshape its past beside other strong forms, including the -uv- pattern visible in tuve. This explains the family resemblance without pretending that each modern letter came straight from one Latin form."
+              "text": "The second verb stays in its known infinitive form."
             }
           ]
         },
@@ -987,90 +128,68 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“estuve, estuviste, estuvo”",
+              "instruction": "“querer — quiero, quieres, quiere”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “estuve, estuviste, estuvo”]"
+              "source": "[YOU SAY: “querer — quiero, quieres, quiere”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Estuve bien.”",
+              "instruction": "“Quiero hablar”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Estuve bien.”]"
+              "source": "[YOU SAY: “Quiero hablar”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“tuve and estuve share -uv- through historical analogy”",
+              "instruction": "“quaerere — query — querer”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “tuve and estuve share -uv- through historical analogy”]"
+              "source": "[YOU SAY: “quaerere — query — querer”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C15-preterite-fuertes-estar-forms",
-              "prompt": "Give the singular completed-past forms of estar: yo, tú, then él/ella/usted.",
+              "id": "ES-C11-querer-singular-forms",
+              "prompt": "Give the learned singular present forms of querer: yo, tú, then él/ella/usted.",
               "assesses": [
-                "ES-LEX-ESTAR",
-                "ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN"
+                "ES-LEX-QUERER",
+                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR"
               ],
-              "responseSeconds": 9,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "estuve, estuviste, estuvo",
-                "estuve estuviste estuvo",
-                "estuve / estuviste / estuvo"
+                "quiero, quieres, quiere",
+                "quiero quieres quiere",
+                "quiero / quieres / quiere"
               ],
               "feedback": {
-                "correct": "Right: estuve, estuviste, estuvo.",
-                "incorrect": "Use strong stem estuv- with -e, -iste, -o."
+                "correct": "Right: quiero, quieres, quiere.",
+                "incorrect": "Keep the e becomes ie stem and use the three singular endings: quiero, quieres, quiere."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C15-preterite-fuertes-estuve-bien",
-              "prompt": "Say 'I was well' as a completed past statement in Spanish.",
+              "id": "ES-C11-querer-want-to-speak",
+              "prompt": "Say 'I want to speak' in Spanish.",
               "assesses": [
-                "ES-LEX-ESTAR",
-                "ES-GRAMMAR-ESTAR-ESTA-ESTAS",
-                "ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR",
-                "ES-LEX-BIEN"
+                "ES-LEX-QUERER",
+                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR",
+                "ES-LEX-HABLAR"
               ],
-              "responseSeconds": 7,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "estuve bien.",
-                "estuve bien"
+                "quiero hablar.",
+                "quiero hablar"
               ],
               "feedback": {
-                "correct": "Right: Estuve bien.",
-                "incorrect": "Use completed-past estuve, then known bien."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-preterite-fuertes-analogy",
-              "prompt": "Which known strong form helped shape the family resemblance in estuve: tuve or hice?",
-              "assesses": [
-                "ES-ETYMON-ESTUVE-ANALOGY",
-                "ES-ETYMON-STARE",
-                "ES-GRAMMAR-TENER-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-HACER-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 6,
-              "acceptedResponses": [
-                "tuve"
-              ],
-              "feedback": {
-                "correct": "Right: estuve shares the analogically shaped -uv- pattern of tuve.",
-                "incorrect": "Look for the shared -uv- shape: tuve and estuve."
+                "correct": "Right: Quiero hablar.",
+                "incorrect": "Use quiero followed by the unchanged infinitive hablar."
               }
             }
           ]
@@ -1088,26 +207,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three learned estar forms. (Estuve, estuviste, estuvo.) Which known strong verb shares their -uv- shape? (Tener: tuve.) Why should estuve not be shown as a direct wearing-down of stetī? (Analogy reshaped the Spanish family.) Next: retrieve all six bounded patterns."
+              "text": "What does querer mean? (“To want.”) Give the three learned forms. (Quiero, quieres, quiere.) Which Latin verb and English cousin help explain it? (Quaerere, “seek”; query or quest.) Next: add the other singular vowel change with poder."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C15-practice",
-      "sequence": 1105,
-      "title": "Practice — six singular patterns, no hidden vocabulary",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "a singular checkpoint for regular and strong completed-past patterns",
+      "id": "ES-C11-poder",
+      "sequence": 930,
+      "title": "poder — ability with the o becomes ue change",
+      "headword": "poder",
+      "romanization": "poder",
+      "gloss": "to be able or can — with the singular present forms puedo, puedes, and puede",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3451b9bc46a8b9be",
+      "sourceHash": "fnv1a64:0941b6870147b9bf",
       "notice": null,
       "blocks": [
         {
@@ -1123,80 +242,78 @@
             },
             {
               "kind": "speech",
-              "text": "This checkpoint adds nothing. Retrieve only the three singular persons of each learned row. Every word in the short sentences is already known."
+              "text": "Quiero hablar says what you want to do. Now change the first verb to say what you are able to do. The second verb will remain a known infinitive."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the complete Chapter 15 frame",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Regular rows:"
+              "text": "diphthong-ue — puedo begins pwe- with one smooth glide."
             },
             {
               "kind": "speech",
-              "text": "yo: hablé, comí, viví."
-            },
-            {
-              "kind": "speech",
-              "text": "tú: hablaste, comiste, viviste."
-            },
-            {
-              "kind": "speech",
-              "text": "él / ella / usted: habló, comió, vivió."
-            },
-            {
-              "kind": "speech",
-              "text": "Strong rows:"
-            },
-            {
-              "kind": "speech",
-              "text": "yo: tuve, hice, estuve."
-            },
-            {
-              "kind": "speech",
-              "text": "tú: tuviste, hiciste, estuviste."
-            },
-            {
-              "kind": "speech",
-              "text": "él / ella / usted: tuvo, hizo, estuvo."
-            },
-            {
-              "kind": "speech",
-              "text": "The -er and -ir rows share -í, -iste, -ió. The three strong rows share -e, -iste, -o, but their stems must be learned: tuv-, hic-/hiz-, estuv-. Plural persons, more strong verbs, and new time or setting vocabulary remain outside this checkpoint."
+              "text": "r-tap — end poder with one light tap."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: let spelling show the stress",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Regular comí, comió, viví, vivió carry written accents for final stress."
-            },
-            {
-              "kind": "speech",
-              "text": "Strong tuve, tuvo, hice, hizo, estuve, estuvo carry no written accents; stress remains in the strong stem."
-            },
-            {
-              "kind": "speech",
-              "text": "Comiste and viviste need no accent because their ordinary stress is already next to last."
+              "text": "poder means “to be able”; in a sentence it often translates as “can.” It descends through Latin potere from posse, “to be able.” English power, potent, potential, and possible belong to the same family. Ability is the power to do something."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The histories, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: the three singular forms",
           "segments": [
             {
+              "kind": "table",
+              "headers": [
+                "person",
+                "present of poder"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. present of poder: puedo.",
+                "person: tú. present of poder: puedes.",
+                "person: él / ella / usted. present of poder: puede."
+              ]
+            },
+            {
               "kind": "speech",
-              "text": "The regular -er/-ir endings continue Latin perfect material reshaped across Romance. Tuve and hice continue older strong-perfect histories, also reshaped rather than copied letter for letter. Estuve shows especially clear analogical remodeling beside the -uv- family of tuve."
+              "text": "Say puedo, puedes, puede. In these three learned forms, the stem o opens into ue. Plural persons wait."
+            },
+            {
+              "kind": "speech",
+              "text": "Follow the form of poder with one unchanged infinitive:"
+            },
+            {
+              "kind": "speech",
+              "text": "Puedo hablar. — “I can speak.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Puedes comer. — “You can eat.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Puede vivir. — “He, she, or formal you can live.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Compare Quiero hablar with Puedo hablar: only the first verb changes the meaning from want to ability."
             }
           ]
         },
@@ -1214,190 +331,68 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“hablé, comí, viví”",
+              "instruction": "“poder — puedo, puedes, puede”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “hablé, comí, viví”]"
+              "source": "[YOU SAY: “poder — puedo, puedes, puede”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“tuve, hice, estuve”",
+              "instruction": "“Puedo hablar”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “tuve, hice, estuve”]"
+              "source": "[YOU SAY: “Puedo hablar”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Hice café. Viví en Madrid. Estuve bien.”",
+              "instruction": "“poder — power — possible”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Hice café. Viví en Madrid. Estuve bien.”]"
+              "source": "[YOU SAY: “poder — power — possible”]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“comí and comió have accents; tuve and tuvo do not”",
-              "spoken": true,
-              "scored": false,
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C11-poder-singular-forms",
+              "prompt": "Give the learned singular present forms of poder: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-LEX-PODER",
+                "ES-GRAMMAR-PODER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "puedo, puedes, puede",
+                "puedo puedes puede",
+                "puedo / puedes / puede"
+              ],
+              "feedback": {
+                "correct": "Right: puedo, puedes, puede.",
+                "incorrect": "Keep the o becomes ue stem and use the three singular endings: puedo, puedes, puede."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C11-poder-can-eat",
+              "prompt": "Say 'You can eat' to one friend in Spanish.",
+              "assesses": [
+                "ES-LEX-PODER",
+                "ES-GRAMMAR-PODER-PRESENT-SINGULAR",
+                "ES-LEX-COMER"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: “comí and comió have accents; tuve and tuvo do not”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-practice-regular-yo-forms",
-              "prompt": "Give the learned yo past forms of hablar, comer, and vivir, in that order.",
-              "assesses": [
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-ER-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-IR-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE",
-                "ES-LEX-HABLAR",
-                "ES-LEX-COMER",
-                "ES-LEX-VIVIR"
-              ],
-              "responseSeconds": 9,
               "acceptedResponses": [
-                "hablé, comí, viví",
-                "hablé comí viví",
-                "hablé / comí / viví"
+                "puedes comer.",
+                "puedes comer"
               ],
               "feedback": {
-                "correct": "Right: hablé, comí, viví.",
-                "incorrect": "Retrieve the three regular yo forms: hablé, comí, viví."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-practice-strong-yo-forms",
-              "prompt": "Give the learned yo past forms of tener, hacer, and estar, in that order.",
-              "assesses": [
-                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN",
-                "ES-GRAMMAR-TENER-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-HACER-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR",
-                "ES-LEX-TENER",
-                "ES-LEX-HACER",
-                "ES-LEX-ESTAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "tuve, hice, estuve",
-                "tuve hice estuve",
-                "tuve / hice / estuve"
-              ],
-              "feedback": {
-                "correct": "Right: tuve, hice, estuve.",
-                "incorrect": "Retrieve the three strong yo forms: tuve, hice, estuve."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-practice-hice-cafe",
-              "prompt": "Say 'I made coffee' in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-HACER-PRETERITE-SINGULAR",
-                "ES-LEX-HACER",
-                "ES-LEX-CAFE"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "hice café.",
-                "hice café"
-              ],
-              "feedback": {
-                "correct": "Right: Hice café.",
-                "incorrect": "Use the strong yo form hice, then known café."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-practice-vivi-madrid",
-              "prompt": "Say 'I lived in Madrid' in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-IR-PRETERITE-SINGULAR",
-                "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS",
-                "ES-LEX-VIVIR",
-                "ES-LEX-EN"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "viví en madrid.",
-                "viví en madrid"
-              ],
-              "feedback": {
-                "correct": "Right: Viví en Madrid.",
-                "incorrect": "Use accented viví, then known en Madrid."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-practice-estuve-bien",
-              "prompt": "Say 'I was well' as a completed event in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR",
-                "ES-LEX-ESTAR",
-                "ES-LEX-BIEN"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "estuve bien.",
-                "estuve bien"
-              ],
-              "feedback": {
-                "correct": "Right: Estuve bien.",
-                "incorrect": "Use the strong yo form estuve, then known bien."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-practice-accent-contrast",
-              "prompt": "Which pair carries written accents: comí/comió or tuve/tuvo?",
-              "assesses": [
-                "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS",
-                "ES-GRAMMAR-ER-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "comí and comió",
-                "comí comió",
-                "comí/comió",
-                "comí y comió"
-              ],
-              "feedback": {
-                "correct": "Right: comí and comió mark final stress; tuve and tuvo do not.",
-                "incorrect": "The regular final-stressed pair carries the marks: comí and comió."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-practice-history-match",
-              "prompt": "Which learned form is especially described as analogically remodeled beside tuve: comí, hice, or estuve?",
-              "assesses": [
-                "ES-HISTORY-ER-IR-PRETERITE-LATIN-PERFECT",
-                "ES-ETYMON-TUVE",
-                "ES-ETYMON-HICE",
-                "ES-ETYMON-ESTUVE-ANALOGY"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "estuve"
-              ],
-              "feedback": {
-                "correct": "Right: estuve was analogically remodeled beside the -uv- strong family.",
-                "incorrect": "Look for the form sharing -uv- with tuve: estuve."
+                "correct": "Right: Puedes comer.",
+                "incorrect": "Use the tú form puedes followed by the unchanged infinitive comer."
               }
             }
           ]
@@ -1415,7 +410,616 @@
             },
             {
               "kind": "speech",
-              "text": "Give the regular comer and vivir sets. (Comí, comiste, comió; viví, viviste, vivió.) Give the three strong sets. (Tuve, tuviste, tuvo; hice, hiciste, hizo; estuve, estuviste, estuvo.) Which rows share endings? (-er/-ir share one regular set; the strong rows share another.) Chapter 16 can add a new past contrast without borrowing any plural form here."
+              "text": "What does poder mean? (“To be able; can.”) Give the three learned forms. (Puedo, puedes, puede.) What English word is its close cousin? (Power.) Next: compare only the singular forms you have actually learned."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C11-stem-changes",
+      "sequence": 940,
+      "title": "e becomes ie and o becomes ue — compare the singular forms",
+      "headword": "e → ie and o → ue",
+      "romanization": "e → ie and o → ue",
+      "gloss": "comparing the two vowel changes inside the learned singular forms",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c7f8012f9e19ffd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You now own three small singular sets: tengo, tienes, tiene; quiero, quieres, quiere; and puedo, puedes, puede. Compare only those learned forms before extending the pattern later."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart — why vowels opened",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "On the road from Latin to Spanish, many short e and o vowels opened when stressed: e becomes ie and o becomes ue. That history helps explain why a verb's stem can look different across its forms."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a clue, not a machine that predicts every form. Learn each verb's small set, then use the shared history to organize what you remember."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two changes, one learned frame",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "tener / querer, e becomes ie family",
+                "poder, o becomes ue"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. tener / querer, e becomes ie family: tengo / quiero. poder, o becomes ue: puedo.",
+                "person: tú. tener / querer, e becomes ie family: tienes / quieres. poder, o becomes ue: puedes.",
+                "person: él / ella / usted. tener / querer, e becomes ie family: tiene / quiere. poder, o becomes ue: puede."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The comparison says exactly this:"
+            },
+            {
+              "kind": "speech",
+              "text": "querer shows ie in all three forms learned here."
+            },
+            {
+              "kind": "speech",
+              "text": "poder shows ue in all three forms learned here."
+            },
+            {
+              "kind": "speech",
+              "text": "tener reminds you that a common verb may combine more than one change: tengo has its known g, while tienes and tiene show ie."
+            },
+            {
+              "kind": "speech",
+              "text": "No plural form and no new verb is part of today's generalization."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“quiero, quieres, quiere”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “quiero, quieres, quiere”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“puedo, puedes, puede”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “puedo, puedes, puede”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“stressed e and o often opened to ie and ue”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “stressed e and o often opened to ie and ue”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C11-stem-changes-yo-contrast",
+              "prompt": "Give the learned yo forms of querer and poder, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR",
+                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-PODER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "quiero, puedo",
+                "quiero puedo",
+                "quiero / puedo"
+              ],
+              "feedback": {
+                "correct": "Right: quiero, puedo — e becomes ie beside o becomes ue.",
+                "incorrect": "Use the learned yo forms: quiero, then puedo."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C11-stem-changes-tu-contrast",
+              "prompt": "Give the learned tú forms of tener, querer, and poder, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-PODER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "tienes, quieres, puedes",
+                "tienes quieres puedes",
+                "tienes / quieres / puedes"
+              ],
+              "feedback": {
+                "correct": "Right: tienes, quieres, puedes.",
+                "incorrect": "Retrieve the three known tú forms: tienes, quieres, puedes."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which change appears in querer? (e becomes ie.) In poder? (o becomes ue.) Why is the history useful but not a complete prediction rule? (It organizes learned forms, but individual verbs can combine or resist changes.) Next: one possessive that agrees with a known noun's gender."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C11-nuestro",
+      "sequence": 950,
+      "title": "nuestro, nuestra — “our” with singular gender agreement",
+      "headword": "nuestro, nuestra",
+      "romanization": "nuestro, nuestra",
+      "gloss": "our — matching a known masculine or feminine singular noun",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e8578a03cf6b9a86",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You put mi, tu, or su before the known noun café. Now add “our” and let it match one contrast you learned much earlier: masculine día beside feminine noche."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nuestro and nuestra mean “our.” They descend from Latin noster, also “our.” Paternoster means “Our Father,” and English nostrum originally meant “our thing.”"
+            },
+            {
+              "kind": "speech",
+              "text": "The change from noster to nuestro also displays the historical o becomes ue opening you just used to organize poder."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: match singular gender",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "known noun",
+                "“our” phrase"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "known noun: el día, masculine. “our” phrase: nuestro día.",
+                "known noun: la noche, feminine. “our” phrase: nuestra noche."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Like mi, tu, and su, the new word goes before the noun. Unlike those earlier forms, it shows the noun's gender: nuestro before a masculine singular noun, nuestra before a feminine singular noun."
+            },
+            {
+              "kind": "speech",
+              "text": "Only these two singular forms belong to this lesson. Plural agreement and the separate word for “your” to a group wait."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“nuestro día”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “nuestro día”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“nuestra noche”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “nuestra noche”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“noster — nuestro — Paternoster”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “noster — nuestro — Paternoster”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C11-nuestro-our-day",
+              "prompt": "Say 'our day' in Spanish.",
+              "assesses": [
+                "ES-LEX-POSSESSIVES-NUESTRO-NUESTRA",
+                "ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR",
+                "ES-LEX-DIA"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "nuestro día",
+                "nuestro dia"
+              ],
+              "feedback": {
+                "correct": "Right: masculine día takes nuestro.",
+                "incorrect": "Use the masculine singular form nuestro before día."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C11-nuestro-our-night",
+              "prompt": "Say 'our night' in Spanish.",
+              "assesses": [
+                "ES-LEX-POSSESSIVES-NUESTRO-NUESTRA",
+                "ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR",
+                "ES-LEX-NOCHE"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "nuestra noche",
+                "nuestra noche."
+              ],
+              "feedback": {
+                "correct": "Right: feminine noche takes nuestra.",
+                "incorrect": "Use the feminine singular form nuestra before noche."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which form goes before masculine día? (Nuestro.) Before feminine noche? (Nuestra.) What Latin source explains the pair? (Noster, “our.”) Next: retrieve the whole chapter without adding a form."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C11-practice",
+      "sequence": 960,
+      "title": "Practice — wanting, ability, and our known nouns",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "singular wanting, ability, vowel-change comparison, and our day or night",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3dc8e9b6be3e11fd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This checkpoint adds nothing. Retrieve two three-form verbs, compare their two vowel changes, and choose nuestro or nuestra before one known singular noun."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the complete small chapter frame",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wanting: quiero, quieres, quiere plus a known infinitive."
+            },
+            {
+              "kind": "speech",
+              "text": "ability: puedo, puedes, puede plus a known infinitive."
+            },
+            {
+              "kind": "speech",
+              "text": "the contrast: e becomes ie in the learned querer set; o becomes ue in the learned poder set."
+            },
+            {
+              "kind": "speech",
+              "text": "singular “our”: nuestro día, nuestra noche."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural persons and plural possessive agreement remain deferred."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The words, taken apart — retrieve the history",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "querer continues Latin quaerere, “seek,” the family of query."
+            },
+            {
+              "kind": "speech",
+              "text": "poder continues the Latin ability family behind power and possible."
+            },
+            {
+              "kind": "speech",
+              "text": "stressed Latin e and o often opened into Spanish ie and ue."
+            },
+            {
+              "kind": "speech",
+              "text": "nuestro, nuestra continue Latin noster, “our.”"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“quiero hablar; puedo hablar”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “quiero hablar; puedo hablar”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“quieres comer; puedes comer”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “quieres comer; puedes comer”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“nuestro día; nuestra noche”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “nuestro día; nuestra noche”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C11-practice-querer-forms",
+              "prompt": "Give the learned singular forms of querer: yo, tú, then usted.",
+              "assesses": [
+                "ES-LEX-QUERER",
+                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "quiero, quieres, quiere",
+                "quiero quieres quiere",
+                "quiero / quieres / quiere"
+              ],
+              "feedback": {
+                "correct": "Right: quiero, quieres, quiere.",
+                "incorrect": "Retrieve the three learned forms: quiero, quieres, quiere."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C11-practice-poder-forms",
+              "prompt": "Give the learned singular forms of poder: yo, tú, then usted.",
+              "assesses": [
+                "ES-LEX-PODER",
+                "ES-GRAMMAR-PODER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "puedo, puedes, puede",
+                "puedo puedes puede",
+                "puedo / puedes / puede"
+              ],
+              "feedback": {
+                "correct": "Right: puedo, puedes, puede.",
+                "incorrect": "Retrieve the three learned forms: puedo, puedes, puede."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C11-practice-want-to-speak",
+              "prompt": "Say 'I want to speak' in Spanish.",
+              "assesses": [
+                "ES-LEX-QUERER",
+                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR",
+                "ES-LEX-HABLAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "quiero hablar.",
+                "quiero hablar"
+              ],
+              "feedback": {
+                "correct": "Right: Quiero hablar.",
+                "incorrect": "Use quiero followed by the known infinitive hablar."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C11-practice-can-eat",
+              "prompt": "Say 'You can eat' to one friend in Spanish.",
+              "assesses": [
+                "ES-LEX-PODER",
+                "ES-GRAMMAR-PODER-PRESENT-SINGULAR",
+                "ES-LEX-COMER"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "puedes comer.",
+                "puedes comer"
+              ],
+              "feedback": {
+                "correct": "Right: Puedes comer.",
+                "incorrect": "Use puedes followed by the known infinitive comer."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C11-practice-our-night",
+              "prompt": "Say 'our night' in Spanish.",
+              "assesses": [
+                "ES-LEX-POSSESSIVES-NUESTRO-NUESTRA",
+                "ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR",
+                "ES-LEX-NOCHE"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "nuestra noche",
+                "nuestra noche."
+              ],
+              "feedback": {
+                "correct": "Right: feminine noche takes nuestra.",
+                "incorrect": "Choose feminine singular nuestra before noche."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the two singular sets. (Quiero, quieres, quiere; puedo, puedes, puede.) Which vowel contrast organizes them? (e becomes ie beside o becomes ue.) Say “our day” and “our night.” (Nuestro día; nuestra noche.) Chapter 12 can now build from this closed singular frontier."
             }
           ]
         }

@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Changed — Spanish runs 1..54 (HL-C98)
+
+- Regenerate the `bookhashes` chapter-lesson pin from the lesson files: the
+  first paradigm became five chapters (one grammar cell each, plus a review and
+  a synthesis chapter), so old Spanish chapters 16–50 shifted to 20–54. This pin
+  lives in the consumer, so the data package's own suite passes while this one
+  fails — which is exactly why the app is built in CI.
+- Eager bundle 478,900 / 500,000 bytes.
+
 ### Added — cited Arabic independent-seen ductus (HL-C09AQ)
 
 - Render **س** in two evidence-aligned frames: three close teeth shaped
