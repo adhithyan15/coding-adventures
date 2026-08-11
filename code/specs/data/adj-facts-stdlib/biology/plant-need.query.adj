@@ -1,0 +1,19 @@
+% ============================================================================
+% plant-need.query.adj — a worked recall over the plant-need library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does sunlight do
+% for a plant?": it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?`
+% against the `plant_need` rows and returns the role + the table's own
+% source/locator/trust. An input the table does not carry abstains
+% honestly — the engine never invents a role.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli plant-need.query.adj
+% ============================================================================
+
+import "plant-need.adj"
+
+? plant_need(sunlight, $Role)              % expect excites_chlorophyll_electrons
+? plant_need($Need, combined_to_make_glucose)  % expect carbon_dioxide
+? plant_need(soil, $Role)                  % expect abstain — no role is shipped for soil
