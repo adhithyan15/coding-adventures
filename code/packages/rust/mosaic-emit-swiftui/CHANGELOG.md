@@ -4,6 +4,14 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - native accessible drag and drop
+
+`HostDraggable` and `HostDropTarget` now lower to SwiftUI's native drag/drop
+system with component-local payload isolation, accepts and disabled filtering,
+before/into/after hover proposals, accepted-only drag completion, and an
+equivalent keyboard workflow with platform accessibility announcements. The
+complete generated TaskApp is compiled through SwiftPM as the regression gate.
+
 ### Fixed - empty-event project shells
 
 Components with no authored events keep their uninhabited event enum but now

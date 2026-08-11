@@ -59,11 +59,11 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
   SVG-overlay host component) or product guidance on visual treatment
   before it's picked up — see `code/specs/task-app-richer-gantt-v1.md`'s
   "What does NOT ship" section for the full reasoning.
-- **Native drag support for HostDraggable/HostDropTarget.** Flutter and Compose
-  Desktop now lower the UI35 family to native drag systems with equivalent
-  keyboard and accessibility operation. SwiftUI, Qt, and WinUI/XAML still
-  degrade the board and calendar drag interactions to static containers; close
-  those three backend gaps one bounded emitter slice at a time. See
+- **Native drag support for HostDraggable/HostDropTarget.** Flutter, Compose
+  Desktop, Qt, and SwiftUI now lower the UI35 family to native drag systems with
+  equivalent keyboard and accessibility operation. WinUI/XAML still degrades
+  the board and calendar drag interactions to static containers; close that
+  remaining native backend gap. See
   `code/specs/UI35-host-drag-drop.md` and UI38's prioritized completion backlog.
 - **Calendar week/day views, resize, and time-blocking.** Deferred from the Phase 7 ship —
   see `code/specs/task-app-calendar-v1.md` for the full rationale (resize isn't supported by
@@ -94,6 +94,14 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
   needs SQL-over-IndexedDB rather than load-all.
 
 ## Resolved (kept for traceability, not actionable)
+
+- **Native SwiftUI drag support for HostDraggable/HostDropTarget.** The UI35
+  family now uses native SwiftUI pointer/touch transfer and drop delegates,
+  with component-scoped payloads, accepts/disabled filtering,
+  before/into/after proposals, keyboard and assistive actions, RTL movement,
+  and platform accessibility announcements. Both the macOS and iOS 16
+  generated TaskApp targets compile; SwiftUI's remaining strict TaskApp gap is
+  native table semantics, not board or calendar drag interaction.
 
 - **Concrete Rust TaskApp engine on strict Compose Desktop.** Compose CI keeps
   the counter ABI conformance distributable and harness independent, then emits

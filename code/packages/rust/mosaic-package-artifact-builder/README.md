@@ -31,7 +31,7 @@ builds. `BuildProfile::Permissive` emits the normal artifacts and a deterministi
 same report but rejects the build before application artifacts are emitted when
 the selected backend has a known degradation.
 
-The inventory identifies passive drag/drop lowerings on SwiftUI and XAML,
+The inventory identifies the passive drag/drop lowering on XAML,
 native table lowerings without table semantics (excluding canonical UI31/Grid
 shapes on Flutter, Compose, and Qt), Flutter's
 dialog placeholder and missing URL effect
@@ -46,10 +46,10 @@ The overall native-complete milestone remains open while ignored properties,
 events, styles, effects, and
 accessibility metadata are added to the inventory.
 
-Flutter, Compose, and Qt drag primitives are no longer reported as inert:
+Flutter, Compose, Qt, and SwiftUI drag primitives are no longer reported as inert:
 those emitters use native pointer/touch drag targets plus the UI35 keyboard,
-accepted-drop, component-scoping, and announcement contracts. SwiftUI and XAML
-remain explicit degradations until they ship equivalent behavior.
+accepted-drop, component-scoping, and announcement contracts. XAML remains an
+explicit degradation until it ships equivalent behavior.
 
 The package-expanded TaskApp is the full strict-profile proof point for Flutter
 and Compose. Qt's same table is now native and accessible; its permissive
@@ -57,8 +57,8 @@ acceptance report retains only the sample-runtime fallback. The strict Flutter
 and Compose outputs have no known degradations and require the standard
 Rust runtime. Flutter passes whole-project Dart analysis and a native desktop
 build; Compose passes Kotlin compilation and native desktop distribution
-packaging. This does not close the cross-backend milestone; Qt, SwiftUI, and
-XAML still have explicit TaskApp degradations.
+packaging. This does not close the cross-backend milestone; SwiftUI still lacks
+native table semantics and XAML retains explicit TaskApp degradations.
 
 Property degradations carry the exact package-expanded node and property index.
 For example, Compose/Flutter/SwiftUI report an authored, non-false

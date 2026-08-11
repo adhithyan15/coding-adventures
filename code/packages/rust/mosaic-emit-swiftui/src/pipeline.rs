@@ -2088,6 +2088,17 @@ pub fn from_pipeline(
     )
     .unwrap();
     writeln!(out, "import SwiftUI").unwrap();
+    if layout_contains_tag(&layout.root, "HostDraggable")
+        || layout_contains_tag(&layout.root, "HostDropTarget")
+    {
+        writeln!(out, "import Foundation").unwrap();
+        writeln!(out, "import UniformTypeIdentifiers").unwrap();
+        writeln!(out, "#if os(macOS)").unwrap();
+        writeln!(out, "import AppKit").unwrap();
+        writeln!(out, "#elseif os(iOS)").unwrap();
+        writeln!(out, "import UIKit").unwrap();
+        writeln!(out, "#endif").unwrap();
+    }
     writeln!(out).unwrap();
 
     if layout_uses_automatic_hover(&layout.root, &part_styles) {
@@ -2100,6 +2111,12 @@ pub fn from_pipeline(
     }
     if layout_uses_automatic_press(&layout.root, &part_styles) {
         out.push_str(PRESS_STATE_HELPER_SWIFT);
+        writeln!(out).unwrap();
+    }
+    if layout_contains_tag(&layout.root, "HostDraggable")
+        || layout_contains_tag(&layout.root, "HostDropTarget")
+    {
+        out.push_str(&emit_drag_helpers(name));
         writeln!(out).unwrap();
     }
 
@@ -2125,6 +2142,431 @@ pub fn from_pipeline(
 // =====================================================================
 // Section emitters
 // =====================================================================
+
+/// Emit UI35's component-local SwiftUI drag/drop runtime.
+///
+/// SwiftUI's native `onDrag` / `onDrop` APIs own pointer and touch transfer.
+/// A small registry supplies the equivalent Space/Enter, arrow-key, and
+/// Escape workflow without moving domain state in the view. The native and
+/// keyboard paths converge on the target state's `accept` method, which is
+/// the only place an authored `onDrop` proposal is emitted.
+fn emit_drag_helpers(_component: &str) -> String {
+    r#"private struct __COMPONENT__MosaicDragData: Equatable {
+    let scopeID: UUID
+    let key: String
+    let kind: String
+    let label: String
+
+    func encode() -> String {
+        let fields = [scopeID.uuidString, key, kind, label].map {
+            Data($0.utf8).base64EncodedString()
+        }
+        return "mosaic-drag-v1." + fields.joined(separator: ".")
+    }
+}
+
+private final class __COMPONENT__MosaicDropTargetState {
+    private unowned let scope: __COMPONENT__MosaicDragScope
+    var targetKey: String
+    var acceptsKinds: [String]?
+    var disabled: Bool
+    var height: CGFloat = 0
+    var position = "into"
+    var onDragEnter: ((__COMPONENT__MosaicDragData) -> Void)?
+    var onDragLeave: ((__COMPONENT__MosaicDragData) -> Void)?
+    var onDropHover: ((__COMPONENT__MosaicDragData, String) -> Void)?
+    var onDrop: ((__COMPONENT__MosaicDragData, String) -> Void)?
+
+    init(
+        scope: __COMPONENT__MosaicDragScope,
+        targetKey: String,
+        acceptsKinds: [String]?,
+        disabled: Bool,
+        onDragEnter: ((__COMPONENT__MosaicDragData) -> Void)?,
+        onDragLeave: ((__COMPONENT__MosaicDragData) -> Void)?,
+        onDropHover: ((__COMPONENT__MosaicDragData, String) -> Void)?,
+        onDrop: ((__COMPONENT__MosaicDragData, String) -> Void)?
+    ) {
+        self.scope = scope
+        self.targetKey = targetKey
+        self.acceptsKinds = acceptsKinds
+        self.disabled = disabled
+        self.onDragEnter = onDragEnter
+        self.onDragLeave = onDragLeave
+        self.onDropHover = onDropHover
+        self.onDrop = onDrop
+    }
+
+    func update(
+        targetKey: String,
+        acceptsKinds: [String]?,
+        disabled: Bool,
+        onDragEnter: ((__COMPONENT__MosaicDragData) -> Void)?,
+        onDragLeave: ((__COMPONENT__MosaicDragData) -> Void)?,
+        onDropHover: ((__COMPONENT__MosaicDragData, String) -> Void)?,
+        onDrop: ((__COMPONENT__MosaicDragData, String) -> Void)?
+    ) {
+        self.targetKey = targetKey
+        self.acceptsKinds = acceptsKinds
+        self.disabled = disabled
+        self.onDragEnter = onDragEnter
+        self.onDragLeave = onDragLeave
+        self.onDropHover = onDropHover
+        self.onDrop = onDrop
+    }
+
+    func accepts(_ data: __COMPONENT__MosaicDragData) -> Bool {
+        data.scopeID == scope.id && !disabled && (acceptsKinds?.contains(data.kind) ?? true)
+    }
+
+    func enter(_ data: __COMPONENT__MosaicDragData) {
+        if accepts(data) { onDragEnter?(data) }
+    }
+
+    func leave(_ data: __COMPONENT__MosaicDragData) {
+        if data.scopeID == scope.id { onDragLeave?(data) }
+    }
+
+    func hover(_ data: __COMPONENT__MosaicDragData, at point: CGPoint?) {
+        guard accepts(data) else { return }
+        if height > 0, let point {
+            let ratio = point.y / height
+            position = ratio < (1.0 / 3.0) ? "before" : (ratio > (2.0 / 3.0) ? "after" : "into")
+        } else {
+            position = "into"
+        }
+        onDropHover?(data, position)
+    }
+
+    func accept(_ data: __COMPONENT__MosaicDragData, keyboard: Bool = false) -> Bool {
+        guard accepts(data) else { return false }
+        let acceptedPosition = keyboard ? "into" : position
+        scope.markPointerAccepted(data)
+        onDrop?(data, acceptedPosition)
+        scope.announce("Dropped \(data.label) on \(targetKey).")
+        return true
+    }
+}
+
+private final class __COMPONENT__MosaicDragScope: ObservableObject {
+    let id = UUID()
+    @Published private(set) var announcement = "Drag and drop ready."
+    private var targets: [__COMPONENT__MosaicDropTargetState] = []
+    private var keyboardData: __COMPONENT__MosaicDragData?
+    private weak var keyboardTarget: __COMPONENT__MosaicDropTargetState?
+    private var keyboardEnd: ((Bool) -> Void)?
+    private var pointerData: __COMPONENT__MosaicDragData?
+    private var pointerEnd: ((Bool) -> Void)?
+    private var acceptedPointer: __COMPONENT__MosaicDragData?
+
+    func register(_ target: __COMPONENT__MosaicDropTargetState) {
+        if !targets.contains(where: { $0 === target }) { targets.append(target) }
+    }
+
+    func unregister(_ target: __COMPONENT__MosaicDropTargetState) {
+        targets.removeAll { $0 === target }
+        if keyboardTarget === target { keyboardTarget = nil }
+    }
+
+    func announce(_ message: String) {
+        announcement = message
+#if os(macOS)
+        NSAccessibility.post(
+            element: NSApp as Any,
+            notification: .announcementRequested,
+            userInfo: [.announcement: message]
+        )
+#elseif os(iOS)
+        UIAccessibility.post(notification: .announcement, argument: message)
+#endif
+    }
+
+    func toggleKeyboard(
+        _ data: __COMPONENT__MosaicDragData,
+        onStart: (() -> Void)?,
+        onEnd: ((Bool) -> Void)?
+    ) {
+        if keyboardData == nil {
+            keyboardData = data
+            keyboardTarget = nil
+            keyboardEnd = onEnd
+            onStart?()
+            announce("Grabbed \(data.label). Use arrow keys to choose a target, then press Space or Enter to drop.")
+        } else if !dropKeyboard() {
+            _ = cancelKeyboard()
+        }
+    }
+
+    func stepKeyboard(_ delta: Int) -> Bool {
+        guard let data = keyboardData else { return false }
+        let eligible = targets.filter { $0.accepts(data) }
+        guard !eligible.isEmpty else {
+            announce("No available drop targets.")
+            return true
+        }
+        let previous = keyboardTarget
+        let current = previous.flatMap { target in eligible.firstIndex(where: { $0 === target }) } ?? -1
+        let nextIndex = (current + delta + eligible.count) % eligible.count
+        let next = eligible[nextIndex]
+        if previous !== next {
+            previous?.leave(data)
+            next.enter(data)
+        }
+        next.hover(data, at: nil)
+        keyboardTarget = next
+        announce("Move to \(next.targetKey), position \(nextIndex + 1) of \(eligible.count).")
+        return true
+    }
+
+    private func dropKeyboard() -> Bool {
+        guard let data = keyboardData, let target = keyboardTarget, target.accept(data, keyboard: true) else {
+            return false
+        }
+        finishKeyboard(dropped: true)
+        return true
+    }
+
+    func cancelKeyboard() -> Bool {
+        guard let data = keyboardData else { return false }
+        keyboardTarget?.leave(data)
+        announce("Cancelled drag.")
+        finishKeyboard(dropped: false)
+        return true
+    }
+
+    private func finishKeyboard(dropped: Bool) {
+        let callback = keyboardEnd
+        keyboardData = nil
+        keyboardTarget = nil
+        keyboardEnd = nil
+        callback?(dropped)
+    }
+
+    func beginPointer(
+        _ data: __COMPONENT__MosaicDragData,
+        onStart: (() -> Void)?,
+        onEnd: ((Bool) -> Void)?
+    ) {
+        if let previous = pointerData { finishPointer(previous) }
+        pointerData = data
+        pointerEnd = onEnd
+        acceptedPointer = nil
+        onStart?()
+        announce("Grabbed \(data.label).")
+    }
+
+    func activePointerData() -> __COMPONENT__MosaicDragData? { pointerData }
+
+    func markPointerAccepted(_ data: __COMPONENT__MosaicDragData) {
+        if pointerData == data { acceptedPointer = data }
+    }
+
+    func finishPointer(_ data: __COMPONENT__MosaicDragData) {
+        guard pointerData == data else { return }
+        let dropped = acceptedPointer == data
+        let callback = pointerEnd
+        pointerData = nil
+        pointerEnd = nil
+        acceptedPointer = nil
+        if !dropped { announce("Cancelled drag.") }
+        callback?(dropped)
+    }
+}
+
+private struct __COMPONENT__MosaicDraggable<Content: View>: View {
+    @ObservedObject var scope: __COMPONENT__MosaicDragScope
+    let key: String
+    let kind: String
+    let label: String
+    let disabled: Bool
+    let onDragStart: (() -> Void)?
+    let onDragEnd: ((Bool) -> Void)?
+    let content: Content
+    @Environment(\.layoutDirection) private var layoutDirection
+
+    init(
+        scope: __COMPONENT__MosaicDragScope,
+        key: String,
+        kind: String,
+        label: String,
+        disabled: Bool,
+        onDragStart: (() -> Void)?,
+        onDragEnd: ((Bool) -> Void)?,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.scope = scope
+        self.key = key
+        self.kind = kind
+        self.label = label
+        self.disabled = disabled
+        self.onDragStart = onDragStart
+        self.onDragEnd = onDragEnd
+        self.content = content()
+    }
+
+    private var data: __COMPONENT__MosaicDragData {
+        __COMPONENT__MosaicDragData(scopeID: scope.id, key: key, kind: kind, label: label)
+    }
+
+    private var button: some View {
+        Button(action: {
+            if !disabled { scope.toggleKeyboard(data, onStart: onDragStart, onEnd: onDragEnd) }
+        }) {
+            content
+        }
+        .buttonStyle(.plain)
+        .disabled(disabled)
+        .accessibilityLabel(Text("Draggable \(label)"))
+        .accessibilityHint(Text("Press Space or Enter to grab, use arrow keys to choose a target, then press Space or Enter to drop."))
+        .accessibilityValue(Text(scope.announcement))
+        .accessibilityAction(named: Text("Previous drop target")) { _ = scope.stepKeyboard(-1) }
+        .accessibilityAction(named: Text("Next drop target")) { _ = scope.stepKeyboard(1) }
+        .accessibilityAction(named: Text("Cancel drag")) { _ = scope.cancelKeyboard() }
+    }
+
+    @ViewBuilder private var pointerBody: some View {
+        if disabled {
+            button
+        } else {
+            button
+                .onDrag {
+                    scope.beginPointer(data, onStart: onDragStart, onEnd: onDragEnd)
+                    return NSItemProvider(object: data.encode() as NSString)
+                }
+                .simultaneousGesture(
+                    DragGesture(minimumDistance: 8).onEnded { _ in
+                        let finished = data
+                        DispatchQueue.main.async { scope.finishPointer(finished) }
+                    }
+                )
+        }
+    }
+
+    @ViewBuilder var body: some View {
+#if os(macOS)
+        pointerBody
+            .onMoveCommand { direction in
+                switch direction {
+                case .down: _ = scope.stepKeyboard(1)
+                case .up: _ = scope.stepKeyboard(-1)
+                case .right: _ = scope.stepKeyboard(layoutDirection == .leftToRight ? 1 : -1)
+                case .left: _ = scope.stepKeyboard(layoutDirection == .leftToRight ? -1 : 1)
+                default: break
+                }
+            }
+            .onExitCommand { _ = scope.cancelKeyboard() }
+#else
+        pointerBody
+#endif
+    }
+}
+
+private struct __COMPONENT__MosaicDropDelegate: DropDelegate {
+    let state: __COMPONENT__MosaicDropTargetState
+    let scope: __COMPONENT__MosaicDragScope
+
+    func validateDrop(info: DropInfo) -> Bool {
+        scope.activePointerData().map(state.accepts) ?? false
+    }
+
+    func dropEntered(info: DropInfo) {
+        if let data = scope.activePointerData(), state.accepts(data) { state.enter(data) }
+    }
+
+    func dropUpdated(info: DropInfo) -> DropProposal? {
+        guard let data = scope.activePointerData(), state.accepts(data) else {
+            return DropProposal(operation: .forbidden)
+        }
+        state.hover(data, at: info.location)
+        return DropProposal(operation: .move)
+    }
+
+    func dropExited(info: DropInfo) {
+        if let data = scope.activePointerData() { state.leave(data) }
+    }
+
+    func performDrop(info: DropInfo) -> Bool {
+        guard let data = scope.activePointerData() else { return false }
+        return state.accept(data)
+    }
+}
+
+private struct __COMPONENT__MosaicDropTarget<Content: View>: View {
+    @ObservedObject var scope: __COMPONENT__MosaicDragScope
+    @State private var state: __COMPONENT__MosaicDropTargetState
+    let targetKey: String
+    let acceptsKinds: [String]?
+    let disabled: Bool
+    let onDragEnter: ((__COMPONENT__MosaicDragData) -> Void)?
+    let onDragLeave: ((__COMPONENT__MosaicDragData) -> Void)?
+    let onDropHover: ((__COMPONENT__MosaicDragData, String) -> Void)?
+    let onDrop: ((__COMPONENT__MosaicDragData, String) -> Void)?
+    let content: Content
+
+    init(
+        scope: __COMPONENT__MosaicDragScope,
+        targetKey: String,
+        acceptsKinds: [String]?,
+        disabled: Bool,
+        onDragEnter: ((__COMPONENT__MosaicDragData) -> Void)?,
+        onDragLeave: ((__COMPONENT__MosaicDragData) -> Void)?,
+        onDropHover: ((__COMPONENT__MosaicDragData, String) -> Void)?,
+        onDrop: ((__COMPONENT__MosaicDragData, String) -> Void)?,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.scope = scope
+        self.targetKey = targetKey
+        self.acceptsKinds = acceptsKinds
+        self.disabled = disabled
+        self.onDragEnter = onDragEnter
+        self.onDragLeave = onDragLeave
+        self.onDropHover = onDropHover
+        self.onDrop = onDrop
+        _state = State(initialValue: __COMPONENT__MosaicDropTargetState(
+            scope: scope,
+            targetKey: targetKey,
+            acceptsKinds: acceptsKinds,
+            disabled: disabled,
+            onDragEnter: onDragEnter,
+            onDragLeave: onDragLeave,
+            onDropHover: onDropHover,
+            onDrop: onDrop
+        ))
+        self.content = content()
+    }
+
+    var body: some View {
+        state.update(
+            targetKey: targetKey,
+            acceptsKinds: acceptsKinds,
+            disabled: disabled,
+            onDragEnter: onDragEnter,
+            onDragLeave: onDragLeave,
+            onDropHover: onDropHover,
+            onDrop: onDrop
+        )
+        return content
+            .background(
+                GeometryReader { proxy in
+                    Color.clear
+                        .onAppear { state.height = proxy.size.height }
+                        .onChange(of: proxy.size.height) { state.height = $0 }
+                }
+            )
+            .onAppear { scope.register(state) }
+            .onDisappear { scope.unregister(state) }
+            .onDrop(
+                of: [UTType.utf8PlainText],
+                delegate: __COMPONENT__MosaicDropDelegate(state: state, scope: scope)
+            )
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel(Text("Drop target \(state.targetKey)"))
+            .accessibilityValue(Text(scope.announcement))
+    }
+}
+"#
+    .replace("__COMPONENT__", "_")
+}
 
 /// Emit the Swift `enum` modelling the discriminated event-union.
 ///
@@ -2338,6 +2780,15 @@ fn emit_view_struct(
         writeln!(out, "    let {field}: {ty}").unwrap();
     }
     writeln!(out, "    let dispatch: ({component}Event) -> Void").unwrap();
+    if layout_contains_tag(layout_root, "HostDraggable")
+        || layout_contains_tag(layout_root, "HostDropTarget")
+    {
+        writeln!(
+            out,
+            "    @StateObject private var _mosaicDragScope = _MosaicDragScope()"
+        )
+        .unwrap();
+    }
     writeln!(out).unwrap();
 
     // Moslayout conditions use value truthiness, while Swift requires an
@@ -2626,24 +3077,15 @@ fn emit_view_tree(
         // view modifier on the wrapped child (macOS / iOS 16+), and
         // `HostNumberInput` to `TextField` with the `.number`
         // format binding (iOS 15+/macOS 12+).
-        // UI35 — the drag family. This backend does not implement dragging yet, so
-        // both lower to a plain vertical container: the card and the column still
-        // render, they just aren't draggable here.
-        //
-        // The alternative — erroring on an unknown primitive — means a layout that
-        // uses drag cannot be emitted to this backend AT ALL, which took down the
-        // task-app cross-backend tests the moment the app grew a board. Degrading to
-        // the content is the behaviour UI35 asks for: the view is still usable, minus
-        // the interaction. See `code/specs/UI35-host-drag-drop.md`.
-        "HostDraggable" | "HostDropTarget" => container(
-            "VStack",
-            node,
-            indent,
-            part_styles,
-            emits,
-            table_ctx,
-            for_payload,
-        )?,
+        // UI35 — native pointer/touch drag-and-drop plus an accessible
+        // keyboard path. Both paths share the target state's `accept` method,
+        // so the proposal payload cannot drift between input modalities.
+        "HostDraggable" => {
+            emit_host_draggable(node, indent, part_styles, emits, table_ctx, for_payload)?
+        }
+        "HostDropTarget" => {
+            emit_host_drop_target(node, indent, part_styles, emits, table_ctx, for_payload)?
+        }
 
         "HostLink" => emit_host_link(node, indent, emits, for_payload)?,
         "HostTooltip" => emit_host_tooltip(node, indent, part_styles, emits, for_payload)?,
@@ -3902,6 +4344,252 @@ fn emit_host_radio(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
     }
 
     Ok(out)
+}
+
+// =====================================================================
+// UI35 — HostDraggable / HostDropTarget emitters
+// =====================================================================
+
+#[allow(clippy::too_many_arguments)]
+fn emit_host_draggable(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
+    table_ctx: Option<&TableContext>,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let inner = " ".repeat(indent + 4);
+    let key = swift_drag_text_expr(node, "drag-key", "\"\"", for_payload)?;
+    let kind = swift_drag_text_expr(node, "drag-kind", "\"\"", for_payload)?;
+    let label = swift_drag_text_expr(node, "drag-label", &key, for_payload)?;
+    let disabled = swift_drag_disabled_expr(node, "drag-disabled", for_payload)?;
+    let start = swift_drag_event_dispatch(
+        node,
+        "onDragStart",
+        emits,
+        &[("key", key.as_str()), ("kind", kind.as_str())],
+    )?
+    .map(|dispatch| format!("{{ {dispatch} }}"))
+    .unwrap_or_else(|| "nil".to_string());
+    let end = swift_drag_event_dispatch(
+        node,
+        "onDragEnd",
+        emits,
+        &[
+            ("key", key.as_str()),
+            ("kind", kind.as_str()),
+            ("dropped", "dropped"),
+        ],
+    )?
+    .map(|dispatch| format!("{{ dropped in {dispatch} }}"))
+    .unwrap_or_else(|| "nil".to_string());
+
+    let mut out = String::new();
+    writeln!(out, "{pad}_MosaicDraggable(").unwrap();
+    writeln!(out, "{inner}scope: _mosaicDragScope,").unwrap();
+    writeln!(out, "{inner}key: {key},").unwrap();
+    writeln!(out, "{inner}kind: {kind},").unwrap();
+    writeln!(out, "{inner}label: {label},").unwrap();
+    writeln!(out, "{inner}disabled: {disabled},").unwrap();
+    writeln!(out, "{inner}onDragStart: {start},").unwrap();
+    writeln!(out, "{inner}onDragEnd: {end}").unwrap();
+    writeln!(out, "{pad}) {{").unwrap();
+    out.push_str(&container(
+        "VStack",
+        node,
+        indent + 4,
+        part_styles,
+        emits,
+        table_ctx,
+        for_payload,
+    )?);
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
+#[allow(clippy::too_many_arguments)]
+fn emit_host_drop_target(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
+    table_ctx: Option<&TableContext>,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let inner = " ".repeat(indent + 4);
+    let target_key = swift_drag_text_expr(node, "drop-key", "\"\"", for_payload)?;
+    let disabled = swift_drag_disabled_expr(node, "drop-disabled", for_payload)?;
+    let accepts = swift_drag_accepts_expr(node, for_payload)?.unwrap_or_else(|| "nil".to_string());
+    let enter_values = [("key", "data.key"), ("kind", "data.kind")];
+    let drop_values = [
+        ("key", "data.key"),
+        ("kind", "data.kind"),
+        ("targetKey", target_key.as_str()),
+        ("position", "position"),
+    ];
+
+    let callback = |prop: &str,
+                    signature: &str,
+                    values: &[(&str, &str)]|
+     -> Result<String, PipelineEmitError> {
+        Ok(swift_drag_event_dispatch(node, prop, emits, values)?
+            .map(|dispatch| format!("{{ {signature} in {dispatch} }}"))
+            .unwrap_or_else(|| "nil".to_string()))
+    };
+
+    let mut out = String::new();
+    writeln!(out, "{pad}_MosaicDropTarget(").unwrap();
+    writeln!(out, "{inner}scope: _mosaicDragScope,").unwrap();
+    writeln!(out, "{inner}targetKey: {target_key},").unwrap();
+    writeln!(out, "{inner}acceptsKinds: {accepts},").unwrap();
+    writeln!(out, "{inner}disabled: {disabled},").unwrap();
+    writeln!(
+        out,
+        "{inner}onDragEnter: {},",
+        callback("onDragEnter", "data", &enter_values)?
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{inner}onDragLeave: {},",
+        callback("onDragLeave", "data", &enter_values)?
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{inner}onDropHover: {},",
+        callback("onDropHover", "data, position", &drop_values)?
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{inner}onDrop: {}",
+        callback("onDrop", "data, position", &drop_values)?
+    )
+    .unwrap();
+    writeln!(out, "{pad}) {{").unwrap();
+    out.push_str(&container(
+        "VStack",
+        node,
+        indent + 4,
+        part_styles,
+        emits,
+        table_ctx,
+        for_payload,
+    )?);
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
+fn swift_drag_text_expr(
+    node: &LayoutNode,
+    name: &str,
+    fallback: &str,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
+    match find_prop_value(node, name) {
+        Some(LayoutPropValue::String(value)) => Ok(format!("\"{}\"", escape_swift_string(value))),
+        Some(LayoutPropValue::SlotRef(slot)) | Some(LayoutPropValue::Keyword(slot)) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(format!("String(describing: {field})"))
+        }
+        Some(LayoutPropValue::Expr(expression)) => Ok(format!(
+            "String(describing: {})",
+            swift_collection_index_expr(expression.trim(), for_payload)
+        )),
+        Some(LayoutPropValue::Number(number)) => Ok(format!("\"{number}\"")),
+        Some(LayoutPropValue::EmitRef(_)) | None => Ok(fallback.to_string()),
+    }
+}
+
+fn swift_drag_disabled_expr(
+    node: &LayoutNode,
+    specific: &str,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
+    let value = find_prop_value(node, specific).or_else(|| find_prop_value(node, "disabled"));
+    match value {
+        Some(LayoutPropValue::Keyword(value)) if value == "true" || value == "false" => {
+            Ok(value.clone())
+        }
+        Some(LayoutPropValue::SlotRef(slot)) | Some(LayoutPropValue::Keyword(slot)) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(format!("_mosaicTruthy({field})"))
+        }
+        Some(LayoutPropValue::Expr(expression)) => Ok(format!(
+            "_mosaicTruthy({})",
+            swift_collection_index_expr(expression.trim(), for_payload)
+        )),
+        Some(LayoutPropValue::Number(number)) => Ok((*number != 0.0).to_string()),
+        Some(LayoutPropValue::String(value)) => Ok((value == "true").to_string()),
+        Some(LayoutPropValue::EmitRef(_)) | None => Ok("false".to_string()),
+    }
+}
+
+fn swift_drag_accepts_expr(
+    node: &LayoutNode,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<Option<String>, PipelineEmitError> {
+    let Some(value) = find_prop_value(node, "accepts") else {
+        return Ok(None);
+    };
+    match value {
+        LayoutPropValue::String(kind) => Ok(Some(format!("[\"{}\"]", escape_swift_string(kind)))),
+        LayoutPropValue::SlotRef(slot) | LayoutPropValue::Keyword(slot) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(Some(field))
+        }
+        LayoutPropValue::Expr(expression) => Ok(Some(swift_collection_index_expr(
+            expression.trim(),
+            for_payload,
+        ))),
+        LayoutPropValue::Number(_) | LayoutPropValue::EmitRef(_) => Ok(Some("[]".to_string())),
+    }
+}
+
+fn swift_drag_event_dispatch(
+    node: &LayoutNode,
+    prop: &str,
+    emits: &[EmitDecl],
+    values: &[(&str, &str)],
+) -> Result<Option<String>, PipelineEmitError> {
+    let Some(emit_name) = find_emit_ref_prop(node, prop) else {
+        return Ok(None);
+    };
+    let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+    validate_emit_name(&case_name)?;
+    let Some(emit) = emits.iter().find(|emit| emit.name == emit_name) else {
+        return Ok(Some(format!("dispatch(.{case_name})")));
+    };
+    if emit.params.is_empty() {
+        return Ok(Some(format!("dispatch(.{case_name})")));
+    }
+    let args = emit
+        .params
+        .iter()
+        .map(|param| {
+            let field = to_camel_case_first_lower(&param.name);
+            validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            let value = values
+                .iter()
+                .find_map(|(name, value)| (*name == field).then_some(*value))
+                .map(ToString::to_string)
+                .unwrap_or_else(|| match &param.r#type {
+                    EmitPayloadType::Text | EmitPayloadType::Color => "\"\"".to_string(),
+                    EmitPayloadType::Number => "0.0".to_string(),
+                    EmitPayloadType::Bool => "false".to_string(),
+                    EmitPayloadType::Component(_) => "AnyView(EmptyView())".to_string(),
+                });
+            Ok(format!("{field}: {value}"))
+        })
+        .collect::<Result<Vec<_>, PipelineEmitError>>()?;
+    Ok(Some(format!("dispatch(.{case_name}({}))", args.join(", "))))
 }
 
 // =====================================================================
@@ -8221,6 +8909,116 @@ mod tests {
             out.contains("dispatch(.pick(value: radioValue))"),
             "expected dispatch with `radioValue` bare identifier, got:\n{out}"
         );
+    }
+
+    // =====================================================================
+    // UI35 — HostDraggable / HostDropTarget (SwiftUI)
+    // =====================================================================
+
+    #[test]
+    fn drag_family_emits_native_pointer_keyboard_and_accessibility_runtime() {
+        let draggable = LayoutNode {
+            tag: "HostDraggable".into(),
+            part_name: None,
+            props: vec![
+                prop_slot_ref("drag-key", "drag-key"),
+                prop_string("drag-kind", "task"),
+                prop_slot_ref("drag-label", "drag-label"),
+                prop_emit_ref("onDragStart", "onDragStart"),
+                prop_emit_ref("onDragEnd", "onDragEnd"),
+            ],
+            children: vec![leaf("Text", vec![prop_string("content", "Card")])],
+        };
+        let target = LayoutNode {
+            tag: "HostDropTarget".into(),
+            part_name: None,
+            props: vec![
+                prop_string("drop-key", "lane-a"),
+                prop_slot_ref("accepts", "accepted-kinds"),
+                prop_emit_ref("onDrop", "onDrop"),
+            ],
+            children: vec![draggable],
+        };
+        let out = from_pipeline(
+            &component(
+                "Board",
+                vec![
+                    slot("drag-key", SlotType::Text, true),
+                    slot("drag-label", SlotType::Text, true),
+                    slot(
+                        "accepted-kinds",
+                        SlotType::List(Box::new(ListInnerType::Text)),
+                        true,
+                    ),
+                ],
+                vec![
+                    emit(
+                        "onDragStart",
+                        vec![
+                            param("key", EmitPayloadType::Text),
+                            param("kind", EmitPayloadType::Text),
+                        ],
+                    ),
+                    emit(
+                        "onDragEnd",
+                        vec![
+                            param("key", EmitPayloadType::Text),
+                            param("kind", EmitPayloadType::Text),
+                            param("dropped", EmitPayloadType::Bool),
+                        ],
+                    ),
+                    emit(
+                        "onDrop",
+                        vec![
+                            param("key", EmitPayloadType::Text),
+                            param("kind", EmitPayloadType::Text),
+                            param("target-key", EmitPayloadType::Text),
+                            param("position", EmitPayloadType::Text),
+                        ],
+                    ),
+                ],
+            ),
+            &layout_with("Board", container_node("Column", vec![target])),
+            &empty_style("Board"),
+        )
+        .expect("emit SwiftUI drag family")
+        .output;
+
+        for expected in [
+            "import UniformTypeIdentifiers",
+            "private final class _MosaicDragScope: ObservableObject",
+            ".onDrag {",
+            ".onDrop(",
+            "private struct _MosaicDropDelegate: DropDelegate",
+            "data.scopeID == scope.id",
+            "Press Space or Enter to grab",
+            ".accessibilityAction(named: Text(\"Next drop target\"))",
+            ".onMoveCommand",
+            ".onExitCommand",
+            "layoutDirection == .leftToRight",
+            "NSAccessibility.post(",
+            "UIAccessibility.post(notification: .announcement",
+            "acceptsKinds: acceptedKinds",
+            "dispatch(.dragStart(key: String(describing: dragKey), kind: \"task\"))",
+            "dispatch(.dragEnd(key: String(describing: dragKey), kind: \"task\", dropped: dropped))",
+            "dispatch(.drop(key: data.key, kind: data.kind, targetKey: \"lane-a\", position: position))",
+        ] {
+            assert!(out.contains(expected), "missing `{expected}`:\n{out}");
+        }
+    }
+
+    #[test]
+    fn non_drag_component_omits_drag_runtime_and_platform_imports() {
+        let out = from_pipeline(
+            &component("Plain", vec![], vec![]),
+            &layout_with("Plain", container_node("Column", vec![])),
+            &empty_style("Plain"),
+        )
+        .unwrap()
+        .output;
+        assert!(!out.contains("_MosaicDragScope"));
+        assert!(!out.contains("UniformTypeIdentifiers"));
+        assert!(!out.contains("import AppKit"));
     }
 
     // =====================================================================
