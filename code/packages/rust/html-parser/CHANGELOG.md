@@ -6,6 +6,10 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- A `template` end tag with no authored open HTML template now reports the
+  required parse error and remains ignored. Matching HTML templates, foreign
+  template-named elements, and synthetic template fragment contexts retain
+  their distinct closure and diagnostic behavior.
 - EOF reached with authored open templates now reports one dedicated
   template-mode parse error per open template before preserving any residual
   table, select, or generic EOF diagnostic. Synthetic template fragment

@@ -6852,6 +6852,19 @@ impl HtmlParser {
             ));
             return;
         }
+        let in_foreign_content = self.current_namespace().is_some()
+            && !self.current_node_is_svg_html_integration_point()
+            && !self.current_node_is_mathml_integration_point();
+        if name == "template"
+            && in_foreign_content
+            && self.close_open_foreign_element_before_html_boundary(name)
+        {
+            return;
+        }
+        if name == "template" && in_foreign_content {
+            self.handle_html_template_end_tag();
+            return;
+        }
         if self.has_open_svg_html_integration_point()
             && name != "template"
             && name != "p"
@@ -6975,7 +6988,7 @@ impl HtmlParser {
                 self.append_start_tag("br".to_string(), Vec::new(), true);
             }
             "menuitem" => self.close_non_paragraph_children_above_menuitem(),
-            "template" => self.close_open_element_without_scope_checks("template"),
+            "template" => self.handle_html_template_end_tag(),
             name if is_void_element(name) => {
                 self.diagnostics.push(ParserDiagnostic::new(
                     "unexpected-void-end-tag",
@@ -7849,13 +7862,36 @@ impl HtmlParser {
         }
     }
 
-    fn close_open_element_without_scope_checks(&mut self, name: &str) {
+    fn close_open_foreign_element_before_html_boundary(&mut self, name: &str) -> bool {
+        for (index, path) in self.open_elements.iter().enumerate().rev() {
+            let Some(element) = element_ref_at_path(&self.document, path) else {
+                continue;
+            };
+            if element.namespace.is_none() {
+                return false;
+            }
+            if element.name.eq_ignore_ascii_case(name) {
+                self.open_elements.truncate(index);
+                return true;
+            }
+        }
+        false
+    }
+
+    fn handle_html_template_end_tag(&mut self) {
         if let Some(index) = self.open_elements.iter().rposition(|path| {
             element_ref_at_path(&self.document, path).is_some_and(|element| {
-                element.name == name && (name != "template" || element.namespace.is_none())
+                element.name == "template"
+                    && element.namespace.is_none()
+                    && !has_fragment_context_marker(element)
             })
         }) {
             self.open_elements.truncate(index);
+        } else {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-template-end-tag",
+                "end tag `</template>` was ignored because no HTML template element was open",
+            ));
         }
     }
 
@@ -34061,6 +34097,86 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "unexpected-fragment-context-end-tag"));
+    }
+
+    #[test]
+    fn reports_template_end_tags_without_an_open_html_template() {
+        for source in [
+            "<!doctype html><div></template></div>",
+            "<!doctype html><template></template></template>",
+            "<!doctype html><svg></template><circle></circle></svg>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| diagnostic.code == "unexpected-template-end-tag")
+                    .count(),
+                1,
+                "source {source:?}"
+            );
+        }
+
+        let ignored = parse_html_with_diagnostics(
+            "<!doctype html><div id=before></template><span id=after></span></div>",
+        )
+        .unwrap();
+        let control = parse_html(
+            "<!doctype html><div id=before><span id=after></span></div>",
+        )
+        .unwrap();
+        assert_eq!(ignored.document, control);
+    }
+
+    #[test]
+    fn closes_matching_html_and_foreign_template_elements_without_a_stray_diagnostic() {
+        for source in [
+            "<!doctype html><template><div></template>",
+            "<!doctype html><template><template></template></template>",
+            "<!doctype html><svg><template></template><circle></circle></svg>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "unexpected-template-end-tag"),
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+        }
+
+        let foreign = parse_html_with_diagnostics(
+            "<!doctype html><svg><template></template><circle></circle></svg>",
+        )
+        .unwrap();
+        let svg = find_first_element_in_nodes(&foreign.document.children, "svg").unwrap();
+        assert_eq!(svg.namespace.as_deref(), Some("svg"));
+        assert_eq!(element(&svg.children[0]).name, "template");
+        assert_eq!(element(&svg.children[1]).name, "circle");
+    }
+
+    #[test]
+    fn leaves_template_fragment_shell_and_ordinary_stray_end_diagnostics_distinct() {
+        let fragment = parse_html_fragment_for_context_with_diagnostics(
+            "</template><p>x",
+            "template",
+        )
+        .unwrap();
+        assert_eq!(
+            fragment.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-fragment-context-end-tag",
+                "end tag `</template>` targeted a seeded fragment context element",
+            )]
+        );
+
+        let ordinary = parse_html_with_diagnostics("<!doctype html><div></span></div>").unwrap();
+        assert!(ordinary
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-template-end-tag"));
     }
 
     #[test]
