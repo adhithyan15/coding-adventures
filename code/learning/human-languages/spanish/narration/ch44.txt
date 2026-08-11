@@ -1,43 +1,115 @@
-Spanish, chapter 44: Synthesis --- Promising, and Supposing.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 44: The Future --- Saying What Will Happen.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-Synthesis — promising, and supposing.
+Lesson 1 of 3.
+hablaré — keep the infinitive, add the future.
 
 Warm-up.
 [pause 2 seconds]
-Nothing new in this chapter. Say hablaré, then hablaría.
+Voy a hablar español uses the near-future frame you already know. Spanish also has a one-word future: Hablaré español — “I will speak Spanish.” It can present a future prediction or intention without adding a new subject or object.
 
-Grammar Lens: the two endings are one word, twice.
-Three chapters ago you were told where these endings came from. Now it is worth seeing what that fact buys you.
-Both are the verb haber — Latin habēre, "to have" — glued onto the back of the infinitive. Romance speakers stopped saying "I have to speak" as two words and fused it into one:
-hablar + he (I have) becomes hablaré — I will speak. hablar + había (I had) becomes hablaría — I would speak.
-That is the entire difference between the two tenses: the same auxiliary, once in the present and once in the past. Not two systems to learn — one system, looked at from two moments.
+Grammar Lens: three familiar persons.
+Keep the whole infinitive hablar, then add one ending:
+[a table of 3 rows, read aloud]
+person: yo. simple future: hablaré.
+person: tú. simple future: hablarás.
+person: él / ella / usted. simple future: hablará.
+Say hablaré, hablarás, hablará. Each form has final stress, marked by an accent. Plural persons wait.
 
-What you've built.
-And the meaning follows from the grammar rather than being extra to it.
-Having to do something now is a commitment: hablaré is a promise, or a prediction you are standing behind. Having had to do it is a supposition — the obligation sits in a past that never arrived, so hablaría is hypothetical.
-Promise from the present. Suppose from the past.
-English hides the same move: will is the present of an old verb meaning to want, and would is its past. Will/would is the same pair as -é/-ía.
-
-The exchange.
-— ¿Hablarás español en Madrid? — Sí, hablaré español. — ¿Y sin práctica? — Hablaría español, pero no bien.
-One letter-run apart, and the second speaker has moved from a commitment to a guess without changing a single other word.
+The weld, taken apart.
+Late Latin and early Romance used more than one way to speak about the future. One influential construction placed an infinitive beside present forms of Latin habēre, “to have.” Through repeated use and sound change, descendants of those pieces became the endings in forms such as hablaré.
+That history explains why the infinitive remains visible. It does not mean that a modern learner should attach the full modern verb haber, and it does not require the claim that every older future vanished at one moment.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: hablaré then hablaría, and hear a promise turn into a guess]
+[your turn — say: “hablaré, hablarás, hablará”]
 [pause 8 seconds for the answer]
-[repeat that twice]
-Until the choice is about what you mean, not which ending it was.
-[question — say your answer, then pause 8 seconds]
-You are committing to it. I will speak: which form?
-[question — say your answer, then pause 8 seconds]
-Now you are only supposing. I would speak: which form?
-[question — say your answer, then pause 10 seconds]
-What single word is glued onto the infinitive in BOTH tenses?
+[your turn — say: “Voy a hablar español. Hablaré español.”]
+[pause 8 seconds for the answer]
+[your turn — say: “infinitive plus historical habēre material”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the learned singular future forms of hablar: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Say 'I will speak Spanish' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Which Latin verb meaning 'to have' contributed material to the Romance future endings?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is glued onto the infinitive in both tenses? (Haber — the verb to have.) Which one is a promise, and which a supposition? (-é the promise, -ía the supposition.) And what is the English pair that works the same way? (Will and would — a present and a past of one old verb.)
+Give the three learned forms. (Hablaré, hablarás, hablará.) What stays visible? (The whole infinitive.) What older verb contributed to the endings? (Latin habēre.) Next: test the same endings on comer.
+
+
+Lesson 2 of 3.
+comeré — the same endings keep -er.
+
+Warm-up.
+[pause 2 seconds]
+You built hablaré without removing -ar. Keep comer just as intact: comeré — “I will eat.”
+
+Grammar Lens: the singular -er row.
+[a table of 3 rows, read aloud]
+person: yo. simple future: comeré.
+person: tú. simple future: comerás.
+person: él / ella / usted. simple future: comerá.
+Say comeré, comerás, comerá. Compare hablaré / comeré: the infinitives differ, but the future endings do not. Plural persons wait.
+
+The ending, taken apart.
+The historical infinitive-plus-habēre construction helps explain the shared endings: the verb-family vowel remains inside hablar or comer, rather than selecting a different ending set.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “comeré, comerás, comerá”]
+[pause 8 seconds for the answer]
+[your turn — say: “Hablaré. Comeré.”]
+[pause 8 seconds for the answer]
+[your turn — say: “Beberé café.”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the learned singular future forms of comer: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Use the learned -er future pattern to say 'I will drink coffee' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Which endings do hablaré and comeré share across the learned singular row?
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three learned forms. (Comeré, comerás, comerá.) Did the -er disappear? (No.) Which endings match hablar? (-é, -ás, -á.) Next: let vivir test the pattern once more.
+
+
+Lesson 3 of 3.
+viviré — one future row for three verb families.
+
+Warm-up.
+[pause 2 seconds]
+Hablaré kept -ar. Comeré kept -er. Predict the yo future of vivir before reading on. It is viviré.
+
+Grammar Lens: the singular -ir row.
+[a table of 3 rows, read aloud]
+person: yo. simple future: viviré.
+person: tú. simple future: vivirás.
+person: él / ella / usted. simple future: vivirá.
+Say viviré, vivirás, vivirá. Now the bounded pattern is complete: hablaré, comeré, viviré. The same three endings attach to all three whole infinitives. Plural persons wait.
+
+Grammar Lens: meaning with known words.
+Viviré en Madrid says “I will live in Madrid.” Every lexical piece was available before this lesson; only the future form is new.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “viviré, vivirás, vivirá”]
+[pause 8 seconds for the answer]
+[your turn — say: “hablaré, comeré, viviré”]
+[pause 8 seconds for the answer]
+[your turn — say: “Viviré en Madrid.”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the learned singular future forms of vivir: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Say 'I will live in Madrid' in Spanish.
+[question — say your answer, then pause 9 seconds]
+Give the future yo forms of hablar, comer, and vivir, in that order.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three vivir forms. (Viviré, vivirás, vivirá.) Which verb families share the learned endings? (All three: -ar, -er, -ir.) Next: reuse the whole-infinitive frame for “would.”

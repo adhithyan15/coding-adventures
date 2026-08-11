@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C16-ver
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 1122
-chapter: 40
+chapter: 41
 type: word
 headword: ver
 gloss: to see — veo, ves, ve

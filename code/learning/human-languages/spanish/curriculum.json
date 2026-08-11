@@ -716,11 +716,13 @@
         "ES-C16-ser-imperfecto",
         "ES-C16-ir-imperfecto",
         "ES-C16-ver-imperfecto",
-        "ES-C16-practice"
+        "ES-C16-practice",
+        "ES-C16-sintesis-imperfecto"
       ],
       "before": [],
       "inline": [
-        "ES-EXT-040-LANGUAGE-SPECIFIC"
+        "ES-EXT-040-LANGUAGE-SPECIFIC",
+        "ES-EXT-040-CONSOLIDATION-IMPERFECT"
       ],
       "after": []
     },
@@ -2412,6 +2414,17 @@
       "prerequisites": [],
       "lessons": [
         "ES-C18-sintesis-subjuntivo"
+      ]
+    },
+    {
+      "id": "ES-EXT-040-CONSOLIDATION-IMPERFECT",
+      "stage": "A2",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C16-sintesis-imperfecto"
       ]
     }
   ]

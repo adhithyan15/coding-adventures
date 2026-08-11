@@ -1,62 +1,92 @@
-Spanish, chapter 50: Lo Siento.
-2 lessons. All 2 can be done entirely by ear.
+Spanish, chapter 50: The Subjunctive Built From the Yo Form.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-lo siento — "I'm sorry," i.e. "I feel it".
-
-Warm-up.
-[pause 2 seconds]
-You already know por favor, "please." The next courtesy phrase is lo siento. Spanish does not say "I am sorry" as an adjective; it says something closer to "I feel this."
-
-The phrase, taken apart.
-lo = "it" — a neuter pronoun. It does not point at any noun; it points at the situation itself. Spanish keeps this one leftover neuter slot precisely for "the whole business, unnamed."
-siento = "I feel," from sentir, "to feel," from Latin sentīre. That root gave English a whole family: sentiment, sense, consent ("feel together"), resent ("feel back at"), and sentence (originally an opinion, something felt).
-So lo siento is literally "I feel it." You are naming a feeling — regret, sympathy — rather than declaring a state about yourself. That is why it stretches so easily: lo siento mucho, "I feel it a lot," works both for stepping on someone's foot and for hearing that their father died.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "siento" — I feel — then "lo siento," I feel it / I'm sorry]
-[pause 8 seconds for the answer]
-[your turn — say: "lo siento mucho" — I'm so sorry]
-[pause 8 seconds for the answer]
-[your turn — say: "siento" then English "sentiment, sense, consent"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does lo siento literally mean? ("I feel it" — siento, "I feel," from Latin sentīre.) What is the lo pointing at? (The situation, not a noun — it is the neuter "it.") Next: Spanish's other word for sorry, and when it is the right one.
-
-
-Lesson 2 of 2.
-perdón — the sorry that asks for something back.
+Lesson 1 of 3.
+quiera, quieras, quiera — keep the change you know.
 
 Warm-up.
 [pause 2 seconds]
-Lo siento names a feeling. Spanish keeps a second word for a different job — one that is not about your feelings at all, but about something you want from the other person.
-
-The word, taken apart.
-perdón ("pardon"), from the verb perdonar — Latin per- ("thoroughly") + dōnāre ("to give"). Literally: "to give completely."
-That dōnāre is English's donate, donor, and condone; the per- is the same intensifier in perfect ("thoroughly made") and perturb. So forgiveness, in Latin's picture of it, is a gift given all the way — you hand over the debt rather than keeping a share of it.
-
-Why it's said this way: which one to reach for.
-The two are not interchangeable, and the difference follows straight from the etymologies:
+Present quiero already carries the stressed e becomes ie change. Remove -o to get quier-, then add the -er/-ir subjunctive endings:
 [a table of 3 rows, read aloud]
-literally. lo siento: "I feel it". perdón: "give [it] completely".
-points at. lo siento: your feeling. perdón: their forgiveness.
-use for. lo siento: regret, sympathy. perdón: fault, or getting past someone.
-So perdón is what you say to squeeze through a crowd or catch a waiter's eye (English "excuse me"), and to ask forgiveness for something you did — often stronger than lo siento. Lo siento leans toward "I'm sorry that happened," including things that are nobody's fault at all.
-Be honest about the edges: native speakers use whichever fits, the boundary is soft, and mixing them is not a real mistake — just a shade off.
+person: yo. present subjunctive: quiera.
+person: tú. present subjunctive: quieras.
+person: él / ella / usted. present subjunctive: quiera.
+Say only this bounded singular row: quiera, quieras, quiera.
+
+Grammar Lens: one known verb, one inherited stem.
+You are not learning a new list of stem-changing verbs. You are carrying one known change into one known row. Quiero que quieras hablar español means “I want you to want to speak Spanish.” The sentence is deliberately narrow: no new person noun, object, or plural form.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "perdón" — pardon / excuse me]
-[pause 8 seconds for the answer]
-[your turn — say: the pair — "lo siento" for regret, "perdón" for fault]
-[pause 8 seconds for the answer]
-[your turn — say: "perdón" then English "donate, condone" — the dōnāre root]
-[pause 8 seconds for the answer]
+Carry only the known quier- stem into this row.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular subjunctive forms of querer: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 6 seconds]
+Which known present yo form gives the stem quier-?
+[question — say your answer, then pause 7 seconds]
+Complete 'Quiero que ___ hablar español' for one friend.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What do the two halves of perdonar mean? (Per-, "thoroughly," plus dōnāre, "to give" — to give completely.) Which word do you use to get past someone in a corridor? (Perdón.) Which leans toward sympathy rather than fault? (Lo siento — "I feel it.")
+Give the three forms. (Quiera, quieras, quiera.) Which old change stays visible? (e becomes ie.) Where did the stem come from? (Known quiero, minus -o.)
+
+
+Lesson 2 of 3.
+pueda, puedas, pueda — one more known stem change.
+
+Warm-up.
+[pause 2 seconds]
+Present puedo already carries o becomes ue. Remove -o to get pued-, then add the same a row:
+[a table of 3 rows, read aloud]
+person: yo. present subjunctive: pueda.
+person: tú. present subjunctive: puedas.
+person: él / ella / usted. present subjunctive: pueda.
+Say pueda, puedas, pueda. No other poder forms enter today.
+
+Grammar Lens: use it immediately.
+Quiero que puedas hablar español means “I want you to be able to speak Spanish.” Every word was already known except the single form puedas. This is the gentle pattern: learn one row, then spend it in the next sentence.
+
+Guided Practice.
+[pause 1 second]
+Carry only the known pued- stem into this row.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular subjunctive forms of poder: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 6 seconds]
+Which known present yo form gives the stem pued-?
+[question — say your answer, then pause 10 seconds]
+Say 'I want you to be able to speak Spanish' to one friend.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three forms. (Pueda, puedas, pueda.) Which old change stays visible? (o becomes ue.) Which form addresses one friend after quiero que? (Puedas.)
+
+
+Lesson 3 of 3.
+haga, hagas, haga — hago lends its stem.
+
+Warm-up.
+[pause 2 seconds]
+The known present yo form is hago. Remove -o and keep hag-:
+[a table of 3 rows, read aloud]
+person: yo. present subjunctive: haga.
+person: tú. present subjunctive: hagas.
+person: él / ella / usted. present subjunctive: haga.
+Say haga, hagas, haga. Only hacer enters this lesson; other special stems wait for later chapters.
+
+Grammar Lens: spend the new form.
+Haces café can assert “you make coffee.” Quiero que hagas café says “I want you to make coffee.” The g is not a fresh exception: it was already in hago, the present form that supplied the stem.
+
+Guided Practice.
+[pause 1 second]
+Carry only the known hag- stem into this row.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular subjunctive forms of hacer: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 6 seconds]
+Which known present yo form gives the stem hag-?
+[question — say your answer, then pause 9 seconds]
+Say 'I want you to make coffee' to one friend.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three forms. (Haga, hagas, haga.) Where does hag- come from? (Known hago, minus -o.) Say the wanted event. (Quiero que hagas café.)

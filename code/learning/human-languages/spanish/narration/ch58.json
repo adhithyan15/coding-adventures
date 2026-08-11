@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 58,
-  "title": "Noon and Midnight",
+  "title": "The Seasons",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:cf3c2da0f65b4958",
+  "sourceHash": "fnv1a64:030c63431b969758",
   "lessons": [
     {
-      "id": "ES-C28-mediodia-medianoche",
-      "sequence": 1480,
-      "title": "mediodía, medianoche — noon and midnight, spelled out in full",
-      "headword": "mediodía, medianoche",
-      "romanization": "mediodía, medianoche",
-      "gloss": "noon and midnight — both halves still fully alive as ordinary Spanish words, unlike French's worn-down midi/minuit",
+      "id": "ES-C25-las-estaciones",
+      "sequence": 1430,
+      "title": "la primavera, el verano, el otoño, el invierno — three plain, one surprising",
+      "headword": "la primavera, el verano, el otoño, el invierno",
+      "romanization": "la primavera, el verano, el otoño, el invierno",
+      "gloss": "the four seasons — three straightforward, and one whose MEANING quietly shifted from \"spring\" to \"summer\"",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b40726c0bdda9fb8",
+      "sourceHash": "fnv1a64:78448815e6fa91f0",
       "notice": null,
       "blocks": [
         {
@@ -35,49 +35,46 @@
             },
             {
               "kind": "speech",
-              "text": "Two hours that don't get a number — they get a name. And Spanish keeps that name far more transparent than its French cousin does."
+              "text": "Three of Spanish's four seasons are exactly what you'd expect from Latin. The fourth hides a genuine surprise: its meaning itself drifted from one season to another."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The two words, taken apart",
+          "title": "The words, taken apart: three straightforward seasons",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "Spanish",
-                "from Latin",
-                "literally"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "Spanish: mediodía. from Latin: medius diēs. literally: \"mid-day\" (medio \"middle\" + día \"day\").",
-                "Spanish: medianoche. from Latin: media nox. literally: \"mid-night\" (media \"middle\" + noche \"night\")."
-              ]
+              "kind": "speech",
+              "text": "la primavera (\"spring\") from Latin prīma vēra, literally \"first spring\" (vēr, \"spring,\" + prīma, \"first\"). Italian still says the identical phrase, primavera, unchanged. (Old French once said primevère too, before switching to printemps.)"
             },
             {
               "kind": "speech",
-              "text": "Both halves are fully alive, ordinary Spanish words on their own: medio/media (\"middle\" — cousin of English medium, mid, middle) and día/noche (\"day/night,\" words you already know). Compare French, which took the same Latin phrase down a bumpier road: minuit's second half, -nuit, is still the plain, everyday French word for \"night\" — just as recognizable as Spanish's noche. But midi's second half, -di, wore down into an opaque fragment: the ordinary French word for \"day\" is jour, not di — that piece survives only as a fossil, tucked inside weekday names like lundi and mardi. So the erosion split unevenly: French kept \"night\" transparent and lost \"day,\" while Spanish kept both."
+              "text": "el otoño (\"autumn\") from Latin autumnus — the same root behind French automne and English autumn itself."
             },
             {
               "kind": "speech",
-              "text": "They don't need horas the way a normal Spanish time (son las tres) never does either — they simply stand in for the hour on their own:"
-            },
-            {
-              "kind": "speech",
-              "text": "Es mediodía. — \"It is noon.\" Es medianoche. — \"It is midnight.\""
-            },
-            {
-              "kind": "speech",
-              "text": "(Fun aside: English noon comes from Latin nōna hōra, \"the ninth hour\" — originally mid-afternoon, it drifted earlier over the centuries to mean midday. Spanish kept the tidier, transparent \"mid-day\" instead.)"
+              "text": "el invierno (\"winter\") from Latin hībernum (tempus), \"the wintry [season]\" — the same root as French hiver and English hibernate, \"to spend the winter.\""
             }
           ]
         },
         {
           "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: verano",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You might expect verano (\"summer\") to come from Latin aestas, \"heat\" — the way French été does. It doesn't. The standard account (per Spanish etymological dictionaries) traces verano to Latin vērānum (tempus), \"of spring\" — built on the very same vēr, \"spring,\" behind primavera."
+            },
+            {
+              "kind": "speech",
+              "text": "So how did a word meaning \"spring-ish\" end up naming summer? The honest answer is a shift in meaning over time, not a sound change — though the exact story is murkier than a tidy one-line explanation. The traditional, simplified account says that as primavera (\"first spring\") rose to become the standard word for spring, verano's meaning drifted forward into the season right after, summer; the fuller picture likely also involves Vulgar Latin agricultural usage (a \"vernal\" grazing or working period that stretched from late spring into early summer), so the drift may not be purely a case of one word simply vacating a job for the other. Either way, two Spanish words both rooted in vēr, \"spring,\" ended up naming two different seasons."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -90,43 +87,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"mediodía\" (noon), \"medianoche\" (midnight)",
+              "instruction": "\"primavera, verano, otoño, invierno\" — the four seasons",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"mediodía\" (noon), \"medianoche\" (midnight)]"
+              "source": "[YOU SAY: \"primavera, verano, otoño, invierno\" — the four seasons]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "break them — \"medio + día\", \"media + noche\" — both halves still ordinary words",
+              "instruction": "\"primavera = prima vera, first spring\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: break them — \"medio + día\", \"media + noche\" — both halves still ordinary words]"
+              "source": "[YOU SAY: \"primavera = prima vera, first spring\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Es mediodía. Es medianoche.\" — they stand in for the hour",
+              "instruction": "the surprise — \"verano ALSO comes from vēr, 'spring' — but its meaning moved to summer\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Es mediodía. Es medianoche.\" — they stand in for the hour]"
+              "source": "[YOU SAY: the surprise — \"verano ALSO comes from vēr, 'spring' — but its meaning moved to summer\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the contrast — French kept \"night\" (nuit) but wore \"day\" down to a fossil (-di)",
+              "instruction": "\"invierno hibernate\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the contrast — French kept \"night\" (nuit) but wore \"day\" down to a fossil (-di)]"
+              "source": "[YOU SAY: \"invierno ~ hibernate\"]"
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -138,7 +135,7 @@
             },
             {
               "kind": "speech",
-              "text": "What do mediodía and medianoche literally mean, and from what Latin? (\"Mid-day\" from medius diēs; \"mid-night\" from media nox.) Are both halves still recognizable, ordinary Spanish words? (Yes — medio/ media \"middle,\" día/noche \"day/night.\") Did French erode its phrase evenly? (No — French's -nuit stayed just as transparent as Spanish's noche, but its -di wore down to an opaque fossil, since the everyday French word for \"day\" is actually jour.) How do you say \"it is noon\"? (Es mediodía.)"
+              "text": "What does primavera literally mean? (\"First spring\" — prīma vēra.) Does verano come from Latin aestas, like French été? (No — from vērānum, \"of spring,\" the same vēr root as primavera; its meaning shifted toward summer over time — traditionally linked to primavera taking over the job of naming spring, though the fuller history is murkier than that alone.) What English word is invierno the cousin of? (Hibernate.)"
             }
           ]
         }
