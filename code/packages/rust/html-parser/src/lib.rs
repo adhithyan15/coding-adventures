@@ -5408,6 +5408,10 @@ impl HtmlParser {
         }
 
         if !in_foreign_content && name == "select" && self.current_element_is_table_structure() {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-select-start-tag-in-table",
+                "select start tag in a table context was foster parented",
+            ));
             if let Some(path) = self.insert_node_before_open_table(Node::element(name, attributes))
             {
                 self.open_elements.push(path);
@@ -34167,6 +34171,42 @@ mod tests {
                 .parser_diagnostics
                 .iter()
                 .all(|diagnostic| { diagnostic.code != "unexpected-input-start-tag-in-table" }));
+        }
+    }
+
+    #[test]
+    fn reports_select_start_tags_fostered_from_table_structure() {
+        for source in [
+            "<!doctype html><table><select></select></table>",
+            "<!doctype html><table><tbody><select></select></table>",
+            "<!doctype html><table><tr><select></select></table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic
+                        == &ParserDiagnostic::new(
+                            "unexpected-select-start-tag-in-table",
+                            "select start tag in a table context was foster parented",
+                        )
+                }),
+                "source {source:?}"
+            );
+
+            let children = &body(&output.document).children;
+            assert_eq!(element(&children[0]).name, "select", "source {source:?}");
+            assert_eq!(element(&children[1]).name, "table", "source {source:?}");
+        }
+
+        for source in [
+            "<!doctype html><select></select>",
+            "<!doctype html><table><tr><td><select></select></td></tr></table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| { diagnostic.code != "unexpected-select-start-tag-in-table" }));
         }
     }
 
