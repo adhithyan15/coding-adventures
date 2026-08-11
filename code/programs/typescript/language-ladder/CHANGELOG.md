@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Arabic independent-ayn ductus (HL-C09AU)
+
+- Render **ع** in two evidence-aligned frames: shape its open head from the
+  upper-right tip, then continue down and around the broad lower bowl.
+- Keep the directly linked MOV's one pen-down run, zero lifts, and
+  two-way-connector context explicit while fitting the vendored Noto Naskh outline.
+- Preserve Ayn independently of adjacent dotted Ghayn and queue the directly
+  linked independent **ك** source next.
+
 ### Added — cited Arabic independent-daad ductus (HL-C09AT)
 
 - Render **ض** in four evidence-aligned frames: its clockwise oval, joined
