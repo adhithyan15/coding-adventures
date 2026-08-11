@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C24-mano
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 1470
-chapter: 82
+sequence: 1490
+chapter: 87
 type: word
 headword: la mano
 gloss: the hand — feminine despite ending in -o, Spanish's most famous gender exception

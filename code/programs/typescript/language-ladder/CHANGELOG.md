@@ -18,6 +18,11 @@
   down the right side, and turn left along the base without lifting.
 - Preserve the rounder purple cursive hook and queue Samekh from the same source.
 
+### Changed — Spanish runs 1..120 (HL-C108)
+
+- Re-pin the Spanish book-hash table for the five plural-article chapters
+  inserted at 56; chapters after them shift by five.
+
 ### Added — cited Hebrew Mem ductus (HL-C09BP)
 
 - Render **מ** in five evidence-aligned frames: draw the detached angled left

@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C22-azul
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1420
-chapter: 80
+sequence: 1440
+chapter: 85
 type: word
 headword: azul
 gloss: blue — an Arabic loan that became the plain everyday word, where French's cousin stayed poetic

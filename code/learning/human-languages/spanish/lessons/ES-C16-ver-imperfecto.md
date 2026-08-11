@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C16-ver-imperfecto
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1184
-chapter: 67
+sequence: 1204
+chapter: 72
 type: grammar
 headword: veía
 gloss: the singular imperfect of ver — veía, veías, veía

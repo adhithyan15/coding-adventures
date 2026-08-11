@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C15-comer-preterite
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1130
-chapter: 62
+sequence: 1150
+chapter: 67
 type: word
 headword: comí
 gloss: the regular singular -er preterite — comí, comiste, comió
