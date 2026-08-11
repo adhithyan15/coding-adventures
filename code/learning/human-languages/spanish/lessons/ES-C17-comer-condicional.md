@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C17-comer-condicional
 spine_node: SPINE-TALK-ABOUT-FUTURE
 sequence: 1186
-chapter: 61
+chapter: 62
 type: grammar
 headword: comería
 gloss: the singular conditional of comer — comería, comerías, comería

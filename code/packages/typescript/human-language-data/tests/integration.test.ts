@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(106); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(107); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -326,6 +326,12 @@ describe("real curriculum", () => {
       "ES-C12-practice-yo-go-order",
       "ES-C12-yo-go-hacer-choice",
       "ES-C12-yo-go-learned-order",
+      "ES-C13-plurales-cambio-can",
+      "ES-C13-plurales-cambio-derive",
+      "ES-C13-plurales-cambio-want",
+      "ES-C13-plurales-yo-go-out",
+      "ES-C13-plurales-yo-go-say",
+      "ES-C13-plurales-yo-go-we",
       "ES-C13-poner-meaning",
       "ES-C13-poner-singular-forms",
       "ES-C13-practice-leave-come",
@@ -339,6 +345,9 @@ describe("real curriculum", () => {
       "ES-C13-repaso-yo-go-why",
       "ES-C13-salir-leave-madrid",
       "ES-C13-salir-singular-forms",
+      "ES-C13-sintesis-derivar-count",
+      "ES-C13-sintesis-derivar-rules",
+      "ES-C13-sintesis-derivar-they",
       "ES-C13-sintesis-yo-go-me",
       "ES-C13-sintesis-yo-go-them",
       "ES-C13-sintesis-yo-go-which",

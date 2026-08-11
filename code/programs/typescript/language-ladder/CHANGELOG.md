@@ -10,6 +10,11 @@
   rounded looping handwritten alternative.
 - Queue the same lesson's Mem demonstration next.
 
+### Changed — Spanish runs 1..107 (HL-C105)
+
+- Re-pin the Spanish book-hash table for the consolidation chapter that derives
+  the remaining irregular plurals; chapters after it shift by one.
+
 ### Added — cited Hebrew Kaf ductus (HL-C09BN)
 
 - Render **כ** in three evidence-aligned frames: draw the top bar left-to-right,

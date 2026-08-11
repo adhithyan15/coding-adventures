@@ -1,43 +1,99 @@
-Spanish, chapter 63: Synthesis --- Promising, and Supposing.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 63: One Stem, Two Tenses.
+2 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 1.
-Synthesis — promising, and supposing.
+Lesson 1 of 2.
+haré, tendré, podré — three stems, two ending sets.
 
 Warm-up.
 [pause 2 seconds]
-Nothing new in this chapter. Say hablaré, then hablaría.
+Regular verbs keep the whole infinitive. Three common verbs you already know use a shorter or reshaped stem. Learn only these three today. In each row, the same stem serves the future and the conditional.
 
-Grammar Lens: the two endings are one word, twice.
-Three chapters ago you were told where these endings came from. Now it is worth seeing what that fact buys you.
-Both are the verb haber — Latin habēre, "to have" — glued onto the back of the infinitive. Romance speakers stopped saying "I have to speak" as two words and fused it into one:
-hablar + he (I have) becomes hablaré — I will speak. hablar + había (I had) becomes hablaría — I would speak.
-That is the entire difference between the two tenses: the same auxiliary, once in the present and once in the past. Not two systems to learn — one system, looked at from two moments.
+Grammar Lens: hacer becomes har-.
+[a table of 3 rows, read aloud]
+person: yo. future: haré. conditional: haría.
+person: tú. future: harás. conditional: harías.
+person: él / ella / usted. future: hará. conditional: haría.
+Use the known noun in Haré café — “I will make coffee” — and Haría café — “I would make coffee.”
 
-What you've built.
-And the meaning follows from the grammar rather than being extra to it.
-Having to do something now is a commitment: hablaré is a promise, or a prediction you are standing behind. Having had to do it is a supposition — the obligation sits in a past that never arrived, so hablaría is hypothetical.
-Promise from the present. Suppose from the past.
-English hides the same move: will is the present of an old verb meaning to want, and would is its past. Will/would is the same pair as -é/-ía.
+Grammar Lens: tener becomes tendr-.
+[a table of 3 rows, read aloud]
+person: yo. future: tendré. conditional: tendría.
+person: tú. future: tendrás. conditional: tendrías.
+person: él / ella / usted. future: tendrá. conditional: tendría.
+The d in tendr- arose during the history of the compact future and conditional. Treat tendr- as the learned stem, not as permission to insert d into a new verb.
 
-The exchange.
-— ¿Hablarás español en Madrid? — Sí, hablaré español. — ¿Y sin práctica? — Hablaría español, pero no bien.
-One letter-run apart, and the second speaker has moved from a commitment to a guess without changing a single other word.
+Grammar Lens: poder becomes podr-.
+[a table of 3 rows, read aloud]
+person: yo. future: podré. conditional: podría.
+person: tú. future: podrás. conditional: podrías.
+person: él / ella / usted. future: podrá. conditional: podría.
+Podré hablar español says “I will be able to speak Spanish.” Podría hablar español says “I could / would be able to speak Spanish.”
+These stems reflect inherited reductions and sound changes. The useful modern fact is bounded: har-, tendr-, podr-, each followed by the same endings you already learned.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: hablaré then hablaría, and hear a promise turn into a guess]
+[your turn — say: “haré, haría”]
 [pause 8 seconds for the answer]
-[repeat that twice]
-Until the choice is about what you mean, not which ending it was.
+[your turn — say: “tendré, tendría”]
+[pause 8 seconds for the answer]
+[your turn — say: “podré, podría”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the pair 'I will make coffee; I would make coffee' in Spanish.
 [question — say your answer, then pause 8 seconds]
-You are committing to it. I will speak: which form?
-[question — say your answer, then pause 8 seconds]
-Now you are only supposing. I would speak: which form?
+Give the future and conditional yo forms of tener, in that order.
 [question — say your answer, then pause 10 seconds]
-What single word is glued onto the infinitive in BOTH tenses?
+Give the pair 'I will be able to speak Spanish; I could speak Spanish' in Spanish.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is glued onto the infinitive in both tenses? (Haber — the verb to have.) Which one is a promise, and which a supposition? (-é the promise, -ía the supposition.) And what is the English pair that works the same way? (Will and would — a present and a past of one old verb.)
+Give the three learned stems. (Har-, tendr-, podr-.) Does each verb need separate future and conditional stems? (No; one stem serves both.) Do the endings change? (No.) Next: retrieve the complete twelve-atom chapter.
+
+
+Lesson 2 of 2.
+Practice — one infinitive frame, two futures of thought.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for 2 tables that cannot be read aloud. You can listen to everything else now — leave the sections called Grammar Lens: the regular frame and Grammar Lens: three learned stems until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+This checkpoint adds no vocabulary and no plural persons. Retrieve the six regular singular rows, then the three learned irregular stems. Use the future for “will” and the conditional for the bounded core meaning “would.”
+
+Grammar Lens: the regular frame.
+There is a table here I cannot read to you — 4 columns and 6 rows, and it has more columns than can be held in the ear at once. Its columns are: person, hablar, comer, vivir. Come back and look at it when you have stopped.
+All three regular infinitives remain whole. Future endings are -é, -ás, -á; conditional endings are -ía, -ías, -ía. Plural persons wait.
+
+Grammar Lens: three learned stems.
+There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: verb, learned stem, future yo, conditional yo. Come back and look at it when you have stopped.
+The stems change; the ending sets do not. Other irregular stems remain outside this chapter.
+
+The ending, taken apart.
+Romance future and conditional forms grew from constructions pairing an infinitive with forms of Latin habēre. Present material contributed to the future; past or imperfect material contributed to the conditional. Many paths and competing forms existed during the change, so this is a bridge for memory, not a one-step story or a recipe using modern haber.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “hablaré, comeré, viviré”]
+[pause 8 seconds for the answer]
+[your turn — say: “hablaría, comería, viviría”]
+[pause 8 seconds for the answer]
+[your turn — say: “haré/haría, tendré/tendría, podré/podría”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the future yo forms of hablar, comer, and vivir, in that order.
+[question — say your answer, then pause 9 seconds]
+Give the conditional yo forms of hablar, comer, and vivir, in that order.
+[question — say your answer, then pause 7 seconds]
+Say 'I will speak Spanish' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Say 'I would live in Madrid' in Spanish.
+[question — say your answer, then pause 9 seconds]
+Give the pair 'I will make coffee; I would make coffee' in Spanish.
+[question — say your answer, then pause 8 seconds]
+Give the learned stems for hacer, tener, and poder, in that order.
+[question — say your answer, then pause 7 seconds]
+Which Latin 'have' verb contributed material to both Romance constructions?
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three regular future yo forms. (Hablaré, comeré, viviré.) Give the three regular conditional yo forms. (Hablaría, comería, viviría.) Which three learned stems replace a whole infinitive? (Har-, tendr-, podr-.) What is the careful historical bridge? (Infinitive plus forms of Latin habēre, reshaped through Romance.) The next chapter can now begin without borrowing plural persons, new auxiliaries, or clock-time vocabulary.
