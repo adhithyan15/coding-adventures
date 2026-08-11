@@ -8526,11 +8526,29 @@ impl HtmlParser {
             return false;
         }
 
+        let furthest_div_path = self
+            .open_elements
+            .iter()
+            .skip(first_div_index + 1)
+            .rfind(|path| {
+                path.starts_with(&first_div_path)
+                    && element_at_path(&self.document, path).is_some_and(|name| name == "div")
+            })
+            .cloned()
+            .unwrap_or_else(|| first_div_path.clone());
+
         let Some(mut div) = remove_node_at_path(&mut self.document.children, &first_div_path)
         else {
             return false;
         };
-        wrap_formatting_along_path(&mut div, &[], &formatting_name, &formatting_attributes);
+        let relative_div_path = &furthest_div_path[first_div_path.len()..];
+        let adoption_path_len = relative_div_path.len().min(7);
+        wrap_formatting_along_path(
+            &mut div,
+            &relative_div_path[..adoption_path_len],
+            &formatting_name,
+            &formatting_attributes,
+        );
 
         let wrappers_to_clone =
             self.adoption_inner_loop_formatting_wrappers(formatting_index, first_div_index);
@@ -8565,7 +8583,11 @@ impl HtmlParser {
             self.open_elements.push(inserted_path.clone());
             inserted_path.push(0);
         }
-        self.open_elements.push(inserted_path);
+        self.open_elements.push(inserted_path.clone());
+        for _ in &relative_div_path[..adoption_path_len] {
+            inserted_path.push(1);
+            self.open_elements.push(inserted_path.clone());
+        }
         true
     }
 
@@ -35135,6 +35157,39 @@ mod tests {
         let shallow_div = element(&element(&shallow_bold.children[0]).children[0]);
         assert_eq!(element(&shallow_div.children[0]).name, "a");
         assert_eq!(shallow_div.children[1], Node::text("X"));
+    }
+
+    #[test]
+    fn keeps_mixed_wrapper_adoption_follow_on_content_at_the_nested_div() {
+        fn assert_repaired_outer_div(outer_div: &Element) {
+            let continued_bold = element(&outer_div.children[1]);
+            assert_eq!(continued_bold.name, "b");
+            assert_eq!(element(&continued_bold.children[0]).name, "i");
+
+            let first_div = element(&outer_div.children[2]);
+            assert_eq!(first_div.name, "div");
+            let continued_bold = element(&first_div.children[0]);
+            let continued_italic = element(&continued_bold.children[0]);
+            assert_eq!(element(&continued_italic.children[0]).name, "a");
+
+            let inner_div = element(&first_div.children[1]);
+            assert_eq!(inner_div.name, "div");
+            let continued_bold = element(&inner_div.children[0]);
+            let continued_italic = element(&continued_bold.children[0]);
+            assert_eq!(element(&continued_italic.children[0]).name, "a");
+            assert_eq!(inner_div.children[1], Node::text("X"));
+        }
+
+        let source = "<div><a><b><span><i><div><div></a></i></b>X";
+        let document = parse_html(source).unwrap();
+        assert_repaired_outer_div(element(&body(&document).children[0]));
+
+        let fragment = parse_html_fragment_for_context(source, "div").unwrap();
+        assert_repaired_outer_div(element(&fragment[0]));
+
+        let table = parse_html(&format!("<table><tr><td>{source}")).unwrap();
+        let cell = find_first_element_in_nodes(&table.children, "td").unwrap();
+        assert_repaired_outer_div(element(&cell.children[0]));
     }
 
     #[test]
