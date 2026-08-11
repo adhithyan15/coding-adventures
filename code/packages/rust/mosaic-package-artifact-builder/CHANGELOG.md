@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased] - complete Qt package QML module
+
+- Generated Qt project shells now list every exported QML component in
+  `qt_add_qml_module` while continuing to mount the first export.
+- Whole-package Qt compilation can no longer miss a broken sibling QML file.
+
 ## [Unreleased] - complete SwiftUI package source set
 
 - Generated SwiftUI project shells now copy every exported view into the

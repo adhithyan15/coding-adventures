@@ -1011,6 +1011,11 @@ jobs:
           "$harness/build/mosaic_qt_runtime_conformance"
           "$harness/build/mosaic_qt_runtime_conformance" --expect-missing-prop-failure
 
+          toolkit_output="$RUNNER_TEMP/mosaic-qt-toolkit"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend qt --output "$toolkit_output" --emit-project
+          cmake -S "$toolkit_output/qt" -B "$toolkit_output/qt/build" -DCMAKE_BUILD_TYPE=Release
+          cmake --build "$toolkit_output/qt/build" --config Release --parallel
+
           MOSAIC_APP_LIBRARY="$RUNNER_TEMP/mosaic-app-does-not-exist.so" \
             "$harness/build/mosaic_qt_runtime_conformance" --expect-required-failure
 

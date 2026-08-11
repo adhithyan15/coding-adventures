@@ -416,6 +416,10 @@ unblocks multiple downstream targets; never count source generation as completio
   - [x] Make the SwiftUI package project type-check every exported view.
     Accordion collection access uses the native `ForEach` integer shadow and
     macOS CI builds the complete 23-component toolkit through SwiftPM.
+  - [x] Lower `Icon` to accessible Qt semantic glyphs and map `spinner` to the
+    native indeterminate `BusyIndicator`, with live glyph/label bindings.
+  - [x] Make the Qt package project compile every exported QML component in
+    one `qt_add_qml_module`; Linux CI builds all 23 toolkit exports.
 - [ ] Enforce accessible names, focus, keyboard actions, scaling, contrast, and
   reduced-motion behavior in the strict profile.
 

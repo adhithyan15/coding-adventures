@@ -1,5 +1,11 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [Unreleased] — accessible Spinner primitive wiring
+
+- Spinner now passes its public `aria-label` slot into the semantic `Icon`.
+- Native backends may use the authored label while retaining their accessible
+  `Loading` fallback for an empty slot.
+
 ## [Unreleased] — Accordion body projection
 
 - Accordion now renders `bodies[i]` for each header instead of passing the

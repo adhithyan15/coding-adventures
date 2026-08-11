@@ -18,7 +18,8 @@
 layout Spinner {
   Stack [ spinner ] {
     Icon [ spinner-glyph ] (
-      glyph : "spinner"
+      glyph : "spinner" ,
+      aria-label : slot: aria-label
     )
   }
 }

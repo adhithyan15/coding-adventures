@@ -36,6 +36,7 @@
 //! | `Text`        | `Text { text: "..." }` or `Text { text: slotName }` for slot-ref content    |
 //! | `Spacer`      | `Item { Layout.fillWidth: true; Layout.fillHeight: true }`                  |
 //! | `Image`       | `Image { source: "..." }`                                                   |
+//! | `Icon`        | `BusyIndicator` for `spinner`; accessible semantic `Label` otherwise         |
 //! | `Divider`     | `Rectangle { height: 1; color: "#888"; Layout.fillWidth: true }`            |
 //! | `Stack`       | `Item { ... }` with `anchors.fill: parent` on each child — Z-axis overlay   |
 //! | `HostInput`   | `TextInput { ... }` or `TextField { ...; placeholderText: ... }`            |
@@ -1042,7 +1043,7 @@ fn emit_styled_layout_container_qml(
     ctx: &EmitCtx,
     element_name: &'static str,
 ) -> Result<Option<String>, PipelineEmitError> {
-    if node.tag != "Row" && node.tag != "Column" {
+    if node.tag != "Row" && node.tag != "Column" && node.tag != "Stack" {
         return Ok(None);
     }
     let Some(props) = part_style_props(node, ctx) else {
@@ -1118,7 +1119,7 @@ fn emit_styled_layout_container_qml(
     out.push_str(&emit_qml_children(
         &node.children,
         depth + 2,
-        /* is_stack = */ false,
+        node.tag == "Stack",
         ctx,
     )?);
     writeln!(out, "{inner_pad}}}").unwrap();
@@ -1246,6 +1247,40 @@ fn from_pipeline_with_runtime_policy(
     writeln!(out, "        }}").unwrap();
     writeln!(out, "        applyMosaicProps(response);").unwrap();
     writeln!(out, "    }}").unwrap();
+    if layout_contains_tag(&layout.root, "Icon") {
+        writeln!(out).unwrap();
+        writeln!(out, "    function mosaicIconGlyph(name) {{").unwrap();
+        writeln!(
+            out,
+            "        switch (String(name).trim().toLowerCase().replace(/_/g, \"-\")) {{"
+        )
+        .unwrap();
+        writeln!(out, "        case \"add\": case \"plus\": return \"+\";").unwrap();
+        writeln!(
+            out,
+            "        case \"close\": case \"dismiss\": case \"x\": return \"\\u00d7\";"
+        )
+        .unwrap();
+        writeln!(out, "        case \"home\": return \"\\u2302\";").unwrap();
+        writeln!(
+            out,
+            "        case \"refresh\": case \"reload\": return \"\\u21bb\";"
+        )
+        .unwrap();
+        writeln!(
+            out,
+            "        case \"settings\": case \"gear\": return \"\\u2699\";"
+        )
+        .unwrap();
+        writeln!(
+            out,
+            "        case \"star\": case \"favorite\": return \"\\u2605\";"
+        )
+        .unwrap();
+        writeln!(out, "        default: return \"?\";").unwrap();
+        writeln!(out, "        }}").unwrap();
+        writeln!(out, "    }}").unwrap();
+    }
 
     // 4. Properties — one `property` declaration per slot.
     if !interface.slots.is_empty() {
@@ -1430,6 +1465,7 @@ fn emit_qml_tree(
         "HostButton" => return emit_host_button_qml(node, depth, ctx),
         "HostDialog" => return emit_host_dialog_qml(node, depth, ctx),
         "HostSurface" => return emit_host_surface_qml(node, depth, ctx),
+        "Icon" => return emit_icon_qml(node, depth, ctx),
 
         // UI29-2 kernel — `HostCheckbox` and `HostRadio` lower to
         // QtQuick.Controls 2 `CheckBox` and `RadioButton`. Both
@@ -1838,6 +1874,194 @@ fn primitive_to_qml(tag: &str) -> Result<QmlElement, PipelineEmitError> {
         ),
         other => return Err(PipelineEmitError::UnknownPrimitive(other.to_string())),
     })
+}
+
+fn layout_contains_tag(node: &LayoutNode, tag: &str) -> bool {
+    node.tag == tag
+        || node
+            .children
+            .iter()
+            .any(|child| layout_contains_tag(child, tag))
+}
+
+/// Lower Mosaic's semantic icon vocabulary to Qt Quick Controls.
+///
+/// The loading glyph uses Qt's native indeterminate `BusyIndicator`. Other
+/// semantic names use a `Label` with a compact, cross-font Unicode mapping.
+/// Both shapes carry an explicit accessible role and name. Runtime glyphs
+/// render both controls in a small wrapper and switch visibility through a
+/// property binding, preserving live host updates without rebuilding QML.
+fn emit_icon_qml(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx<'_>,
+) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let nested = "    ".repeat(depth + 2);
+    let glyph_value = node
+        .props
+        .iter()
+        .find(|prop| matches!(prop.name.as_str(), "glyph" | "source" | "name"))
+        .map(|prop| &prop.value);
+    let glyph = qml_icon_text_expression(glyph_value, "star")?;
+    let literal_glyph = match glyph_value {
+        Some(LayoutPropValue::String(value)) => Some(value.as_str()),
+        _ => None,
+    };
+    let default_name = match literal_glyph {
+        Some(value) if value.eq_ignore_ascii_case("spinner") => "\"Loading\"".to_string(),
+        Some(value) => format!("\"{}\"", escape_qml_string(value)),
+        None => format!(
+            "(String({glyph}).trim().toLowerCase() === \"spinner\" ? \"Loading\" : String({glyph}))"
+        ),
+    };
+    let name_value = node
+        .props
+        .iter()
+        .find(|prop| matches!(prop.name.as_str(), "aria-label" | "content-description"))
+        .map(|prop| &prop.value);
+    let accessible_name = qml_icon_accessible_name(name_value, &default_name)?;
+    let style = part_style_props(node, ctx);
+
+    if literal_glyph.is_some_and(|value| value.eq_ignore_ascii_case("spinner")) {
+        let mut out = String::new();
+        writeln!(out, "{pad}BusyIndicator {{").unwrap();
+        writeln!(out, "{inner}running: true").unwrap();
+        emit_busy_indicator_style(&mut out, &inner, style);
+        writeln!(out, "{inner}Accessible.role: Accessible.ProgressBar").unwrap();
+        writeln!(out, "{inner}Accessible.name: {accessible_name}").unwrap();
+        writeln!(out, "{pad}}}").unwrap();
+        return Ok(out);
+    }
+
+    if literal_glyph.is_some() {
+        let mut out = String::new();
+        writeln!(out, "{pad}Label {{").unwrap();
+        writeln!(out, "{inner}text: mosaicRoot.mosaicIconGlyph({glyph})").unwrap();
+        if let Some(props) = style {
+            for line in qml_text_part_style_lines(props) {
+                writeln!(out, "{inner}{line}").unwrap();
+            }
+        }
+        writeln!(out, "{inner}Accessible.role: Accessible.StaticText").unwrap();
+        writeln!(out, "{inner}Accessible.name: {accessible_name}").unwrap();
+        writeln!(out, "{pad}}}").unwrap();
+        return Ok(out);
+    }
+
+    let mut out = String::new();
+    writeln!(out, "{pad}Item {{").unwrap();
+    writeln!(out, "{inner}property string mosaicGlyphName: {glyph}").unwrap();
+    writeln!(
+        out,
+        "{inner}property string mosaicAccessibleName: {accessible_name}"
+    )
+    .unwrap();
+    if let Some(props) = style {
+        for line in qml_icon_wrapper_size_lines(props) {
+            writeln!(out, "{inner}{line}").unwrap();
+        }
+    }
+    writeln!(out, "{inner}BusyIndicator {{").unwrap();
+    writeln!(out, "{nested}anchors.fill: parent").unwrap();
+    writeln!(
+        out,
+        "{nested}visible: parent.mosaicGlyphName.trim().toLowerCase() === \"spinner\""
+    )
+    .unwrap();
+    writeln!(out, "{nested}running: visible").unwrap();
+    emit_busy_indicator_style(&mut out, &nested, style);
+    writeln!(out, "{nested}Accessible.role: Accessible.ProgressBar").unwrap();
+    writeln!(out, "{nested}Accessible.name: parent.mosaicAccessibleName").unwrap();
+    writeln!(out, "{inner}}}").unwrap();
+    writeln!(out, "{inner}Label {{").unwrap();
+    writeln!(out, "{nested}anchors.centerIn: parent").unwrap();
+    writeln!(
+        out,
+        "{nested}visible: parent.mosaicGlyphName.trim().toLowerCase() !== \"spinner\""
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{nested}text: mosaicRoot.mosaicIconGlyph(parent.mosaicGlyphName)"
+    )
+    .unwrap();
+    if let Some(props) = style {
+        for line in qml_text_part_style_lines(props) {
+            writeln!(out, "{nested}{line}").unwrap();
+        }
+    }
+    writeln!(out, "{nested}Accessible.role: Accessible.StaticText").unwrap();
+    writeln!(out, "{nested}Accessible.name: parent.mosaicAccessibleName").unwrap();
+    writeln!(out, "{inner}}}").unwrap();
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
+fn qml_icon_text_expression(
+    value: Option<&LayoutPropValue>,
+    fallback: &str,
+) -> Result<String, PipelineEmitError> {
+    Ok(match value {
+        Some(LayoutPropValue::String(value)) => {
+            format!("\"{}\"", escape_qml_string(value))
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            field
+        }
+        Some(LayoutPropValue::Expr(expression)) => expression.trim().to_string(),
+        Some(LayoutPropValue::Keyword(value)) => {
+            format!("\"{}\"", escape_qml_string(value))
+        }
+        _ => format!("\"{}\"", escape_qml_string(fallback)),
+    })
+}
+
+fn qml_icon_accessible_name(
+    value: Option<&LayoutPropValue>,
+    fallback: &str,
+) -> Result<String, PipelineEmitError> {
+    Ok(match value {
+        Some(LayoutPropValue::String(value)) if value.is_empty() => fallback.to_string(),
+        Some(LayoutPropValue::String(value)) => {
+            format!("\"{}\"", escape_qml_string(value))
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            format!("({field}.length > 0 ? {field} : {fallback})")
+        }
+        Some(LayoutPropValue::Expr(expression)) => expression.trim().to_string(),
+        Some(LayoutPropValue::Keyword(value)) => {
+            format!("\"{}\"", escape_qml_string(value))
+        }
+        _ => fallback.to_string(),
+    })
+}
+
+fn qml_icon_wrapper_size_lines(props: &[StyleProp]) -> Vec<String> {
+    let Some(size) = style_prop(props, "font-size").and_then(qml_font_pixel_size) else {
+        return Vec::new();
+    };
+    vec![
+        format!("implicitWidth: {size}"),
+        format!("implicitHeight: {size}"),
+        format!("Layout.preferredWidth: {size}"),
+        format!("Layout.preferredHeight: {size}"),
+    ]
+}
+
+fn emit_busy_indicator_style(out: &mut String, pad: &str, props: Option<&[StyleProp]>) {
+    let Some(props) = props else { return };
+    for line in qml_icon_wrapper_size_lines(props) {
+        writeln!(out, "{pad}{line}").unwrap();
+    }
+    if let Some(color) = style_prop(props, "color").and_then(qml_hex_color_or_none) {
+        writeln!(out, "{pad}palette.highlight: \"{color}\"").unwrap();
+    }
 }
 
 /// Build the `text: ...` attribute for a Text primitive, if a `content`
@@ -2989,7 +3213,8 @@ fn build_dialog_title_text_line(node: &LayoutNode) -> Option<String> {
 /// `HostButton` → `Button`, `HostScroll` → `ScrollView`,
 /// `HostDialog` → `Popup`, `HostCheckbox` → `CheckBox`,
 /// `HostRadio` → `RadioButton`, `HostTooltip` → `ToolTip` attached
-/// property, `HostNumberInput` → `TextField`. `HostLink` is intentionally
+/// property, `HostNumberInput` → `TextField`, `Icon` → `BusyIndicator` or
+/// `Label`. `HostLink` is intentionally
 /// NOT here because it lowers to a plain `Text` element with rich-
 /// text + onLinkActivated, not a QtQuick.Controls widget.
 fn tree_needs_controls_import(node: &LayoutNode) -> bool {
@@ -3011,6 +3236,7 @@ fn tree_needs_controls_import(node: &LayoutNode) -> bool {
             | "HostRadio"
             | "HostTooltip"
             | "HostNumberInput"
+            | "Icon"
     ) || node.children.iter().any(tree_needs_controls_import)
 }
 
@@ -4686,6 +4912,100 @@ mod tests {
         };
         let r_slot = from_pipeline(&m, &l_slot, &empty_style("X")).unwrap();
         assert!(r_slot.output.contains("source: photoUrl"));
+    }
+
+    #[test]
+    fn spinner_icon_uses_native_busy_indicator_with_accessible_name() {
+        let m = component(
+            "Spinner",
+            vec![slot("aria-label", SlotType::Text, false)],
+            vec![],
+        );
+        let layout = LayoutDef {
+            component_name: "Spinner".to_string(),
+            root: LayoutNode {
+                tag: "Icon".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "glyph".to_string(),
+                        value: LayoutPropValue::String("spinner".to_string()),
+                    },
+                    LayoutProp {
+                        name: "aria-label".to_string(),
+                        value: LayoutPropValue::SlotRef("aria-label".to_string()),
+                    },
+                ],
+                children: vec![],
+            },
+        };
+        let output = from_pipeline(&m, &layout, &empty_style("Spinner"))
+            .unwrap()
+            .output;
+        assert!(output.contains("import QtQuick.Controls 2.15"));
+        assert!(output.contains("BusyIndicator {"));
+        assert!(output.contains("running: true"));
+        assert!(output.contains("Accessible.role: Accessible.ProgressBar"));
+        assert!(
+            output.contains("Accessible.name: (ariaLabel.length > 0 ? ariaLabel : \"Loading\")")
+        );
+    }
+
+    #[test]
+    fn semantic_icon_uses_accessible_native_label_mapping() {
+        let m = component("Favorite", vec![], vec![]);
+        let layout = LayoutDef {
+            component_name: "Favorite".to_string(),
+            root: LayoutNode {
+                tag: "Icon".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "glyph".to_string(),
+                    value: LayoutPropValue::String("favorite".to_string()),
+                }],
+                children: vec![],
+            },
+        };
+        let output = from_pipeline(&m, &layout, &empty_style("Favorite"))
+            .unwrap()
+            .output;
+        assert!(output.contains("function mosaicIconGlyph(name)"));
+        assert!(output.contains("Label {"));
+        assert!(output.contains("text: mosaicRoot.mosaicIconGlyph(\"favorite\")"));
+        assert!(output.contains("Accessible.role: Accessible.StaticText"));
+        assert!(output.contains("Accessible.name: \"favorite\""));
+    }
+
+    #[test]
+    fn runtime_icon_switches_between_progress_and_semantic_label() {
+        let m = component(
+            "RuntimeIcon",
+            vec![slot("icon-name", SlotType::Text, true)],
+            vec![],
+        );
+        let layout = LayoutDef {
+            component_name: "RuntimeIcon".to_string(),
+            root: LayoutNode {
+                tag: "Icon".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "glyph".to_string(),
+                    value: LayoutPropValue::SlotRef("icon-name".to_string()),
+                }],
+                children: vec![],
+            },
+        };
+        let output = from_pipeline(&m, &layout, &empty_style("RuntimeIcon"))
+            .unwrap()
+            .output;
+        assert!(output.contains("property string mosaicGlyphName: iconName"));
+        assert!(output.contains("BusyIndicator {"));
+        assert!(output.contains("Label {"));
+        assert!(output.contains("=== \"spinner\""));
+        assert!(output.contains("!== \"spinner\""));
+        assert!(output.contains(
+            "property string mosaicAccessibleName: (String(iconName).trim().toLowerCase() === \"spinner\" ? \"Loading\" : String(iconName))"
+        ));
     }
 
     // -------- Test 11: Spacer carries fillWidth + fillHeight --------
