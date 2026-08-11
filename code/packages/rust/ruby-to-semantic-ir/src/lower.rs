@@ -182,6 +182,9 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         // `Expr::KeywordArg`) triggers the `KeywordParams` feature. Set by
         // `extract_params` (def side) and `lower_call_arg` (call side).
         Feature::KeywordParams,
+        // SIR28 §2 — `print`/`puts` lower to `__sys_write__`
+        // (`builtin_call_or_sys_write`), triggering `ConsoleIO`.
+        Feature::ConsoleIO,
     ] {
         if lw.features_used.contains(&f) {
             manifest.add(f);
@@ -6808,12 +6811,7 @@ impl Lowerer {
             self.features_used.insert(Feature::Exceptions);
         }
         let head: Expr = if let Some(effects) = ruby_builtin_effects(&callee) {
-            Expr::BuiltinCall {
-                name: callee,
-                args,
-                effects,
-                span,
-            }
+            self.builtin_call_or_sys_write(callee, args, effects, span)
         } else {
             // Unrecognised name — fall back to DirectCall.  SIR
             // backends that can't resolve the name will surface a
@@ -6827,6 +6825,67 @@ impl Lowerer {
         };
         // Phase 6l — apply trailing `.method[(...)]` chain steps, if any.
         self.apply_dot_chain(head, node)
+    }
+
+    /// SIR28 §2 — `print`/`puts` generalize into `__sys_write__`, carrying
+    /// their newline/stream policy as explicit IR data instead of an
+    /// implicit per-backend assumption (the very inconsistency SIR28 exists
+    /// to fix: real Ruby's `print` never newline-terminates, but several
+    /// SIR backends' `print` always did — see SIR28-syscall-primitives.md
+    /// §"Motivation"). `p` (Ruby's inspect-formatting print) is
+    /// deliberately NOT migrated — SIR28 §2.3 reserves it for a future
+    /// `__sys_write_inspect__` needing a third, formatter axis with no
+    /// consumer yet — so it still falls through to a bare `BuiltinCall`.
+    ///
+    /// | Ruby         | terminator    | unpack_arrays |
+    /// |--------------|---------------|----------------|
+    /// | `print a, b` | `"none"`      | `false`        |
+    /// | `puts a, b`  | `"per_value"` | `true`         |
+    ///
+    /// (SIR28 §2.1's table; `stream` is always `"stdout"` — Ruby's `print`/
+    /// `puts` never target stderr, unlike `warn`.)
+    fn builtin_call_or_sys_write(
+        &mut self,
+        callee: String,
+        args: Vec<Expr>,
+        effects: EffectSet,
+        span: Span,
+    ) -> Expr {
+        let terminator = match callee.as_str() {
+            "print" => "none",
+            "puts" => "per_value",
+            _ => {
+                return Expr::BuiltinCall {
+                    name: callee,
+                    args,
+                    effects,
+                    span,
+                };
+            }
+        };
+        self.features_used.insert(Feature::ConsoleIO);
+        self.features_used.insert(Feature::Strings);
+        let mut sys_args = vec![
+            Expr::StrLit {
+                value: "stdout".into(),
+                span: span.clone(),
+            },
+            Expr::StrLit {
+                value: terminator.into(),
+                span: span.clone(),
+            },
+            Expr::BoolLit {
+                value: terminator == "per_value",
+                span: span.clone(),
+            },
+        ];
+        sys_args.extend(args);
+        Expr::BuiltinCall {
+            name: "__sys_write__".into(),
+            args: sys_args,
+            effects,
+            span,
+        }
     }
 
     /// Phase 6l+6s helper — return the `call_arg` Node children of
@@ -7068,12 +7127,7 @@ impl Lowerer {
 
         let span = self.span_of(node);
         if let Some(effects) = ruby_builtin_effects(&callee) {
-            Ok(Expr::BuiltinCall {
-                name: callee,
-                args: all_args,
-                effects,
-                span,
-            })
+            Ok(self.builtin_call_or_sys_write(callee, all_args, effects, span))
         } else {
             Ok(Expr::DirectCall {
                 fn_name: callee,

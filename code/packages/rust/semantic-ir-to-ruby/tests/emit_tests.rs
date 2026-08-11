@@ -58,8 +58,13 @@ fn run_ruby(source: &str) -> Option<String> {
 #[test]
 fn arithmetic_precedence_shape() {
     let rb = ruby_to_ruby("puts 2 + 3 * 4");
-    // Native operators, precedence preserved by parenthesisation.
-    assert!(rb.contains("sir_puts((2 + (3 * 4)))"), "got:\n{rb}");
+    // Native operators, precedence preserved by parenthesisation.  SIR28 §2:
+    // `puts` lowers to `__sys_write__`, which this backend maps to
+    // `sir_write("stdout", "per_value", true, …)`.
+    assert!(
+        rb.contains("sir_write(\"stdout\", \"per_value\", true, (2 + (3 * 4)))"),
+        "got:\n{rb}"
+    );
     assert!(rb.contains("def sir_user_main"), "renames main");
     assert!(rb.ends_with("sir_user_main\n"), "calls the entry:\n{rb}");
 }

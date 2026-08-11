@@ -37,7 +37,11 @@ parses (see [ruby-parser/src/_grammar.rs](../ruby-parser/src/_grammar.rs)):
   `gets`, `raise`); everything else lowers to a `DirectCall` and
   surfaces an "unresolved" diagnostic if no matching top-level
   function exists.  In v0 there are no `def`s, so all named calls
-  are effectively builtins or unresolved.
+  are effectively builtins or unresolved.  `print`/`puts` specifically
+  lower to `BuiltinCall("__sys_write__", ...)`, not a bare
+  `BuiltinCall("print"/"puts", ...)` — see
+  [SIR28-syscall-primitives.md](../../specs/SIR28-syscall-primitives.md)
+  §2.1; `p` is unaffected (reserved for a future `__sys_write_inspect__`).
 - **Expressions** — integer / string literals, name references,
   binary `+`, `-`, `*`, `/`, `<<` (lowered to `BuiltinCall("+", ...)` etc.,
   matching the convention `twig-to-semantic-ir` established). `<<` folds

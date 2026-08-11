@@ -552,15 +552,20 @@ mod tests {
     fn puts_call_becomes_builtin_with_may_print() {
         let m = lower("puts(42)");
         let b = main_body(&m);
-        // The call is the tail expression — it becomes the value.
+        // The call is the tail expression — it becomes the value.  SIR28 §2:
+        // `puts` generalizes into `__sys_write__(stream, terminator,
+        // unpack_arrays, …values)` — stdout/per_value/true for `puts`.
         match &b.value {
             Expr::BuiltinCall { name, args, effects, .. } => {
-                assert_eq!(name, "puts");
-                assert_eq!(args.len(), 1);
-                assert!(matches!(args[0], Expr::IntLit { value: 42, .. }));
+                assert_eq!(name, "__sys_write__");
+                assert_eq!(args.len(), 4);
+                assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "stdout"));
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "per_value"));
+                assert!(matches!(args[2], Expr::BoolLit { value: true, .. }));
+                assert!(matches!(args[3], Expr::IntLit { value: 42, .. }));
                 assert!(effects.contains(Effect::MayPrint));
             }
-            other => panic!("expected BuiltinCall(puts, …), got {:?}", other),
+            other => panic!("expected BuiltinCall(__sys_write__, …), got {:?}", other),
         }
     }
 
@@ -584,15 +589,17 @@ mod tests {
         assert_eq!(b.stmts.len(), 1);
         assert!(matches!(&b.stmts[0], Stmt::LetBinding { name, .. } if name == "x"));
         // The trailing `puts(x)` is a method call without an
-        // assignment around it, so it becomes the block's value.
+        // assignment around it, so it becomes the block's value.  SIR28
+        // §2: `puts` lowers to `__sys_write__`; the value is args[3] (past
+        // the stream/terminator/unpack_arrays envelope).
         match &b.value {
             Expr::BuiltinCall { name, args, .. } => {
-                assert_eq!(name, "puts");
+                assert_eq!(name, "__sys_write__");
                 assert!(
-                    matches!(&args[0], Expr::VarRef { name, scope, .. } if name == "x" && *scope == Scope::Local)
+                    matches!(&args[3], Expr::VarRef { name, scope, .. } if name == "x" && *scope == Scope::Local)
                 );
             }
-            other => panic!("expected BuiltinCall(puts, …), got {:?}", other),
+            other => panic!("expected BuiltinCall(__sys_write__, …), got {:?}", other),
         }
     }
 
@@ -2191,10 +2198,12 @@ mod tests {
         assert!(block_fn.params.is_empty());
         match &block_fn.body.value {
             Expr::BuiltinCall { name, args, .. } => {
-                assert_eq!(name, "puts");
-                assert!(matches!(args[0], Expr::IntLit { value: 1, .. }));
+                // SIR28 §2: `puts` lowers to `__sys_write__`; the value is
+                // args[3], past the stream/terminator/unpack_arrays envelope.
+                assert_eq!(name, "__sys_write__");
+                assert!(matches!(args[3], Expr::IntLit { value: 1, .. }));
             }
-            other => panic!("expected BuiltinCall(puts, …) tail, got {:?}", other),
+            other => panic!("expected BuiltinCall(__sys_write__, …) tail, got {:?}", other),
         }
         let main = main_body(&m);
         let call_args = main.stmts.iter().find_map(|s| match s {
@@ -2217,7 +2226,9 @@ mod tests {
         assert_eq!(block_fn.params.len(), 1);
         assert_eq!(block_fn.params[0].name, "x");
         if let Expr::BuiltinCall { args, .. } = &block_fn.body.value {
-            assert!(matches!(&args[0], Expr::VarRef { name, scope, .. } if name == "x" && *scope == Scope::Param));
+            // SIR28 §2: `puts` lowers to `__sys_write__`; args[3] is past
+            // the stream/terminator/unpack_arrays envelope.
+            assert!(matches!(&args[3], Expr::VarRef { name, scope, .. } if name == "x" && *scope == Scope::Param));
         } else {
             panic!("expected BuiltinCall body");
         }
@@ -2279,12 +2290,14 @@ mod tests {
             .expect("expected __block_0");
         // `y` is declared as a local (via the `;` clause) and is NOT a param.
         assert!(block_fn.params.iter().all(|p| p.name != "y"));
-        // The `puts(y)` tail call references `y` as Scope::Local.
+        // The `puts(y)` tail call references `y` as Scope::Local.  SIR28
+        // §2: `puts` lowers to `__sys_write__`; args[3] is past the
+        // stream/terminator/unpack_arrays envelope.
         if let Expr::BuiltinCall { args, .. } = &block_fn.body.value {
             assert!(matches!(
-                &args[0],
+                &args[3],
                 Expr::VarRef { name, scope, .. } if name == "y" && *scope == Scope::Local
-            ), "expected y as Scope::Local, got {:?}", args.first());
+            ), "expected y as Scope::Local, got {:?}", args.get(3));
         } else {
             panic!("expected BuiltinCall body, got {:?}", block_fn.body.value);
         }
@@ -2388,13 +2401,15 @@ mod tests {
     fn no_paren_call_with_single_arg_lowers_to_builtin_call() {
         let m = lower("puts 1");
         let b = main_body(&m);
+        // SIR28 §2: `puts` lowers to `__sys_write__`; the value is args[3],
+        // past the stream/terminator/unpack_arrays envelope.
         match &b.value {
             Expr::BuiltinCall { name, args, effects, .. } => {
-                assert_eq!(name, "puts");
-                assert!(matches!(args[0], Expr::IntLit { value: 1, .. }));
+                assert_eq!(name, "__sys_write__");
+                assert!(matches!(args[3], Expr::IntLit { value: 1, .. }));
                 assert!(effects.contains(Effect::MayPrint));
             }
-            other => panic!("expected BuiltinCall(puts, …), got {:?}", other),
+            other => panic!("expected BuiltinCall(__sys_write__, …), got {:?}", other),
         }
     }
 
@@ -2404,10 +2419,11 @@ mod tests {
         let b = main_body(&m);
         match &b.value {
             Expr::BuiltinCall { name, args, .. } => {
-                assert_eq!(name, "puts");
-                assert_eq!(args.len(), 3);
+                assert_eq!(name, "__sys_write__");
+                // 3 envelope args (stream/terminator/unpack_arrays) + 3 values.
+                assert_eq!(args.len(), 6);
             }
-            other => panic!("expected BuiltinCall(puts, …), got {:?}", other),
+            other => panic!("expected BuiltinCall(__sys_write__, …), got {:?}", other),
         }
     }
 
@@ -2417,9 +2433,9 @@ mod tests {
         let b = main_body(&m);
         match &b.value {
             Expr::BuiltinCall { name, args, .. } => {
-                assert_eq!(name, "puts");
-                assert_eq!(args.len(), 1);
-                match &args[0] {
+                assert_eq!(name, "__sys_write__");
+                assert_eq!(args.len(), 4);
+                match &args[3] {
                     Expr::BuiltinCall { name, args: inner, .. } => {
                         assert_eq!(name, "+");
                         assert_eq!(inner.len(), 2);
@@ -2427,7 +2443,7 @@ mod tests {
                     other => panic!("expected nested BuiltinCall(+, …), got {:?}", other),
                 }
             }
-            other => panic!("expected BuiltinCall(puts, …), got {:?}", other),
+            other => panic!("expected BuiltinCall(__sys_write__, …), got {:?}", other),
         }
     }
 
@@ -2442,9 +2458,11 @@ mod tests {
     fn paren_form_still_lowers_unchanged() {
         let m = lower("puts(42)");
         let b = main_body(&m);
+        // SIR28 §2: `puts` lowers to `__sys_write__` — 3 envelope args +
+        // the 1 value.
         assert!(matches!(
             &b.value,
-            Expr::BuiltinCall { name, args, .. } if name == "puts" && args.len() == 1
+            Expr::BuiltinCall { name, args, .. } if name == "__sys_write__" && args.len() == 4
         ));
     }
 
@@ -3007,9 +3025,10 @@ mod tests {
     #[test]
     fn dot_chain_on_method_call_head() {
         // `puts(1).then_something` — head is a method_call (puts is a
-        // known builtin → BuiltinCall("puts")), tail is one dot_call.
-        // We use puts so the head call lowers as a recognised builtin
-        // and the validator doesn't trip on an undeclared function.
+        // known builtin → BuiltinCall("__sys_write__"), SIR28 §2), tail
+        // is one dot_call. We use puts so the head call lowers as a
+        // recognised builtin and the validator doesn't trip on an
+        // undeclared function.
         let m = lower("z = puts(1).then_something\n");
         let b = main_body(&m);
         let value = match &b.stmts[0] {
@@ -3019,14 +3038,16 @@ mod tests {
         match value {
             Expr::BuiltinCall { name, args, .. } => {
                 assert_eq!(name, "__method__");
-                // Receiver is the inner `puts(1)` BuiltinCall.
+                // Receiver is the inner `puts(1)` BuiltinCall, now
+                // `__sys_write__` (SIR28 §2) — the value is inner_args[3],
+                // past the stream/terminator/unpack_arrays envelope.
                 match &args[0] {
                     Expr::BuiltinCall { name: inner_name, args: inner_args, .. } => {
-                        assert_eq!(inner_name, "puts");
-                        assert_eq!(inner_args.len(), 1);
-                        assert!(matches!(&inner_args[0], Expr::IntLit { value: 1, .. }));
+                        assert_eq!(inner_name, "__sys_write__");
+                        assert_eq!(inner_args.len(), 4);
+                        assert!(matches!(&inner_args[3], Expr::IntLit { value: 1, .. }));
                     }
-                    other => panic!("expected inner BuiltinCall(puts, …), got {:?}", other),
+                    other => panic!("expected inner BuiltinCall(__sys_write__, …), got {:?}", other),
                 }
                 assert!(matches!(
                     &args[1],
@@ -4988,15 +5009,16 @@ mod tests {
             result
         );
         let b = main_body(&m);
-        // `puts` is an intrinsic — it lowers to BuiltinCall("puts", …),
-        // not a DirectCall.  Its sole argument is the double-splat.
+        // `puts` is an intrinsic — it lowers to BuiltinCall("__sys_write__",
+        // …) (SIR28 §2), not a DirectCall.  args[3], past the
+        // stream/terminator/unpack_arrays envelope, is the double-splat.
         let args = match &b.value {
-            Expr::BuiltinCall { name, args, .. } if name == "puts" => args,
-            other => panic!("expected BuiltinCall(puts, ...), got {:?}", other),
+            Expr::BuiltinCall { name, args, .. } if name == "__sys_write__" => args,
+            other => panic!("expected BuiltinCall(__sys_write__, ...), got {:?}", other),
         };
-        assert_eq!(args.len(), 1, "expected exactly 1 arg");
+        assert_eq!(args.len(), 4, "expected exactly 4 args (3 envelope + 1 value)");
         assert!(matches!(
-            &args[0],
+            &args[3],
             Expr::BuiltinCall { name, .. } if name == "double_splat"
         ));
     }
@@ -5014,12 +5036,14 @@ mod tests {
             result
         );
         let b = main_body(&m);
+        // SIR28 §2: `puts` lowers to `__sys_write__`; args[3] is past the
+        // stream/terminator/unpack_arrays envelope.
         let args = match &b.value {
-            Expr::BuiltinCall { name, args, .. } if name == "puts" => args,
-            other => panic!("expected BuiltinCall(puts, ...), got {:?}", other),
+            Expr::BuiltinCall { name, args, .. } if name == "__sys_write__" => args,
+            other => panic!("expected BuiltinCall(__sys_write__, ...), got {:?}", other),
         };
-        assert_eq!(args.len(), 1);
-        match &args[0] {
+        assert_eq!(args.len(), 4);
+        match &args[3] {
             Expr::BuiltinCall { name, args, .. } => {
                 assert_eq!(name, "double_splat");
                 assert_eq!(args.len(), 1);
@@ -5081,7 +5105,8 @@ mod tests {
         // Phase 22b — end-to-end: a block-pass call arg lowers cleanly
         // AND the module validates.  `puts` is a known intrinsic, so the
         // validator's unknown-callee check passes; an unknown `f` would
-        // trip it.  `puts` lowers to BuiltinCall("puts", …).
+        // trip it.  `puts` lowers to BuiltinCall("__sys_write__", …)
+        // (SIR28 §2).
         let m = lower("blk = 1\nputs(&blk)\n");
         let result = semantic_ir::validate(&m);
         assert!(
@@ -5090,13 +5115,14 @@ mod tests {
             result
         );
         let b = main_body(&m);
+        // args[3] is past the stream/terminator/unpack_arrays envelope.
         let args = match &b.value {
-            Expr::BuiltinCall { name, args, .. } if name == "puts" => args,
-            other => panic!("expected BuiltinCall(puts, ...), got {:?}", other),
+            Expr::BuiltinCall { name, args, .. } if name == "__sys_write__" => args,
+            other => panic!("expected BuiltinCall(__sys_write__, ...), got {:?}", other),
         };
-        assert_eq!(args.len(), 1);
+        assert_eq!(args.len(), 4);
         assert!(matches!(
-            &args[0],
+            &args[3],
             Expr::BuiltinCall { name, .. } if name == "block_pass"
         ));
     }
@@ -5228,8 +5254,10 @@ mod tests {
         // Globals (the validator enforces declared globals).
         let m = lower("$config = 1\nputs($config)\n");
         let b = main_body(&m);
+        // SIR28 §2: `puts` lowers to `__sys_write__`; args[3] is past the
+        // stream/terminator/unpack_arrays envelope.
         let ref_expr: &Expr = match &b.value {
-            Expr::BuiltinCall { name, args, .. } if name == "puts" => &args[0],
+            Expr::BuiltinCall { name, args, .. } if name == "__sys_write__" => &args[3],
             _ => {
                 b.stmts
                     .iter()
@@ -5237,7 +5265,7 @@ mod tests {
                         Stmt::ExprStmt {
                             expr: Expr::BuiltinCall { name, args, .. },
                             ..
-                        } if name == "puts" => Some(&args[0]),
+                        } if name == "__sys_write__" => Some(&args[3]),
                         _ => None,
                     })
                     .expect("expected puts(...) call")
@@ -7454,13 +7482,14 @@ b = "y"
             }
             other => panic!("expected LetBinding(y), got {:?}", other),
         }
-        // then_branch.value should be the `puts(y)` BuiltinCall whose
-        // single arg is the bound `y`.
+        // then_branch.value should be the `puts(y)` BuiltinCall (lowered
+        // to `__sys_write__`, SIR28 §2) whose value arg (args[3], past the
+        // stream/terminator/unpack_arrays envelope) is the bound `y`.
         match &then_branch.value {
             Expr::BuiltinCall { name, args, .. } => {
-                assert_eq!(name, "puts");
+                assert_eq!(name, "__sys_write__");
                 assert!(
-                    matches!(&args[0], Expr::VarRef { name, .. } if name == "y"),
+                    matches!(&args[3], Expr::VarRef { name, .. } if name == "y"),
                     "expected puts(VarRef(y)), got args={:?}",
                     args
                 );
@@ -8045,13 +8074,15 @@ b = "y"
         let b = main_body(&m);
         // A lone `puts(...)` is the block's trailing VALUE, not a stmt.
         let args = match &b.value {
-            Expr::BuiltinCall { name, args, .. } if name == "puts" => args,
-            other => panic!("expected BuiltinCall(puts, ...), got {:?}", other),
+            Expr::BuiltinCall { name, args, .. } if name == "__sys_write__" => args,
+            other => panic!("expected BuiltinCall(__sys_write__, ...), got {:?}", other),
         };
+        // args[3] is past the stream/terminator/unpack_arrays envelope
+        // (SIR28 §2).
         assert!(
-            matches!(&args[0], Expr::StrLit { value, .. } if value == "test"),
+            matches!(&args[3], Expr::StrLit { value, .. } if value == "test"),
             "expected `__FILE__` to lower to StrLit(\"test\"), got {:?}",
-            args[0]
+            args[3]
         );
     }
 
@@ -8091,13 +8122,15 @@ b = "y"
         // The `__FILE__ = 1` binding is a stmt; the trailing `puts(...)`
         // is the block VALUE, where the shadowed read appears.
         let args = match &b.value {
-            Expr::BuiltinCall { name, args, .. } if name == "puts" => args,
-            other => panic!("expected BuiltinCall(puts, ...), got {:?}", other),
+            Expr::BuiltinCall { name, args, .. } if name == "__sys_write__" => args,
+            other => panic!("expected BuiltinCall(__sys_write__, ...), got {:?}", other),
         };
+        // args[3] is past the stream/terminator/unpack_arrays envelope
+        // (SIR28 §2).
         assert!(
-            matches!(&args[0], Expr::VarRef { name, .. } if name == "__FILE__"),
+            matches!(&args[3], Expr::VarRef { name, .. } if name == "__FILE__"),
             "expected shadowed `__FILE__` to stay a VarRef, got {:?}",
-            args[0]
+            args[3]
         );
     }
 
@@ -8110,13 +8143,15 @@ b = "y"
         let m = lower("puts(__LINE__)\n");
         let b = main_body(&m);
         let args = match &b.value {
-            Expr::BuiltinCall { name, args, .. } if name == "puts" => args,
-            other => panic!("expected BuiltinCall(puts, ...), got {:?}", other),
+            Expr::BuiltinCall { name, args, .. } if name == "__sys_write__" => args,
+            other => panic!("expected BuiltinCall(__sys_write__, ...), got {:?}", other),
         };
+        // args[3] is past the stream/terminator/unpack_arrays envelope
+        // (SIR28 §2).
         assert!(
-            matches!(&args[0], Expr::IntLit { value, .. } if *value == 1),
+            matches!(&args[3], Expr::IntLit { value, .. } if *value == 1),
             "expected `__LINE__` on line 1 to lower to IntLit(1), got {:?}",
-            args[0]
+            args[3]
         );
     }
 
@@ -8128,13 +8163,15 @@ b = "y"
         let m = lower("x = 1\nputs(__LINE__)\n");
         let b = main_body(&m);
         let args = match &b.value {
-            Expr::BuiltinCall { name, args, .. } if name == "puts" => args,
-            other => panic!("expected BuiltinCall(puts, ...), got {:?}", other),
+            Expr::BuiltinCall { name, args, .. } if name == "__sys_write__" => args,
+            other => panic!("expected BuiltinCall(__sys_write__, ...), got {:?}", other),
         };
+        // args[3] is past the stream/terminator/unpack_arrays envelope
+        // (SIR28 §2).
         assert!(
-            matches!(&args[0], Expr::IntLit { value, .. } if *value == 2),
+            matches!(&args[3], Expr::IntLit { value, .. } if *value == 2),
             "expected `__LINE__` on line 2 to lower to IntLit(2), got {:?}",
-            args[0]
+            args[3]
         );
     }
 
@@ -8160,13 +8197,15 @@ b = "y"
         let m = lower("__LINE__ = 7\nputs(__LINE__)\n");
         let b = main_body(&m);
         let args = match &b.value {
-            Expr::BuiltinCall { name, args, .. } if name == "puts" => args,
-            other => panic!("expected BuiltinCall(puts, ...), got {:?}", other),
+            Expr::BuiltinCall { name, args, .. } if name == "__sys_write__" => args,
+            other => panic!("expected BuiltinCall(__sys_write__, ...), got {:?}", other),
         };
+        // args[3] is past the stream/terminator/unpack_arrays envelope
+        // (SIR28 §2).
         assert!(
-            matches!(&args[0], Expr::VarRef { name, .. } if name == "__LINE__"),
+            matches!(&args[3], Expr::VarRef { name, .. } if name == "__LINE__"),
             "expected shadowed `__LINE__` to stay a VarRef, got {:?}",
-            args[0]
+            args[3]
         );
     }
 
@@ -8179,13 +8218,15 @@ b = "y"
         let m = lower("puts(__dir__)\n");
         let b = main_body(&m);
         let args = match &b.value {
-            Expr::BuiltinCall { name, args, .. } if name == "puts" => args,
-            other => panic!("expected BuiltinCall(puts, ...), got {:?}", other),
+            Expr::BuiltinCall { name, args, .. } if name == "__sys_write__" => args,
+            other => panic!("expected BuiltinCall(__sys_write__, ...), got {:?}", other),
         };
+        // args[3] is past the stream/terminator/unpack_arrays envelope
+        // (SIR28 §2).
         assert!(
-            matches!(&args[0], Expr::StrLit { value, .. } if value == "."),
+            matches!(&args[3], Expr::StrLit { value, .. } if value == "."),
             "expected `__dir__` to lower to StrLit(\".\"), got {:?}",
-            args[0]
+            args[3]
         );
     }
 
@@ -8222,13 +8263,15 @@ b = "y"
         let m = lower("__dir__ = 1\nputs(__dir__)\n");
         let b = main_body(&m);
         let args = match &b.value {
-            Expr::BuiltinCall { name, args, .. } if name == "puts" => args,
-            other => panic!("expected BuiltinCall(puts, ...), got {:?}", other),
+            Expr::BuiltinCall { name, args, .. } if name == "__sys_write__" => args,
+            other => panic!("expected BuiltinCall(__sys_write__, ...), got {:?}", other),
         };
+        // args[3] is past the stream/terminator/unpack_arrays envelope
+        // (SIR28 §2).
         assert!(
-            matches!(&args[0], Expr::VarRef { name, .. } if name == "__dir__"),
+            matches!(&args[3], Expr::VarRef { name, .. } if name == "__dir__"),
             "expected shadowed `__dir__` to stay a VarRef, got {:?}",
-            args[0]
+            args[3]
         );
     }
 

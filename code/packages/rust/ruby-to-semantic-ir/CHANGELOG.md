@@ -2,6 +2,58 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## 0.10.0 — SIR28 Slice 4: `print`/`puts` lower to `__sys_write__`
+
+Part of the SIR28 arc (`__sys_write__`, the general syscall-primitive
+family — see
+[SIR28-syscall-primitives.md](../../specs/SIR28-syscall-primitives.md)).
+All 7 backends implement `__sys_write__` (Slice 3, merged); this crate is
+the first frontend to emit it, closing the loop for Ruby-sourced programs.
+
+**Behavior change**: `print`/`puts` no longer lower to bare
+`BuiltinCall("print"/"puts", args)`. They now lower to
+`BuiltinCall("__sys_write__", [StrLit("stdout"), StrLit(terminator),
+BoolLit(unpack_arrays), ...args])` — `terminator: "none"`,
+`unpack_arrays: false` for `print`; `terminator: "per_value"`,
+`unpack_arrays: true` for `puts` (SIR28 §2.1's table). `Feature::ConsoleIO`
+is declared whenever either fires.
+
+This is the fix for the print/puts newline inconsistency across backends
+(previously: the C/Ruby backends' `print` never newline-terminated while
+Rust/Go/Python/JS's did, because newline behavior was implicit in which
+*backend* ran the program, not carried as IR data). With this frontend
+change, every backend now receives the SAME explicit `terminator` value
+for the SAME source program, so output is consistent regardless of which
+backend compiles it.
+
+Added `Lowerer::builtin_call_or_sys_write` (`src/lower.rs`), called from
+both call-lowering paths that recognize `print`/`puts` as builtins
+(`lower_method_call`'s parenned/paren-less call path and
+`lower_method_with_block`'s block-taking call path — `print`/`puts` never
+actually take a block in real Ruby, but the wrapping is applied uniformly
+for correctness). `p` (Ruby's inspect-formatting print) is deliberately
+NOT migrated — SIR28 §2.3 reserves it for a future
+`__sys_write_inspect__` needing a third, formatter axis with no consumer
+yet — so it still lowers to a bare `BuiltinCall("p", ...)`, unchanged.
+
+`Feature::ConsoleIO` added to the manifest-materialization allowlist in
+`compile()` (the `features_used` tally was already correct; the allowlist
+that copies it into the final `Module.manifest` was the gap).
+
+**Downstream test fixups** (no source changes, test-only): the backends
+whose own test suites lower real Ruby source via
+`ruby_to_semantic_ir::compile_source` and assert on shape/output —
+`semantic-ir-to-python`, `semantic-ir-to-ruby`, `semantic-ir-to-typescript`
+— had their `_sir_puts(...)`/`sir_puts(...)`/`__Sir.puts(...)` shape
+assertions updated to the new `_sir_write(...)`/`sir_write(...)`/
+`__Sir.write(...)` shape, and their execution-proof expected strings
+updated to drop the newline that `print` (Python backend) previously
+added incorrectly — a pre-existing bug (Python's `sir_print` had appended
+a newline; real Ruby's `print` never does) that this frontend change
+surfaces and fixes for every Ruby-sourced program compiled to Python.
+
+`ruby-to-semantic-ir` 0.9.1 -> 0.10.0.
+
 ## 0.9.1 — lower a dotted/chained bracket-index write receiver
 
 `ruby-parser` 0.8.1 widens `index_assignment`'s grammar to admit a
