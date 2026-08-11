@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C29-la-hora
 spine_node: SPINE-TIME-OF-DAY
-sequence: 1600
-chapter: 102
+sequence: 1620
+chapter: 107
 type: word
 headword: la hora
 gloss: hour / o'clock — telling the time, and a word Spanish inherited almost unchanged from Latin

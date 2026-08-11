@@ -1,48 +1,50 @@
-Spanish, chapter 123: Traer --- Bringing, and Latin for Dragging.
+Spanish, chapter 123: Gustar — the Verb Built the Other Way Round.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-traer — "to bring", and the direction baked into it.
+gustar — the verb that runs backwards.
 
 Warm-up.
 [pause 2 seconds]
-Me levanto, and now estoy de pie. Up, and carrying something. The verb for that has a direction inside it that English leaves open.
+Back in the introductions you learned mucho gusto — "much pleasure". Here is the verb that noun belongs to, assembled the opposite way round from English. It is the single thing in Spanish that trips English speakers up hardest.
 
 Sounds you'll need.
-r-tap — one flick of the tongue: tra-ER, two beats.
-g-hard — the g of traigo is hard, as in English go.
+g-hard — a hard g before u: goos-TAR.
+s-clear — a clean hissing s, never a z buzz.
 
-The word, taken apart: traer.
-traer ("to bring") from Latin trahere, "to drag, to pull". Bringing started out as hauling.
-Latin built a second stem, tract-, and English helped itself to both: tractor, traction, attract, contract, subtract, extract, distract, retract — and abstract, abs- + trahere, something "dragged away" from anything particular.
-Then the worn-down half, through French: trace, train (what is dragged along behind), trail, portray from prōtrahere, "to draw forth", and retreat from retrahere, "to draw back".
+The word, taken apart: gustar.
+gustar from Latin gustāre, "to taste". English kept the root and stayed close to the tongue:
+gusto — doing something with relish, that is, with a taste for it.
+gustatory — of the sense of taste.
+disgust — dis- "away" + taste: what you spit back out.
+degustation, a tasting menu; and through French, ragout.
+Spanish's own el gusto — the gusto of mucho gusto — still holds both senses: taste on the tongue, and pleasure taken in a thing. The verb followed the second: gustar means "to please".
 
-Grammar Lens: the hard g, for the second time.
-[a table of 5 rows, read aloud]
-person: yo. form: traigo.
-person: tú. form: traes.
-person: él/ella/usted. form: trae.
-person: nosotros. form: traemos.
-person: ellos/ustedes. form: traen.
-Oír grew a hard -g- in oigo and nowhere else in its present. Traer does the identical thing: traigo, and then four ordinary -er endings. One club, two members so far, and neither one announces itself.
-
-Why it's said this way: here, or away.
-English lets one verb wander: bring me the bread, bring it to the café — same word, opposite journeys. Spanish will not.
-Traer moves a thing toward you. Llevar moves it away. Traigo el pan is the bread arriving here; llevo el pan is the bread leaving with me. You choose by where you are standing, never by what you are carrying.
-And llevar from Latin levāre, "to raise" — the verb already behind levantarse. To carry a load was first to lift it.
+Grammar Lens: the thing you like is the subject.
+English says I like the book: the liker is the subject. Spanish has no such sentence. It says Me gusta el libro — "the book is pleasing to me".
+Everything follows from that:
+el libro is the subject, which is why the verb is gusta, third person.
+me is the person it happens to, not the one doing anything.
+So the verb agrees with the thing, never with you:
+[a table of 3 rows, read aloud]
+what you mean: I like the book. Spanish: Me gusta el libro. why: one book, so gusta.
+what you mean: I like books. Spanish: Me gustan los libros. why: many books, so gustan.
+what you mean: I like reading. Spanish: Me gusta leer. why: one action, so gusta.
+To change who is pleased, change the little word in front, not the verb: me (to me), te (to you), le (to him, her, usted), nos (to us), les (to them).
+Careful. There is no yo gusto el libro. Yo gusto is a real sentence — it means "I am pleasing" — just not the one you were reaching for.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "traigo, traes, trae, traemos, traen"]
+[your turn — say: "Me gusta el café" then "Me gustan los libros" — the verb follows the thing]
 [pause 8 seconds for the answer]
-[your turn — say: "Traigo el pan" then "Llevo el pan" — here, then away]
+[your turn — say: "Te gusta tomar café" — you like drinking coffee]
 [pause 8 seconds for the answer]
-[your turn — say: "oigo" then "traigo" — the same hard g]
+[your turn — say: "Me gusta ayudar" — I like helping]
 [pause 8 seconds for the answer]
-[your turn — say: "traer" then English "tractor, attract, abstract"]
+[your turn — say: "gustar" then English "gusto, disgust, gustatory" — the tasting family]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which way does traer carry a thing, and which verb goes the other way? (Toward you; llevar.) What did trahere mean, and name two English words from it. (To drag; tractor, attract, abstract, retreat.) Which form of traer misbehaves, and which verb showed you that same misbehaviour first? (Traigo; oigo.) And say you are standing. (Estoy de pie.)
+In me gusta el libro, what is the subject? (El libro.) Why is it me gustan los libros? (The verb agrees with los libros, which is plural.) What did gustāre mean, and name an English cousin. (To taste; gusto, disgust.) And what would yo gusto actually mean? (I am pleasing.)

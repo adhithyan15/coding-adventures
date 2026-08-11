@@ -97,7 +97,7 @@ import {
 import { loadLanguages, saveLanguages } from "./languagestore.ts";
 import { lessonSections } from "./lessonbody.ts";
 import { generatedFigureUrl } from "./figures.ts";
-import { bookHashStatus } from "./bookhashes.ts";
+import { bookHashStatus, whenBookHashesReady } from "./bookhashes.ts";
 import { parseFont, boundsOf, type Font } from "./truetype.ts";
 import {
   ductusFilmstrip,
@@ -975,6 +975,14 @@ function renderLanguagePicker(): HTMLElement {
       reviewCell = null;
       lessonIndex = null;
       void refreshCorpus(loadLearnCorpus);
+
+// The book-hash manifest is 136 kB and loads lazily (see bookhashes.ts), so
+// the "book synced / stale" note in a lesson's metadata line is absent on
+// first paint. Re-render once it lands rather than leaving it permanently
+// blank. A failed load resolves too, and simply leaves the note off.
+void whenBookHashesReady().then(() => {
+  render();
+});
     };
     const text = el("span", "");
     text.textContent = `${definition.name} · ${definition.script}`;

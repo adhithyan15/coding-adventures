@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 93,
-  "title": "Lo Siento",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:5213afd4b01d38fa",
+  "title": "Wanting, Not Asserting",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:868954cbf12d180d",
   "lessons": [
     {
-      "id": "ES-C20-lo-siento",
-      "sequence": 1410,
-      "title": "lo siento — \"I'm sorry,\" i.e. \"I feel it\"",
-      "headword": "lo siento",
-      "romanization": "lo siento",
-      "gloss": "I'm sorry — literally \"I feel it,\" a naming of the feeling rather than a claim about yourself",
+      "id": "ES-C18-quiero-que",
+      "sequence": 1310,
+      "title": "Hablas español, Quiero que hables español — fact or wanted event?",
+      "headword": "Hablas español · Quiero que hables español",
+      "romanization": "Hablas español · Quiero que hables español",
+      "gloss": "an asserted event beside a wanted, not-yet-real event",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5da6cbd775f145c5",
+      "sourceHash": "fnv1a64:a66e5f750f02f7ad",
       "notice": null,
       "blocks": [
         {
@@ -35,172 +35,37 @@
             },
             {
               "kind": "speech",
-              "text": "You already know por favor, \"please.\" The next courtesy phrase is lo siento. Spanish does not say \"I am sorry\" as an adjective; it says something closer to \"I feel this.\""
+              "text": "Hablas español can assert “You speak Spanish.” Now compare Quiero que hables español — “I want you to speak Spanish.” Hables does not report what is true. It presents the speaking as wanted and not yet asserted. That meaning contrast is the first small doorway into the subjunctive."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The phrase, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: count the doers",
           "segments": [
-            {
-              "kind": "speech",
-              "text": "lo = \"it\" — a neuter pronoun. It does not point at any noun; it points at the situation itself. Spanish keeps this one leftover neuter slot precisely for \"the whole business, unnamed.\""
-            },
-            {
-              "kind": "speech",
-              "text": "siento = \"I feel,\" from sentir, \"to feel,\" from Latin sentīre. That root gave English a whole family: sentiment, sense, consent (\"feel together\"), resent (\"feel back at\"), and sentence (originally an opinion, something felt)."
-            },
-            {
-              "kind": "speech",
-              "text": "So lo siento is literally \"I feel it.\" You are naming a feeling — regret, sympathy — rather than declaring a state about yourself. That is why it stretches so easily: lo siento mucho, \"I feel it a lot,\" works both for stepping on someone's foot and for hearing that their father died."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"siento\" — I feel — then \"lo siento,\" I feel it / I'm sorry",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"siento\" — I feel — then \"lo siento,\" I feel it / I'm sorry]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"lo siento mucho\" — I'm so sorry",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"lo siento mucho\" — I'm so sorry]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"siento\" then English \"sentiment, sense, consent\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"siento\" then English \"sentiment, sense, consent\"]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does lo siento literally mean? (\"I feel it\" — siento, \"I feel,\" from Latin sentīre.) What is the lo pointing at? (The situation, not a noun — it is the neuter \"it.\") Next: Spanish's other word for sorry, and when it is the right one."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C20-perdon",
-      "sequence": 1420,
-      "title": "perdón — the sorry that asks for something back",
-      "headword": "perdón",
-      "romanization": "perdón",
-      "gloss": "the other sorry — \"give completely\" — for fault and for getting past people, where lo siento is for regret",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:955e460a552048e8",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Lo siento names a feeling. Spanish keeps a second word for a different job — one that is not about your feelings at all, but about something you want from the other person."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "perdón (\"pardon\"), from the verb perdonar — Latin per- (\"thoroughly\") + dōnāre (\"to give\"). Literally: \"to give completely.\""
-            },
-            {
-              "kind": "speech",
-              "text": "That dōnāre is English's donate, donor, and condone; the per- is the same intensifier in perfect (\"thoroughly made\") and perturb. So forgiveness, in Latin's picture of it, is a gift given all the way — you hand over the debt rather than keeping a share of it."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: which one to reach for",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The two are not interchangeable, and the difference follows straight from the etymologies:"
-            },
             {
               "kind": "table",
               "headers": [
-                "",
-                "lo siento",
-                "perdón"
+                "meaning",
+                "Spanish",
+                "doers"
               ],
               "columns": 3,
-              "rowCount": 3,
+              "rowCount": 2,
               "utterances": [
-                "literally. lo siento: \"I feel it\". perdón: \"give [it] completely\".",
-                "points at. lo siento: your feeling. perdón: their forgiveness.",
-                "use for. lo siento: regret, sympathy. perdón: fault, or getting past someone."
+                "meaning: I want to speak Spanish. Spanish: Quiero hablar español. doers: one: I want; I speak.",
+                "meaning: I want you to speak Spanish. Spanish: Quiero que hables español. doers: two: I want; you speak."
               ]
             },
             {
               "kind": "speech",
-              "text": "So perdón is what you say to squeeze through a crowd or catch a waiter's eye (English \"excuse me\"), and to ask forgiveness for something you did — often stronger than lo siento. Lo siento leans toward \"I'm sorry that happened,\" including things that are nobody's fault at all."
-            },
-            {
-              "kind": "speech",
-              "text": "Be honest about the edges: native speakers use whichever fits, the boundary is soft, and mixing them is not a real mistake — just a shade off."
+              "text": "With one doer, keep the known infinitive hablar. With a different doer for the wanted event, use que and the new form hables. This is a bounded pattern for querer, not a rule for every clause in Spanish."
             }
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -213,34 +78,94 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"perdón\" — pardon / excuse me",
+              "instruction": "“Hablas español.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"perdón\" — pardon / excuse me]"
+              "source": "[YOU SAY: “Hablas español.”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pair — \"lo siento\" for regret, \"perdón\" for fault",
+              "instruction": "“Quiero hablar español.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"lo siento\" for regret, \"perdón\" for fault]"
+              "source": "[YOU SAY: “Quiero hablar español.”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"perdón\" then English \"donate, condone\" — the dōnāre root",
+              "instruction": "“Quiero que hables español.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"perdón\" then English \"donate, condone\" — the *dōnāre* root]"
+              "source": "[YOU SAY: “Quiero que hables español.”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-quiero-que-meaning",
+              "prompt": "Which form asserts that one friend speaks: hablas or hables?",
+              "assesses": [
+                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
+                "ES-GRAMMAR-AR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "hablas"
+              ],
+              "feedback": {
+                "correct": "Right: hablas can assert the event.",
+                "incorrect": "Use indicative hablas for the asserted event; hables is the wanted form here."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-quiero-que-one-doer",
+              "prompt": "Say 'I want to speak Spanish' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
+                "ES-LEX-QUERER",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "quiero hablar español.",
+                "quiero hablar español"
+              ],
+              "feedback": {
+                "correct": "Right: one doer keeps the infinitive hablar.",
+                "incorrect": "Use known quiero plus the infinitive: Quiero hablar español."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-quiero-que-two-doers",
+              "prompt": "Say 'I want you to speak Spanish' to one friend.",
+              "assesses": [
+                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
+                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
+                "ES-LEX-QUE",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "quiero que hables español.",
+                "quiero que hables español"
+              ],
+              "feedback": {
+                "correct": "Right: two doers give quiero que hables.",
+                "incorrect": "Join the wanted event with que and use hables: Quiero que hables español."
+              }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -252,7 +177,7 @@
             },
             {
               "kind": "speech",
-              "text": "What do the two halves of perdonar mean? (Per-, \"thoroughly,\" plus dōnāre, \"to give\" — to give completely.) Which word do you use to get past someone in a corridor? (Perdón.) Which leans toward sympathy rather than fault? (Lo siento — \"I feel it.\")"
+              "text": "Which form asserts the event? (Hablas.) Which presents it as wanted? (Hables, after quiero que.) What happens when the wanter and the speaker are the same? (Use the infinitive: Quiero hablar.) Next, build the three singular -ar forms one piece at a time."
             }
           ]
         }
