@@ -579,7 +579,9 @@
           73,
           74,
           75,
-          76
+          76,
+          77,
+          78
         ],
         "bookChapters": [
           1,
@@ -657,7 +659,9 @@
           73,
           74,
           75,
-          76
+          76,
+          77,
+          78
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -2143,9 +2147,9 @@
       {
         "code": "chapter-payoff-not-representative",
         "language": "spanish",
-        "chapter": 46,
+        "chapter": 48,
         "lessonId": "ES-C26-pan",
-        "message": "spanish chapter 46 payoff assesses 3/8 of the chapter's atoms (0.38), below the 0.5 floor."
+        "message": "spanish chapter 48 payoff assesses 3/8 of the chapter's atoms (0.38), below the 0.5 floor."
       },
       {
         "code": "chapter-payoff-not-representative",
@@ -2365,8 +2369,8 @@
       },
       {
         "language": "spanish",
-        "bookChapters": 76,
-        "declaredChapters": 76,
+        "bookChapters": 78,
+        "declaredChapters": 78,
         "missingCapability": 0,
         "findings": 1,
         "clean": false
@@ -2397,8 +2401,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 549,
-      "declaredChapters": 549,
+      "bookChapters": 551,
+      "declaredChapters": 551,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 25,
@@ -46493,35 +46497,6 @@
           {
             "language": "spanish",
             "chapter": 20,
-            "lessonCount": 5,
-            "voice": 5,
-            "sight": 0,
-            "pen": 0,
-            "coreVoice": 5,
-            "modalities": [
-              "voice"
-            ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": null
-          },
-          {
-            "language": "spanish",
-            "chapter": 21,
-            "lessonCount": 5,
-            "voice": 4,
-            "sight": 1,
-            "pen": 0,
-            "coreVoice": 4,
-            "modalities": [
-              "voice",
-              "sight"
-            ],
-            "drivablePrefix": 4,
-            "firstNonVoiceLesson": "ES-C07-repaso-comer"
-          },
-          {
-            "language": "spanish",
-            "chapter": 22,
             "lessonCount": 1,
             "voice": 1,
             "sight": 0,
@@ -46535,17 +46510,46 @@
           },
           {
             "language": "spanish",
-            "chapter": 23,
-            "lessonCount": 4,
-            "voice": 4,
+            "chapter": 21,
+            "lessonCount": 1,
+            "voice": 1,
             "sight": 0,
             "pen": 0,
-            "coreVoice": 4,
+            "coreVoice": 1,
             "modalities": [
               "voice"
             ],
-            "drivablePrefix": 4,
+            "drivablePrefix": 1,
             "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 22,
+            "lessonCount": 3,
+            "voice": 3,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 3,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 23,
+            "lessonCount": 5,
+            "voice": 4,
+            "sight": 1,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": "ES-C07-repaso-comer"
           },
           {
             "language": "spanish",
@@ -46564,34 +46568,6 @@
           {
             "language": "spanish",
             "chapter": 25,
-            "lessonCount": 5,
-            "voice": 5,
-            "sight": 0,
-            "pen": 0,
-            "coreVoice": 5,
-            "modalities": [
-              "voice"
-            ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": null
-          },
-          {
-            "language": "spanish",
-            "chapter": 26,
-            "lessonCount": 5,
-            "voice": 5,
-            "sight": 0,
-            "pen": 0,
-            "coreVoice": 5,
-            "modalities": [
-              "voice"
-            ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": null
-          },
-          {
-            "language": "spanish",
-            "chapter": 27,
             "lessonCount": 4,
             "voice": 4,
             "sight": 0,
@@ -46601,6 +46577,34 @@
               "voice"
             ],
             "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 26,
+            "lessonCount": 1,
+            "voice": 1,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 1,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 27,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
             "firstNonVoiceLesson": null
           },
           {
@@ -46621,6 +46625,34 @@
             "language": "spanish",
             "chapter": 29,
             "lessonCount": 4,
+            "voice": 4,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 30,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 31,
+            "lessonCount": 4,
             "voice": 3,
             "sight": 1,
             "pen": 0,
@@ -46631,34 +46663,6 @@
             ],
             "drivablePrefix": 2,
             "firstNonVoiceLesson": "ES-C12-yo-go"
-          },
-          {
-            "language": "spanish",
-            "chapter": 30,
-            "lessonCount": 1,
-            "voice": 1,
-            "sight": 0,
-            "pen": 0,
-            "coreVoice": 1,
-            "modalities": [
-              "voice"
-            ],
-            "drivablePrefix": 1,
-            "firstNonVoiceLesson": null
-          },
-          {
-            "language": "spanish",
-            "chapter": 31,
-            "lessonCount": 1,
-            "voice": 1,
-            "sight": 0,
-            "pen": 0,
-            "coreVoice": 1,
-            "modalities": [
-              "voice"
-            ],
-            "drivablePrefix": 1,
-            "firstNonVoiceLesson": null
           },
           {
             "language": "spanish",
@@ -46677,15 +46681,15 @@
           {
             "language": "spanish",
             "chapter": 33,
-            "lessonCount": 2,
-            "voice": 2,
+            "lessonCount": 1,
+            "voice": 1,
             "sight": 0,
             "pen": 0,
-            "coreVoice": 2,
+            "coreVoice": 1,
             "modalities": [
               "voice"
             ],
-            "drivablePrefix": 2,
+            "drivablePrefix": 1,
             "firstNonVoiceLesson": null
           },
           {
@@ -46705,6 +46709,34 @@
           {
             "language": "spanish",
             "chapter": 35,
+            "lessonCount": 2,
+            "voice": 2,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 2,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 36,
+            "lessonCount": 1,
+            "voice": 1,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 1,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 37,
             "lessonCount": 3,
             "voice": 3,
             "sight": 0,
@@ -46718,7 +46750,7 @@
           },
           {
             "language": "spanish",
-            "chapter": 36,
+            "chapter": 38,
             "lessonCount": 6,
             "voice": 6,
             "sight": 0,
@@ -46732,7 +46764,7 @@
           },
           {
             "language": "spanish",
-            "chapter": 37,
+            "chapter": 39,
             "lessonCount": 8,
             "voice": 8,
             "sight": 0,
@@ -46746,7 +46778,7 @@
           },
           {
             "language": "spanish",
-            "chapter": 38,
+            "chapter": 40,
             "lessonCount": 8,
             "voice": 7,
             "sight": 1,
@@ -46761,7 +46793,7 @@
           },
           {
             "language": "spanish",
-            "chapter": 39,
+            "chapter": 41,
             "lessonCount": 9,
             "voice": 9,
             "sight": 0,
@@ -46775,7 +46807,7 @@
           },
           {
             "language": "spanish",
-            "chapter": 40,
+            "chapter": 42,
             "lessonCount": 2,
             "voice": 2,
             "sight": 0,
@@ -46789,7 +46821,7 @@
           },
           {
             "language": "spanish",
-            "chapter": 41,
+            "chapter": 43,
             "lessonCount": 2,
             "voice": 0,
             "sight": 2,
@@ -46803,7 +46835,7 @@
           },
           {
             "language": "spanish",
-            "chapter": 42,
+            "chapter": 44,
             "lessonCount": 4,
             "voice": 4,
             "sight": 0,
@@ -46817,7 +46849,7 @@
           },
           {
             "language": "spanish",
-            "chapter": 43,
+            "chapter": 45,
             "lessonCount": 3,
             "voice": 3,
             "sight": 0,
@@ -46831,7 +46863,7 @@
           },
           {
             "language": "spanish",
-            "chapter": 44,
+            "chapter": 46,
             "lessonCount": 2,
             "voice": 2,
             "sight": 0,
@@ -46841,34 +46873,6 @@
               "voice"
             ],
             "drivablePrefix": 2,
-            "firstNonVoiceLesson": null
-          },
-          {
-            "language": "spanish",
-            "chapter": 45,
-            "lessonCount": 1,
-            "voice": 1,
-            "sight": 0,
-            "pen": 0,
-            "coreVoice": 1,
-            "modalities": [
-              "voice"
-            ],
-            "drivablePrefix": 1,
-            "firstNonVoiceLesson": null
-          },
-          {
-            "language": "spanish",
-            "chapter": 46,
-            "lessonCount": 3,
-            "voice": 3,
-            "sight": 0,
-            "pen": 0,
-            "coreVoice": 3,
-            "modalities": [
-              "voice"
-            ],
-            "drivablePrefix": 3,
             "firstNonVoiceLesson": null
           },
           {
@@ -46888,15 +46892,15 @@
           {
             "language": "spanish",
             "chapter": 48,
-            "lessonCount": 1,
-            "voice": 1,
+            "lessonCount": 3,
+            "voice": 3,
             "sight": 0,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 3,
             "modalities": [
               "voice"
             ],
-            "drivablePrefix": 1,
+            "drivablePrefix": 3,
             "firstNonVoiceLesson": null
           },
           {
@@ -46916,6 +46920,34 @@
           {
             "language": "spanish",
             "chapter": 50,
+            "lessonCount": 1,
+            "voice": 1,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 1,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 51,
+            "lessonCount": 1,
+            "voice": 1,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 1,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 52,
             "lessonCount": 3,
             "voice": 3,
             "sight": 0,
@@ -46929,7 +46961,7 @@
           },
           {
             "language": "spanish",
-            "chapter": 51,
+            "chapter": 53,
             "lessonCount": 4,
             "voice": 4,
             "sight": 0,
@@ -46943,58 +46975,30 @@
           },
           {
             "language": "spanish",
-            "chapter": 52,
-            "lessonCount": 2,
-            "voice": 2,
-            "sight": 0,
-            "pen": 0,
-            "coreVoice": 2,
-            "modalities": [
-              "voice"
-            ],
-            "drivablePrefix": 2,
-            "firstNonVoiceLesson": null
-          },
-          {
-            "language": "spanish",
-            "chapter": 53,
-            "lessonCount": 2,
-            "voice": 2,
-            "sight": 0,
-            "pen": 0,
-            "coreVoice": 2,
-            "modalities": [
-              "voice"
-            ],
-            "drivablePrefix": 2,
-            "firstNonVoiceLesson": null
-          },
-          {
-            "language": "spanish",
             "chapter": 54,
-            "lessonCount": 1,
-            "voice": 1,
+            "lessonCount": 2,
+            "voice": 2,
             "sight": 0,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 2,
             "modalities": [
               "voice"
             ],
-            "drivablePrefix": 1,
+            "drivablePrefix": 2,
             "firstNonVoiceLesson": null
           },
           {
             "language": "spanish",
             "chapter": 55,
-            "lessonCount": 1,
-            "voice": 1,
+            "lessonCount": 2,
+            "voice": 2,
             "sight": 0,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 2,
             "modalities": [
               "voice"
             ],
-            "drivablePrefix": 1,
+            "drivablePrefix": 2,
             "firstNonVoiceLesson": null
           },
           {
@@ -47140,29 +47144,29 @@
           {
             "language": "spanish",
             "chapter": 66,
-            "lessonCount": 4,
-            "voice": 4,
+            "lessonCount": 1,
+            "voice": 1,
             "sight": 0,
             "pen": 0,
-            "coreVoice": 4,
+            "coreVoice": 1,
             "modalities": [
               "voice"
             ],
-            "drivablePrefix": 4,
+            "drivablePrefix": 1,
             "firstNonVoiceLesson": null
           },
           {
             "language": "spanish",
             "chapter": 67,
-            "lessonCount": 4,
-            "voice": 4,
+            "lessonCount": 1,
+            "voice": 1,
             "sight": 0,
             "pen": 0,
-            "coreVoice": 4,
+            "coreVoice": 1,
             "modalities": [
               "voice"
             ],
-            "drivablePrefix": 4,
+            "drivablePrefix": 1,
             "firstNonVoiceLesson": null
           },
           {
@@ -47182,29 +47186,29 @@
           {
             "language": "spanish",
             "chapter": 69,
-            "lessonCount": 1,
-            "voice": 1,
+            "lessonCount": 4,
+            "voice": 4,
             "sight": 0,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 4,
             "modalities": [
               "voice"
             ],
-            "drivablePrefix": 1,
+            "drivablePrefix": 4,
             "firstNonVoiceLesson": null
           },
           {
             "language": "spanish",
             "chapter": 70,
-            "lessonCount": 1,
-            "voice": 1,
+            "lessonCount": 4,
+            "voice": 4,
             "sight": 0,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 4,
             "modalities": [
               "voice"
             ],
-            "drivablePrefix": 1,
+            "drivablePrefix": 4,
             "firstNonVoiceLesson": null
           },
           {
@@ -47266,6 +47270,34 @@
           {
             "language": "spanish",
             "chapter": 75,
+            "lessonCount": 1,
+            "voice": 1,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 1,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 76,
+            "lessonCount": 1,
+            "voice": 1,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 1,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 77,
             "lessonCount": 3,
             "voice": 3,
             "sight": 0,
@@ -47279,7 +47311,7 @@
           },
           {
             "language": "spanish",
-            "chapter": 76,
+            "chapter": 78,
             "lessonCount": 4,
             "voice": 4,
             "sight": 0,
