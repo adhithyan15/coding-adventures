@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.51.9 — implement `__sys_write__`, the SIR28 console-output primitive
+
+Adds a `"__sys_write__" => Some("__Sir.write")` emit arm (plain
+`emit_args`, no special literal extraction — JS branches on the
+stream/terminator strings at runtime, exactly like `print`/`puts`) and a
+new runtime function, `write`/`writeOne`, generalizing the existing
+`print`/`puts` into one function parameterized by `stream`
+(stdout/stderr), `terminator` (none/per_value/once), and `unpackArrays` —
+the policy axes SIR28 §2.1 defines. Declares `Feature::ConsoleIO`.
+`write` is promoted to a top-level `__Sir` member alongside `print`/`puts`.
+
+Deliberately does NOT replicate `puts`'s trailing-newline-suppression
+nuance (`puts "x\n"` prints `x\n`, not `x\n\n`) — a pre-existing
+divergence from the C/Go/Rust/Python backends' own `puts`, orthogonal to
+and not fixed by SIR28; `__sys_write__`'s `per_value` terminator always
+appends exactly one newline per value, matching SIR28 §2.1's table and
+every other backend's `__sys_write__` faithfully.
+
+Purely additive: nothing emits `__sys_write__` yet, so `print`/`puts` and
+every existing `print`/`puts`-sourced program are unchanged.
+
+New `tests/compile_and_run_sys_write.rs` (mirrors `run_with_node.rs`'s
+hand-built-`Module` + real-`node` pattern): hand-builds a `Module`
+directly per stream/terminator/unpack_arrays combination (no frontend
+emits the op yet), runs it with `node`, and asserts stdout/stderr.
+
 ## 0.51.8 — doc-comment reframing: SIR25 §2 is the dispatch authority, not "matches Ruby"
 
 Documentation-only, no behavior change. Per `SIR25-language-agnostic-

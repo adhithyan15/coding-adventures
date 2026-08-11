@@ -1829,6 +1829,14 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     let helper = match name {
         "print" => Some("__Sir.print"),
         "puts" => Some("__Sir.puts"),
+        // SIR28 §2: the console-output primitive `print`/`puts` generalize
+        // into. `args = [StrLit(stream), StrLit(terminator),
+        // BoolLit(unpack_arrays), ...values]`, already validated by
+        // `semantic-ir`'s validator (SIR28 §3.1) against a closed set. A
+        // plain `emit_args` (no special literal extraction, unlike the
+        // C/Go/Rust backends) is correct: JS branches on the
+        // stream/terminator strings at runtime, exactly like `print`/`puts`.
+        "__sys_write__" => Some("__Sir.write"),
         "cons" => Some("__Sir.builtins[\"cons\"]"),
         "car" => Some("__Sir.builtins[\"car\"]"),
         "cdr" => Some("__Sir.builtins[\"cdr\"]"),
