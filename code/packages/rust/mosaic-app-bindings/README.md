@@ -14,11 +14,14 @@ semantic events, and return decoded updates to the generated view.
 
 Set the `mosaic.app.library` JVM property or `MOSAIC_APP_LIBRARY` environment
 variable to a library name or absolute path. The conventional fallback name is
-`mosaic_app`.
-Linux CI compiles the exact Compose/JNA binding from a complete generated
-TaskApp project with the shared `mosaic-app-conformance` library, then verifies
-startup, semantic dispatch, snapshot/restore, notification, buffer ownership,
-and teardown on the JVM.
+`mosaic_app`. Generated Compose native distributions add an app-relative lookup
+before that conventional fallback: `compose.application.resources.dir` plus
+`libmosaic_app.dylib`, `libmosaic_app.so`, or `mosaic_app.dll`.
+Linux CI compiles the exact Compose/JNA binding from a generated strict package,
+verifies the selected `mosaic-app-conformance` library was installed in that
+resource directory byte-for-byte, then exercises startup, semantic dispatch,
+snapshot/restore, notification, buffer ownership, and teardown without
+`MOSAIC_APP_LIBRARY`.
 
 For SwiftUI, set `MOSAIC_APP_LIBRARY` to the application dylib path. Without an
 explicit path the loader first checks symbols linked into the process, then tries

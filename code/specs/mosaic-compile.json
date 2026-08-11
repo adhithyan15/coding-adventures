@@ -144,6 +144,13 @@
           "type": "enum",
           "enum_values": ["permissive", "native-complete"],
           "required": false
+        },
+        {
+          "id": "runtime-library",
+          "long": "runtime-library",
+          "description": "Target Rust application cdylib to bundle into the generated native project. Compose supports .dylib, .so, and .dll in this release; requires --emit-project and is mandatory for a native-complete Compose artifact.",
+          "type": "string",
+          "required": false
         }
       ],
       "arguments": [

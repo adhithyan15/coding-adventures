@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Added - Compose native artifacts bundle their Rust engine
+
+Package mode accepts `--runtime-library <target cdylib>`. Compose copies the
+selected `.dylib`, `.so`, or `.dll` into the generated native distribution's
+platform resources, and `--profile native-complete --emit-project` rejects a
+Compose build that omits the engine.
+
 ### Fixed - Flutter project shells compile complete packages
 
 Flutter package projects now place every exported widget in the generated

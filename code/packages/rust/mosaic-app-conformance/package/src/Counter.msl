@@ -1,0 +1,20 @@
+style Counter {
+  part root {
+    direction: column;
+    gap: 12;
+    padding: 24;
+  }
+
+  part title {
+    font-size: 24;
+    font-weight: 700;
+  }
+
+  part platform {
+    color: #475569;
+  }
+
+  part status {
+    color: #166534;
+  }
+}

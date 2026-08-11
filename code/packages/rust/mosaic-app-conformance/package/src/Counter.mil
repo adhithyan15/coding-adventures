@@ -1,0 +1,4 @@
+component Counter {
+  slot platform : text;
+  slot status : text;
+}

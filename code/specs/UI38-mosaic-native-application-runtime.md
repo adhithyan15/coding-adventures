@@ -302,10 +302,13 @@ unblocks multiple downstream targets; never count source generation as completio
 - [ ] Generate standard effect hosts, beginning with storage and lifecycle.
 - [ ] Bundle the selected Rust application engine library into every generated
   installable native artifact and resolve it from an app-relative location.
-  Conformance harnesses currently inject the library path externally; a packaged
-  Compose `.app`, for example, launches only through the permissive sample
-  fallback when `libmosaic_app` is not installed globally. Start with Compose,
-  then repeat the packaging contract for SwiftUI, Qt, XAML, and Flutter.
+  - [x] Compose accepts an explicit target `cdylib`, copies it into the native
+    distribution resources, resolves it through Compose's app-resources JVM
+    property, and rejects strict distributable builds that omit it. The shared
+    Rust engine plus Mosaic conformance package compile, package, and launch as
+    a macOS `.app` without an injected library path; Linux CI verifies the same
+    installed-resource bytes and runtime round trip.
+  - [ ] Repeat the packaging contract for SwiftUI, Qt, XAML, and Flutter.
 - [ ] Add `native-complete` capability/degradation analysis to the compiler.
   - [x] Add a package-builder API and CLI profile with deterministic,
     package-expanded degradation reports and pre-emission strict rejection.
@@ -328,6 +331,9 @@ unblocks multiple downstream targets; never count source generation as completio
     - [ ] Define a serializable native-view reference contract for `node` and
       component slots; Flutter's JSON runtime cannot currently materialize a
       Dart `Widget` value for those otherwise typed composition seams.
+    - [ ] Define display coercion for non-text values used as `Text.content`.
+      Compose currently emits a numeric MIL slot as `Double` directly into
+      `Text`, which fails the generated project's Kotlin compile boundary.
     - [ ] Apply UI35 `accepts` kind filtering to the existing React and HTML
       interaction lowerings; both predate that enforcement and currently accept
       every drag kind even when a target authors a filter.

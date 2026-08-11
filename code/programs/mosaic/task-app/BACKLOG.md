@@ -35,11 +35,11 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 ## Backlog (lower priority — Phase 10+, spec explicitly defers these)
 
 - **Bundle the Rust engine in native application packages.** Native conformance
-  harnesses can load the engine from an injected path, but generated installers
-  do not yet place and resolve the selected `mosaic_app` library app-relatively.
-  A packaged Compose `.app` therefore launches through its permissive sample
-  fallback unless the library is installed externally. Track this as P0 in
-  UI38 and implement Compose first, then repeat for the other native families.
+  harnesses cover the fixed application ABI. Compose packaging now accepts an
+  explicit target `cdylib`, installs it app-relatively, and proves a strict
+  conformance `.app` launches without an injected path. TaskApp still needs its
+  own concrete Rust application engine before it can use that contract; SwiftUI,
+  Qt, XAML, and Flutter packaging remain P0 in UI38.
 - **Segmented-switch icons.** Split out from the icon/SVG-assets item (see
   Resolved below) — everything else in that item shipped. The six
   view-switcher buttons (List/Board/Sheet/Calendar/Notes/Timeline) each want
