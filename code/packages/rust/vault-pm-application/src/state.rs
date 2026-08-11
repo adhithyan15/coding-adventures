@@ -80,6 +80,7 @@ pub struct PublicationJournalV1 {
     expected_heads: PinnedHeads,
     device_counter: u64,
     catalog_root: ObjectId,
+    audit_event_head: Option<ObjectId>,
 }
 
 impl PublicationJournalV1 {
@@ -101,6 +102,7 @@ impl PublicationJournalV1 {
             expected_heads,
             device_counter,
             catalog_root,
+            audit_event_head: None,
         };
         value.validate()?;
         Ok(value)
@@ -139,6 +141,21 @@ impl PublicationJournalV1 {
     /// Return the resulting encrypted catalog object ID.
     pub const fn catalog_root(&self) -> ObjectId {
         self.catalog_root
+    }
+
+    /// Return the encrypted audit event made the new local per-device head.
+    pub const fn audit_event_head(&self) -> Option<ObjectId> {
+        self.audit_event_head
+    }
+
+    /// Bind one newly published encrypted audit event as the next local head.
+    pub(crate) fn with_audit_event_head(
+        mut self,
+        audit_event_head: ObjectId,
+    ) -> Result<Self, ApplicationError> {
+        self.audit_event_head = Some(audit_event_head);
+        self.validate()?;
+        Ok(self)
     }
 
     /// Reconstruct the VLT-PM04 publication without changing any signed bytes.
@@ -180,6 +197,11 @@ impl PublicationJournalV1 {
         if !object_ids.contains(&self.catalog_root) || object_ids.contains(&commit_id) {
             return Err(ApplicationError::IntegrityFailure);
         }
+        if self.audit_event_head.is_some_and(|head| {
+            head == self.catalog_root || !object_ids.contains(&head) || head == commit_id
+        }) {
+            return Err(ApplicationError::IntegrityFailure);
+        }
         Ok(())
     }
 }
@@ -192,6 +214,7 @@ impl Debug for PublicationJournalV1 {
             .field("base_head_count", &self.base_heads.len())
             .field("expected_head_count", &self.expected_heads.len())
             .field("device_counter", &self.device_counter)
+            .field("advances_audit", &self.audit_event_head.is_some())
             .finish_non_exhaustive()
     }
 }
@@ -210,6 +233,7 @@ pub struct ActiveStateV1 {
     pinned_heads: PinnedHeads,
     last_device_counter: u64,
     catalog_root: ObjectId,
+    audit_event_head: Option<ObjectId>,
 }
 
 impl ActiveStateV1 {
@@ -240,6 +264,7 @@ impl ActiveStateV1 {
             pinned_heads,
             last_device_counter,
             catalog_root,
+            audit_event_head: None,
         };
         value.validate()?;
         Ok(value)
@@ -300,12 +325,32 @@ impl ActiveStateV1 {
         self.catalog_root
     }
 
+    /// Return the last durably activated encrypted event for this device.
+    pub const fn audit_event_head(&self) -> Option<ObjectId> {
+        self.audit_event_head
+    }
+
+    /// Install a verified encrypted event as this device's first audit head.
+    pub(crate) fn with_audit_event_head(
+        mut self,
+        audit_event_head: ObjectId,
+    ) -> Result<Self, ApplicationError> {
+        self.audit_event_head = Some(audit_event_head);
+        self.validate()?;
+        Ok(self)
+    }
+
     pub(crate) fn after_publication(
         &self,
         publication: &PublicationJournalV1,
     ) -> Result<Self, ApplicationError> {
         validate_pending(self, publication)?;
-        Self::new(
+        let next_audit_head = match (self.audit_event_head, publication.audit_event_head) {
+            (None, next) => next,
+            (Some(previous), Some(next)) if previous != next => Some(next),
+            (Some(_), _) => return Err(ApplicationError::IntegrityFailure),
+        };
+        let next = Self::new(
             self.bootstrap_locator,
             self.vault_id,
             self.bootstrap_id,
@@ -317,12 +362,21 @@ impl ActiveStateV1 {
             publication.expected_heads.clone(),
             publication.device_counter,
             publication.catalog_root,
-        )
+        )?;
+        match next_audit_head {
+            Some(head) => next.with_audit_event_head(head),
+            None => Ok(next),
+        }
     }
 
     fn validate(&self) -> Result<(), ApplicationError> {
         if self.last_device_counter == 0 || self.pinned_heads.is_empty() {
             return Err(ApplicationError::InvalidInput);
+        }
+        if self.audit_event_head == Some(self.catalog_root)
+            || self.audit_event_head == Some(self.device_certificate_id)
+        {
+            return Err(ApplicationError::IntegrityFailure);
         }
         self.local_secret
             .validate()
@@ -344,6 +398,7 @@ impl Debug for ActiveStateV1 {
             .debug_struct("ActiveStateV1")
             .field("head_count", &self.pinned_heads.len())
             .field("last_device_counter", &self.last_device_counter)
+            .field("audit_enabled", &self.audit_event_head.is_some())
             .finish_non_exhaustive()
     }
 }
@@ -645,6 +700,10 @@ fn validate_pending(
 ) -> Result<(), ApplicationError> {
     if publication.base_heads != active.pinned_heads
         || active.last_device_counter.checked_add(1) != Some(publication.device_counter)
+        || (active.audit_event_head.is_some() && publication.audit_event_head.is_none())
+        || active
+            .audit_event_head
+            .is_some_and(|head| publication.audit_event_head == Some(head))
     {
         return Err(ApplicationError::IntegrityFailure);
     }
@@ -681,12 +740,18 @@ fn encode_active(value: &ActiveStateV1) -> Result<CborValue, ApplicationError> {
         field(9, encode_heads(&value.pinned_heads)),
         field(10, CborValue::Unsigned(value.last_device_counter)),
         field(11, bytes(value.catalog_root.as_bytes())),
+        field(12, optional_bytes(value.audit_event_head)),
     ]))
 }
 
 fn decode_active(value: CborValue) -> Result<ActiveStateV1, ApplicationError> {
-    let mut fields = closed_fields(value, &[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])?;
-    ActiveStateV1::new(
+    let mut fields = closed_fields_legacy_or_current(
+        value,
+        &[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+        &[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+    )?;
+    let audit_event_head = take_optional_fixed_if_present(&mut fields, 12)?.map(ObjectId::new);
+    let active = ActiveStateV1::new(
         BootstrapLocator::new(take_fixed(&mut fields, 1)?),
         VaultId::new(take_fixed(&mut fields, 2)?),
         BootstrapId::new(take_fixed(&mut fields, 3)?),
@@ -698,7 +763,11 @@ fn decode_active(value: CborValue) -> Result<ActiveStateV1, ApplicationError> {
         decode_heads(take_value(&mut fields, 9)?)?,
         take_uint(&mut fields, 10)?,
         ObjectId::new(take_fixed(&mut fields, 11)?),
-    )
+    )?;
+    match audit_event_head {
+        Some(head) => active.with_audit_event_head(head),
+        None => Ok(active),
+    }
 }
 
 fn encode_publication(value: &PublicationJournalV1) -> Result<CborValue, ApplicationError> {
@@ -716,11 +785,14 @@ fn encode_publication(value: &PublicationJournalV1) -> Result<CborValue, Applica
         field(5, encode_heads(&value.expected_heads)),
         field(6, CborValue::Unsigned(value.device_counter)),
         field(7, bytes(value.catalog_root.as_bytes())),
+        field(8, optional_bytes(value.audit_event_head)),
     ]))
 }
 
 fn decode_publication(value: CborValue) -> Result<PublicationJournalV1, ApplicationError> {
-    let mut fields = closed_fields(value, &[1, 2, 3, 4, 5, 6, 7])?;
+    let mut fields =
+        closed_fields_legacy_or_current(value, &[1, 2, 3, 4, 5, 6, 7], &[1, 2, 3, 4, 5, 6, 7, 8])?;
+    let audit_event_head = take_optional_fixed_if_present(&mut fields, 8)?.map(ObjectId::new);
     let object_values = take_array(&mut fields, 1)?;
     if object_values.is_empty() || object_values.len() > MAX_PUBLICATION_OBJECTS {
         return Err(ApplicationError::BoundExceeded);
@@ -730,7 +802,7 @@ fn decode_publication(value: CborValue) -> Result<PublicationJournalV1, Applicat
         .map(bytes_value)
         .map(|result| result.and_then(decode_frame))
         .collect::<Result<Vec<_>, _>>()?;
-    PublicationJournalV1::new(
+    let publication = PublicationJournalV1::new(
         objects,
         decode_frame(take_bytes(&mut fields, 2)?)?,
         take_bytes(&mut fields, 3)?,
@@ -738,7 +810,11 @@ fn decode_publication(value: CborValue) -> Result<PublicationJournalV1, Applicat
         decode_heads(take_value(&mut fields, 5)?)?,
         take_uint(&mut fields, 6)?,
         ObjectId::new(take_fixed(&mut fields, 7)?),
-    )
+    )?;
+    match audit_event_head {
+        Some(head) => publication.with_audit_event_head(head),
+        None => Ok(publication),
+    }
 }
 
 fn encode_envelope(value: &AeadEnvelopeV1) -> CborValue {
@@ -836,12 +912,37 @@ fn closed_fields(
     Ok(fields)
 }
 
+fn closed_fields_legacy_or_current(
+    value: CborValue,
+    legacy: &[u64],
+    current: &[u64],
+) -> Result<BTreeMap<u64, CborValue>, ApplicationError> {
+    let field_count = match &value {
+        CborValue::Map(entries) => entries.len(),
+        _ => return Err(ApplicationError::IntegrityFailure),
+    };
+    if field_count == legacy.len() {
+        closed_fields(value, legacy)
+    } else {
+        closed_fields(value, current)
+    }
+}
+
 fn field(key: u64, value: CborValue) -> (CborValue, CborValue) {
     (CborValue::Unsigned(key), value)
 }
 
 fn bytes(value: &[u8]) -> CborValue {
     CborValue::Bytes(value.to_vec())
+}
+
+fn optional_bytes(value: Option<ObjectId>) -> CborValue {
+    CborValue::Array(
+        value
+            .into_iter()
+            .map(|value| bytes(value.as_bytes()))
+            .collect(),
+    )
 }
 
 fn take_value(
@@ -858,6 +959,20 @@ fn take_uint(fields: &mut BTreeMap<u64, CborValue>, key: u64) -> Result<u64, App
         CborValue::Unsigned(value) => Ok(value),
         _ => Err(ApplicationError::IntegrityFailure),
     }
+}
+
+fn take_optional_fixed_if_present<const N: usize>(
+    fields: &mut BTreeMap<u64, CborValue>,
+    key: u64,
+) -> Result<Option<[u8; N]>, ApplicationError> {
+    let Some(value) = fields.remove(&key) else {
+        return Ok(None);
+    };
+    let values = match value {
+        CborValue::Array(values) if values.len() <= 1 => values,
+        _ => return Err(ApplicationError::IntegrityFailure),
+    };
+    values.into_iter().next().map(fixed_value).transpose()
 }
 
 fn take_bytes(
@@ -1059,7 +1174,7 @@ mod tests {
         let encoded = state.encode().unwrap();
         assert_eq!(
             hex(&sha256(&encoded)),
-            "0ed1fb1008a6db326ca8dd19910847321c7fdf725632b3252b0d05f32f6b44ec"
+            "d36bda7b6694cef9cefd7460cbb362b6d18b9b0e0c40a7fac147baac4348e011"
         );
         assert_eq!(LocalVaultStateV1::decode(&encoded).unwrap(), state);
         assert_eq!(format!("{state:?}"), "LocalVaultStateV1::PreparedInit");
@@ -1099,6 +1214,82 @@ mod tests {
     }
 
     #[test]
+    fn audit_head_is_journaled_backward_compatible_and_cannot_be_skipped() {
+        let active = prepared().intended_active().clone();
+        let CborValue::Map(mut legacy_active_fields) = encode_active(&active).unwrap() else {
+            panic!("active state must be a map")
+        };
+        legacy_active_fields.retain(|(key, _)| key != &CborValue::Unsigned(12));
+        assert_eq!(
+            decode_active(CborValue::Map(legacy_active_fields)).unwrap(),
+            active
+        );
+        let CborValue::Map(mut malformed_active_fields) = encode_active(&active).unwrap() else {
+            panic!("active state must be a map")
+        };
+        malformed_active_fields.retain(|(key, _)| key != &CborValue::Unsigned(12));
+        malformed_active_fields.push(field(
+            12,
+            CborValue::Array(vec![bytes(&[1; 32]), bytes(&[2; 32])]),
+        ));
+        assert_eq!(
+            decode_active(CborValue::Map(malformed_active_fields)),
+            Err(ApplicationError::IntegrityFailure)
+        );
+
+        let catalog = frame(8);
+        let catalog_root = catalog.id().unwrap();
+        let audit_event = frame(9);
+        let audit_event_head = audit_event.id().unwrap();
+        let publication = journal(
+            vec![catalog, audit_event],
+            frame(10),
+            active.device_certificate_id(),
+            active.pinned_heads().clone(),
+            2,
+            catalog_root,
+        )
+        .with_audit_event_head(audit_event_head)
+        .unwrap();
+        assert_eq!(publication.audit_event_head(), Some(audit_event_head));
+
+        let CborValue::Map(mut legacy_publication_fields) =
+            encode_publication(&publication).unwrap()
+        else {
+            panic!("publication must be a map")
+        };
+        legacy_publication_fields.retain(|(key, _)| key != &CborValue::Unsigned(8));
+        assert_eq!(
+            decode_publication(CborValue::Map(legacy_publication_fields))
+                .unwrap()
+                .audit_event_head(),
+            None
+        );
+
+        let pending =
+            LocalVaultStateV1::pending_publication(active.clone(), publication.clone()).unwrap();
+        let encoded = pending.encode().unwrap();
+        assert_eq!(LocalVaultStateV1::decode(&encoded).unwrap(), pending);
+        let audited = active.after_publication(&publication).unwrap();
+        assert_eq!(audited.audit_event_head(), Some(audit_event_head));
+
+        let next_catalog = frame(11);
+        let next_catalog_root = next_catalog.id().unwrap();
+        let unaudited = journal(
+            vec![next_catalog],
+            frame(12),
+            audited.device_certificate_id(),
+            audited.pinned_heads().clone(),
+            3,
+            next_catalog_root,
+        );
+        assert_eq!(
+            LocalVaultStateV1::pending_publication(audited, unaudited),
+            Err(ApplicationError::IntegrityFailure)
+        );
+    }
+
+    #[test]
     fn explicit_accessors_and_diagnostics_disclose_only_bounded_metadata() {
         let prepared = prepared();
         let active = prepared.intended_active();
@@ -1118,6 +1309,7 @@ mod tests {
         );
         assert!(publication.base_heads().is_empty());
         assert_eq!(publication.catalog_root(), active.catalog_root());
+        assert_eq!(publication.audit_event_head(), None);
         assert!(format!("{publication:?}").starts_with("PublicationJournalV1"));
 
         assert_eq!(
@@ -1138,9 +1330,10 @@ mod tests {
         assert_eq!(active.local_secret(), &envelope());
         assert_eq!(active.pinned_heads(), publication.expected_heads());
         assert_eq!(active.last_device_counter(), 1);
+        assert_eq!(active.audit_event_head(), None);
         assert_eq!(
             format!("{active:?}"),
-            "ActiveStateV1 { head_count: 1, last_device_counter: 1, .. }"
+            "ActiveStateV1 { head_count: 1, last_device_counter: 1, audit_enabled: false, .. }"
         );
         assert!(format!("{prepared:?}").starts_with("PreparedInitV1"));
         assert_eq!(
@@ -1220,6 +1413,18 @@ mod tests {
             ),
             Err(ApplicationError::IntegrityFailure)
         );
+        assert_eq!(
+            publication
+                .clone()
+                .with_audit_event_head(ObjectId::new([0xfa; 32])),
+            Err(ApplicationError::IntegrityFailure)
+        );
+        assert_eq!(
+            publication
+                .clone()
+                .with_audit_event_head(publication.catalog_root()),
+            Err(ApplicationError::IntegrityFailure)
+        );
 
         assert_eq!(
             ActiveStateV1::new(
@@ -1235,6 +1440,16 @@ mod tests {
                 active.last_device_counter,
                 active.catalog_root,
             ),
+            Err(ApplicationError::IntegrityFailure)
+        );
+        assert_eq!(
+            active.clone().with_audit_event_head(active.catalog_root()),
+            Err(ApplicationError::IntegrityFailure)
+        );
+        assert_eq!(
+            active
+                .clone()
+                .with_audit_event_head(active.device_certificate_id()),
             Err(ApplicationError::IntegrityFailure)
         );
     }
