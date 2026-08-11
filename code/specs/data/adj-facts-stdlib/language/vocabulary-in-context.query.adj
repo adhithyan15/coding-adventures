@@ -1,0 +1,15 @@
+% ============================================================================
+% vocabulary-in-context.query.adj — worked recall over the
+% vocabulary-in-context library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does this word
+% mean, based on its context sentence?" (direct) or "which word has this
+% meaning?" (reverse) — it states no fact of its own — it only `import`s
+% the grounded table and asks binding queries.
+% ============================================================================
+
+import "vocabulary-in-context.adj"
+
+? vocabulary_in_context(ornithology, $Meaning)                % expect scientific_study_of_birds (direct)
+? vocabulary_in_context($W, hidden_or_not_easily_seen)         % expect inconspicuous (reverse)
+? vocabulary_in_context(arboreal, $Meaning)                    % expect abstain -- a real vocabulary word, but not one this source defines
