@@ -422,7 +422,7 @@ describe("the real corpus", () => {
     // not number the family; ch19's ஆகிறது is described the same way), so it practises
     // TA-GRAMMAR-DATIVE-SUBJECT-02 at a distance of 90 lessons (index 38 -> 128)
     // rather than re-teaching it.
-    expect(report.summary.atomsTaught).toBe(2660);
+    expect(report.summary.atomsTaught).toBe(2663); // +3: ES-LEX-VOS-01, ES-CULTURE-VOSEO-02 (ES-C03-vos)
     // +2, and it goes UP, which is worth stating plainly. Three of the five new atoms
     // are TA-W09's and nothing follows TA-W09, so they are orphans by construction:
     // PA-YA-01, E-SIGN-02, READ-PEYAR-03. TA-W08's two are revisited by TA-W09.
@@ -771,7 +771,7 @@ describe("the real corpus", () => {
       // Chapter 16 replaces three legacy lessons with eight bounded steps;
       // Chapter 17 replaces four legacy lessons with eight bounded steps.
       // Chapter 18 replaces ten legacy lessons with nine bounded steps.
-      lessonCount: 188,
+      lessonCount: 189, // +1: ES-C03-vos
       lessonsWithoutSequence: 0,
       forwardPrerequisites: 0,
       // Chapters 9, 10, and 13 each add nine atoms, Chapter 11 adds eleven, and
@@ -781,7 +781,7 @@ describe("the real corpus", () => {
       // Chapter 16 adds twelve atoms without adding an unrevisited orphan.
       // Chapter 17 does the same across its future and conditional ramp.
       // Chapter 18 does the same across its singular subjunctive ramp.
-      atomsTaught: 384,
+      atomsTaught: 387,
       atomsNeverRevisited: 65,
     });
   });

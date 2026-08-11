@@ -8,7 +8,7 @@ type: practice-mix
 headword: (practice)
 gloss: a full introduction, formal and informal
 concept_tag: CH3-PRACTICE
-prerequisites: [ES-C02-practice, ES-C03-me-llamo, ES-C03-tu-usted, ES-C03-como-se-llama, ES-C03-gusto]
+prerequisites: [ES-C02-practice, ES-C03-me-llamo, ES-C03-tu-usted, ES-C03-vos, ES-C03-como-se-llama, ES-C03-gusto]
 sounds: []
 roots: []
 duration:
@@ -18,13 +18,13 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-HOLA, ES-LEX-BUENOS-DIAS, ES-LEX-ME-LLAMO, ES-LEX-TU, ES-LEX-USTED, ES-LEX-COMO-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-MUCHO-GUSTO]
+  knowledge: [ES-LEX-HOLA, ES-LEX-BUENOS-DIAS, ES-LEX-ME-LLAMO, ES-LEX-TU, ES-LEX-USTED, ES-LEX-VOS-01, ES-CULTURE-VOSEO-02, ES-ETYMON-VOS-03, ES-LEX-COMO-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-MUCHO-GUSTO]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus, fluency]
 register: neutral
 variety: general
-reviews_of: [ES-C03-me-llamo, ES-C03-tu-usted, ES-C03-como-se-llama, ES-C03-gusto]
+reviews_of: [ES-C03-me-llamo, ES-C03-tu-usted, ES-C03-vos, ES-C03-como-se-llama, ES-C03-gusto]
 ---
 
 # Practice — introducing yourself
@@ -61,7 +61,7 @@ that carry the whole social difference:
 - **mucho gusto** — "much pleasure," pleased to meet you.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HOLA, ES-LEX-BUENOS-DIAS, ES-LEX-ME-LLAMO, ES-LEX-TU, ES-LEX-USTED, ES-LEX-COMO-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-MUCHO-GUSTO] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HOLA, ES-LEX-BUENOS-DIAS, ES-LEX-ME-LLAMO, ES-LEX-TU, ES-LEX-USTED, ES-LEX-VOS-01, ES-CULTURE-VOSEO-02, ES-ETYMON-VOS-03, ES-LEX-COMO-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-MUCHO-GUSTO] -->
 
 [PAUSE 1s]
 - [YOU SAY: the full *formal* exchange, both parts]
@@ -73,7 +73,7 @@ that carry the whole social difference:
 [REPEAT x2] Run the formal version start to finish without stopping.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HOLA, ES-LEX-BUENOS-DIAS, ES-LEX-ME-LLAMO, ES-LEX-TU, ES-LEX-USTED, ES-LEX-COMO-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-MUCHO-GUSTO] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HOLA, ES-LEX-BUENOS-DIAS, ES-LEX-ME-LLAMO, ES-LEX-TU, ES-LEX-USTED, ES-LEX-VOS-01, ES-CULTURE-VOSEO-02, ES-ETYMON-VOS-03, ES-LEX-COMO-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-MUCHO-GUSTO] -->
 
 [PAUSE 3s] Which two words change between the formal and informal
 introduction? (*se llama usted* → *te llamas*.) Next chapter, you will learn

@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "How Are You?",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:251f36fd9697af71",
+  "sourceHash": "fnv1a64:57b84666fc45f83f",
   "lessons": [
     {
       "id": "ES-C04-gracias",
@@ -1920,7 +1920,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95b7ff61b4e942fd",
+      "sourceHash": "fnv1a64:a4922df3c09133ea",
       "notice": null,
       "blocks": [
         {
@@ -2056,7 +2056,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which be-verb carries \"how are you?\" and why? (estar — current state.) Two words swap between formal and informal — which? (está becomes estás, and usted becomes tú.) What does de nada literally say? (\"Of nothing.\") Next chapter: farewells — hasta luego, hasta mañana, adiós."
+              "text": "Which be-verb carries \"how are you?\" and why? (estar — current state.) Two words swap between formal and informal — which? (está becomes estás, and usted becomes tú.) What does de nada literally say? (\"Of nothing.\") And if the person answering you says vos instead of tú — do you switch? (No. You understand it and keep saying tú.) Next chapter: farewells — hasta luego, hasta mañana, adiós."
             }
           ]
         }

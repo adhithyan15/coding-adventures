@@ -239,11 +239,11 @@ describe("the committed corpus", () => {
     const { lessons } = loadEverything();
     const r = measureMetalanguage(lessons, loadMetalanguage());
     expect(r.summary.terms).toBe(54);
-    expect(r.summary.lessonsUsingTerms).toBe(1679);
+    expect(r.summary.lessonsUsingTerms).toBe(1680); // +1: ES-C03-vos
 
     // No lesson declares an introduction yet, so every use is early. The total
     // says how pervasive the assumption is; the technical count says what to fix.
-    expect(r.summary.usesBeforeIntroduction).toBe(7738);
+    expect(r.summary.usesBeforeIntroduction).toBe(7744); // +5: ES-C03-vos and the two practice edits use ordinary terms (word, plural, ending)
     expect(r.summary.technicalUsesBeforeIntroduction).toBe(2289);
     expect(r.summary.technicalLessons).toBe(1161);
 

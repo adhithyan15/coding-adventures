@@ -8,17 +8,17 @@ type: practice-mix
 headword: (practice)
 gloss: the full "how are you?" exchange, formal and informal
 concept_tag: CH4-PRACTICE
-prerequisites: [ES-C04-de-nada, ES-C04-regular, ES-C04-y, ES-W03-question-span]
+prerequisites: [ES-C04-de-nada, ES-C04-regular, ES-C04-y, ES-C03-vos, ES-W03-question-span]
 sounds: []
 roots: []
 duration:
   max_seconds: 280
 requires:
-  knowledge: [ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-LEX-ESTAR, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-GRAMMAR-ESTAR-REGISTER-CONTRAST, ES-LEX-COMO-ESTA-USTED, ES-LEX-COMO-ESTAS, ES-LEX-BIEN, ES-LEX-REGULAR, ES-LEX-MAS-O-MENOS, ES-LEX-Y, ES-LEX-ME-LLAMO, ES-ORTHOGRAPHY-PUNCTUATION-SPAN]
+  knowledge: [ES-LEX-VOS-01, ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-LEX-ESTAR, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-GRAMMAR-ESTAR-REGISTER-CONTRAST, ES-LEX-COMO-ESTA-USTED, ES-LEX-COMO-ESTAS, ES-LEX-BIEN, ES-LEX-REGULAR, ES-LEX-MAS-O-MENOS, ES-LEX-Y, ES-LEX-ME-LLAMO, ES-ORTHOGRAPHY-PUNCTUATION-SPAN]
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-LEX-ESTAR, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-GRAMMAR-ESTAR-REGISTER-CONTRAST, ES-LEX-COMO-ESTA-USTED, ES-LEX-COMO-ESTAS, ES-LEX-BIEN, ES-LEX-REGULAR, ES-LEX-MAS-O-MENOS, ES-PRAGMATICS-AND-YOU, ES-LEX-ME-LLAMO]
+  knowledge: [ES-LEX-VOS-01, ES-CULTURE-VOSEO-02, ES-ETYMON-VOS-03, ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-LEX-ESTAR, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-GRAMMAR-ESTAR-REGISTER-CONTRAST, ES-LEX-COMO-ESTA-USTED, ES-LEX-COMO-ESTAS, ES-LEX-BIEN, ES-LEX-REGULAR, ES-LEX-MAS-O-MENOS, ES-PRAGMATICS-AND-YOU, ES-LEX-ME-LLAMO]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus, fluency]
@@ -77,9 +77,11 @@ It bounces the question back without repeating the whole sentence.
 [REPEAT x2] Run the formal exchange, greeting to answer, without stopping.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-LEX-ESTAR, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-GRAMMAR-ESTAR-REGISTER-CONTRAST, ES-LEX-COMO-ESTA-USTED, ES-LEX-COMO-ESTAS, ES-LEX-BIEN, ES-LEX-REGULAR, ES-LEX-MAS-O-MENOS, ES-PRAGMATICS-AND-YOU, ES-LEX-ME-LLAMO] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-ETYMON-VOS-03, ES-CULTURE-VOSEO-02, ES-LEX-VOS-01, ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-LEX-ESTAR, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-GRAMMAR-ESTAR-REGISTER-CONTRAST, ES-LEX-COMO-ESTA-USTED, ES-LEX-COMO-ESTAS, ES-LEX-BIEN, ES-LEX-REGULAR, ES-LEX-MAS-O-MENOS, ES-PRAGMATICS-AND-YOU, ES-LEX-ME-LLAMO] -->
 
 [PAUSE 3s] Which be-verb carries "how are you?" and why? (*estar* — current
 state.) Two words swap between formal and informal — which? (*está → estás*, and
-*usted → tú*.) What does *de nada* literally say? ("Of nothing.") Next chapter:
-**farewells** — hasta luego, hasta mañana, adiós.
+*usted → tú*.) What does *de nada* literally say? ("Of nothing.") And if the
+person answering you says **vos** instead of *tú* — do you switch? (*No. You
+understand it and keep saying tú.*) Next chapter: **farewells** — hasta luego,
+hasta mañana, adiós.
