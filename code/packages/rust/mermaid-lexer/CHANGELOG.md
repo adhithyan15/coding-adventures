@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.29.0
+
+- Recognize Mermaid state `classDef` and `class` statements in the portable lexer grammar.
+
 ## 0.28.0
 
 - Tokenize state inline-style separators and hexadecimal colors without folding them into labels.

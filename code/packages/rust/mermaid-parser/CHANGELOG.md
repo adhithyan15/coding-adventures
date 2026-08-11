@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.50.0
+
+- Parse state `classDef` and `class` statements and resolve reusable styles into graph IR.
+
 ## 0.49.0
 
 - Parse state inline fill, stroke, text-color, and stroke-width styles into shared graph IR.

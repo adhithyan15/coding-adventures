@@ -1,15 +1,17 @@
-# @version 5
+# @version 6
 # Mermaid 11.16.1 state diagram grammar: initial graph-compatible slice.
 
 document = { terminator } HEADER body EOF ;
 body = { terminator | statement } ;
-statement = direction_stmt | state_stmt | style_stmt | description_stmt | transition_stmt ;
+statement = direction_stmt | state_stmt | style_stmt | class_def_stmt | class_stmt | description_stmt | transition_stmt ;
 
 direction_stmt = "direction" DIRECTION ;
 state_stmt = "state" ( state_ref ( CHOICE | FORK_JOIN ) | STRING "as" state_ref | state_ref [ COLON text ] ) ;
 description_stmt = state_ref COLON text ;
 transition_stmt = endpoint ARROW endpoint [ COLON text ] ;
 style_stmt = "style" state_ref style_assignment { COMMA style_assignment } ;
+class_def_stmt = "classDef" state_ref style_assignment { COMMA style_assignment } ;
+class_stmt = "class" state_ref { COMMA state_ref } state_ref ;
 style_assignment = style_property COLON style_value ;
 style_property = ID | WORD ;
 style_value = HASH_COLOR | ID | WORD ;
@@ -17,5 +19,5 @@ style_value = HASH_COLOR | ID | WORD ;
 endpoint = EDGE_STATE | state_ref ;
 state_ref = ID | WORD ;
 text = text_atom { text_atom } ;
-text_atom = ID | WORD | STRING | EDGE_STATE | DIRECTION | HASH_COLOR | COMMA | "state" | "style" | "direction" | "as" ;
+text_atom = ID | WORD | STRING | EDGE_STATE | DIRECTION | HASH_COLOR | COMMA | "state" | "style" | "classDef" | "class" | "direction" | "as" ;
 terminator = NEWLINE | SEMICOLON ;

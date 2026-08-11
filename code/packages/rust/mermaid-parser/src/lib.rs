@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.49.0";
+pub const VERSION: &str = "0.50.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1059,6 +1059,8 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
     let mut node_indices = HashMap::new();
     let mut edges = Vec::new();
     let mut pseudo_index = 0;
+    let mut class_styles: HashMap<String, DiagramStyle> = HashMap::new();
+    let mut pending_classes: Vec<(Vec<String>, String)> = Vec::new();
 
     while !cursor.at_eof() {
         if cursor.current().value.eq_ignore_ascii_case("direction") {
@@ -1073,26 +1075,44 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                 "RL" => DiagramDirection::Rl,
                 _ => unreachable!("state.tokens restricts direction values"),
             };
+        } else if cursor.current().value.eq_ignore_ascii_case("classDef") {
+            cursor.advance();
+            let class_name = take_state_ref(&mut cursor)?;
+            let mut style = DiagramStyle::default();
+            parse_state_style_assignments(&mut cursor, &mut style)?;
+            class_styles.insert(class_name, style);
+        } else if cursor.current().value.eq_ignore_ascii_case("class") {
+            cursor.advance();
+            let mut ids = vec![take_state_ref(&mut cursor)?];
+            while cursor.consume_if("COMMA").is_some() {
+                ids.push(take_state_ref(&mut cursor)?);
+            }
+            let class_name = take_state_ref(&mut cursor)?;
+            for id in &ids {
+                if !node_indices.contains_key(id) {
+                    upsert_state_node(&mut nodes, &mut node_indices, id.clone(), id.clone());
+                }
+            }
+            if let Some(class_style) = class_styles.get(&class_name) {
+                for id in &ids {
+                    merge_state_style(
+                        nodes[node_indices[id]].style.get_or_insert_default(),
+                        class_style,
+                    );
+                }
+            } else {
+                pending_classes.push((ids, class_name));
+            }
         } else if cursor.current().value.eq_ignore_ascii_case("style") {
             cursor.advance();
             let id = take_state_ref(&mut cursor)?;
             if !node_indices.contains_key(&id) {
                 upsert_state_node(&mut nodes, &mut node_indices, id.clone(), id.clone());
             }
-            loop {
-                let property = take_state_ref(&mut cursor)?;
-                cursor.consume_if("COLON").ok_or_else(|| {
-                    token_error(cursor.current(), "expected ':' in state style assignment")
-                })?;
-                let value = cursor.advance().clone();
-                if !matches!(token_name(&value), "HASH_COLOR" | "ID" | "WORD") {
-                    return Err(token_error(&value, "expected state style value"));
-                }
-                apply_state_style(&mut nodes[node_indices[&id]], &property, &value)?;
-                if cursor.consume_if("COMMA").is_none() {
-                    break;
-                }
-            }
+            parse_state_style_assignments(
+                &mut cursor,
+                nodes[node_indices[&id]].style.get_or_insert_default(),
+            )?;
         } else if cursor.current().value.eq_ignore_ascii_case("state") {
             cursor.advance();
             let (id, label) = if token_name(cursor.current()) == "STRING" {
@@ -1183,6 +1203,20 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
         cursor.skip_terminators();
     }
 
+    for (ids, class_name) in pending_classes {
+        let class_style = class_styles.get(&class_name).ok_or_else(|| ParseError {
+            message: format!("unknown state style class {class_name:?}"),
+            line: 1,
+            col: 1,
+        })?;
+        for id in ids {
+            merge_state_style(
+                nodes[node_indices[&id]].style.get_or_insert_default(),
+                class_style,
+            );
+        }
+    }
+
     Ok(GraphDiagram {
         direction,
         title: None,
@@ -1244,11 +1278,10 @@ fn upsert_state_node(
 }
 
 fn apply_state_style(
-    node: &mut GraphNode,
+    style: &mut DiagramStyle,
     property: &str,
     value: &Token,
 ) -> Result<(), ParseError> {
-    let style = node.style.get_or_insert_with(DiagramStyle::default);
     match property.to_ascii_lowercase().as_str() {
         "fill" => style.fill = Some(value.value.clone()),
         "stroke" => style.stroke = Some(value.value.clone()),
@@ -1270,6 +1303,41 @@ fn apply_state_style(
         }
     }
     Ok(())
+}
+
+fn parse_state_style_assignments(
+    cursor: &mut TokenCursor,
+    style: &mut DiagramStyle,
+) -> Result<(), ParseError> {
+    loop {
+        let property = take_state_ref(cursor)?;
+        cursor.consume_if("COLON").ok_or_else(|| {
+            token_error(cursor.current(), "expected ':' in state style assignment")
+        })?;
+        let value = cursor.advance().clone();
+        if !matches!(token_name(&value), "HASH_COLOR" | "ID" | "WORD") {
+            return Err(token_error(&value, "expected state style value"));
+        }
+        apply_state_style(style, &property, &value)?;
+        if cursor.consume_if("COMMA").is_none() {
+            return Ok(());
+        }
+    }
+}
+
+fn merge_state_style(target: &mut DiagramStyle, source: &DiagramStyle) {
+    if source.fill.is_some() {
+        target.fill.clone_from(&source.fill);
+    }
+    if source.stroke.is_some() {
+        target.stroke.clone_from(&source.stroke);
+    }
+    if source.stroke_width.is_some() {
+        target.stroke_width = source.stroke_width;
+    }
+    if source.text_color.is_some() {
+        target.text_color.clone_from(&source.text_color);
+    }
 }
 
 fn take_state_text(cursor: &mut TokenCursor) -> String {
@@ -3942,6 +4010,37 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_resolves_reusable_style_classes() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nclass Ready,Waiting warning\nclassDef warning fill:#fef3c7,stroke:#92400e,color:#451a03,stroke-width:2px\nReady --> Waiting\n",
+        )
+        .expect("state style classes should parse");
+
+        for id in ["Ready", "Waiting"] {
+            let style = diagram
+                .nodes
+                .iter()
+                .find(|node| node.id == id)
+                .unwrap()
+                .style
+                .as_ref()
+                .unwrap();
+            assert_eq!(style.fill.as_deref(), Some("#fef3c7"));
+            assert_eq!(style.stroke.as_deref(), Some("#92400e"));
+            assert_eq!(style.text_color.as_deref(), Some("#451a03"));
+            assert_eq!(style.stroke_width, Some(2.0));
+        }
+    }
+
+    #[test]
+    fn state_rejects_unknown_style_classes() {
+        let error = parse_state_diagram("stateDiagram-v2\nclass Ready missing\n")
+            .expect_err("unknown state classes should fail");
+
+        assert!(error.message.contains("unknown state style class"));
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -4712,7 +4811,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.49.0");
+        assert_eq!(crate::VERSION, "0.50.0");
     }
 
     #[test]

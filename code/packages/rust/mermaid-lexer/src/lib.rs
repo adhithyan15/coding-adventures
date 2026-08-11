@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.28.0";
+pub const VERSION: &str = "0.29.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -208,7 +208,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.28.0");
+        assert_eq!(VERSION, "0.29.0");
     }
 
     #[test]
@@ -266,6 +266,16 @@ mod tests {
                 .count(),
             3
         );
+        assert_eq!(tokens.iter().filter(|token| token.value == ",").count(), 2);
+    }
+
+    #[test]
+    fn tokenizes_state_class_styles() {
+        let tokens = tokenize_mermaid_state(
+            "stateDiagram-v2\nclassDef warning fill:#fef3c7,stroke:#92400e\nclass Ready,Waiting warning\n",
+        );
+        assert!(tokens.iter().any(|token| token.value == "classDef"));
+        assert!(tokens.iter().any(|token| token.value == "class"));
         assert_eq!(tokens.iter().filter(|token| token.value == ",").count(), 2);
     }
 
