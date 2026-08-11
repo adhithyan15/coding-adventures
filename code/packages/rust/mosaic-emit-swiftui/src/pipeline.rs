@@ -55,10 +55,10 @@
 //!   PR. Payload-carrying emits work for the *enum case shape* (so the
 //!   host's switch is exhaustive) but dispatch sites still pass nothing.
 //!
-//! - **`Icon`, `Grid` (v2) primitives.** They still lower to
-//!   `UnknownPrimitive` errors today. `Stack`, `HostScroll`, `HostInput`,
-//!   and `HostButton` landed in v0.2.0 (UI29 kernel partial); the
-//!   remaining primitives get dedicated emitters in follow-ups.
+//! - **`Grid` (v2) primitive.** It still lowers to an
+//!   `UnknownPrimitive` error today. `Stack`, `HostScroll`, `HostInput`,
+//!   `HostButton`, and `Icon` have native SwiftUI lowerings; Grid gets a
+//!   dedicated emitter in a follow-up.
 //!
 //! ## UI29 kernel partial (v0.2.0 / v0.3.0 / v0.4.0)
 //!
@@ -1165,6 +1165,14 @@ fn layout_uses_automatic_press(node: &LayoutNode, part_styles: &PartStyleMap) ->
             .children
             .iter()
             .any(|child| layout_uses_automatic_press(child, part_styles))
+}
+
+fn layout_contains_tag(node: &LayoutNode, tag: &str) -> bool {
+    node.tag == tag
+        || node
+            .children
+            .iter()
+            .any(|child| layout_contains_tag(child, tag))
 }
 
 /// One state layer collected from a node's `state-when-<X>: ( expr )` props.
@@ -2379,6 +2387,43 @@ fn emit_view_struct(
         "    private func _mosaicButton(_ label: Any, action: @escaping () -> Void) -> AnyView {{ AnyView(Button(action: action) {{ _mosaicText(label) }}) }}"
     )
     .unwrap();
+    if layout_contains_tag(layout_root, "Icon") {
+        writeln!(
+            out,
+            "    private func _mosaicIconSymbol(_ name: String) -> String {{"
+        )
+        .unwrap();
+        writeln!(
+            out,
+            "        switch name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased().replacingOccurrences(of: \"_\", with: \"-\") {{"
+        )
+        .unwrap();
+        writeln!(out, "        case \"add\", \"plus\": return \"plus\"").unwrap();
+        writeln!(
+            out,
+            "        case \"close\", \"dismiss\", \"x\": return \"xmark\""
+        )
+        .unwrap();
+        writeln!(out, "        case \"home\": return \"house\"").unwrap();
+        writeln!(
+            out,
+            "        case \"refresh\", \"reload\": return \"arrow.clockwise\""
+        )
+        .unwrap();
+        writeln!(
+            out,
+            "        case \"settings\", \"gear\": return \"gearshape\""
+        )
+        .unwrap();
+        writeln!(
+            out,
+            "        case \"star\", \"favorite\": return \"star.fill\""
+        )
+        .unwrap();
+        writeln!(out, "        default: return \"questionmark.diamond\"").unwrap();
+        writeln!(out, "        }}").unwrap();
+        writeln!(out, "    }}").unwrap();
+    }
     if part_styles.contains_key(CONCRETE_MODIFIER_HELPERS_KEY) {
         writeln!(out, "    private func _mosaicForegroundColor(_ view: AnyView, _ color: Color) -> AnyView {{ AnyView(view.foregroundColor(color)) }}").unwrap();
         writeln!(out, "    private func _mosaicFont(_ view: AnyView, _ font: Font) -> AnyView {{ AnyView(view.font(font)) }}").unwrap();
@@ -2534,7 +2579,7 @@ fn emit_view_tree(
         // Leaf primitives — emit a single line, no children.
         // -----------------------------------------------------------------
         "Text" => {
-            let expr = swift_text_expression(node);
+            let expr = swift_text_expression(node, for_payload);
             format!("{pad}{expr}\n")
         }
         "Spacer" => format!("{pad}Spacer()\n"),
@@ -2548,6 +2593,7 @@ fn emit_view_tree(
             let escaped = escape_swift_string(symbol);
             format!("{pad}Image(systemName: \"{escaped}\")\n")
         }
+        "Icon" => emit_icon(node, indent)?,
         "Divider" => format!("{pad}Divider()\n"),
 
         // UI29 kernel partial — `HostInput` and `HostButton` are leaf
@@ -2791,6 +2837,83 @@ fn emit_view_tree(
     }
 
     Ok(inner)
+}
+
+/// Lower Mosaic's semantic icon vocabulary to native SwiftUI views.
+///
+/// Static and runtime glyph names share the same SF Symbols mapping. The
+/// semantic `spinner` name becomes SwiftUI's indeterminate `ProgressView`
+/// instead of a decorative image, and every icon receives an accessibility
+/// label even when the layout omits one.
+fn emit_icon(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let child_pad = " ".repeat(indent + 4);
+    let glyph_value = find_prop_value(node, "glyph")
+        .or_else(|| find_prop_value(node, "source"))
+        .or_else(|| find_prop_value(node, "name"));
+    let glyph = swift_icon_text_expression(glyph_value)?.unwrap_or_else(|| "\"star\"".to_string());
+    let literal_glyph = match glyph_value {
+        Some(LayoutPropValue::String(value)) => Some(value.as_str()),
+        _ => None,
+    };
+    let default_description = match literal_glyph {
+        Some(value) if value.eq_ignore_ascii_case("spinner") => "\"Loading\"".to_string(),
+        Some(value) => format!("\"{}\"", escape_swift_string(value)),
+        None => glyph.clone(),
+    };
+    let description_value = find_prop_value(node, "aria-label")
+        .or_else(|| find_prop_value(node, "content-description"));
+    let description = match description_value {
+        Some(LayoutPropValue::String(value)) if value.is_empty() => default_description,
+        Some(LayoutPropValue::String(value)) => {
+            format!("\"{}\"", escape_swift_string(value))
+        }
+        Some(LayoutPropValue::SlotRef(slot)) | Some(LayoutPropValue::Keyword(slot)) => {
+            let binding = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&binding).map_err(PipelineEmitError::UnsafeSlotName)?;
+            format!("({binding}.isEmpty ? {default_description} : {binding})")
+        }
+        Some(LayoutPropValue::Expr(expression)) => expression.trim().to_string(),
+        _ => default_description,
+    };
+
+    let mut output = match literal_glyph {
+        Some(value) if value.eq_ignore_ascii_case("spinner") => {
+            format!("{pad}ProgressView()\n")
+        }
+        Some(_) => format!("{pad}Image(systemName: _mosaicIconSymbol({glyph}))\n"),
+        None => format!(
+            "{pad}Group {{\n\
+             {child_pad}if {glyph}.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == \"spinner\" {{\n\
+             {child_pad}    ProgressView()\n\
+             {child_pad}}} else {{\n\
+             {child_pad}    Image(systemName: _mosaicIconSymbol({glyph}))\n\
+             {child_pad}}}\n\
+             {pad}}}\n"
+        ),
+    };
+    output = output.trim_end_matches('\n').to_string();
+    output.push_str(&format!(
+        "\n{child_pad}.accessibilityLabel(Text(verbatim: {description}))\n"
+    ));
+    Ok(output)
+}
+
+fn swift_icon_text_expression(
+    value: Option<&LayoutPropValue>,
+) -> Result<Option<String>, PipelineEmitError> {
+    match value {
+        Some(LayoutPropValue::String(value)) => {
+            Ok(Some(format!("\"{}\"", escape_swift_string(value))))
+        }
+        Some(LayoutPropValue::SlotRef(slot)) | Some(LayoutPropValue::Keyword(slot)) => {
+            let binding = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&binding).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(Some(binding))
+        }
+        Some(LayoutPropValue::Expr(expression)) => Ok(Some(expression.trim().to_string())),
+        _ => Ok(None),
+    }
 }
 
 fn erase_swiftui_view_type(source: &str, indent: usize, use_concrete_modifiers: bool) -> String {
@@ -3098,7 +3221,7 @@ fn emit_children(
 /// 2. `Text { content: @slot; }` → `_mosaicText(slotName)` referencing the
 ///    let property through one concrete, verbatim-text helper.
 /// 3. `Text { }` → `Text("")` placeholder.
-fn swift_text_expression(node: &LayoutNode) -> String {
+fn swift_text_expression(node: &LayoutNode, for_payload: Option<ForPayloadScope<'_>>) -> String {
     for prop in &node.props {
         if prop.name == "content" {
             match &prop.value {
@@ -3134,12 +3257,35 @@ fn swift_text_expression(node: &LayoutNode) -> String {
                     // gets the live cell text inside every body cell
                     // instead of the empty placeholder this branch used
                     // to emit before §3.4 made the scope rules explicit.
-                    return format!("_mosaicText({text})");
+                    return format!(
+                        "_mosaicText({})",
+                        swift_collection_index_expr(text, for_payload)
+                    );
                 }
             }
         }
     }
     "Text(\"\")".to_string()
+}
+
+fn swift_collection_index_expr(
+    expression: &str,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> String {
+    let Some(index) = for_payload.and_then(|scope| scope.index) else {
+        return expression.to_string();
+    };
+    let replacement = format!("[_swiftIdx{index}]");
+    let mut lowered = expression.to_string();
+    for authored in [
+        format!("[{index}]"),
+        format!("[ {index}]"),
+        format!("[{index} ]"),
+        format!("[ {index} ]"),
+    ] {
+        lowered = lowered.replace(&authored, &replacement);
+    }
+    lowered
 }
 
 // =====================================================================
@@ -5588,6 +5734,143 @@ mod tests {
         .unwrap()
         .output;
         assert!(out2.contains(r#"Image(systemName: "photo")"#));
+    }
+
+    #[test]
+    fn spinner_icon_uses_native_progress_with_accessible_default() {
+        let layout = layout_with(
+            "Spinner",
+            container_node(
+                "Stack",
+                vec![leaf("Icon", vec![prop_string("glyph", "spinner")])],
+            ),
+        );
+        let out = from_pipeline(
+            &component("Spinner", vec![], vec![]),
+            &layout,
+            &empty_style("Spinner"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("ProgressView()"),
+            "native spinner missing:\n{out}"
+        );
+        assert!(
+            out.contains(".accessibilityLabel(Text(verbatim: \"Loading\"))"),
+            "accessible spinner label missing:\n{out}"
+        );
+    }
+
+    #[test]
+    fn icon_maps_semantic_names_to_sf_symbols() {
+        let layout = layout_with(
+            "Favorite",
+            container_node(
+                "Box",
+                vec![leaf("Icon", vec![prop_string("glyph", "favorite")])],
+            ),
+        );
+        let out = from_pipeline(
+            &component("Favorite", vec![], vec![]),
+            &layout,
+            &empty_style("Favorite"),
+        )
+        .unwrap()
+        .output;
+        assert!(out.contains("case \"star\", \"favorite\": return \"star.fill\""));
+        assert!(out.contains("Image(systemName: _mosaicIconSymbol(\"favorite\"))"));
+        assert!(out.contains(".accessibilityLabel(Text(verbatim: \"favorite\"))"));
+    }
+
+    #[test]
+    fn icon_accepts_runtime_glyph_and_accessibility_label_slots() {
+        let layout = layout_with(
+            "RuntimeIcon",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "Icon",
+                    vec![
+                        prop_slot_ref("glyph", "icon-name"),
+                        prop_slot_ref("aria-label", "icon-label"),
+                    ],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component(
+                "RuntimeIcon",
+                vec![
+                    slot("icon-name", SlotType::Text, true),
+                    slot("icon-label", SlotType::Text, true),
+                ],
+                vec![],
+            ),
+            &layout,
+            &empty_style("RuntimeIcon"),
+        )
+        .unwrap()
+        .output;
+        assert!(out.contains("if iconName.trimmingCharacters"));
+        assert!(out.contains("Image(systemName: _mosaicIconSymbol(iconName))"));
+        assert!(out.contains(
+            ".accessibilityLabel(Text(verbatim: (iconLabel.isEmpty ? iconName : iconLabel)))"
+        ));
+    }
+
+    #[test]
+    fn text_collection_access_uses_the_loops_int_index_shadow() {
+        let indexed = leaf(
+            "For",
+            vec![
+                prop_slot_ref("each", "headers"),
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword("header".to_string()),
+                },
+                LayoutProp {
+                    name: "index".to_string(),
+                    value: LayoutPropValue::Keyword("i".to_string()),
+                },
+            ],
+        );
+        let mut indexed = indexed;
+        indexed.children.push(leaf(
+            "Text",
+            vec![LayoutProp {
+                name: "content".to_string(),
+                value: LayoutPropValue::Expr("( bodies [ i ] )".to_string()),
+            }],
+        ));
+        let layout = layout_with("Accordion", container_node("Column", vec![indexed]));
+        let out = from_pipeline(
+            &component(
+                "Accordion",
+                vec![
+                    slot(
+                        "headers",
+                        SlotType::List(Box::new(ListInnerType::Text)),
+                        false,
+                    ),
+                    slot(
+                        "bodies",
+                        SlotType::List(Box::new(ListInnerType::Text)),
+                        false,
+                    ),
+                ],
+                vec![],
+            ),
+            &layout,
+            &empty_style("Accordion"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("_mosaicText(( bodies [_swiftIdxi] ))"),
+            "collection access must use Swift's Int index shadow:\n{out}"
+        );
+        assert!(!out.contains("[ i ]"));
     }
 
     // ---------------------------------------------------------------------

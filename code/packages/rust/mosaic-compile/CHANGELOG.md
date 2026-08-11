@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Fixed - SwiftUI project shells compile complete packages
+
+SwiftUI package projects now place every exported view in the SwiftPM
+application target instead of only the first mounted export. macOS CI builds
+the complete 23-component toolkit, including native SF Symbol icons,
+`ProgressView` spinner semantics, and Accordion's indexed body projection.
+
 ### Fixed - Compose project shells compile complete packages
 
 Compose package projects now place every exported component in Gradle's Kotlin

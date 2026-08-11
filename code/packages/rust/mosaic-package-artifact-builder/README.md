@@ -82,6 +82,9 @@ a tiny C dynamic-loader target. Set `MOSAIC_APP_LIBRARY` to the application
 the Rust handle, buffers, sequence, snapshots, and updates. Permissive builds
 can fall back to the legacy reflection hook; `native-complete` builds require
 the standard binding and runtime-provided props before mounting the view.
+Every exported SwiftUI view is mirrored into the generated SwiftPM application
+target, so `swift build` type-checks the complete package while `App.swift`
+continues to mount the manifest's first export.
 XAML project shells install a standard .NET host that uses built-in native
 loading and JSON APIs. The generated window prefers that runtime when its DLL is
 available, then retains the app-owned reflection host only as a permissive

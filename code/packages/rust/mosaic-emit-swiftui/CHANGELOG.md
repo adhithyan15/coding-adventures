@@ -4,6 +4,14 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - native icons and progress
+
+`Icon` now lowers semantic glyph names to SF Symbols with authored or default
+accessibility labels. The semantic `spinner` glyph becomes SwiftUI's native
+indeterminate `ProgressView`. Indexed text expressions also use the enclosing
+`ForEach` integer shadow, allowing Accordion's `bodies[i]` projection to remain
+type-correct alongside number-typed loop comparisons.
+
 ### Added - native-complete runtime-required shell
 
 `EmitOptions::require_runtime` now generates a SwiftUI shell that requires the
