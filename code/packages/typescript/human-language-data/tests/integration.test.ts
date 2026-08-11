@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(152); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(157); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -659,6 +659,23 @@ describe("real curriculum", () => {
       "ES-C50-sintesis-pedir-bien-mistake",
       "ES-C50-sintesis-pedir-bien-stranger",
       "ES-C50-sintesis-pedir-bien-where",
+      "ES-C51-la-flecha-cause",
+      "ES-C51-la-flecha-gift",
+      "ES-C51-la-flecha-test",
+      "ES-C51-la-flecha-why",
+      "ES-C51-para-arrow",
+      "ES-C51-para-when",
+      "ES-C51-para-you",
+      "ES-C51-por-favor",
+      "ES-C51-por-per",
+      "ES-C51-por-thanks",
+      "ES-C51-repaso-flecha-both",
+      "ES-C51-repaso-flecha-old",
+      "ES-C51-repaso-flecha-two",
+      "ES-C51-sintesis-regalo-motivo-cause",
+      "ES-C51-sintesis-regalo-motivo-gift",
+      "ES-C51-sintesis-regalo-motivo-thanks",
+      "ES-C51-sintesis-regalo-motivo-wrong",
       "ES-W03-question-span-roberto-outside",
       "FA-C02-esm-e-man-sara",
       "FA-C03-chist-fusion",

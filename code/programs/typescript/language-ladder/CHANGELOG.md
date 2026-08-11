@@ -11,6 +11,11 @@
   turn, two pen lifts, and left-to-right final héng.
 - Reduce Chinese's remaining verified-ductus inventory to 20 entries.
 
+### Changed — Spanish runs 1..157 (HL-C105)
+
+- Re-pin the Spanish book-hash table for the five por/para chapters appended at
+  153. No renumbering: the arc lands at the end of the course.
+
 ### Added — cited Chinese 口 ductus (HL-C09CB)
 
 - Render **口** in four source-aligned frames: left side, top bar, the joined

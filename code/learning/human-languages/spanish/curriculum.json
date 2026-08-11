@@ -1597,6 +1597,66 @@
       "before": [],
       "inline": [],
       "after": []
+    },
+    {
+      "id": "ES-PATH-037-PARA",
+      "spine_node": "SPINE-GIVE-REASONS",
+      "lessons": [
+        "ES-C51-para"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-037-PARA"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-037-POR",
+      "spine_node": "SPINE-GIVE-REASONS",
+      "lessons": [
+        "ES-C51-por"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-037-POR"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-037-ARROW",
+      "spine_node": "SPINE-GIVE-REASONS",
+      "lessons": [
+        "ES-C51-la-flecha"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-037-ARROW"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-037-REVIEW-PP",
+      "spine_node": "SPINE-GIVE-REASONS",
+      "lessons": [
+        "ES-C51-repaso-flecha"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-037-REVIEW-PP"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-037-SYNTH-PP",
+      "spine_node": "SPINE-GIVE-REASONS",
+      "lessons": [
+        "ES-C51-sintesis-regalo-motivo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-037-SYNTH-PP"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -1861,7 +1921,12 @@
     },
     "SPINE-GIVE-REASONS": {
       "segments": [
-        "ES-PATH-037"
+        "ES-PATH-037",
+        "ES-PATH-037-PARA",
+        "ES-PATH-037-POR",
+        "ES-PATH-037-ARROW",
+        "ES-PATH-037-REVIEW-PP",
+        "ES-PATH-037-SYNTH-PP"
       ],
       "omits": [],
       "relocates": {}
@@ -3669,6 +3734,61 @@
       "prerequisites": [],
       "lessons": [
         "ES-C50-sintesis-pedir-bien"
+      ]
+    },
+    {
+      "id": "ES-EXT-037-PARA",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C51-para"
+      ]
+    },
+    {
+      "id": "ES-EXT-037-POR",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C51-por"
+      ]
+    },
+    {
+      "id": "ES-EXT-037-ARROW",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C51-la-flecha"
+      ]
+    },
+    {
+      "id": "ES-EXT-037-REVIEW-PP",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C51-repaso-flecha"
+      ]
+    },
+    {
+      "id": "ES-EXT-037-SYNTH-PP",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C51-sintesis-regalo-motivo"
       ]
     }
   ]

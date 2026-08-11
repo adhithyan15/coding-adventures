@@ -3083,6 +3083,31 @@
       "output": "spanish/book/chapters/ch152-giving-reasons.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 153,
+      "output": "spanish/book/chapters/ch153-para.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 154,
+      "output": "spanish/book/chapters/ch154-por.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 155,
+      "output": "spanish/book/chapters/ch155-por-para-contrast.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 156,
+      "output": "spanish/book/chapters/ch156-review-por-para.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 157,
+      "output": "spanish/book/chapters/ch157-synthesis-por-para.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

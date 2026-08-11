@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:5ea636a816bc1c6a",
+  "sourceHash": "fnv1a64:8a43cbd6a46618ce",
   "summary": {
-    "totalLessons": 1804,
-    "voice": 1206,
-    "sight": 529,
+    "totalLessons": 1809,
+    "voice": 1210,
+    "sight": 530,
     "pen": 69,
-    "drivableLessons": 1206,
+    "drivableLessons": 1210,
     "drivablePercent": 67,
     "trackCount": 22,
-    "chapterCount": 625,
-    "drivablePrefixTotal": 1019,
-    "fullyDrivableChapters": 415,
-    "unstartableChapters": 157,
+    "chapterCount": 630,
+    "drivablePrefixTotal": 1023,
+    "fullyDrivableChapters": 419,
+    "unstartableChapters": 158,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -6754,12 +6754,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 298,
-      "voice": 265,
-      "sight": 26,
+      "lessonCount": 303,
+      "voice": 269,
+      "sight": 27,
       "pen": 7,
       "drivablePercent": 89,
-      "drivablePrefixTotal": 252,
+      "drivablePrefixTotal": 256,
       "modalities": [
         "voice",
         "sight",
@@ -9288,6 +9288,84 @@
             "ES-C41-asi-que",
             "ES-C41-deber",
             "ES-C41-explicar"
+          ]
+        },
+        {
+          "chapter": 153,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C51-para"
+          ]
+        },
+        {
+          "chapter": 154,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C51-por"
+          ]
+        },
+        {
+          "chapter": 155,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C51-la-flecha"
+          ]
+        },
+        {
+          "chapter": 156,
+          "lessonCount": 1,
+          "voice": 0,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "ES-C51-repaso-flecha",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 157,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C51-sintesis-regalo-motivo"
           ]
         }
       ]
@@ -39850,6 +39928,96 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:b13de95e2b731915"
+    },
+    {
+      "id": "ES-C51-para",
+      "language": "spanish",
+      "chapter": 153,
+      "sequence": 2081,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:294e98562c8749ba"
+    },
+    {
+      "id": "ES-C51-por",
+      "language": "spanish",
+      "chapter": 154,
+      "sequence": 2082,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e8f1d5ba91d79e3b"
+    },
+    {
+      "id": "ES-C51-la-flecha",
+      "language": "spanish",
+      "chapter": 155,
+      "sequence": 2083,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a7adab55f2c21ad7"
+    },
+    {
+      "id": "ES-C51-repaso-flecha",
+      "language": "spanish",
+      "chapter": 156,
+      "sequence": 2084,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:12b276740a26935a"
+    },
+    {
+      "id": "ES-C51-sintesis-regalo-motivo",
+      "language": "spanish",
+      "chapter": 157,
+      "sequence": 2085,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b390090a285ba074"
     },
     {
       "id": "TA-C01-vanakkam",

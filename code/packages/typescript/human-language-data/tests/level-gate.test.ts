@@ -75,7 +75,7 @@ describe("the gate that would have caught the A2 claim", () => {
     // Chapter 16 reclassifies two paradigm bundles as grammar and adds ver;
     // Chapter 17 correctly reclassifies its two tense bundles as grammar.
     // Chapter 18 likewise replaces two word/phrase bundles with typed grammar.
-    expect(spanish.vocabulary).toBe(142); // +2 more: the repair kit // -1: HL-C98 retires the bundled AR-PRESENT-SINGULAR headword
+    expect(spanish.vocabulary).toBe(144); // +2 more: the repair kit // -1: HL-C98 retires the bundled AR-PRESENT-SINGULAR headword
     expect(vocab.shortfall).toBeGreaterThan(LEVEL_VOCABULARY["pre-A1"] - spanish.vocabulary);
   });
 
@@ -143,7 +143,7 @@ describe("etymology is a hook, not a skill", () => {
     // checkpoint, so the pre-A1 shortfall falls from 49 to 48. Chapter 10 revisits
     // another older atom and lowers the shortfall again. Its etymon atoms sit above
     // pre-A1, so this level-specific waiver count correctly stays unchanged.
-    expect(reinforcement.shortfall).toBe(35); // -1: HL-C98 closes a reinforcement gap
+    expect(reinforcement.shortfall).toBe(34); // -1: HL-C98 closes a reinforcement gap
     expect(reinforcement.detail).toContain("atom(s) at or below pre-A1 are rev"); // +2: the repair kit's two etymons // -1: HL-C98
   });
 
