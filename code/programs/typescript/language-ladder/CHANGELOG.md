@@ -2,6 +2,16 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Urdu independent-baṛī-ye ductus (HL-C09AG)
+
+- Add Urdu independent ے from Northwestern's *Zer o Zabar* animations as one
+  continuous folded bowl from the upper right through the leftward sweep and
+  far-left curl, then rightward along the lower fold.
+- Keep the zero-lift path and all three learner movements on the vendored Noto
+  Naskh fallback while preserving the source's positional distinction.
+- Render a real three-frame filmstrip whose one stroke, zero lifts, source,
+  prose, geometry, and summary agree, completing the Urdu starter inventory.
+
 ### Added — cited Urdu independent-nun-ghunna ductus (HL-C09AF)
 
 - Add Urdu independent ں from Northwestern's *Zer o Zabar* animations as the

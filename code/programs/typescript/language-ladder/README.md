@@ -170,8 +170,9 @@ in font units, and `ductusview.ts` flips them together with exactly **one**
 sitting upside down on a correct letter.
 
 **All eleven starter Tamil letters — அ, ஆ, இ, க, ம, வ, ல, ற, ன, ண, and ந —,
-all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —, and Urdu
-independent ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, and ی have authored pen paths today.**
+all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —, and all
+thirteen Urdu starter entries — ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, ی, and ے —
+have authored pen paths today.**
 `DUCTUS` admits no letter without a citation
 for its stroke order, and hand-drawing a letter is forbidden
 outright (a subtly wrong Tamil ண looks perfect to exactly the audience that
@@ -265,7 +266,12 @@ chhoṭī ye while the zero-lift learner path follows Noto Naskh. Urdu ں adds a
 one-frame Chapter-6 filmstrip: the independent dotless bowl sweeps
 right-to-left below the baseline in the same zero-lift run as ن. The source note
 preserves the initial/medial ordinary-nūn forms, and Noto Naskh verifies that
-U+06BA exactly shares U+0646's body contour with the dot removed. The runtime
+U+06BA exactly shares U+0646's body contour with the dot removed. Urdu ے then
+completes the starter inventory with a three-frame Chapter-4 filmstrip: its
+upper-right descent sweeps left across the broad bowl, curls back underneath at
+the far left, and continues right along the lower fold without lifting. The
+source note preserves the distinct initial/medial tooth and independent/final
+sound role while the learner path follows Noto Naskh's folded contour. The runtime
 resolves each cited path back to the owning script and lazily loads that script's font,
 while Tamil continues to use Noto Sans Tamil. Unverified letters still
 fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

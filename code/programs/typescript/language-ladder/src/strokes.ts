@@ -247,6 +247,9 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // the dot near the baseline. Initial and medial forms use a distinct tooth.
 // Urdu ہ starts at the independent teardrop's upper right, loops
 // counterclockwise around its base, and crosses the top without lifting.
+// Urdu ے begins at the independent form's upper right, sweeps left across its
+// broad bowl, curls back underneath at the far left, and continues right along
+// the lower fold in one uninterrupted stroke.
 // The adjacent ب starts at the bowl's right lip, sweeps right-to-left through
 // its shallow dip, then lifts once before placing the separate dot below.
 // After the intervening Persian-added پ row, ت repeats the same bowl, lifts to
@@ -839,6 +842,57 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: urduAlphabetSource("ی"),
+  },
+  [ductusKey("urdu-nastaliq", "ے")]: {
+    script: "urdu-nastaliq",
+    glyph: "ے",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend from the upper right and sweep left across the broad bowl",
+            path: [
+              { x: 360, y: 280 },
+              { x: 350, y: 275 },
+              { x: 330, y: 252 },
+              { x: 310, y: 238 },
+              { x: 292, y: 230 },
+              { x: 250, y: 215 },
+              { x: 200, y: 195 },
+              { x: 150, y: 173 },
+              { x: 115, y: 145 },
+              { x: 100, y: 110 },
+            ],
+          },
+          {
+            label: "curl back underneath at the far left without lifting",
+            path: [
+              { x: 100, y: 110 },
+              { x: 90, y: 95 },
+              { x: 82, y: 78 },
+              { x: 82, y: 62 },
+              { x: 95, y: 55 },
+              { x: 120, y: 52 },
+            ],
+          },
+          {
+            label: "continue right along the lower fold without lifting",
+            path: [
+              { x: 120, y: 52 },
+              { x: 170, y: 30 },
+              { x: 250, y: 20 },
+              { x: 350, y: 12 },
+              { x: 450, y: 10 },
+              { x: 550, y: 20 },
+              { x: 650, y: 40 },
+              { x: 720, y: 62 },
+              { x: 740, y: 90 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: urduAlphabetSource("ے"),
   },
   "ب": {
     script: "perso-arabic",

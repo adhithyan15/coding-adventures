@@ -228,10 +228,15 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   below-baseline bowl as **ن** in one zero-lift run. The prose identifies final
   and independent nūn-e ġhunna as nūn without its dot, while the initial and
   medial forms remain ordinary nūn; Noto Naskh's U+06BA contour exactly matches
-  the U+0646 body with that dot removed.
-  The remaining **196** prose part orders across eight scripts (`arabic` 21,
+  the U+0646 body with that dot removed. Urdu **ے** then completes the starter
+  inventory from Chapter 4: both independent baṛī ye animations descend from
+  the upper right, sweep left across the broad bowl, curl back underneath at
+  the far left, and continue right along the lower fold in one zero-lift run.
+  The prose's initial/medial tooth and independent/final sound distinctions
+  remain explicit while the learner path follows Noto Naskh's folded contour.
+  The remaining **195** prose part orders across seven scripts (`arabic` 21,
   `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 22,
-  `japanese` 34, `urdu-nastaliq` 1) are explicitly **unverified for pen lifts**.
+  `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
   verified claim has the same cited, font-checked path. That closes `HL-C19`;
