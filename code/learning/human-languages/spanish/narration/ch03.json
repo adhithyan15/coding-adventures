@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 3,
   "title": "Introducing Yourself",
-  "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:cca681cba079b8ff",
+  "drivablePrefix": 8,
+  "sourceHash": "fnv1a64:c75d827ddf163dc9",
   "lessons": [
     {
       "id": "ES-C03-me",
@@ -414,17 +414,17 @@
     {
       "id": "ES-C03-tu-usted",
       "sequence": 160,
-      "title": "tú and usted — two words for \"you\"",
+      "title": "tú and usted — two of the three words Spanish says to one person",
       "headword": "tú / usted",
       "romanization": "tú / usted",
-      "gloss": "the two words Spanish has for \"you\" — and the one English quietly retired",
+      "gloss": "two of the three words Spanish uses to one person — and the one English quietly retired",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ccef862fda339570",
+      "sourceHash": "fnv1a64:5c4bd9befafbab6d",
       "notice": null,
       "blocks": [
         {
@@ -440,7 +440,7 @@
             },
             {
               "kind": "speech",
-              "text": "English has one word for \"you.\" Spanish has two. Today you get both words and what each one is for. What the choice means socially — and the odd grammar usted drags along with it — comes in the next lesson."
+              "text": "English has one word for \"you.\" Spanish has three for speaking to one person, and today you get two of them — the two you will use yourself. What the choice means socially, and the odd grammar usted drags along with it, comes next. The third word comes shortly after, and you will only ever need to recognise it."
             }
           ]
         },
@@ -463,7 +463,11 @@
             },
             {
               "kind": "speech",
-              "text": "Both are subject pronouns — the \"doer\" word, like yo (\"I\"). Say them enough times that they come out without hunting: tú, one syllable with the accent; usted, stress on the second, with a very soft final d."
+              "text": "Both are the \"doer\" word — the one that says who is acting, like yo (\"I\"). Say them enough times that they come out without hunting: tú, one syllable with the accent; usted, stress on the second, with a very soft final d."
+            },
+            {
+              "kind": "speech",
+              "text": "Not the whole story, and you should know that now. Across Argentina, Uruguay, Paraguay, most of Central America and parts of Colombia, the everyday informal \"you\" is a third word — not tú at all. That is well over a hundred million people. You are learning tú because it is understood everywhere, and you will meet the third word shortly, only to recognise."
             }
           ]
         },
@@ -520,7 +524,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which is formal, tú or usted? (Usted.) What English pronoun is the lost twin of tú, and what happened to it? (Thou — it faded out of English around 400 years ago.) Next: what picking one of them tells your listener."
+              "text": "Which is formal, tú or usted? (Usted.) What English pronoun is the lost twin of tú, and what happened to it? (Thou — it faded out of English around 400 years ago.) How many words does Spanish have for \"you,\" and how many will you say yourself? (Three, for one person; two.) Next: what picking one of them tells your listener."
             }
           ]
         }
@@ -677,6 +681,160 @@
       ]
     },
     {
+      "id": "ES-C03-vos",
+      "sequence": 175,
+      "title": "vos — the third \"you,\" and you only have to recognise it",
+      "headword": "vos",
+      "romanization": "vos",
+      "gloss": "\"you\" across a large part of the Spanish-speaking world — to recognise, not to say",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f67965ed7d524ded",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two words so far. Which one do you use with a friend? (Tú.) Which one keeps a respectful distance? (Usted.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vos — \"you,\" informal. It does the same job as tú."
+            },
+            {
+              "kind": "speech",
+              "text": "Where it lives, in part: Argentina, Uruguay and Paraguay, and most of Central America. It is also alive in Chile, and in parts of Colombia and Bolivia — this list is not the whole map. Counting only the places named, that is well over a hundred million people for whom vos, not tú, is the ordinary word to a friend."
+            },
+            {
+              "kind": "speech",
+              "text": "You are learning tú because it is understood everywhere, those places included. But a course that never mentioned vos would be teaching you a Spanish nobody speaks in Buenos Aires."
+            },
+            {
+              "kind": "speech",
+              "text": "What you owe this word. Recognition, nothing more. Hear vos, think tú. Its endings differ a little, and you will meet that where you meet the endings themselves — not before."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Vos is Latin vōs — and Latin vōs was the plural \"you.\" The word Romans used for a group."
+            },
+            {
+              "kind": "speech",
+              "text": "How does a plural become the word for one friend? By politeness. Addressing someone as though they were several made them bigger. The courtesy wore off, and across much of the Americas the word slid into tú's place."
+            },
+            {
+              "kind": "speech",
+              "text": "English began the same way and ended in the opposite place. You met thou earlier in this chapter. What retired it was you — a plural, used to one person out of politeness, exactly as Spanish used vos. But English's polite plural won and spread until it was the only word left; standard English now has no separate singular at all. Spanish's vos went the other way — it lost the polite job and dropped into the intimate one."
+            },
+            {
+              "kind": "speech",
+              "text": "Same start, opposite ends. And what took the polite job away from vos is the very next lesson."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recognition only — nothing to produce here."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "\"vos\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: \"vos\"]"
+            },
+            {
+              "kind": "speech",
+              "text": "becomes think: tú. A friend, an equal, someone at ease with you."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "\"usted\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: \"usted\"]"
+            },
+            {
+              "kind": "speech",
+              "text": "becomes think: distance, or respect."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tú\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tú\"]"
+            },
+            {
+              "kind": "speech",
+              "text": "— still your word, everywhere you go."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many words does Spanish have for \"you\" when speaking to one person? (Three.) Which do you say? (Tú — and usted for distance.) Name a country where vos is the everyday word. (Argentina, Uruguay, Nicaragua…) What was Latin vōs originally? (The plural \"you.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ES-C03-usted-origin",
       "sequence": 180,
       "title": "vuestra merced becomes usted — respect compressed into one word",
@@ -689,7 +847,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a68e3b11f451f46b",
+      "sourceHash": "fnv1a64:8bffab6aaf79c2f9",
       "notice": null,
       "blocks": [
         {
@@ -799,7 +957,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did vuestra merced mean? (\"Your grace\" or \"your mercy.\") Why does usted take the he/she verb form? (It began as a third-person title.)"
+              "text": "What did vuestra merced mean? (\"Your grace\" or \"your mercy.\") Why does usted take the he/she verb form? (It began as a third-person title.) And the third \"you\" you met last lesson — which is it, and do you say it or just know it? (Vos; you recognise it, and keep saying tú.)"
             }
           ]
         }
@@ -1820,7 +1978,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:18b77f42953215fc",
+      "sourceHash": "fnv1a64:586e754bda1b8e68",
       "notice": null,
       "blocks": [
         {

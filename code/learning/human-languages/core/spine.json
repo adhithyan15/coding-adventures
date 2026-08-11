@@ -9,10 +9,22 @@
     "C1",
     "C2"
   ],
+  "strands": [
+    "FUNCTION",
+    "GRAMMAR",
+    "LEXICON",
+    "SOUND",
+    "ETYMOLOGY",
+    "CULTURE",
+    "IDIOM",
+    "TEXT"
+  ],
+  "strandNote": "HL10 section 2: the eight parallel ladders the curriculum runs. Every node declares exactly one. FUNCTION and TEXT are fully universal across tracks; GRAMMAR, SOUND and ETYMOLOGY are universal SLOTS filled per language; CULTURE and IDIOM are universal HOOKS whose content is entirely local. A strand with zero nodes is not an oversight to be hidden -- it is the measurement that the strand exists as an aspiration rather than a commitment.",
   "nodes": [
     {
       "id": "SPINE-MEET-GREET",
       "stage": "pre-A1",
+      "strand": "FUNCTION",
       "canDo": "I can recognize and use an appropriate greeting when I meet someone.",
       "prerequisites": [],
       "core": true,
@@ -26,6 +38,7 @@
     {
       "id": "SPINE-COURTESY-THANK",
       "stage": "pre-A1",
+      "strand": "FUNCTION",
       "canDo": "I can thank someone and respond appropriately to thanks.",
       "prerequisites": [
         "SPINE-MEET-GREET"
@@ -40,6 +53,7 @@
     {
       "id": "SPINE-RESPOND-BASIC",
       "stage": "pre-A1",
+      "strand": "FUNCTION",
       "canDo": "I can give a basic yes, no, or okay response.",
       "prerequisites": [
         "SPINE-MEET-GREET"
@@ -55,6 +69,7 @@
     {
       "id": "SPINE-EXCHANGE-NAMES",
       "stage": "pre-A1",
+      "strand": "FUNCTION",
       "canDo": "I can ask someone's name, give my own, and acknowledge the introduction.",
       "prerequisites": [
         "SPINE-MEET-GREET",
@@ -77,6 +92,7 @@
     {
       "id": "SPINE-CHECK-WELLBEING",
       "stage": "pre-A1",
+      "strand": "FUNCTION",
       "canDo": "I can ask how someone is and give a simple answer.",
       "prerequisites": [
         "SPINE-EXCHANGE-NAMES"
@@ -93,6 +109,7 @@
     {
       "id": "SPINE-POLITE-REQUEST-REPAIR",
       "stage": "pre-A1",
+      "strand": "FUNCTION",
       "canDo": "I can make a request politely and repair a small social mistake.",
       "prerequisites": [
         "SPINE-COURTESY-THANK"
@@ -106,6 +123,7 @@
     {
       "id": "SPINE-TAKE-LEAVE",
       "stage": "pre-A1",
+      "strand": "FUNCTION",
       "canDo": "I can end a short interaction and choose a suitable parting expression.",
       "prerequisites": [
         "SPINE-CHECK-WELLBEING"
@@ -123,6 +141,7 @@
     {
       "id": "SPINE-TIME-OF-DAY",
       "stage": "A1",
+      "strand": "FUNCTION",
       "canDo": "I can recognize basic times of day and choose a time-appropriate greeting.",
       "prerequisites": [
         "SPINE-MEET-GREET"
@@ -143,6 +162,7 @@
     {
       "id": "SPINE-ASK-LOCATION",
       "stage": "A1",
+      "strand": "FUNCTION",
       "canDo": "I can ask where a familiar person, place, or object is.",
       "prerequisites": [
         "SPINE-EXCHANGE-NAMES"
@@ -155,6 +175,7 @@
     {
       "id": "SPINE-DEFINITE-REFERENCE",
       "stage": "A1",
+      "strand": "GRAMMAR",
       "canDo": "I can recognize how this language marks a specific known person or thing when it does so.",
       "prerequisites": [
         "SPINE-EXCHANGE-NAMES"
@@ -167,6 +188,7 @@
     {
       "id": "SPINE-COUNT-ONE-TO-FIVE",
       "stage": "A1",
+      "strand": "LEXICON",
       "canDo": "I can understand and produce the cardinal numbers one through five.",
       "prerequisites": [
         "SPINE-RESPOND-BASIC"
@@ -179,6 +201,7 @@
     {
       "id": "SPINE-SAY-WHAT-I-DO",
       "stage": "A2",
+      "strand": "GRAMMAR",
       "canDo": "I can say what I do — name a verb, find its stem, and put it in the present.",
       "prerequisites": [
         "SPINE-EXCHANGE-NAMES"
@@ -232,6 +255,7 @@
     {
       "id": "SPINE-NEGATE-AND-ASK",
       "stage": "A2",
+      "strand": "GRAMMAR",
       "canDo": "I can say that something is not so, and ask a question that can be answered yes or no.",
       "prerequisites": [
         "SPINE-SAY-WHAT-I-DO",
@@ -246,6 +270,7 @@
     {
       "id": "SPINE-SAY-WHAT-I-WANT",
       "stage": "A2",
+      "strand": "FUNCTION",
       "canDo": "I can say what I want or need, and ask for it.",
       "prerequisites": [
         "SPINE-SAY-WHAT-I-DO",
@@ -259,6 +284,7 @@
     {
       "id": "SPINE-TALK-ABOUT-PAST",
       "stage": "A2",
+      "strand": "GRAMMAR",
       "canDo": "I can say what happened before now.",
       "prerequisites": [
         "SPINE-SAY-WHAT-I-DO"
@@ -271,6 +297,7 @@
     {
       "id": "SPINE-TALK-ABOUT-FUTURE",
       "stage": "A2",
+      "strand": "GRAMMAR",
       "canDo": "I can say what will happen, or what I mean to do.",
       "prerequisites": [
         "SPINE-SAY-WHAT-I-DO"
@@ -283,6 +310,7 @@
     {
       "id": "SPINE-NARRATE-EVENTS",
       "stage": "B1",
+      "strand": "TEXT",
       "canDo": "I can tell a simple connected story about something that happened, in order.",
       "prerequisites": [
         "SPINE-TALK-ABOUT-PAST"
@@ -298,6 +326,7 @@
     {
       "id": "SPINE-GIVE-REASONS",
       "stage": "B1",
+      "strand": "FUNCTION",
       "canDo": "I can give reasons and explanations for my opinions and plans.",
       "prerequisites": [
         "SPINE-NEGATE-AND-ASK",
@@ -314,6 +343,7 @@
     {
       "id": "SPINE-HANDLE-TRAVEL",
       "stage": "B1",
+      "strand": "FUNCTION",
       "canDo": "I can deal with most situations that come up while travelling.",
       "prerequisites": [
         "SPINE-ASK-LOCATION",
@@ -330,6 +360,7 @@
     {
       "id": "SPINE-DESCRIBE-EXPERIENCE",
       "stage": "B1",
+      "strand": "FUNCTION",
       "canDo": "I can describe experiences, feelings and ambitions.",
       "prerequisites": [
         "SPINE-NARRATE-EVENTS"
@@ -345,6 +376,7 @@
     {
       "id": "SPINE-EXPRESS-CONDITION",
       "stage": "B1",
+      "strand": "GRAMMAR",
       "canDo": "I can say what would happen if something else did.",
       "prerequisites": [
         "SPINE-GIVE-REASONS"
@@ -360,6 +392,7 @@
     {
       "id": "SPINE-ARGUE-A-VIEW",
       "stage": "B2",
+      "strand": "TEXT",
       "canDo": "I can develop an argument, giving relevant reasons and examples.",
       "prerequisites": [
         "SPINE-GIVE-REASONS",
@@ -376,6 +409,7 @@
     {
       "id": "SPINE-REPORT-WHAT-OTHERS-SAID",
       "stage": "B2",
+      "strand": "GRAMMAR",
       "canDo": "I can report what someone else said or asked.",
       "prerequisites": [
         "SPINE-NARRATE-EVENTS"
@@ -391,6 +425,7 @@
     {
       "id": "SPINE-READ-EXTENDED-PROSE",
       "stage": "B2",
+      "strand": "TEXT",
       "canDo": "I can read articles and reports on contemporary matters.",
       "prerequisites": [
         "SPINE-DESCRIBE-EXPERIENCE"
@@ -406,6 +441,7 @@
     {
       "id": "SPINE-DISCUSS-ABSTRACT",
       "stage": "B2",
+      "strand": "FUNCTION",
       "canDo": "I can take part in a discussion of abstract or unfamiliar topics.",
       "prerequisites": [
         "SPINE-ARGUE-A-VIEW",
@@ -422,6 +458,7 @@
     {
       "id": "SPINE-INFER-IMPLICIT-MEANING",
       "stage": "C1",
+      "strand": "TEXT",
       "canDo": "I can grasp what a speaker implies without saying it.",
       "prerequisites": [
         "SPINE-DISCUSS-ABSTRACT"
@@ -437,6 +474,7 @@
     {
       "id": "SPINE-STRUCTURE-EXTENDED-TEXT",
       "stage": "C1",
+      "strand": "TEXT",
       "canDo": "I can produce clear, well-structured text on a complex subject.",
       "prerequisites": [
         "SPINE-READ-EXTENDED-PROSE",
@@ -453,6 +491,7 @@
     {
       "id": "SPINE-SHIFT-REGISTER",
       "stage": "C1",
+      "strand": "CULTURE",
       "canDo": "I can shift register to suit the person I am speaking to and the setting.",
       "prerequisites": [
         "SPINE-DISCUSS-ABSTRACT"
@@ -468,6 +507,7 @@
     {
       "id": "SPINE-FOLLOW-REGIONAL-VARIATION",
       "stage": "C1",
+      "strand": "CULTURE",
       "canDo": "I can follow a speaker whose regional variety differs from the one I learned.",
       "prerequisites": [
         "SPINE-SHIFT-REGISTER"
@@ -483,6 +523,7 @@
     {
       "id": "SPINE-SUMMARIZE-FROM-SOURCES",
       "stage": "C2",
+      "strand": "TEXT",
       "canDo": "I can summarise several sources and reconstruct the argument in my own words.",
       "prerequisites": [
         "SPINE-STRUCTURE-EXTENDED-TEXT",
@@ -499,6 +540,7 @@
     {
       "id": "SPINE-EXPRESS-FINE-SHADES",
       "stage": "C2",
+      "strand": "LEXICON",
       "canDo": "I can convey finer shades of meaning precisely.",
       "prerequisites": [
         "SPINE-SHIFT-REGISTER",
@@ -515,6 +557,7 @@
     {
       "id": "SPINE-READ-LITERARY-AND-CLASSICAL",
       "stage": "C2",
+      "strand": "TEXT",
       "canDo": "I can read literary and older texts and feel the period they come from.",
       "prerequisites": [
         "SPINE-INFER-IMPLICIT-MEANING",
@@ -531,6 +574,7 @@
     {
       "id": "SPINE-READ-CULTURAL-WEIGHT",
       "stage": "C2",
+      "strand": "CULTURE",
       "canDo": "I can read the cultural weight of a phrase, not only its meaning.",
       "prerequisites": [
         "SPINE-SHIFT-REGISTER",

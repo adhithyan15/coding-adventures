@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.19.0 - 2026-08-11
+
+- Reserve deterministic sequence header geometry for UML actor symbols.
+
+## 0.18.0 - 2026-08-11
+
+- Apply ordered sequence autonumber visibility changes and counter resets during layout.
+
+## 0.17.0 - 2026-08-11
+
+- Resolve wrapped participant-box labels into deterministic group header geometry.
+
+## 0.16.0 - 2026-08-11
+
+- Resolve wrapped participant aliases into deterministic, shared header geometry.
+
 ## 0.15.0 - 2026-08-10
 
 - Resolve wrapped sequence control and branch labels into deterministic frame geometry.

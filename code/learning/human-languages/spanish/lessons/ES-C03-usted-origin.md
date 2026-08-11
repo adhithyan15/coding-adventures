@@ -7,7 +7,7 @@ chapter: 3
 type: etymology
 headword: vuestra merced → usted
 gloss: the respectful title inside usted
-prerequisites: [ES-C03-tu-usted, ES-C03-tu-usted-register]
+prerequisites: [ES-C03-tu-usted, ES-C03-tu-usted-register, ES-C03-vos]
 sounds: []
 roots: [vestra, merces]
 duration:
@@ -17,7 +17,7 @@ requires:
 introduces:
   knowledge: [ES-ETYMON-VUESTRA-MERCED]
 practises:
-  knowledge: [ES-LEX-USTED, ES-GRAMMAR-USTED-THIRD-PERSON, ES-ETYMON-VUESTRA-MERCED]
+  knowledge: [ES-LEX-USTED, ES-LEX-VOS-01, ES-CULTURE-VOSEO-02, ES-ETYMON-VOS-03, ES-GRAMMAR-USTED-THIRD-PERSON, ES-ETYMON-VUESTRA-MERCED]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -67,7 +67,9 @@ That is why modern *usted* still takes the he/she verb form even while it means
 - [YOU SAY: which verb pattern *usted* takes]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-USTED, ES-GRAMMAR-USTED-THIRD-PERSON, ES-ETYMON-VUESTRA-MERCED] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-VOS-01, ES-CULTURE-VOSEO-02, ES-ETYMON-VOS-03, ES-LEX-USTED, ES-GRAMMAR-USTED-THIRD-PERSON, ES-ETYMON-VUESTRA-MERCED] -->
 
 [PAUSE 3s] What did *vuestra merced* mean? ("Your grace" or "your mercy.")
 Why does *usted* take the he/she verb form? (It began as a third-person title.)
+And the third "you" you met last lesson — which is it, and do you say it or
+just know it? (*Vos*; you recognise it, and keep saying *tú*.)

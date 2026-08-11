@@ -3804,6 +3804,61 @@ SirValue _sir_puts_v(SirValue *xs, int n) {
 SirValue _sir_print(int n, ...) { va_list ap; SirValue *xs; SirValue r; va_start(ap, n); xs = _sir_va_collect(n, ap); va_end(ap); r = _sir_print_v(xs, n); if (xs) free(xs); return r; }
 SirValue _sir_puts(int n, ...)  { va_list ap; SirValue *xs; SirValue r; va_start(ap, n); xs = _sir_va_collect(n, ap); va_end(ap); r = _sir_puts_v(xs, n);  if (xs) free(xs); return r; }
 
+/* SIR28 §2.1: `__sys_write__`, the console-output primitive `print`/`puts`
+ * generalize into.  Where `_sir_print_v`/`_sir_puts_v` above hard-code ONE
+ * newline policy each, this is the SAME operation parameterized by policy
+ * flags carried as DATA (validated by `semantic-ir`'s validator against a
+ * closed enum, SIR28 §2.2) -- the root cause SIR28 exists to fix: real
+ * Ruby's `print` never newline-terminates, Python's `print()`/JS's
+ * `console.log` always do, but all three used to lower to the identical
+ * `BuiltinCall("print", ...)` this backend had no way to tell apart.
+ *
+ * `terminator`: 0 = none (`_sir_print`'s behavior -- write each value's
+ * display form back to back, no newline), 1 = per_value (`_sir_puts`'s
+ * behavior -- one newline per value, honouring `unpack_arrays`), 2 = once
+ * (Python `print`/JS `console.log` -- space-join every value, one trailing
+ * newline).  `unpack_arrays` is only consulted under `terminator == 1`,
+ * matching SIR28 §2.1's table exactly. */
+SirValue _sir_write_v(FILE *out, SirValue *xs, int n, int terminator, int unpack_arrays) {
+    int i;
+    switch (terminator) {
+        case 1: /* per_value ("puts") */
+            if (n <= 0) { fputc('\n', out); return _sir_nil(); }
+            for (i = 0; i < n; i++) {
+                if (unpack_arrays) {
+                    _sir_puts_one(out, xs[i]);
+                } else {
+                    _sir_fmt(out, xs[i]);
+                    fputc('\n', out);
+                }
+            }
+            return _sir_nil();
+        case 2: /* once ("print"/"console.log") */
+            for (i = 0; i < n; i++) {
+                if (i > 0) fputc(' ', out);
+                _sir_fmt(out, xs[i]);
+            }
+            fputc('\n', out);
+            return _sir_nil();
+        default: /* none ("print") */
+            for (i = 0; i < n; i++) _sir_fmt(out, xs[i]);
+            return _sir_nil();
+    }
+}
+/* `stream`: 0 = stdout, 1 = stderr.  Both `stream` and `terminator` are
+ * compile-time constants baked in by the emitter from a validated `StrLit`
+ * (never source-derived text reaching a dynamic file-handle lookup). */
+SirValue _sir_write(int stream, int terminator, int unpack_arrays, int n, ...) {
+    va_list ap; SirValue *xs; SirValue r;
+    FILE *out = stream ? stderr : stdout;
+    va_start(ap, n);
+    xs = _sir_va_collect(n, ap);
+    va_end(ap);
+    r = _sir_write_v(out, xs, n, terminator, unpack_arrays);
+    if (xs) free(xs);
+    return r;
+}
+
 /* ---- builtin-as-value (VarRef Builtin) ---------------------- */
 
 /* A builtin used in value position becomes a closure whose sole capture is

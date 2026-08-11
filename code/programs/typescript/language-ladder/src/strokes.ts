@@ -7,6 +7,7 @@
 // static picture of the finished letter cannot show — where it stays down and
 // where (if ever) it lifts.
 
+import arabic from "../../../../learning/human-languages/data/scripts/arabic.json";
 import persoArabic from "../../../../learning/human-languages/data/scripts/perso-arabic.json";
 import urduNastaliq from "../../../../learning/human-languages/data/scripts/urdu-nastaliq.json";
 //
@@ -189,6 +190,14 @@ function truncateToFraction(pts: Point[], fraction: number): Point[] {
 
 const clamp01 = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n);
 
+const arabicAlphabetSource = (glyph: string): StrokeSource => {
+  const letter = arabic.letters.find((candidate) => candidate.glyph === glyph);
+  if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
+    throw new Error(`Arabic ${glyph} has no verified source`);
+  }
+  return letter.strokeOrderSource;
+};
+
 const persianAlphabetSource = (glyph: string): StrokeSource => {
   const letter = persoArabic.letters.find((candidate) => candidate.glyph === glyph);
   if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
@@ -216,6 +225,23 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // glyph (shape) and against `source` (order), not trusted because they look
 // plausible here.
 //
+// Arabic ا opens the smallest remaining starter inventory from the University
+// of Oregon's instructional video: one top-to-bottom movement with no lift.
+// Its scoped key preserves Arabic provenance separately from the Persian and
+// Urdu records for the same Unicode glyph while sharing the Noto Naskh shape.
+// The adjacent Arabic ب demonstration sweeps its bowl right-to-left, turns up
+// at the left tip, then lifts once to place the dot below. Its Arabic-scoped
+// source remains separate from Persian ب while sharing the checked Noto shape.
+// Arabic ت reuses that separately demonstrated bowl because its own clip opens
+// with the body already complete, then places the left and right upper dots as
+// separate strokes. Its scoped source remains distinct from Persian ت.
+// The linked Arabic ث asset is actually another ت lesson: it draws only two
+// upper dots, so it cannot support a three-dot path. The next viable source,
+// Arabic ج, draws the short head left-to-right, continues around the bowl, then
+// lifts once for its dot. That body-first order stays distinct from Urdu ج.
+// The page's unlinked Arabic ح attachment instead opens while a short left stem
+// is descending, then restarts near that stem's top and sweeps around the
+// dotless bowl. Its one verified lift is not inferred from adjacent Jeem.
 // Persian ا opens UT Austin's freehand alphabet demonstration: one vertical
 // movement travels from the top to the baseline. The lesson presents the
 // alphabet right-to-left, while this isolated non-connector remains one stroke.
@@ -247,6 +273,9 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // the dot near the baseline. Initial and medial forms use a distinct tooth.
 // Urdu ہ starts at the independent teardrop's upper right, loops
 // counterclockwise around its base, and crosses the top without lifting.
+// Urdu ے begins at the independent form's upper right, sweeps left across its
+// broad bowl, curls back underneath at the far left, and continues right along
+// the lower fold in one uninterrupted stroke.
 // The adjacent ب starts at the bowl's right lip, sweeps right-to-left through
 // its shallow dip, then lifts once before placing the separate dot below.
 // After the intervening Persian-added پ row, ت repeats the same bowl, lifts to
@@ -334,6 +363,267 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: urduAlphabetSource("ا"),
+  },
+  [ductusKey("arabic", "ا")]: {
+    script: "arabic",
+    glyph: "ا",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "down",
+            path: [
+              { x: 120, y: 640 },
+              { x: 120, y: 580 },
+              { x: 119, y: 500 },
+              { x: 124, y: 400 },
+              { x: 128, y: 250 },
+              { x: 129, y: 100 },
+              { x: 127, y: 10 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ا"),
+  },
+  [ductusKey("arabic", "ب")]: {
+    script: "arabic",
+    glyph: "ب",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep the shallow bowl from right to left",
+            path: [
+              { x: 678, y: 382 },
+              { x: 663, y: 345 },
+              { x: 650, y: 305 },
+              { x: 654, y: 260 },
+              { x: 672, y: 215 },
+              { x: 688, y: 170 },
+              { x: 686, y: 126 },
+              { x: 620, y: 94 },
+              { x: 530, y: 65 },
+              { x: 430, y: 42 },
+              { x: 335, y: 38 },
+              { x: 245, y: 51 },
+              { x: 170, y: 83 },
+              { x: 120, y: 135 },
+              { x: 96, y: 205 },
+              { x: 100, y: 255 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then place the dot below",
+            path: [
+              { x: 412, y: -137 },
+              { x: 379, y: -101 },
+              { x: 344, y: -137 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ب"),
+  },
+  [ductusKey("arabic", "ت")]: {
+    script: "arabic",
+    glyph: "ت",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep the shallow bowl from right to left",
+            path: [
+              { x: 678, y: 382 },
+              { x: 663, y: 345 },
+              { x: 650, y: 305 },
+              { x: 654, y: 260 },
+              { x: 672, y: 215 },
+              { x: 688, y: 170 },
+              { x: 686, y: 126 },
+              { x: 620, y: 94 },
+              { x: 530, y: 65 },
+              { x: 430, y: 42 },
+              { x: 335, y: 38 },
+              { x: 245, y: 51 },
+              { x: 170, y: 83 },
+              { x: 120, y: 135 },
+              { x: 96, y: 205 },
+              { x: 100, y: 255 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then place the left dot above",
+            path: [
+              { x: 247, y: 374 },
+              { x: 284, y: 412 },
+              { x: 319, y: 379 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again and place the right dot",
+            path: [
+              { x: 395, y: 389 },
+              { x: 434, y: 430 },
+              { x: 470, y: 395 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ت"),
+  },
+  [ductusKey("arabic", "ج")]: {
+    script: "arabic",
+    glyph: "ج",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the short upper head from left to right",
+            path: [
+              { x: 110, y: 315 },
+              { x: 150, y: 335 },
+              { x: 210, y: 340 },
+              { x: 280, y: 325 },
+              { x: 350, y: 305 },
+              { x: 420, y: 285 },
+              { x: 490, y: 270 },
+              { x: 540, y: 270 },
+            ],
+          },
+          {
+            label: "continue down and around the bowl",
+            path: [
+              { x: 540, y: 270 },
+              { x: 490, y: 270 },
+              { x: 420, y: 285 },
+              { x: 350, y: 305 },
+              { x: 280, y: 325 },
+              { x: 210, y: 340 },
+              { x: 150, y: 335 },
+              { x: 110, y: 315 },
+              { x: 100, y: 290 },
+              { x: 130, y: 305 },
+              { x: 170, y: 310 },
+              { x: 220, y: 305 },
+              { x: 270, y: 285 },
+              { x: 320, y: 265 },
+              { x: 300, y: 245 },
+              { x: 260, y: 220 },
+              { x: 216, y: 190 },
+              { x: 180, y: 130 },
+              { x: 145, y: 65 },
+              { x: 118, y: -42 },
+              { x: 130, y: -110 },
+              { x: 180, y: -175 },
+              { x: 225, y: -200 },
+              { x: 300, y: -245 },
+              { x: 400, y: -245 },
+              { x: 500, y: -230 },
+              { x: 575, y: -210 },
+              { x: 608, y: -195 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift once, then place the dot below",
+            path: [
+              { x: 415, y: -1 },
+              { x: 374, y: 38 },
+              { x: 330, y: -9 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ج"),
+  },
+  [ductusKey("arabic", "ح")]: {
+    script: "arabic",
+    glyph: "ح",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the short left stem downward",
+            path: [
+              { x: 110, y: 315 },
+              { x: 105, y: 302 },
+              { x: 100, y: 290 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift once and restart near the stem's top",
+            path: [
+              { x: 110, y: 315 },
+              { x: 150, y: 335 },
+              { x: 210, y: 340 },
+              { x: 280, y: 325 },
+              { x: 350, y: 305 },
+              { x: 420, y: 285 },
+              { x: 490, y: 270 },
+              { x: 540, y: 270 },
+            ],
+          },
+          {
+            label: "continue down and around the bowl",
+            path: [
+              { x: 540, y: 270 },
+              { x: 490, y: 270 },
+              { x: 420, y: 285 },
+              { x: 350, y: 305 },
+              { x: 280, y: 325 },
+              { x: 210, y: 340 },
+              { x: 150, y: 335 },
+              { x: 110, y: 315 },
+              { x: 100, y: 290 },
+              { x: 130, y: 305 },
+              { x: 170, y: 310 },
+              { x: 220, y: 305 },
+              { x: 270, y: 285 },
+              { x: 320, y: 265 },
+              { x: 300, y: 245 },
+              { x: 260, y: 220 },
+              { x: 216, y: 190 },
+              { x: 180, y: 130 },
+              { x: 145, y: 65 },
+              { x: 118, y: -42 },
+              { x: 130, y: -110 },
+              { x: 180, y: -175 },
+              { x: 225, y: -200 },
+              { x: 300, y: -245 },
+              { x: 400, y: -245 },
+              { x: 500, y: -230 },
+              { x: 575, y: -210 },
+              { x: 608, y: -195 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ح"),
   },
   [ductusKey("urdu-nastaliq", "ج")]: {
     script: "urdu-nastaliq",
@@ -727,6 +1017,37 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: urduAlphabetSource("ن"),
   },
+  [ductusKey("urdu-nastaliq", "ں")]: {
+    script: "urdu-nastaliq",
+    glyph: "ں",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep the independent dotless bowl right to left below the baseline",
+            path: [
+              { x: 495, y: 210 },
+              { x: 475, y: 160 },
+              { x: 480, y: 100 },
+              { x: 500, y: 40 },
+              { x: 510, y: -20 },
+              { x: 485, y: -80 },
+              { x: 430, y: -140 },
+              { x: 360, y: -190 },
+              { x: 280, y: -220 },
+              { x: 210, y: -215 },
+              { x: 150, y: -170 },
+              { x: 105, y: -110 },
+              { x: 90, y: -60 },
+              { x: 95, y: 0 },
+              { x: 105, y: 45 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: urduAlphabetSource("ں"),
+  },
   [ductusKey("urdu-nastaliq", "ہ")]: {
     script: "urdu-nastaliq",
     glyph: "ہ",
@@ -808,6 +1129,57 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: urduAlphabetSource("ی"),
+  },
+  [ductusKey("urdu-nastaliq", "ے")]: {
+    script: "urdu-nastaliq",
+    glyph: "ے",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend from the upper right and sweep left across the broad bowl",
+            path: [
+              { x: 360, y: 280 },
+              { x: 350, y: 275 },
+              { x: 330, y: 252 },
+              { x: 310, y: 238 },
+              { x: 292, y: 230 },
+              { x: 250, y: 215 },
+              { x: 200, y: 195 },
+              { x: 150, y: 173 },
+              { x: 115, y: 145 },
+              { x: 100, y: 110 },
+            ],
+          },
+          {
+            label: "curl back underneath at the far left without lifting",
+            path: [
+              { x: 100, y: 110 },
+              { x: 90, y: 95 },
+              { x: 82, y: 78 },
+              { x: 82, y: 62 },
+              { x: 95, y: 55 },
+              { x: 120, y: 52 },
+            ],
+          },
+          {
+            label: "continue right along the lower fold without lifting",
+            path: [
+              { x: 120, y: 52 },
+              { x: 170, y: 30 },
+              { x: 250, y: 20 },
+              { x: 350, y: 12 },
+              { x: 450, y: 10 },
+              { x: 550, y: 20 },
+              { x: 650, y: 40 },
+              { x: 720, y: 62 },
+              { x: 740, y: 90 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: urduAlphabetSource("ے"),
   },
   "ب": {
     script: "perso-arabic",

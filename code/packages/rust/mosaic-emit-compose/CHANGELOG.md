@@ -12,6 +12,16 @@ This project follows [Semantic Versioning](https://semver.org/).
   semantics while dispatching Mosaic events, including item/index payloads
   inside `For`. Generated links receive theme-aware visible styling and need no
   application-owned URL adapter.
+- `Stack` now lowers to Compose's `Box` — the layering container it already
+  uses for the `Box` primitive itself, since Compose's `Box` natively stacks
+  its children. Found while wiring `task-app`'s icon assets (progress ring,
+  crescent moon, bridge-arc brand mark — see `task-app-icon-assets-v1.md`),
+  the first place a Mosaic component used `Stack` and hit this backend's
+  build. Not yet lowered: a child's static `position: absolute` + `top`/
+  `left` into `Modifier.offset(...)` — v1's existing "anything else
+  silently skipped" posture for static props means a Stack's children all
+  render at the Box's origin today rather than the pixel positions the
+  web/Flutter backends place them at.
 - `HostTooltip` now lowers to Compose Foundation's cross-platform
   `BasicTooltipBox`, including native overlay placement and dismissal, Material
   surface chrome, literal/slot/expression text, and assistive-technology

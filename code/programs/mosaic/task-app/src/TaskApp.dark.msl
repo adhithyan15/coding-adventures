@@ -54,6 +54,38 @@ style TaskApp {
     background : "#eaa63f" ;
     box-shadow : "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)" ;
   }
+  // The bridge arc (task-app-icon-assets-v1.md) — two posts and a
+  // border-only curved top, positioned inside brand-mark's Stack.
+  part brand-post-left {
+    position : "absolute" ;
+    top : 11 ;
+    left : 4 ;
+    width : 3 ;
+    height : 13 ;
+    border-radius : 1 ;
+    background : "#f1ebe1" ;
+  }
+  part brand-post-right {
+    position : "absolute" ;
+    top : 11 ;
+    left : 21 ;
+    width : 3 ;
+    height : 13 ;
+    border-radius : 1 ;
+    background : "#f1ebe1" ;
+  }
+  part brand-arc {
+    position : "absolute" ;
+    top : 3 ;
+    left : 4 ;
+    width : 20 ;
+    height : 10 ;
+    border-top-width : 3 ;
+    border-top-color : "#f1ebe1" ;
+    border-top-style : "solid" ;
+    border-top-left-radius : 20 ;
+    border-top-right-radius : 20 ;
+  }
   part brand-name {
     font-size : 15 ;
     font-weight : bold ;
@@ -103,6 +135,8 @@ style TaskApp {
     padding-bottom : 2 ;
     padding-left : 9 ;
     border-radius : 20 ;
+    gap : 5 ;
+    align : center-vertical ;
   }
   part pill-warn {
     background : "#3a221c" ;
@@ -114,7 +148,95 @@ style TaskApp {
     padding-bottom : 2 ;
     padding-left : 9 ;
     border-radius : 20 ;
+    gap : 5 ;
+    align : center-vertical ;
   }
+  // Pill status dot (task-app-icon-assets-v1.md) — currentColor so it
+  // always matches the pill's own semantic colour with no extra binding.
+  part pill-dot-ok {
+    width : 6 ;
+    height : 6 ;
+    border-radius : 50% ;
+    background : "currentColor" ;
+  }
+  part pill-dot-warn {
+    width : 6 ;
+    height : 6 ;
+    border-radius : 50% ;
+    background : "currentColor" ;
+  }
+  // ── progress ring (task-app-icon-assets-v1.md) ─────────────────────────
+  part ring-wrap {
+    gap : 10 ;
+    align : center-vertical ;
+  }
+  part ring-circle {
+    width : 34 ;
+    height : 34 ;
+  }
+  // The only UI36-`background`-bound part in this whole component — see
+  // TaskApp.mil's doc comment on `ring-gradient`.
+  part ring-fill {
+    width : 34 ;
+    height : 34 ;
+    border-radius : 50% ;
+  }
+  // Punches the donut hole: a smaller same-surface-colour circle stacked on
+  // top of ring-fill. The topbar has no background of its own (it sits
+  // directly on app-shell), so this matches app-shell's own background —
+  // if the ring ever moves onto a card, this needs to move with it.
+  part ring-hole {
+    position : "absolute" ;
+    top : 5 ;
+    left : 5 ;
+    width : 24 ;
+    height : 24 ;
+    border-radius : 50% ;
+    background : "#1a1714" ;
+  }
+  part ring-caption {
+    gap : 0 ;
+  }
+  part ring-pct {
+    font-size : 14 ;
+    font-weight : bold ;
+    color : "#f1ebe1" ;
+  }
+  part ring-label {
+    font-size : 12.5 ;
+    color : "#b3a99c" ;
+  }
+
+  // ── theme toggle (task-app-icon-assets-v1.md) ──────────────────────────
+  // See TaskApp.mll's doc comment: HostButton can't render a child, so the
+  // shape IS the button's own background/box-shadow, and the accessible
+  // label text is kept (for screen readers) but visually hidden via
+  // `color: transparent` rather than removed.
+  part theme-toggle-sun {
+    width : 34 ;
+    height : 34 ;
+    border-radius : 50% ;
+    background : "#eaa63f" ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    color : "transparent" ;
+    font-size : 1 ;
+  }
+  // A crescent: an inset shadow, offset toward one corner, painted in the
+  // page's own background colour — it reads as a bite taken out of the
+  // filled circle rather than a second shape.
+  part theme-toggle-moon {
+    width : 34 ;
+    height : 34 ;
+    border-radius : 50% ;
+    background : "#b3a99c" ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    box-shadow : "5px -5px 0 0 #1a1714 inset" ;
+    color : "transparent" ;
+    font-size : 1 ;
+  }
+
   // Per-project complexity toggle — see task-app-complexity-config-v1.md.
   // A pill like pill-ok/pill-warn above, but interactive (a hover state),
   // so it reads as a control rather than a status badge.
@@ -640,6 +762,35 @@ style TaskApp {
     border-radius : 13 ;
     box-shadow : "0 1px 2px rgba(0,0,0,.35), 0 4px 14px rgba(0,0,0,.35)" ;
   }
+  // The decorative plus mark (task-app-icon-assets-v1.md) — two crossed
+  // bars, centred inside the dashed box via absolute positioning.
+  part composer-plus {
+    width : 30 ;
+    height : 30 ;
+    flex-shrink : 0 ;
+    border-radius : 8 ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    border-style : "dashed" ;
+  }
+  part plus-bar-h {
+    position : "absolute" ;
+    top : 14 ;
+    left : 10 ;
+    width : 10 ;
+    height : 2 ;
+    border-radius : 1 ;
+    background : "#867c70" ;
+  }
+  part plus-bar-v {
+    position : "absolute" ;
+    top : 10 ;
+    left : 14 ;
+    width : 2 ;
+    height : 10 ;
+    border-radius : 1 ;
+    background : "#867c70" ;
+  }
   part name-input {
     width : 100% ;
     background : "transparent" ;
@@ -726,13 +877,33 @@ style TaskApp {
     gap : 7 ;
   }
   // Section heading between groups — the engine decides the grouping.
+  // Padding moved from group-head onto the row that now wraps it and its
+  // count badge (task-app-icon-assets-v1.md) — group-head itself keeps
+  // only its own text styling.
+  part group-head-row {
+    gap : 8 ;
+    align : center-vertical ;
+    padding : 10 ;
+  }
   part group-head {
     font-size : 11 ;
     font-weight : bold ;
     color : "#867c70" ;
     letter-spacing : "0.07em" ;
     text-transform : "uppercase" ;
-    padding : 10 ;
+  }
+  part group-count {
+    background : "#2d271f" ;
+    color : "#b3a99c" ;
+    font-size : 11 ;
+    letter-spacing : "0" ;
+    font-weight : normal ;
+    text-transform : "none" ;
+    padding-top : 1 ;
+    padding-right : 8 ;
+    padding-bottom : 1 ;
+    padding-left : 8 ;
+    border-radius : 20 ;
   }
   part task-card {
     background : "#252019" ;

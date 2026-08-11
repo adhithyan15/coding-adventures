@@ -974,6 +974,77 @@ func _sir_puts_one(v Value, visited map[Value]bool) {
 	}
 }
 
+// ── write (SIR28 §2.1) ────────────────────────────────────────
+//
+// `__sys_write__`, the console-output primitive `_sir_print`/`_sir_puts`
+// above generalize into. Where those hard-code ONE newline policy each,
+// this is the SAME operation parameterized by policy flags carried as
+// DATA -- the root cause SIR28 exists to fix: real Ruby's `print` never
+// newline-terminates, Python's `print()`/JS's `console.log` always do,
+// but all three used to lower to the identical `BuiltinCall("print", ...)`
+// this backend had no way to tell apart.
+//
+// `terminator`: "none" (`_sir_print`'s behavior) | "per_value"
+// (`_sir_puts`'s array-unpacking behavior, honouring `unpackArrays`) |
+// "once" (Python `print`/JS `console.log` -- space-join every value, one
+// trailing newline). Deliberately does NOT replicate `_sir_puts`'s
+// trailing-newline-suppression nuance above (`puts "x\n"` prints `x\n`,
+// not `x\n\n`) -- that's a pre-existing divergence from the C backend's
+// own `puts`, orthogonal to and not fixed by SIR28; `per_value` here
+// always appends exactly one newline per value, matching SIR28 §2.1's
+// table and every other backend's `__sys_write__` faithfully.
+func _sir_write(stream string, terminator string, unpackArrays bool, args []Value) Value {
+	out := os.Stdout
+	if stream == "stderr" {
+		out = os.Stderr
+	}
+	switch terminator {
+	case "per_value":
+		if len(args) == 0 {
+			fmt.Fprint(out, "\n")
+			return nil
+		}
+		visited := make(map[Value]bool)
+		for _, a := range args {
+			_sir_write_one(out, a, unpackArrays, visited)
+		}
+	case "once":
+		parts := make([]string, len(args))
+		for i, a := range args {
+			parts[i] = _sir_format(a)
+		}
+		fmt.Fprint(out, strings.Join(parts, " ")+"\n")
+	default:
+		for _, a := range args {
+			fmt.Fprint(out, _sir_format(a))
+		}
+	}
+	return nil
+}
+
+// Emit a single `_sir_write` argument under the `per_value` terminator.
+// Mirrors `_sir_puts_one`'s array-unpacking + cycle-guard exactly (same
+// `visited` map keyed by the `*Seq` handle, same `[...]` cycle
+// placeholder), gated by `unpackArrays` (`_sir_puts`'s behavior sets it;
+// a bare `_sir_print`-shaped `per_value` call would not).
+func _sir_write_one(out *os.File, v Value, unpackArrays bool, visited map[Value]bool) {
+	if unpackArrays {
+		if s, ok := v.(*Seq); ok {
+			if visited[v] {
+				fmt.Fprint(out, "[...]\n")
+				return
+			}
+			visited[v] = true
+			for _, item := range s.Items {
+				_sir_write_one(out, item, unpackArrays, visited)
+			}
+			delete(visited, v)
+			return
+		}
+	}
+	fmt.Fprint(out, _sir_format(v)+"\n")
+}
+
 // ── format (cycle-safe) ────────────────────────────────────────
 //
 // `*Seq`/`*Map` are *shared, mutable* handles, so an emitted program

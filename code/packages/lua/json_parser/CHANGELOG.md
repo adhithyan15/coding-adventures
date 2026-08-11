@@ -7,6 +7,10 @@
 - The Unix and Windows standalone BUILD recipes now install the shared
   `coding-adventures-lexer` rock before `json_lexer`, and the Unix self-install
   no longer consults remote dependency resolution.
+- Bundle a byte-locked Lua projection of the canonical `json.grammar` fixture
+  so an installed parser no longer walks out of its LuaRocks tree.
+- Replace the ambient filesystem capability with an empty authority profile
+  and add drift coverage for both deployed JSON grammar payloads.
 
 ## [0.1.0] - 2026-03-29
 

@@ -11,18 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 10317,
+  "active_pr": 10521,
   "last_inventory": {
-    "revision": "61cdb3ef1465c6c652d0d734d3c862b669b3adfb",
+    "revision": "fc8be1789c6b5f0d6aa360f0ffc05de23d74689d",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1286,
-    "implementation_package_slots": 4442,
+    "implementation_identities": 1298,
+    "implementation_package_slots": 4454,
     "high_consensus_packages": 173,
     "high_consensus_missing_slots": 269,
-    "singleton_packages": 836,
-    "singleton_missing_slots": 11704,
-    "rust_singletons": 640,
+    "singleton_packages": 848,
+    "singleton_missing_slots": 11872,
+    "rust_singletons": 652,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -416,21 +416,31 @@
     {
       "id": "build-file-lua-json-value-transitive-closure",
       "title": "Close the Lua JSON value parser prerequisites",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-file-standalone-integrity-lua", "build-file-lua-parser-lexer-transitive-closure"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/lua-json-value-transitive-closure",
+      "pr_number": 10521,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/10521",
+      "pr_opened_at": "2026-08-11T00:43:10Z",
+      "implementation_revision": "ddeafb9752194b716045cfca7856f58df239d10e",
+      "selection_revision": "5415ba120d1a25eb11302909eee1addeb8f1e0fe",
+      "selection_notes": "Selected after external merge of PR #10317 and the collision-checked ownership refresh. Both prerequisites are merged; this one-package Unix/Windows closure is the smallest audited unblocked successor, while data-store remains clock-blocked and the new Vault application chain remains dependency-blocked.",
+      "validation_notes": "Fresh isolated generic and Windows LuaRocks homes each installed the exact eight-rock chain with dependency fetching disabled, passed 91 json_value tests, and passed the source-path-free installed runtime smoke. Source suites pass 43 json_lexer, 44 json_parser, 91 json_value, and 107 downstream json_serializer cases; neutral-directory installed json_value and json_serializer smokes pass. LuaCov reports 96.55% lexer, 90.32% parser, and 85.41% value production coverage. Changed Lua files pass luacheck; Python build-tool passes 353 tests at 85.19%; Lua build-tool passes 61 cases; Go build-tool test, vet, module verification, and trimpath build pass. Reporter and taxonomy tests pass 17 tests and 676 subtests. The collision report remains at 1,298 identities, 4,454 slots, zero collisions, and zero unknown buckets. All 258 Lua BUILD files validate; the full 4,862-package audit retains the exact unrelated 17 Perl, Python, and Swift diagnostics with zero Lua findings.",
+      "publication_notes": "Ready-for-review PR #10521 opened after a final origin/main fetch confirmed the branch was one commit ahead with no base drift. The first implementation commit is recorded above; this state-only follow-up keeps the active-PR invariant durable on the same branch.",
       "notes": "Discovered by the complete canonical Lua sibling-bootstrap audit for the selected Unix closure tranche. json_value bootstraps grammar-tools and json-parser but omits directed-graph, state-machine, lexer, json-lexer, and parser from the clean-tree transitive closure."
     },
     {
       "id": "build-file-lua-lattice-transitive-closure",
       "title": "Close the Lua Lattice parser and transpiler prerequisites",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-file-standalone-integrity-lua"],
       "branch": "codex/lua-lattice-transitive-closure",
       "pr_number": 10317,
       "selection_revision": "c12372bc87848013a25b49dbea21e9eac28d8d23",
       "selection_notes": "Selected after PR #10264 merged and the collision-checked ownership refresh. One coherent Lattice chain repairs three successive packages and six Unix/Windows front doors, the largest actual fanout among the remaining audited Lua closures.",
+      "merged_at": "2026-08-10T05:06:15Z",
+      "merge_revision": "75861d6a838a12b84f188f1a3995f9fd6f03d033",
+      "merge_notes": "External review merged PR #10317; this item legally transitioned from pr-open to merged and no parity PR remains active.",
       "notes": "Discovered by the complete canonical Lua sibling-bootstrap audit for the selected Unix closure tranche. lattice_parser, lattice_ast_to_css, and lattice_transpiler omit shared directed-graph, state-machine, lexer, lattice-lexer, parser, and lattice-parser prerequisites at successive points in one dependency chain. Selected at c12372bc8784 after recording six new Rust singleton identities and their portable or dependency-blocked wrapper/native owners. The three-package Lattice chain closes six standalone build front doors, while JSON value remains a one-package follow-up behind the now-merged parser/lexer prerequisite and data-store remains blocked on its newly recorded clock-authority mismatch. Clean-tree red baselines across all six recipes failed at their first omitted unpublished prerequisite. The implementation installs every exact sibling rock leaf-to-root with dependency fetching disabled. A neutral-directory smoke then exposed that the installed lexer and parser still searched outside the LuaRocks tree for repository grammar files; generated Lua payloads now project the canonical lattice.tokens and lattice.grammar bytes into the deployed rocks, byte-for-byte drift tests keep those projections aligned, and both package capability profiles are empty because runtime grammar loading is authority-free. Final local validation passed all six fresh-tree build front doors with 95 Busted cases per platform and neutral-directory installed-runtime smokes, plus 84 lexer and 46 parser source cases. LuaCov measured lexer 96.55%, parser 90.32%, AST-to-CSS 76.77%, and transpiler 91.67%; generated single-return payload artifacts are byte-locked rather than behavior branches. Build-tool validation passed Python 353 tests at 85.26% coverage, Lua 61 tests at 73.95% weighted production coverage, and Go test, vet, module verification, and trimpath build. Reporter tests passed 10 cases, capability taxonomy passed 7, collision reporting stayed clean, and the full 4,847-package validator retained exactly 17 known non-Lua diagnostics with zero Lua diagnostics. The final security pass added the transpiler's directly imported parser to its declared dependencies. After rebasing, a brand-new isolated tree rebuilt all nine rocks with dependency fetching disabled, the deployed transpiler passed 16 cases plus its end-to-end smoke, Lua resolver/discovery UTF-8 planning passed 37 focused cases, and the Python and Go build-tool gates remained green. Final base 61cdb3ef14 retained the collision-clean 1,286-identity inventory. Ready-for-review PR #10317 opened with the complete validation summary; this item legally transitioned from in-progress to pr-open and is now the sole active parity PR."
     },
     {
@@ -2631,6 +2641,134 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-checked d46de7b34e inventory after merged PR #10307 added the empty-capability Rust vault-pm-repository identity and language-neutral VLT-PM04 contract. Define established-lane implementations and fixtures for domain-separated opaque addressing, dependency-ordered immutable publication and read-back, mandatory injected commit and announcement verification, exact object-ID checks, bounded DAG reconstruction, caller-pinned heads, deterministic ancestry history, withholding and device-counter equivocation detection, ambiguous-write retry, and conservative plan-only garbage collection with closed redacted errors. Reuse the portable format and storage contracts plus established pure HMAC-SHA256 and SHA-256 behavior. Filesystem, provider clients, clocks, entropy, device keys, decryption, signature authority, physical deletion, and unlocked-host policy remain injected or native."
+    },
+    {
+      "id": "mosaic-app-conformance-native-fixture-review",
+      "title": "Review the Mosaic real-engine native ABI fixture",
+      "status": "pending",
+      "depends_on": ["mosaic-app-runtime-portable-conformance", "mosaic-app-capi-wrapper-native-abi-review", "mosaic-app-bindings-generated-wrapper-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10382 added Rust mosaic-app-conformance. The crate is a cdylib/rlib fixture that exposes the real deterministic Mosaic runtime through the reviewed C ABI to Compose, Flutter, Qt, SwiftUI, and XAML conformance harnesses. Require an explicit empty capability profile plus platform evidence for dynamic-library lifecycle, opaque handles, returned buffers, snapshots, and teardown. Keep runtime semantics in the portable owner and ABI or generated-host behavior in the existing wrapper reviews; do not manufacture fifteen implementations of this native fixture."
+    },
+    {
+      "id": "smart-home-axis-pairing-service-native-authority-review",
+      "title": "Review the Axis pairing-service native-authority exception",
+      "status": "pending",
+      "depends_on": ["smart-home-pairing-transaction-portable-conformance", "chief-daemon-secret-file-native-authority-review", "vault-sealed-store-native-authority-review", "smart-home-axis-snapshot-host-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10328 added Rust smart-home-axis-pairing-service without a capability manifest. This concrete host composes owner-only credential-file reads, OS entropy, sealed Vault writes, Axis transport and snapshot authority, actor effects, recoverable pairing transactions, and runtime mutation. Keep transaction recovery and deterministic vendor validation in portable owners; review the minimum filesystem, entropy, credential, Vault, network, actor, and runtime authority with cleanup, redaction, and platform evidence."
+    },
+    {
+      "id": "smart-home-onvif-pairing-service-native-authority-review",
+      "title": "Review the ONVIF pairing-service native-authority exception",
+      "status": "pending",
+      "depends_on": ["smart-home-pairing-transaction-portable-conformance", "chief-daemon-secret-file-native-authority-review", "vault-sealed-store-native-authority-review", "smart-home-onvif-snapshot-host-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10309 added Rust smart-home-onvif-pairing-service without a capability manifest. This concrete excluded ONVIF host composes owner-only credential-file reads, OS entropy, sealed Vault writes, authenticated vendor effects, recoverable pairing transactions, actor execution, and runtime mutation. Keep request validation and transaction recovery in portable owners; review the minimum filesystem, entropy, credential, Vault, network, actor, and runtime authority with cleanup, redaction, and platform evidence."
+    },
+    {
+      "id": "smart-home-reolink-pairing-service-native-authority-review",
+      "title": "Review the Reolink pairing-service native-authority exception",
+      "status": "pending",
+      "depends_on": ["smart-home-pairing-transaction-portable-conformance", "chief-daemon-secret-file-native-authority-review", "vault-sealed-store-native-authority-review", "smart-home-reolink-snapshot-host-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10340 added Rust smart-home-reolink-pairing-service without a capability manifest. This concrete host composes owner-only credential-file reads, OS entropy, sealed Vault writes, Reolink transport and snapshot authority, actor effects, recoverable pairing transactions, and runtime mutation. Keep transaction recovery and deterministic vendor validation in portable owners; review the minimum filesystem, entropy, credential, Vault, network, actor, and runtime authority with cleanup, redaction, and platform evidence."
+    },
+    {
+      "id": "smart-home-synology-pairing-service-native-authority-review",
+      "title": "Review the Synology pairing-service native-authority exception",
+      "status": "pending",
+      "depends_on": ["smart-home-pairing-transaction-portable-conformance", "chief-daemon-secret-file-native-authority-review", "vault-sealed-store-native-authority-review", "smart-home-synology-snapshot-host-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10349 added Rust smart-home-synology-pairing-service without a capability manifest. This concrete host composes owner-only credential-file reads, OS entropy, sealed Vault writes, Synology transport and snapshot authority, actor effects, recoverable pairing transactions, and runtime mutation. Keep transaction recovery and deterministic vendor validation in portable owners; review the minimum filesystem, entropy, credential, Vault, network, actor, and runtime authority with cleanup, redaction, and platform evidence."
+    },
+    {
+      "id": "smart-home-zoneminder-pairing-service-native-authority-review",
+      "title": "Review the ZoneMinder pairing-service native-authority exception",
+      "status": "pending",
+      "depends_on": ["smart-home-pairing-transaction-portable-conformance", "chief-daemon-secret-file-native-authority-review", "vault-sealed-store-native-authority-review", "smart-home-zoneminder-snapshot-host-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10318 added Rust smart-home-zoneminder-pairing-service without a capability manifest. This concrete host composes owner-only credential-file reads, OS entropy, sealed Vault writes, ZoneMinder transport and snapshot authority, actor effects, recoverable pairing transactions, and runtime mutation. Keep transaction recovery and deterministic vendor validation in portable owners; review the minimum filesystem, entropy, credential, Vault, network, actor, and runtime authority with cleanup, redaction, and platform evidence."
+    },
+    {
+      "id": "vault-pm-application-portable-conformance",
+      "title": "Fixture and port the Vault password-manager application core",
+      "status": "pending",
+      "depends_on": ["vault-pm-format-portable-conformance", "vault-pm-storage-portable-conformance", "vault-pm-domain-portable-conformance", "vault-pm-repository-portable-conformance", "vault-records-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10321 added empty-capability Rust vault-pm-application and later Vault slices expanded it. Define language-neutral fixtures and established-lane implementations for the VLT-PM05 host-neutral application state machine, bootstrap and unlock verification, repository workflows, item operations, stable redacted errors, and no-mutation failures over injected stores, keys, time, and entropy. Native persistence, clocks, entropy, terminal I/O, credential custody, and process authority remain injected."
+    },
+    {
+      "id": "vault-pm-application-storage-core-portable-conformance",
+      "title": "Fixture and port the Vault application storage-core adapters",
+      "status": "pending",
+      "depends_on": ["vault-pm-application-portable-conformance", "vault-pm-format-portable-conformance", "vault-pm-storage-storage-core-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10412 added empty-capability Rust vault-pm-application-storage-core. Define language-neutral fixtures and established-lane adapters for bootstrap and local-state records over an injected storage-core backend, including exact framing, bounded decode, immutable writes, corruption classification, revisions, and closed payload-free errors. Concrete filesystem, provider, durability, locking, and retry authority remain native."
+    },
+    {
+      "id": "vault-pm-config-portable-conformance",
+      "title": "Fixture and port the Vault password-manager configuration contract",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10422 added empty-capability Rust vault-pm-config. Define language-neutral fixtures and established-lane implementations for the bounded VLT-PM07 TOML parser, exact version and field validation, deterministic defaults, canonical rendering, round trips, hostile input bounds, and stable payload-free errors. Filesystem paths, environment lookup, file permissions, and atomic persistence belong to the native local host."
+    },
+    {
+      "id": "vault-pm-cli-host-native-authority-review",
+      "title": "Review the Vault CLI terminal and entropy host",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10434 added Rust vault-pm-cli-host. Review its controlling-terminal reads and writes, Unix termios and Windows console FFI, echo restoration, OS CSPRNG, bounded secret buffers, zeroization, redacted failures, and exact structured capability profile. Do not manufacture an all-language privileged terminal or entropy host."
+    },
+    {
+      "id": "vault-pm-local-host-native-authority-review",
+      "title": "Review the Vault local filesystem host",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "security_findings": "The current manifest omits effective fs:delete authority even though Unix and Windows cleanup paths remove staging files; the review must reconcile the structured profile before approval.",
+      "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10417 added Rust vault-pm-local-host. Review environment and path resolution, no-follow owner-private directory and file creation, exact reads and writes, locks, atomic replacement, Unix and Windows FFI, race resistance, cleanup, redacted failures, and truthful structured capabilities. Keep deterministic path and config semantics in portable owners; do not manufacture all-language privileged filesystem hosts."
+    },
+    {
+      "id": "vault-pm-cli-portable-command-conformance",
+      "title": "Fixture and port the Vault CLI command contract",
+      "status": "pending",
+      "depends_on": ["vault-pm-application-portable-conformance", "vault-pm-application-storage-core-portable-conformance", "vault-pm-config-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered while classifying the package and program forms of the normalized Rust vault-pm-cli identity added by merged PR #10439. Extract language-neutral fixtures and established-lane implementations for strict argv parsing, command planning, stable exit classes, payload-redacted rendering, injected workflow ordering, and deterministic no-effect failures. Terminal, entropy, wall-clock, environment, filesystem, locking, and executable composition remain native-host concerns."
+    },
+    {
+      "id": "vault-pm-cli-native-authority-review",
+      "title": "Review the Vault CLI native composition boundary",
+      "status": "pending",
+      "depends_on": ["vault-pm-cli-portable-command-conformance", "vault-pm-cli-host-native-authority-review", "vault-pm-local-host-native-authority-review", "vault-pm-storage-storage-core-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "security_findings": "The current top-level profile does not express the effective terminal, entropy, environment, and FFI authority constructed through its concrete hosts; retain the block until composed authority is truthful.",
+      "notes": "Review the normalized Rust vault-pm-cli package and program composition after its deterministic command contract is extracted. Require exact filesystem read/write/create, wall-clock, terminal, entropy, storage-adapter, process-exit, secret-custody, cleanup, redaction, and platform evidence with a truthful capability profile. Do not replicate native composition in every lane; keep portable command behavior in the separate fixture owner."
     },
     {
       "id": "lua-in-memory-data-store-engine-clock-authority-truthfulness",

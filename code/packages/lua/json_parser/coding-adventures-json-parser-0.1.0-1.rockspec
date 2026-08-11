@@ -45,5 +45,7 @@ build = {
     modules = {
         ["coding_adventures.json_parser"] =
             "src/coding_adventures/json_parser/init.lua",
+        ["coding_adventures.json_parser.grammar_data"] =
+            "src/coding_adventures/json_parser/grammar_data.lua",
     },
 }

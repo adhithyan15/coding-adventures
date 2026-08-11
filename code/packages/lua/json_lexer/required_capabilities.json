@@ -2,6 +2,6 @@
   "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
   "version": 1,
   "package": "lua/json_lexer",
-  "capabilities": ["filesystem:read"],
-  "justification": "Reads json.tokens grammar file from the repository's grammars/ directory at startup to configure the grammar-driven lexer."
+  "capabilities": [],
+  "justification": "Parses a checked-in grammar payload bundled in the Lua module; it performs no ambient filesystem, network, clock, entropy, or process access."
 }

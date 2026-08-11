@@ -338,14 +338,17 @@ const SUPPORTED_OPS: &[&str] = &[
 /// observe the collector's live-byte total directly, rather than assuming it
 /// behaves the same as the native backends from reading source alone.
 ///
-/// `gc_collect_minor_precise` / `gc_kind_of` (AOT00-T8 follow-up, write-barrier
-/// emission): test-only diagnostic seams, not exposed to Twig source — they let a
-/// hand-built end-to-end test drive an *unconditional* minor collection (bypassing
-/// the `should_collect_minor`/`auto_minor` policy gate entirely, since
-/// `__gc_collect_minor_precise` needs no attestation of its own — see that
-/// function's doc) and then check a specific object's survival by kind id, the
-/// only reliable signal per this crate's own `array_ref_tracing.rs` lesson (a
-/// `freed`-count or conservative-scan-dependent assertion is not deterministic
+/// `gc_set_auto_minor` / `gc_collect_minor_precise` / `gc_kind_of` (AOT00-T8
+/// follow-up, write-barrier emission): test-only diagnostic seams, not exposed to
+/// Twig source. `gc_collect_minor_precise` (a *direct*, unconditional minor
+/// collection) is gated on `__gc_set_auto_minor`'s attestation, same as the
+/// automatic `should_collect_minor` policy path — see `__gc_collect_minor_precise`'s
+/// own doc (security-review finding: an earlier version of this seam bypassed that
+/// gate entirely, since the direct entry point didn't yet enforce it). `gc_set_auto_minor`
+/// is what a hand-built end-to-end test calls first to attest before driving a real
+/// minor collection; `gc_kind_of` then checks a specific object's survival by kind
+/// id, the only reliable signal per this crate's own `array_ref_tracing.rs` lesson
+/// (a `freed`-count or conservative-scan-dependent assertion is not deterministic
 /// enough to prove one specific object's fate).
 const SUPPORTED_BUILTINS: &[&str] = &[
     "print_i64",
@@ -354,6 +357,7 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     "input_i64",
     "input_str",
     "gc_live_bytes",
+    "gc_set_auto_minor",
     "gc_collect_minor_precise",
     "gc_kind_of",
 ];
@@ -774,6 +778,7 @@ pub fn lower_iir_to_llvm(
     // `@__twig_gc_live_bytes()` from the shared `gc-core-capi` archive.
     let mut used_gc_live_bytes = false;
     // AOT00-T8 follow-up test seams — see `SUPPORTED_BUILTINS`'s own doc.
+    let mut used_gc_set_auto_minor = false;
     let mut used_gc_collect_minor_precise = false;
     let mut used_gc_kind_of = false;
     // LANG-FULL E5: any array op needs `@calloc` (the allocation) and `@llvm.trap`
@@ -863,6 +868,7 @@ pub fn lower_iir_to_llvm(
                         "input_i64" => used_input_i64 = true,
                         "input_str" => used_input_str = true,
                         "gc_live_bytes" => used_gc_live_bytes = true,
+                        "gc_set_auto_minor" => used_gc_set_auto_minor = true,
                         "gc_collect_minor_precise" => used_gc_collect_minor_precise = true,
                         "gc_kind_of" => used_gc_kind_of = true,
                         _ => {
@@ -916,7 +922,8 @@ pub fn lower_iir_to_llvm(
     }
     if used_alloc_bytes || used_arrays || used_conversions || used_str_index || used_putchar || used_getchar
         || used_input_i64 || used_input_str || used_str_concat || used_str_eq || used_str_cmp || used_gc_alloc
-        || used_gc_live_bytes || used_field_store || used_gc_collect_minor_precise || used_gc_kind_of {
+        || used_gc_live_bytes || used_field_store || used_gc_set_auto_minor
+        || used_gc_collect_minor_precise || used_gc_kind_of {
         out.push('\n');
         if used_alloc_bytes || used_arrays {
             // Twig GC completion round: `alloc_bytes` (Brainfuck's byte tape)
@@ -980,10 +987,18 @@ pub fn lower_iir_to_llvm(
             // instead of assuming it from reading the allocator's C source.
             out.push_str("declare i64 @__twig_gc_live_bytes()\n");
         }
+        if used_gc_set_auto_minor {
+            // AOT00-T8 follow-up: attests every heap-reference store this module's
+            // compiled output performs is barrier-covered (see
+            // `__gc_set_auto_minor`'s own doc for the full soundness argument) --
+            // `gc_collect_minor_precise` below is a no-op without this.
+            out.push_str("declare void @__twig_gc_set_auto_minor(i64)\n");
+        }
         if used_gc_collect_minor_precise {
-            // AOT00-T8 follow-up: an unconditional minor collection, bypassing the
-            // `should_collect_minor`/`auto_minor` policy gate entirely (see
-            // `SUPPORTED_BUILTINS`'s own doc) — the test-only seam that proves the
+            // AOT00-T8 follow-up: a *direct* minor collection -- gated on
+            // `gc_set_auto_minor`'s attestation, same as the automatic
+            // `should_collect_minor`/`auto_minor` policy path (see
+            // `SUPPORTED_BUILTINS`'s own doc) -- the test-only seam that proves the
             // write barrier above actually keeps a remembered-set edge alive.
             out.push_str("declare i64 @__twig_gc_collect_minor_precise()\n");
         }
@@ -3961,6 +3976,15 @@ fn lower_call_builtin(
             let dest = require_dest(instr, "gc_live_bytes", state.fn_name)?.to_string();
             out.push_str(&format!("  %{dest} = call i64 @__twig_gc_live_bytes()\n"));
             state.env.insert(dest.clone(), format!("%{dest}"));
+            Ok(())
+        }
+        // ── gc_set_auto_minor(on) — test-only seam (AOT00-T8), no dest ──────
+        //
+        //   srcs = [Var("gc_set_auto_minor"), <on:i64>]
+        //     → call void @__twig_gc_set_auto_minor(i64 <on>)
+        "gc_set_auto_minor" => {
+            let on = resolve_operand(instr.srcs.get(1), &state.env, "i64", state.fn_name)?;
+            out.push_str(&format!("  call void @__twig_gc_set_auto_minor(i64 {on})\n"));
             Ok(())
         }
         // ── gc_collect_minor_precise() -> v — test-only seam (AOT00-T8) ─────

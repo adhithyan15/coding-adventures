@@ -111,6 +111,8 @@ arrows, open/filled/cross/point arrowheads, bidirectional messages, notes,
 activation/deactivation, titles, and automatic numbering. It lowers through
 `diagram-layout-sequence` to existing path, rectangle, dashed-stroke, and glyph
 PaintInstructions and is exercised by a Mermaid-to-Metal-to-PNG fixture.
+Grammar-backed `actor` declarations retain their semantic kind through layout
+and lower to backend-neutral ellipse/path instructions for UML stick figures.
 
 Nested Mermaid 11.16.1 control blocks (`loop`, `opt`, `alt`/`else`, `par`/`and`,
 `par_over`, `critical`/`option`, `break`, and `rect`) lower into ordered semantic
@@ -138,6 +140,8 @@ Both modern `title Text` and legacy `title: Text` sequence title forms lower
 through the same title semantics and native text pipeline.
 Sequence text decodes Mermaid decimal and HTML named entity codes to Unicode
 before layout and Paint glyph shaping.
+Sequence `#` comments are discarded by the grammar-driven lexer while numeric
+and named `#...;` entities remain semantic label text.
 Message and note `<br>`, `<br/>`, and `<br />` tags become semantic newlines;
 sequence layout reserves line-aware geometry before Paint glyph shaping.
 Message and note `wrap:` and `nowrap:` directives lower to explicit semantic

@@ -523,6 +523,25 @@ pub unsafe extern "C" fn __gc_collect_precise() -> i64 {
 /// stack-base detection collects nothing this cycle — bias-to-leak, identical to every
 /// other collect entry here.
 ///
+/// **Security-review finding, hardened here:** requires [`__gc_set_auto_minor`]
+/// attestation, same as [`__gc_safepoint`]'s automatic minor path
+/// ([`gc_core::FlatHeap::should_collect_minor`]'s own `auto_minor` gate) — a minor
+/// collection's correctness depends entirely on the remembered set being complete, and
+/// this is the **one shared entry point** every caller of an unconditional minor
+/// collect goes through, whether that's `__gc_safepoint`'s internal dispatch (already
+/// attested, since `should_collect_minor` requires it) or a *direct* caller — the
+/// `__twig_gc_collect_minor_precise` alias, or any future frontend that adds this name
+/// to its own builtin table. Before this fix, a direct caller bypassed the attestation
+/// gate entirely: nothing but the doc comment's own "no attestation needed, caller
+/// owns the obligation" framing stopped an un-barrier-verified embedder from freeing a
+/// still-referenced young object. Gating here, not just at each caller, makes it
+/// impossible to add a new direct caller that forgets to check — the same "one place
+/// this decision lives" pattern `should_collect`/`should_collect_minor` already use.
+/// Unattested calls collect nothing this cycle — bias-to-leak, the same graceful
+/// degradation every other policy gate in this file uses, not a hard failure (an
+/// embedder that never calls `__gc_set_auto_minor` is a normal, expected operating
+/// mode, not a bug).
+///
 /// # Safety
 ///
 /// Same contract as [`__gc_collect_precise`]: sound to call from any thread that owns
@@ -530,6 +549,9 @@ pub unsafe extern "C" fn __gc_collect_precise() -> i64 {
 #[no_mangle]
 #[inline(never)]
 pub unsafe extern "C" fn __gc_collect_minor_precise() -> i64 {
+    if !with_heap(|h| h.auto_minor()) {
+        return 0;
+    }
     // Spill callee-saved registers into a stack buffer (in this frame), then SP.
     let mut regs = [0usize; SPILL_SLOTS];
     let sp = spill_and_sp(regs.as_mut_ptr());
@@ -977,6 +999,10 @@ mod tests {
         assert!(kept != 0);
         unsafe { *(kept as *mut i64) = 0x0ff1ce };
 
+        // Security-review finding (this call is now gated on auto_minor -- see
+        // __gc_collect_minor_precise's own doc): attest, since this test's synthetic
+        // stack scan is the barrier-correctness verification in this case.
+        crate::__gc_set_auto_minor(1);
         let _freed = unsafe { __gc_collect_minor_precise() };
 
         assert_eq!(

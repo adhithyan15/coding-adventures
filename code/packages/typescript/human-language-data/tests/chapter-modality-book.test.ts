@@ -59,7 +59,7 @@ describe("book chapter modality projection", () => {
     ).toThrow(/invalid modality counts/);
   });
 
-  it("covers all 513 generated and handwritten chapter openings in all 22 books", () => {
+  it("covers all 514 generated and handwritten chapter openings in all 22 books", () => {
     const root = defaultCurriculumRoot();
     const outputs = generatedBookOutputs(root);
     const modalityFiles = [...outputs.entries()].filter(([path]) =>
@@ -68,7 +68,9 @@ describe("book chapter modality projection", () => {
     expect(modalityFiles).toHaveLength(22);
 
     const ledgers = loadTrackChapters(root);
-    expect(ledgers.flatMap((track) => track.chapters)).toHaveLength(513);
+    // +1: Tamil chapter 39. Its opening renders "first 3 of 4 lessons", because the
+    // writing lesson is last in the chapter — the placement rule TA-W19 established.
+    expect(ledgers.flatMap((track) => track.chapters)).toHaveLength(514);
     for (const track of ledgers) {
       const path = `${track.language}/book/chapter-modalities.tex`;
       const tex = outputs.get(path);

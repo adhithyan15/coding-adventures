@@ -223,7 +223,10 @@ describe("corpus snapshot", () => {
     // +3 more: TA-W14/15/16, closing chapters 4-5, sit there too.
     // +2: TA-W17-read-unavu and TA-W18-read-uur.
     // +1: TA-W19-read-muunru, the strand's last available slot, likewise pre-A1.
-    expect(summary.byLevel["pre-A1"]).toBe(878);
+    // +1, and only ONE of chapter 39's four lessons: TA-W20-read-onru, which sits on
+    // SPINE-MEET-GREET like every other writing lesson. The chapter's three speaking
+    // lessons land at A2, because SPINE-SAY-WHAT-I-WANT is an A2 node — see below.
+    expect(summary.byLevel["pre-A1"]).toBe(880); // +1: ES-C03-vos sits on SPINE-EXCHANGE-NAMES
     // Chapter 10 adds singular ir and possessives at A1. Chapter 11 adds one more
     // definite-reference lesson there; its other work is A2. Chapter 12 adds its
     // newly mapped terminal checkpoints at A2 on SPINE-SAY-WHAT-I-DO.
@@ -232,7 +235,10 @@ describe("corpus snapshot", () => {
     // Chapter 16's split adds five more mapped A2 lessons on the same node.
     // Chapter 17's split adds four more mapped A2 lessons on the same node.
     // Chapter 18 replaces ten mapped A2 lessons with nine prerequisite-safe steps.
-    expect(summary.byLevel.A2).toBe(409); // +39: Spanish chapters 11-18 plus prerequisite closure
+    // +3: TA-C39-vendum, TA-C39-evvalavu and TA-C39-oru. Tamil's curriculum.json had
+    // already declared SPINE-SAY-WHAT-I-WANT with an empty segment list and VERB-WANT
+    // in `omits`; chapter 39 realizes the node, so the omission is removed with it.
+    expect(summary.byLevel.A2).toBe(412); // +39: Spanish chapters 11-18 plus prerequisite closure
     // 8, not 0: Spanish chapters 38 and 41 realize SPINE-NARRATE-EVENTS and
     // SPINE-GIVE-REASONS, four lessons each — the only B1 nodes any track has touched.
     // B2-C2 remain authored-but-unrealized, in every track.
@@ -302,7 +308,9 @@ describe("corpus snapshot", () => {
     // +2: TA-W17-read-unavu and TA-W18-read-uur, the only lessons that join.
     // +1: TA-W19-read-muunru, again measured as a set difference — the only lesson
     // that joins, not inferred from the total.
-    expect(ramp).toHaveLength(1187);
+    // +1, measured as a set difference: TA-W20-read-onru is the only lesson that
+    // joins. The three A2 speaking lessons are above the A1 cut and do not.
+    expect(ramp).toHaveLength(1189); // +1: ES-C03-vos
     expect(ramp.length).toBeLessThan(lessons.length);
   });
 });

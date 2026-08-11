@@ -4,6 +4,27 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - UI36: `background` joins the bindable-property list
+
+UI36's `dynamic_size_style` hard-listed exactly six literal size properties
+(`width`/`height`/`min-width`/`max-width`/`min-height`/`max-height`).
+`background` didn't fit that list by name, but it fits UI36's own stated
+purpose exactly — "a value a stylesheet cannot know" — for a continuously-
+filling progress ring's `conic-gradient(...)`, computed by the host the same
+way a Gantt bar's width already is. Renamed `dynamic_size_style` →
+`dynamic_bound_style` and `SIZE_PROPS` → `BINDABLE_PROPS` (four call sites)
+since "size" no longer described every entry; the mechanism itself (three
+value shapes, same bound-value-beats-static-style precedence) is unchanged.
+Purely additive to existing size-prop usage.
+
+Found building task-app's icon assets (`task-app-icon-assets-v1.md`) — the
+progress ring was the one shape in that slice that couldn't be built from
+already-existing capability.
+
+New tests (`ui36_background_can_come_from_an_expression`,
+`ui36_bound_background_overrides_the_part_style`) alongside the existing
+UI36 property tests.
+
 ### Added - HostTooltip: expression-bound `text` (UI29-4 extension)
 
 `HostTooltip`'s `text` prop previously accepted only a string literal or a

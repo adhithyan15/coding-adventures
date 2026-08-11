@@ -7,6 +7,51 @@
 export * from "./types.js";
 export * from "./constants.js";
 export { splitFrontmatter, type Frontmatter } from "./frontmatter.js";
+export {
+  declaredStrands,
+  strandDefects,
+  nodeSizeDefects,
+  summarizeStrands,
+  renderStrandSummary,
+  NODE_CONCEPT_TARGET,
+  type StrandDefect,
+  type NodeSizeDefect,
+  type StrandCount,
+  type StrandSummary,
+} from "./strands.js";
+export {
+  topologicalOrder,
+  cellGraphDefects,
+  cellCoverage,
+  renderCellCoverage,
+  type CellGraphDefect,
+  type CellCoverage,
+} from "./grammar-cells.js";
+export {
+  buildRootLedger,
+  renderRootLedger,
+  type RootEntry,
+  type RootLedger,
+  type RootNamespace,
+} from "./root-ledger.js";
+export {
+  PERSON_LABELS,
+  FULL_GRID_ROWS,
+  personRowCount,
+  lessonInfoDump,
+  measureInfoDump,
+  renderInfoDump,
+  type InfoDumpKind,
+  type InfoDumpFinding,
+  type InfoDumpReport,
+} from "./info-dump.js";
+export {
+  termsUsedIn,
+  measureMetalanguage,
+  renderMetalanguage,
+  type MetalanguageUse,
+  type MetalanguageReport,
+} from "./metalanguage.js";
 export { parseBodyBlocks, parseLesson, buildDataset, type ParsedLesson } from "./parse.js";
 export {
   parseLessonActivityValue,
@@ -82,6 +127,7 @@ export {
   loadLanguageCurricula,
   loadTrackChapters,
   loadChapterPolicy,
+  loadMetalanguage,
   loadBookCorpus,
   loadLessons,
   loadModalityManifest,

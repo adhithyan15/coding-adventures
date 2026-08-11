@@ -113,3 +113,401 @@ landed and why, not a semver-tracked API.
   manifest objective `adj.science.k2.season_start_month_number` (band K-2, `infer` competency).
   New e2e test `facts_seasonmonthnumber_e2e.rs` (3 tests: direct derivation with dual citations,
   reverse binding, honest abstention on an untabled season).
+- `astronomy/planet-ordinal-position.adj` (new) — the SECOND cross-directory `rule` composition
+  in the ADJ stdlib's science domain, following `earth-science/season-start-month-number.adj`'s
+  precedent. Bridges the already-shipped `planet_order` table (`astronomy/planets.adj`) with the
+  already-shipped `ordinal_number` table (`mathematics/ordinal-numbers.adj`) to DERIVE
+  `planet_ordinal_position(planet, ordinal)` -- grounding the common early-elementary framing
+  "Earth is the THIRD planet from the Sun." Reuses TWO already-verified citations (NASA planet
+  order, standard English ordinal-number convention) with zero new sourcing work. Honest
+  abstention on Pluto (reclassified a dwarf planet in 2006, deliberately not a row in
+  `planets.adj`) -- the rule abstains rather than inventing a position. Same cross-directory
+  pattern as `season-start-month-number.adj`: the library lives in `astronomy/` (its natural
+  home) and imports its mathematics sibling via a relative `../mathematics/ordinal-numbers.adj`
+  path; its `.query.adj` companion is placed at the package root so the CLI's import sandbox
+  (rooted at the top-level program's own directory) resolves the `../` hop. New manifest
+  objective `adj.science.k2.planet_ordinal_position` (band K-2, `infer` competency). New e2e test
+  `facts_planetordinalposition_e2e.rs` (3 tests: direct derivation with dual citations, reverse
+  binding, honest abstention on Pluto).
+- `astronomy/moon-phase-ordinal-position.adj` (new) — the THIRD cross-directory `rule`
+  composition in the ADJ stdlib's science domain, and the SECOND time the exact number-to-
+  ordinal-word bridge pattern (first used in `astronomy/planet-ordinal-position.adj`) has been
+  applied — this time to a DIFFERENT already-shipped table in the same `astronomy/` directory.
+  Bridges the already-shipped `moon_phase_order` table (`astronomy/moon-phases.adj`) with the
+  already-shipped `ordinal_number` table (`mathematics/ordinal-numbers.adj`) to DERIVE
+  `moon_phase_ordinal_position(phase, ordinal)` -- grounding "the full Moon is the FIFTH phase in
+  the cycle." Reuses TWO already-verified citations (NASA Moon phases, standard English ordinal-
+  number convention) with zero new sourcing work. Honest abstention on "eclipse" (a different
+  astronomical event, deliberately not a row in `moon-phases.adj`). Same cross-directory pattern
+  as `planet-ordinal-position.adj`/`season-start-month-number.adj`: the library lives in
+  `astronomy/` (its natural home) and imports its mathematics sibling via a relative
+  `../mathematics/ordinal-numbers.adj` path; its `.query.adj` companion is placed at the package
+  root. New manifest objective `adj.science.k2.moon_phase_ordinal_position` (band K-2, `infer`
+  competency). New e2e test `facts_moonphaseordinalposition_e2e.rs` (3 tests: direct derivation
+  with dual citations, reverse binding, honest abstention on "eclipse").
+- `language/word-families.adj` — extended with a FIFTH word family, "-og" (dog, hog, fog, log,
+  jog), added as five new rows in the existing `word_family` table alongside "-an", "-at", "-ig",
+  and "-ug". The existing `rhymes_with` rule is reused UNCHANGED for the fifth time running.
+  Quoted verbatim from a THIRD Super Teacher Worksheets page (same site, same `consensus` trust
+  tier, its own real citation): "Here is a collection of printable activities for young readers
+  to learn about the 'og' family of words... Words included: clog, jog, dog, hog, frog, fog, and
+  log." — WebFetch-verified twice for consistency, mirroring "-ig"/"-ug"'s bar. Deliberately
+  excludes "clog" and "frog" (four-letter consonant-blend words) to preserve the strict
+  three-letter CVC scope, the same discipline every prior family has used. IMPORTANT: this slice
+  also fixed the library's own abstention worked-example and test, which had used "dog" as the
+  "unshipped word" case since slice 1 -- now that "dog" is itself a real `-og` member, both
+  `word-families.query.adj` and `facts_wordfamilies_e2e.rs`'s abstention case were switched to
+  "cup" (still genuinely untabled). No new manifest objective needed -- extends the same
+  already-covered library `adj.literacy.k2.rhyming_word_families`. New e2e test
+  `rhymes_with_isolates_a_fifth_family_and_abstains_on_excluded_blend_words` (7th test in
+  `facts_wordfamilies_e2e.rs`), which asserts NO cross-contamination with any of the four prior
+  families AND honest abstention on "frog".
+- `language/syllable-count.adj` (new) — the SECOND literacy sub-skill library in the ADJ stdlib,
+  deliberately DIFFERENT in shape from `word-families.adj`'s rhyme-family derivation: a genuinely
+  new phonological-awareness skill (syllable segmentation, CCSS RF.K.2.b) rather than another word
+  family (RF.K.2.a). A new `syllable_count(word, count)` table names how many syllables each of
+  four words has, quoted verbatim from Reading Rockets' "Phonological and Phonemic Awareness: In
+  Practice" module, which demonstrates syllable segmentation as a classroom technique (one index
+  card placed per syllable while the teacher says each part aloud): peanut, pencil, sunset, and
+  laptop, all explicitly segmented on the page. WebFetch-verified TWICE for consistency before
+  writing -- the first pass over-eagerly attributed a syllable count to "classroom" that the
+  second, more careful pass found was NOT actually syllable-segmented on the page (just used in an
+  unrelated sentence), so it was correctly dropped. All four confirmed words happen to be
+  two-syllable in this cited source (the page's demonstration does not segment a one- or
+  three-syllable word), so the table is honestly narrow rather than fabricating contrast; a future
+  slice can add variety once a comparably clean citation for a different count is found. Grounds
+  CCSS RF.K.2.b. New manifest objective `adj.literacy.k2.syllable_count` (band K-2, `recall`
+  competency -- a pure lookup, not a `rule`-derived fact, since no composition was needed or
+  available here). New e2e test `facts_syllablecount_e2e.rs` (3 tests: direct recall, reverse
+  binding, honest abstention on an unshipped word).
+- `biology/mitosis-phase-order.adj` (new) + `biology/mitosis-phase-ordinal-position.adj` (new) --
+  the FIRST biology-domain entry in the ordinal-bridge composition pattern
+  `earth-science/season-start-month-number.adj`, `astronomy/planet-ordinal-position.adj`, and
+  `astronomy/moon-phase-ordinal-position.adj` already established, and the FOURTH cross-directory
+  `rule` composition overall. `mitosis-phases.adj` (already shipped) tables each phase's defining
+  event but only encodes cycle ORDER as row order, not a queryable number, so
+  `mitosis-phase-order.adj` makes that same source's ordering ("The four phases of mitosis are
+  Prophase ... Metaphase ... Anaphase ... Telophase", the SAME NCI SEER sentence
+  `mitosis-phases.adj` already cites -- zero new sourcing risk) a first-class
+  `mitosis_phase_order(phase, order)` fact, mirroring `astronomy/moon-phases.adj`'s own
+  `moon_phase_order` column. `mitosis-phase-ordinal-position.adj` then bridges that new fact to
+  the already-shipped `mathematics/ordinal-numbers.adj` exactly as the astronomy ordinal bridges
+  do, deriving `mitosis_phase_ordinal_position($Phase, $Ordinal)` (e.g. "anaphase" -> "third").
+  Honest abstention on `interphase` (the resting phase BETWEEN divisions, deliberately excluded
+  from both tables, mirroring `mitosis-phases.adj`'s own exclusion). New manifest objective
+  `adj.science.6to8.mitosis_phase_ordinal_position` (band 6-8, matching where NGSS places cell
+  division, vs. the K-2 band of the three prior astronomy/earth-science ordinal bridges). New
+  e2e test `facts_mitosisphaseordinalposition_e2e.rs` (3 tests: direct derivation with dual
+  citations, reverse binding, honest abstention on `interphase`).
+- `language/initial-sound.adj` (new) -- the THIRD literacy sub-skill library in the ADJ stdlib,
+  deliberately different in shape from both prior ones: `word-families.adj` derives RHYMING
+  (RF.K.2.a, shared END sound) via a `rule`, `syllable-count.adj` recalls a SYLLABLE COUNT
+  (RF.K.2.b) -- this one recalls a word's BEGINNING sound (phoneme identity/isolation, RF.K.2.d)
+  as a pure lookup, `initial_sound(word, sound)`. Quoted verbatim from Reading Rockets' "Reading
+  101 for Parents: Phonological and Phonemic Awareness" guide, WebFetch-verified TWICE for
+  consistency before writing: "Bell, bike, and boy all have /b/ at the beginning." -- the site's
+  own canonical phoneme-identity example (confirmed appearing word-for-word on more than one
+  Reading Rockets page). Deliberately scoped to ONLY the three words and one sound (/b/) this
+  single cited sentence names -- all three happen to share one phoneme, so the table is honestly
+  narrow (mirroring `syllable-count.adj`'s all-2-syllable table) rather than fabricating a second
+  sound group from an uncited word list. Grounds CCSS RF.K.2.d. New manifest objective
+  `adj.literacy.k2.initial_sound` (band K-2, `recall` competency). New e2e test
+  `facts_initialsound_e2e.rs` (3 tests: direct recall, reverse binding across all three words
+  sharing /b/, honest abstention on an unshipped word).
+- `chemistry/measuring-tools.adj` (new) -- a genuinely new "observation and measurement" axis
+  (ADJ-STDLIB-COVERAGE.md 5.1's named Major Gap for K-8 science), distinct from the sibling
+  `lab-equipment.adj`'s tool->purpose-verb table. A new `measuring_tool(tool, quantity)` table
+  names which ONE quantity each of four common lab tools measures (ruler->length,
+  graduated_cylinder->volume, balance->mass, thermometer->temperature), quoted verbatim from a
+  Chemistry LibreTexts introductory lab manual, "Introducing Measurements in the Laboratory",
+  whose four-part lab exercise each opens with a sentence naming the tool and the quantity/unit
+  it measures. WebFetch-verified TWICE for consistency before writing. Deliberately NOT a 5th
+  ordinal-bridge instance -- the science lane's four prior slices (season/planet/moon-phase/
+  mitosis) already saturate that pattern; this slice diversifies into a different axis
+  (observation/measurement) entirely, after a survey of chemistry reaction-types.adj/gas-laws.adj
+  and earth-science rock-types.adj found no clean, uninvented causal pairing available without
+  fabricating an unstated link. Grounds the NGSS science-practice observation/measurement gap.
+  New manifest objective `adj.science.3to5.measuring_tools` (band 3-5, `recall` competency -- a
+  pure lookup, not a `rule`-derived fact). New e2e test `facts_measuringtools_e2e.rs` (3 tests:
+  direct recall, reverse binding, honest abstention on an unshipped tool).
+- `language/onset-rime.adj` (new) -- the FOURTH literacy sub-skill library in the ADJ stdlib,
+  deliberately different in shape from the three prior ones: `word-families.adj` derives RHYMING
+  (RF.K.2.a), `syllable-count.adj` recalls a SYLLABLE COUNT (RF.K.2.b), and `initial-sound.adj`
+  recalls a BEGINNING sound (RF.K.2.d) -- this one recalls how a single-syllable word splits into
+  its ONSET (sound(s) before the vowel) and RIME (the vowel and everything after) as a pure
+  lookup, `onset_rime(word, onset, rime)`, a THREE-column table (the shape
+  `metrology/si-base-units.adj` already established). Quoted verbatim from Reading Rockets'
+  "Tuning In to the Sounds in Words" article, WebFetch-verified TWICE for consistency before
+  writing: "sleep could be broken into /sl/ and /eep/" and "Here are two ways to break up the
+  word blast: Onset (bl) – Rime (ast)". Deliberately scoped to ONLY these two words the cited
+  page splits explicitly -- honestly narrow (mirroring `syllable-count.adj`'s and
+  `initial-sound.adj`'s precedent) rather than inventing a split for an uncited word. Grounds
+  CCSS RF.K.2.c. New manifest objective `adj.literacy.k2.onset_rime` (band K-2, `recall`
+  competency). New e2e test `facts_onsetrime_e2e.rs` (3 tests: direct segmenting recall, reverse
+  blending recall, honest abstention on an unshipped word).
+- `language/phoneme-substitution.adj` (new) -- the FIFTH literacy sub-skill library in the ADJ
+  stdlib, completing coverage of all five named parts of CCSS RF.K.2. Deliberately different in
+  shape from all four prior ones (rhyme derivation RF.K.2.a, syllable count RF.K.2.b, onset/rime
+  RF.K.2.c, initial sound RF.K.2.d) -- this recalls what happens when you SUBSTITUTE one sound in
+  a word for another, grounding RF.K.2.e ("Add or substitute individual sounds in simple,
+  one-syllable words to make new words") as a pure lookup,
+  `phoneme_substitution(original_word, original_sound, new_sound, new_word)`, a FOUR-column
+  table. Quoted verbatim from Reading Rockets' "Phonological and Phonemic Awareness: In Practice"
+  module (the SAME page `syllable-count.adj` already cites, a different section), WebFetch-
+  verified TWICE for consistency before writing: "I can change one sound in a word to form a new
+  word. Watch me. I will change 'make' to 'bake'." and "The first sound in make is /m/. The first
+  sound in bake is /b/." Deliberately scoped to ONLY this ONE substitution the cited page walks
+  through step by step -- honestly narrow (mirroring `onset-rime.adj`'s and `initial-sound.adj`'s
+  precedent) rather than inventing a substitution the source does not demonstrate. New manifest
+  objective `adj.literacy.k2.phoneme_substitution` (band K-2, `recall` competency). New e2e test
+  `facts_phonemesubstitution_e2e.rs` (3 tests: direct recall of the new word, reverse binding of
+  the original word/sound, honest abstention on an untabled substitution).
+- `meteorology/weather-instruments.adj` (new) -- a DIFFERENT "observation and measurement" axis
+  from the already-shipped `chemistry/measuring-tools.adj` (lab tools) -- this one covers
+  weather-OBSERVING instruments. A new `weather_instrument(instrument, quantity)` table names
+  which ONE quantity each of six instruments measures (anemometer->wind_speed,
+  weather_vane->wind_direction, barometer->atmospheric_pressure,
+  thermometer->air_temperature, hygrometer->humidity, rain_gauge->rainfall), quoted verbatim
+  from NOAA's "Build Your Own Weather Station" education page, whose six section headings each
+  name one instrument and the quantity it measures. WebFetch-verified TWICE for consistency
+  before writing. `trust authoritative` -- a primary NOAA (.gov) source, matching the sibling
+  `precipitation-types.adj`/`wind-scale.adj` NOAA sources' tier. Continues diversifying the
+  science lane after a fresh survey of biology food-chain-roles.adj/animal-diets.adj and
+  meteorology precipitation-types.adj/wind-scale.adj again found no clean, uninvented causal
+  pairing (the food-chain-role/diet-category vocabularies don't share a key without asserting an
+  unstated "herbivore IS a consumer" link). Grounds the NGSS science-practice observation/
+  measurement gap. New manifest objective `adj.science.3to5.weather_instruments` (band 3-5,
+  `recall` competency). New e2e test `facts_weatherinstruments_e2e.rs` (3 tests: direct recall,
+  reverse binding, honest abstention on a non-weather instrument).
+- `biology/monarch-life-cycle.adj` (new) -- a genuinely NEW content shape for this loop's science
+  sweep, neither an instrument-measures-quantity table (like `chemistry/measuring-tools.adj`) nor
+  an ordinal-WORD bridge (like the four already-shipped season/planet/moon-phase/mitosis ordinal-
+  position libraries) -- a plain numbered life-cycle-stage recall table, applying the SAME shape
+  `earth-science/water-cycle.adj` already established for a physical-process cycle to a
+  BIOLOGICAL one. A new `monarch_life_stage(stage, order)` table names the position of each of
+  the monarch butterfly's four life stages (egg->1, larva->2, pupa->3, adult->4), quoted verbatim
+  from the USDA Forest Service's "Monarch Butterfly Biology" page, WebFetch-verified TWICE for
+  consistency before writing: "The monarch has four distinct life stages: egg, larva
+  (caterpillar), pupa (chrysalis), and adult." `trust authoritative` -- a primary U.S. government
+  (USDA, .gov) source. Honest abstention on "nymph" (the incomplete-metamorphosis term, e.g. a
+  grasshopper -- not one of the monarch's complete-metamorphosis stages). Grounds NGSS 3-LS1-1
+  ("Develop models to describe that organisms have unique and diverse life cycles"). New manifest
+  objective `adj.science.3to5.monarch_life_cycle` (band 3-5, `recall` competency). New e2e test
+  `facts_monarchlifecycle_e2e.rs` (3 tests: direct recall, reverse binding, honest abstention on
+  "nymph").
+- `language/compound-word-spelling-example.adj` (new) -- the SIXTH literacy sub-skill library,
+  and the FIRST to move beyond CCSS RF.K.2 (all five named parts of which -- rhyming, syllable
+  count, onset/rime, initial sound, phoneme substitution -- are now shipped). Grounds a SPELLING
+  pattern instead of a phonological-awareness one: teaching a beginner to spell multisyllable
+  words is easier when the word is a compound built from two words the learner can already
+  spell. A new `compound_word_spelling_example(word, teaching_use)` table names the four
+  compound words a primary source uses to teach this (catfish, hotdog, playground, yellowtail),
+  quoted verbatim from Reading Rockets' "How Spelling Supports Reading" article, WebFetch-
+  verified TWICE for consistency before writing. `trust consensus`, the same tier as the other
+  Reading Rockets citations already shipped in this directory. Deliberately gives the table a
+  genuine second column (`teaching_use`, a constant label for every row) rather than a bare
+  `columns word` -- an earlier draft with a single-column table was empirically verified in a
+  scratch dir to NOT produce ordinary `recall`/`abstained` query semantics on a fully-ground
+  query (the engine instead falls back to its hypothesis-ranking/adjudication mode), so every
+  table in this stdlib should keep at least two genuine columns even when the second is a
+  constant. Deliberately does NOT cite a specific CCSS standard code: the closest candidates
+  (RF.1.3.e general phonics, L.2.4.d compound-word MEANING prediction) both describe a different
+  skill than what this source supports (spelling ease via compound decomposition, not decoding
+  or meaning), so `standards` stays empty rather than force-citing a mismatched code. Honest
+  abstention on "cupcake" (a real compound word, but not one this source names). New manifest
+  objective `adj.literacy.k2.compound_word_spelling_example` (band K-2, `recall` competency).
+  New e2e test `facts_compoundwordspellingexample_e2e.rs` (3 tests: direct recall, reverse
+  binding of all four example words, honest abstention on an uncited compound).
+- `oceanography/ocean-observing-instruments.adj` (new) -- a THIRD "observation and measurement"
+  axis for the science domain, after `chemistry/measuring-tools.adj` (lab tools) and
+  `meteorology/weather-instruments.adj` (weather-observing instruments) -- this one covers
+  OCEAN-observing instruments. A new `ocean_instrument(instrument, quantity)` table names which
+  ONE quantity each of three instruments measures or detects (tide_gauge -> sea_level,
+  hydrophone -> underwater_sound, sonar -> distance_to_object), quoted verbatim from three
+  DIFFERENT NOAA oceanservice.noaa.gov "facts" pages, WebFetch-verified before writing.
+  `trust authoritative` -- a primary NOAA (.gov) source, the same tier `weather-instruments.adj`'s
+  source earned. UNLIKE `weather-instruments.adj` (six rows sharing ONE source page), this
+  table's three rows each cite a DIFFERENT page -- since the ADJ table grammar carries only one
+  table-level `source`/`locator`/`trust` block (confirmed by reading `weather-instruments.adj`
+  and `word-families.adj` before writing), the table's own citation is the primary/first-listed
+  source (tide-gauge.html) and each other row's own distinct citation is documented in the
+  file's header prose, the same discipline `word-families.adj`'s multi-family extensions
+  established. Deliberately excludes a CTD (which measures MULTIPLE quantities at once --
+  conductivity, temperature, and depth -- not one, so it does not fit this table's
+  one-instrument-one-quantity shape) and a buoy/ocean glider (both 404'd on
+  oceanservice.noaa.gov this session, no citable page found). New manifest objective
+  `adj.science.3to5.ocean_instruments` (band 3-5, `recall` competency, matching
+  measuring-tools.adj's and weather-instruments.adj's band). New e2e test
+  `facts_oceaninstruments_e2e.rs` (3 tests: direct recall, reverse binding, honest abstention on
+  a CTD).
+- `language/silent-e-word.adj` (new) -- the SEVENTH literacy sub-skill library, and the SECOND
+  to move beyond CCSS RF.K.2, following `compound-word-spelling-example.adj`'s precedent into
+  ANOTHER spelling pattern: the "silent e" / "magic e" (VCe) syllable type -- a long vowel
+  spelled with a single letter, followed by a single consonant, followed by a silent "e". A new
+  `silent_e_word(word, syllable_type)` table names the seven example words a primary source
+  uses to teach this (wake, whale, while, yoke, yore, rude, hare), quoted verbatim from Reading
+  Rockets' "Six Syllable Types" article, WebFetch-verified TWICE for consistency before writing.
+  `trust consensus`, the same tier as the other Reading Rockets citations already shipped in
+  this directory. Deliberately does NOT populate the manifest's `standards` field: CCSS RF.1.3.c
+  ("Know final -e and common vowel team conventions for representing long vowel sounds") is a
+  genuinely clean fit for this pattern (confirmed via two independent sources), but every
+  objective in this stdlib so far describes its grounding standard in CHANGELOG/README prose
+  rather than the manifest's `standards` array, so this library follows that same established
+  convention rather than unilaterally breaking it. Honest abstention on "snake" (a real VCe
+  word, but not one this source names). New manifest objective
+  `adj.literacy.k2.silent_e_word` (band K-2, `recall` competency). New e2e test
+  `facts_silentEword_e2e.rs` (3 tests: direct recall, reverse binding of all seven example
+  words, honest abstention on an uncited VCe word).
+- `language/r-controlled-vowel-word.adj` (new) -- the EIGHTH literacy sub-skill library, and the
+  THIRD to move beyond CCSS RF.K.2, following `compound-word-spelling-example.adj`'s and
+  `silent-e-word.adj`'s precedent into a phonics pattern: "r-controlled vowels" (aka "bossy r"),
+  where a vowel followed by "r" no longer makes its expected sound. A new
+  `r_controlled_vowel_word(word, pattern)` table names five example words and the r-controlled
+  digraph in each (barn -> ar, corn -> or, fern -> er, bird -> ir, curl -> ur), quoted verbatim
+  from the University of Florida Literacy Institute (UFLI)'s phonics foundations toolbox: "There
+  are three main r-controlled vowel sounds: the /ar/ sound, as in barn; the /or/ sound, as in
+  corn; and the /er/ sound, as in fern, bird, and curl." WebFetch-verified TWICE for consistency
+  before writing (two independent fetches of the same page). `trust authoritative` -- UFLI is a
+  university literacy research center (University of Florida, .edu), a primary academic source.
+  DESIGN NOTE: the source groups fern/bird/curl under ONE phonetic label ("/er/ sound") despite
+  three different spellings (er/ir/ur) -- `pattern` here is the LITERAL r-controlled digraph
+  objectively present in each word's own spelling, NOT an assertion that the source itself
+  distinguished er/ir/ur as separate categories (it did not), the same discipline
+  `word-families.adj`'s `family` column already established for naming letters-in-the-word
+  rather than a source-stated grouping. Honest abstention on "star" (a real ar-pattern word, but
+  not one this source names). New manifest objective `adj.literacy.k2.r_controlled_vowel_word`
+  (band K-2, `recall` competency). New e2e test `facts_rcontrolledvowelword_e2e.rs` (3 tests:
+  direct recall, reverse binding, honest abstention on an uncited word).
+- `language/fable-moral.adj` (new) -- the NINTH literacy sub-skill library, and the FIRST to
+  ground a whole-TEXT comprehension artifact rather than a word-level phonics/spelling fact: a
+  classic fable's own narrator-stated moral. A new `fable_moral(fable, moral)` table names three
+  fables and their own stated lessons (tortoise_and_the_hare -> "Slow but steady wins the
+  race.", shepherds_boy_and_the_wolf -> "There is no believing a liar, even when he speaks the
+  truth.", boy_and_the_filberts -> "Do not attempt too much at once."), quoted verbatim from
+  George Fyler Townsend's classic English translation of Aesop's Fables, hosted by Project
+  Gutenberg -- a legitimate public-domain literary primary source. `trust authoritative`.
+  RESEARCH DISCIPLINE: of SIX candidate fables originally surveyed on the same page, only these
+  THREE give a clean, unambiguous, narrator-voice closing moral, verified by reading the raw
+  page text directly. The other three -- "The Ants and the Grasshopper", "The Fox and the Crow",
+  and "The Lion and the Mouse" -- were deliberately EXCLUDED after verification found their
+  closing line is a character's spoken dialogue (the ants' taunt, the fox's gloat, the mouse's
+  own words), not the narrator's own stated moral; asserting those as "the fable's moral" the
+  same way the three shipped rows are stated would overclaim what the source actually does.
+  GRAMMAR DISCOVERY: the ADJ query grammar accepts a quoted-string literal as a `table` row
+  VALUE, but NOT as a query argument -- a query can only ground an atom/number or bind a $Var,
+  so "which fable has moral X" is answered by enumerating with `? fable_moral($F, $Moral)` and
+  reading off the match, not by querying with the moral string itself as a ground argument (a
+  new finding for this stdlib, documented in the file's own header for future sentence-valued
+  tables). Honest abstention on "the_fox_and_the_crow". New manifest objective
+  `adj.literacy.k2.fable_moral` (band K-2, `recall` competency). New e2e test
+  `facts_fablemoral_e2e.rs` (3 tests: direct recall, reverse binding of all three fables, honest
+  abstention on a fable whose closing line is dialogue).
+- `language/vocabulary-in-context.adj` (new) -- the TENTH literacy sub-skill library. A new
+  `vocabulary_in_context(word, meaning)` table names three vocabulary words whose meaning a
+  primary source teaches via a worked context-clue example sentence (ornithology ->
+  scientific_study_of_birds, sentence: "People who study birds are experts in ornithology.";
+  frugivorous -> eats_fruit_as_primary_food, sentence: "Frugivorous birds prefer eating fruit to
+  any other kind of food."; inconspicuous -> hidden_or_not_easily_seen, sentence: "Some birds
+  like to build their nests in inconspicuous spots -- high up in the tops of trees, well hidden
+  by leaves."), quoted verbatim from Reading Rockets' "Using Context Clues to Understand Word
+  Meanings" article, `trust consensus` -- the same tier as the other Reading Rockets citations
+  already shipped in this directory. DESIGN NOTE: `meaning` is a short constant-style label
+  rather than a full-sentence definition -- `fable-moral.adj`'s grammar discovery found that a
+  quoted-string literal works as a `table` row VALUE but not as a query ARGUMENT, so using a
+  short atom here (unlike `fable-moral.adj`'s sentence-valued `moral` column) keeps BOTH the
+  direct and reverse queries usable as ordinary ground-argument binding queries. Honest
+  abstention on "arboreal" (a real vocabulary word, but not one this source defines). New
+  manifest objective `adj.literacy.k2.vocabulary_in_context` (band K-2, `recall` competency).
+  New e2e test `facts_vocabularyincontext_e2e.rs` (3 tests: direct recall, reverse binding,
+  honest abstention on an undefined word).
+- `meteorology/cloud-type.adj` (new) -- the ELEVENTH science slice, and a genuinely new
+  "observation and measurement" axis from the already-shipped `weather-instruments.adj` and
+  `ocean-observing-instruments.adj` (instrument -> quantity measured): this table names a cloud
+  TYPE and the weather it indicates, not an instrument at all. A new `cloud_type(cloud,
+  weather_indication)` table names three cloud types (cirrus -> approaching_warm_front,
+  cumulonimbus -> heavy_rain_thunderstorm, stratus -> light_rain_drizzle_or_none), quoted
+  verbatim from the National Weather Service's (Louisville forecast office) "Cloud
+  Classification" education page, `trust authoritative`. WebFetch-verified before writing (note:
+  the related jetstream.noaa.gov domain 403s WebFetch entirely -- weather.gov was used instead,
+  per this stdlib's established workaround). Honest abstention on "altocumulus" (a real cloud
+  type, but not one this source classifies by weather indication). New manifest objective
+  `adj.science.3to5.cloud_type` (band 3-5, `recall` competency, `ngss` coverage root). New e2e
+  test `facts_cloudtype_e2e.rs` (3 tests: direct recall, reverse binding, honest abstention on
+  an untabled cloud).
+- `geology/rock-type.adj` (new) -- the TWELFTH science slice, and a new file in the ALREADY-
+  SHIPPED `geology/` directory (alongside `earth-layers.adj` and `mineral-hardness.adj`). A new
+  `rock_type(rock, formation_process)` table names the three basic classes geologists sort ALL
+  rocks into and HOW each class forms (igneous -> crystallized_molten_rock, sedimentary ->
+  deposited_weathered_material, metamorphic -> heat_and_pressure_transformation). UNLIKE
+  `earth-layers.adj` (four rows sharing one USGS publication), this table's three rows each cite
+  a DIFFERENT USGS FAQ page ("What are igneous/sedimentary/metamorphic rocks?"), so it uses the
+  multi-source pattern `ocean-observing-instruments.adj`/`fable-moral.adj` established: the
+  table-level citation carries the primary (igneous) source, and the other two rows' own
+  distinct citations are documented in the file's header prose. All three quotes WebFetch-
+  verified before writing. `trust authoritative` -- every row's own source page is a primary
+  U.S. government (USGS, .gov) source. Honest abstention on "coal" (a real rock, but not one of
+  the three rock-type classes tabled here). New manifest objective `adj.science.3to5.rock_type`
+  (band 3-5, `recall` competency, `ngss` coverage root). New e2e test `facts_rocktype_e2e.rs`
+  (3 tests: direct recall, reverse binding, honest abstention on an untabled rock).
+- `language/past-tense-ed-sound.adj` (new) -- the ELEVENTH literacy sub-skill library, and a
+  genuinely new phonics pattern beyond CCSS RF.K.2's five parts and the spelling/whole-text/
+  vocabulary slices already shipped: the regular -ed past-tense suffix is spelled the same way
+  every time, but PRONOUNCED one of three different ways depending on the final sound of the
+  base verb. A new `past_tense_ed_sound(word, sound)` table names three worked examples (walked
+  -> t_sound, lived -> d_sound, wanted -> id_sound), quoted verbatim from 7ESL's "Pronunciation
+  of ED: Past Tense Pronunciation for Regular Verbs" article, `trust consensus` -- a general
+  ESL-learning site, the same tier this stdlib already reserves for its other non-.gov language
+  sources (Wikipedia's Greek-alphabet/Morse-code entries). WebFetch-verified before writing.
+  Honest abstention on "played" (also /d/-sounded, but not one of the three tabled example
+  words). New manifest objective `adj.literacy.k2.past_tense_ed_sound` (band K-2, `recall`
+  competency, `ccss.ela` coverage root). New e2e test `facts_pasttenseedsound_e2e.rs` (3 tests:
+  direct recall, reverse binding, honest abstention on an untabled word).
+- `language/plural-s-sound.adj` (new) -- the TWELFTH literacy sub-skill library, a sibling
+  phonics pattern to `past-tense-ed-sound.adj`: the regular plural -s/-es suffix is pronounced
+  one of three different ways depending on the final sound of the singular noun. A new
+  `plural_s_sound(word, sound)` table names three worked examples (hats -> s_sound, dogs ->
+  z_sound, boxes -> iz_sound), quoted verbatim from Speakspeak's "Pronunciation of 's' and 'es'
+  plural endings" article, `trust consensus` -- the same tier as `past-tense-ed-sound.adj`'s
+  7ESL citation. WebFetch-verified before writing. Honest abstention on "cats" (also
+  /s/-sounded, but not one of the three tabled example words). New manifest objective
+  `adj.literacy.k2.plural_s_sound` (band K-2, `recall` competency, `ccss.ela` coverage root).
+  New e2e test `facts_pluralssound_e2e.rs` (3 tests: direct recall, reverse binding, honest
+  abstention on an untabled word). NOTE: this slice replaced a dropped "science 13th slice:
+  water cycle stages" candidate after discovering `earth-science/water-cycle.adj` already
+  tables `water_cycle_stage(stage, step_number)` covering the same ground -- see this
+  directory's `README.md` for a fuller account of the duplication discovered this cycle
+  (also `physics/simple-machines.adj` vs. a dropped teachengineering.org candidate, and
+  `earth-science/rock-types.adj` vs. the already-merged `geology/rock-type.adj`).
+- `biology/rainforest-layer.adj` (new) -- a science slice picked using the new mandatory
+  full-tree-grep-before-scoping discipline (see the entry above): `grep -ril "rainforest"
+  code/specs/data/adj-facts-stdlib/` confirmed ZERO existing coverage before this file was
+  written, unlike moon phases and food chain roles, both confirmed already covered elsewhere in
+  the stdlib during the same research pass. A new `rainforest_layer(layer, description)` table
+  names the four rainforest layers top to bottom and a one-fact description of each (emergent ->
+  tallest_trees_dominate_skyline, canopy -> deep_treetop_vegetation_layer, understory ->
+  dark_humid_layer_below_canopy, forest_floor -> darkest_layer_hard_for_plants_to_grow), quoted
+  verbatim from National Geographic Education's "Rain Forest" entry, `trust consensus` -- a
+  reputable education organization, not primary government, the same tier this stdlib already
+  reserves for its other non-.gov sources. WebFetch-verified before writing (fetched twice, once
+  for the overall page and once specifically to confirm the emergent layer's tree-height
+  sentence verbatim). Honest abstention on "soil_layer" (not one of the four named layers). New
+  manifest objective `adj.science.3to5.rainforest_layer` (band 3-5, `recall` competency, `ngss`
+  coverage root). New e2e test `facts_rainforestlayer_e2e.rs` (3 tests: direct recall, reverse
+  binding, honest abstention on an untabled layer).
+- `language/idiom-meaning.adj` (new) -- the THIRTEENTH literacy sub-skill library, and a
+  genuinely new figurative-language skill beyond CCSS RF.K.2's five parts and the
+  phonics/spelling/whole-text/vocabulary slices already shipped: an idiom's literal words do NOT
+  give its meaning. Picked using the mandatory full-tree-grep-before-scoping discipline --
+  `grep -ril "idiom\|proverb" code/specs/data/adj-facts-stdlib/` confirmed ZERO existing coverage
+  before this file was written. A new `idiom_meaning(idiom, meaning)` table names three common
+  idioms and their meanings (piece_of_cake -> very_easy_to_do, break_the_ice ->
+  start_a_conversation, under_the_weather -> feeling_slightly_ill), quoted verbatim from Oxford
+  International English's "30 Useful English Idiomatic Expressions & Their Meanings" article,
+  `trust consensus` -- the same tier as this stdlib's other non-.gov language sources (7ESL,
+  Speakspeak). WebFetch-verified before writing. Honest abstention on
+  "raining_cats_and_dogs" (a real, well-known idiom, but not one of these three tabled example
+  idioms). New manifest objective `adj.literacy.3to5.idiom_meaning` (band 3-5 -- idioms are
+  typically a CCSS L.3.5.b, grade 3+ skill, unlike most of this stdlib's other K-2 literacy
+  slices -- `recall` competency, `ccss.ela` coverage root). New e2e test
+  `facts_idiommeaning_e2e.rs` (3 tests: direct recall, reverse binding, honest abstention on an
+  untabled idiom).

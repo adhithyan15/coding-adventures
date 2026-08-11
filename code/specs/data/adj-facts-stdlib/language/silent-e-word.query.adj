@@ -1,0 +1,14 @@
+% ============================================================================
+% silent-e-word.query.adj — worked recall over the silent-e-word library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "is this a silent-e
+% word, and what pattern does it follow?" (direct) or "which words follow
+% this pattern?" (reverse) — it states no fact of its own — it only
+% `import`s the grounded table and asks binding queries.
+% ============================================================================
+
+import "silent-e-word.adj"
+
+? silent_e_word(wake, $SyllableType)          % expect vce_long_vowel (direct)
+? silent_e_word($W, vce_long_vowel)           % expect wake, whale, while, yoke, yore, rude, hare (reverse)
+? silent_e_word(snake, $SyllableType)         % expect abstain -- a real VCe word, but not one this source names

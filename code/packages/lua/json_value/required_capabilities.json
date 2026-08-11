@@ -1,1 +1,7 @@
-{"capabilities": []}
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "lua/json_value",
+  "capabilities": [],
+  "justification": "Evaluates and serializes in-memory JSON values over the authority-free installed parser stack; it performs no ambient filesystem, network, clock, entropy, or process access."
+}

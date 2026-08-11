@@ -404,7 +404,8 @@ describe("the real corpus", () => {
     // under every detector: it must scope negation, and it must not count a TA-C*
     // lesson as teaching. Under one that does both, the difference this lesson makes
     // is exactly ூ, and thirteen glyphs used by chapter 7's numbers — ஏ, ஐ, ஒ and the
-    // ten digits ௧-௰ — remain untaught. Ignore negation and the delta becomes four
+    // ten digits ௧-௰ — remained untaught at that point. Chapter 39 then teaches ஒ,
+    // leaving twelve. Ignore negation and the delta becomes four
     // glyphs, because this very lesson prints ஒன்று, ஐந்து and ஏழு in bold inside the
     // sentence saying they are still unreadable; count TA-C* as teaching and the
     // untaught set empties, because chapter 7 bolds those letters while merely using
@@ -414,7 +415,14 @@ describe("the real corpus", () => {
     // remaining runway holds ONE more writing lesson, which TA-W19 now occupies at
     // sequence 1165, last in chapter 38. Those thirteen glyphs cannot be taught
     // inside 38 chapters.
-    expect(report.summary.atomsTaught).toBe(2652);
+    // +8: chapter 39's four lessons introduce 2 atoms each, and all eight are genuine
+    // first introductions. What the chapter does NOT re-teach is the point —
+    // TA-C39-vendum is another dative-subject verb,
+    // after ch32's தெரியும், ch33's புரிகிறது and ch34's பிடிக்கும் (the lesson does
+    // not number the family; ch19's ஆகிறது is described the same way), so it practises
+    // TA-GRAMMAR-DATIVE-SUBJECT-02 at a distance of 90 lessons (index 38 -> 128)
+    // rather than re-teaching it.
+    expect(report.summary.atomsTaught).toBe(2663); // +3: ES-LEX-VOS-01, ES-CULTURE-VOSEO-02 (ES-C03-vos)
     // +2, and it goes UP, which is worth stating plainly. Three of the five new atoms
     // are TA-W09's and nothing follows TA-W09, so they are orphans by construction:
     // PA-YA-01, E-SIGN-02, READ-PEYAR-03. TA-W08's two are revisited by TA-W09.
@@ -453,7 +461,31 @@ describe("the real corpus", () => {
     // atoms in: TA-ETYMON-VIDAI-02 and TA-LEX-VIDAI-01, which were already never
     // revisited and merely became window-measurable. TA-W19's own two are absent from
     // that subset because at index 127 no window is evaluable for them.
-    expect(report.summary.atomsNeverRevisited).toBe(472);
+    // +2 net, and this counter's composition is NOT the same as the defect subset's
+    // above, which is the trap here — both move +2, so a wrong attribution passes.
+    // summary.atomsNeverRevisited counts every taught atom with zero revisits,
+    // regardless of whether any window was evaluable (src/continuity.ts increments it
+    // outside the evaluability guard). Its trade is FIVE in, THREE out:
+    //   IN  TA-GRAMMAR-EVVALAVU-VS-ETHANAI-02, TA-LEX-ORU-01,
+    //       TA-GRAMMAR-ORU-ATTRIBUTIVE-02, and TA-W20's own TA-SCRIPT-O-VOWEL-01 and
+    //       TA-SCRIPT-READ-ONRU-02, which sit at the track's last index.
+    //   OUT TA-SCRIPT-READ-MUUNRU-02 and TA-SCRIPT-UU-SIGN-01, both 0 -> 1 because
+    //       TA-W20 re-reads மூன்று and credits the ூ sign that makes it மூன்று; and
+    //       TA-GRAMMAR-PIDI-02, 0 -> 1, from TA-C39-vendum declaring the shape
+    //       பிடிக்கும் shares with வேண்டும்.
+    // The 422-atom defect subset trades differently: 422 -> 424, three in and PIDI-02
+    // out. Two atoms are absent from the subset for want of an evaluable window —
+    // TA-SCRIPT-O-VOWEL-01 and TA-SCRIPT-READ-ONRU-02, introduced at the last index,
+    // where at + 1 > last. UU-SIGN-01 is absent for a different reason: its R1 window
+    // IS evaluable, but its revisit count is now 1. The ORU atoms are in the subset,
+    // at index 130, where R1 is evaluable and they have no revisit.
+    // The ORU pair is structural rather than an oversight: TA-W20 genuinely re-reads
+    // ஒரு, but a writing lesson may only take other writing lessons as prerequisites
+    // (TA-EXT-003-SCRIPT is inlined at TA-PATH-003, so naming a chapter-39 lesson
+    // would put the prerequisite AFTER its dependent and fail the ordering rule). The
+    // tie is carried by `reviews_of` instead, which does not count as a revisit.
+    // Chapters 40 and 41 are planned to close this.
+    expect(report.summary.atomsNeverRevisited).toBe(474);
     expect(report.summary.neverRevisitedPercent).toBe(18);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
@@ -530,7 +562,14 @@ describe("the real corpus", () => {
     // chapters later: TA-C05-vaazh spelled வாழ் out of வா, and TA-C04-naalai glossed
     // பார்க்கலாம் from பார். Neither word moved; both are now named in romanization,
     // which is what a speaking-first lesson should have been doing anyway.
-    expect(report.summary.forwardReferences).toBe(423);
+    // +1, and it is a measurement improvement rather than new damage. The single new
+    // entry is TA-C18-mani-homophone-time using ஒரு at position 65, 65 lessons before
+    // TA-C39-oru teaches it. That use is not new — ch18 has always printed ஒரு — but
+    // until this chapter no lesson OWNED the word, so the checker had no teacher to
+    // measure the distance against and stayed silent. Naming a teacher is what made
+    // the existing early use visible. It also argues ஒரு belongs earlier than 39,
+    // which the runway did not allow.
+    expect(report.summary.forwardReferences).toBe(424);
 
     // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
     // day as 766 -> 749. The absolute figures drift as main lands lessons; what the
@@ -603,7 +642,13 @@ describe("the real corpus", () => {
     // are the R1 case of the one mechanism described at the R2 pin below: the track
     // was 127 lessons, 126 + 1 = 127, so R1's first position did not exist until this
     // lesson made index 127 exist. Their revisit counts are 0 before and 0 after.
-    expect(report.summary.missedByWindow.R1).toBe(886);
+    // +5. Three are chapter 39's own atoms with nothing after them yet. Two are
+    // TA-W19's — TA-SCRIPT-READ-MUUNRU-02 and TA-SCRIPT-UU-SIGN-01, introduced at 127,
+    // which had NO evaluable window while the track ended at 127 and now have one.
+    // READ-MUUNRU-02 gained a real revisit at the same time (0 -> 1, TA-W20 re-reads
+    // மூன்று beside ஒன்று) and still misses R1, because TA-W20 is 4 lessons later and
+    // R1 stops at 3.
+    expect(report.summary.missedByWindow.R1).toBe(891);
     // +2 net, and the composition is the interesting part: all FIVE new atoms miss R2
     // as well, offset by THREE pre-existing atoms that TA-W09 pulls back into it.
     // TA-W09 sits 12 lessons after TA-W06 and 8 after TA-W07, both inside R2's 5-15
@@ -671,7 +716,33 @@ describe("the real corpus", () => {
     // For every atom that ENTERS any of the four windows the revisit count is
     // identical before and after, so no existing reinforcement was broken. Every atom
     // that LEAVES gained a real revisit. R3 and R4 are not pinned here.
-    expect(report.summary.missedByWindow.R2).toBe(1808);
+    // (Scope: that invariant is TA-W19's. Chapter 39 breaks it in the benign
+    // direction — READ-MUUNRU-02 and UU-SIGN-01 enter R1 with revisits 0 -> 1, having
+    // GAINED one. See the chapter-39 R1 note above.)
+    // +8, and every one of them is the same measurability mechanism, now with a wider
+    // mouth: the Tamil track grew 128 -> 132, so a window becomes evaluable for exactly
+    // those atoms whose `introducedAt + window.from` lands in (127, 131]. All eight fit
+    // — four two-atom pairs, at 126 (VIDAI, 126+5=131), 125 (SUGAM), 124
+    // (UDAMBU) and 123 (IVAR-EN-NANBAR): two atoms each, eight in all. Not one of
+    // their revisit counts changed.
+    // The same arithmetic, unpinned here: R4 243 -> 247, and R3 does not move at all —
+    // 1309 -> 1309, seven in and seven out. That is the whole argument for declaring
+    // what a sentence actually re-uses. TA-C39-vendum names தெரியும், புரிகிறது and
+    // பிடிக்கும் in one clause and credits all six of their atoms:
+    //   TA-LEX-PIDI-01 and TA-GRAMMAR-PIDI-02 (at 108) land a revisit at exactly
+    //   distance 20, R3's first position, so neither enters;
+    //   TA-LEX-PURI-01 and TA-GRAMMAR-PURI-02 (at 100) and TA-GRAMMAR-TERI-02 (at 98)
+    //   leave R3 outright and, missing no other window either, drop off the defect
+    //   list entirely.
+    // The same clause with the verbs merely named would have read identically on the
+    // page and left R3 five windows worse.
+    // Against that, four atoms LEAVE R3 and three leave R4, and those are real gains
+    // this chapter earned by declaring what it actually re-uses: EE-SIGN-01 1 -> 2,
+    // INDEPENDENT-VOWEL-E-01 2 -> 3, NGA-LLA-01 2 -> 3 and TTA-01 1 -> 2 out of R3;
+    // GRAMMAR-DATIVE-SUBJECT-02 2 -> 3, LEX-DATIVE-SUBJECT-01 3 -> 4 and
+    // LEX-NUMBERS-1-5-01 2 -> 3 out of R4. Chapter 6's dative and chapter 7's numbers
+    // are reached at R4 distance for the first time.
+    expect(report.summary.missedByWindow.R2).toBe(1816);
   });
 
   it("shows what a declared reading order was worth", () => {
@@ -700,7 +771,7 @@ describe("the real corpus", () => {
       // Chapter 16 replaces three legacy lessons with eight bounded steps;
       // Chapter 17 replaces four legacy lessons with eight bounded steps.
       // Chapter 18 replaces ten legacy lessons with nine bounded steps.
-      lessonCount: 188,
+      lessonCount: 189, // +1: ES-C03-vos
       lessonsWithoutSequence: 0,
       forwardPrerequisites: 0,
       // Chapters 9, 10, and 13 each add nine atoms, Chapter 11 adds eleven, and
@@ -710,7 +781,7 @@ describe("the real corpus", () => {
       // Chapter 16 adds twelve atoms without adding an unrevisited orphan.
       // Chapter 17 does the same across its future and conditional ramp.
       // Chapter 18 does the same across its singular subjunctive ramp.
-      atomsTaught: 384,
+      atomsTaught: 387,
       atomsNeverRevisited: 65,
     });
   });

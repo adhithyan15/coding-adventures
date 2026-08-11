@@ -2,6 +2,42 @@
 
 All notable changes to this crate are documented here.
 
+## 0.24.5 - 2026-08-10 — fix: `__gc_collect_minor_precise` now enforces `auto_minor` attestation
+
+- **Security-review finding, hardened here.** `__gc_collect_minor_precise` — a
+  *direct*, unconditional minor collection — previously had no `auto_minor`
+  attestation check of its own: only `__gc_safepoint`'s automatic dispatch path
+  checked it (via `FlatHeap::should_collect_minor`). A minor collection's
+  correctness depends entirely on the remembered set being complete; calling this
+  entry point directly (as `0.24.4`'s new `__twig_gc_collect_minor_precise` alias
+  does) bypassed that gate entirely — nothing but a doc comment's own framing
+  ("the caller takes on the obligation by calling it at all") stopped an
+  un-barrier-verified embedder from freeing a still-referenced young object, a real
+  use-after-free.
+- **Fix: the check now lives at `__gc_collect_minor_precise` itself** — the one
+  shared entry point every caller of an unconditional minor collect goes through,
+  whether that's `__gc_safepoint`'s already-attested internal dispatch or a direct
+  caller. Unattested, the function is a safe no-op (collects nothing, returns `0`)
+  — bias-to-leak, the same graceful degradation every other policy gate in this
+  crate uses. This is the same "one place this decision lives" pattern
+  `gc-core`'s own `should_collect`/`should_collect_minor` already use — future
+  direct callers can't add a new bypass by forgetting to check.
+- **New `__twig_gc_set_auto_minor` alias** → `__gc_set_auto_minor`, so the same
+  test infrastructure that drives `__twig_gc_collect_minor_precise` can also
+  attest before calling it.
+- Fixed the one existing test that called `__gc_collect_minor_precise` directly
+  without attesting (`minor_precise_collect_keeps_live_local_and_retains_old`) —
+  added the attestation call; confirmed this was the only affected caller in the
+  crate.
+- Verification: `cargo build`/`test` clean (41 lib tests, unchanged — the fix
+  itself needed no new unit test since the existing test now exercises the
+  attested path; `iir-to-llvm`'s and `lang-aot`'s own test suites, which also
+  exercise this function, both updated and passing — see those crates'
+  changelogs); `cargo clippy --all-targets -- -D warnings` clean;
+  `cargo +nightly miri test -p gc-core-capi --lib precise_walk` clean (9/9,
+  unaffected by this change but re-verified); full-crate `cargo +nightly miri
+  test -p gc-core` clean (158 passed, 2 ignored, unaffected).
+
 ## 0.24.4 - 2026-08-10 — new `twig_compat` aliases for the LLVM write-barrier follow-up
 
 - **`__twig_gc_write_barrier(parent, child)`** → [`__gc_write_barrier`]. Unlike every

@@ -170,8 +170,9 @@ in font units, and `ductusview.ts` flips them together with exactly **one**
 sitting upside down on a correct letter.
 
 **All eleven starter Tamil letters — அ, ஆ, இ, க, ம, வ, ல, ற, ன, ண, and ந —,
-all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —, and Urdu
-independent ا, ج, ر, س, ش, ک, ل, م, ن, ہ, and ی have authored pen paths today.**
+all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —, all
+thirteen Urdu starter entries — ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, ی, and ے —,
+and Arabic ا and ب have authored pen paths today.**
 `DUCTUS` admits no letter without a citation
 for its stroke order, and hand-drawing a letter is forbidden
 outright (a subtly wrong Tamil ண looks perfect to exactly the audience that
@@ -261,8 +262,47 @@ Naskh. Urdu ی adds a two-frame Chapter-4 filmstrip: the pen starts at the upper
 right, descends through the independent S curve, then stays down while it sweeps
 left around the below-baseline bowl to its rising tip. The source note preserves
 the two dots as an initial/medial feature that does not belong to independent
-chhoṭī ye while the zero-lift learner path follows Noto Naskh. The runtime resolves
-each cited path back to the owning script and lazily loads that script's font,
+chhoṭī ye while the zero-lift learner path follows Noto Naskh. Urdu ں adds a
+one-frame Chapter-6 filmstrip: the independent dotless bowl sweeps
+right-to-left below the baseline in the same zero-lift run as ن. The source note
+preserves the initial/medial ordinary-nūn forms, and Noto Naskh verifies that
+U+06BA exactly shares U+0646's body contour with the dot removed. Urdu ے then
+completes the starter inventory with a three-frame Chapter-4 filmstrip: its
+upper-right descent sweeps left across the broad bowl, curls back underneath at
+the far left, and continues right along the lower fold without lifting. The
+source note preserves the distinct initial/medial tooth and independent/final
+sound role while the learner path follows Noto Naskh's folded contour.
+Arabic ا then adds its own one-frame filmstrip from the University of Oregon's
+*Introduction to Arabic* video: independent alif descends top-to-bottom in one
+continuous 00:05–00:07 movement with no lift. The adjacent one-way-connector
+lesson context remains explicit, and script-aware lookup keeps the Arabic source
+separate from the Persian and Urdu records while all three paths are checked
+against the same vendored Noto Naskh outline. Arabic ب adds the adjacent
+two-frame video demonstration: its shallow bowl sweeps continuously from the
+upper-right tip to the turned-up left tip, then one lift precedes the dot below.
+The two-way-connector context stays explicit, while script-aware lookup keeps
+its Arabic source separate from Persian ب and both learner paths stay on the
+same vendored Noto Naskh outline. Arabic ت then adds a three-frame path from the
+book's dedicated ب/ت/ث page. Its Taa clip opens with the bowl already complete,
+so the learner path cites the page's separately demonstrated Baa body for that
+right-to-left sweep, then follows Taa's left and right upper dots as two
+individually lifted strokes. The evidence split, two-way-connector context, and
+Arabic-scoped provenance stay explicit while the path fits the same Noto Naskh
+outline independently of Persian ت. The page's next link is labeled ث, but its
+video visibly writes another two-dot ت; the audit records that source mismatch
+and leaves ث on the conventional fallback. Arabic ج therefore becomes the next
+verified path: its dedicated clip draws the short upper head left-to-right,
+continues down and around the bowl in the same pen-down run, then lifts once for
+the dot below. The resulting three-frame filmstrip stays on the isolated Noto
+Naskh outline, keeps the lesson's two-way-connector context, and remains
+script-scoped separately from Urdu's dot-first ج. The same page does not link
+Haa in its body, but its WordPress attachment ledger exposes `Haa.mov`. That
+clip opens while **ح**'s short left stem is underway, finishes the descender,
+then lifts once and restarts near its top before sweeping continuously around
+the dotless bowl. Its three-frame filmstrip keeps that stem-first evidence
+distinct from Jeem's body-first order while fitting the isolated Noto Naskh
+outline. The runtime
+resolves each cited path back to the owning script and lazily loads that script's font,
 while Tamil continues to use Noto Sans Tamil. Unverified letters still
 fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
 and it needs a cited source per letter.

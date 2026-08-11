@@ -13,7 +13,16 @@ layout TaskApp {
     // ── RAIL ────────────────────────────────────────────────────────────────
     Column [ rail ] {
       Row [ brand ] {
-        Box [ brand-mark ] { }
+        // The bridge arc (task-app-icon-assets-v1.md) — two upright posts
+        // joined by an arc, user-picked from a proposed shortlist. All three
+        // pieces are independently positioned inside a Stack (position:
+        // relative), each a static Box (no data, so nothing here needed the
+        // UI36 background extension the ring did).
+        Stack [ brand-mark ] {
+          Box [ brand-post-left ] { }
+          Box [ brand-post-right ] { }
+          Box [ brand-arc ] { }
+        }
         Text [ brand-name ] ( content : "Trestle" )
       }
 
@@ -40,13 +49,62 @@ layout TaskApp {
           Row [ subline ] {
             Text [ summary ] ( content : slot: summary )
             // The engine's own verdict, coloured by tone: a warning reads red.
+            // The dot (task-app-icon-assets-v1.md) is `background: currentColor`
+            // in mostyle, so it always matches whichever branch's text colour —
+            // no separate warn/ok dot styling to keep in sync.
             If ( when: slot: status-warn ) {
-              Text [ pill-warn ] ( content : slot: status-label )
+              Row [ pill-warn ] {
+                Box [ pill-dot-warn ] { }
+                Text [ pill-warn-label ] ( content : slot: status-label )
+              }
             }
             Else {
-              Text [ pill-ok ] ( content : slot: status-label )
+              Row [ pill-ok ] {
+                Box [ pill-dot-ok ] { }
+                Text [ pill-ok-label ] ( content : slot: status-label )
+              }
             }
           }
+        }
+
+        // The project-progress ring (task-app-icon-assets-v1.md) — a donut via
+        // one filled circle (its background bound to the host-computed
+        // conic-gradient, UI36) with a smaller same-surface-colour circle
+        // stacked on top to punch the hole. No SVG.
+        Row [ ring-wrap ] {
+          Stack [ ring-circle ] {
+            Box [ ring-fill ] ( background : slot: ring-gradient )
+            Box [ ring-hole ] { }
+          }
+          Column [ ring-caption ] {
+            Text [ ring-pct ] ( content : slot: ring-percent )
+            Text [ ring-label ] ( content : "complete" )
+          }
+        }
+
+        // The theme toggle (task-app-icon-assets-v1.md) — see `theme-is-dark`'s
+        // doc comment in TaskApp.mil. `HostButton` has no way to render a
+        // child (only its flat `label`, per mosaic-emit-react's
+        // `host_button_label_body` — a real kernel gap, not something this
+        // slice works around by inventing one) and no `a11y-label`-style prop
+        // either, so the accessible name has to be the `label` text itself
+        // — kept real (a screen reader announces it), just visually hidden
+        // (`color: transparent` in the .msl part; the button's own box stays
+        // its full clickable size, only the text glyphs vanish). The crescent
+        // (an inset box-shadow cut into a filled circle) or plain filled sun
+        // is drawn entirely by the button's own background/box-shadow — no
+        // SVG, no more `position: fixed` button living outside this component.
+        If ( when: slot: theme-is-dark ) {
+          HostButton [ theme-toggle-sun ] (
+            label : "Switch to the light theme" ,
+            onClick : emit: onToggleTheme
+          )
+        }
+        Else {
+          HostButton [ theme-toggle-moon ] (
+            label : "Switch to the dark theme" ,
+            onClick : emit: onToggleTheme
+          )
         }
 
         // Flips the active project's complexity tier — see
@@ -346,6 +404,14 @@ layout TaskApp {
         Else {
           Column [ list-wrap ] {
             Row [ composer ] {
+              // The dashed-box plus mark ahead of the inputs — decoration, not a
+              // button (the mock's own `.composer .plus` is `aria-hidden`); the
+              // real "add" action is the `add-btn` below. Two crossed bars in a
+              // Stack, no SVG (task-app-icon-assets-v1.md).
+              Stack [ composer-plus ] {
+                Box [ plus-bar-h ] { }
+                Box [ plus-bar-v ] { }
+              }
               HostInput [ name-input ] (
                 value : slot: new-task-name ,
                 placeholder : "What needs doing?" ,
@@ -363,9 +429,17 @@ layout TaskApp {
               For ( each: slot: task-rows , as: row , index: i ) {
                 // A group heading, present only on the row that opens a group — the
                 // engine decides the grouping, so the layout just prints the label
-                // where it is handed one.
+                // where it is handed one. The count badge (row[14],
+                // task-app-icon-assets-v1.md) is co-present by construction but
+                // still gated by its own If, matching row[10]/row[11]'s discipline
+                // rather than assuming the pairing.
                 If ( when: ( row[9] ) ) {
-                  Text [ group-head ] ( content : ( row[9] ) )
+                  Row [ group-head-row ] {
+                    Text [ group-head ] ( content : ( row[9] ) )
+                    If ( when: ( row[14] ) ) {
+                      Text [ group-count ] ( content : ( row[14] ) )
+                    }
+                  }
                 }
                 Column [ task-card ] {
                   Row [ task-row ] {

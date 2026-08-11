@@ -21,8 +21,8 @@ exact upstream commits used for the latest completed audit.
 
 ## Prioritized Queue
 
-The 2026-08-09 upstream audit at WPT
-`54f8f933629e7c010ae98a246729af01f8abcda5` and html5lib-tests
+The 2026-08-10 upstream audit at WPT
+`f3d30c116e82b06f72831f27b7fe94a2f8114030` and html5lib-tests
 `224991ec10db04f056a89eed8b0bd8695fd2950e` covered all 1,934 WPT
 tree-construction cases and all 6,806 html5lib tokenizer cases with zero missing
 signatures and zero normalized skips. DOM output is complete, but diagnostic
@@ -110,6 +110,42 @@ Prioritized work items:
    parse error before foster parenting, matching WPT `tests7.dat` and
    `webkit02.dat` evidence while preserving the specialized hidden-input path
    and leaving inputs inside cells quiet.
+   `select` start tags processed directly in table structure now report the
+   general in-table parse error before foster parenting, matching WPT
+   `tests10.dat`, `tests17.dat`, `tests18.dat`, and `webkit01.dat` evidence while
+   leaving selects outside tables and inside cells quiet.
+   Generic paragraph-boundary, `br`, `p`, and `plaintext` start tags processed
+   directly in table structure now report the general in-table parse error
+   before foster parenting, matching WPT `tests8.dat`, `tricky01.dat`,
+   `tests18.dat`, and `template.dat` evidence while leaving the same starts
+   outside tables and inside cells quiet.
+   `li` start tags processed in table foster-parenting state now report the
+   general in-table parse error for both a direct table-structure start and a
+   repeated start whose parent is already fostered before the table, matching
+   WPT `tests8.dat` while leaving list items outside tables and inside cells
+   quiet.
+   `img` start tags processed directly in table structure now report the
+   general in-table parse error and foster before the table, including the
+   specialized center/font reconstruction path evidenced by WPT
+   `tricky01.dat`, while leaving images outside tables and inside cells quiet.
+   Generic `div` and `span` end tags processed while table foster parenting is
+   active now report the general in-table parse error, matching WPT
+   `tests8.dat` evidence while leaving the same endings outside tables and
+   inside cells quiet.
+   `center` end tags processed while table foster parenting is active now
+   report the general in-table parse error alongside non-current end-tag
+   recovery, matching WPT `tricky01.dat` while leaving centers outside tables
+   and inside cells quiet.
+   EOF reached while table structure or foster parenting remains active now
+   reports the dedicated table-mode parse error instead of the broader
+   unclosed-elements diagnostic, matching WPT's `eof-in-table` evidence while
+   leaving closed tables, open cells, and closed table fragments on their
+   existing paths.
+   EOF reached with authored open templates now reports one template-mode
+   parse error for each open template before evaluating the residual insertion
+   mode, matching the focused `template.dat` EOF cases across ordinary,
+   nested, table, select, and text-mode contexts. Closed templates and the
+   synthetic template fragment context remain quiet.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases

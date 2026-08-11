@@ -223,10 +223,50 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   upper right and keep the dotless S-shaped body and below-baseline bowl in one
   continuous sweep to the rising left tip. The learner path preserves the
   source's two dots as an initial/medial feature rather than inventing lifted
-  marks on the independent form.
-  The remaining **197** prose part orders across eight scripts (`arabic` 21,
+  marks on the independent form. Urdu **ں** returns to Chapter 6: both
+  independent nūn-e ġhunna animations keep the same right-to-left,
+  below-baseline bowl as **ن** in one zero-lift run. The prose identifies final
+  and independent nūn-e ġhunna as nūn without its dot, while the initial and
+  medial forms remain ordinary nūn; Noto Naskh's U+06BA contour exactly matches
+  the U+0646 body with that dot removed. Urdu **ے** then completes the starter
+  inventory from Chapter 4: both independent baṛī ye animations descend from
+  the upper right, sweep left across the broad bowl, curl back underneath at
+  the far left, and continue right along the lower fold in one zero-lift run.
+  The prose's initial/medial tooth and independent/final sound distinctions
+  remain explicit while the learner path follows Noto Naskh's folded contour.
+  Arabic **ا** then opens the smallest remaining starter inventory from the
+  University of Oregon's *Introduction to Arabic* video: the independent alif
+  descends top-to-bottom in one uninterrupted 00:05–00:07 movement. Its
+  zero-lift learner path stays on the isolated Noto Naskh outline, while a
+  script-scoped key keeps its Arabic source distinct from Persian and Urdu ا;
+  the adjacent lesson's one-way-connector label and printed final form remain
+  explicit. The page's adjacent **ب** video then starts at the upper-right tip,
+  sweeps continuously right-to-left through the shallow bowl, turns up at the
+  left tip, and lifts once for the dot below. Its two-frame learner path stays
+  on the isolated Noto Naskh outline, while Arabic-scoped provenance remains
+  distinct from Persian ب and the lesson's two-way-connector context remains
+  explicit. The later **ت** clip opens with that shared bowl already complete,
+  then places the left and right dots above as two separate strokes. Its
+  three-frame learner path therefore cites the page's Baa demonstration for the
+  independently shown bowl and the Taa clip for the two lifted dots instead of
+  inferring a hidden body motion. Arabic-scoped provenance remains distinct from
+  Persian ت and the two-way-connector context stays explicit. The page's next
+  link is labeled **ث**, but the underlying `taa.mp4` is another Taa lesson: its
+  first form has only two upper dots, so ث remains unverified instead of gaining
+  an invented third-dot order. The next viable **ج** video draws the short upper
+  head left-to-right, continues down and around the bowl without lifting, then
+  lifts once for the dot below. Its three-frame path preserves the lesson's
+  two-way-connector context, Arabic-scoped provenance, and the deliberate
+  contrast with Urdu's dot-first ج while following the isolated Noto Naskh
+  outline. The page body does not link Haa, but its WordPress attachment ledger
+  exposes `Haa.mov`. That clip opens while **ح**'s short left stem is already
+  underway, visibly lengthens it downward through 00:00.15, then lifts once and
+  restarts near its top at 00:00.32. The second run sweeps down-right and around
+  the dotless bowl through 00:00.82. Its three-frame path therefore preserves a
+  source-specific stem-first order instead of copying Jeem's body-first motion.
+  The remaining **190** prose part orders across seven scripts (`arabic` 16,
   `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 22,
-  `japanese` 34, `urdu-nastaliq` 2) are explicitly **unverified for pen lifts**.
+  `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
   verified claim has the same cited, font-checked path. That closes `HL-C19`;

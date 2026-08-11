@@ -8,6 +8,10 @@
 //! collector, exactly like `llvm_gc_completion.rs` — through the exact scenario
 //! the barrier exists for:
 //!
+//! 0. Attest via `gc_set_auto_minor(1)` — `gc_collect_minor_precise` is a safe
+//!    no-op without this (a later security-review hardening of this same
+//!    follow-up); this module's own `field_store` below is what makes the
+//!    attestation genuinely true.
 //! 1. Allocate `parent` and run one minor collection with it rooted on the
 //!    stack. It survives, and — `gc_core::flat_heap::DEFAULT_TENURE_AGE` is `1`
 //!    — tenures to **old** on that very first survived cycle.
@@ -63,6 +67,16 @@ fn write_barrier_module() -> IIRModule {
         vec![],
         "i64",
         vec![
+            // Attest before anything else: `gc_collect_minor_precise` is a safe
+            // no-op without this (security-review finding -- see that builtin's
+            // own doc). This module's own field_store is what makes the
+            // attestation genuinely true, not just asserted.
+            IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![Operand::Var("gc_set_auto_minor".into()), Operand::Int(1)],
+                "void",
+            ),
             IIRInstr::new("alloc", Some("parent".into()), vec![], "ref<LispyPair>"),
             // First minor collection: `parent` is referenced again below, so it
             // must be kept live (and therefore stack-discoverable) across this

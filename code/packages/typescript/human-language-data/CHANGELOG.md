@@ -4,6 +4,545 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - source-verified Arabic independent haa (HL-C09AM)
+
+- Resolve the chapter's unlinked `Haa.mov` through its WordPress attachment
+  ledger and verify two independent pen-down runs for **ح**.
+- Preserve the clip's visible stem-first order: finish the short left descender,
+  lift once, then restart near its top and sweep continuously around the dotless
+  bowl instead of inheriting adjacent Jeem's motion.
+- Keep two-way-connector context and Arabic-scoped Noto Naskh provenance while
+  reducing the measured HL-C09 debt to 190 entries; Arabic has 16 outstanding.
+
+### Added - source-verified Arabic independent jeem (HL-C09AL)
+
+- Record HL-C09AK's source defect: the page's link labeled Thaa plays another
+  two-dot Taa lesson, so **ث** remains conventional rather than gaining an
+  unsupported third-dot order or lift count.
+- Reprioritize to the next viable **ج** video and verify its independent body
+  first: the short upper head travels left-to-right, continues down and around
+  the bowl without lifting, then one lift precedes the dot below.
+- Preserve two-way-connector context, Arabic provenance independently of Urdu's
+  dot-first ج, and reduce the measured HL-C09 debt to 191 entries across seven
+  scripts; Arabic remains the smallest inventory with 17 entries outstanding.
+
+### Added - source-verified Arabic independent taa (HL-C09AJ)
+
+- Verify the independent **ت** body from the University of Oregon page's Baa
+  demonstration and its left-then-right upper dots from the dedicated Taa clip.
+- Record the evidence split explicitly because Taa opens with the shared bowl
+  already complete; preserve two separately lifted dot strokes, the lesson's
+  two-way-connector context, and Arabic provenance independently of Persian ت.
+- Reduce the measured HL-C09 debt to 192 entries across seven scripts; Arabic
+  remains the smallest inventory with 18 entries outstanding.
+
+### Added - source-verified Arabic independent baa (HL-C09AI)
+
+- Verify independent **ب** from the University of Oregon's adjacent video as a
+  continuous right-to-left bowl followed by one lift and the dot below.
+- Preserve the lesson's two-way-connector context while attaching the exact
+  citation and lift count to the canonical Arabic row, independently of the
+  Persian record for the same Unicode glyph.
+- Reduce the measured HL-C09 debt to 193 entries across seven scripts; Arabic
+  remains the smallest inventory with 19 entries outstanding.
+
+### Added - source-verified Arabic independent alif (HL-C09AH)
+
+- Verify independent **ا** from the University of Oregon's *Introduction to
+  Arabic* video as one continuous top-to-bottom stroke with zero lifts.
+- Preserve the lesson's one-way-connector context while attaching the exact
+  citation and lift count to the canonical Arabic row, independently of the
+  Persian and Urdu records for the same Unicode glyph.
+- Reduce the measured HL-C09 debt to 194 entries across seven scripts; Arabic
+  remains the smallest inventory with 20 entries outstanding.
+
+### Added - the irregular and stem-changing overlays (HL-C91)
+
+HL10 section 5.1 sized the Spanish verb system at roughly 630 cells. HL-C82
+shipped the 231 regular ones; this adds the **402 overlays**, for **633 total**.
+The original estimate holds.
+
+    stem-change  e-ie 36 · o-ue 32 · e-i 20 · u-ue 4
+    strong preterite 90 · short stem 144 · irregular subjunctive 36
+    irregular imperfect 18 · irregular participle 12 · go-club 10
+
+**They are a separate list, and that is pedagogy rather than tidiness.** A
+learner never meets "the irregular verbs" as a category. They meet the regular
+row, and then the one verb that breaks it, in frequency order, one cell at a
+time. So every overlay's prerequisite is the regular cell it deviates from:
+`tengo` hangs off `ES-CELL-IND-PRES-1SG-CONJ2`. The DAG gains depth, nothing
+becomes reachable earlier, and an irregular is always taught against a pattern
+the learner already holds.
+
+Three shapes are pinned by test because losing them would flatten the model back
+into "this verb is irregular":
+
+- **The boot.** A stem change covers the singular and the third plural only; the
+  two plural persons keep the regular stem. Four cells per verb, not six.
+- **One weld, twice.** A shortened future stem serves the conditional as well, so
+  a verb like *tener* owns twelve cells but one thing to learn.
+- **Three imperfects.** The entire language has three irregular imperfects, which
+  is why HL10 places that tense immediately after the preterite as a rest.
+
+The regular inventory is byte-identical to before -- verified against `HEAD`, not
+asserted -- so every HL-C82 pin still measures what it measured.
+
+`BUILD` already gates generator drift with `--check`; the generator now also
+refuses any overlay whose `deviatesFrom` is not a real regular cell, and any
+duplicate overlay id.
+
+### Added - Urdu baṛī ye completes the starter ductus inventory (HL-C09AG)
+
+- Verify independent **ے** from Northwestern's *Zer o Zabar* calligraphic and
+  handwriting animations as one zero-lift folded bowl: upper-right descent,
+  leftward sweep, far-left curl, then a rightward lower fold.
+- Preserve the source's independent/final sound role and its distinct
+  initial/medial be-series tooth while attaching the exact citation and lift
+  count to the canonical Urdu script row.
+- Reduce the measured HL-C09 debt to 195 entries across seven scripts; Urdu's
+  thirteen-entry starter inventory is now fully source-verified.
+
+### Fixed - a report that its own subject could edit (HL-C90)
+
+Every gate in this package interpolates author-written strings into lines
+written to stdout: lesson ids, node ids, root slugs, finding messages. A lesson
+id carrying an ANSI escape rewrites its own line in a terminal, so a crafted id
+could erase the very defect line a reviewer is reading to decide whether the
+corpus is sound.
+
+These reports exist to make problems visible. A report that can be edited by its
+subject does not.
+
+`stripControlCharacters` now guards **nineteen interpolations** across
+`report.ts`, `strands.ts`, `grammar-cells.ts`, `root-ledger.ts`, `info-dump.ts`
+and `metalanguage.ts` -- every place a corpus-derived string reaches a report
+line. Control characters are removed rather than escaped: the reports
+are read by humans, not parsed, so a visible `\u001b` adds noise without adding
+information. Tab and newline survive -- they are ordinary layout, and the render
+helpers control their own line breaks.
+
+Found by the security review of HL-C80 and filed whole rather than fixed halfway
+inside an unrelated PR, because the pattern was package-wide from the start.
+
+The tests build their control characters with `String.fromCharCode` rather than
+writing literals, for two reasons learned in this session: a literal ESC in a
+source file is invisible to a reviewer, and this repository has already had
+non-ASCII source literals silently mangled on write.
+
+### Added - the metalanguage ramp (HL-C89)
+
+The hidden prerequisite of every language textbook: it assumes the reader
+already knows grammar *vocabulary*. "The first-person singular present
+indicative of a regular -ar verb" spends six technical terms on one form, and a
+beginner who never studied grammar understands none of them. The book is gentle
+about Spanish and brutal about English, and nobody notices, because the author
+has known those words since school.
+
+`core/metalanguage.json` makes it a ramp: **54 terms**, each carrying the thing
+the learner must already be able to DO before the term is named. `verb` arrives
+once *soy*, *estoy* and one present form are in use. `mood` waits for block D of
+the subjunctive arc, twenty-four lessons in.
+
+**`plainAlternative` is the point.** A rule that only forbids is a rule authors
+route around, so every term carries what a lesson must say *instead* until the
+term is earned -- "a doing word" for verb, "the plain form, the one in a
+dictionary" for infinitive, "whether you are asserting or wanting" for mood. The
+gate can tell an author what to write, not merely what not to.
+
+The first measurement: **2,289 technical uses across 1,161 lessons**, led by
+`verb` (795 lessons), `noun` (398), `regular` (109), `tense` (109), `pronoun`
+(102), `article` (91). Nothing anywhere introduces any of them.
+
+**Two numbers, deliberately.** The raw total is 7,738, but `word` alone appears
+in 1,555 lessons and needs no introduction at all. A measurement that does not
+separate ordinary English from technical vocabulary produces one enormous number
+that is identical for every corpus and useless to every author -- the same
+cry-wolf failure the info-dump gate avoided by flagging shape rather than size.
+So terms carry `technical`, the total says how pervasive the assumption is, and
+the technical count says what to fix first. `noun`, `verb` and `adjective` count
+as technical on purpose: the premise is a reader who never studied grammar, and
+for them "a doing word" lands and "verb" does not.
+
+### Changed - HL-C89's scope, corrected by measuring before building
+
+HL10 section 7.4 also asks for a banned-word lint -- no *simply*, *just*,
+*obviously*. Measured first, and it is nearly a no-op: a naive denylist flags
+**535 of 1,694** lessons (`just` 359, `simply` 184), narrowing to genuinely
+dismissive senses drops it to **23**, and reading those, most are still innocent
+-- "*Desde luego* means 'of course'" is teaching the phrase, not talking down to
+the reader. The corpus's prose is already kind. Building that half first would
+have produced a gate nobody needed.
+
+
+### Added - the info-dump gate, and what it found (HL-C84)
+
+The owner's rule is one sentence: "will not info dump ever". This makes it a
+measurement.
+
+**The prose is not the problem.** Scanning all 1,694 lessons for rule-statement
+shapes -- "X is used for...", "X always takes...", "there are four kinds of X" --
+turns up **17 lessons**. Seventeen. HL09 called the writing "as well built as
+anything commercial" and the corpus agrees.
+
+**The info dump lives in tables**, and in one specific shape:
+
+    70 lessons carry a paradigm-shaped table -- a grid whose first column walks
+    a list of grammatical persons -- and 18 of those are FULL grids of five or
+    more rows. FR-C05-parler, GE-C05-wohnen and ES-C17-practice each present a
+    complete six-person conjugation at once.
+
+That is exactly the artifact HL10 section 5.3 forbids: six new forms, one new
+concept, no retrieval, and an implicit claim that the learner absorbs them by
+staring. It is also the single most universal convention in language publishing,
+which is why it needs a gate rather than a style note -- nobody writing one
+thinks they are doing anything unusual.
+
+**Shape, not size.** 470 tables in the corpus have three or more data rows and
+most are perfectly good: a vocabulary recap, a regional comparison, a list of
+labelled facts. Flagging all 470 would bury the 70 that matter and teach authors
+that the gate cries wolf. The signal is a first column that walks a paradigm,
+because that is a table presenting N grammar cells where the budget allows one.
+
+`PERSON_LABELS` is a census of what the corpus's own tables put in that column,
+per track, covering the six Latin-script tracks that use them today. A track
+absent from the map is never flagged -- honest rather than silently clean, the
+same rule `continuity.ts` uses for its article map.
+
+Report-only, per the HL05 precedent. Its real value is as a review aid: a lesson
+that trips it is not automatically wrong, but it is automatically read by a
+human before merge.
+
+### Fixed - two ways a lesson file could attack its own gate
+
+Security review of the above, both verified by execution.
+
+**A quadratic comment strip.** `replace(/<!--[\s\S]*?-->/g, "")` looks like the
+safe construct and is not. With `/g` the engine retries at every `<!--`, and
+when there is no closing `-->` each start expands one character at a time to
+EOF before failing -- O(n squared) in the *count* of `<!--` tokens, with no
+`-->` needed anywhere. Measured: 500 KB of repeated `<!--` took **13 seconds**,
+and a 4 MB lesson would have pinned a core for roughly fifteen minutes. Now a
+monotonic `indexOf` scan: the same input takes **22 ms**, and an unterminated
+comment keeps the remainder of the file verbatim rather than swallowing it.
+
+**A directory name resolving through `Object.prototype`.** `PERSON_LABELS` is a
+plain object indexed by `lesson.language`, which `loader.ts` takes straight from
+`readdirSync` -- so a track directory named `constructor`, `toString` or
+`__proto__` resolved to an inherited member, passed the `undefined` check, and
+threw on `.includes`. This package already exports `hasOwn` for exactly this and
+uses it at five sites; `parse.ts` guards its own language lookup the same way
+and `ramp.ts` documents this identical bug being fixed once before. The new
+module simply skipped the convention.
+
+
+### Added - the Root Ledger, and the account it renders (HL-C83)
+
+HL00 calls the etymology "the heart of the lesson... the signature of this
+curriculum", and it is genuinely the strongest thing in the corpus. But a root
+is only *useful* if it is spent again, which is what HL10 section 6.2's
+`rootLedgerMinReuse: 3` says: a root may be taught only if at least three LATER
+lessons draw on it.
+
+The first measurement, across both etymology namespaces:
+
+    2,717 roots
+    2,624 spent fewer than three times   (97%)
+    1,807 never spent at ALL             (taught once, never returned to)
+
+Spanish alone: 303 roots, 290 underspent, 190 never spent. The best-spent root
+in the entire corpus is `LA-ETYMON-SALVE-02`, at eight payoffs.
+
+The etymology is real, it is good, and almost none of it is being spent. That is
+the difference between a curriculum whose vocabulary compounds and one where
+every lesson starts over -- and it is the machinery the friends layer (HL10
+section 6.7) needs, since a root with recorded payoffs already knows which later
+words it predicts.
+
+**An introduction is not a payoff.** A root named in exactly one lesson scores
+zero, not one. Counting the introduction would have started every root at 1 and
+flattered the corpus by exactly the number of roots it has.
+
+**Both namespaces, deliberately.** The corpus records etymology twice --
+cross-language `roots:` slugs (1,966) that let a Spanish root and an Italian one
+be recognised as the same root, and `<LANG>-ETYMON-*` atoms (751) that
+participate in prerequisites and reinforcement windows. A ledger over only one
+would report a root unspent while the other namespace was quietly spending it.
+
+### Fixed - three bugs found while building it
+
+**The etymon namespace silently contributed zero.** The frontmatter keys are
+flat and dotted -- `introduces.knowledge`, never a nested `introduces` object --
+and reading them as nested returns `undefined` for every lesson in the corpus.
+The ledger reported 1,966 roots instead of 2,717, which reads as "the corpus has
+no etymon atoms" rather than "the reader is broken". `ramp.ts` already carried a
+warning about this exact mistake, from when it made the chapter gates report all
+279 authored chapters as broken; this module now uses that file's shared
+`frontmatterList` rather than its own reader.
+
+**A composite key that could merge two roots.** `${language} ${namespace}
+${root}` lets `("es", "roots", "a b")` and `("es", "roots a", "b")` collide and
+silently sum two roots' payoff counts. Now length-prefixed. No collision existed
+in the current corpus -- the counts are unchanged -- but a root slug is
+author-written and may contain anything.
+
+**NUL bytes in a source file.** The spaces inside a template literal were
+written to disk as U+0000: `${language}\0${namespace}`. The file still compiled,
+`grep` silently found nothing in it, and an exact-match edit could not touch the
+line. A NUL in source is always a write accident, never intent, so
+`tests/root-ledger.test.ts` now asserts that no file in `src/` contains one --
+cheaper to assert than to rediscover.
+
+
+### Added - the grammar cell inventory (HL-C82)
+
+A **cell** is one filled slot in one paradigm: Spanish `hablo` is a cell. The
+six-form present-indicative table is not a teachable unit; it is six.
+
+Every language textbook opens a tense with its full grid, and that grid is the
+steepest single step in language pedagogy -- six new forms, one new concept, no
+retrieval, and an implicit claim that the learner absorbs them by staring. HL10
+forbids it twice: `maxNewGrammarCellsPerLesson: 1`, and no paradigm table until
+every cell in it has been taught individually, at which point the table is a
+recap rather than an introduction. A rule like that is only enforceable if the
+cells are enumerated. Now they are.
+
+Two files, because HL10 section 4 makes GRAMMAR a universal slot inventory with
+local filling -- which is what lets the other 21 tracks reuse this:
+
+- `core/grammar-slots.json` -- **231 language-neutral slots**. 144 finite, 30
+  imperative, 48 compound, 9 non-finite. No id or gloss may name a form from any
+  particular language, and a test enforces it. A new track answers "do you have
+  this?" instead of designing a syllabus from nothing.
+- `spanish/grammar-cells.json` -- Spanish's answers, with the ordering a learner
+  climbs.
+
+**`prerequisites` is what makes this a ramp rather than a list**, and each edge
+is a pedagogical claim that can be argued with:
+
+- Singular before plural, one person at a time. This is what turns "the present
+  tense" from one chapter into fourteen.
+- Conjugation 1 before 2 before 3, at the same person and tense.
+- Tenses in acquisition order, anchored at the 1SG conjugation-1 cell only --
+  anchoring every cell would say "learn all of the present before any of the
+  preterite", forbidding the interleaving that makes the ramp gentle.
+- The present subjunctive hangs off the present indicative 1SG, because that is
+  where its stem comes from (`tengo` to `tenga`). Load-bearing, not decorative:
+  it is why HL10 section 5.4 puts the -go verbs before the subjunctive arc.
+- A negative command requires the affirmative command **and** the present
+  subjunctive -- which is how the subjunctive first reaches a learner, before it
+  is ever named.
+- Compounds require the participle and the auxiliary's own finite cell. Nobody
+  says "I have spoken" before they can say "I have".
+
+The resulting graph has four roots -- the three infinitives and `hablo` -- and a
+maximum depth of 15, the future subjunctive third person plural.
+
+The 18 future-subjunctive cells are marked `productive: false` with a recorded
+reason, so the gate can tell "not taught yet" from "deliberately recognised and
+never produced".
+
+`cellCoverage` measures the corpus and reports **0 of 231**. That zero is the
+honest number and is deliberate: the alternative was inferring cells from atom
+names, but `ES-GRAMMAR-AR-FUTURE-SINGULAR` is three cells only if the lesson
+really taught three at once -- which is the exact thing being forbidden. A fuzzy
+mapping would have credited coverage the corpus has not earned and quietly
+legitimised the info dump. HL-C84 wires the declarations on.
+
+The data is generated by `data/generate_grammar_cells.py`, which validates the
+DAG (no dangling edge, no cycle) at generation time. `BUILD` runs it with
+`--check`, so committed drift fails the build -- the same contract
+`check:books` and `check:modality` already enforce.
+
+### Fixed - an ordering check that graded file order instead of reading order
+
+Found while testing the above. `sequence` arrives from the frontmatter parser as
+a **string**, and the first draft of `sequenceOf` tested `typeof raw ===
+"number"`. Every lesson therefore fell through to `Infinity`, the sort became a
+no-op, and the out-of-order check silently graded lessons in whatever order the
+array happened to hold -- passing on any fixture that was already sorted.
+
+Now coerced the way `continuity.ts`'s `declaredSequence` already did it, with a
+regression test asserting both directions: array order wrong but `sequence`
+right must not fire, and array order right but `sequence` wrong must.
+
+### Added - the strand dimension, and the three ladders nobody has climbed (HL-C80)
+
+HL09 proved a course can be gentle on one ramp and brutal on another with
+nobody noticing, because only the gentle ramp was counted. Spanish measured
+178 headwords with every lesson inside the atom budget -- a textbook-perfect
+vocabulary ramp -- while the learner still could not say "no", could not say
+"I am", and met the entire past tense behind a spine node declaring one
+concept.
+
+The fix is not a bigger budget, it is more ladders. `core/spine.json` now
+declares eight **strands** -- FUNCTION, GRAMMAR, LEXICON, SOUND, ETYMOLOGY,
+CULTURE, IDIOM, TEXT -- and every one of its 33 nodes names exactly one. A new
+`strands.ts` measures the distribution, and `report-cli` prints it.
+
+The first snapshot is the reason the model was worth building:
+
+    FUNCTION 14, GRAMMAR 7, LEXICON 2, SOUND 0,
+    ETYMOLOGY 0, CULTURE 3, IDIOM 0, TEXT 7
+
+**Three declared ladders have no nodes on them.** ETYMOLOGY is the sharpest:
+HL00 calls it "the signature of this curriculum" and 708 lessons carry an
+etymology hook, so the content is genuinely there -- as prose an author chose
+to write, promised by no node and owed by no chapter. That is the difference
+between a commitment and an intention, and it is exactly what a strand model
+exists to expose. `summarizeStrands` seeds its counts from the DECLARED strand
+list rather than from the nodes present, so an unclimbed ladder reports as a
+zero instead of vanishing from the table.
+
+`nodeSizeDefects` makes the HL09 section 1 defect checkable: a node is realized
+by one to three chapters, so it may not declare more concepts than a chapter
+may introduce. `SPINE-SAY-WHAT-I-DO` declares **42** against a ceiling of 12,
+while `SPINE-TALK-ABOUT-PAST` declares one and stands for the entire past tense
+of the language. Both cannot be one rung of the same ladder, and that asymmetry
+is how a track claimed A2 on fourteen present-tense lessons. HL-C81 splits it;
+until then the count is pinned so it cannot grow quietly.
+
+`core/chapter-policy.json` gains the seven HL10 section 2.2 budgets, all
+optional so a policy file written before them still loads. The consequential
+one is `maxNewGrammarCellsPerLesson: 1` -- a *cell* is one filled slot in one
+paradigm (`hablo`), not the six-form table, and Spanish holds roughly 630 verb
+cells. `maxRuleStatementsPerLesson: 1` is the info-dump gate, and
+`minDownstreamReach: 1` makes "every lesson leads to future lessons"
+falsifiable by naming an introduced atom no later lesson ever uses.
+
+Everything here is report-only, per the HL05 precedent: the corpus predates the
+model, and a gate that fails on already-recorded debt teaches authors to route
+around it rather than pay it down.
+
+### Fixed - a strand gate that a crafted stage name could silence
+
+Security review of the above, verified against the built module rather than
+reasoned from the diff. `byStage` was built with `Object.fromEntries`, so it
+inherited from `Object.prototype`, and membership was tested with `in`, which
+walks the prototype chain. A node declaring `stage: "toString"` therefore passed
+the check, read the inherited **function**, and `+= 1` wrote the string
+`"function toString() { [native code] }1"` into the counts. That string is not
+`=== 0`, so `missingStages` reported the stage as **covered**.
+
+A gate whose whole job is making curriculum defects visible, reporting clean
+*because of* a crafted stage name, is worse than no gate. Buckets are now
+`Object.create(null)` with an own-property check.
+
+Five malformed-JSON shapes also threw uncaught `TypeError`s out of the CLI --
+`strands` as an object or string, `stages` as a string, `nodes` absent, `nodes`
+holding `null` -- surfacing as Node stack traces with absolute filesystem paths
+where `report-cli` otherwise catches and returns exit 2. `Array.isArray` guards
+now match the shape validation `loadChapterPolicy` already performs.
+
+Confirmed not exploitable and deliberately unchanged: `Object.fromEntries` uses
+`CreateDataPropertyOrThrow`, so a `__proto__` key becomes an ordinary own
+property and never a prototype write.
+
+Specified in `code/specs/HL10-spanish-pre-a1-to-c2-course-architecture.md`.
+
+
+### Added - Tamil chapter 39, and the first letter of the debt it exists to pay
+
+`TA-W19` measured the strand out of room after itself, and three letters —
+**ஏ**, **ஐ**, **ஒ** — were still used inside words and never taught. The track
+was extended rather than relaxing the chapter atom cap, the 3:1 cadence or the
+rule that a chapter must not open on a pen lesson. This is the first of three
+chapters planned to do it.
+
+One correction belongs here, because the decision was taken partly on it. The
+position search that informed it reported ZERO admissible slots anywhere in the
+track. That was wrong: it assigned a candidate insertion to the chapter of the
+lesson it precedes rather than the one it follows, which silently discarded
+every end-of-chapter position. Re-run correctly against `origin/main`, exactly
+ONE slot exists — chapter 35, after `TA-C35-naarkaali`, gaps of 3 and 3, load
+10 + 2 = 12. One slot is still not three, so extending the track was needed
+either way for at least two of the three letters; but "no slot at all" was not
+true, and chapters 40 and 41 should consider spending that slot before adding a
+second new chapter.
+
+- `TA-C39-vendum` (1170) — **வேண்டும்**, another verb Tamil builds with no
+  subject, after **தெரியும்** (ch32), **புரிகிறது** (ch33) and **பிடிக்கும்**
+  (ch34). The lesson deliberately does not number the family: chapter 19's
+  **ஆகிறது** age construction is described in the same terms, so a count would
+  have to argue for its own boundary. The lesson does not re-teach the
+  dative-subject shape either; it practises chapter 6's
+  `TA-GRAMMAR-DATIVE-SUBJECT-02` at a distance of 90 lessons, the first time
+  anything has reached it at R4 range.
+- `TA-C39-evvalavu` (1180) — **எவ்வளவு**, and the line Tamil draws that English
+  does not: **எத்தனை** counts, **எவ்வளவு** measures. Age took the counting one.
+- `TA-C39-oru` (1190, payoff) — **ஒரு** in front of a noun where **ஒன்று**
+  cannot stand, and the chapter's production task: ask a price, order one tea,
+  decline the second with **வேண்டாம்**.
+- `TA-W20-read-onru` (1195) — **ஒ**, spelling **ஒன்று** and **ஒரு**. It is
+  last in the chapter, so the opening reads "first 3 of 4 lessons".
+
+### Added - the spine node this track had declared and never realized
+
+`curriculum.json` already carried `SPINE-SAY-WHAT-I-WANT` with an empty
+`segments` list and `VERB-WANT` sitting in `omits` — an authored admission that
+the node was mapped but unmet. Chapter 39 realizes it through `TA-PATH-036`, so
+the omission is removed rather than merely annotated. Three of the chapter's
+lessons land at A2 as a result, because that node is an A2 node; only
+`TA-W20-read-onru` is pre-A1, on `SPINE-MEET-GREET` like every other writing
+lesson.
+
+### Changed - what a new chapter costs, measured
+
+Four wiring points are needed, and the first alone is not enough:
+`chapters.json` (the capability ledger), `book-generation.json` (the target),
+`tamil/book/book.tex` (the `\input`), and `curriculum.json` (path segment,
+extension, spine segments). Declaring only the ledger fails the book-cli gate
+"puts every ledgered chapter into its book, not merely into a file", which is
+exactly the check that exists to catch this.
+
+Pins re-derived by set difference against `origin/main`:
+
+- `atomsTaught` 2652 -> 2660; `pre-A1` 878 -> 879 and `A2` 409 -> 412;
+  ramp-to-A1 1187 -> 1188 with `TA-W20-read-onru` the only joiner; manifest
+  `totalLessons` 1690 -> 1694, `chapterCount` 513 -> 514, `pen` 68 -> 69,
+  `sight` 508 -> 511, `unstartableChapters` 137 -> 138.
+- `missedByWindow.R2` 1808 -> 1816, and all eight entrants are one mechanism:
+  the track grew 128 -> 132, so a window becomes evaluable for exactly those
+  atoms whose `introducedAt + window.from` falls in (127, 131]. They are four
+  two-atom pairs — VIDAI at 126, SUGAM at 125, UDAMBU at 124 and
+  IVAR-EN-NANBAR at 123 — and not one of their revisit counts changed.
+  R4 243 -> 247 is the same arithmetic at 80. R3 does not move at all —
+  1309 -> 1309, seven in and seven out — which is the whole argument for
+  declaring what a sentence
+  actually re-uses. `TA-C39-vendum` names **தெரியும்**, **புரிகிறது** and
+  **பிடிக்கும்** in one clause and credits all six of their atoms: the two
+  `PIDI` atoms (index 108) land a revisit at exactly distance 20, R3's first
+  position, so neither enters, while `TA-LEX-PURI-01`, `TA-GRAMMAR-PURI-02`
+  (index 100) and `TA-GRAMMAR-TERI-02` (index 98) leave R3 outright and drop off
+  the defect list. The same clause with the verbs merely named would have read
+  identically on the page and left R3 five windows worse.
+- Against that, ten atoms LEAVE a window, and those are the chapter earning its
+  keep: `TA-SCRIPT-EE-SIGN-01` 1 -> 2 revisits, `INDEPENDENT-VOWEL-E-01` 2 -> 3,
+  `NGA-LLA-01` 2 -> 3, `TTA-01` 1 -> 2, the two `PURI` atoms and
+  `TA-GRAMMAR-TERI-02` out of R3 (seven in all);
+  `GRAMMAR-DATIVE-SUBJECT-02` 2 -> 3, `LEX-DATIVE-SUBJECT-01` 3 -> 4 and
+  `LEX-NUMBERS-1-5-01` 2 -> 3 out of R4.
+- `atomsNeverRevisited` 472 -> 474, five in and three out. IN are
+  `TA-GRAMMAR-EVVALAVU-VS-ETHANAI-02`, `TA-LEX-ORU-01`,
+  `TA-GRAMMAR-ORU-ATTRIBUTIVE-02` and TA-W20's own `TA-SCRIPT-O-VOWEL-01` and
+  `TA-SCRIPT-READ-ONRU-02`; OUT are `TA-SCRIPT-READ-MUUNRU-02`,
+  `TA-GRAMMAR-PIDI-02` and `TA-SCRIPT-UU-SIGN-01`, each 0 -> 1 revisits. The
+  last is TA-W19's own sign, credited where TA-W20 contrasts **மூன்று** with
+  **ஒன்று**. The 422-atom defect
+  subset moves separately, 422 -> 424; the two counters are worth keeping apart.
+  The `ORU` pair being among the entrants is structural, not
+  an oversight: `TA-W20` genuinely re-reads **ஒரு**, but a writing lesson may
+  only take other writing lessons as prerequisites — `TA-EXT-003-SCRIPT` is
+  inlined at `TA-PATH-003`, so naming a chapter-39 lesson would place the
+  prerequisite after its dependent and fail the ordering rule. The tie is
+  carried by `reviews_of`, which is not a revisit. Chapters 40 and 41 are
+  planned to close it.
+- `forwardReferences` 423 -> 424, and the new entry is a measurement
+  improvement rather than fresh damage: `TA-C18-mani-homophone-time` has always
+  printed **ஒரு**, but no lesson owned the word, so the checker had no teacher
+  to measure against. Naming one made a 65-lesson-old early use visible. It is
+  also an argument that **ஒரு** belongs earlier than chapter 39, which the
+  runway did not allow.
+
 ### Added - the ூ sign, and the measured end of the Tamil strand's runway
 
 - Teach `TA-W19-read-muunru` (chapter 38, sequence 1165) around **மூன்று**: the
@@ -65,10 +604,11 @@ own.
 The two facts this entry rests on hold under a detector that does two specific
 things, and it is worth naming them rather than claiming detector-independence:
 it must scope negation, and it must not treat a `TA-C*` lesson as teaching. Both
-matter, and this very lesson is why the first one does — it prints **ஒன்று**,
-**ஐந்து** and **ஏழு** in bold inside the sentence saying they *wait on letters
-this book has not taught*, so a detector that ignores negation would score ஏ, ஐ
-and ஒ as taught here and put this lesson's delta at four glyphs instead of one.
+matter, and this very lesson is why the first one does — it prints the numbers
+it cannot yet spell in bold inside a sentence saying they wait on letters the
+book has not taught, so a detector that ignores negation scores those letters
+as taught here and puts this lesson's delta at four glyphs instead of one.
+(The chapter-39 entry above narrows that sentence, once **ஒ** is taught.)
 Chapter 7's own lessons bold the same letters while merely using them, which is
 why the second matters. Under a detector that does both: the difference **this**
 lesson makes is exactly **ூ**, and the thirteen chapter-7 glyphs named above are
@@ -153,6 +693,16 @@ the direction of each mover is recorded at the assertion:
   after, which is the check that separates an artifact from a regression: no
   existing reinforcement was broken by the insertion. TA-W19's own two atoms
   appear in no window at all, because at index 127 none is evaluable.
+
+### Added - verified Urdu independent ں handwriting
+
+- Record Northwestern's *Zer o Zabar* independent nūn-e ġhunna animations as
+  one right-to-left bowl below the baseline with zero pen lifts.
+- Preserve the source's final/independent dotless-nūn distinction and its
+  ordinary-nūn initial/medial forms; Noto Naskh confirms U+06BA exactly shares
+  U+0646's body contour with the dot removed.
+- Raise cited handwriting coverage to 32 of 228 prose entries, leaving 196
+  explicit unverified part orders and 1 in the Urdu starter inventory.
 
 ### Added - verified Urdu independent ی handwriting
 
@@ -1992,7 +2542,6 @@ found defects the one before it had not.
   read; a reading-only ladder would fit it better. A second test requires a caveat on any
   mapping that names a specific foreign ladder without the awarding body's backing — it
   caught a bare Persian/AMFA correspondence during this change.
-
 
 
 ### Fixed — "detachable" and "is a writing segment" are two different things

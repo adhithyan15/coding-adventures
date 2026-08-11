@@ -1,0 +1,13 @@
+% ============================================================================
+% rock-type.query.adj — worked recall over the rock-type library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how does this rock form?"
+% (direct) or "which rock type forms this way?" (reverse) — it states no fact
+% of its own — it only `import`s the grounded table and asks binding queries.
+% ============================================================================
+
+import "rock-type.adj"
+
+? rock_type(igneous, $Process)                          % expect crystallized_molten_rock (direct)
+? rock_type($R, heat_and_pressure_transformation)        % expect metamorphic (reverse)
+? rock_type(coal, $Process)                              % expect abstain -- coal is a real rock, but not one of the three rock-type classes tabled here

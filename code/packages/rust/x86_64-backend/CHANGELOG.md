@@ -1,5 +1,69 @@
 # Changelog — `x86_64-backend`
 
+## 0.39.0 - 2026-08-10 — generational write barrier from `field_store` + `array_set` (AOT00-T8 follow-up)
+
+Closes the last of the three AOT00-T8 backend write-barrier follow-ups (LLVM done via
+#10430, aarch64-backend done via #10475 `field_store` + #10477 `array_set`). Both
+heap-mutating store opcodes in this backend now call `__twig_gc_write_barrier(parent,
+child)` unconditionally after the store, so the generational collector's remembered
+set stays sound once minor collection is reachable from real Twig source.
+
+- **`field_store`**: after `[ptr + idx*8] = value`, reloads `ptr_src`/`val_src` fresh
+  from their stack slots into this ABI's first two integer arg registers and calls
+  the barrier. RAX happens to still hold `ptr_src` post-store here (unlike
+  `array_set` below), but the fix reloads anyway rather than reusing RAX/RCX — those
+  registers don't line up with either ABI's arg0/arg1 slots (SysV: RDI/RSI, MsX64:
+  RCX/RDX), so passing them through unreloaded would be an ABI-specific correctness
+  landmine.
+- **`array_set`**: same fix, but here the reload is load-bearing for a second, sharper
+  reason — this op's own store-address computation overwrites RAX with
+  `base + idx*8` (an interior/element pointer) before the store. Since
+  `__gc_write_barrier` trusts its `parent` argument unconditionally (reads
+  `parent - HEADER_SIZE` for the generation byte, no base-pointer validation),
+  handing it that interior pointer would read the wrong byte as the generation flag.
+  The fix reloads the array's original base handle (`h_src`) fresh from its own stack
+  slot instead — safe because this backend's register allocator is a pure stack-spill
+  design (`RegAlloc`, doc comment at the top of the module): every CIR virtual lives
+  at a fixed `[rbp, offset]` slot, and no value is ever kept live in a register across
+  an instruction boundary, so `load_operand` always re-reads the correct value
+  regardless of what the store's own addressing clobbered RAX into.
+- **Dual-ABI correctness**: unlike the aarch64 backend (single AAPCS64 ABI), this
+  backend supports both System V and Microsoft x64 calling conventions. The barrier
+  reload targets `abi.arg_regs()[0]`/`[1]` (SysV: RDI/RSI, MsX64: RCX/RDX) rather than
+  a hardcoded register pair, so the fix is correct under both `X86_64Backend::new()`
+  (SysV) and `X86_64Backend::with_abi(X86_64Abi::MsX64)`.
+- Unconditional emission, same justification as the aarch64 fixes: this IR level has
+  no static type information distinguishing a pointer element/field from a scalar
+  one, and the barrier never dereferences `child`, so passing a non-pointer value is
+  a harmless over-approximation.
+- 7 new unit tests. Five assert `__twig_gc_write_barrier` `PltRel32`-relocation
+  presence/count via `compile_function_with_relocs`
+  (`field_store_calls_the_generational_write_barrier`,
+  `field_store_write_barrier_is_emitted_per_store_not_deduplicated`,
+  `array_set_calls_the_generational_write_barrier`,
+  `array_set_write_barrier_is_emitted_per_store_not_deduplicated`,
+  `field_store_write_barrier_lowers_under_msx64_abi_too`). Confirmed load-bearing via
+  revert-check (barrier calls disabled → all 5 fail as predicted; restored → pass).
+  Two more, added after security review flagged that a reloc-count-only MsX64 test
+  can't tell a correct `abi.arg_regs()` reload from a latent hardcoded-SysV-register
+  bug (both compile to the same relocation), assert the actual machine-code bytes:
+  `field_store_write_barrier_loads_sysv_args_into_rdi_rsi` proves the SysV reload
+  lands in RDI/RSI (registers `field_store` never otherwise touches), and the
+  strengthened `field_store_write_barrier_lowers_under_msx64_abi_too` /
+  new `array_set_write_barrier_lowers_under_msx64_abi_too` prove the MsX64-compiled
+  body contains **no** RDI/RSI loads at all. Verified these two are load-bearing by
+  temporarily hardcoding `Reg::Rdi`/`Reg::Rsi` into the `field_store` MsX64 path —
+  the MsX64 absence-check failed exactly as predicted; reverted, all 82 pass.
+- Currently inert in practice, same as the aarch64 fixes: no `gc_set_auto_minor`/
+  `gc_collect_minor_precise` builtin table entries exist in this backend yet, so
+  minor collection is not reachable from real Twig source through this path. No
+  real-execution differential test was attempted, for the same structural reason
+  documented in `lessons.md` for the aarch64-backend fix — `gc-core-capi`'s
+  conservative stack scan always covers `[sp, start_fp)`, which necessarily includes
+  an already-returned callee's vacated stack memory, making that class of test
+  unreliable independent of write-barrier correctness. Verification here is
+  unit/relocation-level only.
+
 ## 0.38.0 - 2026-07-31 - boolean array elements
 
 The native array element-size helper now accepts `bool`, using the backend's

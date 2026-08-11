@@ -1011,9 +1011,40 @@ fn declare_omitted_when_print_i64_unused() {
         "no print_i64 use → no extern; got:\n{ll}");
 }
 
-/// AOT00-T8 follow-up: `gc_collect_minor_precise()` (no args) → the unconditional
-/// minor-collection test seam — see `SUPPORTED_BUILTINS`'s own doc for why this
-/// bypasses the `should_collect_minor`/`auto_minor` policy gate entirely.
+/// AOT00-T8 follow-up: `gc_set_auto_minor(on)` (no dest) — the attestation seam
+/// `gc_collect_minor_precise` requires before it will collect anything (see that
+/// builtin's own test and `SUPPORTED_BUILTINS`'s doc).
+#[test]
+fn call_builtin_gc_set_auto_minor_emits_extern_call_and_declare() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![Operand::Var("gc_set_auto_minor".into()), Operand::Int(1)],
+                "void",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(
+        ll.contains("declare void @__twig_gc_set_auto_minor(i64)"),
+        "expected extern declare for @__twig_gc_set_auto_minor; got:\n{ll}"
+    );
+    assert!(
+        ll.contains("call void @__twig_gc_set_auto_minor(i64 1)"),
+        "expected call site passing the attestation flag through; got:\n{ll}"
+    );
+}
+
+/// AOT00-T8 follow-up: `gc_collect_minor_precise()` (no args) → the *direct*
+/// minor-collection test seam — gated on `gc_set_auto_minor`'s attestation, same as
+/// the automatic `should_collect_minor`/`auto_minor` policy path (see
+/// `SUPPORTED_BUILTINS`'s own doc).
 #[test]
 fn call_builtin_gc_collect_minor_precise_emits_extern_call_and_declare() {
     let f = IIRFunction::new(

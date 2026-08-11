@@ -1,0 +1,57 @@
+% ============================================================================
+% rainforest-layer — each of the four rainforest layers and a one-fact
+% description of it (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A beginner ecology fact: a rainforest is not one flat habitat — it is FOUR
+% stacked layers, from the treetops down to the ground, and each layer has its
+% own defining character. Recall is a binding query:
+%
+%     ? rainforest_layer(canopy, $D)   % deep_treetop_vegetation_layer
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `rainforest_layer(layer, description)` carrying the table's
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the description atom WITH its source, on the CPU, with zero
+% model calls, and abstains on a word that is not one of the four layers.
+% The query also runs BACKWARD — bind the description and recall the layer:
+%
+%     ? rainforest_layer($L, tallest_trees_dominate_skyline)   % emergent
+%
+% The four layers, top to bottom, as a little truth table:
+%
+%     layer          description (this table's label)         the cited quote
+%     ------------   ----------------------------------------   -----------------------------------------------------------------------------
+%     emergent       tallest_trees_dominate_skyline              "The top layer of the rainforest is the emergent layer. Here, trees as tall as
+%                                                                  60 meters (200 feet) dominate the skyline."
+%     canopy         deep_treetop_vegetation_layer                "Beneath the emergent layer is the canopy, a deep layer of vegetation roughly
+%                                                                  six meters (20 feet) thick."
+%     understory     dark_humid_layer_below_canopy                "the understory is an even darker, stiller and more humid environment."
+%     forest_floor   darkest_layer_hard_for_plants_to_grow        "The forest floor is the darkest of all rainforest layers, making it extremely
+%                                                                  difficult for plants to grow."
+%
+% Provenance: quoted verbatim from National Geographic Education's "Rain
+% Forest" encyclopedic entry, WebFetch-verified before writing (fetched
+% twice — once for the overall page, once specifically for the emergent
+% layer's paragraph, to confirm the tree-height sentence verbatim). `trust
+% consensus` — National Geographic Education is a reputable education
+% organization, not a primary government source, the same tier this stdlib
+% already reserves for its other non-.gov sources (e.g. Wikipedia's
+% Greek-alphabet entry, Speakspeak's plural-ending article). A word that is
+% NOT one of these four layers — "soil layer", "topsoil", or a made-up layer
+% name — is deliberately NOT a row, so a recall ABSTAINS on it rather than
+% inventing a description. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table rainforest_layer {
+    columns layer, description
+
+    row (emergent, tallest_trees_dominate_skyline)
+    row (canopy, deep_treetop_vegetation_layer)
+    row (understory, dark_humid_layer_below_canopy)
+    row (forest_floor, darkest_layer_hard_for_plants_to_grow)
+
+    source "The top layer of the rainforest is the emergent layer. Here, trees as tall as 60 meters (200 feet) dominate the skyline."
+    locator "https://education.nationalgeographic.org/resource/rain-forest/"
+    trust consensus
+}

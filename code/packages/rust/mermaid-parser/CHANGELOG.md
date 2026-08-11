@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.30.0
+
+- Accept Mermaid 11.16.1 sequence `#` comments without losing entity-coded text.
+
+## 0.29.0
+
+- Preserve ordered sequence `autonumber`, `autonumber off`, and counter-reset statements.
+
+## 0.28.0
+
+- Preserve `wrap:` and `nowrap:` directives on sequence participant-box labels.
+
+## 0.27.0
+
+- Preserve `wrap:` and `nowrap:` directives on sequence participant aliases.
+
 ## 0.26.0
 
 - Preserve `wrap:` and `nowrap:` directives on sequence control-block and branch labels.

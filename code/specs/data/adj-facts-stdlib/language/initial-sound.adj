@@ -1,0 +1,60 @@
+% ============================================================================
+% initial-sound — a word's beginning sound (phoneme), a THIRD literacy
+% sub-skill in the ADJ stdlib (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% Deliberately DIFFERENT in shape from both prior literacy libraries:
+% `word-families.adj` derives RHYMING (RF.K.2.a, shared END sound) via a
+% `rule`, and `syllable-count.adj` recalls a SYLLABLE COUNT (RF.K.2.b). This
+% library recalls a word's BEGINNING sound (phoneme identity/isolation,
+% RF.K.2.d — "Isolate and pronounce the initial ... sound(s) in ... spoken
+% words") as a pure lookup: `initial_sound(word, sound)`. Recall is a
+% binding query:
+%
+%     ? initial_sound(bell, $S)   % b
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `initial_sound(word, sound)` carrying the Reading Rockets citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% sound WITH its source, on the CPU, with zero model calls, and abstains on
+% any word not one of the three the cited sentence names. The query also
+% runs BACKWARD — bind a sound and recall every word sharing it:
+%
+%     ? initial_sound($W, b)   % bell, bike, boy (all three)
+%
+% This backward direction is itself the classic "phoneme identity" exercise
+% Reading Rockets describes: "Recognizing which words in a set of words
+% begin with the same sound."
+%
+% Provenance: quoted verbatim from Reading Rockets' "Reading 101 for
+% Parents: Phonological and Phonemic Awareness" guide, WebFetch-verified
+% TWICE for consistency before writing (the same sentence also appears,
+% word-for-word, on at least one sibling Reading Rockets page, confirming
+% it is the site's own standing canonical example rather than a one-off).
+% The exact sentence: "Bell, bike, and boy all have /b/ at the beginning."
+% — appearing under a "Children can demonstrate phonemic awareness in
+% several ways, including: Recognizing which words in a set of words begin
+% with the same sound" bullet. `trust consensus` — a widely-used literacy
+% parent/educator resource, the same tier `syllable-count.adj`'s Reading
+% Rockets source earned.
+%
+% Deliberately scoped to ONLY the three words (bell, bike, boy) and the one
+% sound (/b/) this single cited sentence names — all three happen to share
+% one phoneme, so the table is honestly narrow (mirroring
+% `syllable-count.adj`'s all-2-syllable table) rather than fabricating a
+% second phoneme group from an uncited word list. A future slice can add a
+% second sound group once a comparably clean citation is found. (See
+% ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table initial_sound {
+    columns word, sound
+
+    row (bell, b)
+    row (bike, b)
+    row (boy, b)
+
+    source "Bell, bike, and boy all have /b/ at the beginning."
+    locator "https://www.readingrockets.org/literacy-home/reading-101-guide-parents/reading-basics/phonological-and-phonemic-awareness"
+    trust consensus
+}

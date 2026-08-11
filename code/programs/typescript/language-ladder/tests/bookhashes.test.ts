@@ -10,9 +10,15 @@ describe("generated book source hashes", () => {
     // into thirty-three prerequisite-ordered micro-lessons: ch3 12->14,
     // ch4 13->15, ch6 7->9. The generated-book manifest and the lesson files
     // agree on these numbers; only this app-side pin was stale.
+    //
+    // ch3 14->15: HL-C86 adds ES-C03-vos. Spanish had asserted a two-way "you"
+    // as universal while `vos` appeared zero times in 188 lessons; it is now
+    // taught receptively. This pin lives in the CONSUMER, not in
+    // human-language-data, so the data package's own suite passes while this
+    // one fails -- which is exactly why the downstream app is built in CI.
     [1, 7],
     [2, 5],
-    [3, 14],
+    [3, 15],
     [4, 15],
     [5, 7],
     [6, 9],

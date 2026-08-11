@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:462d84aa9f1a2082",
+  "sourceHash": "fnv1a64:b8aa6cd0d85b5107",
   "summary": {
-    "totalLessons": 1690,
-    "voice": 1114,
-    "sight": 508,
-    "pen": 68,
-    "drivableLessons": 1114,
+    "totalLessons": 1695,
+    "voice": 1115,
+    "sight": 511,
+    "pen": 69,
+    "drivableLessons": 1115,
     "drivablePercent": 66,
     "trackCount": 22,
-    "chapterCount": 513,
-    "drivablePrefixTotal": 924,
+    "chapterCount": 514,
+    "drivablePrefixTotal": 925,
     "fullyDrivableChapters": 324,
-    "unstartableChapters": 137,
+    "unstartableChapters": 138,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -6754,12 +6754,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 188,
-      "voice": 173,
+      "lessonCount": 189,
+      "voice": 174,
       "sight": 8,
       "pen": 7,
       "drivablePercent": 92,
-      "drivablePrefixTotal": 157,
+      "drivablePrefixTotal": 158,
       "modalities": [
         "voice",
         "sight",
@@ -6810,8 +6810,8 @@
         },
         {
           "chapter": 3,
-          "lessonCount": 14,
-          "voice": 12,
+          "lessonCount": 15,
+          "voice": 13,
           "sight": 1,
           "pen": 1,
           "modalities": [
@@ -6819,7 +6819,7 @@
             "sight",
             "pen"
           ],
-          "drivablePrefix": 7,
+          "drivablePrefix": 8,
           "firstNonVoiceLesson": "ES-C03-como-acento",
           "drivable": false,
           "drivableLessonIds": [
@@ -6828,6 +6828,7 @@
             "ES-C03-me-llamo",
             "ES-C03-tu-usted",
             "ES-C03-tu-usted-register",
+            "ES-C03-vos",
             "ES-C03-usted-origin",
             "ES-C03-como"
           ]
@@ -7548,11 +7549,11 @@
     },
     {
       "language": "tamil",
-      "lessonCount": 128,
+      "lessonCount": 132,
       "voice": 76,
-      "sight": 29,
-      "pen": 23,
-      "drivablePercent": 59,
+      "sight": 32,
+      "pen": 24,
+      "drivablePercent": 58,
       "drivablePrefixTotal": 60,
       "modalities": [
         "voice",
@@ -8220,6 +8221,21 @@
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "TA-C38-udambu",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 39,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 3,
+          "pen": 1,
+          "modalities": [
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "TA-C39-vendum",
           "drivable": false,
           "drivableLessonIds": []
         }
@@ -32986,7 +33002,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ccef862fda339570"
+      "sourceHash": "fnv1a64:5c4bd9befafbab6d"
     },
     {
       "id": "ES-C03-tu-usted-register",
@@ -33007,6 +33023,24 @@
       "sourceHash": "fnv1a64:e1ccfd229de2a3fd"
     },
     {
+      "id": "ES-C03-vos",
+      "language": "spanish",
+      "chapter": 3,
+      "sequence": 175,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f67965ed7d524ded"
+    },
+    {
       "id": "ES-C03-usted-origin",
       "language": "spanish",
       "chapter": 3,
@@ -33022,7 +33056,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a68e3b11f451f46b"
+      "sourceHash": "fnv1a64:8bffab6aaf79c2f9"
     },
     {
       "id": "ES-C03-como",
@@ -33170,7 +33204,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:18b77f42953215fc"
+      "sourceHash": "fnv1a64:586e754bda1b8e68"
     },
     {
       "id": "ES-C04-gracias",
@@ -33460,7 +33494,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:95b7ff61b4e942fd"
+      "sourceHash": "fnv1a64:a4922df3c09133ea"
     },
     {
       "id": "ES-C05-adios",
@@ -38622,10 +38656,98 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:2ef84654a6ca9fcb",
+      "sourceHash": "fnv1a64:fe1014ace1a33e35",
       "detachableSegments": [
         "Script you'll notice: the ூ sign",
         "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C39-vendum",
+      "language": "tamil",
+      "chapter": 39,
+      "sequence": 1170,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d7f91d1c50b0387b",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C39-evvalavu",
+      "language": "tamil",
+      "chapter": 39,
+      "sequence": 1180,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:99891ce4af69b90a",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C39-oru",
+      "language": "tamil",
+      "chapter": 39,
+      "sequence": 1190,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e44d69fb4d5bfdf6",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-W20-read-onru",
+      "language": "tamil",
+      "chapter": 39,
+      "sequence": 1195,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:350b118dee1fea76",
+      "detachableSegments": [
+        "Script you'll notice: ஒ",
+        "Script you'll notice: build the word",
+        "Script you'll notice: the same letter, the shorter word"
       ],
       "delivery": "script"
     },

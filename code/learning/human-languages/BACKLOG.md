@@ -135,8 +135,35 @@ oval-or-teardrop body, while the other positional forms remain distinct.
 HL-C09AE verifies independent ی from the same chapter: both demonstrations keep
 its dotless S-shaped body and below-baseline bowl in one upper-right-to-left,
 zero-lift run, while the two dots remain exclusive to the initial and medial
-forms. The next smallest starter entry is ں; HL-C09AF queues its source-backed
-audit from Chapter 6.
+forms. HL-C09AF verifies independent ں from Chapter 6: both demonstrations keep
+the same right-to-left, below-baseline bowl as ن in one zero-lift run, while the
+finished form omits ن's dot and the initial/medial forms remain ordinary nūn.
+HL-C09AG completes the Urdu starter inventory with independent ے from Chapter
+4: both demonstrations start at the upper right, descend and sweep left across
+the broad bowl, curl back underneath at the far left, then continue right along
+the lower fold without lifting. The chapter's initial/medial be-series tooth
+and independent/final sound distinction remain explicit. That made Arabic the
+smallest remaining starter inventory at 21 entries and queued a
+source-and-identity audit for its independent ا before another shared Unicode
+glyph entered `DUCTUS`. HL-C09AH verifies that Arabic identity independently:
+the University of Oregon's *Introduction to Arabic* video draws independent ا
+top-to-bottom in one continuous stroke at 00:05–00:07, and the adjacent lesson
+identifies alif as a one-way connector. HL-C09AI follows from the adjacent ب
+video: the independent bowl starts at its upper-right tip, sweeps continuously
+right-to-left, turns up at the left tip, then lifts once for the dot below.
+HL-C09AJ combines that separately demonstrated Arabic bowl with the dedicated ت
+clip, which opens on the completed body before drawing the left and right upper
+dots as two separate strokes. HL-C09AK then audits the page's linked ث asset
+instead of trusting its label: the 57-second clip is another Taa lesson whose
+first independent form draws a bowl and exactly two upper dots, never the third
+dot required by ث. That mismatch is now explicit deferred source debt rather
+than an invented path. Arabic remains the smallest inventory; HL-C09AL moves to
+the next viable source, ج, whose dedicated video draws the short upper head
+left-to-right, continues down and around the bowl, then lifts once for the dot.
+HL-C09AM resolves the page's unlinked Haa attachment through its WordPress media
+ledger instead of borrowing Jeem's order: the clip finishes a short left stem,
+lifts once, then restarts near its top and sweeps continuously around the dotless
+ح bowl. The same ledger exposes Khaa media for the next audit.
 The index audit found **2,075** canonical candidates across the corpus: **1,426**
 word and phrase lessons for English-first lookup, **136** dedicated grammar,
 writing, etymology, culture, and pronunciation lessons, **427** chapter
@@ -261,6 +288,66 @@ These restate and sharpen the program; where they conflict with an older item, t
    `lessons/XX-CNN-*.md` at the reader today), no app assumptions, no dangling cross-track
    references, and the front/back matter a book is expected to have. → HL-C50.
 
+## P0 — The Spanish pre-A1 → C2 course (HL10)
+
+**2026-08-10.** [HL10](../../specs/HL10-spanish-pre-a1-to-c2-course-architecture.md)
+is the course architecture HL09 implied but never wrote. HL09 fixed how gentle a
+step must be; HL10 says what the steps are — eight parallel strands, a spine
+rebuilt to ~400 nodes, a grammar ramp expressed in ~630 individually-taught verb
+cells at one cell per lesson, etymology as a productive system with a payoff
+ledger, and a stage-by-stage map of ~4,950 lessons across ~851 chapters
+(≈10,500 pages, seven volumes).
+
+Three measurements from the current corpus that set the starting point:
+Spanish's 188 lessons contain **one** distinct culture atom, **zero** mentions of
+*vos* (a form used by ~100 million speakers), and **188 of 188** lessons declare
+`variety: general` — the unmarked default HL09 §8.1 forbids.
+
+| ID | Status | Work item | Completion signal |
+|---|---|---|---|
+| HL-C79 | Partly complete — **measurement already shipped**; Spanish order is clean | Land the remainder of HL09 steps 1–3. **Re-measured 2026-08-10:** `measureContinuity` already reports order integrity, the R1–R4 windows and forward references, and Spanish measures **0** lessons without `sequence`, **0** forward prerequisites and **0** forward reviews — steps 1 and 2 are discharged for the pilot track. What remains is step 3 and the corpus beyond Spanish. | Spanish: close its 65 never-revisited atoms and 55 forward references by wiring `practises.knowledge` on teaching lessons (HL09 §7.2 option (b), which costs no new lessons). Corpus-wide: 477 lessons across 17 tracks still declare no `sequence`, and the R1/R2 miss counts (891/1816) are untouched. |
+| HL-C80 | Complete (#10497) | Add the strand dimension to `spine.json` and the HL10 §2.2 budgets to `chapter-policy.json`, report-only. | All 33 nodes carry one of eight declared strands; `strands.ts` measures the distribution and `report-cli` prints it. First snapshot: FUNCTION 14, GRAMMAR 7, LEXICON 2, SOUND 0, ETYMOLOGY 0, CULTURE 3, IDIOM 0, TEXT 7 — **three declared ladders have no nodes on them**, ETYMOLOGY most sharply, which HL00 calls the signature of this curriculum and 708 lessons carry as prose no node promises. The seven budgets ship optional and report-only. |
+| HL-C81 | Queued — **strategy revised after measuring** | Split every oversized spine node, starting with `SPINE-SAY-WHAT-I-DO` (42 concepts → nine nodes, HL10 §3.3). | **Measured 2026-08-10: the blast radius is 328 lessons across 20 tracks and all 22 `curriculum.json` files** (Spanish 37, Latin 31, Portuguese 22, Italian 18, German/French 16 each, then 8–14 apiece). Re-pointing each lesson is not mechanical — it needs an editorial judgement about which person and conjugation that lesson actually teaches, so a bulk rewrite would silently invent facts. Revised plan, per BACKLOG priority rule 3 (finish a vertical slice first): (a) author the nine new nodes alongside the old one, (b) migrate **Spanish only** — 37 lessons, each judged against `grammar-cells.json` — and prove the level gate still computes, (c) migrate the remaining tracks one PR each, (d) delete `SPINE-SAY-WHAT-I-DO` once no lesson names it. The node stays over-ceiling and report-only until (d). |
+| HL-C82 | Complete (#10501) — regular cells; overlays in HL-C91 | Author the Spanish grammar cell inventory (HL10 §5.1) as data. | 231 language-neutral slots in `core/grammar-slots.json` (144 finite, 30 imperative, 48 compound, 9 non-finite) and Spanish's filling in `spanish/grammar-cells.json`, with a validated prerequisite DAG — 4 roots (the three infinitives and *hablo*), max depth 15, no cycles, no dangling edges. Generated by `data/generate_grammar_cells.py` and drift-gated in `BUILD`. Corpus coverage measures **0 of 231**, deliberately not inferred from atom names. The ~400 irregular and stem-changing overlays are **not** included — see HL-C91. |
+| HL-C83 | Complete (#10503) | Build the Root Ledger over the existing etymology references (HL10 §6.2). | `root-ledger.ts` counts **payoffs, not mentions** — an introduction scores zero — across both namespaces (1,966 `roots:` slugs + 751 `*-ETYMON-*` atoms). First measurement: **2,717 roots, 2,624 spent fewer than three times (97%), 1,807 never spent at all.** Spanish: 303 / 290 / 190. This is the burn-down list HL-C88's friends layer needs, since a root with recorded payoffs already knows which later words it predicts. |
+| HL-C84 | Complete (#10507) | Enforce the info-dump gate (HL10 §7.3), report-only. | `info-dump.ts` measures rule statements and paradigm tables. **The prose is fine — 17 rule statements across 1,694 lessons.** The dumps are in tables: **70 lessons carry a paradigm-shaped table, 18 of them a full grid** (`FR-C05-parler`, `GE-C05-wohnen`, `ES-C17-practice` each present a complete six-person conjugation at once). Flags shape, not size — 470 tables have ≥3 rows and most are fine. Burn-down is HL-C92. |
+| HL-C85 | Queued | Absorb the existing 188 Spanish lessons into the rebuilt spine (HL10 §13). | Zero forward references and zero dead-end atoms in Spanish; the learner can say *no* and *I am*; nothing is deleted. |
+| HL-C86 | Queued — **Chapter 1 drafted as a sample in HL10 Appendix A; opens on `hola` per the usefulness rule** | Author pre-A1 to its full 30 chapters / ~180 lessons. | HL09 §3.1 satisfied at pre-A1; ≥95% of lessons `voice`; every chapter drivable from its first lesson, with an intro, an etymological thread, and a culture note. |
+| HL-C87 | Queued | Per-atom mastery and voice mode in Language Ladder (HL10 §10.1–10.2). | The app schedules from atom strength rather than lesson completion; a full chapter is completable hands-free. |
+| HL-C90 | Complete (#PENDING) | Neutralize control characters in every corpus-derived string the gap report writes to stdout. | A node id or finding message containing an ESC sequence currently rewrites its own line in a terminal, so a crafted id can hide the very defect line a reviewer is reading to judge whether the data is sound. Package-wide, not local: `report.ts` interpolates `finding.message` exactly as `strands.ts` interpolates `nodeId`. Strip `/[\x00-\x08\x0b-\x1f\x7f]/g` in the shared render helpers, with a fixture proving a crafted id cannot erase a line. |
+| HL-C88 | Queued | Build the **friends** layer (HL10 §6.7): English cognates, the eight systematic suffix correspondences, hidden friends via the sound laws, and generated cousin panels from `concept_tag`. | Every lesson may carry at most one friend; friends never count toward the ≤3 atom budget; the cousin panel is generated from the 1,131 `concept_tag` lessons rather than hand-typed (closes the authoring half of HL-C48); every asserted friend has a defensible etymology or is taught as a false friend. |
+| HL-C89 | Complete (#10511) — ramp shipped, lint deliberately minimal | Build the metalanguage ramp and the dummy-friendly prose lint (HL10 §7.4–7.5). | `core/metalanguage.json` declares **54 terms**, each with the thing the learner must already be able to DO first and the `plainAlternative` a lesson must use until the term is earned. First measurement: **2,289 technical uses across 1,161 lessons** — `verb` 795, `noun` 398, `regular` 109, `tense` 109 — with nothing introducing any of them. Two numbers reported so `word` (1,555 lessons) cannot bury `dative` (53). The prose lint was **measured and found near-empty** (535 naive → 23 narrowed, most still innocent) and is not built; the corpus's prose is already kind. Burn-down of the 2,289 is HL-C93. |
+| HL-C91 | Complete (#PENDING) | Add the irregular and stem-changing overlays to the Spanish cell inventory. | HL10 §5.1 sizes the Spanish verb system at ~630 cells; HL-C82 shipped the **231 regular** ones. The remaining ~400 are overlays — the four stem-change patterns (e→ie, o→ue, e→i, u→ue), the `-go` club, the strong preterites (*fui*, *hice*, *dije*, *tuve*, *estuve*, *pude*, *puse*, *supe*, *quise*, *vine*, *traje*), the three imperfect irregulars, and the irregular participles. Each attaches to the regular cell it deviates from, so the DAG gains depth rather than breadth, and each needs a frequency-ordered position. **HL-C90 is deliberately skipped here**: it is claimed by the in-flight HL-C80 branch (control-character neutralization), and reusing it would recreate the duplicate-id tangle HL-I06 exists to prevent. |
+| HL-C92 | Queued — found by HL-C84 | Split the 18 full paradigm grids, and the 52 partial ones behind them. | Each presents N grammar cells where `maxNewGrammarCellsPerLesson` allows one, so each becomes N lessons plus a recap table that is now legitimately a recap. Start with the three complete six-person conjugations — `FR-C05-parler`, `GE-C05-wohnen`, `ES-C17-practice`. Needs `grammar-cells.json` extended past Spanish first, or the split has no cell ids to name in French and German. |
+| HL-C93 | Queued — found by HL-C89 | Wire `introduces_metalanguage` onto the lessons that first earn each of the 54 terms. | 2,289 technical uses across 1,161 lessons currently precede any introduction. Most are discharged by declaring the term on the lesson that first teaches the thing — `verb` on the lesson after *soy*/*estoy*/one present form, `mood` at subjunctive block D — rather than by rewriting prose. Where a term genuinely arrives too early, the fix is the recorded `plainAlternative`, not a gloss in place. |
+
+**Owner decisions, settled 2026-08-10** and recorded in HL10 §16:
+
+1. The productive variety is **neutral Latin American**, with Peninsular and
+   Rioplatense fully receptive from pre-A1, held as a track config key rather than
+   baked into lessons.
+2. **One curriculum; for now exactly one book.** The curriculum is canonical and
+   books are derived views over it. No splitting yet — the driving edition
+   (HL-C43), per-part editions, a writing companion and a reference edition are
+   deferred generation targets, listed in HL10 §11.1 so they are visibly
+   postponed rather than forgotten. No lesson may assume which edition it appears
+   in. This puts a ~50× scale requirement on the book pipeline (214 pages today).
+
+**A fourth directive, 2026-08-10, and it governs more than one lesson:** *the
+book has to be useful from page 1; when deciding between etymology and
+usefulness, always choose usefulness.* Etymology never decides WHICH word is
+taught or when — it decides how the word already chosen is explained, and
+`rootLedgerMinReuse` culls roots, never headwords. This **reverses** the earlier
+decision to open the course on `gracias`: it opens on `hola`, per HL10 §6.3. The
+reversal was already required by HL10 §9's own selection order (function first,
+frequency second, cognate leverage third), which the `gracias` choice broke.
+
+A third directive, same day, added the **friends** system and the
+**dummy-friendly** requirement: introduce relatives from other languages so the
+reader's brain can connect, and write for someone who knows no grammar
+vocabulary at all. Both are specified in HL10 §6.7, §7.4 and §7.5 and carried by
+HL-C88 and HL-C89 below.
+
 ## P0 — Step-by-Step capability program (HL05–HL08)
 
 Specified in [HL05](../../specs/HL05-chapter-capability-and-step-by-step-shape.md),
@@ -296,7 +383,7 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C06 | Complete (#10219) | Add the figure pipeline: SVG generation, `graphicx`, SVG→PDF in CI, and a `--check` hash gate. | A generated figure round-trips from canonical data into a compiled PDF and fails CI on drift, reusing `paint-vm-svg`'s `renderToSvgString`. |
 | HL-C07 | Complete (#9963) | Add the log-scanning warning gate with recorded per-track baselines. | Overfull/underfull boxes, missing glyphs, hyperref warnings, duplicate destinations, and font substitutions are machine-checked by `scan_latex_log_warnings.py` after the `latexmk` loop, against `core/latex-warning-baseline.json`. Baselines ship unseeded — `null` means unmeasured, never zero — so the gate reports today and fails the moment a seeded track regresses. The first CI run on main emits the real counts into the job summary for a human to paste back. |
 | HL-C08 | Complete (#9974) | Render the ductus in Language Ladder. | `penPathD`/`penTip` drive the tested SVG stroke build-up in the app; the currently authored ductus is shared with validation and script practice. |
-| HL-C09 | Queued — 31 of 228 verified | Expand `DUCTUS` to cover the ten scripts with prose stroke-order entries. | Add cited, font-checked ductus and verified pen-lift metadata for the remaining 197 entries measured by HL-C19; each passes the on-ink, join-tolerance, coverage, citation, and source-agreement invariants. |
+| HL-C09 | Queued — 38 of 228 verified | Expand `DUCTUS` to cover the ten scripts with prose stroke-order entries. | Add cited, font-checked ductus and verified pen-lift metadata for the remaining 190 entries measured by HL-C19; each passes the on-ink, join-tolerance, coverage, citation, and source-agreement invariants. |
 | HL-C09A | Complete (#10222) | Verify Tamil அ as the first post-HL-C19 expansion tranche, using the primer already cited for Tamil handwriting. | அ carries a source-aligned two-stroke path with exactly one lift; its five movements, learner prose, source metadata, font-outline geometry, and rendered filmstrip agree. |
 | HL-C09B | Complete (#10223) | Verify Tamil ஆ as the next source-backed expansion tranche from Frame 4 of the same primer. | ஆ carries a font-checked path for the அ body plus its long-vowel right-hand loop; its learner prose states every verified lift, and source, geometry, and filmstrip tests agree. |
 | HL-C09C | Complete (#10226) | Verify Tamil இ as Frame 4's third source-backed vowel tranche. | இ carries a seven-movement, font-checked path whose learner prose states each evidenced lift; the cited order, Noto outline geometry, source metadata, and real filmstrip agree. |
@@ -328,7 +415,15 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C09AC | Complete (#10356) | Locate and verify independent Urdu ن in *Zer o Zabar*'s source-backed chapter *Sīn, shīn, baṛī he, nūn, and nūn-e ġhunna*. | Both independent animations draw the below-baseline bowl first, then lift once for the dot near the baseline. The distinct initial/medial tooth form, script-scoped source, Noto Naskh fallback geometry, and two-frame filmstrip agree. |
 | HL-C09AD | Complete (#10360) | Locate and verify independent Urdu ہ in *Zer o Zabar*'s source-backed chapter *Chhoṭī he, do-chashmī he, chhoṭī ye, baṛī ye, and punctuation*. | Both independent animations start at the upper right and draw one counterclockwise oval-or-teardrop loop around the base and back up to cross at the top without lifting. The distinct initial/medial divot-and-mark forms, final squiggle, script-scoped source, Noto Naskh fallback geometry, and one-frame filmstrip agree. |
 | HL-C09AE | Complete (#10363) | Locate and verify independent Urdu ی in the same *Zer o Zabar* chapter. | Both independent chhoṭī ye animations start at the upper right and keep the dotless S-shaped body and below-baseline bowl in one continuous sweep to the rising left tip. The two dots belong only to initial/medial ye; that positional distinction, zero-lift motion, script-scoped source, Noto Naskh fallback geometry, and two-frame filmstrip agree. |
-| HL-C09AF | Queued — next | Locate and verify independent Urdu ں in *Zer o Zabar*'s source-backed chapter *Sīn, shīn, baṛī he, nūn, and nūn-e ġhunna*. | Audit the independent nūn-e ġhunna animations, confirm whether the dotless bowl exactly shares ن's body direction and lift-free motion, then reconcile that motion with the canonical Noto Naskh fallback before authoring the smallest next path. |
+| HL-C09AF | Complete (#10516) | Locate and verify independent Urdu ں in *Zer o Zabar*'s source-backed chapter *Sīn, shīn, baṛī he, nūn, and nūn-e ġhunna*. | Both independent animations keep one right-to-left bowl below the baseline without lifting; the prose says the final/independent form is ن without its dot, and the vendored Noto Naskh U+06BA outline exactly matches U+0646's body contour with that dot removed. The positional distinction, zero-lift motion, script-scoped source, geometry, and one-frame filmstrip agree. |
+| HL-C09AG | Complete (#10523) | Locate and verify independent Urdu ے in *Zer o Zabar*'s source-backed chapter *Chhoṭī he, do-chashmī he, chhoṭī ye, baṛī ye, and punctuation*. | Both independent animations start at the upper right, descend and sweep left across the broad bowl, curl back underneath at the far left, then continue right along the lower fold without lifting. The positional distinction, zero-lift motion, script-scoped source, Noto Naskh fallback geometry, and three-frame filmstrip agree, completing the Urdu starter inventory. |
+| HL-C09AH | Complete (#10528) | Audit a source for independent Arabic ا and preserve its script identity before authoring the first path in the smallest remaining inventory. | The University of Oregon's instructional video verifies independent ا as one continuous top-to-bottom stroke with zero lifts. Its Arabic-scoped source, one-way-connector context, learner prose, Noto Naskh geometry, and one-frame filmstrip agree without inheriting Persian or Urdu provenance. |
+| HL-C09AI | Complete (#10532) | Verify independent Arabic ب from the adjacent source-backed video. | The University of Oregon video verifies independent ب as one continuous right-to-left bowl followed by one lift and the dot below. Its Arabic-scoped source, two-way-connector context, learner prose, Noto Naskh geometry, and two-frame filmstrip agree without inheriting Persian provenance. |
+| HL-C09AJ | Complete (#10539) | Locate and verify independent Arabic ت as the next entry in the smallest remaining inventory. | The University of Oregon page's Baa video verifies the shared right-to-left bowl; its dedicated Taa clip then places the left and right upper dots as two separately lifted strokes. The evidence split is explicit because Taa opens on the completed bowl. Arabic-scoped source, two-way-connector context, learner prose, Noto Naskh geometry, and three-frame filmstrip agree without inheriting Persian provenance. |
+| HL-C09AK | Deferred — source mismatch | Verify independent Arabic ث from the source-adjacent demonstration. | The page labels `taa.mp4` as Thaa, but frame-by-frame inspection shows another Taa lesson: its first independent form draws the bowl at 00:01.1–00:02.1 and exactly two upper dots at 00:02.3–00:03.0. No third dot appears, and source search found no correctly linked Thaa asset, so ث remains conventional rather than inheriting an unsupported lift count. |
+| HL-C09AL | Complete (#10545) | Reprioritize to independent Arabic ج from the next source-backed alphabet page. | The University of Oregon's Jeem clip draws the short upper head left-to-right at 00:05.1–00:05.4, continues down and around the independent bowl through 00:05.8 without lifting, then lifts once and places the dot below at 00:06.3–00:06.5. Arabic-scoped prose, source metadata, Noto Naskh geometry, and a three-frame filmstrip agree independently of Urdu's dot-first ج. |
+| HL-C09AM | Complete (#10550) | Audit independent Arabic ح from the same ج/ح/خ lesson after the Jeem tranche lands. | The page's attachment ledger exposes `Haa.mov` even though its chapter body links only Jeem. The clip opens mid-mark, finishes the short left stem at 00:00.15, then visibly restarts near the stem's top at 00:00.32 and sweeps down-right and around the dotless bowl through 00:00.82. Arabic-scoped prose, source metadata, Noto Naskh geometry, and a three-frame filmstrip preserve that one-lift order rather than inheriting Jeem's body-first motion. |
+| HL-C09AN | Queued — next | Audit independent Arabic خ from the same attachment ledger. | Resolve the exposed `kha.mov`, verify whether its body follows ح before the separately placed upper dot, and preserve evidence for every lift rather than assuming the ج or ح order. |
 | HL-C10 | Complete (#10010, #10013, #10067) | Complete A1 and add the A2-through-C2 spine tranches with all registered realization ledgers. | All seven declared stages carry nodes; every one of the 22 registered tracks has a non-drifting ledger entry for every node. |
 | HL-C11 | Queued — capability and closure coverage complete | Finish representative chapter payoffs across all 22 tracks. | #10128 brought all 513 chapters to an authored `canDo`, spine mapping, known payoff lesson, and closed assessment. Remediate the remaining 27 payoffs below the 0.5 representativeness floor across ten tracks, then enforce the clean tracks instead of leaving their gates report-only. |
 | HL-C12 | Queued — licensing decided, pipeline outstanding | Add the Class C illustration pipeline with provenance sidecars and a size budget. Licensing is settled and recorded in [`_assets/LICENSE.md`](./_assets/LICENSE.md); the remaining work is the pipeline itself. | Every asset carries `license`, `rightsAsserted`, `generator`, `model`, `prompt`, `date`, and `sha256`; CI fails any asset without a provenance sidecar or a recorded licence, and enforces the per-track size budget. |

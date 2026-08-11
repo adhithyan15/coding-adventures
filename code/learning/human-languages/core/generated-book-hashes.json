@@ -3275,13 +3275,14 @@
     {
       "language": "spanish",
       "chapter": 3,
-      "sourceHash": "fnv1a64:e3b0d5406a5ae90f",
+      "sourceHash": "fnv1a64:5015543f8a700f67",
       "lessonIds": [
         "ES-C03-me",
         "ES-C03-llamar",
         "ES-C03-me-llamo",
         "ES-C03-tu-usted",
         "ES-C03-tu-usted-register",
+        "ES-C03-vos",
         "ES-C03-usted-origin",
         "ES-C03-como",
         "ES-C03-como-acento",
@@ -3297,7 +3298,7 @@
     {
       "language": "spanish",
       "chapter": 4,
-      "sourceHash": "fnv1a64:f6afd8e58aeaf134",
+      "sourceHash": "fnv1a64:a04fdcf926f11b8a",
       "lessonIds": [
         "ES-C04-gracias",
         "ES-C04-de-nada",
@@ -4108,7 +4109,7 @@
     {
       "language": "tamil",
       "chapter": 38,
-      "sourceHash": "fnv1a64:054d73c0361cdf30",
+      "sourceHash": "fnv1a64:b5625b697770f1ba",
       "lessonIds": [
         "TA-C38-udambu",
         "TA-C38-sugam",
@@ -4116,6 +4117,18 @@
         "TA-W19-read-muunru"
       ],
       "tex": "tamil/book/chapters/ch38-keeping-well-and-leaving.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 39,
+      "sourceHash": "fnv1a64:ea03acf7e1a0abbb",
+      "lessonIds": [
+        "TA-C39-vendum",
+        "TA-C39-evvalavu",
+        "TA-C39-oru",
+        "TA-W20-read-onru"
+      ],
+      "tex": "tamil/book/chapters/ch39-asking-for-what-you-want.tex"
     },
     {
       "language": "telugu",

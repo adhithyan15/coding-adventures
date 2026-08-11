@@ -1,5 +1,15 @@
 # Changelog — coding-adventures-json-value
 
+## [Unreleased]
+
+### Fixed
+
+- Close the canonical Unix and Windows standalone dependency chain by
+  installing directed-graph, state-machine, grammar-tools, lexer, JSON lexer,
+  parser, and JSON parser leaf-to-root with dependency fetching disabled.
+- Add a neutral-directory installed-runtime smoke that parses, evaluates, and
+  deterministically serializes JSON using only deployed rocks.
+
 ## [0.1.0] - 2026-03-29
 
 ### Added

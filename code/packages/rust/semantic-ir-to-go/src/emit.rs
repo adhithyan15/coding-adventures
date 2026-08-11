@@ -62,7 +62,7 @@ pub fn emit_module(m: &Module) -> String {
     emit_banner(&mut out, m);
     out.push_str("package main\n\n");
     out.push_str(
-        "import (\n\t\"fmt\"\n\t\"math\"\n\t\"sort\"\n\t\"strconv\"\n\t\"strings\"\n)\n\n",
+        "import (\n\t\"fmt\"\n\t\"math\"\n\t\"os\"\n\t\"sort\"\n\t\"strconv\"\n\t\"strings\"\n)\n\n",
     );
     // Suppress unused-import linter complaints if a tiny module
     // happens not to reference them (the runtime always does, so
@@ -1166,6 +1166,39 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
                 emit_expr(out, a, indent);
             }
             out.push(')');
+            return;
+        }
+    }
+    // SIR28 §2: the console-output primitive `print`/`puts` generalize
+    // into. `args = [StrLit(stream), StrLit(terminator),
+    // BoolLit(unpack_arrays), ...values]`, already validated by
+    // `semantic-ir`'s validator (SIR28 §3.1) against a closed set.
+    // `stream`/`terminator` are lifted to quoted Go string literals — same
+    // rationale as `__new__`'s class-name lift just above: keeps the
+    // runtime's `switch` on a compile-time-known string, closed dispatch.
+    if name == "__sys_write__" {
+        if let (
+            Some(Expr::StrLit { value: stream, .. }),
+            Some(Expr::StrLit { value: term, .. }),
+            Some(Expr::BoolLit { value: unpack, .. }),
+        ) = (args.first(), args.get(1), args.get(2))
+        {
+            let _ = write!(
+                out,
+                "_sir_write({}, {}, {}, []Value{{",
+                quote_go_string(stream),
+                quote_go_string(term),
+                unpack
+            );
+            if args.len() > 3 {
+                for (i, a) in args[3..].iter().enumerate() {
+                    if i > 0 {
+                        out.push_str(", ");
+                    }
+                    emit_expr(out, a, indent);
+                }
+            }
+            out.push_str("})");
             return;
         }
     }

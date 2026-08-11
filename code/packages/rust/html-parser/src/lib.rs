@@ -4669,15 +4669,37 @@ impl HtmlParser {
                             ));
                             self.open_elements.pop();
                         }
-                        if (self.is_fragment
-                            || self.has_open_element("body")
-                            || self.current_element_is("plaintext"))
-                            && self.has_disallowed_authored_open_element_for_eof()
-                        {
+                        let authored_template_count = self.authored_open_template_count();
+                        for _ in 0..authored_template_count {
                             self.diagnostics.push(ParserDiagnostic::new(
-                                "eof-with-unclosed-elements",
-                                "end of file was reached with disallowed open elements",
+                                "eof-in-template",
+                                "end of file was reached while parsing a template",
                             ));
+                        }
+                        let eof_open_element_limit = self
+                            .first_authored_open_template_index()
+                            .unwrap_or(self.open_elements.len());
+                        if (self.is_fragment
+                            || self.open_element_prefix_has_name(eof_open_element_limit, "body")
+                            || self.open_element_prefix_current_is(
+                                eof_open_element_limit,
+                                "plaintext",
+                            ))
+                            && self.has_disallowed_authored_open_element_for_eof_before(
+                                eof_open_element_limit,
+                            )
+                        {
+                            if self.eof_open_element_prefix_is_in_table(eof_open_element_limit) {
+                                self.diagnostics.push(ParserDiagnostic::new(
+                                    "eof-in-table",
+                                    "end of file was reached while parsing table structure",
+                                ));
+                            } else {
+                                self.diagnostics.push(ParserDiagnostic::new(
+                                    "eof-with-unclosed-elements",
+                                    "end of file was reached with disallowed open elements",
+                                ));
+                            }
                         }
                         self.populate_selectedcontent_for_open_selects();
                         repair_table_cell_fostered_nobr_adoption(&mut self.document);
@@ -5360,6 +5382,10 @@ impl HtmlParser {
             && (self.current_element_is_table_structure()
                 || self.current_parent_is_fostered_before_open_table())
         {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-li-start-tag-in-table",
+                "li start tag in a table context was foster parented",
+            ));
             self.close_open_element_if(|name| name == "li");
             if let Some(path) = self.insert_node_before_open_table(Node::element(name, attributes))
             {
@@ -5388,6 +5414,10 @@ impl HtmlParser {
         }
 
         if !in_foreign_content && name == "img" && self.current_element_is_table_structure() {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-img-start-tag-in-table",
+                "img start tag in a table context was foster parented",
+            ));
             if let Some(path) =
                 self.insert_node_before_open_table_inside_previous_center_font_context(
                     Node::element(name.clone(), attributes.clone()),
@@ -5396,6 +5426,8 @@ impl HtmlParser {
                 self.open_elements.push(path);
                 return;
             }
+            self.insert_node_before_open_table(Node::element(name, attributes));
+            return;
         }
 
         if !in_foreign_content
@@ -5408,11 +5440,26 @@ impl HtmlParser {
         }
 
         if !in_foreign_content && name == "select" && self.current_element_is_table_structure() {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-select-start-tag-in-table",
+                "select start tag in a table context was foster parented",
+            ));
             if let Some(path) = self.insert_node_before_open_table(Node::element(name, attributes))
             {
                 self.open_elements.push(path);
             }
             return;
+        }
+
+        if !in_foreign_content
+            && self.current_element_is_table_structure()
+            && (is_paragraph_boundary_element(&name)
+                || matches!(name.as_str(), "br" | "p" | "plaintext"))
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-start-tag-in-table",
+                format!("start tag `<{name}>` in a table context was foster parented"),
+            ));
         }
 
         if !in_foreign_content
@@ -6888,6 +6935,16 @@ impl HtmlParser {
             self.diagnostics.push(ParserDiagnostic::new(
                 "shell-end-tag-with-unclosed-elements",
                 format!("end tag `</{name}>` was seen with disallowed open elements"),
+            ));
+        }
+        if matches!(name, "center" | "div" | "span")
+            && self.has_open_table_context()
+            && (self.current_element_is_table_structure()
+                || self.current_parent_is_fostered_before_open_table())
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-end-tag-in-table",
+                format!("end tag `</{name}>` in a table context was processed with a parse error"),
             ));
         }
         match name {
@@ -8428,13 +8485,68 @@ impl HtmlParser {
         })
     }
 
-    fn has_disallowed_authored_open_element_for_eof(&self) -> bool {
-        self.open_elements.iter().any(|path| {
+    fn has_disallowed_authored_open_element_for_eof_before(&self, limit: usize) -> bool {
+        self.open_elements[..limit].iter().any(|path| {
             element_ref_at_path(&self.document, path).is_some_and(|element| {
                 !has_fragment_context_marker(element)
                     && is_disallowed_open_element_for_body_end(element)
             })
         })
+    }
+
+    fn first_authored_open_template_index(&self) -> Option<usize> {
+        self.open_elements.iter().position(|path| {
+            element_ref_at_path(&self.document, path).is_some_and(|element| {
+                element.name == "template"
+                    && element.namespace.is_none()
+                    && !has_fragment_context_marker(element)
+            })
+        })
+    }
+
+    fn authored_open_template_count(&self) -> usize {
+        self.open_elements
+            .iter()
+            .filter(|path| {
+                element_ref_at_path(&self.document, path).is_some_and(|element| {
+                    element.name == "template"
+                        && element.namespace.is_none()
+                        && !has_fragment_context_marker(element)
+                })
+            })
+            .count()
+    }
+
+    fn eof_open_element_prefix_is_in_table(&self, limit: usize) -> bool {
+        let open_elements = &self.open_elements[..limit];
+        let Some(current_path) = open_elements.last() else {
+            return false;
+        };
+        let Some(table_path) = open_elements.iter().rfind(|path| {
+            element_at_path(&self.document, path).is_some_and(is_table_context_element)
+        }) else {
+            return false;
+        };
+        element_at_path(&self.document, current_path).is_some_and(|name| {
+            matches!(
+                name,
+                "table" | "colgroup" | "tbody" | "thead" | "tfoot" | "tr"
+            )
+        }) || !current_path.starts_with(table_path)
+    }
+
+    fn open_element_prefix_has_name(&self, limit: usize, name: &str) -> bool {
+        self.open_elements[..limit]
+            .iter()
+            .any(|path| element_at_path(&self.document, path).is_some_and(|open| open == name))
+    }
+
+    fn open_element_prefix_current_is(&self, limit: usize, name: &str) -> bool {
+        self.open_elements[..limit]
+            .last()
+            .is_some_and(|path| {
+                element_at_path(&self.document, path).is_some_and(|open| open == name)
+            })
     }
 
     fn current_element_is_authored_text_mode_element(&self) -> bool {
@@ -32112,7 +32224,6 @@ mod tests {
         for source in [
             "<!doctype html><html><plaintext></plaintext>",
             "<!doctype html><head><plaintext></plaintext>",
-            "<!doctype html><template><plaintext>a</template>b",
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert!(
@@ -32123,6 +32234,19 @@ mod tests {
                 "source {source:?}"
             );
         }
+
+        let template = parse_html_with_diagnostics(
+            "<!doctype html><template><plaintext>a</template>b",
+        )
+        .unwrap();
+        assert!(template
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "eof-in-template"));
+        assert!(template
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "eof-with-unclosed-elements"));
 
         let noscript = parse_html_with_diagnostics_and_options(
             "<!doctype html><html><noscript><plaintext></plaintext>",
@@ -34168,6 +34292,341 @@ mod tests {
                 .iter()
                 .all(|diagnostic| { diagnostic.code != "unexpected-input-start-tag-in-table" }));
         }
+    }
+
+    #[test]
+    fn reports_select_start_tags_fostered_from_table_structure() {
+        for source in [
+            "<!doctype html><table><select></select></table>",
+            "<!doctype html><table><tbody><select></select></table>",
+            "<!doctype html><table><tr><select></select></table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic
+                        == &ParserDiagnostic::new(
+                            "unexpected-select-start-tag-in-table",
+                            "select start tag in a table context was foster parented",
+                        )
+                }),
+                "source {source:?}"
+            );
+
+            let children = &body(&output.document).children;
+            assert_eq!(element(&children[0]).name, "select", "source {source:?}");
+            assert_eq!(element(&children[1]).name, "table", "source {source:?}");
+        }
+
+        for source in [
+            "<!doctype html><select></select>",
+            "<!doctype html><table><tr><td><select></select></td></tr></table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| { diagnostic.code != "unexpected-select-start-tag-in-table" }));
+        }
+    }
+
+    #[test]
+    fn reports_generic_start_tags_fostered_from_table_structure() {
+        for (source, name) in [
+            ("<!doctype html><table><div></div></table>", "div"),
+            (
+                "<!doctype html><table><tbody><div></div></tbody></table>",
+                "div",
+            ),
+            (
+                "<!doctype html><table><tbody><tr><div></div></tr></tbody></table>",
+                "div",
+            ),
+            ("<!doctype html><table><center></center></table>", "center"),
+            ("<!doctype html><table><p></p></table>", "p"),
+            ("<!doctype html><table><br></table>", "br"),
+            ("<!doctype html><table><plaintext>", "plaintext"),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic
+                        == &ParserDiagnostic::new(
+                            "unexpected-start-tag-in-table",
+                            format!("start tag `<{name}>` in a table context was foster parented"),
+                        )
+                }),
+                "source {source:?}"
+            );
+
+            let children = &body(&output.document).children;
+            assert_eq!(element(&children[0]).name, name, "source {source:?}");
+            assert_eq!(element(&children[1]).name, "table", "source {source:?}");
+        }
+
+        for source in [
+            "<!doctype html><div></div>",
+            "<!doctype html><table><tr><td><div></div></td></tr></table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-start-tag-in-table"));
+        }
+    }
+
+    #[test]
+    fn reports_li_start_tags_fostered_from_table_context() {
+        let output = parse_html_with_diagnostics("<!doctype html><table><li><li></table>").unwrap();
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-li-start-tag-in-table")
+                .count(),
+            2
+        );
+
+        let children = &body(&output.document).children;
+        assert_eq!(element(&children[0]).name, "li");
+        assert_eq!(element(&children[1]).name, "li");
+        assert_eq!(element(&children[2]).name, "table");
+
+        for source in [
+            "<!doctype html><ul><li></li></ul>",
+            "<!doctype html><table><tr><td><ul><li></li></ul></td></tr></table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-li-start-tag-in-table"));
+        }
+    }
+
+    #[test]
+    fn reports_img_start_tags_fostered_from_table_structure() {
+        let output =
+            parse_html_with_diagnostics("<!doctype html><table><img src=x></table>").unwrap();
+        assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic
+                == &ParserDiagnostic::new(
+                    "unexpected-img-start-tag-in-table",
+                    "img start tag in a table context was foster parented",
+                )
+        }));
+        let children = &body(&output.document).children;
+        assert_eq!(element(&children[0]).name, "img");
+        assert_eq!(element(&children[1]).name, "table");
+
+        let output = parse_html_with_diagnostics(
+            "<!doctype html><table><center> <font>a</center> <img> <tr><td> </td> </tr> </table>",
+        )
+        .unwrap();
+        assert!(output
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "unexpected-img-start-tag-in-table"));
+        let children = &body(&output.document).children;
+        assert_eq!(element(&children[0]).name, "center");
+        let font = element(&children[1]);
+        assert_eq!(font.name, "font");
+        assert_eq!(element(&font.children[0]).name, "img");
+        assert_eq!(element(&children[2]).name, "table");
+
+        for source in [
+            "<!doctype html><img src=x>",
+            "<!doctype html><table><tr><td><img src=x></td></tr></table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-img-start-tag-in-table"));
+        }
+    }
+
+    #[test]
+    fn reports_generic_end_tags_processed_in_table_foster_state() {
+        let output = parse_html_with_diagnostics(
+            "<!doctype html><table><div>x<div></div>x</span>x</table>",
+        )
+        .unwrap();
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-end-tag-in-table")
+                .count(),
+            2
+        );
+        assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic
+                == &ParserDiagnostic::new(
+                    "unexpected-end-tag-in-table",
+                    "end tag `</div>` in a table context was processed with a parse error",
+                )
+        }));
+        assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic
+                == &ParserDiagnostic::new(
+                    "unexpected-end-tag-in-table",
+                    "end tag `</span>` in a table context was processed with a parse error",
+                )
+        }));
+
+        let center = parse_html_with_diagnostics(
+            "<!doctype html><table><center> <font>a</center> <img> <tr><td> </td> </tr> </table>",
+        )
+        .unwrap();
+        assert!(center.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic
+                == &ParserDiagnostic::new(
+                    "unexpected-end-tag-in-table",
+                    "end tag `</center>` in a table context was processed with a parse error",
+                )
+        }));
+        assert!(center
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "unexpected-non-current-end-tag"));
+
+        for source in [
+            "<!doctype html><div></div></span>",
+            "<!doctype html><center></center>",
+            "<!doctype html><table><tr><td><div></div></span></td></tr></table>",
+            "<!doctype html><table><tr><td><center></center></td></tr></table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag-in-table"));
+        }
+    }
+
+    #[test]
+    fn reports_eof_in_table_structure_without_duplicating_generic_eof() {
+        for source in [
+            "<!doctype html><table>",
+            "<!doctype html><table><tbody>",
+            "<!doctype html><table><tr>",
+            "<!doctype html><table><div>x",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+                diagnostic
+                    == &ParserDiagnostic::new(
+                        "eof-in-table",
+                        "end of file was reached while parsing table structure",
+                    )
+            }));
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "eof-with-unclosed-elements"));
+        }
+
+        for source in [
+            "<!doctype html><table></table>",
+            "<!doctype html><table><tr><td>x",
+            "<!doctype html><div>x",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "eof-in-table"));
+        }
+
+        let cell = parse_html_with_diagnostics("<!doctype html><table><tr><td>x").unwrap();
+        assert!(cell
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "eof-with-unclosed-elements"));
+
+        let fragment = parse_html_fragment_for_context_with_diagnostics(
+            "<tr><td>x</td></tr>",
+            "table",
+        )
+        .unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "eof-in-table"));
+    }
+
+    #[test]
+    fn reports_eof_once_for_each_authored_open_template() {
+        for (source, expected_count) in [
+            ("<!doctype html><template>", 1),
+            ("<!doctype html><template><div>", 1),
+            ("<!doctype html><template><template><div>", 2),
+            ("<!doctype html><template><script>var i", 1),
+            ("<!doctype html><table><tr><template><td>", 1),
+            ("<!doctype html><select><template>", 1),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| diagnostic.code == "eof-in-template")
+                    .count(),
+                expected_count,
+                "source {source:?}"
+            );
+        }
+
+        let table =
+            parse_html_with_diagnostics("<!doctype html><table><tr><template><td>").unwrap();
+        assert!(table
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "eof-in-table"));
+        assert!(table
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "eof-with-unclosed-elements"));
+
+        let cell = parse_html_with_diagnostics(
+            "<!doctype html><table><tr><td><template><div>",
+        )
+        .unwrap();
+        assert_eq!(
+            cell.parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "eof-in-template")
+                .count(),
+            1
+        );
+        assert!(cell
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "eof-in-table"));
+        assert!(cell
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "eof-with-unclosed-elements"));
+
+        for source in [
+            "<!doctype html><template></template>",
+            "<!doctype html><template><template></template></template>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "eof-in-template"));
+        }
+
+        let fragment = parse_html_fragment_for_context_with_diagnostics("<div>", "template")
+            .unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "eof-in-template"));
     }
 
     #[test]

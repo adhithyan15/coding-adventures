@@ -1,0 +1,14 @@
+% ============================================================================
+% fable-moral.query.adj — worked recall over the fable-moral library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is this fable's
+% moral?" (direct) or "which fable has this moral?" (reverse) — it states
+% no fact of its own — it only `import`s the grounded table and asks
+% binding queries.
+% ============================================================================
+
+import "fable-moral.adj"
+
+? fable_moral(tortoise_and_the_hare, $Moral)   % expect "Slow but steady wins the race." (direct)
+? fable_moral($F, $Moral)                       % expect all three fables and their morals (reverse over everything)
+? fable_moral(the_fox_and_the_crow, $Moral)     % expect abstain -- its closing line is character dialogue, not a narrator-stated moral

@@ -1,0 +1,29 @@
+% ============================================================================
+% mitosis-phase-ordinal-position.query.adj — worked recall over the
+% mitosis-phase/ordinal bridge library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what position is this
+% phase of mitosis, in words?" — it states no fact of its own — it only
+% `import`s the grounded rule and asks binding queries. The answer is
+% DERIVED, joining a phase-order fact to an ordinal-word fact, so every
+% answer carries BOTH citations in its `steps` trail.
+%
+% Placed at the stdlib PACKAGE ROOT (not beside `biology/mitosis-phase-
+% ordinal-position.adj`) — the same cross-directory-import sandboxing
+% pattern `astronomy/planet-ordinal-position.query.adj` (and, before it,
+% `season-start-month-number.query.adj`) already established: the library
+% itself lives in `biology/` and reaches its mathematics sibling via a
+% relative `../mathematics/ordinal-numbers.adj` import, which only resolves
+% if the CONSUMING entry program (this file) sits at or above the package
+% root.
+%
+% Run (from this directory, the package root, so the relative import
+% resolves):
+%     ../../packages/rust/target/debug/adj-lang-cli mitosis-phase-ordinal-position.query.adj
+% ============================================================================
+
+import "biology/mitosis-phase-ordinal-position.adj"
+
+? mitosis_phase_ordinal_position(anaphase, $O)      % expect third  (direct: what position is anaphase, in words?)
+? mitosis_phase_ordinal_position($P, first)         % expect prophase (reverse: which phase is first?)
+? mitosis_phase_ordinal_position(interphase, $O)    % expect abstain -- interphase is not one of the 4 ordered mitotic phases

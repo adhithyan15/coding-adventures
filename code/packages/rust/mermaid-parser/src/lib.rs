@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.26.0";
+pub const VERSION: &str = "0.30.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1116,10 +1116,22 @@ fn parse_sequence_body(
                 if cursor.current().value == "off" {
                     diagram.auto_number = false;
                     cursor.advance();
+                    diagram.events.push(SequenceEvent::AutoNumber {
+                        visible: false,
+                        start: None,
+                        step: None,
+                    });
                 } else {
                     diagram.auto_number = true;
-                    diagram.auto_number_start = take_sequence_number(cursor)?.unwrap_or(1.0);
-                    diagram.auto_number_step = take_sequence_number(cursor)?.unwrap_or(1.0);
+                    let start = take_sequence_number(cursor)?;
+                    let step = take_sequence_number(cursor)?;
+                    diagram.auto_number_start = start.unwrap_or(1.0);
+                    diagram.auto_number_step = step.unwrap_or(1.0);
+                    diagram.events.push(SequenceEvent::AutoNumber {
+                        visible: true,
+                        start,
+                        step,
+                    });
                 }
             }
             "loop" | "rect" | "opt" | "alt" | "par" | "par_over" | "critical" | "break" => {
@@ -1284,13 +1296,23 @@ fn parse_sequence_participant(
         }
         inline_alias = parsed.1;
     }
-    let label = if cursor.current().value == "as" {
+    let (label, label_wrap) = if cursor.current().value == "as" {
         cursor.advance();
-        take_sequence_line_text(cursor)
+        take_sequence_wrapped_text(cursor)
     } else {
-        inline_alias.unwrap_or_else(|| id.clone())
+        (
+            inline_alias.unwrap_or_else(|| id.clone()),
+            SequenceTextWrap::Default,
+        )
     };
-    upsert_sequence_participant(diagram, participant_indices, id.clone(), label, kind);
+    upsert_sequence_participant(
+        diagram,
+        participant_indices,
+        id.clone(),
+        label,
+        label_wrap,
+        kind,
+    );
     if created {
         diagram.events.push(SequenceEvent::ParticipantCreated {
             participant: id.clone(),
@@ -1357,11 +1379,12 @@ fn parse_sequence_participant_box(
     participant_indices: &mut HashMap<String, usize>,
 ) -> Result<(), ParseError> {
     cursor.advance();
-    let (fill, label) = parse_sequence_box_header(&take_sequence_line_text(cursor));
+    let (fill, label, label_wrap) = parse_sequence_box_header(&take_sequence_line_text(cursor));
     let group_id = format!("box-{}", diagram.participant_groups.len() + 1);
     diagram.participant_groups.push(SequenceParticipantGroup {
         id: group_id.clone(),
         label,
+        label_wrap,
         fill,
     });
     cursor.skip_terminators();
@@ -1384,10 +1407,10 @@ fn parse_sequence_participant_box(
     Ok(())
 }
 
-fn parse_sequence_box_header(raw: &str) -> (Option<String>, Option<String>) {
+fn parse_sequence_box_header(raw: &str) -> (Option<String>, Option<String>, SequenceTextWrap) {
     let raw = raw.trim();
     if raw.is_empty() {
-        return (None, None);
+        return (None, None, SequenceTextWrap::Default);
     }
     let lower = raw.to_ascii_lowercase();
     let function_color = ["rgb(", "rgba(", "hsl(", "hsla("]
@@ -1422,12 +1445,23 @@ fn parse_sequence_box_header(raw: &str) -> (Option<String>, Option<String>) {
             | "yellow"
     );
     if function_color || is_named_color {
-        let label = raw[split..].trim();
+        let (label, wrap) = split_sequence_wrap_directive(raw[split..].trim());
         let fill =
             (!first.eq_ignore_ascii_case("transparent")).then(|| normalize_sequence_color(first));
-        (fill, (!label.is_empty()).then(|| label.to_string()))
+        (fill, (!label.is_empty()).then(|| label.to_string()), wrap)
     } else {
-        (None, Some(raw.to_string()))
+        let (label, wrap) = split_sequence_wrap_directive(raw);
+        (None, (!label.is_empty()).then(|| label.to_string()), wrap)
+    }
+}
+
+fn split_sequence_wrap_directive(raw: &str) -> (&str, SequenceTextWrap) {
+    if let Some(label) = raw.strip_prefix("nowrap:") {
+        (label.trim(), SequenceTextWrap::NoWrap)
+    } else if let Some(label) = raw.strip_prefix("wrap:") {
+        (label.trim(), SequenceTextWrap::Wrap)
+    } else {
+        (raw, SequenceTextWrap::Default)
     }
 }
 
@@ -1857,6 +1891,7 @@ fn ensure_sequence_participant(
             participant_indices,
             id.to_string(),
             id.to_string(),
+            SequenceTextWrap::Default,
             SequenceParticipantKind::Participant,
         );
     }
@@ -1867,10 +1902,12 @@ fn upsert_sequence_participant(
     participant_indices: &mut HashMap<String, usize>,
     id: String,
     label: String,
+    label_wrap: SequenceTextWrap,
     kind: SequenceParticipantKind,
 ) {
     if let Some(&index) = participant_indices.get(&id) {
         diagram.participants[index].label = DiagramLabel::new(label);
+        diagram.participants[index].label_wrap = label_wrap;
         diagram.participants[index].kind = kind;
         return;
     }
@@ -1878,6 +1915,7 @@ fn upsert_sequence_participant(
     diagram.participants.push(SequenceParticipant {
         id,
         label: DiagramLabel::new(label),
+        label_wrap,
         kind,
         style: None,
         group_id: None,
@@ -3156,18 +3194,22 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(diagram.participants[0].label.text, "Alice");
         assert!(matches!(
             &diagram.events[0],
+            SequenceEvent::AutoNumber { visible: true, .. }
+        ));
+        assert!(matches!(
+            &diagram.events[1],
             SequenceEvent::Message { from, to, activate: true, .. }
                 if from == "A" && to == "Bob"
         ));
         assert!(matches!(
-            &diagram.events[1],
+            &diagram.events[2],
             SequenceEvent::Note {
                 placement: SequenceNotePlacement::RightOf,
                 ..
             }
         ));
         assert!(matches!(
-            &diagram.events[2],
+            &diagram.events[3],
             SequenceEvent::Activation { participant, active: false } if participant == "Bob"
         ));
     }
@@ -3259,6 +3301,30 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         );
         assert_eq!(diagram.participants[0].group_id.as_deref(), Some("box-1"));
         assert_eq!(diagram.participants[2].group_id.as_deref(), Some("box-2"));
+    }
+
+    #[test]
+    fn sequence_preserves_participant_box_wrap_directives() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nbox hsl(180, 100%, 50%) wrap: A deliberately detailed client application tier\nparticipant API\nend\nbox nowrap: Core services\nparticipant DB\nend\n",
+        )
+        .unwrap();
+        assert_eq!(
+            diagram.participant_groups[0].label.as_deref(),
+            Some("A deliberately detailed client application tier")
+        );
+        assert_eq!(
+            diagram.participant_groups[0].label_wrap,
+            SequenceTextWrap::Wrap
+        );
+        assert_eq!(
+            diagram.participant_groups[1].label.as_deref(),
+            Some("Core services")
+        );
+        assert_eq!(
+            diagram.participant_groups[1].label_wrap,
+            SequenceTextWrap::NoWrap
+        );
     }
 
     #[test]
@@ -3368,6 +3434,40 @@ B//-A: reverse stick top
         assert!(diagram.auto_number);
         assert_eq!(diagram.auto_number_start, 10.5);
         assert_eq!(diagram.auto_number_step, 2.25);
+        assert!(matches!(
+            diagram.events.first(),
+            Some(SequenceEvent::AutoNumber {
+                visible: true,
+                start: Some(10.5),
+                step: Some(2.25),
+            })
+        ));
+    }
+
+    #[test]
+    fn sequence_preserves_ordered_autonumber_toggles() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nautonumber\nA->>B: One\nautonumber off\nA->>B: Hidden\nautonumber 20 5\nA->>B: Twenty\n",
+        )
+        .unwrap();
+        let controls: Vec<_> = diagram
+            .events
+            .iter()
+            .filter(|event| matches!(event, SequenceEvent::AutoNumber { .. }))
+            .collect();
+        assert_eq!(controls.len(), 3);
+        assert!(matches!(
+            controls[1],
+            SequenceEvent::AutoNumber { visible: false, .. }
+        ));
+        assert!(matches!(
+            controls[2],
+            SequenceEvent::AutoNumber {
+                visible: true,
+                start: Some(20.0),
+                step: Some(5.0)
+            }
+        ));
     }
 
     #[test]
@@ -3477,6 +3577,19 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn sequence_ignores_hash_comments_around_semantic_text() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\n# participant setup\nparticipant A # declaration comment\nA->>B: Hello # message comment\n",
+        )
+        .unwrap();
+        assert_eq!(diagram.participants.len(), 2);
+        assert!(matches!(
+            &diagram.events[0],
+            SequenceEvent::Message { label, .. } if label == "Hello"
+        ));
+    }
+
+    #[test]
     fn sequence_converts_html_breaks_to_semantic_newlines() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\nAlice->>Bob: First line<br/>Second line\nnote over Alice,Bob: Note one<br />Note two\n",
@@ -3508,6 +3621,21 @@ B//-A: reverse stick top
             SequenceEvent::Note { text, wrap: SequenceTextWrap::NoWrap, .. }
                 if text == "A deliberately long note"
         ));
+    }
+
+    #[test]
+    fn sequence_preserves_participant_alias_wrap_directives() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nparticipant API as wrap: A deliberately detailed public application programming interface\nactor User as nowrap: Banking User\n",
+        )
+        .unwrap();
+        assert_eq!(
+            diagram.participants[0].label.text,
+            "A deliberately detailed public application programming interface"
+        );
+        assert_eq!(diagram.participants[0].label_wrap, SequenceTextWrap::Wrap);
+        assert_eq!(diagram.participants[1].label.text, "Banking User");
+        assert_eq!(diagram.participants[1].label_wrap, SequenceTextWrap::NoWrap);
     }
 
     #[test]
@@ -3623,7 +3751,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.26.0");
+        assert_eq!(crate::VERSION, "0.30.0");
     }
 
     #[test]

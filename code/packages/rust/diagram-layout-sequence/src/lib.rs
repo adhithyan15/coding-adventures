@@ -4,10 +4,10 @@ use std::collections::{HashMap, HashSet};
 
 use diagram_ir::{
     LayoutedSequenceDiagram, LayoutedSequenceItem, SequenceBlockKind, SequenceDiagram,
-    SequenceEvent, SequenceNotePlacement, SequenceTextWrap,
+    SequenceEvent, SequenceNotePlacement, SequenceParticipantKind, SequenceTextWrap,
 };
 
-pub const VERSION: &str = "0.15.0";
+pub const VERSION: &str = "0.19.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -37,19 +37,66 @@ struct BlockFrameState {
 /// Lay out an ordered sequence diagram. Participant order is semantic and is
 /// therefore retained exactly rather than optimized by the layout engine.
 pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDiagram {
-    let header_y = HEADER_Y
-        + if diagram.participant_groups.is_empty() {
-            0.0
-        } else {
-            28.0
-        };
     let lane_widths: Vec<f64> = diagram
         .participants
         .iter()
         .map(|participant| {
-            ((participant.label.text.chars().count() as f64 * 8.0) + 36.0).max(MIN_LANE_W)
+            if participant.label_wrap == SequenceTextWrap::Wrap {
+                MIN_LANE_W
+            } else {
+                ((participant.label.text.chars().count() as f64 * 8.0) + 36.0).max(MIN_LANE_W)
+            }
         })
         .collect();
+    let group_labels: HashMap<String, (Option<String>, f64)> = diagram
+        .participant_groups
+        .iter()
+        .map(|group| {
+            let group_width = diagram
+                .participants
+                .iter()
+                .zip(&lane_widths)
+                .filter(|(participant, _)| {
+                    participant.group_id.as_deref() == Some(group.id.as_str())
+                })
+                .map(|(_, width)| *width)
+                .sum::<f64>();
+            let label = group.label.as_ref().map(|label| {
+                wrap_sequence_text(label, &group.label_wrap, (group_width - 24.0).max(1.0))
+            });
+            let label_height = label
+                .as_deref()
+                .map_or(0.0, |label| line_count(label) as f64 * 16.0);
+            (group.id.clone(), (label, label_height))
+        })
+        .collect();
+    let group_header_height = group_labels
+        .values()
+        .map(|(_, height)| *height)
+        .fold(0.0, f64::max);
+    let header_y = HEADER_Y
+        + if diagram.participant_groups.is_empty() {
+            0.0
+        } else {
+            group_header_height + 12.0
+        };
+    let participant_labels: Vec<String> = diagram
+        .participants
+        .iter()
+        .zip(&lane_widths)
+        .map(|(participant, lane_width)| {
+            wrap_sequence_text(
+                &participant.label.text,
+                &participant.label_wrap,
+                (*lane_width - 40.0).max(1.0),
+            )
+        })
+        .collect();
+    let header_height = participant_labels
+        .iter()
+        .zip(&diagram.participants)
+        .map(|(label, participant)| participant_header_height(&participant.kind, line_count(label)))
+        .fold(HEADER_H, f64::max);
     let width = lane_widths.iter().sum::<f64>() + MARGIN * 2.0;
     let created_participants: HashSet<&str> = diagram
         .events
@@ -66,7 +113,12 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
     let mut x = MARGIN;
     let mut lane_lefts = Vec::with_capacity(lane_widths.len());
 
-    for (participant, lane_width) in diagram.participants.iter().zip(&lane_widths) {
+    for ((participant, lane_width), label) in diagram
+        .participants
+        .iter()
+        .zip(&lane_widths)
+        .zip(&participant_labels)
+    {
         lane_lefts.push(x);
         let box_width = (*lane_width - 24.0).max(100.0);
         let center = x + *lane_width / 2.0;
@@ -74,7 +126,8 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
         if !created_participants.contains(participant.id.as_str()) {
             items.push(LayoutedSequenceItem::ParticipantBox {
                 id: participant.id.clone(),
-                label: participant.label.text.clone(),
+                label: label.clone(),
+                label_height: line_count(label) as f64 * 16.0,
                 kind: participant.kind.clone(),
                 links: participant.links.clone(),
                 properties: participant.properties.clone(),
@@ -82,21 +135,50 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 x: center - box_width / 2.0,
                 y: header_y,
                 width: box_width,
-                height: HEADER_H,
+                height: header_height,
             });
-            lifeline_starts.insert(participant.id.clone(), header_y + HEADER_H);
+            lifeline_starts.insert(participant.id.clone(), header_y + header_height);
         }
         x += *lane_width;
     }
 
-    let event_start = header_y + HEADER_H + 36.0;
+    let event_start = header_y + header_height + 36.0;
     let mut y = event_start;
     let mut activation_starts: HashMap<String, Vec<f64>> = HashMap::new();
-    let mut message_number = diagram.auto_number_start;
+    let has_auto_number_events = diagram
+        .events
+        .iter()
+        .any(|event| matches!(event, SequenceEvent::AutoNumber { .. }));
+    let mut auto_number_visible = if has_auto_number_events {
+        false
+    } else {
+        diagram.auto_number
+    };
+    let mut message_number = if has_auto_number_events {
+        1.0
+    } else {
+        diagram.auto_number_start
+    };
+    let mut message_number_step = if has_auto_number_events {
+        1.0
+    } else {
+        diagram.auto_number_step
+    };
     let mut block_stack: Vec<BlockFrameState> = Vec::new();
 
     for event in &diagram.events {
         match event {
+            SequenceEvent::AutoNumber {
+                visible,
+                start,
+                step,
+            } => {
+                auto_number_visible = *visible;
+                if *visible {
+                    message_number = start.unwrap_or(1.0);
+                    message_number_step = step.unwrap_or(1.0);
+                }
+            }
             SequenceEvent::Message {
                 from,
                 to,
@@ -132,9 +214,11 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     arrowhead: arrowhead.clone(),
                     bidirectional: *bidirectional,
                     central_connection: central_connection.clone(),
-                    number: diagram.auto_number.then_some(message_number),
+                    number: auto_number_visible.then_some(message_number),
                 });
-                message_number += diagram.auto_number_step;
+                if auto_number_visible {
+                    message_number += message_number_step;
+                }
                 if *activate {
                     activation_starts
                         .entry(to.clone())
@@ -183,9 +267,14 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                         .position(|item| item.id == *participant)
                         .unwrap_or(0);
                     let box_width = (lane_widths[lane_index] - 24.0).max(100.0);
+                    let created_header_height = participant_header_height(
+                        &definition.kind,
+                        line_count(&participant_labels[lane_index]),
+                    );
                     items.push(LayoutedSequenceItem::ParticipantBox {
                         id: definition.id.clone(),
-                        label: definition.label.text.clone(),
+                        label: participant_labels[lane_index].clone(),
+                        label_height: line_count(&participant_labels[lane_index]) as f64 * 16.0,
                         kind: definition.kind.clone(),
                         links: definition.links.clone(),
                         properties: definition.properties.clone(),
@@ -193,11 +282,13 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                         x: center - box_width / 2.0,
                         y,
                         width: box_width,
-                        height: HEADER_H,
+                        height: created_header_height,
                     });
-                    lifeline_starts.insert(participant.clone(), y + HEADER_H);
+                    lifeline_starts.insert(participant.clone(), y + created_header_height);
+                    y += (created_header_height + 14.0).max(EVENT_H);
+                } else {
+                    y += EVENT_H;
                 }
-                y += EVENT_H;
             }
             SequenceEvent::ParticipantDestroyed { participant } => {
                 if let Some(&center) = centers.get(participant) {
@@ -330,9 +421,11 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
         if let (Some(first), Some(last)) = (indexes.first(), indexes.last()) {
             let group_x = lane_lefts[*first] + 4.0;
             let group_right = lane_lefts[*last] + lane_widths[*last] - 4.0;
+            let (label, label_height) = group_labels.get(&group.id).cloned().unwrap_or((None, 0.0));
             items.push(LayoutedSequenceItem::ParticipantGroup {
                 id: group.id.clone(),
-                label: group.label.clone(),
+                label,
+                label_height,
                 fill: group.fill.clone(),
                 x: group_x,
                 y: HEADER_Y - 6.0,
@@ -349,7 +442,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 y1: lifeline_starts
                     .get(&participant.id)
                     .copied()
-                    .unwrap_or(header_y + HEADER_H),
+                    .unwrap_or(header_y + header_height),
                 y2: lifeline_ends
                     .get(&participant.id)
                     .copied()
@@ -387,6 +480,19 @@ fn wrap_sequence_text(text: &str, wrap: &SequenceTextWrap, max_width: f64) -> St
         .flat_map(|line| wrap_sequence_line(line, max_chars))
         .collect::<Vec<_>>()
         .join("\n")
+}
+
+fn line_count(text: &str) -> usize {
+    text.lines().count().max(1)
+}
+
+fn participant_header_height(kind: &SequenceParticipantKind, lines: usize) -> f64 {
+    let base = if kind == &SequenceParticipantKind::Actor {
+        64.0
+    } else {
+        HEADER_H
+    };
+    base + 16.0 * (lines.max(1) as f64 - 1.0)
 }
 
 fn wrap_sequence_line(line: &str, max_chars: usize) -> Vec<String> {
@@ -440,6 +546,7 @@ mod tests {
         SequenceParticipant {
             id: id.into(),
             label: DiagramLabel::new(id),
+            label_wrap: SequenceTextWrap::Default,
             kind: SequenceParticipantKind::Participant,
             style: None,
             group_id: None,
@@ -500,6 +607,62 @@ mod tests {
     }
 
     #[test]
+    fn applies_ordered_autonumber_toggles_and_resets() {
+        let message = |label: &str| SequenceEvent::Message {
+            from: "Alice".into(),
+            to: "Bob".into(),
+            label: label.into(),
+            wrap: SequenceTextWrap::Default,
+            line_style: SequenceLineStyle::Solid,
+            arrowhead: SequenceArrowhead::Filled,
+            bidirectional: false,
+            central_connection: SequenceCentralConnection::None,
+            activate: false,
+            deactivate: false,
+        };
+        let diagram = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: true,
+            auto_number_start: 20.0,
+            auto_number_step: 5.0,
+            participants: vec![participant("Alice"), participant("Bob")],
+            participant_groups: vec![],
+            events: vec![
+                SequenceEvent::AutoNumber {
+                    visible: true,
+                    start: None,
+                    step: None,
+                },
+                message("One"),
+                SequenceEvent::AutoNumber {
+                    visible: false,
+                    start: None,
+                    step: None,
+                },
+                message("Hidden"),
+                SequenceEvent::AutoNumber {
+                    visible: true,
+                    start: Some(20.0),
+                    step: Some(5.0),
+                },
+                message("Twenty"),
+                message("Twenty-five"),
+            ],
+        };
+        let numbers: Vec<_> = layout_sequence_diagram(&diagram)
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedSequenceItem::Message { number, .. } => Some(*number),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(numbers, vec![Some(1.0), None, Some(20.0), Some(25.0)]);
+    }
+
+    #[test]
     fn wraps_sequence_text_only_when_requested() {
         let text = "A deliberately long message that must wrap across several native lines";
         let wrapped = wrap_sequence_text(text, &SequenceTextWrap::Wrap, 90.0);
@@ -508,6 +671,70 @@ mod tests {
             wrap_sequence_text(text, &SequenceTextWrap::NoWrap, 90.0),
             text
         );
+    }
+
+    #[test]
+    fn wrapped_participant_alias_expands_all_headers_and_lifelines() {
+        let mut alice = participant("Alice");
+        alice.label =
+            DiagramLabel::new("A deliberately detailed public application programming interface");
+        alice.label_wrap = SequenceTextWrap::Wrap;
+        let diagram = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
+            participants: vec![alice, participant("Bob")],
+            participant_groups: vec![],
+            events: vec![],
+        };
+        let layout = layout_sequence_diagram(&diagram);
+        let boxes: Vec<_> = layout
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedSequenceItem::ParticipantBox {
+                    label,
+                    label_height,
+                    height,
+                    ..
+                } => Some((label, *label_height, *height)),
+                _ => None,
+            })
+            .collect();
+        assert!(boxes[0].0.contains('\n'));
+        assert!(boxes[0].1 > 16.0);
+        assert_eq!(boxes[0].2, boxes[1].2);
+        assert!(boxes[0].2 > HEADER_H);
+    }
+
+    #[test]
+    fn actor_headers_reserve_symbol_geometry() {
+        let mut actor = participant("Alice");
+        actor.kind = SequenceParticipantKind::Actor;
+        let diagram = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
+            participants: vec![actor, participant("Service")],
+            participant_groups: vec![],
+            events: vec![],
+        };
+        let layout = layout_sequence_diagram(&diagram);
+        let heights: Vec<_> = layout
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedSequenceItem::ParticipantBox { height, .. } => Some(*height),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(heights, vec![64.0, 64.0]);
     }
 
     #[test]
@@ -748,6 +975,7 @@ mod tests {
             participant_groups: vec![diagram_ir::SequenceParticipantGroup {
                 id: "client".into(),
                 label: Some("Client tier".into()),
+                label_wrap: SequenceTextWrap::Default,
                 fill: Some("aqua".into()),
             }],
             events: vec![],
@@ -770,5 +998,51 @@ mod tests {
             })
             .unwrap();
         assert!(group_x + group_width < database_x);
+    }
+
+    #[test]
+    fn wrapped_participant_group_label_reserves_header_space() {
+        let mut alice = participant("Alice");
+        alice.group_id = Some("client".into());
+        let diagram = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
+            participants: vec![alice],
+            participant_groups: vec![diagram_ir::SequenceParticipantGroup {
+                id: "client".into(),
+                label: Some("A deliberately detailed client application tier".into()),
+                label_wrap: SequenceTextWrap::Wrap,
+                fill: None,
+            }],
+            events: vec![],
+        };
+        let layout = layout_sequence_diagram(&diagram);
+        let (label, label_height) = layout
+            .items
+            .iter()
+            .find_map(|item| match item {
+                LayoutedSequenceItem::ParticipantGroup {
+                    label,
+                    label_height,
+                    ..
+                } => Some((label.as_deref().unwrap(), *label_height)),
+                _ => None,
+            })
+            .unwrap();
+        let participant_y = layout
+            .items
+            .iter()
+            .find_map(|item| match item {
+                LayoutedSequenceItem::ParticipantBox { y, .. } => Some(*y),
+                _ => None,
+            })
+            .unwrap();
+        assert!(label.contains('\n'));
+        assert!(label_height > 16.0);
+        assert_eq!(participant_y, HEADER_Y + label_height + 12.0);
     }
 }

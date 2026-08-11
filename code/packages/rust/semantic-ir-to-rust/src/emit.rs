@@ -1674,6 +1674,17 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
             emit_method_dispatch(out, args, indent);
             return;
         }
+        // SIR28 §2: the console-output primitive `print`/`puts` generalize
+        // into. `args = [StrLit(stream), StrLit(terminator),
+        // BoolLit(unpack_arrays), ...values]`, already validated by
+        // `semantic-ir`'s validator (SIR28 §3.1) against a closed set —
+        // routed to `emit_sys_write`, which mirrors `emit_method_dispatch`'s
+        // "lift a compile-time-known literal to a Rust literal, degrade
+        // gracefully rather than panic on the unexpected" discipline.
+        "__sys_write__" => {
+            emit_sys_write(out, args, indent);
+            return;
+        }
         // ── block-pass (`&:sym` / `&blk`) ─────────────────────────────
         // A trailing `&expr` block-pass reaches us as
         // `BuiltinCall("block_pass", [expr])`.  The common collection-code
@@ -1797,6 +1808,40 @@ fn emit_method_dispatch(out: &mut String, args: &[Expr], indent: usize) {
     out.push_str(", vec![");
     if args.len() > 2 {
         emit_args(out, &args[2..], indent);
+    }
+    out.push_str("])");
+}
+
+/// Emit `BuiltinCall("__sys_write__", [StrLit(stream), StrLit(terminator),
+/// BoolLit(unpack_arrays), ...values])` (SIR28 §2) as
+/// `__sir::write(<stream str-literal>, <terminator str-literal>,
+/// <unpack_arrays bool-literal>, vec![<values>])`.
+///
+/// `stream`/`terminator` are lifted to Rust `&str` literals (same rationale
+/// as `emit_method_dispatch`'s method name: the runtime's `write` matches
+/// them as compile-time-known `&str`s, keeping dispatch closed) rather than
+/// passed through as runtime `Value`s. A malformed shape (missing/non-literal
+/// leading args — should never happen given upstream validation) degrades to
+/// `"stdout"`/`"none"`/`false` rather than panicking in the emitter.
+fn emit_sys_write(out: &mut String, args: &[Expr], indent: usize) {
+    out.push_str("__sir::write(");
+    match args.first() {
+        Some(Expr::StrLit { value, .. }) => out.push_str(&quote_rs_string(value)),
+        _ => out.push_str("\"stdout\""),
+    }
+    out.push_str(", ");
+    match args.get(1) {
+        Some(Expr::StrLit { value, .. }) => out.push_str(&quote_rs_string(value)),
+        _ => out.push_str("\"none\""),
+    }
+    out.push_str(", ");
+    match args.get(2) {
+        Some(Expr::BoolLit { value, .. }) => out.push_str(if *value { "true" } else { "false" }),
+        _ => out.push_str("false"),
+    }
+    out.push_str(", vec![");
+    if args.len() > 3 {
+        emit_args(out, &args[3..], indent);
     }
     out.push_str("])");
 }

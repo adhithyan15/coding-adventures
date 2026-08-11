@@ -14,9 +14,11 @@ vault-pm audit verify
 vault-pm doctor [--unlock]
 vault-pm item add login
 vault-pm item edit ITEM
+vault-pm item delete ITEM
 vault-pm item list
 vault-pm item show ITEM
 vault-pm history list ITEM
+vault-pm history restore ITEM REVISION
 ```
 
 `init` and every authenticated command require a controlling terminal even
@@ -25,7 +27,9 @@ field, URL, or stdin path exists. Unix integration tests launch this exact binar
 under fresh pseudo-terminals, verify passphrases and item passwords are not
 echoed, restart the process for durable item add/edit/list/show, inject decoy
 bytes through stdin, verify redacted canonical history across another fresh
-process, and inspect the isolated filesystem tree for plaintext secret bytes.
+process, delete to a causal tombstone, restore an exact live ancestor into a
+new revision, and inspect the isolated filesystem tree for plaintext secret
+bytes.
 
 ## Verification
 

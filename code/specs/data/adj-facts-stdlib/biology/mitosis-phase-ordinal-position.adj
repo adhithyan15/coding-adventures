@@ -1,0 +1,66 @@
+% ============================================================================
+% mitosis-phase-ordinal-position — each mitotic phase's position in the cycle
+% as an ORDINAL WORD ("third", not just "3"), DERIVED (not looked up) by
+% bridging a biology fact to a math fact (adj-facts-stdlib, BIOLOGY,
+% cross-directory composition with MATHEMATICS). Grounds the common
+% classroom framing "anaphase is the THIRD phase of mitosis."
+% ============================================================================
+% `biology/mitosis-phase-order.adj` already tables each phase's position as a
+% NUMBER (anaphase is position 3); `mathematics/ordinal-numbers.adj` already
+% tables each NUMBER's ordinal WORD (3 is "third"). Neither file states
+% outright "anaphase is the third phase" — but composing the two
+% ALREADY-SHIPPED facts answers it directly. This is the SAME "compose two
+% independently-citable facts into a derived, dual-cited conclusion"
+% discipline `astronomy/planet-ordinal-position.adj` and
+% `astronomy/moon-phase-ordinal-position.adj` already established — the
+% FOURTH cross-directory `rule` composition in this loop's science sweep,
+% and the FIRST in the biology domain.
+%
+%     import "mitosis-phase-ordinal-position.adj"
+%     ? mitosis_phase_ordinal_position(anaphase, $O)     % third
+%     ? mitosis_phase_ordinal_position($P, first)        % prophase (reverse recall)
+%     ? mitosis_phase_ordinal_position(interphase, $O)   % abstain -- not one of the 4 ordered mitotic phases
+%
+% This is a native `rule` (ADJ-TABLES RS-6): its body binds `$Phase`/`$Number`
+% through the already-shipped `mitosis_phase_order` table, then re-binds
+% `$Number`/`$Ordinal` through the already-shipped `ordinal_number` table — a
+% plain two-hop join (the same shape the astronomy ordinal bridges already
+% established), not a causal inference; it just names the standard convention
+% that a counting number has a corresponding ordinal word. A query's `steps`
+% trail shows THREE entries: the rule's own citation (the ordinal-word
+% convention), the `mitosis_phase_order` fact's citation (NCI SEER), and the
+% `ordinal_number` fact's citation, so a human can independently verify each
+% link. Honest abstention on `interphase` — the resting phase BETWEEN
+% divisions, deliberately NOT a row in `mitosis-phase-order.adj` (mirroring
+% `mitosis-phases.adj`'s own exclusion) — this rule abstains on it too,
+% rather than inventing a position.
+%
+% CROSS-DIRECTORY IMPORT: this file lives in `biology/` (its natural subject
+% home, alongside `mitosis-phase-order.adj`) and imports its mathematics
+% sibling with a relative `../mathematics/ordinal-numbers.adj` path — the
+% SAME shape `earth-science/season-start-month-number.adj` and
+% `astronomy/planet-ordinal-position.adj` already established and
+% empirically verified (in a scratch dir, before writing this file, following
+% that precedent exactly): the CLI's import sandbox is rooted at the
+% TOP-LEVEL PROGRAM's own directory, not each importer's directory, so this
+% resolves cleanly provided the consuming entry program lives at or above the
+% package root. This library's OWN `.query.adj` companion is therefore placed
+% at the package root (not beside this file), mirroring
+% `planet-ordinal-position.query.adj` and
+% `moon-phase-ordinal-position.query.adj`'s already-established pattern.
+%
+% Deliberately scoped to the STANDARD ordinal-word bridge only, over the
+% canonical four mitotic phases `mitosis-phase-order.adj` already tables — no
+% new phase or ordinal-number content is asserted here, only the join. (See
+% ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+import "mitosis-phase-order.adj"
+import "../mathematics/ordinal-numbers.adj"
+
+rule { head: mitosis_phase_ordinal_position($Phase, $Ordinal)
+       when: mitosis_phase_order($Phase, $Number), ordinal_number($Number, $Ordinal)
+       source "1 one first, 2 two second, 3 three third, 4 four fourth, 5 five fifth"
+       locator "https://www.ef.edu/english-resources/english-grammar/numbers-english/"
+       trust consensus }

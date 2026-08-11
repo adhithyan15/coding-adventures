@@ -2,6 +2,72 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Arabic independent-haa ductus (HL-C09AM)
+
+- Resolve the source page's hidden Haa attachment and render **ح** in three
+  evidence-aligned frames: its short left stem, a lifted restart near the stem's
+  top, and the continuous dotless bowl.
+- Keep the one-lift, stem-first motion distinct from adjacent Jeem's body-first
+  path while fitting the same isolated Noto Naskh skeleton.
+- Preserve two-way-connector context and script-scoped Arabic provenance, with
+  Khaa queued from the same attachment ledger.
+
+### Added — cited Arabic independent-jeem ductus (HL-C09AL)
+
+- Record that the page's linked Thaa asset actually writes another two-dot Taa,
+  leaving **ث** on its conventional fallback rather than inventing source data.
+- Reprioritize to **ج** and render its body-first motion as three frames: a short
+  left-to-right upper head, the continuous descent and rounded bowl, then one
+  lifted dot below.
+- Keep two-way-connector context, Noto Naskh geometry, and Arabic-scoped
+  provenance distinct from Urdu's dot-first Jeem path.
+
+### Added — cited Arabic independent-taa ductus (HL-C09AJ)
+
+- Verify independent **ت** with the page's separately demonstrated Arabic bowl
+  followed by left and right upper dots as two individually lifted strokes.
+- Keep the evidence split explicit because the Taa clip opens on the completed
+  body, while preserving two-way-connector context and Arabic-scoped provenance.
+- Render a real three-frame filmstrip whose source, prose, Noto Naskh geometry,
+  two-lift summary, and distinct identity agree without inheriting Persian ت.
+
+### Added — cited Arabic independent-baa ductus (HL-C09AI)
+
+- Verify independent **ب** from the University of Oregon's adjacent video as a
+  continuous right-to-left bowl followed by one lift and the dot below.
+- Preserve the lesson's two-way-connector context and isolate Arabic provenance
+  from the Persian record for the same Unicode glyph.
+- Render a real two-frame filmstrip whose source, prose, Noto Naskh geometry,
+  one-lift summary, and Arabic-scoped identity agree.
+
+### Added — cited Arabic independent-alif ductus (HL-C09AH)
+
+- Verify independent **ا** from the University of Oregon's *Introduction to
+  Arabic* video as one continuous top-to-bottom stroke with zero lifts.
+- Preserve the lesson's one-way-connector context and isolate Arabic provenance
+  from the Persian and Urdu records for the same Unicode glyph.
+- Render a real one-frame filmstrip whose source, prose, Noto Naskh geometry,
+  zero-lift summary, and Arabic-scoped identity agree.
+
+### Added — cited Urdu independent-baṛī-ye ductus (HL-C09AG)
+
+- Add Urdu independent ے from Northwestern's *Zer o Zabar* animations as one
+  continuous folded bowl from the upper right through the leftward sweep and
+  far-left curl, then rightward along the lower fold.
+- Keep the zero-lift path and all three learner movements on the vendored Noto
+  Naskh fallback while preserving the source's positional distinction.
+- Render a real three-frame filmstrip whose one stroke, zero lifts, source,
+  prose, geometry, and summary agree, completing the Urdu starter inventory.
+
+### Added — cited Urdu independent-nun-ghunna ductus (HL-C09AF)
+
+- Add Urdu independent ں from Northwestern's *Zer o Zabar* animations as the
+  same right-to-left, below-baseline bowl as ن, without its dot or a pen lift.
+- Preserve the source's ordinary-nūn initial/medial forms and verify that Noto
+  Naskh U+06BA exactly shares U+0646's body contour with the dot removed.
+- Render a real one-frame filmstrip whose one stroke, zero lifts, source,
+  prose, geometry, and summary agree.
+
 ### Added — cited Urdu independent-ye ductus (HL-C09AE)
 
 - Add Urdu independent ی from Northwestern's *Zer o Zabar* animations as one
