@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 10828,
   "last_inventory": {
     "revision": "38ecfd9ff014d447659b37227abd44fcfc55dcc5",
     "schema_version": 3,
@@ -928,13 +928,15 @@
     {
       "id": "build-tool-python-haskell-language-filter",
       "title": "Expose Haskell, Java, and Kotlin in Python build-tool filtering",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-lua-rockspec-encoding", "build-tool-python-ecosystem-scoped-alias-resolution", "build-tool-python-haskell-gradle-field-aware-resolution"],
       "branch": "codex/python-haskell-jvm-language-filter",
-      "pr_number": null,
+      "pr_number": 10828,
       "selection_revision": "a4ad42e1f71ad146af212817ef72c7154af83a9b",
       "selection_notes": "Selected after PR #10751 merged externally and the collision-clean refresh classified smart-home-controller-runtime. This bounded follow-up exposes 206 Haskell, 129 Java, and 133 Kotlin build roots only after their resolver graphs became field-aware, while also making their package/program identities follow the shared discovery contract. Canonical-CBOR lane children remain ready but none independently unlocks the twelve-child completion umbrella.",
+      "implementation_revision": "f3be67ab1be17c6294f20b01b72e66732c7e1cc1",
       "validation_notes": "Both Python BUILD front doors pass 379 tests with 89.23% total coverage and 96% discovery coverage under Python 3.13.14; focused discovery and filter coverage passes 70 tests. The 58-case language-neutral corpus validates 243 files, and its schema/runner suite passes 59 tests plus 52 subtests. Go passes all packages, vet, module verification, trimpath build, and the strengthened discovery fixture. With real Cabal output still present and excluded, exact Python-versus-Go equality holds for 206 Haskell nodes/487 edges/3 programs, 129 Java nodes/186 edges/1 program, and 133 Kotlin nodes/166 edges/7 programs. Native GHC 9.4.8/Cabal tests pass for Haskell logic-gates (6 examples) and its arithmetic downstream (5 examples); Temurin 21.0.12 and Gradle 8.11.1 pass Java and Kotlin algol-lexer plus each algol-parser downstream. Scoped Ruff safety rules, discovery MyPy, Bandit, Go vet, state-graph, strict-JSON, credential-pattern, diff, and collision gates pass. The repository's pre-existing full Ruff debt decreases from 19 to 14 findings; the one pre-existing CLI MyPy nullable-length finding remains outside this tranche. The collision-clean report remains 1,301 identities, 4,457 slots, 851 singletons, 11,914 singleton gaps, 655 Rust singletons, zero collisions, and zero unknown buckets. Reusing an existing Windows plan filename reproduced the separately tracked atomic-overwrite owner; fresh output paths pass all real plan comparisons.",
+      "publication_notes": "Ready-for-review PR #10828 opened from f3be67ab1b. GitHub reports it open, non-draft, and mergeable; CI, CodeQL, and neutral auxiliary checks are queued, so the loop is monitor-only until they finish.",
       "notes": "Discovered while validating the full Python build-tool scan. Haskell resolver branches exist but discovery omits the lane, while Java and Kotlin are discoverable and resolvable but absent from ALL_LANGUAGES and argparse choices. Add the focused discovery, filter, and dry-run contract only after ecosystem-scoped aliases and field-aware Cabal/Gradle resolution make default all-language planning safe."
     },
     {
