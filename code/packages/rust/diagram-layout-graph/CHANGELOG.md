@@ -1,5 +1,9 @@
 # Changelog — diagram-layout-graph
 
+## 0.2.0
+
+- Give backend-neutral bar nodes compact fork/join geometry.
+
 ## 0.1.1 — TextMeasurer injection for real node sizing
 
 ### Changed

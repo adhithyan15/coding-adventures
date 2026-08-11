@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.24.0
+
+- Add a backend-neutral bar node shape for state fork and join pseudostates.
+
 ## 0.23.0
 
 - Distinguish mirrored footer participant boxes in sequence layout IR.

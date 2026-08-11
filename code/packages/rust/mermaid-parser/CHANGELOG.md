@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.48.0
+
+- Parse Mermaid state fork/join markers and lower them to compact, styled graph-IR bars.
+
 ## 0.47.0
 
 - Parse both Mermaid state choice marker spellings and lower choices to graph-IR diamonds.

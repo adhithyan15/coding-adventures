@@ -38,10 +38,10 @@
 //! | `h_padding`     | 24      | Horizontal text padding inside a node    |
 //! | `char_width`    | 8       | Approximate width per character (px)     |
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 use diagram_ir::{
-    DiagramDirection, GraphDiagram, LayoutedGraphDiagram, LayoutedGraphEdge,
+    DiagramDirection, DiagramShape, GraphDiagram, LayoutedGraphDiagram, LayoutedGraphEdge,
     LayoutedGraphNode, Point, ResolvedDiagramStyle, resolve_style, resolve_style_with_base,
 };
 use directed_graph::Graph;
@@ -125,6 +125,18 @@ fn node_width(label: &str, opts: &Opts, measurer: Option<&dyn TextMeasurer>) -> 
         opts.h_padding * 2.0 + label.len() as f64 * opts.char_width
     };
     text_width.max(opts.min_node_width)
+}
+
+fn node_dimensions(
+    node: &diagram_ir::GraphNode,
+    opts: &Opts,
+    measurer: Option<&dyn TextMeasurer>,
+) -> (f64, f64) {
+    if node.shape == Some(DiagramShape::Bar) {
+        (64.0, 8.0)
+    } else {
+        (node_width(&node.label.text, opts, measurer), opts.node_height)
+    }
 }
 
 // ============================================================================
@@ -226,7 +238,7 @@ fn place_nodes(
             rank.iter()
                 .map(|id| {
                     let node = diagram.nodes.iter().find(|n| n.id == *id).unwrap();
-                    node_width(&node.label.text, opts, measurer)
+                    node_dimensions(node, opts, measurer).0
                 })
                 .fold(0.0_f64, f64::max)
         })
@@ -239,8 +251,7 @@ fn place_nodes(
     for (rank_index, rank) in ranks.iter().enumerate() {
         for (item_index, node_id) in rank.iter().enumerate() {
             let node = diagram.nodes.iter().find(|n| n.id == *node_id).unwrap();
-            let width  = node_width(&node.label.text, opts, measurer);
-            let height = opts.node_height;
+            let (width, height) = node_dimensions(node, opts, measurer);
 
             // For BT/RL, reverse the rank axis so rank 0 appears at the
             // "start" of the reversed direction.
@@ -496,7 +507,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.1.0");
+        assert_eq!(VERSION, "0.2.0");
     }
 
     #[test]
@@ -625,5 +636,15 @@ mod tests {
         let yb = l.nodes.iter().find(|n| n.id == "B").unwrap().y;
         let yc = l.nodes.iter().find(|n| n.id == "C").unwrap().y;
         assert!(ya < yb && yb < yc, "TB chain should have A above B above C");
+    }
+
+    #[test]
+    fn bar_nodes_use_compact_geometry() {
+        let mut d = two_node_diagram(DiagramDirection::Tb);
+        d.nodes[0].shape = Some(DiagramShape::Bar);
+        d.nodes[0].label = DiagramLabel::new("");
+        let l = layout_graph_diagram(&d, None, None);
+        let bar = l.nodes.iter().find(|node| node.id == "A").unwrap();
+        assert_eq!((bar.width, bar.height), (64.0, 8.0));
     }
 }

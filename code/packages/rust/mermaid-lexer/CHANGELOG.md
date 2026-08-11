@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.27.0
+
+- Tokenize angle-bracket and bracket Mermaid state fork/join markers.
+
 ## 0.26.0
 
 - Tokenize both Mermaid 11.16.1 state choice marker spellings.
