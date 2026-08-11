@@ -2324,6 +2324,8 @@ impl Compiler {
     /// `sqrt` is accepted only when the host operation round-trips exactly to
     /// its finite literal-only operand. Transcendental functions are limited
     /// to canonical inputs whose Report-defined result is exactly zero or one.
+    /// Integer-valued `sign` and `entier` results are represented as f64 only
+    /// while they remain in the exact binary64 integer range.
     fn static_standard_real_value(&self, node: &GrammarASTNode) -> Option<f64> {
         if node.rule_name != "proc_call" {
             return None;
@@ -2351,6 +2353,19 @@ impl Compiler {
             "sin" | "arctan" if operand == 0.0 => 0.0,
             "cos" | "exp" if operand == 0.0 => 1.0,
             "ln" if operand == 1.0 => 0.0,
+            "sign" => {
+                if operand < 0.0 {
+                    -1.0
+                } else if operand > 0.0 {
+                    1.0
+                } else {
+                    0.0
+                }
+            }
+            "entier" => {
+                let integer = operand.floor();
+                (integer.abs() <= 9_007_199_254_740_992.0).then_some(integer)?
+            }
             _ => return None,
         };
         value.is_finite().then_some(value)
@@ -7512,6 +7527,38 @@ mod tests {
                 .expect_err("noncanonical transcendental output requires runtime formatting");
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }
+    }
+
+    #[test]
+    fn al4_print_integer_standard_functions_in_static_real_arithmetic() {
+        let module = compile_source(
+            "begin print(sign(-2.5) + 2.0, entier(2.75) + 0.5) end",
+            "test",
+        )
+        .expect("integer-valued standard functions compose with static real arithmetic");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["1", "2.5"]);
+        assert!(main.instructions.iter().all(|instr| {
+            !matches!(instr.op.as_str(), "real_to_int_floor" | "cmp_lt" | "cmp_gt")
+        }));
+    }
+
+    #[test]
+    fn al4_print_static_entier_rejects_values_outside_exact_f64_integer_range() {
+        let err = compile_source(
+            "begin print(entier(1.0E20) + 0.5) end",
+            "test",
+        )
+        .expect_err("an inexact f64 integer conversion must require runtime formatting");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
