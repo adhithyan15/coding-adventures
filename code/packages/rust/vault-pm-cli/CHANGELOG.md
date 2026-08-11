@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Route `item edit ITEM` through an opaque application-owned preparation so
+  active-epoch precondition, prompt, entropy, and document-validation failures
+  become durable before their CLI errors, while success stays one atomic
+  `ItemUpdate` mutation.
 - Collapse active-epoch `history restore ITEM REVISION` into one item-bound
   audited application mutation, including durable missing, cross-item,
   tombstone, same-revision, and conflict failures.

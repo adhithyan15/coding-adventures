@@ -8,7 +8,7 @@ use coding_adventures_vault_pm_application::{
     complete_generation_zero, prepare_generation_zero, rehydrate_prepared_init,
     AddItemRandomnessV1, ApplicationError, AuditVerificationV1, AuditedAccessRandomnessV1,
     BootstrapLocator, DeleteItemRandomnessV1, GenerationZeroPolicyV1, GenerationZeroRandomness,
-    ItemHistoryViewV1, LocalStateStore, LocalStateStoreError, LocalVaultStateV1,
+    ItemHistoryViewV1, LocalStateStore, LocalStateStoreError, LocalVaultStateV1, LoginEditInputV1,
     ReplaceItemRandomnessV1, RestoreItemRandomnessV1, V1ApplicationRepositoryFactory,
     VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1, ADD_ITEM_RANDOM_BYTES,
     AUDITED_ACCESS_RANDOM_BYTES, DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES,
@@ -535,63 +535,81 @@ fn item_edit_login(
     item_id: ItemId,
 ) -> Result<CliOutput, CliFailure> {
     let (access, application_store) = authenticated_access(host, paths, writer)?;
-    let session = access.as_unlocked().map_err(map_application)?;
-    let expected_revision = session
-        .current_item_revision(item_id)
+    let audit_enabled = access
+        .as_unlocked()
         .map_err(map_application)?
-        .ok_or(CliFailure::NotFound)?;
-    let current = session
-        .reveal_item_revision(expected_revision)
-        .map_err(map_application)?;
-    let AnyRecord::Login(current_login) = current.payload() else {
-        return Err(CliFailure::Unsupported);
-    };
-    if current_login.urls.len() > 1 {
-        return Err(CliFailure::Unsupported);
+        .audit_enabled();
+    if audit_enabled {
+        let (wall_time_ms, failure_randomness) = audited_access_inputs(host)?;
+        let preparation = access
+            .into_unlocked()
+            .map_err(map_application)?
+            .prepare_audited_login_edit(
+                item_id,
+                wall_time_ms,
+                failure_randomness,
+                &application_store,
+            )
+            .map_err(map_application)?
+            .into_preparation()
+            .map_err(map_application)?;
+        let input = match read_login_edit_input(host) {
+            Ok(input) => input,
+            Err(error) => {
+                preparation
+                    .record_audited_host_failure(&application_store)
+                    .map_err(map_application)?;
+                return Err(map_host(error));
+            }
+        };
+        let mut mutation_random = [0_u8; REPLACE_ITEM_RANDOM_BYTES];
+        if let Err(error) = host.fill_entropy(&mut mutation_random) {
+            preparation
+                .record_audited_host_failure(&application_store)
+                .map_err(map_application)?;
+            return Err(map_host(error));
+        }
+        preparation
+            .complete_audited(
+                input,
+                ReplaceItemRandomnessV1::new(mutation_random),
+                &application_store,
+            )
+            .map_err(map_application)?
+            .into_operation()
+            .map_err(map_application)?;
+    } else {
+        let preparation = access
+            .into_unlocked()
+            .map_err(map_application)?
+            .prepare_login_edit(item_id)
+            .map_err(map_application)?;
+        let input = read_login_edit_input(host).map_err(map_host)?;
+        let wall_time_ms = host.now_ms().map_err(map_host)?;
+        let mut mutation_random = [0_u8; REPLACE_ITEM_RANDOM_BYTES];
+        host.fill_entropy(&mut mutation_random).map_err(map_host)?;
+        preparation
+            .complete(
+                input,
+                wall_time_ms,
+                ReplaceItemRandomnessV1::new(mutation_random),
+                &application_store,
+            )
+            .map_err(map_application)?;
     }
-
-    let title = host.read_login_title().map_err(map_host)?;
-    let username = host.read_login_username().map_err(map_host)?;
-    let password = host.read_login_password().map_err(map_host)?;
-    let url = host.read_login_url().map_err(map_host)?;
-    let wall_time_ms = host.now_ms().map_err(map_host)?;
-    let updated_at_ms = wall_time_ms.max(current.updated_at_ms());
-    let document = ItemDocument::new(
-        current.id(),
-        current.schema().clone(),
-        current.created_at_ms(),
-        updated_at_ms,
-        current.favorite().clone(),
-        current.collection_ids().clone(),
-        current.tags().clone(),
-        AnyRecord::Login(Login {
-            title: title.into_inner(),
-            username: username.into_inner(),
-            password: password.into_inner(),
-            urls: url.into_iter().map(Zeroizing::into_inner).collect(),
-            notes: current_login.notes.clone(),
-        }),
-        current.attachments().clone(),
-    )
-    .map_err(|_| CliFailure::InvalidCommand)?;
-    drop(current);
-    let mut mutation_random = [0_u8; REPLACE_ITEM_RANDOM_BYTES];
-    host.fill_entropy(&mut mutation_random).map_err(map_host)?;
-    access
-        .into_unlocked()
-        .map_err(map_application)?
-        .replace_item(
-            expected_revision,
-            document,
-            wall_time_ms,
-            ReplaceItemRandomnessV1::new(mutation_random),
-            &application_store,
-        )
-        .map_err(map_application)?;
     Ok(CliOutput::success(format!(
         "Item updated: {}\n",
         item_id.to_user_string()
     )))
+}
+
+fn read_login_edit_input(host: &dyn CliHost) -> Result<LoginEditInputV1, HostError> {
+    Ok(LoginEditInputV1::new(
+        host.read_login_title()?,
+        host.read_login_username()?,
+        host.read_login_password()?,
+        host.read_login_url()?,
+    ))
 }
 
 fn item_show(
@@ -1808,6 +1826,57 @@ mod tests {
         let audit = run(["audit", "verify"], &audit_host);
         assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
         assert!(audit.stdout().contains("commits=6"), "{audit:?}");
+        assert!(audit.stdout().contains("audit_events=3"), "{audit:?}");
+    }
+
+    #[test]
+    fn active_epoch_edit_records_prompt_failure_before_success() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"audited edit passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        let add_host = TestHost::with_texts(
+            paths.clone(),
+            [passphrase.clone(), b"original secret".to_vec()],
+            [
+                "Edit me".to_owned(),
+                "original@example.test".to_owned(),
+                String::new(),
+            ],
+        );
+        assert_eq!(
+            run(["item", "add", "login"], &add_host).exit_code(),
+            ExitCode::Success
+        );
+        let item_id =
+            ItemId::new([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]).to_user_string();
+        activate_test_audit_epoch(&paths, passphrase.clone());
+
+        let failed_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let failed = run(["item", "edit", item_id.as_str()], &failed_host);
+        assert_eq!(failed.exit_code(), ExitCode::Provider, "{failed:?}");
+        assert!(failed.stdout().is_empty());
+
+        let replacement = b"replacement secret".to_vec();
+        let edit_host = TestHost::with_texts(
+            paths.clone(),
+            [passphrase.clone(), replacement],
+            [
+                "Edited".to_owned(),
+                "edited@example.test".to_owned(),
+                String::new(),
+            ],
+        );
+        let edited = run(["item", "edit", item_id.as_str()], &edit_host);
+        assert_eq!(edited.exit_code(), ExitCode::Success, "{edited:?}");
+        assert_eq!(edited.stdout(), format!("Item updated: {item_id}\n"));
+        assert!(!edited.stdout().contains("replacement secret"));
+
+        let audit_host = TestHost::new(paths, [passphrase]);
+        let audit = run(["audit", "verify"], &audit_host);
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        assert!(audit.stdout().contains("commits=5"), "{audit:?}");
         assert!(audit.stdout().contains("audit_events=3"), "{audit:?}");
     }
 

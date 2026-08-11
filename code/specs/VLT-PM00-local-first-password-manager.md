@@ -1491,9 +1491,11 @@ changelog, focused build, and downstream validation.
                  history selection stays inside the application; successful
                  restore and its event publish atomically; invalid selection
                  outcomes publish failed events before their errors.
-9b-2c-5b-3b-2b. adopt audited capability/disclosure handling in the multi-stage
-                 edit path, then remove the pre-audit fallback when migration
-                 becomes user-visible.
+9b-2c-5b-3b-2b. completed opaque application-owned edit preparation and
+                 active-epoch CLI completion: current revisions and existing
+                 secret documents stay out of orchestration; precondition,
+                 prompt, entropy, and input failures publish before their
+                 errors; successful updates remain atomic mutations.
 9b-2c-5c. redacted authenticated audit list/show plus trace-aware output and
           tamper/fault/real-process acceptance.
 9b-2c-4c-1. completed production application boundary for a single durable,

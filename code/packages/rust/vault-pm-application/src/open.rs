@@ -20,6 +20,7 @@ use coding_adventures_vault_pm_domain::{
 };
 use coding_adventures_vault_pm_format::{DeviceId, ObjectId, VaultId};
 use coding_adventures_vault_pm_repository::{OpenReport, PinnedHeads};
+use coding_adventures_vault_records::{AnyRecord, Login};
 use coding_adventures_zeroize::Zeroizing;
 use core::fmt::{self, Debug, Formatter};
 use std::collections::{BTreeMap, BTreeSet};
@@ -30,6 +31,187 @@ use crate::codec::{MAX_CANDIDATES_PER_ITEM, MAX_CATALOG_ENTRIES};
 pub const DEFAULT_ITEM_HISTORY_LIMIT: usize = 100;
 /// Hard maximum number of historical revisions returned for one item.
 pub const MAX_ITEM_HISTORY_LIMIT: usize = 4_096;
+
+/// Owned wipe-on-drop caller fields for one complete login edit.
+pub struct LoginEditInputV1 {
+    title: Zeroizing<String>,
+    username: Zeroizing<String>,
+    password: Zeroizing<String>,
+    url: Option<Zeroizing<String>>,
+}
+
+impl LoginEditInputV1 {
+    /// Take the complete bounded login form collected by a trusted host.
+    pub const fn new(
+        title: Zeroizing<String>,
+        username: Zeroizing<String>,
+        password: Zeroizing<String>,
+        url: Option<Zeroizing<String>>,
+    ) -> Self {
+        Self {
+            title,
+            username,
+            password,
+            url,
+        }
+    }
+}
+
+struct LoginEditFailureAuditV1 {
+    wall_time_ms: u64,
+    randomness: AuditedAccessRandomnessV1,
+}
+
+type LoginEditSelectionV1 = (RevisionId, Zeroizing<ItemDocument>);
+type LoginEditPreconditionV1 = (
+    Result<LoginEditSelectionV1, ApplicationError>,
+    Option<RevisionId>,
+);
+
+/// Opaque application-owned state for one validated login edit ceremony.
+///
+/// The current revision capability and secret-bearing document never cross
+/// this boundary. The value intentionally implements neither `Debug` nor
+/// `Clone` and is consumed by completion or audited failure recording.
+pub struct LoginEditPreparationV1 {
+    session: UnlockedVaultV1,
+    item_id: ItemId,
+    expected_revision: RevisionId,
+    current: Zeroizing<ItemDocument>,
+    failure_audit: Option<LoginEditFailureAuditV1>,
+}
+
+/// Audited result of validating one login edit target.
+pub enum AuditedLoginEditPreparationV1 {
+    /// The application retains the current revision and document for editing.
+    Ready(Box<LoginEditPreparationV1>),
+    /// The closed precondition failure and its next owner state are durable.
+    Failed(Box<crate::AuditedAccessResultV1<()>>),
+}
+
+impl AuditedLoginEditPreparationV1 {
+    /// Return the opaque preparation or its already-durable operation failure.
+    pub fn into_preparation(self) -> Result<LoginEditPreparationV1, ApplicationError> {
+        match self {
+            Self::Ready(preparation) => Ok(*preparation),
+            Self::Failed(failure) => match failure.into_operation() {
+                Ok(()) => Err(ApplicationError::InternalInvariant),
+                Err(error) => Err(error),
+            },
+        }
+    }
+}
+
+impl LoginEditPreparationV1 {
+    fn replacement_document(
+        &self,
+        input: LoginEditInputV1,
+        updated_at_ms: u64,
+    ) -> Result<ItemDocument, ApplicationError> {
+        let AnyRecord::Login(current_login) = self.current.payload() else {
+            return Err(ApplicationError::InternalInvariant);
+        };
+        ItemDocument::new(
+            self.current.id(),
+            self.current.schema().clone(),
+            self.current.created_at_ms(),
+            updated_at_ms.max(self.current.updated_at_ms()),
+            self.current.favorite().clone(),
+            self.current.collection_ids().clone(),
+            self.current.tags().clone(),
+            AnyRecord::Login(Login {
+                title: input.title.into_inner(),
+                username: input.username.into_inner(),
+                password: input.password.into_inner(),
+                urls: input.url.into_iter().map(Zeroizing::into_inner).collect(),
+                notes: current_login.notes.clone(),
+            }),
+            self.current.attachments().clone(),
+        )
+        .map_err(|_| ApplicationError::InvalidInput)
+    }
+
+    /// Complete a validated pre-audit login edit as one replacement mutation.
+    pub fn complete(
+        self,
+        input: LoginEditInputV1,
+        wall_time_ms: u64,
+        randomness: ReplaceItemRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        let document = match self.replacement_document(input, wall_time_ms) {
+            Ok(document) => document,
+            Err(error) if self.failure_audit.is_some() => {
+                let failed = self.publish_audited_failure(error, local_state_store)?;
+                return match failed.into_operation() {
+                    Ok(()) => Err(ApplicationError::InternalInvariant),
+                    Err(error) => Err(error),
+                };
+            }
+            Err(error) => return Err(error),
+        };
+        self.session.replace_item(
+            self.expected_revision,
+            document,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+        )
+    }
+
+    /// Complete an audited login edit, publishing failure before any error.
+    pub fn complete_audited(
+        self,
+        input: LoginEditInputV1,
+        randomness: ReplaceItemRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<()>, ApplicationError> {
+        let wall_time_ms = self
+            .failure_audit
+            .as_ref()
+            .ok_or(ApplicationError::InvalidInput)?
+            .wall_time_ms;
+        let document = match self.replacement_document(input, wall_time_ms) {
+            Ok(document) => document,
+            Err(error) => return self.publish_audited_failure(error, local_state_store),
+        };
+        let active = self.session.replace_item(
+            self.expected_revision,
+            document,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+        )?;
+        Ok(crate::AuditedAccessResultV1::new(active, Ok(())))
+    }
+
+    /// Record a host-side prompt or entropy failure before exposing it.
+    pub fn record_audited_host_failure(
+        self,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        let audited =
+            self.publish_audited_failure(ApplicationError::InvalidInput, local_state_store)?;
+        Ok(audited.into_parts().0)
+    }
+
+    fn publish_audited_failure(
+        self,
+        error: ApplicationError,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<()>, ApplicationError> {
+        let audit = self.failure_audit.ok_or(ApplicationError::InvalidInput)?;
+        self.session.finish_audited_access(
+            AuditActionV1::ItemUpdate,
+            Some(self.item_id),
+            Some(self.expected_revision),
+            audit.wall_time_ms,
+            audit.randomness,
+            local_state_store,
+            Err(error),
+        )
+    }
+}
 
 /// One secret-free historical item revision projection.
 #[derive(Clone, PartialEq, Eq)]
@@ -918,6 +1100,83 @@ impl UnlockedVaultV1 {
             randomness,
             local_state_store,
         )
+    }
+
+    /// Validate one current login edit without releasing its revision or body.
+    ///
+    /// Missing and tombstoned items return `NotFound`; current conflicts return
+    /// `ConflictRequired`; non-login records and logins with more than one URL
+    /// return `Unsupported`. A successful opaque preparation owns this session,
+    /// the exact current revision, and the wipe-on-drop current document.
+    pub fn prepare_login_edit(
+        self,
+        item_id: ItemId,
+    ) -> Result<LoginEditPreparationV1, ApplicationError> {
+        let (operation, _) = self.login_edit_precondition(item_id);
+        let (expected_revision, current) = operation?;
+        Ok(LoginEditPreparationV1 {
+            session: self,
+            item_id,
+            expected_revision,
+            current,
+            failure_audit: None,
+        })
+    }
+
+    /// Validate one login edit or durably publish its failed precondition.
+    pub fn prepare_audited_login_edit(
+        self,
+        item_id: ItemId,
+        wall_time_ms: u64,
+        failure_randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<AuditedLoginEditPreparationV1, ApplicationError> {
+        self.require_audit_epoch()?;
+        let (operation, selected_revision) = self.login_edit_precondition(item_id);
+        match operation {
+            Ok((expected_revision, current)) => Ok(AuditedLoginEditPreparationV1::Ready(Box::new(
+                LoginEditPreparationV1 {
+                    session: self,
+                    item_id,
+                    expected_revision,
+                    current,
+                    failure_audit: Some(LoginEditFailureAuditV1 {
+                        wall_time_ms,
+                        randomness: failure_randomness,
+                    }),
+                },
+            ))),
+            Err(error) => self
+                .finish_audited_access(
+                    AuditActionV1::ItemUpdate,
+                    Some(item_id),
+                    selected_revision,
+                    wall_time_ms,
+                    failure_randomness,
+                    local_state_store,
+                    Err(error),
+                )
+                .map(|failure| AuditedLoginEditPreparationV1::Failed(Box::new(failure))),
+        }
+    }
+
+    fn login_edit_precondition(&self, item_id: ItemId) -> LoginEditPreconditionV1 {
+        let expected_revision = match self.current_item_revision(item_id) {
+            Ok(Some(revision)) => revision,
+            Ok(None) => return (Err(ApplicationError::NotFound), None),
+            Err(error) => return (Err(error), None),
+        };
+        let current = match self.reveal_item_revision(expected_revision) {
+            Ok(current) => current,
+            Err(error) => return (Err(error), Some(expected_revision)),
+        };
+        let AnyRecord::Login(login) = current.payload() else {
+            return (Err(ApplicationError::Unsupported), Some(expected_revision));
+        };
+        if login.urls.len() > 1 {
+            return (Err(ApplicationError::Unsupported), Some(expected_revision));
+        }
+        (Ok((expected_revision, current)), Some(expected_revision))
     }
 
     /// Delete the sole expected current live revision by publishing a causal
@@ -6465,6 +6724,136 @@ mod tests {
             local.0.lock().unwrap().as_deref(),
             Some(exact_item.as_slice())
         );
+    }
+
+    #[test]
+    fn audited_login_edit_records_precondition_host_failure_and_success() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let add_randomness = add_item_randomness(0x71);
+        let item_id = add_randomness.item_id();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .add_item(
+            new_login_document(item_id, "Edit audit", "original-secret"),
+            440,
+            add_randomness,
+            &local,
+        )
+        .unwrap();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .activate_audit_epoch(441, audited_access_randomness(0x72), &local)
+        .unwrap();
+
+        let missing_id = ItemId::new([0x99; 16]);
+        let missing = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .prepare_audited_login_edit(missing_id, 442, audited_access_randomness(0x73), &local)
+        .unwrap();
+        assert_eq!(
+            missing.into_preparation().err(),
+            Some(ApplicationError::NotFound)
+        );
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemUpdate,
+                AuditOutcomeV1::Failed,
+                Some(missing_id),
+                None,
+            )
+        );
+        let expected_revision = session.current_item_revision(item_id).unwrap().unwrap();
+        session
+            .prepare_audited_login_edit(item_id, 443, audited_access_randomness(0x74), &local)
+            .unwrap()
+            .into_preparation()
+            .unwrap()
+            .record_audited_host_failure(&local)
+            .unwrap();
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemUpdate,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                Some(expected_revision),
+            )
+        );
+        let edited = session
+            .prepare_audited_login_edit(item_id, 444, audited_access_randomness(0x75), &local)
+            .unwrap()
+            .into_preparation()
+            .unwrap()
+            .complete_audited(
+                LoginEditInputV1::new(
+                    Zeroizing::new("Edited".to_owned()),
+                    Zeroizing::new("edited@example.test".to_owned()),
+                    Zeroizing::new("replacement-secret".to_owned()),
+                    None,
+                ),
+                replace_item_randomness(0x76),
+                &local,
+            )
+            .unwrap();
+        assert!(edited.operation_succeeded());
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemUpdate,
+                AuditOutcomeV1::Succeeded,
+                Some(item_id),
+                Some(expected_revision),
+            )
+        );
+        let report = session.audit_verify().unwrap();
+        assert_eq!(report.commit_count(), 6);
+        assert_eq!(report.audit_event_count(), 4);
     }
 
     #[test]

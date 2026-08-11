@@ -2,6 +2,22 @@
 
 All notable changes to this package are documented here.
 
+## [0.43.0] - 2026-08-11
+
+### Added
+
+- Add an opaque login-edit preparation that retains the current revision and
+  secret-bearing document entirely inside the application boundary.
+- Add audited preparation, completion, and host-failure paths for missing,
+  conflicted, unsupported, invalid-input, prompt, and entropy failures.
+
+### Security
+
+- Publish successful `ItemUpdate` events atomically with replacement revisions
+  and publish closed edit failures before the host can expose their outcome.
+- Preserve notes and immutable metadata without releasing the existing login
+  document or optimistic revision capability to CLI orchestration.
+
 ## [0.42.0] - 2026-08-11
 
 ### Added
