@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.28.0 - 2026-08-11
+
+- Anchor active self-messages to the outer edge of the current activation stack.
+
 ## 0.27.0 - 2026-08-11
 
 - Keep explicit activation and deactivation statements on the current sequence event row instead of adding synthetic vertical gaps.

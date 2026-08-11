@@ -137,6 +137,8 @@ events and lower to depth-offset bars through backend-neutral Paint rectangles.
 Messages entering or leaving active participants terminate at the visible edge
 of the current activation bar, including a bar opened by that message. Paint
 ordering keeps those message paths and arrowheads above activation rectangles.
+Self-messages on active participants anchor to the outer edge of the current
+activation stack rather than falling back to the lifeline center.
 Explicit activation and deactivation statements update that stack without
 creating synthetic event rows or vertical gaps.
 Explicit and message-suffix deactivation is validated against that semantic
