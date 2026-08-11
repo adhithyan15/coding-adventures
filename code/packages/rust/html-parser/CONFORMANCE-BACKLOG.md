@@ -244,8 +244,11 @@ Prioritized work items:
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases
-   without changing their now-conforming DOM output, beginning with end tags
-   whose matching formatting element is not current.
+   without changing their now-conforming DOM output. Matching open formatting
+   elements that are not current now report before existing DOM repair, as do
+   matching end tags whose formatting element was displaced from the open stack
+   before reconstruction inside a paragraph boundary. Continue the fresh
+   algorithm audit across the remaining active-formatting-list branches.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.

@@ -137,6 +137,8 @@ events and lower to depth-offset bars through backend-neutral Paint rectangles.
 Messages entering or leaving active participants terminate at the visible edge
 of the current activation bar, including a bar opened by that message. Paint
 ordering keeps those message paths and arrowheads above activation rectangles.
+Explicit activation and deactivation statements update that stack without
+creating synthetic event rows or vertical gaps.
 Explicit and message-suffix deactivation is validated against that semantic
 stack and fails when the participant is inactive, matching Mermaid 11.16.1.
 Central connections use distinct grammar alternatives and reject `+` or `-`
