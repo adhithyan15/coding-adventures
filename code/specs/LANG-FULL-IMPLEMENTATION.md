@@ -795,7 +795,9 @@ backend immediately) come before the enabler-dependent items.
   (`combine(scale(3), scale(4))` → 42 on all seven backends).
   Procedure declarations follow lexical block scope: nested declarations use
   stable sibling-function identities, shadow an outer procedure inside their
-  block, and restore the outer direct-call binding after scope exit.
+  block, and restore the outer direct-call binding after scope exit. Nested
+  declaration metadata also leaves lookup scope, so unique nested procedures
+  cannot leak and temporary standard-function overrides restore the built-in.
 - ◑ **AL4** — literal string `print`/`output` I/O runs on all 7 backends via
   **E4**. Undeclared statement-position `print('HI')`/`output('HI')` calls lower
   to `str_const` + `print_str`, and literal-backed scalar string variables
