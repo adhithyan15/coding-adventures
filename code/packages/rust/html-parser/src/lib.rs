@@ -7345,6 +7345,18 @@ impl HtmlParser {
                 }
                 return;
             }
+            if is_formatting_element(name)
+                && !self
+                    .current_element_name()
+                    .is_some_and(|current| current.eq_ignore_ascii_case(name))
+            {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-non-current-formatting-end-tag",
+                    format!(
+                        "end tag `</{name}>` triggered adoption-agency recovery before its formatting element was current"
+                    ),
+                ));
+            }
             if is_formatting_element(name) && self.adopt_formatting_end_tag_across_paragraph(index)
             {
                 return;
@@ -34200,6 +34212,48 @@ mod tests {
                 "end tag `</font>` could not close a formatting element across table scope"
             )]
         );
+    }
+
+    #[test]
+    fn reports_adoption_agency_recovery_for_non_current_formatting_elements() {
+        for (source, name) in [
+            ("<!doctype html><b>1<i>2<p>3</b>4", "b"),
+            ("<!doctype html><b><p><i>text</b>tail</p>", "b"),
+            ("<!doctype html><div><a><b><div></b>", "b"),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic
+                        == &ParserDiagnostic::new(
+                            "unexpected-non-current-formatting-end-tag",
+                            format!(
+                                "end tag `</{name}>` triggered adoption-agency recovery before its formatting element was current"
+                            ),
+                        )
+                }),
+                "source {source:?}"
+            );
+        }
+
+        for source in [
+            "<!doctype html><a>current</a>",
+            "<!doctype html><b><i>nested</i></b>",
+            "<!doctype html></a>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-non-current-formatting-end-tag"
+            }));
+        }
+
+        let table =
+            parse_html_with_diagnostics("<!doctype html><font><table></font></table></font>")
+                .unwrap();
+        assert!(table
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| { diagnostic.code != "unexpected-non-current-formatting-end-tag" }));
     }
 
     #[test]

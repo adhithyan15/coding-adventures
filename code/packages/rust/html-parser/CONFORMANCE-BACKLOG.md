@@ -238,13 +238,14 @@ Prioritized work items:
    ignored `<body>` token also no longer marks an explicit body start and
    incorrectly disables a later valid frameset. Ordinary document-shell starts,
    nested templates, foreign template-named elements, and synthetic template
-   fragment contexts remain on their existing paths. Continue with the
-   remaining template-state branches, then move to adoption agency only after
-   that audit is exhausted.
+   fragment contexts remain on their existing paths. The remaining
+   template-state branches are now audited against the current Standard and
+   live corpus without another uncovered diagnostic boundary.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases
-   without changing their now-conforming DOM output.
+   without changing their now-conforming DOM output, beginning with end tags
+   whose matching formatting element is not current.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
