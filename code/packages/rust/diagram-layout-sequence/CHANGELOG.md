@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.16.0 - 2026-08-11
+
+- Resolve wrapped participant aliases into deterministic, shared header geometry.
+
 ## 0.15.0 - 2026-08-10
 
 - Resolve wrapped sequence control and branch labels into deterministic frame geometry.

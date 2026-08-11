@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.20.0
+
+- Preserve participant-label wrap intent and resolved label height in sequence IR.
+
 ## 0.19.0
 
 - Preserve explicit wrap intent and line-aware layout geometry for sequence control-block labels.

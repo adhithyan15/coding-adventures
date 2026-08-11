@@ -1,6 +1,6 @@
-//! diagram-ir v0.19.0 - DG00/DG04 semantic IR
+//! diagram-ir v0.20.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.19.0";
+pub const VERSION: &str = "0.20.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -170,6 +170,7 @@ pub enum SequenceParticipantKind {
 pub struct SequenceParticipant {
     pub id: String,
     pub label: DiagramLabel,
+    pub label_wrap: SequenceTextWrap,
     pub kind: SequenceParticipantKind,
     pub style: Option<DiagramStyle>,
     pub group_id: Option<String>,
@@ -328,6 +329,7 @@ pub enum LayoutedSequenceItem {
     ParticipantBox {
         id: String,
         label: String,
+        label_height: f64,
         kind: SequenceParticipantKind,
         links: Vec<SequenceLink>,
         properties: Vec<SequenceProperty>,
@@ -946,8 +948,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn version_is_0_19_0() {
-        assert_eq!(VERSION, "0.19.0");
+    fn version_is_0_20_0() {
+        assert_eq!(VERSION, "0.20.0");
     }
     #[test]
     fn default_direction_is_tb() {

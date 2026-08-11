@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.26.0";
+pub const VERSION: &str = "0.27.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1284,13 +1284,23 @@ fn parse_sequence_participant(
         }
         inline_alias = parsed.1;
     }
-    let label = if cursor.current().value == "as" {
+    let (label, label_wrap) = if cursor.current().value == "as" {
         cursor.advance();
-        take_sequence_line_text(cursor)
+        take_sequence_wrapped_text(cursor)
     } else {
-        inline_alias.unwrap_or_else(|| id.clone())
+        (
+            inline_alias.unwrap_or_else(|| id.clone()),
+            SequenceTextWrap::Default,
+        )
     };
-    upsert_sequence_participant(diagram, participant_indices, id.clone(), label, kind);
+    upsert_sequence_participant(
+        diagram,
+        participant_indices,
+        id.clone(),
+        label,
+        label_wrap,
+        kind,
+    );
     if created {
         diagram.events.push(SequenceEvent::ParticipantCreated {
             participant: id.clone(),
@@ -1857,6 +1867,7 @@ fn ensure_sequence_participant(
             participant_indices,
             id.to_string(),
             id.to_string(),
+            SequenceTextWrap::Default,
             SequenceParticipantKind::Participant,
         );
     }
@@ -1867,10 +1878,12 @@ fn upsert_sequence_participant(
     participant_indices: &mut HashMap<String, usize>,
     id: String,
     label: String,
+    label_wrap: SequenceTextWrap,
     kind: SequenceParticipantKind,
 ) {
     if let Some(&index) = participant_indices.get(&id) {
         diagram.participants[index].label = DiagramLabel::new(label);
+        diagram.participants[index].label_wrap = label_wrap;
         diagram.participants[index].kind = kind;
         return;
     }
@@ -1878,6 +1891,7 @@ fn upsert_sequence_participant(
     diagram.participants.push(SequenceParticipant {
         id,
         label: DiagramLabel::new(label),
+        label_wrap,
         kind,
         style: None,
         group_id: None,
@@ -3511,6 +3525,21 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn sequence_preserves_participant_alias_wrap_directives() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nparticipant API as wrap: A deliberately detailed public application programming interface\nactor User as nowrap: Banking User\n",
+        )
+        .unwrap();
+        assert_eq!(
+            diagram.participants[0].label.text,
+            "A deliberately detailed public application programming interface"
+        );
+        assert_eq!(diagram.participants[0].label_wrap, SequenceTextWrap::Wrap);
+        assert_eq!(diagram.participants[1].label.text, "Banking User");
+        assert_eq!(diagram.participants[1].label_wrap, SequenceTextWrap::NoWrap);
+    }
+
+    #[test]
     fn sequence_preserves_control_block_wrap_directives() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\nalt wrap: A deliberately detailed acceptance path\nA->>B: Yes\nelse nowrap: A deliberately detailed rejection path\nB-->>A: No\nend\n",
@@ -3623,7 +3652,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.26.0");
+        assert_eq!(crate::VERSION, "0.27.0");
     }
 
     #[test]

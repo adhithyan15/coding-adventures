@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.27.0
+
+- Preserve `wrap:` and `nowrap:` directives on sequence participant aliases.
+
 ## 0.26.0
 
 - Preserve `wrap:` and `nowrap:` directives on sequence control-block and branch labels.
