@@ -450,8 +450,17 @@ The rule is not about counting lessons. It is about what a chapter can *owe* a
 reader and still pay. One verb, one origin, one set of forms.
 
 **Measured 2026-08-10:** 12 of Spanish's 19 verb-teaching chapters break this —
-chapters 43, 44 and 48 each teach **four** verbs — and `beber`, `preguntar` and
-`tomar` are taught with no etymology at all. That burn-down is HL-C99.
+chapters 47, 48 and 52 each taught **four** verbs. That burn-down is HL-C99;
+its first slice split chapter 47 into six (one verb each, then a review and a
+synthesis chapter), leaving **11 of 22** verb chapters still crowded.
+
+**Correction, same day.** An earlier revision of this section claimed `beber`,
+`preguntar` and `tomar` were "taught with no etymology at all." That was wrong.
+All **42** Spanish verbs carry one; those three carry it through `roots:` and
+`etymology_hook` rather than an `ES-ETYMON-*` atom, and the measurement had
+counted only the atom namespace. The Root Ledger (§6.2) deliberately spans both
+namespaces for exactly this reason, and a one-namespace census contradicts it.
+The real defect is only the crowding, which is what the rule above addresses.
 
 ### 5.8 Review chapters and synthesis chapters
 

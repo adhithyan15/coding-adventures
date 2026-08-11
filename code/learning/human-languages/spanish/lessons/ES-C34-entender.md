@@ -3,23 +3,23 @@ schema_version: 2
 id: ES-C34-entender
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 1620
-chapter: 47
+chapter: 48
 type: word
 headword: entender
 gloss: to understand — literally "to stretch toward"; the second e→ie stem-changer
 concept_tag: VERB-UNDERSTAND
-prerequisites: [ES-C34-pensar, ES-C07-comer]
+prerequisites: [ES-C34-pensar, ES-C07-comer, ES-R01-no-entiendo]
 sounds: [diphthong-ie, d-soft]
 roots: [intendere-latin]
 etymology_hook: "entender ← Latin intendere, in- 'toward' + tendere 'to stretch' → intend, intense, attention, extend, tension, tendon, tent"
 duration:
   max_seconds: 250
 requires:
-  knowledge: [ES-LEX-PENSAR-01, ES-ETYMON-PENSAR-02]
+  knowledge: [ES-LEX-PENSAR-01, ES-ETYMON-PENSAR-02, ES-LEX-NO-ENTIENDO-01]
 introduces:
   knowledge: [ES-LEX-ENTENDER-03, ES-ETYMON-ENTENDER-04]
 practises:
-  knowledge: [ES-LEX-PENSAR-01, ES-LEX-ENTENDER-03, ES-ETYMON-ENTENDER-04]
+  knowledge: [ES-LEX-PENSAR-01, ES-LEX-ENTENDER-03, ES-ETYMON-ENTENDER-04, ES-LEX-NO-ENTIENDO-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,11 +31,11 @@ reviews_of: [ES-C34-pensar]
 # entender — "to understand", built out of stretching
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PENSAR-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PENSAR-01, ES-LEX-NO-ENTIENDO-01] -->
 
-[PAUSE 2s] *Pensar* broke its stem under stress. So does this one — and it hands
-you the single most useful sentence a beginner owns: **no entiendo**, "I don't
-understand."
+[PAUSE 2s] *Pensar* broke its stem under stress. So does this one — and you have
+already been using it. **No entiendo** has been in your mouth since chapter 14,
+where you learned it as one frozen block. This is the verb it came from.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
