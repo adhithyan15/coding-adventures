@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.26.0
+
+- Tokenize both Mermaid 11.16.1 state choice marker spellings.
+
 ## 0.25.0
 
 - Add a grammar-driven Mermaid 11.16.1 state-diagram lexer for declarations, transitions, directions, and edge states.

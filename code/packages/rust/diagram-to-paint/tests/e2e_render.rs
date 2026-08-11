@@ -156,7 +156,7 @@ mod apple {
     #[test]
     fn render_mermaid_state_to_png() {
         let graph = parse_state_diagram(
-            "stateDiagram-v2\ndirection LR\nReady: Awaiting work\n[*] --> Ready\nReady --> Running: start\nRunning --> [*]: stop\n",
+            "stateDiagram-v2\ndirection LR\nReady: Awaiting work\nstate Decision <<choice>>\n[*] --> Ready\nReady --> Decision: inspect\nDecision --> Running: start\nDecision --> Ready: wait\nRunning --> [*]: stop\n",
         )
         .expect("Mermaid state parse failed");
         let layout = layout_graph_diagram(&graph, None, None);

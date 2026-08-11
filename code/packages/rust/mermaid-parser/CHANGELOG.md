@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.47.0
+
+- Parse both Mermaid state choice marker spellings and lower choices to graph-IR diamonds.
+
 ## 0.46.0
 
 - Parse Mermaid state description statements without a leading `state` keyword and carry their labels through graph IR.

@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.25.0";
+pub const VERSION: &str = "0.26.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -208,7 +208,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.25.0");
+        assert_eq!(VERSION, "0.26.0");
     }
 
     #[test]
@@ -226,6 +226,20 @@ mod tests {
         assert!(tokens
             .iter()
             .any(|token| token.value == "Still waiting" || token.value == "\"Still waiting\""));
+    }
+
+    #[test]
+    fn tokenizes_state_choice_markers() {
+        let tokens = tokenize_mermaid_state(
+            "stateDiagram-v2\nstate First <<choice>>\nstate Second [[choice]]\n",
+        );
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| token.type_name.as_deref() == Some("CHOICE"))
+                .count(),
+            2
+        );
     }
 
     #[test]

@@ -110,8 +110,9 @@ The initial Mermaid 11.16.1 state slice is grammar-backed and covers
 aliases, standalone `State: description` labels, labeled transitions, document
 direction, and `[*]` start/end edge states. It lowers into the shared graph IR,
 graph layout, and backend-neutral
-PaintScene instructions, with a Metal-to-PNG fixture. Composite states, notes,
-choices, forks, joins, concurrency, click metadata, accessibility metadata, and
+PaintScene instructions, with a Metal-to-PNG fixture. Choice pseudostates accept
+both `<<choice>>` and `[[choice]]` and lower to graph-IR diamonds. Composite
+states, notes, forks, joins, concurrency, click metadata, accessibility metadata, and
 state styling remain explicit gaps, so the family is marked partial.
 
 ### Sequence Native Slice
