@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.42.0";
+pub const VERSION: &str = "0.43.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -249,7 +249,8 @@ pub fn parse_mermaid_c4_ast(source: &str) -> Result<GrammarASTNode, ParseError> 
 }
 
 pub fn parse_mermaid_sequence_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
-    let tokens = tokenize_mermaid_sequence(source);
+    let preprocessed = preprocess_mermaid_directives(source)?;
+    let tokens = tokenize_mermaid_sequence(&preprocessed.source);
     let grammar = parse_parser_grammar(SEQUENCE_PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|e| panic!("Failed to parse sequence.grammar: {e}"));
     let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
@@ -1023,9 +1024,10 @@ fn parse_data_list(s: &str) -> Vec<f64> {
 /// shared sequence IR. Unsupported control blocks fail grammar validation
 /// instead of being silently discarded.
 pub fn parse_sequence_diagram(source: &str) -> Result<SequenceDiagram, ParseError> {
-    parse_mermaid_sequence_ast(source)?;
+    let preprocessed = preprocess_mermaid_directives(source)?;
+    parse_mermaid_sequence_ast(&preprocessed.source)?;
 
-    let mut cursor = TokenCursor::new(tokenize_mermaid_sequence(source));
+    let mut cursor = TokenCursor::new(tokenize_mermaid_sequence(&preprocessed.source));
     cursor.skip_terminators();
     cursor
         .consume_if("HEADER")
@@ -1048,8 +1050,82 @@ pub fn parse_sequence_diagram(source: &str) -> Result<SequenceDiagram, ParseErro
     parse_sequence_body(&mut cursor, &mut diagram, &mut participant_indices, &[])?;
     bind_sequence_lifecycle_events(&mut diagram, cursor.current())?;
     validate_sequence_activation_balance(&diagram, cursor.current())?;
+    if preprocessed.wrap == Some(true) {
+        apply_sequence_default_wrap(&mut diagram);
+    }
 
     Ok(diagram)
+}
+
+struct PreprocessedMermaid {
+    source: String,
+    wrap: Option<bool>,
+}
+
+fn preprocess_mermaid_directives(source: &str) -> Result<PreprocessedMermaid, ParseError> {
+    let mut cleaned = source.as_bytes().to_vec();
+    let mut search_from = 0;
+    let mut wrap = None;
+    while let Some(relative_start) = source[search_from..].find("%%{") {
+        let start = search_from + relative_start;
+        let content_start = start + 3;
+        let Some(relative_end) = source[content_start..].find("}%%") else {
+            let line = source[..start]
+                .bytes()
+                .filter(|byte| *byte == b'\n')
+                .count()
+                + 1;
+            return Err(ParseError {
+                message: "unterminated Mermaid directive".into(),
+                line,
+                col: 1,
+            });
+        };
+        let end = content_start + relative_end;
+        let directive = source[content_start..end].trim();
+        if directive.eq_ignore_ascii_case("wrap") {
+            wrap = Some(true);
+        } else if directive.eq_ignore_ascii_case("nowrap") {
+            wrap = Some(false);
+        }
+        for byte in &mut cleaned[start..end + 3] {
+            if !matches!(*byte, b'\r' | b'\n') {
+                *byte = b' ';
+            }
+        }
+        search_from = end + 3;
+    }
+    Ok(PreprocessedMermaid {
+        source: String::from_utf8(cleaned).expect("directive blanking preserves UTF-8"),
+        wrap,
+    })
+}
+
+fn apply_sequence_default_wrap(diagram: &mut SequenceDiagram) {
+    for participant in &mut diagram.participants {
+        if participant.label_wrap == SequenceTextWrap::Default {
+            participant.label_wrap = SequenceTextWrap::Wrap;
+        }
+    }
+    for group in &mut diagram.participant_groups {
+        if group.label_wrap == SequenceTextWrap::Default {
+            group.label_wrap = SequenceTextWrap::Wrap;
+        }
+    }
+    for event in &mut diagram.events {
+        let wrap = match event {
+            SequenceEvent::Message { wrap, .. }
+            | SequenceEvent::Note { wrap, .. }
+            | SequenceEvent::BlockStart { wrap, .. }
+            | SequenceEvent::BlockBranch { wrap, .. } => Some(wrap),
+            _ => None,
+        };
+        if let Some(wrap) = wrap {
+            if *wrap == SequenceTextWrap::Default {
+                *wrap = SequenceTextWrap::Wrap;
+            }
+        }
+    }
 }
 
 fn validate_sequence_activation_balance(
@@ -3466,6 +3542,40 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn sequence_preprocesses_init_and_wrap_directives() {
+        let diagram = parse_sequence_diagram(
+            "%%{init: {'logLevel': 0}}%%\nsequenceDiagram\n%%{wrap}%%\nparticipant Alice as Primary client\nAlice->>Bob: A deliberately long request\nnote right of Bob: A deliberately long note\n",
+        )
+        .expect("preprocessor directives should not enter the sequence grammar");
+
+        assert_eq!(diagram.participants[0].label_wrap, SequenceTextWrap::Wrap);
+        assert!(matches!(
+            diagram.events[0],
+            SequenceEvent::Message {
+                wrap: SequenceTextWrap::Wrap,
+                ..
+            }
+        ));
+        assert!(matches!(
+            diagram.events[1],
+            SequenceEvent::Note {
+                wrap: SequenceTextWrap::Wrap,
+                ..
+            }
+        ));
+    }
+
+    #[test]
+    fn sequence_rejects_unterminated_directives() {
+        let error = parse_sequence_diagram(
+            "%%{init: {'logLevel': 0}\nsequenceDiagram\nAlice->>Bob: Request\n",
+        )
+        .expect_err("unterminated directives must not be silently discarded");
+        assert!(error.message.contains("unterminated Mermaid directive"));
+        assert_eq!(error.line, 1);
+    }
+
+    #[test]
     fn sequence_parses_nested_control_blocks_and_branches() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\nalt Authorized\nAlice->>Bob: Submit\nloop Retry\nBob-->>Alice: Pending\nend\nelse Rejected\nBob-->>Alice: Denied\nend\n",
@@ -4144,7 +4254,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.42.0");
+        assert_eq!(crate::VERSION, "0.43.0");
     }
 
     #[test]
