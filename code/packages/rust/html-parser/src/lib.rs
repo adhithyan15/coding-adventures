@@ -5221,7 +5221,7 @@ impl HtmlParser {
         }
 
         if !in_foreign_content
-            && self.has_open_element("template")
+            && self.first_authored_open_template_index().is_some()
             && !self.has_open_element("table")
             && (is_table_section(&name) || matches!(name.as_str(), "caption" | "colgroup"))
             && !(name == "tfoot" && self.current_has_child_element("thead"))
@@ -5230,6 +5230,12 @@ impl HtmlParser {
                 || self.current_last_child_element_is("tr")
                 || self.current_last_child_element_is("col"))
         {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-start-tag-in-template-table-mode",
+                format!(
+                    "start tag `<{name}>` was ignored because its required table row or body was not in scope"
+                ),
+            ));
             return;
         }
 
@@ -34382,6 +34388,67 @@ mod tests {
                 diagnostic.code != "unexpected-end-tag-in-template-column-group"
             }));
         }
+    }
+
+    #[test]
+    fn reports_start_tags_rejected_after_template_owned_rows_or_cells() {
+        for (source, name) in [
+            (
+                "<!doctype html><template><tr></tr><tbody></template>",
+                "tbody",
+            ),
+            (
+                "<!doctype html><template><td></td><tbody></template>",
+                "tbody",
+            ),
+            (
+                "<!doctype html><template><tr></tr><caption></template>",
+                "caption",
+            ),
+            (
+                "<!doctype html><template><th></th><colgroup></template>",
+                "colgroup",
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "unexpected-start-tag-in-template-table-mode",
+                    format!(
+                        "start tag `<{name}>` was ignored because its required table row or body was not in scope"
+                    ),
+                )],
+                "source {source:?}"
+            );
+
+            let control = parse_html(&source.replace(&format!("<{name}>"), "")).unwrap();
+            assert_eq!(output.document, control, "source {source:?}");
+        }
+
+        for source in [
+            "<!doctype html><table><tbody><tr></tr></tbody><tbody></tbody></table>",
+            "<!doctype html><template><thead></thead><caption></caption><tbody></tbody></template>",
+            "<!doctype html><template><tr></tr><template><tbody></template></template>",
+            "<!doctype html><svg><template><tr></tr><tbody></tbody></template></svg>",
+            "<!doctype html><div><tr></tr><tbody></tbody></div>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-start-tag-in-template-table-mode"
+                }),
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+        }
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<tr></tr><tbody>", "template")
+                .unwrap();
+        assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-start-tag-in-template-table-mode"
+        }));
     }
 
     #[test]
