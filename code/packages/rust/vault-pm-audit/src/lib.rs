@@ -54,6 +54,8 @@ pub enum AuditActionV1 {
     ItemSearch,
     /// Resolve one current item conflict.
     ItemConflictResolve,
+    /// Merge multiple current item candidates into one authored revision.
+    ItemConflictMerge,
     /// Import a portable snapshot.
     PortableImport,
     /// Export a portable snapshot.
@@ -77,6 +79,7 @@ impl AuditActionV1 {
             Self::ItemHistoryRead => 16,
             Self::ItemSearch => 17,
             Self::ItemConflictResolve => 18,
+            Self::ItemConflictMerge => 19,
             Self::PortableImport => 20,
             Self::PortableExport => 21,
         }
@@ -98,6 +101,7 @@ impl AuditActionV1 {
             16 => Ok(Self::ItemHistoryRead),
             17 => Ok(Self::ItemSearch),
             18 => Ok(Self::ItemConflictResolve),
+            19 => Ok(Self::ItemConflictMerge),
             20 => Ok(Self::PortableImport),
             21 => Ok(Self::PortableExport),
             _ => Err(AuditError::Unsupported),
@@ -113,6 +117,7 @@ impl AuditActionV1 {
                 | Self::ItemDelete
                 | Self::ItemRestore
                 | Self::ItemConflictResolve
+                | Self::ItemConflictMerge
         )
     }
 
@@ -126,6 +131,7 @@ impl AuditActionV1 {
                 | Self::ItemRestore
                 | Self::ItemHistoryRead
                 | Self::ItemConflictResolve
+                | Self::ItemConflictMerge
         )
     }
 
@@ -758,6 +764,21 @@ mod tests {
     #[test]
     fn action_resource_and_result_shapes_fail_closed() {
         let base = successful_read();
+        assert!(AuditEventV1::new(
+            base.vault_id,
+            base.device_id,
+            base.device_counter,
+            base.trace_id,
+            AuditActionV1::ItemConflictMerge,
+            AuditOutcomeV1::Succeeded,
+            Some(item(4)),
+            None,
+            Some(revision(6)),
+            base.previous_event,
+            base.basis_heads.clone(),
+            base.timestamp_ms,
+        )
+        .is_ok());
         assert_eq!(
             AuditEventV1::new(
                 base.vault_id,

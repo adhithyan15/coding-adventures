@@ -7,3 +7,5 @@
   fields.
 - Added deterministic canonical encoding, strict decoding, device signing, and
   signature verification without storage, clock, entropy, or host coupling.
+- Added a distinct authored conflict-merge action so an event never invents a
+  single selected revision for a merge that intentionally retains all parents.

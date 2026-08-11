@@ -7,9 +7,11 @@ operation events, plus domain-separated V1 encrypted object framing and an
 authority-anchored repository verifier for the single authorized Phase 1A
 device. Audit events use their own authenticated object-kind domain; durable
 owner state can now journal a redacted per-device event head and refuses to
-activate a later publication that omits or reuses that head. Legacy local state
-decodes with auditing disabled. Audit activation, event construction, chain
-verification, and CLI enforcement remain later slices. It also defines the
+activate a later publication that omits or reuses that head. Once such a head
+exists, every item mutation and portable import constructs an encrypted signed
+event and advances it atomically with the repository commit. Legacy local state
+decodes with auditing disabled. Audit activation, complete chain verification,
+access enforcement, and CLI audit rendering remain later slices. It also defines the
 exact canonical
 `PreparedInit -> Active -> PendingPublication -> Active` owner-state machine,
 retry-stable publication journals, encrypted local-secret custody, and
@@ -101,6 +103,14 @@ publishing. Ambiguous writes accept only the byte-identical intended state,
 and a provider or final-local-write interruption remains recoverable by the
 existing pending-publication workflow. The mutation consumes its unlocked
 session so callers must reopen before observing or mutating the new pins.
+
+Mutation entropy blocks reserve one independent operation trace and one audit
+object frame in addition to the existing revision, catalog, and commit material.
+When an audit epoch is active, create, update, delete, restore, conflict choice,
+authored conflict merge, and portable import bind their action, exact basis
+heads, device counter, prior event, selected revision where applicable, and
+result revision into the event. The event object, logical mutation objects, and
+commit share the same write-ahead journal and activation compare-exchange.
 
 Compare-and-replace is available through the same session-consuming boundary.
 It requires the requested item to have exactly one current live candidate equal
