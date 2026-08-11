@@ -94,6 +94,8 @@ const CHINESE_WOMAN = ductusFor("女", "chinese")!;
 const chineseWomanOutline = chineseOutline("女");
 const CHINESE_CHILD = ductusFor("子", "chinese")!;
 const chineseChildOutline = chineseOutline("子");
+const CHINESE_SUN = ductusFor("日", "chinese")!;
+const chineseSunOutline = chineseOutline("日");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -951,6 +953,43 @@ describe("Chinese 子 — two cited joined turns followed by a final horizontal"
     ).toEqual([penPathD(CHINESE_CHILD.strokes[0], 1), penPathD(CHINESE_CHILD.strokes[1], 1)]);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CHINESE_CHILD.strokes[2], 1),
+    );
+  });
+});
+
+describe("Chinese 日 — a cited joined corner with an inside-before-close order", () => {
+  const steps = ductusSteps(CHINESE_SUN);
+  const strip = ductusFilmstrip(CHINESE_SUN, chineseSunOutline);
+
+  it("draws the left side, joined top-right corner, inside bar, then closing bottom", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the left vertical shù from top to bottom",
+      "lift, then draw the top horizontal héng from left to right",
+      "turn without lifting and descend the right side",
+      "lift, then draw the middle horizontal héng from left to right",
+      "lift, then close the bottom horizontal héng from left to right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, false, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 1, 2, 3]);
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 5 movements");
+  });
+
+  it("draws the exact Noto Sans SC glyph with the inside bar behind the closing bottom", () => {
+    const paths = byTag(strip.frames[4], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      chineseSunOutline.path,
+    );
+    expect(
+      paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d),
+    ).toEqual([
+      penPathD(CHINESE_SUN.strokes[0], 1),
+      penPathD(CHINESE_SUN.strokes[1], 1),
+      penPathD(CHINESE_SUN.strokes[2], 1),
+    ]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_SUN.strokes[3], 1),
     );
   });
 });
