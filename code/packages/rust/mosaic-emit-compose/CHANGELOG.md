@@ -7,6 +7,11 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `HostDialog` now lowers modal content to Compose's native `Dialog` and the
+  contract's non-modal form to `Popup`. Generated overlays honor controlled
+  visibility and interactive-dismiss policy, dispatch open/close events, render
+  a semantic heading, preserve nested Mosaic content and styles, and provide
+  useful Material surface chrome without application-owned dialog glue.
 - `HostLink` now lowers to Compose's native annotated-text link API. External
   links open through the platform `UriHandler`; internal links retain link
   semantics while dispatching Mosaic events, including item/index payloads

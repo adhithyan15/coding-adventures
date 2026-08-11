@@ -70,11 +70,12 @@ wants the strict-Flux store/dispatcher contract.
 | Input        | multiline-capable `BasicTextField`        |
 | HostButton   | `Button(onClick) { Text(label) }`         |
 | HostLink     | native annotated text link                |
+| HostDialog   | native `Dialog` / non-modal `Popup`       |
 
 The emitter also lowers `For`, `If`/`Else`, table structure, buttons, checkbox
-and radio controls, number inputs, links, native accessible tooltip wrappers, and the
-current drag/drop degradation path. Unsupported primitives still return a
-clear `UnknownPrimitive` error instead of silently disappearing.
+and radio controls, number inputs, links, accessible dialog and tooltip
+overlays, and the current drag/drop degradation path. Unsupported primitives
+still return a clear `UnknownPrimitive` error instead of silently disappearing.
 
 ## Style handling
 
@@ -85,6 +86,6 @@ their own `MaterialTheme` for platform-level theming.
 
 ## Tests
 
-`cargo test -p mosaic-emit-compose` runs 43 focused emitter tests. The
+`cargo test -p mosaic-emit-compose` runs 48 focused emitter tests. The
 package-expanded TaskApp is also exercised as a real Compose Desktop project:
 Kotlin compilation, native macOS distribution packaging, and process launch.
