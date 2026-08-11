@@ -24,8 +24,10 @@ one publish-before-release completion path, and publication failure releases
 neither result nor original error while leaving the exact pending journal
 recoverable. Complete verification, coarse diagnostics, and encrypted portable
 export now use that same boundary, including failed export-input attempts.
-Secret disclosure, CLI adoption, audit activation, and redacted audit history
-rendering remain later slices. It also defines the
+Exact current-revision capabilities, whole secret-bearing documents, and
+schema-specific secret fields are also held until their succeeded, denied, or
+failed event is durable. CLI adoption, audit activation, and redacted audit
+history rendering remain later slices. It also defines the
 exact canonical
 `PreparedInit -> Active -> PendingPublication -> Active` owner-state machine,
 retry-stable publication journals, encrypted local-secret custody, and
@@ -206,6 +208,13 @@ unsafe non-interactive output after both flag opt-in and a host-emitted stderr
 warning. The application validates those facts before repository traversal.
 Actual TTY inspection, warning rendering, clipboard writes, ownership checks,
 and timed clear remain host responsibilities.
+
+Audited variants consume the session before returning an exact current
+revision capability, whole secret-bearing document, or selected field. They
+publish the item and exact successfully reached revision before release;
+unconfirmed disclosure ceremonies publish `Denied` without revision traversal,
+while missing revisions and field/schema mismatches publish `Failed`. An audit
+publication failure withholds the capability, secret, and original error.
 
 Long-lived hosts can retain an explicit `VaultAccessV1` lifecycle boundary.
 It begins with only a redacted `LockedVaultV1` locator handle, authenticates a

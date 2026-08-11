@@ -2,6 +2,23 @@
 
 All notable changes to this package are documented here.
 
+## [0.38.0] - 2026-08-11
+
+### Added
+
+- Add session-consuming audited access to exact current revision capabilities,
+  whole secret-bearing revisions, and schema-specific secret fields.
+- Represent refused interactive and unsafe non-interactive disclosure
+  ceremonies as durable `Denied` item-read events.
+
+### Security
+
+- Withhold every revision capability, owned document, revealed secret, and
+  closed operation failure until its signed event and next owner state are
+  durable.
+- Bind successful reads and authorized field-selection failures to the exact
+  item and reachable revision without traversing revisions for denied requests.
+
 ## [0.37.0] - 2026-08-11
 
 ### Added

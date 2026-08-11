@@ -1475,9 +1475,10 @@ changelog, focused build, and downstream validation.
               export boundaries over the shared publish-before-release path,
               including verification failures and invalid export-input
               attempts.
-9b-2c-5b-2c. close secret disclosure and exact current-revision capability
-              access, including succeeded, denied, and failed outcomes without
-              exposing a secret or mutation capability before publication.
+9b-2c-5b-2c. completed secret disclosure, whole secret-bearing revision, and
+              exact current-revision capability access, including succeeded,
+              denied, and failed outcomes without exposing a secret or
+              mutation capability before publication.
 9b-2c-5b-3. adopt only audited application access methods in every
             authenticated CLI path, with output strictly after durable owner
             activation and real-process failure-ordering acceptance.
