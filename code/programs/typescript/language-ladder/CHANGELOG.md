@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Hebrew Lamed ductus (HL-C09BO)
+
+- Render **ל** in three evidence-aligned frames: descend the tall left stroke,
+  continue right along the middle bar, and turn diagonally down-left without lifting.
+- Keep the source's one-stroke angular print order explicit while preserving its
+  rounded looping handwritten alternative.
+- Queue the same lesson's Mem demonstration next.
+
 ### Added — cited Hebrew Kaf ductus (HL-C09BN)
 
 - Render **כ** in three evidence-aligned frames: draw the top bar left-to-right,

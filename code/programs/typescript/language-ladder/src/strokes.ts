@@ -889,6 +889,49 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: hebrewAlphabetSource("כ"),
   },
+  // Printed Lamed is one angular run: down the tall left stroke, right across
+  // the middle, then diagonally down-left. Handwriting rounds this into a loop.
+  [ductusKey("hebrew", "ל")]: {
+    script: "hebrew",
+    glyph: "ל",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the tall left stroke from top to bottom",
+            path: [
+              { x: 80, y: 730 },
+              { x: 80, y: 660 },
+              { x: 80, y: 590 },
+              { x: 80, y: 555 },
+            ],
+          },
+          {
+            label: "continue right along the middle bar without lifting",
+            path: [
+              { x: 80, y: 555 },
+              { x: 180, y: 555 },
+              { x: 300, y: 555 },
+              { x: 420, y: 555 },
+            ],
+          },
+          {
+            label: "turn diagonally down-left through the lower stroke without lifting",
+            path: [
+              { x: 420, y: 555 },
+              { x: 400, y: 480 },
+              { x: 370, y: 390 },
+              { x: 340, y: 300 },
+              { x: 310, y: 210 },
+              { x: 280, y: 120 },
+              { x: 250, y: 38 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ל"),
+  },
   "ا": {
     script: "perso-arabic",
     glyph: "ا",

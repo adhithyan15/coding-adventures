@@ -173,7 +173,7 @@ sitting upside down on a correct letter.
 all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —, all
 thirteen Urdu starter entries — ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, ی, and ے —,
 and all eighteen Arabic starter letters — ا, ب, ت, ج, ح, خ, د, ر, س, ش, ص, ض, ع, ك, ل, ه, و, and ي —
-and Hebrew א, ב, ג, ד, ה, ו, ז, ח, ט, י, and כ
+and Hebrew א, ב, ג, ד, ה, ו, ז, ח, ט, י, כ, and ל
 have authored pen paths today.**
 `DUCTUS` admits no letter without a citation
 for its stroke order, and hand-drawing a letter is forbidden
@@ -425,6 +425,10 @@ The dedicated Kaf lesson adds a three-frame printed **כ** filmstrip: its top ba
 travels left-to-right, rounds down the right side, and turns left along the base
 without lifting. The source calls handwriting half a circle to the right and
 contrasts its rounded sweep with the same printed movement's sharp corners.
+The Lamed/Mem lesson adds a three-frame printed **ל** filmstrip: its tall left
+stroke descends to the middle junction, continues right along the bar, and turns
+diagonally down-left without lifting. The source's earlier handwritten version
+rounds the same one-run idea into a loop, which remains explicit in the citation.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
