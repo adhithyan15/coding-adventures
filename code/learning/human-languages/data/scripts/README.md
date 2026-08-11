@@ -316,8 +316,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   00:04.9–00:06.0: close the lower counter, thread through the centre into the
   upper-right counter, then sweep left along the baseline without lifting. Its
   three-frame path fits that compact demonstration to the wider isolated Noto
-  Naskh outline while keeping Arabic and Persian provenance separate. The
-  remaining **178** prose part orders across seven scripts (`arabic` 4,
+  Naskh outline while keeping Arabic and Persian provenance separate. The same
+  page's directly linked `waw.mov` verifies independent **و** in one run at
+  00:45.7–00:46.9: sweep left from the lower-right junction to close the small
+  head loop, then continue down and left through the tail without lifting. Its
+  two-frame path preserves Waw's one-way-connector and w/long-ū roles while
+  keeping Arabic and Persian provenance separate. The remaining **177** prose
+  part orders across seven scripts (`arabic` 3,
   `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 22,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
