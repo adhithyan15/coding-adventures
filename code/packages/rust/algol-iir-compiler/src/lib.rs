@@ -366,6 +366,11 @@ struct Compiler {
     register_names: HashSet<String>,
     defined_labels: HashSet<String>,
     referenced_labels: HashSet<String>,
+    /// Source label name -> stable IIR label for the nearest lexical block.
+    /// Labels are pre-registered before declarations and statements so forward
+    /// gotos and switch-list entries bind to the correct shadowing declaration.
+    labels: HashMap<String, String>,
+    label_scope_names: Vec<HashSet<String>>,
     /// Procedures lowered out of line, in declaration order.  These become
     /// extra `IIRFunction`s alongside `main` when the module is assembled.
     functions: Vec<IIRFunction>,
@@ -437,6 +442,8 @@ impl Default for Compiler {
             register_names: HashSet::new(),
             defined_labels: HashSet::new(),
             referenced_labels: HashSet::new(),
+            labels: HashMap::new(),
+            label_scope_names: vec![HashSet::new()],
             functions: Vec::new(),
             proc_sigs: HashMap::new(),
             proc_decls: HashMap::new(),
@@ -536,10 +543,17 @@ impl Compiler {
         self.set_loc(node);
 
         let saved_switches = (!is_root).then(|| self.switches.clone());
+        let saved_labels = (!is_root).then(|| self.labels.clone());
         if !is_root {
             self.push_scope();
             self.switch_scope_names.push(HashSet::new());
+            self.label_scope_names.push(HashSet::new());
         }
+
+        // Labels have block scope and may be referenced before their textual
+        // declaration, including from a switch list. Register every label in
+        // this block while deliberately stopping at nested block boundaries.
+        self.register_block_labels(node)?;
 
         // Pass 0 — register every procedure's signature *before* lowering any
         // body.  ALGOL allows a call to appear ahead of the textual
@@ -593,6 +607,8 @@ impl Compiler {
             self.pop_scope();
             self.switch_scope_names.pop();
             self.switches = saved_switches.expect("nested block saves switch bindings");
+            self.label_scope_names.pop();
+            self.labels = saved_labels.expect("nested block saves label bindings");
         }
         Ok(())
     }
@@ -1395,6 +1411,9 @@ impl Compiler {
         let saved_registers = std::mem::take(&mut self.register_names);
         let saved_defined = std::mem::take(&mut self.defined_labels);
         let saved_referenced = std::mem::take(&mut self.referenced_labels);
+        let saved_labels = std::mem::take(&mut self.labels);
+        let saved_label_scope_names =
+            std::mem::replace(&mut self.label_scope_names, vec![HashSet::new()]);
         let saved_switches = std::mem::take(&mut self.switches);
         let saved_switch_scope_names =
             std::mem::replace(&mut self.switch_scope_names, vec![HashSet::new()]);
@@ -1579,7 +1598,10 @@ impl Compiler {
             .ok_or_else(|| CompileError::Malformed("proc_body is empty".into()))?;
         match inner.rule_name.as_str() {
             "block" => self.emit_block(inner, false)?,
-            "statement" => self.emit_statement(inner)?,
+            "statement" => {
+                self.register_statement_labels(inner)?;
+                self.emit_statement(inner)?;
+            }
             other => {
                 return Err(CompileError::Malformed(format!(
                     "unexpected proc_body child {other:?}"
@@ -1628,6 +1650,8 @@ impl Compiler {
         self.register_names = saved_registers;
         self.defined_labels = saved_defined;
         self.referenced_labels = saved_referenced;
+        self.labels = saved_labels;
+        self.label_scope_names = saved_label_scope_names;
         self.switches = saved_switches;
         self.switch_scope_names = saved_switch_scope_names;
         self.switch_expansion_steps = saved_switch_expansion_steps;
@@ -2982,7 +3006,12 @@ impl Compiler {
 
         let children = direct_nodes(node);
         if let Some(label) = children.iter().find(|n| n.rule_name == "label") {
-            let name = self.label_name(label)?;
+            let source_name = self.label_name(label)?;
+            let name = self.labels.get(&source_name).cloned().ok_or_else(|| {
+                CompileError::Malformed(format!(
+                    "label {source_name:?} was not registered in its block"
+                ))
+            })?;
             self.defined_labels.insert(name.clone());
             self.emit(IIRInstr::new(
                 "label",
@@ -3470,7 +3499,12 @@ impl Compiler {
             // simple_desig = label
             let label_node = first_direct_node(simple, "label")
                 .ok_or_else(|| CompileError::Malformed("designator missing label".into()))?;
-            let label = self.label_name(label_node)?;
+            let source_label = self.label_name(label_node)?;
+            let label = self
+                .labels
+                .get(&source_label)
+                .cloned()
+                .unwrap_or(source_label);
             self.referenced_labels.insert(label.clone());
             self.emit(IIRInstr::new("jmp", None, vec![Operand::Var(label)], "void"));
             Ok(())
@@ -3493,7 +3527,7 @@ impl Compiler {
         let switch_list = first_direct_node(node, "switch_list")
             .ok_or_else(|| CompileError::Malformed("switch_decl missing switch_list".into()))?;
 
-        let targets: Vec<GrammarASTNode> = direct_nodes(switch_list)
+        let mut targets: Vec<GrammarASTNode> = direct_nodes(switch_list)
             .into_iter()
             .filter(|n| n.rule_name == "desig_expr")
             .cloned()
@@ -3510,7 +3544,43 @@ impl Compiler {
                 "duplicate declaration for switch {name:?}"
             )));
         }
+        for target in &mut targets {
+            bind_designator_labels(target, &self.labels);
+        }
         self.switches.insert(name, targets);
+        Ok(())
+    }
+
+    fn register_block_labels(&mut self, block: &GrammarASTNode) -> Result<(), CompileError> {
+        for statement in direct_nodes(block)
+            .into_iter()
+            .filter(|node| node.rule_name == "statement")
+        {
+            self.register_statement_labels(statement)?;
+        }
+        Ok(())
+    }
+
+    fn register_statement_labels(
+        &mut self,
+        statement: &GrammarASTNode,
+    ) -> Result<(), CompileError> {
+        let mut labels = Vec::new();
+        collect_statement_labels(statement, &mut labels);
+        for label in labels {
+            let source_name = self.label_name(label)?;
+            let current_scope = self
+                .label_scope_names
+                .last_mut()
+                .expect("compiler always has a label scope");
+            if !current_scope.insert(source_name.clone()) {
+                return Err(CompileError::Type(format!(
+                    "duplicate declaration for label {source_name:?}"
+                )));
+            }
+            let iir_name = self.fresh_label(&format!("label_{source_name}"));
+            self.labels.insert(source_name, iir_name);
+        }
         Ok(())
     }
 
@@ -4827,7 +4897,11 @@ impl Compiler {
             .filter(|t| matches!(t.effective_type_name(), "NAME" | "INTEGER_LIT"))
             .collect();
         if tokens.len() == 1 {
-            Ok(format!("L_{}", tokens[0].value))
+            if tokens[0].value.starts_with("__algol_") {
+                Ok(tokens[0].value.clone())
+            } else {
+                Ok(format!("L_{}", tokens[0].value))
+            }
         } else {
             Err(CompileError::Malformed(format!(
                 "label should contain exactly one NAME or INTEGER_LIT token, got {}",
@@ -5252,6 +5326,48 @@ fn bare_scalar_variable_name(node: &GrammarASTNode) -> Option<String> {
                 .map(|token| token.value.clone())
         })
         .flatten()
+}
+
+/// Collect labels whose declaration region is the current block. Compound,
+/// conditional, and loop statements do not introduce scopes; a nested block
+/// does, so its subtree is intentionally left for that block's own pre-pass.
+fn collect_statement_labels<'a>(
+    node: &'a GrammarASTNode,
+    labels: &mut Vec<&'a GrammarASTNode>,
+) {
+    if node.rule_name == "block" {
+        return;
+    }
+    if node.rule_name == "statement" {
+        if let Some(label) = first_direct_node(node, "label") {
+            labels.push(label);
+        }
+    }
+    for child in direct_nodes(node) {
+        collect_statement_labels(child, labels);
+    }
+}
+
+/// Freeze lexical label references in a stored switch designator. Switch
+/// entries are evaluated later, but their identifiers belong to the switch
+/// declaration's block rather than the eventual `goto` statement's block.
+fn bind_designator_labels(node: &mut GrammarASTNode, labels: &HashMap<String, String>) {
+    if node.rule_name == "label" {
+        for child in &mut node.children {
+            if let ASTNodeOrToken::Token(token) = child {
+                let source_name = format!("L_{}", token.value);
+                if let Some(iir_name) = labels.get(&source_name) {
+                    token.value = iir_name.clone();
+                }
+            }
+        }
+        return;
+    }
+    for child in &mut node.children {
+        if let ASTNodeOrToken::Node(node) = child {
+            bind_designator_labels(node, labels);
+        }
+    }
 }
 
 /// Rewrite NAME tokens in a stored call-by-name actual to compiler-generated
@@ -8273,6 +8389,36 @@ mod tests {
         )
         .expect_err("same-block switch declarations must remain unique");
         assert!(err.to_string().contains("duplicate declaration for switch"));
+    }
+
+    #[test]
+    fn nested_block_label_shadows_and_restores_outer_binding() {
+        let src = "begin integer result, phase; phase := 0; goto outer; \
+                   outer: if phase = 0 then \
+                     begin phase := 1; \
+                       begin integer marker; marker := 0; goto outer; \
+                             outer: result := 20 + marker; goto innerdone; \
+                             innerdone: end; \
+                       goto outer end \
+                   else begin result := result + 22; goto done end; \
+                   done: end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn switch_label_binding_is_frozen_at_declaration() {
+        let src = "begin integer result; switch s := target; \
+                   begin integer marker; marker := 0; goto s[1]; \
+                         target: result := 1 + marker; goto done end; \
+                   target: result := 42; done: end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn duplicate_label_in_same_block_is_rejected() {
+        let err = compile_source("begin one: ; one: end", "duplicate_label")
+            .expect_err("same-block label declarations must remain unique");
+        assert!(err.to_string().contains("duplicate declaration for label"));
     }
 
     #[test]

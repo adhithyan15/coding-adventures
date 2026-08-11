@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.220.51 - 2026-08-11 (ALGOL label shadowing — seven-backend matrix)
+
+The matrix now proves lexical label shadowing on Native AOT, LLVM, WASM, JVM,
+CLR, VM, and JIT. A nested `outer` label receives the nearest forward jump,
+then scope exit restores the enclosing `outer`, producing 42 everywhere.
+
 ## 0.220.50 - 2026-08-11 (ALGOL switch shadowing — seven-backend matrix)
 
 The matrix now proves lexical switch shadowing on Native AOT, LLVM, WASM, JVM,
