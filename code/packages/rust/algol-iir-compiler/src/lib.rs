@@ -279,6 +279,70 @@ enum ProcedureParamType {
     },
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ProcedureParamKind {
+    Array,
+    Procedure,
+}
+
+/// One source-level parameter specification, before complementary report-style
+/// parts such as `integer a; array a;` are combined.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+struct ProcedureParamSpecification {
+    scalar_type: Option<ScalarType>,
+    kind: Option<ProcedureParamKind>,
+}
+
+impl ProcedureParamSpecification {
+    fn merge(self, other: Self, name: &str) -> Result<Self, CompileError> {
+        let scalar_type = match (self.scalar_type, other.scalar_type) {
+            (Some(left), Some(right)) if left == right => {
+                return Err(CompileError::Type(format!(
+                    "duplicate type specification for formal parameter {name:?}"
+                )))
+            }
+            (Some(_), Some(_)) => {
+                return Err(CompileError::Type(format!(
+                    "conflicting type specifications for formal parameter {name:?}"
+                )))
+            }
+            (left @ Some(_), None) | (None, left @ Some(_)) => left,
+            (None, None) => None,
+        };
+        let kind = match (self.kind, other.kind) {
+            (Some(left), Some(right)) if left == right => {
+                return Err(CompileError::Type(format!(
+                    "duplicate kind specification for formal parameter {name:?}"
+                )))
+            }
+            (Some(_), Some(_)) => {
+                return Err(CompileError::Type(format!(
+                    "conflicting kind specifications for formal parameter {name:?}"
+                )))
+            }
+            (left @ Some(_), None) | (None, left @ Some(_)) => left,
+            (None, None) => None,
+        };
+        Ok(Self { scalar_type, kind })
+    }
+
+    fn finish(self, name: &str) -> Result<ProcedureParamType, CompileError> {
+        match (self.scalar_type, self.kind) {
+            (Some(ty), None) => Ok(ProcedureParamType::Scalar(ty)),
+            (elem_ty, Some(ProcedureParamKind::Array)) => Ok(ProcedureParamType::Array {
+                elem_ty: elem_ty.unwrap_or(ScalarType::Real),
+                dimensions: 1,
+            }),
+            (expected_ret, Some(ProcedureParamKind::Procedure)) => {
+                Ok(ProcedureParamType::Procedure { expected_ret })
+            }
+            (None, None) => Err(CompileError::Malformed(format!(
+                "parameter {name:?} has an empty specification"
+            ))),
+        }
+    }
+}
+
 /// Whether an ALGOL formal receives an eager value or re-evaluates its actual
 /// expression in the caller's lexical environment.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1257,17 +1321,17 @@ impl Compiler {
         }
     }
 
-    /// Map a procedure `specifier` to the supported formal shape.
+    /// Map a procedure `specifier` to one source-level specification part.
     ///
     /// The compiled parser accepts `integer array a` as a two-token specifier;
     /// its legacy `array a` spelling remains a real-array formal, matching the
     /// default element type of an untyped ALGOL array declaration. Array
     /// formals infer their dimension count from their subscripted uses in the
     /// procedure body; the actual's rank is checked when the call is lowered.
-    fn procedure_param_type(
+    fn procedure_param_specification(
         &self,
         node: &GrammarASTNode,
-    ) -> Result<ProcedureParamType, CompileError> {
+    ) -> Result<ProcedureParamSpecification, CompileError> {
         let tokens = recursive_tokens(node);
         let words: Vec<&str> = tokens.iter().map(|token| token.value.as_str()).collect();
         let scalar = |word: &str| match word {
@@ -1279,22 +1343,26 @@ impl Compiler {
         };
 
         match words.as_slice() {
-            ["array"] => Ok(ProcedureParamType::Array {
-                elem_ty: ScalarType::Real,
-                dimensions: 1,
+            ["array"] => Ok(ProcedureParamSpecification {
+                scalar_type: None,
+                kind: Some(ProcedureParamKind::Array),
             }),
             [ty, "array"] => scalar(ty)
-                .map(|elem_ty| ProcedureParamType::Array {
-                    elem_ty,
-                    dimensions: 1,
+                .map(|scalar_type| ProcedureParamSpecification {
+                    scalar_type: Some(scalar_type),
+                    kind: Some(ProcedureParamKind::Array),
                 })
                 .ok_or_else(|| CompileError::Malformed(format!(
                     "unknown array parameter element type {ty:?}"
                 ))),
-            ["procedure"] => Ok(ProcedureParamType::Procedure { expected_ret: None }),
+            ["procedure"] => Ok(ProcedureParamSpecification {
+                scalar_type: None,
+                kind: Some(ProcedureParamKind::Procedure),
+            }),
             [ty, "procedure"] => scalar(ty)
-                .map(|expected_ret| ProcedureParamType::Procedure {
-                    expected_ret: Some(expected_ret),
+                .map(|scalar_type| ProcedureParamSpecification {
+                    scalar_type: Some(scalar_type),
+                    kind: Some(ProcedureParamKind::Procedure),
                 })
                 .ok_or_else(|| {
                     CompileError::Malformed(format!(
@@ -1302,7 +1370,10 @@ impl Compiler {
                     ))
                 }),
             [ty] => scalar(ty)
-                .map(ProcedureParamType::Scalar)
+                .map(|scalar_type| ProcedureParamSpecification {
+                    scalar_type: Some(scalar_type),
+                    kind: None,
+                })
                 .ok_or_else(|| CompileError::Unsupported(format!("{ty} parameters"))),
             [_, kind] if matches!(*kind, "label" | "switch") => Err(
                 CompileError::Unsupported(format!("{kind} parameters")),
@@ -1391,15 +1462,17 @@ impl Compiler {
                 )));
             }
         }
-        // Each parameter's type, gathered from the `spec_part` declarations.
-        let mut type_of: HashMap<String, ProcedureParamType> = HashMap::new();
+        // Each parameter's type and kind, gathered from the `spec_part`
+        // declarations. Report-style split specifications (`integer a; array
+        // a;`) contribute complementary pieces and are merged before lowering.
+        let mut specification_of: HashMap<String, ProcedureParamSpecification> = HashMap::new();
         for spec in direct_nodes(proc_decl)
             .into_iter()
             .filter(|n| n.rule_name == "spec_part")
         {
             let specifier = first_direct_node(spec, "specifier")
                 .ok_or_else(|| CompileError::Malformed("spec_part missing specifier".into()))?;
-            let ty = self.procedure_param_type(specifier)?;
+            let specification = self.procedure_param_specification(specifier)?;
             let list = first_direct_node(spec, "ident_list")
                 .ok_or_else(|| CompileError::Malformed("spec_part missing ident_list".into()))?;
             for n in ident_list_names(list) {
@@ -1408,19 +1481,21 @@ impl Compiler {
                         "specified parameter {n:?} is not in the formal parameter list"
                     )));
                 }
-                if type_of.insert(n.clone(), ty).is_some() {
-                    return Err(CompileError::Type(format!(
-                        "duplicate specification for formal parameter {n:?}"
-                    )));
-                }
+                let merged = specification_of
+                    .get(&n)
+                    .copied()
+                    .unwrap_or_default()
+                    .merge(specification, &n)?;
+                specification_of.insert(n, merged);
             }
         }
 
         let mut params = Vec::with_capacity(param_names.len());
         for p in param_names {
-            let ty = type_of.get(&p).copied().ok_or_else(|| {
+            let specification = specification_of.get(&p).copied().ok_or_else(|| {
                 CompileError::Malformed(format!("parameter {p:?} has no specification"))
             })?;
+            let ty = specification.finish(&p)?;
             let ty = match ty {
                 ProcedureParamType::Array { elem_ty, .. } => ProcedureParamType::Array {
                     elem_ty,
@@ -7139,6 +7214,15 @@ mod tests {
     }
 
     #[test]
+    fn split_array_and_procedure_specifications_run() {
+        let src = "begin integer result; integer array values[4:4]; \
+                   integer procedure twice(x); value x; integer x; twice := x + x; \
+                   integer procedure apply(p,a); value a; integer p,a; procedure p; array a; \
+                   apply := p(a[4]); values[4] := 21; result := apply(twice, values) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
     fn duplicate_formal_parameter_is_rejected() {
         let err = compile_source(
             "begin integer procedure bad(x,x); value x; integer x; bad := x; bad(1,2) end",
@@ -7183,15 +7267,39 @@ mod tests {
     }
 
     #[test]
-    fn duplicate_formal_specification_is_rejected() {
+    fn conflicting_formal_type_specifications_are_rejected() {
         let err = compile_source(
             "begin integer procedure bad(x); value x; integer x; real x; bad := x; bad(1) end",
-            "duplicate_formal_specification",
+            "conflicting_formal_specification",
         )
-        .expect_err("a formal parameter must have exactly one specification");
+        .expect_err("a formal parameter cannot have conflicting types");
         assert!(err
             .to_string()
-            .contains("duplicate specification for formal parameter \"x\""));
+            .contains("conflicting type specifications for formal parameter \"x\""));
+    }
+
+    #[test]
+    fn duplicate_formal_type_specification_is_rejected() {
+        let err = compile_source(
+            "begin integer procedure bad(x); value x; integer x; integer x; bad := x; bad(1) end",
+            "duplicate_formal_type_specification",
+        )
+        .expect_err("a formal parameter cannot repeat its type");
+        assert!(err
+            .to_string()
+            .contains("duplicate type specification for formal parameter \"x\""));
+    }
+
+    #[test]
+    fn conflicting_formal_kind_specifications_are_rejected() {
+        let err = compile_source(
+            "begin integer procedure bad(x); value x; integer x; array x; procedure x; bad := 0; bad(1) end",
+            "conflicting_formal_kind_specification",
+        )
+        .expect_err("a formal parameter cannot be both an array and a procedure");
+        assert!(err
+            .to_string()
+            .contains("conflicting kind specifications for formal parameter \"x\""));
     }
 
     #[test]

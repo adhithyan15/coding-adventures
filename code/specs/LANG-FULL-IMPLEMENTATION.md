@@ -805,8 +805,10 @@ backend immediately) come before the enabler-dependent items.
   cannot leak and temporary standard-function overrides restore the built-in.
   Procedure headings are validated before lowering: duplicate formal/value
   names, value or specification names outside the formal list, and repeated
-  specifications are rejected. Each formal therefore has exactly one declared
-  type, while valid multi-group headings keep the same typed direct-call ABI.
+  specifications are rejected. Complementary report-style parts such as
+  `integer a; array a;` and `integer p; procedure p;` merge into one typed
+  formal, while duplicate or conflicting type/kind parts fail closed. Valid
+  multi-group headings keep the same typed direct-call ABI.
 - ◑ **AL4** — literal string `print`/`output` I/O runs on all 7 backends via
   **E4**. Undeclared statement-position `print('HI')`/`output('HI')` calls lower
   to `str_const` + `print_str`, and literal-backed scalar string variables

@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.220.63 - 2026-08-11 (ALGOL split formal specifications — seven-backend matrix)
+
+The matrix now merges separate type and kind parts for integer array and typed
+procedure formals, then executes their existing descriptor and direct-call
+specialization paths on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
 ## 0.220.62 - 2026-08-11 (ALGOL procedure heading validation — seven-backend matrix)
 
 The matrix now runs a typed ALGOL procedure whose formals are partitioned
