@@ -150,6 +150,11 @@ Prioritized work items:
    in-head parse error and remains ignored, matching WPT `template.dat` while
    preserving matching HTML-template closure, foreign template-named element
    closure, and the synthetic template-fragment boundary diagnostic.
+   A matching HTML `template` end tag now thoroughly generates implied end
+   tags and reports when a non-template element remains current, matching WPT
+   `template.dat`'s mismatched-template evidence while leaving implied
+   descendants, directly current templates, foreign template-named elements,
+   and synthetic template fragment contexts quiet.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases

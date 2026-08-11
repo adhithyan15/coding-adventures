@@ -7886,6 +7886,20 @@ impl HtmlParser {
                     && !has_fragment_context_marker(element)
             })
         }) {
+            while self.open_elements.len() > index + 1
+                && self.current_namespace().is_none()
+                && self
+                    .current_element_name()
+                    .is_some_and(is_thoroughly_implied_end_tag_element)
+            {
+                self.open_elements.pop();
+            }
+            if self.open_elements.len() > index + 1 {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "mismatched-template-end-tag",
+                    "end tag `</template>` closed an HTML template while a non-template element remained current",
+                ));
+            }
             self.open_elements.truncate(index);
         } else {
             self.diagnostics.push(ParserDiagnostic::new(
@@ -11174,6 +11188,14 @@ fn is_implied_end_tag_element(name: &str) -> bool {
         name,
         "dd" | "dt" | "li" | "optgroup" | "option" | "p" | "rb" | "rp" | "rt" | "rtc"
     )
+}
+
+fn is_thoroughly_implied_end_tag_element(name: &str) -> bool {
+    is_implied_end_tag_element(name)
+        || matches!(
+            name,
+            "caption" | "colgroup" | "tbody" | "td" | "tfoot" | "th" | "thead" | "tr"
+        )
 }
 
 fn is_heading_element(name: &str) -> bool {
@@ -34155,6 +34177,38 @@ mod tests {
         assert_eq!(svg.namespace.as_deref(), Some("svg"));
         assert_eq!(element(&svg.children[0]).name, "template");
         assert_eq!(element(&svg.children[1]).name, "circle");
+    }
+
+    #[test]
+    fn reports_template_end_tags_with_a_non_template_current_node_after_implied_end_tags() {
+        let mismatched =
+            parse_html_with_diagnostics("<!doctype html><div><template><div><span></template><b>")
+                .unwrap();
+        assert_eq!(
+            mismatched
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "mismatched-template-end-tag")
+                .count(),
+            1
+        );
+
+        for source in [
+            "<!doctype html><template></template>",
+            "<!doctype html><template><template></template></template>",
+            "<!doctype html><template><p></template>",
+            "<!doctype html><svg><template></template></svg>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "mismatched-template-end-tag"),
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+        }
     }
 
     #[test]

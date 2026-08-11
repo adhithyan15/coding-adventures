@@ -6,6 +6,11 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Matching HTML `template` end tags now thoroughly generate implied end tags
+  and report the required parse error when a non-template element remains
+  current. Directly current templates, implied descendants, foreign
+  template-named elements, and synthetic template fragment contexts remain
+  quiet.
 - A `template` end tag with no authored open HTML template now reports the
   required parse error and remains ignored. Matching HTML templates, foreign
   template-named elements, and synthetic template fragment contexts retain
