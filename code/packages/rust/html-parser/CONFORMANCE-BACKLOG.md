@@ -114,6 +114,11 @@ Prioritized work items:
    general in-table parse error before foster parenting, matching WPT
    `tests10.dat`, `tests17.dat`, `tests18.dat`, and `webkit01.dat` evidence while
    leaving selects outside tables and inside cells quiet.
+   Generic paragraph-boundary, `br`, `p`, and `plaintext` start tags processed
+   directly in table structure now report the general in-table parse error
+   before foster parenting, matching WPT `tests8.dat`, `tricky01.dat`,
+   `tests18.dat`, and `template.dat` evidence while leaving the same starts
+   outside tables and inside cells quiet.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases

@@ -5420,6 +5420,17 @@ impl HtmlParser {
         }
 
         if !in_foreign_content
+            && self.current_element_is_table_structure()
+            && (is_paragraph_boundary_element(&name)
+                || matches!(name.as_str(), "br" | "p" | "plaintext"))
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-start-tag-in-table",
+                format!("start tag `<{name}>` in a table context was foster parented"),
+            ));
+        }
+
+        if !in_foreign_content
             && self.has_open_element("template")
             && !self.has_open_element("table")
             && self.current_element_is_table_structure()
@@ -34207,6 +34218,52 @@ mod tests {
                 .parser_diagnostics
                 .iter()
                 .all(|diagnostic| { diagnostic.code != "unexpected-select-start-tag-in-table" }));
+        }
+    }
+
+    #[test]
+    fn reports_generic_start_tags_fostered_from_table_structure() {
+        for (source, name) in [
+            ("<!doctype html><table><div></div></table>", "div"),
+            (
+                "<!doctype html><table><tbody><div></div></tbody></table>",
+                "div",
+            ),
+            (
+                "<!doctype html><table><tbody><tr><div></div></tr></tbody></table>",
+                "div",
+            ),
+            ("<!doctype html><table><center></center></table>", "center"),
+            ("<!doctype html><table><p></p></table>", "p"),
+            ("<!doctype html><table><br></table>", "br"),
+            ("<!doctype html><table><plaintext>", "plaintext"),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic
+                        == &ParserDiagnostic::new(
+                            "unexpected-start-tag-in-table",
+                            format!("start tag `<{name}>` in a table context was foster parented"),
+                        )
+                }),
+                "source {source:?}"
+            );
+
+            let children = &body(&output.document).children;
+            assert_eq!(element(&children[0]).name, name, "source {source:?}");
+            assert_eq!(element(&children[1]).name, "table", "source {source:?}");
+        }
+
+        for source in [
+            "<!doctype html><div></div>",
+            "<!doctype html><table><tr><td><div></div></td></tr></table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-start-tag-in-table"));
         }
     }
 
