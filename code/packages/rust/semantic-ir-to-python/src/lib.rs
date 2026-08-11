@@ -90,6 +90,11 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // object, `raise`, and ordered rescue-clause class matching come from
     // `coding-adventures-sir-runtime-exceptions`.  Per code/specs/sir-runtime.md.
     Feature::Exceptions,
+    // `Feature::ConsoleIO` (SIR28) — `__sys_write__`, the reserved
+    // console-output primitive `print`/`puts` will migrate to. Additive:
+    // nothing emits it yet, so this declares acceptance ahead of any
+    // frontend using it.
+    Feature::ConsoleIO,
 ];
 
 impl Backend for PythonBackend {
@@ -2509,6 +2514,173 @@ mod tests {
         );
         if let Some(stdout) = run_emitted_python(&a.source) {
             assert_eq!(stdout, "7\n", "MX2 extend produced wrong output");
+        }
+    }
+
+    // ── SIR28 §2: `__sys_write__` ───────────────────────────────────────
+    //
+    // No frontend emits `__sys_write__` yet (that's SIR28 Slices 4-6), so
+    // these hand-build a `Module` directly, one per stream/terminator/
+    // unpack_arrays combination SIR28 §2.1 defines, execute it through a
+    // real interpreter via `run_emitted_python`, and assert stdout/stderr.
+
+    fn str_lit(v: &str) -> Expr {
+        Expr::StrLit { value: v.into(), span: s() }
+    }
+
+    fn bool_lit(v: bool) -> Expr {
+        Expr::BoolLit { value: v, span: s() }
+    }
+
+    fn int_lit(v: i64) -> Expr {
+        Expr::IntLit { value: v, span: s() }
+    }
+
+    fn seq_lit(items: Vec<Expr>) -> Expr {
+        Expr::SeqLit { items, span: s() }
+    }
+
+    fn sys_write_module(
+        stream: &str,
+        terminator: &str,
+        unpack_arrays: bool,
+        values: Vec<Expr>,
+    ) -> Module {
+        let mut args = vec![str_lit(stream), str_lit(terminator), bool_lit(unpack_arrays)];
+        args.extend(values);
+        let call = Expr::BuiltinCall {
+            name: "__sys_write__".into(),
+            args,
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        Module {
+            name: "prog".into(),
+            manifest: FeatureManifest::from_features(&[
+                Feature::ConsoleIO,
+                Feature::Strings,
+                Feature::Sequences,
+            ]),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![Function {
+                name: "main".into(),
+                params: vec![],
+                return_type: None,
+                captures: vec![],
+                body: Block { stmts: vec![], value: call, span: s() },
+                effects: EffectSet::PURE,
+                metadata: Metadata::new(),
+                span: s(),
+            }],
+            globals: vec![],
+            metadata: Metadata::new().with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        }
+    }
+
+    /// Run a `sys_write_module` and return (stdout, stderr), or `None` to
+    /// skip when no usable Python interpreter is present. Mirrors
+    /// `run_emitted_python` but also captures stderr, needed for the
+    /// `stream: "stderr"` case.
+    fn run_sys_write(m: &Module) -> Option<(String, String)> {
+        let exe = ["python3", "python"].into_iter().find(|e| python_is_runnable(e))?;
+        let source = compile(m).expect("compile to python").source;
+
+        let py_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../python");
+        let pythonpath = std::env::join_paths([
+            py_root.join("sir-runtime-core/src"),
+            py_root.join("sir-runtime-pairs/src"),
+            py_root.join("sir-runtime-oop/src"),
+            py_root.join("sir-runtime-range/src"),
+            py_root.join("sir-runtime-regex/src"),
+            py_root.join("sir-runtime-exceptions/src"),
+        ])
+        .expect("join PYTHONPATH");
+
+        static SEQ: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+        let nonce = SEQ.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        let file =
+            std::env::temp_dir().join(format!("sir_syswrite_{}_{}.py", std::process::id(), nonce));
+        std::fs::write(&file, &source).expect("write temp python");
+        let out = std::process::Command::new(exe)
+            .arg(&file)
+            .env("PYTHONPATH", &pythonpath)
+            .output()
+            .expect("spawn python");
+        let _ = std::fs::remove_file(&file);
+
+        assert!(
+            out.status.success(),
+            "emitted Python failed under {exe}:\n{}\n--- source ---\n{source}",
+            String::from_utf8_lossy(&out.stderr)
+        );
+        Some((
+            String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n"),
+            String::from_utf8_lossy(&out.stderr).replace("\r\n", "\n"),
+        ))
+    }
+
+    #[test]
+    fn sys_write_terminator_none_writes_values_back_to_back() {
+        let m = sys_write_module("stdout", "none", false, vec![str_lit("a"), str_lit("b")]);
+        if let Some((out, _)) = run_sys_write(&m) {
+            assert_eq!(out, "ab");
+        }
+    }
+
+    #[test]
+    fn sys_write_terminator_per_value_writes_one_newline_per_value() {
+        let m = sys_write_module("stdout", "per_value", false, vec![int_lit(1), int_lit(2)]);
+        if let Some((out, _)) = run_sys_write(&m) {
+            assert_eq!(out, "1\n2\n");
+        }
+    }
+
+    #[test]
+    fn sys_write_terminator_once_space_joins_with_one_trailing_newline() {
+        let m = sys_write_module("stdout", "once", false, vec![int_lit(1), int_lit(2)]);
+        if let Some((out, _)) = run_sys_write(&m) {
+            assert_eq!(out, "1 2\n");
+        }
+    }
+
+    #[test]
+    fn sys_write_per_value_with_unpack_arrays_flattens_nested_array() {
+        let m = sys_write_module(
+            "stdout",
+            "per_value",
+            true,
+            vec![seq_lit(vec![int_lit(1), seq_lit(vec![int_lit(2), int_lit(3)]), int_lit(4)])],
+        );
+        if let Some((out, _)) = run_sys_write(&m) {
+            assert_eq!(out, "1\n2\n3\n4\n");
+        }
+    }
+
+    #[test]
+    fn sys_write_per_value_without_unpack_arrays_bracket_displays_array() {
+        let m =
+            sys_write_module("stdout", "per_value", false, vec![seq_lit(vec![int_lit(1), int_lit(2)])]);
+        if let Some((out, _)) = run_sys_write(&m) {
+            assert_eq!(out, "[1, 2]\n");
+        }
+    }
+
+    #[test]
+    fn sys_write_stream_stderr_writes_to_stderr_not_stdout() {
+        let m = sys_write_module("stderr", "once", false, vec![str_lit("oops")]);
+        if let Some((out, err)) = run_sys_write(&m) {
+            assert_eq!(out, "");
+            assert_eq!(err, "oops\n");
+        }
+    }
+
+    #[test]
+    fn sys_write_per_value_with_zero_values_writes_a_single_blank_line() {
+        let m = sys_write_module("stdout", "per_value", false, vec![]);
+        if let Some((out, _)) = run_sys_write(&m) {
+            assert_eq!(out, "\n");
         }
     }
 }

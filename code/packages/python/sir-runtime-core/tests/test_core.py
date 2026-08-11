@@ -234,6 +234,80 @@ def test_puts_mutually_recursive_arrays_terminate(
     assert capsys.readouterr().out == "[...]\n"
 
 
+# --- sir_write (SIR28 §2.1: __sys_write__) ----------------------------------
+
+
+def test_write_terminator_none_writes_values_back_to_back(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    assert sir.sir_write("stdout", "none", False, "a", "b") is None
+    assert capsys.readouterr().out == "ab"
+
+
+def test_write_terminator_per_value_writes_one_newline_per_value(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    sir.sir_write("stdout", "per_value", False, 1, 2)
+    assert capsys.readouterr().out == "1\n2\n"
+
+
+def test_write_terminator_once_space_joins_with_one_trailing_newline(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    sir.sir_write("stdout", "once", False, 1, 2)
+    assert capsys.readouterr().out == "1 2\n"
+
+
+def test_write_per_value_with_unpack_arrays_flattens_nested_array(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    sir.sir_write("stdout", "per_value", True, [1, [2, 3], 4])
+    assert capsys.readouterr().out == "1\n2\n3\n4\n"
+
+
+def test_write_per_value_without_unpack_arrays_bracket_displays_array(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    sir.sir_write("stdout", "per_value", False, [1, 2])
+    assert capsys.readouterr().out == "[1, 2]\n"
+
+
+def test_write_stream_stderr_writes_to_stderr_not_stdout(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    sir.sir_write("stderr", "once", False, "oops")
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == "oops\n"
+
+
+def test_write_per_value_with_zero_values_writes_a_single_blank_line(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    sir.sir_write("stdout", "per_value", False)
+    assert capsys.readouterr().out == "\n"
+
+
+def test_write_does_not_suppress_trailing_newline_unlike_puts(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    # Deliberate divergence from sir_puts: __sys_write__ always appends
+    # exactly one newline per value under "per_value", even when the
+    # value's display form already ends in one (SIR28 §2.1's table, not
+    # sir_puts's extra suppression nuance).
+    sir.sir_write("stdout", "per_value", False, "x\n")
+    assert capsys.readouterr().out == "x\n\n"
+
+
+def test_write_self_referential_array_terminates(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    a: list = []
+    a.append(a)
+    assert sir.sir_write("stdout", "per_value", True, a) is None
+    assert capsys.readouterr().out == "[...]\n"
+
+
 # --- arithmetic ------------------------------------------------------------
 
 

@@ -33,6 +33,7 @@ from .runtime import (
     make_closure,
     sir_print,
     sir_puts,
+    sir_write,
 )
 from .symbols import Symbol, intern
 from .values import (
@@ -96,6 +97,7 @@ __all__ = [
     "global_get_static",
     "sir_print",
     "sir_puts",
+    "sir_write",
     "print",
     "call_builtin",
     "builtin_closure",

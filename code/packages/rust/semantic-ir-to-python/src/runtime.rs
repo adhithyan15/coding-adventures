@@ -119,6 +119,7 @@ from coding_adventures_sir_runtime_core import (
     is_symbol as _sir_is_symbol,
     sir_print as _sir_print,
     sir_puts as _sir_puts,
+    sir_write as _sir_write,
     to_display as _sir_to_display,
 )
 
@@ -177,6 +178,7 @@ mod tests {
             "is_symbol as _sir_is_symbol",
             "sir_print as _sir_print",
             "sir_puts as _sir_puts",
+            "sir_write as _sir_write",
             "to_display as _sir_to_display",
         ] {
             assert!(RUNTIME.contains(alias), "runtime missing alias `{}`", alias);
