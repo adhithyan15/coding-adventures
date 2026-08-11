@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Chinese 女 ductus (HL-C09CC)
+
+- Render **女** in four source-aligned frames: descend left, turn and sweep
+  down-right without lifting, restart for the left-falling stroke, then cross
+  the middle with a separately started horizontal.
+- Fit all three source runs to Noto Sans SC while preserving the first internal
+  turn, two pen lifts, and left-to-right final héng.
+- Reduce Chinese's remaining verified-ductus inventory to 20 entries.
+
 ### Added — cited Chinese 口 ductus (HL-C09CB)
 
 - Render **口** in four source-aligned frames: left side, top bar, the joined

@@ -90,6 +90,8 @@ const CHINESE_PERSON_RADICAL = ductusFor("亻", "chinese")!;
 const chinesePersonRadicalOutline = chineseOutline("亻");
 const CHINESE_MOUTH = ductusFor("口", "chinese")!;
 const chineseMouthOutline = chineseOutline("口");
+const CHINESE_WOMAN = ductusFor("女", "chinese")!;
+const chineseWomanOutline = chineseOutline("女");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -882,6 +884,38 @@ describe("Chinese 口 — a cited three-run box that closes last", () => {
     ).toEqual([penPathD(CHINESE_MOUTH.strokes[0], 1), penPathD(CHINESE_MOUTH.strokes[1], 1)]);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CHINESE_MOUTH.strokes[2], 1),
+    );
+  });
+});
+
+describe("Chinese 女 — a cited bent first run followed by two lifted strokes", () => {
+  const steps = ductusSteps(CHINESE_WOMAN);
+  const strip = ductusFilmstrip(CHINESE_WOMAN, chineseWomanOutline);
+
+  it("keeps the first bend joined before the falling and horizontal strokes", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the first piědiǎn stroke down and left",
+      "turn without lifting and sweep down to the lower right",
+      "lift, then draw the left-falling piě stroke from upper right to lower left",
+      "lift, then draw the middle horizontal héng from left to right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 2]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 4 movements");
+  });
+
+  it("draws the exact Noto Sans SC glyph with both earlier runs behind the middle horizontal", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      chineseWomanOutline.path,
+    );
+    expect(
+      paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d),
+    ).toEqual([penPathD(CHINESE_WOMAN.strokes[0], 1), penPathD(CHINESE_WOMAN.strokes[1], 1)]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_WOMAN.strokes[2], 1),
     );
   });
 });
