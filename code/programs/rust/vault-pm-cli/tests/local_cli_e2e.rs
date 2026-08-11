@@ -12,6 +12,7 @@ static NEXT_TEMP: AtomicU64 = AtomicU64::new(1);
 const PASSPHRASE: &[u8] = b"e2e correct horse battery staple";
 const ITEM_PASSWORD: &[u8] = b"e2e item password stays encrypted";
 const UPDATED_ITEM_PASSWORD: &[u8] = b"e2e updated password stays encrypted";
+const SECURE_NOTE_BODY: &[u8] = b"e2e secure note body stays encrypted";
 const STDIN_INJECTION: &[u8] = b"stdin injected secret\nstdin injected secret\n";
 
 struct TestHome(PathBuf);
@@ -106,6 +107,26 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert!(add_transcript.contains("URL (optional): "));
     assert!(!add_transcript.contains("e2e item password"));
     let item_id = extract_item_id(&add_transcript);
+
+    let (note_status, note_transcript) = run_add_secure_note_in_pty(&home);
+    assert!(
+        note_status.success(),
+        "secure note add failed: {note_transcript}"
+    );
+    assert!(note_transcript.contains("Title: "));
+    assert!(note_transcript.contains("Note: "));
+    assert!(!note_transcript.contains("e2e secure note body"));
+    let note_id = extract_item_id(&note_transcript);
+
+    let (note_show_status, note_show_transcript) =
+        run_unlock_in_pty(&home, &["item", "show", &note_id], b"Body: <redacted>");
+    assert!(
+        note_show_status.success(),
+        "secure note show failed: {note_show_transcript}"
+    );
+    assert!(note_show_transcript.contains("Type: vault/note/v1"));
+    assert!(note_show_transcript.contains("Title: \"Recovery note\""));
+    assert!(!note_show_transcript.contains("e2e secure note body"));
 
     let (list_status, list_transcript) = run_unlock_in_pty(
         &home,
@@ -228,7 +249,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     let (post_failure_status, post_failure_transcript) = run_unlock_in_pty(
         &home,
         &["audit", "verify"],
-        b"commits=8 catalogs=5 revisions=4 items=1 audit_events=3",
+        b"commits=9 catalogs=6 revisions=5 items=2 audit_events=3",
     );
     assert!(
         post_failure_status.success(),
@@ -290,6 +311,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert_tree_excludes(&home.0, PASSPHRASE);
     assert_tree_excludes(&home.0, ITEM_PASSWORD);
     assert_tree_excludes(&home.0, UPDATED_ITEM_PASSWORD);
+    assert_tree_excludes(&home.0, SECURE_NOTE_BODY);
 }
 
 fn run_add_login_in_pty(home: &TestHome) -> (ExitStatus, String) {
@@ -302,6 +324,48 @@ fn run_add_login_in_pty(home: &TestHome) -> (ExitStatus, String) {
         b"https://example.test",
         b"Item added: ",
     )
+}
+
+fn run_add_secure_note_in_pty(home: &TestHome) -> (ExitStatus, String) {
+    let (mut master, slave) = open_pty();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
+    command.args(["item", "add", "secure-note"]);
+    home.configure(&mut command);
+    command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::from(slave.try_clone().unwrap()))
+        .stderr(Stdio::from(slave));
+    unsafe {
+        command.pre_exec(|| {
+            if libc::setsid() < 0 || libc::ioctl(libc::STDOUT_FILENO, tiocsctty_request(), 0) < 0 {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    let mut child = command.spawn().unwrap();
+    drop(command);
+    child
+        .stdin
+        .take()
+        .unwrap()
+        .write_all(STDIN_INJECTION)
+        .unwrap();
+    let mut transcript = Vec::new();
+    read_until(&mut master, &mut transcript, b"Vault passphrase: ");
+    master.write_all(PASSPHRASE).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Title: ");
+    master.write_all(b"Recovery note\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Note: ");
+    master.write_all(SECURE_NOTE_BODY).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Item added: ");
+    let item_line = transcript.len() - b"Item added: ".len();
+    read_until_from(&mut master, &mut transcript, item_line, b"\n");
+    drop(master);
+    let status = child.wait().unwrap();
+    (status, String::from_utf8_lossy(&transcript).into_owned())
 }
 
 fn run_edit_login_in_pty(home: &TestHome, item_id: &str) -> (ExitStatus, String) {

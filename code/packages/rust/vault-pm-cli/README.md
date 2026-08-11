@@ -68,6 +68,11 @@ Time, the item identity, mutation entropy, and audit-failure entropy are
 reserved before authentication; after an active-epoch unlock, any item-form
 prompt failure publishes a failed traceable `ItemCreate` event before its
 closed CLI error becomes observable.
+`item add secure-note` reuses that create boundary, collects a required title
+and a required single-line body through the fixed hidden `Note:` prompt, and
+publishes the same atomic `ItemCreate` event on success. List output contains
+only the escaped title; show output contains `Body: <redacted>`. The body never
+enters normal CLI rendering or audit projections.
 `item list` and `item show ITEM` reopen in separate one-shot sessions and
 render only escaped redacted projections; the password and notes body are
 never available to the renderer. In an active epoch, both commands first make

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Add fixed secure-note title and hidden body prompts, reusing the bounded,
+  echo-restoring, wipe-on-drop controlling-terminal input boundary.
+
 ## 0.1.0
 
 - Add fixed-prompt echoed UTF-8 login metadata collection with per-field

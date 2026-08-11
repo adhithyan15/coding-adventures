@@ -75,6 +75,8 @@ impl Display for CliHostError {
 pub enum TextPrompt {
     /// Required login display title.
     LoginTitle,
+    /// Required secure-note display title.
+    SecureNoteTitle,
     /// Optional login username or account handle.
     LoginUsername,
     /// Optional primary login URL.
@@ -84,7 +86,7 @@ pub enum TextPrompt {
 impl TextPrompt {
     fn message(self) -> &'static str {
         match self {
-            Self::LoginTitle => "Title: ",
+            Self::LoginTitle | Self::SecureNoteTitle => "Title: ",
             Self::LoginUsername => "Username: ",
             Self::LoginUrl => "URL (optional): ",
         }
@@ -92,7 +94,7 @@ impl TextPrompt {
 
     const fn max_bytes(self) -> usize {
         match self {
-            Self::LoginTitle => 256,
+            Self::LoginTitle | Self::SecureNoteTitle => 256,
             Self::LoginUsername => 1_024,
             Self::LoginUrl => MAX_TEXT_BYTES,
         }
@@ -120,6 +122,8 @@ pub enum SecretPrompt {
     ImportPassphrase,
     /// Collect a login item's password without terminal echo.
     LoginPassword,
+    /// Collect a secure-note body without terminal echo.
+    SecureNoteBody,
 }
 
 impl SecretPrompt {
@@ -131,6 +135,7 @@ impl SecretPrompt {
             Self::ExportPassphrase => "Export passphrase: ",
             Self::ImportPassphrase => "Import passphrase: ",
             Self::LoginPassword => "Password: ",
+            Self::SecureNoteBody => "Note: ",
         }
     }
 }
@@ -249,10 +254,13 @@ mod tests {
             "Import passphrase: "
         );
         assert_eq!(SecretPrompt::LoginPassword.message(), "Password: ");
+        assert_eq!(SecretPrompt::SecureNoteBody.message(), "Note: ");
         assert_eq!(TextPrompt::LoginTitle.message(), "Title: ");
+        assert_eq!(TextPrompt::SecureNoteTitle.message(), "Title: ");
         assert_eq!(TextPrompt::LoginUsername.message(), "Username: ");
         assert_eq!(TextPrompt::LoginUrl.message(), "URL (optional): ");
         assert!(!TextPrompt::LoginTitle.allows_empty());
+        assert!(!TextPrompt::SecureNoteTitle.allows_empty());
         assert!(TextPrompt::LoginUsername.allows_empty());
         assert!(TextPrompt::LoginUrl.allows_empty());
         let expected = [

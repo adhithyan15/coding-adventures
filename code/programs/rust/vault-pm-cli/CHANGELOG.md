@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Exposed secure-note creation and redacted show, with real-process PTY proof
+  that the body is hidden during input and absent from the storage tree.
 - Extended the real-process PTY audit ceremony through an invalid item-create
   prompt and exact trace selection of its durable failed event.
 - Exposed authenticated `audit list` and `audit show TRACE`, and extended the

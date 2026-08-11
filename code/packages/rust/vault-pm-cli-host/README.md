@@ -28,13 +28,13 @@ not become visible terminal input. Ordinary success, error, and panic-unwind
 paths restore the captured mode; a force-kill that prevents destructors from
 running is outside an in-process library's guarantees.
 
-Accepted secrets are non-empty and at most 1,024 bytes. Echoed login metadata
-has fixed per-field bounds up to 2,048 UTF-8 bytes and rejects control
-characters; only username and URL may be empty. Prompt strings and every
-public error are fixed and contain no secret, OS error, terminal path, user
-name, or caller payload. This crate deliberately does not parse commands,
-choose storage, persist configuration, calibrate Argon2id, or prepare vault
-bytes.
+Accepted passphrases, login passwords, and secure-note bodies are non-empty and
+at most 1,024 bytes. Echoed login metadata and secure-note titles have fixed
+per-field bounds up to 2,048 UTF-8 bytes and reject control characters; only
+username and URL may be empty. Prompt strings and every public error are fixed
+and contain no secret, OS error, terminal path, user name, or caller payload.
+This crate deliberately does not parse commands, choose storage, persist
+configuration, calibrate Argon2id, or prepare vault bytes.
 
 Nine Unix tests exercise stable diagnostics, text/secret bounds, constant-time
 confirmation behavior, real OS entropy, pseudo-terminal ordinary and hidden
