@@ -313,8 +313,8 @@ describe("corpus snapshot", () => {
     // +1 to both: Tamil chapter 39, ledgered in chapters.json, declared in
     // book-generation.json and \input into tamil/book/book.tex. All three are needed —
     // the first alone fails the book-cli "ledgered chapter into its book" gate.
-    expect(report.summary.bookChapters).toBe(527); // +8: HL-C94 splits the four over-budget opening chapters into twelve // +16: vocabulary wave 4, 4 tracks x 4 chapters // +4: HL-C98 gives the first paradigm one cell per chapter (3 teaching + review + synthesis)
-    expect(report.summary.declaredChapters).toBe(527); // +98: handwritten capability closure // +4: HL-C98
+    expect(report.summary.bookChapters).toBe(532); // +8: HL-C94 splits the four over-budget opening chapters into twelve // +16: vocabulary wave 4, 4 tracks x 4 chapters // +4: HL-C98 gives the first paradigm one cell per chapter (3 teaching + review + synthesis)
+    expect(report.summary.declaredChapters).toBe(532); // +98: handwritten capability closure // +4: HL-C98
     expect(report.summary.chaptersWithoutCapability).toBe(0);
     expect(report.summary.payoffsNotClosed).toBe(0);
     expect(report.summary.unknownPayoffLessons).toBe(0);

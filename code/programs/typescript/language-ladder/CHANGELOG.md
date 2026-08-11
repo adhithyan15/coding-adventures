@@ -3,6 +3,13 @@
 ## Unreleased — schema-v2 lesson compatibility
 
 
+### Changed — Spanish runs 1..59 (HL-C99)
+
+- Regenerate the `bookhashes` chapter-lesson pin: chapter 47's four mind-verbs
+  each took a chapter, plus a review and a synthesis chapter, so old Spanish
+  chapters 48–54 shifted to 53–59.
+- Eager bundle 479,308 / 500,000 bytes.
+
 ### Added — cited Arabic independent-saad ductus (HL-C09AS)
 
 - Render **ص** in three evidence-aligned frames: its clockwise oval, the joined

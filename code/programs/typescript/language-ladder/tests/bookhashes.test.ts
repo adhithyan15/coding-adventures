@@ -20,6 +20,8 @@ describe("generated book source hashes", () => {
     // HL-C98 gave the first paradigm one cell per chapter (hablo / hablas /
     // habla), plus a review chapter and a synthesis chapter, so Spanish runs
     // 1..54 and old chapters 16..50 shifted to 20..54.
+    // HL-C99 gave each of the four mind-verbs its own chapter, plus a review
+    // and a synthesis chapter, so Spanish runs 1..59 and old 48..54 -> 53..59.
     [1, 7],
     [2, 6],
     [3, 4],
@@ -66,14 +68,19 @@ describe("generated book source hashes", () => {
     [44, 4],
     [45, 2],
     [46, 2],
-    [47, 4],
-    [48, 4],
-    [49, 4],
-    [50, 4],
-    [51, 4],
-    [52, 4],
-    [53, 3],
+    [47, 1],
+    [48, 1],
+    [49, 1],
+    [50, 1],
+    [51, 1],
+    [52, 1],
+    [53, 4],
     [54, 4],
+    [55, 4],
+    [56, 4],
+    [57, 4],
+    [58, 3],
+    [59, 4],
   ])("matches the browser-loaded Spanish Chapter %i AST across %i lessons", (chapter, count) => {
     const lessons = loadLessons();
     const expected = expectedBookHash("spanish", chapter);

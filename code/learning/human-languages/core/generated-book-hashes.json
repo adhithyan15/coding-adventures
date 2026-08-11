@@ -3790,97 +3790,139 @@
     {
       "language": "spanish",
       "chapter": 47,
-      "sourceHash": "fnv1a64:8be5c8f318095290",
+      "sourceHash": "fnv1a64:40f39eee41f1ee44",
       "lessonIds": [
-        "ES-C34-pensar",
-        "ES-C34-entender",
-        "ES-C34-leer",
-        "ES-C34-escribir"
+        "ES-C34-pensar"
       ],
-      "tex": "spanish/book/chapters/ch47-verbs-of-the-mind.tex"
+      "tex": "spanish/book/chapters/ch47-pensar.tex"
     },
     {
       "language": "spanish",
       "chapter": 48,
-      "sourceHash": "fnv1a64:c6276d16631b407f",
+      "sourceHash": "fnv1a64:9e8f3cd50f71f5b6",
+      "lessonIds": [
+        "ES-C34-entender"
+      ],
+      "tex": "spanish/book/chapters/ch48-entender.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 49,
+      "sourceHash": "fnv1a64:3d60dde813fff64b",
+      "lessonIds": [
+        "ES-C34-leer"
+      ],
+      "tex": "spanish/book/chapters/ch49-leer.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 50,
+      "sourceHash": "fnv1a64:7b010ef4d76f0e87",
+      "lessonIds": [
+        "ES-C34-escribir"
+      ],
+      "tex": "spanish/book/chapters/ch50-escribir.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 51,
+      "sourceHash": "fnv1a64:f89129f62e693988",
+      "lessonIds": [
+        "ES-C34-repaso-mente"
+      ],
+      "tex": "spanish/book/chapters/ch51-review-verbs-of-mind.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 52,
+      "sourceHash": "fnv1a64:5ee802c328d2474e",
+      "lessonIds": [
+        "ES-C34-sintesis-mente"
+      ],
+      "tex": "spanish/book/chapters/ch52-synthesis-verbs-of-mind.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 53,
+      "sourceHash": "fnv1a64:55be4a1dc3341841",
       "lessonIds": [
         "ES-C35-tomar",
         "ES-C35-preguntar",
         "ES-C35-ayudar",
         "ES-C35-gustar"
       ],
-      "tex": "spanish/book/chapters/ch48-take-ask-help.tex"
+      "tex": "spanish/book/chapters/ch53-take-ask-help.tex"
     },
     {
       "language": "spanish",
-      "chapter": 49,
-      "sourceHash": "fnv1a64:88d65c13c2de2245",
+      "chapter": 54,
+      "sourceHash": "fnv1a64:c17e1efc4fbcc96b",
       "lessonIds": [
         "ES-C36-oir",
         "ES-C36-dormir",
         "ES-C36-caminar",
         "ES-C36-correr"
       ],
-      "tex": "spanish/book/chapters/ch49-hear-sleep-walk-run.tex"
+      "tex": "spanish/book/chapters/ch54-hear-sleep-walk-run.tex"
     },
     {
       "language": "spanish",
-      "chapter": 50,
-      "sourceHash": "fnv1a64:773760ccfb1dfbbf",
+      "chapter": 55,
+      "sourceHash": "fnv1a64:be5d5fb72dbcd1ad",
       "lessonIds": [
         "ES-C37-abrir",
         "ES-C37-cerrar",
         "ES-C37-sentarse",
         "ES-C37-levantarse"
       ],
-      "tex": "spanish/book/chapters/ch50-open-close-sit-stand.tex"
+      "tex": "spanish/book/chapters/ch55-open-close-sit-stand.tex"
     },
     {
       "language": "spanish",
-      "chapter": 51,
-      "sourceHash": "fnv1a64:6f208d65ee7651f6",
+      "chapter": 56,
+      "sourceHash": "fnv1a64:85f6f8e70b9d044a",
       "lessonIds": [
         "ES-C38-luego",
         "ES-C38-porque",
         "ES-C38-imperfecto",
         "ES-C38-contar"
       ],
-      "tex": "spanish/book/chapters/ch51-narrating.tex"
+      "tex": "spanish/book/chapters/ch56-narrating.tex"
     },
     {
       "language": "spanish",
-      "chapter": 52,
-      "sourceHash": "fnv1a64:08946861246eb754",
+      "chapter": 57,
+      "sourceHash": "fnv1a64:9303dcde3fcf5e70",
       "lessonIds": [
         "ES-C39-traer",
         "ES-C39-conseguir",
         "ES-C39-jugar",
         "ES-C39-conocer"
       ],
-      "tex": "spanish/book/chapters/ch52-bring-get-play-meet.tex"
+      "tex": "spanish/book/chapters/ch57-bring-get-play-meet.tex"
     },
     {
       "language": "spanish",
-      "chapter": 53,
-      "sourceHash": "fnv1a64:c452a0ca25f94052",
+      "chapter": 58,
+      "sourceHash": "fnv1a64:fffa787dd3cb70d9",
       "lessonIds": [
         "ES-C40-esperar",
         "ES-C40-contestar",
         "ES-C40-comprar"
       ],
-      "tex": "spanish/book/chapters/ch53-wait-answer-buy.tex"
+      "tex": "spanish/book/chapters/ch58-wait-answer-buy.tex"
     },
     {
       "language": "spanish",
-      "chapter": 54,
-      "sourceHash": "fnv1a64:ca4fd9f562f4b346",
+      "chapter": 59,
+      "sourceHash": "fnv1a64:298d34ad3d2090a3",
       "lessonIds": [
         "ES-C41-creer",
         "ES-C41-asi-que",
         "ES-C41-deber",
         "ES-C41-explicar"
       ],
-      "tex": "spanish/book/chapters/ch54-giving-reasons.tex"
+      "tex": "spanish/book/chapters/ch59-giving-reasons.tex"
     },
     {
       "language": "tamil",

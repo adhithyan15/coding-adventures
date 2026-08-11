@@ -133,12 +133,12 @@ describe("corpus snapshot", () => {
     // singular steps; its terminal checkpoint remains correctly atom-free.
     // Chapter 18 replaces nine legacy teaching lessons with eight measurable
     // singular steps; its terminal checkpoint remains correctly atom-free.
-    expect(report.summary.unmeasurableLessons).toBe(539);
+    expect(report.summary.unmeasurableLessons).toBe(541);
     // 65 -> 66: vocabulary wave 4 added 52 schema-v2 lessons. Chapter 10's three
     // newly measurable teaching lessons carry the corpus across one point, and the
     // five-step Chapter-15 migration carries it across the next. Chapter 18's eight
     // measurable teaching lessons carry the current corpus across another point.
-    expect(report.summary.measurablePercent).toBe(69); // +1: HL-C98
+    expect(report.summary.measurablePercent).toBe(68); // +1: HL-C98
   });
 
   it("names the steepest lesson, which is where a burn-down starts", () => {
