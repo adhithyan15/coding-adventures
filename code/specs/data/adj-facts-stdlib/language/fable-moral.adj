@@ -1,0 +1,79 @@
+% ============================================================================
+% fable-moral — each fable's own explicitly stated moral (adj-facts-stdlib,
+% LANGUAGE).
+% ============================================================================
+% The NINTH literacy sub-skill library in this loop's sweep, and the
+% FIRST to ground a whole-TEXT comprehension artifact rather than a
+% word-level phonics/spelling fact: a classic fable's own stated moral,
+% the lesson the narrator draws at the story's end. Recall is a binding
+% query:
+%
+%     ? fable_moral(tortoise_and_the_hare, $Moral)
+%       % "Slow but steady wins the race."
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `fable_moral(fable, moral)` carrying the source citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns
+% the moral WITH its source, on the CPU, with zero model calls, and
+% abstains on any fable the source does not give a standalone moral for.
+% The query also runs BACKWARD — bind both variables to enumerate every
+% fable/moral pair the table grounds:
+%
+%     ? fable_moral($F, $Moral)
+%       % tortoise_and_the_hare/"Slow but steady...", shepherds_boy_and_the_wolf/"There is no believing...", boy_and_the_filberts/"Do not attempt..."
+%
+% (NOTE: the ADJ query grammar accepts a quoted-string LITERAL as a row
+% VALUE inside a `table` block, but not as a QUERY argument — a query can
+% only ground an atom/number or bind a $Var, so recalling "which fable
+% has moral X" is done by enumerating with $F, $Moral and reading off the
+% match, not by querying with the moral string as a ground argument.)
+%
+% DESIGN NOTE — why only THREE fables, out of many candidates checked: a
+% classic Aesop translation does not uniformly close every fable with a
+% standalone "moral" sentence in the narrator's own voice — some fables
+% instead end with a character's spoken line that CARRIES a lesson but is
+% still that character's dialogue, not the narrator's stated moral. This
+% library only tables the THREE fables where the cited translation gives
+% a clean, unambiguous, narrator-voice closing moral, verified by reading
+% the raw page text directly:
+%
+%     fable                        moral (verbatim, narrator's voice)
+%     ---------------------------  -----------------------------------------------------------------
+%     tortoise_and_the_hare        "Slow but steady wins the race."
+%     shepherds_boy_and_the_wolf   "There is no believing a liar, even when he speaks the truth."
+%     boy_and_the_filberts         "Do not attempt too much at once."
+%
+% Three OTHER fables on the same page were deliberately excluded after
+% verification because their closing line is a CHARACTER's spoken
+% dialogue, not the narrator's own stated moral: "The Ants and the
+% Grasshopper" (the ants' taunt to the grasshopper), "The Fox and the
+% Crow" (the fox's gloating remark to the crow), and "The Lion and the
+% Mouse" (the mouse's own words to the lion). Asserting those as this
+% fable's "moral" the same way the three above are stated would overclaim
+% what the source actually does — a character's dialogue is not
+% automatically the narrator's stated lesson.
+%
+% Provenance: quoted verbatim from George Fyler Townsend's classic English
+% translation of Aesop's Fables, hosted by Project Gutenberg — a
+% legitimate public-domain literary primary source. WebFetch-verified
+% (including a targeted re-fetch distinguishing narrator's-voice morals
+% from character dialogue) before writing. `trust authoritative` — a
+% primary literary text, the same tier this stdlib gives other primary
+% public-domain/government sources. A fable not one of these three — e.g.
+% `the_fox_and_the_crow`, a real fable on the same page but excluded for
+% the reason above — is deliberately NOT a row, so a recall ABSTAINS on
+% it rather than inventing or misattributing a moral. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table fable_moral {
+    columns fable, moral
+
+    row (tortoise_and_the_hare, "Slow but steady wins the race.")
+    row (shepherds_boy_and_the_wolf, "There is no believing a liar, even when he speaks the truth.")
+    row (boy_and_the_filberts, "Do not attempt too much at once.")
+
+    source "Slow but steady wins the race."
+    locator "https://www.gutenberg.org/files/21/old/aesop11h.htm"
+    trust authoritative
+}
