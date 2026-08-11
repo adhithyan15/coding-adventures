@@ -1,0 +1,14 @@
+% ============================================================================
+% pronoun-type.query.adj — worked recall over the pronoun-type library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is this pronoun
+% type?" (direct) or "which pronoun type matches this description?"
+% (reverse) — it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries.
+% ============================================================================
+
+import "pronoun-type.adj"
+
+? pronoun_type(interrogative_pronoun, $D)                              % expect used_in_questions (direct)
+? pronoun_type($T, changes_form_based_on_grammatical_person)          % expect personal_pronoun (reverse)
+? pronoun_type(relative_pronoun, $D)                                   % expect abstain -- a real pronoun type the source covers, but not one of the three tabled here

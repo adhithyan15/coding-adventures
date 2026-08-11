@@ -1,0 +1,68 @@
+% ============================================================================
+% pronoun-type — three named pronoun types and what each actually is
+% (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% Pronouns fall into several overlapping categories: a personal pronoun
+% changes form based on grammatical person, an indefinite pronoun refers
+% generally without specifically identifying who or what is meant, and an
+% interrogative pronoun is used in questions. Recall is a binding query:
+%
+%     ? pronoun_type(interrogative_pronoun, $D)
+%       % used_in_questions
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `pronoun_type(type, description)` carrying the source citation,
+% so the lookup above is the ordinary SLD binding query — the engine
+% returns the description WITH its source, on the CPU, with zero model
+% calls, and abstains on a pronoun type that is not one of these three.
+% The query also runs BACKWARD — bind a description and recall the
+% pronoun type it names:
+%
+%     ? pronoun_type($T, changes_form_based_on_grammatical_person)
+%       % personal_pronoun
+%
+% The three pronoun types, as a little truth table:
+%
+%     type                    description                                              quote (verbatim)
+%     ------------------------  -------------------------------------------------------  --------------------------------------------------------------------------------
+%     personal_pronoun          changes_form_based_on_grammatical_person                 "Personal pronouns are pronouns that change form based on their grammatical person—that is, based on whether they refer to the person speaking or writing (the first person), the person or thing being spoken to (the second person), or the person or thing being spoken about (the third person)."
+%     indefinite_pronoun        refers_generally_without_specific_identification         "Indefinite pronouns are used to refer generally to a person or thing that doesn't need to be specifically identified or has already been mentioned."
+%     interrogative_pronoun     used_in_questions                                        "Interrogative pronouns are used in questions."
+%
+% Provenance: quoted verbatim from Grammarly's "Pronouns: Definition and
+% Examples" article, which also gives definitions for reflexive, intensive,
+% possessive, reciprocal, and distributive pronouns. WebFetch-verified
+% before writing (twice — the second pass confirmed the FULL sentences,
+% since a first, shorter-truncated fetch had clipped the personal-pronoun
+% sentence and undercounted the relative-pronoun passage's sentence
+% count). `trust consensus` — Grammarly is a reputable, widely-cited
+% grammar-content company, the same tier this stdlib already reserves for
+% other non-.gov language sources and the same source family already
+% cited by `noun-type.adj`/`verb-type.adj`. Picked using the mandatory
+% full-tree-grep-before-scoping discipline — `grep -rilE "\bpronoun_type\b|
+% \bpersonal_pronoun\b|\bindefinite_pronoun\b|\binterrogative_pronoun\b|
+% \brelative_pronoun\b" code/specs/data/adj-facts-stdlib/` found ZERO hits,
+% confirming a completely fresh topic before this file was written. A
+% pronoun type that is NOT one of these three — "relative_pronoun", a real
+% pronoun type the same page also covers, but whose own explanation takes
+% THREE sentences ("Relative pronouns are another class of pronouns. They
+% connect relative clauses to independent clauses. Often, they introduce
+% additional information about something mentioned in the sentence.")
+% rather than one clean self-contained sentence like the three tabled here
+% — is deliberately NOT a row, so a recall ABSTAINS on it rather than
+% inventing a single-sentence description the source never gave. (See
+% ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table pronoun_type {
+    columns type, description
+
+    row (personal_pronoun, changes_form_based_on_grammatical_person)
+    row (indefinite_pronoun, refers_generally_without_specific_identification)
+    row (interrogative_pronoun, used_in_questions)
+
+    source "Personal pronouns are pronouns that change form based on their grammatical person—that is, based on whether they refer to the person speaking or writing (the first person), the person or thing being spoken to (the second person), or the person or thing being spoken about (the third person)."
+    locator "https://www.grammarly.com/blog/parts-of-speech/pronouns/"
+    trust consensus
+}
