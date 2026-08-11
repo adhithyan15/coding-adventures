@@ -370,9 +370,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   left stroke, continue right along the middle bar, then turn diagonally
   down-left. Its three-frame Noto Sans Hebrew path preserves the source's
   rounded looping handwriting while keeping the demonstrated angular order.
-  The remaining **165** prose
+  The same lesson verifies printed **מ** in two runs: draw the detached angled
+  left part, lift once, then climb through the upper shoulder, turn down the
+  right side, and return left along the base. Its five-frame Noto Sans Hebrew path preserves the narrow N-like cursive form
+  while keeping print's bottom-left gap explicit.
+  The remaining **164** prose
   part orders across seven scripts
-  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 10,
+  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 9,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every

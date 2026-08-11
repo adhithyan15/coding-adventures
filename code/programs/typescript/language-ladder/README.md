@@ -429,6 +429,10 @@ The Lamed/Mem lesson adds a three-frame printed **ל** filmstrip: its tall left
 stroke descends to the middle junction, continues right along the bar, and turns
 diagonally down-left without lifting. The source's earlier handwritten version
 rounds the same one-run idea into a loop, which remains explicit in the citation.
+The same lesson adds a five-frame printed **מ** filmstrip: its detached angled
+left part comes first, then one lift precedes the joined upper shoulder, right
+descent, and leftward base. The source's earlier handwriting
+compresses Mem into a narrow N-like zigzag, which remains explicit in the citation.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

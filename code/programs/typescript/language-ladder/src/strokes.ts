@@ -932,6 +932,70 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: hebrewAlphabetSource("ל"),
   },
+  // Printed Mem starts with its detached angled left part. After one lift, the
+  // angular right body climbs, descends, and returns left along the base.
+  [ductusKey("hebrew", "מ")]: {
+    script: "hebrew",
+    glyph: "מ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the detached left part from its lower tip up to the corner",
+            path: [
+              { x: 92, y: 45 },
+              { x: 115, y: 205 },
+              { x: 145, y: 365 },
+              { x: 140, y: 555 },
+            ],
+          },
+          {
+            label: "turn down-right through its short inner leg without lifting",
+            path: [
+              { x: 140, y: 555 },
+              { x: 150, y: 520 },
+              { x: 160, y: 485 },
+              { x: 170, y: 450 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then climb diagonally right through the upper shoulder",
+            path: [
+              { x: 190, y: 440 },
+              { x: 235, y: 515 },
+              { x: 300, y: 560 },
+              { x: 390, y: 560 },
+            ],
+          },
+          {
+            label: "turn down the right side without lifting",
+            path: [
+              { x: 390, y: 560 },
+              { x: 470, y: 525 },
+              { x: 530, y: 430 },
+              { x: 565, y: 315 },
+              { x: 550, y: 180 },
+              { x: 500, y: 76 },
+            ],
+          },
+          {
+            label: "turn left along the base without lifting, stopping before the left part",
+            path: [
+              { x: 500, y: 76 },
+              { x: 430, y: 48 },
+              { x: 355, y: 38 },
+              { x: 280, y: 38 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("מ"),
+  },
   "ا": {
     script: "perso-arabic",
     glyph: "ا",
