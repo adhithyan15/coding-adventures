@@ -1,0 +1,14 @@
+% ============================================================================
+% verb-type.query.adj — worked recall over the verb-type library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is this verb
+% type?" (direct) or "which verb type matches this definition?" (reverse)
+% — it states no fact of its own — it only `import`s the grounded table
+% and asks binding queries.
+% ============================================================================
+
+import "verb-type.adj"
+
+? verb_type(action_verb, $D)                                       % expect physical_action_or_activity_that_can_be_seen_or_heard (direct)
+? verb_type($T, changes_another_verbs_tense_voice_or_mood)          % expect auxiliary_verb (reverse)
+? verb_type(transitive_verb, $D)                                    % expect abstain -- a real verb type the source covers, but not one of the three tabled here
