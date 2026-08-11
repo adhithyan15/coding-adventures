@@ -6,14 +6,14 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.55.0";
+pub const VERSION: &str = "0.56.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
 
 use diagram_ir::{
     DiagramDirection, DiagramLabel, DiagramShape, DiagramStyle, EdgeKind, GraphDiagram, GraphEdge,
-    GraphLink, GraphNode,
+    GraphGroup, GraphLink, GraphNode,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
@@ -298,6 +298,7 @@ pub fn parse_to_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
         accessibility_title: None,
         accessibility_description: None,
         links: Vec::new(),
+        groups: Vec::new(),
         nodes: builder.nodes,
         edges: builder.edges,
     })
@@ -1045,8 +1046,7 @@ fn parse_data_list(s: &str) -> Vec<f64> {
 /// Parse the graph-compatible core of Mermaid state diagrams.
 ///
 /// The supported state slice lowers flat declarations, transitions,
-/// pseudostates, notes, metadata, and styles into graph IR. Composite states
-/// remain an explicit compatibility gap.
+/// pseudostates, composite groups, notes, metadata, and styles into graph IR.
 pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
     let preprocessed = preprocess_mermaid_source(source)?;
     parse_mermaid_state_ast(&preprocessed.source)?;
@@ -1064,12 +1064,24 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
     let mut node_indices = HashMap::new();
     let mut edges = Vec::new();
     let mut links = Vec::new();
+    let mut groups = Vec::new();
+    let mut group_stack: Vec<String> = Vec::new();
     let mut pseudo_index = 0;
     let mut note_index = 0;
     let mut class_styles: HashMap<String, DiagramStyle> = HashMap::new();
     let mut pending_classes: Vec<(Vec<String>, String)> = Vec::new();
+    let mut membership_cursor = 0;
 
     while !cursor.at_eof() {
+        record_new_state_group_members(&group_stack, &mut groups, &nodes, membership_cursor);
+        membership_cursor = nodes.len();
+        if cursor.consume_if("RBRACE").is_some() {
+            group_stack.pop().ok_or_else(|| {
+                token_error(cursor.current(), "unexpected composite state closing brace")
+            })?;
+            cursor.skip_terminators();
+            continue;
+        }
         if token_name(cursor.current()) == "ACC_TITLE" {
             cursor.advance();
             accessibility_title = Some(take_state_text(&mut cursor));
@@ -1253,6 +1265,17 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                 (take_state_ref(&mut cursor)?, label)
             } else {
                 let id = take_state_ref(&mut cursor)?;
+                if cursor.consume_if("LBRACE").is_some() {
+                    groups.push(GraphGroup {
+                        id: id.clone(),
+                        label: DiagramLabel::new(id.clone()),
+                        parent_id: group_stack.last().cloned(),
+                        node_ids: Vec::new(),
+                    });
+                    group_stack.push(id);
+                    cursor.skip_terminators();
+                    continue;
+                }
                 if cursor.consume_if("CHOICE").is_some() {
                     upsert_state_node(&mut nodes, &mut node_indices, id.clone(), String::new());
                     let node = &mut nodes[node_indices[&id]];
@@ -1350,6 +1373,14 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
         cursor.skip_terminators();
     }
 
+    record_new_state_group_members(&group_stack, &mut groups, &nodes, membership_cursor);
+    if !group_stack.is_empty() {
+        return Err(token_error(
+            cursor.current(),
+            "unterminated composite state group",
+        ));
+    }
+
     for (ids, class_name) in pending_classes {
         let class_style = class_styles.get(&class_name).ok_or_else(|| ParseError {
             message: format!("unknown state style class {class_name:?}"),
@@ -1370,6 +1401,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
         accessibility_title,
         accessibility_description,
         links,
+        groups,
         nodes,
         edges,
     })
@@ -1433,6 +1465,25 @@ fn upsert_state_node(
         shape: Some(DiagramShape::RoundedRect),
         style: None,
     });
+}
+
+fn record_new_state_group_members(
+    group_stack: &[String],
+    groups: &mut [GraphGroup],
+    nodes: &[GraphNode],
+    node_count_before: usize,
+) {
+    let Some(group_id) = group_stack.last() else {
+        return;
+    };
+    let Some(group) = groups.iter_mut().find(|group| &group.id == group_id) else {
+        return;
+    };
+    for node in &nodes[node_count_before..] {
+        if !group.node_ids.contains(&node.id) {
+            group.node_ids.push(node.id.clone());
+        }
+    }
 }
 
 fn upsert_state_note_node(
@@ -4422,6 +4473,21 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_parses_nested_composite_groups() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nstate Outer {\nA --> B\nstate Inner {\nC --> D\n}\n}\n",
+        )
+        .expect("nested composite states should parse");
+
+        assert_eq!(diagram.groups.len(), 2);
+        assert_eq!(diagram.groups[0].id, "Outer");
+        assert_eq!(diagram.groups[0].node_ids, vec!["A", "B"]);
+        assert_eq!(diagram.groups[1].id, "Inner");
+        assert_eq!(diagram.groups[1].parent_id.as_deref(), Some("Outer"));
+        assert_eq!(diagram.groups[1].node_ids, vec!["C", "D"]);
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -5192,7 +5258,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.55.0");
+        assert_eq!(crate::VERSION, "0.56.0");
     }
 
     #[test]

@@ -551,6 +551,7 @@ fn lower(doc: &DotDocument) -> GraphDiagram {
         accessibility_title: None,
         accessibility_description: None,
         links: Vec::new(),
+        groups: Vec::new(),
         nodes,
         edges,
     }

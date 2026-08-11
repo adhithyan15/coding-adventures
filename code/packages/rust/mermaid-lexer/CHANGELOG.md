@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.35.0
+
+- Tokenize state composite-group braces from the pinned grammar.
+
 ## 0.34.0
 
 - Tokenize state click links, href markers, URLs, and tooltips.

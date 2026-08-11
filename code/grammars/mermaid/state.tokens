@@ -1,4 +1,4 @@
-# @version 10
+# @version 11
 # @case_insensitive true
 # Mermaid 11.16.1 state diagram token grammar, derived from stateDiagram.jison.
 
@@ -22,6 +22,7 @@ FORK_JOIN    = /(?:<<(?:fork|join)>>|\[\[(?:fork|join)\]\])/
 STYLE_SEPARATOR = ":::"
 COLON        = ":"
 COMMA        = ","
+LBRACE       = "{"
 RBRACE       = "}"
 HASH_COLOR   = /#[0-9A-Fa-f]{3,8}/
 STRING       = /"[^"\r\n]*"/

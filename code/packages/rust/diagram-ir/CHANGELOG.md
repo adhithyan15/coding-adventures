@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.28.0
+
+- Add nested graph groups for composite state containment and backend-neutral outlines.
+
 ## 0.27.0
 
 - Preserve graph node links and optional tooltips through semantic and layout IR.

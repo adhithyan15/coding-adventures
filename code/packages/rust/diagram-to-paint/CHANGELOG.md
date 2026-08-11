@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Lower composite graph groups to backend-neutral background rectangles and shaped labels.
 - Export graph node URLs, tooltips, and hit-test bounds through PaintScene metadata.
 - Export graph-family accessibility metadata through PaintScene metadata.
 - Lower graph note nodes and dashed note associations to backend-neutral paths.

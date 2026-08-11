@@ -361,7 +361,24 @@ where
 {
     let mut instructions: Vec<PaintInstruction> = Vec::new();
 
-    // ── 1. Edges (lines + arrowheads) — drawn behind nodes ───────────────────
+    // ── 1. Composite groups — drawn behind edges and member nodes ────────────
+    for group in &diagram.groups {
+        instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: group.x,
+            y: group.y,
+            width: group.width,
+            height: group.height,
+            fill: Some("#f8fafc".into()),
+            stroke: Some("#64748b".into()),
+            stroke_width: Some(1.5),
+            corner_radius: Some(8.0),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+    }
+
+    // ── 2. Edges (lines + arrowheads) — drawn behind nodes ───────────────────
     for edge in &diagram.edges {
         let mut path = line_path(&edge.points, &edge.style.stroke, edge.style.stroke_width);
         if edge.kind == EdgeKind::NoteAssociation {
@@ -373,12 +390,12 @@ where
         }
     }
 
-    // ── 2. Node shapes — drawn over edges so endpoints are hidden ─────────────
+    // ── 3. Node shapes — drawn over edges so endpoints are hidden ─────────────
     for node in &diagram.nodes {
         instructions.push(node_shape_instruction(node));
     }
 
-    // ── 3. Text — all labels routed through layout-to-paint ───────────────────
+    // ── 4. Text — all labels routed through layout-to-paint ───────────────────
     //
     // Build one PositionedNode per text item, collect them as children of a
     // transparent synthetic root spanning the full canvas, then call
@@ -389,6 +406,18 @@ where
     let title_size = title_font.size;
 
     let mut text_children: Vec<PositionedNode> = Vec::new();
+
+    for group in &diagram.groups {
+        text_children.push(text_node_no_wrap(
+            &group.label.text,
+            group.x + 12.0,
+            group.y + 8.0,
+            group.width - 24.0,
+            label_size * 1.2,
+            label_font.clone(),
+            css_to_color("#334155"),
+        ));
+    }
 
     // Title (if present) — centred at the top of the canvas.
     if let Some(title) = &diagram.title {
@@ -2862,6 +2891,7 @@ mod tests {
             accessibility_title: None,
             accessibility_description: None,
             links: Vec::new(),
+            groups: Vec::new(),
             width: 400.0,
             height: 200.0,
             nodes: vec![
@@ -3273,6 +3303,29 @@ mod tests {
         );
         assert_eq!(metadata["graph.node.A.link.tooltip"], "Open ready state");
         assert!(metadata.contains_key("graph.node.A.link.bounds"));
+    }
+
+    #[test]
+    fn graph_groups_lower_to_background_rectangles() {
+        let mut layout = simple_layout();
+        layout.groups.push(diagram_ir::LayoutedGraphGroup {
+            id: "Processing".into(),
+            label: DiagramLabel::new("Processing"),
+            parent_id: None,
+            x: 8.0,
+            y: 8.0,
+            width: 340.0,
+            height: 100.0,
+        });
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let scene = diagram_to_paint(&layout, &opts);
+
+        assert!(scene.instructions.iter().any(|instruction| {
+            matches!(instruction, PaintInstruction::Rect(rect) if rect.width == 340.0)
+        }));
     }
 
     #[test]
