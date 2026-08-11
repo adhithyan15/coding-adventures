@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 10521,
   "last_inventory": {
     "revision": "fc8be1789c6b5f0d6aa360f0ffc05de23d74689d",
     "schema_version": 3,
@@ -416,13 +416,17 @@
     {
       "id": "build-file-lua-json-value-transitive-closure",
       "title": "Close the Lua JSON value parser prerequisites",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-file-standalone-integrity-lua", "build-file-lua-parser-lexer-transitive-closure"],
       "branch": "codex/lua-json-value-transitive-closure",
-      "pr_number": null,
+      "pr_number": 10521,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/10521",
+      "pr_opened_at": "2026-08-11T00:43:10Z",
+      "implementation_revision": "ddeafb9752194b716045cfca7856f58df239d10e",
       "selection_revision": "5415ba120d1a25eb11302909eee1addeb8f1e0fe",
       "selection_notes": "Selected after external merge of PR #10317 and the collision-checked ownership refresh. Both prerequisites are merged; this one-package Unix/Windows closure is the smallest audited unblocked successor, while data-store remains clock-blocked and the new Vault application chain remains dependency-blocked.",
       "validation_notes": "Fresh isolated generic and Windows LuaRocks homes each installed the exact eight-rock chain with dependency fetching disabled, passed 91 json_value tests, and passed the source-path-free installed runtime smoke. Source suites pass 43 json_lexer, 44 json_parser, 91 json_value, and 107 downstream json_serializer cases; neutral-directory installed json_value and json_serializer smokes pass. LuaCov reports 96.55% lexer, 90.32% parser, and 85.41% value production coverage. Changed Lua files pass luacheck; Python build-tool passes 353 tests at 85.19%; Lua build-tool passes 61 cases; Go build-tool test, vet, module verification, and trimpath build pass. Reporter and taxonomy tests pass 17 tests and 676 subtests. The collision report remains at 1,298 identities, 4,454 slots, zero collisions, and zero unknown buckets. All 258 Lua BUILD files validate; the full 4,862-package audit retains the exact unrelated 17 Perl, Python, and Swift diagnostics with zero Lua findings.",
+      "publication_notes": "Ready-for-review PR #10521 opened after a final origin/main fetch confirmed the branch was one commit ahead with no base drift. The first implementation commit is recorded above; this state-only follow-up keeps the active-PR invariant durable on the same branch.",
       "notes": "Discovered by the complete canonical Lua sibling-bootstrap audit for the selected Unix closure tranche. json_value bootstraps grammar-tools and json-parser but omits directed-graph, state-machine, lexer, json-lexer, and parser from the clean-tree transitive closure."
     },
     {
