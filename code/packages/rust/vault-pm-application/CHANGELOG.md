@@ -2,6 +2,20 @@
 
 All notable changes to this package are documented here.
 
+## [0.47.0] - 2026-08-11
+
+### Added
+
+- Add audited portable-import host-failure and target-validation boundaries.
+- Allow an empty target to retain audit-only attempts before its first atomic
+  import.
+
+### Security
+
+- Publish failed `PortableImport` events before returning host, artifact, or
+  target errors, while keeping the success event atomic with re-identified
+  candidates and the new target catalog.
+
 ## [0.46.0] - 2026-08-11
 
 ### Added

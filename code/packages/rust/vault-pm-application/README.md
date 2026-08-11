@@ -332,11 +332,17 @@ complete restore crash-resumable without partial logical visibility. The source
 snapshot, imported plaintexts, and entropy remain non-printable and wipe on
 drop.
 
+An audit-enabled target may retain any number of audit-only attempts while
+remaining logically empty. Host/artifact failures publish itemless failed
+`PortableImport` events, target-side validation failures publish before their
+closed error, and success keeps its `PortableImport` event atomic with every
+re-identified candidate and the new catalog.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
 credential store, or entropy source. Host field clipboard implementation,
-portable import/restore, and richer host-side path, authorization,
-quota, and cache checks land in later slices.
+portable target creation and restore verification, and richer host-side path,
+authorization, quota, and cache checks land in later slices.
 There is no unchecked
 repository verification path: construction decrypts and
 authority-verifies the exact locally pinned certificate frame and object ID,

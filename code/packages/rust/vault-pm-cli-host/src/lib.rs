@@ -6,8 +6,8 @@ use coding_adventures_csprng::fill_random;
 use coding_adventures_ct_compare::ct_eq;
 use coding_adventures_zeroize::Zeroizing;
 use core::fmt::{self, Debug, Display, Formatter};
-use std::fs::{self, OpenOptions};
-use std::io::{self, Write};
+use std::fs::{self, File, OpenOptions};
+use std::io::{self, Read, Write};
 use std::path::Path;
 
 #[cfg(unix)]
@@ -54,6 +54,10 @@ pub enum CliHostError {
     ExportDestinationExists,
     /// The portable-export destination could not be durably written.
     ExportWriteFailed,
+    /// The portable-import source was empty, not a file, or exceeded its bound.
+    InvalidImportSource,
+    /// The portable-import source could not be completely read.
+    ImportReadFailed,
     /// The caller requested an empty entropy buffer.
     InvalidEntropyRequest,
     /// The operating-system CSPRNG failed to fill a requested buffer.
@@ -78,6 +82,8 @@ impl Display for CliHostError {
             Self::InvalidExportDestination => "vault-pm CLI host: invalid export destination",
             Self::ExportDestinationExists => "vault-pm CLI host: export destination exists",
             Self::ExportWriteFailed => "vault-pm CLI host: export write failed",
+            Self::InvalidImportSource => "vault-pm CLI host: invalid import source",
+            Self::ImportReadFailed => "vault-pm CLI host: import read failed",
             Self::InvalidEntropyRequest => "vault-pm CLI host: invalid entropy request",
             Self::EntropyUnavailable => "vault-pm CLI host: OS entropy unavailable",
             Self::UnsupportedPlatform => "vault-pm CLI host: unsupported platform",
@@ -230,6 +236,41 @@ pub fn write_portable_export(destination: &Path, artifact: &[u8]) -> Result<(), 
     Ok(())
 }
 
+/// Read one explicit encrypted portable artifact under an exact host ceiling.
+///
+/// The source must be a non-empty regular file. Metadata is checked before
+/// allocation and the reader itself is capped at `max_bytes + 1`, so a file
+/// that grows concurrently cannot force an unbounded allocation. Artifact
+/// authentication and parsing remain application responsibilities.
+pub fn read_portable_export(source: &Path, max_bytes: usize) -> Result<Vec<u8>, CliHostError> {
+    if source.as_os_str().is_empty() || max_bytes == 0 {
+        return Err(CliHostError::InvalidImportSource);
+    }
+    let file = File::open(source).map_err(|_| CliHostError::ImportReadFailed)?;
+    let metadata = file
+        .metadata()
+        .map_err(|_| CliHostError::ImportReadFailed)?;
+    if !metadata.is_file()
+        || metadata.len() == 0
+        || metadata.len() > u64::try_from(max_bytes).unwrap_or(u64::MAX)
+    {
+        return Err(CliHostError::InvalidImportSource);
+    }
+    let capacity =
+        usize::try_from(metadata.len()).map_err(|_| CliHostError::InvalidImportSource)?;
+    let limit = u64::try_from(max_bytes)
+        .unwrap_or(u64::MAX)
+        .saturating_add(1);
+    let mut artifact = Vec::with_capacity(capacity);
+    file.take(limit)
+        .read_to_end(&mut artifact)
+        .map_err(|_| CliHostError::ImportReadFailed)?;
+    if artifact.is_empty() || artifact.len() > max_bytes {
+        return Err(CliHostError::InvalidImportSource);
+    }
+    Ok(artifact)
+}
+
 /// Stateless cryptographic entropy adapter backed by the repository OS CSPRNG.
 #[derive(Clone, Copy, Debug, Default)]
 pub struct OsEntropy;
@@ -378,6 +419,14 @@ mod tests {
                 "vault-pm CLI host: export write failed",
             ),
             (
+                CliHostError::InvalidImportSource,
+                "vault-pm CLI host: invalid import source",
+            ),
+            (
+                CliHostError::ImportReadFailed,
+                "vault-pm CLI host: import read failed",
+            ),
+            (
                 CliHostError::TextInputFailed,
                 "vault-pm CLI host: text input failed",
             ),
@@ -507,6 +556,38 @@ mod tests {
             );
         }
         fs::remove_file(destination).unwrap();
+    }
+
+    #[test]
+    fn portable_import_reader_is_regular_nonempty_and_bounded() {
+        let source = std::env::temp_dir().join(format!(
+            "vault-pm-cli-host-import-{}.vpm",
+            std::process::id()
+        ));
+        let _ = fs::remove_file(&source);
+        fs::write(&source, b"encrypted artifact").unwrap();
+        assert_eq!(
+            read_portable_export(&source, b"encrypted artifact".len()).unwrap(),
+            b"encrypted artifact"
+        );
+        assert_eq!(
+            read_portable_export(&source, b"encrypted artifact".len() - 1).unwrap_err(),
+            CliHostError::InvalidImportSource
+        );
+        assert_eq!(
+            read_portable_export(
+                source.parent().expect("temporary import parent"),
+                b"encrypted artifact".len(),
+            )
+            .unwrap_err(),
+            CliHostError::InvalidImportSource
+        );
+        fs::write(&source, b"").unwrap();
+        assert_eq!(
+            read_portable_export(&source, 64).unwrap_err(),
+            CliHostError::InvalidImportSource
+        );
+        fs::remove_file(source).unwrap();
     }
 
     #[test]

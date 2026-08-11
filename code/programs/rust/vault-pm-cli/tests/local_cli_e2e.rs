@@ -328,6 +328,41 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
         .windows(EXPORT_PASSPHRASE.len())
         .any(|value| value == EXPORT_PASSPHRASE));
 
+    let restore_home = TestHome::new();
+    let (restore_init_status, restore_init_transcript) = run_init_in_pty(&restore_home);
+    assert!(
+        restore_init_status.success(),
+        "restore target init failed: {restore_init_transcript}"
+    );
+    let (restore_audit_status, restore_audit_transcript) =
+        run_unlock_in_pty(&restore_home, &["audit", "enable"], b"Audit: enabled.");
+    assert!(
+        restore_audit_status.success(),
+        "restore target audit enable failed: {restore_audit_transcript}"
+    );
+    let (import_status, import_transcript) = run_import_in_pty(&restore_home, &export_path);
+    assert!(
+        import_status.success(),
+        "portable import failed: {import_transcript}"
+    );
+    assert!(import_transcript.contains("Import passphrase: "));
+    assert!(import_transcript.contains("Portable import complete: items=2 candidates=2."));
+    assert!(!import_transcript
+        .as_bytes()
+        .windows(EXPORT_PASSPHRASE.len())
+        .any(|value| value == EXPORT_PASSPHRASE));
+    let (restore_list_status, restore_list_transcript) = run_unlock_in_pty(
+        &restore_home,
+        &["item", "list"],
+        b"vault/note/v1\t\"Recovery note\"",
+    );
+    assert!(restore_list_status.success(), "{restore_list_transcript}");
+    assert_transcript_excludes_secrets(&restore_list_transcript);
+    assert_tree_excludes(&restore_home.0, ITEM_PASSWORD);
+    assert_tree_excludes(&restore_home.0, UPDATED_ITEM_PASSWORD);
+    assert_tree_excludes(&restore_home.0, SECURE_NOTE_BODY);
+    assert_tree_excludes(&restore_home.0, EXPORT_PASSPHRASE);
+
     assert_tree_excludes(&home.0, PASSPHRASE);
     assert_tree_excludes(&home.0, ITEM_PASSWORD);
     assert_tree_excludes(&home.0, UPDATED_ITEM_PASSWORD);
@@ -373,6 +408,47 @@ fn run_export_in_pty(home: &TestHome, destination: &Path) -> (ExitStatus, String
     master.write_all(EXPORT_PASSPHRASE).unwrap();
     master.write_all(b"\n").unwrap();
     read_until(&mut master, &mut transcript, b"Portable export written.");
+    drop(master);
+    let status = child.wait().unwrap();
+    (status, String::from_utf8_lossy(&transcript).into_owned())
+}
+
+fn run_import_in_pty(home: &TestHome, source: &Path) -> (ExitStatus, String) {
+    let (mut master, slave) = open_pty();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
+    command.args(["import", source.to_str().expect("UTF-8 test import source")]);
+    home.configure(&mut command);
+    command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::from(slave.try_clone().unwrap()))
+        .stderr(Stdio::from(slave));
+    unsafe {
+        command.pre_exec(|| {
+            if libc::setsid() < 0 || libc::ioctl(libc::STDOUT_FILENO, tiocsctty_request(), 0) < 0 {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    let mut child = command.spawn().unwrap();
+    child
+        .stdin
+        .take()
+        .unwrap()
+        .write_all(STDIN_INJECTION)
+        .unwrap();
+    let mut transcript = Vec::new();
+    read_until(&mut master, &mut transcript, b"Vault passphrase: ");
+    master.write_all(PASSPHRASE).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Import passphrase: ");
+    master.write_all(EXPORT_PASSPHRASE).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(
+        &mut master,
+        &mut transcript,
+        b"Portable import complete: items=2 candidates=2.",
+    );
     drop(master);
     let status = child.wait().unwrap();
     (status, String::from_utf8_lossy(&transcript).into_owned())

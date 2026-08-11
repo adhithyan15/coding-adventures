@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Exposed audited `import FILE` and extended the real-process PTY suite through
+  an independent initialized target, hidden artifact input, and restarted
+  redacted observation.
 - Exposed audited encrypted `export FILE` and extended the real-process PTY
   suite through two hidden export-passphrase prompts and plaintext-tree checks.
 - Exposed secure-note creation and redacted show, with real-process PTY proof
