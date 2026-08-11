@@ -3016,7 +3016,7 @@ impl Compiler {
         self.set_loc(node);
 
         let children = direct_nodes(node);
-        if let Some(label) = children.iter().find(|n| n.rule_name == "label") {
+        for label in children.iter().filter(|node| node.rule_name == "label") {
             let source_name = self.label_name(label)?;
             let name = self.labels.get(&source_name).cloned().ok_or_else(|| {
                 CompileError::Malformed(format!(
@@ -5386,9 +5386,11 @@ fn collect_statement_labels<'a>(
         return;
     }
     if node.rule_name == "statement" {
-        if let Some(label) = first_direct_node(node, "label") {
-            labels.push(label);
-        }
+        labels.extend(
+            direct_nodes(node)
+                .into_iter()
+                .filter(|child| child.rule_name == "label"),
+        );
     }
     for child in direct_nodes(node) {
         collect_statement_labels(child, labels);
@@ -8495,6 +8497,15 @@ mod tests {
                          marker := 0; goto root[1]; \
                          innertarget: result := 1 + marker; goto done end; \
                    outertarget: result := 42; done: end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn multiple_labels_share_one_statement_target() {
+        let src = "begin integer result, phase; phase := 0; goto first; \
+                   first: second: if phase = 0 then \
+                     begin phase := 1; goto second end \
+                   else result := 42 end";
         assert_eq!(run_i64(src), 42);
     }
 
