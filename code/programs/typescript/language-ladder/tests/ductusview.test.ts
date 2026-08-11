@@ -119,6 +119,8 @@ const HEBREW_QOF = ductusFor("ק", "hebrew")!;
 const hebrewQofOutline = hebrewOutline("ק");
 const HEBREW_RESH = ductusFor("ר", "hebrew")!;
 const hebrewReshOutline = hebrewOutline("ר");
+const HEBREW_SHIN = ductusFor("ש", "hebrew")!;
+const hebrewShinOutline = hebrewOutline("ש");
 const PERSIAN_ALEF = DUCTUS["ا"];
 const persianAlefOutline = naskhOutline("ا");
 const ARABIC_ALEF = ductusFor("ا", "arabic")!;
@@ -1376,6 +1378,37 @@ describe("Hebrew ר — one rounded top-and-right run", () => {
     expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(HEBREW_RESH.strokes[0], 1),
+    );
+  });
+});
+
+describe("Hebrew ש — an outer bowl followed by a lifted middle branch", () => {
+  const steps = ductusSteps(HEBREW_SHIN);
+  const strip = ductusFilmstrip(HEBREW_SHIN, hebrewShinOutline);
+
+  it("keeps the outer bowl joined before the separate middle branch", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the right branch and round left along the base",
+      "continue up the left branch without lifting",
+      "lift, then descend the middle branch into the base",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+  });
+
+  it("draws the exact Noto Sans Hebrew glyph and preserves the outer run", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewShinOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(HEBREW_SHIN.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_SHIN.strokes[1], 1),
     );
   });
 });

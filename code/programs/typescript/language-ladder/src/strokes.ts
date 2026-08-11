@@ -1344,6 +1344,67 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: hebrewAlphabetSource("ר"),
   },
+  // Printed Shin draws its outer right-base-left bowl in one run, then lifts
+  // once for the middle branch. The adjacent purple cursive form compresses
+  // those parts into a single rounded loop with a short rightward exit.
+  [ductusKey("hebrew", "ש")]: {
+    script: "hebrew",
+    glyph: "ש",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the right branch and round left along the base",
+            path: [
+              { x: 620, y: 570 },
+              { x: 620, y: 500 },
+              { x: 620, y: 420 },
+              { x: 620, y: 340 },
+              { x: 610, y: 250 },
+              { x: 580, y: 170 },
+              { x: 530, y: 100 },
+              { x: 470, y: 60 },
+              { x: 400, y: 35 },
+              { x: 330, y: 32 },
+              { x: 260, y: 45 },
+              { x: 200, y: 80 },
+              { x: 160, y: 135 },
+            ],
+          },
+          {
+            label: "continue up the left branch without lifting",
+            path: [
+              { x: 160, y: 135 },
+              { x: 135, y: 200 },
+              { x: 110, y: 280 },
+              { x: 110, y: 380 },
+              { x: 110, y: 480 },
+              { x: 110, y: 570 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend the middle branch into the base",
+            path: [
+              { x: 365, y: 570 },
+              { x: 365, y: 500 },
+              { x: 365, y: 430 },
+              { x: 355, y: 365 },
+              { x: 330, y: 320 },
+              { x: 295, y: 285 },
+              { x: 250, y: 260 },
+              { x: 205, y: 250 },
+              { x: 165, y: 250 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ש"),
+  },
   "ا": {
     script: "perso-arabic",
     glyph: "ا",

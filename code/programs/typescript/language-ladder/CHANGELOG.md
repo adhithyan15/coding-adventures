@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Hebrew Shin ductus (HL-C09BX)
+
+- Render **ש** in three evidence-aligned frames: descend the right branch and
+  round through the base into the left branch, then lift once for the middle.
+- Preserve the adjacent purple cursive form's compact one-run loop while keeping
+  the printed form's two runs explicit.
+- Queue the adjacent Tav demonstration as the final Hebrew inventory entry.
+
 ### Added — cited Hebrew Resh ductus (HL-C09BW)
 
 - Render **ר** in two evidence-aligned frames: draw the top bar left-to-right,

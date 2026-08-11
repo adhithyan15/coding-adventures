@@ -458,6 +458,10 @@ Its printed **ר** demonstration adds a two-frame filmstrip: the top bar travels
 left-to-right, rounds the top-right corner, and continues down the right side in
 one run. The adjacent purple cursive Resh keeps that zero-lift order in a rounder
 hook.
+Its printed **ש** demonstration adds a three-frame filmstrip: the right branch
+descends and rounds left through the base into the climbing left branch, then one
+lift precedes the middle branch's descent. The adjacent purple cursive Shin
+compresses those parts into one rounded loop with a short rightward exit.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
