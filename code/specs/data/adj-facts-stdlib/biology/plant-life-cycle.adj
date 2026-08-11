@@ -1,0 +1,60 @@
+% ============================================================================
+% plant-life-cycle — each stage of a flowering plant's early life cycle as
+% a NUMBER (1-3), the position in the ordered sequence
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A sibling library to the already-shipped `monarch-life-cycle.adj` and
+% `frog-life-cycle.adj` — the SAME plain numbered life-cycle-stage recall
+% shape, applied to a DIFFERENT organism. A flowering plant begins life as
+% a seed, then germinates, then emerges above the soil as a seedling.
+% Recall is a binding query:
+%
+%     ? plant_life_stage(germination, $N)   % 2
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `plant_life_stage(stage, order)` carrying the source citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% position WITH its source, on the CPU, with zero model calls, and abstains
+% on a word that is not one of the three stages the source names. The query
+% also runs BACKWARD — bind a number and recall the stage:
+%
+%     ? plant_life_stage($S, 1)   % seed
+%
+% The three stages IN ORDER, as a little truth table:
+%
+%     stage         order   quote (verbatim)
+%     -----------   -----   --------------------------------------------------------------
+%     seed          1       "They begin their lives as seeds."
+%     germination   2       "When a seed begins to grow, this is called germination."
+%     seedling      3       "When the first sign of life appears above the soil, this is
+%                             called a sprout or seedling."
+%
+% Provenance: quoted verbatim from Ducksters' "Flowering Plants" (Biology
+% for Kids) article's "Life-cycle of a Flowering Plant" section, which
+% describes the stages in this order. WebFetch-verified before writing.
+% `trust consensus` — this is the FIRST citation from Ducksters in this
+% stdlib: a reputable, long-running kids-science-education site, the same
+% tier this stdlib already reserves for other non-.gov kids-education
+% sources (National Geographic Kids, Grammarly), not a primary .gov
+% source. The source's own narrative goes on to describe a "mature plant"
+% stage and "flowering," but this table deliberately does NOT extend past
+% the first three stages, keeping this slice the same size as every
+% sibling life-cycle library. A word that is NOT one of these three
+% stages — `flowering`, a real later stage the source does describe, but
+% not one this table's three rows number — is deliberately NOT a row, so
+% a recall ABSTAINS on it rather than inventing a position. (See
+% ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table plant_life_stage {
+    columns stage, order
+
+    row (seed, 1)
+    row (germination, 2)
+    row (seedling, 3)
+
+    source "They begin their lives as seeds."
+    locator "https://www.ducksters.com/science/biology/flowering_plants.php"
+    trust consensus
+}
