@@ -22,7 +22,7 @@ const TRACE_ID_BYTES: usize = 32;
 const OBJECT_RANDOM_BYTES: usize = 32 + 24 + 24;
 const AUDIT_RANDOM_BYTES: usize = TRACE_ID_BYTES + OBJECT_RANDOM_BYTES;
 #[cfg(test)]
-pub(crate) const AUDIT_EPOCH_TEST_RANDOM_BYTES: usize = TRACE_ID_BYTES + 3 * OBJECT_RANDOM_BYTES;
+pub(crate) const AUDIT_ONLY_TEST_RANDOM_BYTES: usize = TRACE_ID_BYTES + 2 * OBJECT_RANDOM_BYTES;
 
 /// Exact caller-filled CSPRNG bytes consumed by one add-item mutation.
 pub const ADD_ITEM_RANDOM_BYTES: usize =
@@ -911,37 +911,55 @@ pub(crate) fn activate_audit_epoch_for_test(
     wall_time_ms: u64,
     event_basis_override: Option<Vec<ObjectId>>,
     event_signing_seed_override: Option<[u8; 32]>,
-    randomness: [u8; AUDIT_EPOCH_TEST_RANDOM_BYTES],
+    randomness: [u8; AUDIT_ONLY_TEST_RANDOM_BYTES],
     local_state_store: &dyn LocalStateStore,
 ) -> Result<ActiveStateV1, ApplicationError> {
     if active.audit_event_head().is_some() {
         return Err(ApplicationError::InvalidInput);
     }
+    publish_audit_only_event_for_test(
+        active,
+        keys,
+        local_secret,
+        repository,
+        AuditActionV1::AuditEpochStart,
+        AuditOutcomeV1::Succeeded,
+        None,
+        None,
+        wall_time_ms,
+        event_basis_override,
+        event_signing_seed_override,
+        randomness,
+        local_state_store,
+    )
+}
+
+#[cfg(test)]
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn publish_audit_only_event_for_test(
+    active: &ActiveStateV1,
+    keys: &V1Keys,
+    local_secret: &LocalSecretV1,
+    repository: &dyn ApplicationRepository,
+    action: AuditActionV1,
+    outcome: AuditOutcomeV1,
+    item_id: Option<ItemId>,
+    selected_revision: Option<RevisionId>,
+    wall_time_ms: u64,
+    event_basis_override: Option<Vec<ObjectId>>,
+    event_signing_seed_override: Option<[u8; 32]>,
+    randomness: [u8; AUDIT_ONLY_TEST_RANDOM_BYTES],
+    local_state_store: &dyn LocalStateStore,
+) -> Result<ActiveStateV1, ApplicationError> {
     let device_counter = active
         .last_device_counter()
         .checked_add(1)
         .ok_or(ApplicationError::BoundExceeded)?;
     let mut offset = 0;
     let trace_id = OperationId::new(take_slice(&randomness, &mut offset));
-    let catalog_randomness = take_object_randomness_slice(&randomness, &mut offset);
     let audit_randomness = take_object_randomness_slice(&randomness, &mut offset);
     let commit_randomness = take_object_randomness_slice(&randomness, &mut offset);
-    debug_assert_eq!(offset, AUDIT_EPOCH_TEST_RANDOM_BYTES);
-
-    let current_catalog = repository
-        .read_object(active.catalog_root())
-        .map_err(map_repository)?;
-    let catalog_plaintext = crate::open_object(keys, ObjectKind::Catalog, current_catalog.frame())?;
-    let catalog_plaintext = Zeroizing::new(CatalogV1::decode(&catalog_plaintext)?.encode()?);
-    let catalog_frame = seal_object(
-        keys,
-        ObjectKind::Catalog,
-        &catalog_plaintext,
-        &catalog_randomness,
-    )?;
-    let catalog_id = catalog_frame
-        .id()
-        .map_err(|_| ApplicationError::InternalInvariant)?;
+    debug_assert_eq!(offset, AUDIT_ONLY_TEST_RANDOM_BYTES);
 
     let mut parents = active.pinned_heads().iter().copied().collect::<Vec<_>>();
     parents.sort_unstable();
@@ -951,12 +969,12 @@ pub(crate) fn activate_audit_epoch_for_test(
         active.device_id(),
         device_counter,
         trace_id,
-        AuditActionV1::AuditEpochStart,
-        AuditOutcomeV1::Succeeded,
+        action,
+        outcome,
+        item_id,
+        selected_revision,
         None,
-        None,
-        None,
-        None,
+        active.audit_event_head(),
         event_basis,
         wall_time_ms,
     )
@@ -978,8 +996,7 @@ pub(crate) fn activate_audit_epoch_for_test(
         .id()
         .map_err(|_| ApplicationError::InternalInvariant)?;
 
-    let mut added_objects = vec![catalog_id, event_id];
-    added_objects.sort_unstable();
+    let added_objects = vec![event_id];
     let (_, device_signing_secret) = generate_keypair(local_secret.device_signing_seed());
     let device_signing_secret = Zeroizing::new(device_signing_secret);
     let unsigned_commit = CommitV1 {
@@ -987,7 +1004,7 @@ pub(crate) fn activate_audit_epoch_for_test(
         device_id: active.device_id(),
         device_counter,
         parents,
-        catalog_root: catalog_id,
+        catalog_root: active.catalog_root(),
         added_objects,
         tombstone_root: None,
         wall_time_ms,
@@ -1031,16 +1048,16 @@ pub(crate) fn activate_audit_epoch_for_test(
         .map_err(|_| ApplicationError::InternalInvariant)?;
     let expected_heads =
         PinnedHeads::new([commit_id]).map_err(|_| ApplicationError::InternalInvariant)?;
-    let publication = PublicationJournalV1::new(
-        vec![catalog_frame, event_frame],
+    let publication = PublicationJournalV1::new_audit_only(
+        vec![event_frame],
         commit_frame,
         announcement,
         active.pinned_heads().clone(),
         expected_heads,
         device_counter,
-        catalog_id,
-    )?
-    .with_audit_event_head(event_id)?;
+        active.catalog_root(),
+        event_id,
+    )?;
     publish_mutation(active, repository, publication, local_state_store)
 }
 

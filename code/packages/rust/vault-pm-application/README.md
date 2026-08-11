@@ -12,8 +12,11 @@ exists, every item mutation and portable import constructs an encrypted signed
 event and advances it atomically with the repository commit. Legacy local state
 decodes with auditing disabled. Complete audit verification now follows any
 durable event head back to its explicit genesis and authenticates every event
-against its signed repository commit. Audit activation, access enforcement,
-and redacted audit history rendering remain later slices. It also defines the
+against its signed repository commit. A dedicated audit-only journal can now
+advance that event head and device counter while reusing only the exact active
+catalog root; ambiguous provider success retains and replays the exact pending
+bytes. Audit activation, access enforcement, and redacted audit history
+rendering remain later slices. It also defines the
 exact canonical
 `PreparedInit -> Active -> PendingPublication -> Active` owner-state machine,
 retry-stable publication journals, encrypted local-secret custody, and

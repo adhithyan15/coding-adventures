@@ -94,6 +94,53 @@ impl PublicationJournalV1 {
         device_counter: u64,
         catalog_root: ObjectId,
     ) -> Result<Self, ApplicationError> {
+        Self::new_inner(
+            objects,
+            commit,
+            announcement,
+            base_heads,
+            expected_heads,
+            device_counter,
+            catalog_root,
+            None,
+        )
+    }
+
+    /// Validate one audit-only publication that reuses the active catalog.
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn new_audit_only(
+        objects: Vec<ObjectFrameV1>,
+        commit: ObjectFrameV1,
+        announcement: Vec<u8>,
+        base_heads: PinnedHeads,
+        expected_heads: PinnedHeads,
+        device_counter: u64,
+        catalog_root: ObjectId,
+        audit_event_head: ObjectId,
+    ) -> Result<Self, ApplicationError> {
+        Self::new_inner(
+            objects,
+            commit,
+            announcement,
+            base_heads,
+            expected_heads,
+            device_counter,
+            catalog_root,
+            Some(audit_event_head),
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn new_inner(
+        objects: Vec<ObjectFrameV1>,
+        commit: ObjectFrameV1,
+        announcement: Vec<u8>,
+        base_heads: PinnedHeads,
+        expected_heads: PinnedHeads,
+        device_counter: u64,
+        catalog_root: ObjectId,
+        audit_event_head: Option<ObjectId>,
+    ) -> Result<Self, ApplicationError> {
         let value = Self {
             objects,
             commit,
@@ -102,7 +149,7 @@ impl PublicationJournalV1 {
             expected_heads,
             device_counter,
             catalog_root,
-            audit_event_head: None,
+            audit_event_head,
         };
         value.validate()?;
         Ok(value)
@@ -194,7 +241,9 @@ impl PublicationJournalV1 {
                 return Err(ApplicationError::IntegrityFailure);
             }
         }
-        if !object_ids.contains(&self.catalog_root) || object_ids.contains(&commit_id) {
+        let supplies_catalog = object_ids.contains(&self.catalog_root);
+        if (!supplies_catalog && self.audit_event_head.is_none()) || object_ids.contains(&commit_id)
+        {
             return Err(ApplicationError::IntegrityFailure);
         }
         if self.audit_event_head.is_some_and(|head| {
@@ -700,6 +749,11 @@ fn validate_pending(
 ) -> Result<(), ApplicationError> {
     if publication.base_heads != active.pinned_heads
         || active.last_device_counter.checked_add(1) != Some(publication.device_counter)
+        || (publication.catalog_root != active.catalog_root
+            && !publication
+                .objects
+                .iter()
+                .any(|frame| frame.id().ok() == Some(publication.catalog_root)))
         || (active.audit_event_head.is_some() && publication.audit_event_head.is_none())
         || active
             .audit_event_head
@@ -802,18 +856,32 @@ fn decode_publication(value: CborValue) -> Result<PublicationJournalV1, Applicat
         .map(bytes_value)
         .map(|result| result.and_then(decode_frame))
         .collect::<Result<Vec<_>, _>>()?;
-    let publication = PublicationJournalV1::new(
-        objects,
-        decode_frame(take_bytes(&mut fields, 2)?)?,
-        take_bytes(&mut fields, 3)?,
-        decode_heads(take_value(&mut fields, 4)?)?,
-        decode_heads(take_value(&mut fields, 5)?)?,
-        take_uint(&mut fields, 6)?,
-        ObjectId::new(take_fixed(&mut fields, 7)?),
-    )?;
+    let commit = decode_frame(take_bytes(&mut fields, 2)?)?;
+    let announcement = take_bytes(&mut fields, 3)?;
+    let base_heads = decode_heads(take_value(&mut fields, 4)?)?;
+    let expected_heads = decode_heads(take_value(&mut fields, 5)?)?;
+    let device_counter = take_uint(&mut fields, 6)?;
+    let catalog_root = ObjectId::new(take_fixed(&mut fields, 7)?);
     match audit_event_head {
-        Some(head) => publication.with_audit_event_head(head),
-        None => Ok(publication),
+        Some(head) => PublicationJournalV1::new_audit_only(
+            objects,
+            commit,
+            announcement,
+            base_heads,
+            expected_heads,
+            device_counter,
+            catalog_root,
+            head,
+        ),
+        None => PublicationJournalV1::new(
+            objects,
+            commit,
+            announcement,
+            base_heads,
+            expected_heads,
+            device_counter,
+            catalog_root,
+        ),
     }
 }
 
@@ -1114,6 +1182,39 @@ mod tests {
         .unwrap()
     }
 
+    fn audit_only_journal(
+        audit_event: ObjectFrameV1,
+        commit: ObjectFrameV1,
+        certificate_id: ObjectId,
+        base_heads: PinnedHeads,
+        counter: u64,
+        catalog_root: ObjectId,
+    ) -> PublicationJournalV1 {
+        let audit_event_head = audit_event.id().unwrap();
+        let commit_id = commit.id().unwrap();
+        let announcement = AnnouncementV1 {
+            vault_id: VAULT_ID,
+            device_id: DEVICE_ID,
+            device_counter: counter,
+            commit_id,
+            device_certificate: certificate_id,
+            signature: Signature::new([0x52; 64]),
+        }
+        .encode()
+        .unwrap();
+        PublicationJournalV1::new_audit_only(
+            vec![audit_event],
+            commit,
+            announcement,
+            base_heads,
+            PinnedHeads::new([commit_id]).unwrap(),
+            counter,
+            catalog_root,
+            audit_event_head,
+        )
+        .unwrap()
+    }
+
     fn prepared() -> PreparedInitV1 {
         let bootstrap = bootstrap().encode().unwrap();
         let decoded_bootstrap = BootstrapV1::decode(&bootstrap).unwrap();
@@ -1285,6 +1386,44 @@ mod tests {
         );
         assert_eq!(
             LocalVaultStateV1::pending_publication(audited, unaudited),
+            Err(ApplicationError::IntegrityFailure)
+        );
+    }
+
+    #[test]
+    fn audit_only_journal_reuses_only_the_exact_active_catalog() {
+        let active = prepared().intended_active().clone();
+        let publication = audit_only_journal(
+            frame(13),
+            frame(14),
+            active.device_certificate_id(),
+            active.pinned_heads().clone(),
+            2,
+            active.catalog_root(),
+        );
+        assert_eq!(publication.objects().len(), 1);
+        assert!(publication
+            .objects()
+            .iter()
+            .all(|frame| frame.id().unwrap() != active.catalog_root()));
+        let pending =
+            LocalVaultStateV1::pending_publication(active.clone(), publication.clone()).unwrap();
+        let encoded = pending.encode().unwrap();
+        assert_eq!(LocalVaultStateV1::decode(&encoded).unwrap(), pending);
+        let intended = active.after_publication(&publication).unwrap();
+        assert_eq!(intended.catalog_root(), active.catalog_root());
+        assert_eq!(intended.audit_event_head(), publication.audit_event_head());
+
+        let wrong_catalog = audit_only_journal(
+            frame(15),
+            frame(16),
+            active.device_certificate_id(),
+            active.pinned_heads().clone(),
+            2,
+            ObjectId::new([0xee; 32]),
+        );
+        assert_eq!(
+            LocalVaultStateV1::pending_publication(active, wrong_catalog),
             Err(ApplicationError::IntegrityFailure)
         );
     }

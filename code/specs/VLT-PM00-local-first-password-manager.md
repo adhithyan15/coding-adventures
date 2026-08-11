@@ -1458,9 +1458,18 @@ changelog, focused build, and downstream validation.
           per-device links/counters, genesis roots, mutation resource shape,
           selected revisions, and edit results, with aggregate-only reporting
           and backward-compatible zero-event verification for pre-audit vaults.
+9b-2c-5a. completed audit-only crash journal and repository publication
+          substrate, reusing only the exact active encrypted catalog while a
+          newly supplied encrypted event advances the commit, device counter,
+          and durable audit head; exact replay after ambiguous provider success
+          is covered before any access command adopts the boundary.
+9b-2c-5b. fail-closed access-event enforcement for every authenticated
+          list/show/history/search/verify/diagnose/export and later secret
+          disclosure path, including succeeded, denied, and failed outcomes.
+9b-2c-5c. redacted authenticated audit list/show plus trace-aware output and
+          tamper/fault/real-process acceptance.
 9b-2c-4c. explicit pre-audit-vault migration epoch, exposed only once every
           edit and access path can advance the chain or fail closed.
-9b-2c-5. fail-closed access-event publication plus redacted audit list/show.
 9b-3a-1. revision-safe authenticated login replacement using
          `VLT-PM12-cli-login-replace.md`.
 9b-3a-2. remaining record creation plus richer notes/multiple-URL editing.

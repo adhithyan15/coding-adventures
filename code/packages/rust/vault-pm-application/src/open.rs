@@ -1009,7 +1009,10 @@ fn map_repository(error: ApplicationRepositoryError) -> ApplicationError {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::mutation::{activate_audit_epoch_for_test, AUDIT_EPOCH_TEST_RANDOM_BYTES};
+    use crate::mutation::{
+        activate_audit_epoch_for_test, publish_audit_only_event_for_test,
+        AUDIT_ONLY_TEST_RANDOM_BYTES,
+    };
     use crate::{
         complete_generation_zero, decode_signed_audit_event, encode_item_revision,
         encode_signed_commit, prepare_generation_zero, seal_object, CatalogV1,
@@ -1022,7 +1025,7 @@ mod tests {
         decode as decode_cbor, encode as encode_cbor, CborValue,
     };
     use coding_adventures_ed25519::{generate_keypair, sign};
-    use coding_adventures_vault_pm_audit::AuditActionV1;
+    use coding_adventures_vault_pm_audit::{AuditActionV1, AuditOutcomeV1};
     use coding_adventures_vault_pm_domain::{
         ContentType, ItemDocument, ItemState, LwwRegister, ObservedSet, OperationId,
         RedactedRecordView, Tombstone,
@@ -1770,7 +1773,7 @@ mod tests {
             699,
             None,
             None,
-            [0xa7; AUDIT_EPOCH_TEST_RANDOM_BYTES],
+            [0xa7; AUDIT_ONLY_TEST_RANDOM_BYTES],
             &local,
         )
         .unwrap();
@@ -1785,7 +1788,38 @@ mod tests {
         .unwrap();
         let epoch = session.audit_verify().unwrap();
         assert_eq!(epoch.commit_count(), 2);
+        assert_eq!(epoch.catalog_count(), 1);
         assert_eq!(epoch.audit_event_count(), 1);
+
+        publish_audit_only_event_for_test(
+            &session.active,
+            &session._keys,
+            &session._local_secret,
+            session._repository.as_ref(),
+            AuditActionV1::ItemList,
+            AuditOutcomeV1::Succeeded,
+            None,
+            None,
+            699,
+            None,
+            None,
+            [0xaa; AUDIT_ONLY_TEST_RANDOM_BYTES],
+            &local,
+        )
+        .unwrap();
+        drop(session);
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let accessed = session.audit_verify().unwrap();
+        assert_eq!(accessed.commit_count(), 3);
+        assert_eq!(accessed.catalog_count(), 1);
+        assert_eq!(accessed.audit_event_count(), 2);
 
         let randomness = add_item_randomness(0xa8);
         let item_id = randomness.item_id();
@@ -1806,15 +1840,15 @@ mod tests {
         )
         .unwrap();
         let report = reopened.audit_verify().unwrap();
-        assert_eq!(report.announcement_count(), 3);
-        assert_eq!(report.commit_count(), 3);
-        assert_eq!(report.catalog_count(), 3);
+        assert_eq!(report.announcement_count(), 4);
+        assert_eq!(report.commit_count(), 4);
+        assert_eq!(report.catalog_count(), 2);
         assert_eq!(report.revision_count(), 1);
         assert_eq!(report.item_count(), 1);
-        assert_eq!(report.audit_event_count(), 2);
+        assert_eq!(report.audit_event_count(), 3);
         assert_eq!(
             format!("{report:?}"),
-            "AuditVerificationV1 { integrity_verified: true, announcement_count: 3, commit_count: 3, catalog_count: 3, revision_count: 1, item_count: 1, audit_event_count: 2 }"
+            "AuditVerificationV1 { integrity_verified: true, announcement_count: 4, commit_count: 4, catalog_count: 2, revision_count: 1, item_count: 1, audit_event_count: 3 }"
         );
         assert!(!format!("{report:?}").contains("Audited login"));
         assert!(!format!("{report:?}").contains("audit-secret"));
@@ -1844,12 +1878,100 @@ mod tests {
         )
         .unwrap();
         let report = reopened.audit_verify().unwrap();
-        assert_eq!(report.announcement_count(), 4);
-        assert_eq!(report.commit_count(), 4);
-        assert_eq!(report.catalog_count(), 4);
+        assert_eq!(report.announcement_count(), 5);
+        assert_eq!(report.commit_count(), 5);
+        assert_eq!(report.catalog_count(), 3);
         assert_eq!(report.revision_count(), 2);
         assert_eq!(report.item_count(), 1);
-        assert_eq!(report.audit_event_count(), 3);
+        assert_eq!(report.audit_event_count(), 4);
+    }
+
+    #[test]
+    fn audit_only_publication_replays_after_ambiguous_provider_failure() {
+        let passphrase = b"active passphrase";
+        let prepared = prepare_generation_zero(
+            Zeroizing::new(passphrase.to_vec()),
+            GenerationZeroPolicyV1::new(8 * 1024, 1, 1, 10).unwrap(),
+            randomness(),
+        )
+        .unwrap();
+        let locator = prepared.bootstrap_locator();
+        let local = MemoryLocalStateStore::default();
+        let bootstrap = MemoryBootstrapStore::default();
+        let backend = Arc::new(FaultInjectingObjectStore::new(InMemoryObjectStore::new()));
+        let factory = V1ApplicationRepositoryFactory::from_shared(Arc::clone(&backend));
+        complete_generation_zero(prepared, &local, &bootstrap, &factory).unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(passphrase.to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let catalog_root = session.active.catalog_root();
+        backend
+            .enqueue(FaultAction {
+                operation: StoreOperation::PutImmutable,
+                effect: FaultEffect::CommitPutThenNetwork,
+            })
+            .unwrap();
+
+        assert_eq!(
+            activate_audit_epoch_for_test(
+                &session.active,
+                &session._keys,
+                &session._local_secret,
+                session._repository.as_ref(),
+                703,
+                None,
+                None,
+                [0xab; AUDIT_ONLY_TEST_RANDOM_BYTES],
+                &local,
+            ),
+            Err(ApplicationError::StorageUnavailable)
+        );
+        let exact_pending = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::PendingPublication {
+            active,
+            publication,
+        } = LocalVaultStateV1::decode(&exact_pending).unwrap()
+        else {
+            panic!("audit-only failure must retain the exact pending journal")
+        };
+        assert_eq!(active.catalog_root(), catalog_root);
+        assert_eq!(publication.catalog_root(), catalog_root);
+        assert_eq!(publication.objects().len(), 1);
+        assert_eq!(
+            publication.audit_event_head(),
+            publication.objects()[0].id().ok()
+        );
+        drop(session);
+
+        let recovered = recover_pending_publication(
+            Zeroizing::new(passphrase.to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(recovered.catalog_root(), catalog_root);
+        assert_eq!(recovered.last_device_counter(), 2);
+        assert!(recovered.audit_event_head().is_some());
+        let reopened = open_active_vault(
+            Zeroizing::new(passphrase.to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let report = reopened.audit_verify().unwrap();
+        assert_eq!(report.commit_count(), 2);
+        assert_eq!(report.catalog_count(), 1);
+        assert_eq!(report.audit_event_count(), 1);
+        assert_eq!(backend.pending_faults().unwrap(), 0);
     }
 
     #[test]
@@ -1858,13 +1980,9 @@ mod tests {
             (
                 Some(vec![ObjectId::new([0xfe; 32])]),
                 None,
-                [0xb1; AUDIT_EPOCH_TEST_RANDOM_BYTES],
+                [0xb1; AUDIT_ONLY_TEST_RANDOM_BYTES],
             ),
-            (
-                None,
-                Some([0xfd; 32]),
-                [0xb2; AUDIT_EPOCH_TEST_RANDOM_BYTES],
-            ),
+            (None, Some([0xfd; 32]), [0xb2; AUDIT_ONLY_TEST_RANDOM_BYTES]),
         ] {
             let (locator, local, bootstrap, factory) = initialized();
             let session = open_active_vault(
@@ -1922,7 +2040,7 @@ mod tests {
             810,
             None,
             None,
-            [0xb3; AUDIT_EPOCH_TEST_RANDOM_BYTES],
+            [0xb3; AUDIT_ONLY_TEST_RANDOM_BYTES],
             &local,
         )
         .unwrap();
