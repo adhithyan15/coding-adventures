@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Hebrew Ayin ductus (HL-C09BS)
+
+- Render **ע** in three evidence-aligned frames: descend the right branch into
+  the base, sweep left, then turn back and climb the left branch without lifting.
+- Preserve the adjacent purple cursive form's compact loop while keeping the
+  source's single printed run explicit.
+- Queue Pe from the same full-alphabet source.
+
 ### Added — cited Hebrew Samekh ductus (HL-C09BR)
 
 - Render **ס** in four evidence-aligned frames: draw the flat top, round down

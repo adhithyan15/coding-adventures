@@ -109,6 +109,8 @@ const HEBREW_NUN = ductusFor("נ", "hebrew")!;
 const hebrewNunOutline = hebrewOutline("נ");
 const HEBREW_SAMEKH = ductusFor("ס", "hebrew")!;
 const hebrewSamekhOutline = hebrewOutline("ס");
+const HEBREW_AYIN = ductusFor("ע", "hebrew")!;
+const hebrewAyinOutline = hebrewOutline("ע");
 const PERSIAN_ALEF = DUCTUS["ا"];
 const persianAlefOutline = naskhOutline("ا");
 const ARABIC_ALEF = ductusFor("ا", "arabic")!;
@@ -1215,6 +1217,35 @@ describe("Hebrew ס — one closed clockwise printed loop", () => {
     expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(HEBREW_SAMEKH.strokes[0], 3),
+    );
+  });
+});
+
+describe("Hebrew ע — one joined branch-and-base run", () => {
+  const steps = ductusSteps(HEBREW_AYIN);
+  const strip = ductusFilmstrip(HEBREW_AYIN, hebrewAyinOutline);
+
+  it("keeps the right descent, base, and left climb joined", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the right branch and curve left into the base",
+      "sweep left along the base without lifting",
+      "turn back and climb the left branch without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+
+  it("draws the exact Noto Sans Hebrew glyph in the final frame", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewAyinOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_AYIN.strokes[0], 2),
     );
   });
 });
