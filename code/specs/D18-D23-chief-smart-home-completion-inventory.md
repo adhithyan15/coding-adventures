@@ -1902,46 +1902,49 @@ MQTT after firmware no longer logs plaintext credentials.
 21. Add Frigate commands or configuration mutations only with operation-specific
    D23 contracts, least-privilege role checks, and readable postcondition
    verification.
-22. Add bounded Blue Iris snapshots only after an official interface documents
+22. Add Frigate recordings, export, and playback only after a supervised
+   resource executor owns bounded transfer, cancellation, retention, and
+   resource lifecycle semantics.
+23. Add bounded Blue Iris snapshots only after an official interface documents
     how an isolated secure JSON session authenticates `/image/{camera}`, or a
     concrete cookie/session-bound media executor exists. Never disable secure
     sessions or place reusable Blue Iris credentials in a URL. Alert/clip
     search, export, and playback still require a supervised resource executor.
-23. Add broader Blue Iris `camconfig` or administrative mutations only with
+24. Add broader Blue Iris `camconfig` or administrative mutations only with
    operation-specific D23 contracts, least-privilege permissions, and readable
    postcondition verification; do not persist the license value returned at
    login.
-24. Add automatic Blue Iris discovery only if the server exposes a documented,
+25. Add automatic Blue Iris discovery only if the server exposes a documented,
    stable LAN advertisement; the current production path is explicit local
    HTTPS endpoint configuration.
-25. Add Blue Iris focus, iris, digital-I/O, preset-setting, or broader PTZ
+26. Add Blue Iris focus, iris, digital-I/O, preset-setting, or broader PTZ
    controls only when each operation has a specific native capability probe,
    bounded semantics, and readable verification where the device exposes it.
-26. Add Axis event streaming only after the existing WebSocket protocol core has
+27. Add Axis event streaming only after the existing WebSocket protocol core has
    a concrete authenticated host using the completed Digest primitive or a
    short-lived session token, plus subscription supervision.
-27. Enumerate Axis video sources/channels before extending PTZ beyond the current
+28. Enumerate Axis video sources/channels before extending PTZ beyond the current
     capability-probed VAPIX camera 1 boundary.
-28. Add Axis absolute/relative zoom, guard-tour, or advanced preset management
+29. Add Axis absolute/relative zoom, guard-tour, or advanced preset management
     only when each operation has a specific capability probe and readable state.
-29. Add Reolink current-position, zoom, guard-point, or patrol controls only when
+30. Add Reolink current-position, zoom, guard-point, or patrol controls only when
     each operation has a capability-specific probe and the firmware exposes the
     native state needed to avoid invented orientation claims.
-30. Add Reolink push events only after a concrete webhook or event-stream host
+31. Add Reolink push events only after a concrete webhook or event-stream host
     and subscription lifecycle exist.
-31. Add authenticated KLAP/Tapo devices and other broader-device families only
+32. Add authenticated KLAP/Tapo devices and other broader-device families only
     after their authentication and session prerequisites are concrete.
-32. Add ONVIF PullPoint events once a concrete event host and subscription
+33. Add ONVIF PullPoint events once a concrete event host and subscription
     lifecycle exist.
-33. Add RTSP media transfer and recording once concrete media transfer and
+34. Add RTSP media transfer and recording once concrete media transfer and
     recorder host primitives exist.
-34. Add a production Matter commissioning, secure-session, and network host only
+35. Add a production Matter commissioning, secure-session, and network host only
     after certificate, fabric, Interaction Model encoding, subscription, and
     transport prerequisites exist.
-35. Add a Thread border-router host only after an actual host transport exists.
-36. Add a production Zigbee coordinator, join, and security host only after
+36. Add a Thread border-router host only after an actual host transport exists.
+37. Add a production Zigbee coordinator, join, and security host only after
     concrete coordinator transport and security primitives exist.
-37. Add production Z-Wave inclusion and S2 only after concrete host transport
+38. Add production Z-Wave inclusion and S2 only after concrete host transport
     and security primitives exist.
 
 ## End-To-End Definition
