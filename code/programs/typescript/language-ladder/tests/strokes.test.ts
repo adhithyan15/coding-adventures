@@ -33,6 +33,7 @@ const HEBREW_VAV = DUCTUS[ductusKey("hebrew", "ו")];
 const HEBREW_ZAYIN = DUCTUS[ductusKey("hebrew", "ז")];
 const HEBREW_HEIT = DUCTUS[ductusKey("hebrew", "ח")];
 const HEBREW_TET = DUCTUS[ductusKey("hebrew", "ט")];
+const HEBREW_YOD = DUCTUS[ductusKey("hebrew", "י")];
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
@@ -321,6 +322,19 @@ describe("handwriting ductus", () => {
     expect(right[0].y).toBeLessThan(right.at(-1)!.y);
     expect(hook[0]).toEqual(right.at(-1));
     expect(hook.at(-1)!.x).toBeLessThan(hook[0].x);
+  });
+
+  it("Hebrew י joins its tiny head directly to the short descending stem", () => {
+    expect(HEBREW_YOD.script).toBe("hebrew");
+    expect(penLifts(HEBREW_YOD)).toBe(0);
+    expect(HEBREW_YOD.strokes).toHaveLength(1);
+    expect(HEBREW_YOD.strokes[0].segments).toHaveLength(2);
+    const head = HEBREW_YOD.strokes[0].segments[0].path;
+    const stem = HEBREW_YOD.strokes[0].segments[1].path;
+    expect(head[0].x).toBeLessThan(head.at(-1)!.x);
+    expect(stem[0]).toEqual(head.at(-1));
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+    expect(Math.min(...stem.map((point) => point.y))).toBeGreaterThan(250);
   });
 
   it("அ lifts once before its separate right upright (two strokes)", () => {
@@ -959,6 +973,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ט", HEBREW_TET.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
+    expect(verifiedLetterFont("י", HEBREW_YOD.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
     expect(verifiedLetterFont("ம", DUCTUS["ம"].source.url)).toBe(
       "_fonts/NotoSansTamil-Static.ttf",
     );
@@ -1090,6 +1107,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /rounded handwritten Tet.*00:44.9–00:46.0.*start at the bottom.*left curve.*right side.*curl inward.*unusual.*bottom up.*00:47.4–00:51.1.*printed demonstration.*left side top-to-bottom.*base.*00:54.2–00:55.4.*lifts once.*lower-right.*climbs the right side.*inward hook.*00:55.7–00:56.3.*rounding the printed corners.*handwritten form.*00:57.5–01:02.3.*Noto Sans Hebrew.*bottom-up handwritten variation/i,
+    );
+  });
+
+  it("Hebrew י traces its tiny printed head and stem in one run", () => {
+    const src = HEBREW_YOD.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=NBUtBPVKchk");
+    expect(src.citation).toMatch(
+      /Hebrew Writing #6.*Tet and Yod.*02:00.7–02:01.2.*HebrewPod101/i,
+    );
+    expect(src.variation).toMatch(
+      /handwritten Yod.*tiny comma-like run.*01:53.4–01:53.8.*high on the writing line.*simplest letter.*01:50.4–01:51.0.*little comma.*upper-right.*01:54.0–01:57.2.*printed demonstration.*head left-to-right.*short stem.*without lifting.*02:00.7–02:01.2.*print is almost the same.*little angle.*02:03.7–02:07.1.*Noto Sans Hebrew.*comma-like handwritten variation/i,
     );
   });
 

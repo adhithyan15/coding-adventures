@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Hebrew Yod ductus (HL-C09BM)
+
+- Render **י** in two evidence-aligned frames: draw its tiny head left-to-right
+  and continue down the short stem without lifting.
+- Keep the source's one-stroke printed angle explicit while preserving its
+  comma-like handwritten alternative.
+- Queue the series' dedicated Kaf lesson (`EcQ0gL-NM-k`) next.
+
 ### Added — cited Hebrew Tet ductus (HL-C09BL)
 
 - Render **ט** in four evidence-aligned frames: descend the left side and turn

@@ -816,6 +816,36 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: hebrewAlphabetSource("ט"),
   },
+  // Printed Yod is the same tiny comma-like idea as handwriting with a sharper
+  // angle: the head runs left-to-right and turns directly down the short stem.
+  [ductusKey("hebrew", "י")]: {
+    script: "hebrew",
+    glyph: "י",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the small head from left to right",
+            path: [
+              { x: 60, y: 555 },
+              { x: 120, y: 555 },
+              { x: 180, y: 555 },
+            ],
+          },
+          {
+            label: "continue down through the short angled stem without lifting",
+            path: [
+              { x: 180, y: 555 },
+              { x: 180, y: 480 },
+              { x: 180, y: 390 },
+              { x: 180, y: 300 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("י"),
+  },
   "ا": {
     script: "perso-arabic",
     glyph: "ا",
