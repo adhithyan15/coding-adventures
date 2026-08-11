@@ -125,6 +125,7 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
             "cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance",
             workflow,
         )
+        self.assertIn("mosaic-app-conformance/package", workflow)
         self.assertIn('--runtime-library "$runtime_library"', workflow)
         self.assertIn(
             "find \"$swift_bin\" -type f -path '*/Runtime/libmosaic_app.dylib'",
@@ -138,8 +139,7 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
             'Conformance --library "$installed_runtime"',
             workflow,
         )
-        self.assertIn("mosaic-swift-native-complete-rating-controls", workflow)
-        self.assertIn("mosaic-pkg-rating-controls", workflow)
+        self.assertIn("mosaic-swift-bundled-conformance", workflow)
         self.assertIn(
             '--backend swiftui --output "$bundled_output" '
             '--emit-project --profile native-complete --runtime-library "$runtime_library"',

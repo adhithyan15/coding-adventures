@@ -324,10 +324,10 @@ unblocks multiple downstream targets; never count source generation as completio
     strict installable builds that omit it. macOS CI verifies the bundled bytes
     and complete standard-binding conformance without an injected library path.
   - [ ] Repeat the packaging contract for Flutter.
-- [ ] Make SwiftUI project shells compile components with an empty event enum;
-  the host-state dispatch method currently references `mosaicEnvelope` and
-  `mosaicName` helpers that are emitted only when the component declares an
-  event.
+- [x] Make SwiftUI project shells compile components with an empty event enum by
+  emitting unreachable but type-correct wire helpers with exhaustive empty
+  switches; macOS CI builds the canonical no-event conformance app through
+  SwiftPM.
 - [ ] Add `native-complete` capability/degradation analysis to the compiler.
   - [x] Add a package-builder API and CLI profile with deterministic,
     package-expanded degradation reports and pre-emission strict rejection.
