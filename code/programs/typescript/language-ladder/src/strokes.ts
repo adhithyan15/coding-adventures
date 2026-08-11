@@ -538,6 +538,46 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: hebrewAlphabetSource("ג"),
   },
+  // The source's cursive Dalet is explicitly one curve: a broad left-to-right
+  // arch curls through a small loop and continues into its tail. The learner
+  // path preserves that zero-lift run while fitting it to Noto Sans Hebrew's
+  // angular block top bar, sharp right heel, and downstroke.
+  [ductusKey("hebrew", "ד")]: {
+    script: "hebrew",
+    glyph: "ד",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top bar from left to right",
+            path: [
+              { x: 70, y: 555 },
+              { x: 150, y: 555 },
+              { x: 240, y: 555 },
+              { x: 330, y: 555 },
+              { x: 420, y: 555 },
+              { x: 480, y: 555 },
+            ],
+          },
+          {
+            label: "continue around the sharp right corner and down without lifting",
+            path: [
+              { x: 480, y: 555 },
+              { x: 430, y: 540 },
+              { x: 385, y: 510 },
+              { x: 370, y: 460 },
+              { x: 370, y: 370 },
+              { x: 370, y: 270 },
+              { x: 370, y: 170 },
+              { x: 370, y: 70 },
+              { x: 370, y: 20 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ד"),
+  },
   "ا": {
     script: "perso-arabic",
     glyph: "ا",

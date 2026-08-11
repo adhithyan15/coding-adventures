@@ -27,6 +27,7 @@ const tamil = () => parseFont(load("NotoSansTamil-Static.ttf"));
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
+const HEBREW_DALET = DUCTUS[ductusKey("hebrew", "ד")];
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
@@ -865,6 +866,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ג", HEBREW_GIMEL.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
+    expect(verifiedLetterFont("ד", HEBREW_DALET.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
     expect(verifiedLetterFont("ம", DUCTUS["ம"].source.url)).toBe(
       "_fonts/NotoSansTamil-Static.ttf",
     );
@@ -930,6 +934,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /contrasts.*rounded cursive Gimel.*00:48.4–00:50.1.*printed form.*top bar left-to-right.*right stem.*short lower-right leg.*00:54.2–00:55.4.*lifts once.*lower junction.*longer diagonal leg down-left.*00:55.4–00:55.9.*Noto Sans Hebrew.*handwriting variation/i,
+    );
+  });
+
+  it("Hebrew ד preserves its one-curve cursive order on the angular block outline", () => {
+    const src = HEBREW_DALET.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tN6Mf7fxxS4");
+    expect(src.citation).toMatch(
+      /Hebrew Writing.*Gimel, Dalet and Kamats.*03:43.8–03:45.0.*HebrewPod101/i,
+    );
+    expect(src.variation).toMatch(
+      /cursive Dalet.*broad arch left-to-right.*03:43.8–03:44.1.*small lower loop.*03:44.1–03:44.7.*descending tail.*03:45.0.*without lifting.*just one curve.*03:46.6–03:47.3.*printed Dalet.*angular.*Noto Sans Hebrew.*block top-bar-and-right-downstroke.*single continuous run.*zero-lift/i,
     );
   });
 
