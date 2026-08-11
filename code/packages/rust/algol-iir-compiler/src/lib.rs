@@ -1362,16 +1362,35 @@ impl Compiler {
             },
             None => Vec::new(),
         };
+        let mut declared_names = HashSet::with_capacity(param_names.len());
+        for param_name in &param_names {
+            if !declared_names.insert(param_name.clone()) {
+                return Err(CompileError::Type(format!(
+                    "duplicate formal parameter {param_name:?}"
+                )));
+            }
+        }
 
         // Which parameters are passed by value.
-        let value_names: HashSet<String> = match first_direct_node(proc_decl, "value_part") {
+        let value_name_list = match first_direct_node(proc_decl, "value_part") {
             Some(vp) => first_direct_node(vp, "ident_list")
                 .map(ident_list_names)
-                .unwrap_or_default()
-                .into_iter()
-                .collect(),
-            None => HashSet::new(),
+                .unwrap_or_default(),
+            None => Vec::new(),
         };
+        let mut value_names = HashSet::with_capacity(value_name_list.len());
+        for value_name in value_name_list {
+            if !declared_names.contains(&value_name) {
+                return Err(CompileError::Type(format!(
+                    "value parameter {value_name:?} is not in the formal parameter list"
+                )));
+            }
+            if !value_names.insert(value_name.clone()) {
+                return Err(CompileError::Type(format!(
+                    "duplicate value parameter {value_name:?}"
+                )));
+            }
+        }
         // Each parameter's type, gathered from the `spec_part` declarations.
         let mut type_of: HashMap<String, ProcedureParamType> = HashMap::new();
         for spec in direct_nodes(proc_decl)
@@ -1384,7 +1403,16 @@ impl Compiler {
             let list = first_direct_node(spec, "ident_list")
                 .ok_or_else(|| CompileError::Malformed("spec_part missing ident_list".into()))?;
             for n in ident_list_names(list) {
-                type_of.insert(n, ty);
+                if !declared_names.contains(&n) {
+                    return Err(CompileError::Type(format!(
+                        "specified parameter {n:?} is not in the formal parameter list"
+                    )));
+                }
+                if type_of.insert(n.clone(), ty).is_some() {
+                    return Err(CompileError::Type(format!(
+                        "duplicate specification for formal parameter {n:?}"
+                    )));
+                }
             }
         }
 
@@ -7099,6 +7127,71 @@ mod tests {
         assert!(err
             .to_string()
             .contains("duplicate declaration for procedure"));
+    }
+
+    #[test]
+    fn procedure_heading_with_multiple_specification_groups_runs() {
+        let src = "begin integer result; \
+                   integer procedure combine(a,b,c); value a,b,c; integer a,b; real c; \
+                   combine := a * 10 + b + entier(c); \
+                   result := combine(3, 4, 8.0) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn duplicate_formal_parameter_is_rejected() {
+        let err = compile_source(
+            "begin integer procedure bad(x,x); value x; integer x; bad := x; bad(1,2) end",
+            "duplicate_formal_parameter",
+        )
+        .expect_err("formal parameter names must be unique");
+        assert!(err.to_string().contains("duplicate formal parameter \"x\""));
+    }
+
+    #[test]
+    fn unknown_value_parameter_is_rejected() {
+        let err = compile_source(
+            "begin integer procedure bad(x); value y; integer x; bad := x; bad(1) end",
+            "unknown_value_parameter",
+        )
+        .expect_err("the value part may only name formal parameters");
+        assert!(err
+            .to_string()
+            .contains("value parameter \"y\" is not in the formal parameter list"));
+    }
+
+    #[test]
+    fn duplicate_value_parameter_is_rejected() {
+        let err = compile_source(
+            "begin integer procedure bad(x); value x,x; integer x; bad := x; bad(1) end",
+            "duplicate_value_parameter",
+        )
+        .expect_err("the value part may name each formal at most once");
+        assert!(err.to_string().contains("duplicate value parameter \"x\""));
+    }
+
+    #[test]
+    fn unknown_specified_parameter_is_rejected() {
+        let err = compile_source(
+            "begin integer procedure bad(x); value x; integer x,y; bad := x; bad(1) end",
+            "unknown_specified_parameter",
+        )
+        .expect_err("specification parts may only name formal parameters");
+        assert!(err
+            .to_string()
+            .contains("specified parameter \"y\" is not in the formal parameter list"));
+    }
+
+    #[test]
+    fn duplicate_formal_specification_is_rejected() {
+        let err = compile_source(
+            "begin integer procedure bad(x); value x; integer x; real x; bad := x; bad(1) end",
+            "duplicate_formal_specification",
+        )
+        .expect_err("a formal parameter must have exactly one specification");
+        assert!(err
+            .to_string()
+            .contains("duplicate specification for formal parameter \"x\""));
     }
 
     #[test]
