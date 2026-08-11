@@ -6057,6 +6057,37 @@ fn expr_static_real_arithmetic_value(node: &GrammarASTNode) -> Option<f64> {
     }
 
     let seq = pieces(node);
+    if node.rule_name == "expr_pow"
+        && seq
+            .iter()
+            .any(|piece| matches!(piece, Piece::Op(op) if op == "^" || op == "**"))
+    {
+        if seq.len().is_multiple_of(2) {
+            return None;
+        }
+        let mut operands = Vec::new();
+        for (index, piece) in seq.iter().enumerate() {
+            if index % 2 == 0 {
+                let Piece::Node(operand) = piece else {
+                    return None;
+                };
+                operands.push(*operand);
+            } else if !matches!(piece, Piece::Op(op) if op == "^" || op == "**") {
+                return None;
+            }
+        }
+        let (base, exponents) = operands.split_first()?;
+        let exponent = literal_nonneg_integer_power_chain(exponents)?;
+        let base = expr_static_real_arithmetic_value(base)?;
+        let mut value = 1.0;
+        for _ in 0..exponent {
+            value *= base;
+            if !value.is_finite() {
+                return None;
+            }
+        }
+        return Some(value);
+    }
     if seq.len() == 1 {
         return match seq[0] {
             Piece::Node(child) => expr_static_real_arithmetic_value(child),
@@ -7091,6 +7122,42 @@ mod tests {
         let err = compile_source("begin print(1.0E308 / 1.0E-308) end", "test")
             .expect_err("non-finite compile-time quotient must fail closed");
         assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_real_integer_power() {
+        let module = compile_source("begin print(2.5 ^ 2, 2.0 ^ 3 ^ 2) end", "test")
+            .expect("static real integer powers compile");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["6.25", "512"]);
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+    }
+
+    #[test]
+    fn al4_print_static_real_integer_power_rejects_non_finite_result() {
+        let err = compile_source("begin print(1.0E308 ^ 2) end", "test")
+            .expect_err("non-finite compile-time power must fail closed");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_real_power_rejects_unbounded_exponents() {
+        for source in [
+            "begin print(2.0 ^ 2.0) end",
+            "begin print(2.0 ^ 65) end",
+        ] {
+            let err = compile_source(source, "test")
+                .expect_err("unbounded static real power must require runtime formatting");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
     }
 
     #[test]
