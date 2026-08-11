@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 22,
-  "title": "Espanol, and Your First Built Sentence",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:a4106f0778d70db8",
+  "title": "Synthesis --- The Same Conversation, Twice",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:d7af9a71edde72ee",
   "lessons": [
     {
-      "id": "ES-C06-espanol",
-      "sequence": 550,
-      "title": "español — the word for the language",
-      "headword": "español",
-      "romanization": "español",
-      "gloss": "\"Spanish\" — the language, the people, and the Roman name for the peninsula underneath it",
+      "id": "ES-C06-repaso-hablar",
+      "sequence": 534,
+      "title": "Synthesis — the same conversation, twice",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — one conversation, held twice, where the only thing that changes is who you are talking to",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:649b081f38773c93",
+      "sourceHash": "fnv1a64:b1535ff66f9dfbb1",
       "notice": null,
       "blocks": [
         {
@@ -35,350 +35,48 @@
             },
             {
               "kind": "speech",
-              "text": "You have practised writing this word's ñ. Now find out what is inside it — because español is not a Spanish-made word at all."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart — español",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "español = \"Spanish\" — both the language and a Spaniard — from Hispania, the Roman name for the Iberian peninsula. The path Hispania becomes hispaniolus becomes español wore the word down, and there is the ñ again, exactly the -ni- squeeze you met in the writing lesson (Hispaniolus becomes españ-ol). Say it es-pa-NYOL."
-            },
-            {
-              "kind": "speech",
-              "text": "Two footnotes worth having:"
-            },
-            {
-              "kind": "speech",
-              "text": "English Spanish, Hispanic and Hispania are all the same root, so the English and Spanish names for the language are cousins, not translations of each other."
-            },
-            {
-              "kind": "speech",
-              "text": "Hispania itself may go back through Latin to a Phoenician name for the coast, often read as \"land of hyraxes\" (or rabbits) — the Phoenicians having met an unfamiliar animal and reached for the nearest word they had."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"español\" — es-pa-NYOL",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"español\" — *es-pa-NYOL*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the path — \"Hispania, hispaniolus, español\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the path — \"Hispania, hispaniolus, español\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"español\" then English \"Hispanic\" — same root",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"español\" then English \"Hispanic\" — same root]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Where does español come from? (Hispania, the Roman name for Iberia.) What letter does its ending bring back, and from what Latin sequence? (ñ, from -ni- in Hispaniolus.) Next: put it behind a verb and build your first sentence."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C06-hablo-espanol",
-      "sequence": 560,
-      "title": "Hablo español — your first real sentence",
-      "headword": "Hablo español",
-      "romanization": "Hablo español",
-      "gloss": "your first sentence built from parts — and the rule that languages take no article",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:35f0d8e06af6c70c",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "This is the moment this book has been building to. You take a verb you conjugated yourself and a noun you took apart yourself, and make a sentence nobody handed you pre-assembled."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "notice",
-          "title": "What you've built — the sentence assembled",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Snap two things you already own together:"
-            },
-            {
-              "kind": "speech",
-              "text": "Hablo (I speak, from hablar) + español (Spanish) = Hablo español."
-            },
-            {
-              "kind": "speech",
-              "text": "That is a complete, grammatical Spanish sentence, and notice what is not in it: no separate subject word. The -o of hablo already says \"I\" — the pro-drop you just learned, doing real work in a real sentence."
-            },
-            {
-              "kind": "speech",
-              "text": "Now swap the pieces and watch it generate:"
-            },
-            {
-              "kind": "speech",
-              "text": "Estudio español. — \"I study Spanish.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Trabajo. — \"I work.\""
-            },
-            {
-              "kind": "speech",
-              "text": "¿Hablas español? — \"Do you speak Spanish?\" (the ¿? pair opening and closing the question, as in the writing lesson)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: languages go bare",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "One more thing missing from hablo español: no \"the,\" no \"a.\" After a verb like hablar or estudiar, a language name takes no article — hablo español, never hablo el español."
-            },
-            {
-              "kind": "speech",
-              "text": "This matters because Spanish otherwise loves its articles far more than English does (me gusta el café, \"I like coffee\"). So this is a genuine exception you have to hold onto, and the rule of thumb is narrow: right after hablar, the language goes bare."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Hablo español\" — AH-bloh es-pa-NYOL",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Hablo español\" — *AH-bloh es-pa-NYOL*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "swap the verb — \"Estudio español\", \"Trabajo\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: swap the verb — \"Estudio español\", \"Trabajo\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "ask it — \"¿Hablas español?\" (raise the pitch; ¿ opens it)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: ask it — \"¿Hablas español?\" (raise the pitch; ¿ opens it)]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "You met no long ago as the answer. It has a second job, and now you have a sentence to try it on: put no directly in front of the verb and the whole thing flips."
-            },
-            {
-              "kind": "speech",
-              "text": "Hablo español becomes No hablo español."
-            },
-            {
-              "kind": "speech",
-              "text": "That is all there is to it. English needs a helper — do not — and Spanish needs nothing: one small word, in front, and the sentence means its opposite."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"I speak Spanish,\" then \"I study Spanish.\" (Hablo español; estudio español.) Why is there no separate subject word? (The -o ending carries \"I.\") Why no \"the\" before español? (Languages take no article after a verb like hablar.) You just built a sentence from parts — that is the whole game from here."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C06-practice",
-      "sequence": 570,
-      "title": "Practice — making sentences with -ar verbs",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "your first sentences — the -ar present tense in action",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:d13dd7e393a5b9bd",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "A milestone chapter: for the first time you're not reciting fixed phrases, you're building sentences from a pattern. Drill the three verbs through the endings until hablo / hablas / habla is automatic."
+              "text": "Nothing new in this chapter either. This one is for using what you have — because knowing three endings is not the same as choosing the right one while a real person waits for you to finish."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: conjugate on command",
+          "title": "Grammar Lens: what the ending is really saying",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
+              "kind": "speech",
+              "text": "You are going to hold one short conversation twice — once with someone your own age, once with someone you want to show respect to. The words barely change. What changes is one letter on the end of one verb."
             },
             {
               "kind": "speech",
-              "text": "Run each verb through the three singular jobs you know: the ending alone for I becomes tú becomes usted:"
-            },
-            {
-              "kind": "speech",
-              "text": "hablar: hablo, hablas, habla."
-            },
-            {
-              "kind": "speech",
-              "text": "trabajar: trabajo, trabajas, trabaja."
-            },
-            {
-              "kind": "speech",
-              "text": "estudiar: estudio, estudias, estudia."
-            },
-            {
-              "kind": "speech",
-              "text": "Same three endings (-o / -as / -a) every time — that's the whole regular -ar present, singular."
+              "text": "That letter is the whole message. Hablas says I am at ease with you. Habla says I am being careful with you. English would need a change of tone, or a \"sir.\" Spanish does it with an -s."
             }
           ]
         },
         {
           "index": 2,
           "type": "input",
-          "title": "The exchange — say something real",
+          "title": "The exchange — with a friend",
           "segments": [
             {
               "kind": "speech",
-              "text": "— ¿Hablas español? — Hablo español. — ¿Estudias español? — Estudio español. — Café, por favor. — ¡Gracias! — De nada."
+              "text": "— ¡Hola! Me llamo Ana. — Me llamo David. Mucho gusto. — ¿Hablas español? — Sí, hablo español. ¡Gracias!"
             }
           ]
         },
         {
           "index": 3,
-          "type": "notice",
-          "title": "What you've built this chapter",
+          "type": "input",
+          "title": "The exchange, again — being polite",
           "segments": [
             {
               "kind": "speech",
-              "text": "por favor — please ( from \"for a favour\"), completing gracias / de nada / por favor."
+              "text": "— Buenos días. Me llamo Ana. — Me llamo David. Mucho gusto. — ¿Habla usted español? — Sí, hablo español. Gracias."
             },
             {
               "kind": "speech",
-              "text": "the singular regular -ar pattern — drop -ar, add -o / -as / -a: the template behind hablar, trabajar, and estudiar."
-            },
-            {
-              "kind": "speech",
-              "text": "hablar ( from fābula, fable; the f becomes h law), trabajar ( from tripalium, torture becomes travail/travel), estudiar ( from studēre, eagerness becomes student)."
-            },
-            {
-              "kind": "speech",
-              "text": "Hablo español — your first self-assembled sentence (pro-drop, no article)."
+              "text": "One letter. Hablas became habla, and the whole exchange changed its temperature. Your own line — hablo — never moved, because you are still you in both conversations."
             }
           ]
         },
@@ -396,29 +94,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "conjugate all three verbs for I / tú / usted, without stopping",
+              "instruction": "version one, both parts, start to finish",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: conjugate all three verbs for I / tú / usted, without stopping]"
+              "source": "[YOU SAY: version one, both parts, start to finish]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "answer “¿Hablas español?” and “¿Estudias español?” about yourself",
+              "instruction": "version two — and catch the single letter that moved",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: answer “¿Hablas español?” and “¿Estudias español?” about yourself]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "request “Café, por favor” and run the full gracias/de nada loop",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: request “Café, por favor” and run the full gracias/de nada loop]"
+              "source": "[YOU SAY: version two — and catch the single letter that moved]"
             },
             {
               "kind": "repeat",
@@ -427,7 +116,63 @@
             },
             {
               "kind": "speech",
-              "text": "Ask and answer “¿Hablas español? — Hablo español.”"
+              "text": "Run whichever version is harder."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C06-repaso-hablar-friend",
+              "prompt": "You are talking to someone your own age. Which form: hablas or habla?",
+              "assesses": [
+                "ES-GRAMMAR-AR-PRESENT-2SG"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "hablas",
+                "tu hablas"
+              ],
+              "feedback": {
+                "correct": "Yes — hablas is the warm one.",
+                "incorrect": "With a friend or a peer, hablas."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C06-repaso-hablar-polite",
+              "prompt": "You are speaking to someone you want to show respect to. Which form?",
+              "assesses": [
+                "ES-GRAMMAR-AR-PRESENT-3SG",
+                "ES-REGISTER-TU-USTED"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "habla",
+                "habla usted"
+              ],
+              "feedback": {
+                "correct": "Yes — habla, the usted form.",
+                "incorrect": "Usted takes the he/she form: habla."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C06-repaso-hablar-self",
+              "prompt": "In BOTH conversations, how do you say I speak?",
+              "assesses": [
+                "ES-GRAMMAR-AR-PRESENT-1SG"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "hablo",
+                "the same, hablo",
+                "hablo both times"
+              ],
+              "feedback": {
+                "correct": "Right — your own form never changes. Only the one aimed at them does.",
+                "incorrect": "hablo, both times. You are still you."
+              }
             }
           ]
         },
@@ -444,7 +189,7 @@
             },
             {
               "kind": "speech",
-              "text": "What are the three singular -ar endings? (-o / -as / -a.) Give the “I” form of all three verbs. (Hablo, trabajo, estudio.) Why does Hablo español need no separate subject word? (The -o carries “I.”) You can now generate sentences — this book stops handing you phrases and starts handing you rules. Next chapter adds the -er/-ir verb families."
+              "text": "What is the only thing that changed between the two conversations? (One letter — hablas becomes habla.) Why did hablo stay the same? (Because it is about you, and you did not change.) What does choosing habla over hablas actually tell the other person? (That you are being respectful — the grammar is carrying the manners.)"
             }
           ]
         }

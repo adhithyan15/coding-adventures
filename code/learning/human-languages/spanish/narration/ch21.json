@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 21,
-  "title": "Estudiar --- Studying Is Being Eager",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:776db1a54ae292c1",
+  "title": "Espanol, and Your First Built Sentence",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:7a65cb8b4d6de032",
   "lessons": [
     {
-      "id": "ES-C06-estudiar",
-      "sequence": 540,
-      "title": "estudiar — \"to study,\" and the eagerness inside it",
-      "headword": "estudiar",
-      "romanization": "estudiar",
-      "gloss": "to study (a third -ar verb — the pattern is automatic now)",
+      "id": "ES-C06-espanol",
+      "sequence": 530,
+      "title": "español — the word for the language",
+      "headword": "español",
+      "romanization": "español",
+      "gloss": "\"Spanish\" — the language, the people, and the Roman name for the peninsula underneath it",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2519f2ffa7570757",
+      "sourceHash": "fnv1a64:e810c7b445a7aea6",
       "notice": null,
       "blocks": [
         {
@@ -35,88 +35,35 @@
             },
             {
               "kind": "speech",
-              "text": "Your third -ar verb. By now the pattern should feel automatic — that's exactly what we want. estudiar also hides a nicer feeling than the classroom suggests: at root it means eagerness."
+              "text": "You have practised writing this word's ñ. Now find out what is inside it — because español is not a Spanish-made word at all."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "etymology",
+          "title": "The word, taken apart — español",
           "segments": [
             {
               "kind": "speech",
-              "text": "st-no-e — Spanish props up st- with an e: es-tudiar (the same reflex behind estar, España, escuela). es-too-DYAR."
+              "text": "español = \"Spanish\" — both the language and a Spaniard — from Hispania, the Roman name for the Iberian peninsula. The path Hispania becomes hispaniolus becomes español wore the word down, and there is the ñ again, exactly the -ni- squeeze you met in the writing lesson (Hispaniolus becomes españ-ol). Say it es-pa-NYOL."
             },
             {
               "kind": "speech",
-              "text": "diphthong-io — the -iar glides: es-too-DYAR."
+              "text": "Two footnotes worth having:"
+            },
+            {
+              "kind": "speech",
+              "text": "English Spanish, Hispanic and Hispania are all the same root, so the English and Spanish names for the language are cousins, not translations of each other."
+            },
+            {
+              "kind": "speech",
+              "text": "Hispania itself may go back through Latin to a Phoenician name for the coast, often read as \"land of hyraxes\" (or rabbits) — the Phoenicians having met an unfamiliar animal and reached for the nearest word they had."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "estudiar comes from Latin studēre, \"to be eager, to apply oneself zealously.\" A studium was zeal, enthusiasm, devotion — only later \"study.\" So to study is, at heart, to throw yourself eagerly at something."
-            },
-            {
-              "kind": "speech",
-              "text": "That studēre is everywhere in English:"
-            },
-            {
-              "kind": "speech",
-              "text": "student — literally \"one who is eager.\""
-            },
-            {
-              "kind": "speech",
-              "text": "studio, studious, study — the place, the trait, the act."
-            },
-            {
-              "kind": "speech",
-              "text": "Italian studio and the musical studio keep the \"devoted practice\" sense."
-            },
-            {
-              "kind": "speech",
-              "text": "So Estudio español is \"I devote myself eagerly to Spanish\" — a nicer picture than mere schoolwork."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the template holds",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Drop -ar, add the ending — for the third time:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form",
-                "meaning"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "person: I (ending carries the subject). form: estudio. meaning: I study.",
-                "person: tú. form: estudias. meaning: you study.",
-                "person: usted. form: estudia. meaning: you (formal) study."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Three verbs, one pattern: hablo, trabajo, estudio. The singular regular -ar present is now reusable rather than memorized verb by verb."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -129,29 +76,190 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"estudiar\" — es-too-DYAR",
+              "instruction": "\"español\" — es-pa-NYOL",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"estudiar\" — *es-too-DYAR*]"
+              "source": "[YOU SAY: \"español\" — *es-pa-NYOL*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"estudio, estudias, estudia\" — the now-familiar endings",
+              "instruction": "the path — \"Hispania, hispaniolus, español\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"estudio, estudias, estudia\" — the now-familiar endings]"
+              "source": "[YOU SAY: the path — \"Hispania, hispaniolus, español\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"estudiar\" then English \"student, studio\" — the studēre \"eagerness\"",
+              "instruction": "\"español\" then English \"Hispanic\" — same root",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"estudiar\" then English \"student, studio\" — the *studēre* \"eagerness\"]"
+              "source": "[YOU SAY: \"español\" then English \"Hispanic\" — same root]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does español come from? (Hispania, the Roman name for Iberia.) What letter does its ending bring back, and from what Latin sequence? (ñ, from -ni- in Hispaniolus.) Next: put it behind a verb and build your first sentence."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C06-hablo-espanol",
+      "sequence": 532,
+      "title": "Hablo español — your first real sentence",
+      "headword": "Hablo español",
+      "romanization": "Hablo español",
+      "gloss": "your first sentence built from parts — and the rule that languages take no article",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ff00a553dc2fb12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is the moment this book has been building to. You take a verb you conjugated yourself and a noun you took apart yourself, and make a sentence nobody handed you pre-assembled."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built — the sentence assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Snap two things you already own together:"
+            },
+            {
+              "kind": "speech",
+              "text": "Hablo (I speak, from hablar) + español (Spanish) = Hablo español."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a complete, grammatical Spanish sentence, and notice what is not in it: no separate subject word. The -o of hablo already says \"I\" — the pro-drop you just learned, doing real work in a real sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "Now swap the pieces and watch it generate:"
+            },
+            {
+              "kind": "speech",
+              "text": "Estudio español. — \"I study Spanish.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Trabajo. — \"I work.\""
+            },
+            {
+              "kind": "speech",
+              "text": "¿Hablas español? — \"Do you speak Spanish?\" (the ¿? pair opening and closing the question, as in the writing lesson)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: languages go bare",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more thing missing from hablo español: no \"the,\" no \"a.\" After a verb like hablar or estudiar, a language name takes no article — hablo español, never hablo el español."
+            },
+            {
+              "kind": "speech",
+              "text": "This matters because Spanish otherwise loves its articles far more than English does (me gusta el café, \"I like coffee\"). So this is a genuine exception you have to hold onto, and the rule of thumb is narrow: right after hablar, the language goes bare."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Hablo español\" — AH-bloh es-pa-NYOL",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Hablo español\" — *AH-bloh es-pa-NYOL*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "swap the verb — \"Estudio español\", \"Trabajo\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: swap the verb — \"Estudio español\", \"Trabajo\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask it — \"¿Hablas español?\" (raise the pitch; ¿ opens it)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask it — \"¿Hablas español?\" (raise the pitch; ¿ opens it)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You met no long ago as the answer. It has a second job, and now you have a sentence to try it on: put no directly in front of the verb and the whole thing flips."
+            },
+            {
+              "kind": "speech",
+              "text": "Hablo español becomes No hablo español."
+            },
+            {
+              "kind": "speech",
+              "text": "That is all there is to it. English needs a helper — do not — and Spanish needs nothing: one small word, in front, and the sentence means its opposite."
             }
           ]
         },
@@ -168,7 +276,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did studēre originally mean? (\"To be eager / apply oneself.\") Its English cousins? (Student, studio, studious.) Say \"I study\" — and notice it uses the same -o as hablo and trabajo. (Estudio.) Next: put a verb and a noun together into your first real sentence."
+              "text": "Say \"I speak Spanish,\" then \"I study Spanish.\" (Hablo español; estudio español.) Why is there no separate subject word? (The -o ending carries \"I.\") Why no \"the\" before español? (Languages take no article after a verb like hablar.) You just built a sentence from parts — that is the whole game from here."
             }
           ]
         }

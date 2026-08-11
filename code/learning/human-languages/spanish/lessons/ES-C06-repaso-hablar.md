@@ -2,30 +2,30 @@
 schema_version: 2
 id: ES-C06-repaso-hablar
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 526
-chapter: 19
+sequence: 534
+chapter: 22
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — one conversation, held twice, where the only thing that changes is who you are talking to
 concept_tag: ES-SYNTHESIS-AR-PRESENT
-prerequisites: [ES-C06-ar-presente, ES-C19-si, ES-C19-no]
+prerequisites: [ES-C06-ar-presente, ES-C06-hablo-espanol, ES-C19-si, ES-C19-no]
 sounds: []
 roots: []
 etymology_hook: "nothing new — this chapter spends everything and buys nothing"
 duration:
   max_seconds: 280
 requires:
-  knowledge: [ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-AR-PRESENT-1SG, ES-GRAMMAR-AR-PRESENT-2SG, ES-GRAMMAR-AR-PRESENT-3SG, ES-GRAMMAR-PRO-DROP, ES-LEX-HABLAR, ES-LEX-ME-LLAMO, ES-LEX-MUCHO-GUSTO, ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED, ES-LEX-BUENOS-DIAS, ES-LEX-GRACIAS, ES-LEX-SI-01, ES-LEX-NO-01]
+  knowledge: [ES-LEX-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-AR-PRESENT-1SG, ES-GRAMMAR-AR-PRESENT-2SG, ES-GRAMMAR-AR-PRESENT-3SG, ES-GRAMMAR-PRO-DROP, ES-LEX-HABLAR, ES-LEX-ME-LLAMO, ES-LEX-MUCHO-GUSTO, ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED, ES-LEX-BUENOS-DIAS, ES-LEX-GRACIAS, ES-LEX-SI-01, ES-LEX-NO-01]
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-AR-PRESENT-1SG, ES-GRAMMAR-AR-PRESENT-2SG, ES-GRAMMAR-AR-PRESENT-3SG, ES-GRAMMAR-PRO-DROP, ES-LEX-HABLAR, ES-LEX-ME-LLAMO, ES-LEX-MUCHO-GUSTO, ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED, ES-LEX-BUENOS-DIAS, ES-LEX-GRACIAS, ES-LEX-SI-01, ES-LEX-NO-01]
+  knowledge: [ES-LEX-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-AR-PRESENT-1SG, ES-GRAMMAR-AR-PRESENT-2SG, ES-GRAMMAR-AR-PRESENT-3SG, ES-GRAMMAR-PRO-DROP, ES-LEX-HABLAR, ES-LEX-ME-LLAMO, ES-LEX-MUCHO-GUSTO, ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED, ES-LEX-BUENOS-DIAS, ES-LEX-GRACIAS, ES-LEX-SI-01, ES-LEX-NO-01]
 skills: [listening, speaking]
 modes: [interpersonal, presentational]
 strands: [meaning-output, fluency]
 register: neutral
 variety: general
-reviews_of: [ES-C06-hablo, ES-C06-hablas, ES-C06-habla, ES-C06-ar-presente, ES-C03-tu-usted-register]
+reviews_of: [ES-C06-hablo, ES-C06-hablas, ES-C06-habla, ES-C06-ar-presente, ES-C06-hablo-espanol, ES-C03-tu-usted-register]
 ---
 
 # Synthesis — the same conversation, twice
@@ -49,20 +49,20 @@ That letter is the whole message. *Hablas* says *I am at ease with you*.
 tone, or a "sir." Spanish does it with an **-s**.
 
 ## The exchange — with a friend
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ME-LLAMO, ES-GRAMMAR-AR-PRESENT-2SG, ES-LEX-MUCHO-GUSTO, ES-LEX-HABLAR, ES-LEX-TU, ES-LEX-SI-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ME-LLAMO, ES-GRAMMAR-AR-PRESENT-2SG, ES-LEX-MUCHO-GUSTO, ES-LEX-HABLAR, ES-LEX-TU, ES-LEX-SI-01, ES-LEX-ESPANOL] -->
 
 > — ¡Hola! Me llamo Ana.
 > — Me llamo David. Mucho gusto.
-> — ¿**Hablas**?
-> — Sí, **hablo**. ¡Gracias!
+> — ¿**Hablas** español?
+> — Sí, **hablo** español. ¡Gracias!
 
 ## The exchange, again — being polite
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-BUENOS-DIAS, ES-GRAMMAR-AR-PRESENT-3SG, ES-REGISTER-TU-USTED, ES-LEX-USTED, ES-LEX-GRACIAS, ES-LEX-NO-01] -->
 
 > — Buenos días. Me llamo Ana.
 > — Me llamo David. Mucho gusto.
-> — ¿**Habla** usted?
-> — Sí, **hablo**. Gracias.
+> — ¿**Habla** usted español?
+> — Sí, **hablo** español. Gracias.
 
 **One letter.** *Hablas* became *habla*, and the whole exchange changed its
 temperature. Your own line — *hablo* — never moved, because *you* are still

@@ -2,34 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 43,
-  "title": "Days of the Week",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:24f445ecd833fedb",
+  "title": "Lo Siento",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:bc071d463889084f",
   "lessons": [
     {
-      "id": "ES-C21-lunes-viernes",
-      "sequence": 1320,
-      "title": "lunes to viernes — the planets of the week, worn down",
-      "headword": "lunes, martes, miércoles, jueves, viernes",
-      "romanization": "lunes, martes, miércoles, jueves, viernes",
-      "gloss": "the weekdays (Monday–Friday) — worn-down planet-god names",
+      "id": "ES-C20-lo-siento",
+      "sequence": 1300,
+      "title": "lo siento — \"I'm sorry,\" i.e. \"I feel it\"",
+      "headword": "lo siento",
+      "romanization": "lo siento",
+      "gloss": "I'm sorry — literally \"I feel it,\" a naming of the feeling rather than a claim about yourself",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0792f1ad588ca64b",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The words, taken apart: the planet weekdays"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The words, taken apart: the planet weekdays until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:d885a61902f2ca98",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -44,35 +35,26 @@
             },
             {
               "kind": "speech",
-              "text": "The Romans mapped the seven-day week onto the seven visible \"wandering stars\" — the planet-gods. Spanish kept that map, but handled the word \"day\" differently from its Romance cousins: where French still spells out \"-di\" (day) on every weekday, Spanish mostly just dropped it."
+              "text": "You already know por favor, \"please.\" The next courtesy phrase is lo siento. Spanish does not say \"I am sorry\" as an adjective; it says something closer to \"I feel this.\""
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The words, taken apart: the planet weekdays",
+          "title": "The phrase, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Each weekday began life as \"[planet-god]'s diēs (day).\" In Vulgar Latin, diēs was simply dropped as a separate word in most of these — what survived is just the planet's own Latin genitive form. That's why martes, jueves, viernes already end in ‑s: not because diēs wore down into one, but because Martis, Iovis, Veneris — the planets' own genitive forms — end in ‑s in Latin already. Lunes has no such ‑s to inherit (lūnae doesn't end in one), so it likely picked up the ending by analogy with its four siblings:"
-            },
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
-              "headers": [
-                "Spanish",
-                "from Latin",
-                "planet-god",
-                "English echo"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, planet-god, English echo. Come back and look at it when you have stopped."
+              "text": "lo = \"it\" — a neuter pronoun. It does not point at any noun; it points at the situation itself. Spanish keeps this one leftover neuter slot precisely for \"the whole business, unnamed.\""
             },
             {
               "kind": "speech",
-              "text": "Compare French, which keeps diēs as its own visible syllable on every day — lundi, mardi, jeudi — while Spanish dropped it from four of its five weekdays. miércoles is the odd one out: some historians of the language think its extra \"‑coles\" is a genuine surviving trace of diēs itself (fused in and reshaped) — though the exact sound changes are debated, unlike the plainer, better-understood story for its four siblings."
+              "text": "siento = \"I feel,\" from sentir, \"to feel,\" from Latin sentīre. That root gave English a whole family: sentiment, sense, consent (\"feel together\"), resent (\"feel back at\"), and sentence (originally an opinion, something felt)."
+            },
+            {
+              "kind": "speech",
+              "text": "So lo siento is literally \"I feel it.\" You are naming a feeling — regret, sympathy — rather than declaring a state about yourself. That is why it stretches so easily: lo siento mucho, \"I feel it a lot,\" works both for stepping on someone's foot and for hearing that their father died."
             }
           ]
         },
@@ -90,29 +72,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"lunes, martes, miércoles, jueves, viernes\" — the work week",
+              "instruction": "\"siento\" — I feel — then \"lo siento,\" I feel it / I'm sorry",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"lunes, martes, miércoles, jueves, viernes\" — the work week]"
+              "source": "[YOU SAY: \"siento\" — I feel — then \"lo siento,\" I feel it / I'm sorry]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "each as \"[planet]'s day, worn down\" — \"lunes = Moon, jueves = Jupiter\"",
+              "instruction": "\"lo siento mucho\" — I'm so sorry",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: each as \"[planet]'s day, worn down\" — \"lunes = Moon, jueves = Jupiter\"]"
+              "source": "[YOU SAY: \"lo siento mucho\" — I'm so sorry]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the bridge — \"martes / Tuesday, both the war-god's day (Mars / Tiw)\"",
+              "instruction": "\"siento\" then English \"sentiment, sense, consent\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the bridge — \"martes / Tuesday, both the war-god's day (Mars / Tiw)\"]"
+              "source": "[YOU SAY: \"siento\" then English \"sentiment, sense, consent\"]"
             }
           ]
         },
@@ -129,52 +111,27 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the weekday family:"
-            },
-            {
-              "kind": "speech",
-              "text": "What did every Spanish weekday begin life as? (\"[Planet-god]'s diēs (day)\" — the same Latin phrase French keeps more visibly with -di.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Why do martes, jueves, viernes end in -s, and where does lunes get its -s from? (From the planet's own Latin genitive — Martis/Iovis/ Veneris already end in -s; lunes likely picked it up by analogy, since lūnae has no -s of its own.)"
-            },
-            {
-              "kind": "speech",
-              "text": "What's debated about miércoles? (Whether its \"‑coles\" is a genuine surviving trace of diēs — unlike the plainer, better-understood story for its four siblings.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Why do martes and Tuesday line up? (They name the same day for the war-god: Mars in Latin, Tiw in Germanic.)"
+              "text": "What does lo siento literally mean? (\"I feel it\" — siento, \"I feel,\" from Latin sentīre.) What is the lo pointing at? (The situation, not a noun — it is the neuter \"it.\") Next: Spanish's other word for sorry, and when it is the right one."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C21-sabado-domingo",
-      "sequence": 1330,
-      "title": "sábado and domingo — the week's religious edge",
-      "headword": "sábado, domingo",
-      "romanization": "sábado, domingo",
-      "gloss": "the weekend (Saturday, Sunday) — where religion overwrote astronomy",
+      "id": "ES-C20-perdon",
+      "sequence": 1310,
+      "title": "perdón — the sorry that asks for something back",
+      "headword": "perdón",
+      "romanization": "perdón",
+      "gloss": "the other sorry — \"give completely\" — for fault and for getting past people, where lo siento is for regret",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0375e8d303c5688",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The two days, taken apart"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The two days, taken apart until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:c1722b0e24b253df",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -189,44 +146,61 @@
             },
             {
               "kind": "speech",
-              "text": "Five days named for planets — then two that broke the pattern entirely. The weekend is where religion overwrote astronomy, and Spanish keeps both rewrites in plain view."
+              "text": "Lo siento names a feeling. Spanish keeps a second word for a different job — one that is not about your feelings at all, but about something you want from the other person."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The two days, taken apart",
+          "title": "The word, taken apart",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 2,
-              "headers": [
-                "Spanish",
-                "from Latin",
-                "meaning",
-                "note"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 2 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, meaning, note. Come back and look at it when you have stopped."
+              "kind": "speech",
+              "text": "perdón (\"pardon\"), from the verb perdonar — Latin per- (\"thoroughly\") + dōnāre (\"to give\"). Literally: \"to give completely.\""
             },
             {
               "kind": "speech",
-              "text": "Two different rewrites:"
-            },
-            {
-              "kind": "speech",
-              "text": "sábado would have been \"Saturn's day\" (as English Saturday still is — the one weekday English kept a Roman god for). Instead, Latin Christians borrowed the Jewish Sabbath (Sabbatum from Hebrew shabbāt), and it became sábado. So English Saturday and Spanish sábado are the same day, two different names — the planet vs. the Sabbath."
-            },
-            {
-              "kind": "speech",
-              "text": "domingo drops Sun-worship entirely: where English keeps Sunday, Spanish made it diēs Dominica, \"the Lord's day\" (Dominus becomes English dominion, dominate, dame). Spanish kept domingo recognizably close to Dominica — compare French's more worn-down dimanche, where the di- (day) fossil jumped to the front of the word."
+              "text": "That dōnāre is English's donate, donor, and condone; the per- is the same intensifier in perfect (\"thoroughly made\") and perturb. So forgiveness, in Latin's picture of it, is a gift given all the way — you hand over the debt rather than keeping a share of it."
             }
           ]
         },
         {
           "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: which one to reach for",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The two are not interchangeable, and the difference follows straight from the etymologies:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "lo siento",
+                "perdón"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "literally. lo siento: \"I feel it\". perdón: \"give [it] completely\".",
+                "points at. lo siento: your feeling. perdón: their forgiveness.",
+                "use for. lo siento: regret, sympathy. perdón: fault, or getting past someone."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So perdón is what you say to squeeze through a crowd or catch a waiter's eye (English \"excuse me\"), and to ask forgiveness for something you did — often stronger than lo siento. Lo siento leans toward \"I'm sorry that happened,\" including things that are nobody's fault at all."
+            },
+            {
+              "kind": "speech",
+              "text": "Be honest about the edges: native speakers use whichever fits, the boundary is soft, and mixing them is not a real mistake — just a shade off."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -239,34 +213,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the full week — \"lunes, martes, miércoles, jueves, viernes, sábado, domingo\"",
+              "instruction": "\"perdón\" — pardon / excuse me",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the full week — \"lunes, martes, miércoles, jueves, viernes, sábado, domingo\"]"
+              "source": "[YOU SAY: \"perdón\" — pardon / excuse me]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"sábado = Sabbath, domingo = the Lord's day\" — religion, not planets",
+              "instruction": "the pair — \"lo siento\" for regret, \"perdón\" for fault",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"sábado = Sabbath, domingo = the Lord's day\" — religion, not planets]"
+              "source": "[YOU SAY: the pair — \"lo siento\" for regret, \"perdón\" for fault]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pair-ups — \"sábado / Saturday (Sabbath vs. Saturn)\", \"domingo / Sunday (Lord vs. Sun)\"",
+              "instruction": "\"perdón\" then English \"donate, condone\" — the dōnāre root",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pair-ups — \"sábado / Saturday (Sabbath vs. Saturn)\", \"domingo / Sunday (Lord vs. Sun)\"]"
+              "source": "[YOU SAY: \"perdón\" then English \"donate, condone\" — the *dōnāre* root]"
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -278,7 +252,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give all seven Spanish days. (Lunes … domingo.) Where does sábado come from, and its English contrast? (The Sabbath, Sabbatum; English kept Saturday = Saturn's day.) What does domingo mean literally? (\"The Lord's day,\" diēs Dominica.)"
+              "text": "What do the two halves of perdonar mean? (Per-, \"thoroughly,\" plus dōnāre, \"to give\" — to give completely.) Which word do you use to get past someone in a corridor? (Perdón.) Which leans toward sympathy rather than fault? (Lo siento — \"I feel it.\")"
             }
           ]
         }

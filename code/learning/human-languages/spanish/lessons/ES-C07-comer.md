@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C07-comer
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 580
-chapter: 23
+chapter: 24
 type: word
 headword: comer
 gloss: to eat — your first -er verb, and the family whose yo-form you already own
