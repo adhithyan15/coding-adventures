@@ -428,8 +428,12 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   bent first run: descend left, turn without lifting, and sweep down-right;
   lift for the separately left-falling stroke, then lift again for the middle
   horizontal. Its four-frame Noto Sans SC path keeps the source's three strokes
-  and two lifts distinct. The remaining **151** prose part orders across six
-  scripts (`arabic` 3, `chinese` 20, `cyrillic` 33, `devanagari` 28,
+  and two lifts distinct. Chinese **子** then adds two joined turns: draw the
+  top horizontal and sweep down-left without lifting, lift for the central
+  descent and its leftward base hook, then lift again for the middle horizontal.
+  Its five-frame Noto Sans SC path keeps both turns visible. The remaining
+  **150** prose part orders across six scripts (`arabic` 3, `chinese` 19,
+  `cyrillic` 33, `devanagari` 28,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every

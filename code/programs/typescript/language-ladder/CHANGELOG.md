@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Chinese 子 ductus (HL-C09CD)
+
+- Render **子** in five source-aligned frames: cross the top and turn down-left,
+  restart for the central descent and joined base hook, then cross the middle.
+- Fit all three source runs to Noto Sans SC while preserving both internal
+  turns, two pen lifts, and the left-to-right final héng.
+- Reduce Chinese's remaining verified-ductus inventory to 19 entries.
+
 ### Added — cited Chinese 女 ductus (HL-C09CC)
 
 - Render **女** in four source-aligned frames: descend left, turn and sweep
