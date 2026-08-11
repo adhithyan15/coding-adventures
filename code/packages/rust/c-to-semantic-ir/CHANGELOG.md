@@ -1,6 +1,32 @@
 # Changelog
 
-## Unreleased
+## [0.2.0] - 2026-08-11
+
+### Changed — SIR28 Slice 6 (batch 3): `printf` lowers to `__sys_write__`
+
+Part of the SIR28 arc (`__sys_write__`, the general syscall-primitive
+family — see `code/specs/SIR28-syscall-primitives.md`). All 7 backends
+already implement it (Slice 3); this crate is the last frontend in
+Slice 6.
+
+**Behavior change**: `printf("<fmt>", args…)` no longer lowers to
+`BuiltinCall("print", parts)`. It now lowers to
+`BuiltinCall("__sys_write__", [StrLit("stdout"), StrLit("none"),
+BoolLit(false), ...parts])` — `terminator: "none"` is the exact fit for
+`printf`'s own semantics: write every value back-to-back with no added
+separator and no added newline (a `\n` only appears when the format
+string itself contains one, already baked into `parts` as a literal
+`StrLit` chunk by the existing format-string parser). `Feature::ConsoleIO`
+is declared whenever `printf` is used (new `uses_console_io` flag,
+mirroring the existing conditional `uses_strings`/`uses_floats`/
+`uses_arrays` flags). Also now sets `Effect::MayPrint` (previously
+unset, the same gap fixed in every other frontend this arc has touched).
+
+Verified byte-identical against real `cc`-compiled output across the
+full `tests/three_way_conformance.rs` corpus (~101 `printf` call sites)
+— this frontend's own oracle test, unchanged and still green.
+
+`c-to-semantic-ir` 0.1.0 -> 0.2.0.
 
 ### Fixed — `<<` lowered to a SIR builtin name that collided with Ruby's `<<`
 
