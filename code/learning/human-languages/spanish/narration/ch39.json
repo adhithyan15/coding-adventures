@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Completing the Preterite --- Three Families, One Question",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:4261eb735ad58059",
+  "sourceHash": "fnv1a64:8812fc179a26f80d",
   "lessons": [
     {
       "id": "ES-C15-comer-preterite",
@@ -1107,7 +1107,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37887e92c6e496df",
+      "sourceHash": "fnv1a64:9e7a51a701dd59f1",
       "notice": null,
       "blocks": [
         {
@@ -1130,7 +1130,7 @@
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the complete Chapter 15 frame",
+          "title": "Grammar Lens: the complete frame for this chapter",
           "segments": [
             {
               "kind": "speech",
@@ -1415,7 +1415,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the regular comer and vivir sets. (Comí, comiste, comió; viví, viviste, vivió.) Give the three strong sets. (Tuve, tuviste, tuvo; hice, hiciste, hizo; estuve, estuviste, estuvo.) Which rows share endings? (-er/-ir share one regular set; the strong rows share another.) Chapter 16 can add a new past contrast without borrowing any plural form here."
+              "text": "Give the regular comer and vivir sets. (Comí, comiste, comió; viví, viviste, vivió.) Give the three strong sets. (Tuve, tuviste, tuvo; hice, hiciste, hizo; estuve, estuviste, estuvo.) Which rows share endings? (-er/-ir share one regular set; the strong rows share another.) The next chapter can add a new past contrast without borrowing any plural form here."
             }
           ]
         }

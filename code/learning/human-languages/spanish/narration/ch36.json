@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Review --- Six Verbs, One Ending",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:678b94bdc7f76b0f",
+  "sourceHash": "fnv1a64:082e4f51ffe4b1b6",
   "lessons": [
     {
       "id": "ES-C13-repaso-yo-go",
@@ -226,7 +226,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:163934d4a3db6f11",
+      "sourceHash": "fnv1a64:29305b8ff7f2b591",
       "notice": null,
       "blocks": [
         {
@@ -249,7 +249,7 @@
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the complete Chapter 13 frame",
+          "title": "Grammar Lens: the complete frame for this chapter",
           "segments": [
             {
               "kind": "speech",
@@ -497,7 +497,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give all three new singular sets. (Pongo, pones, pone; salgo, sales, sale; vengo, vienes, viene.) Which six learned yo forms now share -go? (Tengo, hago, digo, pongo, salgo, vengo.) Why is the list a memory aid rather than a prediction rule? (Different histories converged on one shape.) Chapter 14 may now introduce a new time frame without borrowing any plural form from this chapter."
+              "text": "Give all three new singular sets. (Pongo, pones, pone; salgo, sales, sale; vengo, vienes, viene.) Which six learned yo forms now share -go? (Tengo, hago, digo, pongo, salgo, vengo.) Why is the list a memory aid rather than a prediction rule? (Different histories converged on one shape.) The next chapter may now introduce a new time frame without borrowing any plural form from this chapter."
             }
           ]
         }

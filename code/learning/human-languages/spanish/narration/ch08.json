@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Answering, and Handing It Back",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:a8af72e4568f2764",
+  "sourceHash": "fnv1a64:33ecef40d78f7747",
   "lessons": [
     {
       "id": "ES-C04-como-estas-register",
@@ -144,7 +144,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc39b48945c77f82",
+      "sourceHash": "fnv1a64:66d9251ab92d2bd2",
       "notice": null,
       "blocks": [
         {
@@ -160,7 +160,7 @@
             },
             {
               "kind": "speech",
-              "text": "You asked ¿cómo estás? Now you can answer three ways: great, middling, or a wave of the hand. You already have bien (\"well,\" Chapter 1). Today, the middling answers — because nobody is bien every day."
+              "text": "You asked ¿cómo estás? Now you can answer three ways: great, middling, or a wave of the hand. You already have bien (\"well\"). Today, the middling answers — because nobody is bien every day."
             }
           ]
         },
@@ -177,7 +177,7 @@
             },
             {
               "kind": "speech",
-              "text": "Recall from Chapter 1: bien — \"well.\" Root? (Latin bene, \"well\" — same as benefit, benevolent.) So estoy bien = \"I'm well.\" Now the answer for when you're not quite bien."
+              "text": "Recall bien — \"well.\" Root? (Latin bene, \"well\" — same as benefit, benevolent.) So estoy bien = \"I'm well.\" Now the answer for when you're not quite bien."
             }
           ]
         },

@@ -74,4 +74,4 @@ Plural persons and plural possessive agreement remain deferred.
 [PAUSE 3s] Give the two singular sets. (*Quiero, quieres, quiere; puedo,
 puedes, puede.*) Which vowel contrast organizes them? (**e → ie** beside
 **o → ue**.) Say “our day” and “our night.” (*Nuestro día; nuestra noche.*)
-Chapter 12 can now build from this closed singular frontier.
+The next chapter can now build from this closed singular frontier.

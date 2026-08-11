@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "How Are You",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:d95ff9434b139498",
+  "sourceHash": "fnv1a64:59dcc264c7832fdf",
   "lessons": [
     {
       "id": "ES-C04-estar",
@@ -303,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96e365b8b431be8a",
+      "sourceHash": "fnv1a64:e65ac9e7e946b1a8",
       "notice": null,
       "blocks": [
         {
@@ -319,7 +319,7 @@
             },
             {
               "kind": "speech",
-              "text": "Everything you've built this chapter now snaps together into one question. You already met cómo (\"how\") and the tú / usted choice back in Chapter 3; you just learned estar. Assemble them."
+              "text": "Everything you've built this chapter now snaps together into one question. You already met cómo (\"how\") and the tú / usted choice back in when you first met them; you just learned estar. Assemble them."
             }
           ]
         },

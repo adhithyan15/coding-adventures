@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "The Future and the Conditional --- One Weld, Twice",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:aa8f1a09a567fd10",
+  "sourceHash": "fnv1a64:af060c6401c2fec8",
   "lessons": [
     {
       "id": "ES-C17-futuro",
@@ -1394,7 +1394,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:aad5bba0362e1fd2",
+      "sourceHash": "fnv1a64:73c0d3538b8e1c00",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1681,7 +1681,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three regular future yo forms. (Hablaré, comeré, viviré.) Give the three regular conditional yo forms. (Hablaría, comería, viviría.) Which three learned stems replace a whole infinitive? (Har-, tendr-, podr-.) What is the careful historical bridge? (Infinitive plus forms of Latin habēre, reshaped through Romance.) Chapter 18 can now begin without borrowing plural persons, new auxiliaries, or clock-time vocabulary."
+              "text": "Give the three regular future yo forms. (Hablaré, comeré, viviré.) Give the three regular conditional yo forms. (Hablaría, comería, viviría.) Which three learned stems replace a whole infinitive? (Har-, tendr-, podr-.) What is the careful historical bridge? (Infinitive plus forms of Latin habēre, reshaped through Romance.) The next chapter can now begin without borrowing plural persons, new auxiliaries, or clock-time vocabulary."
             }
           ]
         }

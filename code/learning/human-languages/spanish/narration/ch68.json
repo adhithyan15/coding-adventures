@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "Synthesis --- What You Like, and Who Does the Liking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:169ea7df23dc32da",
+  "sourceHash": "fnv1a64:e5b5cd1a7f67235f",
   "lessons": [
     {
       "id": "ES-C35-sintesis-gustar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1422713c55b81564",
+      "sourceHash": "fnv1a64:bff73187f644d3bc",
       "notice": null,
       "blocks": [
         {
@@ -73,7 +73,7 @@
             },
             {
               "kind": "speech",
-              "text": "That last line is a joke you can now get. Mucho gusto — the phrase you learned in chapter 5 for \"pleased to meet you\" — is the same word. It has always meant much pleasure. You have been saying gustar's noun since your third conversation in this book."
+              "text": "That last line is a joke you can now get. Mucho gusto — the phrase you learned long ago for \"pleased to meet you\" — is the same word. It has always meant much pleasure. You have been saying gustar's noun since your third conversation in this book."
             }
           ]
         },
@@ -182,7 +182,7 @@
               ],
               "feedback": {
                 "correct": "Yes — mucho gusto has always meant much pleasure.",
-                "incorrect": "Mucho gusto — you have been saying gustar's noun since chapter 5."
+                "incorrect": "Mucho gusto — you have been saying gustar's noun since your third conversation."
               }
             }
           ]

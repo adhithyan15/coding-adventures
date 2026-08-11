@@ -42,7 +42,7 @@ one spatial endpoint and one temporal endpoint, using only one new word.
 
 > **hasta aquí** — up to here
 
-For a time endpoint, reuse **la noche**, “the night,” from Chapter 2:
+For a time endpoint, reuse **la noche**, “the night,” which you already have:
 
 > **hasta la noche** — until the night / until tonight
 

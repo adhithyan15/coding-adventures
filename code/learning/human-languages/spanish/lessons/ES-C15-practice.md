@@ -36,7 +36,7 @@ reviews_of: [ES-C15-comer-preterite, ES-C15-comer-vivir-preterite, ES-C15-tener-
 persons of each learned row. Every word in the short sentences is already
 known.
 
-## Grammar Lens: the complete Chapter 15 frame
+## Grammar Lens: the complete frame for this chapter
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-GRAMMAR-ER-PRETERITE-SINGULAR, ES-GRAMMAR-IR-PRETERITE-SINGULAR, ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE, ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN, ES-GRAMMAR-TENER-PRETERITE-SINGULAR, ES-GRAMMAR-HACER-PRETERITE-SINGULAR, ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR] -->
 
 Regular rows:
@@ -96,4 +96,4 @@ analogical remodeling beside the **-uv-** family of **tuve**.
 comió; viví, viviste, vivió.*) Give the three strong sets. (*Tuve, tuviste,
 tuvo; hice, hiciste, hizo; estuve, estuviste, estuvo.*) Which rows share
 endings? (**-er/-ir** share one regular set; the strong rows share another.)
-Chapter 16 can add a new past contrast without borrowing any plural form here.
+The next chapter can add a new past contrast without borrowing any plural form here.

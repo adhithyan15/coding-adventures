@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "Head and Hand",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ea81e2a803830b15",
+  "sourceHash": "fnv1a64:a00e60fd638e0980",
   "lessons": [
     {
       "id": "ES-C24-cabeza",
@@ -168,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4dd372b3ec194d9",
+      "sourceHash": "fnv1a64:bcae065000c87373",
       "notice": null,
       "blocks": [
         {
@@ -184,7 +184,7 @@
             },
             {
               "kind": "speech",
-              "text": "You've been trusting \"-o words are masculine, -a words are feminine\" since Chapter 1. Here's the word that breaks it — and everyone learning Spanish has to memorize this one by name."
+              "text": "You've been trusting \"-o words are masculine, -a words are feminine\" since your first chapters. Here's the word that breaks it — and everyone learning Spanish has to memorize this one by name."
             }
           ]
         },

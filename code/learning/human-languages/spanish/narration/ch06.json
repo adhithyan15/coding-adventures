@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Thank You, Yes, and No",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7ef2a126cfcd7b8a",
+  "sourceHash": "fnv1a64:1c9efb49f04e762f",
   "lessons": [
     {
       "id": "ES-C19-si",
@@ -167,7 +167,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d902223ec6a8f8dc",
+      "sourceHash": "fnv1a64:b0a00037389ee116",
       "notice": null,
       "blocks": [
         {
@@ -235,7 +235,7 @@
             },
             {
               "kind": "speech",
-              "text": "<!-- the negator sense is taught in ES-C06-hablo-espanol, the first lesson where the learner has a verb to put it in front of. Named by lesson id, not by chapter number: chapter numbers move on every split, and a stale number here is invisible -- this comment said \"chapter 14\" through three renumbers after the lesson had moved to chapter 20. -->."
+              "text": "<!-- the negator sense is taught in ES-C06-hablo-espanol, the first lesson where the learner has a verb to put it in front of. Named by lesson id, never by chapter number: an earlier version of this comment gave a number, went stale across three renumbers, was \"fixed\" with a fresh number, and went stale again two PRs later. Chapter numbers move; lesson ids do not. -->."
             }
           ]
         },

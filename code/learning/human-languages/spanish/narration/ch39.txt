@@ -228,7 +228,7 @@ Warm-up.
 [pause 2 seconds]
 This checkpoint adds nothing. Retrieve only the three singular persons of each learned row. Every word in the short sentences is already known.
 
-Grammar Lens: the complete Chapter 15 frame.
+Grammar Lens: the complete frame for this chapter.
 Regular rows:
 yo: hablé, comí, viví.
 tú: hablaste, comiste, viviste.
@@ -274,4 +274,4 @@ Which learned form is especially described as analogically remodeled beside tuve
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the regular comer and vivir sets. (Comí, comiste, comió; viví, viviste, vivió.) Give the three strong sets. (Tuve, tuviste, tuvo; hice, hiciste, hizo; estuve, estuviste, estuvo.) Which rows share endings? (-er/-ir share one regular set; the strong rows share another.) Chapter 16 can add a new past contrast without borrowing any plural form here.
+Give the regular comer and vivir sets. (Comí, comiste, comió; viví, viviste, vivió.) Give the three strong sets. (Tuve, tuviste, tuvo; hice, hiciste, hizo; estuve, estuviste, estuvo.) Which rows share endings? (-er/-ir share one regular set; the strong rows share another.) The next chapter can add a new past contrast without borrowing any plural form here.

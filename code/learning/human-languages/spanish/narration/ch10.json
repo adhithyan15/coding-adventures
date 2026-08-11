@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Enye and the Upside-Down Marks",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4264b292d0a983cd",
+  "sourceHash": "fnv1a64:c8e873ede44922c8",
   "lessons": [
     {
       "id": "ES-W02-enye",
@@ -572,7 +572,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a78b985d2295395d",
+      "sourceHash": "fnv1a64:92479db99b2d50c5",
       "notice": null,
       "blocks": [
         {
@@ -588,7 +588,7 @@
             },
             {
               "kind": "speech",
-              "text": "No new words. This chapter's atoms — gracias, de nada, estar, ¿cómo está?, regular — now assemble into a real exchange, run formally and informally until the register swap is automatic. It picks up right where the Chapter 3 introduction left off."
+              "text": "No new words. This chapter's atoms — gracias, de nada, estar, ¿cómo está?, regular — now assemble into a real exchange, run formally and informally until the register swap is automatic. It picks up right where the introduction left off."
             }
           ]
         },
@@ -678,11 +678,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "chain Chapter 3 + 4 — introduce yourself and ask how they are: \"Me llamo … ¿Cómo está usted?\"",
+              "instruction": "chain the two — introduce yourself and ask how they are: \"Me llamo … ¿Cómo está usted?\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: chain Chapter 3 + 4 — introduce yourself *and* ask how they are: \"Me llamo … ¿Cómo está usted?\"]"
+              "source": "[YOU SAY: chain the two — introduce yourself *and* ask how they are: \"Me llamo … ¿Cómo está usted?\"]"
             },
             {
               "kind": "repeat",

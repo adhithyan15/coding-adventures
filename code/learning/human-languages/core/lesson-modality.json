@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:dba95a62b2da3602",
+  "sourceHash": "fnv1a64:1e59341e942534f3",
   "summary": {
     "totalLessons": 1725,
     "voice": 1146,
@@ -33902,7 +33902,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d902223ec6a8f8dc"
+      "sourceHash": "fnv1a64:b0a00037389ee116"
     },
     {
       "id": "ES-C04-gracias",
@@ -34010,7 +34010,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:96e365b8b431be8a"
+      "sourceHash": "fnv1a64:e65ac9e7e946b1a8"
     },
     {
       "id": "ES-C04-repaso-como-esta",
@@ -34064,7 +34064,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dc39b48945c77f82"
+      "sourceHash": "fnv1a64:66d9251ab92d2bd2"
     },
     {
       "id": "ES-C04-y",
@@ -34264,7 +34264,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a78b985d2295395d"
+      "sourceHash": "fnv1a64:92479db99b2d50c5"
     },
     {
       "id": "ES-C05-adios",
@@ -34318,7 +34318,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d35a91d2f080067b"
+      "sourceHash": "fnv1a64:b50943b74b9579d1"
     },
     {
       "id": "ES-C05-repaso-adios",
@@ -35092,7 +35092,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b3ef44cb556b9c5b"
+      "sourceHash": "fnv1a64:c1a08368f12bfd85"
     },
     {
       "id": "ES-C09-practice",
@@ -35182,7 +35182,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dcb76c22f31c09fa"
+      "sourceHash": "fnv1a64:d652b730646069de"
     },
     {
       "id": "ES-C11-querer",
@@ -35272,7 +35272,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d42ec93a0571daa4"
+      "sourceHash": "fnv1a64:1b801b9c6e5f8650"
     },
     {
       "id": "ES-C12-hacer",
@@ -35344,7 +35344,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:556f71fc1d442f26"
+      "sourceHash": "fnv1a64:50996b7bed17d3da"
     },
     {
       "id": "ES-C13-poner",
@@ -35434,7 +35434,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:163934d4a3db6f11"
+      "sourceHash": "fnv1a64:29305b8ff7f2b591"
     },
     {
       "id": "ES-C13-sintesis-yo-go",
@@ -35506,7 +35506,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:11c185457ba12709"
+      "sourceHash": "fnv1a64:7ee52848d1c91d7d"
     },
     {
       "id": "ES-C15-comer-preterite",
@@ -35614,7 +35614,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:37887e92c6e496df"
+      "sourceHash": "fnv1a64:9e7a51a701dd59f1"
     },
     {
       "id": "ES-C16-imperfecto",
@@ -35668,7 +35668,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e981921e186908dc"
+      "sourceHash": "fnv1a64:af7827d7e838ecf8"
     },
     {
       "id": "ES-C16-ver",
@@ -35740,7 +35740,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a1275cbfc3c0100b"
+      "sourceHash": "fnv1a64:88275857bbb677c5"
     },
     {
       "id": "ES-C16-practice",
@@ -35758,7 +35758,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4ac74a9737eb7ee8"
+      "sourceHash": "fnv1a64:908a56590692e7b8"
     },
     {
       "id": "ES-C17-futuro",
@@ -35902,7 +35902,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:aad5bba0362e1fd2"
+      "sourceHash": "fnv1a64:73c0d3538b8e1c00"
     },
     {
       "id": "ES-C18-quiero-que",
@@ -36298,7 +36298,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b4dd372b3ec194d9"
+      "sourceHash": "fnv1a64:bcae065000c87373"
     },
     {
       "id": "ES-C25-las-estaciones",
@@ -36658,7 +36658,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8559080828660bbc"
+      "sourceHash": "fnv1a64:b01c96b5002fad94"
     },
     {
       "id": "ES-C34-leer",
@@ -36730,7 +36730,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:03a61f2148f98ead"
+      "sourceHash": "fnv1a64:fb4fb8df6d755635"
     },
     {
       "id": "ES-C35-tomar",
@@ -36838,7 +36838,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1422713c55b81564"
+      "sourceHash": "fnv1a64:bff73187f644d3bc"
     },
     {
       "id": "ES-C36-oir",
@@ -37288,7 +37288,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:658b04cd3fcfdcf0"
+      "sourceHash": "fnv1a64:5b50a88c8bb21448"
     },
     {
       "id": "TA-C01-vanakkam",

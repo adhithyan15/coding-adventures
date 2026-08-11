@@ -59,7 +59,7 @@ have — which is why this is a chapter about saying an idea, not a word.
 > — A mí también. **Mucho gusto.**
 
 That last line is a joke you can now get. *Mucho gusto* — the phrase you
-learned in chapter 5 for "pleased to meet you" — is the **same word**. It has
+learned long ago for "pleased to meet you" — is the **same word**. It has
 always meant *much pleasure*. You have been saying *gustar*'s noun since your
 third conversation in this book.
 
@@ -74,7 +74,7 @@ Liking, in Spanish, started at the tongue.
 
 <!-- hl-activity: {"id":"ES-C35-sintesis-gustar-subject","kind":"text","assesses":["ES-GRAMMAR-GUSTAR-INVERSION-09"],"prompt":"In me gusta el cafe, what is the subject?","answer":"el cafe","accepted":["the coffee","cafe","el café"],"feedback":{"correct":"Yes — the coffee does the pleasing.","incorrect":"El cafe. It is the one doing the pleasing; you receive it."},"response_seconds":10} -->
 <!-- hl-activity: {"id":"ES-C35-sintesis-gustar-taste","kind":"text","assesses":["ES-ETYMON-GUSTAR-08"],"prompt":"What did gustar originally mean?","answer":"to taste","accepted":["taste","tasting"],"feedback":{"correct":"Yes — gustare, and English kept it in gusto and disgust.","incorrect":"To taste — from Latin gustare."},"response_seconds":8} -->
-<!-- hl-activity: {"id":"ES-C35-sintesis-gustar-joke","kind":"text","assesses":["ES-LEX-GUSTO","ES-LEX-GUSTAR-07"],"prompt":"Which phrase you learned long ago is built from this same word?","answer":"mucho gusto","accepted":["gusto","much pleasure"],"feedback":{"correct":"Yes — mucho gusto has always meant much pleasure.","incorrect":"Mucho gusto — you have been saying gustar's noun since chapter 5."},"response_seconds":10} -->
+<!-- hl-activity: {"id":"ES-C35-sintesis-gustar-joke","kind":"text","assesses":["ES-LEX-GUSTO","ES-LEX-GUSTAR-07"],"prompt":"Which phrase you learned long ago is built from this same word?","answer":"mucho gusto","accepted":["gusto","much pleasure"],"feedback":{"correct":"Yes — mucho gusto has always meant much pleasure.","incorrect":"Mucho gusto — you have been saying gustar's noun since your third conversation."},"response_seconds":10} -->
 
 [PAUSE 1s]
 

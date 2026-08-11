@@ -53,7 +53,7 @@ Warm-up.
 [pause 2 seconds]
 This checkpoint adds nothing. Retrieve the three bounded singular sets first. Only then widen the memory comparison from three learned yo forms to six.
 
-Grammar Lens: the complete Chapter 13 frame.
+Grammar Lens: the complete frame for this chapter.
 putting or placing: pongo, pones, pone.
 leaving or going out: salgo, sales, sale.
 coming: vengo, vienes, viene.
@@ -93,4 +93,4 @@ Match each Spanish verb to one English cousin: poner, salir, venir.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give all three new singular sets. (Pongo, pones, pone; salgo, sales, sale; vengo, vienes, viene.) Which six learned yo forms now share -go? (Tengo, hago, digo, pongo, salgo, vengo.) Why is the list a memory aid rather than a prediction rule? (Different histories converged on one shape.) Chapter 14 may now introduce a new time frame without borrowing any plural form from this chapter.
+Give all three new singular sets. (Pongo, pones, pone; salgo, sales, sale; vengo, vienes, viene.) Which six learned yo forms now share -go? (Tengo, hago, digo, pongo, salgo, vengo.) Why is the list a memory aid rather than a prediction rule? (Different histories converged on one shape.) The next chapter may now introduce a new time frame without borrowing any plural form from this chapter.

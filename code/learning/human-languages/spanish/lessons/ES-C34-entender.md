@@ -34,7 +34,7 @@ reviews_of: [ES-C34-pensar]
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PENSAR-01, ES-LEX-NO-ENTIENDO-01] -->
 
 [PAUSE 2s] *Pensar* broke its stem under stress. So does this one — and you have
-already been using it. **No entiendo** has been in your mouth since chapter 14,
+already been using it. **No entiendo** has been in your mouth since the repair kit,
 where you learned it as one frozen block. This is the verb it came from.
 
 ## Sounds you'll need

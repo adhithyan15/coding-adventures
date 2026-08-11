@@ -34,7 +34,7 @@ reviews_of: [ES-C04-gracias, ES-C04-de-nada, ES-C04-como-estas-register, ES-C04-
 
 [PAUSE 2s] No new words. This chapter's atoms — *gracias, de nada, estar, ¿cómo
 está?, regular* — now assemble into a real exchange, run formally and informally
-until the register swap is automatic. It picks up right where the Chapter 3
+until the register swap is automatic. It picks up right where the
 introduction left off.
 
 ## The exchange
@@ -71,7 +71,7 @@ It bounces the question back without repeating the whole sentence.
 [PAUSE 1s]
 - [YOU SAY: the full *formal* exchange, both voices]
 - [YOU SAY: the same exchange *informally* — catch *está → estás*, *usted → tú*]
-- [YOU SAY: chain Chapter 3 + 4 — introduce yourself *and* ask how they are:
+- [YOU SAY: chain the two — introduce yourself *and* ask how they are:
   "Me llamo … ¿Cómo está usted?"]
 
 [REPEAT x2] Run the formal exchange, greeting to answer, without stopping.

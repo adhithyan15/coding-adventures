@@ -36,7 +36,7 @@ reviews_of: [ES-C13-poner, ES-C13-salir, ES-C13-venir, ES-C12-practice]
 sets first. Only then widen the memory comparison from three learned **yo**
 forms to six.
 
-## Grammar Lens: the complete Chapter 13 frame
+## Grammar Lens: the complete frame for this chapter
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PONER, ES-GRAMMAR-PONER-PRESENT-SINGULAR, ES-LEX-SALIR, ES-GRAMMAR-SALIR-PRESENT-SINGULAR, ES-LEX-VENIR, ES-GRAMMAR-VENIR-PRESENT-SINGULAR, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-DE] -->
 
 - putting or placing: **pongo · pones · pone**.
@@ -85,5 +85,5 @@ outside this checkpoint.
 sales, sale; vengo, vienes, viene.*) Which six learned **yo** forms now share
 **-go**? (*Tengo, hago, digo, pongo, salgo, vengo.*) Why is the list a memory
 aid rather than a prediction rule? (Different histories converged on one
-shape.) Chapter 14 may now introduce a new time frame without borrowing any
+shape.) The next chapter may now introduce a new time frame without borrowing any
 plural form from this chapter.

@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "Entender — Understanding Is Stretching Toward",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ec3c5a5e231a434e",
+  "sourceHash": "fnv1a64:d884efbacf18e440",
   "lessons": [
     {
       "id": "ES-C34-entender",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8559080828660bbc",
+      "sourceHash": "fnv1a64:b01c96b5002fad94",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Pensar broke its stem under stress. So does this one — and you have already been using it. No entiendo has been in your mouth since chapter 14, where you learned it as one frozen block. This is the verb it came from."
+              "text": "Pensar broke its stem under stress. So does this one — and you have already been using it. No entiendo has been in your mouth since the repair kit, where you learned it as one frozen block. This is the verb it came from."
             }
           ]
         },
