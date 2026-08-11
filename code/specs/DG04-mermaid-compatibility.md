@@ -107,8 +107,9 @@ the same participant/message/lifeline IR.
 
 The initial Mermaid 11.16.1 state slice is grammar-backed and covers
 `stateDiagram`/`stateDiagram-v2` headers, simple declarations and quoted
-aliases, labeled transitions, document direction, and `[*]` start/end edge
-states. It lowers into the shared graph IR, graph layout, and backend-neutral
+aliases, standalone `State: description` labels, labeled transitions, document
+direction, and `[*]` start/end edge states. It lowers into the shared graph IR,
+graph layout, and backend-neutral
 PaintScene instructions, with a Metal-to-PNG fixture. Composite states, notes,
 choices, forks, joins, concurrency, click metadata, accessibility metadata, and
 state styling remain explicit gaps, so the family is marked partial.
