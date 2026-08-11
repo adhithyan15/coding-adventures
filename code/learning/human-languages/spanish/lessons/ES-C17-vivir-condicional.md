@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C17-vivir-condicional
 spine_node: SPINE-TALK-ABOUT-FUTURE
-sequence: 1170
-chapter: 59
+sequence: 1190
+chapter: 61
 type: grammar
 headword: viviría
 gloss: the singular conditional of vivir — viviría, vivirías, viviría

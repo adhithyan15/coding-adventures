@@ -1,127 +1,36 @@
-Spanish, chapter 78: Numbers Eleven to Twenty.
-4 lessons. All 4 can be done entirely by ear.
+Spanish, chapter 78: Telling Time.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 4.
-once — quince: five words with a seam you can no longer see.
-
-Warm-up.
-[pause 2 seconds]
-Spanish counts past ten in two completely different ways, and the join between them is a real boundary in the language, not a place someone drew a line. Today: the first five, which you simply have to learn as words.
-
-The words, taken apart: once through quince.
-[a table of 5 rows, read aloud]
-Spanish: once. from Latin: undecim ("one-ten").
-Spanish: doce. from Latin: duodecim ("two-ten").
-Spanish: trece. from Latin: tredecim ("three-ten").
-Spanish: catorce. from Latin: quattuordecim ("four-ten").
-Spanish: quince. from Latin: quindecim ("five-ten").
-Every one of these was a compound — a number plus -decim ("ten," the same root as diez). But these five are the numbers people say most often, and heavy use wears words smooth. Centuries of everyday speech fused each pair into a single, opaque word: no Spanish speaker hears "one-ten" in once any more than an English speaker hears "two-ten" in twelve.
-Listen for the ghost, though. The -ce ending on doce, trece, catorce, quince is all that survives of Latin's -decim. It is the same "ten" you already say in diez, ground down to two letters.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "once, doce, trece, catorce, quince"]
-[pause 8 seconds for the answer]
-[your turn — say: just the endings — "-ce, -ce, -ce, -ce" — the worn-down ten]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Count eleven to fifteen. (Once, doce, trece, catorce, quince.) What are these five, structurally? (Fused Latin compounds — number plus -decim, "ten.") Which piece of each word is the old "ten"? (The -ce ending — diez worn down.) Next: the numbers where the seam is still wide open.
-
-
-Lesson 2 of 4.
-dieciséis — diecinueve: where the seam reopens.
+Lesson 1 of 1.
+la hora — Spanish's barely-changed Latin hour.
 
 Warm-up.
 [pause 2 seconds]
-You just learned five numbers whose insides had been ground smooth. Now say fifteen and then sixteen — quince, dieciséis — and hear the language change gear. From here you are not memorising words; you are following a rule.
+You've now seen this Latin word take three different paths: French wore it down to heure, German borrowed it centuries later as Uhr. Spanish's path is the simplest of all — it barely changed.
 
-The words, taken apart: dieciséis through diecinueve.
+The word, taken apart: hora.
+hora from Latin hōra from Greek hṓrā, "a season, a time of day" (the Greek goddesses of the seasons were the Hōrai). Spanish kept the word almost exactly as Latin had it — just a silent h in spelling, a fossil of a Latin h that was already weak and barely pronounced by the time Spanish inherited the word (the same non-story as French heure or English hour's silent h). Be careful not to confuse this with hijo and hacer's silent h — those come from a completely different, later Spanish sound change (Latin f- becomes Old Spanish aspirated h- becomes eventual silence), not from an already-weak Latin h the way hora's is. Two different roads to the same "silent letter" result. Compare its cousins: French wore hōra down further to heure; German didn't inherit the word at all, but borrowed it later as Uhr; English took the same Latin hōra and made hour.
 [a table of 4 rows, read aloud]
-Spanish: dieciséis. literally: diez y seis, "ten and six".
-Spanish: diecisiete. literally: diez y siete, "ten and seven".
-Spanish: dieciocho. literally: diez y ocho, "ten and eight".
-Spanish: diecinueve. literally: diez y nueve, "ten and nine".
-No fusion. You can hear diez plainly at the front of every one, and the number you already know sitting right behind it.
+language: Spanish. word: hora. what happened: inherited almost unchanged, just a silent h.
+language: French. word: heure. what happened: inherited, but worn down further.
+language: German. word: Uhr. what happened: not inherited — borrowed later, separately.
+language: English. word: hour. what happened: inherited via French, silent h.
 
-Grammar Lens: a formula, not a list.
-This is the structural difference that makes 15/16 a real boundary in Spanish rather than a convenient place to pause:
-[a table of 3 rows, read aloud]
-how you get the word. 11-15: remember it. 16-19: build it.
-the "ten" inside. 11-15: worn to -ce. 16-19: still spelled dieci-.
-can you hear the parts? 11-15: no. 16-19: yes.
-So once through quince are vocabulary, and dieciséis through diecinueve are grammar: one template, dieci- + digit, filled four times. Learn the template once and all four are already yours.
+Grammar Lens: Son las and telling time.
+Spanish uses ser ("to be") plus the feminine plural article (agreeing with the unspoken horas) to tell time — and famously switches number for "one":
+Es la una. — "It is one o'clock." (singular — la una, "the one") Son las dos. — "It is two o'clock." (plural — las dos, "the two") Son las diez. — "It is ten o'clock."
+Literally "it is the one" / "they are the two/ten" — the hour count itself is implied by the article and number, without needing to say hora(s) at all in everyday speech (unlike French's il est deux heures, which spells out "hours" every time).
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "dieciséis, diecisiete, dieciocho, diecinueve"]
+[your turn — say: "hora" — silent h, a fossil of an already-weak Latin h]
 [pause 8 seconds for the answer]
-[your turn — say: the seam out loud — "diez y seis" then "dieciséis"]
+[your turn — say: "Es la una. Son las dos. Son las diez."]
 [pause 8 seconds for the answer]
-[your turn — say: the boundary — "quince" (remembered), "dieciséis" (built)]
+[your turn — say: "hora / heure / hour" — one Latin root, three different fates]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Count sixteen to nineteen. (Dieciséis, diecisiete, dieciocho, diecinueve.) Are these fused or transparent? (Transparent — plain "ten and X.") Which of the two groups do you have to memorise, and which can you generate? (Memorise 11-15; generate 16-19 from dieci- plus the digit.)
-
-
-Lesson 3 of 4.
-duodēvīgintī — the quirk Spanish threw away.
-
-Warm-up.
-[pause 2 seconds]
-Dieciocho and diecinueve look like the least interesting words in the chapter — just two more ten-and-X compounds. They are actually the most interesting, because of what Latin said instead.
-
-You'll want to know first.
-dieciséis — diecinueve — the dieci- plus digit template.
-
-Why it's said this way: Latin counted 18 and 19 backwards.
-You would expect dieciocho and diecinueve to carry on whatever Latin did for 18 and 19. Latin did something else entirely. Its everyday words for those two numbers were subtractive — counted down from twenty:
-[a table of 2 rows, read aloud]
-number: 18. Latin: duodēvīgintī. literally: "two from twenty".
-number: 19. Latin: ūndēvīgintī. literally: "one from twenty".
-(You still meet this habit in English clock-talk: "ten to four.")
-Spanish did not inherit either word. It built dieciocho and diecinueve fresh, on exactly the same simple template as 16 and 17 — quietly regularising away an irregularity that existed in its own parent language. Languages are usually described as wearing down and getting messier; here is a clean case of one tidying up.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: Latin's way — "two from twenty" — then Spanish's — "dieciocho"]
-[pause 8 seconds for the answer]
-[your turn — say: "dieciocho, diecinueve" — addition, not subtraction]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-How did Latin say 18 and 19? (Subtractively — duodēvīgintī, "two from twenty," and ūndēvīgintī, "one from twenty.") Did Spanish keep that? (No — it built dieciocho and diecinueve on the regular ten-and-X template.) So which language is the irregular one here? (Latin — Spanish simplified.)
-
-
-Lesson 4 of 4.
-veinte — the number the teens were counting toward.
-
-Warm-up.
-[pause 2 seconds]
-Latin's own 18 and 19 were counted down from twenty. So it is worth meeting twenty itself — the number the whole run has been aiming at.
-
-The word, taken apart: veinte.
-veinte ("twenty") from Latin vīgintī. It was worn down by ordinary sound change — the g softened away, the vowels shifted — but notice what did not happen to it: it was never fused out of two separate words the way once through quince were. Vīgintī was already a single word for a single round number, so there is no seam inside veinte to look for.
-Three different histories, then, in one short chapter:
-[a table of 3 rows, read aloud]
-words: once - quince. what happened: two words fused into one.
-words: dieciséis - diecinueve. what happened: two words built into one, seam visible.
-words: veinte. what happened: one word, simply worn.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "once, doce, trece, catorce, quince" — the five fused Latins]
-[pause 8 seconds for the answer]
-[your turn — say: "dieciséis, diecisiete, dieciocho, diecinueve" — built, not fused]
-[pause 8 seconds for the answer]
-[your turn — say: "veinte" — twenty, worn but never fused]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Count eleven to twenty. Where is the boundary between remembering and building, and why is it there? (After quince — 11-15 are fused Latin compounds, 16-19 are dieci- plus a digit.) Did Spanish inherit Latin's subtractive 18 and 19? (No — it regularised them.) Was veinte fused from two words? (No — Latin vīgintī was already one word; it was only worn down.)
+What Latin (and Greek) word is hora from? (hōra from Greek hṓrā.) How did Spanish's path differ from French's and German's? (Spanish inherited it almost unchanged; French wore it down further to heure; German didn't inherit it at all and borrowed Uhr separately, much later.) How do you say "it is one o'clock" vs. "it is two o'clock"? (Es la una — singular; Son las dos — plural.)

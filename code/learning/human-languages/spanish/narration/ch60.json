@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 60,
-  "title": "One Stem, Two Tenses",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:befd65e3d87a88a0",
+  "title": "The Future --- Saying What Will Happen",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:abbf6a226b913d57",
   "lessons": [
     {
-      "id": "ES-C17-irregulares",
-      "sequence": 1174,
-      "title": "haré, tendré, podré — three stems, two ending sets",
-      "headword": "haré · tendré · podré",
-      "romanization": "haré · tendré · podré",
-      "gloss": "three bounded stems shared by the future and conditional",
+      "id": "ES-C17-futuro",
+      "sequence": 1170,
+      "title": "hablaré — keep the infinitive, add the future",
+      "headword": "hablaré",
+      "romanization": "hablaré",
+      "gloss": "the singular simple future of hablar — hablaré, hablarás, hablará",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b800bbcee64d4ac2",
+      "sourceHash": "fnv1a64:498250d5f7421cc7",
       "notice": null,
       "blocks": [
         {
@@ -35,94 +35,56 @@
             },
             {
               "kind": "speech",
-              "text": "Regular verbs keep the whole infinitive. Three common verbs you already know use a shorter or reshaped stem. Learn only these three today. In each row, the same stem serves the future and the conditional."
+              "text": "Voy a hablar español uses the near-future frame you already know. Spanish also has a one-word future: Hablaré español — “I will speak Spanish.” It can present a future prediction or intention without adding a new subject or object."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: hacer becomes har-",
+          "title": "Grammar Lens: three familiar persons",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the whole infinitive hablar, then add one ending:"
+            },
             {
               "kind": "table",
               "headers": [
                 "person",
-                "future",
-                "conditional"
+                "simple future"
               ],
-              "columns": 3,
+              "columns": 2,
               "rowCount": 3,
               "utterances": [
-                "person: yo. future: haré. conditional: haría.",
-                "person: tú. future: harás. conditional: harías.",
-                "person: él / ella / usted. future: hará. conditional: haría."
+                "person: yo. simple future: hablaré.",
+                "person: tú. simple future: hablarás.",
+                "person: él / ella / usted. simple future: hablará."
               ]
             },
             {
               "kind": "speech",
-              "text": "Use the known noun in Haré café — “I will make coffee” — and Haría café — “I would make coffee.”"
+              "text": "Say hablaré, hablarás, hablará. Each form has final stress, marked by an accent. Plural persons wait."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: tener becomes tendr-",
+          "type": "etymology",
+          "title": "The weld, taken apart",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "person",
-                "future",
-                "conditional"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. future: tendré. conditional: tendría.",
-                "person: tú. future: tendrás. conditional: tendrías.",
-                "person: él / ella / usted. future: tendrá. conditional: tendría."
-              ]
+              "kind": "speech",
+              "text": "Late Latin and early Romance used more than one way to speak about the future. One influential construction placed an infinitive beside present forms of Latin habēre, “to have.” Through repeated use and sound change, descendants of those pieces became the endings in forms such as hablaré."
             },
             {
               "kind": "speech",
-              "text": "The d in tendr- arose during the history of the compact future and conditional. Treat tendr- as the learned stem, not as permission to insert d into a new verb."
+              "text": "That history explains why the infinitive remains visible. It does not mean that a modern learner should attach the full modern verb haber, and it does not require the claim that every older future vanished at one moment."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: poder becomes podr-",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "future",
-                "conditional"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. future: podré. conditional: podría.",
-                "person: tú. future: podrás. conditional: podrías.",
-                "person: él / ella / usted. future: podrá. conditional: podría."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Podré hablar español says “I will be able to speak Spanish.” Podría hablar español says “I could / would be able to speak Spanish.”"
-            },
-            {
-              "kind": "speech",
-              "text": "These stems reflect inherited reductions and sound changes. The useful modern fact is bounded: har-, tendr-, podr-, each followed by the same endings you already learned."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -135,97 +97,94 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“haré, haría”",
+              "instruction": "“hablaré, hablarás, hablará”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “haré, haría”]"
+              "source": "[YOU SAY: “hablaré, hablarás, hablará”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“tendré, tendría”",
+              "instruction": "“Voy a hablar español. Hablaré español.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “tendré, tendría”]"
+              "source": "[YOU SAY: “Voy a hablar español. Hablaré español.”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“podré, podría”",
+              "instruction": "“infinitive plus historical habēre material”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “podré, podría”]"
+              "source": "[YOU SAY: “infinitive plus historical habēre material”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C17-irregulares-hacer-pair",
-              "prompt": "Give the pair 'I will make coffee; I would make coffee' in Spanish.",
+              "id": "ES-C17-futuro-singular-forms",
+              "prompt": "Give the learned singular future forms of hablar: yo, tú, then él/ella/usted.",
               "assesses": [
-                "ES-GRAMMAR-HACER-FUTURE-CONDITIONAL-SINGULAR",
-                "ES-LEX-HACER",
-                "ES-LEX-CAFE"
+                "ES-GRAMMAR-AR-FUTURE-SINGULAR",
+                "ES-LEX-HABLAR"
               ],
               "responseSeconds": 9,
               "acceptedResponses": [
-                "haré café; haría café.",
-                "haré café haría café",
-                "haré café / haría café"
+                "hablaré, hablarás, hablará",
+                "hablaré hablarás hablará",
+                "hablaré / hablarás / hablará"
               ],
               "feedback": {
-                "correct": "Right: Haré café; haría café.",
-                "incorrect": "Use the shared har- stem with -é, then -ía."
+                "correct": "Right: hablaré, hablarás, hablará.",
+                "incorrect": "Keep hablar whole and add -é, -ás, -á."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C17-irregulares-tener-pair",
-              "prompt": "Give the future and conditional yo forms of tener, in that order.",
+              "id": "ES-C17-futuro-hablare-espanol",
+              "prompt": "Say 'I will speak Spanish' in Spanish.",
               "assesses": [
-                "ES-GRAMMAR-TENER-FUTURE-CONDITIONAL-SINGULAR",
-                "ES-LEX-TENER"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "tendré, tendría",
-                "tendré tendría",
-                "tendré / tendría"
-              ],
-              "feedback": {
-                "correct": "Right: tendré, tendría.",
-                "incorrect": "Keep the learned tendr- stem and switch -é to -ía."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C17-irregulares-poder-pair",
-              "prompt": "Give the pair 'I will be able to speak Spanish; I could speak Spanish' in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-PODER-FUTURE-CONDITIONAL-SINGULAR",
-                "ES-LEX-PODER",
+                "ES-GRAMMAR-FUTURE-PREDICTION-INTENTION",
+                "ES-GRAMMAR-AR-FUTURE-SINGULAR",
                 "ES-LEX-HABLAR",
                 "ES-LEX-ESPANOL"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 7,
               "acceptedResponses": [
-                "podré hablar español; podría hablar español.",
-                "podré hablar español podría hablar español",
-                "podré hablar español / podría hablar español"
+                "hablaré español.",
+                "hablaré español"
               ],
               "feedback": {
-                "correct": "Right: Podré hablar español; podría hablar español.",
-                "incorrect": "Use podré, then podría, before known hablar español."
+                "correct": "Right: Hablaré español.",
+                "incorrect": "Use the yo future hablaré before known español."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-futuro-history",
+              "prompt": "Which Latin verb meaning 'to have' contributed material to the Romance future endings?",
+              "assesses": [
+                "ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "habēre",
+                "habere",
+                "haber"
+              ],
+              "feedback": {
+                "correct": "Right: forms of habēre contributed to the future construction.",
+                "incorrect": "The historical partner was habēre, the source of haber."
               }
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -237,37 +196,27 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three learned stems. (Har-, tendr-, podr-.) Does each verb need separate future and conditional stems? (No; one stem serves both.) Do the endings change? (No.) Next: retrieve the complete twelve-atom chapter."
+              "text": "Give the three learned forms. (Hablaré, hablarás, hablará.) What stays visible? (The whole infinitive.) What older verb contributed to the endings? (Latin habēre.) Next: test the same endings on comer."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C17-practice",
-      "sequence": 1178,
-      "title": "Practice — one infinitive frame, two futures of thought",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "a singular checkpoint for the simple future and conditional",
+      "id": "ES-C17-comer-futuro",
+      "sequence": 1174,
+      "title": "comeré — the same endings keep -er",
+      "headword": "comeré",
+      "romanization": "comeré",
+      "gloss": "the singular simple future of comer — comeré, comerás, comerá",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2817d29ae4ff35da",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for 2 tables that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "Grammar Lens: the regular frame",
-          "Grammar Lens: three learned stems"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for 2 tables that cannot be read aloud. You can listen to everything else now — leave the sections called Grammar Lens: the regular frame and Grammar Lens: three learned stems until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:e47eb35451ec6036",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -282,71 +231,48 @@
             },
             {
               "kind": "speech",
-              "text": "This checkpoint adds no vocabulary and no plural persons. Retrieve the six regular singular rows, then the three learned irregular stems. Use the future for “will” and the conditional for the bounded core meaning “would.”"
+              "text": "You built hablaré without removing -ar. Keep comer just as intact: comeré — “I will eat.”"
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the regular frame",
+          "title": "Grammar Lens: the singular -er row",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 6,
+              "kind": "table",
               "headers": [
                 "person",
-                "hablar",
-                "comer",
-                "vivir"
+                "simple future"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 6 rows, and it has more columns than can be held in the ear at once. Its columns are: person, hablar, comer, vivir. Come back and look at it when you have stopped."
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. simple future: comeré.",
+                "person: tú. simple future: comerás.",
+                "person: él / ella / usted. simple future: comerá."
+              ]
             },
             {
               "kind": "speech",
-              "text": "All three regular infinitives remain whole. Future endings are -é, -ás, -á; conditional endings are -ía, -ías, -ía. Plural persons wait."
+              "text": "Say comeré, comerás, comerá. Compare hablaré / comeré: the infinitives differ, but the future endings do not. Plural persons wait."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: three learned stems",
-          "segments": [
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 3,
-              "headers": [
-                "verb",
-                "learned stem",
-                "future yo",
-                "conditional yo"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: verb, learned stem, future yo, conditional yo. Come back and look at it when you have stopped."
-            },
-            {
-              "kind": "speech",
-              "text": "The stems change; the ending sets do not. Other irregular stems remain outside this chapter."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "etymology",
           "title": "The ending, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Romance future and conditional forms grew from constructions pairing an infinitive with forms of Latin habēre. Present material contributed to the future; past or imperfect material contributed to the conditional. Many paths and competing forms existed during the change, so this is a bridge for memory, not a one-step story or a recipe using modern haber."
+              "text": "The historical infinitive-plus-habēre construction helps explain the shared endings: the verb-family vowel remains inside hablar or comer, rather than selecting a different ending set."
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -355,6 +281,206 @@
               "seconds": 1,
               "perItem": false,
               "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“comeré, comerás, comerá”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “comeré, comerás, comerá”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Hablaré. Comeré.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Hablaré. Comeré.”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Beberé café.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Beberé café.”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-comer-futuro-singular-forms",
+              "prompt": "Give the learned singular future forms of comer: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-PATTERN-ER-FUTURE-SINGULAR",
+                "ES-LEX-COMER"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "comeré, comerás, comerá",
+                "comeré comerás comerá",
+                "comeré / comerás / comerá"
+              ],
+              "feedback": {
+                "correct": "Right: comeré, comerás, comerá.",
+                "incorrect": "Keep comer whole and add -é, -ás, -á."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-comer-futuro-cafe",
+              "prompt": "Use the learned -er future pattern to say 'I will drink coffee' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-FUTURE-PREDICTION-INTENTION",
+                "ES-PATTERN-ER-FUTURE-SINGULAR",
+                "ES-LEX-BEBER",
+                "ES-LEX-CAFE"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "beberé café.",
+                "beberé café",
+                "bebere cafe",
+                "bebere cafe."
+              ],
+              "feedback": {
+                "correct": "Right: Beberé café.",
+                "incorrect": "Keep known beber whole, add -é, then known café."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-comer-futuro-shared-endings",
+              "prompt": "Which endings do hablaré and comeré share across the learned singular row?",
+              "assesses": [
+                "ES-GRAMMAR-AR-FUTURE-SINGULAR",
+                "ES-PATTERN-ER-FUTURE-SINGULAR"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "-é, -ás, -á",
+                "é ás á",
+                "-é -ás -á"
+              ],
+              "feedback": {
+                "correct": "Right: -é, -ás, -á serve both infinitives.",
+                "incorrect": "Read the final pieces: hablaré/comeré, hablarás/comerás, hablará/comerá."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the three learned forms. (Comeré, comerás, comerá.) Did the -er disappear? (No.) Which endings match hablar? (-é, -ás, -á.) Next: let vivir test the pattern once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C17-vivir-futuro",
+      "sequence": 1178,
+      "title": "viviré — one future row for three verb families",
+      "headword": "viviré",
+      "romanization": "viviré",
+      "gloss": "the singular simple future of vivir — viviré, vivirás, vivirá",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a36270c22b0ee7b5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hablaré kept -ar. Comeré kept -er. Predict the yo future of vivir before reading on. It is viviré."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the singular -ir row",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "simple future"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. simple future: viviré.",
+                "person: tú. simple future: vivirás.",
+                "person: él / ella / usted. simple future: vivirá."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say viviré, vivirás, vivirá. Now the bounded pattern is complete: hablaré, comeré, viviré. The same three endings attach to all three whole infinitives. Plural persons wait."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: meaning with known words",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Viviré en Madrid says “I will live in Madrid.” Every lexical piece was available before this lesson; only the future form is new."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“viviré, vivirás, vivirá”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “viviré, vivirás, vivirá”]"
             },
             {
               "kind": "prompt",
@@ -368,25 +494,57 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“hablaría, comería, viviría”",
+              "instruction": "“Viviré en Madrid.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “hablaría, comería, viviría”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“haré/haría, tendré/tendría, podré/podría”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “haré/haría · tendré/tendría · podré/podría”]"
+              "source": "[YOU SAY: “Viviré en Madrid.”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C17-practice-regular-future-yo",
+              "id": "ES-C17-vivir-futuro-singular-forms",
+              "prompt": "Give the learned singular future forms of vivir: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-GRAMMAR-IR-FUTURE-SINGULAR",
+                "ES-LEX-VIVIR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "viviré, vivirás, vivirá",
+                "viviré vivirás vivirá",
+                "viviré / vivirás / vivirá"
+              ],
+              "feedback": {
+                "correct": "Right: viviré, vivirás, vivirá.",
+                "incorrect": "Keep vivir whole and add -é, -ás, -á."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-vivir-futuro-madrid",
+              "prompt": "Say 'I will live in Madrid' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-FUTURE-PREDICTION-INTENTION",
+                "ES-GRAMMAR-IR-FUTURE-SINGULAR",
+                "ES-LEX-VIVIR",
+                "ES-LEX-EN"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "viviré en madrid.",
+                "viviré en madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Viviré en Madrid.",
+                "incorrect": "Use viviré, then the known frame en Madrid."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-vivir-futuro-three-yo",
               "prompt": "Give the future yo forms of hablar, comer, and vivir, in that order.",
               "assesses": [
                 "ES-GRAMMAR-AR-FUTURE-SINGULAR",
@@ -403,135 +561,11 @@
                 "correct": "Right: hablaré, comeré, viviré.",
                 "incorrect": "Keep each infinitive whole and add -é."
               }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C17-practice-regular-conditional-yo",
-              "prompt": "Give the conditional yo forms of hablar, comer, and vivir, in that order.",
-              "assesses": [
-                "ES-GRAMMAR-AR-CONDITIONAL-SINGULAR",
-                "ES-GRAMMAR-ER-CONDITIONAL-SINGULAR",
-                "ES-GRAMMAR-IR-CONDITIONAL-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "hablaría, comería, viviría",
-                "hablaría comería viviría",
-                "hablaría / comería / viviría"
-              ],
-              "feedback": {
-                "correct": "Right: hablaría, comería, viviría.",
-                "incorrect": "Keep each infinitive whole and add -ía."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C17-practice-hablare-espanol",
-              "prompt": "Say 'I will speak Spanish' in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-FUTURE-PREDICTION-INTENTION",
-                "ES-GRAMMAR-AR-FUTURE-SINGULAR",
-                "ES-LEX-HABLAR",
-                "ES-LEX-ESPANOL"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "hablaré español.",
-                "hablaré español"
-              ],
-              "feedback": {
-                "correct": "Right: Hablaré español.",
-                "incorrect": "Use future hablaré before known español."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C17-practice-viviria-madrid",
-              "prompt": "Say 'I would live in Madrid' in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL",
-                "ES-GRAMMAR-IR-CONDITIONAL-SINGULAR",
-                "ES-LEX-VIVIR",
-                "ES-LEX-EN"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "viviría en madrid.",
-                "viviría en madrid"
-              ],
-              "feedback": {
-                "correct": "Right: Viviría en Madrid.",
-                "incorrect": "Use conditional viviría, then known en Madrid."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C17-practice-hacer-pair",
-              "prompt": "Give the pair 'I will make coffee; I would make coffee' in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-HACER-FUTURE-CONDITIONAL-SINGULAR",
-                "ES-LEX-HACER",
-                "ES-LEX-CAFE"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "haré café; haría café.",
-                "haré café haría café",
-                "haré café / haría café"
-              ],
-              "feedback": {
-                "correct": "Right: Haré café; haría café.",
-                "incorrect": "Use har- with future -é, then conditional -ía."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C17-practice-three-stems",
-              "prompt": "Give the learned stems for hacer, tener, and poder, in that order.",
-              "assesses": [
-                "ES-GRAMMAR-HACER-FUTURE-CONDITIONAL-SINGULAR",
-                "ES-GRAMMAR-TENER-FUTURE-CONDITIONAL-SINGULAR",
-                "ES-GRAMMAR-PODER-FUTURE-CONDITIONAL-SINGULAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "har-, tendr-, podr-",
-                "har tendr podr",
-                "har- / tendr- / podr-"
-              ],
-              "feedback": {
-                "correct": "Right: har-, tendr-, podr-.",
-                "incorrect": "Retrieve the bounded three: har-, tendr-, podr-."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C17-practice-history",
-              "prompt": "Which Latin 'have' verb contributed material to both Romance constructions?",
-              "assesses": [
-                "ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "habēre",
-                "habere",
-                "haber"
-              ],
-              "feedback": {
-                "correct": "Right: habēre contributed to both constructions.",
-                "incorrect": "The shared historical partner was habēre."
-              }
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -543,7 +577,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three regular future yo forms. (Hablaré, comeré, viviré.) Give the three regular conditional yo forms. (Hablaría, comería, viviría.) Which three learned stems replace a whole infinitive? (Har-, tendr-, podr-.) What is the careful historical bridge? (Infinitive plus forms of Latin habēre, reshaped through Romance.) The next chapter can now begin without borrowing plural persons, new auxiliaries, or clock-time vocabulary."
+              "text": "Give the three vivir forms. (Viviré, vivirás, vivirá.) Which verb families share the learned endings? (All three: -ar, -er, -ir.) Next: reuse the whole-infinitive frame for “would.”"
             }
           ]
         }

@@ -18,6 +18,12 @@
   rounded handwritten half-circle alternative.
 - Queue the series' Lamed/Mem lesson (`CBU6aSCcPrE`) next.
 
+### Changed — Spanish runs 1..106 (HL-C105)
+
+- Regenerate the `bookhashes` chapter-lesson pin: `tener` and `ir` gained plural
+  chapters, so old Spanish chapters 43–104 shifted to 45–106.
+- Eager bundle 487,797 / 500,000 bytes.
+
 ### Added — cited Hebrew Yod ductus (HL-C09BM)
 
 - Render **י** in two evidence-aligned frames: draw its tiny head left-to-right

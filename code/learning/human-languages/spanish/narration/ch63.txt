@@ -1,98 +1,43 @@
-Spanish, chapter 63: The Subjunctive, Regular.
-3 lessons. All 3 can be done entirely by ear.
+Spanish, chapter 63: Synthesis --- Promising, and Supposing.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 3.
-hable, hables, hable — the singular -ar row.
-
-Warm-up.
-[pause 2 seconds]
-You already used hables for one friend. Today add only the other two singular slots:
-[a table of 3 rows, read aloud]
-person: yo. present subjunctive: hable.
-person: tú. present subjunctive: hables.
-person: él / ella / usted. present subjunctive: hable.
-Plural forms wait. Say the small row: hable, hables, hable.
-
-Grammar Lens: the yo stem, then a vowel swap.
-Start from present hablo. Remove -o to reveal habl-. Regular -ar verbs then use e in these subjunctive endings: -e, -es, -e. The family vowel has swapped from the familiar a to e. This recipe will matter later because a verb's special present yo stem can travel with it.
-
-The name, taken apart.
-Spanish subjuntivo descends from Latin subiūnctīvus, “subjoined,” from sub- “under” plus iungere “join.” English join, junction, and conjunction belong to the same word family; yoke is a more distant cousin. The name helps you picture the wanted clause joined under quiero que. It is history, not a complete usage rule.
-
-Guided Practice.
-[pause 1 second]
-Build each answer only from the learned singular row.
-[question — say your answer, then pause 9 seconds]
-Give the learned singular present-subjunctive forms of hablar: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 6 seconds]
-Which present form gives the stem for regular hable: hablo or habla?
-[question — say your answer, then pause 7 seconds]
-What joining idea sits inside the Latin source of subjuntivo?
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three forms. (Hable, hables, hable.) Which present form supplies the stem? (Hablo.) What did the family vowel do? (a becomes e.) What does the name remember? (A clause subjoined, or joined under another.)
-
-
-Lesson 2 of 3.
-coma, comas, coma — let -er cross to a.
+Lesson 1 of 1.
+Synthesis — promising, and supposing.
 
 Warm-up.
 [pause 2 seconds]
-Start from como, remove -o, and keep com-. A regular -er verb crosses to the a family:
-[a table of 3 rows, read aloud]
-person: yo. present subjunctive: coma.
-person: tú. present subjunctive: comas.
-person: él / ella / usted. present subjunctive: coma.
-Say only the singular row: coma, comas, coma.
+Nothing new in this chapter. Say hablaré, then hablaría.
 
-Grammar Lens: meaning before machinery.
-Comes can assert “you eat.” Quiero que comas presents your eating as what I want. The e becomes a contrast helps you hear the two meanings. It does not mean that every a form is subjunctive; use the learned frame as a whole.
+Grammar Lens: the two endings are one word, twice.
+Three chapters ago you were told where these endings came from. Now it is worth seeing what that fact buys you.
+Both are the verb haber — Latin habēre, "to have" — glued onto the back of the infinitive. Romance speakers stopped saying "I have to speak" as two words and fused it into one:
+hablar + he (I have) becomes hablaré — I will speak. hablar + había (I had) becomes hablaría — I would speak.
+That is the entire difference between the two tenses: the same auxiliary, once in the present and once in the past. Not two systems to learn — one system, looked at from two moments.
+
+What you've built.
+And the meaning follows from the grammar rather than being extra to it.
+Having to do something now is a commitment: hablaré is a promise, or a prediction you are standing behind. Having had to do it is a supposition — the obligation sits in a past that never arrived, so hablaría is hypothetical.
+Promise from the present. Suppose from the past.
+English hides the same move: will is the present of an old verb meaning to want, and would is its past. Will/would is the same pair as -é/-ía.
+
+The exchange.
+— ¿Hablarás español en Madrid? — Sí, hablaré español. — ¿Y sin práctica? — Hablaría español, pero no bien.
+One letter-run apart, and the second speaker has moved from a commitment to a guess without changing a single other word.
 
 Guided Practice.
 [pause 1 second]
-Keep comer inside the learned singular frame.
-[question — say your answer, then pause 9 seconds]
-Give the learned singular subjunctive forms of comer: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 6 seconds]
-Which form belongs after quiero que for one friend: comes or comas?
+[your turn — say: hablaré then hablaría, and hear a promise turn into a guess]
+[pause 8 seconds for the answer]
+[repeat that twice]
+Until the choice is about what you mean, not which ending it was.
 [question — say your answer, then pause 8 seconds]
-Say 'I want you to eat' to one friend.
+You are committing to it. I will speak: which form?
+[question — say your answer, then pause 8 seconds]
+Now you are only supposing. I would speak: which form?
+[question — say your answer, then pause 10 seconds]
+What single word is glued onto the infinitive in BOTH tenses?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three forms. (Coma, comas, coma.) Which form asserts “you eat”? (Comes.) Which belongs after quiero que? (Comas.) Next, test whether regular -ir behaves differently.
-
-
-Lesson 3 of 3.
-viva, vivas, viva — -ir joins -er.
-
-Warm-up.
-[pause 2 seconds]
-Start from vivo, remove -o, then add the same a endings you just used with comer:
-[a table of 3 rows, read aloud]
-person: yo. present subjunctive: viva.
-person: tú. present subjunctive: vivas.
-person: él / ella / usted. present subjunctive: viva.
-Regular -er and -ir match in this singular row:
-comer: coma, comas, coma.
-vivir: viva, vivas, viva.
-Plural differences wait.
-
-Grammar Lens: meaning in a known frame.
-Vives en Madrid asserts where one friend lives. Quiero que vivas en Madrid makes that living a wanted event. Nothing new is being smuggled into the sentence: en and Madrid have appeared in the earlier location frame.
-
-Guided Practice.
-[pause 1 second]
-Keep vivir inside the learned singular frame.
-[question — say your answer, then pause 9 seconds]
-Give the learned singular subjunctive forms of vivir: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 7 seconds]
-Which two regular verb families share -a, -as, -a here?
-[question — say your answer, then pause 9 seconds]
-Say 'I want you to live in Madrid' to one friend.
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three forms. (Viva, vivas, viva.) Which regular family matches -ir here? (-er.) Which form fits one friend after quiero que? (Vivas.)
+What is glued onto the infinitive in both tenses? (Haber — the verb to have.) Which one is a promise, and which a supposition? (-é the promise, -ía the supposition.) And what is the English pair that works the same way? (Will and would — a present and a past of one old verb.)

@@ -1,43 +1,61 @@
-Spanish, chapter 81: Synthesis --- Saying Something About Your Own Life.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 81: Dog and Cat.
+2 lessons. All 2 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-Synthesis — saying something about your own life.
+Lesson 1 of 2.
+gato — the word that travelled with the animal.
 
 Warm-up.
 [pause 2 seconds]
-Nothing new in this chapter. Say the words for dog and for black.
+Some etymologies can be followed all the way home. This one runs from your mouth back to ancient Egypt, and every step of it is documented.
 
-What you've built.
-Something has been accumulating quietly for fourteen chapters and has never once been put to work.
-You have six colours. Parents and brothers and sisters. A head and a hand. Water, wine and bread. The seasons, the months, the hours. Hot weather and cold. Numbers to twenty. A dog and a cat.
-That is not a vocabulary list any more. It is enough to describe the room you are sitting in, and this chapter is the first that asks you to.
-
-Grammar Lens: the word that made this possible.
-Notice which article you need here, because it is not the one you have used most.
-el perro — the dog. A particular one. The one we were talking about. un perro — a dog. Any dog. One you are mentioning for the first time.
-Describing your own life means introducing things your listener does not know about yet — and that is exactly the job un does. Almost every sentence below needs it.
-
-The exchange.
-— ¿Tienes un perro? — Sí, tengo un perro negro. ¿Y tú? — Tengo un gato blanco.
-Every word in those three lines is one you built yourself, across fourteen chapters that never asked you to combine them. Nothing here is new. What is new is that it is a conversation rather than a list.
+The word, taken apart: gato.
+gato ("cat") from Latin cattus. But cattus was not Classical Latin's word for cat. That was fēlēs, which survives today only in the scientific name Felis catus and in English feline.
+Cattus entered Latin later, arriving with the animal itself as domestic cats spread along Roman trade routes from where they were domesticated — Egypt, around 2000 BCE. The word is most likely Afro-Asiatic in origin (compare Nubian kadis, "cat").
+So word and creature travelled together, out of Africa into Europe, and the newcomer pushed fēlēs out almost everywhere: Spanish gato, Italian gatto, French chat, Old Irish cat, Welsh cath, English cat. When a thing arrives from abroad, its name usually arrives with it.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the exchange above, both parts]
+[your turn — say: "el gato" — the cat]
 [pause 8 seconds for the answer]
-[your turn — say: it again about a real animal you know, with a real colour]
+[your turn — say: the trail — "kadis, cattus, gato"]
 [pause 8 seconds for the answer]
-[repeat that twice]
-Until you are describing rather than translating.
-[question — say your answer, then pause 10 seconds]
-Say I have a black dog.
-[question — say your answer, then pause 10 seconds]
-You are mentioning your cat for the first time. Un gato or el gato?
-[question — say your answer, then pause 8 seconds]
-Say it is cold.
+[your turn — say: the word it replaced — "fēlēs," now only in "feline"]
+[pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which article introduces something your listener does not yet know about? (Un.) And which points at something you have both already mentioned? (El.) Say one true sentence about an animal, with its colour.
+What was Classical Latin's actual word for cat, and where does it survive? (Fēlēs — in Felis catus and English feline.) Where did cattus most likely come from? (An Afro-Asiatic word, travelling with the domesticated cat out of Egypt.) Next: the other animal in this chapter, whose history nobody can trace at all.
+
+
+Lesson 2 of 2.
+perro — the word nobody can explain.
+
+Warm-up.
+[pause 2 seconds]
+Gato could be traced all the way to Egypt. Perro is the opposite kind of word, and it is worth knowing that such words exist: completely ordinary, used a thousand times a day, and nobody knows where it came from.
+
+The word, taken apart: perro.
+perro ("dog"). Roll the rr: PEH-rro.
+The word Spanish should have inherited is canis — the same root as English canine, French chien, Italian cane. And it did survive, as the now-archaic Spanish can (still readable in old poetry and in canino). But at some point perro pushed can almost entirely out of everyday use — and perro itself has no agreed origin.
+
+Why it's said this way: an honestly open question.
+Three serious proposals, none confirmed:
+[a table of 3 rows, read aloud]
+proposal: onomatopoeia — a growl, or a shepherd's call "perr, perr". the case for it: matches how herding calls become names elsewhere. the problem: no early written evidence.
+proposal: pre-Roman Iberian substrate. the case for it: the -rro ending is a known marker of likely pre-Latin words in Spanish. the problem: the substrate languages are barely recorded.
+proposal: Persian persus, a hunting-dog breed. the case for it: such breeds did spread in the late Empire. the problem: the sound match is loose.
+Notice what makes this a good open question rather than a shrug: each proposal predicts different evidence, and the evidence needed simply has not survived. Perro remains one of Spanish's genuinely unsolved puzzles, and a useful reminder that "we don't know" is a real answer in etymology, not a gap in your notes.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "el perro, el gato" — dog and cat]
+[pause 8 seconds for the answer]
+[your turn — say: "can" — the archaic word perro replaced, from Latin canis]
+[pause 8 seconds for the answer]
+[your turn — say: the contrast — "gato, traced to Egypt; perro, unsolved"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What archaic Spanish word did perro replace, and what is its Latin source? (Can, from canis — the root of English canine.) Does perro have a confirmed etymology? (No — onomatopoeic, pre-Latin substrate and Persian proposals all remain unconfirmed.) And gato's origin, by contrast? (Traceable — Latin cattus, probably Afro-Asiatic, travelling out of Egypt.)

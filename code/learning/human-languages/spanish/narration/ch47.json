@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 47,
-  "title": "Venir --- Coming",
+  "title": "Poner --- Putting, and the Root Under Position",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0f986801bdeaee09",
+  "sourceHash": "fnv1a64:9ce9bd8a731a825a",
   "lessons": [
     {
-      "id": "ES-C13-venir",
+      "id": "ES-C13-poner",
       "sequence": 1040,
-      "title": "venir — coming with three singular forms",
-      "headword": "venir",
-      "romanization": "venir",
-      "gloss": "to come — with the singular present forms vengo, vienes, and viene",
+      "title": "poner — putting or placing with three singular forms",
+      "headword": "poner",
+      "romanization": "poner",
+      "gloss": "to put or place — with the singular present forms pongo, pones, and pone",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2619ed2c0360b7fc",
+      "sourceHash": "fnv1a64:6f7027e0058447ad",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can say salgo de Madrid, and you already know tengo, tienes, tiene. Now learn venir, “to come,” inside exactly the same three singular persons."
+              "text": "You already know hago, haces, hace and the careful comparison tengo, hago, digo. Add one verb on its own evidence: poner, “to put” or “to place.”"
             }
           ]
         },
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The g in vengo is hard. In vienes and viene, let ie move as one smooth vowel sequence."
+              "text": "The g in pongo has the familiar hard sound. Tap the final r of poner lightly; do not turn it into the stronger written rr sound."
             }
           ]
         },
@@ -57,53 +57,36 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "venir descends from Latin venīre, “to come.” English convene means “come together”; an event is something that “comes out”; and adventure passed through the idea of what may “come to” a person. The recurring ven- or vent- shape marks this old coming family."
+              "text": "poner descends from Latin pōnere, “to put or place.” English keeps the same placing family in position, compose (“place together”), and deposit (“place down”). The two shapes pon- and pos- are historical relatives, so poner and position are cousins even though their endings differ."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: one known comparison, still singular",
+          "title": "Grammar Lens: only the three singular forms",
           "segments": [
             {
               "kind": "table",
               "headers": [
                 "person",
-                "present of venir",
-                "known tener comparison"
+                "present of poner"
               ],
-              "columns": 3,
+              "columns": 2,
               "rowCount": 3,
               "utterances": [
-                "person: yo. present of venir: vengo. known tener comparison: tengo.",
-                "person: tú. present of venir: vienes. known tener comparison: tienes.",
-                "person: él / ella / usted. present of venir: viene. known tener comparison: tiene."
+                "person: yo. present of poner: pongo.",
+                "person: tú. present of poner: pones.",
+                "person: él / ella / usted. present of poner: pone."
               ]
             },
             {
               "kind": "speech",
-              "text": "Say vengo, vienes, viene. The learned singular forms line up closely with tengo, tienes, tiene: the yo form ends in -go, while the other two show ie. This comparison describes two complete learned sets; it does not introduce a plural “boot” table or license guesses about other verbs."
+              "text": "Say the bounded set as pongo, pones, pone. The learned yo form joins the known comparison because it ends in -go. That resemblance helps memory; it still does not predict an unseen verb."
             },
             {
               "kind": "speech",
-              "text": "Now contrast leaving and coming with known de and Madrid:"
-            },
-            {
-              "kind": "speech",
-              "text": "Salgo de Madrid. — “I leave Madrid.”"
-            },
-            {
-              "kind": "speech",
-              "text": "Vengo de Madrid. — “I come from Madrid.”"
-            },
-            {
-              "kind": "speech",
-              "text": "Vienes de Madrid. — “You come from Madrid.”"
-            },
-            {
-              "kind": "speech",
-              "text": "Plural persons and free-standing arrival vocabulary wait for later lessons."
+              "text": "For now, practise the forms and their meaning without importing a new object. Later lessons can add the nouns needed for expressions such as setting a table or putting on clothing. Plural persons and reflexive ponerse also wait."
             }
           ]
         },
@@ -121,88 +104,68 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“venir — vengo, vienes, viene”",
+              "instruction": "“poner — pongo, pones, pone”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “venir — vengo, vienes, viene”]"
+              "source": "[YOU SAY: “poner — pongo, pones, pone”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Vengo de Madrid.”",
+              "instruction": "“pōnere — position — poner”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Vengo de Madrid.”]"
+              "source": "[YOU SAY: “pōnere — position — poner”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“vengo / tengo — vienes / tienes”",
+              "instruction": "“a learned comparison, not a prediction rule”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “vengo / tengo — vienes / tienes”]"
+              "source": "[YOU SAY: “a learned comparison, not a prediction rule”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C13-venir-singular-forms",
-              "prompt": "Give the learned singular present forms of venir: yo, tú, then él/ella/usted.",
+              "id": "ES-C13-poner-singular-forms",
+              "prompt": "Give the learned singular present forms of poner: yo, tú, then él/ella/usted.",
               "assesses": [
-                "ES-LEX-VENIR",
-                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR"
+                "ES-LEX-PONER",
+                "ES-GRAMMAR-PONER-PRESENT-SINGULAR"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "vengo, vienes, viene",
-                "vengo vienes viene",
-                "vengo / vienes / viene"
+                "pongo, pones, pone",
+                "pongo pones pone",
+                "pongo / pones / pone"
               ],
               "feedback": {
-                "correct": "Right: vengo, vienes, viene.",
-                "incorrect": "Retrieve the bounded set: vengo, vienes, viene."
+                "correct": "Right: pongo, pones, pone.",
+                "incorrect": "Keep the g in the yo form: pongo, pones, pone."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C13-venir-come-from-madrid",
-              "prompt": "Say 'I come from Madrid' in Spanish.",
+              "id": "ES-C13-poner-meaning",
+              "prompt": "What two English verbs does poner cover?",
               "assesses": [
-                "ES-LEX-VENIR",
-                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR",
-                "ES-LEX-DE"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "vengo de madrid.",
-                "vengo de madrid"
-              ],
-              "feedback": {
-                "correct": "Right: Vengo de Madrid.",
-                "incorrect": "Use vengo, then the known de plus Madrid."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C13-venir-tener-contrast",
-              "prompt": "Give the tú forms of venir and tener, in that order.",
-              "assesses": [
-                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR",
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
+                "ES-LEX-PONER"
               ],
               "responseSeconds": 7,
               "acceptedResponses": [
-                "vienes, tienes",
-                "vienes tienes",
-                "vienes / tienes"
+                "to put or to place",
+                "put or place",
+                "to put and to place",
+                "put and place"
               ],
               "feedback": {
-                "correct": "Right: vienes, tienes.",
-                "incorrect": "Both learned tú forms show ie: vienes, tienes."
+                "correct": "Right: poner means to put or to place.",
+                "incorrect": "Retrieve the placing pair: to put or to place."
               }
             }
           ]
@@ -220,7 +183,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does venir mean? (“To come.”) Give its three learned forms. (Vengo, vienes, viene.) Which learned verb provides the close comparison? (Tener: tengo, tienes, tiene.) Which Latin source and English cousin help explain it? (Venīre; convene, event, or adventure.) Next: compare all six learned yo forms only after retrieving this chapter's three verbs."
+              "text": "What does poner mean? (“To put” or “to place.”) Give its three learned forms. (Pongo, pones, pone.) Which Latin source and English cousin help explain it? (Pōnere; position, compose, or deposit.) Next: learn salir inside the same three-person frame."
             }
           ]
         }

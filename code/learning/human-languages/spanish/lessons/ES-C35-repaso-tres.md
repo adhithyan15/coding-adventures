@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C35-repaso-tres
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1684
-chapter: 91
+sequence: 1704
+chapter: 93
 type: practice-mix
 headword: (review)
 gloss: review — three ordinary verbs, and what "ordinary" is about to mean

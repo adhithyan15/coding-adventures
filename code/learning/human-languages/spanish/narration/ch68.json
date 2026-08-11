@@ -2,33 +2,31 @@
   "version": 1,
   "language": "spanish",
   "chapter": 68,
-  "title": "Days of the Week",
+  "title": "Synthesis --- Claiming, and Not Claiming",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b13095473cea15de",
+  "sourceHash": "fnv1a64:dfa116a391110290",
   "lessons": [
     {
-      "id": "ES-C21-lunes-viernes",
-      "sequence": 1330,
-      "title": "lunes to viernes — the planets of the week, worn down",
-      "headword": "lunes, martes, miércoles, jueves, viernes",
-      "romanization": "lunes, martes, miércoles, jueves, viernes",
-      "gloss": "the weekdays (Monday–Friday) — worn-down planet-god names",
+      "id": "ES-C18-sintesis-subjuntivo",
+      "sequence": 1246,
+      "title": "Synthesis — claiming, and not claiming",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — the mood tells your listener whether you are claiming it is true",
       "script": "latin",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "wide-table"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:4cafd3e0e35e518d",
+      "sourceHash": "fnv1a64:dea63cf33669380e",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes for one table that cannot be read aloud"
+          "your eyes, because the lesson points at something written down"
         ],
-        "waitUntilStopped": [
-          "The words, taken apart: the planet weekdays"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The words, taken apart: the planet weekdays until you have stopped, and I will say so again when we reach it."
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
       },
       "blocks": [
         {
@@ -44,40 +42,73 @@
             },
             {
               "kind": "speech",
-              "text": "The Romans mapped the seven-day week onto the seven visible \"wandering stars\" — the planet-gods. Spanish kept that map, but handled the word \"day\" differently from its Romance cousins: where French still spells out \"-di\" (day) on every weekday, Spanish mostly just dropped it."
+              "text": "Nothing new in this chapter. Say hablas, then hables."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The words, taken apart: the planet weekdays",
+          "type": "grammar",
+          "title": "Grammar Lens: what the second one is actually doing",
           "segments": [
             {
               "kind": "speech",
-              "text": "Each weekday began life as \"[planet-god]'s diēs (day).\" In Vulgar Latin, diēs was simply dropped as a separate word in most of these — what survived is just the planet's own Latin genitive form. That's why martes, jueves, viernes already end in ‑s: not because diēs wore down into one, but because Martis, Iovis, Veneris — the planets' own genitive forms — end in ‑s in Latin already. Lunes has no such ‑s to inherit (lūnae doesn't end in one), so it likely picked up the ending by analogy with its four siblings:"
-            },
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
-              "headers": [
-                "Spanish",
-                "from Latin",
-                "planet-god",
-                "English echo"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, planet-god, English echo. Come back and look at it when you have stopped."
+              "text": "Those two forms are not two tenses. They are two stances."
             },
             {
               "kind": "speech",
-              "text": "Compare French, which keeps diēs as its own visible syllable on every day — lundi, mardi, jeudi — while Spanish dropped it from four of its five weekdays. miércoles is the odd one out: some historians of the language think its extra \"‑coles\" is a genuine surviving trace of diēs itself (fused in and reshaped) — though the exact sound changes are debated, unlike the plainer, better-understood story for its four siblings."
+              "text": "Hablas español. — I am telling you this is so. Quiero que hables español. — I am not telling you anything is so."
+            },
+            {
+              "kind": "speech",
+              "text": "In the first, you put a fact on the table and stood behind it. In the second, nothing has been claimed at all: the speaking has not happened, and might not. The mood is the difference, and the difference is about what you are willing to assert."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole of it, and it is worth holding onto, because every remaining use of this mood — and there are many — is a version of the same move. Wishing, doubting, denying, hoping: none of them puts a fact on the table."
+            },
+            {
+              "kind": "speech",
+              "text": "Indicative: this is so. Subjunctive: I am not saying this is so."
             }
           ]
         },
         {
           "index": 2,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— ¿Hablas español? — Ana quiere que hable español. — Ojalá hables mucho."
+            },
+            {
+              "kind": "speech",
+              "text": "Three lines, three stances. The first asks about a fact. The second reports somebody's wish, so nothing is asserted. The third wishes it outright."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ojalá deserves a last look, because it explains itself."
+            },
+            {
+              "kind": "speech",
+              "text": "It is Arabic — wa-šā' allāh, \"and may God will it\" — carried into Spanish over eight centuries of al-Andalus and kept long after the religion behind it stopped being the speaker's. A Spanish speaker saying ojalá today is uttering a prayer in a language they do not speak, to a God the sentence no longer names."
+            },
+            {
+              "kind": "speech",
+              "text": "And it can only ever take this mood. Of course it can: a thing God has yet to will is, by definition, not a fact you can assert."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -90,183 +121,83 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"lunes, martes, miércoles, jueves, viernes\" — the work week",
+              "instruction": "the three-line exchange, and name the stance of each line",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"lunes, martes, miércoles, jueves, viernes\" — the work week]"
+              "source": "[YOU SAY: the three-line exchange, and name the stance of each line]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "each as \"[planet]'s day, worn down\" — \"lunes = Moon, jueves = Jupiter\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: each as \"[planet]'s day, worn down\" — \"lunes = Moon, jueves = Jupiter\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the bridge — \"martes / Tuesday, both the war-god's day (Mars / Tiw)\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the bridge — \"martes / Tuesday, both the war-god's day (Mars / Tiw)\"]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
               "kind": "speech",
-              "text": "Recall the weekday family:"
+              "text": "Until choosing the mood feels like choosing what you mean."
             },
             {
-              "kind": "speech",
-              "text": "What did every Spanish weekday begin life as? (\"[Planet-god]'s diēs (day)\" — the same Latin phrase French keeps more visibly with -di.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Why do martes, jueves, viernes end in -s, and where does lunes get its -s from? (From the planet's own Latin genitive — Martis/Iovis/ Veneris already end in -s; lunes likely picked it up by analogy, since lūnae has no -s of its own.)"
-            },
-            {
-              "kind": "speech",
-              "text": "What's debated about miércoles? (Whether its \"‑coles\" is a genuine surviving trace of diēs — unlike the plainer, better-understood story for its four siblings.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Why do martes and Tuesday line up? (They name the same day for the war-god: Mars in Latin, Tiw in Germanic.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C21-sabado-domingo",
-      "sequence": 1340,
-      "title": "sábado and domingo — the week's religious edge",
-      "headword": "sábado, domingo",
-      "romanization": "sábado, domingo",
-      "gloss": "the weekend (Saturday, Sunday) — where religion overwrote astronomy",
-      "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "wide-table"
-      ],
-      "sourceHash": "fnv1a64:db91adf9eafdf3a2",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The two days, taken apart"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The two days, taken apart until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Five days named for planets — then two that broke the pattern entirely. The weekend is where religion overwrote astronomy, and Spanish keeps both rewrites in plain view."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The two days, taken apart",
-          "segments": [
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 2,
-              "headers": [
-                "Spanish",
-                "from Latin",
-                "meaning",
-                "note"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-sintesis-subjuntivo-assert",
+              "prompt": "You are stating a fact about a friend: you speak Spanish. Hablas or hables?",
+              "assesses": [
+                "ES-GRAMMAR-AR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 2 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, meaning, note. Come back and look at it when you have stopped."
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "hablas",
+                "hablas - indicative"
+              ],
+              "feedback": {
+                "correct": "Yes — you put a fact on the table.",
+                "incorrect": "hablas. The indicative asserts."
+              }
             },
             {
-              "kind": "speech",
-              "text": "Two different rewrites:"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-sintesis-subjuntivo-wish",
+              "prompt": "Now you only wish it were so. Which form follows ojala?",
+              "assesses": [
+                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "hables",
+                "hables - subjunctive",
+                "ojala hables"
+              ],
+              "feedback": {
+                "correct": "Yes — nothing is being claimed.",
+                "incorrect": "hables. A wish asserts nothing."
+              }
             },
             {
-              "kind": "speech",
-              "text": "sábado would have been \"Saturn's day\" (as English Saturday still is — the one weekday English kept a Roman god for). Instead, Latin Christians borrowed the Jewish Sabbath (Sabbatum from Hebrew shabbāt), and it became sábado. So English Saturday and Spanish sábado are the same day, two different names — the planet vs. the Sabbath."
-            },
-            {
-              "kind": "speech",
-              "text": "domingo drops Sun-worship entirely: where English keeps Sunday, Spanish made it diēs Dominica, \"the Lord's day\" (Dominus becomes English dominion, dominate, dame). Spanish kept domingo recognizably close to Dominica — compare French's more worn-down dimanche, where the di- (day) fossil jumped to the front of the word."
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-sintesis-subjuntivo-ojala",
+              "prompt": "What did ojala originally mean, and in which language?",
+              "assesses": [
+                "ES-ETYMON-OJALA-HISPANIC-ARABIC"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "may god will it, in arabic",
+                "arabic, may god will it",
+                "and may god will it",
+                "wa sha allah"
+              ],
+              "feedback": {
+                "correct": "Right — and that is exactly why it cannot take the asserting mood.",
+                "incorrect": "Arabic wa-sha' allah, 'and may God will it'."
+              }
             }
           ]
         },
         {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the full week — \"lunes, martes, miércoles, jueves, viernes, sábado, domingo\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the full week — \"lunes, martes, miércoles, jueves, viernes, sábado, domingo\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"sábado = Sabbath, domingo = the Lord's day\" — religion, not planets",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"sábado = Sabbath, domingo = the Lord's day\" — religion, not planets]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pair-ups — \"sábado / Saturday (Sabbath vs. Saturn)\", \"domingo / Sunday (Lord vs. Sun)\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pair-ups — \"sábado / Saturday (Sabbath vs. Saturn)\", \"domingo / Sunday (Lord vs. Sun)\"]"
-            }
-          ]
-        },
-        {
-          "index": 3,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -278,7 +209,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give all seven Spanish days. (Lunes … domingo.) Where does sábado come from, and its English contrast? (The Sabbath, Sabbatum; English kept Saturday = Saturn's day.) What does domingo mean literally? (\"The Lord's day,\" diēs Dominica.)"
+              "text": "What does the indicative do that the subjunctive does not? (Claim that something is so.) Why can ojalá never take the indicative? (Because a thing not yet willed is not a fact.) And what language is ojalá? (Arabic — a prayer that outlived the religion behind it.)"
             }
           ]
         }

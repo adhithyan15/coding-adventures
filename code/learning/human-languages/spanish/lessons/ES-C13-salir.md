@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C13-salir
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1030
-chapter: 46
+sequence: 1050
+chapter: 48
 type: word
 headword: salir
 gloss: to leave or go out — with the singular present forms salgo, sales, and sale

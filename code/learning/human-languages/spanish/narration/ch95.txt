@@ -1,173 +1,42 @@
-Spanish, chapter 95: Opening, Closing, Sitting Down, Standing Up.
-4 lessons. All 4 can be done entirely by ear.
+Spanish, chapter 95: Synthesis --- What You Like, and Who Does the Liking.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 4.
-abrir — "to open", and the one part of it that misbehaves.
-
-Warm-up.
-[pause 2 seconds]
-Say corro and camino once — two verbs that gave you no trouble. This one is nearly as easy, and its one misbehaving piece is a word you will read on a shop door before you ever say it.
-
-Sounds you'll need.
-b-soft — between vowels the b barely closes the lips: a-BREER.
-r-tap — a single flick for the final r.
-
-The word, taken apart: abrir.
-abrir ("to open") from Latin aperīre, "to open, to uncover". The p softened to b between vowels on the way into Spanish — the slide that turned sapere into saber and lupus into lobo.
-English took the root through two doors and does not notice they are one word:
-straight from Latin apertūra: aperture, the opening a lens makes.
-through French ovrir and its participle overt: overt ("out in the open") and overture, an opera's opening.
-aperitif, a drink that opens the appetite; Spanish, el aperitivo.
-The cousin that is not one. April looks like it belongs here — the opening month. That is old folk etymology and is not accepted: the better proposals point at an Etruscan Apru, borrowed from Aphrodite, or at an Italic word meaning "the next one". A hook this pretty is the kind to check.
-
-Grammar Lens: regular everywhere but the participle.
-In the present, abrir is a plain -ir verb, the family escribir belongs to: abro, abres, abre, abrimos, abren. Nothing breaks, nothing grows.
-The past participle is where the irregularity lives. A regular -ir verb would give abrido. Spanish says abierto, straight down from Latin apertum, keeping the e that broke to ie under stress long ago.
-You will meet that participle long before the tense it belongs to, because it is a word on doors: ABIERTO on the sign, está abierto for "it is open now". Escribir does the same with escrito. Both refuse the regular ending because both inherited a Latin participle whole.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "abro, abres, abre, abrimos, abren"]
-[pause 8 seconds for the answer]
-[your turn — say: "Abro el libro" then "Está abierto"]
-[pause 8 seconds for the answer]
-[your turn — say: "abrir" then English "aperture, overt, overture"]
-[pause 8 seconds for the answer]
-[your turn — say: "correr" then English "current, curriculum" — still there from before]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What is the past participle of abrir, and what would a regular verb have given? (Abierto; abrido.) Name two English words from aperīre. (Aperture, overt, overture, aperitif.) Is April one? (No — folk etymology.) Which other verb keeps an inherited Latin participle? (Escribir becomes escrito.) And which Latin verb is behind correr? (Currere.)
-
-
-Lesson 2 of 4.
-cerrar — "to close", from the bar across the door.
+Lesson 1 of 1.
+Synthesis — what you like, and who is doing the liking.
 
 Warm-up.
 [pause 2 seconds]
-Abro, abres, abre — and the sign saying ABIERTO. Here is the sign on the other side of the day, and a verb that cracks its stem.
+Say "I like coffee" in Spanish. Then answer this: in that sentence, which word is the subject?
 
-Sounds you'll need.
-soft-c — c before e is soft: a th across most of Spain, an s across Latin America.
-rolled-rr — the double r is fully trilled: se-RRAR.
+Grammar Lens: the sentence that will not let you be the subject.
+Me gusta el café. The coffee is the subject. The coffee does the pleasing. You are the one it happens to.
+English puts you in charge: I like coffee — I am the subject, the coffee just sits there. Spanish reverses it.
+Two chapters ago, all three verbs were about the one doing it. That is why this chapter had to sit next to them.
+Translate I like word by word and you build a sentence Spanish does not have — which is why this is a chapter about saying an idea, not a word.
 
-The word, taken apart: cerrar.
-cerrar ("to close") from Late Latin serāre, "to bolt, to fasten", from the noun sera: the bar you drop across a door. Closing here is a physical object being put in place, not an abstraction.
-Its Romance siblings kept the pressure: Italian serrare, French serrer, "to squeeze, to tighten". English holds one of that branch, serried, as in ranks pressed shut against each other. Reference works generally connect sera to Latin serere, "to join in a row", which would make series and insert distant relatives — usual, but not certain.
+The exchange.
+— ¿Te gusta el café? — Sí, me gusta mucho. ¿Y a ti? — A mí también. Mucho gusto.
+That last line is a joke you can now get. Mucho gusto — the phrase you learned long ago for "pleased to meet you" — is the same word. It has always meant much pleasure. You have been saying gustar's noun since your third conversation in this book.
 
-Why it's said this way: the road Spanish did not take.
-Latin had a perfectly good verb for closing: claudere. English is full of it — close, closet, closure, clause, cloister, include, exclude, conclude, recluse.
-Spanish let it go. For shutting a door it took serāre instead, and kept claudere only in words scholars borrowed back much later: incluir, excluir, concluir, clausura. That inversion is worth sitting with: the bigger English family belongs to the verb Spanish gave up. A cousin web maps what each language kept, and these two kept opposite halves.
-
-Grammar Lens: e becomes ie, and the sign on the door.
-[a table of 5 rows, read aloud]
-person: yo. form: cierro.
-person: tú. form: cierras.
-person: él/ella/usted. form: cierra.
-person: nosotros. form: cerramos.
-person: ellos/ustedes. form: cierran.
-Dormir broke o becomes ue. Cerrar breaks e becomes ie — the same boot, the other vowel, the same trigger: stress on the stem. Cerramos is plain because there the stress moves to the ending.
-Its participle, unlike abierto, is regular: cerrado. The two signs on one door are built differently — abierto inherited whole from Latin, cerrado made by rule.
+What you've built.
+Gustar is Latin gustāre, to taste — English gusto, disgust. Liking, in Spanish, started at the tongue.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "cierro, cierras, cierra, cerramos, cierran"]
+[your turn — say: the exchange above, both parts]
 [pause 8 seconds for the answer]
-[your turn — say: "Abro el libro" then "Cierro el libro"]
+[your turn — say: it again, and as you say me gusta, notice that you are not the subject]
 [pause 8 seconds for the answer]
-[your turn — say: "ABIERTO" then "CERRADO" — the two signs]
-[pause 8 seconds for the answer]
-[your turn — say: "aperīre, aperture" then "serāre, serried" — the two doors' roots]
-[pause 8 seconds for the answer]
+[repeat that twice]
+Until me gusta arrives without translating I like first.
+[question — say your answer, then pause 10 seconds]
+In me gusta el cafe, what is the subject?
+[question — say your answer, then pause 8 seconds]
+What did gustar originally mean?
+[question — say your answer, then pause 10 seconds]
+Which phrase you learned long ago is built from this same word?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What was a sera, and does cerrar come from claudere? (The bar dropped across a door; and no — Spanish kept claudere only in incluir, excluir, concluir.) Which form of cerrar keeps its plain e, and why? (Cerramos — the stress moves to the ending, as in dormimos.) Which participle is irregular, abierto or cerrado? (Abierto.) And what did intendere, behind entender, mean literally? (To stretch toward.)
-
-
-Lesson 3 of 4.
-sentarse — "to seat oneself", which is how Spanish thinks about sitting down.
-
-Warm-up.
-[pause 2 seconds]
-Two things in hand. Cierro — the e cracking to ie. And me llamo, "I call myself", where the little me bounced the action back onto you. This verb needs both at once.
-
-Sounds you'll need.
-diphthong-ie — the stressed e breaks: me siento = me SYEN-to.
-s-clear — a clean hissing s, never a z buzz.
-
-The word, taken apart: sentarse.
-sentar from Vulgar Latin sedentāre, built not on the Latin verb but on its present participle: sedēns, "sitting", from sedēre, "to sit". Spanish made a new verb out of being in a sitting state.
-Sedēre is one of the great English suppliers, and hardly any descendant still looks like sitting: sedentary, sediment, sedate; session and siege (an army sitting down outside a city); preside, reside; assess, obsess, possess. By way of Greek hedra, "seat", it also gives cathedral and chair.
-Then the other branch. English sit, seat, settle, saddle and nest come down from the very same root, sed-, through Germanic rather than Latin. Neither borrowed from the other: they are siblings, exactly as padre and father are, each branch reshaping the sounds its own way.
-
-Grammar Lens: seating someone, and seating yourself.
-Plain sentar means to seat somebody else. To sit down yourself, you send the action back with the pronoun that made me llamo "I call myself":
-[a table of 5 rows, read aloud]
-person: yo. form: me siento.
-person: tú. form: te sientas.
-person: él/ella/usted. form: se sienta.
-person: nosotros. form: nos sentamos.
-person: ellos/ustedes. form: se sientan.
-Two patterns run at once, and you have both. The pronoun changes with the person — me, te, se, nos, se — and the stem breaks e becomes ie wherever the stress lands on it, leaving nos sentamos plain. The pronoun stands before a conjugated verb and clips onto an infinitive, hence the name sentarse.
-Two verbs, one shape. Me siento is also the yo-form of sentirse, "to feel": me siento bien is "I feel fine". Only what follows tells them apart.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "me siento, te sientas, se sienta, nos sentamos, se sientan"]
-[pause 8 seconds for the answer]
-[your turn — say: "me llamo" then "me siento" — the same little me, twice]
-[pause 8 seconds for the answer]
-[your turn — say: "Cierro el libro y me siento" — I close the book and sit down]
-[pause 8 seconds for the answer]
-[your turn — say: "sentarse" then English "session, sedentary, preside"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does sentarse say literally, and which Latin form was it built on? (To seat oneself; the participle sedēns.) Are English sit and Latin sedēre parent and child, or siblings? (Siblings — separate branches of one root, like father and padre.) Which form keeps its plain e, and what was a sera? (Nos sentamos; the bar across a door.)
-
-
-Lesson 4 of 4.
-levantarse — "to raise oneself", and how Spanish says "stand".
-
-Warm-up.
-[pause 2 seconds]
-Me siento put you in the chair, the little me bouncing the action back onto you. Now get out of it. The pronoun works the same way; this time the stem does not crack at all.
-
-Sounds you'll need.
-v-b — Spanish v and b are one sound: le-ban-TAR.
-nasal-n — a clean n before the t, not swallowed.
-
-The word, taken apart: levantarse.
-levantar from Vulgar Latin levantāre, from levāns, the present participle of levāre, "to raise, to lighten" — itself from levis, "light, not heavy".
-Notice the shape: a Latin present participle, made into a new verb — the identical recipe that gave sentar from sedēns. Spanish built both of its body-position verbs out of a word for the state rather than the act.
-Levāre is everywhere in English: lever, elevate, elevator for raising; levity, levitate, alleviate, relieve for lightening; leaven, what raises the bread, and levy, a tax raised. And the Levant, from French levant, "rising": from western Europe it lay where the sun came up. English light, the opposite of heavy, is the Germanic cousin of levis, as sit is of sedēre.
-
-Grammar Lens: raising a thing, raising yourself, standing still.
-Levantar on its own raises something else. Levantarse raises you:
-[a table of 3 rows, read aloud]
-Levanto la mano means I raise my hand.
-Levanto la cabeza means I lift my head.
-Me levanto means I get up, I stand up.
-The endings are ordinary -ar throughout — me levanto, te levantas, se levanta, nos levantamos, se levantan — and nothing breaks. So the chapter has now shown its two features apart: sentarse is reflexive and a stem-changer; levantarse is reflexive only.
-For standing as a state, Spanish uses no verb. It says estar de pie — "to be on foot", el pie being the foot. English's single "stand" splits in two: me levanto for getting up, estoy de pie for being up.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "me levanto, te levantas, se levanta, nos levantamos, se levantan"]
-[pause 8 seconds for the answer]
-[your turn — say: "Levanto la mano" then "Levanto la cabeza" then "Me levanto"]
-[pause 8 seconds for the answer]
-[your turn — say: "Estoy de pie" — I am standing]
-[pause 8 seconds for the answer]
-[your turn — say: "Abro el libro, me siento, cierro el libro, me levanto"]
-[pause 8 seconds for the answer]
-[your turn — say: "levantar" then English "lever, elevate, Levant"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say the chapter's four verbs, then say how you are standing. (Abro, cierro, me siento, me levanto; estoy de pie.) What do sentar and levantar share in their making, and which also breaks its stem? (Both from a Latin present participle, sedēns and levāns; sentarse breaks e becomes ie.) Name the two roots on that door, and which participle is irregular. (Aperīre and serāre — not claudere; abierto.) Why la mano? (Manus was feminine in Latin.)
+Who is the subject of me gusta el café? (El café.) What did gustar mean first? (To taste.) And what has mucho gusto meant all along? (Much pleasure — the same word.)
