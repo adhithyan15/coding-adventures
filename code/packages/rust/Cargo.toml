@@ -766,6 +766,7 @@ members = [
     "vault-import-export",
     "vault-pm-format",
     "vault-pm-domain",
+    "vault-pm-audit",
     "storage-fs",
     "chief-of-staff-channel-crypto",
     "chief-of-staff-channel-store",

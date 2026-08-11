@@ -1,0 +1,12 @@
+[package]
+name = "coding_adventures_vault_pm_audit"
+version = "0.1.0"
+edition = "2021"
+description = "Storage-neutral signed operation audit events for the local-first password manager"
+
+[dependencies]
+coding_adventures_canonical_cbor = { path = "../canonical-cbor" }
+coding_adventures_ed25519 = { path = "../ed25519" }
+coding_adventures_vault_pm_domain = { path = "../vault-pm-domain" }
+coding_adventures_vault_pm_format = { path = "../vault-pm-format" }
+coding_adventures_zeroize = { path = "../zeroize" }
