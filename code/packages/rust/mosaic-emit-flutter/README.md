@@ -129,6 +129,13 @@ package builder: it requires `MosaicHost.loadRequired()`, waits for the first
 Rust props envelope, exposes an accessible startup indicator, and fails on
 missing required props instead of synthesizing sample values.
 
+Every emitted project also owns `analysis_options.yaml` and
+`test/widget_test.dart`, with the matching `flutter_lints` development
+dependency. Running the documented `flutter create` command therefore keeps a
+Mosaic app smoke test that imports the actual generated pub package instead of
+installing Flutter's stock `MyApp` counter test. `flutter analyze` checks the
+complete shell, test, host binding, and every package export.
+
 Mosaic conditions pass through a generated value-truthiness helper before they
 enter Dart's statically typed boolean positions. Text-input change and commit
 handlers synthesize their declared zero- or one-value event constructors, so a

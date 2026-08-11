@@ -1080,7 +1080,7 @@ jobs:
             cd "$output/flutter"
             flutter create --platforms=linux --project-name mosaic_taskapp_acceptance .
             flutter pub get
-            dart analyze lib hook/build.dart
+            flutter analyze
             flutter build linux --debug
           )
 
@@ -1105,7 +1105,7 @@ jobs:
           (
             cd "$strict_output/flutter"
             flutter pub get
-            dart analyze lib
+            flutter analyze
           )
 
           toolkit_output="$RUNNER_TEMP/mosaic-flutter-toolkit"
@@ -1114,7 +1114,8 @@ jobs:
             cd "$toolkit_output/flutter"
             flutter create --platforms=linux --project-name mosaic_toolkit_acceptance .
             flutter pub get
-            dart analyze lib
+            flutter analyze
+            flutter test
             flutter build linux --debug
           )
 
@@ -1125,7 +1126,7 @@ jobs:
             flutter create --platforms=linux --project-name mosaic_drag_board .
             cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/drag-board-test/widget_test.dart" test/widget_test.dart
             flutter pub get
-            dart analyze lib/DragBoard.dart test/widget_test.dart
+            flutter analyze
             flutter test test/widget_test.dart
           )
 
@@ -1137,7 +1138,7 @@ jobs:
             flutter create --platforms=linux --project-name mosaic_data_grid_acceptance .
             cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/data-grid-test/widget_test.dart" test/widget_test.dart
             flutter pub get
-            dart analyze lib/DataGrid.dart test/widget_test.dart
+            flutter analyze
             flutter test test/widget_test.dart
           )
 

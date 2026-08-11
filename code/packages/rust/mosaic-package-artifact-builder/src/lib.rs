@@ -1693,7 +1693,11 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     "{}\n## Rust application runtime\n\nThis project includes Mosaic's standard Dart FFI binding. {} The generated host owns the application handle, event sequence, snapshots, returned buffers, and teardown.\n",
                     proj.readme, runtime_distribution
                 );
-                let flat: [(&str, &str); 2] = [("pubspec.yaml", &pubspec), ("README.md", &readme)];
+                let flat: [(&str, &str); 3] = [
+                    ("pubspec.yaml", &pubspec),
+                    ("analysis_options.yaml", &proj.analysis_options_yaml),
+                    ("README.md", &readme),
+                ];
                 for (rel, body) in flat {
                     let p = backend_dir.join(rel);
                     write_file(&p, body.as_bytes())?;
@@ -1705,6 +1709,12 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 }
                 write_file(&nested, proj.main_dart.as_bytes())?;
                 written.push(nested);
+                let widget_test = backend_dir.join("test/widget_test.dart");
+                if let Some(parent) = widget_test.parent() {
+                    create_dir_all(parent)?;
+                }
+                write_file(&widget_test, proj.widget_test_dart.as_bytes())?;
+                written.push(widget_test);
                 // Dart package imports may not escape `lib/`. Keep the
                 // top-level artifacts for Mosaic package consumers, and
                 // mirror every export into the runnable Flutter package so
@@ -6867,9 +6877,20 @@ version = "1"
         assert!(host.contains("FutureOr<Map<String, Object?>?> handleEvent"));
         let pubspec = fs::read_to_string(dir.join("pubspec.yaml")).expect("pubspec.yaml");
         assert!(pubspec.contains("ffi: '>=2.1.0 <3.0.0'"));
+        assert!(pubspec.contains("flutter_lints: '>=6.0.0 <7.0.0'"));
+        let analysis_options =
+            fs::read_to_string(dir.join("analysis_options.yaml")).expect("analysis_options.yaml");
+        assert!(analysis_options.contains("package:flutter_lints/flutter.yaml"));
+        let widget_test =
+            fs::read_to_string(dir.join("test/widget_test.dart")).expect("widget_test.dart");
+        assert!(widget_test.contains("package:mosaic_grid/main.dart"));
+        assert!(widget_test.contains("const MosaicApp()"));
+        assert!(!widget_test.contains("MyApp"));
         let readme = fs::read_to_string(dir.join("README.md")).expect("README.md");
         assert!(readme.contains("MOSAIC_APP_LIBRARY"));
         assert!(readme.contains("owns the application handle"));
+        assert!(readme.contains("flutter analyze"));
+        assert!(readme.contains("flutter test"));
     }
 
     #[test]

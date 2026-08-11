@@ -293,8 +293,9 @@ final class _MosaicRuntime {
     final input = calloc<_MosaicBytes>();
     final output = calloc<_MosaicBuffer>();
     try {
-      if (encoded.isNotEmpty)
+      if (encoded.isNotEmpty) {
         bytes.asTypedList(encoded.length).setAll(0, encoded);
+      }
       input.ref
         ..ptr = encoded.isEmpty ? nullptr : bytes
         ..len = encoded.length;
