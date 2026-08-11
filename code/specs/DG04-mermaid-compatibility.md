@@ -193,6 +193,8 @@ Automatic numbering preserves Mermaid 11.15+ decimal start and increment
 values through semantic IR, layout, and shaped Paint labels. Re-enabling a
 paused counter without arguments resumes its current value and increment;
 layout rounds every increment to Mermaid's two-decimal sequence precision.
+Semantic validation rejects contiguous number tokens so thousandths cannot be
+misread as a valid start/increment pair, matching the pinned lexer boundary.
 Nested `rect` background highlights carry RGB/RGBA fills and normalized HSL/HSLA
 fills through semantic block events, layout frames, and Paint. Empty `rect`
 headers preserve Mermaid's theme-default background intent, and CSS named
