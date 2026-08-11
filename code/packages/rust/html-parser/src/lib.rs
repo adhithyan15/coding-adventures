@@ -5392,6 +5392,10 @@ impl HtmlParser {
         }
 
         if !in_foreign_content && name == "img" && self.current_element_is_table_structure() {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-img-start-tag-in-table",
+                "img start tag in a table context was foster parented",
+            ));
             if let Some(path) =
                 self.insert_node_before_open_table_inside_previous_center_font_context(
                     Node::element(name.clone(), attributes.clone()),
@@ -5400,6 +5404,8 @@ impl HtmlParser {
                 self.open_elements.push(path);
                 return;
             }
+            self.insert_node_before_open_table(Node::element(name, attributes));
+            return;
         }
 
         if !in_foreign_content
@@ -34297,6 +34303,48 @@ mod tests {
                 .parser_diagnostics
                 .iter()
                 .all(|diagnostic| diagnostic.code != "unexpected-li-start-tag-in-table"));
+        }
+    }
+
+    #[test]
+    fn reports_img_start_tags_fostered_from_table_structure() {
+        let output =
+            parse_html_with_diagnostics("<!doctype html><table><img src=x></table>").unwrap();
+        assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic
+                == &ParserDiagnostic::new(
+                    "unexpected-img-start-tag-in-table",
+                    "img start tag in a table context was foster parented",
+                )
+        }));
+        let children = &body(&output.document).children;
+        assert_eq!(element(&children[0]).name, "img");
+        assert_eq!(element(&children[1]).name, "table");
+
+        let output = parse_html_with_diagnostics(
+            "<!doctype html><table><center> <font>a</center> <img> <tr><td> </td> </tr> </table>",
+        )
+        .unwrap();
+        assert!(output
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "unexpected-img-start-tag-in-table"));
+        let children = &body(&output.document).children;
+        assert_eq!(element(&children[0]).name, "center");
+        let font = element(&children[1]);
+        assert_eq!(font.name, "font");
+        assert_eq!(element(&font.children[0]).name, "img");
+        assert_eq!(element(&children[2]).name, "table");
+
+        for source in [
+            "<!doctype html><img src=x>",
+            "<!doctype html><table><tr><td><img src=x></td></tr></table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-img-start-tag-in-table"));
         }
     }
 
