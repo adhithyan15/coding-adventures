@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Thank You, Yes, and No",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0dbb2c34355070db",
+  "sourceHash": "fnv1a64:7ef2a126cfcd7b8a",
   "lessons": [
     {
       "id": "ES-C19-si",
@@ -167,7 +167,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82b8ef5dee485ae2",
+      "sourceHash": "fnv1a64:d902223ec6a8f8dc",
       "notice": null,
       "blocks": [
         {
@@ -235,7 +235,7 @@
             },
             {
               "kind": "speech",
-              "text": "<!-- the negator sense is taught in chapter 14, where the learner has a verb -->."
+              "text": "<!-- the negator sense is taught in ES-C06-hablo-espanol, the first lesson where the learner has a verb to put it in front of. Named by lesson id, not by chapter number: chapter numbers move on every split, and a stale number here is invisible -- this comment said \"chapter 14\" through three renumbers after the lesson had moved to chapter 20. -->."
             }
           ]
         },

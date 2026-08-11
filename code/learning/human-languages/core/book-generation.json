@@ -2585,37 +2585,62 @@
     {
       "language": "spanish",
       "chapter": 53,
-      "output": "spanish/book/chapters/ch53-take-ask-help.tex"
+      "output": "spanish/book/chapters/ch53-tomar.tex"
     },
     {
       "language": "spanish",
       "chapter": 54,
-      "output": "spanish/book/chapters/ch54-hear-sleep-walk-run.tex"
+      "output": "spanish/book/chapters/ch54-preguntar.tex"
     },
     {
       "language": "spanish",
       "chapter": 55,
-      "output": "spanish/book/chapters/ch55-open-close-sit-stand.tex"
+      "output": "spanish/book/chapters/ch55-ayudar.tex"
     },
     {
       "language": "spanish",
       "chapter": 56,
-      "output": "spanish/book/chapters/ch56-narrating.tex"
+      "output": "spanish/book/chapters/ch56-review-ordinary-verbs.tex"
     },
     {
       "language": "spanish",
       "chapter": 57,
-      "output": "spanish/book/chapters/ch57-bring-get-play-meet.tex"
+      "output": "spanish/book/chapters/ch57-gustar.tex"
     },
     {
       "language": "spanish",
       "chapter": 58,
-      "output": "spanish/book/chapters/ch58-wait-answer-buy.tex"
+      "output": "spanish/book/chapters/ch58-synthesis-gustar.tex"
     },
     {
       "language": "spanish",
       "chapter": 59,
-      "output": "spanish/book/chapters/ch59-giving-reasons.tex"
+      "output": "spanish/book/chapters/ch59-hear-sleep-walk-run.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 60,
+      "output": "spanish/book/chapters/ch60-open-close-sit-stand.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 61,
+      "output": "spanish/book/chapters/ch61-narrating.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 62,
+      "output": "spanish/book/chapters/ch62-bring-get-play-meet.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 63,
+      "output": "spanish/book/chapters/ch63-wait-answer-buy.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 64,
+      "output": "spanish/book/chapters/ch64-giving-reasons.tex"
     },
     {
       "language": "tamil",

@@ -22,6 +22,8 @@ describe("generated book source hashes", () => {
     // 1..54 and old chapters 16..50 shifted to 20..54.
     // HL-C99 gave each of the four mind-verbs its own chapter, plus a review
     // and a synthesis chapter, so Spanish runs 1..59 and old 48..54 -> 53..59.
+    // HL-C99b split chapter 53 (tomar/preguntar/ayudar/gustar) into six, so
+    // Spanish runs 1..64 and old 54..59 -> 59..64.
     [1, 7],
     [2, 6],
     [3, 4],
@@ -74,13 +76,18 @@ describe("generated book source hashes", () => {
     [50, 1],
     [51, 1],
     [52, 1],
-    [53, 4],
-    [54, 4],
-    [55, 4],
-    [56, 4],
-    [57, 4],
-    [58, 3],
+    [53, 1],
+    [54, 1],
+    [55, 1],
+    [56, 1],
+    [57, 1],
+    [58, 1],
     [59, 4],
+    [60, 4],
+    [61, 4],
+    [62, 4],
+    [63, 3],
+    [64, 4],
   ])("matches the browser-loaded Spanish Chapter %i AST across %i lessons", (chapter, count) => {
     const lessons = loadLessons();
     const expected = expectedBookHash("spanish", chapter);
