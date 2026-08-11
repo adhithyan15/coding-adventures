@@ -1,0 +1,15 @@
+% ============================================================================
+% animal-adaptation.query.adj — worked recall over the animal-adaptation
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what adaptation is
+% this animal known for?" (direct) or "which animal is known for this
+% adaptation?" (reverse) — it states no fact of its own — it only
+% `import`s the grounded table and asks binding queries.
+% ============================================================================
+
+import "animal-adaptation.adj"
+
+? animal_adaptation(arctic_fox, $A)   % expect camouflage (direct)
+? animal_adaptation($X, hibernation)  % expect groundhog (reverse)
+? animal_adaptation(penguin, $A)      % expect abstain -- penguin is a real animal but not one of the three tabled here
