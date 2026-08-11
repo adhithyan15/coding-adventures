@@ -257,6 +257,41 @@ impl UnlockedVaultV1 {
         project_current_item(candidates)
     }
 
+    /// Return one current redacted item only after its access event and next
+    /// owner state are durable.
+    ///
+    /// Missing and tombstoned items become the closed `NotFound` operation
+    /// result. A successful event binds the exact selected live revision;
+    /// conflicts are recorded as failed attempts. Event-publication failure
+    /// releases none of those results.
+    pub fn audited_get_item(
+        self,
+        item_id: ItemId,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<RedactedItemView>, ApplicationError> {
+        self.require_audit_epoch()?;
+        let (operation, selected_revision) = match self.current_catalog.items.get(&item_id) {
+            None => (Err(ApplicationError::NotFound), None),
+            Some(candidates) => {
+                let operation = project_current_item(candidates)
+                    .and_then(|view| view.ok_or(ApplicationError::NotFound));
+                let selected_revision = operation.is_ok().then(|| candidates[0].revision_id());
+                (operation, selected_revision)
+            }
+        };
+        self.finish_audited_access(
+            AuditActionV1::ItemRead,
+            Some(item_id),
+            selected_revision,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+            operation,
+        )
+    }
+
     /// Return the exact sole current live revision for optimistic mutation.
     ///
     /// A missing item and a current tombstone both return `None`. Multiple
@@ -308,29 +343,17 @@ impl UnlockedVaultV1 {
         randomness: AuditedAccessRandomnessV1,
         local_state_store: &dyn LocalStateStore,
     ) -> Result<crate::AuditedAccessResultV1<Vec<RedactedItemView>>, ApplicationError> {
-        if self.active.audit_event_head().is_none() {
-            return Err(ApplicationError::InvalidInput);
-        }
+        self.require_audit_epoch()?;
         let operation = self.list_items();
-        let outcome = if operation.is_ok() {
-            AuditOutcomeV1::Succeeded
-        } else {
-            AuditOutcomeV1::Failed
-        };
-        let active = publish_audited_access(
-            &self.active,
-            &self._keys,
-            &self._local_secret,
-            self._repository.as_ref(),
+        self.finish_audited_access(
             AuditActionV1::ItemList,
-            outcome,
             None,
             None,
             wall_time_ms,
             randomness,
             local_state_store,
-        )?;
-        Ok(crate::AuditedAccessResultV1::new(active, operation))
+            operation,
+        )
     }
 
     /// Search unambiguous live items using only approved redacted metadata.
@@ -351,6 +374,34 @@ impl UnlockedVaultV1 {
         }
         self.search
             .search(query, collection, limit, &self.current_catalog.items)
+    }
+
+    /// Return a redacted search result only after its access event and next
+    /// owner state are durable.
+    ///
+    /// Invalid queries, bounds, and current conflicts are recorded as failed
+    /// post-authentication attempts. The owned query remains wipe-on-drop, and
+    /// event-publication failure releases no search result or original error.
+    pub fn audited_search_items(
+        self,
+        query: Zeroizing<String>,
+        collection: Option<CollectionId>,
+        limit: usize,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<Vec<RedactedItemView>>, ApplicationError> {
+        self.require_audit_epoch()?;
+        let operation = self.search_items(query, collection, limit);
+        self.finish_audited_access(
+            AuditActionV1::ItemSearch,
+            None,
+            None,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+            operation,
+        )
     }
 
     /// Return how many unambiguous live items are held in the wipe-on-lock
@@ -384,6 +435,33 @@ impl UnlockedVaultV1 {
         .collect()
     }
 
+    /// Return one item's redacted history only after its access event and next
+    /// owner state are durable.
+    ///
+    /// Invalid bounds and repository/integrity failures are represented only
+    /// after a failed history-access event can be published. Publication
+    /// failure supersedes and withholds the history result.
+    pub fn audited_item_history(
+        self,
+        item_id: ItemId,
+        limit: usize,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<Vec<ItemHistoryViewV1>>, ApplicationError> {
+        self.require_audit_epoch()?;
+        let operation = self.item_history(item_id, limit);
+        self.finish_audited_access(
+            AuditActionV1::ItemHistoryRead,
+            Some(item_id),
+            None,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+            operation,
+        )
+    }
+
     /// Return every retained current candidate for one conflicted item as a
     /// deterministic secret-free view.
     ///
@@ -406,6 +484,70 @@ impl UnlockedVaultV1 {
             .iter()
             .map(ItemHistoryViewV1::from_candidate)
             .collect()
+    }
+
+    /// Return current redacted conflict candidates only after their history
+    /// access event and next owner state are durable.
+    ///
+    /// Missing and unconflicted items remain closed operation failures, but
+    /// become observable only after their failed access event is durable.
+    pub fn audited_conflict_candidates(
+        self,
+        item_id: ItemId,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<Vec<ItemHistoryViewV1>>, ApplicationError> {
+        self.require_audit_epoch()?;
+        let operation = self.conflict_candidates(item_id);
+        self.finish_audited_access(
+            AuditActionV1::ItemHistoryRead,
+            Some(item_id),
+            None,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+            operation,
+        )
+    }
+
+    fn require_audit_epoch(&self) -> Result<(), ApplicationError> {
+        self.active
+            .audit_event_head()
+            .map(|_| ())
+            .ok_or(ApplicationError::InvalidInput)
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn finish_audited_access<T>(
+        self,
+        action: AuditActionV1,
+        item_id: Option<ItemId>,
+        selected_revision: Option<RevisionId>,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+        operation: Result<T, ApplicationError>,
+    ) -> Result<crate::AuditedAccessResultV1<T>, ApplicationError> {
+        let outcome = if operation.is_ok() {
+            AuditOutcomeV1::Succeeded
+        } else {
+            AuditOutcomeV1::Failed
+        };
+        let active = publish_audited_access(
+            &self.active,
+            &self._keys,
+            &self._local_secret,
+            self._repository.as_ref(),
+            action,
+            outcome,
+            item_id,
+            selected_revision,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+        )?;
+        Ok(crate::AuditedAccessResultV1::new(active, operation))
     }
 
     /// Explicitly reveal one reachable live revision inside an owned
@@ -1376,6 +1518,27 @@ mod tests {
         AuditedAccessRandomnessV1::new(bytes)
     }
 
+    fn latest_audit_facts(
+        session: &UnlockedVaultV1,
+    ) -> (
+        AuditActionV1,
+        AuditOutcomeV1,
+        Option<ItemId>,
+        Option<RevisionId>,
+    ) {
+        let event_head = session.active.audit_event_head().unwrap();
+        let object = session._repository.read_object(event_head).unwrap();
+        let plaintext =
+            open_object(&session._keys, ObjectKind::AuditEvent, object.frame()).unwrap();
+        let event = decode_signed_audit_event(&plaintext).unwrap();
+        (
+            event.event().action(),
+            event.event().outcome(),
+            event.event().item_id(),
+            event.event().selected_revision(),
+        )
+    }
+
     fn new_login_document(item_id: ItemId, title: &str, password: &str) -> ItemDocument {
         login_document_with_times(item_id, title, password, 300, 300)
     }
@@ -2295,6 +2458,196 @@ mod tests {
         assert_eq!(report.catalog_count(), 1);
         assert_eq!(report.audit_event_count(), 2);
         assert_eq!(backend.pending_faults().unwrap(), 0);
+    }
+
+    #[test]
+    fn audited_redacted_reads_form_one_exact_success_and_failure_chain() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let add_randomness = add_item_randomness(0xc1);
+        let item_id = add_randomness.item_id();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .add_item(
+            new_login_document(item_id, "Audited redacted portal", "hidden-secret"),
+            720,
+            add_randomness,
+            &local,
+        )
+        .unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let selected_revision = session.current_catalog.items[&item_id][0].revision_id();
+        activate_audit_epoch_for_test(
+            &session.active,
+            &session._keys,
+            &session._local_secret,
+            session._repository.as_ref(),
+            721,
+            None,
+            None,
+            [0xc2; AUDIT_ONLY_TEST_RANDOM_BYTES],
+            &local,
+        )
+        .unwrap();
+        drop(session);
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let (_, shown) = session
+            .audited_get_item(item_id, 722, audited_access_randomness(0xc3), &local)
+            .unwrap()
+            .into_parts();
+        let shown = shown.unwrap();
+        assert_eq!(shown.item_id, item_id);
+        assert!(matches!(
+            &shown.record,
+            RedactedRecordView::Login { title, .. } if title == "Audited redacted portal"
+        ));
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemRead,
+                AuditOutcomeV1::Succeeded,
+                Some(item_id),
+                Some(selected_revision),
+            )
+        );
+
+        let (_, searched) = session
+            .audited_search_items(
+                Zeroizing::new("redacted portal".to_owned()),
+                None,
+                10,
+                723,
+                audited_access_randomness(0xc4),
+                &local,
+            )
+            .unwrap()
+            .into_parts();
+        assert_eq!(searched.unwrap().len(), 1);
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemSearch,
+                AuditOutcomeV1::Succeeded,
+                None,
+                None,
+            )
+        );
+
+        let (_, history) = session
+            .audited_item_history(
+                item_id,
+                DEFAULT_ITEM_HISTORY_LIMIT,
+                724,
+                audited_access_randomness(0xc5),
+                &local,
+            )
+            .unwrap()
+            .into_parts();
+        assert_eq!(history.unwrap().len(), 1);
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemHistoryRead,
+                AuditOutcomeV1::Succeeded,
+                Some(item_id),
+                None,
+            )
+        );
+
+        let (_, candidates) = session
+            .audited_conflict_candidates(item_id, 725, audited_access_randomness(0xc6), &local)
+            .unwrap()
+            .into_parts();
+        assert_eq!(candidates, Err(ApplicationError::ConflictRequired));
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemHistoryRead,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+
+        let missing = ItemId::new([0xc7; 16]);
+        let (_, missing_result) = session
+            .audited_get_item(missing, 726, audited_access_randomness(0xc8), &local)
+            .unwrap()
+            .into_parts();
+        assert_eq!(missing_result, Err(ApplicationError::NotFound));
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemRead,
+                AuditOutcomeV1::Failed,
+                Some(missing),
+                None,
+            )
+        );
+        let report = session.audit_verify().unwrap();
+        assert_eq!(report.commit_count(), 8);
+        assert_eq!(report.catalog_count(), 2);
+        assert_eq!(report.audit_event_count(), 6);
     }
 
     #[test]

@@ -16,11 +16,15 @@ against its signed repository commit. A dedicated audit-only journal can now
 advance that event head and device counter while reusing only the exact active
 catalog root; ambiguous provider success retains and replays the exact pending
 bytes. A first session-consuming audited access boundary now publishes an
-`ItemList` success or post-authentication failure before releasing the redacted
-list or closed operation error; publication failure releases neither and leaves
-the exact pending journal recoverable. Remaining access methods, CLI adoption,
-audit activation, and redacted audit history rendering remain later slices. It
-also defines the
+access success or post-authentication failure before releasing any redacted
+list, one-item show, search, bounded history, or conflict-candidate result.
+Successful item reads bind the exact selected live revision; missing and
+tombstoned items become audited `NotFound` results. All covered methods share
+one publish-before-release completion path, and publication failure releases
+neither result nor original error while leaving the exact pending journal
+recoverable. Verification, diagnostics, export, secret disclosure, CLI
+adoption, audit activation, and redacted audit history rendering remain later
+slices. It also defines the
 exact canonical
 `PreparedInit -> Active -> PendingPublication -> Active` owner-state machine,
 retry-stable publication journals, encrypted local-secret custody, and

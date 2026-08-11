@@ -2,6 +2,24 @@
 
 All notable changes to this package are documented here.
 
+## [0.36.0] - 2026-08-11
+
+### Added
+
+- Extend the session-consuming audited access boundary to one-item redacted
+  reads, redacted search, bounded redacted history, and current conflict
+  candidate inspection.
+- Bind successful item reads to their exact selected live revision and map
+  missing or tombstoned items to a closed audited `NotFound` result.
+
+### Security
+
+- Route list, show, search, history, and conflict inspection through one common
+  publish-before-release completion path.
+- Record invalid queries, invalid history bounds, missing items, and
+  unconflicted candidate requests as failed authenticated attempts; audit
+  publication failure still supersedes and withholds every operation result.
+
 ## [0.35.0] - 2026-08-10
 
 ### Added

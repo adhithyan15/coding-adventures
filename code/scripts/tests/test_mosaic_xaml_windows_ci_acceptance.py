@@ -108,6 +108,7 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
             workflow,
         )
         self.assertIn("Build complete Mosaic TaskApp WinUI shell", workflow)
+        self.assertIn("timeout-minutes: 15", workflow)
         self.assertIn(
             "mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app",
             workflow,
@@ -123,6 +124,10 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
         self.assertIn("mosaic-xaml-native-complete-rating-controls", workflow)
         self.assertIn("Native-complete XAML generation reported degradations", workflow)
         self.assertIn("dotnet build (Split-Path -Leaf $strictProject)", workflow)
+        self.assertIn("mosaic-xaml-toolkit", workflow)
+        self.assertIn("mosaic-pkg-toolkit --backend xaml", workflow)
+        self.assertIn("dotnet build (Split-Path -Leaf $toolkitProject)", workflow)
+        self.assertIn("Complete Mosaic toolkit XAML build failed", workflow)
         self.assertIn("MOSAIC_SKIP_INTERACTIVE_WINDOWS_ACCEPTANCE: '1'", workflow)
         self.assertNotIn("Start-Process -FilePath $executable", workflow)
         self.assertIn("Round-trip Rust engine through standard XAML binding", workflow)
