@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.52.0
+
+- Parse single-line state notes into note nodes and note-association edges in graph IR.
+
 ## 0.51.0
 
 - Resolve state `:::` class shorthand on standalone states and transition endpoints.

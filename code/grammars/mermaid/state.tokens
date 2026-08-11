@@ -1,4 +1,4 @@
-# @version 6
+# @version 7
 # @case_insensitive true
 # Mermaid 11.16.1 state diagram token grammar, derived from stateDiagram.jison.
 
@@ -29,5 +29,9 @@ keywords:
   style
   classDef
   class
+  note
+  left
+  right
+  of
   direction
   as

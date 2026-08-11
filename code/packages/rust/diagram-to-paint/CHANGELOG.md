@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Lower graph note nodes and dashed note associations to backend-neutral paths.
 - Lower compact graph-IR bar nodes to backend-neutral rectangles for state fork/join rendering.
 - Render destroyed participants through their message-positioned footer geometry instead of adding an unconditional destruction cross.
 - Resolve self-message source and destination tips independently for reverse/bidirectional arrowheads and central endpoint markers.

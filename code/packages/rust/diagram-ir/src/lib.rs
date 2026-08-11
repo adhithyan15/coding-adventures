@@ -1,6 +1,6 @@
-//! diagram-ir v0.24.0 - DG00/DG04 semantic IR
+//! diagram-ir v0.25.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.24.0";
+pub const VERSION: &str = "0.25.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -19,6 +19,7 @@ pub enum DiagramShape {
     RoundedRect,
     Ellipse,
     Diamond,
+    Note,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -86,6 +87,7 @@ pub fn resolve_style_with_base(
 pub enum EdgeKind {
     Directed,
     Undirected,
+    NoteAssociation,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -958,7 +960,7 @@ mod tests {
 
     #[test]
     fn version_is_0_24_0() {
-        assert_eq!(VERSION, "0.24.0");
+        assert_eq!(VERSION, "0.25.0");
     }
     #[test]
     fn default_direction_is_tb() {

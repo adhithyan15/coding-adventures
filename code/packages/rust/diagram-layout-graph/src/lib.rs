@@ -38,7 +38,7 @@
 //! | `h_padding`     | 24      | Horizontal text padding inside a node    |
 //! | `char_width`    | 8       | Approximate width per character (px)     |
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 
 use diagram_ir::{
     DiagramDirection, DiagramShape, GraphDiagram, LayoutedGraphDiagram, LayoutedGraphEdge,
@@ -132,10 +132,19 @@ fn node_dimensions(
     opts: &Opts,
     measurer: Option<&dyn TextMeasurer>,
 ) -> (f64, f64) {
-    if node.shape == Some(DiagramShape::Bar) {
-        (64.0, 8.0)
-    } else {
-        (node_width(&node.label.text, opts, measurer), opts.node_height)
+    match node.shape {
+        Some(DiagramShape::Bar) => (64.0, 8.0),
+        Some(DiagramShape::Note) => {
+            let line_count = node.label.text.lines().count().max(1) as f64;
+            let width = node
+                .label
+                .text
+                .lines()
+                .map(|line| node_width(line, opts, measurer))
+                .fold(opts.min_node_width, f64::max);
+            (width, (24.0 + line_count * 18.0).max(opts.node_height))
+        }
+        _ => (node_width(&node.label.text, opts, measurer), opts.node_height),
     }
 }
 
@@ -161,7 +170,7 @@ fn assign_ranks(diagram: &GraphDiagram) -> Vec<Vec<String>> {
     }
     for edge in &diagram.edges {
         // Ignore self-loops for rank assignment (they don't change depth).
-        if edge.from != edge.to {
+        if edge.from != edge.to && edge.kind != diagram_ir::EdgeKind::NoteAssociation {
             let _ = g.add_edge(&edge.from, &edge.to);
         }
     }
@@ -356,7 +365,12 @@ fn route_edge(
     let from_node = nodes_by_id[&edge.from];
     let to_node   = nodes_by_id[&edge.to];
 
-    let (start, end) = edge_endpoints(direction, from_node, to_node);
+    let edge_direction = if edge.kind == diagram_ir::EdgeKind::NoteAssociation {
+        &DiagramDirection::Lr
+    } else {
+        direction
+    };
+    let (start, end) = edge_endpoints(edge_direction, from_node, to_node);
 
     // Self-loops use a 5-point detour that loops above the node.
     let points = if from_node.id == to_node.id {
@@ -440,7 +454,56 @@ pub fn layout_graph_diagram(
     measurer: Option<&dyn TextMeasurer>,
 ) -> LayoutedGraphDiagram {
     let opts = Opts::from(options);
-    let (nodes, width, height) = place_nodes(diagram, &opts, measurer);
+    let (mut nodes, _, _) = place_nodes(diagram, &opts, measurer);
+
+    for edge in diagram
+        .edges
+        .iter()
+        .filter(|edge| edge.kind == diagram_ir::EdgeKind::NoteAssociation)
+    {
+        let (note_id, state_id, note_is_left) = if diagram
+            .nodes
+            .iter()
+            .any(|node| node.id == edge.from && node.shape == Some(DiagramShape::Note))
+        {
+            (&edge.from, &edge.to, true)
+        } else {
+            (&edge.to, &edge.from, false)
+        };
+        let Some(note_index) = nodes.iter().position(|node| &node.id == note_id) else {
+            continue;
+        };
+        let Some(state_index) = nodes.iter().position(|node| &node.id == state_id) else {
+            continue;
+        };
+        let state = nodes[state_index].clone();
+        let note = &mut nodes[note_index];
+        note.x = if note_is_left {
+            state.x - opts.node_gap - note.width
+        } else {
+            state.x + state.width + opts.node_gap
+        };
+        note.y = state.y + (state.height - note.height) / 2.0;
+    }
+
+    let min_x = nodes.iter().map(|node| node.x).fold(opts.margin, f64::min);
+    let min_y = nodes.iter().map(|node| node.y).fold(opts.margin, f64::min);
+    let shift_x = (opts.margin - min_x).max(0.0);
+    let shift_y = (opts.margin - min_y).max(0.0);
+    for node in &mut nodes {
+        node.x += shift_x;
+        node.y += shift_y;
+    }
+    let width = nodes
+        .iter()
+        .map(|node| node.x + node.width)
+        .fold(0.0, f64::max)
+        + opts.margin;
+    let height = nodes
+        .iter()
+        .map(|node| node.y + node.height)
+        .fold(0.0, f64::max)
+        + opts.margin;
 
     let nodes_by_id: std::collections::HashMap<String, &LayoutedGraphNode> =
         nodes.iter().map(|n| (n.id.clone(), n)).collect();
@@ -507,7 +570,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.2.0");
+        assert_eq!(VERSION, "0.3.0");
     }
 
     #[test]
@@ -646,5 +709,30 @@ mod tests {
         let l = layout_graph_diagram(&d, None, None);
         let bar = l.nodes.iter().find(|node| node.id == "A").unwrap();
         assert_eq!((bar.width, bar.height), (64.0, 8.0));
+    }
+
+    #[test]
+    fn note_nodes_reserve_multiline_geometry() {
+        let mut d = two_node_diagram(DiagramDirection::Lr);
+        d.nodes[0].shape = Some(DiagramShape::Note);
+        d.nodes[0].label = DiagramLabel::new("first line\nsecond line");
+        let l = layout_graph_diagram(&d, None, None);
+        let note = l.nodes.iter().find(|node| node.id == "A").unwrap();
+
+        assert!(note.height >= 60.0);
+        assert!(note.width >= 96.0);
+    }
+
+    #[test]
+    fn note_associations_place_notes_beside_states() {
+        let mut d = two_node_diagram(DiagramDirection::Tb);
+        d.nodes[0].shape = Some(DiagramShape::Note);
+        d.edges[0].kind = EdgeKind::NoteAssociation;
+        let l = layout_graph_diagram(&d, None, None);
+        let note = l.nodes.iter().find(|node| node.id == "A").unwrap();
+        let state = l.nodes.iter().find(|node| node.id == "B").unwrap();
+
+        assert!(note.x + note.width < state.x);
+        assert_eq!(l.edges[0].points[0].y, note.y + note.height / 2.0);
     }
 }

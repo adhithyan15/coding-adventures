@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.31.0
+
+- Tokenize attached state note keywords from the pinned Mermaid grammar.
+
 ## 0.30.0
 
 - Tokenize Mermaid state `:::` inline class separators from the pinned grammar.

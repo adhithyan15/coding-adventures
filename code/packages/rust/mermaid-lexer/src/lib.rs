@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.30.0";
+pub const VERSION: &str = "0.31.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -208,7 +208,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.30.0");
+        assert_eq!(VERSION, "0.31.0");
     }
 
     #[test]
@@ -289,6 +289,19 @@ mod tests {
                 .count(),
             2
         );
+    }
+
+    #[test]
+    fn tokenizes_state_attached_notes() {
+        let tokens = tokenize_mermaid_state(
+            "stateDiagram-v2\nnote left of Ready: Waiting for work\nnote right of Running: Active\n",
+        );
+        assert_eq!(
+            tokens.iter().filter(|token| token.value == "note").count(),
+            2
+        );
+        assert_eq!(tokens.iter().filter(|token| token.value == "of").count(), 2);
+        assert_eq!(tokens.iter().filter(|token| token.value == ":").count(), 2);
     }
 
     #[test]
