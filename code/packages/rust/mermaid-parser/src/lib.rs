@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.33.0";
+pub const VERSION: &str = "0.34.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1126,7 +1126,7 @@ fn parse_sequence_body(
                 } else {
                     diagram.auto_number = true;
                     let start = take_sequence_number(cursor)?;
-                    let step = take_sequence_number(cursor)?;
+                    let step = take_sequence_number(cursor)?.or(start.map(|_| 1.0));
                     diagram.auto_number_start = start.unwrap_or(1.0);
                     diagram.auto_number_step = step.unwrap_or(1.0);
                     diagram.events.push(SequenceEvent::AutoNumber {
@@ -3531,6 +3531,21 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn sequence_autonumber_start_defaults_increment_to_one() {
+        let diagram =
+            parse_sequence_diagram("sequenceDiagram\nautonumber 20\nAlice->>Bob: First\n").unwrap();
+
+        assert!(matches!(
+            diagram.events[0],
+            SequenceEvent::AutoNumber {
+                visible: true,
+                start: Some(20.0),
+                step: Some(1.0),
+            }
+        ));
+    }
+
+    #[test]
     fn sequence_preserves_ordered_autonumber_toggles() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\nautonumber\nA->>B: One\nautonumber off\nA->>B: Hidden\nautonumber 20 5\nA->>B: Twenty\n",
@@ -3837,7 +3852,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.33.0");
+        assert_eq!(crate::VERSION, "0.34.0");
     }
 
     #[test]

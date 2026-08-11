@@ -94,6 +94,8 @@ const ARABIC_RAA = ductusFor("ر", "arabic")!;
 const arabicRaaOutline = naskhOutline("ر");
 const ARABIC_SEEN = ductusFor("س", "arabic")!;
 const arabicSeenOutline = naskhOutline("س");
+const ARABIC_SHIIN = ductusFor("ش", "arabic")!;
+const arabicShiinOutline = naskhOutline("ش");
 const URDU_ALEF = ductusFor("ا", "urdu-nastaliq")!;
 const urduAlefOutline = naskhOutline("ا");
 const URDU_JIM = ductusFor("ج", "urdu-nastaliq")!;
@@ -147,7 +149,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds eleven Tamil letters, nine Persian letters, nine Arabic letters, and thirteen Urdu letters", () => {
+  it("finds eleven Tamil letters, nine Persian letters, ten Arabic letters, and thirteen Urdu letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -171,6 +173,7 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("ا", "arabic")?.glyph).toBe("ا");
     expect(ductusFor("ب", "arabic")?.glyph).toBe("ب");
     expect(ductusFor("س", "arabic")?.glyph).toBe("س");
+    expect(ductusFor("ش", "arabic")?.glyph).toBe("ش");
     expect(ductusFor("ا", "urdu-nastaliq")?.glyph).toBe("ا");
     expect(ductusFor("ج", "urdu-nastaliq")?.glyph).toBe("ج");
     expect(ductusFor("ج", "perso-arabic")).toBeUndefined();
@@ -223,6 +226,15 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(arabic?.source.url).not.toBe(persian?.source.url);
     expect(arabic?.source.url).not.toBe(urdu?.source.url);
     expect(persian?.source.url).not.toBe(urdu?.source.url);
+  });
+
+  it("keeps the shared Arabic and Urdu ش independently addressable", () => {
+    const arabic = ductusFor("ش", "arabic");
+    const urdu = ductusFor("ش", "urdu-nastaliq");
+    expect(arabic?.script).toBe("arabic");
+    expect(urdu?.script).toBe("urdu-nastaliq");
+    expect(arabic?.source.url).not.toBe(urdu?.source.url);
+    expect(ductusFor("ش", "perso-arabic")).toBeUndefined();
   });
 
   it("keeps the shared Persian and Urdu م independently addressable", () => {
@@ -990,6 +1002,43 @@ describe("Arabic س — an unbroken teeth-and-bowl filmstrip", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(ARABIC_SEEN.strokes[0], 1),
+    );
+  });
+});
+
+describe("Arabic ش — a complete س body followed by three dots", () => {
+  const steps = ductusSteps(ARABIC_SHIIN);
+  const strip = ductusFilmstrip(ARABIC_SHIIN, arabicShiinOutline);
+
+  it("shows the body first, then lower-left, lower-right, and upper dots", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "shape the three close teeth from right to left",
+      "flow directly into the final bowl without lifting",
+      "lift, then place the lower-left dot",
+      "lift again, then place the lower-right dot",
+      "lift a third time, then place the centered upper dot",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 2, 3]);
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 5 movements");
+  });
+
+  it("draws Noto Naskh and preserves completed strokes during the upper dot", () => {
+    const paths = byTag(strip.frames[4], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicShiinOutline.path,
+    );
+    const done = paths.filter((path) => path.attrs.class === "ductus__done");
+    expect(done).toHaveLength(3);
+    expect(done.map((path) => path.attrs.d)).toEqual([
+      penPathD(ARABIC_SHIIN.strokes[0], 1),
+      penPathD(ARABIC_SHIIN.strokes[1], 1),
+      penPathD(ARABIC_SHIIN.strokes[2], 1),
+    ]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_SHIIN.strokes[3], 1),
     );
   });
 });

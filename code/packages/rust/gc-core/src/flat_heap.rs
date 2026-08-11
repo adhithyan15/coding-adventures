@@ -179,7 +179,40 @@ struct KindLayout {
     /// variable-length array tail). `None` ⇒ pure record. Populated by a later rung
     /// (`register_ref_array_kind`); today every registration sets `None`.
     tail_from: Option<usize>,
+    /// **(AOT00-T10)** Field-encoding mode for `fixed`/`tail_from`. `false` (the original,
+    /// default mode — every existing registration via [`FlatHeap::register_kind`]/
+    /// [`FlatHeap::register_ref_array_kind`]) means **boxed**: a slot is *always* a
+    /// reference-candidate word, raw or NaN-box-tagged with an arbitrary tag (both forms
+    /// tried — see [`FlatHeap::mark_word`]/[`FlatHeap::classify_precise_word`]/
+    /// [`FlatHeap::forwarded`]). `true` (only via [`FlatHeap::register_tagged_kind`]) means
+    /// **tagged**: a slot is a reference *iff* its low [`NAN_BOX_TAG_BITS`] bits exactly
+    /// equal [`NAN_BOX_REF_TAG`] — anything else is *provably* not a reference, not merely
+    /// probably. This distinction only matters at [`FlatHeap::for_each_ref_slot`], which is
+    /// the single choke point every consumer (mark, `classify_mobility`, compaction fixup)
+    /// goes through to enumerate a kind's ref slots — see that method's own doc for why nothing
+    /// downstream needs its own tagged/boxed branch. See `AOT00-T10-tagged-field-kinds.md` for
+    /// the full motivation: a boxed-mode registration is unsound for an object whose fields can
+    /// legitimately hold either a reference or a non-reference scalar in the *same* slot (e.g.
+    /// `vm-core`'s dynamically-typed cons-cell car/cdr) — compaction's fixup would rewrite a
+    /// non-reference field's bits whenever they coincidentally match a moved object's old
+    /// address, a real (if low-probability) correctness bug boxed mode has no way to rule out.
+    tagged: bool,
 }
+
+/// **(AOT00-T10)** Bit width of the NaN-box tag every [`KindLayout::tagged`] field uses.
+/// Matches [`FlatHeap::alloc`]'s 16-byte payload alignment guarantee — a real (untagged)
+/// heap address's low 3 bits are always clear, so a 3-bit tag never collides with a genuine
+/// address's own bits.
+pub const NAN_BOX_TAG_BITS: u32 = 3;
+/// **(AOT00-T10)** Mask selecting the low [`NAN_BOX_TAG_BITS`] bits of a tagged-mode word.
+pub const NAN_BOX_TAG_MASK: usize = 0x7;
+/// **(AOT00-T10)** The exact tag value that means "this tagged-mode word is a reference".
+/// Any other value in the low [`NAN_BOX_TAG_BITS`] bits is *provably* not a reference under
+/// the tagged convention — the caller-side invariant [`FlatHeap::register_tagged_kind`]'s own
+/// Safety section requires every write to a registered offset to uphold. This is the same
+/// constant `vm-core`'s own field-store tag scheme (`FIELD_TAG_HEAP_REF`, AOT00-T1v §2.4)
+/// already uses; `gc-core` is the canonical definition — one tag convention, not two.
+pub const NAN_BOX_REF_TAG: usize = 0x7;
 
 /// A flat, real-memory mark-and-sweep heap.
 ///
@@ -653,7 +686,54 @@ impl FlatHeap {
         // A pure record: fixed reference offsets, no variable-length tail. The tail case
         // (`tail_from == Some`) is `register_ref_array_kind`; a `None` tail keeps the tracer
         // behaviour byte-for-byte identical to the pre-`KindLayout` field map.
-        self.field_maps.push(KindLayout { fixed: field_offsets.into(), tail_from: None });
+        self.field_maps.push(KindLayout { fixed: field_offsets.into(), tail_from: None, tagged: false });
+        id as u16
+    }
+
+    /// Register a **tagged-field** reference map (AOT00-T10) — the NaN-boxed-word
+    /// analogue of [`Self::register_kind`]. Objects of this kind are traced precisely
+    /// exactly as `register_kind`'s own objects are, with one difference: a slot at one
+    /// of `field_offsets` is a reference *iff* its low [`NAN_BOX_TAG_BITS`] bits equal
+    /// [`NAN_BOX_REF_TAG`] — anything else (e.g. a shifted integer whose low bits are
+    /// always clear) is *provably* not a reference and is never traced, never marked,
+    /// and never considered by compaction's fixup. See
+    /// `code/specs/AOT00-T10-tagged-field-kinds.md` for the full motivation: this mode
+    /// exists because `register_kind`'s "always a reference-candidate word" contract
+    /// (boxed mode) is unsound for an object whose fields can legitimately hold either a
+    /// reference or a non-reference scalar in the *same* dynamically-typed slot —
+    /// compaction would otherwise risk rewriting a non-reference field's bits whenever
+    /// they coincidentally match a moved object's old address.
+    ///
+    /// Ids share the same `1..` namespace as `register_kind`/`register_ref_array_kind`
+    /// (one registry, `kind == 0` still opaque/conservative). No variable-length tail
+    /// variant exists yet — every tagged-kind field is a fixed offset today; add one
+    /// analogous to `register_ref_array_kind` if a tagged-mode array need arises.
+    ///
+    /// # Safety
+    ///
+    /// Every write to a registered offset, for the lifetime of every object of this
+    /// kind, must uphold the tag convention this mode trusts: [`NAN_BOX_REF_TAG`] for a
+    /// genuine reference, any other value in the low [`NAN_BOX_TAG_BITS`] bits for
+    /// anything else. `gc-core` cannot verify this — it is enforced entirely by the
+    /// caller's own field-store path (e.g. `vm-core`'s `handle_gc_field_store`, whose
+    /// tag scheme this mode was designed to trust exactly). A caller whose field-store
+    /// path ever writes an untagged raw pointer, or a non-reference value whose tag
+    /// coincidentally equals `NAN_BOX_REF_TAG`, into a tagged-mode slot breaks the
+    /// soundness argument this entire mode rests on — a real use-after-free (a live
+    /// reference silently excluded from tracing) or data corruption (a non-reference
+    /// value coincidentally traced/relocated), not a leak.
+    ///
+    /// # Panics
+    ///
+    /// Panics only if more than `u16::MAX - 1` kinds are registered — far beyond any
+    /// real program.
+    pub unsafe fn register_tagged_kind(&mut self, field_offsets: &[usize]) -> u16 {
+        let id = self.field_maps.len() + 1;
+        assert!(
+            id <= u16::MAX as usize,
+            "flat-heap kind registry overflow: more than 65534 kinds registered"
+        );
+        self.field_maps.push(KindLayout { fixed: field_offsets.into(), tail_from: None, tagged: true });
         id as u16
     }
 
@@ -700,7 +780,7 @@ impl FlatHeap {
         // saturation) is the safe, still-precise choice — never a wrapped small offset that would
         // trace non-reference words.
         let tail = tail_from.checked_add(7).map_or(usize::MAX, |n| n & !7usize);
-        self.field_maps.push(KindLayout { fixed: fixed.into(), tail_from: Some(tail) });
+        self.field_maps.push(KindLayout { fixed: fixed.into(), tail_from: Some(tail), tagged: false });
         id as u16
     }
 
@@ -1793,6 +1873,17 @@ impl FlatHeap {
     /// `*mut usize` inside `h`'s payload whose 8-byte access is in bounds; the callback reads
     /// (and, for fixup, writes) the word.
     ///
+    /// **(AOT00-T10)** For a [`KindLayout::tagged`] kind, a candidate slot is skipped entirely
+    /// — `f` is never called for it — unless its *current* word's low [`NAN_BOX_TAG_BITS`] bits
+    /// equal [`NAN_BOX_REF_TAG`]. This is why none of the four consumers need their own
+    /// tagged/boxed branch: a non-reference tagged word (e.g. a shifted integer) is simply never
+    /// yielded, so mark never has a chance to (harmlessly) over-mark it, and — the actual bug
+    /// this exists to close — compaction's fixup never has a chance to (unsoundly) rewrite it.
+    /// The check reads the word itself (not just the offset), so it is necessarily re-evaluated
+    /// on every call — correct, since the word can change between collections (a field is
+    /// reassigned between one collect and the next) but never *during* one (single-threaded,
+    /// no concurrent mutation while a collection runs).
+    ///
     /// # Safety
     /// `h` is a live block owned by this heap. The wrap-safe bound `off <= size - 8` (never
     /// `off + 8 <= size`, which could overflow for a near-`usize::MAX` offset from a bad map)
@@ -1808,10 +1899,20 @@ impl FlatHeap {
         };
         let base = h.add(1) as *mut u8;
         let size = (*h).size;
+        let maybe_yield = |off: usize, f: &mut dyn FnMut(*mut usize)| {
+            let slot = base.add(off) as *mut usize;
+            if layout.tagged {
+                let word = ptr::read_unaligned(slot as *const usize);
+                if word & NAN_BOX_TAG_MASK != NAN_BOX_REF_TAG {
+                    return; // provably not a reference under the tagged convention — skip
+                }
+            }
+            f(slot);
+        };
         // Fixed reference fields (the record case).
         for &off in layout.fixed.iter() {
             if size >= 8 && off <= size - 8 {
-                f(base.add(off) as *mut usize);
+                maybe_yield(off, &mut f);
             }
         }
         // Variable-length reference tail (the array case): every aligned word in
@@ -1819,7 +1920,7 @@ impl FlatHeap {
         if let Some(start) = layout.tail_from {
             let mut off = start;
             while size >= 8 && off <= size - 8 {
-                f(base.add(off) as *mut usize);
+                maybe_yield(off, &mut f);
                 off += 8;
             }
         }
@@ -4430,6 +4531,126 @@ mod tests {
         assert_eq!(troot, tarr, "conservative array is PINNED — no relocation");
         drop(heap);
         drop(twin);
+    }
+
+    // ── Tagged-field kinds (AOT00-T10) ──────────────────────────────────────
+
+    /// **The headline regression proof.** A `register_tagged_kind(&[0, 8])` object `p` has a
+    /// genuine reference in field 0 (ref-tagged, low 3 bits `0b111`) and a NON-reference word in
+    /// field 8 that is deliberately engineered to coincidentally equal an independently-rooted,
+    /// independently-movable object `x`'s OLD base address — the exact collision shape that would
+    /// corrupt a boxed-mode (`register_kind`) field under compaction (see the twin test directly
+    /// below, which proves it does). Under `register_tagged_kind`, field 8's tag (`0b000`, since a
+    /// 16-byte-aligned address's low bits are already clear) is not `NAN_BOX_REF_TAG`, so
+    /// `for_each_ref_slot` never yields it to `fixup_ref_fields` at all — `x`'s relocation must
+    /// leave field 8 completely untouched, still equal to `x`'s OLD address, even though `x` itself
+    /// really did move (proven by rooting it independently and observing its own root slot change).
+    #[test]
+    fn tagged_kind_never_rewrites_a_non_reference_field_that_coincidentally_matches_a_moved_address() {
+        let mut heap = FlatHeap::new();
+        let tagged_kind = unsafe { heap.register_tagged_kind(&[0, 8]) };
+        let leaf = heap.register_kind(&[]); // movable, no ref fields
+
+        let x = heap.alloc(16, leaf) as usize;
+        let child = heap.alloc(16, leaf) as usize;
+        let p = heap.alloc(16, tagged_kind) as usize;
+        unsafe {
+            // Field 0: a genuine reference to `child`, ref-tagged (low 3 bits 0b111 — safe to
+            // OR in since `alloc`'s 16-byte alignment guarantees `child`'s own low 4 bits are 0).
+            *(p as *mut usize) = child | NAN_BOX_REF_TAG;
+            // Field 8: NOT a reference. Set to `x`'s own (already 16-aligned, so already
+            // tag-0b000) address -- a coincidental collision with a REAL object that is about
+            // to move, engineered on purpose rather than left to astronomical chance.
+            *((p + 8) as *mut usize) = x;
+        }
+
+        // Root p, child, AND x independently: x must survive/move on its own regardless of
+        // whether anything (correctly) treats field 8 as pointing to it.
+        let p_root = p;
+        let child_root = child;
+        let x_root = x;
+        let slots = [
+            &p_root as *const usize as usize,
+            &child_root as *const usize as usize,
+            &x_root as *const usize as usize,
+        ];
+        let stats = unsafe { heap.collect_compacting(&slots, &[]) };
+        assert_eq!(stats.survived, 3, "p, child, and x all survive");
+        assert_eq!(stats.freed, 0);
+
+        let new_p = p_root;
+        let new_child = child_root;
+        let new_x = x_root;
+        assert_ne!(new_p, p, "p itself relocated (movable via the tagged kind)");
+        assert_ne!(new_child, child, "child relocated");
+        assert_ne!(new_x, x, "x relocated independently — the collision really is with a moved address");
+
+        let field0 = unsafe { *(new_p as *const usize) };
+        assert_eq!(
+            field0,
+            new_child | NAN_BOX_REF_TAG,
+            "field 0 (a genuine reference) IS correctly rewritten to child's new address, tag preserved"
+        );
+
+        let field8 = unsafe { *((new_p + 8) as *const usize) };
+        assert_eq!(
+            field8, x,
+            "field 8 (a non-reference word that coincidentally equals x's OLD address) must be \
+             completely untouched by compaction — if tagged mode had treated it as a reference \
+             (the boxed-mode defect this test guards against), it would now equal x's NEW address"
+        );
+        assert_ne!(
+            field8, new_x,
+            "sanity / load-bearing check: if field 8 ever equals x's NEW address, the tagged-mode \
+             fix has regressed back to the boxed-mode defect"
+        );
+    }
+
+    /// **The boxed-mode twin — demonstrates the actual defect, not just its absence.** Identical
+    /// setup to the headline test above, but registered via `register_kind` (boxed mode) instead
+    /// of `register_tagged_kind`. Because boxed mode has no way to know field 8 was never a
+    /// reference, `forwarded()`'s raw-address lookup against `x`'s old (untagged) value finds a
+    /// real hit in the `forward` map and rewrites it — silently corrupting a non-reference field
+    /// into a stale-looking-but-actually-fresh pointer value. This is the literal, concrete bug
+    /// AOT00-T10 exists to close (see lessons.md "vm-core kind registration soundness note" and
+    /// `AOT00-T10-tagged-field-kinds.md` §1 for the full trace); this test proves it happens, not
+    /// just that it theoretically could.
+    #[test]
+    fn boxed_mode_twin_shows_the_defect_tagged_mode_closes() {
+        let mut heap = FlatHeap::new();
+        let boxed_kind = heap.register_kind(&[0, 8]); // deliberately the WRONG mode for this shape
+        let leaf = heap.register_kind(&[]);
+
+        let x = heap.alloc(16, leaf) as usize;
+        let child = heap.alloc(16, leaf) as usize;
+        let p = heap.alloc(16, boxed_kind) as usize;
+        unsafe {
+            *(p as *mut usize) = child | NAN_BOX_REF_TAG;
+            *((p + 8) as *mut usize) = x; // "an int" a real frontend never meant as a reference
+        }
+
+        let p_root = p;
+        let child_root = child;
+        let x_root = x;
+        let slots = [
+            &p_root as *const usize as usize,
+            &child_root as *const usize as usize,
+            &x_root as *const usize as usize,
+        ];
+        let stats = unsafe { heap.collect_compacting(&slots, &[]) };
+        assert_eq!(stats.survived, 3);
+
+        let new_x = x_root;
+        assert_ne!(new_x, x, "x relocated");
+
+        let field8 = unsafe { *((p_root + 8) as *const usize) };
+        assert_eq!(
+            field8, new_x,
+            "boxed mode DOES corrupt this field: it has no way to distinguish field 8 from a \
+             genuine reference, finds its value coincidentally matches x's old address in the \
+             forward map, and rewrites it to x's NEW address — exactly the defect \
+             register_tagged_kind (headline test above) prevents"
+        );
     }
 
     /// **Header + tail compose.** A `{header_ref, len, elems…}` object: a fixed reference field
