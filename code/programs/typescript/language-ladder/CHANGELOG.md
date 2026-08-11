@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Urdu independent-nun-ghunna ductus (HL-C09AF)
+
+- Add Urdu independent ں from Northwestern's *Zer o Zabar* animations as the
+  same right-to-left, below-baseline bowl as ن, without its dot or a pen lift.
+- Preserve the source's ordinary-nūn initial/medial forms and verify that Noto
+  Naskh U+06BA exactly shares U+0646's body contour with the dot removed.
+- Render a real one-frame filmstrip whose one stroke, zero lifts, source,
+  prose, geometry, and summary agree.
+
 ### Added — cited Urdu independent-ye ductus (HL-C09AE)
 
 - Add Urdu independent ی from Northwestern's *Zer o Zabar* animations as one

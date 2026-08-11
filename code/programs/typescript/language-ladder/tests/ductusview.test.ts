@@ -94,6 +94,8 @@ const URDU_MIM = ductusFor("م", "urdu-nastaliq")!;
 const urduMimOutline = naskhOutline("م");
 const URDU_NUN = ductusFor("ن", "urdu-nastaliq")!;
 const urduNunOutline = naskhOutline("ن");
+const URDU_GHUNNA = ductusFor("ں", "urdu-nastaliq")!;
+const urduGhunnaOutline = naskhOutline("ں");
 const URDU_HE = ductusFor("ہ", "urdu-nastaliq")!;
 const urduHeOutline = naskhOutline("ہ");
 const URDU_YE = ductusFor("ی", "urdu-nastaliq")!;
@@ -125,7 +127,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds all eleven authored Tamil letters, nine Persian letters, and Urdu ا, ج, ر, س, ش, ک, ل, م, ن, ہ, and ی", () => {
+  it("finds all eleven authored Tamil letters, nine Persian letters, and Urdu ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, and ی", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -162,6 +164,7 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("م", "perso-arabic")?.glyph).toBe("م");
     expect(ductusFor("ن", "urdu-nastaliq")?.glyph).toBe("ن");
     expect(ductusFor("ن", "perso-arabic")?.glyph).toBe("ن");
+    expect(ductusFor("ں", "urdu-nastaliq")?.glyph).toBe("ں");
     expect(ductusFor("ہ", "urdu-nastaliq")?.glyph).toBe("ہ");
     expect(ductusFor("ی", "urdu-nastaliq")?.glyph).toBe("ی");
   });
@@ -962,6 +965,33 @@ describe("Urdu ن — its below-baseline bowl precedes the lifted dot", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(URDU_NUN.strokes[1], 1),
+    );
+  });
+});
+
+describe("Urdu ں — its dotless bowl is one unbroken stroke", () => {
+  const steps = ductusSteps(URDU_GHUNNA);
+  const strip = ductusFilmstrip(URDU_GHUNNA, urduGhunnaOutline);
+
+  it("shows the sourced dotless nūn bowl with no lift", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep the independent dotless bowl right to left below the baseline",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0]);
+    expect(strip.frames).toHaveLength(1);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 1 movement");
+  });
+
+  it("draws the Noto Naskh outline and finishes the complete sourced bowl", () => {
+    const paths = byTag(strip.frames[0], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      urduGhunnaOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(URDU_GHUNNA.strokes[0], 1),
     );
   });
 });
