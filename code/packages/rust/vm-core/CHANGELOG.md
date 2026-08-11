@@ -1,5 +1,70 @@
 # Changelog — vm-core
 
+## [0.25.0] — 2026-08-11 (`gc_alloc`'d pairs become genuinely movable, AOT00-T10 PR-3)
+
+`gc-core` 0.35.0/0.36.0 (AOT00-T10 PR-1/PR-2) added a **tagged** kind-registration
+mode (`FlatHeap::register_tagged_kind`) specifically to close the soundness gap
+0.24.0's own changelog and the prior docs-only PR flagged: vm-core's fields are
+NaN-boxed tagged words, not always-boxed references, so the original ("boxed")
+`register_kind` mode was unsound here. This PR wires vm-core onto it — the last
+piece of the AOT00-T10 arc, and (per explicit owner direction: vm-core is
+unreleased, so its design is free to change to share one real GC mechanism with
+native-AOT rather than accumulate a second, divergent one) the point where
+`gc_alloc`'d objects stop being permanently pinned:
+
+- **`VMCore.pair_kind: u16`** — registered once in `VMCore::new()` via
+  `unsafe { heap.register_tagged_kind(&[0, 8]) }`, right after `set_auto_minor(true)`.
+  Sound because every write to a `gc_alloc`'d object's fields goes through
+  `handle_gc_field_store`, which unconditionally applies the tag convention this
+  registration trusts before storing (`FIELD_TAG_HEAP_REF` for a `Value::HeapRef`,
+  never that tag for a `Value::Int`).
+- **`DispatchCtx.pair_kind: u16`** — threaded through as a plain `Copy` field
+  alongside `u8_wrap`/`max_frames`, wired at both `DispatchCtx` construction sites.
+- **`handle_gc_alloc`** now allocates under `ctx.pair_kind` when `bytes == 16` (the
+  one shape it's registered against — every current `alloc`/`gc_alloc` emission
+  site in the pipeline passes zero operands, always this default); any other size
+  still falls back to kind `0`, unconditionally sound per `FlatHeap`'s own
+  "unregistered kind falls back to conservative" invariant.
+- **`FIELD_TAG_BITS`/`FIELD_TAG_MASK`/`FIELD_TAG_HEAP_REF`** now derive from
+  `gc_core::NAN_BOX_TAG_BITS`/`NAN_BOX_TAG_MASK`/`NAN_BOX_REF_TAG` instead of
+  independent literals — one tag convention, defined once in `gc-core`, not two
+  that could silently drift apart.
+- **Doc comments rewritten** — `handle_gc_alloc`'s and the block comment above it
+  (previously: "registering a kind here is NOT a safe drop-in... a real design
+  decision, not a mechanical follow-up") now explain the tagged-mode fix instead of
+  warning it away; the underlying fact that *boxed*-mode registration would still be
+  unsound for these fields is preserved, since that part never changed.
+- **New test — the actual relocation proof this arc has owed since AOT00-T9 PR-5**:
+  `gc_alloc_pair_relocates_and_stays_correct_under_a_compacting_minor_collection`
+  (`tests/gc_heap.rs`). Runs `execute()` three times on one `VMCore` (state persists
+  across calls, like the existing `max_memory_entries` cap-recovery test already
+  relies on): a warmup drives `should_collect_minor`/`should_compact_minor` both
+  over threshold (identical scaffold to `safepoint_stays_minor_scoped_when_should_
+  compact_minor_also_fires`), then a fresh, still-young `pair` is allocated, rooted
+  via `global_store`, and its address captured on return; a second call allocates
+  and orphans a large young block and `safepoint`s, forcing a real
+  `collect_minor_compacting` cycle; a third call reads the global back. The address
+  changes (proving physical relocation, not just survival in place) and both fields
+  still read back correctly (proving the evacuation copied the payload and the
+  global root was retargeted, not left dangling). Verified load-bearing via a
+  TEMP-REVERT-CHECK: forcing `kind = 0` makes the address-equality assertion fail as
+  expected.
+- Re-ran the full `lang-aot` `lang_matrix.rs` suite (53 tests, covering the
+  Vm-column cons/list/record/union/closure cases among everything else). 6
+  pre-existing failures (`Clr`/`clang` toolchain gaps on this machine —
+  `algol_boolean_procedure_*`, `algol_nested_capturing_formal_procedure_*`,
+  `algol_runtime_string_ordering_*`, `matrix_every_proven_cell_agrees`,
+  `proven_columns_do_not_silently_skip`) reproduce byte-for-byte, in the same
+  set, with the same messages, on a clean `origin/main` checkout with this
+  PR's changes stashed out — confirmed via a direct baseline re-run, not
+  assumed. No regression from this change: every test that passed before
+  still passes, and every failure is unrelated to `vm-core`'s interpreter
+  path (none of the failure messages mention `Vm`; they're all CLR/LLVM
+  native-backend toolchain issues). Every other existing `gc_heap.rs` test
+  still passes, since kind only affects `classify_mobility`'s decision during
+  a *compacting* collection, and every test besides the two compacting ones
+  only exercises non-moving `collect_mixed`/`collect_minor_mixed` paths.
+
 ## [0.24.0] — 2026-08-11 (`run_safepoint` opts into moving-minor collection, AOT00-T9 §5 PR-5 follow-up)
 
 `gc-core` 0.34.0 (AOT00-T9 §5, PR-5) added `FlatHeap::should_compact_minor` — a

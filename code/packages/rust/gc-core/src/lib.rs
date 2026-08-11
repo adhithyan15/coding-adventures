@@ -48,7 +48,10 @@ pub mod profile;
 pub mod stackmap_builder;
 
 // Top-level re-exports for the most commonly used types.
-pub use flat_heap::{frame_root_slots, FlatHeap, StackMapRecord, StackMapTable};
+pub use flat_heap::{
+    frame_root_slots, FlatHeap, StackMapRecord, StackMapTable, NAN_BOX_REF_TAG, NAN_BOX_TAG_BITS,
+    NAN_BOX_TAG_MASK,
+};
 pub use heap_ref::HeapRef;
 pub use kind::{HeapKind, KindRegistry};
 pub use policy::{AdaptivePolicy, DefaultPolicy, GcAlgorithm, GcPolicy, PolicyDecision};

@@ -175,6 +175,22 @@ pub struct VMCore {
     /// exactly where every reference lives.
     heap: gc_core::FlatHeap,
 
+    /// **(AOT00-T10)** Kind id `heap` registers `handle_gc_alloc`'s default 2-field
+    /// (`{0, 8}`) shape under — every current `alloc`/`gc_alloc` emission site in the
+    /// pipeline passes zero operands, always this same 16-byte default (confirmed by
+    /// grep across every call site; see `AOT00-T1v`'s own finding). Registered via
+    /// [`gc_core::FlatHeap::register_tagged_kind`], NOT `register_kind` — vm-core's
+    /// fields are NaN-boxed tagged words (`Value::HeapRef`/`Value::Int` share the same
+    /// ref-shaped slot, disambiguated only by the tag bits `handle_gc_field_store`
+    /// writes and `FIELD_TAG_MASK`/`FIELD_TAG_HEAP_REF` read back), so the boxed mode
+    /// `register_kind` uses (every slot always a reference-candidate) would be unsound
+    /// here — see `handle_gc_alloc`'s own doc and `code/specs/AOT00-T10-tagged-field-
+    /// kinds.md` for the full soundness argument this field's registration relies on.
+    /// `handle_gc_alloc` uses this kind only when its own `bytes == 16` (the one shape
+    /// proven to match); any other size falls back to kind `0`, unconditionally sound
+    /// per `FlatHeap`'s own "unregistered kind falls back to conservative" invariant.
+    pair_kind: u16,
+
     /// Live count of `gc_alloc`'d objects — incremented on `gc_alloc`,
     /// decremented by each collection's `freed` count (a relocated survivor
     /// under compaction is not freed, so it correctly stays counted).
@@ -255,6 +271,17 @@ impl VMCore {
         // table: an extension that writes a heap-object field must call the barrier too.
         let mut heap = gc_core::FlatHeap::new();
         heap.set_auto_minor(true);
+        // (AOT00-T10) Register the tagged-mode pair kind `handle_gc_alloc`'s default
+        // 16-byte allocation uses — see `pair_kind`'s own doc for the full soundness
+        // argument (why `register_tagged_kind`, not `register_kind`, is the sound
+        // choice for vm-core's NaN-boxed fields).
+        //
+        // SAFETY: every write to offsets 0 and 8 of a `pair_kind`-tagged object goes
+        // through `handle_gc_field_store` (the only op that writes a `gc_alloc`'d
+        // object's fields), which unconditionally applies the tag convention this
+        // registration trusts (`FIELD_TAG_HEAP_REF` for a `Value::HeapRef`, a shifted
+        // value — never that tag — for a `Value::Int`) before storing.
+        let pair_kind = unsafe { heap.register_tagged_kind(&[0, 8]) };
         VMCore {
             u8_wrap: false,
             profiler_enabled: true,
@@ -267,6 +294,7 @@ impl VMCore {
             globals: HashMap::new(),
             arrays: Vec::new(),
             heap,
+            pair_kind,
             gc_object_count: 0,
             jit_handlers: HashMap::new(),
             extra_opcodes: HashMap::new(),
@@ -392,6 +420,7 @@ impl VMCore {
             globals: &mut self.globals,
             arrays: &mut self.arrays,
             heap: &mut self.heap,
+            pair_kind: self.pair_kind,
             gc_object_count: &mut self.gc_object_count,
             u8_wrap: self.u8_wrap,
             max_frames: self.max_frames,
@@ -469,6 +498,7 @@ impl VMCore {
             globals: &mut self.globals,
             arrays: &mut self.arrays,
             heap: &mut self.heap,
+            pair_kind: self.pair_kind,
             gc_object_count: &mut self.gc_object_count,
             u8_wrap: self.u8_wrap,
             max_frames: self.max_frames,

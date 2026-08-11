@@ -2855,6 +2855,18 @@ already-reviewed conservative-scan collision cases). Either is a real design dec
 a quick follow-up PR — flagging it here so a future session doesn't rediscover the same
 trap by implementing the "obvious" mechanical version.
 
+**Resolved in AOT00-T10** (2026-08-11, following an explicit owner directive that vm-core,
+being unreleased, is free to change design rather than work around it: "We shouldn't have
+10 different GC implementations"). Option (a) above — type-directed field maps — turned out
+not to be the only way to give gc-core "which words are references" ground truth: vm-core
+already computes that ground truth *dynamically*, once per store, via the tag bits this exact
+lesson describes (`FIELD_TAG_HEAP_REF` vs. everything else). `gc-core` gained a second,
+**tagged** kind-registration mode (`FlatHeap::register_tagged_kind`) that trusts a slot's own
+tag bits at scan time instead of assuming every slot is always a reference — closing the
+`forwarded()` collision risk exactly, not just bounding it. See
+`code/specs/AOT00-T10-tagged-field-kinds.md` for the full design and `vm-core`'s
+`VMCore::pair_kind` for the wiring.
+
 ## A blanket `--testTimeout` override during local verification hides timeout failures
 
 **Context:** `human-language-data`, PR #10043 (second core-verb tranche, +24 lessons).

@@ -449,3 +449,132 @@ fn safepoint_stays_minor_scoped_when_should_compact_minor_also_fires() {
          reclaimed the old object too, since neither it nor the big block is rooted"
     );
 }
+
+/// AOT00-T10's headline proof: a `gc_alloc`'d pair, now wired onto
+/// `register_tagged_kind` (`VMCore::pair_kind`), is genuinely **movable**
+/// under a compacting collection — not just non-moving-degraded like every
+/// prior `gc_alloc` object (see this file's own
+/// `safepoint_stays_minor_scoped_when_should_compact_minor_also_fires`, whose
+/// doc comment records that `handle_gc_alloc` used to allocate unconditionally
+/// under kind 0, making relocation unprovable at this layer).
+///
+/// Runs `execute()` three times on the SAME `VMCore` — its `gc_heap()`'s
+/// generational/fragmentation profile and its allocator's memory both persist
+/// across calls, exactly like `gc_alloc_is_capped_and_collection_frees_room_
+/// under_the_cap` already relies on:
+///
+/// 1. **Setup**: the identical 5-batch-of-garbage-plus-collect warmup
+///    `safepoint_stays_minor_scoped_when_should_compact_minor_also_fires`
+///    uses, driving `should_collect_minor`'s EMA under 0.15 and
+///    `should_compact_minor`'s fragmentation signal over 0.40. The tracked
+///    `pair` is allocated only *after* all six warmup collections, so it is
+///    still young — never having survived a collection — when the trigger
+///    call's compacting cycle runs. It's given two field values, rooted via
+///    `global_store` (a root `build_roots` walks on every call regardless of
+///    which function is executing), and returned so the test can read its
+///    address before any move.
+/// 2. **Trigger**: allocates one more large (1.1 MiB) young garbage block and
+///    immediately orphans it, then `safepoint`s. The warmup's profile still
+///    reads through `should_collect_minor` and `should_compact_minor`, so
+///    `run_safepoint` takes the `collect_minor_compacting` branch. `pair` is
+///    young, rooted, and — now that `ctx.pair_kind` is a real tagged kind —
+///    both precise and unpinned, so `classify_mobility` calls it movable and
+///    the collector evacuates it into a fresh arena. `collect_minor_
+///    compacting` rewrites every root slot in place (the same mechanism
+///    `collect_compacting` uses), so the `Value::HeapRef` sitting in
+///    `ctx.globals` is updated automatically — no vm-core fixup needed.
+/// 3. **Readback**: `global_load`s `pair` again and reads its address plus
+///    both fields back through ordinary `gc_field_load`s.
+///
+/// The proof: the address read back after the trigger differs from the one
+/// returned by setup (the object physically moved, not just survived in
+/// place), and both fields still read back correctly at the new address —
+/// the evacuation copied the payload and the root was retargeted correctly,
+/// not left dangling at the old, now-freed address.
+#[test]
+fn gc_alloc_pair_relocates_and_stays_correct_under_a_compacting_minor_collection() {
+    let mut m = IIRModule::new("gc_heap_relocation", "gc_heap_relocation");
+    let mut vm = VMCore::new();
+
+    // --- Call 1 ("setup"): warmup, then allocate+root the tracked pair.
+    let mut setup = Vec::new();
+    for _ in 0..5 {
+        for _ in 0..10 {
+            setup.push(ins("gc_alloc", Some("garbage"), vec![], "ref<pair>"));
+            setup.push(ins("const", Some("garbage"), vec![Operand::Int(0)], "i64"));
+        }
+        setup.push(ins("gc_collect", None, vec![], "void"));
+    }
+    setup.push(ins("gc_alloc", Some("warm"), vec![], "ref<pair>"));
+    setup.push(ins("gc_alloc", Some("garbage"), vec![], "ref<pair>"));
+    setup.push(ins("const", Some("garbage"), vec![Operand::Int(0)], "i64"));
+    setup.push(ins("gc_collect", None, vec![], "void"));
+    setup.push(ins("const", Some("warm"), vec![Operand::Int(0)], "i64"));
+    // Allocated fresh AFTER every warmup collection — still young going into
+    // the trigger call's compacting minor cycle.
+    setup.push(ins("const", Some("v0"), vec![Operand::Int(111)], "i64"));
+    setup.push(ins("const", Some("v1"), vec![Operand::Int(222)], "i64"));
+    setup.push(ins("gc_alloc", Some("pair"), vec![], "ref<pair>"));
+    setup.push(ins("gc_field_store", None, vec![Operand::Var("pair".into()), Operand::Int(0), Operand::Var("v0".into())], "void"));
+    setup.push(ins("gc_field_store", None, vec![Operand::Var("pair".into()), Operand::Int(1), Operand::Var("v1".into())], "void"));
+    setup.push(ins("global_store", None, vec![Operand::Str("p".into()), Operand::Var("pair".into())], "void"));
+    setup.push(ins("ret", None, vec![Operand::Var("pair".into())], "ref<pair>"));
+    m.add_or_replace(IIRFunction::new("main", vec![], "ref<pair>", setup));
+    let before = vm.execute(&mut m, "main", &[]).unwrap().unwrap();
+    let addr_before = before.as_heap_ref().unwrap().addr();
+
+    // --- Call 2 ("trigger"): force the compacting minor collection.
+    let trigger = vec![
+        ins("gc_alloc", Some("big"), vec![Operand::Int(1_100_000)], "ref<bytes>"),
+        ins("const", Some("big"), vec![Operand::Int(0)], "i64"),
+        ins("safepoint", None, vec![], "void"),
+        ins("ret", None, vec![Operand::Int(1)], "i64"),
+    ];
+    m.add_or_replace(IIRFunction::new("main", vec![], "i64", trigger));
+    vm.execute(&mut m, "main", &[]).unwrap();
+    assert_eq!(
+        vm.gc_heap().collection_count(),
+        7,
+        "the trigger call's safepoint must run exactly one more cycle, over the 1 MiB threshold"
+    );
+
+    // --- Call 3 ("readback"): re-load the global and compare addresses.
+    let readback_addr = vec![
+        ins("global_load", Some("pair"), vec![Operand::Str("p".into())], "ref<pair>"),
+        ins("ret", None, vec![Operand::Var("pair".into())], "ref<pair>"),
+    ];
+    m.add_or_replace(IIRFunction::new("main", vec![], "ref<pair>", readback_addr));
+    let after = vm.execute(&mut m, "main", &[]).unwrap().unwrap();
+    let addr_after = after.as_heap_ref().unwrap().addr();
+
+    assert_ne!(
+        addr_before, addr_after,
+        "a young, rooted, tagged-kind pair must be physically relocated by a compacting \
+         minor collection — if this fails, either the collection didn't take the moving \
+         branch, or ctx.pair_kind isn't making the object movable"
+    );
+
+    let readback_f0 = vec![
+        ins("global_load", Some("pair"), vec![Operand::Str("p".into())], "ref<pair>"),
+        ins("gc_field_load", Some("r"), vec![Operand::Var("pair".into()), Operand::Int(0)], "i64"),
+        ins("ret", None, vec![Operand::Var("r".into())], "i64"),
+    ];
+    m.add_or_replace(IIRFunction::new("main", vec![], "i64", readback_f0));
+    assert_eq!(
+        vm.execute(&mut m, "main", &[]).unwrap(),
+        Some(Value::Int(111)),
+        "field 0 must still read back correctly at the relocated address"
+    );
+
+    let readback_f1 = vec![
+        ins("global_load", Some("pair"), vec![Operand::Str("p".into())], "ref<pair>"),
+        ins("gc_field_load", Some("r"), vec![Operand::Var("pair".into()), Operand::Int(1)], "i64"),
+        ins("ret", None, vec![Operand::Var("r".into())], "i64"),
+    ];
+    m.add_or_replace(IIRFunction::new("main", vec![], "i64", readback_f1));
+    assert_eq!(
+        vm.execute(&mut m, "main", &[]).unwrap(),
+        Some(Value::Int(222)),
+        "field 1 must still read back correctly at the relocated address"
+    );
+}
