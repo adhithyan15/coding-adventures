@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Arabic independent-seen ductus (HL-C09AQ)
+
+- Render **س** in two evidence-aligned frames: three close teeth shaped
+  right-to-left, then the connected flow into the final bowl.
+- Keep the source's single pen-down run, zero lifts, and two-way-connector
+  context explicit while fitting the vendored Noto Naskh outline.
+- Preserve Arabic provenance independently of Persian and Urdu **س**, with the
+  same page's directly linked Shiin MOV queued next.
+
 ### Added — cited Arabic independent-raa ductus (HL-C09AP)
 
 - Render **ر** in two evidence-aligned frames: the upper-tip descent through its
