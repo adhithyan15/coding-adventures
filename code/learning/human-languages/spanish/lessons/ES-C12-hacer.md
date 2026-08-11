@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C12-hacer
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 970
-chapter: 43
+sequence: 980
+chapter: 44
 type: word
 headword: hacer
 gloss: to do or make — with the singular present forms hago, haces, and hace

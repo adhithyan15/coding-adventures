@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 85,
-  "title": "Review --- Four Verbs of the Mind",
+  "title": "Escribir — Writing Is Scratching",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d8a0095e82d29c2d",
+  "sourceHash": "fnv1a64:eb93bd0a1216da3c",
   "lessons": [
     {
-      "id": "ES-C34-repaso-mente",
-      "sequence": 1643,
-      "title": "Review — four verbs of the mind",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — four verbs of the mind, and the four physical acts hiding inside them",
+      "id": "ES-C34-escribir",
+      "sequence": 1650,
+      "title": "escribir — \"to write\", which once meant \"to scratch\"",
+      "headword": "escribir",
+      "romanization": "escribir",
+      "gloss": "to write — from a Latin verb meaning \"to scratch\", and the reason Spanish puts an e- in front",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7d3b9285abe7a63",
+      "sourceHash": "fnv1a64:cc1ae1bb5ecfa63d",
       "notice": null,
       "blocks": [
         {
@@ -35,62 +35,98 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new in this chapter. Name the four verbs of the last four chapters: to think, to understand, to read, to write."
+              "text": "Leer gathers letters off a page. This is the other half of the same skill — and its root remembers a time when writing was done with a sharp point in wax."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Here is the thing none of the four chapters could show you on its own."
+              "text": "st-no-e — Spanish will not begin a word with sc-, sp-, st-, so it props one up with an e-: es-cri-BIR."
             },
             {
               "kind": "speech",
-              "text": "Every one of these four \"mental\" verbs began as something you do with your body:"
-            },
-            {
-              "kind": "speech",
-              "text": "pensar — Latin pēnsāre, to weigh. Thinking is putting things on a balance. English kept the scales in weigh your options, and in pensive."
-            },
-            {
-              "kind": "speech",
-              "text": "entender — Latin intendere, to stretch toward. Understanding is reaching. English kept the reach in attention."
-            },
-            {
-              "kind": "speech",
-              "text": "leer — Latin legere, to gather, pick out. Reading is picking grain from a field. English kept the gathering in collect, select, elect."
-            },
-            {
-              "kind": "speech",
-              "text": "escribir — Latin scrībere, to scratch. Writing is scratching a surface, which is exactly what it was."
-            },
-            {
-              "kind": "speech",
-              "text": "Four abstractions, four labourers. No language invents a word for thinking; it borrows one from the hands and lets the meaning drift indoors."
-            },
-            {
-              "kind": "speech",
-              "text": "And a hidden joint. Intellect is Latin inter + legere — \"to gather between.\" The root of leer is sitting inside the English word for the mind itself."
+              "text": "b-soft — between vowels the b is soft, lips barely touching."
             }
           ]
         },
         {
           "index": 2,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "etymology",
+          "title": "The word, taken apart: escribir",
           "segments": [
             {
               "kind": "speech",
-              "text": "Four verbs, and with them the four things you do with a language: take it in (leer), work on it (pensar), get it (entender), put it back out (escribir)."
+              "text": "escribir (\"to write\") from Latin scrībere, whose first sense was \"to scratch, to incise\". Writing was cutting a line into wax or stone before it was ever ink on paper."
+            },
+            {
+              "kind": "speech",
+              "text": "The English family is huge, and every member still works with a pen:"
+            },
+            {
+              "kind": "speech",
+              "text": "scribe, scribble, script, scripture."
+            },
+            {
+              "kind": "speech",
+              "text": "describe (de- \"down\") and description; prescribe (prae- \"before\") and prescription; subscribe (sub- \"under\" — you signed at the bottom); inscription; transcript; postscript."
+            },
+            {
+              "kind": "speech",
+              "text": "manuscript — manus \"hand\" + scriptum: written by hand."
+            },
+            {
+              "kind": "speech",
+              "text": "conscription — being written into an army."
+            },
+            {
+              "kind": "speech",
+              "text": "The Spanish past participle is escrito (\"written\"), which is English script wearing different clothes."
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: an -ir verb, and a productive spelling rule",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Escribir is a plain -ir verb, the family vivir opened:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "form",
+                "ending"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "person: yo. form: escribo. ending: -o.",
+                "person: tú. form: escribes. ending: -es.",
+                "person: él/ella/usted. form: escribe. ending: -e.",
+                "person: nosotros. form: escribimos. ending: -imos.",
+                "person: ellos/ustedes. form: escriben. ending: -en."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That propped-up e- is a rule you can run yourself, not a quirk of one word: Latin schola became escuela, spatha became espada (sword), stāre became estar, Hispānia became España. It is also why a Spanish speaker learning English says eh-Spain."
+            },
+            {
+              "kind": "speech",
+              "text": "Now you can state a plan out loud: Pienso escribir — \"I mean to write.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -103,87 +139,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four verbs in order — to read, to think, to understand, to write",
+              "instruction": "\"escribo, escribes, escribe, escribimos, escriben\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four verbs in order — to read, to think, to understand, to write]"
+              "source": "[YOU SAY: \"escribo, escribes, escribe, escribimos, escriben\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "for each one, the body word underneath it",
+              "instruction": "\"Leo y escribo español\" — I read and write Spanish",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: for each one, the body word underneath it]"
+              "source": "[YOU SAY: \"Leo y escribo español\" — I read and write Spanish]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C34-repaso-mente-weigh",
-              "prompt": "Which of the four verbs originally meant to weigh?",
-              "assesses": [
-                "ES-ETYMON-PENSAR-02"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Pienso escribir\" — I mean to write",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "pensar",
-                "pensar (to think)",
-                "think"
-              ],
-              "feedback": {
-                "correct": "Yes — pensare, and the scales survive in pensive and peso.",
-                "incorrect": "pensar, from pensare, to weigh."
-              }
+              "source": "[YOU SAY: \"Pienso escribir\" — I mean to write]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C34-repaso-mente-gather",
-              "prompt": "Which one meant to gather or pick out?",
-              "assesses": [
-                "ES-ETYMON-LEER-06"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"escribir\" then English \"scribe, describe, manuscript\" — the scratching family",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "leer",
-                "leer (to read)",
-                "read"
-              ],
-              "feedback": {
-                "correct": "Yes — legere, the root inside collect, select and intellect.",
-                "incorrect": "leer, from legere, to gather."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C34-repaso-mente-scratch",
-              "prompt": "And which one meant to scratch?",
-              "assesses": [
-                "ES-ETYMON-ESCRIBIR-08"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "escribir",
-                "escribir (to write)",
-                "write"
-              ],
-              "feedback": {
-                "correct": "Yes — scribere. Writing was scratching a surface.",
-                "incorrect": "escribir, from scribere, to scratch."
-              }
+              "source": "[YOU SAY: \"escribir\" then English \"scribe, describe, manuscript\" — the scratching family]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -195,7 +187,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did entender physically mean? (To stretch toward.) What do all four have in common? (Each was a body word before it was a mind word.) Next chapter you will use them to say something you actually think."
+              "text": "What did scrībere mean first? (To scratch, to incise.) Why does Spanish say escuela and España? (It refuses to open a word with sc- or sp-, so it props an e- in front.) Say \"I read and write Spanish\". (Leo y escribo español.) And what does legere mean, from the lesson before? (To gather, to pick out.) Next chapter: taking, asking, helping — and a verb that runs backwards."
             }
           ]
         }

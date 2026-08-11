@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 83,
-  "title": "Leer — Reading Is Gathering",
+  "title": "Entender — Understanding Is Stretching Toward",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:80ec78588aec3c3c",
+  "sourceHash": "fnv1a64:e29df711179fef36",
   "lessons": [
     {
-      "id": "ES-C34-leer",
+      "id": "ES-C34-entender",
       "sequence": 1630,
-      "title": "leer — \"to read\", and before that, \"to gather\"",
-      "headword": "leer",
-      "romanization": "leer",
-      "gloss": "to read — from a Latin verb meaning \"to gather, to pick out\"",
+      "title": "entender — \"to understand\", built out of stretching",
+      "headword": "entender",
+      "romanization": "entender",
+      "gloss": "to understand — literally \"to stretch toward\"; the second e becomes ie stem-changer",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5f56cf30dac1ea4",
+      "sourceHash": "fnv1a64:198803e9a555d51f",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two cracked verbs down. Here is a calm one — nothing breaks in the middle. The only difficulty is in your mouth: two e's in a row that must stay two."
+              "text": "Pensar broke its stem under stress. So does this one — and you have already been using it. No entiendo has been in your mouth since the repair kit, where you learned it as one frozen block. This is the verb it came from."
             }
           ]
         },
@@ -46,74 +46,77 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "hiatus-ee — leer is two syllables, le-ER, never one long English ee."
+              "text": "diphthong-ie — entiendo = en-TYEN-do."
             },
             {
               "kind": "speech",
-              "text": "leo is likewise two beats, LE-o."
+              "text": "d-soft — the d between vowels is soft, close to the th of English this."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: leer",
+          "title": "The word, taken apart: entender",
           "segments": [
             {
               "kind": "speech",
-              "text": "leer (\"to read\") from Latin legere, \"to gather, to pick out, to choose\" — and only afterwards \"to read\". A reader picks letters out of a row the way a farmhand picks olives off a branch."
+              "text": "entender (\"to understand\") from Latin intendere: in- (\"toward\") + tendere (\"to stretch\"). Understanding something was stretching your attention toward it — leaning in."
             },
             {
               "kind": "speech",
-              "text": "That gathering root runs through an enormous amount of English:"
+              "text": "tendere stretches right across English:"
             },
             {
               "kind": "speech",
-              "text": "legible, legend (\"things to be read\"), lecture, lectern, and worn right down, lesson."
+              "text": "intend, intent, intense, intention — the very same in- + stretch."
             },
             {
               "kind": "speech",
-              "text": "built with prefixes: collect (col- \"together\"), select (se- \"apart\"), elect (e- \"out\"), intellect (inter- \"between\" — choosing between things)."
+              "text": "attend, attention — ad- \"toward\", stretch that way."
             },
             {
               "kind": "speech",
-              "text": "diligent and elegant, both of which meant \"picking carefully\"."
+              "text": "extend, contend, pretend, tension, tendon, and tent, which is stretched cloth."
             },
             {
               "kind": "speech",
-              "text": "One honest limit: Greek légein (\"to speak, to gather\") — which gives English logic, dialogue, catalogue — is a cousin of legere from the same ancient root, not its parent. Same family, separate journeys."
+              "text": "So entiendo and I intend are the same two Latin pieces landing in different places: Spanish went to \"I grasp it\", English to \"I mean to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Careful with a false friend. Spanish pretender is not English pretend. It means \"to aim at, to be after\" — pretende ser médico, \"he means to become a doctor\". Same pieces, different landing."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: a plain -er verb, with a mouthful",
+          "title": "Grammar Lens: an -er verb that cracks, and a calmer twin",
           "segments": [
             {
               "kind": "speech",
-              "text": "Nothing irregular happens. Drop -er, add the ordinary endings:"
+              "text": "Ordinary -er endings, stressed e broken to ie:"
             },
             {
               "kind": "table",
               "headers": [
                 "person",
                 "form",
-                "said"
+                "stem"
               ],
               "columns": 3,
-              "rowCount": 5,
+              "rowCount": 4,
               "utterances": [
-                "person: yo. form: leo. said: LE-o.",
-                "person: tú. form: lees. said: LE-es.",
-                "person: él/ella/usted. form: lee. said: LE-e.",
-                "person: nosotros. form: leemos. said: le-E-mos.",
-                "person: ellos/ustedes. form: leen. said: LE-en."
+                "person: yo. form: entiendo. stem: broken.",
+                "person: tú. form: entiendes. stem: broken.",
+                "person: nosotros. form: entendemos. stem: plain.",
+                "person: ellos/ustedes. form: entienden. stem: broken."
               ]
             },
             {
               "kind": "speech",
-              "text": "Every one of those is a syllable longer than an English speaker expects. Give each e its own beat and the word comes out right."
+              "text": "Spanish has a second verb for this job: comprender from Latin comprehendere, \"to seize together\" ( becomes English comprehend, apprehend, comprehensive). It is a plain -er verb with no crack at all: comprendo, comprendes, comprende. Both mean \"understand\". Entender is the everyday one; comprender leans a little more formal, and more toward grasping a whole thing than catching a word."
             }
           ]
         },
@@ -131,38 +134,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"leer\" — le-ER, two beats",
+              "instruction": "\"No entiendo\" — I don't understand",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"leer\" — *le-ER*, two beats]"
+              "source": "[YOU SAY: \"No entiendo\" — I don't understand]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Leo un libro\" — I read a book",
+              "instruction": "\"entiendo, entiendes, entendemos, entienden\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Leo un libro\" — I read a book]"
+              "source": "[YOU SAY: \"entiendo, entiendes, entendemos, entienden\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"No entiendo\" then \"Leo, pero no entiendo\" — I read, but I don't understand",
+              "instruction": "\"pienso\" then \"entiendo\" — the same crack, twice",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"No entiendo\" then \"Leo, pero no entiendo\" — I read, but I don't understand]"
+              "source": "[YOU SAY: \"pienso\" then \"entiendo\" — the same crack, twice]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"leer\" then English \"legible, collect, select, elect\"",
+              "instruction": "\"entender\" then English \"intend, intense, attention\" — the stretching family",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"leer\" then English \"legible, collect, select, elect\"]"
+              "source": "[YOU SAY: \"entender\" then English \"intend, intense, attention\" — the stretching family]"
             }
           ]
         },
@@ -179,7 +182,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did legere mean before it meant \"to read\"? (To gather, to pick out.) Give two English words built on it with a prefix. (Collect, select, elect, intellect.) How many syllables in leo? (Two — LE-o.) Next: escribir, the other half of literacy."
+              "text": "What does tendere mean, and what does in- add? (To stretch; \"toward\".) Give the yo and nosotros forms. (Entiendo, entendemos.) Of entender and comprender, which one breaks its stem? (Entender.) And what does Spanish pretender mean? (To aim at, not to pretend.) Next: leer."
             }
           ]
         }

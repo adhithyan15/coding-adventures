@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C11-nuestro
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 950
-chapter: 42
+sequence: 960
+chapter: 43
 type: word
 headword: nuestro, nuestra
 gloss: our — matching a known masculine or feminine singular noun
