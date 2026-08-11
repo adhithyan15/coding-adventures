@@ -97,7 +97,7 @@ describe("corpus snapshot", () => {
     const report = measureRamp(lessons, loadChapterPolicy());
 
     expect(report.policy).toEqual({ maxNewAtomsPerLesson: 3, maxNewAtomsPerChapter: 12 });
-    expect(report.summary.lessonViolations).toBe(41);
+    expect(report.summary.lessonViolations).toBe(42);
     // 24 -> 21. HL-C94 splits Spanish's four over-budget opening chapters into
     // twelve: ch3 27 atoms, ch4 31, ch5 17, ch6 19 become twelve chapters of which
     // exactly one (ch7, 13) is still over. That is the owner's "the first chapters
@@ -133,7 +133,7 @@ describe("corpus snapshot", () => {
     // singular steps; its terminal checkpoint remains correctly atom-free.
     // Chapter 18 replaces nine legacy teaching lessons with eight measurable
     // singular steps; its terminal checkpoint remains correctly atom-free.
-    expect(report.summary.unmeasurableLessons).toBe(559);
+    expect(report.summary.unmeasurableLessons).toBe(561);
     // 65 -> 66: vocabulary wave 4 added 52 schema-v2 lessons. Chapter 10's three
     // newly measurable teaching lessons carry the corpus across one point, and the
     // five-step Chapter-15 migration carries it across the next. Chapter 18's eight

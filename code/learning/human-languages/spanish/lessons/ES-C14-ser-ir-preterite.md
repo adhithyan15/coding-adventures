@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C14-ser-ir-preterite
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1120
-chapter: 66
+sequence: 1140
+chapter: 71
 type: word
 headword: fui
 gloss: the shared singular preterite of ser and ir — fui, fuiste, fue

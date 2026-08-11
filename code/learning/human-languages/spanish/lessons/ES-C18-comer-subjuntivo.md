@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C18-comer-subjuntivo
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 1258
-chapter: 79
+sequence: 1278
+chapter: 84
 type: grammar
 headword: coma · comas · coma
 gloss: the singular present subjunctive of comer

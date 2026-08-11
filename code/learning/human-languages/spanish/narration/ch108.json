@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 108,
-  "title": "Gustar — the Verb Built the Other Way Round",
+  "title": "Synthesis --- What You Understand, and What You Don't",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6d2ab89a4beb32b6",
+  "sourceHash": "fnv1a64:a4583a1c4d9821bd",
   "lessons": [
     {
-      "id": "ES-C35-gustar",
-      "sequence": 1750,
-      "title": "gustar — the verb that runs backwards",
-      "headword": "gustar",
-      "romanization": "gustar",
-      "gloss": "to please — the verb English calls \"to like\", built the other way round",
+      "id": "ES-C34-sintesis-mente",
+      "sequence": 1736,
+      "title": "Synthesis — what you understand, and what you don't",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — the sentence you have been saying since chapter 14, finally taken apart",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ed90fac17939f77",
+      "sourceHash": "fnv1a64:e432077e40682dc8",
       "notice": null,
       "blocks": [
         {
@@ -35,103 +35,72 @@
             },
             {
               "kind": "speech",
-              "text": "Back in the introductions you learned mucho gusto — \"much pleasure\". Here is the verb that noun belongs to, assembled the opposite way round from English. It is the single thing in Spanish that trips English speakers up hardest."
+              "text": "Say the sentence you learned in the repair kit, the one that rescues a conversation. (No entiendo.)"
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "grammar",
+          "title": "Grammar Lens: the formula was a verb all along",
           "segments": [
             {
               "kind": "speech",
-              "text": "g-hard — a hard g before u: goos-TAR."
+              "text": "You have been saying no entiendo since the repair kit, and until four chapters ago it was a single frozen block — two sounds that meant I'm lost, with no moving parts."
             },
             {
               "kind": "speech",
-              "text": "s-clear — a clean hissing s, never a z buzz."
+              "text": "It has parts now. Entiendo is entender, and entender is Latin intendere, \"to stretch toward.\" Which means the sentence you have been using to admit defeat has never actually said I failed. It says:"
+            },
+            {
+              "kind": "speech",
+              "text": "I am not managing to stretch that far."
+            },
+            {
+              "kind": "speech",
+              "text": "That was true the whole time. You just could not see it yet."
+            },
+            {
+              "kind": "speech",
+              "text": "And the moment a formula has parts, it turns. No entiendo stops being the only thing you can say and becomes one option among several."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: gustar",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "gustar from Latin gustāre, \"to taste\". English kept the root and stayed close to the tongue:"
+              "text": "Back in the repair kit, all you could do:"
             },
             {
               "kind": "speech",
-              "text": "gusto — doing something with relish, that is, with a taste for it."
+              "text": "— No entiendo. Más despacio, por favor."
             },
             {
               "kind": "speech",
-              "text": "gustatory — of the sense of taste."
+              "text": "Now, the same moment, with the parts working:"
             },
             {
               "kind": "speech",
-              "text": "disgust — dis- \"away\" + taste: what you spit back out."
+              "text": "— Perdón — leo un poco, pero no entiendo. — Más despacio, por favor. Ahora entiendo. Gracias."
             },
             {
               "kind": "speech",
-              "text": "degustation, a tasting menu; and through French, ragout."
-            },
-            {
-              "kind": "speech",
-              "text": "Spanish's own el gusto — the gusto of mucho gusto — still holds both senses: taste on the tongue, and pleasure taken in a thing. The verb followed the second: gustar means \"to please\"."
+              "text": "Same trouble. But the second speaker is no longer only failing — they are reporting which part works and which does not. That is the difference between a distress signal and a conversation."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the thing you like is the subject",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "English says I like the book: the liker is the subject. Spanish has no such sentence. It says Me gusta el libro — \"the book is pleasing to me\"."
-            },
-            {
-              "kind": "speech",
-              "text": "Everything follows from that:"
-            },
-            {
-              "kind": "speech",
-              "text": "el libro is the subject, which is why the verb is gusta, third person."
-            },
-            {
-              "kind": "speech",
-              "text": "me is the person it happens to, not the one doing anything."
-            },
-            {
-              "kind": "speech",
-              "text": "So the verb agrees with the thing, never with you:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "what you mean",
-                "Spanish",
-                "why"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "what you mean: I like the book. Spanish: Me gusta el libro. why: one book, so gusta.",
-                "what you mean: I like books. Spanish: Me gustan los libros. why: many books, so gustan.",
-                "what you mean: I like reading. Spanish: Me gusta leer. why: one action, so gusta."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "To change who is pleased, change the little word in front, not the verb: me (to me), te (to you), le (to him, her, usted), nos (to us), les (to them)."
-            },
-            {
-              "kind": "speech",
-              "text": "Careful. There is no yo gusto el libro. Yo gusto is a real sentence — it means \"I am pleasing\" — just not the one you were reaching for."
+              "text": "Four verbs is not four words. It is the ability to say where you are in a language: what you take in, what you work on, what lands, what you can produce."
             }
           ]
         },
@@ -149,38 +118,69 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Me gusta el café\" then \"Me gustan los libros\" — the verb follows the thing",
+              "instruction": "the repair-kit version — the distress signal on its own",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Me gusta el café\" then \"Me gustan los libros\" — the verb follows the thing]"
+              "source": "[YOU SAY: the repair-kit version — the distress signal on its own]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Te gusta tomar café\" — you like drinking coffee",
+              "instruction": "the version above, where you say what does work before what doesn't",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Te gusta tomar café\" — you like drinking coffee]"
+              "source": "[YOU SAY: the version above, where you say what *does* work before what doesn't]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Me gusta ayudar\" — I like helping",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Me gusta ayudar\" — I like helping]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"gustar\" then English \"gusto, disgust, gustatory\" — the tasting family",
-              "spoken": true,
-              "scored": false,
+              "kind": "speech",
+              "text": "Run the second one until it sounds like a person, not a repair kit."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C34-sintesis-mente-literal",
+              "prompt": "What does no entiendo literally say, given intendere?",
+              "assesses": [
+                "ES-ETYMON-ENTENDER-04",
+                "ES-LEX-NO-ENTIENDO-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "i am not stretching that far",
+                "i am not reaching that far",
+                "not stretching toward it",
+                "i cannot stretch that far"
+              ],
+              "feedback": {
+                "correct": "Yes — not a confession of failure, a report of reach.",
+                "incorrect": "Intendere is to stretch toward: I am not managing to stretch that far."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C34-sintesis-mente-now",
+              "prompt": "How do you say I understand now, once it slows down?",
+              "assesses": [
+                "ES-LEX-ENTENDER-03"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"gustar\" then English \"gusto, disgust, gustatory\" — the tasting family]"
+              "acceptedResponses": [
+                "ahora entiendo",
+                "entiendo",
+                "entiendo ahora"
+              ],
+              "feedback": {
+                "correct": "Yes.",
+                "incorrect": "Ahora entiendo — now I understand."
+              }
             }
           ]
         },
@@ -197,7 +197,7 @@
             },
             {
               "kind": "speech",
-              "text": "In me gusta el libro, what is the subject? (El libro.) Why is it me gustan los libros? (The verb agrees with los libros, which is plural.) What did gustāre mean, and name an English cousin. (To taste; gusto, disgust.) And what would yo gusto actually mean? (I am pleasing.)"
+              "text": "Which verb was hiding inside no entiendo? (Entender.) What did it physically mean? (To stretch toward.) What can you say now that you could not say back then? (Not just that you are lost — which part is lost.)"
             }
           ]
         }

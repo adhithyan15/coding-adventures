@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C17-comer-futuro
 spine_node: SPINE-TALK-ABOUT-FUTURE
-sequence: 1214
-chapter: 74
+sequence: 1234
+chapter: 79
 type: pattern
 headword: comeré
 gloss: the singular simple future of comer — comeré, comerás, comerá

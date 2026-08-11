@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C32-gato
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1640
-chapter: 95
+sequence: 1660
+chapter: 100
 type: word
 headword: gato
 gloss: cat — a word that travelled out of Africa with the animal, pushing Latin's own fēlēs aside

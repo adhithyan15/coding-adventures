@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(120); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(125); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -553,6 +553,22 @@ describe("real curriculum", () => {
       "ES-C44-sintesis-mas-de-uno-contrast",
       "ES-C44-sintesis-mas-de-uno-definite",
       "ES-C44-sintesis-mas-de-uno-meals",
+      "ES-C45-los-las-books",
+      "ES-C45-los-las-meals",
+      "ES-C45-los-las-tidy",
+      "ES-C45-nos-ending",
+      "ES-C45-nos-say",
+      "ES-C45-nos-word",
+      "ES-C45-os-other",
+      "ES-C45-os-say",
+      "ES-C45-os-vos",
+      "ES-C45-repaso-ocho-all",
+      "ES-C45-repaso-ocho-free",
+      "ES-C45-repaso-ocho-quarter",
+      "ES-C45-sintesis-sin-repetir-books",
+      "ES-C45-sintesis-sin-repetir-cost",
+      "ES-C45-sintesis-sin-repetir-meals",
+      "ES-C45-sintesis-sin-repetir-us",
       "ES-W03-question-span-roberto-outside",
       "FA-C02-esm-e-man-sara",
       "FA-C03-chist-fusion",

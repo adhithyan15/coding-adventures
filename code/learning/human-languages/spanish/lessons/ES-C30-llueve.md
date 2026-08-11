@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C30-llueve
 spine_node: SPINE-TIME-OF-DAY
-sequence: 1590
-chapter: 93
+sequence: 1610
+chapter: 98
 type: phrase
 headword: llueve
 gloss: rain refuses the hacer pattern and brings its own verb — and its ll- is the sound change you already met in llamar

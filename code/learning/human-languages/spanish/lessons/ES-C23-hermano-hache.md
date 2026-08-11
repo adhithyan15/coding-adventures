@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C23-hermano-hache
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 1470
-chapter: 86
+sequence: 1490
+chapter: 91
 type: etymology
 headword: hermano ← *ermano*
 gloss: the h on hermano is not the h on hijo — one was spoken for centuries, the other never was
