@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Synthesis --- Asking, and Answering",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1f7308c87dd5703a",
+  "sourceHash": "fnv1a64:f2dabdd1fdd6197f",
   "lessons": [
     {
       "id": "ES-C07-sintesis-preguntar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0cb22e77df9d93d4",
+      "sourceHash": "fnv1a64:e755b9f265587bb2",
       "notice": null,
       "blocks": [
         {
@@ -169,7 +169,6 @@
               "acceptedResponses": [
                 "three",
                 "3",
-                "tres",
                 "all three"
               ],
               "feedback": {

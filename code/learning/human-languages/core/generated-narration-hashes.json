@@ -6690,7 +6690,7 @@
     {
       "language": "spanish",
       "chapter": 24,
-      "sourceHash": "fnv1a64:1f7308c87dd5703a",
+      "sourceHash": "fnv1a64:f2dabdd1fdd6197f",
       "lessonIds": [
         "ES-C07-sintesis-preguntar"
       ],
@@ -6699,7 +6699,7 @@
       "text": "spanish/narration/ch24.txt",
       "json": "spanish/narration/ch24.json",
       "textHash": "fnv1a64:7f76d3ba4477dbe8",
-      "jsonHash": "fnv1a64:845deaa8225d7db0"
+      "jsonHash": "fnv1a64:e901f1d68e23816d"
     },
     {
       "language": "spanish",
