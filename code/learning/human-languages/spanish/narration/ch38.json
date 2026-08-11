@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 38,
-  "title": "Black, White, Red, and Blue",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:43b96248b60fd404",
+  "title": "The Future and the Conditional --- One Weld, Twice",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:7a98cddd75e76e18",
   "lessons": [
     {
-      "id": "ES-C22-negro-blanco",
-      "sequence": 1340,
-      "title": "negro, blanco — two colours, and one of their histories",
-      "headword": "negro, blanco",
-      "romanization": "negro, blanco",
-      "gloss": "black and white — the two words, and the straight-line Latin history of the first one",
+      "id": "ES-C17-futuro",
+      "sequence": 1140,
+      "title": "hablaré — keep the infinitive, add the future",
+      "headword": "hablaré",
+      "romanization": "hablaré",
+      "gloss": "the singular simple future of hablar — hablaré, hablarás, hablará",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b15b7b9bb4f7f85d",
+      "sourceHash": "fnv1a64:d8486ac6dc8c3aa5",
       "notice": null,
       "blocks": [
         {
@@ -35,37 +35,51 @@
             },
             {
               "kind": "speech",
-              "text": "Two colours you can put to work immediately. One of them has the most ordinary history imaginable. The other does not — which is why it gets its own lesson next."
+              "text": "Voy a hablar español uses the near-future frame you already know. Spanish also has a one-word future: Hablaré español — “I will speak Spanish.” It can present a future prediction or intention without adding a new subject or object."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The words, taken apart: negro",
+          "type": "grammar",
+          "title": "Grammar Lens: three familiar persons",
           "segments": [
             {
               "kind": "speech",
-              "text": "negro (\"black\") from Latin niger. Nothing surprising: the same Latin root gives English denigrate (\"to blacken someone's name\") and the rest of the Romance family's words for black — French noir, Italian nero, Portuguese negro. Latin's word for black stayed put, in every daughter language."
+              "text": "Keep the whole infinitive hablar, then add one ending:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "simple future"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. simple future: hablaré.",
+                "person: tú. simple future: hablarás.",
+                "person: él / ella / usted. simple future: hablará."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Hold that in mind as the baseline. It is what a colour word normally does."
+              "text": "Say hablaré, hablarás, hablará. Each form has final stress, marked by an accent. Plural persons wait."
             }
           ]
         },
         {
           "index": 2,
-          "type": "input",
-          "title": "The two words in use",
+          "type": "etymology",
+          "title": "The weld, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "blanco (\"white\") is the pair to it: el gato negro, el gato blanco. Both behave like any Spanish adjective — they follow the noun and agree with it (la casa blanca)."
+              "text": "Late Latin and early Romance used more than one way to speak about the future. One influential construction placed an infinitive beside present forms of Latin habēre, “to have.” Through repeated use and sound change, descendants of those pieces became the endings in forms such as hablaré."
             },
             {
               "kind": "speech",
-              "text": "But hear what you would have expected and did not get. Latin's word for white was albus, and by the negro pattern Spanish \"white\" should be something like albo. It is not. Where blanco actually came from — and what became of albus — is the next lesson."
+              "text": "That history explains why the infinitive remains visible. It does not mean that a modern learner should attach the full modern verb haber, and it does not require the claim that every older future vanished at one moment."
             }
           ]
         },
@@ -83,29 +97,89 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"negro, blanco\"",
+              "instruction": "“hablaré, hablarás, hablará”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"negro, blanco\"]"
+              "source": "[YOU SAY: “hablaré, hablarás, hablará”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "with a noun — \"el gato negro, la casa blanca\"",
+              "instruction": "“Voy a hablar español. Hablaré español.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: with a noun — \"el gato negro, la casa blanca\"]"
+              "source": "[YOU SAY: “Voy a hablar español. Hablaré español.”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"negro\" then English \"denigrate\" — the niger root",
+              "instruction": "“infinitive plus historical habēre material”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"negro\" then English \"denigrate\" — the *niger* root]"
+              "source": "[YOU SAY: “infinitive plus historical habēre material”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-futuro-singular-forms",
+              "prompt": "Give the learned singular future forms of hablar: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-GRAMMAR-AR-FUTURE-SINGULAR",
+                "ES-LEX-HABLAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "hablaré, hablarás, hablará",
+                "hablaré hablarás hablará",
+                "hablaré / hablarás / hablará"
+              ],
+              "feedback": {
+                "correct": "Right: hablaré, hablarás, hablará.",
+                "incorrect": "Keep hablar whole and add -é, -ás, -á."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-futuro-hablare-espanol",
+              "prompt": "Say 'I will speak Spanish' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-FUTURE-PREDICTION-INTENTION",
+                "ES-GRAMMAR-AR-FUTURE-SINGULAR",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "hablaré español.",
+                "hablaré español"
+              ],
+              "feedback": {
+                "correct": "Right: Hablaré español.",
+                "incorrect": "Use the yo future hablaré before known español."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-futuro-history",
+              "prompt": "Which Latin verb meaning 'to have' contributed material to the Romance future endings?",
+              "assesses": [
+                "ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "habēre",
+                "habere",
+                "haber"
+              ],
+              "feedback": {
+                "correct": "Right: forms of habēre contributed to the future construction.",
+                "incorrect": "The historical partner was habēre, the source of haber."
+              }
             }
           ]
         },
@@ -122,26 +196,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say black and white. (Negro, blanco.) Where does negro come from, and what English word shares it? (Latin niger — denigrate.) What would you have expected Spanish's \"white\" to be, given Latin albus? (Something like albo — and it isn't. That is next lesson's puzzle.)"
+              "text": "Give the three learned forms. (Hablaré, hablarás, hablará.) What stays visible? (The whole infinitive.) What older verb contributed to the endings? (Latin habēre.) Next: test the same endings on comer."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C22-blanco-germanico",
-      "sequence": 1350,
-      "title": "blanco — the colour Spanish did not inherit",
-      "headword": "blanco ← *blank",
-      "romanization": "blanco ← *blank",
-      "gloss": "white is a Germanic loan, not a Latin inheritance — and Latin's own albus is still around, just not as a colour",
+      "id": "ES-C17-comer-futuro",
+      "sequence": 1144,
+      "title": "comeré — the same endings keep -er",
+      "headword": "comeré",
+      "romanization": "comeré",
+      "gloss": "the singular simple future of comer — comeré, comerás, comerá",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:99b79682cd56a6ec",
+      "sourceHash": "fnv1a64:ecadf2f3ca0eb8b8",
       "notice": null,
       "blocks": [
         {
@@ -157,68 +231,1031 @@
             },
             {
               "kind": "speech",
-              "text": "Negro came straight down from Latin, like almost every other everyday word you have met. Blanco did not come down at all. It walked in."
+              "text": "You built hablaré without removing -ar. Keep comer just as intact: comeré — “I will eat.”"
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
+          "type": "grammar",
+          "title": "Grammar Lens: the singular -er row",
           "segments": [
             {
+              "kind": "table",
+              "headers": [
+                "person",
+                "simple future"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. simple future: comeré.",
+                "person: tú. simple future: comerás.",
+                "person: él / ella / usted. simple future: comerá."
+              ]
+            },
+            {
               "kind": "speech",
-              "text": "negro, blanco — the two colour words."
+              "text": "Say comeré, comerás, comerá. Compare hablaré / comeré: the infinitives differ, but the future endings do not. Plural persons wait."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: blanco",
+          "title": "The ending, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "blanco comes from Germanic blank — \"shining, gleaming.\" It is a loan, traditionally attributed to contact with the Visigoths, the Germanic people who ruled Spain for centuries after Rome collapsed."
-            },
-            {
-              "kind": "speech",
-              "text": "Be careful how firmly you hold that last part: no surviving Gothic text actually preserves this word, so the Visigothic route is a plausible traditional account, not a documented one. What is well attested is the parallel case next door — French took the very same Germanic word (blanc) from a different Germanic people, the Franks. Two Romance sisters, the same borrowed word for white, two separate borrowings."
-            },
-            {
-              "kind": "speech",
-              "text": "Why would a borrowed word beat Latin's own? Because blank was not a pale word: it meant bright, gleaming. Colour terms lose out to vivid ones all the time — English's own bright is doing the same job in \"bright white.\""
+              "text": "The historical infinitive-plus-habēre construction helps explain the shared endings: the verb-family vowel remains inside hablar or comer, rather than selecting a different ending set."
             }
           ]
         },
         {
           "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: where albus went",
+          "type": "guided-production",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Latin's white did not vanish. It stopped being the everyday word and survived in corners:"
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
             },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“comeré, comerás, comerá”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “comeré, comerás, comerá”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Hablaré. Comeré.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Hablaré. Comeré.”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Beberé café.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Beberé café.”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-comer-futuro-singular-forms",
+              "prompt": "Give the learned singular future forms of comer: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-PATTERN-ER-FUTURE-SINGULAR",
+                "ES-LEX-COMER"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "comeré, comerás, comerá",
+                "comeré comerás comerá",
+                "comeré / comerás / comerá"
+              ],
+              "feedback": {
+                "correct": "Right: comeré, comerás, comerá.",
+                "incorrect": "Keep comer whole and add -é, -ás, -á."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-comer-futuro-cafe",
+              "prompt": "Use the learned -er future pattern to say 'I will drink coffee' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-FUTURE-PREDICTION-INTENTION",
+                "ES-PATTERN-ER-FUTURE-SINGULAR",
+                "ES-LEX-BEBER",
+                "ES-LEX-CAFE"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "beberé café.",
+                "beberé café",
+                "bebere cafe",
+                "bebere cafe."
+              ],
+              "feedback": {
+                "correct": "Right: Beberé café.",
+                "incorrect": "Keep known beber whole, add -é, then known café."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-comer-futuro-shared-endings",
+              "prompt": "Which endings do hablaré and comeré share across the learned singular row?",
+              "assesses": [
+                "ES-GRAMMAR-AR-FUTURE-SINGULAR",
+                "ES-PATTERN-ER-FUTURE-SINGULAR"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "-é, -ás, -á",
+                "é ás á",
+                "-é -ás -á"
+              ],
+              "feedback": {
+                "correct": "Right: -é, -ás, -á serve both infinitives.",
+                "incorrect": "Read the final pieces: hablaré/comeré, hablarás/comerás, hablará/comerá."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the three learned forms. (Comeré, comerás, comerá.) Did the -er disappear? (No.) Which endings match hablar? (-é, -ás, -á.) Next: let vivir test the pattern once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C17-vivir-futuro",
+      "sequence": 1148,
+      "title": "viviré — one future row for three verb families",
+      "headword": "viviré",
+      "romanization": "viviré",
+      "gloss": "the singular simple future of vivir — viviré, vivirás, vivirá",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef14d3a2e42d9add",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hablaré kept -ar. Comeré kept -er. Predict the yo future of vivir before reading on. It is viviré."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the singular -ir row",
+          "segments": [
             {
               "kind": "table",
               "headers": [
-                "word",
-                "meaning",
-                "the white inside"
+                "person",
+                "simple future"
               ],
-              "columns": 3,
-              "rowCount": 4,
+              "columns": 2,
+              "rowCount": 3,
               "utterances": [
-                "word: alba. meaning: dawn. the white inside: the sky going white.",
-                "word: albo (rare, poetic). meaning: white, pale. the white inside: a fossil, mostly literary now.",
-                "word: álbum (Eng. album). meaning: album. the white inside: a blank white tablet.",
-                "word: albino. meaning: albino. the white inside: white-skinned."
+                "person: yo. simple future: viviré.",
+                "person: tú. simple future: vivirás.",
+                "person: él / ella / usted. simple future: vivirá."
               ]
             },
             {
               "kind": "speech",
-              "text": "That is the normal fate of a displaced word: not death, but retreat into technical and poetic corners. El alba is still every Spanish speaker's word for dawn."
+              "text": "Say viviré, vivirás, vivirá. Now the bounded pattern is complete: hablaré, comeré, viviré. The same three endings attach to all three whole infinitives. Plural persons wait."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: meaning with known words",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Viviré en Madrid says “I will live in Madrid.” Every lexical piece was available before this lesson; only the future form is new."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“viviré, vivirás, vivirá”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “viviré, vivirás, vivirá”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“hablaré, comeré, viviré”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “hablaré, comeré, viviré”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Viviré en Madrid.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Viviré en Madrid.”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-vivir-futuro-singular-forms",
+              "prompt": "Give the learned singular future forms of vivir: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-GRAMMAR-IR-FUTURE-SINGULAR",
+                "ES-LEX-VIVIR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "viviré, vivirás, vivirá",
+                "viviré vivirás vivirá",
+                "viviré / vivirás / vivirá"
+              ],
+              "feedback": {
+                "correct": "Right: viviré, vivirás, vivirá.",
+                "incorrect": "Keep vivir whole and add -é, -ás, -á."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-vivir-futuro-madrid",
+              "prompt": "Say 'I will live in Madrid' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-FUTURE-PREDICTION-INTENTION",
+                "ES-GRAMMAR-IR-FUTURE-SINGULAR",
+                "ES-LEX-VIVIR",
+                "ES-LEX-EN"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "viviré en madrid.",
+                "viviré en madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Viviré en Madrid.",
+                "incorrect": "Use viviré, then the known frame en Madrid."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-vivir-futuro-three-yo",
+              "prompt": "Give the future yo forms of hablar, comer, and vivir, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-AR-FUTURE-SINGULAR",
+                "ES-PATTERN-ER-FUTURE-SINGULAR",
+                "ES-GRAMMAR-IR-FUTURE-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "hablaré, comeré, viviré",
+                "hablaré comeré viviré",
+                "hablaré / comeré / viviré"
+              ],
+              "feedback": {
+                "correct": "Right: hablaré, comeré, viviré.",
+                "incorrect": "Keep each infinitive whole and add -é."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the three vivir forms. (Viviré, vivirás, vivirá.) Which verb families share the learned endings? (All three: -ar, -er, -ir.) Next: reuse the whole-infinitive frame for “would.”"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C17-condicional",
+      "sequence": 1152,
+      "title": "hablaría — the whole infinitive meets -ía",
+      "headword": "hablaría",
+      "romanization": "hablaría",
+      "gloss": "the singular conditional of hablar — hablaría, hablarías, hablaría",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:89c224f8d4a24b49",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hablaré español places speaking in the future. Hablaría español means “I would speak Spanish” in an imagined or conditional situation. Today the situation can remain unstated; learn the form and its core “would” meaning first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: three familiar persons",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep hablar whole, then add the learned singular conditional endings:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "conditional"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. conditional: hablaría.",
+                "person: tú. conditional: hablarías.",
+                "person: él / ella / usted. conditional: hablaría."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say hablaría, hablarías, hablaría. The first and third forms match. The accent keeps í-a in separate syllables, just as it did in comía. Plural persons wait."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The second weld, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The conditional developed from an infinitive beside past or imperfect forms of the same “have” verb that helped form the Romance future. That is why the whole infinitive remains visible again and why the endings resemble the -ía row. The history passes through older Romance forms; modern hablaría is not made by attaching the complete modern word había."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“hablaría, hablarías, hablaría”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “hablaría, hablarías, hablaría”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Hablaré español. Hablaría español.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Hablaré español. Hablaría español.”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“ha-bla-rí-a”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “ha-bla-rí-a”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-condicional-singular-forms",
+              "prompt": "Give the learned singular conditional forms of hablar: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-GRAMMAR-AR-CONDITIONAL-SINGULAR",
+                "ES-LEX-HABLAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "hablaría, hablarías, hablaría",
+                "hablaría hablarías hablaría",
+                "hablaría / hablarías / hablaría"
+              ],
+              "feedback": {
+                "correct": "Right: hablaría, hablarías, hablaría.",
+                "incorrect": "Keep hablar whole and add -ía, -ías, -ía."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-condicional-hablaria-espanol",
+              "prompt": "Say 'I would speak Spanish' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL",
+                "ES-GRAMMAR-AR-CONDITIONAL-SINGULAR",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "hablaría español.",
+                "hablaría español"
+              ],
+              "feedback": {
+                "correct": "Right: Hablaría español.",
+                "incorrect": "Use the yo conditional hablaría before known español."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-condicional-syllables",
+              "prompt": "Write hablaría with the final three syllables separated.",
+              "assesses": [
+                "ES-GRAMMAR-AR-CONDITIONAL-SINGULAR",
+                "ES-SOUND-WRITTEN-ACCENT"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "ha-bla-rí-a",
+                "habla-rí-a",
+                "rí-a"
+              ],
+              "feedback": {
+                "correct": "Right: the accent keeps rí-a apart.",
+                "incorrect": "The accented í stays separate from a: ha-bla-rí-a."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the three learned forms. (Hablaría, hablarías, hablaría.) What is the core meaning? (“Would speak.”) Which older construction stands behind the row? (An infinitive plus past forms of haber.) Next: give comer the same ending set."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C17-comer-condicional",
+      "sequence": 1156,
+      "title": "comería — keep -er before “would”",
+      "headword": "comería",
+      "romanization": "comería",
+      "gloss": "the singular conditional of comer — comería, comerías, comería",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7500b4bee4ad2629",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Comeré means “I will eat.” Keep comer whole and exchange the future ending for -ía: comería — “I would eat.”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the singular -er row",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "conditional"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. conditional: comería.",
+                "person: tú. conditional: comerías.",
+                "person: él / ella / usted. conditional: comería."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say comería, comerías, comería. Compare hablaría / comería: one bounded ending set serves both complete infinitives. Plural persons wait."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“comería, comerías, comería”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “comería, comerías, comería”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“comeré, comería”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “comeré, comería”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“hablaría, comería”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “hablaría, comería”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-comer-condicional-singular-forms",
+              "prompt": "Give the learned singular conditional forms of comer: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-GRAMMAR-ER-CONDITIONAL-SINGULAR",
+                "ES-LEX-COMER"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "comería, comerías, comería",
+                "comería comerías comería",
+                "comería / comerías / comería"
+              ],
+              "feedback": {
+                "correct": "Right: comería, comerías, comería.",
+                "incorrect": "Keep comer whole and add -ía, -ías, -ía."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-comer-condicional-future-pair",
+              "prompt": "Give the yo pair 'I will eat; I would eat' in Spanish.",
+              "assesses": [
+                "ES-PATTERN-ER-FUTURE-SINGULAR",
+                "ES-GRAMMAR-ER-CONDITIONAL-SINGULAR",
+                "ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "comeré; comería.",
+                "comeré comería",
+                "comeré / comería"
+              ],
+              "feedback": {
+                "correct": "Right: comeré; comería.",
+                "incorrect": "Keep comer and contrast future -é with conditional -ía."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-comer-condicional-shared-endings",
+              "prompt": "Which endings do hablaría and comería share across the learned singular row?",
+              "assesses": [
+                "ES-GRAMMAR-AR-CONDITIONAL-SINGULAR",
+                "ES-GRAMMAR-ER-CONDITIONAL-SINGULAR"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "-ía, -ías, -ía",
+                "ía ías ía",
+                "-ía -ías -ía"
+              ],
+              "feedback": {
+                "correct": "Right: -ía, -ías, -ía serve both infinitives.",
+                "incorrect": "Read the final pieces: hablaría/comería, hablarías/comerías, hablaría/comería."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the three learned forms. (Comería, comerías, comería.) Which piece stays whole? (Comer.) Which endings match hablaría? (-ía, -ías, -ía.) Next: complete the regular pattern with vivir."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C17-vivir-condicional",
+      "sequence": 1160,
+      "title": "viviría — the regular conditional closes its small frame",
+      "headword": "viviría",
+      "romanization": "viviría",
+      "gloss": "the singular conditional of vivir — viviría, vivirías, viviría",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d56f661e322d1fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can move from comeré to comería. Apply the same move to viviré: viviría — “I would live.”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the singular -ir row",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "conditional"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. conditional: viviría.",
+                "person: tú. conditional: vivirías.",
+                "person: él / ella / usted. conditional: viviría."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say viviría, vivirías, viviría. The complete regular frame is now hablaría, comería, viviría. Plural persons wait."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: meaning with known words",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Viviría en Madrid says “I would live in Madrid.” The lesson adds no new place or preposition."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“viviría, vivirías, viviría”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “viviría, vivirías, viviría”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“hablaría, comería, viviría”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “hablaría, comería, viviría”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Viviría en Madrid.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Viviría en Madrid.”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-vivir-condicional-singular-forms",
+              "prompt": "Give the learned singular conditional forms of vivir: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-GRAMMAR-IR-CONDITIONAL-SINGULAR",
+                "ES-LEX-VIVIR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "viviría, vivirías, viviría",
+                "viviría vivirías viviría",
+                "viviría / vivirías / viviría"
+              ],
+              "feedback": {
+                "correct": "Right: viviría, vivirías, viviría.",
+                "incorrect": "Keep vivir whole and add -ía, -ías, -ía."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-vivir-condicional-madrid",
+              "prompt": "Say 'I would live in Madrid' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL",
+                "ES-GRAMMAR-IR-CONDITIONAL-SINGULAR",
+                "ES-LEX-VIVIR",
+                "ES-LEX-EN"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "viviría en madrid.",
+                "viviría en madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Viviría en Madrid.",
+                "incorrect": "Use viviría, then known en Madrid."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-vivir-condicional-three-yo",
+              "prompt": "Give the conditional yo forms of hablar, comer, and vivir, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-AR-CONDITIONAL-SINGULAR",
+                "ES-GRAMMAR-ER-CONDITIONAL-SINGULAR",
+                "ES-GRAMMAR-IR-CONDITIONAL-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "hablaría, comería, viviría",
+                "hablaría comería viviría",
+                "hablaría / comería / viviría"
+              ],
+              "feedback": {
+                "correct": "Right: hablaría, comería, viviría.",
+                "incorrect": "Keep each infinitive whole and add -ía."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the three vivir forms. (Viviría, vivirías, viviría.) Which regular verb families share the ending row? (All three.) Next: three already-known verbs change the stem but keep both sets of endings."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C17-irregulares",
+      "sequence": 1164,
+      "title": "haré, tendré, podré — three stems, two ending sets",
+      "headword": "haré · tendré · podré",
+      "romanization": "haré · tendré · podré",
+      "gloss": "three bounded stems shared by the future and conditional",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0ddb8f12e321f00",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Regular verbs keep the whole infinitive. Three common verbs you already know use a shorter or reshaped stem. Learn only these three today. In each row, the same stem serves the future and the conditional."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: hacer becomes har-",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "future",
+                "conditional"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. future: haré. conditional: haría.",
+                "person: tú. future: harás. conditional: harías.",
+                "person: él / ella / usted. future: hará. conditional: haría."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Use the known noun in Haré café — “I will make coffee” — and Haría café — “I would make coffee.”"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: tener becomes tendr-",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "future",
+                "conditional"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. future: tendré. conditional: tendría.",
+                "person: tú. future: tendrás. conditional: tendrías.",
+                "person: él / ella / usted. future: tendrá. conditional: tendría."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The d in tendr- arose during the history of the compact future and conditional. Treat tendr- as the learned stem, not as permission to insert d into a new verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: poder becomes podr-",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "future",
+                "conditional"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. future: podré. conditional: podría.",
+                "person: tú. future: podrás. conditional: podrías.",
+                "person: él / ella / usted. future: podrá. conditional: podría."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Podré hablar español says “I will be able to speak Spanish.” Podría hablar español says “I could / would be able to speak Spanish.”"
+            },
+            {
+              "kind": "speech",
+              "text": "These stems reflect inherited reductions and sound changes. The useful modern fact is bounded: har-, tendr-, podr-, each followed by the same endings you already learned."
             }
           ]
         },
@@ -236,29 +1273,92 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pairing — \"negro from Latin, blanco from Germanic\"",
+              "instruction": "“haré, haría”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pairing — \"negro from Latin, blanco from Germanic\"]"
+              "source": "[YOU SAY: “haré, haría”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"el alba\" — dawn — and hear the old Latin white inside it",
+              "instruction": "“tendré, tendría”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"el alba\" — dawn — and hear the old Latin white inside it]"
+              "source": "[YOU SAY: “tendré, tendría”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"blanco\" then French \"blanc\" — the same loan, twice over",
+              "instruction": "“podré, podría”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"blanco\" then French \"blanc\" — the same loan, twice over]"
+              "source": "[YOU SAY: “podré, podría”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-irregulares-hacer-pair",
+              "prompt": "Give the pair 'I will make coffee; I would make coffee' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-HACER-FUTURE-CONDITIONAL-SINGULAR",
+                "ES-LEX-HACER",
+                "ES-LEX-CAFE"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "haré café; haría café.",
+                "haré café haría café",
+                "haré café / haría café"
+              ],
+              "feedback": {
+                "correct": "Right: Haré café; haría café.",
+                "incorrect": "Use the shared har- stem with -é, then -ía."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-irregulares-tener-pair",
+              "prompt": "Give the future and conditional yo forms of tener, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-TENER-FUTURE-CONDITIONAL-SINGULAR",
+                "ES-LEX-TENER"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "tendré, tendría",
+                "tendré tendría",
+                "tendré / tendría"
+              ],
+              "feedback": {
+                "correct": "Right: tendré, tendría.",
+                "incorrect": "Keep the learned tendr- stem and switch -é to -ía."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-irregulares-poder-pair",
+              "prompt": "Give the pair 'I will be able to speak Spanish; I could speak Spanish' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-PODER-FUTURE-CONDITIONAL-SINGULAR",
+                "ES-LEX-PODER",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "podré hablar español; podría hablar español.",
+                "podré hablar español podría hablar español",
+                "podré hablar español / podría hablar español"
+              ],
+              "feedback": {
+                "correct": "Right: Podré hablar español; podría hablar español.",
+                "incorrect": "Use podré, then podría, before known hablar español."
+              }
             }
           ]
         },
@@ -275,27 +1375,37 @@
             },
             {
               "kind": "speech",
-              "text": "Where does blanco come from, and what did it mean? (Germanic blank, \"shining\" — traditionally linked to the Visigoths, though not directly attested.) Which other language borrowed the same word, from whom? (French blanc, from the Franks.) Where did Latin's albus end up? (In alba \"dawn,\" álbum, albino — no longer the everyday colour word.)"
+              "text": "Give the three learned stems. (Har-, tendr-, podr-.) Does each verb need separate future and conditional stems? (No; one stem serves both.) Do the endings change? (No.) Next: retrieve the complete twelve-atom chapter."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C22-rojo",
-      "sequence": 1360,
-      "title": "rojo — the same family as red, by a different branch",
-      "headword": "rojo",
-      "romanization": "rojo",
-      "gloss": "red — a cousin of French rouge and English red, but by a different branch of the same very old family",
+      "id": "ES-C17-practice",
+      "sequence": 1168,
+      "title": "Practice — one infinitive frame, two futures of thought",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "a singular checkpoint for the simple future and conditional",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "wide-table"
       ],
-      "sourceHash": "fnv1a64:241863491fe64967",
-      "notice": null,
+      "sourceHash": "fnv1a64:3e1e77d5a70899c2",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes for 2 tables that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "Grammar Lens: the regular frame",
+          "Grammar Lens: three learned stems"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for 2 tables that cannot be read aloud. You can listen to everything else now — leave the sections called Grammar Lens: the regular frame and Grammar Lens: three learned stems until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -310,193 +1420,256 @@
             },
             {
               "kind": "speech",
-              "text": "So far the sorting has been simple: negro inherited, blanco borrowed. Rojo needs a third box — inherited, yes, but not from the word you would guess."
+              "text": "This checkpoint adds no vocabulary and no plural persons. Retrieve the six regular singular rows, then the three learned irregular stems. Use the future for “will” and the conditional for the bounded core meaning “would.”"
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: rojo",
+          "type": "grammar",
+          "title": "Grammar Lens: the regular frame",
           "segments": [
             {
-              "kind": "speech",
-              "text": "rojo (\"red\") from Latin russus, an everyday, expressive Latin word for red. That is a different specific Latin word from the one behind French rouge ( from rubeus). Latin had several reds and the daughter languages did not all pick the same one."
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 6,
+              "headers": [
+                "person",
+                "hablar",
+                "comer",
+                "vivir"
+              ],
+              "text": "There is a table here I cannot read to you — 4 columns and 6 rows, and it has more columns than can be held in the ear at once. Its columns are: person, hablar, comer, vivir. Come back and look at it when you have stopped."
             },
             {
               "kind": "speech",
-              "text": "Both russus and rubeus, though, descend from the very same ancient root: PIE h₁rewdʰ- — which is also the root of English red, rust, ruddy, and of Latin ruber itself (English rubric, once written in red ink)."
-            },
-            {
-              "kind": "speech",
-              "text": "So rojo, rouge and red are cousins, not copies: three descendants of one very old family, arriving by three different branches. Nobody borrowed this one from anybody."
+              "text": "All three regular infinitives remain whole. Future endings are -é, -ás, -á; conditional endings are -ía, -ías, -ía. Plural persons wait."
             }
           ]
         },
         {
           "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "grammar",
+          "title": "Grammar Lens: three learned stems",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 3,
+              "headers": [
+                "verb",
+                "learned stem",
+                "future yo",
+                "conditional yo"
+              ],
+              "text": "There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: verb, learned stem, future yo, conditional yo. Come back and look at it when you have stopped."
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"rojo\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"rojo\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the cousins — \"rojo, rouge, red\", three branches, one root",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the cousins — \"rojo · rouge · red\", three branches, one root]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the three so far — \"negro inherited, blanco borrowed, rojo cousin\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the three so far — \"negro inherited, blanco borrowed, rojo cousin\"]"
+              "kind": "speech",
+              "text": "The stems change; the ending sets do not. Other irregular stems remain outside this chapter."
             }
           ]
         },
         {
           "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Is rojo from the same Latin word as French rouge? (No — rojo from russus, rouge from rubeus.) Are they related at all? (Yes — cousins, via the shared PIE root h₁rewdʰ-, which also gives English red.) Next: the one colour in this chapter that came from outside Europe entirely."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C22-azul",
-      "sequence": 1370,
-      "title": "azul — a stone from Afghanistan, in your everyday vocabulary",
-      "headword": "azul",
-      "romanization": "azul",
-      "gloss": "blue — an Arabic loan that became the plain everyday word, where French's cousin stayed poetic",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:c19412c5e81801a7",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Three colours in, three different histories: inherited, borrowed from a neighbour, inherited by a different branch. The fourth comes from outside the Indo-European family altogether."
-            }
-          ]
-        },
-        {
-          "index": 1,
           "type": "etymology",
-          "title": "The word, taken apart: azul",
+          "title": "The ending, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "azul (\"blue\") from Arabic لازورد (lāzaward), \"lapis lazuli\" — the deep blue stone, mined for centuries in what is now Afghanistan and ground into the most expensive pigment in the medieval world. Spanish picked the word up during the centuries of Arabic-speaking rule in Iberia (al-Andalus). English has the same source at one more remove, in azure, and the stone keeps its own name: lazuli."
-            },
-            {
-              "kind": "speech",
-              "text": "So Spanish's word for blue is, underneath, the name of a rock — which is common for blue. Blue is the last basic colour term most languages acquire, and when they do, they usually name it after the thing that was reliably that colour."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: everyday here, poetic there",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Here is the contrast worth keeping. French has azur too — but only as a secondary, poetic word (the sky's blue, the Côte d'Azur); its everyday blue is the Germanic loan bleu. In Spanish it is the reverse: azul is the plain, unremarkable, everyday word, with no Germanic rival competing for the job at all."
-            },
-            {
-              "kind": "speech",
-              "text": "Same borrowed word, two languages, opposite outcomes — a reminder that where a word came from tells you nothing about how ordinary it now feels."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "all four — \"negro, blanco, rojo, azul\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: all four — \"negro, blanco, rojo, azul\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "sort them — \"negro inherited, blanco Germanic, rojo cousin of red, azul Arabic\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: sort them — \"negro inherited, blanco Germanic, rojo cousin of red, azul Arabic\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"azul\" then English \"azure\" — the same lapis lazuli",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"azul\" then English \"azure\" — the same lapis lazuli]"
+              "text": "Romance future and conditional forms grew from constructions pairing an infinitive with forms of Latin habēre. Present material contributed to the future; past or imperfect material contributed to the conditional. Many paths and competing forms existed during the change, so this is a bridge for memory, not a one-step story or a recipe using modern haber."
             }
           ]
         },
         {
           "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“hablaré, comeré, viviré”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “hablaré, comeré, viviré”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“hablaría, comería, viviría”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “hablaría, comería, viviría”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“haré/haría, tendré/tendría, podré/podría”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “haré/haría · tendré/tendría · podré/podría”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-practice-regular-future-yo",
+              "prompt": "Give the future yo forms of hablar, comer, and vivir, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-AR-FUTURE-SINGULAR",
+                "ES-PATTERN-ER-FUTURE-SINGULAR",
+                "ES-GRAMMAR-IR-FUTURE-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "hablaré, comeré, viviré",
+                "hablaré comeré viviré",
+                "hablaré / comeré / viviré"
+              ],
+              "feedback": {
+                "correct": "Right: hablaré, comeré, viviré.",
+                "incorrect": "Keep each infinitive whole and add -é."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-practice-regular-conditional-yo",
+              "prompt": "Give the conditional yo forms of hablar, comer, and vivir, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-AR-CONDITIONAL-SINGULAR",
+                "ES-GRAMMAR-ER-CONDITIONAL-SINGULAR",
+                "ES-GRAMMAR-IR-CONDITIONAL-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "hablaría, comería, viviría",
+                "hablaría comería viviría",
+                "hablaría / comería / viviría"
+              ],
+              "feedback": {
+                "correct": "Right: hablaría, comería, viviría.",
+                "incorrect": "Keep each infinitive whole and add -ía."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-practice-hablare-espanol",
+              "prompt": "Say 'I will speak Spanish' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-FUTURE-PREDICTION-INTENTION",
+                "ES-GRAMMAR-AR-FUTURE-SINGULAR",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "hablaré español.",
+                "hablaré español"
+              ],
+              "feedback": {
+                "correct": "Right: Hablaré español.",
+                "incorrect": "Use future hablaré before known español."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-practice-viviria-madrid",
+              "prompt": "Say 'I would live in Madrid' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL",
+                "ES-GRAMMAR-IR-CONDITIONAL-SINGULAR",
+                "ES-LEX-VIVIR",
+                "ES-LEX-EN"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "viviría en madrid.",
+                "viviría en madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Viviría en Madrid.",
+                "incorrect": "Use conditional viviría, then known en Madrid."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-practice-hacer-pair",
+              "prompt": "Give the pair 'I will make coffee; I would make coffee' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-HACER-FUTURE-CONDITIONAL-SINGULAR",
+                "ES-LEX-HACER",
+                "ES-LEX-CAFE"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "haré café; haría café.",
+                "haré café haría café",
+                "haré café / haría café"
+              ],
+              "feedback": {
+                "correct": "Right: Haré café; haría café.",
+                "incorrect": "Use har- with future -é, then conditional -ía."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-practice-three-stems",
+              "prompt": "Give the learned stems for hacer, tener, and poder, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-HACER-FUTURE-CONDITIONAL-SINGULAR",
+                "ES-GRAMMAR-TENER-FUTURE-CONDITIONAL-SINGULAR",
+                "ES-GRAMMAR-PODER-FUTURE-CONDITIONAL-SINGULAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "har-, tendr-, podr-",
+                "har tendr podr",
+                "har- / tendr- / podr-"
+              ],
+              "feedback": {
+                "correct": "Right: har-, tendr-, podr-.",
+                "incorrect": "Retrieve the bounded three: har-, tendr-, podr-."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-practice-history",
+              "prompt": "Which Latin 'have' verb contributed material to both Romance constructions?",
+              "assesses": [
+                "ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "habēre",
+                "habere",
+                "haber"
+              ],
+              "feedback": {
+                "correct": "Right: habēre contributed to both constructions.",
+                "incorrect": "The shared historical partner was habēre."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -508,7 +1681,7 @@
             },
             {
               "kind": "speech",
-              "text": "Name the four colours and sort them by origin. (Negro — Latin niger; blanco — Germanic blank; rojo — Latin russus, cousin of red; azul — Arabic lāzaward.) What did lāzaward actually name? (Lapis lazuli, the stone.) How does azul's role differ from French azur's? (Azul is Spanish's everyday blue; French's azur is only poetic, with bleu doing the daily work.)"
+              "text": "Give the three regular future yo forms. (Hablaré, comeré, viviré.) Give the three regular conditional yo forms. (Hablaría, comería, viviría.) Which three learned stems replace a whole infinitive? (Har-, tendr-, podr-.) What is the careful historical bridge? (Infinitive plus forms of Latin habēre, reshaped through Romance.) Chapter 18 can now begin without borrowing plural persons, new auxiliaries, or clock-time vocabulary."
             }
           ]
         }

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 53,
-  "title": "Escribir — Writing Is Scratching",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:143bab4e788d3eba",
+  "title": "Green and Yellow",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:a543b7a6a7224fbb",
   "lessons": [
     {
-      "id": "ES-C34-escribir",
-      "sequence": 1640,
-      "title": "escribir — \"to write\", which once meant \"to scratch\"",
-      "headword": "escribir",
-      "romanization": "escribir",
-      "gloss": "to write — from a Latin verb meaning \"to scratch\", and the reason Spanish puts an e- in front",
+      "id": "ES-C33-verde",
+      "sequence": 1590,
+      "title": "verde — the colour named after being alive",
+      "headword": "verde",
+      "romanization": "verde",
+      "gloss": "green — from a verb meaning \"to flourish,\" and a cousin of verdant but not of English green",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:932001a8a5e564df",
+      "sourceHash": "fnv1a64:ae8dc0227a1e9a8b",
       "notice": null,
       "blocks": [
         {
@@ -35,98 +35,31 @@
             },
             {
               "kind": "speech",
-              "text": "Leer gathers letters off a page. This is the other half of the same skill — and its root remembers a time when writing was done with a sharp point in wax."
+              "text": "After azul's long journey from Afghanistan, here is a colour that stayed exactly where it started. It is also the one that names a process rather than a thing."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "etymology",
+          "title": "The word, taken apart: verde",
           "segments": [
             {
               "kind": "speech",
-              "text": "st-no-e — Spanish will not begin a word with sc-, sp-, st-, so it props one up with an e-: es-cri-BIR."
+              "text": "verde (\"green\") from Latin viridis (worn down through virdis), which comes from the verb virēre, \"to be green, to flourish, to be vigorous.\""
             },
             {
               "kind": "speech",
-              "text": "b-soft — between vowels the b is soft, lips barely touching."
+              "text": "So the adjective is built on a verb of thriving. Latin did not name the colour of leaves; it named what leaves are doing, and let the colour follow. The same root gives vigour its neighbours in English: verdant, verdure, and the green-tinged verdigris (\"green of Greece\")."
+            },
+            {
+              "kind": "speech",
+              "text": "One careful non-connection: verde is not a cousin of English green. Green comes from a completely separate Germanic root, tied to grow and grass — which, funnily enough, is the same idea arrived at independently. Two families, two words, one metaphor: green is the colour of things that are growing."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: escribir",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "escribir (\"to write\") from Latin scrībere, whose first sense was \"to scratch, to incise\". Writing was cutting a line into wax or stone before it was ever ink on paper."
-            },
-            {
-              "kind": "speech",
-              "text": "The English family is huge, and every member still works with a pen:"
-            },
-            {
-              "kind": "speech",
-              "text": "scribe, scribble, script, scripture."
-            },
-            {
-              "kind": "speech",
-              "text": "describe (de- \"down\") and description; prescribe (prae- \"before\") and prescription; subscribe (sub- \"under\" — you signed at the bottom); inscription; transcript; postscript."
-            },
-            {
-              "kind": "speech",
-              "text": "manuscript — manus \"hand\" + scriptum: written by hand."
-            },
-            {
-              "kind": "speech",
-              "text": "conscription — being written into an army."
-            },
-            {
-              "kind": "speech",
-              "text": "The Spanish past participle is escrito (\"written\"), which is English script wearing different clothes."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: an -ir verb, and a productive spelling rule",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Escribir is a plain -ir verb, the family vivir opened:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form",
-                "ending"
-              ],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "person: yo. form: escribo. ending: -o.",
-                "person: tú. form: escribes. ending: -es.",
-                "person: él/ella/usted. form: escribe. ending: -e.",
-                "person: nosotros. form: escribimos. ending: -imos.",
-                "person: ellos/ustedes. form: escriben. ending: -en."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "That propped-up e- is a rule you can run yourself, not a quirk of one word: Latin schola became escuela, spatha became espada (sword), stāre became estar, Hispānia became España. It is also why a Spanish speaker learning English says eh-Spain."
-            },
-            {
-              "kind": "speech",
-              "text": "Now you can state a plan out loud: Pienso escribir — \"I mean to write.\""
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -139,43 +72,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"escribo, escribes, escribe, escribimos, escriben\"",
+              "instruction": "\"verde\" — green",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"escribo, escribes, escribe, escribimos, escriben\"]"
+              "source": "[YOU SAY: \"verde\" — green]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Leo y escribo español\" — I read and write Spanish",
+              "instruction": "the root — \"virēre, to flourish\" becomes \"verde\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Leo y escribo español\" — I read and write Spanish]"
+              "source": "[YOU SAY: the root — \"virēre, to flourish\" → \"verde\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Pienso escribir\" — I mean to write",
+              "instruction": "\"verde\" then English \"verdant\" — and not \"green\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Pienso escribir\" — I mean to write]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"escribir\" then English \"scribe, describe, manuscript\" — the scratching family",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"escribir\" then English \"scribe, describe, manuscript\" — the scratching family]"
+              "source": "[YOU SAY: \"verde\" then English \"verdant\" — and *not* \"green\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -187,7 +111,118 @@
             },
             {
               "kind": "speech",
-              "text": "What did scrībere mean first? (To scratch, to incise.) Why does Spanish say escuela and España? (It refuses to open a word with sc- or sp-, so it props an e- in front.) Say \"I read and write Spanish\". (Leo y escribo español.) And what does legere mean, from the lesson before? (To gather, to pick out.) Next chapter: taking, asking, helping — and a verb that runs backwards."
+              "text": "What Latin verb gives verde, and what does it mean? (Virēre, \"to be green, to flourish.\") Is verde related to English green? (No — green is Germanic, from the same family as grow and grass; the two languages reached the same metaphor separately.) Next: a colour that is not named after a colour at all."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C33-amarillo",
+      "sequence": 1600,
+      "title": "amarillo — the colour that started as a taste",
+      "headword": "amarillo",
+      "romanization": "amarillo",
+      "gloss": "yellow — from \"a little bitter,\" not from any Latin word for yellow at all",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:563242a295cffad3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Verde was exactly what you would expect from Latin. This one is not. Latin had three perfectly good words for yellow, and Spanish took none of them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: amarillo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "amarillo (\"yellow\") does not trace to flāvus, gilvus or lūteus — Latin's actual yellow words. It comes from Late Latin amarellus, \"a little bitter,\" a diminutive of amarus, \"bitter.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A colour named after a taste. The bridge is medicine: yellow was the colour of bile and of jaundice (which Spanish still calls ictericia, but which folk speech long tied to bitterness), and of a great many bitter-tasting plants. A word meaning \"somewhat bitter\" came to mean \"the yellowish look of a bitter thing,\" then simply \"yellowish,\" and by Spanish's Golden Age it had dropped the taste entirely and kept only the colour."
+            },
+            {
+              "kind": "speech",
+              "text": "You can still check the family in a living word: amargo (\"bitter\") is amarillo's cousin, straight from the same amarus. Say them together and the shared amar- is right there."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"verde, amarillo\" — green and yellow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"verde, amarillo\" — green and yellow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"amarillo, amargo\" — hear the shared amar-",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"amarillo, amargo\" — hear the shared *amar-*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the path — \"a little bitter\" becomes \"yellowish\" becomes \"yellow\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the path — \"a little bitter\" → \"yellowish\" → \"yellow\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does amarillo come from a Latin word for yellow? (No — from amarellus, \"a little bitter,\" a diminutive of amarus.) What everyday Spanish word is its cousin? (Amargo, \"bitter.\") And verde? (From virēre, \"to flourish\" — a colour named after being alive, as this one is named after a taste.)"
             }
           ]
         }

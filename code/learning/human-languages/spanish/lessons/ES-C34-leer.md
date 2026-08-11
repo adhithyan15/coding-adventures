@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C34-leer
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 1630
-chapter: 52
+chapter: 56
 type: word
 headword: leer
 gloss: to read — from a Latin verb meaning "to gather, to pick out"

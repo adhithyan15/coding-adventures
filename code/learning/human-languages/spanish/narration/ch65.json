@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 65,
-  "title": "Traer --- Bringing, and Latin for Dragging",
+  "title": "Synthesis --- What You Like, and Who Does the Liking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b4b3405440e95ad2",
+  "sourceHash": "fnv1a64:f0e520cb86040464",
   "lessons": [
     {
-      "id": "ES-C39-traer",
-      "sequence": 1810,
-      "title": "traer — \"to bring\", and the direction baked into it",
-      "headword": "traer",
-      "romanization": "traer",
-      "gloss": "to bring — Latin's word for dragging, and a verb with a direction built into it",
+      "id": "ES-C35-sintesis-gustar",
+      "sequence": 1684,
+      "title": "Synthesis — what you like, and who is doing the liking",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — saying what you like, in a language that refuses to let you own it",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e9c1de8f76eeb8e",
+      "sourceHash": "fnv1a64:831b567e350ee583",
       "notice": null,
       "blocks": [
         {
@@ -35,92 +35,61 @@
             },
             {
               "kind": "speech",
-              "text": "Me levanto, and now estoy de pie. Up, and carrying something. The verb for that has a direction inside it that English leaves open."
+              "text": "Say \"I like coffee\" in Spanish. Then answer this: in that sentence, which word is the subject?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "grammar",
+          "title": "Grammar Lens: the sentence that will not let you be the subject",
           "segments": [
             {
               "kind": "speech",
-              "text": "r-tap — one flick of the tongue: tra-ER, two beats."
+              "text": "Me gusta el café. The coffee is the subject. The coffee does the pleasing. You are the one it happens to."
             },
             {
               "kind": "speech",
-              "text": "g-hard — the g of traigo is hard, as in English go."
+              "text": "English puts you in charge: I like coffee — I am the subject, the coffee just sits there. Spanish reverses it."
+            },
+            {
+              "kind": "speech",
+              "text": "Two chapters ago, all three verbs were about the one doing it. That is why this chapter had to sit next to them."
+            },
+            {
+              "kind": "speech",
+              "text": "Translate I like word by word and you build a sentence Spanish does not have — which is why this is a chapter about saying an idea, not a word."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: traer",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "traer (\"to bring\") from Latin trahere, \"to drag, to pull\". Bringing started out as hauling."
+              "text": "— ¿Te gusta el café? — Sí, me gusta mucho. ¿Y a ti? — A mí también. Mucho gusto."
             },
             {
               "kind": "speech",
-              "text": "Latin built a second stem, tract-, and English helped itself to both: tractor, traction, attract, contract, subtract, extract, distract, retract — and abstract, abs- + trahere, something \"dragged away\" from anything particular."
-            },
-            {
-              "kind": "speech",
-              "text": "Then the worn-down half, through French: trace, train (what is dragged along behind), trail, portray from prōtrahere, \"to draw forth\", and retreat from retrahere, \"to draw back\"."
+              "text": "That last line is a joke you can now get. Mucho gusto — the phrase you learned in chapter 5 for \"pleased to meet you\" — is the same word. It has always meant much pleasure. You have been saying gustar's noun since your third conversation in this book."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the hard g, for the second time",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form"
-              ],
-              "columns": 2,
-              "rowCount": 5,
-              "utterances": [
-                "person: yo. form: traigo.",
-                "person: tú. form: traes.",
-                "person: él/ella/usted. form: trae.",
-                "person: nosotros. form: traemos.",
-                "person: ellos/ustedes. form: traen."
-              ]
-            },
-            {
               "kind": "speech",
-              "text": "Oír grew a hard -g- in oigo and nowhere else in its present. Traer does the identical thing: traigo, and then four ordinary -er endings. One club, two members so far, and neither one announces itself."
+              "text": "Gustar is Latin gustāre, to taste — English gusto, disgust. Liking, in Spanish, started at the tongue."
             }
           ]
         },
         {
           "index": 4,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: here, or away",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "English lets one verb wander: bring me the bread, bring it to the café — same word, opposite journeys. Spanish will not."
-            },
-            {
-              "kind": "speech",
-              "text": "Traer moves a thing toward you. Llevar moves it away. Traigo el pan is the bread arriving here; llevo el pan is the bread leaving with me. You choose by where you are standing, never by what you are carrying."
-            },
-            {
-              "kind": "speech",
-              "text": "And llevar from Latin levāre, \"to raise\" — the verb already behind levantarse. To carry a load was first to lift it."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -133,43 +102,93 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"traigo, traes, trae, traemos, traen\"",
+              "instruction": "the exchange above, both parts",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"traigo, traes, trae, traemos, traen\"]"
+              "source": "[YOU SAY: the exchange above, both parts]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Traigo el pan\" then \"Llevo el pan\" — here, then away",
+              "instruction": "it again, and as you say me gusta, notice that you are not the subject",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Traigo el pan\" then \"Llevo el pan\" — here, then away]"
+              "source": "[YOU SAY: it again, and as you say *me gusta*, notice that you are **not** the subject]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"oigo\" then \"traigo\" — the same hard g",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"oigo\" then \"traigo\" — the same hard g]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"traer\" then English \"tractor, attract, abstract\"",
-              "spoken": true,
-              "scored": false,
+              "kind": "speech",
+              "text": "Until me gusta arrives without translating I like first."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C35-sintesis-gustar-subject",
+              "prompt": "In me gusta el cafe, what is the subject?",
+              "assesses": [
+                "ES-GRAMMAR-GUSTAR-INVERSION-09"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "el cafe",
+                "the coffee",
+                "cafe",
+                "el café"
+              ],
+              "feedback": {
+                "correct": "Yes — the coffee does the pleasing.",
+                "incorrect": "El cafe. It is the one doing the pleasing; you receive it."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C35-sintesis-gustar-taste",
+              "prompt": "What did gustar originally mean?",
+              "assesses": [
+                "ES-ETYMON-GUSTAR-08"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"traer\" then English \"tractor, attract, abstract\"]"
+              "acceptedResponses": [
+                "to taste",
+                "taste",
+                "tasting"
+              ],
+              "feedback": {
+                "correct": "Yes — gustare, and English kept it in gusto and disgust.",
+                "incorrect": "To taste — from Latin gustare."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C35-sintesis-gustar-joke",
+              "prompt": "Which phrase you learned long ago is built from this same word?",
+              "assesses": [
+                "ES-LEX-GUSTO",
+                "ES-LEX-GUSTAR-07"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "mucho gusto",
+                "gusto",
+                "much pleasure"
+              ],
+              "feedback": {
+                "correct": "Yes — mucho gusto has always meant much pleasure.",
+                "incorrect": "Mucho gusto — you have been saying gustar's noun since chapter 5."
+              }
             }
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -181,7 +200,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which way does traer carry a thing, and which verb goes the other way? (Toward you; llevar.) What did trahere mean, and name two English words from it. (To drag; tractor, attract, abstract, retreat.) Which form of traer misbehaves, and which verb showed you that same misbehaviour first? (Traigo; oigo.) And say you are standing. (Estoy de pie.)"
+              "text": "Who is the subject of me gusta el café? (El café.) What did gustar mean first? (To taste.) And what has mucho gusto meant all along? (Much pleasure — the same word.)"
             }
           ]
         }

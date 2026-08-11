@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 48,
-  "title": "Dog and Cat",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:4858af06753fdbe7",
+  "title": "Noon and Midnight",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:58f7ec05a84b99f1",
   "lessons": [
     {
-      "id": "ES-C32-gato",
-      "sequence": 1570,
-      "title": "gato — the word that travelled with the animal",
-      "headword": "gato",
-      "romanization": "gato",
-      "gloss": "cat — a word that travelled out of Africa with the animal, pushing Latin's own fēlēs aside",
+      "id": "ES-C28-mediodia-medianoche",
+      "sequence": 1480,
+      "title": "mediodía, medianoche — noon and midnight, spelled out in full",
+      "headword": "mediodía, medianoche",
+      "romanization": "mediodía, medianoche",
+      "gloss": "noon and midnight — both halves still fully alive as ordinary Spanish words, unlike French's worn-down midi/minuit",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0ea3b6c21be0ace",
+      "sourceHash": "fnv1a64:c8b05aa39290c573",
       "notice": null,
       "blocks": [
         {
@@ -35,168 +35,49 @@
             },
             {
               "kind": "speech",
-              "text": "Some etymologies can be followed all the way home. This one runs from your mouth back to ancient Egypt, and every step of it is documented."
+              "text": "Two hours that don't get a number — they get a name. And Spanish keeps that name far more transparent than its French cousin does."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The word, taken apart: gato",
+          "title": "The two words, taken apart",
           "segments": [
-            {
-              "kind": "speech",
-              "text": "gato (\"cat\") from Latin cattus. But cattus was not Classical Latin's word for cat. That was fēlēs, which survives today only in the scientific name Felis catus and in English feline."
-            },
-            {
-              "kind": "speech",
-              "text": "Cattus entered Latin later, arriving with the animal itself as domestic cats spread along Roman trade routes from where they were domesticated — Egypt, around 2000 BCE. The word is most likely Afro-Asiatic in origin (compare Nubian kadis, \"cat\")."
-            },
-            {
-              "kind": "speech",
-              "text": "So word and creature travelled together, out of Africa into Europe, and the newcomer pushed fēlēs out almost everywhere: Spanish gato, Italian gatto, French chat, Old Irish cat, Welsh cath, English cat. When a thing arrives from abroad, its name usually arrives with it."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"el gato\" — the cat",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"el gato\" — the cat]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the trail — \"kadis, cattus, gato\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the trail — \"kadis, cattus, gato\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the word it replaced — \"fēlēs,\" now only in \"feline\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the word it replaced — \"fēlēs,\" now only in \"feline\"]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What was Classical Latin's actual word for cat, and where does it survive? (Fēlēs — in Felis catus and English feline.) Where did cattus most likely come from? (An Afro-Asiatic word, travelling with the domesticated cat out of Egypt.) Next: the other animal in this chapter, whose history nobody can trace at all."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C32-perro",
-      "sequence": 1580,
-      "title": "perro — the word nobody can explain",
-      "headword": "perro",
-      "romanization": "perro",
-      "gloss": "dog — a genuinely unsolved etymology, and the Latin word it pushed out",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:3df6845d802ab352",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Gato could be traced all the way to Egypt. Perro is the opposite kind of word, and it is worth knowing that such words exist: completely ordinary, used a thousand times a day, and nobody knows where it came from."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: perro",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "perro (\"dog\"). Roll the rr: PEH-rro."
-            },
-            {
-              "kind": "speech",
-              "text": "The word Spanish should have inherited is canis — the same root as English canine, French chien, Italian cane. And it did survive, as the now-archaic Spanish can (still readable in old poetry and in canino). But at some point perro pushed can almost entirely out of everyday use — and perro itself has no agreed origin."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: an honestly open question",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Three serious proposals, none confirmed:"
-            },
             {
               "kind": "table",
               "headers": [
-                "proposal",
-                "the case for it",
-                "the problem"
+                "Spanish",
+                "from Latin",
+                "literally"
               ],
               "columns": 3,
-              "rowCount": 3,
+              "rowCount": 2,
               "utterances": [
-                "proposal: onomatopoeia — a growl, or a shepherd's call \"perr, perr\". the case for it: matches how herding calls become names elsewhere. the problem: no early written evidence.",
-                "proposal: pre-Roman Iberian substrate. the case for it: the -rro ending is a known marker of likely pre-Latin words in Spanish. the problem: the substrate languages are barely recorded.",
-                "proposal: Persian persus, a hunting-dog breed. the case for it: such breeds did spread in the late Empire. the problem: the sound match is loose."
+                "Spanish: mediodía. from Latin: medius diēs. literally: \"mid-day\" (medio \"middle\" + día \"day\").",
+                "Spanish: medianoche. from Latin: media nox. literally: \"mid-night\" (media \"middle\" + noche \"night\")."
               ]
             },
             {
               "kind": "speech",
-              "text": "Notice what makes this a good open question rather than a shrug: each proposal predicts different evidence, and the evidence needed simply has not survived. Perro remains one of Spanish's genuinely unsolved puzzles, and a useful reminder that \"we don't know\" is a real answer in etymology, not a gap in your notes."
+              "text": "Both halves are fully alive, ordinary Spanish words on their own: medio/media (\"middle\" — cousin of English medium, mid, middle) and día/noche (\"day/night,\" words you already know). Compare French, which took the same Latin phrase down a bumpier road: minuit's second half, -nuit, is still the plain, everyday French word for \"night\" — just as recognizable as Spanish's noche. But midi's second half, -di, wore down into an opaque fragment: the ordinary French word for \"day\" is jour, not di — that piece survives only as a fossil, tucked inside weekday names like lundi and mardi. So the erosion split unevenly: French kept \"night\" transparent and lost \"day,\" while Spanish kept both."
+            },
+            {
+              "kind": "speech",
+              "text": "They don't need horas the way a normal Spanish time (son las tres) never does either — they simply stand in for the hour on their own:"
+            },
+            {
+              "kind": "speech",
+              "text": "Es mediodía. — \"It is noon.\" Es medianoche. — \"It is midnight.\""
+            },
+            {
+              "kind": "speech",
+              "text": "(Fun aside: English noon comes from Latin nōna hōra, \"the ninth hour\" — originally mid-afternoon, it drifted earlier over the centuries to mean midday. Spanish kept the tidier, transparent \"mid-day\" instead.)"
             }
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -209,34 +90,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"el perro, el gato\" — dog and cat",
+              "instruction": "\"mediodía\" (noon), \"medianoche\" (midnight)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"el perro, el gato\" — dog and cat]"
+              "source": "[YOU SAY: \"mediodía\" (noon), \"medianoche\" (midnight)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"can\" — the archaic word perro replaced, from Latin canis",
+              "instruction": "break them — \"medio + día\", \"media + noche\" — both halves still ordinary words",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"can\" — the archaic word *perro* replaced, from Latin *canis*]"
+              "source": "[YOU SAY: break them — \"medio + día\", \"media + noche\" — both halves still ordinary words]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the contrast — \"gato, traced to Egypt; perro, unsolved\"",
+              "instruction": "\"Es mediodía. Es medianoche.\" — they stand in for the hour",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the contrast — \"gato, traced to Egypt; perro, unsolved\"]"
+              "source": "[YOU SAY: \"Es mediodía. Es medianoche.\" — they stand in for the hour]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast — French kept \"night\" (nuit) but wore \"day\" down to a fossil (-di)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast — French kept \"night\" (nuit) but wore \"day\" down to a fossil (-di)]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -248,7 +138,7 @@
             },
             {
               "kind": "speech",
-              "text": "What archaic Spanish word did perro replace, and what is its Latin source? (Can, from canis — the root of English canine.) Does perro have a confirmed etymology? (No — onomatopoeic, pre-Latin substrate and Persian proposals all remain unconfirmed.) And gato's origin, by contrast? (Traceable — Latin cattus, probably Afro-Asiatic, travelling out of Egypt.)"
+              "text": "What do mediodía and medianoche literally mean, and from what Latin? (\"Mid-day\" from medius diēs; \"mid-night\" from media nox.) Are both halves still recognizable, ordinary Spanish words? (Yes — medio/ media \"middle,\" día/noche \"day/night.\") Did French erode its phrase evenly? (No — French's -nuit stayed just as transparent as Spanish's noche, but its -di wore down to an opaque fossil, since the everyday French word for \"day\" is actually jour.) How do you say \"it is noon\"? (Es mediodía.)"
             }
           ]
         }

@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(72); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(76); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -269,8 +269,14 @@ describe("real curriculum", () => {
       "ES-C13-practice-salir-forms",
       "ES-C13-practice-six-yo-forms",
       "ES-C13-practice-venir-forms",
+      "ES-C13-repaso-yo-go-count",
+      "ES-C13-repaso-yo-go-slot",
+      "ES-C13-repaso-yo-go-why",
       "ES-C13-salir-leave-madrid",
       "ES-C13-salir-singular-forms",
+      "ES-C13-sintesis-yo-go-me",
+      "ES-C13-sintesis-yo-go-them",
+      "ES-C13-sintesis-yo-go-which",
       "ES-C13-venir-come-from-madrid",
       "ES-C13-venir-singular-forms",
       "ES-C13-venir-tener-contrast",
