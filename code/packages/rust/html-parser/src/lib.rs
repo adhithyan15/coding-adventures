@@ -4382,6 +4382,7 @@ pub struct HtmlParser {
     document: Document,
     open_elements: Vec<Vec<usize>>,
     pending_formatting_reconstruction: Vec<(String, Vec<Attribute>)>,
+    stack_displaced_formatting_paths: Vec<Vec<usize>>,
     prunable_empty_reconstructed_formatting_paths: Vec<Vec<usize>>,
     diagnostics: Vec<ParserDiagnostic>,
     options: HtmlParseOptions,
@@ -4407,6 +4408,7 @@ impl Default for HtmlParser {
             document: Document::new(),
             open_elements: Vec::new(),
             pending_formatting_reconstruction: Vec::new(),
+            stack_displaced_formatting_paths: Vec::new(),
             prunable_empty_reconstructed_formatting_paths: Vec::new(),
             diagnostics: Vec::new(),
             options: HtmlParseOptions::default(),
@@ -4462,6 +4464,7 @@ impl HtmlParser {
             document,
             open_elements: vec![vec![0], vec![0, 1]],
             pending_formatting_reconstruction: Vec::new(),
+            stack_displaced_formatting_paths: Vec::new(),
             prunable_empty_reconstructed_formatting_paths: Vec::new(),
             diagnostics: Vec::new(),
             options,
@@ -4489,6 +4492,7 @@ impl HtmlParser {
             document,
             open_elements,
             pending_formatting_reconstruction: Vec::new(),
+            stack_displaced_formatting_paths: Vec::new(),
             prunable_empty_reconstructed_formatting_paths: Vec::new(),
             diagnostics: Vec::new(),
             options,
@@ -5568,6 +5572,7 @@ impl HtmlParser {
                             self.prunable_empty_reconstructed_formatting_paths
                                 .push(path.clone());
                         }
+                        self.stack_displaced_formatting_paths.push(path.clone());
                         self.open_elements.push(path);
                     }
                 }
@@ -5751,6 +5756,7 @@ impl HtmlParser {
                 self.prunable_empty_reconstructed_formatting_paths
                     .push(path.clone());
             }
+            self.stack_displaced_formatting_paths.push(path.clone());
             self.open_elements.push(path);
         }
 
@@ -7345,6 +7351,20 @@ impl HtmlParser {
                 }
                 return;
             }
+            let stack_displaced_formatting = is_formatting_element(name)
+                && self.current_element_is(name)
+                && self.is_stack_displaced_formatting_element(&self.open_elements[index]);
+            if stack_displaced_formatting {
+                let path = self.open_elements[index].clone();
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-formatting-end-tag-without-open-element",
+                    format!(
+                        "end tag `</{name}>` triggered adoption-agency recovery after its formatting element left the open stack"
+                    ),
+                ));
+                self.stack_displaced_formatting_paths
+                    .retain(|candidate| candidate != &path);
+            }
             if is_formatting_element(name)
                 && !self
                     .current_element_name()
@@ -8172,8 +8192,16 @@ impl HtmlParser {
         element_ref_at_path(&self.document, path).is_some_and(|element| element.children.is_empty())
     }
 
+    fn is_stack_displaced_formatting_element(&self, path: &[usize]) -> bool {
+        self.stack_displaced_formatting_paths
+            .iter()
+            .any(|candidate| candidate.as_slice() == path)
+    }
+
     fn remove_reconstructed_formatting_node(&mut self, path: &[usize]) {
         remove_node_at_path(&mut self.document.children, path);
+        self.stack_displaced_formatting_paths
+            .retain(|candidate| candidate.as_slice() != path);
         self.prunable_empty_reconstructed_formatting_paths
             .retain(|candidate| candidate.as_slice() != path);
     }
@@ -34254,6 +34282,49 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| { diagnostic.code != "unexpected-non-current-formatting-end-tag" }));
+    }
+
+    #[test]
+    fn reports_adoption_agency_recovery_when_formatting_is_no_longer_open() {
+        let output =
+            parse_html_with_diagnostics("<!doctype html><a><p></a>tail</p>").unwrap();
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-formatting-end-tag-without-open-element",
+                "end tag `</a>` triggered adoption-agency recovery after its formatting element left the open stack"
+            )]
+        );
+
+        let document_body = body(&output.document);
+        assert_eq!(document_body.children.len(), 2);
+        assert_eq!(element(&document_body.children[0]).name, "a");
+        let paragraph = element(&document_body.children[1]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children.len(), 2);
+        let reconstructed_anchor = element(&paragraph.children[0]);
+        assert_eq!(reconstructed_anchor.name, "a");
+        assert!(reconstructed_anchor.children.is_empty());
+        assert_eq!(paragraph.children[1], Node::text("tail"));
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<a><p></a>", "div").unwrap();
+        assert!(fragment.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-formatting-end-tag-without-open-element"
+        }));
+
+        for source in [
+            "<!doctype html><a>current</a>",
+            "<!doctype html></a>",
+            "<!doctype html><div><b></div><div>reconstructed</b>",
+            "<!doctype html><b><p><i>text</b>tail</p>",
+            "<!doctype html><font><table></font></table></font>",
+        ] {
+            let control = parse_html_with_diagnostics(source).unwrap();
+            assert!(control.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-formatting-end-tag-without-open-element"
+            }));
+        }
     }
 
     #[test]
