@@ -14,7 +14,7 @@ roots: [tardus]
 duration:
   max_seconds: 180
 requires:
-  knowledge: [ES-LEX-DIA, ES-LEX-BUENOS-DIAS]
+  knowledge: [ES-LEX-DIA, ES-LEX-BUENOS-DIAS, ES-GRAMMAR-NOUN-GENDER]
 introduces:
   knowledge: [ES-LEX-TARDE]
 practises:

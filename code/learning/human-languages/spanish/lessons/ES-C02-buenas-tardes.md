@@ -14,11 +14,11 @@ roots: [bonus, tardus]
 duration:
   max_seconds: 180
 requires:
-  knowledge: [ES-MORPH-BUENO-BUENA, ES-LEX-TARDE, ES-GRAMMAR-NOUN-GENDER]
+  knowledge: [ES-LEX-TARDE, ES-LEX-BUENOS-DIAS]
 introduces:
-  knowledge: [ES-LEX-BUENAS-TARDES, ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL]
+  knowledge: [ES-LEX-BUENAS-TARDES]
 practises:
-  knowledge: [ES-LEX-BUENAS-TARDES, ES-LEX-BUENOS-DIAS, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL]
+  knowledge: [ES-LEX-BUENAS-TARDES, ES-LEX-BUENOS-DIAS, ES-GRAMMAR-NOUN-GENDER]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -49,20 +49,12 @@ and that difference teaches you the other half of the agreement rule.
 **buenas tardes** = **buena** ("good") + **tardes** ("afternoons") =
 literally "good afternoons."
 
-## Grammar Lens: agreement, the feminine case
-<!-- hl-knowledge: introduces=[ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL]; assesses=[] -->
+## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-BUENAS-TARDES] -->
 
-Back in *buenos días*, *bueno* became *buenos* — **masculine** plural,
-because *día* is masculine. Now: **tarde is a feminine noun** (*la tarde*).
-So *bueno* has to become **feminine** plural to match — *buenas*. Same rule,
-other gender:
-
-- *días* (masculine, plural) → *buen**os** días*
-- *tardes* (feminine, plural) → *buen**as** tardes*
-
-That single vowel — the *o* vs. *a* at the end of *buenos*/*buenas* — is the
-adjective reporting the gender of the noun it's attached to. You now control
-all four shapes in the wild: *bueno, buena, buenos, buenas*.
+*Buenos días* in the morning; **buenas tardes** in the afternoon. The ending
+changes, and there is a reason for it — the same reason that comes later, with
+the rest of the pattern. For now: two greetings, two shapes, both said whole.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -74,7 +66,7 @@ Spanish-speaking world is late. Spanish follows the daylight, not the clock;
 there's no fixed "12:00 = afternoon" line.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-BUENAS-TARDES, ES-LEX-BUENOS-DIAS, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-BUENAS-TARDES, ES-LEX-BUENOS-DIAS, ES-GRAMMAR-NOUN-GENDER] -->
 
 [PAUSE 1s]
 - [YOU SAY: "buenas tardes" — *BWEH-nas TAR-des*]
@@ -82,7 +74,7 @@ there's no fixed "12:00 = afternoon" line.
 - [YOU SAY: why *buenas* and not *buenos*? (out loud, your own words)]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-BUENAS-TARDES, ES-LEX-BUENOS-DIAS, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-BUENAS-TARDES, ES-LEX-BUENOS-DIAS, ES-GRAMMAR-NOUN-GENDER] -->
 
 [PAUSE 3s] Why is it *buenas tardes* but *buenos días*? (*tarde* is feminine,
 *día* is masculine — the adjective agrees with each.)
