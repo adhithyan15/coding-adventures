@@ -2,17 +2,17 @@
   "version": 1,
   "language": "spanish",
   "chapter": 10,
-  "title": "Enye and the Upside-Down Marks",
+  "title": "The Written Accent",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c8e873ede44922c8",
+  "sourceHash": "fnv1a64:06130b946ce85324",
   "lessons": [
     {
-      "id": "ES-W02-enye",
-      "sequence": 370,
-      "title": "ñ — the letter that remembers a doubled n",
-      "headword": "ñ",
-      "romanization": "ñ",
-      "gloss": "the letter eñe — a tiny second n riding on the first",
+      "id": "ES-W01-acento",
+      "sequence": 350,
+      "title": "á é í ó ú — the acute accent, and the two jobs it does",
+      "headword": "á é í ó ú",
+      "romanization": "á é í ó ú",
+      "gloss": "the acute accent as a visible exception to Spanish's default stress rules",
       "script": "latin",
       "modality": "pen",
       "derivedModality": "pen",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d7578a1ad7b8222c",
+      "sourceHash": "fnv1a64:561222668343de75",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -28,9 +28,9 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script — how to write it"
+          "Script — shape and stroke"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — how to write it until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — shape and stroke until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -46,188 +46,41 @@
             },
             {
               "kind": "speech",
-              "text": "ñ is the one letter English does not have — and it has the best origin story in the alphabet. That wavy hat (, a tilde) is not decoration. It is a tiny second n, written on top to save space. Once you know that, you know both how to write it and why it sounds as it does."
+              "text": "You've been reading accented words since your very first noun — día, cómo, está, más. Time to make that little stroke make sense. Spanish uses one mark to write exceptional stress — the acute accent, ´, leaning right — and it does two jobs in the words you know. Learn the stress job now; the next lesson adds its grammar-label job."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "script",
+          "title": "Script — shape and stroke",
           "segments": [
             {
               "kind": "speech",
-              "text": "ñ = the ny in \"canyon\" or \"onion\" — one squished sound, tongue flat against the roof of the mouth. English canyon is, in fact, Spanish cañón with the ñ spelled out as ny. Say \"onion,\" freeze on the middle: that is ñ."
+              "text": "A short stroke rising left-to-right, sitting on top of a vowel: á é í ó ú. (On the í, it replaces the dot.) One clean up-stroke — the opposite lean from the French grave accent à. Spanish never uses grave or circumflex; if it leans the wrong way, it isn't Spanish."
             }
           ]
         },
         {
           "index": 2,
-          "type": "script",
-          "title": "Script — how to write it",
+          "type": "grammar",
+          "title": "Grammar Lens: the mark records exceptional stress",
           "segments": [
             {
               "kind": "speech",
-              "text": "Write a normal n, then a small wavy floating above it. Two strokes, one letter."
+              "text": "Spanish stress is regular, so most words need no mark. The default:"
             },
             {
               "kind": "speech",
-              "text": "Careful: ñ is its own letter, not \"n with an accent.\" año (\"year\") and ano (a rather different word) are completely different words — the tilde is not an optional flourish, it is a distinct letter of the alphabet, with its own slot in the dictionary."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: the scribe's shortcut",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "That wave is a medieval shorthand. Scribes copying Latin were forever writing double letters, so they saved a stroke: write the letter once, and put a little mark above meaning \"…and one more of these.\" A bar over a vowel meant a dropped n or m (Latin tantum becomes tãtum); a wave over an n meant nn."
+              "text": "word ends in a vowel, -n, or -s becomes stress the second-to-last syllable (ho-la, lla-mo, gus-to)."
             },
             {
               "kind": "speech",
-              "text": "Spanish is full of words where a Latin -nn- did exactly this:"
+              "text": "word ends in any other consonant becomes stress the last syllable (us-ted, re-gu-lar, es-tar)."
             },
             {
               "kind": "speech",
-              "text": "Latin annus (\"year\") becomes anno becomes año. (That same annus gives English annual, anniversary, bi-ennial.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Latin canna (\"reed\") becomes caña; Latin domina becomes donna becomes doña."
-            },
-            {
-              "kind": "speech",
-              "text": "So the tilde on ñ is a frozen abbreviation — a thousand-year-old note saying \"there used to be two n's here.\" You are writing a scribe's shortcut."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"año\" — AH-nyo, one squished ny; then English \"annual\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"año\" — *AH-nyo*, one squished *ny*; then English \"annual\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the doubled-n words — \"año, caña, doña\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the doubled-n words — \"año, caña, doña\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What is the tilde on ñ, really? (A tiny second n — a scribe's shorthand for a doubled nn.) What Latin word gives año, and what English words share it? (Annus becomes annual, anniversary.) Is ñ a separate letter or an accented n? (A separate letter.) Next: the two everyday words you will be writing it in."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-W02-enye-formas",
-      "sequence": 380,
-      "title": "mañana, español — the ñ in the words you are about to need",
-      "headword": "mañana, español",
-      "romanization": "mañana, español",
-      "gloss": "the two ñ words you will meet next — and the second road to ñ, which is not a doubled n at all",
-      "script": "latin",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:98c1a06364ee4a0e",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script — the two forms"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the two forms until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You can write ñ and you can say it. Two of the next words in this book carry it, and both are worth a minute on their own — because neither of them got its ñ from a doubled n."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ñ — the letter, the sound, and the scribe's shorthand."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "Script — the two forms",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "mañana — \"tomorrow,\" and also \"morning.\" ma-NYA-na: the ñ is in the middle, and it is the stressed syllable."
-            },
-            {
-              "kind": "speech",
-              "text": "español — \"Spanish.\" es-pa-NYOL: the ñ is at the end, right before the -ol."
-            },
-            {
-              "kind": "speech",
-              "text": "Now the honest footnote. The scribe's doubled nn is one road to ñ, the one you met with año. These two words took a different road: Latin's -ni- before a vowel. Mañana traces back through maneana to māne (\"morning\" — the root of English matinée); español comes from Hispaniolus, built on Hispania. In both, a ni sequence squeezed together into the same single palatal sound."
-            },
-            {
-              "kind": "speech",
-              "text": "So ñ is where two separate Latin sequences ended up — -nn- and -ni-. One letter, one sound, two histories."
+              "text": "The accent appears only when a word breaks that rule — it marks the exception. está ends in a vowel, so the rule wants ES-ta; the accent overrides it to es-TÁ. cómo ends in a vowel (rule wants co-MO) but is stressed CÓ-mo, so it gets the mark. The accent is a spoken stress you can see — it never changes the vowel's sound, only which syllable you hit."
             }
           ]
         },
@@ -245,20 +98,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"año, mañana, español\" — the ñ in three positions",
+              "instruction": "“hola, llamo, gusto” — second-to-last stress",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"año, mañana, español\" — the ñ in three positions]"
+              "source": "[YOU SAY: “hola, llamo, gusto” — second-to-last stress]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two roads — \"año, from -nn-\" then \"mañana, from -ni-\"",
+              "instruction": "“usted, regular, estar” — final stress",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two roads — \"año, from -nn-\" then \"mañana, from -ni-\"]"
+              "source": "[YOU SAY: “usted, regular, estar” — final stress]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"está, cómo\" — the accent overrides the default",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"está, cómo\" — the accent overrides the default]"
             }
           ]
         },
@@ -275,166 +137,35 @@
             },
             {
               "kind": "speech",
-              "text": "Where does the ñ sit in mañana, and where in español? (Middle; end.) Did those two get their ñ from a doubled n? (No — from Latin -ni- before a vowel, a second road to the same letter.) What was the first road? (-nn-, the scribe's shorthand, as in año.)"
+              "text": "How many accent marks does Spanish have, and which way does it lean? (One — the acute, ´, rising left-to-right.) Its two jobs? (Mark irregular stress; the next step covers its look-alike job.) When does a word ending in a vowel, -n, or -s need an accent? (When its stress breaks the second-to-last default.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-W03-inverted",
-      "sequence": 390,
-      "title": "¿ ¡ — the marks that open a question",
-      "headword": "¿ ¡",
-      "romanization": "¿ ¡",
-      "gloss": "the inverted opening marks — an early cue for question or exclamation intonation",
+      "id": "ES-W01-tilde-diacritica",
+      "sequence": 360,
+      "title": "el or él? — the accent as a meaning label",
+      "headword": "el / él",
+      "romanization": "el / él",
+      "gloss": "the acute accent separates the article el from the pronoun él",
       "script": "latin",
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-type",
-        "script-block"
+        "writing-type"
       ],
-      "sourceHash": "fnv1a64:135adb26ebc6723c",
+      "sourceHash": "fnv1a64:76337bd27b8b94e5",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "a pen and something to write on"
         ],
         "waitUntilStopped": [
-          "Script — the two opening marks"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the two opening marks until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You've been writing them since ¿cómo está usted? Spanish is the one major language that puts an upside-down question or exclamation mark at the start of the sentence, as well as the normal one at the end. It looks exotic; the reason is purely practical."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script — the two opening marks",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "¿ …? wraps a question: ¿Cómo estás?"
-            },
-            {
-              "kind": "speech",
-              "text": "¡ …! wraps an exclamation: ¡Hola! ¡Gracias!"
-            },
-            {
-              "kind": "speech",
-              "text": "The opening mark is just the closing mark flipped 180° — turned upside down and left-right. To write ¿, draw a normal? and rotate it half a turn: the hook ends up at the bottom, the dot on top."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way — the opening mark is an early cue",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "English lets you read most of a sentence before the final? reveals it was a question — fine, because English usually flags a question early with word order (\"Are you…\", \"Do you…\"). Spanish often doesn't reorder words: Tienes hambre. (\"You're hungry.\") and ¿Tienes hambre? (\"Are you hungry?\") are the same words — only punctuation and the spoken rising tone tell them apart."
-            },
-            {
-              "kind": "speech",
-              "text": "So the Spanish Royal Academy, in 1754, made the opening ¿ official: it warns the reader \"a question is starting — read this with rising intonation from the very first word.\" It's a melody cue placed before the melody, the exact same instinct as the written accent marking stress you can't otherwise see. For a language read aloud, it's genuinely useful."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "read \"¿Cómo estás?\" — start the rising question melody from the very first word, the way the ¿ tells you to",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: read \"¿Cómo estás?\" — start the rising *question* melody from the very first word, the way the ¿ tells you to]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"¡Hola!\" — the ¡ warns you to begin with exclamation energy",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"¡Hola!\" — the ¡ warns you to begin with exclamation energy]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Why does Spanish open a question with ¿? (Because word order often doesn't change, so the reader needs an early warning to use question intonation.) How do you write it? (A normal? rotated 180°.) Does it always sit at the sentence's start? (The next step places it around a question inside a larger sentence.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-W03-question-span",
-      "sequence": 400,
-      "title": "Where does ¿ begin? — bracket the spoken span",
-      "headword": "Roberto, ¿cómo estás?",
-      "romanization": "Roberto, ¿cómo estás?",
-      "gloss": "opening punctuation brackets only the question or exclamation span inside a larger sentence",
-      "script": "latin",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:29f18fab1217f366",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script — bracket the spoken span",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — bracket the spoken span and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -450,34 +181,34 @@
             },
             {
               "kind": "speech",
-              "text": "You can open a whole question with ¿. Now place that mark inside a larger sentence, exactly where the questioning voice begins."
+              "text": "You know el as the article “the.” Add one acute accent and the same two letters do a different job."
             }
           ]
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "Script — bracket the spoken span",
+          "type": "grammar",
+          "title": "Grammar Lens: one mark, two grammatical jobs",
           "segments": [
             {
               "kind": "speech",
-              "text": "The opening mark goes where the question begins, even if the sentence started earlier:"
+              "text": "The tilde diacrítica separates words that otherwise look alike:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "no accent",
+                "with accent"
+              ],
+              "columns": 2,
+              "rowCount": 1,
+              "utterances": [
+                "no accent: el = the. with accent: él = he."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Roberto, ¿cómo estás?"
-            },
-            {
-              "kind": "speech",
-              "text": "The name Roberto is outside the question. The marks bracket the words that need question intonation. The same principle works for an exclamation:"
-            },
-            {
-              "kind": "speech",
-              "text": "Roberto, ¡buenos días!"
-            },
-            {
-              "kind": "speech",
-              "text": "This is why the opening mark is more than decoration. It tells the reader exactly where to begin and end a change in spoken melody."
+              "text": "The two words are pronounced alike. Here the accent does not move stress; it labels meaning and grammar. Other pairs will arrive only when you know both words, so this lesson asks you to hold one contrast, not memorize a list."
             }
           ]
         },
@@ -494,30 +225,30 @@
             },
             {
               "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "“María, ¿cómo estás?”",
-              "spoken": false,
+              "action": "SAY",
+              "instruction": "“el” — the",
+              "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU WRITE: “María, ¿cómo estás?”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "“María, ¡buenos días!”",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: “María, ¡buenos días!”]"
+              "source": "[YOU SAY: “el” — the]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "begin the new melody at ¿ or ¡, not at the first capital",
+              "instruction": "“él” — he",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: begin the new melody at ¿ or ¡, not at the first capital]"
+              "source": "[YOU SAY: “él” — he]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "el / él, adding the meaning-label accent only to the pronoun",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **el / él**, adding the meaning-label accent only to the pronoun]"
             }
           ]
         },
@@ -534,45 +265,26 @@
             },
             {
               "kind": "speech",
-              "text": "In Roberto, ¿cómo estás?, is Roberto inside the question? (No.) Where does the inverted mark go? (At the start of the question or exclamation span.) What does that placement tell a reader? (Where to change the spoken melody.)"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-W03-question-span-roberto-outside",
-              "prompt": "In 'Roberto, ¿cómo estás?', is Roberto inside the question?",
-              "assesses": [
-                "ES-ORTHOGRAPHY-PUNCTUATION-SPAN"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "no",
-                "no it is not",
-                "it is not"
-              ],
-              "feedback": {
-                "correct": "Correct: Roberto is outside the question; ¿ begins where the questioning voice begins.",
-                "incorrect": "No. Roberto is outside the question because the inverted mark comes after the name."
-              }
+              "text": "What is the accent's second job? (Separate look-alike words.) Which means “the”? (El, no accent.) Which means “he”? (Él, with the accent.) Does this mark change their stress? (No — it labels the job.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C04-practice",
-      "sequence": 410,
-      "title": "Practice — \"how are you?\", start to finish",
+      "id": "ES-W01-repaso-acento",
+      "sequence": 365,
+      "title": "The written accent — putting it together",
       "headword": "(practice)",
       "romanization": "(practice)",
-      "gloss": "the full \"how are you?\" exchange, formal and informal",
+      "gloss": "The written accent — putting the chapter together",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:92479db99b2d50c5",
+      "sourceHash": "fnv1a64:a336b13438a6ddd0",
       "notice": null,
       "blocks": [
         {
@@ -588,7 +300,7 @@
             },
             {
               "kind": "speech",
-              "text": "No new words. This chapter's atoms — gracias, de nada, estar, ¿cómo está?, regular — now assemble into a real exchange, run formally and informally until the register swap is automatic. It picks up right where the introduction left off."
+              "text": "Two lessons on one small mark that changes both sound and meaning. Nothing new in this lesson — only what you already have."
             }
           ]
         },
@@ -599,50 +311,18 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Formal (a stranger, an elder, a customer):"
-            },
-            {
-              "kind": "speech",
-              "text": "— Buenos días. ¿Cómo está usted? — Bien, gracias. ¿Y usted? — Más o menos. — [reply to a thanks, later in the chat] De nada."
-            },
-            {
-              "kind": "speech",
-              "text": "Informal (a friend, a peer) — only the verb + pronoun change:"
-            },
-            {
-              "kind": "speech",
-              "text": "— ¡Hola! ¿Cómo estás? — Regular. ¿Y tú? — Bien, gracias."
-            },
-            {
-              "kind": "speech",
-              "text": "The glue pattern you just secured is ¿y usted? / ¿y tú? — “and you?” It bounces the question back without repeating the whole sentence."
+              "text": "está is not esta. él is not el."
             }
           ]
         },
         {
           "index": 2,
           "type": "notice",
-          "title": "What you've built this chapter",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "gracias — thank you ( from grātia, \"grace\")."
-            },
-            {
-              "kind": "speech",
-              "text": "de nada — you're welcome ( from \"of a born-thing\" becomes \"of nothing\")."
-            },
-            {
-              "kind": "speech",
-              "text": "estar — the state/location be-verb ( from stāre, “to stand”)."
-            },
-            {
-              "kind": "speech",
-              "text": "¿cómo está usted? / ¿cómo estás? — how are you, formal / informal."
-            },
-            {
-              "kind": "speech",
-              "text": "bien / regular / más o menos — well / so-so / more-or-less."
+              "text": "You can hear where the stress falls and see why the mark is there."
             }
           ]
         },
@@ -660,38 +340,25 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the full formal exchange, both voices",
+              "instruction": "the whole exchange, both parts, without stopping",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the full *formal* exchange, both voices]"
+              "source": "[YOU SAY: the whole exchange, both parts, without stopping]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the same exchange informally — catch está becomes estás, usted becomes tú",
+              "instruction": "it again, faster, and let it sound like speech rather than recital",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the same exchange *informally* — catch *está → estás*, *usted → tú*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "chain the two — introduce yourself and ask how they are: \"Me llamo … ¿Cómo está usted?\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: chain the two — introduce yourself *and* ask how they are: \"Me llamo … ¿Cómo está usted?\"]"
+              "source": "[YOU SAY: it again, faster, and let it sound like speech rather than recital]"
             },
             {
               "kind": "repeat",
               "times": 2,
               "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Run the formal exchange, greeting to answer, without stopping."
             }
           ]
         },
@@ -708,7 +375,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which be-verb carries \"how are you?\" and why? (estar — current state.) Two words swap between formal and informal — which? (está becomes estás, and usted becomes tú.) What does de nada literally say? (\"Of nothing.\") And if the person answering you says vos instead of tú — do you switch? (No. You understand it and keep saying tú.) Next chapter: farewells — hasta luego, hasta mañana, adiós."
+              "text": "Run it once more from memory. If a word does not come, go back one lesson rather than pushing on — this chapter is short on purpose."
             }
           ]
         }

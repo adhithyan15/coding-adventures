@@ -230,7 +230,7 @@ describe("corpus snapshot", () => {
     // Chapter 10 adds singular ir and possessives at A1. Chapter 11 adds one more
     // definite-reference lesson there; its other work is A2. Chapter 12 adds its
     // newly mapped terminal checkpoints at A2 on SPINE-SAY-WHAT-I-DO.
-    expect(summary.byLevel.A1).toBe(311); // +1: ES-C02-concordancia sits on SPINE-TIME-OF-DAY
+    expect(summary.byLevel.A1).toBe(314); // +1: ES-C02-concordancia sits on SPINE-TIME-OF-DAY
     // Chapter 15's split adds three more mapped A2 lessons without changing its node.
     // Chapter 16's split adds five more mapped A2 lessons on the same node.
     // Chapter 17's split adds four more mapped A2 lessons on the same node.
@@ -310,7 +310,7 @@ describe("corpus snapshot", () => {
     // that joins, not inferred from the total.
     // +1, measured as a set difference: TA-W20-read-onru is the only lesson that
     // joins. The three A2 speaking lessons are above the A1 cut and do not.
-    expect(ramp).toHaveLength(1207); // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14
+    expect(ramp).toHaveLength(1210); // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14
     expect(ramp.length).toBeLessThan(lessons.length);
   });
 });

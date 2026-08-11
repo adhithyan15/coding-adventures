@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 6,
-  "title": "Thank You, Yes, and No",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1c9efb49f04e762f",
+  "title": "Asking Someone's Name",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:b955c62581839ba5",
   "lessons": [
     {
-      "id": "ES-C19-si",
-      "sequence": 264,
-      "title": "sí — yes",
-      "headword": "sí",
-      "romanization": "sí",
-      "gloss": "yes",
+      "id": "ES-C03-como",
+      "sequence": 190,
+      "title": "cómo — \"how,\" your first question word",
+      "headword": "cómo",
+      "romanization": "cómo",
+      "gloss": "how — a whole Latin phrase, quo modo, worn smooth into one word",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:770219e241ba2c7c",
+      "sourceHash": "fnv1a64:a9591e76278fc0c9",
       "notice": null,
       "blocks": [
         {
@@ -35,362 +35,47 @@
             },
             {
               "kind": "speech",
-              "text": "The smallest useful word — and the accent on it is doing real work."
+              "text": "To ask someone's name or how they are, you need this word first. Cómo — \"how\" — and hiding inside it is a little Latin word for \"manner\" that you already own a dozen English versions of."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: sí and si",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "sí = yes. One syllable, said see."
-            },
-            {
-              "kind": "speech",
-              "text": "The written accent is not decoration — it is the whole difference between two words:"
-            },
-            {
-              "kind": "speech",
-              "text": "sí (with the accent) = yes."
-            },
-            {
-              "kind": "speech",
-              "text": "si (no accent) = if."
-            },
-            {
-              "kind": "speech",
-              "text": "They sound almost identical, so Spanish uses the mark to tell them apart on the page: Sí, si quieres = \"Yes, if you want.\" Miss the accent and you've written \"if\" where you meant \"yes.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: where sí comes from",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "sí is Latin sīc, \"thus, so\" — answering a question with \"just so,\" exactly the move Latin also made with ita (\"thus\" = yes, from the Latin yes/no lesson). Its Romance cousins kept the same root:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "Latin sīc",
-                ", which gives:"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "Latin sīc: Spanish. , which gives:: sí.",
-                "Latin sīc: Italian. , which gives:: sì.",
-                "Latin sīc: Portuguese. , which gives:: sim."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "French is the odd one out — it went a completely different way for \"yes\" (oui), which its own lesson tells. But say sí, sì, sim in a row and you hear one Latin word answering across three countries."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"sí\" — see, and picture the accent",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"sí\" — *see*, and picture the accent]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pair — \"sí\" (yes) vs \"si\" (if)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"sí\" (yes) vs \"si\" (if)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the cousins — \"sí, sì, sim\" — all from Latin sīc",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the cousins — \"sí, sì, sim\" — all from Latin *sīc*]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "How do you say yes in Spanish? (sí.) What is the only difference between sí \"yes\" and si \"if\"? (The written accent.) What Latin word is sí from, and what did it mean? (sīc — \"thus, so\".)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C19-no",
-      "sequence": 266,
-      "title": "no — no / not",
-      "headword": "no",
-      "romanization": "no",
-      "gloss": "no / not",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:b0a00037389ee116",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The easiest word yet — and it quietly does two jobs Spanish never splits apart."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: no",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "no = no. Said noh, a clean single vowel."
-            },
-            {
-              "kind": "speech",
-              "text": "It is Latin nōn with almost nothing worn off — just the final consonant gone. Compare the family, all from the same nōn:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "Latin nōn",
-                ", which gives:"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "Latin nōn: Spanish. , which gives:: no.",
-                "Latin nōn: Italian. , which gives:: no.",
-                "Latin nōn: French. , which gives:: non."
-              ]
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Here's the thing English splits and Spanish doesn't. English has \"no\" (the answer) and \"not\" (inside a sentence) — two different words. Spanish uses no for both:"
-            },
-            {
-              "kind": "speech",
-              "text": "as the answer. Someone asks you something — anything at all — and this one syllable declines it. You do not need to understand the question to answer it, which is exactly why this word comes early."
-            },
-            {
-              "kind": "speech",
-              "text": "and later, as the word that turns a sentence around — but that needs a sentence first, so it waits until you have one. For now: no is how you decline, refuse, and disagree, which is most of what a beginner needs it for."
-            },
-            {
-              "kind": "speech",
-              "text": "<!-- the negator sense is taught in ES-C06-hablo-espanol, the first lesson where the learner has a verb to put it in front of. Named by lesson id, never by chapter number: an earlier version of this comment gave a number, went stale across three renumbers, was \"fixed\" with a fresh number, and went stale again two PRs later. Chapter numbers move; lesson ids do not. -->."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"no\" — noh",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"no\" — *noh*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"No.\" — flat, once, the way you would decline a second coffee",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"No.\" — flat, once, the way you would decline a second coffee]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Sí.\" then \"No.\" — the two shortest complete answers in Spanish",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Sí.\" then \"No.\" — the two shortest complete answers in Spanish]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "How do you say no in Spanish? (no.) What Latin word is it from? (nōn.) Spanish no does the work of which two English words? (\"no\" the answer, and later the word for \"not.\") Where does no go to negate a sentence? (Right before the verb.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C04-gracias",
-      "sequence": 270,
-      "title": "gracias — \"thank you,\" and a whole family of English words",
-      "headword": "gracias",
-      "romanization": "gracias",
-      "gloss": "thank you",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:8c075bcf44e8c24a",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You can now introduce yourself. The next exchange is how are you? — but every answer ends the same polite way, so we learn the courtesy word first: gracias."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "vowel-a — the clean ah of father, twice."
-            },
-            {
-              "kind": "speech",
-              "text": "r-tap — a single flicked r (not the English one, and not yet the rolled rr): the tongue taps once, like the middle of American butter."
-            },
-            {
-              "kind": "speech",
-              "text": "ci-th-s — the ci is a soft s in Latin America (GRAH-syahs) and a soft th in most of Spain (GRAH-thyahs). Either is correct — pick one."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "gracias is the plural of gracia (\"grace, favour\"), from Latin grātia — favour freely given. Saying gracias literally offers someone \"graces,\" i.e. good will in return for theirs."
+              "text": "cómo — \"how.\" Root: Latin quo modo — not a word but a two-word phrase, \"in what manner.\""
             },
             {
               "kind": "speech",
-              "text": "That one Latin root grātia fans out across English — once you see it, you get a fistful of words for free:"
+              "text": "The two halves, and their English cousins:"
             },
             {
               "kind": "speech",
-              "text": "grace, gracious, graceful — the direct borrowings."
+              "text": "modo (\"manner, measure\") becomes English mode, modal, model, moderate, modify, commodity."
             },
             {
               "kind": "speech",
-              "text": "grateful, gratitude — being full of grātia."
+              "text": "quo (\"in what\") is the Latin question-stem qu-, the seed of nearly every Spanish question word."
             },
             {
               "kind": "speech",
-              "text": "gratis, gratuity — something given as a favour (for free, or a tip)."
+              "text": "How the phrase became one word — the wearing-down. Spanish did not borrow cómo ready-made; it eroded out of quo modo over centuries of everyday speech. The final -do fell off and the middle collapsed:"
             },
             {
               "kind": "speech",
-              "text": "congratulate — literally \"to wish grace together with someone.\""
+              "text": "quomodo becomes quomo becomes como."
             },
             {
               "kind": "speech",
-              "text": "Italian grazie, French grâces, Portuguese graças — the whole Romance family kept grātia, even where everyday thanks went elsewhere (French says merci, Portuguese obrigado)."
-            },
-            {
-              "kind": "speech",
-              "text": "So gracias is not a word to memorize cold: it is grace, made plural and handed to another person."
+              "text": "The qu- (a kw sound) flattened to a plain k, written c before o. What is left is a whole Latin phrase worn smooth — the way a pebble loses its edges in a river. The same erosion gave Italian come, Portuguese como, French comme."
             }
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -403,25 +88,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"gracias\" — GRAH-syahs, one soft tap on the r",
+              "instruction": "\"cómo\" — CÓ-mo, stress on the first syllable",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"gracias\" — *GRAH-syahs*, one soft tap on the *r*]"
+              "source": "[YOU SAY: \"cómo\" — *CÓ-mo*, stress on the first syllable]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"gracias\" then English \"grace, grateful, gratitude\" — one family",
+              "instruction": "\"cómo\" then English \"mode\", \"model\" — the modo root",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"gracias\" then English \"grace, grateful, gratitude\" — one family]"
+              "source": "[YOU SAY: \"cómo\" then English \"mode\", \"model\" — the *modo* root]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the erosion — \"quo modo, quomo, como\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the erosion — \"quo modo, quomo, como\"]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -433,27 +127,38 @@
             },
             {
               "kind": "speech",
-              "text": "What everyday English word is gracias the plural of, at the root? (Grace.) So when you thank someone in Spanish, you are literally handing them — what? (Graces / favours.) Next: the little reply that closes the exchange, de nada."
+              "text": "What does cómo mean? (\"How.\") Walk the erosion: quo modo becomes? becomes cómo. (Quomo becomes como.) What did the two Latin halves mean? (Quo, \"in what\"; modo, \"manner\" — the root of English mode and model.) Next: the two marks Spanish puts on a question."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C04-de-nada",
-      "sequence": 280,
-      "title": "de nada — \"you're welcome,\" or \"it was nothing\"",
-      "headword": "de nada",
-      "romanization": "de nada",
-      "gloss": "you're welcome (literally \"of nothing\")",
+      "id": "ES-C03-como-acento",
+      "sequence": 200,
+      "title": "¿cómo? — the two marks that say \"this is a question\"",
+      "headword": "¿cómo?",
+      "romanization": "¿cómo?",
+      "gloss": "the two marks Spanish puts on a question — the opening ¿ and the accent that turns como into cómo",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-type",
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:fc48980ed1e4ef18",
-      "notice": null,
+      "sourceHash": "fnv1a64:045f46f9d26ad328",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the upside-down opener"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the upside-down opener until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -468,56 +173,73 @@
             },
             {
               "kind": "speech",
-              "text": "Someone says gracias. You need the reply that closes the loop: de nada — literally \"of nothing.\" You're waving the favour off as no trouble at all — the same move English makes with \"it's nothing\" / \"no problem.\""
+              "text": "You have the word cómo. Written down, it wears two marks that English has no equivalent for — and neither of them is decoration. Both do a job English leaves to word order and guesswork."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "input",
+          "title": "You'll want to know first",
           "segments": [
             {
               "kind": "speech",
-              "text": "d-soft — the d in nada is soft, almost the th of this (NAH-thah), not a hard English d. Spanish d between vowels always softens."
-            },
-            {
-              "kind": "speech",
-              "text": "vowel-a — three clean ah sounds: deh NAH-thah."
+              "text": "cómo — the word itself, and where it came from."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — the phrase",
+          "type": "script",
+          "title": "Script — the upside-down opener",
           "segments": [
             {
               "kind": "speech",
-              "text": "de = \"of / from\" (Latin dē) — the same de hiding in English depart, deduct, descend."
+              "text": "Spanish questions open with an upside-down ¿ and close with a normal?: ¿cómo?"
             },
             {
               "kind": "speech",
-              "text": "nada = \"nothing.\" And this is the beautiful part."
-            },
-            {
-              "kind": "speech",
-              "text": "nada comes from Latin (rēs) nāta — \"(a thing) born.\" From nāscī, \"to be born,\" the same root as English native, nature, natal, re-nais-sance (re-birth). Latin speakers said nōn est rēs nāta, \"there is not a born thing\" — not a single thing that ever came into being — and over centuries the emphatic nāta (\"born thing\") wore down until the word for 'born thing' became the word for 'nothing' itself."
-            },
-            {
-              "kind": "speech",
-              "text": "So the reply de nada literally says \"of [a] born-thing\" becomes \"of nothing at all.\" French did the identical trick with rien (\"nothing\") — which is Latin rem, \"a thing.\" Two languages, same move: the word for thing collapses into the word for nothing."
+              "text": "Why? Spanish word order often does not change in a question — cómo estás looks the same whether you are asking or reporting. A reader coming to a long sentence would not know to raise their pitch until they hit the mark at the very end, by which time it is too late. The ¿ is a piece of engineering: it tells your voice, in advance, what shape the sentence has. Only the question part gets bracketed, not necessarily the whole line."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: the courtesy pair",
+          "title": "Grammar Lens: the accent that marks a question",
           "segments": [
             {
               "kind": "speech",
-              "text": "gracias becomes de nada is a fixed adjacency pair: one turn expects the other. Learn them as a unit, the way English glues thank you becomes you're welcome."
+              "text": "Now watch the accent mark do real work:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "written",
+                "means"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "cómo means \"how?\" — the question word.",
+                "como means \"like / as\" — or \"I eat\"."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Same letters, same sound. The written accent is the only thing marking the difference:"
+            },
+            {
+              "kind": "speech",
+              "text": "¿Cómo estás? — \"How are you?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Como tú. — \"Like you.\" / Yo como. — \"I eat.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Every question word you will meet — qué, dónde, cuándo, quién — carries this accent for exactly this reason. It is not about stress (the stress is the same either way); it is a flag that says \"asking.\""
             }
           ]
         },
@@ -535,20 +257,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"gracias\" … \"de nada\" — the full exchange, both voices",
+              "instruction": "\"¿cómo?\" — with question intonation, opening high",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"gracias\" … \"de nada\" — the full exchange, both voices]"
+              "source": "[YOU SAY: \"¿cómo?\" — with question intonation, opening high]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"de nada\" then English \"native, nature, natal\" — nada's true family",
+              "instruction": "the pair — \"cómo\" (how?) then \"como\" (like / I eat)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"de nada\" then English \"native, nature, natal\" — nada's true family]"
+              "source": "[YOU SAY: the pair — \"cómo\" (how?) then \"como\" (like / I eat)]"
             }
           ]
         },
@@ -565,27 +287,34 @@
             },
             {
               "kind": "speech",
-              "text": "nada (\"nothing\") started life as the Latin word for a born — what? (A thing — rēs nāta, a born thing.) What English words share that \"born\" root? (Native, nature, natal, renaissance.) Next: the verb the whole \"how are you?\" question turns on — estar."
+              "text": "Why does Spanish open a question with ¿? (Word order often does not change, so the reader needs the warning before the sentence, not after.) What changes when the accent disappears from cómo? (It stops being the question word — como means \"like / as,\" or \"I eat.\")"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C04-repaso-gracias",
-      "sequence": 285,
-      "title": "Thank you, yes, and no — putting it together",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "Thank you, and the answer — putting the chapter together",
+      "id": "ES-C03-familia-qu",
+      "sequence": 210,
+      "title": "The qu- question family — one ancient pattern, many clues",
+      "headword": "qu-",
+      "romanization": "qu-",
+      "gloss": "the Latin question family inside Spanish",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:f94878266e44a9a9",
-      "notice": null,
+      "sourceHash": "fnv1a64:590e6bda98194f56",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -600,37 +329,51 @@
             },
             {
               "kind": "speech",
-              "text": "Two words that travel everywhere together. Nothing new in this lesson — only what you already have."
+              "text": "You traced cómo back to Latin quomodo. Focus now on its first piece, qu-, without trying to use a whole set of new question words yet."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "The exchange",
+          "title": "You'll want to know first",
           "segments": [
             {
               "kind": "speech",
-              "text": "— Gracias. — De nada."
-            },
-            {
-              "kind": "speech",
-              "text": "And the two words that let you answer anything at all:"
-            },
-            {
-              "kind": "speech",
-              "text": "— ¿…? — Sí. / — No."
+              "text": "cómo — \"how,\" from Latin quomodo."
             }
           ]
         },
         {
           "index": 2,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "You can thank someone, answer when you are thanked, and — for the first time — accept or decline. Until you have sí and no, every question anyone asks you is unanswerable."
+              "text": "Latin used a recurring qu- stem in questions. Spanish preserves that family, although centuries of sound change gave the modern forms different shapes:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Spanish clue",
+                "from Latin",
+                "future meaning"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "Spanish clue: qué. from Latin: quid. future meaning: what.",
+                "Spanish clue: quién. from Latin: quem. future meaning: who.",
+                "Spanish clue: cuál. from Latin: qualis. future meaning: which.",
+                "Spanish clue: cuándo. from Latin: quando. future meaning: when.",
+                "Spanish clue: cuánto. from Latin: quantus. future meaning: how much.",
+                "Spanish clue: cómo. from Latin: quomodo. future meaning: how."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "These are previews, not vocabulary to produce today. For now, use the family only as an etymological clue: a question form beginning qu- or cu- may continue the same Latin pattern. Dónde, \"where,\" is an exception from Latin de unde, \"from where.\""
             }
           ]
         },
@@ -648,25 +391,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the whole exchange, both parts, without stopping",
+              "instruction": "the Latin source of cómo",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the whole exchange, both parts, without stopping]"
+              "source": "[YOU SAY: the Latin source of *cómo*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "it again, faster, and let it sound like speech rather than recital",
+              "instruction": "the recurring Latin question stem",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: it again, faster, and let it sound like speech rather than recital]"
+              "source": "[YOU SAY: the recurring Latin question stem]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "whether the table is today's production list or a preview",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: whether the table is today's production list or a preview]"
             }
           ]
         },
@@ -683,7 +430,730 @@
             },
             {
               "kind": "speech",
-              "text": "Run it once more from memory. If a word does not come, go back one lesson rather than pushing on — this chapter is short on purpose."
+              "text": "Which old stem connects qué, quién, cuándo, and cómo? (qu-.) Which word in the preview is the exception? (Dónde.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C03-se-llama",
+      "sequence": 220,
+      "title": "se llama — the reflexive that fits usted",
+      "headword": "se llama",
+      "romanization": "se llama",
+      "gloss": "he/she calls himself; you (formal) call yourself",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18c0a7427760040f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can say me llamo (\"I call myself\"). To ask someone else their name — especially formally, with usted — you need the version that loops back on them: se llama."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "me llamo — the reflexive \"I call myself.\""
+            },
+            {
+              "kind": "speech",
+              "text": "tú / usted — and the key fact that usted takes he/she verb forms."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "se llama = se (\"himself / herself / yourself-formal\") + llama (\"calls\"). So se llama = \"he/she calls himself,\" or — because usted uses third-person forms — \"you (formal) call yourself.\""
+            },
+            {
+              "kind": "speech",
+              "text": "se — the reflexive pronoun for the third person (and for usted). Root: Latin sē (\"himself, herself, itself\"). That same se- — carrying the sense of \"self / apart / aside\" — is bolted onto a shelf of English words:"
+            },
+            {
+              "kind": "speech",
+              "text": "secede — se + cedere (\"go apart\")."
+            },
+            {
+              "kind": "speech",
+              "text": "seclude, segregate (\"apart from the flock\"), separate."
+            },
+            {
+              "kind": "speech",
+              "text": "seduce — se + ducere (\"lead aside\")."
+            },
+            {
+              "kind": "speech",
+              "text": "secure — se + cura (\"free from care\"), secret (\"set apart\")."
+            },
+            {
+              "kind": "speech",
+              "text": "Every one is something turned in on itself or set apart — the same idea as a reflexive looping the action back on the doer."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the reflexive pronoun changes with the person",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The verb llamar stays, but the little reflexive word in front shifts to match who is doing the calling:"
+            },
+            {
+              "kind": "speech",
+              "text": "me llamo — I call myself."
+            },
+            {
+              "kind": "speech",
+              "text": "te llamas — you (informal, tú) call yourself."
+            },
+            {
+              "kind": "speech",
+              "text": "se llama — he / she / you (formal, usted) calls himself/yourself."
+            },
+            {
+              "kind": "speech",
+              "text": "Three persons, three pronouns: me / te / se. That se is exactly why the formal \"what's your name?\" is ¿cómo se llama usted? — usted, born from \"your grace,\" politely takes the he/she shape."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"se llama\" — seh YA-ma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"se llama\" — *seh YA-ma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the set — \"me llamo, te llamas, se llama\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the set — \"me llamo, te llamas, se llama\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"se\" then \"secede\", \"seclude\", \"separate\" — the set-apart root",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"se\" then \"secede\", \"seclude\", \"separate\" — the set-apart root]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which reflexive goes with usted — te or se? (se — because usted takes third-person forms.) What's the \"self/apart\" root inside secede and separate? (Latin se-.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C03-como-se-llama",
+      "sequence": 230,
+      "title": "¿cómo se llama usted? — assembling the question, and answering it",
+      "headword": "¿cómo se llama usted?",
+      "romanization": "¿cómo se llama usted?",
+      "gloss": "what's your name? (formal)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:703702b6f121e529",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Everything you built this chapter clicks into one sentence: how to ask a stranger their name, and how to answer back. This is your first real two-way exchange."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cómo, se llama, usted."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — by assembling it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "¿Cómo se llama usted? = cómo (\"how\") + se llama (\"do you-formal call yourself\") + usted (\"you,\" formal)."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally: \"How do you call yourself?\" Spanish asks how, not what, for a name — you're asking by what name a person goes, the manner they're called."
+            },
+            {
+              "kind": "speech",
+              "text": "The informal version, for a friend, swaps the reflexive and drops the formal pronoun: ¿Cómo te llamas? (te llamas, from tú). Same question, two registers — exactly the tú/usted choice from earlier, now live in a real sentence:"
+            },
+            {
+              "kind": "speech",
+              "text": "To a stranger, an elder, a customer becomes ¿Cómo se llama usted?"
+            },
+            {
+              "kind": "speech",
+              "text": "To a friend, a child, a peer becomes ¿Cómo te llamas?"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "How to answer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You already have the answer from the me llamo lesson: Me llamo ___."
+            },
+            {
+              "kind": "speech",
+              "text": "— ¿Cómo se llama usted? — Me llamo David."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask a stranger their name — ¿cómo se llama usted?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask a stranger their name — *¿cómo se llama usted?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask a friend the same — ¿cómo te llamas?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask a friend the same — *¿cómo te llamas?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole mini-exchange — ask, then answer with me llamo ___",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole mini-exchange — ask, then answer with *me llamo ___*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Formal vs. informal \"what's your name\"? (¿Cómo se llama usted? / ¿Cómo te llamas?) Does Spanish literally ask \"what\" or \"how\" is your name? (\"How\" — cómo.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C03-mucho",
+      "sequence": 240,
+      "title": "mucho — \"much,\" and a sound-change you've already seen",
+      "headword": "mucho",
+      "romanization": "mucho",
+      "gloss": "much / a lot",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90d3dca5d6e4bf7b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One more word before \"pleased to meet you.\" mucho — \"much, a lot\" — and it hides the same Latin-to-Spanish sound trick you spotted in noche."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "soft-c — the ch is the ch of church: MOO-cho."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mucho — \"much, a lot.\" Root: Latin multus (\"much, many\"). The English cousins keep the original -lt-:"
+            },
+            {
+              "kind": "speech",
+              "text": "multiple, multitude, multiply, multi-purpose, multimedia."
+            },
+            {
+              "kind": "speech",
+              "text": "The sound-change, again: Latin multum becomes Spanish mucho. The Latin -lt- softened into Spanish -ch- — the very same move as noctem becomes noche (-ct- becomes -ch-, as in the noche lesson). Spanish has a habit of melting these consonant clusters into ch. So a Spanish -ch- word very often points back to a Latin -ct- or -lt- root — and the English cousin usually preserves it (nocturnal, multiple)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mucho\" — MOO-cho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mucho\" — *MOO-cho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mucho\" then \"multiple\", \"multitude\" — the mult- family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mucho\" then \"multiple\", \"multitude\" — the *mult-* family]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"noche\" and \"mucho\" — two words, same -ch- from a melted Latin cluster",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"noche\" and \"mucho\" — two words, same *-ch-* from a melted Latin cluster]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "mucho comes from Latin multus — what English words keep the -lt-? (multiple, multitude, multiply.) What Latin cluster melted into the -ch-? (-lt-, like -ct- did in noche.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C03-gusto",
+      "sequence": 250,
+      "title": "gusto becomes mucho gusto — \"much pleasure\"",
+      "headword": "mucho gusto",
+      "romanization": "mucho gusto",
+      "gloss": "pleased to meet you (literally \"much pleasure\")",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c345f34f12f9fdc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The line you say when you shake someone's hand. First the noun gusto, then snap mucho onto it, and you've got it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mucho — \"much,\" about to modify gusto."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el gusto (masculine) — \"taste; pleasure, liking.\" Root: Latin gustus (\"a tasting, a taste\"). The English cousins:"
+            },
+            {
+              "kind": "speech",
+              "text": "gustatory — to do with the sense of taste."
+            },
+            {
+              "kind": "speech",
+              "text": "disgust — dis- (\"not, opposite\") + gust: literally \"distaste.\""
+            },
+            {
+              "kind": "speech",
+              "text": "gusto — borrowed whole into English, meaning zest, relish, enjoyment."
+            },
+            {
+              "kind": "speech",
+              "text": "False friend to flag: a gust of wind is not related — that one's from Old Norse gustr. Same spelling, different root. Resemblance isn't proof."
+            },
+            {
+              "kind": "speech",
+              "text": "mucho gusto = mucho (\"much\") + gusto (\"pleasure\") = literally \"much pleasure\" — short for \"it's a great pleasure [to meet you].\" gusto is masculine (el gusto), and mucho is in its plain masculine form to match it: another quiet piece of the agreement you've been building."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish greets a new acquaintance by naming the pleasure of it — \"much pleasure\" — where English names the person (\"pleased to meet you\"). The phrase works by itself, so this first exchange needs no extra reply formula."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"gusto\" then \"gusto\" (English), \"disgust\", \"gustatory\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"gusto\" then \"gusto\" (English), \"disgust\", \"gustatory\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mucho gusto\" — on meeting someone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mucho gusto\" — on meeting someone]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mucho gusto literally mean? (\"Much pleasure.\") Is el gusto masculine or feminine? (Masculine.) And the English cousin of gusto built from dis-? (Disgust — \"distaste.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C03-practice",
+      "sequence": 260,
+      "title": "Practice — introducing yourself",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "a full introduction, formal and informal",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14f2dbd042b4ff42",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ten lessons of atoms now assemble into a real conversation. No new words — just the exchange, run both formally and informally until the tú / usted choice is automatic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Formal (a stranger, an elder, a customer):"
+            },
+            {
+              "kind": "speech",
+              "text": "— Buenos días. Me llamo Susana. ¿Cómo se llama usted? — Me llamo David. Mucho gusto."
+            },
+            {
+              "kind": "speech",
+              "text": "Informal (a friend, a peer): only two words change, and they're the ones that carry the whole social difference:"
+            },
+            {
+              "kind": "speech",
+              "text": "— ¡Hola! Me llamo Susana. ¿Cómo te llamas? — Me llamo David. Mucho gusto."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "me llamo — introduce yourself (\"I call myself\")."
+            },
+            {
+              "kind": "speech",
+              "text": "tú / usted — the informal vs. formal \"you,\" and why (the retired thou; usted from \"your grace\")."
+            },
+            {
+              "kind": "speech",
+              "text": "¿cómo te llamas? / ¿cómo se llama usted? — ask a name, in either register, the pronoun (te / se) tracking the choice."
+            },
+            {
+              "kind": "speech",
+              "text": "mucho gusto — \"much pleasure,\" pleased to meet you."
+            },
+            {
+              "kind": "speech",
+              "text": "And one from two chapters back, because it is worth keeping warm: buenos días but buenas tardes — the describing word copies its noun."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the full formal exchange, both parts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the full *formal* exchange, both parts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same exchange informally — catch yourself on se llama becomes te llamas",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same exchange *informally* — catch yourself on *se llama* → *te llamas*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "for a police officer, then your best friend — which \"you\" for each, and why?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: for a police officer, then your best friend — which \"you\" for each, and why?]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Run the formal version start to finish without stopping."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two words change between the formal and informal introduction? (se llama usted becomes te llamas.) Next chapter, you will learn how to ask how someone is doing."
             }
           ]
         }

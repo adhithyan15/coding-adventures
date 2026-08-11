@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-R03-repaso-reparar
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 508
-chapter: 14
+chapter: 15
 type: practice-mix
 headword: (practice)
 gloss: When you don't understand — putting the repair kit together

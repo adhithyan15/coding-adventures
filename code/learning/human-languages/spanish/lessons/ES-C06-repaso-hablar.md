@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C06-repaso-hablar
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 534
-chapter: 22
+chapter: 23
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — one conversation, held twice, where the only thing that changes is who you are talking to

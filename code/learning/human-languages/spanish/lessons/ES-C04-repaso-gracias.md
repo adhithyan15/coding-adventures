@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C04-repaso-gracias
 spine_node: SPINE-COURTESY-THANK
 sequence: 285
-chapter: 6
+chapter: 7
 type: practice-mix
 headword: (practice)
 gloss: Thank you, and the answer — putting the chapter together

@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C06-repaso-cafe
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 505
-chapter: 13
+chapter: 14
 type: practice-mix
 headword: (practice)
 gloss: Ordering — putting the chapter together

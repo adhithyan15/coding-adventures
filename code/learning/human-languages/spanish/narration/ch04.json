@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 4,
-  "title": "The Three Words for You",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3f90f7698163e690",
+  "title": "Saying Your Name",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:77bc191daa544cc7",
   "lessons": [
     {
-      "id": "ES-C03-tu-usted",
-      "sequence": 160,
-      "title": "tú and usted — two of the three words Spanish says to one person",
-      "headword": "tú / usted",
-      "romanization": "tú / usted",
-      "gloss": "two of the three words Spanish uses to one person — and the one English quietly retired",
+      "id": "ES-C03-me",
+      "sequence": 130,
+      "title": "me — your first pronoun, and a real English twin",
+      "headword": "me",
+      "romanization": "me",
+      "gloss": "me / myself",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa0a7e6843fbef84",
+      "sourceHash": "fnv1a64:99c6fa9663558809",
       "notice": null,
       "blocks": [
         {
@@ -35,184 +35,44 @@
             },
             {
               "kind": "speech",
-              "text": "English has one word for \"you.\" Spanish has three for speaking to one person, and today you get two of them — the two you will use yourself. What the choice means socially, and the odd grammar usted drags along with it, comes next. The third word comes shortly after, and you will only ever need to recognise it."
+              "text": "A tiny word doing big work. me is your first pronoun — and unlike hola, its English look-alike is the real thing: a true cousin, not a coincidence."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "The two words",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "tú — \"you,\" informal. For friends, family, children, peers, anyone you are on easy terms with."
-            },
-            {
-              "kind": "speech",
-              "text": "Root: Latin tū. This is a true cousin of English thou — the word English used to have for exactly this job, the intimate \"you\" (thou/thee/thy), before it faded out around 400 years ago. Both tú and thou come straight from the same ancient root (tu-). So Spanish still uses, every day, the pronoun English quietly retired."
-            },
-            {
-              "kind": "speech",
-              "text": "usted — \"you,\" formal. For strangers, elders, officials, customers, anyone you are showing respect or keeping distance with."
-            },
-            {
-              "kind": "speech",
-              "text": "Both are the \"doer\" word — the one that says who is acting, like yo (\"I\"). Say them enough times that they come out without hunting: tú, one syllable with the accent; usted, stress on the second, with a very soft final d."
-            },
-            {
-              "kind": "speech",
-              "text": "Not the whole story, and you should know that now. Across Argentina, Uruguay, Paraguay, most of Central America and parts of Colombia, the everyday informal \"you\" is a third word — not tú at all. That is well over a hundred million people. You are learning tú because it is understood everywhere, and you will meet the third word shortly, only to recognise."
+              "text": "vowel-e — one clean syllable, meh (the e of bed)."
             }
           ]
         },
         {
           "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"tú\" — for a close friend",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"tú\" — for a close friend]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"usted\" — for someone you'd address respectfully",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"usted\" — for someone you'd address respectfully]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"tú\" then English \"thou\" — the retired twin",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"tú\" then English \"thou\" — the retired twin]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which is formal, tú or usted? (Usted.) What English pronoun is the lost twin of tú, and what happened to it? (Thou — it faded out of English around 400 years ago.) How many words does Spanish have for \"you,\" and how many will you say yourself? (Three, for one person; two.) Next: what picking one of them tells your listener."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C03-tu-usted-register",
-      "sequence": 170,
-      "title": "tú or usted — a choice you have to make every time",
-      "headword": "tú o usted",
-      "romanization": "tú o usted",
-      "gloss": "the choice English lost — and the surprise that usted takes he/she verb forms",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:12f9445101833faa",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You have both words. Now the hard part: Spanish makes you choose one every time you speak to someone, and the choice is never neutral."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "tú / usted — the two words themselves."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: the layer English dropped",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Tú and usted do not differ in meaning — both are \"you,\" singular, one person. They differ in register: the social distance you are claiming."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "you say",
-                "you are signalling"
-              ],
-              "columns": 2,
-              "rowCount": 2,
-              "utterances": [
-                "you say: tú. you are signalling: closeness, equality, ease.",
-                "you say: usted. you are signalling: respect, deference, distance."
-              ]
+              "text": "me — \"me / myself.\" Root: Latin me (the object form of ego, \"I\")."
             },
             {
               "kind": "speech",
-              "text": "English used to carry this too, with thou against you — and when thou died, English lost the ability to say it at all. One-size-fits-all \"you\" means an English speaker never has to decide. A Spanish speaker decides every single time, and getting it wrong is not a grammar mistake but a social one: tú to a stranger can read as presumptuous, usted to a friend as cold."
-            },
-            {
-              "kind": "speech",
-              "text": "The safe default when you cannot tell: usted. Over-formal is recoverable; over-familiar is awkward."
+              "text": "Here's the satisfying part: English me is a genuine cousin, not a false friend. Spanish me comes from Latin me; English me comes from Proto-Germanic — but both trace back to the same ancient ancestor (the Proto-Indo-European root me-, \"me\"). So do English my and mine. This is the opposite of the hola/hello trap you saw earlier: here the resemblance is real, and you can lean on it hard. Spanish me = English me, all the way down."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: usted takes he/she forms",
+          "title": "Grammar Lens: what a pronoun is",
           "segments": [
             {
               "kind": "speech",
-              "text": "One structural surprise, because it shapes every lesson after this: usted takes the he/she verb forms, not the informal \"you\" forms."
-            },
-            {
-              "kind": "speech",
-              "text": "That is why \"what's your name?\" formally is ¿cómo se llama usted? — using the se llama you would otherwise use for \"he calls himself\" — and not te llamas. Grammatically, usted behaves as though you were talking about the person rather than to them. That is a fossil of where the word came from, and the next lesson digs it up."
+              "text": "A pronoun is a stand-in word that points to a person or thing without naming them — I, you, he, me, it. me specifically is an object pronoun: it marks the person the action lands on (\"call me\", \"give me\"). In Spanish it usually sits right before the verb — you'll see it next lesson in me llamo, literally \"myself I-call.\" For now, just hold me = \"me / myself.\""
             }
           ]
         },
@@ -230,29 +90,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"tú\" and name someone you would use it with",
+              "instruction": "\"me\" — meh",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"tú\" and name someone you would use it with]"
+              "source": "[YOU SAY: \"me\" — *meh*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"usted\" and name someone you would use it with",
+              "instruction": "\"me\" then English \"me\", \"my\", \"mine\" — all one family",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"usted\" and name someone you would use it with]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "which verb pattern usted takes — the he/she one",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: which verb pattern *usted* takes — the he/she one]"
+              "source": "[YOU SAY: \"me\" then English \"me\", \"my\", \"mine\" — all one family]"
             }
           ]
         },
@@ -269,26 +120,26 @@
             },
             {
               "kind": "speech",
-              "text": "Do tú and usted differ in meaning or in register? (Register — both mean \"you\"; they signal closeness versus respect.) Which do you pick when unsure? (Usted.) Which verb forms does usted take? (The same forms used with he or she.)"
+              "text": "Is Spanish me a true cousin of English me, or a coincidence like hola/hello? (A true cousin — both from the same ancient root.) What part of speech is it? (A pronoun.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C03-vos",
-      "sequence": 175,
-      "title": "vos — the third \"you,\" and you only have to recognise it",
-      "headword": "vos",
-      "romanization": "vos",
-      "gloss": "\"you\" across a large part of the Spanish-speaking world — to recognise, not to say",
+      "id": "ES-C03-llamar",
+      "sequence": 140,
+      "title": "llamo — \"I call,\" from a root that shouts",
+      "headword": "llamo",
+      "romanization": "llamo",
+      "gloss": "I call (from llamar, to call)",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb01ab8129d78156",
+      "sourceHash": "fnv1a64:33a46fc5f8d8b456",
       "notice": null,
       "blocks": [
         {
@@ -304,7 +155,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two words so far. Which one do you use with a friend? (Tú.) Which one keeps a respectful distance? (Usted.)"
+              "text": "The verb inside \"my name is.\" On its own it means \"to call\" — and its Latin root literally means to shout, which is why it echoes through a whole family of English words."
             }
           ]
         },
@@ -315,47 +166,54 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "vos — \"you,\" informal. It does the same job as tú."
-            },
-            {
-              "kind": "speech",
-              "text": "Where it lives, in part: Argentina, Uruguay and Paraguay, and most of Central America. It is also alive in Chile, and in parts of Colombia and Bolivia — this list is not the whole map. Counting only the places named, that is well over a hundred million people for whom vos, not tú, is the ordinary word to a friend."
-            },
-            {
-              "kind": "speech",
-              "text": "You are learning tú because it is understood everywhere, those places included. But a course that never mentioned vos would be teaching you a Spanish nobody speaks in Buenos Aires."
-            },
-            {
-              "kind": "speech",
-              "text": "What you owe this word. Recognition, nothing more. Hear vos, think tú. Its endings differ a little, and you will meet that where you meet the endings themselves — not before."
+              "text": "me — you'll bolt me onto llamo next lesson."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Vos is Latin vōs — and Latin vōs was the plural \"you.\" The word Romans used for a group."
-            },
-            {
-              "kind": "speech",
-              "text": "How does a plural become the word for one friend? By politeness. Addressing someone as though they were several made them bigger. The courtesy wore off, and across much of the Americas the word slid into tú's place."
-            },
-            {
-              "kind": "speech",
-              "text": "English began the same way and ended in the opposite place. You met thou earlier in this chapter. What retired it was you — a plural, used to one person out of politeness, exactly as Spanish used vos. But English's polite plural won and spread until it was the only word left; standard English now has no separate singular at all. Spanish's vos went the other way — it lost the polite job and dropped into the intimate one."
-            },
-            {
-              "kind": "speech",
-              "text": "Same start, opposite ends. And what took the polite job away from vos is the very next lesson."
+              "text": "ll-y — ll sounds like English y: llamo is YA-mo, not LA-mo. see reference."
             }
           ]
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "llamo — \"I call.\" The dictionary form (the infinitive) is llamar, \"to call.\" Root: Latin clamare, \"to cry out, to shout.\" That clam- shouts all through English:"
+            },
+            {
+              "kind": "speech",
+              "text": "exclaim, exclamation — ex- (\"out\") + clamare: to shout out."
+            },
+            {
+              "kind": "speech",
+              "text": "proclaim, proclamation — pro- (\"forth\"): to call forth."
+            },
+            {
+              "kind": "speech",
+              "text": "acclaim — ad- (\"toward\"): to shout praise toward."
+            },
+            {
+              "kind": "speech",
+              "text": "claim, reclaim, disclaim; and clamor, borrowed whole."
+            },
+            {
+              "kind": "speech",
+              "text": "A sound-pattern to bank: Latin cl- became Spanish ll-. clamare becomes llamar. It happened repeatedly: clavem becomes llave (\"key\"), flamma becomes llama (\"flame\"), plovere becomes llover (\"to rain\"). A Spanish word starting ll- is very often a Latin cl-/fl-/pl- word in disguise — and its English cousin usually kept the original cluster (clamor, flame, pluvial)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -366,52 +224,36 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Recognition only — nothing to produce here."
-            },
-            {
               "kind": "prompt",
-              "action": "HEAR",
-              "instruction": "\"vos\"",
+              "action": "SAY",
+              "instruction": "\"llamo\" — YA-mo",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: \"vos\"]"
-            },
-            {
-              "kind": "speech",
-              "text": "becomes think: tú. A friend, an equal, someone at ease with you."
-            },
-            {
-              "kind": "prompt",
-              "action": "HEAR",
-              "instruction": "\"usted\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU HEAR: \"usted\"]"
-            },
-            {
-              "kind": "speech",
-              "text": "becomes think: distance, or respect."
+              "source": "[YOU SAY: \"llamo\" — *YA-mo*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"tú\"",
+              "instruction": "\"llamo\" then \"exclaim\", \"proclaim\", \"clamor\" — the shouting root",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"tú\"]"
+              "source": "[YOU SAY: \"llamo\" then \"exclaim\", \"proclaim\", \"clamor\" — the shouting root]"
             },
             {
-              "kind": "speech",
-              "text": "— still your word, everywhere you go."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"llamar\" (to call), \"llave\" (key) — both from Latin cl-",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"llamar\" (to call), \"llave\" (key) — both from Latin *cl-*]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -423,26 +265,26 @@
             },
             {
               "kind": "speech",
-              "text": "How many words does Spanish have for \"you\" when speaking to one person? (Three.) Which do you say? (Tú — and usted for distance.) Name a country where vos is the everyday word. (Argentina, Uruguay, Nicaragua…) What was Latin vōs originally? (The plural \"you.\")"
+              "text": "What does the root clamare mean? (To shout / cry out.) Latin cl- becomes which two letters in Spanish? (ll- — clamare becomes llamar.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C03-usted-origin",
-      "sequence": 180,
-      "title": "vuestra merced becomes usted — respect compressed into one word",
-      "headword": "vuestra merced → usted",
-      "romanization": "vuestra merced → usted",
-      "gloss": "the respectful title inside usted",
+      "id": "ES-C03-me-llamo",
+      "sequence": 150,
+      "title": "me llamo — \"I call myself\"",
+      "headword": "me llamo",
+      "romanization": "me llamo",
+      "gloss": "my name is (literally \"I call myself\")",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6488dc6c3de34f54",
+      "sourceHash": "fnv1a64:e60154f0219a5658",
       "notice": null,
       "blocks": [
         {
@@ -458,7 +300,7 @@
             },
             {
               "kind": "speech",
-              "text": "You use usted for respectful \"you,\" and it takes the same verb form as \"he\" or \"she.\" That surprising grammar preserves the word's history."
+              "text": "Snap the last two lessons together — me + llamo — and you can introduce yourself. But notice Spanish doesn't say \"my name is\" at all."
             }
           ]
         },
@@ -469,38 +311,49 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "tú / usted — the informal and formal choices."
+              "text": "me, llamo."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart",
+          "title": "The word, taken apart — by assembling it",
           "segments": [
             {
               "kind": "speech",
-              "text": "usted wore down from vuestra merced, \"your grace\" or \"your mercy.\" Vuestra comes from Latin vestra, \"your.\" Merced comes from Latin merces, mercedem, \"wages, reward, favor.\""
-            },
-            {
-              "kind": "speech",
-              "text": "The merc- root links mercy, mercenary, commerce, merchant, and merchandise. A respectful title was repeated so often that two words compressed into one pronoun. Its older abbreviation Vd. still preserves the v of vuestra."
+              "text": "me llamo = me (\"myself\") + llamo (\"I call\") = literally \"I call myself.\" Then the name: Me llamo Susana — \"I call myself Susan.\""
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: reflexive verbs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "When the action loops back onto the person doing it — you call yourself — the verb is reflexive, and Spanish marks it with that little pronoun in front: me (\"myself\"). llamo alone is \"I call [someone else]\"; me llamo is \"I call myself.\" English can do this (\"I call myself Sam\") but usually doesn't bother, flattening it to \"my name is.\" Spanish keeps the reflexive loop visible."
+            },
+            {
+              "kind": "speech",
+              "text": "This matters because the pronoun changes with the person: me llamo (I call myself) becomes te llamas (you-informal call yourself) becomes se llama (he/she/you-formal calls himself). You'll meet te and se in a few lessons; for now, lock in me llamo for yourself."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "A title like \"your grace\" refers to a respected person in the third person. That is why modern usted still takes the he/she verb form even while it means \"you.\" The social history remains visible in the grammar."
+              "text": "Spanish presents your name not as a thing you have (\"my name is\") but as what you do — what you call yourself. It's subtly more active, and it's the completely standard, neutral way to introduce yourself."
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -513,34 +366,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two-word title that became usted",
+              "instruction": "\"me llamo\" + your own name",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two-word title that became *usted*]"
+              "source": "[YOU SAY: \"me llamo\" + your own name]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"usted\" followed by \"mercy\" and \"merchant\" — the merc- family",
+              "instruction": "\"hola, me llamo ___\" — greeting + introduction",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"usted\" followed by \"mercy\" and \"merchant\" — the *merc-* family]"
+              "source": "[YOU SAY: \"hola, me llamo ___\" — greeting + introduction]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "which verb pattern usted takes",
+              "instruction": "what does me llamo literally mean, word for word?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: which verb pattern *usted* takes]"
+              "source": "[YOU SAY: what does *me llamo* literally mean, word for word?]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -552,26 +405,26 @@
             },
             {
               "kind": "speech",
-              "text": "What did vuestra merced mean? (\"Your grace\" or \"your mercy.\") Why does usted take the he/she verb form? (It began as a third-person title.) And the third \"you\" you met last lesson — which is it, and do you say it or just know it? (Vos; you recognise it, and keep saying tú.)"
+              "text": "Literally, what is me llamo? (\"I call myself.\") What makes it reflexive? (The me — the action loops back on you.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C03-repaso-tu-usted",
-      "sequence": 185,
-      "title": "Choosing your \"you\" — putting it together",
+      "id": "ES-C03-repaso-nombre",
+      "sequence": 155,
+      "title": "Saying your name — putting it together",
       "headword": "(practice)",
       "romanization": "(practice)",
-      "gloss": "Choosing your \"you\" — putting the chapter together",
+      "gloss": "Saying your name — putting the chapter together",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3132e140edb8d56a",
+      "sourceHash": "fnv1a64:248a5bbdade892fc",
       "notice": null,
       "blocks": [
         {
@@ -587,7 +440,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three words, one choice, and it is social rather than grammatical. Nothing new in this lesson — only what you already have."
+              "text": "Three lessons became one sentence. Say it to a stranger. Nothing new in this lesson — only what you already have."
             }
           ]
         },
@@ -598,7 +451,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "To a friend: tú. To a stranger, an elder, an official: usted. Heard across the Southern Cone and Central America: vos — understand it, keep saying tú."
+              "text": "— Hola. Me llamo Susana. — Me llamo David."
             }
           ]
         },
@@ -609,7 +462,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You know which word to reach for, and why usted takes the shape it does."
+              "text": "You can now put your own name into Spanish, which is the first thing anyone will ask you for."
             }
           ]
         },

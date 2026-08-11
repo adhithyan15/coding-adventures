@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 14,
-  "title": "When You Don't Understand",
+  "title": "A Coffee, Please",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:d21f653eba15b5e6",
+  "sourceHash": "fnv1a64:095e5d40b15456d2",
   "lessons": [
     {
-      "id": "ES-R01-no-entiendo",
-      "sequence": 506,
-      "title": "no entiendo — the most useful sentence a beginner owns",
-      "headword": "no entiendo",
-      "romanization": "no entiendo",
-      "gloss": "\"I don't understand\" — the most useful sentence a beginner owns",
+      "id": "ES-C06-cafe",
+      "sequence": 490,
+      "title": "café — coffee, and a place to drink it",
+      "headword": "café",
+      "romanization": "café",
+      "gloss": "coffee / a café — one useful noun before the polite request that follows",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca5d584e23891eb2",
+      "sourceHash": "fnv1a64:40a3b88295e15b63",
       "notice": null,
       "blocks": [
         {
@@ -35,26 +35,18 @@
             },
             {
               "kind": "speech",
-              "text": "Everything so far assumed you understood what was said to you. This chapter is for when you did not."
+              "text": "Before you can make a polite request, you need one small thing to request. Café gives you a useful noun and lets the written accent do a job you already understand."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "No entiendo. — \"I don't understand.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Say it whole. You already have no; the rest comes with it for now, and the piece you are not yet meant to take apart will come apart later."
-            },
-            {
-              "kind": "speech",
-              "text": "This is not an admission of failure. It is the sentence that keeps a conversation alive — the alternative is nodding at something you did not catch."
+              "text": "Say ca-FÉ. A vowel-final word would normally stress the second-to-last syllable, so the acute accent records the unexpected final stress."
             }
           ]
         },
@@ -65,15 +57,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The word hiding inside entiendo comes from Latin intendere — literally to stretch toward. To understand something was to lean into it."
+              "text": "Spanish café came through Italian caffè and Turkish kahve from Arabic qahwah. English coffee reached the same travelling word by a different European route. The drink and the word both crossed languages."
             },
             {
               "kind": "speech",
-              "text": "English took the same word and kept it in several places: intend (to stretch your mind toward a thing), intense, and — through the same family — attention, which is what you are stretching when you listen hard."
+              "text": "The route from Arabic qahwah through Turkish kahve and Italian caffè to Spanish café."
             },
             {
               "kind": "speech",
-              "text": "So no entiendo is, underneath, \"I am not managing to stretch that far yet.\" Which is exactly true, and much kinder than \"I failed.\""
+              "text": "Café can name the drink or the place, just as English coffee and café divide those jobs. It is masculine: el café."
             }
           ]
         },
@@ -91,20 +83,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"No entiendo.\" — calmly, not apologetically",
+              "instruction": "“café” — final stress",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"No entiendo.\" — calmly, not apologetically]"
+              "source": "[YOU SAY: “café” — final stress]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "it again, to someone speaking too fast",
+              "instruction": "“el café”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: it again, to someone speaking too fast]"
+              "source": "[YOU SAY: “el café”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the route — “qahwah becomes kahve becomes caffè becomes café”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the route — “qahwah → kahve → caffè → café”]"
             }
           ]
         },
@@ -121,26 +122,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say it once from memory. Which English word shares its root?"
+              "text": "Where does the stress fall? (On the final é.) Why is the accent written? (It overrides the usual vowel-final stress.) What route carried the word into Spanish? (Arabic qahwah becomes Turkish kahve becomes Italian caffè becomes Spanish café.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-R02-mas-despacio",
-      "sequence": 507,
-      "title": "más despacio — the request that makes the last sentence solvable",
-      "headword": "más despacio",
-      "romanization": "más despacio",
-      "gloss": "\"more slowly\" — the request that makes the last sentence solvable",
+      "id": "ES-C06-por-favor",
+      "sequence": 500,
+      "title": "por favor — \"please,\" i.e. \"for a favour\"",
+      "headword": "por favor",
+      "romanization": "por favor",
+      "gloss": "please (literally \"for [a] favour\")",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8efebaa3a6860d7b",
+      "sourceHash": "fnv1a64:031d0e43ac4b59b7",
       "notice": null,
       "blocks": [
         {
@@ -156,42 +157,69 @@
             },
             {
               "kind": "speech",
-              "text": "Everything so far assumed you understood what was said to you. This chapter is for when you did not."
+              "text": "You can already thank (gracias) and reply (de nada). The third courtesy completes the set: por favor, \"please\" — literally \"for [a] favour.\" You're asking someone to do you a kindness."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Más despacio, por favor. — \"More slowly, please.\""
+              "text": "r-tap — one soft tapped r in por and favor."
             },
             {
               "kind": "speech",
-              "text": "No entiendo stops the conversation. This restarts it. Together they are the whole repair kit: say what went wrong, then say what would fix it."
+              "text": "v-b — Spanish v and b sound identical (a soft b): favor ≈ fah-BOR. (So favor and English favour look alike and the v even sounds like the b you'd hear in \"harbour.\")"
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart",
+          "title": "The word, taken apart — the phrase",
           "segments": [
             {
               "kind": "speech",
-              "text": "Despacio comes from de spatio — \"of space.\" Latin spatium is English space, and also spatial."
+              "text": "por = \"for / through / by,\" from Latin prō (\"for, on behalf of\") — the same pro- in English pronoun, propose, protect."
             },
             {
               "kind": "speech",
-              "text": "Doing something de spatio meant doing it with room around it, unhurried. The sense drifted from space into time, which is a journey English made too: we still say we need space when we mean we need time."
+              "text": "favor = \"a favour, goodwill,\" from Latin favēre, \"to be favourable to, to support.\" It's the very word English borrowed: favour, favorite, favorable, favouritism."
+            },
+            {
+              "kind": "speech",
+              "text": "So por favor literally says “for a favour” — [do this] as a kindness to me. English favour, favorite, and favorable keep the same Latin family visible without asking you to learn another language's formula."
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the courtesy set is complete",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You now hold the three pillars of politeness:"
+            },
+            {
+              "kind": "speech",
+              "text": "por favor — please (asking)."
+            },
+            {
+              "kind": "speech",
+              "text": "gracias — thank you (receiving)."
+            },
+            {
+              "kind": "speech",
+              "text": "de nada — you're welcome (replying)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -204,25 +232,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Más despacio.\" — calmly, not apologetically",
+              "instruction": "\"por favor\" — por fah-BOR, soft v/b",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Más despacio.\" — calmly, not apologetically]"
+              "source": "[YOU SAY: \"por favor\" — *por fah-BOR*, soft *v/b*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "it again, to someone speaking too fast",
+              "instruction": "\"Café, por favor\" — \"Coffee, please\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: it again, to someone speaking too fast]"
+              "source": "[YOU SAY: \"Café, por favor\" — \"Coffee, please\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"favor\" then English \"favour, favorite\" — one family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"favor\" then English \"favour, favorite\" — one family]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -234,26 +271,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say it once from memory. Which English word shares its root?"
+              "text": "What does por favor literally mean? (\"For a favour.\") What Latin verb is favor from, and its English cousins? (favēre — favour, favorite, favorable.) Which three-word courtesy loop do you now own? (Por favor becomes gracias becomes de nada.) Next: your first regular verb — hablar, “to speak.”"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-R03-repaso-reparar",
-      "sequence": 508,
-      "title": "When you don't understand — putting it together",
+      "id": "ES-C06-repaso-cafe",
+      "sequence": 505,
+      "title": "Ordering — putting it together",
       "headword": "(practice)",
       "romanization": "(practice)",
-      "gloss": "When you don't understand — putting the repair kit together",
+      "gloss": "Ordering — putting the chapter together",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b31bbb2641c73a67",
+      "sourceHash": "fnv1a64:76520bd8380dab29",
       "notice": null,
       "blocks": [
         {
@@ -269,7 +306,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two sentences. Between them they rescue almost any conversation."
+              "text": "Your first transaction: a thing you want, and the word that makes it a request. Nothing new in this lesson — only what you already have."
             }
           ]
         },
@@ -280,7 +317,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "— (something too fast to follow) — No entiendo. Más despacio, por favor. — (again, slower) — Gracias."
+              "text": "— Un café, por favor. — Gracias."
             }
           ]
         },
@@ -291,7 +328,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Until now, a sentence you missed was the end of the conversation. It is not any more. You can say what went wrong and what would fix it, and then thank someone for doing it — which is the difference between speaking a language badly and not speaking it at all."
+              "text": "You can ask for something and stay polite doing it."
             }
           ]
         },
@@ -309,20 +346,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "both sentences, one after the other, without a pause between them",
+              "instruction": "the whole exchange, both parts, without stopping",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: both sentences, one after the other, without a pause between them]"
+              "source": "[YOU SAY: the whole exchange, both parts, without stopping]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "them again, then \"Gracias.\" — the whole repair, start to finish",
+              "instruction": "it again, faster, and let it sound like speech rather than recital",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: them again, then \"Gracias.\" — the whole repair, start to finish]"
+              "source": "[YOU SAY: it again, faster, and let it sound like speech rather than recital]"
             },
             {
               "kind": "repeat",
@@ -344,7 +381,7 @@
             },
             {
               "kind": "speech",
-              "text": "What do you say when you did not follow? And what do you ask for next? Which English words hide inside entiendo and despacio? (Intend, intense, attention — and space.)"
+              "text": "Run it once more from memory. If a word does not come, go back one lesson rather than pushing on — this chapter is short on purpose."
             }
           ]
         }

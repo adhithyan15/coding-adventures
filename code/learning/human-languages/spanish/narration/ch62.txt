@@ -1,41 +1,95 @@
-Spanish, chapter 62: The Months.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 62: Water, Wine, and Bread.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-los meses — the calendar's gods and Caesars.
+Lesson 1 of 3.
+el agua — water, and an article that is not what it looks like.
 
 Warm-up.
 [pause 2 seconds]
-Spanish's twelve months are a procession of Roman gods and emperors, barely changed from Latin. Two things you already know pay off immediately: marzo is the war-god you met in martes, and septiembre–diciembre are the Latin numbers 7–10 from the counting chapters.
+One of the least changed words in Spanish, carrying one of its most misunderstood rules. The "masculine" article on this feminine noun is not a mistake and not an exception to gender.
 
-The months, taken apart.
-[a table of 12 rows, read aloud]
-Spanish: enero. from Latin: Iānuārius. who / what: Janus, the two-faced god of doors & beginnings.
-Spanish: febrero. from Latin: Februārius. who / what: Februa, the Roman purification festival.
-Spanish: marzo. from Latin: Martius. who / what: Mars, the war-god — the same Mars as martes (Tuesday)!
-Spanish: abril. from Latin: Aprīlis. who / what: perhaps aperīre, "to open" (buds opening).
-Spanish: mayo. from Latin: Māius. who / what: Maia, goddess of growth.
-Spanish: junio. from Latin: Iūnius. who / what: Juno, queen of the gods.
-Spanish: julio. from Latin: Iūlius. who / what: originally Quīntīlis, "the 5th [month]" — renamed for Julius Caesar after his death.
-Spanish: agosto. from Latin: Augustus. who / what: originally Sextīlis, "the 6th [month]" — renamed for the emperor Augustus.
-Spanish: septiembre. from Latin: september. who / what: "7th" (septem).
-Spanish: octubre. from Latin: octōber. who / what: "8th" (octō).
-Spanish: noviembre. from Latin: november. who / what: "9th" (novem).
-Spanish: diciembre. from Latin: december. who / what: "10th" (decem).
-Two payoffs land at once:
-marzo = Mars = martes. The month and the weekday honor the same war-god — Martius (his month) and Martis diēs (his day). Spot one, you know the other.
-The 7–10 months. Septiembre through diciembre still carry septem, octō, novem, decem — because the old Roman year originally began in March, with September genuinely the 7th month. Centuries before Caesar, two new months (Januarius, Februarius) were added at the front to cover the winter, which pushed every later month's number out of step with its name — September became the 9th month while still being named "7th." Julius and Augustus had nothing to do with that shift: they simply got two already-existing months — Quintilis and Sextilis, literally "5th" and "6th" — renamed in their honor after the fact. The names stuck; the months themselves were never new.
+The word, taken apart: agua.
+agua ("water") from Latin aqua — almost unchanged in two thousand years. Compare French, where the very same word was worn all the way down to a bare "eau," just the sound "oh." Same starting point, same span of time, wildly different amounts of erosion: how fast a language wears its words down is not fixed.
+English kept the whole Latin word too, but as a learned borrowing rather than an inherited everyday one: aquatic, aquarium, aqueduct, aqualung.
+
+Grammar Lens: el agua's article and gender.
+Notice: el agua, not la agua — yet agua is genuinely feminine. You can prove it: el agua fría, "the cold water," keeps the feminine adjective ending, and the plural is las aguas, never los aguas.
+The rule is phonological, not grammatical. Spanish swaps la for el directly before a singular feminine noun beginning with a stressed a-sound, to avoid running two identical vowels together (la agua). It is the same instinct that makes English pick "an apple" over "a apple."
+[a table of 3 rows, read aloud]
+the water. singular: el agua. plural: las aguas.
+the eagle. singular: el águila. plural: las águilas.
+the axe. singular: el hacha. plural: las hachas.
+Only the article changes. The noun's gender never moves.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the twelve — "enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre"]
+[your turn — say: "el agua" — water, feminine, but takes el]
 [pause 8 seconds for the answer]
-[your turn — say: the tie-back — "marzo / martes — both Mars, the war-god"]
+[your turn — say: the proof — "el agua fría" and "las aguas"]
 [pause 8 seconds for the answer]
-[your turn — say: "septiembre = 7, diciembre = 10" — the old March-start year]
+[your turn — say: the contrast — "agua" barely changed; French's "eau" wore all the way down]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which god links marzo and martes? (Mars, the war-god — his month and his day.) Why is diciembre Latin for "ten"? (The Roman year began in March, and adding January/February at the front later pushed every month's number out of step with its name.) Did Julius Caesar and Augustus add new months to the calendar? (No — julio and agosto were already-existing months, Quintilis and Sextilis ("5th"/"6th"), simply renamed in their honor.)
+Is agua masculine or feminine? (Feminine — el replaces la only because agua begins with a stressed a.) How would you prove it? (El agua fría; las aguas.) How does Spanish's erosion of aqua compare with French's? (Much less — Spanish kept nearly the whole word; French wore it to "eau.")
+
+
+Lesson 2 of 3.
+el vino — one word, three separate arrivals in English.
+
+Warm-up.
+[pause 2 seconds]
+The second drink is grammatically boring — plain masculine, plain el vino, no stressed-a trick. Its history makes up for that.
+
+The word, taken apart: vino.
+vino ("wine") from Latin vīnum — which held its shape well, as French's vin did too.
+English shares the very same root by more than one road, and the roads are worth separating, because they show three different ways a word can travel:
+[a table of 3 rows, read aloud]
+English word: wine. how it got there: vīnum borrowed directly into old Germanic, very early.
+English word: vine, vinegar. how it got there: borrowed centuries later, secondhand via French (vin + aigre, "sour wine").
+English word: vineyard. how it got there: not borrowed at all — English built it at home from the already-borrowed wine plus native yard.
+So wine and vine are the same Latin word twice, arriving a thousand years apart by different routes, and vineyard is a homemade compound made out of the first arrival. One Latin noun; three English histories.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "el agua, el vino" — the two drinks]
+[pause 8 seconds for the answer]
+[your turn — say: "vino" then English "wine, vine, vinegar" — one root, three roads]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What Latin word gives vino? (Vīnum.) Name three English cousins and say how each arrived. (Wine — direct, early, into Germanic; vine/vinegar — later, via French; vineyard — built at home from wine plus yard.) And why is it el agua but las aguas? (The el is a sound rule for a stressed a, singular only.)
+
+
+Lesson 3 of 3.
+el pan — bread, and the friend who shares it.
+
+Warm-up.
+[pause 2 seconds]
+Spanish's word for bread hides the same lovely word-story you'd find in English's "companion" — except Spanish kept both halves, the bread and the friendship.
+
+The word, taken apart: pan.
+el pan ("bread") from Latin pānis. Masculine: el pan.
+
+Why it's said this way: bread and friendship.
+The Latin root pān- ("bread") gives Spanish its own word for a close friend:
+compañero / compañera ("companion, friend, partner") from com- ("with").
+pānis — literally "one you share bread with." Spanish built this word from the very same recipe as English companion and company (which come from the identical Latin pieces) — but where English only kept the friendship sense, Spanish still visibly uses the same root for the actual bread (pan) too.
+panadería ("bakery") and panadero ("baker") — both transparently built on pan.
+So pan and compañero are the same word-family doing double duty in Spanish: name the food, and name the friend you'd share it with.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "el pan" — bread]
+[pause 8 seconds for the answer]
+[your turn — say: "compañero" — literally, one you share bread with]
+[pause 8 seconds for the answer]
+[your turn — say: "panadería, panadero" — bakery, baker]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give "bread" with its article. (El pan.) What does compañero literally mean, and what's it built from? ("One you share bread with" — com- + pānis.) Does English keep this same double meaning? (No — English's companion only kept the friendship sense; Spanish still uses the same root for the actual bread, pan, too.)

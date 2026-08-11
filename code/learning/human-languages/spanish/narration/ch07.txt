@@ -1,123 +1,167 @@
-Spanish, chapter 7: How Are You.
-4 lessons. All 4 can be done entirely by ear.
+Spanish, chapter 7: Thank You, Yes, and No.
+5 lessons. All 5 can be done entirely by ear.
 
 
-Lesson 1 of 4.
-estar — "to be," the standing kind.
+Lesson 1 of 5.
+sí — yes.
 
 Warm-up.
 [pause 2 seconds]
-To ask how are you? Spanish needs a verb for being. Today just the verb itself and where it came from; how to use it, and its two forms, come next.
+The smallest useful word — and the accent on it is doing real work.
+
+The word, taken apart: sí and si.
+sí = yes. One syllable, said see.
+The written accent is not decoration — it is the whole difference between two words:
+sí (with the accent) = yes.
+si (no accent) = if.
+They sound almost identical, so Spanish uses the mark to tell them apart on the page: Sí, si quieres = "Yes, if you want." Miss the accent and you've written "if" where you meant "yes."
+
+The word, taken apart: where sí comes from.
+sí is Latin sīc, "thus, so" — answering a question with "just so," exactly the move Latin also made with ita ("thus" = yes, from the Latin yes/no lesson). Its Romance cousins kept the same root:
+[a table of 3 rows, read aloud]
+Latin sīc: Spanish. , which gives:: sí.
+Latin sīc: Italian. , which gives:: sì.
+Latin sīc: Portuguese. , which gives:: sim.
+French is the odd one out — it went a completely different way for "yes" (oui), which its own lesson tells. But say sí, sì, sim in a row and you hear one Latin word answering across three countries.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "sí" — see, and picture the accent]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — "sí" (yes) vs "si" (if)]
+[pause 8 seconds for the answer]
+[your turn — say: the cousins — "sí, sì, sim" — all from Latin sīc]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say yes in Spanish? (sí.) What is the only difference between sí "yes" and si "if"? (The written accent.) What Latin word is sí from, and what did it mean? (sīc — "thus, so".)
+
+
+Lesson 2 of 5.
+no — no / not.
+
+Warm-up.
+[pause 2 seconds]
+The easiest word yet — and it quietly does two jobs Spanish never splits apart.
+
+The word, taken apart: no.
+no = no. Said noh, a clean single vowel.
+It is Latin nōn with almost nothing worn off — just the final consonant gone. Compare the family, all from the same nōn:
+[a table of 3 rows, read aloud]
+Latin nōn: Spanish. , which gives:: no.
+Latin nōn: Italian. , which gives:: no.
+Latin nōn: French. , which gives:: non.
+
+Why it's said this way.
+Here's the thing English splits and Spanish doesn't. English has "no" (the answer) and "not" (inside a sentence) — two different words. Spanish uses no for both:
+as the answer. Someone asks you something — anything at all — and this one syllable declines it. You do not need to understand the question to answer it, which is exactly why this word comes early.
+and later, as the word that turns a sentence around — but that needs a sentence first, so it waits until you have one. For now: no is how you decline, refuse, and disagree, which is most of what a beginner needs it for.
+<!-- the negator sense is taught in ES-C06-hablo-espanol, the first lesson where the learner has a verb to put it in front of. Named by lesson id, never by chapter number: an earlier version of this comment gave a number, went stale across three renumbers, was "fixed" with a fresh number, and went stale again two PRs later. Chapter numbers move; lesson ids do not. -->.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "no" — noh]
+[pause 8 seconds for the answer]
+[your turn — say: "No." — flat, once, the way you would decline a second coffee]
+[pause 8 seconds for the answer]
+[your turn — say: "Sí." then "No." — the two shortest complete answers in Spanish]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say no in Spanish? (no.) What Latin word is it from? (nōn.) Spanish no does the work of which two English words? ("no" the answer, and later the word for "not.") Where does no go to negate a sentence? (Right before the verb.)
+
+
+Lesson 3 of 5.
+gracias — "thank you," and a whole family of English words.
+
+Warm-up.
+[pause 2 seconds]
+You can now introduce yourself. The next exchange is how are you? — but every answer ends the same polite way, so we learn the courtesy word first: gracias.
 
 Sounds you'll need.
-st-no-e — Spanish never starts a word with a bare st-; it props it up with an e: es-TAR. (That reflex is why Spanish speakers say e-Spain, e-student — the same e that Latin stāre grew to become estar.)
-r-tap — the final r is one soft tap: es-TAR.
+vowel-a — the clean ah of father, twice.
+r-tap — a single flicked r (not the English one, and not yet the rolled rr): the tongue taps once, like the middle of American butter.
+ci-th-s — the ci is a soft s in Latin America (GRAH-syahs) and a soft th in most of Spain (GRAH-thyahs). Either is correct — pick one.
 
 The word, taken apart.
-estar comes straight from Latin stāre, "to stand." Hold onto that picture: it is the whole reason this verb behaves the way it does. How you are standing at this moment — well, tired, here, there — is a snapshot, not a permanent fact.
-That root stā-/sta- is one of the most productive in English. Estar hands you a large family for free:
-stay, stand, stance, station, stable, stationary — to stand or stay put.
-state, status, statue, estate — a way of standing (your state is how you stand).
-constant, circumstance, substance — "standing with / around / under."
-So ¿cómo estás? is, at the root, "how are you standing?"
+gracias is the plural of gracia ("grace, favour"), from Latin grātia — favour freely given. Saying gracias literally offers someone "graces," i.e. good will in return for theirs.
+That one Latin root grātia fans out across English — once you see it, you get a fistful of words for free:
+grace, gracious, graceful — the direct borrowings.
+grateful, gratitude — being full of grātia.
+gratis, gratuity — something given as a favour (for free, or a tip).
+congratulate — literally "to wish grace together with someone."
+Italian grazie, French grâces, Portuguese graças — the whole Romance family kept grātia, even where everyday thanks went elsewhere (French says merci, Portuguese obrigado).
+So gracias is not a word to memorize cold: it is grace, made plural and handed to another person.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "estar" — es-TAR, with the little propping e]
+[your turn — say: "gracias" — GRAH-syahs, one soft tap on the r]
 [pause 8 seconds for the answer]
-[your turn — say: "estar" then English "stay, state, status, stable" — all standing]
+[your turn — say: "gracias" then English "grace, grateful, gratitude" — one family]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which Latin verb is estar — "to be" or "to stand"? (To stand — stāre.) Why does Spanish put an e on the front? (It never begins a word with bare st-.) Name two English cousins. (Stay, state, status, stable, estate…) Next: the two forms you will actually ask with.
+What everyday English word is gracias the plural of, at the root? (Grace.) So when you thank someone in Spanish, you are literally handing them — what? (Graces / favours.) Next: the little reply that closes the exchange, de nada.
 
 
-Lesson 2 of 4.
-estás / está — the two forms, and what they are for.
+Lesson 4 of 5.
+de nada — "you're welcome," or "it was nothing".
 
 Warm-up.
 [pause 2 seconds]
-Estar is "to stand." Now put it to work. Two forms, one job: saying how somebody is right now.
+Someone says gracias. You need the reply that closes the loop: de nada — literally "of nothing." You're waving the favour off as no trouble at all — the same move English makes with "it's nothing" / "no problem."
 
-You'll want to know first.
-estar — the verb and its Latin "to stand" root.
-tú or usted — why usted takes he/she forms.
+Sounds you'll need.
+d-soft — the d in nada is soft, almost the th of this (NAH-thah), not a hard English d. Spanish d between vowels always softens.
+vowel-a — three clean ah sounds: deh NAH-thah.
 
-Grammar Lens: state and location use estar.
-Use estar for a current state or a location — the two things that can change without changing what something is:
-a state: estoy bien — "I'm well" (today; maybe not tomorrow).
-a location: está aquí — "it's here" (for now).
-"How are you?" asks about a current state, so it takes estar. Spanish has a second be-verb for identity, and it arrives in its own later lesson; keeping it out of today's drill lets one contrast settle at a time.
+The word, taken apart — the phrase.
+de = "of / from" (Latin dē) — the same de hiding in English depart, deduct, descend.
+nada = "nothing." And this is the beautiful part.
+nada comes from Latin (rēs) nāta — "(a thing) born." From nāscī, "to be born," the same root as English native, nature, natal, re-nais-sance (re-birth). Latin speakers said nōn est rēs nāta, "there is not a born thing" — not a single thing that ever came into being — and over centuries the emphatic nāta ("born thing") wore down until the word for 'born thing' became the word for 'nothing' itself.
+So the reply de nada literally says "of [a] born-thing" becomes "of nothing at all." French did the identical trick with rien ("nothing") — which is Latin rem, "a thing." Two languages, same move: the word for thing collapses into the word for nothing.
 
-Grammar Lens: the two forms you need.
-[a table of 2 rows, read aloud]
-you're addressing: tú (informal). form: estás. reads as: "you are".
-you're addressing: usted (formal). form: está. reads as: "you are".
-Notice that está is also "he is / she is." That is not a coincidence and not something extra to learn — it is the usted-takes-he/she-forms rule you already met, showing up for the first time in a real verb.
+Grammar Lens: the courtesy pair.
+gracias becomes de nada is a fixed adjacency pair: one turn expects the other. Learn them as a unit, the way English glues thank you becomes you're welcome.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "estás" … "está" — the two forms you'll ask with]
+[your turn — say: "gracias" … "de nada" — the full exchange, both voices]
 [pause 8 seconds for the answer]
-[your turn — say: which one goes with tú, which with usted]
-[pause 8 seconds for the answer]
-[your turn — say: a state, then a location — "estás bien", "está aquí"]
+[your turn — say: "de nada" then English "native, nature, natal" — nada's true family]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What two kinds of thing does estar cover? (Current state and location.) Which form goes with tú, and which with usted? (Estás; está.) Why is está also "he/she is"? (Because usted takes the he/she verb forms.) Next lesson, you finally ask it: ¿cómo está usted?
+nada ("nothing") started life as the Latin word for a born — what? (A thing — rēs nāta, a born thing.) What English words share that "born" root? (Native, nature, natal, renaissance.) Next: the verb the whole "how are you?" question turns on — estar.
 
 
-Lesson 3 of 4.
-¿cómo está usted? — "how are you?"
-
-Warm-up.
-[pause 2 seconds]
-Everything you've built this chapter now snaps together into one question. You already met cómo ("how") and the tú / usted choice back in when you first met them; you just learned estar. Assemble them.
-
-The word, taken apart — assembling the phrase.
-¿Cómo está usted? = "How are you?" (formal) literally: "In what manner are you standing?"
-cómo = "how / in what manner".
-está = "you are" (the usted/he-she form of estar — state, not identity).
-usted = the formal "you".
-Note the ¿ — Spanish opens a question with an upside-down mark so you know the melody is coming before you start reading aloud. (We take that mark apart in a dedicated writing lesson.)
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "¿Cómo está usted?" — formal, for a stranger]
-[pause 8 seconds for the answer]
-[your turn — say: the pieces — "cómo + está + usted"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Which be-verb does "how are you?" use — ser or estar, and why? (estar — it's about your current state.) What changes between formal and informal? (The next step changes the ending and pronoun.) Next: choosing the register.
-
-
-Lesson 4 of 4.
-How are you — putting the question together.
+Lesson 5 of 5.
+Thank you, yes, and no — putting it together.
 
 Warm-up.
 [pause 2 seconds]
-You have a second "to be" and the question it carries. Nothing new here — only what you already have.
+Two words that travel everywhere together. Nothing new in this lesson — only what you already have.
 
 The exchange.
-— Buenos días. ¿Cómo está usted?
-The answer is the next chapter. Asking is this one.
+— Gracias. — De nada.
+And the two words that let you answer anything at all:
+— ¿…? — Sí. / — No.
 
 What you've built.
-You can ask a stranger how they are, which is the question that opens almost every conversation you will ever have in Spanish.
+You can thank someone, answer when you are thanked, and — for the first time — accept or decline. Until you have sí and no, every question anyone asks you is unanswerable.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "¿Cómo está usted?" — to someone you have just met]
+[your turn — say: the whole exchange, both parts, without stopping]
 [pause 8 seconds for the answer]
-[your turn — say: the greeting and the question together, as one breath]
+[your turn — say: it again, faster, and let it sound like speech rather than recital]
 [pause 8 seconds for the answer]
 [repeat that twice]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which "to be" carries how someone is, and why? (Estar — a state, not an identity.) Ask the question once more from memory.
+Run it once more from memory. If a word does not come, go back one lesson rather than pushing on — this chapter is short on purpose.

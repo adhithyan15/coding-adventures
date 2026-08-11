@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C06-habla
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 521
-chapter: 17
+chapter: 18
 type: grammar
 headword: habla
 gloss: "he speaks," "she speaks" — and the form usted takes, which is why it matters twice

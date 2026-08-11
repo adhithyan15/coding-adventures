@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(91); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(92); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -170,6 +170,15 @@ describe("real curriculum", () => {
       "ES-C01-genero-gramatical-class-count",
       "ES-C02-concordancia-why-buenas",
       "ES-C02-concordancia-why-buenos",
+      "ES-C02-repaso-articulos-an-afternoon",
+      "ES-C02-repaso-articulos-the-day",
+      "ES-C02-repaso-articulos-where",
+      "ES-C02-un-contrast",
+      "ES-C02-un-form",
+      "ES-C02-un-number",
+      "ES-C02-una-tarde",
+      "ES-C02-una-which",
+      "ES-C02-una-worn",
       "ES-C06-ar-presente-mix-1",
       "ES-C06-ar-presente-mix-2",
       "ES-C06-ar-presente-mix-3",
@@ -554,10 +563,13 @@ describe("real curriculum", () => {
       (lesson) =>
         lesson.language === "spanish" &&
         lesson.realization.chapter >= 1 &&
-        lesson.realization.chapter <= 3,
+        lesson.realization.chapter <= 4,
     );
     // 24 before HL-C18; the tú/usted and cómo splits each added one micro-lesson.
-    expect(pilot).toHaveLength(17) // HL-C94: chapters 1-3 are now short on purpose;
+    // Range widened 1-3 -> 1-4 when HL-C100 inserted `un`/`una` as a new chapter 3:
+    // narrowing the count instead would have quietly dropped the original chapter 3
+    // (`me llamo`) out of the pilot's coverage, which is the thing this guards.
+    expect(pilot).toHaveLength(20) // HL-C94: these chapters are short on purpose;
     expect(pilot.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
     expect(
       report.duration.violations.filter(

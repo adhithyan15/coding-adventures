@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C03-familia-qu
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 210
-chapter: 5
+chapter: 6
 type: etymology
 headword: qu-
 gloss: the Latin question family inside Spanish

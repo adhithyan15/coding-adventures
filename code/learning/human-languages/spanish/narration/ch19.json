@@ -2,25 +2,34 @@
   "version": 1,
   "language": "spanish",
   "chapter": 19,
-  "title": "Trabajar --- Work, and the Torture Device Behind It",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c25f079e9545be92",
+  "title": "Review --- The Three Forms Side by Side",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:175ea881f20b8efa",
   "lessons": [
     {
-      "id": "ES-C06-trabajar",
-      "sequence": 526,
-      "title": "trabajar — \"to work,\" and it once meant torture",
-      "headword": "trabajar",
-      "romanization": "trabajar",
-      "gloss": "to work (a second -ar verb — same pattern)",
+      "id": "ES-C06-ar-presente",
+      "sequence": 524,
+      "title": "Review — the three forms, side by side",
+      "headword": "hablo · hablas · habla",
+      "romanization": "hablo · hablas · habla",
+      "gloss": "review — the three forms you already own, put side by side for the first time",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "wide-table"
       ],
-      "sourceHash": "fnv1a64:a57a2a8c311d131a",
-      "notice": null,
+      "sourceHash": "fnv1a64:492908c359178db6",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes for one table that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "Grammar Lens: the table you have earned"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: the table you have earned until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,84 +44,67 @@
             },
             {
               "kind": "speech",
-              "text": "A second -ar verb — snap it into the exact template you just learned. And trabajar has the darkest, best etymology in this chapter: it began as a word for torture, and it's the secret origin of English travel."
+              "text": "Nothing new in this chapter. Not one word. Say the three forms you already have, in any order they come."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "grammar",
+          "title": "Grammar Lens: the table you have earned",
           "segments": [
             {
               "kind": "speech",
-              "text": "j-jota — the j is a raspy h-from-the-throat (the jota): trabajar = tra-ba-HAR."
+              "text": "Three chapters, one form each. Now — and only now — they are worth seeing together:"
+            },
+            {
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 3,
+              "headers": [
+                "who",
+                "ending",
+                "hablar, which gives:",
+                "meaning"
+              ],
+              "text": "There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: who, ending, hablar, which gives:, meaning. Come back and look at it when you have stopped."
             },
             {
               "kind": "speech",
-              "text": "r-tap, b-soft — tapped r, soft b."
+              "text": "A table like this one at the start would have been three things at once and you would have memorised it. Arriving here, it is a picture of something you can already do."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the whole engine. Every regular -ar verb in Spanish — and there are thousands — runs on these three endings. You have not learned one verb. You have learned the pattern that fits all of them."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "trabajar comes from Vulgar Latin tripaliāre, \"to torture\" — from tripalium, a Roman instrument of torture made of three stakes (tri- \"three\" + pālus \"stake,\" the root of English pale and impale)."
+              "text": "Say what you do — hablo."
             },
             {
               "kind": "speech",
-              "text": "The chain of meaning is grimly logical: torture becomes torment / suffering becomes hard toil becomes just work. And English took the very same word down a parallel road:"
+              "text": "Ask or state what a friend does — hablas."
             },
             {
               "kind": "speech",
-              "text": "travail — painful, laborious effort (and the pains of childbirth)."
+              "text": "Say what someone else does, or address someone politely — habla."
             },
             {
               "kind": "speech",
-              "text": "travel — yes: journeying was once such an ordeal that \"travail\" (toil) became travel (to make a journey). Every time you travel, you're etymologically being tortured."
-            },
-            {
-              "kind": "speech",
-              "text": "So even plain trabajo, “I work,” hides the old idea of toil as torment — a dark little joke inside an everyday verb."
+              "text": "Do all three without a pronoun, because the ending carries it."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: same -ar template",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Drop -ar, add the ending — identical to hablar:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form",
-                "meaning"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "person: I (ending carries the subject). form: trabajo. meaning: I work.",
-                "person: tú. form: trabajas. meaning: you work.",
-                "person: usted. form: trabaja. meaning: you (formal) work."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Notice you didn't learn a new ending — that's the point. One template, every regular -ar verb."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -125,34 +117,88 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"trabajar\" — tra-ba-HAR, raspy j",
+              "instruction": "all three in order — \"hablo, hablas, habla\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"trabajar\" — *tra-ba-HAR*, raspy *j*]"
+              "source": "[YOU SAY: all three in order — \"hablo, hablas, habla\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"trabajo, trabajas, trabaja\" — same endings as hablo/hablas/habla",
+              "instruction": "them out of order, as prompted: she, I, a friend, politely",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"trabajo, trabajas, trabaja\" — same endings as *hablo/hablas/habla*]"
+              "source": "[YOU SAY: them out of order, as prompted: *she* · *I* · *a friend* · *politely*]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"trabajar\" becomes travail becomes travel — torture became a journey",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"trabajar\" → travail → travel — torture became a journey]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until the ending arrives before you have to think about it."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C06-ar-presente-mix-1",
+              "prompt": "I speak.",
+              "assesses": [
+                "ES-GRAMMAR-AR-PRESENT-1SG"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "hablo",
+                "yo hablo"
+              ],
+              "feedback": {
+                "correct": "Yes.",
+                "incorrect": "hablo — the -o is I."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C06-ar-presente-mix-2",
+              "prompt": "She speaks.",
+              "assesses": [
+                "ES-GRAMMAR-AR-PRESENT-3SG"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "habla",
+                "ella habla"
+              ],
+              "feedback": {
+                "correct": "Yes.",
+                "incorrect": "habla — the -a covers he, she, and polite you."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C06-ar-presente-mix-3",
+              "prompt": "You speak, to a friend.",
+              "assesses": [
+                "ES-GRAMMAR-AR-PRESENT-2SG"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "hablas",
+                "tu hablas"
+              ],
+              "feedback": {
+                "correct": "Yes.",
+                "incorrect": "hablas — the -as is tu."
+              }
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -164,7 +210,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did trabajar originally mean, and from what device? (\"To torture,\" from tripalium, a three-stake tool.) What two English words come from the same root? (Travail and travel.) How do you say \"I work\"? (Trabajo — same -o ending.) Next: estudiar, \"to study.\""
+              "text": "Three endings — name them. (-o, -as, -a.) How many regular -ar verbs does this pattern fit? (All of them.) Next chapter you will not learn anything either — you will use this to say something you actually mean."
             }
           ]
         }

@@ -1,167 +1,281 @@
-Spanish, chapter 6: Thank You, Yes, and No.
-5 lessons. All 5 can be done entirely by ear.
+Spanish, chapter 6: Asking Someone's Name.
+8 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 5.
-sí — yes.
-
-Warm-up.
-[pause 2 seconds]
-The smallest useful word — and the accent on it is doing real work.
-
-The word, taken apart: sí and si.
-sí = yes. One syllable, said see.
-The written accent is not decoration — it is the whole difference between two words:
-sí (with the accent) = yes.
-si (no accent) = if.
-They sound almost identical, so Spanish uses the mark to tell them apart on the page: Sí, si quieres = "Yes, if you want." Miss the accent and you've written "if" where you meant "yes."
-
-The word, taken apart: where sí comes from.
-sí is Latin sīc, "thus, so" — answering a question with "just so," exactly the move Latin also made with ita ("thus" = yes, from the Latin yes/no lesson). Its Romance cousins kept the same root:
-[a table of 3 rows, read aloud]
-Latin sīc: Spanish. , which gives:: sí.
-Latin sīc: Italian. , which gives:: sì.
-Latin sīc: Portuguese. , which gives:: sim.
-French is the odd one out — it went a completely different way for "yes" (oui), which its own lesson tells. But say sí, sì, sim in a row and you hear one Latin word answering across three countries.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "sí" — see, and picture the accent]
-[pause 8 seconds for the answer]
-[your turn — say: the pair — "sí" (yes) vs "si" (if)]
-[pause 8 seconds for the answer]
-[your turn — say: the cousins — "sí, sì, sim" — all from Latin sīc]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-How do you say yes in Spanish? (sí.) What is the only difference between sí "yes" and si "if"? (The written accent.) What Latin word is sí from, and what did it mean? (sīc — "thus, so".)
-
-
-Lesson 2 of 5.
-no — no / not.
+Lesson 1 of 8.
+cómo — "how," your first question word.
 
 Warm-up.
 [pause 2 seconds]
-The easiest word yet — and it quietly does two jobs Spanish never splits apart.
-
-The word, taken apart: no.
-no = no. Said noh, a clean single vowel.
-It is Latin nōn with almost nothing worn off — just the final consonant gone. Compare the family, all from the same nōn:
-[a table of 3 rows, read aloud]
-Latin nōn: Spanish. , which gives:: no.
-Latin nōn: Italian. , which gives:: no.
-Latin nōn: French. , which gives:: non.
-
-Why it's said this way.
-Here's the thing English splits and Spanish doesn't. English has "no" (the answer) and "not" (inside a sentence) — two different words. Spanish uses no for both:
-as the answer. Someone asks you something — anything at all — and this one syllable declines it. You do not need to understand the question to answer it, which is exactly why this word comes early.
-and later, as the word that turns a sentence around — but that needs a sentence first, so it waits until you have one. For now: no is how you decline, refuse, and disagree, which is most of what a beginner needs it for.
-<!-- the negator sense is taught in ES-C06-hablo-espanol, the first lesson where the learner has a verb to put it in front of. Named by lesson id, never by chapter number: an earlier version of this comment gave a number, went stale across three renumbers, was "fixed" with a fresh number, and went stale again two PRs later. Chapter numbers move; lesson ids do not. -->.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "no" — noh]
-[pause 8 seconds for the answer]
-[your turn — say: "No." — flat, once, the way you would decline a second coffee]
-[pause 8 seconds for the answer]
-[your turn — say: "Sí." then "No." — the two shortest complete answers in Spanish]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-How do you say no in Spanish? (no.) What Latin word is it from? (nōn.) Spanish no does the work of which two English words? ("no" the answer, and later the word for "not.") Where does no go to negate a sentence? (Right before the verb.)
-
-
-Lesson 3 of 5.
-gracias — "thank you," and a whole family of English words.
-
-Warm-up.
-[pause 2 seconds]
-You can now introduce yourself. The next exchange is how are you? — but every answer ends the same polite way, so we learn the courtesy word first: gracias.
-
-Sounds you'll need.
-vowel-a — the clean ah of father, twice.
-r-tap — a single flicked r (not the English one, and not yet the rolled rr): the tongue taps once, like the middle of American butter.
-ci-th-s — the ci is a soft s in Latin America (GRAH-syahs) and a soft th in most of Spain (GRAH-thyahs). Either is correct — pick one.
+To ask someone's name or how they are, you need this word first. Cómo — "how" — and hiding inside it is a little Latin word for "manner" that you already own a dozen English versions of.
 
 The word, taken apart.
-gracias is the plural of gracia ("grace, favour"), from Latin grātia — favour freely given. Saying gracias literally offers someone "graces," i.e. good will in return for theirs.
-That one Latin root grātia fans out across English — once you see it, you get a fistful of words for free:
-grace, gracious, graceful — the direct borrowings.
-grateful, gratitude — being full of grātia.
-gratis, gratuity — something given as a favour (for free, or a tip).
-congratulate — literally "to wish grace together with someone."
-Italian grazie, French grâces, Portuguese graças — the whole Romance family kept grātia, even where everyday thanks went elsewhere (French says merci, Portuguese obrigado).
-So gracias is not a word to memorize cold: it is grace, made plural and handed to another person.
+cómo — "how." Root: Latin quo modo — not a word but a two-word phrase, "in what manner."
+The two halves, and their English cousins:
+modo ("manner, measure") becomes English mode, modal, model, moderate, modify, commodity.
+quo ("in what") is the Latin question-stem qu-, the seed of nearly every Spanish question word.
+How the phrase became one word — the wearing-down. Spanish did not borrow cómo ready-made; it eroded out of quo modo over centuries of everyday speech. The final -do fell off and the middle collapsed:
+quomodo becomes quomo becomes como.
+The qu- (a kw sound) flattened to a plain k, written c before o. What is left is a whole Latin phrase worn smooth — the way a pebble loses its edges in a river. The same erosion gave Italian come, Portuguese como, French comme.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "gracias" — GRAH-syahs, one soft tap on the r]
+[your turn — say: "cómo" — CÓ-mo, stress on the first syllable]
 [pause 8 seconds for the answer]
-[your turn — say: "gracias" then English "grace, grateful, gratitude" — one family]
+[your turn — say: "cómo" then English "mode", "model" — the modo root]
+[pause 8 seconds for the answer]
+[your turn — say: the erosion — "quo modo, quomo, como"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What everyday English word is gracias the plural of, at the root? (Grace.) So when you thank someone in Spanish, you are literally handing them — what? (Graces / favours.) Next: the little reply that closes the exchange, de nada.
+What does cómo mean? ("How.") Walk the erosion: quo modo becomes? becomes cómo. (Quomo becomes como.) What did the two Latin halves mean? (Quo, "in what"; modo, "manner" — the root of English mode and model.) Next: the two marks Spanish puts on a question.
 
 
-Lesson 4 of 5.
-de nada — "you're welcome," or "it was nothing".
+Lesson 2 of 8.
+¿cómo? — the two marks that say "this is a question".
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the upside-down opener until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Someone says gracias. You need the reply that closes the loop: de nada — literally "of nothing." You're waving the favour off as no trouble at all — the same move English makes with "it's nothing" / "no problem."
+You have the word cómo. Written down, it wears two marks that English has no equivalent for — and neither of them is decoration. Both do a job English leaves to word order and guesswork.
+
+You'll want to know first.
+cómo — the word itself, and where it came from.
+
+Script — the upside-down opener.
+Spanish questions open with an upside-down ¿ and close with a normal?: ¿cómo?
+Why? Spanish word order often does not change in a question — cómo estás looks the same whether you are asking or reporting. A reader coming to a long sentence would not know to raise their pitch until they hit the mark at the very end, by which time it is too late. The ¿ is a piece of engineering: it tells your voice, in advance, what shape the sentence has. Only the question part gets bracketed, not necessarily the whole line.
+
+Grammar Lens: the accent that marks a question.
+Now watch the accent mark do real work:
+[a table of 2 rows, read aloud]
+cómo means "how?" — the question word.
+como means "like / as" — or "I eat".
+Same letters, same sound. The written accent is the only thing marking the difference:
+¿Cómo estás? — "How are you?"
+Como tú. — "Like you." / Yo como. — "I eat."
+Every question word you will meet — qué, dónde, cuándo, quién — carries this accent for exactly this reason. It is not about stress (the stress is the same either way); it is a flag that says "asking."
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "¿cómo?" — with question intonation, opening high]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — "cómo" (how?) then "como" (like / I eat)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Why does Spanish open a question with ¿? (Word order often does not change, so the reader needs the warning before the sentence, not after.) What changes when the accent disappears from cómo? (It stops being the question word — como means "like / as," or "I eat.")
+
+
+Lesson 3 of 8.
+The qu- question family — one ancient pattern, many clues.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+You traced cómo back to Latin quomodo. Focus now on its first piece, qu-, without trying to use a whole set of new question words yet.
+
+You'll want to know first.
+cómo — "how," from Latin quomodo.
+
+The word, taken apart.
+Latin used a recurring qu- stem in questions. Spanish preserves that family, although centuries of sound change gave the modern forms different shapes:
+[a table of 6 rows, read aloud]
+Spanish clue: qué. from Latin: quid. future meaning: what.
+Spanish clue: quién. from Latin: quem. future meaning: who.
+Spanish clue: cuál. from Latin: qualis. future meaning: which.
+Spanish clue: cuándo. from Latin: quando. future meaning: when.
+Spanish clue: cuánto. from Latin: quantus. future meaning: how much.
+Spanish clue: cómo. from Latin: quomodo. future meaning: how.
+These are previews, not vocabulary to produce today. For now, use the family only as an etymological clue: a question form beginning qu- or cu- may continue the same Latin pattern. Dónde, "where," is an exception from Latin de unde, "from where."
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the Latin source of cómo]
+[pause 8 seconds for the answer]
+[your turn — say: the recurring Latin question stem]
+[pause 8 seconds for the answer]
+[your turn — say: whether the table is today's production list or a preview]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which old stem connects qué, quién, cuándo, and cómo? (qu-.) Which word in the preview is the exception? (Dónde.)
+
+
+Lesson 4 of 8.
+se llama — the reflexive that fits usted.
+
+Warm-up.
+[pause 2 seconds]
+You can say me llamo ("I call myself"). To ask someone else their name — especially formally, with usted — you need the version that loops back on them: se llama.
+
+You'll want to know first.
+me llamo — the reflexive "I call myself."
+tú / usted — and the key fact that usted takes he/she verb forms.
+
+The word, taken apart.
+se llama = se ("himself / herself / yourself-formal") + llama ("calls"). So se llama = "he/she calls himself," or — because usted uses third-person forms — "you (formal) call yourself."
+se — the reflexive pronoun for the third person (and for usted). Root: Latin sē ("himself, herself, itself"). That same se- — carrying the sense of "self / apart / aside" — is bolted onto a shelf of English words:
+secede — se + cedere ("go apart").
+seclude, segregate ("apart from the flock"), separate.
+seduce — se + ducere ("lead aside").
+secure — se + cura ("free from care"), secret ("set apart").
+Every one is something turned in on itself or set apart — the same idea as a reflexive looping the action back on the doer.
+
+Grammar Lens: the reflexive pronoun changes with the person.
+The verb llamar stays, but the little reflexive word in front shifts to match who is doing the calling:
+me llamo — I call myself.
+te llamas — you (informal, tú) call yourself.
+se llama — he / she / you (formal, usted) calls himself/yourself.
+Three persons, three pronouns: me / te / se. That se is exactly why the formal "what's your name?" is ¿cómo se llama usted? — usted, born from "your grace," politely takes the he/she shape.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "se llama" — seh YA-ma]
+[pause 8 seconds for the answer]
+[your turn — say: the set — "me llamo, te llamas, se llama"]
+[pause 8 seconds for the answer]
+[your turn — say: "se" then "secede", "seclude", "separate" — the set-apart root]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which reflexive goes with usted — te or se? (se — because usted takes third-person forms.) What's the "self/apart" root inside secede and separate? (Latin se-.)
+
+
+Lesson 5 of 8.
+¿cómo se llama usted? — assembling the question, and answering it.
+
+Warm-up.
+[pause 2 seconds]
+Everything you built this chapter clicks into one sentence: how to ask a stranger their name, and how to answer back. This is your first real two-way exchange.
+
+You'll want to know first.
+cómo, se llama, usted.
+
+The word, taken apart — by assembling it.
+¿Cómo se llama usted? = cómo ("how") + se llama ("do you-formal call yourself") + usted ("you," formal).
+Literally: "How do you call yourself?" Spanish asks how, not what, for a name — you're asking by what name a person goes, the manner they're called.
+The informal version, for a friend, swaps the reflexive and drops the formal pronoun: ¿Cómo te llamas? (te llamas, from tú). Same question, two registers — exactly the tú/usted choice from earlier, now live in a real sentence:
+To a stranger, an elder, a customer becomes ¿Cómo se llama usted?
+To a friend, a child, a peer becomes ¿Cómo te llamas?
+
+How to answer.
+You already have the answer from the me llamo lesson: Me llamo ___.
+— ¿Cómo se llama usted? — Me llamo David.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: ask a stranger their name — ¿cómo se llama usted?]
+[pause 8 seconds for the answer]
+[your turn — say: ask a friend the same — ¿cómo te llamas?]
+[pause 8 seconds for the answer]
+[your turn — say: the whole mini-exchange — ask, then answer with me llamo ___]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Formal vs. informal "what's your name"? (¿Cómo se llama usted? / ¿Cómo te llamas?) Does Spanish literally ask "what" or "how" is your name? ("How" — cómo.)
+
+
+Lesson 6 of 8.
+mucho — "much," and a sound-change you've already seen.
+
+Warm-up.
+[pause 2 seconds]
+One more word before "pleased to meet you." mucho — "much, a lot" — and it hides the same Latin-to-Spanish sound trick you spotted in noche.
 
 Sounds you'll need.
-d-soft — the d in nada is soft, almost the th of this (NAH-thah), not a hard English d. Spanish d between vowels always softens.
-vowel-a — three clean ah sounds: deh NAH-thah.
+soft-c — the ch is the ch of church: MOO-cho.
 
-The word, taken apart — the phrase.
-de = "of / from" (Latin dē) — the same de hiding in English depart, deduct, descend.
-nada = "nothing." And this is the beautiful part.
-nada comes from Latin (rēs) nāta — "(a thing) born." From nāscī, "to be born," the same root as English native, nature, natal, re-nais-sance (re-birth). Latin speakers said nōn est rēs nāta, "there is not a born thing" — not a single thing that ever came into being — and over centuries the emphatic nāta ("born thing") wore down until the word for 'born thing' became the word for 'nothing' itself.
-So the reply de nada literally says "of [a] born-thing" becomes "of nothing at all." French did the identical trick with rien ("nothing") — which is Latin rem, "a thing." Two languages, same move: the word for thing collapses into the word for nothing.
-
-Grammar Lens: the courtesy pair.
-gracias becomes de nada is a fixed adjacency pair: one turn expects the other. Learn them as a unit, the way English glues thank you becomes you're welcome.
+The word, taken apart.
+mucho — "much, a lot." Root: Latin multus ("much, many"). The English cousins keep the original -lt-:
+multiple, multitude, multiply, multi-purpose, multimedia.
+The sound-change, again: Latin multum becomes Spanish mucho. The Latin -lt- softened into Spanish -ch- — the very same move as noctem becomes noche (-ct- becomes -ch-, as in the noche lesson). Spanish has a habit of melting these consonant clusters into ch. So a Spanish -ch- word very often points back to a Latin -ct- or -lt- root — and the English cousin usually preserves it (nocturnal, multiple).
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "gracias" … "de nada" — the full exchange, both voices]
+[your turn — say: "mucho" — MOO-cho]
 [pause 8 seconds for the answer]
-[your turn — say: "de nada" then English "native, nature, natal" — nada's true family]
+[your turn — say: "mucho" then "multiple", "multitude" — the mult- family]
+[pause 8 seconds for the answer]
+[your turn — say: "noche" and "mucho" — two words, same -ch- from a melted Latin cluster]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-nada ("nothing") started life as the Latin word for a born — what? (A thing — rēs nāta, a born thing.) What English words share that "born" root? (Native, nature, natal, renaissance.) Next: the verb the whole "how are you?" question turns on — estar.
+mucho comes from Latin multus — what English words keep the -lt-? (multiple, multitude, multiply.) What Latin cluster melted into the -ch-? (-lt-, like -ct- did in noche.)
 
 
-Lesson 5 of 5.
-Thank you, yes, and no — putting it together.
+Lesson 7 of 8.
+gusto becomes mucho gusto — "much pleasure".
 
 Warm-up.
 [pause 2 seconds]
-Two words that travel everywhere together. Nothing new in this lesson — only what you already have.
+The line you say when you shake someone's hand. First the noun gusto, then snap mucho onto it, and you've got it.
 
-The exchange.
-— Gracias. — De nada.
-And the two words that let you answer anything at all:
-— ¿…? — Sí. / — No.
+You'll want to know first.
+mucho — "much," about to modify gusto.
 
-What you've built.
-You can thank someone, answer when you are thanked, and — for the first time — accept or decline. Until you have sí and no, every question anyone asks you is unanswerable.
+The word, taken apart.
+el gusto (masculine) — "taste; pleasure, liking." Root: Latin gustus ("a tasting, a taste"). The English cousins:
+gustatory — to do with the sense of taste.
+disgust — dis- ("not, opposite") + gust: literally "distaste."
+gusto — borrowed whole into English, meaning zest, relish, enjoyment.
+False friend to flag: a gust of wind is not related — that one's from Old Norse gustr. Same spelling, different root. Resemblance isn't proof.
+mucho gusto = mucho ("much") + gusto ("pleasure") = literally "much pleasure" — short for "it's a great pleasure [to meet you]." gusto is masculine (el gusto), and mucho is in its plain masculine form to match it: another quiet piece of the agreement you've been building.
+
+Why it's said this way.
+Spanish greets a new acquaintance by naming the pleasure of it — "much pleasure" — where English names the person ("pleased to meet you"). The phrase works by itself, so this first exchange needs no extra reply formula.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the whole exchange, both parts, without stopping]
+[your turn — say: "gusto" then "gusto" (English), "disgust", "gustatory"]
 [pause 8 seconds for the answer]
-[your turn — say: it again, faster, and let it sound like speech rather than recital]
+[your turn — say: "mucho gusto" — on meeting someone]
 [pause 8 seconds for the answer]
-[repeat that twice]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Run it once more from memory. If a word does not come, go back one lesson rather than pushing on — this chapter is short on purpose.
+What does mucho gusto literally mean? ("Much pleasure.") Is el gusto masculine or feminine? (Masculine.) And the English cousin of gusto built from dis-? (Disgust — "distaste.")
+
+
+Lesson 8 of 8.
+Practice — introducing yourself.
+
+Warm-up.
+[pause 2 seconds]
+Ten lessons of atoms now assemble into a real conversation. No new words — just the exchange, run both formally and informally until the tú / usted choice is automatic.
+
+The exchange.
+Formal (a stranger, an elder, a customer):
+— Buenos días. Me llamo Susana. ¿Cómo se llama usted? — Me llamo David. Mucho gusto.
+Informal (a friend, a peer): only two words change, and they're the ones that carry the whole social difference:
+— ¡Hola! Me llamo Susana. ¿Cómo te llamas? — Me llamo David. Mucho gusto.
+
+What you've built.
+me llamo — introduce yourself ("I call myself").
+tú / usted — the informal vs. formal "you," and why (the retired thou; usted from "your grace").
+¿cómo te llamas? / ¿cómo se llama usted? — ask a name, in either register, the pronoun (te / se) tracking the choice.
+mucho gusto — "much pleasure," pleased to meet you.
+And one from two chapters back, because it is worth keeping warm: buenos días but buenas tardes — the describing word copies its noun.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the full formal exchange, both parts]
+[pause 8 seconds for the answer]
+[your turn — say: the same exchange informally — catch yourself on se llama becomes te llamas]
+[pause 8 seconds for the answer]
+[your turn — say: for a police officer, then your best friend — which "you" for each, and why?]
+[pause 8 seconds for the answer]
+[repeat that twice]
+Run the formal version start to finish without stopping.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which two words change between the formal and informal introduction? (se llama usted becomes te llamas.) Next chapter, you will learn how to ask how someone is doing.

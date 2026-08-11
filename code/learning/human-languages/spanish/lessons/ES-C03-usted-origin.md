@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C03-usted-origin
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 180
-chapter: 4
+chapter: 5
 type: etymology
 headword: vuestra merced → usted
 gloss: the respectful title inside usted

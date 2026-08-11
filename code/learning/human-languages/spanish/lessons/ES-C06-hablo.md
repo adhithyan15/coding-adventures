@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C06-hablo
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 514
-chapter: 15
+chapter: 16
 type: grammar
 headword: hablo
 gloss: "I speak" — your first verb form, and the one ending that means "I"

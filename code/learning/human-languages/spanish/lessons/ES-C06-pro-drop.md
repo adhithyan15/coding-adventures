@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C06-pro-drop
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 517
-chapter: 15
+chapter: 16
 type: grammar
 headword: hablo
 gloss: why "hablo" is already a whole sentence, with no word for "I" anywhere in it
