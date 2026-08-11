@@ -1,6 +1,6 @@
 [package]
 name = "twig-to-semantic-ir"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Twig AST → narrow-waist Semantic IR (SIR11). First frontend for the SIR10 narrow-waist IR."
 

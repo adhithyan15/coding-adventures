@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.2.0 — SIR28 (final frontend): `print` lowers to `__sys_write__`
+
+Twig was the one frontend the SIR28 arc missed on its first pass —
+`ruby-to-semantic-ir`, `python-to-semantic-ir`, `javascript-to-semantic-ir`,
+`apl-to-semantic-ir`, `j-to-semantic-ir`, `q-to-semantic-ir`,
+`idl-to-semantic-ir`, `matlab-to-semantic-ir`, `scilab-to-semantic-ir`, and
+`c-to-semantic-ir` all migrated first; a follow-up sweep for Slice 7's
+cleanup found Twig's `print` still lowering to a bare
+`BuiltinCall("print", ...)` via its generic builtin-table dispatch. This
+release closes that gap — see `code/specs/SIR28-syscall-primitives.md`.
+
+**Behavior change**: `(print x)` no longer lowers to
+`BuiltinCall("print", [x])`. It now lowers to
+`BuiltinCall("__sys_write__", [StrLit("stdout"), StrLit("none"),
+BoolLit(false), x])` (SIR28 §2.1's table; `print`'s existing single-arg
+arity carries over unchanged). `Feature::ConsoleIO` is declared whenever
+`print` is used. `Effect::MayPrint` was already set correctly on the old
+bare `print` builtin (via the builtin table's `BuiltinSig.effects`) and
+still is on the new `__sys_write__` call — Twig didn't have the
+`MayPrint` gap every other frontend in this arc had.
+
+`twig-to-semantic-ir` 0.1.0 -> 0.2.0.
+
 ## 0.1.0 — initial release (SIR11 v0)
 
 First Twig → SIR frontend.  Implements the TW00 Twig surface as

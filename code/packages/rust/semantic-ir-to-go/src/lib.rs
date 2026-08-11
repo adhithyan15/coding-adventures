@@ -590,7 +590,9 @@ mod tests {
         let a = compile(&m).expect("compile");
         assert!(a.source.contains("func add(a Value, b Value) Value"));
         assert!(a.source.contains("_sir_plus([]Value{a, b})"));
-        assert!(a.source.contains("_sir_print([]Value{add("));
+        // SIR28 §2: Twig's `print` lowers to `__sys_write__`, which this
+        // backend maps to `_sir_write("stdout", "none", false, []Value{...})`.
+        assert!(a.source.contains("_sir_write(\"stdout\", \"none\", false, []Value{add("));
     }
 
     #[test]

@@ -834,7 +834,9 @@ mod tests {
         let a = compile(&module).expect("compile");
         assert!(a.source.contains("fn add("));
         assert!(a.source.contains("__sir::plus(vec!["));
-        assert!(a.source.contains("__sir::print(add("));
+        // SIR28 §2: `print` lowers to `__sys_write__`, which this backend
+        // maps to `__sir::write(...)`.
+        assert!(a.source.contains("__sir::write(\"stdout\", \"none\", false, vec![add("));
     }
 
     #[test]

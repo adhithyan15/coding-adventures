@@ -774,7 +774,9 @@ mod tests {
         let a = compile(&module).expect("compile");
         assert!(a.source.contains("def add(a, b):"));
         assert!(a.source.contains("_sir_plus(a, b)"));
-        assert!(a.source.contains("_sir_print(add(1, 2))"));
+        // SIR28 §2: `print` lowers to `__sys_write__`, which this backend
+        // maps to `_sir_write(...)`.
+        assert!(a.source.contains("_sir_write(\"stdout\", \"none\", False, add(1, 2))"));
     }
 
     #[test]

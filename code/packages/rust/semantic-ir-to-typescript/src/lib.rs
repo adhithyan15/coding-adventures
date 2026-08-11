@@ -395,7 +395,9 @@ mod tests {
         let a = compile(&module).expect("compile");
         assert!(a.source.contains("function add(a: __Sir.Val, b: __Sir.Val)"));
         assert!(a.source.contains("__Sir.add(a, b)"));
-        assert!(a.source.contains("__Sir.print(add(1, 2))"));
+        // SIR28 §2: `print` lowers to `__sys_write__`, which this backend
+        // maps to `__Sir.write(...)`.
+        assert!(a.source.contains("__Sir.write(\"stdout\", \"none\", false, add(1, 2))"));
     }
 
     #[test]
