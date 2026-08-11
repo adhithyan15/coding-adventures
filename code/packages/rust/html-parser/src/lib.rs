@@ -4939,9 +4939,6 @@ impl HtmlParser {
             name = "img".to_string();
         }
         let body_element_existed_before_start_tag = self.document_has_body_element();
-        if name == "body" {
-            self.explicit_body_start_seen = true;
-        }
 
         let in_foreign_content = self.current_namespace().is_some()
             && !self.current_node_is_svg_html_integration_point()
@@ -5301,6 +5298,7 @@ impl HtmlParser {
         }
 
         if !in_foreign_content && name == "frameset" && self.has_open_element("template") {
+            self.report_authored_template_shell_start(&name);
             return;
         }
 
@@ -5566,6 +5564,7 @@ impl HtmlParser {
         }
 
         if !in_foreign_content && name == "html" && self.has_open_element("template") {
+            self.report_authored_template_shell_start(&name);
             return;
         }
 
@@ -5623,7 +5622,12 @@ impl HtmlParser {
         }
 
         if !in_foreign_content && name == "body" && self.has_open_element("template") {
+            self.report_authored_template_shell_start(&name);
             return;
+        }
+
+        if name == "body" {
+            self.explicit_body_start_seen = true;
         }
 
         if !in_foreign_content
@@ -8686,6 +8690,15 @@ impl HtmlParser {
                     && !has_fragment_context_marker(element)
             })
         })
+    }
+
+    fn report_authored_template_shell_start(&mut self, name: &str) {
+        if self.first_authored_open_template_index().is_some() {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-shell-start-tag-in-template",
+                format!("start tag `<{name}>` in template body content was ignored"),
+            ));
+        }
     }
 
     fn authored_open_template_count(&self) -> usize {
@@ -34728,6 +34741,68 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| { diagnostic.code != "unexpected-row-start-tag-in-template-body" }));
+    }
+
+    #[test]
+    fn reports_shell_start_tags_ignored_in_authored_template_body_content() {
+        for name in ["html", "body", "frameset"] {
+            let source = format!(
+                "<!doctype html><template><div><{name} data-ignored=value><span>x</span></div></template>"
+            );
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "unexpected-shell-start-tag-in-template",
+                    format!("start tag `<{name}>` in template body content was ignored"),
+                )],
+                "source {source:?}"
+            );
+            assert_eq!(
+                output.document,
+                parse_html("<!doctype html><template><div><span>x</span></div></template>")
+                    .unwrap(),
+                "source {source:?}"
+            );
+        }
+
+        let body_does_not_disable_framesets = parse_html_with_diagnostics(
+            "<!doctype html><template><body></template><frameset><frame></frameset>",
+        )
+        .unwrap();
+        assert!(find_first_element_in_nodes(
+            &body_does_not_disable_framesets.document.children,
+            "frameset"
+        )
+        .is_some());
+    }
+
+    #[test]
+    fn keeps_non_authored_template_shell_start_paths_distinct() {
+        for source in [
+            "<!doctype html><html data-existing=value>",
+            "<!doctype html><body data-existing=value>",
+            "<!doctype html><body>x<frameset>",
+            "<!doctype html><template><template><div></div></template></template>",
+            "<!doctype html><svg><template><html></template></svg>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-shell-start-tag-in-template"
+                }),
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+        }
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<html><body><frameset>", "template")
+                .unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| { diagnostic.code != "unexpected-shell-start-tag-in-template" }));
     }
 
     #[test]
