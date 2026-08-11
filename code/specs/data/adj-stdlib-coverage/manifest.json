@@ -1667,6 +1667,21 @@
       "source_cas_hashes": [],
       "benchmark_paths": [],
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.science.3to5.cloud_type",
+      "title": "Recall the weather indication of each common cloud type",
+      "band": "3-5",
+      "domain": "science",
+      "competency": "recall",
+      "coverage_roots": ["ngss"],
+      "standards": [],
+      "prerequisites": [],
+      "libraries": ["code/specs/data/adj-facts-stdlib/meteorology/cloud-type.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     }
   ]
 }

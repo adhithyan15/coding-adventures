@@ -1,0 +1,59 @@
+% ============================================================================
+% cloud-type — each common cloud type and the weather it indicates
+% (adj-facts-stdlib, METEOROLOGY).
+% ============================================================================
+% An ELEVENTH science slice, and a genuinely new axis from the already-shipped
+% `meteorology/weather-instruments.adj` (instrument -> quantity it measures)
+% and `oceanography/ocean-observing-instruments.adj` (instrument -> quantity)
+% — this table does not name an instrument at all. It names a cloud TYPE and
+% the weather condition its presence indicates:
+% `cloud_type(cloud, weather_indication)`. Recall is a binding query:
+%
+%     ? cloud_type(cirrus, $W)   % approaching_warm_front
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `cloud_type(cloud, weather_indication)` carrying the NWS citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% weather indication WITH its source, on the CPU, with zero model calls, and
+% abstains on a cloud not one of the three the cited page names (e.g.
+% altocumulus). The query also runs BACKWARD — bind a weather indication and
+% recall the cloud type that signals it:
+%
+%     ? cloud_type($C, heavy_rain_thunderstorm)   % cumulonimbus
+%
+% The three cloud types and the weather each one indicates, as a little
+% truth table:
+%
+%     cloud          weather_indication            the cited quote
+%     ------------   ---------------------------   -----------------------------------------------------------------------------
+%     cirrus         approaching_warm_front         "They often are the first sign of an approaching warm front or upper-level
+%                                                     jet streak."
+%     cumulonimbus   heavy_rain_thunderstorm        "a mature, deep cumulonimbus cloud, i.e., a thunderstorm producing heavy rain."
+%     stratus        light_rain_drizzle_or_none     "Stratus clouds are uniform and flat, producing a gray layer of cloud cover
+%                                                     which may be precipitation-free or may cause periods of light precipitation
+%                                                     or drizzle."
+%
+% Provenance: quoted verbatim from the National Weather Service's (Louisville
+% forecast office) "Cloud Classification" education page. WebFetch-verified
+% before writing (note: the related jetstream.noaa.gov domain 403s WebFetch
+% entirely — weather.gov was used instead, per this stdlib's established
+% workaround). `trust authoritative` — weather.gov is a primary U.S.
+% government (NWS) science-education source, the same tier
+% `weather-instruments.adj`'s and `precipitation-types.adj`'s NOAA/NWS
+% sources earned. A cloud not one of these three — altocumulus, nimbostratus,
+% cumulus — has no row, so a recall on it ABSTAINS rather than inventing a
+% weather indication. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table cloud_type {
+    columns cloud, weather_indication
+
+    row (cirrus, approaching_warm_front)
+    row (cumulonimbus, heavy_rain_thunderstorm)
+    row (stratus, light_rain_drizzle_or_none)
+
+    source "They often are the first sign of an approaching warm front or upper-level jet streak."
+    locator "https://www.weather.gov/lmk/cloud_classification"
+    trust authoritative
+}

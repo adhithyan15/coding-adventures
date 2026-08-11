@@ -1,0 +1,14 @@
+% ============================================================================
+% cloud-type.query.adj — worked recall over the cloud-type library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what weather does this
+% cloud indicate?" (direct) or "which cloud indicates this weather?"
+% (reverse) — it states no fact of its own — it only `import`s the grounded
+% table and asks binding queries.
+% ============================================================================
+
+import "cloud-type.adj"
+
+? cloud_type(cirrus, $W)                     % expect approaching_warm_front (direct: what does cirrus indicate?)
+? cloud_type($C, heavy_rain_thunderstorm)    % expect cumulonimbus (reverse: which cloud indicates heavy rain/thunderstorms?)
+? cloud_type(altocumulus, $W)                % expect abstain -- altocumulus is a real cloud type but not one this source tables
