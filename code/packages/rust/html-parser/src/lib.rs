@@ -6982,12 +6982,24 @@ impl HtmlParser {
         if self.current_namespace().is_some()
             && !self.current_element_is(name)
             && is_adoption_agency_element(name)
-            && self.has_open_html_element_before_foreign_boundary(name)
         {
             self.diagnostics.push(ParserDiagnostic::new(
                 "unexpected-end-tag-in-foreign-content",
                 format!("end tag `</{name}>` did not match the current foreign element"),
             ));
+
+            if self.close_open_foreign_element_before_html_boundary(name) {
+                return;
+            }
+
+            if !self.has_open_html_element_before_foreign_boundary(name) {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-end-tag",
+                    format!("end tag `</{name}>` did not match an open element"),
+                ));
+                return;
+            }
+
             self.diagnostics.push(ParserDiagnostic::new(
                 "unexpected-non-current-formatting-end-tag",
                 format!(
@@ -34470,9 +34482,8 @@ mod tests {
         for source in [
             "<!doctype html><a><svg></svg></a>",
             "<!doctype html><b><i></b>",
-            "<!doctype html><svg><g></a>",
-            "<!doctype html><svg><a><g></a></svg>",
             "<!doctype html><svg><template></template></svg>",
+            "<!doctype html><svg><a></a></svg>",
         ] {
             let control = parse_html_with_diagnostics(source).unwrap();
             assert!(control
@@ -34481,12 +34492,65 @@ mod tests {
                 .all(|diagnostic| { diagnostic.code != "unexpected-end-tag-in-foreign-content" }));
         }
 
-        let fragment =
-            parse_html_fragment_for_context_with_diagnostics("<a><g></a>", "svg svg").unwrap();
-        assert!(fragment
-            .parser_diagnostics
-            .iter()
-            .all(|diagnostic| { diagnostic.code != "unexpected-end-tag-in-foreign-content" }));
+        let unmatched =
+            parse_html_with_diagnostics("<!doctype html><svg><g></a></g></svg>").unwrap();
+        assert_eq!(
+            unmatched.parser_diagnostics,
+            vec![
+                ParserDiagnostic::new(
+                    "unexpected-end-tag-in-foreign-content",
+                    "end tag `</a>` did not match the current foreign element",
+                ),
+                ParserDiagnostic::new(
+                    "unexpected-end-tag",
+                    "end tag `</a>` did not match an open element",
+                ),
+            ]
+        );
+        let unmatched_svg = element(&body(&unmatched.document).children[0]);
+        assert_eq!(unmatched_svg.name, "svg");
+        assert_eq!(element(&unmatched_svg.children[0]).name, "g");
+
+        let foreign_match =
+            parse_html_with_diagnostics(
+                "<!doctype html><svg><a><g></a><circle></circle></svg>",
+            )
+            .unwrap();
+        assert_eq!(
+            foreign_match.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-end-tag-in-foreign-content",
+                "end tag `</a>` did not match the current foreign element",
+            )]
+        );
+        let foreign_svg = element(&body(&foreign_match.document).children[0]);
+        assert_eq!(foreign_svg.name, "svg");
+        assert_eq!(element(&foreign_svg.children[0]).name, "a");
+        assert_eq!(element(&foreign_svg.children[1]).name, "circle");
+
+        let fragment = parse_html_fragment_for_context_with_diagnostics(
+            "<a><g></a><circle></circle>",
+            "svg svg",
+        )
+        .unwrap();
+        assert_eq!(
+            fragment.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-end-tag-in-foreign-content",
+                "end tag `</a>` did not match the current foreign element",
+            )]
+        );
+        assert_eq!(element(&fragment.nodes[0]).name, "a");
+        assert_eq!(element(&fragment.nodes[1]).name, "circle");
+
+        let ordinary = parse_html_with_diagnostics("<!doctype html><div></a></div>").unwrap();
+        assert_eq!(
+            ordinary.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-end-tag",
+                "end tag `</a>` did not match an open element",
+            )]
+        );
     }
 
     #[test]
