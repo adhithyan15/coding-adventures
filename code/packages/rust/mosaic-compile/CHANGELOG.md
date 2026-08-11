@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Fixed - Flutter project shells compile complete packages
+
+Flutter package projects now place every exported widget in the generated
+application's `lib/` source set instead of only the first mounted export. Linux
+CI analyzes all 23 reusable toolkit components and builds a native Flutter
+desktop application, so broken sibling Dart cannot hide behind Accordion.
+
 ### Fixed - Qt project shells compile complete packages
 
 Qt package projects now place all 23 reusable toolkit exports in the generated

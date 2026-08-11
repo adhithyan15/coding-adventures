@@ -113,9 +113,10 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
         )
         self.assertIn("Round-trip Rust engine through standard Flutter binding", workflow)
         self.assertIn("needs_mosaic_flutter_runtime == 'true'", workflow)
-        self.assertIn("timeout-minutes: 10", workflow)
+        self.assertIn("timeout-minutes: 15", workflow)
         self.assertIn("uses: subosito/flutter-action@v2", workflow)
         self.assertIn("flutter-version: '3.24.0'", workflow)
+        self.assertIn("sudo apt-get install -y libgtk-3-dev", workflow)
         self.assertIn("--backend flutter --output \"$output\" --emit-project", workflow)
         self.assertIn(
             "cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance",
@@ -128,6 +129,14 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("--profile native-complete", workflow)
         self.assertIn(".nativeComplete == true", workflow)
         self.assertIn("dart analyze lib", workflow)
+        self.assertIn("mosaic-flutter-toolkit", workflow)
+        self.assertIn("code/packages/mosaic/mosaic-pkg-toolkit", workflow)
+        self.assertIn(
+            "flutter create --platforms=linux "
+            "--project-name mosaic_toolkit_acceptance .",
+            workflow,
+        )
+        self.assertIn("flutter build linux --debug", workflow)
         self.assertIn("MOSAIC_APP_LIBRARY", workflow)
 
     def test_harness_does_not_duplicate_the_generated_binding(self) -> None:

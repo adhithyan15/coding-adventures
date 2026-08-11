@@ -1371,14 +1371,17 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 write_file(&nested, proj.main_dart.as_bytes())?;
                 written.push(nested);
                 // Dart package imports may not escape `lib/`. Keep the
-                // top-level component artifact for Mosaic package consumers,
-                // and mirror it into the runnable Flutter shell so
-                // `lib/main.dart` can import it as a package-local library.
-                let component_source =
-                    read_to_string(&backend_dir.join(format!("{component}.dart")))?;
-                let component_copy = backend_dir.join(format!("lib/{component}.dart"));
-                write_file(&component_copy, component_source.as_bytes())?;
-                written.push(component_copy);
+                // top-level artifacts for Mosaic package consumers, and
+                // mirror every export into the runnable Flutter package so
+                // `dart analyze lib` type-checks the complete package rather
+                // than only the first component mounted by `main.dart`.
+                for exported_component in components {
+                    let component_source =
+                        read_to_string(&backend_dir.join(format!("{exported_component}.dart")))?;
+                    let component_copy = backend_dir.join(format!("lib/{exported_component}.dart"));
+                    write_file(&component_copy, component_source.as_bytes())?;
+                    written.push(component_copy);
+                }
                 let host = backend_dir.join("lib/mosaic_host.dart");
                 if let Some(parent) = host.parent() {
                     create_dir_all(parent)?;
@@ -5938,6 +5941,35 @@ version = "1"
         let readme = fs::read_to_string(dir.join("README.md")).expect("README.md");
         assert!(readme.contains("MOSAIC_APP_LIBRARY"));
         assert!(readme.contains("owns the application handle"));
+    }
+
+    #[test]
+    fn flutter_project_shell_includes_every_exported_component_in_source_set() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid", "Cell", "Column"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Flutter,
+            emit_project: true,
+            theme: None,
+        })
+        .expect("multi-component Flutter package build");
+
+        let dir = out.path().join("flutter");
+        for component in ["Grid", "Cell", "Column"] {
+            let artifact = dir.join(format!("{component}.dart"));
+            let source_set_copy = dir.join(format!("lib/{component}.dart"));
+            assert_eq!(
+                fs::read_to_string(&artifact).expect("top-level Flutter artifact"),
+                fs::read_to_string(&source_set_copy).expect("Flutter source-set copy"),
+                "{component} must participate in the generated Flutter project"
+            );
+            assert!(
+                result.artifacts.iter().any(|path| path == &source_set_copy),
+                "{component} source-set copy must be reported as an artifact"
+            );
+        }
     }
 
     #[test]

@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased] - complete Flutter package source set
+
+- Generated Flutter project shells now copy every exported widget into `lib/`
+  while continuing to mount the first export as the application entry widget.
+- Whole-package Dart analysis can no longer miss a broken sibling component
+  that was emitted only as a top-level distribution artifact.
+
 ## [Unreleased] - complete Qt package QML module
 
 - Generated Qt project shells now list every exported QML component in

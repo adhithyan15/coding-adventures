@@ -97,6 +97,10 @@ runtime while preserving `MosaicApp(mosaicHost: ...)` injection. Set
 target platform's conventional `mosaic_app` name. Permissive builds retain the
 injectable/optional preview path; `native-complete` builds require the binding
 and Rust-provided props before mounting the generated widget.
+Every exported Flutter widget is mirrored into the generated application's
+`lib/` source set, so `dart analyze lib` type-checks the complete package while
+`main.dart` continues to mount the manifest's first export. Native CI also
+bootstraps the documented Linux runner and builds the toolkit desktop app.
 Qt project shells install a standard QObject host backed by `QLibrary` and
 Qt JSON/variant APIs. Explicit package host assets can still replace
 `MosaicHost.h/.cpp` for specialized native surfaces and effects. Permissive
