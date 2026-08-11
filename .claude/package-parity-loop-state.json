@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 10564,
   "last_inventory": {
     "revision": "dda47210d3041d7ee3f63b66da9c9766e664bd2d",
     "schema_version": 3,
@@ -459,13 +459,17 @@
     {
       "id": "build-tool-python-ecosystem-scoped-alias-resolution",
       "title": "Scope Python build-tool dependency aliases by ecosystem",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/python-ecosystem-scoped-alias-resolution",
-      "pr_number": null,
+      "pr_number": 10564,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/10564",
+      "pr_opened_at": "2026-08-11T04:24:44Z",
+      "implementation_revision": "0935487257e5b6d16acdc66a6c8468408828c62b",
       "selection_revision": "e45fc12d4517084705ccbf4ecad26d314bbab56d",
       "selection_notes": "Selected after external merge of PR #10521 and the collision-clean identity-neutral inventory refresh. The global alias table is a high-severity dependency-confusion boundary that can route an edge to another ecosystem and schedule the wrong local shell BUILD; this pure, dependency-free repair also makes later language-filter expansion safe.",
       "validation_notes": "The new 58th language-neutral resolution case is consumed by Python and Go and proves same-spelled Lua, Perl, Python, and Haskell aliases stay ecosystem-local while one exact qualified BUILD edge crosses lanes. Python passes its real BUILD_windows front door and 357 tests at 87%+ coverage; focused Ruff, MyPy, and Bandit checks pass. The full Ruff command retains the exact pre-existing 86-diagnostic baseline, full MyPy retains six unrelated diagnostics, and full Bandit retains eight low plus one existing shell-execution finding without any resolver finding. Go passes all tests, vet, module verification, and trimpath build. The 58-case/235-file corpus passes 17 schema and 42 runner tests. A full 4,864-package Python plan contains 7,212 edges and exactly two cross-language edges, both exact checked-in BUILD declarations. All 258 Lua identities and all 384 canonicalized Lua edges match the Go oracle. The latest schema-3 inventory remains 1,298 identities, 4,454 slots, 848 singletons, 11,872 singleton gaps, 652 Rust singletons, zero collisions, and zero unknown buckets.",
+      "publication_notes": "Ready-for-review PR #10564 opened after the fully validated implementation commit was pushed. GitHub reports the PR open, non-draft, and mergeable; this state-only follow-up records the sole active parity PR without changing implementation behavior.",
       "notes": "Discovered while independently checking the Lua closure graph. Python build-tool resolution constructs one global alias map for every ecosystem, so later Python, Perl, Haskell, and other package aliases overwrite Lua rock aliases; on the audited repository snapshot, 251 of 258 canonical Lua rock names resolve to a non-Lua identity. Define language-neutral adversarial collision fixtures, preserve explicitly qualified cross-language BUILD edges and within-ecosystem library-over-program priority, scope ordinary manifest aliases to their owning ecosystem, prove wrong BUILD files are never selected, and compare complete real-lane graphs with the canonical Go oracle."
     },
     {
