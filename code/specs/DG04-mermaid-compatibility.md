@@ -128,6 +128,8 @@ receive it. Created participant IDs must be new, and an existing participant
 cannot be reassigned between participant boxes. Nested message and statement
 activations retain stack order in semantic
 events and lower to depth-offset bars through backend-neutral Paint rectangles.
+Explicit and message-suffix deactivation is validated against that semantic
+stack and fails when the participant is inactive, matching Mermaid 11.16.1.
 Singular and JSON-map actor-menu links lower through semantic IR and
 layout into PaintScene metadata. Actor `properties` preserve arbitrary JSON
 values through the same pipeline. DOM-referenced `details` element IDs also

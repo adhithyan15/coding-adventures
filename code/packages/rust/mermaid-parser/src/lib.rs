@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.36.0";
+pub const VERSION: &str = "0.37.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1047,8 +1047,60 @@ pub fn parse_sequence_diagram(source: &str) -> Result<SequenceDiagram, ParseErro
 
     parse_sequence_body(&mut cursor, &mut diagram, &mut participant_indices, &[])?;
     bind_sequence_lifecycle_events(&mut diagram, cursor.current())?;
+    validate_sequence_activation_balance(&diagram, cursor.current())?;
 
     Ok(diagram)
+}
+
+fn validate_sequence_activation_balance(
+    diagram: &SequenceDiagram,
+    eof: &Token,
+) -> Result<(), ParseError> {
+    let mut active: HashMap<&str, usize> = HashMap::new();
+    for event in &diagram.events {
+        match event {
+            SequenceEvent::Message {
+                from,
+                to,
+                activate,
+                deactivate,
+                ..
+            } => {
+                if *deactivate {
+                    deactivate_sequence_participant(&mut active, from, eof)?;
+                }
+                if *activate {
+                    *active.entry(to).or_default() += 1;
+                }
+            }
+            SequenceEvent::Activation {
+                participant,
+                active: true,
+            } => *active.entry(participant).or_default() += 1,
+            SequenceEvent::Activation {
+                participant,
+                active: false,
+            } => deactivate_sequence_participant(&mut active, participant, eof)?,
+            _ => {}
+        }
+    }
+    Ok(())
+}
+
+fn deactivate_sequence_participant<'a>(
+    active: &mut HashMap<&'a str, usize>,
+    participant: &'a str,
+    token: &Token,
+) -> Result<(), ParseError> {
+    let count = active.entry(participant).or_default();
+    if *count == 0 {
+        return Err(token_error(
+            token,
+            format!("trying to deactivate inactive sequence participant {participant:?}"),
+        ));
+    }
+    *count -= 1;
+    Ok(())
 }
 
 fn bind_sequence_lifecycle_events(
@@ -3472,6 +3524,19 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn sequence_rejects_activation_underflow() {
+        let statement_error =
+            parse_sequence_diagram("sequenceDiagram\nparticipant Worker\ndeactivate Worker\n")
+                .expect_err("explicit deactivation requires an active participant");
+        assert!(statement_error.message.contains("deactivate inactive"));
+
+        let message_error =
+            parse_sequence_diagram("sequenceDiagram\nA->>-B: Invalid sender deactivation\n")
+                .expect_err("message deactivation requires an active sender");
+        assert!(message_error.message.contains("deactivate inactive"));
+    }
+
+    #[test]
     fn sequence_parses_participant_boxes() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\nbox hsl(270, 100%, 50%) Client tier\nactor User\nparticipant API as Banking API\nend\nbox Services\nparticipant DB\nend\n",
@@ -3903,7 +3968,7 @@ B//-A: reverse stick top
     #[test]
     fn sequence_preserves_hyphenated_actor_identifiers() {
         let diagram = parse_sequence_diagram(
-            "sequenceDiagram\nparticipant Customer-Portal as Customer\nparticipant Order-Service\nCustomer-Portal->>Order-Service: Submit\nnote over Customer-Portal,Order-Service: Accepted\nOrder-Service-->>-Customer-Portal: Done\nactivate Order-Service\ndeactivate Order-Service\n",
+            "sequenceDiagram\nparticipant Customer-Portal as Customer\nparticipant Order-Service\nCustomer-Portal->>+Order-Service: Submit\nnote over Customer-Portal,Order-Service: Accepted\nOrder-Service-->>-Customer-Portal: Done\nactivate Order-Service\ndeactivate Order-Service\n",
         )
         .unwrap();
         assert_eq!(diagram.participants[0].id, "Customer-Portal");
@@ -3969,7 +4034,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.36.0");
+        assert_eq!(crate::VERSION, "0.37.0");
     }
 
     #[test]

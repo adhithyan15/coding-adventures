@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.37.0
+
+- Reject explicit and message-suffix deactivation of inactive sequence participants.
+
 ## 0.36.0
 
 - Reject duplicate participant IDs in `create` declarations and participants assigned to multiple boxes.
