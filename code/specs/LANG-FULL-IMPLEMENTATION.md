@@ -826,7 +826,9 @@ backend immediately) come before the enabler-dependent items.
   elements retain their full designator until the selected `goto`: a conditional
   branch and a nested switch subscript execute at that time, so both see current
   variables. A cyclic switch graph is rejected before it can recursively expand
-  the IIR dispatch chain. **Limit:** switches aren't block-scope-shadowable.
+  the IIR dispatch chain. Switch declarations are block-scope-shadowable: a
+  nested declaration resolves as the nearest binding and the outer switch is
+  restored when that block exits.
 - ✅ **AL6** — `own` variables (static lifetime). `coding-adventures-algol-parser`
   0.2.0 adds the `[ "own" ] type ident_list` rule; `algol-iir-compiler` 0.7.0 lowers
   an `own` scalar to a module **global** (the E6 substrate), keyed by its unique

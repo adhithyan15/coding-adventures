@@ -400,6 +400,10 @@ struct Compiler {
     /// evaluates the selected expression at run time, which permits both
     /// conditional and nested switch-list elements.
     switches: HashMap<String, Vec<GrammarASTNode>>,
+    /// Switch names declared in each lexical block. `switches` is the flattened
+    /// nearest-binding view; this stack distinguishes legal inner shadowing
+    /// from a duplicate declaration in the same block.
+    switch_scope_names: Vec<HashSet<String>>,
     /// Switches being expanded into the current linear dispatch chain. The
     /// source grammar permits a switch to name another switch, but a cycle
     /// cannot be finitely inlined into portable IIR control flow.
@@ -443,6 +447,7 @@ impl Default for Compiler {
             by_name_capture_counter: 0,
             compiling_by_name_procedures: HashMap::new(),
             switches: HashMap::new(),
+            switch_scope_names: vec![HashSet::new()],
             resolving_switches: HashSet::new(),
             switch_expansion_steps: 0,
             block_captured: HashSet::new(),
@@ -530,8 +535,10 @@ impl Compiler {
     fn emit_block(&mut self, node: &GrammarASTNode, is_root: bool) -> Result<(), CompileError> {
         self.set_loc(node);
 
+        let saved_switches = (!is_root).then(|| self.switches.clone());
         if !is_root {
             self.push_scope();
+            self.switch_scope_names.push(HashSet::new());
         }
 
         // Pass 0 — register every procedure's signature *before* lowering any
@@ -584,6 +591,8 @@ impl Compiler {
         self.block_captured = saved_captured;
         if !is_root {
             self.pop_scope();
+            self.switch_scope_names.pop();
+            self.switches = saved_switches.expect("nested block saves switch bindings");
         }
         Ok(())
     }
@@ -1387,6 +1396,8 @@ impl Compiler {
         let saved_defined = std::mem::take(&mut self.defined_labels);
         let saved_referenced = std::mem::take(&mut self.referenced_labels);
         let saved_switches = std::mem::take(&mut self.switches);
+        let saved_switch_scope_names =
+            std::mem::replace(&mut self.switch_scope_names, vec![HashSet::new()]);
         let saved_switch_expansion_steps = std::mem::replace(&mut self.switch_expansion_steps, 0);
         let saved_initialized_string_slots =
             std::mem::take(&mut self.initialized_string_slots);
@@ -1618,6 +1629,7 @@ impl Compiler {
         self.defined_labels = saved_defined;
         self.referenced_labels = saved_referenced;
         self.switches = saved_switches;
+        self.switch_scope_names = saved_switch_scope_names;
         self.switch_expansion_steps = saved_switch_expansion_steps;
         self.initialized_string_slots = saved_initialized_string_slots;
         self.scopes = saved_scopes;
@@ -3489,7 +3501,11 @@ impl Compiler {
         if targets.is_empty() {
             return Err(CompileError::Malformed("switch has no targets".into()));
         }
-        if self.switches.contains_key(&name) {
+        let current_scope = self
+            .switch_scope_names
+            .last_mut()
+            .expect("compiler always has a switch scope");
+        if !current_scope.insert(name.clone()) {
             return Err(CompileError::Type(format!(
                 "duplicate declaration for switch {name:?}"
             )));
@@ -8233,6 +8249,30 @@ mod tests {
                    yes: result := 1; goto done; no: result := 40; \
                    done: result := result + 2 end";
         assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn nested_block_switch_shadows_and_restores_outer_binding() {
+        let src = "begin integer result, phase; switch s := outertarget; \
+                   phase := 0; \
+                   begin switch s := innertarget; goto s[1]; \
+                         innertarget: if phase = 0 then \
+                           begin phase := 1; result := 20 end \
+                         else goto bad end; \
+                   goto s[1]; \
+                   outertarget: result := result + 22; goto done; \
+                   bad: result := 1; done: end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn duplicate_switch_in_same_block_is_rejected() {
+        let err = compile_source(
+            "begin switch s := one; switch s := two; goto s[1]; one: ; two: end",
+            "duplicate_switch",
+        )
+        .expect_err("same-block switch declarations must remain unique");
+        assert!(err.to_string().contains("duplicate declaration for switch"));
     }
 
     #[test]

@@ -2133,6 +2133,24 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — switch declarations obey lexical block scope. The nested `s`
+    // selects `innertarget`, then leaving that block restores the outer `s`,
+    // which selects `outertarget`. If the inner binding leaked, the phase guard
+    // would jump to `bad` and return 1 instead of 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result, phase; switch s := outertarget; \
+               phase := 0; \
+               begin switch s := innertarget; goto s[1]; \
+                     innertarget: if phase = 0 then \
+                       begin phase := 1; result := 20 end \
+                     else goto bad end; \
+               goto s[1]; outertarget: result := result + 22; goto done; \
+               bad: result := 1; done: end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — *real (f64) arithmetic* + a real comparison (LANG-FULL AL1 /
     // enabler E3, phase 1).  `r := 2.5 * 2.0` computes in IEEE-754 double
     // (`5.0`), then `if r = 5.0` folds a real equality to the integer exit code
@@ -6963,6 +6981,37 @@ fn algol_switch_designator_elements_run_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but switch designator execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_switch_shadowing_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("switch s := outertarget")
+                && program.src.contains("begin switch s := innertarget")
+                && program.src.contains("outertarget: result := result + 22")
+        })
+        .expect("the ALGOL switch-shadowing program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but switch-shadowing execution did not complete"
             );
             continue;
         };
