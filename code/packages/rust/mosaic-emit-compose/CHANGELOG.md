@@ -46,6 +46,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- Text expressions that index a collection with an enclosing Mosaic `For`
+  index now use Compose's internal Kotlin `Int` shadow. This keeps numeric loop
+  comparisons type-correct while allowing toolkit patterns such as
+  `bodies[i]` to compile as `Text(String)`.
 - Mosaic text, number, collection, and nullable values now lower through a
   generated Kotlin truthiness helper anywhere Compose requires a Boolean,
   including `If`, state styles, checked/selected controls, disabled controls,

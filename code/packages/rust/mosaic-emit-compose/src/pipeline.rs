@@ -1433,7 +1433,7 @@ fn emit_compose_tree(
                 "{pad}// Col (column-width hint — no Compose analog)\n"
             ))
         }
-        "Text" => emit_text(node, depth, text_ctx),
+        "Text" => emit_text(node, depth, text_ctx, for_payload),
         "Icon" => emit_icon_compose(node, depth, part_styles, text_ctx),
         "Spacer" => Ok(format!("{pad}Spacer(modifier = Modifier.weight(1f))\n")),
         // `Input` is the pre-UI29 spelling retained for capabilities such as
@@ -2201,12 +2201,13 @@ fn emit_text(
     node: &LayoutNode,
     depth: usize,
     text_ctx: Option<&TextStyleCtx>,
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let value_expr = match find_prop_value(node, "content") {
         Some(LayoutPropValue::String(s)) => format!("\"{}\"", escape_kotlin_string(s)),
         Some(LayoutPropValue::SlotRef(slot)) => to_camel_case_first_lower(slot),
-        Some(LayoutPropValue::Expr(text)) => text.clone(),
+        Some(LayoutPropValue::Expr(text)) => compose_collection_index_expr(text, for_payload),
         _ => "\"\"".to_string(),
     };
     // When an inherited/cell text style is in effect, emit the value
@@ -2215,6 +2216,30 @@ fn emit_text(
     // With no styling, keep the labelled `Text(text = ...)` shape so the
     // styleless passthrough (e.g. FormulaBar) is byte-identical to before.
     Ok(format!("{pad}{}\n", text_call(&value_expr, text_ctx)))
+}
+
+/// Mosaic loop indices are exposed as `number`, so Compose keeps the authored
+/// binding as a `Double` for comparisons and an internal `Int` shadow for
+/// Kotlin collection access. Route an expression such as `bodies[i]` through
+/// that shadow while leaving ordinary arithmetic and comparisons untouched.
+fn compose_collection_index_expr(
+    expression: &str,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> String {
+    let Some(index) = for_payload.and_then(|scope| scope.index) else {
+        return expression.to_string();
+    };
+    let replacement = format!("[_kotlinIdx{index}]");
+    let mut lowered = expression.to_string();
+    for authored in [
+        format!("[{index}]"),
+        format!("[ {index}]"),
+        format!("[{index} ]"),
+        format!("[ {index} ]"),
+    ] {
+        lowered = lowered.replace(&authored, &replacement);
+    }
+    lowered
 }
 
 fn emit_host_input(
@@ -4954,6 +4979,60 @@ mod tests {
             out.contains("val r: Double = _kotlinIdxr.toDouble()"),
             "expected Double re-bind, got:\n{out}"
         );
+    }
+
+    #[test]
+    fn text_collection_access_uses_the_loops_int_index_shadow() {
+        let for_node = node(
+            "For",
+            vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::SlotRef("headers".to_string()),
+                },
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword("header".to_string()),
+                },
+                LayoutProp {
+                    name: "index".to_string(),
+                    value: LayoutPropValue::Keyword("i".to_string()),
+                },
+            ],
+            vec![node(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::Expr("( bodies [ i ] )".to_string()),
+                }],
+                vec![],
+            )],
+        );
+        let l = layout("Accordion", node("Column", vec![], vec![for_node]));
+        let m = component(
+            "Accordion",
+            vec![
+                slot(
+                    "headers",
+                    SlotType::List(Box::new(ListInnerType::Text)),
+                    false,
+                ),
+                slot(
+                    "bodies",
+                    SlotType::List(Box::new(ListInnerType::Text)),
+                    false,
+                ),
+            ],
+            vec![],
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Accordion"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("Text(text = ( bodies [_kotlinIdxi] ))"),
+            "collection access must use Kotlin's Int index shadow:\n{out}"
+        );
+        assert!(!out.contains("[ i ]"));
     }
 
     /// `For` without `index:` falls back to `.forEach { item -> ... }`
