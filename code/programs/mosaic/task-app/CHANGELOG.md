@@ -4,6 +4,15 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - concrete Rust TaskApp runtime on Flutter
+
+Flutter's strict acceptance lane now bundles `task-mosaic-app` rather than the
+counter conformance fixture, verifies that the Linux bundle contains the exact
+library built from this checkout, and launches the generated desktop app under a
+virtual display without `MOSAIC_APP_LIBRARY`. The counter runtime and harness stay
+in a separate build, preserving an independent proof of the standard ABI while the
+TaskApp launch proves that the complete MIL prop surface reaches a real native host.
+
 ### Added - concrete Rust application adapter and strict Qt app
 
 TaskApp now has a concrete `task-mosaic-app` native runtime instead of borrowing
