@@ -2,6 +2,23 @@
 
 All notable changes to this package are documented here.
 
+## [0.37.0] - 2026-08-11
+
+### Added
+
+- Extend the session-consuming audited access boundary to complete repository
+  verification, coarse unlocked diagnostics, and encrypted portable export.
+- Preserve the existing aggregate verification report, identity-free doctor
+  result, and owned export-secret handling behind the common durable-result
+  wrapper.
+
+### Security
+
+- Withhold verification, diagnosis, and encrypted export results until their
+  signed access events and next owner states are durable.
+- Record invalid portable-export inputs as failed authenticated attempts, while
+  audit-publication failure supersedes and withholds either result or error.
+
 ## [0.36.0] - 2026-08-11
 
 ### Added

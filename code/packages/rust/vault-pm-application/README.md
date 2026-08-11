@@ -22,9 +22,10 @@ Successful item reads bind the exact selected live revision; missing and
 tombstoned items become audited `NotFound` results. All covered methods share
 one publish-before-release completion path, and publication failure releases
 neither result nor original error while leaving the exact pending journal
-recoverable. Verification, diagnostics, export, secret disclosure, CLI
-adoption, audit activation, and redacted audit history rendering remain later
-slices. It also defines the
+recoverable. Complete verification, coarse diagnostics, and encrypted portable
+export now use that same boundary, including failed export-input attempts.
+Secret disclosure, CLI adoption, audit activation, and redacted audit history
+rendering remain later slices. It also defines the
 exact canonical
 `PreparedInit -> Active -> PendingPublication -> Active` owner-state machine,
 retry-stable publication journals, encrypted local-secret custody, and
@@ -238,6 +239,10 @@ announcement, commit, catalog, revision, item, and audit-event counts plus
 format, graph, anchor, cryptographic, or domain failure returns the closed
 application error taxonomy without a partial report.
 
+The audited verification method consumes the unlocked session and releases
+this aggregate report or its closed failure only after publishing a signed
+`VaultVerify` event and durable next owner state.
+
 The lifecycle boundary also exposes a read-only `doctor` workflow with one
 closed coarse outcome. Locked checks distinguish absent/prepared
 initialization, pending-publication recovery, owner-state availability,
@@ -248,6 +253,9 @@ bootstrap retained by the session, then run the complete audit to distinguish
 healthy, repository-unavailable, unsupported, and integrity-failure states.
 The report carries no counts or vault, device, item, revision, object, locator,
 or provider identities, and the workflow never repairs state or accepts pins.
+The audited unlocked workflow likewise consumes the session and publishes a
+signed `VaultDiagnose` event before releasing this coarse report; an unhealthy
+report is still a successful completed diagnosis.
 
 An unlocked session can now produce one canonical authenticated portable
 export. The caller supplies the exact active signed bootstrap, a separately
@@ -262,7 +270,9 @@ and search data; public diagnostics reveal no bytes, while passphrase, key,
 plaintext, encoded revisions, and hash preimages are wiped on drop.
 
 The host receives only exact encrypted bytes and remains responsible for an
-explicit destination and safe file replacement.
+explicit destination and safe file replacement. The audited export workflow
+holds those bytes until its signed `PortableExport` event and next owner state
+are durable, and records invalid export inputs as failed attempts.
 
 Untrusted artifacts can now be opened through a separate no-write boundary.
 The caller supplies the owned export passphrase plus an explicit maximum
