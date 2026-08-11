@@ -113,9 +113,9 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
         )
         self.assertIn("Round-trip Rust engine through standard Flutter binding", workflow)
         self.assertIn("needs_mosaic_flutter_runtime == 'true'", workflow)
-        self.assertIn("timeout-minutes: 15", workflow)
+        self.assertIn("timeout-minutes: 25", workflow)
         self.assertIn("uses: subosito/flutter-action@v2", workflow)
-        self.assertIn("flutter-version: '3.24.0'", workflow)
+        self.assertIn("flutter-version: '3.32.0'", workflow)
         self.assertIn("sudo apt-get install -y libgtk-3-dev", workflow)
         self.assertIn("--backend flutter --output \"$output\" --emit-project", workflow)
         self.assertIn(
@@ -129,6 +129,9 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("--profile native-complete", workflow)
         self.assertIn(".nativeComplete == true", workflow)
         self.assertIn("dart analyze lib", workflow)
+        self.assertIn("mosaic_taskapp_acceptance", workflow)
+        self.assertIn("mosaic-flutter-data-grid", workflow)
+        self.assertIn("mosaic_data_grid_acceptance", workflow)
         self.assertIn("mosaic-flutter-toolkit", workflow)
         self.assertIn("code/packages/mosaic/mosaic-pkg-toolkit", workflow)
         self.assertIn(

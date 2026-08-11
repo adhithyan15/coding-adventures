@@ -173,7 +173,7 @@ accessibility semantics. Specifically:
 | WebComponent  | Shadow-DOM real `<table>` elements. NOT `<div role="grid">`.                                                                                                                |
 | SwiftUI       | `SwiftUI.Table` (macOS 12+ / iOS 16+). Older deployment targets must fall back to `List` with rows — never `LazyVGrid` of `HStack`, which loses table semantics.            |
 | Qt            | `QtQuick.Controls.TableView` (Qt 6.2+). NOT a `Repeater` of `RowLayout` of `Text`.                                                                                          |
-| Flutter       | `DataTable` widget. NOT a `Column` of `Row` of `Text`.                                                                                                                       |
+| Flutter       | `DataTable` widget. NOT a `Column` of `Row` of `Text`. Generated shells require Flutter 3.32+, the first stable release whose underlying `Table` exposes explicit table/row/cell semantics roles. |
 | WinUI / XAML  | `Microsoft.UI.Xaml.Controls.DataGrid` from the Windows Community Toolkit. If unavailable, `Grid` with `Grid.RowDefinitions`/`ColumnDefinitions` + `AutomationProperties.Name` per cell to preserve table semantics for Narrator. NEVER `StackPanel` of `StackPanel`. |
 
 **Verification.** Every UI31-K-* PR's test suite MUST include a

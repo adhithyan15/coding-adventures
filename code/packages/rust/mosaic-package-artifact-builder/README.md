@@ -32,8 +32,9 @@ same report but rejects the build before application artifacts are emitted when
 the selected backend has a known degradation.
 
 The inventory identifies passive drag/drop lowerings on Compose, Qt, SwiftUI,
-and XAML, native table lowerings
-without table semantics, Flutter's dialog placeholder and missing URL effect
+and XAML, native table lowerings without table semantics (excluding Flutter's
+canonical UI31/Grid shape, which uses native `DataTable` semantics), Flutter's
+dialog placeholder and missing URL effect
 host, ignored tri-state checkbox and radio-group properties, XAML dialog state
 that still requires code-behind, ignored XAML/SwiftUI dialog lifecycle events,
 ignored XAML/SwiftUI external-link activation events, and generated native
@@ -49,6 +50,12 @@ Flutter's drag primitives are no longer reported as inert: that emitter uses
 native pointer/touch drag targets plus the UI35 keyboard and announcement
 contract. The other native backends remain explicit degradations until they
 ship equivalent behavior.
+
+The package-expanded TaskApp is the first full strict-profile proof point: its
+Flutter output has no known degradations, requires the standard Rust runtime,
+passes whole-project Dart analysis, and builds as a native desktop app in CI.
+This does not close the cross-backend milestone; the other four native emitters
+still have explicit TaskApp degradations.
 
 Property degradations carry the exact package-expanded node and property index.
 For example, Compose/Flutter/SwiftUI report an authored, non-false

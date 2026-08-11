@@ -1,0 +1,13 @@
+[package]
+name = "mosaic-flutter-data-grid"
+version = "0.1.0"
+description = "UI31 Flutter native table semantics acceptance fixture"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["DataGrid"]
+
+[dependencies]
+
+[kernel]
+version = "1"

@@ -627,7 +627,7 @@ jobs:
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'
+          flutter-version: '3.32.0'
           channel: stable
           cache: true
 
@@ -1039,12 +1039,20 @@ jobs:
       - name: Round-trip Rust engine through standard Flutter binding
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
         shell: bash
-        timeout-minutes: 15
+        timeout-minutes: 25
         run: |
           set -euo pipefail
           sudo apt-get install -y libgtk-3-dev
           output="$RUNNER_TEMP/mosaic-flutter-taskapp"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend flutter --output "$output" --emit-project
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend flutter --output "$output" --emit-project --profile native-complete
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$output/flutter/mosaic-degradations.json"
+          (
+            cd "$output/flutter"
+            flutter create --platforms=linux --project-name mosaic_taskapp_acceptance .
+            flutter pub get
+            dart analyze lib
+            flutter build linux --debug
+          )
           cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
 
           harness="$RUNNER_TEMP/mosaic-flutter-runtime-conformance"
@@ -1087,6 +1095,18 @@ jobs:
             cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/drag-board-test/widget_test.dart" test/widget_test.dart
             flutter pub get
             dart analyze lib/DragBoard.dart test/widget_test.dart
+            flutter test test/widget_test.dart
+          )
+
+          table_output="$RUNNER_TEMP/mosaic-flutter-data-grid"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/data-grid --backend flutter --output "$table_output" --emit-project --profile native-complete
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$table_output/flutter/mosaic-degradations.json"
+          (
+            cd "$table_output/flutter"
+            flutter create --platforms=linux --project-name mosaic_data_grid_acceptance .
+            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/data-grid-test/widget_test.dart" test/widget_test.dart
+            flutter pub get
+            dart analyze lib/DataGrid.dart test/widget_test.dart
             flutter test test/widget_test.dart
           )
 

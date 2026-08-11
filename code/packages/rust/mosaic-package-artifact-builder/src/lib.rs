@@ -676,7 +676,10 @@ fn collect_native_degradations(
             "interaction.drag-drop-inert",
             "the backend lowers this interactive primitive to a non-interactive container",
         )),
-        "HostTable" if backend.is_native() => Some((
+        "HostTable"
+            if backend.is_native()
+                && !(backend == Backend::Flutter
+                    && mosaic_emit_flutter::pipeline::host_table_has_native_semantics(node)) => Some((
             "accessibility.table-semantics-missing",
             "the backend preserves the visual rows and cells but does not expose native table semantics",
         )),
@@ -3564,6 +3567,39 @@ version = "1"
             "exactly one artifact (the index)"
         );
         assert!(result.artifacts[0].ends_with("index.ts"));
+    }
+
+    #[test]
+    fn flutter_native_table_semantics_shape_is_conservative() {
+        let node = |tag: &str, children: Vec<LayoutNode>| LayoutNode {
+            tag: tag.to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children,
+        };
+        let header_for = node("For", vec![node("Text", vec![])]);
+        let body_cell_for = node("For", vec![node("Text", vec![])]);
+        let canonical = node(
+            "HostTable",
+            vec![
+                node("HostTableHead", vec![node("Row", vec![header_for])]),
+                node(
+                    "HostTableBody",
+                    vec![node("For", vec![node("Row", vec![body_cell_for])])],
+                ),
+            ],
+        );
+        assert!(mosaic_emit_flutter::pipeline::host_table_has_native_semantics(&canonical));
+
+        let mut unsupported = canonical;
+        unsupported.children.push(node("HostTableFoot", Vec::new()));
+        assert!(!mosaic_emit_flutter::pipeline::host_table_has_native_semantics(&unsupported));
+        assert!(
+            !mosaic_emit_flutter::pipeline::host_table_has_native_semantics(&node(
+                "HostTable",
+                Vec::new()
+            ))
+        );
     }
 
     #[test]
