@@ -170,7 +170,9 @@ Central connection syntax (`()->>`, `->>()`, and `()->>()`) lowers to explicit
 source/destination endpoint semantics and Paint ellipse markers layered above
 activation bars.
 Automatic numbering preserves Mermaid 11.15+ decimal start and increment
-values through semantic IR, layout, and shaped Paint labels.
+values through semantic IR, layout, and shaped Paint labels. Re-enabling a
+paused counter without arguments resumes its current value and increment;
+layout rounds every increment to Mermaid's two-decimal sequence precision.
 Nested `rect` background highlights carry RGB/RGBA fills and normalized HSL/HSLA
 fills through semantic block events, layout frames, and Paint.
 Sequence headers, statement keywords, placements, and control words match
