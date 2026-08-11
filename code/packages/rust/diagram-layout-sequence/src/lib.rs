@@ -7,7 +7,7 @@ use diagram_ir::{
     SequenceEvent, SequenceNotePlacement, SequenceParticipantKind, SequenceTextWrap,
 };
 
-pub const VERSION: &str = "0.23.0";
+pub const VERSION: &str = "0.24.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -33,6 +33,7 @@ struct BlockFrameState {
     x: f64,
     y: f64,
     width: f64,
+    note_overlay_y: Option<f64>,
 }
 
 /// Lay out an ordered sequence diagram. Participant order is semantic and is
@@ -418,14 +419,19 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     SequenceNotePlacement::Over => (min_x + max_x - note_width) / 2.0,
                 }
                 .clamp(MARGIN, (width - MARGIN - note_width).max(MARGIN));
+                let note_height = NOTE_H + 16.0 * line_count.saturating_sub(1) as f64;
+                let note_y = block_stack
+                    .last()
+                    .and_then(|frame| frame.note_overlay_y)
+                    .unwrap_or(y);
                 items.push(LayoutedSequenceItem::Note {
                     x: note_x,
-                    y: y - 10.0,
+                    y: note_y - 10.0,
                     width: note_width,
-                    height: NOTE_H + 16.0 * line_count.saturating_sub(1) as f64,
+                    height: note_height,
                     text,
                 });
-                y += NOTE_H + 16.0 * line_count.saturating_sub(1) as f64 + 20.0;
+                y = y.max(note_y + note_height + 20.0);
             }
             SequenceEvent::BlockStart {
                 kind,
@@ -438,6 +444,11 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 let frame_width = (width - x * 2.0).max(120.0);
                 let label = wrap_sequence_text(label, wrap, frame_width - 16.0);
                 let label_height = 16.0 * label.lines().count().max(1) as f64;
+                let content_y = if kind == &SequenceBlockKind::Rect {
+                    y
+                } else {
+                    y + BLOCK_HEADER_H + label_height - 16.0
+                };
                 block_stack.push(BlockFrameState {
                     kind: kind.clone(),
                     label,
@@ -447,10 +458,9 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     x,
                     y,
                     width: frame_width,
+                    note_overlay_y: (kind == &SequenceBlockKind::ParOver).then_some(content_y),
                 });
-                if kind != &SequenceBlockKind::Rect {
-                    y += BLOCK_HEADER_H + label_height - 16.0;
-                }
+                y = content_y;
             }
             SequenceEvent::BlockBranch { label, wrap } => {
                 if let Some(frame) = block_stack.last() {
@@ -1118,6 +1128,76 @@ mod tests {
             LayoutedSequenceItem::BlockDivider { label, label_height, .. }
                 if label.contains('\n') && *label_height > 16.0
         )));
+    }
+
+    #[test]
+    fn par_over_places_notes_on_the_parallel_content_origin() {
+        let diagram = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
+            participants: vec![participant("Alice"), participant("Bob")],
+            participant_groups: vec![],
+            events: vec![
+                SequenceEvent::BlockStart {
+                    kind: SequenceBlockKind::ParOver,
+                    label: "Parallel overlap".into(),
+                    wrap: SequenceTextWrap::Default,
+                    fill: None,
+                },
+                SequenceEvent::Message {
+                    from: "Alice".into(),
+                    to: "Bob".into(),
+                    label: "Message".into(),
+                    wrap: SequenceTextWrap::Default,
+                    line_style: SequenceLineStyle::Solid,
+                    arrowhead: SequenceArrowhead::Filled,
+                    bidirectional: false,
+                    central_connection: SequenceCentralConnection::None,
+                    activate: false,
+                    deactivate: false,
+                },
+                SequenceEvent::Note {
+                    participants: vec!["Alice".into()],
+                    placement: SequenceNotePlacement::LeftOf,
+                    text: "Alice note".into(),
+                    wrap: SequenceTextWrap::Default,
+                },
+                SequenceEvent::Note {
+                    participants: vec!["Bob".into()],
+                    placement: SequenceNotePlacement::RightOf,
+                    text: "Bob note".into(),
+                    wrap: SequenceTextWrap::Default,
+                },
+                SequenceEvent::BlockEnd {
+                    kind: SequenceBlockKind::ParOver,
+                },
+            ],
+        };
+        let layout = layout_sequence_diagram(&diagram);
+        let message_y = layout
+            .items
+            .iter()
+            .find_map(|item| match item {
+                LayoutedSequenceItem::Message { y, .. } => Some(*y),
+                _ => None,
+            })
+            .unwrap();
+        let note_ys: Vec<_> = layout
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedSequenceItem::Note { y, .. } => Some(*y),
+                _ => None,
+            })
+            .collect();
+
+        assert_eq!(note_ys.len(), 2);
+        assert_eq!(note_ys[0], note_ys[1]);
+        assert!(note_ys[0] < message_y);
     }
 
     #[test]

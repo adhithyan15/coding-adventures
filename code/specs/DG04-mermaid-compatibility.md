@@ -119,8 +119,11 @@ matching Mermaid's default lifeline presentation through the same Paint IR.
 Nested Mermaid 11.16.1 control blocks (`loop`, `opt`, `alt`/`else`, `par`/`and`,
 `par_over`, `critical`/`option`, `break`, and `rect`) lower into ordered semantic
 block events. Sequence layout resolves those events into nested frames and
-branch dividers before existing PaintInstructions render them. Participant
-`create` and `destroy` statements lower into lifecycle events; layout uses them
+branch dividers before existing PaintInstructions render them.
+`par_over` frames retain their distinct semantics by overlaying sibling notes
+at the parallel content origin while preserving the tallest content extent.
+Participant `create` and `destroy` statements lower into lifecycle events;
+layout uses them
 to place dynamic participant headers, bound lifelines, and emit destruction
 markers. Created headers are centered on their associated message line, that
 message terminates at the header edge, and destruction markers terminate the
