@@ -618,6 +618,10 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
     }
     for participant in &diagram.participants {
         if let Some(&center) = centers.get(&participant.id) {
+            let lifeline_end = lifeline_ends
+                .get(&participant.id)
+                .copied()
+                .unwrap_or(footer_y);
             items.push(LayoutedSequenceItem::Lifeline {
                 participant: participant.id.clone(),
                 x: center,
@@ -625,10 +629,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     .get(&participant.id)
                     .copied()
                     .unwrap_or(header_y + header_height),
-                y2: lifeline_ends
-                    .get(&participant.id)
-                    .copied()
-                    .unwrap_or(footer_y),
+                y2: lifeline_end,
             });
             if let Some(starts) = activation_starts.remove(&participant.id) {
                 for (start, depth) in starts {
@@ -636,7 +637,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                         participant: participant.id.clone(),
                         x: activation_x(center, depth),
                         y1: start,
-                        y2: footer_y,
+                        y2: lifeline_end.max(start + 12.0),
                     });
                 }
             }
@@ -1518,7 +1519,7 @@ mod tests {
                     arrowhead: SequenceArrowhead::Filled,
                     bidirectional: false,
                     central_connection: SequenceCentralConnection::None,
-                    activate: false,
+                    activate: true,
                     deactivate: false,
                 },
                 SequenceEvent::Message {
@@ -1608,6 +1609,14 @@ mod tests {
         assert_eq!(footer_y + footer_height / 2.0, stop_y);
         assert_eq!(stop_from_x, footer_x - 3.0);
         assert_eq!(lifeline_y2, stop_y);
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedSequenceItem::Activation {
+                participant,
+                y2,
+                ..
+            } if participant == "Worker" && *y2 == stop_y
+        )));
         assert!(!layout
             .items
             .iter()
