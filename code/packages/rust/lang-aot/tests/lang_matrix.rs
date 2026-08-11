@@ -1484,6 +1484,19 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a valid procedure heading may partition its formals across
+    // multiple specification groups. All names are declared once in the
+    // formal list, appear once in the value part, and receive exactly one type.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+                  integer procedure combine(a,b,c); value a,b,c; integer a,b; real c; \
+                    combine := a * 10 + b + entier(c); \
+                  result := combine(3, 4, 8.0) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a proper procedure captures an enclosing array and retains
     // its declaration-space lower bounds across a fresh procedure frame.
     Prog {
@@ -6399,6 +6412,36 @@ fn algol_zero_argument_procedures_run_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but zero-argument procedure execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_validated_procedure_heading_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure combine(a,b,c)")
+                && program.src.contains("value a,b,c; integer a,b; real c")
+        })
+        .expect("the validated ALGOL procedure-heading program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but validated procedure-heading execution did not complete"
             );
             continue;
         };
