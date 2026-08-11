@@ -211,13 +211,14 @@ Prioritized work items:
    silently discarded, preserving the authored text before the row. Whitespace,
    nested templates, foreign content, synthetic template fragments, valid
    direct rows, and the rejected in-body row path retain their expected
-   behavior. The next template-state candidate is the authored-template shell
-   start boundary: `<html>` and `<body>` starts switch the template insertion
-   mode to in-body, where the current Standard requires a parse error and token
-   ignore, while the parser's dedicated template guards return silently. Audit
-   the adjacent `frameset` start in the same shell family before selecting the
-   smallest coherent diagnostic slice, then move to adoption agency only after
-   the remaining template-state branches are exhausted.
+   behavior. Authored-template `<html>`, `<body>`, and `<frameset>` starts now
+   report the in-body shell-start parse error before remaining ignored. The
+   ignored `<body>` token also no longer marks an explicit body start and
+   incorrectly disables a later valid frameset. Ordinary document-shell starts,
+   nested templates, foreign template-named elements, and synthetic template
+   fragment contexts remain on their existing paths. Continue with the adjacent
+   authored-template shell end-tag and remaining template-state branches, then
+   move to adoption agency only after that audit is exhausted.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases
