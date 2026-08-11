@@ -633,26 +633,43 @@ fn item_delete(
     item_id: ItemId,
 ) -> Result<CliOutput, CliFailure> {
     let (access, application_store) = authenticated_access(host, paths, writer)?;
-    let expected_revision = access
+    let audit_enabled = access
         .as_unlocked()
         .map_err(map_application)?
-        .current_item_revision(item_id)
-        .map_err(map_application)?
-        .ok_or(CliFailure::NotFound)?;
-    let now_ms = host.now_ms().map_err(map_host)?;
+        .audit_enabled();
+    let (now_ms, failure_randomness) = if audit_enabled {
+        let (wall_time_ms, randomness) = audited_access_inputs(host)?;
+        (wall_time_ms, Some(randomness))
+    } else {
+        (host.now_ms().map_err(map_host)?, None)
+    };
     let mut mutation_random = [0_u8; DELETE_ITEM_RANDOM_BYTES];
     host.fill_entropy(&mut mutation_random).map_err(map_host)?;
-    access
-        .into_unlocked()
-        .map_err(map_application)?
-        .delete_item(
-            expected_revision,
-            now_ms,
-            now_ms,
-            DeleteItemRandomnessV1::new(mutation_random),
-            &application_store,
-        )
-        .map_err(map_application)?;
+    let session = access.into_unlocked().map_err(map_application)?;
+    if let Some(failure_randomness) = failure_randomness {
+        session
+            .audited_delete_current_item(
+                item_id,
+                now_ms,
+                now_ms,
+                DeleteItemRandomnessV1::new(mutation_random),
+                failure_randomness,
+                &application_store,
+            )
+            .map_err(map_application)?
+            .into_operation()
+            .map_err(map_application)?;
+    } else {
+        session
+            .delete_current_item(
+                item_id,
+                now_ms,
+                now_ms,
+                DeleteItemRandomnessV1::new(mutation_random),
+                &application_store,
+            )
+            .map_err(map_application)?;
+    }
     Ok(CliOutput::success(format!(
         "Item deleted: {}\n",
         item_id.to_user_string()
@@ -1648,6 +1665,47 @@ mod tests {
             final_audit.stdout().contains("audit_events=6"),
             "{final_audit:?}"
         );
+    }
+
+    #[test]
+    fn active_epoch_delete_keeps_revision_capability_inside_one_mutation() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"audited delete passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        let add_host = TestHost::with_texts(
+            paths.clone(),
+            [passphrase.clone(), b"delete secret".to_vec()],
+            [
+                "Delete me".to_owned(),
+                "user@example.test".to_owned(),
+                String::new(),
+            ],
+        );
+        assert_eq!(
+            run(["item", "add", "login"], &add_host).exit_code(),
+            ExitCode::Success
+        );
+        let item_id =
+            ItemId::new([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]).to_user_string();
+        activate_test_audit_epoch(&paths, passphrase.clone());
+
+        let delete_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let deleted = run(["item", "delete", item_id.as_str()], &delete_host);
+        assert_eq!(deleted.exit_code(), ExitCode::Success, "{deleted:?}");
+        assert_eq!(deleted.stdout(), format!("Item deleted: {item_id}\n"));
+
+        let repeated_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let repeated = run(["item", "delete", item_id.as_str()], &repeated_host);
+        assert_eq!(repeated.exit_code(), ExitCode::NotFound, "{repeated:?}");
+        assert_eq!(repeated.stderr(), "vault-pm: not found\n");
+
+        let audit_host = TestHost::new(paths, [passphrase]);
+        let audit = run(["audit", "verify"], &audit_host);
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        assert!(audit.stdout().contains("commits=5"), "{audit:?}");
+        assert!(audit.stdout().contains("audit_events=3"), "{audit:?}");
     }
 
     #[test]

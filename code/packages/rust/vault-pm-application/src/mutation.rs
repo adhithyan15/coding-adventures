@@ -1009,7 +1009,7 @@ pub(crate) fn publish_audited_access(
     local_state_store: &dyn LocalStateStore,
 ) -> Result<ActiveStateV1, ApplicationError> {
     if active.audit_event_head().is_none()
-        || action.is_item_mutation()
+        || (action.is_item_mutation() && outcome == AuditOutcomeV1::Succeeded)
         || matches!(
             action,
             AuditActionV1::AuditEpochStart
