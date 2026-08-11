@@ -112,8 +112,8 @@ direction, and `[*]` start/end edge states. It lowers into the shared graph IR,
 graph layout, and backend-neutral
 PaintScene instructions, with a Metal-to-PNG fixture. Choice pseudostates accept
 both `<<choice>>` and `[[choice]]` and lower to graph-IR diamonds. Composite
-states, notes inside composite states, and concurrency remain explicit gaps, so
-the family is marked partial.
+transitions targeting a composite boundary and concurrent-region dividers remain
+explicit gaps, so the family is marked partial.
 Fork and join pseudostates accept both upstream marker spellings and lower to a
 compact backend-neutral graph-IR bar shape rendered by existing rectangle Paint
 instructions.
@@ -136,6 +136,9 @@ PaintScene accessibility metadata.
 State `click` statements, including the `href` spelling and optional tooltips,
 survive graph semantic and layout IR. PaintScene exports each URL, tooltip, and
 resolved node bounds as backend-neutral hit-test metadata.
+Nested `state Name { ... }` composites preserve parent/child containment in
+graph-group semantic IR. Graph layout computes padded nested bounds, while
+Paint lowering draws group outlines and shaped labels behind member geometry.
 
 ### Sequence Native Slice
 

@@ -1,5 +1,9 @@
 # Changelog — diagram-layout-graph
 
+## 0.6.0
+
+- Compute padded nested group bounds around composite-state members.
+
 ## 0.5.0
 
 - Forward graph node links and tooltips for backend hit-test metadata.

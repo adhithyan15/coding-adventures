@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.56.0
+
+- Parse nested composite states into graph-group semantic IR.
+
 ## 0.55.0
 
 - Preserve state click URLs and optional tooltips as graph node links.

@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.34.0";
+pub const VERSION: &str = "0.35.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -208,7 +208,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.34.0");
+        assert_eq!(VERSION, "0.35.0");
     }
 
     #[test]
@@ -354,6 +354,14 @@ mod tests {
                 .count(),
             3
         );
+    }
+
+    #[test]
+    fn tokenizes_state_composite_braces() {
+        let tokens =
+            tokenize_mermaid_state("stateDiagram-v2\nstate Processing {\nQueued --> Running\n}\n");
+        assert!(tokens.iter().any(|token| token.value == "{"));
+        assert!(tokens.iter().any(|token| token.value == "}"));
     }
 
     #[test]

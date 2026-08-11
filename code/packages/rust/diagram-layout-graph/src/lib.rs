@@ -38,11 +38,12 @@
 //! | `h_padding`     | 24      | Horizontal text padding inside a node    |
 //! | `char_width`    | 8       | Approximate width per character (px)     |
 
-pub const VERSION: &str = "0.5.0";
+pub const VERSION: &str = "0.6.0";
 
 use diagram_ir::{
     DiagramDirection, DiagramShape, GraphDiagram, LayoutedGraphDiagram, LayoutedGraphEdge,
-    LayoutedGraphNode, Point, ResolvedDiagramStyle, resolve_style, resolve_style_with_base,
+    LayoutedGraphGroup, LayoutedGraphNode, Point, ResolvedDiagramStyle, resolve_style,
+    resolve_style_with_base,
 };
 use directed_graph::Graph;
 use layout_ir::{FontSpec, TextMeasurer};
@@ -417,6 +418,62 @@ fn route_edge(
 // Public API
 // ============================================================================
 
+fn layout_groups(diagram: &GraphDiagram, nodes: &[LayoutedGraphNode]) -> Vec<LayoutedGraphGroup> {
+    let mut computed: std::collections::HashMap<String, LayoutedGraphGroup> =
+        std::collections::HashMap::new();
+    for group in diagram.groups.iter().rev() {
+        let member_nodes: Vec<_> = nodes
+            .iter()
+            .filter(|node| group.node_ids.contains(&node.id))
+            .collect();
+        let child_groups: Vec<_> = computed
+            .values()
+            .filter(|child| child.parent_id.as_deref() == Some(&group.id))
+            .collect();
+        let min_x = member_nodes
+            .iter()
+            .map(|node| node.x)
+            .chain(child_groups.iter().map(|child| child.x))
+            .reduce(f64::min)
+            .unwrap_or(24.0);
+        let min_y = member_nodes
+            .iter()
+            .map(|node| node.y)
+            .chain(child_groups.iter().map(|child| child.y))
+            .reduce(f64::min)
+            .unwrap_or(48.0);
+        let max_x = member_nodes
+            .iter()
+            .map(|node| node.x + node.width)
+            .chain(child_groups.iter().map(|child| child.x + child.width))
+            .reduce(f64::max)
+            .unwrap_or(min_x + 96.0);
+        let max_y = member_nodes
+            .iter()
+            .map(|node| node.y + node.height)
+            .chain(child_groups.iter().map(|child| child.y + child.height))
+            .reduce(f64::max)
+            .unwrap_or(min_y + 52.0);
+        computed.insert(
+            group.id.clone(),
+            LayoutedGraphGroup {
+                id: group.id.clone(),
+                label: group.label.clone(),
+                parent_id: group.parent_id.clone(),
+                x: min_x - 24.0,
+                y: min_y - 40.0,
+                width: max_x - min_x + 48.0,
+                height: max_y - min_y + 64.0,
+            },
+        );
+    }
+    diagram
+        .groups
+        .iter()
+        .filter_map(|group| computed.remove(&group.id))
+        .collect()
+}
+
 /// Lay out a [`GraphDiagram`] and return a [`LayoutedGraphDiagram`] with
 /// absolute geometry for every node and edge.
 ///
@@ -433,6 +490,7 @@ fn route_edge(
 ///     accessibility_title: None,
 ///     accessibility_description: None,
 ///     links: Vec::new(),
+///     groups: Vec::new(),
 ///     nodes: vec![
 ///         GraphNode { id: "A".into(), label: DiagramLabel::new("A"),
 ///                     shape: None, style: None },
@@ -489,22 +547,38 @@ pub fn layout_graph_diagram(
         note.y = state.y + (state.height - note.height) / 2.0;
     }
 
-    let min_x = nodes.iter().map(|node| node.x).fold(opts.margin, f64::min);
-    let min_y = nodes.iter().map(|node| node.y).fold(opts.margin, f64::min);
+    let mut groups = layout_groups(diagram, &nodes);
+
+    let min_x = nodes
+        .iter()
+        .map(|node| node.x)
+        .chain(groups.iter().map(|group| group.x))
+        .fold(opts.margin, f64::min);
+    let min_y = nodes
+        .iter()
+        .map(|node| node.y)
+        .chain(groups.iter().map(|group| group.y))
+        .fold(opts.margin, f64::min);
     let shift_x = (opts.margin - min_x).max(0.0);
     let shift_y = (opts.margin - min_y).max(0.0);
     for node in &mut nodes {
         node.x += shift_x;
         node.y += shift_y;
     }
+    for group in &mut groups {
+        group.x += shift_x;
+        group.y += shift_y;
+    }
     let width = nodes
         .iter()
         .map(|node| node.x + node.width)
+        .chain(groups.iter().map(|group| group.x + group.width))
         .fold(0.0, f64::max)
         + opts.margin;
     let height = nodes
         .iter()
         .map(|node| node.y + node.height)
+        .chain(groups.iter().map(|group| group.y + group.height))
         .fold(0.0, f64::max)
         + opts.margin;
 
@@ -529,6 +603,7 @@ pub fn layout_graph_diagram(
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
         links: diagram.links.clone(),
+        groups,
         width,
         height,
         nodes,
@@ -572,6 +647,7 @@ mod tests {
             accessibility_title: None,
             accessibility_description: None,
             links: Vec::new(),
+            groups: Vec::new(),
             nodes: vec![simple_node("A"), simple_node("B")],
             edges: vec![directed_edge("A", "B")],
         }
@@ -579,7 +655,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.5.0");
+        assert_eq!(VERSION, "0.6.0");
     }
 
     #[test]
@@ -638,6 +714,7 @@ mod tests {
             accessibility_title: None,
             accessibility_description: None,
             links: Vec::new(),
+            groups: Vec::new(),
             nodes: vec![simple_node("A")],
             edges: vec![directed_edge("A", "A")],
         };
@@ -668,6 +745,7 @@ mod tests {
             accessibility_title: None,
             accessibility_description: None,
             links: Vec::new(),
+            groups: Vec::new(),
             nodes: vec![simple_node("A"), simple_node("B")],
             edges: vec![directed_edge("A", "B"), directed_edge("B", "A")],
         };
@@ -687,6 +765,7 @@ mod tests {
             accessibility_title: None,
             accessibility_description: None,
             links: Vec::new(),
+            groups: Vec::new(),
             nodes: vec![
                 simple_node("A"),
                 GraphNode {
@@ -712,6 +791,7 @@ mod tests {
             accessibility_title: None,
             accessibility_description: None,
             links: Vec::new(),
+            groups: Vec::new(),
             nodes: vec![simple_node("A"), simple_node("B"), simple_node("C")],
             edges: vec![directed_edge("A", "B"), directed_edge("B", "C")],
         };
@@ -755,5 +835,23 @@ mod tests {
 
         assert!(note.x + note.width < state.x);
         assert_eq!(l.edges[0].points[0].y, note.y + note.height / 2.0);
+    }
+
+    #[test]
+    fn composite_groups_bound_their_members() {
+        let mut d = two_node_diagram(DiagramDirection::Lr);
+        d.groups.push(diagram_ir::GraphGroup {
+            id: "Processing".into(),
+            label: DiagramLabel::new("Processing"),
+            parent_id: None,
+            node_ids: vec!["A".into(), "B".into()],
+        });
+        let l = layout_graph_diagram(&d, None, None);
+        let group = &l.groups[0];
+
+        for node in &l.nodes {
+            assert!(node.x >= group.x && node.x + node.width <= group.x + group.width);
+            assert!(node.y >= group.y && node.y + node.height <= group.y + group.height);
+        }
     }
 }
