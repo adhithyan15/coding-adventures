@@ -116,6 +116,7 @@ per rotation, in parallel):
 | `anatomy/` | long-bone region → what it is / where it sits (diaphysis → shaft, epiphysis → tip_of_bone, metaphysis → between_diaphysis_and_epiphysis) | NIH NCBI StatPearls (authoritative) |
 | `geology/` | Mohs reference mineral → whole-number hardness (talc → 1, quartz → 7, diamond → 10) | NPS "Mohs Hardness Scale" (authoritative) |
 | `geology/` | Earth's internal layer → physical state, in the source's own words (crust → rigid, mantle → semi_solid, outer_core → liquid, inner_core → solid) | USGS "This Dynamic Earth" (authoritative) |
+| `geology/` | basic rock-type class → how it forms (`rock_type(rock, formation_process)`, igneous → crystallized_molten_rock, sedimentary → deposited_weathered_material, metamorphic → heat_and_pressure_transformation) — a THREE-different-source-page table, unlike its single-source `earth-layers.adj` sibling | USGS "What are igneous/sedimentary/metamorphic rocks?" FAQ pages (authoritative; see `rock-type.adj`'s header) |
 | `meteorology/` | Beaufort wind force number → the name the source gives it (0 → calm, 6 → strong_breeze, 12 → hurricane) | NWS Beaufort Wind Scale (authoritative) |
 | `meteorology/` | precipitation type → defining physical form (snow → ice_crystals, sleet → frozen_raindrops, hail → balls_of_ice) | NOAA National Weather Service (authoritative) |
 | `meteorology/` | Saffir-Simpson hurricane category → the damage descriptor NHC uses (1 → some_damage, 3 → devastating_damage, 5 → catastrophic_damage) | NOAA/NHC Saffir-Simpson Hurricane Wind Scale (authoritative) |
