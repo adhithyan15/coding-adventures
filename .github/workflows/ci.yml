@@ -1108,6 +1108,7 @@ jobs:
       - name: Build complete Mosaic TaskApp WinUI shell
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
         shell: pwsh
+        timeout-minutes: 15
         run: |
           $output = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-taskapp'
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend xaml --output $output --emit-project
@@ -1151,6 +1152,20 @@ jobs:
           Pop-Location
           if ($strictBuildExitCode -ne 0) {
             throw "Native-complete XAML WinUI build failed with exit code $strictBuildExitCode"
+          }
+
+          $toolkitOutput = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-toolkit'
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend xaml --output $toolkitOutput --emit-project
+          if ($LASTEXITCODE -ne 0) {
+            throw "Mosaic toolkit XAML generation failed with exit code $LASTEXITCODE"
+          }
+          $toolkitProject = Join-Path $toolkitOutput 'xaml/Accordion.csproj'
+          Push-Location (Split-Path -Parent $toolkitProject)
+          dotnet build (Split-Path -Leaf $toolkitProject) -c Debug -p:Platform=x64 --nologo
+          $toolkitBuildExitCode = $LASTEXITCODE
+          Pop-Location
+          if ($toolkitBuildExitCode -ne 0) {
+            throw "Complete Mosaic toolkit XAML build failed with exit code $toolkitBuildExitCode"
           }
 
       - name: Round-trip Rust engine through standard XAML binding
