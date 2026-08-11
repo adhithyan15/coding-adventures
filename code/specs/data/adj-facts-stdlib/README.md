@@ -83,6 +83,7 @@ per rotation, in parallel):
 | `earth-science/` | master soil horizon → what it is (o → organic_matter, c → parent_material, r → bedrock) | UNL passel Plant & Soil Sciences eLibrary (authoritative) |
 | `earth-science/` | tectonic plate-boundary type → how plates move (divergent → rip_apart, convergent → subducts, transform → slide_past) | U.S. National Park Service (authoritative) |
 | `earth-science/` | atmosphere layer → distinctive feature (troposphere → weather, stratosphere → ozone_layer, thermosphere → auroras) | NASA "Earth's Atmosphere" (authoritative) |
+| `earth-science/` | cause of rock metamorphism → its shared effect (`metamorphism_cause(cause, effect)`, heat/pressure/hot_mineral_rich_fluids → denser_more_compact_rock) — a sibling library to `rock-types.adj`, but a finer-grained causal axis, confirmed distinct via the mandatory full-tree-grep-before-scoping check | USGS "What are metamorphic rocks?" (authoritative; see `metamorphism-cause.adj`'s header) |
 | `nutrition/` | common food → MyPlate food group | USDA MyPlate |
 | `agriculture/` | farm animal → product it gives | Iowa State University (CFSPH) |
 | `biology/` | common bone → body region | NIH / MedlinePlus |
