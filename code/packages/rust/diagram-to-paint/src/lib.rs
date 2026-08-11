@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.32.0";
+pub const VERSION: &str = "0.33.0";
 
 use std::collections::HashMap;
 
@@ -1248,154 +1248,158 @@ where
         }
     }
 
-    // Lifelines and messages sit behind activation bars, notes, and headers.
+    // Lifelines sit behind activation bars. Messages are painted afterward so
+    // arrowheads remain visible where they meet an activation edge.
     for item in &diagram.items {
-        match item {
-            LayoutedSequenceItem::Lifeline { x, y1, y2, .. } => {
-                instructions.push(PaintInstruction::Path(PaintPath {
-                    base: PaintBase::default(),
-                    commands: vec![
-                        PathCommand::MoveTo { x: *x, y: *y1 },
-                        PathCommand::LineTo { x: *x, y: *y2 },
-                    ],
-                    fill: None,
-                    fill_rule: None,
-                    stroke: Some("#94a3b8".into()),
-                    stroke_width: Some(1.25),
-                    stroke_cap: Some(StrokeCap::Round),
-                    stroke_join: None,
-                    stroke_dash: Some(vec![5.0, 5.0]),
-                    stroke_dash_offset: None,
-                }));
-            }
-            LayoutedSequenceItem::Message {
-                from_x,
-                to_x,
-                y,
-                label,
-                label_height,
-                line_style,
-                arrowhead,
-                bidirectional,
-                central_connection,
-                number,
-            } => {
-                let (commands, start, end, label_x, label_width) = if (*from_x - *to_x).abs() < 0.1
-                {
-                    let loop_width = 46.0;
-                    (
-                        vec![
-                            PathCommand::MoveTo { x: *from_x, y: *y },
-                            PathCommand::LineTo {
-                                x: *from_x + loop_width,
-                                y: *y,
-                            },
-                            PathCommand::LineTo {
-                                x: *from_x + loop_width,
-                                y: *y + 26.0,
-                            },
-                            PathCommand::LineTo {
-                                x: *from_x,
-                                y: *y + 26.0,
-                            },
-                        ],
-                        Point {
+        if let LayoutedSequenceItem::Lifeline { x, y1, y2, .. } = item {
+            instructions.push(PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: vec![
+                    PathCommand::MoveTo { x: *x, y: *y1 },
+                    PathCommand::LineTo { x: *x, y: *y2 },
+                ],
+                fill: None,
+                fill_rule: None,
+                stroke: Some("#94a3b8".into()),
+                stroke_width: Some(1.25),
+                stroke_cap: Some(StrokeCap::Round),
+                stroke_join: None,
+                stroke_dash: Some(vec![5.0, 5.0]),
+                stroke_dash_offset: None,
+            }));
+        }
+    }
+
+    for item in &diagram.items {
+        if let LayoutedSequenceItem::Activation { x, y1, y2, .. } = item {
+            instructions.push(PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(),
+                x: *x,
+                y: *y1,
+                width: 12.0,
+                height: (*y2 - *y1).max(4.0),
+                fill: Some("#dbeafe".into()),
+                stroke: Some("#2563eb".into()),
+                stroke_width: Some(1.0),
+                corner_radius: Some(1.0),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }));
+        }
+    }
+
+    for item in &diagram.items {
+        if let LayoutedSequenceItem::Message {
+            from_x,
+            to_x,
+            y,
+            label,
+            label_height,
+            line_style,
+            arrowhead,
+            bidirectional,
+            central_connection,
+            number,
+        } = item
+        {
+            let (commands, start, end, label_x, label_width) = if (*from_x - *to_x).abs() < 0.1 {
+                let loop_width = 46.0;
+                (
+                    vec![
+                        PathCommand::MoveTo { x: *from_x, y: *y },
+                        PathCommand::LineTo {
+                            x: *from_x + loop_width,
+                            y: *y,
+                        },
+                        PathCommand::LineTo {
                             x: *from_x + loop_width,
                             y: *y + 26.0,
                         },
-                        Point {
+                        PathCommand::LineTo {
                             x: *from_x,
                             y: *y + 26.0,
                         },
-                        *from_x + 8.0,
-                        loop_width + 80.0,
-                    )
-                } else {
-                    let left = from_x.min(*to_x);
-                    (
-                        vec![
-                            PathCommand::MoveTo { x: *from_x, y: *y },
-                            PathCommand::LineTo { x: *to_x, y: *y },
-                        ],
-                        Point { x: *from_x, y: *y },
-                        Point { x: *to_x, y: *y },
-                        left,
-                        (*to_x - *from_x).abs(),
-                    )
-                };
-                instructions.push(PaintInstruction::Path(PaintPath {
-                    base: PaintBase::default(),
-                    commands,
-                    fill: None,
-                    fill_rule: None,
-                    stroke: Some("#334155".into()),
-                    stroke_width: Some(1.5),
-                    stroke_cap: Some(StrokeCap::Round),
-                    stroke_join: Some(StrokeJoin::Round),
-                    stroke_dash: match line_style {
-                        SequenceLineStyle::Solid => None,
-                        SequenceLineStyle::Dotted => Some(vec![5.0, 4.0]),
+                    ],
+                    Point {
+                        x: *from_x + loop_width,
+                        y: *y + 26.0,
                     },
-                    stroke_dash_offset: None,
-                }));
-                let reverse = matches!(
-                    arrowhead,
-                    SequenceArrowhead::ReverseFilledTop
-                        | SequenceArrowhead::ReverseFilledBottom
-                        | SequenceArrowhead::ReverseStickTop
-                        | SequenceArrowhead::ReverseStickBottom
-                );
-                if reverse {
-                    instructions.extend(sequence_arrowhead(&end, &start, arrowhead));
-                } else {
-                    instructions.extend(sequence_arrowhead(&start, &end, arrowhead));
-                }
-                if *bidirectional {
-                    instructions.extend(sequence_arrowhead(&end, &start, arrowhead));
-                }
-                for point in match central_connection {
-                    SequenceCentralConnection::None => vec![],
-                    SequenceCentralConnection::Source => vec![start],
-                    SequenceCentralConnection::Destination => vec![end],
-                    SequenceCentralConnection::Both => vec![start, end],
-                } {
-                    central_markers.push(point);
-                }
-                let rendered_label = match number {
-                    Some(number) => format!("{}. {label}", format_sequence_number(*number)),
-                    None => label.clone(),
-                };
-                text_children.push(text_node_no_wrap(
-                    &rendered_label,
-                    label_x,
-                    *y - *label_height - 6.0,
-                    label_width.max(80.0),
-                    *label_height,
-                    label_font.clone(),
-                    text_color,
-                ));
+                    Point {
+                        x: *from_x,
+                        y: *y + 26.0,
+                    },
+                    *from_x + 8.0,
+                    loop_width + 80.0,
+                )
+            } else {
+                let left = from_x.min(*to_x);
+                (
+                    vec![
+                        PathCommand::MoveTo { x: *from_x, y: *y },
+                        PathCommand::LineTo { x: *to_x, y: *y },
+                    ],
+                    Point { x: *from_x, y: *y },
+                    Point { x: *to_x, y: *y },
+                    left,
+                    (*to_x - *from_x).abs(),
+                )
+            };
+            instructions.push(PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands,
+                fill: None,
+                fill_rule: None,
+                stroke: Some("#334155".into()),
+                stroke_width: Some(1.5),
+                stroke_cap: Some(StrokeCap::Round),
+                stroke_join: Some(StrokeJoin::Round),
+                stroke_dash: match line_style {
+                    SequenceLineStyle::Solid => None,
+                    SequenceLineStyle::Dotted => Some(vec![5.0, 4.0]),
+                },
+                stroke_dash_offset: None,
+            }));
+            let reverse = matches!(
+                arrowhead,
+                SequenceArrowhead::ReverseFilledTop
+                    | SequenceArrowhead::ReverseFilledBottom
+                    | SequenceArrowhead::ReverseStickTop
+                    | SequenceArrowhead::ReverseStickBottom
+            );
+            if reverse {
+                instructions.extend(sequence_arrowhead(&end, &start, arrowhead));
+            } else {
+                instructions.extend(sequence_arrowhead(&start, &end, arrowhead));
             }
-            _ => {}
+            if *bidirectional {
+                instructions.extend(sequence_arrowhead(&end, &start, arrowhead));
+            }
+            for point in match central_connection {
+                SequenceCentralConnection::None => vec![],
+                SequenceCentralConnection::Source => vec![start],
+                SequenceCentralConnection::Destination => vec![end],
+                SequenceCentralConnection::Both => vec![start, end],
+            } {
+                central_markers.push(point);
+            }
+            let rendered_label = match number {
+                Some(number) => format!("{}. {label}", format_sequence_number(*number)),
+                None => label.clone(),
+            };
+            text_children.push(text_node_no_wrap(
+                &rendered_label,
+                label_x,
+                *y - *label_height - 6.0,
+                label_width.max(80.0),
+                *label_height,
+                label_font.clone(),
+                text_color,
+            ));
         }
     }
 
     for item in &diagram.items {
         match item {
-            LayoutedSequenceItem::Activation { x, y1, y2, .. } => {
-                instructions.push(PaintInstruction::Rect(PaintRect {
-                    base: PaintBase::default(),
-                    x: *x,
-                    y: *y1,
-                    width: 12.0,
-                    height: (*y2 - *y1).max(4.0),
-                    fill: Some("#dbeafe".into()),
-                    stroke: Some("#2563eb".into()),
-                    stroke_width: Some(1.0),
-                    corner_radius: Some(1.0),
-                    stroke_dash: None,
-                    stroke_dash_offset: None,
-                }));
-            }
             LayoutedSequenceItem::Destruction { x, y, .. } => {
                 instructions.push(PaintInstruction::Path(PaintPath {
                     base: PaintBase::default(),
@@ -2848,7 +2852,58 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.32.0");
+        assert_eq!(crate::VERSION, "0.33.0");
+    }
+
+    #[test]
+    fn sequence_messages_paint_above_activation_bars() {
+        let diagram = LayoutedSequenceDiagram {
+            width: 240.0,
+            height: 140.0,
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            // Deliberately put the message first: layer order must not depend on
+            // semantic item order.
+            items: vec![
+                LayoutedSequenceItem::Message {
+                    from_x: 40.0,
+                    to_x: 194.0,
+                    y: 72.0,
+                    label: "Request".into(),
+                    label_height: 16.0,
+                    line_style: SequenceLineStyle::Solid,
+                    arrowhead: SequenceArrowhead::Filled,
+                    bidirectional: false,
+                    central_connection: SequenceCentralConnection::None,
+                    number: None,
+                },
+                LayoutedSequenceItem::Activation {
+                    participant: "Service".into(),
+                    x: 194.0,
+                    y1: 52.0,
+                    y2: 112.0,
+                },
+            ],
+        };
+        let (shaper, metrics, resolver) = (FakeShaper, FakeMetrics, FakeResolver);
+        let scene = diagram_to_paint_sequence(&diagram, &make_opts(&shaper, &metrics, &resolver));
+        let activation_index = scene
+            .instructions
+            .iter()
+            .position(|instruction| {
+                matches!(instruction, PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#dbeafe"))
+            })
+            .unwrap();
+        let message_index = scene
+            .instructions
+            .iter()
+            .position(|instruction| {
+                matches!(instruction, PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#334155"))
+            })
+            .unwrap();
+
+        assert!(activation_index < message_index);
     }
 
     #[test]

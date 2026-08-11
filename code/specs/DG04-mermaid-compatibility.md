@@ -135,7 +135,8 @@ cannot be reassigned between participant boxes. Nested message and statement
 activations retain stack order in semantic
 events and lower to depth-offset bars through backend-neutral Paint rectangles.
 Messages entering or leaving active participants terminate at the visible edge
-of the current activation bar, including a bar opened by that message.
+of the current activation bar, including a bar opened by that message. Paint
+ordering keeps those message paths and arrowheads above activation rectangles.
 Explicit and message-suffix deactivation is validated against that semantic
 stack and fails when the participant is inactive, matching Mermaid 11.16.1.
 Central connections use distinct grammar alternatives and reject `+` or `-`
