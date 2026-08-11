@@ -378,6 +378,12 @@ unblocks multiple downstream targets; never count source generation as completio
       heading metadata, and row/column coordinates. The complete
       package-expanded TaskApp now passes Compose's strict profile, Kotlin
       compilation, and native desktop distribution packaging in CI.
+    - [x] Remove Qt's four inert drag/drop reports by lowering UI35 to native
+      Qt Quick `DragHandler`/`Drag` and `DropArea` primitives with
+      component-scoped keyboard traversal, RTL behavior, kind filtering,
+      accepted-only lifecycle outcomes, one drop-payload path, and Qt 6.8
+      accessibility announcements. Complete TaskApp Qt CI now compiles and
+      launches the generated app with only table semantics left to close.
 - [ ] Add launch-and-dispatch conformance fixtures for every native backend.
   - [x] XAML/.NET loads the shared Rust conformance DLL and round-trips startup,
     typed props, semantic dispatch, revised props, buffers, and teardown.

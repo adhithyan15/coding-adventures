@@ -4,6 +4,15 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - native accessible drag and drop
+
+`HostDraggable` and `HostDropTarget` now lower to Qt Quick's native
+`DragHandler`/`Drag` and `DropArea` APIs for mouse, touch, and pen. A
+component-scoped controller adds keyboard grab/move/drop/cancel operation,
+RTL-aware traversal, kind and disabled filtering, accepted-only completion,
+one shared drop-payload path, and Qt 6.8 assistive-technology announcements.
+Generated projects now require Qt 6.8 and use versionless Qt 6 imports.
+
 ### Added - native accessible icons and progress
 
 `Icon` now maps semantic names to accessible Qt Quick `Label` glyphs and the
@@ -108,7 +117,7 @@ for the same event-envelope bridge used by the other native shells.
 
 L6 of UI32 ([spec PR #4286](https://github.com/adhithyan15/coding-adventures/pull/4286); L2 React #4297, L3 HTML #4309, L4 WebComponent #4315, L5 Flutter #4319). `mosaic-compile --backend qt --emit-project` now produces a Qt6 + CMake desktop scaffold:
 
-- `CMakeLists.txt` — pinned Qt6 `6.7` + CMake `3.21` + C++17 per UI32 §3.6.3. `qt_add_executable` + `qt_add_qml_module` embed the component into a `Mosaic.<Component>` QML module.
+- `CMakeLists.txt` — pinned Qt6 `6.8` + CMake `3.21` + C++17 per UI32 §3.6.3. `qt_add_executable` + `qt_add_qml_module` embed the component into a `Mosaic.<Component>` QML module.
 - `main.cpp` — `QGuiApplication` + `QQmlApplicationEngine` loading `qrc:/qt/qml/Mosaic/<Component>/<Component>.qml` (the path `qt_add_qml_module` exposes).
 - `qmldir` — `module Mosaic.<Component>` + `<Component> 1.0 <Component>.qml`.
 - `README.md` — `cmake -B build && cmake --build build && ./build/<Component>` recipe + file map.

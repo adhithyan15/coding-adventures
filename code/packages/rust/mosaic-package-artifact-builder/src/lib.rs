@@ -934,7 +934,9 @@ fn collect_native_degradations(
     let reason = match node.tag.as_str() {
         "HostDraggable" | "HostDropTarget"
             if backend.is_native()
-                && !matches!(backend, Backend::Flutter | Backend::Compose) => Some((
+                && !(matches!(backend, Backend::Flutter | Backend::Compose)
+                    || (backend == Backend::Qt
+                        && mosaic_emit_qt::pipeline::host_drag_drop_has_native_semantics(node))) => Some((
             "interaction.drag-drop-inert",
             "the backend lowers this interactive primitive to a non-interactive container",
         )),
@@ -4106,7 +4108,7 @@ layout Board {
     }
 
     #[test]
-    fn flutter_and_compose_native_drag_drop_are_not_reported_as_inert() {
+    fn flutter_compose_and_qt_native_drag_drop_are_not_reported_as_inert() {
         let pkg = make_package("mosaic-pkg-board", &["Board"]);
         fs::write(
             pkg.path().join("src/Board.mll"),
@@ -4143,6 +4145,11 @@ layout Board {
                 .expect("Compose analysis");
         assert!(compose.native_complete);
         assert!(compose.degradations.is_empty());
+
+        let qt = analyze_package_degradations(&options(Backend::Qt), BuildProfile::NativeComplete)
+            .expect("Qt analysis");
+        assert!(qt.native_complete);
+        assert!(qt.degradations.is_empty());
     }
 
     #[test]

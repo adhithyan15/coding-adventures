@@ -31,8 +31,8 @@ builds. `BuildProfile::Permissive` emits the normal artifacts and a deterministi
 same report but rejects the build before application artifacts are emitted when
 the selected backend has a known degradation.
 
-The inventory identifies passive drag/drop lowerings on Compose, Qt, SwiftUI,
-and XAML, native table lowerings without table semantics (excluding Flutter's
+The inventory identifies passive drag/drop lowerings on SwiftUI and XAML,
+native table lowerings without table semantics (excluding Flutter's
 canonical UI31/Grid shape, which uses native `DataTable` semantics), Flutter's
 dialog placeholder and missing URL effect
 host, ignored tri-state checkbox and radio-group properties, XAML dialog state
@@ -46,10 +46,10 @@ The overall native-complete milestone remains open while ignored properties,
 events, styles, effects, and
 accessibility metadata are added to the inventory.
 
-Flutter's drag primitives are no longer reported as inert: that emitter uses
-native pointer/touch drag targets plus the UI35 keyboard and announcement
-contract. The other native backends remain explicit degradations until they
-ship equivalent behavior.
+Flutter, Compose, and Qt drag primitives are no longer reported as inert:
+those emitters use native pointer/touch drag targets plus the UI35 keyboard,
+accepted-drop, component-scoping, and announcement contracts. SwiftUI and XAML
+remain explicit degradations until they ship equivalent behavior.
 
 The package-expanded TaskApp is the full strict-profile proof point for Flutter
 and Compose. Both outputs have no known degradations and require the standard

@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased] - Qt native drag capability
+
+- Native-complete analysis no longer reports Qt `HostDraggable` and
+  `HostDropTarget` nodes as inert now that the emitter supplies native pointer,
+  touch, keyboard, acceptance, lifecycle, RTL, and accessibility behavior.
+- Complete TaskApp Qt acceptance now requires exactly the remaining table
+  semantics degradation plus the permissive sample-runtime fallback, then
+  compiles and launches the generated native application headlessly.
+
 ## [Unreleased] - analyzer-clean Flutter project bootstrap
 
 - Flutter project shells install Mosaic-owned `analysis_options.yaml` and
@@ -66,7 +75,7 @@
 - Native-complete analysis no longer reports Compose `HostDraggable` and
   `HostDropTarget` nodes as inert now that the emitter supplies native pointer,
   keyboard, acceptance, lifecycle, RTL, and accessibility behavior.
-- Qt, SwiftUI, and XAML retain the stable `interaction.drag-drop-inert`
+- SwiftUI and XAML retain the stable `interaction.drag-drop-inert`
   degradation until their native implementations land.
 
 ## [Unreleased] - Compose native table capability
@@ -94,7 +103,7 @@
 - Native-complete analysis no longer reports Flutter `HostDraggable` and
   `HostDropTarget` nodes as inert now that the emitter supplies native
   pointer/touch, keyboard, acceptance, lifecycle, and accessibility behavior.
-- Compose, Qt, SwiftUI, and XAML retain the stable
+- SwiftUI and XAML retain the stable
   `interaction.drag-drop-inert` degradation until their native implementations
   land.
 
