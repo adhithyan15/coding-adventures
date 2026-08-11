@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(135); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(140); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -602,6 +602,22 @@ describe("real curriculum", () => {
       "ES-C47-sintesis-dos-a-la-vez-count",
       "ES-C47-sintesis-dos-a-la-vez-her",
       "ES-C47-sintesis-dos-a-la-vez-you",
+      "ES-C48-cuando-family",
+      "ES-C48-cuando-say",
+      "ES-C48-cuando-which",
+      "ES-C48-dos-miradas-inside",
+      "ES-C48-dos-miradas-outside",
+      "ES-C48-dos-miradas-which",
+      "ES-C48-repaso-dos-pasados-question",
+      "ES-C48-repaso-dos-pasados-scene",
+      "ES-C48-repaso-dos-pasados-state",
+      "ES-C48-sintesis-una-historia-layers",
+      "ES-C48-sintesis-una-historia-tell",
+      "ES-C48-sintesis-una-historia-third",
+      "ES-C48-sintesis-una-historia-why",
+      "ES-C48-tenia-tuve-got",
+      "ES-C48-tenia-tuve-had",
+      "ES-C48-tenia-tuve-rule",
       "ES-W03-question-span-roberto-outside",
       "FA-C02-esm-e-man-sara",
       "FA-C03-chist-fusion",

@@ -2,25 +2,34 @@
   "version": 1,
   "language": "spanish",
   "chapter": 104,
-  "title": "Water, Wine, and Bread",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:5627d79241f00d09",
+  "title": "Days of the Week",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:e611eba08e744b34",
   "lessons": [
     {
-      "id": "ES-C26-agua",
-      "sequence": 1570,
-      "title": "el agua — water, and an article that is not what it looks like",
-      "headword": "el agua",
-      "romanization": "el agua",
-      "gloss": "water — a word that barely changed from Latin, and takes el without ever stopping being feminine",
+      "id": "ES-C21-lunes-viernes",
+      "sequence": 1470,
+      "title": "lunes to viernes — the planets of the week, worn down",
+      "headword": "lunes, martes, miércoles, jueves, viernes",
+      "romanization": "lunes, martes, miércoles, jueves, viernes",
+      "gloss": "the weekdays (Monday–Friday) — worn-down planet-god names",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "wide-table"
       ],
-      "sourceHash": "fnv1a64:ad6627ca29096a01",
-      "notice": null,
+      "sourceHash": "fnv1a64:27a8f806b6300947",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes for one table that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "The words, taken apart: the planet weekdays"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The words, taken apart: the planet weekdays until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,61 +44,40 @@
             },
             {
               "kind": "speech",
-              "text": "One of the least changed words in Spanish, carrying one of its most misunderstood rules. The \"masculine\" article on this feminine noun is not a mistake and not an exception to gender."
+              "text": "The Romans mapped the seven-day week onto the seven visible \"wandering stars\" — the planet-gods. Spanish kept that map, but handled the word \"day\" differently from its Romance cousins: where French still spells out \"-di\" (day) on every weekday, Spanish mostly just dropped it."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The word, taken apart: agua",
+          "title": "The words, taken apart: the planet weekdays",
           "segments": [
             {
               "kind": "speech",
-              "text": "agua (\"water\") from Latin aqua — almost unchanged in two thousand years. Compare French, where the very same word was worn all the way down to a bare \"eau,\" just the sound \"oh.\" Same starting point, same span of time, wildly different amounts of erosion: how fast a language wears its words down is not fixed."
+              "text": "Each weekday began life as \"[planet-god]'s diēs (day).\" In Vulgar Latin, diēs was simply dropped as a separate word in most of these — what survived is just the planet's own Latin genitive form. That's why martes, jueves, viernes already end in ‑s: not because diēs wore down into one, but because Martis, Iovis, Veneris — the planets' own genitive forms — end in ‑s in Latin already. Lunes has no such ‑s to inherit (lūnae doesn't end in one), so it likely picked up the ending by analogy with its four siblings:"
+            },
+            {
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 5,
+              "headers": [
+                "Spanish",
+                "from Latin",
+                "planet-god",
+                "English echo"
+              ],
+              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, planet-god, English echo. Come back and look at it when you have stopped."
             },
             {
               "kind": "speech",
-              "text": "English kept the whole Latin word too, but as a learned borrowing rather than an inherited everyday one: aquatic, aquarium, aqueduct, aqualung."
+              "text": "Compare French, which keeps diēs as its own visible syllable on every day — lundi, mardi, jeudi — while Spanish dropped it from four of its five weekdays. miércoles is the odd one out: some historians of the language think its extra \"‑coles\" is a genuine surviving trace of diēs itself (fused in and reshaped) — though the exact sound changes are debated, unlike the plainer, better-understood story for its four siblings."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: el agua's article and gender",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Notice: el agua, not la agua — yet agua is genuinely feminine. You can prove it: el agua fría, \"the cold water,\" keeps the feminine adjective ending, and the plural is las aguas, never los aguas."
-            },
-            {
-              "kind": "speech",
-              "text": "The rule is phonological, not grammatical. Spanish swaps la for el directly before a singular feminine noun beginning with a stressed a-sound, to avoid running two identical vowels together (la agua). It is the same instinct that makes English pick \"an apple\" over \"a apple.\""
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "singular",
-                "plural"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "the water. singular: el agua. plural: las aguas.",
-                "the eagle. singular: el águila. plural: las águilas.",
-                "the axe. singular: el hacha. plural: las hachas."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Only the article changes. The noun's gender never moves."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -102,34 +90,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"el agua\" — water, feminine, but takes el",
+              "instruction": "\"lunes, martes, miércoles, jueves, viernes\" — the work week",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"el agua\" — water, feminine, but takes *el*]"
+              "source": "[YOU SAY: \"lunes, martes, miércoles, jueves, viernes\" — the work week]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the proof — \"el agua fría\" and \"las aguas\"",
+              "instruction": "each as \"[planet]'s day, worn down\" — \"lunes = Moon, jueves = Jupiter\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the proof — \"el agua fría\" and \"las aguas\"]"
+              "source": "[YOU SAY: each as \"[planet]'s day, worn down\" — \"lunes = Moon, jueves = Jupiter\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the contrast — \"agua\" barely changed; French's \"eau\" wore all the way down",
+              "instruction": "the bridge — \"martes / Tuesday, both the war-god's day (Mars / Tiw)\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the contrast — \"agua\" barely changed; French's \"eau\" wore all the way down]"
+              "source": "[YOU SAY: the bridge — \"martes / Tuesday, both the war-god's day (Mars / Tiw)\"]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -141,27 +129,52 @@
             },
             {
               "kind": "speech",
-              "text": "Is agua masculine or feminine? (Feminine — el replaces la only because agua begins with a stressed a.) How would you prove it? (El agua fría; las aguas.) How does Spanish's erosion of aqua compare with French's? (Much less — Spanish kept nearly the whole word; French wore it to \"eau.\")"
+              "text": "Recall the weekday family:"
+            },
+            {
+              "kind": "speech",
+              "text": "What did every Spanish weekday begin life as? (\"[Planet-god]'s diēs (day)\" — the same Latin phrase French keeps more visibly with -di.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Why do martes, jueves, viernes end in -s, and where does lunes get its -s from? (From the planet's own Latin genitive — Martis/Iovis/ Veneris already end in -s; lunes likely picked it up by analogy, since lūnae has no -s of its own.)"
+            },
+            {
+              "kind": "speech",
+              "text": "What's debated about miércoles? (Whether its \"‑coles\" is a genuine surviving trace of diēs — unlike the plainer, better-understood story for its four siblings.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Why do martes and Tuesday line up? (They name the same day for the war-god: Mars in Latin, Tiw in Germanic.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C26-vino",
-      "sequence": 1580,
-      "title": "el vino — one word, three separate arrivals in English",
-      "headword": "el vino",
-      "romanization": "el vino",
-      "gloss": "wine — one Latin root that reached English by three separate roads, plus one English built at home",
+      "id": "ES-C21-sabado-domingo",
+      "sequence": 1480,
+      "title": "sábado and domingo — the week's religious edge",
+      "headword": "sábado, domingo",
+      "romanization": "sábado, domingo",
+      "gloss": "the weekend (Saturday, Sunday) — where religion overwrote astronomy",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "wide-table"
       ],
-      "sourceHash": "fnv1a64:dcc95d91fba9efb4",
-      "notice": null,
+      "sourceHash": "fnv1a64:cde57a8fa05c4f12",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes for one table that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "The two days, taken apart"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The two days, taken apart until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -176,40 +189,39 @@
             },
             {
               "kind": "speech",
-              "text": "The second drink is grammatically boring — plain masculine, plain el vino, no stressed-a trick. Its history makes up for that."
+              "text": "Five days named for planets — then two that broke the pattern entirely. The weekend is where religion overwrote astronomy, and Spanish keeps both rewrites in plain view."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The word, taken apart: vino",
+          "title": "The two days, taken apart",
           "segments": [
             {
-              "kind": "speech",
-              "text": "vino (\"wine\") from Latin vīnum — which held its shape well, as French's vin did too."
-            },
-            {
-              "kind": "speech",
-              "text": "English shares the very same root by more than one road, and the roads are worth separating, because they show three different ways a word can travel:"
-            },
-            {
-              "kind": "table",
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 2,
               "headers": [
-                "English word",
-                "how it got there"
+                "Spanish",
+                "from Latin",
+                "meaning",
+                "note"
               ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "English word: wine. how it got there: vīnum borrowed directly into old Germanic, very early.",
-                "English word: vine, vinegar. how it got there: borrowed centuries later, secondhand via French (vin + aigre, \"sour wine\").",
-                "English word: vineyard. how it got there: not borrowed at all — English built it at home from the already-borrowed wine plus native yard."
-              ]
+              "text": "There is a table here I cannot read to you — 4 columns and 2 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, meaning, note. Come back and look at it when you have stopped."
             },
             {
               "kind": "speech",
-              "text": "So wine and vine are the same Latin word twice, arriving a thousand years apart by different routes, and vineyard is a homemade compound made out of the first arrival. One Latin noun; three English histories."
+              "text": "Two different rewrites:"
+            },
+            {
+              "kind": "speech",
+              "text": "sábado would have been \"Saturn's day\" (as English Saturday still is — the one weekday English kept a Roman god for). Instead, Latin Christians borrowed the Jewish Sabbath (Sabbatum from Hebrew shabbāt), and it became sábado. So English Saturday and Spanish sábado are the same day, two different names — the planet vs. the Sabbath."
+            },
+            {
+              "kind": "speech",
+              "text": "domingo drops Sun-worship entirely: where English keeps Sunday, Spanish made it diēs Dominica, \"the Lord's day\" (Dominus becomes English dominion, dominate, dame). Spanish kept domingo recognizably close to Dominica — compare French's more worn-down dimanche, where the di- (day) fossil jumped to the front of the word."
             }
           ]
         },
@@ -227,20 +239,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"el agua, el vino\" — the two drinks",
+              "instruction": "the full week — \"lunes, martes, miércoles, jueves, viernes, sábado, domingo\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"el agua, el vino\" — the two drinks]"
+              "source": "[YOU SAY: the full week — \"lunes, martes, miércoles, jueves, viernes, sábado, domingo\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"vino\" then English \"wine, vine, vinegar\" — one root, three roads",
+              "instruction": "\"sábado = Sabbath, domingo = the Lord's day\" — religion, not planets",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"vino\" then English \"wine, vine, vinegar\" — one root, three roads]"
+              "source": "[YOU SAY: \"sábado = Sabbath, domingo = the Lord's day\" — religion, not planets]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair-ups — \"sábado / Saturday (Sabbath vs. Saturn)\", \"domingo / Sunday (Lord vs. Sun)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair-ups — \"sábado / Saturday (Sabbath vs. Saturn)\", \"domingo / Sunday (Lord vs. Sun)\"]"
             }
           ]
         },
@@ -257,137 +278,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin word gives vino? (Vīnum.) Name three English cousins and say how each arrived. (Wine — direct, early, into Germanic; vine/vinegar — later, via French; vineyard — built at home from wine plus yard.) And why is it el agua but las aguas? (The el is a sound rule for a stressed a, singular only.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C26-pan",
-      "sequence": 1590,
-      "title": "el pan — bread, and the friend who shares it",
-      "headword": "el pan",
-      "romanization": "el pan",
-      "gloss": "bread — and the compañero who shares it with you",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:53fc6eef47b7bc3e",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Spanish's word for bread hides the same lovely word-story you'd find in English's \"companion\" — except Spanish kept both halves, the bread and the friendship."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: pan",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "el pan (\"bread\") from Latin pānis. Masculine: el pan."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: bread and friendship",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The Latin root pān- (\"bread\") gives Spanish its own word for a close friend:"
-            },
-            {
-              "kind": "speech",
-              "text": "compañero / compañera (\"companion, friend, partner\") from com- (\"with\")."
-            },
-            {
-              "kind": "speech",
-              "text": "pānis — literally \"one you share bread with.\" Spanish built this word from the very same recipe as English companion and company (which come from the identical Latin pieces) — but where English only kept the friendship sense, Spanish still visibly uses the same root for the actual bread (pan) too."
-            },
-            {
-              "kind": "speech",
-              "text": "panadería (\"bakery\") and panadero (\"baker\") — both transparently built on pan."
-            },
-            {
-              "kind": "speech",
-              "text": "So pan and compañero are the same word-family doing double duty in Spanish: name the food, and name the friend you'd share it with."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"el pan\" — bread",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"el pan\" — bread]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"compañero\" — literally, one you share bread with",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"compañero\" — literally, one you share bread with]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"panadería, panadero\" — bakery, baker",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"panadería, panadero\" — bakery, baker]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give \"bread\" with its article. (El pan.) What does compañero literally mean, and what's it built from? (\"One you share bread with\" — com- + pānis.) Does English keep this same double meaning? (No — English's companion only kept the friendship sense; Spanish still uses the same root for the actual bread, pan, too.)"
+              "text": "Give all seven Spanish days. (Lunes … domingo.) Where does sábado come from, and its English contrast? (The Sabbath, Sabbatum; English kept Saturday = Saturn's day.) What does domingo mean literally? (\"The Lord's day,\" diēs Dominica.)"
             }
           ]
         }

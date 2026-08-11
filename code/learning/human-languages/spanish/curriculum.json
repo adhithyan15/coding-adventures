@@ -1104,6 +1104,66 @@
       "after": []
     },
     {
+      "id": "ES-PATH-040-ASPECT",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C48-dos-miradas"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-040-ASPECT"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-040-CUANDO",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C48-cuando"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-040-CUANDO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-040-STATE-VERBS",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C48-tenia-tuve"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-040-STATE-VERBS"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-040-REVIEW-PASTS",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C48-repaso-dos-pasados"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-040-REVIEW-PASTS"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-040-SYNTH-STORY",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C48-sintesis-una-historia"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-040-SYNTH-STORY"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-041",
       "spine_node": "SPINE-TALK-ABOUT-FUTURE",
       "lessons": [
@@ -1613,7 +1673,12 @@
         "ES-PATH-039-HACER-PRETERITE-CH15",
         "ES-PATH-039-ESTAR-PRETERITE-CH15",
         "ES-PATH-039-CONSOLIDATION-CH15",
-        "ES-PATH-040"
+        "ES-PATH-040",
+        "ES-PATH-040-ASPECT",
+        "ES-PATH-040-CUANDO",
+        "ES-PATH-040-STATE-VERBS",
+        "ES-PATH-040-REVIEW-PASTS",
+        "ES-PATH-040-SYNTH-STORY"
       ],
       "omits": [
         "VERB-PAST"
@@ -3261,6 +3326,61 @@
       "prerequisites": [],
       "lessons": [
         "ES-C47-sintesis-dos-a-la-vez"
+      ]
+    },
+    {
+      "id": "ES-EXT-040-ASPECT",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C48-dos-miradas"
+      ]
+    },
+    {
+      "id": "ES-EXT-040-CUANDO",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C48-cuando"
+      ]
+    },
+    {
+      "id": "ES-EXT-040-STATE-VERBS",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C48-tenia-tuve"
+      ]
+    },
+    {
+      "id": "ES-EXT-040-REVIEW-PASTS",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C48-repaso-dos-pasados"
+      ]
+    },
+    {
+      "id": "ES-EXT-040-SYNTH-STORY",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C48-sintesis-una-historia"
       ]
     }
   ]

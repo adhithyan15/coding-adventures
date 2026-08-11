@@ -1,95 +1,63 @@
-Spanish, chapter 104: Water, Wine, and Bread.
-3 lessons. All 3 can be done entirely by ear.
+Spanish, chapter 104: Days of the Week.
+2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 3.
-el agua — water, and an article that is not what it looks like.
+Lesson 1 of 2.
+lunes to viernes — the planets of the week, worn down.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The words, taken apart: the planet weekdays until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-One of the least changed words in Spanish, carrying one of its most misunderstood rules. The "masculine" article on this feminine noun is not a mistake and not an exception to gender.
+The Romans mapped the seven-day week onto the seven visible "wandering stars" — the planet-gods. Spanish kept that map, but handled the word "day" differently from its Romance cousins: where French still spells out "-di" (day) on every weekday, Spanish mostly just dropped it.
 
-The word, taken apart: agua.
-agua ("water") from Latin aqua — almost unchanged in two thousand years. Compare French, where the very same word was worn all the way down to a bare "eau," just the sound "oh." Same starting point, same span of time, wildly different amounts of erosion: how fast a language wears its words down is not fixed.
-English kept the whole Latin word too, but as a learned borrowing rather than an inherited everyday one: aquatic, aquarium, aqueduct, aqualung.
-
-Grammar Lens: el agua's article and gender.
-Notice: el agua, not la agua — yet agua is genuinely feminine. You can prove it: el agua fría, "the cold water," keeps the feminine adjective ending, and the plural is las aguas, never los aguas.
-The rule is phonological, not grammatical. Spanish swaps la for el directly before a singular feminine noun beginning with a stressed a-sound, to avoid running two identical vowels together (la agua). It is the same instinct that makes English pick "an apple" over "a apple."
-[a table of 3 rows, read aloud]
-the water. singular: el agua. plural: las aguas.
-the eagle. singular: el águila. plural: las águilas.
-the axe. singular: el hacha. plural: las hachas.
-Only the article changes. The noun's gender never moves.
+The words, taken apart: the planet weekdays.
+Each weekday began life as "[planet-god]'s diēs (day)." In Vulgar Latin, diēs was simply dropped as a separate word in most of these — what survived is just the planet's own Latin genitive form. That's why martes, jueves, viernes already end in ‑s: not because diēs wore down into one, but because Martis, Iovis, Veneris — the planets' own genitive forms — end in ‑s in Latin already. Lunes has no such ‑s to inherit (lūnae doesn't end in one), so it likely picked up the ending by analogy with its four siblings:
+There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, planet-god, English echo. Come back and look at it when you have stopped.
+Compare French, which keeps diēs as its own visible syllable on every day — lundi, mardi, jeudi — while Spanish dropped it from four of its five weekdays. miércoles is the odd one out: some historians of the language think its extra "‑coles" is a genuine surviving trace of diēs itself (fused in and reshaped) — though the exact sound changes are debated, unlike the plainer, better-understood story for its four siblings.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "el agua" — water, feminine, but takes el]
+[your turn — say: "lunes, martes, miércoles, jueves, viernes" — the work week]
 [pause 8 seconds for the answer]
-[your turn — say: the proof — "el agua fría" and "las aguas"]
+[your turn — say: each as "[planet]'s day, worn down" — "lunes = Moon, jueves = Jupiter"]
 [pause 8 seconds for the answer]
-[your turn — say: the contrast — "agua" barely changed; French's "eau" wore all the way down]
+[your turn — say: the bridge — "martes / Tuesday, both the war-god's day (Mars / Tiw)"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is agua masculine or feminine? (Feminine — el replaces la only because agua begins with a stressed a.) How would you prove it? (El agua fría; las aguas.) How does Spanish's erosion of aqua compare with French's? (Much less — Spanish kept nearly the whole word; French wore it to "eau.")
+Recall the weekday family:
+What did every Spanish weekday begin life as? ("[Planet-god]'s diēs (day)" — the same Latin phrase French keeps more visibly with -di.)
+Why do martes, jueves, viernes end in -s, and where does lunes get its -s from? (From the planet's own Latin genitive — Martis/Iovis/ Veneris already end in -s; lunes likely picked it up by analogy, since lūnae has no -s of its own.)
+What's debated about miércoles? (Whether its "‑coles" is a genuine surviving trace of diēs — unlike the plainer, better-understood story for its four siblings.)
+Why do martes and Tuesday line up? (They name the same day for the war-god: Mars in Latin, Tiw in Germanic.)
 
 
-Lesson 2 of 3.
-el vino — one word, three separate arrivals in English.
+Lesson 2 of 2.
+sábado and domingo — the week's religious edge.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The two days, taken apart until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-The second drink is grammatically boring — plain masculine, plain el vino, no stressed-a trick. Its history makes up for that.
+Five days named for planets — then two that broke the pattern entirely. The weekend is where religion overwrote astronomy, and Spanish keeps both rewrites in plain view.
 
-The word, taken apart: vino.
-vino ("wine") from Latin vīnum — which held its shape well, as French's vin did too.
-English shares the very same root by more than one road, and the roads are worth separating, because they show three different ways a word can travel:
-[a table of 3 rows, read aloud]
-English word: wine. how it got there: vīnum borrowed directly into old Germanic, very early.
-English word: vine, vinegar. how it got there: borrowed centuries later, secondhand via French (vin + aigre, "sour wine").
-English word: vineyard. how it got there: not borrowed at all — English built it at home from the already-borrowed wine plus native yard.
-So wine and vine are the same Latin word twice, arriving a thousand years apart by different routes, and vineyard is a homemade compound made out of the first arrival. One Latin noun; three English histories.
+The two days, taken apart.
+There is a table here I cannot read to you — 4 columns and 2 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, meaning, note. Come back and look at it when you have stopped.
+Two different rewrites:
+sábado would have been "Saturn's day" (as English Saturday still is — the one weekday English kept a Roman god for). Instead, Latin Christians borrowed the Jewish Sabbath (Sabbatum from Hebrew shabbāt), and it became sábado. So English Saturday and Spanish sábado are the same day, two different names — the planet vs. the Sabbath.
+domingo drops Sun-worship entirely: where English keeps Sunday, Spanish made it diēs Dominica, "the Lord's day" (Dominus becomes English dominion, dominate, dame). Spanish kept domingo recognizably close to Dominica — compare French's more worn-down dimanche, where the di- (day) fossil jumped to the front of the word.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "el agua, el vino" — the two drinks]
+[your turn — say: the full week — "lunes, martes, miércoles, jueves, viernes, sábado, domingo"]
 [pause 8 seconds for the answer]
-[your turn — say: "vino" then English "wine, vine, vinegar" — one root, three roads]
+[your turn — say: "sábado = Sabbath, domingo = the Lord's day" — religion, not planets]
+[pause 8 seconds for the answer]
+[your turn — say: the pair-ups — "sábado / Saturday (Sabbath vs. Saturn)", "domingo / Sunday (Lord vs. Sun)"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Latin word gives vino? (Vīnum.) Name three English cousins and say how each arrived. (Wine — direct, early, into Germanic; vine/vinegar — later, via French; vineyard — built at home from wine plus yard.) And why is it el agua but las aguas? (The el is a sound rule for a stressed a, singular only.)
-
-
-Lesson 3 of 3.
-el pan — bread, and the friend who shares it.
-
-Warm-up.
-[pause 2 seconds]
-Spanish's word for bread hides the same lovely word-story you'd find in English's "companion" — except Spanish kept both halves, the bread and the friendship.
-
-The word, taken apart: pan.
-el pan ("bread") from Latin pānis. Masculine: el pan.
-
-Why it's said this way: bread and friendship.
-The Latin root pān- ("bread") gives Spanish its own word for a close friend:
-compañero / compañera ("companion, friend, partner") from com- ("with").
-pānis — literally "one you share bread with." Spanish built this word from the very same recipe as English companion and company (which come from the identical Latin pieces) — but where English only kept the friendship sense, Spanish still visibly uses the same root for the actual bread (pan) too.
-panadería ("bakery") and panadero ("baker") — both transparently built on pan.
-So pan and compañero are the same word-family doing double duty in Spanish: name the food, and name the friend you'd share it with.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "el pan" — bread]
-[pause 8 seconds for the answer]
-[your turn — say: "compañero" — literally, one you share bread with]
-[pause 8 seconds for the answer]
-[your turn — say: "panadería, panadero" — bakery, baker]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give "bread" with its article. (El pan.) What does compañero literally mean, and what's it built from? ("One you share bread with" — com- + pānis.) Does English keep this same double meaning? (No — English's companion only kept the friendship sense; Spanish still uses the same root for the actual bread, pan, too.)
+Give all seven Spanish days. (Lunes … domingo.) Where does sábado come from, and its English contrast? (The Sabbath, Sabbatum; English kept Saturday = Saturn's day.) What does domingo mean literally? ("The Lord's day," diēs Dominica.)

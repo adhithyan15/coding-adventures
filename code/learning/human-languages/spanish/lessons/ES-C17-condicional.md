@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C17-condicional
 spine_node: SPINE-TALK-ABOUT-FUTURE
-sequence: 1282
-chapter: 90
+sequence: 1302
+chapter: 95
 type: grammar
 headword: hablaría
 gloss: the singular conditional of hablar — hablaría, hablarías, hablaría

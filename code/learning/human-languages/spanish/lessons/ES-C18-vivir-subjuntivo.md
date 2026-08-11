@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C18-vivir-subjuntivo
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 1322
-chapter: 94
+sequence: 1342
+chapter: 99
 type: grammar
 headword: viva · vivas · viva
 gloss: the singular present subjunctive of vivir

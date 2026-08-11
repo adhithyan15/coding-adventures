@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C18-poder-subjuntivo
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 1330
-chapter: 95
+sequence: 1350
+chapter: 100
 type: grammar
 headword: pueda · puedas · pueda
 gloss: the singular present subjunctive of poder

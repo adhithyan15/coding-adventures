@@ -1,34 +1,97 @@
-Spanish, chapter 106: Noon and Midnight.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 106: Parents and Siblings.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-mediodía, medianoche — noon and midnight, spelled out in full.
+Lesson 1 of 3.
+el padre, la madre — among the oldest words there are.
 
 Warm-up.
 [pause 2 seconds]
-Two hours that don't get a number — they get a name. And Spanish keeps that name far more transparent than its French cousin does.
+"Father" and "mother" are some of the oldest reconstructible words in human language — older than Latin, older than Rome. Spanish kept them close to the Latin original, and they are secretly the same words as English father and mother.
 
-The two words, taken apart.
+The words, taken apart: padre and madre.
+el padre ("father") from Latin pater from PIE ph₂tḗr.
+la madre ("mother") from Latin māter from PIE méh₂tēr.
+
+Why it's said this way: the English sound-law.
+Padre and English father both descend independently from the same PIE word — they're siblings, not parent and child. Latin (and Spanish after it) kept the original p and t largely intact; the Germanic branch that gave English took a separate road through Grimm's Law, which shifted the inherited p becomes f and t becomes th:
 [a table of 2 rows, read aloud]
-Spanish: mediodía. from Latin: medius diēs. literally: "mid-day" (medio "middle" + día "day").
-Spanish: medianoche. from Latin: media nox. literally: "mid-night" (media "middle" + noche "night").
-Both halves are fully alive, ordinary Spanish words on their own: medio/media ("middle" — cousin of English medium, mid, middle) and día/noche ("day/night," words you already know). Compare French, which took the same Latin phrase down a bumpier road: minuit's second half, -nuit, is still the plain, everyday French word for "night" — just as recognizable as Spanish's noche. But midi's second half, -di, wore down into an opaque fragment: the ordinary French word for "day" is jour, not di — that piece survives only as a fossil, tucked inside weekday names like lundi and mardi. So the erosion split unevenly: French kept "night" transparent and lost "day," while Spanish kept both.
-They don't need horas the way a normal Spanish time (son las tres) never does either — they simply stand in for the hour on their own:
-Es mediodía. — "It is noon." Es medianoche. — "It is midnight."
-(Fun aside: English noon comes from Latin nōna hōra, "the ninth hour" — originally mid-afternoon, it drifted earlier over the centuries to mean midday. Spanish kept the tidier, transparent "mid-day" instead.)
+PIE ancestor: ph₂tḗr. Latin becomes Spanish: pater becomes padre. Germanic becomes English: father.
+PIE ancestor: méh₂tēr. Latin becomes Spanish: māter becomes madre. Germanic becomes English: mother.
+So padre and father aren't lookalikes borrowed late, and neither one comes from the other — they're the same inherited PIE word, one branch keeping the p, the other shifting it to f. The Latin root also gives Spanish and English their "of a parent" adjectives: paternal, paternidad, patrón and maternal, maternidad. (A further Latin-only offshoot, māter becomes māteria, "the stuff a tree-mother produces," gives Spanish materia and, separately, matriz — "womb" — via Latin mātrix.)
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "mediodía" (noon), "medianoche" (midnight)]
+[your turn — say: "el padre, la madre"]
 [pause 8 seconds for the answer]
-[your turn — say: break them — "medio + día", "media + noche" — both halves still ordinary words]
+[your turn — say: the sound-law — "padre keeps p; father shifts to f — same word"]
 [pause 8 seconds for the answer]
-[your turn — say: "Es mediodía. Es medianoche." — they stand in for the hour]
-[pause 8 seconds for the answer]
-[your turn — say: the contrast — French kept "night" (nuit) but wore "day" down to a fossil (-di)]
+[your turn — say: "padre becomes paternal; madre becomes maternal"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What do mediodía and medianoche literally mean, and from what Latin? ("Mid-day" from medius diēs; "mid-night" from media nox.) Are both halves still recognizable, ordinary Spanish words? (Yes — medio/ media "middle," día/noche "day/night.") Did French erode its phrase evenly? (No — French's -nuit stayed just as transparent as Spanish's noche, but its -di wore down to an opaque fossil, since the everyday French word for "day" is actually jour.) How do you say "it is noon"? (Es mediodía.)
+Give "father" and "mother" with their articles. (el padre, la madre.) Does padre turn into English father directly? (No — both descend independently from the same PIE word; the Germanic branch shifted p becomes f and t becomes th via Grimm's Law, while Latin/Spanish kept the original sounds.) Name an English cousin of each. (padre becomes paternal; madre becomes maternal.)
+
+
+Lesson 2 of 3.
+el hermano, la hermana — brother and sister, from a different word entirely.
+
+Warm-up.
+[pause 2 seconds]
+You might expect Spanish "brother" to come from Latin frāter, the way French's frère does. It does not. Spanish's siblings took a completely different word — one about seeds.
+
+The words, taken apart: hermano and hermana.
+Classical Latin could say frāter germānus, literally "a brother of the same stock/blood" — distinguishing a full brother from a half-brother, or from a "brother" in some looser sense.
+Then something ordinary and strange happened: in everyday Latin the adjective took over the whole job and the noun quietly dropped out. (English does this all the time — a mobile phone becomes a mobile, a cellular telephone becomes a cell.) What survived is the modifier:
+el hermano ("brother") from Latin germānus.
+la hermana ("sister") from Latin germāna.
+So Spanish's everyday word for brother is, grammatically, a leftover adjective.
+
+Why it's said this way: where germanus comes from.
+Germānus traces back to germen, "sprout, bud, seed" — the same root that gives English germ, germinate, and germane (originally "closely related," from the same seed, before it loosened into just "relevant").
+So calling someone your hermano is, at the etymological root, calling them "sprung from the same seed." (And no, this has nothing to do with Germany — that name is a separate, unrelated puzzle.)
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "el hermano, la hermana" — brother, sister]
+[pause 8 seconds for the answer]
+[your turn — say: the root chain — "germen, seed" becomes "germānus, of the same seed" becomes "hermano"]
+[pause 8 seconds for the answer]
+[your turn — say: "hermano" then English "germinate, germane"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Does Spanish hermano come from Latin frāter? (No — from germānus, "of the same stock/seed," an adjective that swallowed the noun frāter it used to modify.) What does its root germen mean, and what English words share it? (Seed, sprout — germ, germinate, germane.) Next: the silent h on the front, which is not the h you think it is.
+
+
+Lesson 3 of 3.
+the h in hermano — a letter that was never spoken.
+
+Warm-up.
+[pause 2 seconds]
+Germānus starts with a g. Hermano starts with an h. Something has to explain that — and the obvious explanation is the wrong one.
+
+You'll want to know first.
+el hermano, la hermana — the words and the germen root.
+
+Why it's said this way: two different silent h's.
+You may already know that Spanish often turns a Latin initial f into a silent h — filius becomes hijo ("son"), facere becomes hacer ("to do"). Hermano is not that, and the difference is worth getting right.
+Germānus is stressed on its third syllable (ger-MĀ-nus), which leaves the opening ger- unstressed. Latin's g before a front vowel had already softened toward a y-like sound in everyday speech — and in that unstressed position it simply fell away entirely, giving Old Spanish ermano, with no h at all. That is the form actually recorded centuries ago.
+The h you see today was added later, in spelling only, to mark the word's old link to Latin g-. Compare:
+[a table of 2 rows, read aloud]
+word: hijo, hacer. what happened to the sound: Latin f- becomes a real breathy h. was the h ever spoken?: yes, for centuries.
+word: hermano. what happened to the sound: Latin g- simply dropped. was the h ever spoken?: no, never.
+Same silent letter today; two completely different backstories, only one of which involves a sound at all.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "germānus" then "ermano" then "hermano" — the three stages]
+[pause 8 seconds for the answer]
+[your turn — say: the honest distinction — hijo/hacer's h was once truly spoken; hermano's h never was]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Is hermano's h the same kind of change as hijo's or hacer's? (No.) What actually happened to germānus's opening? (Its g dropped away in an unstressed syllable, giving Old Spanish ermano.) So where did the h come from? (Spelling — added later to mark the Latin link, never pronounced.)
