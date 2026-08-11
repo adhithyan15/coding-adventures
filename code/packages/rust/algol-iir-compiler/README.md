@@ -174,6 +174,10 @@ the empty string on its first procedure call and retains subsequent assignments
 across calls. A captured string still requires assignment before its first
 read, just like a local string.
 
+Direct real literals also use the shared string output path, preserving their
+source spelling without requiring a runtime `f64` formatter. Real variables and
+computed real expressions remain explicit type errors.
+
 Proper procedures now lower as side-effecting IIR `void` functions when called
 in statement position. They can write enclosing scalar or array globals and use
 the same string, integer, or boolean output paths as typed procedures. Using a

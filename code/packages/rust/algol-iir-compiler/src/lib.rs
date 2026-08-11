@@ -2183,6 +2183,14 @@ impl Compiler {
                 continue;
             }
 
+            // A real literal has a deterministic source spelling, so this
+            // bounded AL4 step can print it through the already-portable string
+            // path without introducing a runtime f64 formatting ABI.
+            if let Some(literal) = expr_real_literal_text(actual) {
+                self.emit_standard_output_literal(&literal);
+                continue;
+            }
+
             if let Some(var_name) = expr_variable_name(actual) {
                 let binding = self.require_var(&var_name)?;
                 if binding.ty == ScalarType::String
@@ -5951,6 +5959,23 @@ fn expr_string_literal(node: &GrammarASTNode) -> Option<String> {
     None
 }
 
+fn expr_real_literal_text(node: &GrammarASTNode) -> Option<String> {
+    let tokens = direct_tokens(node);
+    if tokens.len() == 1 && tokens[0].effective_type_name() == "REAL_LIT" {
+        return Some(tokens[0].value.clone());
+    }
+    if !tokens.is_empty() {
+        return None;
+    }
+
+    let child_nodes = direct_nodes(node);
+    if child_nodes.len() == 1 {
+        return expr_real_literal_text(child_nodes[0]);
+    }
+
+    None
+}
+
 fn expr_variable_name(node: &GrammarASTNode) -> Option<String> {
     // A call with one bare-variable actual has a single `actual_params` child.
     // Do not mistake that actual for the call expression itself.
@@ -6754,13 +6779,31 @@ mod tests {
     }
 
     #[test]
-    fn al4_print_real_argument_rejects_as_wrong_type() {
-        let err = compile_source("begin print(4.2) end", "test")
-            .expect_err("real output is not implemented by the integer foothold");
+    fn al4_print_real_literal_uses_source_spelling() {
+        let module = compile_source("begin print(4.25) end", "test")
+            .expect("real literal output compiles");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "4.25")
+        }));
+    }
+
+    #[test]
+    fn al4_print_runtime_real_rejects_without_formatter_abi() {
+        let err = compile_source("begin real x; x := 4.2; print(x) end", "test")
+            .expect_err("runtime real output still needs a portable formatter");
         assert!(
             format!("{err:?}").contains("cannot print a real value"),
             "expected a real-type rejection, got: {err:?}"
         );
+    }
+
+    #[test]
+    fn al4_print_signed_real_literal_rejects_without_losing_sign() {
+        let err = compile_source("begin print(-4.25) end", "test")
+            .expect_err("a signed real is an expression, not a direct literal");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
