@@ -212,6 +212,11 @@ describe("generated book source hashes", () => {
     [150, 1],
     [151, 3],
     [152, 4],
+    [153, 1],
+    [154, 1],
+    [155, 1],
+    [156, 1],
+    [157, 1],
   ])("matches the browser-loaded Spanish Chapter %i AST across %i lessons", (chapter, count) => {
     const lessons = loadLessons();
     const expected = expectedBookHash("spanish", chapter);

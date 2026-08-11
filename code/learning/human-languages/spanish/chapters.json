@@ -3106,6 +3106,106 @@
           "ES-GRAMMAR-REASON-CHAIN-09"
         ]
       }
+    },
+    {
+      "chapter": 153,
+      "title": "Para --- For, Pointing Forward",
+      "label": "ch:para",
+      "canDo": "I can use para for a destination, a deadline, a recipient or a purpose.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C51-para",
+        "kind": "task",
+        "summary": "Complete ES-C51-para: produce para ti and para manana, and name the Latin piece inside para that means toward.",
+        "assesses": [
+          "ES-LEX-PARA",
+          "ES-GRAMMAR-PARA-FORWARD",
+          "ES-ETYMON-PER-AD"
+        ],
+        "note": "Replaces the usual list of twelve uses with one direction. The forward-pointing is inside the word: para is per + ad, and ad is the ad of advance and admit."
+      }
+    },
+    {
+      "chapter": 154,
+      "title": "Por --- And Three Phrases You Already Owned",
+      "label": "ch:por",
+      "canDo": "I can use por for a cause, a route or an exchange, and say what por favor literally means.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C51-por",
+        "kind": "task",
+        "summary": "Complete ES-C51-por: say what por favor literally means and name the English word that is the per inside por.",
+        "assesses": [
+          "ES-LEX-POR",
+          "ES-GRAMMAR-POR-THROUGH-BECAUSE",
+          "ES-ETYMON-PRO-PER"
+        ],
+        "note": "The reader has carried por favor, por que and porque since the opening chapters without ever being told what por means. This chapter explains three old phrases at once."
+      }
+    },
+    {
+      "chapter": 155,
+      "title": "Which Way Is the Arrow Pointing?",
+      "label": "ch:por-para-contrast",
+      "canDo": "I can choose between por and para with one question instead of a list of rules.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C51-la-flecha",
+        "kind": "task",
+        "summary": "Complete ES-C51-la-flecha: contrast para ti with por ti and state the arrow test.",
+        "assesses": [
+          "ES-GRAMMAR-POR-PARA-CONTRAST",
+          "ES-ETYMON-PER-AD",
+          "ES-ETYMON-PRO-PER"
+        ],
+        "note": "The test is not a mnemonic: para contains ad (toward) and por contains per (through), so it describes the words and keeps working on uses the book never showed."
+      }
+    },
+    {
+      "chapter": 156,
+      "title": "Review --- One Arrow",
+      "label": "ch:review-por-para",
+      "canDo": "I can state both directions and place my old por phrases under them.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C51-repaso-flecha",
+        "kind": "task",
+        "summary": "Complete ES-C51-repaso-flecha: give both directions, name three old phrases containing por, and say what it means when a sentence takes either.",
+        "assesses": [
+          "ES-GRAMMAR-POR-PARA-CONTRAST",
+          "ES-LEX-POR-FAVOR",
+          "ES-LEX-PORQUE-03"
+        ],
+        "note": "Mostly re-files old Spanish under a heading that explains it, and says so -- much of what looks like late grammar is a name for something already done blindly."
+      }
+    },
+    {
+      "chapter": 157,
+      "title": "Synthesis --- The Gift and the Motive",
+      "label": "ch:synthesis-por-para",
+      "canDo": "I can change the meaning of a sentence by choosing between por and para.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C51-sintesis-regalo-motivo",
+        "kind": "task",
+        "summary": "Complete ES-C51-sintesis-regalo-motivo: say the dinner sentence both ways and say what a wrong choice actually produces.",
+        "assesses": [
+          "ES-GRAMMAR-POR-PARA-CONTRAST",
+          "ES-LEX-PARA",
+          "ES-LEX-POR"
+        ],
+        "note": "First place where the smallest word carries the sentence's emotional content. A wrong choice is not bad grammar -- it is a true sentence about a different situation."
+      }
     }
   ]
 }

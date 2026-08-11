@@ -4759,6 +4759,51 @@
       "tex": "spanish/book/chapters/ch152-giving-reasons.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 153,
+      "sourceHash": "fnv1a64:506f967b60881e91",
+      "lessonIds": [
+        "ES-C51-para"
+      ],
+      "tex": "spanish/book/chapters/ch153-para.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 154,
+      "sourceHash": "fnv1a64:9e96ab061f0e8982",
+      "lessonIds": [
+        "ES-C51-por"
+      ],
+      "tex": "spanish/book/chapters/ch154-por.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 155,
+      "sourceHash": "fnv1a64:87a3eadbc5515f4c",
+      "lessonIds": [
+        "ES-C51-la-flecha"
+      ],
+      "tex": "spanish/book/chapters/ch155-por-para-contrast.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 156,
+      "sourceHash": "fnv1a64:28f753b6f4b168ad",
+      "lessonIds": [
+        "ES-C51-repaso-flecha"
+      ],
+      "tex": "spanish/book/chapters/ch156-review-por-para.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 157,
+      "sourceHash": "fnv1a64:0957c0fb80a62e04",
+      "lessonIds": [
+        "ES-C51-sintesis-regalo-motivo"
+      ],
+      "tex": "spanish/book/chapters/ch157-synthesis-por-para.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:c0940889d5248bc5",
