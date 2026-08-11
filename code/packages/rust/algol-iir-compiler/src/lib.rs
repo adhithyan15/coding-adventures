@@ -5998,6 +5998,38 @@ fn literal_nonneg_integer_power_chain(nodes: &[&GrammarASTNode]) -> Option<u32> 
     Some(value as u32)
 }
 
+fn literal_signed_integer_exponent(node: &GrammarASTNode) -> Option<i32> {
+    if let Some(value) = literal_nonneg_integer_exponent(node) {
+        return Some(value as i32);
+    }
+
+    let tokens = direct_tokens(node);
+    let child_nodes = direct_nodes(node);
+    if tokens.len() == 1
+        && child_nodes.len() == 1
+        && matches!(tokens[0].value.as_str(), "+" | "-")
+    {
+        let value = literal_signed_integer_exponent(child_nodes[0])?;
+        return match tokens[0].value.as_str() {
+            "+" => Some(value),
+            "-" => value.checked_neg(),
+            _ => None,
+        };
+    }
+    if tokens.len() == 2
+        && child_nodes.len() == 1
+        && tokens[0].value == "("
+        && tokens[1].value == ")"
+    {
+        return literal_signed_integer_exponent(child_nodes[0]);
+    }
+    if tokens.is_empty() && child_nodes.len() == 1 {
+        return literal_signed_integer_exponent(child_nodes[0]);
+    }
+
+    None
+}
+
 fn expr_string_literal(node: &GrammarASTNode) -> Option<String> {
     let tokens = direct_tokens(node);
     if tokens.len() == 1 && tokens[0].effective_type_name() == "STRING_LIT" {
@@ -6077,11 +6109,24 @@ fn expr_static_real_arithmetic_value(node: &GrammarASTNode) -> Option<f64> {
             }
         }
         let (base, exponents) = operands.split_first()?;
-        let exponent = literal_nonneg_integer_power_chain(exponents)?;
+        let exponent = literal_nonneg_integer_power_chain(exponents)
+            .map(|value| value as i32)
+            .or_else(|| {
+                (exponents.len() == 1)
+                    .then(|| literal_signed_integer_exponent(exponents[0]))
+                    .flatten()
+            })?;
         let base = expr_static_real_arithmetic_value(base)?;
         let mut value = 1.0;
-        for _ in 0..exponent {
-            value *= base;
+        if exponent < 0 && base == 0.0 {
+            return None;
+        }
+        for _ in 0..exponent.unsigned_abs() {
+            if exponent < 0 {
+                value /= base;
+            } else {
+                value *= base;
+            }
             if !value.is_finite() {
                 return None;
             }
@@ -7158,6 +7203,30 @@ mod tests {
                 .expect_err("unbounded static real power must require runtime formatting");
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }
+    }
+
+    #[test]
+    fn al4_print_static_real_signed_integer_power() {
+        let module = compile_source("begin print(2.0 ^ (-3), 4.0 ^ (+2)) end", "test")
+            .expect("static signed real integer powers compile");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["0.125", "16"]);
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+    }
+
+    #[test]
+    fn al4_print_static_real_negative_power_rejects_zero_base() {
+        let err = compile_source("begin print(0.0 ^ (-1)) end", "test")
+            .expect_err("zero to a negative power must fail closed");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]

@@ -1454,6 +1454,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("6.25512"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — one signed integer-literal exponent remains bounded by the
+    // existing cap. Negative powers use repeated division and still emit only
+    // a frontend-computed string on every backend.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin output(2.0 ^ (-3), 4.0 ^ (+2)) end",
+        expect: Expect::Stdout("0.12516"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — string procedures (LANG-FULL E4-dyn payoff, E4d-AL). The first
     // E4-dyn *frontend* feature: a `string procedure` returns a runtime string.
     // Here the result is chosen by control flow inside the body
@@ -6166,6 +6176,35 @@ fn algol_static_real_integer_power_output_runs_on_every_available_standard_backe
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but static real integer-power output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_static_real_signed_power_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("output(2.0 ^ (-3), 4.0 ^ (+2))")
+        })
+        .expect("the static real signed-power program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but static real signed-power output did not complete"
             );
             continue;
         };
