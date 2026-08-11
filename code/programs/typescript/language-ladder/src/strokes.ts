@@ -229,6 +229,9 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // of Oregon's instructional video: one top-to-bottom movement with no lift.
 // Its scoped key preserves Arabic provenance separately from the Persian and
 // Urdu records for the same Unicode glyph while sharing the Noto Naskh shape.
+// The adjacent Arabic ب demonstration sweeps its bowl right-to-left, turns up
+// at the left tip, then lifts once to place the dot below. Its Arabic-scoped
+// source remains separate from Persian ب while sharing the checked Noto shape.
 // Persian ا opens UT Austin's freehand alphabet demonstration: one vertical
 // movement travels from the top to the baseline. The lesson presents the
 // alphabet right-to-left, while this isolated non-connector remains one stroke.
@@ -373,6 +376,50 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: arabicAlphabetSource("ا"),
+  },
+  [ductusKey("arabic", "ب")]: {
+    script: "arabic",
+    glyph: "ب",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep the shallow bowl from right to left",
+            path: [
+              { x: 678, y: 382 },
+              { x: 663, y: 345 },
+              { x: 650, y: 305 },
+              { x: 654, y: 260 },
+              { x: 672, y: 215 },
+              { x: 688, y: 170 },
+              { x: 686, y: 126 },
+              { x: 620, y: 94 },
+              { x: 530, y: 65 },
+              { x: 430, y: 42 },
+              { x: 335, y: 38 },
+              { x: 245, y: 51 },
+              { x: 170, y: 83 },
+              { x: 120, y: 135 },
+              { x: 96, y: 205 },
+              { x: 100, y: 255 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then place the dot below",
+            path: [
+              { x: 412, y: -137 },
+              { x: 379, y: -101 },
+              { x: 344, y: -137 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ب"),
   },
   [ductusKey("urdu-nastaliq", "ج")]: {
     script: "urdu-nastaliq",

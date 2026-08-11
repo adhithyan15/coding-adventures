@@ -172,7 +172,7 @@ sitting upside down on a correct letter.
 **All eleven starter Tamil letters — அ, ஆ, இ, க, ம, வ, ல, ற, ன, ண, and ந —,
 all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —, all
 thirteen Urdu starter entries — ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, ی, and ے —,
-and Arabic ا have authored pen paths today.**
+and Arabic ا and ب have authored pen paths today.**
 `DUCTUS` admits no letter without a citation
 for its stroke order, and hand-drawing a letter is forbidden
 outright (a subtly wrong Tamil ண looks perfect to exactly the audience that
@@ -277,7 +277,12 @@ Arabic ا then adds its own one-frame filmstrip from the University of Oregon's
 continuous 00:05–00:07 movement with no lift. The adjacent one-way-connector
 lesson context remains explicit, and script-aware lookup keeps the Arabic source
 separate from the Persian and Urdu records while all three paths are checked
-against the same vendored Noto Naskh outline. The runtime
+against the same vendored Noto Naskh outline. Arabic ب adds the adjacent
+two-frame video demonstration: its shallow bowl sweeps continuously from the
+upper-right tip to the turned-up left tip, then one lift precedes the dot below.
+The two-way-connector context stays explicit, while script-aware lookup keeps
+its Arabic source separate from Persian ب and both learner paths stay on the
+same vendored Noto Naskh outline. The runtime
 resolves each cited path back to the owning script and lazily loads that script's font,
 while Tamil continues to use Noto Sans Tamil. Unverified letters still
 fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

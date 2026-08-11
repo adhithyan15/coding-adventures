@@ -240,7 +240,12 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   zero-lift learner path stays on the isolated Noto Naskh outline, while a
   script-scoped key keeps its Arabic source distinct from Persian and Urdu ا;
   the adjacent lesson's one-way-connector label and printed final form remain
-  explicit. The remaining **194** prose part orders across seven scripts (`arabic` 20,
+  explicit. The page's adjacent **ب** video then starts at the upper-right tip,
+  sweeps continuously right-to-left through the shallow bowl, turns up at the
+  left tip, and lifts once for the dot below. Its two-frame learner path stays
+  on the isolated Noto Naskh outline, while Arabic-scoped provenance remains
+  distinct from Persian ب and the lesson's two-way-connector context remains
+  explicit. The remaining **193** prose part orders across seven scripts (`arabic` 19,
   `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 22,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
