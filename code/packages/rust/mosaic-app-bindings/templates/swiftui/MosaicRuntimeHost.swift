@@ -35,8 +35,10 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
     super.init()
   }
 
-  static func load() -> MosaicRuntimeHost? {
-    let path = ProcessInfo.processInfo.environment["MOSAIC_APP_LIBRARY"]
+  static func load(libraryPath: String? = nil) -> MosaicRuntimeHost? {
+    let override = ProcessInfo.processInfo.environment["MOSAIC_APP_LIBRARY"]?
+      .trimmingCharacters(in: .whitespacesAndNewlines)
+    let path = override.flatMap { $0.isEmpty ? nil : $0 } ?? libraryPath
     let runtime = path?.withCString { mosaic_binding_open($0) } ?? mosaic_binding_open(nil)
     guard let runtime else {
       fputs("Mosaic Rust runtime unavailable: loader allocation failed\n", stderr)
@@ -74,8 +76,8 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
     }
   }
 
-  static func loadRequired() -> MosaicRuntimeHost {
-    guard let host = load() else {
+  static func loadRequired(libraryPath: String? = nil) -> MosaicRuntimeHost {
+    guard let host = load(libraryPath: libraryPath) else {
       preconditionFailure("native-complete requires the Mosaic Rust application runtime")
     }
     return host

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Resolve SwiftUI's selected Rust engine from its SwiftPM `Runtime` resource
+  bundle after the explicit environment override, so generated apps need no
+  global dylib installation.
 - Resolve XAML's conventional `mosaic_app.dll` from `AppContext.BaseDirectory`
   after the explicit environment override and before global lookup.
 - Resolve Qt's conventional Mosaic application library beside the native

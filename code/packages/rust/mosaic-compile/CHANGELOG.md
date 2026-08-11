@@ -2,13 +2,14 @@
 
 ## Unreleased
 
-### Added - Compose, Qt, and XAML native artifacts bundle their Rust engine
+### Added - Compose, Qt, SwiftUI, and XAML native artifacts bundle their Rust engine
 
 Package mode accepts `--runtime-library <target cdylib>`. Compose copies the
 selected `.dylib`, `.so`, or `.dll` into platform resources; Qt copies it beside
-the native executable and into the CMake install tree; XAML copies the selected
-DLL beside the WinUI executable. Their standard bindings resolve the app-relative
-engine, and `--profile native-complete --emit-project` rejects a Compose, Qt, or
+the native executable and into the CMake install tree; SwiftUI copies its dylib
+into the SwiftPM resource bundle; XAML copies the selected DLL beside the WinUI
+executable. Their standard bindings resolve the app-relative engine, and
+`--profile native-complete --emit-project` rejects a Compose, Qt, SwiftUI, or
 XAML build that omits it.
 
 ### Fixed - Flutter project shells compile complete packages

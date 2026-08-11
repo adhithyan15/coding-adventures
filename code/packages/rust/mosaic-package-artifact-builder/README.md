@@ -95,18 +95,20 @@ and retain sample props for previews. `native-complete` builds require the
 binding and runtime-provided props before mounting the component. Use
 `build_package_with_profile_and_runtime` with a target `.dylib`, `.so`, or `.dll`
 to copy the selected Rust engine into Compose's platform-specific application
-resources, Qt's CMake install tree, or XAML's WinUI output directory under its
-conventional `mosaic_app` filename. The Compose binding resolves its installed
-resource, while the Qt and XAML bindings resolve the engine beside the installed
-executable before global lookup. A strict Compose, Qt, or XAML project build
-without that selection reports `runtime.library-not-bundled`.
+resources, Qt's CMake install tree, SwiftUI's SwiftPM resource bundle, or XAML's
+WinUI output directory under its conventional `mosaic_app` filename. The Compose
+and SwiftUI bindings resolve their installed resources, while the Qt and XAML
+bindings resolve the engine beside the installed executable before global
+lookup. A strict Compose, Qt, SwiftUI, or XAML project build without that
+selection reports `runtime.library-not-bundled`.
 Every exported Compose component is mirrored into the generated Gradle source
 set, so `gradle compileKotlin` type-checks the complete package even though the
 shell mounts the manifest's first export as its entry component.
 SwiftUI package shells likewise install Mosaic's standard Foundation host plus
-a tiny C dynamic-loader target. Set `MOSAIC_APP_LIBRARY` to the application
-`cdylib` path (or package it as `libmosaic_app.dylib`); the generated host owns
-the Rust handle, buffers, sequence, snapshots, and updates. Permissive builds
+a tiny C dynamic-loader target. A selected `.dylib` is copied into SwiftPM's
+`Runtime` resource bundle and its `Bundle.module` path is passed to the generated
+host; `MOSAIC_APP_LIBRARY` remains a development override. The generated host
+owns the Rust handle, buffers, sequence, snapshots, and updates. Permissive builds
 can fall back to the legacy reflection hook; `native-complete` builds require
 the standard binding and runtime-provided props before mounting the view.
 Every exported SwiftUI view is mirrored into the generated SwiftPM application

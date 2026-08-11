@@ -562,11 +562,14 @@ fn validate_runtime_library_selection(
     let Some(path) = runtime_library else {
         return Ok(());
     };
-    if !matches!(opts.backend, Backend::Compose | Backend::Qt | Backend::Xaml) {
+    if !matches!(
+        opts.backend,
+        Backend::Compose | Backend::Qt | Backend::SwiftUI | Backend::Xaml
+    ) {
         return Err(BuildError::InvalidRuntimeLibrary {
             path: path.to_path_buf(),
             reason:
-                "runtime bundling is currently implemented only for the Compose, Qt, and XAML backends"
+                "runtime bundling is currently implemented only for the Compose, Qt, SwiftUI, and XAML backends"
                     .to_string(),
         });
     }
@@ -581,6 +584,12 @@ fn validate_runtime_library_selection(
         return Err(BuildError::InvalidRuntimeLibrary {
             path: path.to_path_buf(),
             reason: "the XAML backend requires a target cdylib ending in .dll".to_string(),
+        });
+    }
+    if opts.backend == Backend::SwiftUI && file_name != "libmosaic_app.dylib" {
+        return Err(BuildError::InvalidRuntimeLibrary {
+            path: path.to_path_buf(),
+            reason: "the SwiftUI backend requires a target cdylib ending in .dylib".to_string(),
         });
     }
     if !path.is_file() {
@@ -632,6 +641,24 @@ fn install_xaml_runtime_library(source: &Path, backend_dir: &Path) -> Result<Pat
     Ok(target)
 }
 
+fn install_swiftui_runtime_library(
+    source: &Path,
+    backend_dir: &Path,
+) -> Result<PathBuf, BuildError> {
+    if runtime_file_name(source)? != "libmosaic_app.dylib" {
+        unreachable!("SwiftUI runtime suffix was validated before emission");
+    }
+    let target = backend_dir
+        .join("Sources/App/Runtime")
+        .join("libmosaic_app.dylib");
+    let bytes = fs::read(source).map_err(|error| BuildError::InvalidRuntimeLibrary {
+        path: source.to_path_buf(),
+        reason: format!("cannot read selected file: {error}"),
+    })?;
+    write_file(&target, &bytes)?;
+    Ok(target)
+}
+
 /// Analyze and build a package under an explicit completion profile.
 ///
 /// Unlike the legacy [`build_package`] entry point, this always writes a
@@ -648,9 +675,10 @@ pub fn build_package_with_profile(
 /// Analyze and build a package while bundling one target-specific Rust
 /// application engine into the generated native project.
 ///
-/// Compose, Qt, and XAML are the supported packaging backends. Compose and Qt
-/// accept a target `.dylib`, `.so`, or `.dll`; XAML requires a `.dll`. The
-/// emitted copy receives Mosaic's conventional runtime name.
+/// Compose, Qt, SwiftUI, and XAML are the supported packaging backends. Compose
+/// and Qt accept a target `.dylib`, `.so`, or `.dll`; SwiftUI requires a
+/// `.dylib`, and XAML requires a `.dll`. The emitted copy receives Mosaic's
+/// conventional runtime name.
 pub fn build_package_with_profile_and_runtime(
     opts: &BuildOptions,
     profile: BuildProfile,
@@ -745,7 +773,10 @@ pub fn analyze_package_degradations_with_runtime(
 
     if profile == BuildProfile::NativeComplete
         && opts.emit_project
-        && matches!(opts.backend, Backend::Compose | Backend::Qt | Backend::Xaml)
+        && matches!(
+            opts.backend,
+            Backend::Compose | Backend::Qt | Backend::SwiftUI | Backend::Xaml
+        )
         && runtime_library.is_none()
     {
         degradations.push(Degradation {
@@ -765,6 +796,7 @@ pub fn analyze_package_degradations_with_runtime(
                 match opts.backend {
                     Backend::Compose => "Compose",
                     Backend::Qt => "Qt",
+                    Backend::SwiftUI => "SwiftUI",
                     Backend::Xaml => "XAML",
                     _ => unreachable!("runtime bundling degradation is native-backend scoped"),
                 }
@@ -1158,6 +1190,7 @@ fn build_package_inner(
         let target = match opts.backend {
             Backend::Compose => install_compose_runtime_library(source, &backend_dir)?,
             Backend::Qt => install_qt_runtime_library(source, &backend_dir)?,
+            Backend::SwiftUI => install_swiftui_runtime_library(source, &backend_dir)?,
             Backend::Xaml => install_xaml_runtime_library(source, &backend_dir)?,
             _ => unreachable!("runtime library selection was validated before emission"),
         };
@@ -1756,17 +1789,24 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
             if let Some(proj) = r.project {
-                let package_swift =
-                    mosaic_app_bindings::swift_package_with_runtime_binding(&proj.package_swift);
-                let app_swift =
-                    mosaic_app_bindings::swift_app_with_runtime_binding(&proj.app_swift);
+                let bundle_runtime = runtime_library.is_some();
+                let package_swift = mosaic_app_bindings::swift_package_with_runtime_binding(
+                    &proj.package_swift,
+                    bundle_runtime,
+                );
+                let app_swift = mosaic_app_bindings::swift_app_with_runtime_binding(
+                    &proj.app_swift,
+                    bundle_runtime,
+                );
                 let runtime_binding = mosaic_app_bindings::swift_runtime_binding();
+                let runtime_distribution = if bundle_runtime {
+                    "The selected target Rust engine is copied into SwiftPM's `Runtime` resource bundle and resolved through `Bundle.module`; no environment variable or global library install is required."
+                } else {
+                    "No Rust engine was bundled. For development, set `MOSAIC_APP_LIBRARY` to the target dylib path. Strict SwiftUI builds should be regenerated with `--runtime-library <target cdylib>`."
+                };
                 let readme = format!(
-                    "{}\n## Rust application runtime\n\nThis package includes Mosaic's standard SwiftUI binding. Set \
-                     `MOSAIC_APP_LIBRARY` to the Rust application dylib path, or package it as \
-                     `libmosaic_app.dylib`. The generated Foundation host owns the application \
-                     handle, event sequence, snapshots, returned buffers, and teardown.\n",
-                    proj.readme
+                    "{}\n## Rust application runtime\n\nThis package includes Mosaic's standard SwiftUI binding. {} The generated Foundation host owns the application handle, event sequence, snapshots, returned buffers, and teardown.\n",
+                    proj.readme, runtime_distribution
                 );
                 let flat: [(&str, &str); 2] =
                     [("Package.swift", &package_swift), ("README.md", &readme)];
@@ -4403,14 +4443,26 @@ layout NativeEvents {
         let dylib = pkg.path().join("libmosaic_app.dylib");
         fs::write(&dylib, b"runtime").unwrap();
         let backend_error = build_package_with_profile_and_runtime(
-            &options(Backend::SwiftUI),
+            &options(Backend::Flutter),
             BuildProfile::Permissive,
             Some(&dylib),
         )
-        .expect_err("SwiftUI runtime packaging is not implemented yet");
-        assert!(backend_error
+        .expect_err("Flutter runtime packaging is not implemented yet");
+        assert!(backend_error.to_string().contains(
+            "currently implemented only for the Compose, Qt, SwiftUI, and XAML backends"
+        ));
+
+        let so = pkg.path().join("libmosaic_app.so");
+        fs::write(&so, b"runtime").unwrap();
+        let swift_suffix_error = build_package_with_profile_and_runtime(
+            &options(Backend::SwiftUI),
+            BuildProfile::Permissive,
+            Some(&so),
+        )
+        .expect_err("SwiftUI cannot bundle a non-Apple target library");
+        assert!(swift_suffix_error
             .to_string()
-            .contains("currently implemented only for the Compose, Qt, and XAML backends"));
+            .contains("SwiftUI backend requires a target cdylib ending in .dylib"));
 
         let xaml_suffix_error = build_package_with_profile_and_runtime(
             &options(Backend::Xaml),
@@ -4488,7 +4540,7 @@ layout NativeEvents {
         )
         .unwrap();
         let out = TempDir::new().unwrap();
-        let result = build_package_with_profile(
+        let error = build_package_with_profile(
             &BuildOptions {
                 package_root: pkg.path().to_path_buf(),
                 output_root: out.path().to_path_buf(),
@@ -4498,15 +4550,72 @@ layout NativeEvents {
             },
             BuildProfile::NativeComplete,
         )
-        .expect("native-complete SwiftUI shell");
+        .expect_err("native-complete SwiftUI distributions must select their Rust engine");
+
+        assert!(matches!(
+            error,
+            BuildError::NativeIncomplete {
+                backend: Backend::SwiftUI,
+                degradation_count: 1,
+                ..
+            }
+        ));
+
+        let report_path = out.path().join("swiftui/mosaic-degradations.json");
+        let report = fs::read_to_string(report_path).unwrap();
+        assert!(report.contains("runtime.library-not-bundled"));
+        assert!(report.contains("--runtime-library <target cdylib>"));
+        assert!(!out.path().join("swiftui/Package.swift").exists());
+    }
+
+    #[test]
+    fn native_complete_swiftui_shell_bundles_the_selected_rust_runtime() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        fs::write(
+            pkg.path().join("src/Card.mil"),
+            "component Card { slot label : text ; }\n",
+        )
+        .unwrap();
+        fs::write(
+            pkg.path().join("src/Card.mll"),
+            "layout Card { Text [ root ] ( content : slot: label ) }\n",
+        )
+        .unwrap();
+        let runtime = pkg.path().join("libcustom_app.dylib");
+        fs::write(&runtime, b"selected-swift-runtime").unwrap();
+        let out = TempDir::new().unwrap();
+        let result = build_package_with_profile_and_runtime(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::SwiftUI,
+                emit_project: true,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+            Some(&runtime),
+        )
+        .expect("native-complete SwiftUI shell with a selected runtime");
 
         let report_path = out.path().join("swiftui/mosaic-degradations.json");
         assert!(result.artifacts.contains(&report_path));
         let report = fs::read_to_string(report_path).unwrap();
         assert!(report.contains("\"nativeComplete\": true"));
+        assert!(report.contains("\"degradations\": []"));
+
+        let installed_runtime = out
+            .path()
+            .join("swiftui/Sources/App/Runtime/libmosaic_app.dylib");
+        assert!(result.artifacts.contains(&installed_runtime));
+        assert_eq!(
+            fs::read(installed_runtime).unwrap(),
+            b"selected-swift-runtime"
+        );
 
         let app = fs::read_to_string(out.path().join("swiftui/Sources/App/App.swift")).unwrap();
-        assert!(app.contains("MosaicRuntimeHost.loadRequired()"));
+        assert!(app.contains(
+            "MosaicRuntimeHost.loadRequired(libraryPath: Bundle.module.url(forResource: \"libmosaic_app\", withExtension: \"dylib\", subdirectory: \"Runtime\")?.path)"
+        ));
         assert!(app.contains("private let bridge: MosaicHostBridgeObject"));
         assert!(app.contains("MosaicHostValue.requiredString(host.props, \"label\")"));
         assert!(app.contains("preconditionFailure(\"Mosaic runtime update omitted props\")"));
@@ -4521,12 +4630,16 @@ layout NativeEvents {
                 .join("swiftui/Sources/App/MosaicRuntimeHost.swift"),
         )
         .unwrap();
-        assert!(host.contains("static func loadRequired() -> MosaicRuntimeHost"));
+        assert!(host
+            .contains("static func loadRequired(libraryPath: String? = nil) -> MosaicRuntimeHost"));
         assert!(host.contains("native-complete requires the Mosaic Rust application runtime"));
 
+        let package = fs::read_to_string(out.path().join("swiftui/Package.swift")).unwrap();
+        assert!(package.contains("resources: [.copy(\"Runtime\")]"));
+
         let readme = fs::read_to_string(out.path().join("swiftui/README.md")).unwrap();
-        assert!(readme.contains("requires Mosaic's standard Rust application runtime"));
-        assert!(readme.contains("never substitutes preview/sample values"));
+        assert!(readme.contains("copied into SwiftPM's `Runtime` resource bundle"));
+        assert!(readme.contains("no environment variable or global library install is required"));
     }
 
     #[test]

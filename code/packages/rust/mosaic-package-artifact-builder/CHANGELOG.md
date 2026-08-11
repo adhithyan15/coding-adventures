@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased] - SwiftUI Rust engine bundling
+
+- SwiftUI project shells accept a selected target Rust dylib and copy it into
+  the SwiftPM `Runtime` resource bundle under Mosaic's conventional name.
+- Strict SwiftUI builds report `runtime.library-not-bundled` and stop before
+  application emission when no engine was selected.
+- macOS acceptance verifies the bundled bytes and runs the standard binding
+  conformance through the app-local path without `MOSAIC_APP_LIBRARY`.
+
 ## [Unreleased] - XAML Rust engine bundling
 
 - XAML project shells accept a selected target Rust DLL, install it as
