@@ -1,44 +1,42 @@
-Spanish, chapter 76: Review --- All Four Stem Changes.
+Spanish, chapter 76: Conseguir --- Getting Is Following Until You Have It.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-Review — the four stem changes, all of them.
+conseguir — "to get", by following a thing until you have it.
 
 Warm-up.
 [pause 2 seconds]
-Nothing new in this chapter. Say a verb whose stem breaks under stress — any one you have met.
+Traigo carries a thing that is already yours. Coger grabs what is in front of you. This verb is for the getting that took some work.
 
-What you've built.
-Something finished in the last two chapters and it is worth stopping for.
-Spanish has four stem-change patterns. Not five, not a dozen — four. You met the first two long ago with querer and poder, and the last two in the chapters you have just finished. That is the whole system, and you now hold all of it:
-[a table of 4 rows, read aloud]
-the change: e becomes ie. the verb that taught it: querer. what breaks: becomes quiero.
-the change: o becomes ue. the verb that taught it: poder. what breaks: becomes puedo.
-the change: e becomes i. the verb that taught it: conseguir. what breaks: becomes consigo.
-the change: u becomes ue. the verb that taught it: jugar. what breaks: becomes juego.
-This table is allowed here because every row in it is something you can already do. It is a picture of the ground you hold, not a list to memorise.
+Sounds you'll need.
+g-hard — the gu in conseguir is one hard g; the u is silent.
+s-clear — a clean hissing s: con-se-GEER.
 
-Grammar Lens: the pattern with one member.
-The fourth row is strange, and worth knowing precisely.
-u becomes ue happens in exactly one verb in the entire language: jugar.
-Not "mostly one." One. Every other Spanish verb with a u in its stem leaves it alone. So you are not learning a pattern here so much as a single fact with a pattern's shape — which is easier, not harder, and is the kind of thing a course should tell you instead of letting you brace for more.
+The word, taken apart: conseguir.
+conseguir ("to get, to obtain, to manage to") from Latin cōnsequī: com- ("along with") + sequī, "to follow". You got a thing by following it until it was yours.
+Sequī is one of Latin's great English suppliers: sequence, sequel, consequence, subsequent, consecutive; second, from secundus, "the one following"; execute and prosecute; obsequious, following someone about; and through French, pursue, ensue and suit.
+Spanish also keeps the formal partner obtener from obtinēre, "to hold onto" — English obtain. It behaves exactly like tener, so its yo-form is obtengo. Conseguir is the everyday one.
+
+Grammar Lens: the third crack, and a silent u that leaves.
+[a table of 5 rows, read aloud]
+person: yo. form: consigo.
+person: tú. form: consigues.
+person: él/ella/usted. form: consigue.
+person: nosotros. form: conseguimos.
+person: ellos/ustedes. form: consiguen.
+You have met dormir breaking o becomes ue and pido quietly breaking e becomes i. Here is that third pattern in full: stress on the stem turns e into i, and conseguimos stays plain because the stress moved to the ending.
+Now the spelling. Spanish writes gu only to keep a g hard in front of e and i. Once the e becomes i, there is nothing in front to guard against, so the u has no job and goes: consigo, not consiguo. Two changes, one form, and only one of them is a sound.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: one verb from each of the four rows]
+[your turn — say: "consigo, consigues, consigue, conseguimos, consiguen"]
 [pause 8 seconds for the answer]
-[your turn — say: the four changes themselves, as sounds — e-ie, o-ue, e-i, u-ue]
+[your turn — say: "Traigo el café" then "Consigo el café" — carried, then obtained]
 [pause 8 seconds for the answer]
-[repeat that twice]
-Until naming the pattern is faster than working it out.
-[question — say your answer, then pause 8 seconds]
-How many stem-change patterns does Spanish have in total?
-[question — say your answer, then pause 10 seconds]
-Which pattern belongs to exactly one verb, and which verb?
-[question — say your answer, then pause 8 seconds]
-Which change does conseguir make?
+[your turn — say: "sequī, sequence, second" then "conseguir"]
+[pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-How many stem-change patterns are there? (Four — and that is all of them.) Which one has a single member? (u becomes ue, only jugar.) Next chapter is not about forms at all — it is about three places where English gives you one word and Spanish makes you choose.
+What did sequī mean, and name two English words from it. (To follow; sequence, second, consequence, pursue.) Why is it consigo and not consiguo? (The u only guards a hard g before e and i.) Name the three stem cracks you now have, with a verb for each. (Cerrar e becomes ie, dormir o becomes ue, conseguir e becomes i.) And which Latin verb is behind traer? (Trahere.)

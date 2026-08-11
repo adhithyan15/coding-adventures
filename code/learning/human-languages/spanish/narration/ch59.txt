@@ -1,47 +1,54 @@
-Spanish, chapter 59: Leer — Reading Is Gathering.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 59: Green and Yellow.
+2 lessons. All 2 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-leer — "to read", and before that, "to gather".
+Lesson 1 of 2.
+verde — the colour named after being alive.
 
 Warm-up.
 [pause 2 seconds]
-Two cracked verbs down. Here is a calm one — nothing breaks in the middle. The only difficulty is in your mouth: two e's in a row that must stay two.
+After azul's long journey from Afghanistan, here is a colour that stayed exactly where it started. It is also the one that names a process rather than a thing.
 
-Sounds you'll need.
-hiatus-ee — leer is two syllables, le-ER, never one long English ee.
-leo is likewise two beats, LE-o.
-
-The word, taken apart: leer.
-leer ("to read") from Latin legere, "to gather, to pick out, to choose" — and only afterwards "to read". A reader picks letters out of a row the way a farmhand picks olives off a branch.
-That gathering root runs through an enormous amount of English:
-legible, legend ("things to be read"), lecture, lectern, and worn right down, lesson.
-built with prefixes: collect (col- "together"), select (se- "apart"), elect (e- "out"), intellect (inter- "between" — choosing between things).
-diligent and elegant, both of which meant "picking carefully".
-One honest limit: Greek légein ("to speak, to gather") — which gives English logic, dialogue, catalogue — is a cousin of legere from the same ancient root, not its parent. Same family, separate journeys.
-
-Grammar Lens: a plain -er verb, with a mouthful.
-Nothing irregular happens. Drop -er, add the ordinary endings:
-[a table of 5 rows, read aloud]
-person: yo. form: leo. said: LE-o.
-person: tú. form: lees. said: LE-es.
-person: él/ella/usted. form: lee. said: LE-e.
-person: nosotros. form: leemos. said: le-E-mos.
-person: ellos/ustedes. form: leen. said: LE-en.
-Every one of those is a syllable longer than an English speaker expects. Give each e its own beat and the word comes out right.
+The word, taken apart: verde.
+verde ("green") from Latin viridis (worn down through virdis), which comes from the verb virēre, "to be green, to flourish, to be vigorous."
+So the adjective is built on a verb of thriving. Latin did not name the colour of leaves; it named what leaves are doing, and let the colour follow. The same root gives vigour its neighbours in English: verdant, verdure, and the green-tinged verdigris ("green of Greece").
+One careful non-connection: verde is not a cousin of English green. Green comes from a completely separate Germanic root, tied to grow and grass — which, funnily enough, is the same idea arrived at independently. Two families, two words, one metaphor: green is the colour of things that are growing.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "leer" — le-ER, two beats]
+[your turn — say: "verde" — green]
 [pause 8 seconds for the answer]
-[your turn — say: "Leo un libro" — I read a book]
+[your turn — say: the root — "virēre, to flourish" becomes "verde"]
 [pause 8 seconds for the answer]
-[your turn — say: "No entiendo" then "Leo, pero no entiendo" — I read, but I don't understand]
-[pause 8 seconds for the answer]
-[your turn — say: "leer" then English "legible, collect, select, elect"]
+[your turn — say: "verde" then English "verdant" — and not "green"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What did legere mean before it meant "to read"? (To gather, to pick out.) Give two English words built on it with a prefix. (Collect, select, elect, intellect.) How many syllables in leo? (Two — LE-o.) Next: escribir, the other half of literacy.
+What Latin verb gives verde, and what does it mean? (Virēre, "to be green, to flourish.") Is verde related to English green? (No — green is Germanic, from the same family as grow and grass; the two languages reached the same metaphor separately.) Next: a colour that is not named after a colour at all.
+
+
+Lesson 2 of 2.
+amarillo — the colour that started as a taste.
+
+Warm-up.
+[pause 2 seconds]
+Verde was exactly what you would expect from Latin. This one is not. Latin had three perfectly good words for yellow, and Spanish took none of them.
+
+The word, taken apart: amarillo.
+amarillo ("yellow") does not trace to flāvus, gilvus or lūteus — Latin's actual yellow words. It comes from Late Latin amarellus, "a little bitter," a diminutive of amarus, "bitter."
+A colour named after a taste. The bridge is medicine: yellow was the colour of bile and of jaundice (which Spanish still calls ictericia, but which folk speech long tied to bitterness), and of a great many bitter-tasting plants. A word meaning "somewhat bitter" came to mean "the yellowish look of a bitter thing," then simply "yellowish," and by Spanish's Golden Age it had dropped the taste entirely and kept only the colour.
+You can still check the family in a living word: amargo ("bitter") is amarillo's cousin, straight from the same amarus. Say them together and the shared amar- is right there.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "verde, amarillo" — green and yellow]
+[pause 8 seconds for the answer]
+[your turn — say: "amarillo, amargo" — hear the shared amar-]
+[pause 8 seconds for the answer]
+[your turn — say: the path — "a little bitter" becomes "yellowish" becomes "yellow"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Does amarillo come from a Latin word for yellow? (No — from amarellus, "a little bitter," a diminutive of amarus.) What everyday Spanish word is its cousin? (Amargo, "bitter.") And verde? (From virēre, "to flourish" — a colour named after being alive, as this one is named after a taste.)

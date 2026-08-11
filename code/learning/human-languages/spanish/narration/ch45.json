@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 45,
-  "title": "Black, White, Red, and Blue",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:843ca320046606b6",
+  "title": "The Subjunctive --- the Mood of the Not-Yet-Real",
+  "drivablePrefix": 9,
+  "sourceHash": "fnv1a64:4518ff2a88ce279e",
   "lessons": [
     {
-      "id": "ES-C22-negro-blanco",
-      "sequence": 1340,
-      "title": "negro, blanco — two colours, and one of their histories",
-      "headword": "negro, blanco",
-      "romanization": "negro, blanco",
-      "gloss": "black and white — the two words, and the straight-line Latin history of the first one",
+      "id": "ES-C18-quiero-que",
+      "sequence": 1180,
+      "title": "Hablas español, Quiero que hables español — fact or wanted event?",
+      "headword": "Hablas español · Quiero que hables español",
+      "romanization": "Hablas español · Quiero que hables español",
+      "gloss": "an asserted event beside a wanted, not-yet-real event",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:171cd11953cdae99",
+      "sourceHash": "fnv1a64:09eea5061c2714cd",
       "notice": null,
       "blocks": [
         {
@@ -35,301 +35,32 @@
             },
             {
               "kind": "speech",
-              "text": "Two colours you can put to work immediately. One of them has the most ordinary history imaginable. The other does not — which is why it gets its own lesson next."
+              "text": "Hablas español can assert “You speak Spanish.” Now compare Quiero que hables español — “I want you to speak Spanish.” Hables does not report what is true. It presents the speaking as wanted and not yet asserted. That meaning contrast is the first small doorway into the subjunctive."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The words, taken apart: negro",
+          "type": "grammar",
+          "title": "Grammar Lens: count the doers",
           "segments": [
-            {
-              "kind": "speech",
-              "text": "negro (\"black\") from Latin niger. Nothing surprising: the same Latin root gives English denigrate (\"to blacken someone's name\") and the rest of the Romance family's words for black — French noir, Italian nero, Portuguese negro. Latin's word for black stayed put, in every daughter language."
-            },
-            {
-              "kind": "speech",
-              "text": "Hold that in mind as the baseline. It is what a colour word normally does."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "input",
-          "title": "The two words in use",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "blanco (\"white\") is the pair to it: el gato negro, el gato blanco. Both behave like any Spanish adjective — they follow the noun and agree with it (la casa blanca)."
-            },
-            {
-              "kind": "speech",
-              "text": "But hear what you would have expected and did not get. Latin's word for white was albus, and by the negro pattern Spanish \"white\" should be something like albo. It is not. Where blanco actually came from — and what became of albus — is the next lesson."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"negro, blanco\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"negro, blanco\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "with a noun — \"el gato negro, la casa blanca\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: with a noun — \"el gato negro, la casa blanca\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"negro\" then English \"denigrate\" — the niger root",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"negro\" then English \"denigrate\" — the *niger* root]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say black and white. (Negro, blanco.) Where does negro come from, and what English word shares it? (Latin niger — denigrate.) What would you have expected Spanish's \"white\" to be, given Latin albus? (Something like albo — and it isn't. That is next lesson's puzzle.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C22-blanco-germanico",
-      "sequence": 1350,
-      "title": "blanco — the colour Spanish did not inherit",
-      "headword": "blanco ← *blank",
-      "romanization": "blanco ← *blank",
-      "gloss": "white is a Germanic loan, not a Latin inheritance — and Latin's own albus is still around, just not as a colour",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:cae64a7981092270",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Negro came straight down from Latin, like almost every other everyday word you have met. Blanco did not come down at all. It walked in."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "negro, blanco — the two colour words."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: blanco",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "blanco comes from Germanic blank — \"shining, gleaming.\" It is a loan, traditionally attributed to contact with the Visigoths, the Germanic people who ruled Spain for centuries after Rome collapsed."
-            },
-            {
-              "kind": "speech",
-              "text": "Be careful how firmly you hold that last part: no surviving Gothic text actually preserves this word, so the Visigothic route is a plausible traditional account, not a documented one. What is well attested is the parallel case next door — French took the very same Germanic word (blanc) from a different Germanic people, the Franks. Two Romance sisters, the same borrowed word for white, two separate borrowings."
-            },
-            {
-              "kind": "speech",
-              "text": "Why would a borrowed word beat Latin's own? Because blank was not a pale word: it meant bright, gleaming. Colour terms lose out to vivid ones all the time — English's own bright is doing the same job in \"bright white.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: where albus went",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Latin's white did not vanish. It stopped being the everyday word and survived in corners:"
-            },
             {
               "kind": "table",
               "headers": [
-                "word",
                 "meaning",
-                "the white inside"
+                "Spanish",
+                "doers"
               ],
               "columns": 3,
-              "rowCount": 4,
+              "rowCount": 2,
               "utterances": [
-                "word: alba. meaning: dawn. the white inside: the sky going white.",
-                "word: albo (rare, poetic). meaning: white, pale. the white inside: a fossil, mostly literary now.",
-                "word: álbum (Eng. album). meaning: album. the white inside: a blank white tablet.",
-                "word: albino. meaning: albino. the white inside: white-skinned."
+                "meaning: I want to speak Spanish. Spanish: Quiero hablar español. doers: one: I want; I speak.",
+                "meaning: I want you to speak Spanish. Spanish: Quiero que hables español. doers: two: I want; you speak."
               ]
             },
             {
               "kind": "speech",
-              "text": "That is the normal fate of a displaced word: not death, but retreat into technical and poetic corners. El alba is still every Spanish speaker's word for dawn."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pairing — \"negro from Latin, blanco from Germanic\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pairing — \"negro from Latin, blanco from Germanic\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"el alba\" — dawn — and hear the old Latin white inside it",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"el alba\" — dawn — and hear the old Latin white inside it]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"blanco\" then French \"blanc\" — the same loan, twice over",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"blanco\" then French \"blanc\" — the same loan, twice over]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Where does blanco come from, and what did it mean? (Germanic blank, \"shining\" — traditionally linked to the Visigoths, though not directly attested.) Which other language borrowed the same word, from whom? (French blanc, from the Franks.) Where did Latin's albus end up? (In alba \"dawn,\" álbum, albino — no longer the everyday colour word.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C22-rojo",
-      "sequence": 1360,
-      "title": "rojo — the same family as red, by a different branch",
-      "headword": "rojo",
-      "romanization": "rojo",
-      "gloss": "red — a cousin of French rouge and English red, but by a different branch of the same very old family",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:124c8a83910609d3",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "So far the sorting has been simple: negro inherited, blanco borrowed. Rojo needs a third box — inherited, yes, but not from the word you would guess."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: rojo",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "rojo (\"red\") from Latin russus, an everyday, expressive Latin word for red. That is a different specific Latin word from the one behind French rouge ( from rubeus). Latin had several reds and the daughter languages did not all pick the same one."
-            },
-            {
-              "kind": "speech",
-              "text": "Both russus and rubeus, though, descend from the very same ancient root: PIE h₁rewdʰ- — which is also the root of English red, rust, ruddy, and of Latin ruber itself (English rubric, once written in red ink)."
-            },
-            {
-              "kind": "speech",
-              "text": "So rojo, rouge and red are cousins, not copies: three descendants of one very old family, arriving by three different branches. Nobody borrowed this one from anybody."
+              "text": "With one doer, keep the known infinitive hablar. With a different doer for the wanted event, use que and the new form hables. This is a bounded pattern for querer, not a rule for every clause in Spanish."
             }
           ]
         },
@@ -347,29 +78,89 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"rojo\"",
+              "instruction": "“Hablas español.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"rojo\"]"
+              "source": "[YOU SAY: “Hablas español.”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the cousins — \"rojo, rouge, red\", three branches, one root",
+              "instruction": "“Quiero hablar español.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the cousins — \"rojo · rouge · red\", three branches, one root]"
+              "source": "[YOU SAY: “Quiero hablar español.”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three so far — \"negro inherited, blanco borrowed, rojo cousin\"",
+              "instruction": "“Quiero que hables español.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three so far — \"negro inherited, blanco borrowed, rojo cousin\"]"
+              "source": "[YOU SAY: “Quiero que hables español.”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-quiero-que-meaning",
+              "prompt": "Which form asserts that one friend speaks: hablas or hables?",
+              "assesses": [
+                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
+                "ES-GRAMMAR-AR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "hablas"
+              ],
+              "feedback": {
+                "correct": "Right: hablas can assert the event.",
+                "incorrect": "Use indicative hablas for the asserted event; hables is the wanted form here."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-quiero-que-one-doer",
+              "prompt": "Say 'I want to speak Spanish' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
+                "ES-LEX-QUERER",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "quiero hablar español.",
+                "quiero hablar español"
+              ],
+              "feedback": {
+                "correct": "Right: one doer keeps the infinitive hablar.",
+                "incorrect": "Use known quiero plus the infinitive: Quiero hablar español."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-quiero-que-two-doers",
+              "prompt": "Say 'I want you to speak Spanish' to one friend.",
+              "assesses": [
+                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
+                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
+                "ES-LEX-QUE",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "quiero que hables español.",
+                "quiero que hables español"
+              ],
+              "feedback": {
+                "correct": "Right: two doers give quiero que hables.",
+                "incorrect": "Join the wanted event with que and use hables: Quiero que hables español."
+              }
             }
           ]
         },
@@ -386,26 +177,26 @@
             },
             {
               "kind": "speech",
-              "text": "Is rojo from the same Latin word as French rouge? (No — rojo from russus, rouge from rubeus.) Are they related at all? (Yes — cousins, via the shared PIE root h₁rewdʰ-, which also gives English red.) Next: the one colour in this chapter that came from outside Europe entirely."
+              "text": "Which form asserts the event? (Hablas.) Which presents it as wanted? (Hables, after quiero que.) What happens when the wanter and the speaker are the same? (Use the infinitive: Quiero hablar.) Next, build the three singular -ar forms one piece at a time."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C22-azul",
-      "sequence": 1370,
-      "title": "azul — a stone from Afghanistan, in your everyday vocabulary",
-      "headword": "azul",
-      "romanization": "azul",
-      "gloss": "blue — an Arabic loan that became the plain everyday word, where French's cousin stayed poetic",
+      "id": "ES-C18-subjuntivo",
+      "sequence": 1184,
+      "title": "hable, hables, hable — the singular -ar row",
+      "headword": "hable · hables · hable",
+      "romanization": "hable · hables · hable",
+      "gloss": "the singular present subjunctive of hablar",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a798b7fe4e7ec9b",
+      "sourceHash": "fnv1a64:5503d5a2a81dabbd",
       "notice": null,
       "blocks": [
         {
@@ -421,37 +212,47 @@
             },
             {
               "kind": "speech",
-              "text": "Three colours in, three different histories: inherited, borrowed from a neighbour, inherited by a different branch. The fourth comes from outside the Indo-European family altogether."
+              "text": "You already used hables for one friend. Today add only the other two singular slots:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "present subjunctive"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. present subjunctive: hable.",
+                "person: tú. present subjunctive: hables.",
+                "person: él / ella / usted. present subjunctive: hable."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Plural forms wait. Say the small row: hable, hables, hable."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: azul",
+          "type": "grammar",
+          "title": "Grammar Lens: the yo stem, then a vowel swap",
           "segments": [
             {
               "kind": "speech",
-              "text": "azul (\"blue\") from Arabic لازورد (lāzaward), \"lapis lazuli\" — the deep blue stone, mined for centuries in what is now Afghanistan and ground into the most expensive pigment in the medieval world. Spanish picked the word up during the centuries of Arabic-speaking rule in Iberia (al-Andalus). English has the same source at one more remove, in azure, and the stone keeps its own name: lazuli."
-            },
-            {
-              "kind": "speech",
-              "text": "So Spanish's word for blue is, underneath, the name of a rock — which is common for blue. Blue is the last basic colour term most languages acquire, and when they do, they usually name it after the thing that was reliably that colour."
+              "text": "Start from present hablo. Remove -o to reveal habl-. Regular -ar verbs then use e in these subjunctive endings: -e, -es, -e. The family vowel has swapped from the familiar a to e. This recipe will matter later because a verb's special present yo stem can travel with it."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: everyday here, poetic there",
+          "type": "etymology",
+          "title": "The name, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Here is the contrast worth keeping. French has azur too — but only as a secondary, poetic word (the sky's blue, the Côte d'Azur); its everyday blue is the Germanic loan bleu. In Spanish it is the reverse: azul is the plain, unremarkable, everyday word, with no Germanic rival competing for the job at all."
-            },
-            {
-              "kind": "speech",
-              "text": "Same borrowed word, two languages, opposite outcomes — a reminder that where a word came from tells you nothing about how ordinary it now feels."
+              "text": "Spanish subjuntivo descends from Latin subiūnctīvus, “subjoined,” from sub- “under” plus iungere “join.” English join, junction, and conjunction belong to the same word family; yoke is a more distant cousin. The name helps you picture the wanted clause joined under quiero que. It is history, not a complete usage rule."
             }
           ]
         },
@@ -467,31 +268,64 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "all four — \"negro, blanco, rojo, azul\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: all four — \"negro, blanco, rojo, azul\"]"
+              "kind": "speech",
+              "text": "Build each answer only from the learned singular row."
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "sort them — \"negro inherited, blanco Germanic, rojo cousin of red, azul Arabic\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: sort them — \"negro inherited, blanco Germanic, rojo cousin of red, azul Arabic\"]"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-subjuntivo-forms",
+              "prompt": "Give the learned singular present-subjunctive forms of hablar: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-HABLAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "hable, hables, hable",
+                "hable hables hable",
+                "hable / hables / hable"
+              ],
+              "feedback": {
+                "correct": "Right: hable, hables, hable.",
+                "incorrect": "Use the e-family row: hable, hables, hable."
+              }
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"azul\" then English \"azure\" — the same lapis lazuli",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"azul\" then English \"azure\" — the same lapis lazuli]"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-subjuntivo-recipe",
+              "prompt": "Which present form gives the stem for regular hable: hablo or habla?",
+              "assesses": [
+                "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "hablo"
+              ],
+              "feedback": {
+                "correct": "Right: remove -o from hablo to get habl-.",
+                "incorrect": "Start from the present yo form hablo, then remove -o."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-subjuntivo-name",
+              "prompt": "What joining idea sits inside the Latin source of subjuntivo?",
+              "assesses": [
+                "ES-ETYMON-SUBJUNCTIVE-SUBIUNCTIVUS"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "subjoined or joined under",
+                "subjoined",
+                "joined under"
+              ],
+              "feedback": {
+                "correct": "Right: subiūnctīvus carries the idea 'subjoined.'",
+                "incorrect": "Think of a clause joined under another: subjoined."
+              }
             }
           ]
         },
@@ -508,7 +342,1278 @@
             },
             {
               "kind": "speech",
-              "text": "Name the four colours and sort them by origin. (Negro — Latin niger; blanco — Germanic blank; rojo — Latin russus, cousin of red; azul — Arabic lāzaward.) What did lāzaward actually name? (Lapis lazuli, the stone.) How does azul's role differ from French azur's? (Azul is Spanish's everyday blue; French's azur is only poetic, with bleu doing the daily work.)"
+              "text": "Give the three forms. (Hable, hables, hable.) Which present form supplies the stem? (Hablo.) What did the family vowel do? (a becomes e.) What does the name remember? (A clause subjoined, or joined under another.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C18-comer-subjuntivo",
+      "sequence": 1188,
+      "title": "coma, comas, coma — let -er cross to a",
+      "headword": "coma · comas · coma",
+      "romanization": "coma · comas · coma",
+      "gloss": "the singular present subjunctive of comer",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f343a31b27c488a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Start from como, remove -o, and keep com-. A regular -er verb crosses to the a family:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "present subjunctive"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. present subjunctive: coma.",
+                "person: tú. present subjunctive: comas.",
+                "person: él / ella / usted. present subjunctive: coma."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say only the singular row: coma, comas, coma."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: meaning before machinery",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Comes can assert “you eat.” Quiero que comas presents your eating as what I want. The e becomes a contrast helps you hear the two meanings. It does not mean that every a form is subjunctive; use the learned frame as a whole."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Keep comer inside the learned singular frame."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-comer-subjuntivo-forms",
+              "prompt": "Give the learned singular subjunctive forms of comer: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-GRAMMAR-ER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-COMER"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "coma, comas, coma",
+                "coma comas coma",
+                "coma / comas / coma"
+              ],
+              "feedback": {
+                "correct": "Right: coma, comas, coma.",
+                "incorrect": "Use the a-family row: coma, comas, coma."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-comer-subjuntivo-fact-wish",
+              "prompt": "Which form belongs after quiero que for one friend: comes or comas?",
+              "assesses": [
+                "ES-GRAMMAR-ER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-ER-SUBJUNCTIVE-SINGULAR",
+                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "comas"
+              ],
+              "feedback": {
+                "correct": "Right: quiero que comas presents the eating as wanted.",
+                "incorrect": "Use subjunctive comas after the learned trigger quiero que."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-comer-subjuntivo-wanted",
+              "prompt": "Say 'I want you to eat' to one friend.",
+              "assesses": [
+                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
+                "ES-GRAMMAR-ER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-COMER"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "quiero que comas.",
+                "quiero que comas"
+              ],
+              "feedback": {
+                "correct": "Right: Quiero que comas.",
+                "incorrect": "Use the two-doer frame quiero que plus comas."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the three forms. (Coma, comas, coma.) Which form asserts “you eat”? (Comes.) Which belongs after quiero que? (Comas.) Next, test whether regular -ir behaves differently."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C18-vivir-subjuntivo",
+      "sequence": 1192,
+      "title": "viva, vivas, viva — -ir joins -er",
+      "headword": "viva · vivas · viva",
+      "romanization": "viva · vivas · viva",
+      "gloss": "the singular present subjunctive of vivir",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18dfef621952f076",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Start from vivo, remove -o, then add the same a endings you just used with comer:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "present subjunctive"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. present subjunctive: viva.",
+                "person: tú. present subjunctive: vivas.",
+                "person: él / ella / usted. present subjunctive: viva."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Regular -er and -ir match in this singular row:"
+            },
+            {
+              "kind": "speech",
+              "text": "comer: coma, comas, coma."
+            },
+            {
+              "kind": "speech",
+              "text": "vivir: viva, vivas, viva."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural differences wait."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: meaning in a known frame",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Vives en Madrid asserts where one friend lives. Quiero que vivas en Madrid makes that living a wanted event. Nothing new is being smuggled into the sentence: en and Madrid have appeared in the earlier location frame."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Keep vivir inside the learned singular frame."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-vivir-subjuntivo-forms",
+              "prompt": "Give the learned singular subjunctive forms of vivir: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-VIVIR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "viva, vivas, viva",
+                "viva vivas viva",
+                "viva / vivas / viva"
+              ],
+              "feedback": {
+                "correct": "Right: viva, vivas, viva.",
+                "incorrect": "Use the a-family row: viva, vivas, viva."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-vivir-subjuntivo-er-ir-match",
+              "prompt": "Which two regular verb families share -a, -as, -a here?",
+              "assesses": [
+                "ES-GRAMMAR-ER-SUBJUNCTIVE-SINGULAR",
+                "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "-er and -ir",
+                "er and ir",
+                "-er / -ir"
+              ],
+              "feedback": {
+                "correct": "Right: regular -er and -ir match in the learned singular row.",
+                "incorrect": "Coma and viva reveal the pair: -er and -ir."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-vivir-subjuntivo-wanted",
+              "prompt": "Say 'I want you to live in Madrid' to one friend.",
+              "assesses": [
+                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
+                "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-VIVIR",
+                "ES-LEX-EN"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "quiero que vivas en madrid.",
+                "quiero que vivas en madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Quiero que vivas en Madrid.",
+                "incorrect": "Use quiero que plus the tú subjunctive vivas, then en Madrid."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the three forms. (Viva, vivas, viva.) Which regular family matches -ir here? (-er.) Which form fits one friend after quiero que? (Vivas.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C18-querer-subjuntivo",
+      "sequence": 1196,
+      "title": "quiera, quieras, quiera — keep the change you know",
+      "headword": "quiera · quieras · quiera",
+      "romanization": "quiera · quieras · quiera",
+      "gloss": "the singular present subjunctive of querer",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:611aa0eb8a95392f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Present quiero already carries the stressed e becomes ie change. Remove -o to get quier-, then add the -er/-ir subjunctive endings:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "present subjunctive"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. present subjunctive: quiera.",
+                "person: tú. present subjunctive: quieras.",
+                "person: él / ella / usted. present subjunctive: quiera."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say only this bounded singular row: quiera, quieras, quiera."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one known verb, one inherited stem",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You are not learning a new list of stem-changing verbs. You are carrying one known change into one known row. Quiero que quieras hablar español means “I want you to want to speak Spanish.” The sentence is deliberately narrow: no new person noun, object, or plural form."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Carry only the known quier- stem into this row."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-querer-subjuntivo-forms",
+              "prompt": "Give the learned singular subjunctive forms of querer: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-QUERER"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "quiera, quieras, quiera",
+                "quiera quieras quiera",
+                "quiera / quieras / quiera"
+              ],
+              "feedback": {
+                "correct": "Right: quiera, quieras, quiera.",
+                "incorrect": "Keep quier- and add -a, -as, -a."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-querer-subjuntivo-stem",
+              "prompt": "Which known present yo form gives the stem quier-?",
+              "assesses": [
+                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
+                "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "quiero"
+              ],
+              "feedback": {
+                "correct": "Right: remove -o from quiero.",
+                "incorrect": "Start from the learned yo form quiero."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-querer-subjuntivo-wanted",
+              "prompt": "Complete 'Quiero que ___ hablar español' for one friend.",
+              "assesses": [
+                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
+                "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "quieras"
+              ],
+              "feedback": {
+                "correct": "Right: Quiero que quieras hablar español.",
+                "incorrect": "Use the tú subjunctive of querer: quieras."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the three forms. (Quiera, quieras, quiera.) Which old change stays visible? (e becomes ie.) Where did the stem come from? (Known quiero, minus -o.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C18-poder-subjuntivo",
+      "sequence": 1200,
+      "title": "pueda, puedas, pueda — one more known stem change",
+      "headword": "pueda · puedas · pueda",
+      "romanization": "pueda · puedas · pueda",
+      "gloss": "the singular present subjunctive of poder",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:43bca5be8ea2a8b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Present puedo already carries o becomes ue. Remove -o to get pued-, then add the same a row:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "present subjunctive"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. present subjunctive: pueda.",
+                "person: tú. present subjunctive: puedas.",
+                "person: él / ella / usted. present subjunctive: pueda."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say pueda, puedas, pueda. No other poder forms enter today."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: use it immediately",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Quiero que puedas hablar español means “I want you to be able to speak Spanish.” Every word was already known except the single form puedas. This is the gentle pattern: learn one row, then spend it in the next sentence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Carry only the known pued- stem into this row."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-poder-subjuntivo-forms",
+              "prompt": "Give the learned singular subjunctive forms of poder: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-PODER"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "pueda, puedas, pueda",
+                "pueda puedas pueda",
+                "pueda / puedas / pueda"
+              ],
+              "feedback": {
+                "correct": "Right: pueda, puedas, pueda.",
+                "incorrect": "Keep pued- and add -a, -as, -a."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-poder-subjuntivo-stem",
+              "prompt": "Which known present yo form gives the stem pued-?",
+              "assesses": [
+                "ES-GRAMMAR-PODER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
+                "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "puedo"
+              ],
+              "feedback": {
+                "correct": "Right: remove -o from puedo.",
+                "incorrect": "Start from the learned yo form puedo."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-poder-subjuntivo-wanted",
+              "prompt": "Say 'I want you to be able to speak Spanish' to one friend.",
+              "assesses": [
+                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
+                "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "quiero que puedas hablar español.",
+                "quiero que puedas hablar español"
+              ],
+              "feedback": {
+                "correct": "Right: Quiero que puedas hablar español.",
+                "incorrect": "Use quiero que plus puedas, then known hablar español."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the three forms. (Pueda, puedas, pueda.) Which old change stays visible? (o becomes ue.) Which form addresses one friend after quiero que? (Puedas.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C18-hacer-subjuntivo",
+      "sequence": 1204,
+      "title": "haga, hagas, haga — hago lends its stem",
+      "headword": "haga · hagas · haga",
+      "romanization": "haga · hagas · haga",
+      "gloss": "the singular present subjunctive of hacer",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b980fa8b5206776",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The known present yo form is hago. Remove -o and keep hag-:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "present subjunctive"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. present subjunctive: haga.",
+                "person: tú. present subjunctive: hagas.",
+                "person: él / ella / usted. present subjunctive: haga."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say haga, hagas, haga. Only hacer enters this lesson; other special stems wait for later chapters."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: spend the new form",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Haces café can assert “you make coffee.” Quiero que hagas café says “I want you to make coffee.” The g is not a fresh exception: it was already in hago, the present form that supplied the stem."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Carry only the known hag- stem into this row."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-hacer-subjuntivo-forms",
+              "prompt": "Give the learned singular subjunctive forms of hacer: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-HACER"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "haga, hagas, haga",
+                "haga hagas haga",
+                "haga / hagas / haga"
+              ],
+              "feedback": {
+                "correct": "Right: haga, hagas, haga.",
+                "incorrect": "Keep hag- from hago and add -a, -as, -a."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-hacer-subjuntivo-stem",
+              "prompt": "Which known present yo form gives the stem hag-?",
+              "assesses": [
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR",
+                "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "hago"
+              ],
+              "feedback": {
+                "correct": "Right: remove -o from hago.",
+                "incorrect": "The stem comes from the learned yo form hago."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-hacer-subjuntivo-wanted",
+              "prompt": "Say 'I want you to make coffee' to one friend.",
+              "assesses": [
+                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
+                "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-CAFE"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "quiero que hagas café.",
+                "quiero que hagas café",
+                "quiero que hagas cafe"
+              ],
+              "feedback": {
+                "correct": "Right: Quiero que hagas café.",
+                "incorrect": "Use quiero que plus hagas, then known café."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the three forms. (Haga, hagas, haga.) Where does hag- come from? (Known hago, minus -o.) Say the wanted event. (Quiero que hagas café.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C18-ojala",
+      "sequence": 1208,
+      "title": "ojalá + subjunctive — a wish borrowed through Arabic",
+      "headword": "ojalá + subjunctive",
+      "romanization": "ojalá + subjunctive",
+      "gloss": "a wish trigger borrowed through Hispanic Arabic",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf83001b8eb11f3c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ojalá hables español means “I hope you speak Spanish” or “May you speak Spanish.” Ojalá expresses the wish by itself. It needs neither a main verb nor que before the subjunctive. Keep the first frame tiny:"
+            },
+            {
+              "kind": "speech",
+              "text": "Ojalá + subjunctive."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a usable modern pattern. It does not make the Arabic source phrase new Spanish vocabulary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The wish-word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The Real Academia Española records ojalá from Hispanic Arabic wa šá lláh, “and God has willed.” Long contact in al-Andalus carried the expression into Spanish, where its sound and grammatical life changed. You met another Arabic-derived function word in hasta. The historical phrase explains a route; only modern ojalá is available for your Spanish sentences."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Use only modern ojalá as the Spanish trigger."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-ojala-trigger",
+              "prompt": "Say 'I hope you speak Spanish' to one friend using ojalá.",
+              "assesses": [
+                "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER",
+                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "ojalá hables español.",
+                "ojalá hables español",
+                "ojala hables espanol"
+              ],
+              "feedback": {
+                "correct": "Right: Ojalá hables español.",
+                "incorrect": "Use ojalá directly before the tú subjunctive hables."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-ojala-no-que",
+              "prompt": "Does the learned ojalá frame require que before hables? Answer yes or no.",
+              "assesses": [
+                "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER"
+              ],
+              "responseSeconds": 5,
+              "acceptedResponses": [
+                "no"
+              ],
+              "feedback": {
+                "correct": "Right: ojalá directly licenses the subjunctive in this frame.",
+                "incorrect": "No: say Ojalá hables, without que."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-ojala-source",
+              "prompt": "Through which historical language variety did Spanish receive ojalá?",
+              "assesses": [
+                "ES-ETYMON-OJALA-HISPANIC-ARABIC"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "hispanic arabic",
+                "arabic",
+                "andalusi arabic",
+                "hispano-arabic"
+              ],
+              "feedback": {
+                "correct": "Right: the recorded route is through Hispanic Arabic.",
+                "incorrect": "The historical route named here is Hispanic Arabic."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What follows ojalá in the learned frame? (The subjunctive.) Does it need que? (No.) Which historical language variety carried the word into Spanish? (Hispanic Arabic.) Is the older Arabic phrase usable as new Spanish vocabulary here? (No.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C18-practice",
+      "sequence": 1212,
+      "title": "Practice — assert the event or want it",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "a singular checkpoint for wanted events and the present subjunctive",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f61818f605e70a40",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This checkpoint adds no vocabulary, plural person, object pronoun, or new clause frame. First decide whether the event is asserted or wanted. Then retrieve only the singular rows you learned."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the bounded map",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "yo / él / ella / usted",
+                "tú"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "verb: hablar. yo / él / ella / usted: hable. tú: hables.",
+                "verb: comer. yo / él / ella / usted: coma. tú: comas.",
+                "verb: vivir. yo / él / ella / usted: viva. tú: vivas.",
+                "verb: querer. yo / él / ella / usted: quiera. tú: quieras.",
+                "verb: poder. yo / él / ella / usted: pueda. tú: puedas.",
+                "verb: hacer. yo / él / ella / usted: haga. tú: hagas."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The repeated outer form is not a missing row: first- and third-person singular match. Every plural form waits."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two safe triggers",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Same doer: Quiero hablar español."
+            },
+            {
+              "kind": "speech",
+              "text": "Different doer: Quiero que hables español."
+            },
+            {
+              "kind": "speech",
+              "text": "Wish by itself: Ojalá hables español."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not extend these two frames to every emotion, doubt, command, or conjunction yet. More triggers belong in later micro-lessons."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Decide the meaning first; then retrieve only the learned form."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-fact-wanted",
+              "prompt": "Choose the wanted-event form: hablas or hables.",
+              "assesses": [
+                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
+                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR"
+              ],
+              "responseSeconds": 5,
+              "acceptedResponses": [
+                "hables"
+              ],
+              "feedback": {
+                "correct": "Right: hables is the wanted-event form in this chapter.",
+                "incorrect": "Hablas can assert; hables follows the learned wish frame."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-one-two",
+              "prompt": "Give the pair 'I want to speak Spanish; I want you to speak Spanish.'",
+              "assesses": [
+                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 11,
+              "acceptedResponses": [
+                "quiero hablar español; quiero que hables español.",
+                "quiero hablar español quiero que hables español",
+                "quiero hablar español / quiero que hables español"
+              ],
+              "feedback": {
+                "correct": "Right: one doer uses hablar; two use que hables.",
+                "incorrect": "Use Quiero hablar español, then Quiero que hables español."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-regular-rows",
+              "prompt": "Give the tú subjunctive forms of hablar, comer, and vivir, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR",
+                "ES-GRAMMAR-ER-SUBJUNCTIVE-SINGULAR",
+                "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "hables, comas, vivas",
+                "hables comas vivas",
+                "hables / comas / vivas"
+              ],
+              "feedback": {
+                "correct": "Right: hables, comas, vivas.",
+                "incorrect": "Retrieve the three tú forms: hable-s, coma-s, viva-s."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-yo-stem",
+              "prompt": "Which present-person form supplies the stem in this chapter's recipe?",
+              "assesses": [
+                "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "the yo form",
+                "yo",
+                "present yo form"
+              ],
+              "feedback": {
+                "correct": "Right: start from the present yo form.",
+                "incorrect": "The recipe begins with the present yo form."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-querer",
+              "prompt": "Give the learned singular subjunctive row of querer.",
+              "assesses": [
+                "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-QUERER"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "quiera, quieras, quiera",
+                "quiera quieras quiera",
+                "quiera / quieras / quiera"
+              ],
+              "feedback": {
+                "correct": "Right: quiera, quieras, quiera.",
+                "incorrect": "Keep quier- and add -a, -as, -a."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-poder",
+              "prompt": "Say 'I want you to be able to speak Spanish' to one friend.",
+              "assesses": [
+                "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-PODER",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "quiero que puedas hablar español.",
+                "quiero que puedas hablar español"
+              ],
+              "feedback": {
+                "correct": "Right: Quiero que puedas hablar español.",
+                "incorrect": "Use quiero que plus puedas, then hablar español."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-hacer",
+              "prompt": "Say 'I want you to make coffee' to one friend.",
+              "assesses": [
+                "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-HACER",
+                "ES-LEX-CAFE"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "quiero que hagas café.",
+                "quiero que hagas café",
+                "quiero que hagas cafe"
+              ],
+              "feedback": {
+                "correct": "Right: Quiero que hagas café.",
+                "incorrect": "Use quiero que plus hagas, then café."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-ojala",
+              "prompt": "Say 'I hope you live in Madrid' to one friend using ojalá.",
+              "assesses": [
+                "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER",
+                "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-VIVIR",
+                "ES-LEX-EN"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "ojalá vivas en madrid.",
+                "ojalá vivas en madrid",
+                "ojala vivas en madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Ojalá vivas en Madrid.",
+                "incorrect": "Use ojalá directly before vivas en Madrid."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-subjunctive-name",
+              "prompt": "What does the Latin source subiūnctīvus help you picture?",
+              "assesses": [
+                "ES-ETYMON-SUBJUNCTIVE-SUBIUNCTIVUS"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "a clause subjoined or joined under another",
+                "subjoined",
+                "joined under"
+              ],
+              "feedback": {
+                "correct": "Right: a subjoined clause.",
+                "incorrect": "It carries the idea of being subjoined, or joined under another."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-ojala-source",
+              "prompt": "Name the historical language variety through which ojalá entered Spanish.",
+              "assesses": [
+                "ES-ETYMON-OJALA-HISPANIC-ARABIC"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "hispanic arabic",
+                "arabic",
+                "andalusi arabic",
+                "hispano-arabic"
+              ],
+              "feedback": {
+                "correct": "Right: Hispanic Arabic.",
+                "incorrect": "The route recorded here is Hispanic Arabic."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the first meaning choice? (Asserted event or wanted event.) Give the three regular tú forms. (Hables, comas, vivas.) Give the three bounded special tú forms. (Quieras, puedas, hagas.) Name the two safe triggers. (Quiero que for a different doer; ojalá for a wish.) What still waits? (Plural persons, additional irregular verbs, and additional subjunctive triggers.)"
             }
           ]
         }

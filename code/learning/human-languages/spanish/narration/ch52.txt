@@ -1,36 +1,95 @@
-Spanish, chapter 52: Telling Time.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 52: Water, Wine, and Bread.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-la hora — Spanish's barely-changed Latin hour.
+Lesson 1 of 3.
+el agua — water, and an article that is not what it looks like.
 
 Warm-up.
 [pause 2 seconds]
-You've now seen this Latin word take three different paths: French wore it down to heure, German borrowed it centuries later as Uhr. Spanish's path is the simplest of all — it barely changed.
+One of the least changed words in Spanish, carrying one of its most misunderstood rules. The "masculine" article on this feminine noun is not a mistake and not an exception to gender.
 
-The word, taken apart: hora.
-hora from Latin hōra from Greek hṓrā, "a season, a time of day" (the Greek goddesses of the seasons were the Hōrai). Spanish kept the word almost exactly as Latin had it — just a silent h in spelling, a fossil of a Latin h that was already weak and barely pronounced by the time Spanish inherited the word (the same non-story as French heure or English hour's silent h). Be careful not to confuse this with hijo and hacer's silent h — those come from a completely different, later Spanish sound change (Latin f- becomes Old Spanish aspirated h- becomes eventual silence), not from an already-weak Latin h the way hora's is. Two different roads to the same "silent letter" result. Compare its cousins: French wore hōra down further to heure; German didn't inherit the word at all, but borrowed it later as Uhr; English took the same Latin hōra and made hour.
-[a table of 4 rows, read aloud]
-language: Spanish. word: hora. what happened: inherited almost unchanged, just a silent h.
-language: French. word: heure. what happened: inherited, but worn down further.
-language: German. word: Uhr. what happened: not inherited — borrowed later, separately.
-language: English. word: hour. what happened: inherited via French, silent h.
+The word, taken apart: agua.
+agua ("water") from Latin aqua — almost unchanged in two thousand years. Compare French, where the very same word was worn all the way down to a bare "eau," just the sound "oh." Same starting point, same span of time, wildly different amounts of erosion: how fast a language wears its words down is not fixed.
+English kept the whole Latin word too, but as a learned borrowing rather than an inherited everyday one: aquatic, aquarium, aqueduct, aqualung.
 
-Grammar Lens: Son las and telling time.
-Spanish uses ser ("to be") plus the feminine plural article (agreeing with the unspoken horas) to tell time — and famously switches number for "one":
-Es la una. — "It is one o'clock." (singular — la una, "the one") Son las dos. — "It is two o'clock." (plural — las dos, "the two") Son las diez. — "It is ten o'clock."
-Literally "it is the one" / "they are the two/ten" — the hour count itself is implied by the article and number, without needing to say hora(s) at all in everyday speech (unlike French's il est deux heures, which spells out "hours" every time).
+Grammar Lens: el agua's article and gender.
+Notice: el agua, not la agua — yet agua is genuinely feminine. You can prove it: el agua fría, "the cold water," keeps the feminine adjective ending, and the plural is las aguas, never los aguas.
+The rule is phonological, not grammatical. Spanish swaps la for el directly before a singular feminine noun beginning with a stressed a-sound, to avoid running two identical vowels together (la agua). It is the same instinct that makes English pick "an apple" over "a apple."
+[a table of 3 rows, read aloud]
+the water. singular: el agua. plural: las aguas.
+the eagle. singular: el águila. plural: las águilas.
+the axe. singular: el hacha. plural: las hachas.
+Only the article changes. The noun's gender never moves.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "hora" — silent h, a fossil of an already-weak Latin h]
+[your turn — say: "el agua" — water, feminine, but takes el]
 [pause 8 seconds for the answer]
-[your turn — say: "Es la una. Son las dos. Son las diez."]
+[your turn — say: the proof — "el agua fría" and "las aguas"]
 [pause 8 seconds for the answer]
-[your turn — say: "hora / heure / hour" — one Latin root, three different fates]
+[your turn — say: the contrast — "agua" barely changed; French's "eau" wore all the way down]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Latin (and Greek) word is hora from? (hōra from Greek hṓrā.) How did Spanish's path differ from French's and German's? (Spanish inherited it almost unchanged; French wore it down further to heure; German didn't inherit it at all and borrowed Uhr separately, much later.) How do you say "it is one o'clock" vs. "it is two o'clock"? (Es la una — singular; Son las dos — plural.)
+Is agua masculine or feminine? (Feminine — el replaces la only because agua begins with a stressed a.) How would you prove it? (El agua fría; las aguas.) How does Spanish's erosion of aqua compare with French's? (Much less — Spanish kept nearly the whole word; French wore it to "eau.")
+
+
+Lesson 2 of 3.
+el vino — one word, three separate arrivals in English.
+
+Warm-up.
+[pause 2 seconds]
+The second drink is grammatically boring — plain masculine, plain el vino, no stressed-a trick. Its history makes up for that.
+
+The word, taken apart: vino.
+vino ("wine") from Latin vīnum — which held its shape well, as French's vin did too.
+English shares the very same root by more than one road, and the roads are worth separating, because they show three different ways a word can travel:
+[a table of 3 rows, read aloud]
+English word: wine. how it got there: vīnum borrowed directly into old Germanic, very early.
+English word: vine, vinegar. how it got there: borrowed centuries later, secondhand via French (vin + aigre, "sour wine").
+English word: vineyard. how it got there: not borrowed at all — English built it at home from the already-borrowed wine plus native yard.
+So wine and vine are the same Latin word twice, arriving a thousand years apart by different routes, and vineyard is a homemade compound made out of the first arrival. One Latin noun; three English histories.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "el agua, el vino" — the two drinks]
+[pause 8 seconds for the answer]
+[your turn — say: "vino" then English "wine, vine, vinegar" — one root, three roads]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What Latin word gives vino? (Vīnum.) Name three English cousins and say how each arrived. (Wine — direct, early, into Germanic; vine/vinegar — later, via French; vineyard — built at home from wine plus yard.) And why is it el agua but las aguas? (The el is a sound rule for a stressed a, singular only.)
+
+
+Lesson 3 of 3.
+el pan — bread, and the friend who shares it.
+
+Warm-up.
+[pause 2 seconds]
+Spanish's word for bread hides the same lovely word-story you'd find in English's "companion" — except Spanish kept both halves, the bread and the friendship.
+
+The word, taken apart: pan.
+el pan ("bread") from Latin pānis. Masculine: el pan.
+
+Why it's said this way: bread and friendship.
+The Latin root pān- ("bread") gives Spanish its own word for a close friend:
+compañero / compañera ("companion, friend, partner") from com- ("with").
+pānis — literally "one you share bread with." Spanish built this word from the very same recipe as English companion and company (which come from the identical Latin pieces) — but where English only kept the friendship sense, Spanish still visibly uses the same root for the actual bread (pan) too.
+panadería ("bakery") and panadero ("baker") — both transparently built on pan.
+So pan and compañero are the same word-family doing double duty in Spanish: name the food, and name the friend you'd share it with.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "el pan" — bread]
+[pause 8 seconds for the answer]
+[your turn — say: "compañero" — literally, one you share bread with]
+[pause 8 seconds for the answer]
+[your turn — say: "panadería, panadero" — bakery, baker]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give "bread" with its article. (El pan.) What does compañero literally mean, and what's it built from? ("One you share bread with" — com- + pānis.) Does English keep this same double meaning? (No — English's companion only kept the friendship sense; Spanish still uses the same root for the actual bread, pan, too.)
