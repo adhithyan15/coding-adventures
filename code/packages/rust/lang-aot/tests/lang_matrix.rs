@@ -1424,6 +1424,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("4.254.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — finite literal-only multiplication uses the same bounded
+    // frontend evaluator. The second expression proves normal precedence while
+    // every backend continues to receive only portable string output.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin output(2.5 * 2.0, 1.5 + 2.0 * 3.0) end",
+        expect: Expect::Stdout("57.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — string procedures (LANG-FULL E4-dyn payoff, E4d-AL). The first
     // E4-dyn *frontend* feature: a `string procedure` returns a runtime string.
     // Here the result is chosen by control flow inside the body
@@ -6049,6 +6059,35 @@ fn algol_static_additive_real_output_runs_on_every_available_standard_backend() 
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but static additive real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_static_real_multiplication_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("output(2.5 * 2.0, 1.5 + 2.0 * 3.0)")
+        })
+        .expect("the static real multiplication program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but static real multiplication output did not complete"
             );
             continue;
         };

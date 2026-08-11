@@ -6047,11 +6047,11 @@ fn expr_static_real_output_text(node: &GrammarASTNode) -> Option<String> {
     if let Some(literal) = expr_real_literal_text(node) {
         return Some(literal);
     }
-    let value = expr_static_real_additive_value(node)?;
+    let value = expr_static_real_arithmetic_value(node)?;
     value.is_finite().then(|| value.to_string())
 }
 
-fn expr_static_real_additive_value(node: &GrammarASTNode) -> Option<f64> {
+fn expr_static_real_arithmetic_value(node: &GrammarASTNode) -> Option<f64> {
     if let Some(literal) = expr_real_literal_text(node) {
         return literal.parse::<f64>().ok().filter(|value| value.is_finite());
     }
@@ -6059,7 +6059,7 @@ fn expr_static_real_additive_value(node: &GrammarASTNode) -> Option<f64> {
     let seq = pieces(node);
     if seq.len() == 1 {
         return match seq[0] {
-            Piece::Node(child) => expr_static_real_additive_value(child),
+            Piece::Node(child) => expr_static_real_arithmetic_value(child),
             Piece::Op(_) => None,
         };
     }
@@ -6077,7 +6077,7 @@ fn expr_static_real_additive_value(node: &GrammarASTNode) -> Option<f64> {
     let Piece::Node(first) = seq.get(index)? else {
         return None;
     };
-    let mut value = leading_sign * expr_static_real_additive_value(first)?;
+    let mut value = leading_sign * expr_static_real_arithmetic_value(first)?;
     index += 1;
     let mut saw_binary_operator = false;
     while index < seq.len() {
@@ -6087,10 +6087,11 @@ fn expr_static_real_additive_value(node: &GrammarASTNode) -> Option<f64> {
         let Piece::Node(rhs) = seq.get(index + 1)? else {
             return None;
         };
-        let rhs = expr_static_real_additive_value(rhs)?;
+        let rhs = expr_static_real_arithmetic_value(rhs)?;
         value = match op.as_str() {
             "+" => value + rhs,
             "-" => value - rhs,
+            "*" => value * rhs,
             _ => return None,
         };
         if !value.is_finite() {
@@ -6954,9 +6955,9 @@ mod tests {
     }
 
     #[test]
-    fn al4_print_non_additive_computed_real_rejects_static_fast_path() {
-        let err = compile_source("begin print(2.0 * 2.25) end", "test")
-            .expect_err("multiplicative real arithmetic still requires runtime formatting");
+    fn al4_print_divided_real_rejects_static_fast_path() {
+        let err = compile_source("begin print(2.0 / 2.25) end", "test")
+            .expect_err("real division still requires runtime formatting");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
@@ -7002,13 +7003,18 @@ mod tests {
     }
 
     #[test]
-    fn al4_print_conditional_with_computed_real_leaf_rejects() {
-        let err = compile_source(
+    fn al4_print_conditional_with_static_real_product() {
+        let module = compile_source(
             "begin boolean flag; flag := true; print(if flag then 2.0 * 2.25 else 4.25) end",
             "test",
         )
-        .expect_err("computed real leaf still requires runtime formatting");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("conditional static real product compiles");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "4.5")
+        }));
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
     }
 
     #[test]
@@ -7029,9 +7035,33 @@ mod tests {
     }
 
     #[test]
+    fn al4_print_static_real_multiplication() {
+        let module = compile_source("begin print(2.5 * 2.0, 1.5 + 2.0 * 3.0) end", "test")
+            .expect("static real multiplication compiles");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["5", "7.5"]);
+        assert!(main.instructions.iter().all(|instr| instr.type_hint != "f64"));
+    }
+
+    #[test]
     fn al4_print_static_real_arithmetic_rejects_non_finite_result() {
         let err = compile_source("begin print(1.0E308 + 1.0E308) end", "test")
             .expect_err("non-finite compile-time output must fail closed");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_real_multiplication_rejects_non_finite_result() {
+        let err = compile_source("begin print(1.0E308 * 2.0) end", "test")
+            .expect_err("non-finite compile-time product must fail closed");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
@@ -7052,10 +7082,14 @@ mod tests {
     }
 
     #[test]
-    fn al4_print_parenthesized_computed_real_rejects() {
-        let err = compile_source("begin print((2.0 * 2.25)) end", "test")
-            .expect_err("parentheses must not admit non-additive real output");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+    fn al4_print_parenthesized_static_real_product() {
+        let module = compile_source("begin print((2.0 * 2.25)) end", "test")
+            .expect("parenthesized static real product compiles");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "4.5")
+        }));
     }
 
     #[test]
