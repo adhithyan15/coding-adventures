@@ -2227,10 +2227,7 @@ impl Compiler {
         &mut self,
         node: &GrammarASTNode,
     ) -> Result<bool, CompileError> {
-        if let Some(text) = self
-            .static_standard_real_output_text(node)
-            .or_else(|| expr_static_real_output_text(node))
-        {
+        if let Some(text) = self.static_real_output_text(node) {
             self.emit_standard_output_literal(&text);
             return Ok(true);
         }
@@ -2278,17 +2275,27 @@ impl Compiler {
         Ok(true)
     }
 
-    /// Evaluate the small deterministic subset of real standard-function
-    /// calls that can use the formatter-free output path. User declarations
-    /// still shadow the built-ins, and `sqrt` is accepted only when the host
-    /// operation round-trips exactly to its finite literal-only operand.
-    fn static_standard_real_output_text(&self, node: &GrammarASTNode) -> Option<String> {
+    fn static_real_output_text(&self, node: &GrammarASTNode) -> Option<String> {
+        if let Some(literal) = expr_real_literal_text(node) {
+            return Some(literal);
+        }
+        let value = self.static_real_arithmetic_value(node)?;
+        value.is_finite().then(|| value.to_string())
+    }
+
+    fn static_real_arithmetic_value(&self, node: &GrammarASTNode) -> Option<f64> {
+        expr_static_real_arithmetic_value_with(node, &|call| {
+            self.static_standard_real_value(call)
+        })
+    }
+
+    /// Evaluate deterministic real standard-function calls inside the static
+    /// arithmetic tree. User declarations still shadow the built-ins, and
+    /// `sqrt` is accepted only when the host operation round-trips exactly to
+    /// its finite literal-only operand.
+    fn static_standard_real_value(&self, node: &GrammarASTNode) -> Option<f64> {
         if node.rule_name != "proc_call" {
-            let seq = pieces(node);
-            return match seq.as_slice() {
-                [Piece::Node(child)] => self.static_standard_real_output_text(child),
-                _ => None,
-            };
+            return None;
         }
         let name = direct_tokens(node)
             .into_iter()
@@ -2303,7 +2310,7 @@ impl Compiler {
         if actuals.len() != 1 {
             return None;
         }
-        let operand = expr_static_real_arithmetic_value(actuals[0])?;
+        let operand = self.static_real_arithmetic_value(actuals[0])?;
         let value = match target_name.as_str() {
             "abs" => operand.abs(),
             "sqrt" if operand >= 0.0 => {
@@ -2312,7 +2319,7 @@ impl Compiler {
             }
             _ => return None,
         };
-        value.is_finite().then(|| value.to_string())
+        value.is_finite().then_some(value)
     }
 
     fn emit_standard_output_value(
@@ -6157,6 +6164,19 @@ fn expr_static_real_output_text(node: &GrammarASTNode) -> Option<String> {
 }
 
 fn expr_static_real_arithmetic_value(node: &GrammarASTNode) -> Option<f64> {
+    expr_static_real_arithmetic_value_with(node, &|_| None)
+}
+
+fn expr_static_real_arithmetic_value_with<F>(
+    node: &GrammarASTNode,
+    static_call_value: &F,
+) -> Option<f64>
+where
+    F: Fn(&GrammarASTNode) -> Option<f64>,
+{
+    if let Some(value) = static_call_value(node) {
+        return value.is_finite().then_some(value);
+    }
     if let Some(literal) = expr_real_literal_text(node) {
         return literal.parse::<f64>().ok().filter(|value| value.is_finite());
     }
@@ -6192,7 +6212,7 @@ fn expr_static_real_arithmetic_value(node: &GrammarASTNode) -> Option<f64> {
                     None
                 }
             })?;
-        let base = expr_static_real_arithmetic_value(base)?;
+        let base = expr_static_real_arithmetic_value_with(base, static_call_value)?;
         let mut value = 1.0;
         if exponent < 0 && base == 0.0 {
             return None;
@@ -6211,7 +6231,9 @@ fn expr_static_real_arithmetic_value(node: &GrammarASTNode) -> Option<f64> {
     }
     if seq.len() == 1 {
         return match seq[0] {
-            Piece::Node(child) => expr_static_real_arithmetic_value(child),
+            Piece::Node(child) => {
+                expr_static_real_arithmetic_value_with(child, static_call_value)
+            }
             Piece::Op(_) => None,
         };
     }
@@ -6229,7 +6251,8 @@ fn expr_static_real_arithmetic_value(node: &GrammarASTNode) -> Option<f64> {
     let Piece::Node(first) = seq.get(index)? else {
         return None;
     };
-    let mut value = leading_sign * expr_static_real_arithmetic_value(first)?;
+    let mut value =
+        leading_sign * expr_static_real_arithmetic_value_with(first, static_call_value)?;
     index += 1;
     let mut saw_binary_operator = false;
     while index < seq.len() {
@@ -6239,7 +6262,7 @@ fn expr_static_real_arithmetic_value(node: &GrammarASTNode) -> Option<f64> {
         let Piece::Node(rhs) = seq.get(index + 1)? else {
             return None;
         };
-        let rhs = expr_static_real_arithmetic_value(rhs)?;
+        let rhs = expr_static_real_arithmetic_value_with(rhs, static_call_value)?;
         if op == "/" && rhs == 0.0 {
             return None;
         }
@@ -7385,6 +7408,38 @@ mod tests {
             "test",
         )
         .expect_err("a user-defined abs result still requires runtime formatting");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_real_standard_functions_compose_with_arithmetic() {
+        let module = compile_source(
+            "begin print(abs(sqrt(2.25) - 2.0) + 0.25, sqrt(abs(-2.25)) * 2.0) end",
+            "test",
+        )
+        .expect("static standard functions compose with literal-only arithmetic");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["0.75", "3"]);
+        assert!(main.instructions.iter().all(|instr| {
+            !matches!(instr.op.as_str(), "f64_sqrt" | "cmp_lt" | "fsub" | "fadd" | "fmul")
+        }));
+    }
+
+    #[test]
+    fn al4_print_nested_static_standard_function_respects_user_override() {
+        let err = compile_source(
+            "begin real procedure abs(x); value x; real x; abs := x + 1.0; print(abs(2.0) + 0.5) end",
+            "test",
+        )
+        .expect_err("a nested user-defined abs result still requires runtime formatting");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 

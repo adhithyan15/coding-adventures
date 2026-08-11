@@ -194,6 +194,9 @@ literal-only real arithmetic also use the static string path. `sqrt` does so
 when its nonnegative operand has an exactly round-tripping root; inexact roots,
 invalid domains, runtime operands, and user overrides still require runtime
 real formatting.
+Those supported static standard-function calls may nest and compose with the
+same finite literal-only arithmetic evaluator, while every nested call remains
+subject to the same override, domain, exact-root, and finiteness checks.
 
 Proper procedures now lower as side-effecting IIR `void` functions when called
 in statement position. They can write enclosing scalar or array globals and use
