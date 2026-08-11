@@ -112,14 +112,17 @@ direction, and `[*]` start/end edge states. It lowers into the shared graph IR,
 graph layout, and backend-neutral
 PaintScene instructions, with a Metal-to-PNG fixture. Choice pseudostates accept
 both `<<choice>>` and `[[choice]]` and lower to graph-IR diamonds. Composite
-states, notes, concurrency, click metadata, accessibility metadata, and
-class-based state styling remain explicit gaps, so the family is marked partial.
+states, notes, concurrency, click metadata, and accessibility metadata remain
+explicit gaps, so the family is marked partial.
 Fork and join pseudostates accept both upstream marker spellings and lower to a
 compact backend-neutral graph-IR bar shape rendered by existing rectangle Paint
 instructions.
 Inline `style` statements preserve fill, stroke, text color, and stroke width
 through graph IR, layout style resolution, and backend-neutral Paint geometry
-and glyph instructions. Class-based styles remain a compatibility gap.
+and glyph instructions. Named `classDef` declarations and comma-delimited
+`class` assignments resolve the same properties into graph IR, including
+assignments that precede their declaration. Default classes and `:::` shorthand
+remain compatibility gaps.
 
 ### Sequence Native Slice
 
