@@ -1,8 +1,79 @@
-Spanish, chapter 6: Thank You.
-3 lessons. All 3 can be done entirely by ear.
+Spanish, chapter 6: Thank You, Yes, and No.
+5 lessons. All 5 can be done entirely by ear.
 
 
-Lesson 1 of 3.
+Lesson 1 of 5.
+sí — yes.
+
+Warm-up.
+[pause 2 seconds]
+The smallest useful word — and the accent on it is doing real work.
+
+The word, taken apart: sí and si.
+sí = yes. One syllable, said see.
+The written accent is not decoration — it is the whole difference between two words:
+sí (with the accent) = yes.
+si (no accent) = if.
+They sound almost identical, so Spanish uses the mark to tell them apart on the page: Sí, si quieres = "Yes, if you want." Miss the accent and you've written "if" where you meant "yes."
+
+The word, taken apart: where sí comes from.
+sí is Latin sīc, "thus, so" — answering a question with "just so," exactly the move Latin also made with ita ("thus" = yes, from the Latin yes/no lesson). Its Romance cousins kept the same root:
+[a table of 3 rows, read aloud]
+Latin sīc: Spanish. , which gives:: sí.
+Latin sīc: Italian. , which gives:: sì.
+Latin sīc: Portuguese. , which gives:: sim.
+French is the odd one out — it went a completely different way for "yes" (oui), which its own lesson tells. But say sí, sì, sim in a row and you hear one Latin word answering across three countries.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "sí" — see, and picture the accent]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — "sí" (yes) vs "si" (if)]
+[pause 8 seconds for the answer]
+[your turn — say: the cousins — "sí, sì, sim" — all from Latin sīc]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say yes in Spanish? (sí.) What is the only difference between sí "yes" and si "if"? (The written accent.) What Latin word is sí from, and what did it mean? (sīc — "thus, so".)
+
+
+Lesson 2 of 5.
+no — no / not.
+
+Warm-up.
+[pause 2 seconds]
+The easiest word yet — and it quietly does two jobs Spanish never splits apart.
+
+The word, taken apart: no.
+no = no. Said noh, a clean single vowel.
+It is Latin nōn with almost nothing worn off — just the final consonant gone. Compare the family, all from the same nōn:
+[a table of 3 rows, read aloud]
+Latin nōn: Spanish. , which gives:: no.
+Latin nōn: Italian. , which gives:: no.
+Latin nōn: French. , which gives:: non.
+
+Why it's said this way.
+Here's the thing English splits and Spanish doesn't. English has "no" (the answer) and "not" (inside a sentence) — two different words. Spanish uses no for both:
+as the answer. Someone asks you something — anything at all — and this one syllable declines it. You do not need to understand the question to answer it, which is exactly why this word comes early.
+and later, as the word that turns a sentence around — but that needs a sentence first, so it waits until you have one. For now: no is how you decline, refuse, and disagree, which is most of what a beginner needs it for.
+<!-- the negator sense is taught in chapter 14, where the learner has a verb -->.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "no" — noh]
+[pause 8 seconds for the answer]
+[your turn — say: "No." — flat, once, the way you would decline a second coffee]
+[pause 8 seconds for the answer]
+[your turn — say: "Sí." then "No." — the two shortest complete answers in Spanish]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say no in Spanish? (no.) What Latin word is it from? (nōn.) Spanish no does the work of which two English words? ("no" the answer, and later the word for "not.") Where does no go to negate a sentence? (Right before the verb.)
+
+
+Lesson 3 of 5.
 gracias — "thank you," and a whole family of English words.
 
 Warm-up.
@@ -36,7 +107,7 @@ Wrap-up Recall.
 What everyday English word is gracias the plural of, at the root? (Grace.) So when you thank someone in Spanish, you are literally handing them — what? (Graces / favours.) Next: the little reply that closes the exchange, de nada.
 
 
-Lesson 2 of 3.
+Lesson 4 of 5.
 de nada — "you're welcome," or "it was nothing".
 
 Warm-up.
@@ -68,8 +139,8 @@ Wrap-up Recall.
 nada ("nothing") started life as the Latin word for a born — what? (A thing — rēs nāta, a born thing.) What English words share that "born" root? (Native, nature, natal, renaissance.) Next: the verb the whole "how are you?" question turns on — estar.
 
 
-Lesson 3 of 3.
-Thank you, and the answer — putting it together.
+Lesson 5 of 5.
+Thank you, yes, and no — putting it together.
 
 Warm-up.
 [pause 2 seconds]
@@ -77,9 +148,11 @@ Two words that travel everywhere together. Nothing new in this lesson — only w
 
 The exchange.
 — Gracias. — De nada.
+And the two words that let you answer anything at all:
+— ¿…? — Sí. / — No.
 
 What you've built.
-You can thank someone and answer when you are thanked — the shortest complete exchange in the language.
+You can thank someone, answer when you are thanked, and — for the first time — accept or decline. Until you have sí and no, every question anyone asks you is unanswerable.
 
 Guided Practice.
 [pause 1 second]

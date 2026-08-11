@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "More -ar Verbs",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cdf7535689c738af",
+  "sourceHash": "fnv1a64:43d87b75b8b71262",
   "lessons": [
     {
       "id": "ES-C06-trabajar",
@@ -466,7 +466,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8e4005305de5e41",
+      "sourceHash": "fnv1a64:be51586e5e7cc6f9",
       "notice": null,
       "blocks": [
         {
@@ -578,6 +578,25 @@
         },
         {
           "index": 4,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You met no long ago as the answer. It has a second job, and now you have a sentence to try it on: put no directly in front of the verb and the whole thing flips."
+            },
+            {
+              "kind": "speech",
+              "text": "Hablo español becomes No hablo español."
+            },
+            {
+              "kind": "speech",
+              "text": "That is all there is to it. English needs a helper — do not — and Spanish needs nothing: one small word, in front, and the sentence means its opposite."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -485,7 +485,7 @@ describe("the real corpus", () => {
     // would put the prerequisite AFTER its dependent and fail the ordering rule). The
     // tie is carried by `reviews_of` instead, which does not count as a revisit.
     // Chapters 40 and 41 are planned to close this.
-    expect(report.summary.atomsNeverRevisited).toBe(458); // -16: the 8 new payoff lessons close reinforcement windows
+    expect(report.summary.atomsNeverRevisited).toBe(457); // -17: payoff lessons plus si/no moving early
     expect(report.summary.neverRevisitedPercent).toBe(17);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
@@ -648,7 +648,7 @@ describe("the real corpus", () => {
     // READ-MUUNRU-02 gained a real revisit at the same time (0 -> 1, TA-W20 re-reads
     // மூன்று beside ஒன்று) and still misses R1, because TA-W20 is 4 lessons later and
     // R1 stops at 3.
-    expect(report.summary.missedByWindow.R1).toBe(864); // -27: HL-C94's payoff lessons close R1 for their chapters
+    expect(report.summary.missedByWindow.R1).toBe(863);
     // +2 net, and the composition is the interesting part: all FIVE new atoms miss R2
     // as well, offset by THREE pre-existing atoms that TA-W09 pulls back into it.
     // TA-W09 sits 12 lessons after TA-W06 and 8 after TA-W07, both inside R2's 5-15
@@ -782,7 +782,7 @@ describe("the real corpus", () => {
       // Chapter 17 does the same across its future and conditional ramp.
       // Chapter 18 does the same across its singular subjunctive ramp.
       atomsTaught: 387,
-      atomsNeverRevisited: 49,
+      atomsNeverRevisited: 48,
     });
   });
 

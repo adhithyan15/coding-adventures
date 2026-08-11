@@ -2453,119 +2453,114 @@
     {
       "language": "spanish",
       "chapter": 27,
-      "output": "spanish/book/chapters/ch27-yes-and-no.tex"
+      "output": "spanish/book/chapters/ch27-lo-siento.tex"
     },
     {
       "language": "spanish",
       "chapter": 28,
-      "output": "spanish/book/chapters/ch28-lo-siento.tex"
+      "output": "spanish/book/chapters/ch28-days-of-the-week.tex"
     },
     {
       "language": "spanish",
       "chapter": 29,
-      "output": "spanish/book/chapters/ch29-days-of-the-week.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 30,
-      "output": "spanish/book/chapters/ch30-black-white-red-blue.tex",
+      "output": "spanish/book/chapters/ch29-black-white-red-blue.tex",
       "unicodeScript": "Arabic",
       "scriptCommand": "esar"
     },
     {
       "language": "spanish",
+      "chapter": 30,
+      "output": "spanish/book/chapters/ch30-family.tex"
+    },
+    {
+      "language": "spanish",
       "chapter": 31,
-      "output": "spanish/book/chapters/ch31-family.tex"
+      "output": "spanish/book/chapters/ch31-head-and-hand.tex"
     },
     {
       "language": "spanish",
       "chapter": 32,
-      "output": "spanish/book/chapters/ch32-head-and-hand.tex"
+      "output": "spanish/book/chapters/ch32-seasons.tex"
     },
     {
       "language": "spanish",
       "chapter": 33,
-      "output": "spanish/book/chapters/ch33-seasons.tex"
+      "output": "spanish/book/chapters/ch33-water-wine-bread.tex"
     },
     {
       "language": "spanish",
       "chapter": 34,
-      "output": "spanish/book/chapters/ch34-water-wine-bread.tex"
+      "output": "spanish/book/chapters/ch34-months.tex"
     },
     {
       "language": "spanish",
       "chapter": 35,
-      "output": "spanish/book/chapters/ch35-months.tex"
+      "output": "spanish/book/chapters/ch35-noon-midnight.tex"
     },
     {
       "language": "spanish",
       "chapter": 36,
-      "output": "spanish/book/chapters/ch36-noon-midnight.tex"
+      "output": "spanish/book/chapters/ch36-telling-time.tex"
     },
     {
       "language": "spanish",
       "chapter": 37,
-      "output": "spanish/book/chapters/ch37-telling-time.tex"
+      "output": "spanish/book/chapters/ch37-weather.tex"
     },
     {
       "language": "spanish",
       "chapter": 38,
-      "output": "spanish/book/chapters/ch38-weather.tex"
+      "output": "spanish/book/chapters/ch38-numbers-11-20.tex"
     },
     {
       "language": "spanish",
       "chapter": 39,
-      "output": "spanish/book/chapters/ch39-numbers-11-20.tex"
+      "output": "spanish/book/chapters/ch39-dog-and-cat.tex"
     },
     {
       "language": "spanish",
       "chapter": 40,
-      "output": "spanish/book/chapters/ch40-dog-and-cat.tex"
+      "output": "spanish/book/chapters/ch40-green-and-yellow.tex"
     },
     {
       "language": "spanish",
       "chapter": 41,
-      "output": "spanish/book/chapters/ch41-green-and-yellow.tex"
+      "output": "spanish/book/chapters/ch41-verbs-of-the-mind.tex"
     },
     {
       "language": "spanish",
       "chapter": 42,
-      "output": "spanish/book/chapters/ch42-verbs-of-the-mind.tex"
+      "output": "spanish/book/chapters/ch42-take-ask-help.tex"
     },
     {
       "language": "spanish",
       "chapter": 43,
-      "output": "spanish/book/chapters/ch43-take-ask-help.tex"
+      "output": "spanish/book/chapters/ch43-hear-sleep-walk-run.tex"
     },
     {
       "language": "spanish",
       "chapter": 44,
-      "output": "spanish/book/chapters/ch44-hear-sleep-walk-run.tex"
+      "output": "spanish/book/chapters/ch44-open-close-sit-stand.tex"
     },
     {
       "language": "spanish",
       "chapter": 45,
-      "output": "spanish/book/chapters/ch45-open-close-sit-stand.tex"
+      "output": "spanish/book/chapters/ch45-narrating.tex"
     },
     {
       "language": "spanish",
       "chapter": 46,
-      "output": "spanish/book/chapters/ch46-narrating.tex"
+      "output": "spanish/book/chapters/ch46-bring-get-play-meet.tex"
     },
     {
       "language": "spanish",
       "chapter": 47,
-      "output": "spanish/book/chapters/ch47-bring-get-play-meet.tex"
+      "output": "spanish/book/chapters/ch47-wait-answer-buy.tex"
     },
     {
       "language": "spanish",
       "chapter": 48,
-      "output": "spanish/book/chapters/ch48-wait-answer-buy.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 49,
-      "output": "spanish/book/chapters/ch49-giving-reasons.tex"
+      "output": "spanish/book/chapters/ch48-giving-reasons.tex"
     },
     {
       "language": "tamil",

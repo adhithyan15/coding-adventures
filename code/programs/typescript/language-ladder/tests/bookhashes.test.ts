@@ -11,8 +11,9 @@ describe("generated book source hashes", () => {
     // ch4 13->15, ch6 7->9. The generated-book manifest and the lesson files
     // agree on these numbers; only this app-side pin was stale.
     //
-    // HL-C94 then split the four over-budget opening chapters into twelve, so
-    // Spanish runs 1..49 and these counts are regenerated from the lesson files
+    // HL-C94 split the four over-budget opening chapters into twelve; HL-C95 then
+    // moved si/no to chapter 6 and collapsed the chapter they left empty, so
+    // Spanish runs 1..48 and these counts are regenerated from the lesson files
     // rather than hand-edited. This pin lives in the CONSUMER, so the data
     // package's own suite passes while this one fails -- which is exactly why
     // the downstream app is built in CI.
@@ -21,7 +22,7 @@ describe("generated book source hashes", () => {
     [3, 4],
     [4, 5],
     [5, 8],
-    [6, 3],
+    [6, 5],
     [7, 7],
     [8, 3],
     [9, 5],
@@ -44,27 +45,26 @@ describe("generated book source hashes", () => {
     [26, 9],
     [27, 2],
     [28, 2],
-    [29, 2],
-    [30, 4],
-    [31, 3],
-    [32, 2],
-    [33, 1],
-    [34, 3],
+    [29, 4],
+    [30, 3],
+    [31, 2],
+    [32, 1],
+    [33, 3],
+    [34, 1],
     [35, 1],
     [36, 1],
-    [37, 1],
-    [38, 3],
-    [39, 4],
+    [37, 3],
+    [38, 4],
+    [39, 2],
     [40, 2],
-    [41, 2],
+    [41, 4],
     [42, 4],
     [43, 4],
     [44, 4],
     [45, 4],
     [46, 4],
-    [47, 4],
-    [48, 3],
-    [49, 4],
+    [47, 3],
+    [48, 4],
   ])("matches the browser-loaded Spanish Chapter %i AST across %i lessons", (chapter, count) => {
     const lessons = loadLessons();
     const expected = expectedBookHash("spanish", chapter);

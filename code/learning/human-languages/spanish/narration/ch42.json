@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 42,
-  "title": "Four Verbs of the Mind",
+  "title": "Taking, Asking, Helping — and the Backwards Verb",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:3198974177550d28",
+  "sourceHash": "fnv1a64:227240609da2f3a9",
   "lessons": [
     {
-      "id": "ES-C34-pensar",
-      "sequence": 1610,
-      "title": "pensar — \"to think\", and it started out meaning \"to weigh\"",
-      "headword": "pensar",
-      "romanization": "pensar",
-      "gloss": "to think — at root \"to weigh\", and a stem-changer that breaks e becomes ie",
+      "id": "ES-C35-tomar",
+      "sequence": 1650,
+      "title": "tomar — \"to take\", and nobody knows where it came from",
+      "headword": "tomar",
+      "romanization": "tomar",
+      "gloss": "to take (and, across Latin America, to drink) — an everyday word with no settled origin",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8bd7125d247534f4",
+      "sourceHash": "fnv1a64:9e1fa99e52dce251",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can already run an -ar verb: hablo, hablas, habla. Here is one that takes those same endings and then cracks its stem in the middle, the way querer did."
+              "text": "Every verb so far ran straight back to a Latin root you could name. Here is one that does not — and the gap is the useful part."
             }
           ]
         },
@@ -46,86 +46,45 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "diphthong-ie — under stress the e breaks open: pienso = PYEN-so."
+              "text": "r-tap — one soft tap of the tongue: to-MAR."
             },
             {
               "kind": "speech",
-              "text": "The s is always a clear hissing s, never an English z buzz."
+              "text": "vowel-o — a short, pure o, with no English glide toward ow."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: pensar",
+          "title": "The word, taken apart: tomar",
           "segments": [
             {
               "kind": "speech",
-              "text": "pensar (\"to think\") from Latin pēnsāre, \"to weigh\" — the repeating form of pendere, \"to hang, to weigh out\". A Roman hung goods on a balance; the same verb slid across to weighing an idea."
+              "text": "tomar (\"to take\") is a plain -ar verb: tomo, tomas, toma, tomamos, toman. It is one of the most common verbs in the language, and its origin is genuinely unsettled."
             },
             {
               "kind": "speech",
-              "text": "English kept the whole family, and most of it still smells of money and scales:"
+              "text": "The leading proposal derives it from Latin autumāre, \"to take as, to assert\", worn down through an intermediate tumar; a rival one points to a pre-Roman Iberian word Latin never recorded. Neither is proved, and careful dictionaries say so. \"We don't know\" is a real answer in etymology."
             },
             {
               "kind": "speech",
-              "text": "pensive — turning something over on the balance."
-            },
-            {
-              "kind": "speech",
-              "text": "compensate — com- \"together\" + weigh: settle one weight against another."
-            },
-            {
-              "kind": "speech",
-              "text": "expense, dispense, pension — payments were literally weighed out."
-            },
-            {
-              "kind": "speech",
-              "text": "peso — a coin whose name simply means \"a weight\"."
-            },
-            {
-              "kind": "speech",
-              "text": "pansy — from French pensée, \"a thought\"."
-            },
-            {
-              "kind": "speech",
-              "text": "English reaches for the same picture without noticing it: you weigh your options, and an argument carries weight."
+              "text": "It carries a second everyday sense across Latin America: to drink. A waiter asking ¿Qué vas a tomar? is asking what you would like."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the same endings, a broken stem",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: the verb Latin did leave, and how to handle it",
           "segments": [
             {
               "kind": "speech",
-              "text": "The endings are the ordinary -ar set. Only the stressed e changes:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form",
-                "stem"
-              ],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "person: yo. form: pienso. stem: broken.",
-                "person: tú. form: piensas. stem: broken.",
-                "person: él/ella/usted. form: piensa. stem: broken.",
-                "person: nosotros. form: pensamos. stem: plain.",
-                "person: ellos/ustedes. form: piensan. stem: broken."
-              ]
+              "text": "Latin's own \"gather up\" verb survived perfectly well: coger from colligere, which is com- (\"together\") + legere — the very root you met in leer. English took that same Latin word twice: collect straight from the Latin, and coil by way of French."
             },
             {
               "kind": "speech",
-              "text": "Pensamos keeps the plain e because there the stress lands on the ending, not the stem — exactly the rule querer taught you."
-            },
-            {
-              "kind": "speech",
-              "text": "Two small habits come with the verb: pensar en something means \"think about\" it (pienso en ti), and pensar followed by a bare infinitive means \"plan to\" (pienso hablar — I mean to speak)."
+              "text": "In Spain coger is the plain everyday word: coger el autobús, catch the bus. In much of Latin America — Argentina, Mexico and well beyond — it is coarse slang for sex, and using it innocently will derail a conversation. Tomar is safe on both sides of the Atlantic, which is a large part of why it won."
             }
           ]
         },
@@ -143,29 +102,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pensar\" then the set — \"pienso, piensas, piensa, pensamos, piensan\"",
+              "instruction": "\"tomo, tomas, toma, tomamos, toman\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pensar\" then the set — \"pienso, piensas, piensa, pensamos, piensan\"]"
+              "source": "[YOU SAY: \"tomo, tomas, toma, tomamos, toman\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Pienso en ti\" — I am thinking of you",
+              "instruction": "\"Tomo un café\" — I'll have a coffee",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Pienso en ti\" — I am thinking of you]"
+              "source": "[YOU SAY: \"Tomo un café\" — I'll have a coffee]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pensar\" then English \"pensive, compensate, peso\" — the weighing family",
+              "instruction": "\"Tomo el autobús\" — the safe way to say it anywhere",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pensar\" then English \"pensive, compensate, peso\" — the weighing family]"
+              "source": "[YOU SAY: \"Tomo el autobús\" — the safe way to say it anywhere]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"coger\" then English \"collect, coil\" — one root, and one place to be careful",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"coger\" then English \"collect, coil\" — one root, and one place to be careful]"
             }
           ]
         },
@@ -182,26 +150,26 @@
             },
             {
               "kind": "speech",
-              "text": "What did pēnsāre mean literally, and name two English cousins. (To weigh; pensive, compensate, expense, peso.) Which form keeps the plain e, and why? (Pensamos — the stress falls on the ending.) Which little word follows pensar for \"think about\"? (En.) Next: entender, which cracks the same way."
+              "text": "Does tomar have a confirmed etymology? (No — autumāre and a pre-Roman source are both unproved.) What Latin verb gives coger, and which root sits inside it? (Colligere, holding legere, \"to gather\", from leer.) Why reach for tomar instead? (Coger is coarse slang across much of Latin America.) Next: preguntar, and the two different asks."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C34-entender",
-      "sequence": 1620,
-      "title": "entender — \"to understand\", built out of stretching",
-      "headword": "entender",
-      "romanization": "entender",
-      "gloss": "to understand — literally \"to stretch toward\"; the second e becomes ie stem-changer",
+      "id": "ES-C35-preguntar",
+      "sequence": 1660,
+      "title": "preguntar — \"to ask\", by sounding the water with a pole",
+      "headword": "preguntar",
+      "romanization": "preguntar",
+      "gloss": "to ask (a question) — and the reason English's one \"ask\" becomes two Spanish verbs",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7bc2b6a399046322",
+      "sourceHash": "fnv1a64:fbe51e9a3167c8a1",
       "notice": null,
       "blocks": [
         {
@@ -217,7 +185,7 @@
             },
             {
               "kind": "speech",
-              "text": "Pensar broke its stem under stress. So does this one — and it hands you the single most useful sentence a beginner owns: no entiendo, \"I don't understand.\""
+              "text": "English gets by with one verb, ask. Spanish splits the job in two, and picking the wrong half is a reliable beginner mistake. Here is the first half."
             }
           ]
         },
@@ -228,77 +196,245 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "diphthong-ie — entiendo = en-TYEN-do."
+              "text": "pr-cluster — pre- is one crisp beat, preh, with a tapped r."
             },
             {
               "kind": "speech",
-              "text": "d-soft — the d between vowels is soft, close to the th of English this."
+              "text": "g-hard — the g before u is hard, as in English gun: pre-goon-TAR."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: entender",
+          "title": "The word, taken apart: preguntar",
           "segments": [
             {
               "kind": "speech",
-              "text": "entender (\"to understand\") from Latin intendere: in- (\"toward\") + tendere (\"to stretch\"). Understanding something was stretching your attention toward it — leaning in."
+              "text": "preguntar (\"to ask a question\") from Vulgar Latin praecunctāre, itself a reshaping of classical percontārī, \"to inquire\". And percontārī was built on contus, \"a punting pole\": to percontor was to push a pole down through water and find out how deep it was."
             },
             {
               "kind": "speech",
-              "text": "tendere stretches right across English:"
+              "text": "Asking is taking a sounding. Unlike almost every other word here, preguntar left English nothing — the pole word died out — yet English rebuilt the same metaphor on its own: you sound someone out, you probe."
             },
             {
               "kind": "speech",
-              "text": "intend, intent, intense, intention — the very same in- + stretch."
-            },
-            {
-              "kind": "speech",
-              "text": "attend, attention — ad- \"toward\", stretch that way."
-            },
-            {
-              "kind": "speech",
-              "text": "extend, contend, pretend, tension, tendon, and tent, which is stretched cloth."
-            },
-            {
-              "kind": "speech",
-              "text": "So entiendo and I intend are the same two Latin pieces landing in different places: Spanish went to \"I grasp it\", English to \"I mean to\"."
-            },
-            {
-              "kind": "speech",
-              "text": "Careful with a false friend. Spanish pretender is not English pretend. It means \"to aim at, to be after\" — pretende ser médico, \"he means to become a doctor\". Same pieces, different landing."
+              "text": "The verb is a plain -ar one: pregunto, preguntas, pregunta, preguntamos, preguntan. Its noun is la pregunta (fem.), and note that Spanish makes a question rather than asking one: hacer una pregunta."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: an -er verb that cracks, and a calmer twin",
+          "title": "Grammar Lens: one English \"ask\", two Spanish verbs",
           "segments": [
             {
               "kind": "speech",
-              "text": "Ordinary -er endings, stressed e broken to ie:"
+              "text": "Spanish sorts asking by what you are after:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what you want",
+                "verb",
+                "example"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "what you want: information. verb: preguntar. example: Te pregunto la hora — I'm asking you the time.",
+                "what you want: a thing or a favour. verb: pedir. example: Pido un café — I'm asking for a coffee."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Ask for a coffee with preguntar and you have said \"I question a coffee\". The line is simple: a question takes preguntar, a request takes pedir."
+            },
+            {
+              "kind": "speech",
+              "text": "pedir from Latin petere, \"to make for, to aim at\" — and that root stocked English generously: petition, appetite, compete, impetus, perpetual, centripetal. It cracks a third way, e becomes i: pido, pides, pide, pedimos, piden. Recognise pido for now; the pattern gets its own lesson later."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"pregunto, preguntas, pregunta, preguntamos, preguntan\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"pregunto, preguntas, pregunta, preguntamos, preguntan\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Te pregunto la hora\" — I'm asking you the time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Te pregunto la hora\" — I'm asking you the time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Pido un café\" then \"Tomo un café\" — I ask for one, I have one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Pido un café\" then \"Tomo un café\" — I ask for one, I have one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"pedir\" then English \"petition, appetite, compete\" — the aiming family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"pedir\" then English \"petition, appetite, compete\" — the aiming family]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did percontārī picture literally? (Sounding water with a pole.) Which verb asks for a coffee, and which asks the time? (Pedir for the coffee; preguntar for the time.) What Latin root is pedir from, and one English cousin? (Petere, \"to aim at\" — petition, appetite, compete.) Next: ayudar, which is the same word as English aid."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C35-ayudar",
+      "sequence": 1670,
+      "title": "ayudar — \"to help\", and it is English \"aid\" in disguise",
+      "headword": "ayudar",
+      "romanization": "ayudar",
+      "gloss": "to help — literally the same word as English \"aid\", arriving by a different road",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d6b430e6651a2ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can ask a question now. The next thing to ask for is a hand — and this verb is one you already own in English without knowing it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vowel-a — a clean, open a: a-yoo-DAR."
+            },
+            {
+              "kind": "speech",
+              "text": "r-tap — one tap at the end, not an English r."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: ayudar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ayudar (\"to help\") from Latin adiūtāre, the repeating form of adiuvāre: ad- (\"toward\") + iuvāre (\"to help, to delight\"). To help was to move toward someone."
+            },
+            {
+              "kind": "speech",
+              "text": "English borrowed that identical verb through Old French aidier and calls it aid. So ayudar and aid are not merely cousins — they are the same word by two different roads. The family came with it:"
+            },
+            {
+              "kind": "speech",
+              "text": "aide, and aide-de-camp, an officer who helps."
+            },
+            {
+              "kind": "speech",
+              "text": "adjutant — the officer whose whole job is assisting."
+            },
+            {
+              "kind": "speech",
+              "text": "adjuvant — a substance that helps another drug work."
+            },
+            {
+              "kind": "speech",
+              "text": "coadjutor — one who helps alongside."
+            },
+            {
+              "kind": "speech",
+              "text": "The shape change is a rule, not an accident. Latin -di- before a vowel turned into Spanish y: adiūtāre becomes ayudar, hodiē becomes hoy (\"today\"), podium becomes poyo. Once you have that, the word stops looking arbitrary."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: a plain -ar verb, and how to ask for a hand",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nothing breaks; the endings are the ones you started with:"
             },
             {
               "kind": "table",
               "headers": [
                 "person",
                 "form",
-                "stem"
+                "meaning"
               ],
               "columns": 3,
               "rowCount": 4,
               "utterances": [
-                "person: yo. form: entiendo. stem: broken.",
-                "person: tú. form: entiendes. stem: broken.",
-                "person: nosotros. form: entendemos. stem: plain.",
-                "person: ellos/ustedes. form: entienden. stem: broken."
+                "person: yo. form: ayudo. meaning: I help.",
+                "person: tú. form: ayudas. meaning: you help.",
+                "person: nosotros. form: ayudamos. meaning: we help.",
+                "person: ellos/ustedes. form: ayudan. meaning: they help."
               ]
             },
             {
               "kind": "speech",
-              "text": "Spanish has a second verb for this job: comprender from Latin comprehendere, \"to seize together\" ( becomes English comprehend, apprehend, comprehensive). It is a plain -er verb with no crack at all: comprendo, comprendes, comprende. Both mean \"understand\". Entender is the everyday one; comprender leans a little more formal, and more toward grasping a whole thing than catching a word."
+              "text": "Its noun is la ayuda (fem.), \"help\" — the word on relief packages worldwide. Two sentences worth owning: ¿Me ayudas? (\"will you help me?\" — Spanish uses the plain present where English needs will) and, politely, ¿Puedo ayudarle?"
             }
           ]
         },
@@ -316,38 +452,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"No entiendo\" — I don't understand",
+              "instruction": "\"ayudo, ayudas, ayudamos, ayudan\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"No entiendo\" — I don't understand]"
+              "source": "[YOU SAY: \"ayudo, ayudas, ayudamos, ayudan\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"entiendo, entiendes, entendemos, entienden\"",
+              "instruction": "\"¿Me ayudas?\" — will you help me?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"entiendo, entiendes, entendemos, entienden\"]"
+              "source": "[YOU SAY: \"¿Me ayudas?\" — will you help me?]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pienso\" then \"entiendo\" — the same crack, twice",
+              "instruction": "\"Te pregunto\" then \"Me ayudas\" — I ask you, you help me",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pienso\" then \"entiendo\" — the same crack, twice]"
+              "source": "[YOU SAY: \"Te pregunto\" then \"Me ayudas\" — I ask you, you help me]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"entender\" then English \"intend, intense, attention\" — the stretching family",
+              "instruction": "\"ayudar\" then English \"aid, adjutant, adjuvant\" — one word, two roads",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"entender\" then English \"intend, intense, attention\" — the stretching family]"
+              "source": "[YOU SAY: \"ayudar\" then English \"aid, adjutant, adjuvant\" — one word, two roads]"
             }
           ]
         },
@@ -364,26 +500,26 @@
             },
             {
               "kind": "speech",
-              "text": "What does tendere mean, and what does in- add? (To stretch; \"toward\".) Give the yo and nosotros forms. (Entiendo, entendemos.) Of entender and comprender, which one breaks its stem? (Entender.) And what does Spanish pretender mean? (To aim at, not to pretend.) Next: leer."
+              "text": "What two Latin pieces build adiuvāre? (Ad- \"toward\" + iuvāre \"to help\".) What everyday English word is ayudar, arriving by French? (Aid.) What sound-law turned adiūtāre into ayudar, and which other word shows it? (Latin -di- became Spanish y; hodiē becomes hoy.) Next: gustar, the verb that runs backwards."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C34-leer",
-      "sequence": 1630,
-      "title": "leer — \"to read\", and before that, \"to gather\"",
-      "headword": "leer",
-      "romanization": "leer",
-      "gloss": "to read — from a Latin verb meaning \"to gather, to pick out\"",
+      "id": "ES-C35-gustar",
+      "sequence": 1680,
+      "title": "gustar — the verb that runs backwards",
+      "headword": "gustar",
+      "romanization": "gustar",
+      "gloss": "to please — the verb English calls \"to like\", built the other way round",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfb0f87cdebf0135",
+      "sourceHash": "fnv1a64:58a521a9075d106c",
       "notice": null,
       "blocks": [
         {
@@ -399,7 +535,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two cracked verbs down. Here is a calm one — nothing breaks in the middle. The only difficulty is in your mouth: two e's in a row that must stay two."
+              "text": "Back in the introductions you learned mucho gusto — \"much pleasure\". Here is the verb that noun belongs to, assembled the opposite way round from English. It is the single thing in Spanish that trips English speakers up hardest."
             }
           ]
         },
@@ -410,74 +546,92 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "hiatus-ee — leer is two syllables, le-ER, never one long English ee."
+              "text": "g-hard — a hard g before u: goos-TAR."
             },
             {
               "kind": "speech",
-              "text": "leo is likewise two beats, LE-o."
+              "text": "s-clear — a clean hissing s, never a z buzz."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: leer",
+          "title": "The word, taken apart: gustar",
           "segments": [
             {
               "kind": "speech",
-              "text": "leer (\"to read\") from Latin legere, \"to gather, to pick out, to choose\" — and only afterwards \"to read\". A reader picks letters out of a row the way a farmhand picks olives off a branch."
+              "text": "gustar from Latin gustāre, \"to taste\". English kept the root and stayed close to the tongue:"
             },
             {
               "kind": "speech",
-              "text": "That gathering root runs through an enormous amount of English:"
+              "text": "gusto — doing something with relish, that is, with a taste for it."
             },
             {
               "kind": "speech",
-              "text": "legible, legend (\"things to be read\"), lecture, lectern, and worn right down, lesson."
+              "text": "gustatory — of the sense of taste."
             },
             {
               "kind": "speech",
-              "text": "built with prefixes: collect (col- \"together\"), select (se- \"apart\"), elect (e- \"out\"), intellect (inter- \"between\" — choosing between things)."
+              "text": "disgust — dis- \"away\" + taste: what you spit back out."
             },
             {
               "kind": "speech",
-              "text": "diligent and elegant, both of which meant \"picking carefully\"."
+              "text": "degustation, a tasting menu; and through French, ragout."
             },
             {
               "kind": "speech",
-              "text": "One honest limit: Greek légein (\"to speak, to gather\") — which gives English logic, dialogue, catalogue — is a cousin of legere from the same ancient root, not its parent. Same family, separate journeys."
+              "text": "Spanish's own el gusto — the gusto of mucho gusto — still holds both senses: taste on the tongue, and pleasure taken in a thing. The verb followed the second: gustar means \"to please\"."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: a plain -er verb, with a mouthful",
+          "title": "Grammar Lens: the thing you like is the subject",
           "segments": [
             {
               "kind": "speech",
-              "text": "Nothing irregular happens. Drop -er, add the ordinary endings:"
+              "text": "English says I like the book: the liker is the subject. Spanish has no such sentence. It says Me gusta el libro — \"the book is pleasing to me\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Everything follows from that:"
+            },
+            {
+              "kind": "speech",
+              "text": "el libro is the subject, which is why the verb is gusta, third person."
+            },
+            {
+              "kind": "speech",
+              "text": "me is the person it happens to, not the one doing anything."
+            },
+            {
+              "kind": "speech",
+              "text": "So the verb agrees with the thing, never with you:"
             },
             {
               "kind": "table",
               "headers": [
-                "person",
-                "form",
-                "said"
+                "what you mean",
+                "Spanish",
+                "why"
               ],
               "columns": 3,
-              "rowCount": 5,
+              "rowCount": 3,
               "utterances": [
-                "person: yo. form: leo. said: LE-o.",
-                "person: tú. form: lees. said: LE-es.",
-                "person: él/ella/usted. form: lee. said: LE-e.",
-                "person: nosotros. form: leemos. said: le-E-mos.",
-                "person: ellos/ustedes. form: leen. said: LE-en."
+                "what you mean: I like the book. Spanish: Me gusta el libro. why: one book, so gusta.",
+                "what you mean: I like books. Spanish: Me gustan los libros. why: many books, so gustan.",
+                "what you mean: I like reading. Spanish: Me gusta leer. why: one action, so gusta."
               ]
             },
             {
               "kind": "speech",
-              "text": "Every one of those is a syllable longer than an English speaker expects. Give each e its own beat and the word comes out right."
+              "text": "To change who is pleased, change the little word in front, not the verb: me (to me), te (to you), le (to him, her, usted), nos (to us), les (to them)."
+            },
+            {
+              "kind": "speech",
+              "text": "Careful. There is no yo gusto el libro. Yo gusto is a real sentence — it means \"I am pleasing\" — just not the one you were reaching for."
             }
           ]
         },
@@ -495,38 +649,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"leer\" — le-ER, two beats",
+              "instruction": "\"Me gusta el café\" then \"Me gustan los libros\" — the verb follows the thing",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"leer\" — *le-ER*, two beats]"
+              "source": "[YOU SAY: \"Me gusta el café\" then \"Me gustan los libros\" — the verb follows the thing]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Leo un libro\" — I read a book",
+              "instruction": "\"Te gusta tomar café\" — you like drinking coffee",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Leo un libro\" — I read a book]"
+              "source": "[YOU SAY: \"Te gusta tomar café\" — you like drinking coffee]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"No entiendo\" then \"Leo, pero no entiendo\" — I read, but I don't understand",
+              "instruction": "\"Me gusta ayudar\" — I like helping",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"No entiendo\" then \"Leo, pero no entiendo\" — I read, but I don't understand]"
+              "source": "[YOU SAY: \"Me gusta ayudar\" — I like helping]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"leer\" then English \"legible, collect, select, elect\"",
+              "instruction": "\"gustar\" then English \"gusto, disgust, gustatory\" — the tasting family",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"leer\" then English \"legible, collect, select, elect\"]"
+              "source": "[YOU SAY: \"gustar\" then English \"gusto, disgust, gustatory\" — the tasting family]"
             }
           ]
         },
@@ -543,194 +697,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did legere mean before it meant \"to read\"? (To gather, to pick out.) Give two English words built on it with a prefix. (Collect, select, elect, intellect.) How many syllables in leo? (Two — LE-o.) Next: escribir, the other half of literacy."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C34-escribir",
-      "sequence": 1640,
-      "title": "escribir — \"to write\", which once meant \"to scratch\"",
-      "headword": "escribir",
-      "romanization": "escribir",
-      "gloss": "to write — from a Latin verb meaning \"to scratch\", and the reason Spanish puts an e- in front",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:9cc62dcc517c4ebd",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Leer gathers letters off a page. This is the other half of the same skill — and its root remembers a time when writing was done with a sharp point in wax."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "st-no-e — Spanish will not begin a word with sc-, sp-, st-, so it props one up with an e-: es-cri-BIR."
-            },
-            {
-              "kind": "speech",
-              "text": "b-soft — between vowels the b is soft, lips barely touching."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: escribir",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "escribir (\"to write\") from Latin scrībere, whose first sense was \"to scratch, to incise\". Writing was cutting a line into wax or stone before it was ever ink on paper."
-            },
-            {
-              "kind": "speech",
-              "text": "The English family is huge, and every member still works with a pen:"
-            },
-            {
-              "kind": "speech",
-              "text": "scribe, scribble, script, scripture."
-            },
-            {
-              "kind": "speech",
-              "text": "describe (de- \"down\") and description; prescribe (prae- \"before\") and prescription; subscribe (sub- \"under\" — you signed at the bottom); inscription; transcript; postscript."
-            },
-            {
-              "kind": "speech",
-              "text": "manuscript — manus \"hand\" + scriptum: written by hand."
-            },
-            {
-              "kind": "speech",
-              "text": "conscription — being written into an army."
-            },
-            {
-              "kind": "speech",
-              "text": "The Spanish past participle is escrito (\"written\"), which is English script wearing different clothes."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: an -ir verb, and a productive spelling rule",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Escribir is a plain -ir verb, the family vivir opened:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form",
-                "ending"
-              ],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "person: yo. form: escribo. ending: -o.",
-                "person: tú. form: escribes. ending: -es.",
-                "person: él/ella/usted. form: escribe. ending: -e.",
-                "person: nosotros. form: escribimos. ending: -imos.",
-                "person: ellos/ustedes. form: escriben. ending: -en."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "That propped-up e- is a rule you can run yourself, not a quirk of one word: Latin schola became escuela, spatha became espada (sword), stāre became estar, Hispānia became España. It is also why a Spanish speaker learning English says eh-Spain."
-            },
-            {
-              "kind": "speech",
-              "text": "Now you can state a plan out loud: Pienso escribir — \"I mean to write.\""
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"escribo, escribes, escribe, escribimos, escriben\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"escribo, escribes, escribe, escribimos, escriben\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Leo y escribo español\" — I read and write Spanish",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Leo y escribo español\" — I read and write Spanish]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Pienso escribir\" — I mean to write",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Pienso escribir\" — I mean to write]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"escribir\" then English \"scribe, describe, manuscript\" — the scratching family",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"escribir\" then English \"scribe, describe, manuscript\" — the scratching family]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What did scrībere mean first? (To scratch, to incise.) Why does Spanish say escuela and España? (It refuses to open a word with sc- or sp-, so it props an e- in front.) Say \"I read and write Spanish\". (Leo y escribo español.) And what does legere mean, from the lesson before? (To gather, to pick out.) Next chapter: taking, asking, helping — and a verb that runs backwards."
+              "text": "In me gusta el libro, what is the subject? (El libro.) Why is it me gustan los libros? (The verb agrees with los libros, which is plural.) What did gustāre mean, and name an English cousin. (To taste; gusto, disgust.) And what would yo gusto actually mean? (I am pleasing.)"
             }
           ]
         }

@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C19-si
 spine_node: SPINE-RESPOND-BASIC
-sequence: 1280
-chapter: 27
+sequence: 264
+chapter: 6
 type: word
 headword: sí
 gloss: yes

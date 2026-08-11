@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 27,
-  "title": "Yes and No",
+  "title": "Lo Siento",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:cd82493801238baa",
+  "sourceHash": "fnv1a64:536bbec23bf2bed8",
   "lessons": [
     {
-      "id": "ES-C19-si",
-      "sequence": 1280,
-      "title": "sí — yes",
-      "headword": "sí",
-      "romanization": "sí",
-      "gloss": "yes",
+      "id": "ES-C20-lo-siento",
+      "sequence": 1300,
+      "title": "lo siento — \"I'm sorry,\" i.e. \"I feel it\"",
+      "headword": "lo siento",
+      "romanization": "lo siento",
+      "gloss": "I'm sorry — literally \"I feel it,\" a naming of the feeling rather than a claim about yourself",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:440552f31bd7a21c",
+      "sourceHash": "fnv1a64:362fc59faeb2f48e",
       "notice": null,
       "blocks": [
         {
@@ -35,68 +35,31 @@
             },
             {
               "kind": "speech",
-              "text": "The smallest useful word — and the accent on it is doing real work."
+              "text": "You already know por favor, \"please.\" The next courtesy phrase is lo siento. Spanish does not say \"I am sorry\" as an adjective; it says something closer to \"I feel this.\""
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The word, taken apart: sí and si",
+          "title": "The phrase, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "sí = yes. One syllable, said see."
+              "text": "lo = \"it\" — a neuter pronoun. It does not point at any noun; it points at the situation itself. Spanish keeps this one leftover neuter slot precisely for \"the whole business, unnamed.\""
             },
             {
               "kind": "speech",
-              "text": "The written accent is not decoration — it is the whole difference between two words:"
+              "text": "siento = \"I feel,\" from sentir, \"to feel,\" from Latin sentīre. That root gave English a whole family: sentiment, sense, consent (\"feel together\"), resent (\"feel back at\"), and sentence (originally an opinion, something felt)."
             },
             {
               "kind": "speech",
-              "text": "sí (with the accent) = yes."
-            },
-            {
-              "kind": "speech",
-              "text": "si (no accent) = if."
-            },
-            {
-              "kind": "speech",
-              "text": "They sound almost identical, so Spanish uses the mark to tell them apart on the page: Sí, si quieres = \"Yes, if you want.\" Miss the accent and you've written \"if\" where you meant \"yes.\""
+              "text": "So lo siento is literally \"I feel it.\" You are naming a feeling — regret, sympathy — rather than declaring a state about yourself. That is why it stretches so easily: lo siento mucho, \"I feel it a lot,\" works both for stepping on someone's foot and for hearing that their father died."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: where sí comes from",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "sí is Latin sīc, \"thus, so\" — answering a question with \"just so,\" exactly the move Latin also made with ita (\"thus\" = yes, from the Latin yes/no lesson). Its Romance cousins kept the same root:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "Latin sīc",
-                ", which gives:"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "Latin sīc: Spanish. , which gives:: sí.",
-                "Latin sīc: Italian. , which gives:: sì.",
-                "Latin sīc: Portuguese. , which gives:: sim."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "French is the odd one out — it went a completely different way for \"yes\" (oui), which its own lesson tells. But say sí, sì, sim in a row and you hear one Latin word answering across three countries."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -109,34 +72,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"sí\" — see, and picture the accent",
+              "instruction": "\"siento\" — I feel — then \"lo siento,\" I feel it / I'm sorry",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"sí\" — *see*, and picture the accent]"
+              "source": "[YOU SAY: \"siento\" — I feel — then \"lo siento,\" I feel it / I'm sorry]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pair — \"sí\" (yes) vs \"si\" (if)",
+              "instruction": "\"lo siento mucho\" — I'm so sorry",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"sí\" (yes) vs \"si\" (if)]"
+              "source": "[YOU SAY: \"lo siento mucho\" — I'm so sorry]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the cousins — \"sí, sì, sim\" — all from Latin sīc",
+              "instruction": "\"siento\" then English \"sentiment, sense, consent\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the cousins — \"sí, sì, sim\" — all from Latin *sīc*]"
+              "source": "[YOU SAY: \"siento\" then English \"sentiment, sense, consent\"]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -148,26 +111,26 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say yes in Spanish? (sí.) What is the only difference between sí \"yes\" and si \"if\"? (The written accent.) What Latin word is sí from, and what did it mean? (sīc — \"thus, so\".)"
+              "text": "What does lo siento literally mean? (\"I feel it\" — siento, \"I feel,\" from Latin sentīre.) What is the lo pointing at? (The situation, not a noun — it is the neuter \"it.\") Next: Spanish's other word for sorry, and when it is the right one."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C19-no",
-      "sequence": 1290,
-      "title": "no — no / not",
-      "headword": "no",
-      "romanization": "no",
-      "gloss": "no / not",
+      "id": "ES-C20-perdon",
+      "sequence": 1310,
+      "title": "perdón — the sorry that asks for something back",
+      "headword": "perdón",
+      "romanization": "perdón",
+      "gloss": "the other sorry — \"give completely\" — for fault and for getting past people, where lo siento is for regret",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:af8ea35a17c1a565",
+      "sourceHash": "fnv1a64:c5473e85303cbef9",
       "notice": null,
       "blocks": [
         {
@@ -183,59 +146,56 @@
             },
             {
               "kind": "speech",
-              "text": "The easiest word yet — and it quietly does two jobs Spanish never splits apart."
+              "text": "Lo siento names a feeling. Spanish keeps a second word for a different job — one that is not about your feelings at all, but about something you want from the other person."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The word, taken apart: no",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "no = no. Said noh, a clean single vowel."
+              "text": "perdón (\"pardon\"), from the verb perdonar — Latin per- (\"thoroughly\") + dōnāre (\"to give\"). Literally: \"to give completely.\""
             },
             {
               "kind": "speech",
-              "text": "It is Latin nōn with almost nothing worn off — just the final consonant gone. Compare the family, all from the same nōn:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "Latin nōn",
-                ", which gives:"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "Latin nōn: Spanish. , which gives:: no.",
-                "Latin nōn: Italian. , which gives:: no.",
-                "Latin nōn: French. , which gives:: non."
-              ]
+              "text": "That dōnāre is English's donate, donor, and condone; the per- is the same intensifier in perfect (\"thoroughly made\") and perturb. So forgiveness, in Latin's picture of it, is a gift given all the way — you hand over the debt rather than keeping a share of it."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: one word, two jobs",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: which one to reach for",
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's the thing English splits and Spanish doesn't. English has \"no\" (the answer) and \"not\" (inside a sentence) — two different words. Spanish uses no for both:"
+              "text": "The two are not interchangeable, and the difference follows straight from the etymologies:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "lo siento",
+                "perdón"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "literally. lo siento: \"I feel it\". perdón: \"give [it] completely\".",
+                "points at. lo siento: your feeling. perdón: their forgiveness.",
+                "use for. lo siento: regret, sympathy. perdón: fault, or getting past someone."
+              ]
             },
             {
               "kind": "speech",
-              "text": "as the answer: ¿Hablas inglés? — No."
+              "text": "So perdón is what you say to squeeze through a crowd or catch a waiter's eye (English \"excuse me\"), and to ask forgiveness for something you did — often stronger than lo siento. Lo siento leans toward \"I'm sorry that happened,\" including things that are nobody's fault at all."
             },
             {
               "kind": "speech",
-              "text": "as the negator, placed right before the verb: No hablo inglés = \"I do not speak English.\""
-            },
-            {
-              "kind": "speech",
-              "text": "So learning no gives you the whole of Spanish negation for free: to make any sentence negative, drop no in front of the verb. One little word, two everyday jobs."
+              "text": "Be honest about the edges: native speakers use whichever fits, the boundary is soft, and mixing them is not a real mistake — just a shade off."
             }
           ]
         },
@@ -253,29 +213,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"no\" — noh",
+              "instruction": "\"perdón\" — pardon / excuse me",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"no\" — *noh*]"
+              "source": "[YOU SAY: \"perdón\" — pardon / excuse me]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "as an answer — \"¿Hablas inglés? No.\"",
+              "instruction": "the pair — \"lo siento\" for regret, \"perdón\" for fault",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: as an answer — \"¿Hablas inglés? No.\"]"
+              "source": "[YOU SAY: the pair — \"lo siento\" for regret, \"perdón\" for fault]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "as a negator — \"No hablo inglés\"",
+              "instruction": "\"perdón\" then English \"donate, condone\" — the dōnāre root",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: as a negator — \"No hablo inglés\"]"
+              "source": "[YOU SAY: \"perdón\" then English \"donate, condone\" — the *dōnāre* root]"
             }
           ]
         },
@@ -292,7 +252,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say no in Spanish? (no.) What Latin word is it from? (nōn.) Spanish no does the work of which two English words? (\"no\" the answer and \"not\" the negator — No hablo = \"I do not speak.\") Where does no go to negate a sentence? (Right before the verb.)"
+              "text": "What do the two halves of perdonar mean? (Per-, \"thoroughly,\" plus dōnāre, \"to give\" — to give completely.) Which word do you use to get past someone in a corridor? (Perdón.) Which leans toward sympathy rather than fault? (Lo siento — \"I feel it.\")"
             }
           ]
         }

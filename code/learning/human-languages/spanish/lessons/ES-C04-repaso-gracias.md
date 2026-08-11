@@ -7,46 +7,51 @@ chapter: 6
 type: practice-mix
 headword: (practice)
 gloss: Thank you, and the answer — putting the chapter together
-prerequisites: [ES-C04-gracias, ES-C04-de-nada]
+prerequisites: [ES-C04-gracias, ES-C04-de-nada, ES-C19-si, ES-C19-no]
 sounds: []
 roots: []
 etymology_hook: "nothing new here — this lesson only spends what the chapter already bought"
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ES-LEX-GRACIAS, ES-ETYMON-GRATIA, ES-LEX-DE-NADA, ES-ETYMON-NATA]
+  knowledge: [ES-LEX-GRACIAS, ES-ETYMON-GRATIA, ES-LEX-DE-NADA, ES-ETYMON-NATA, ES-LEX-SI-01, ES-ETYMON-SI-02, ES-LEX-NO-01]
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-GRACIAS, ES-ETYMON-GRATIA, ES-LEX-DE-NADA, ES-ETYMON-NATA]
+  knowledge: [ES-LEX-GRACIAS, ES-ETYMON-GRATIA, ES-LEX-DE-NADA, ES-ETYMON-NATA, ES-LEX-SI-01, ES-ETYMON-SI-02, ES-LEX-NO-01]
 skills: [listening, speaking]
 modes: [interpersonal, presentational]
 strands: [meaning-output]
 register: neutral
 variety: american-neutral
-reviews_of: [ES-C04-gracias, ES-C04-de-nada]
+reviews_of: [ES-C04-gracias, ES-C04-de-nada, ES-C19-si, ES-C19-no]
 ---
 
-# Thank you, and the answer — putting it together
+# Thank you, yes, and no — putting it together
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-GRACIAS, ES-ETYMON-GRATIA, ES-LEX-DE-NADA, ES-ETYMON-NATA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-GRACIAS, ES-ETYMON-GRATIA, ES-LEX-DE-NADA, ES-ETYMON-NATA, ES-LEX-SI-01, ES-ETYMON-SI-02, ES-LEX-NO-01] -->
 
 [PAUSE 2s] Two words that travel everywhere together. Nothing new in this lesson — only what you already have.
 
 ## The exchange
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-GRACIAS, ES-ETYMON-GRATIA, ES-LEX-DE-NADA, ES-ETYMON-NATA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-GRACIAS, ES-ETYMON-GRATIA, ES-LEX-DE-NADA, ES-ETYMON-NATA, ES-LEX-SI-01, ES-ETYMON-SI-02, ES-LEX-NO-01] -->
 
 > — **Gracias.**
 > — **De nada.**
 
-## What you've built
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-GRACIAS, ES-ETYMON-GRATIA, ES-LEX-DE-NADA, ES-ETYMON-NATA] -->
+And the two words that let you answer anything at all:
 
-You can thank someone and answer when you are thanked — the shortest complete exchange in the language.
+> — ¿…?
+> — **Sí.**   /   — **No.**
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-GRACIAS, ES-ETYMON-GRATIA, ES-LEX-DE-NADA, ES-ETYMON-NATA, ES-LEX-SI-01, ES-ETYMON-SI-02, ES-LEX-NO-01] -->
+
+You can thank someone, answer when you are thanked, and — for the first time — accept or decline. Until you have *sí* and *no*, every question anyone asks you is unanswerable.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-GRACIAS, ES-ETYMON-GRATIA, ES-LEX-DE-NADA, ES-ETYMON-NATA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-GRACIAS, ES-ETYMON-GRATIA, ES-LEX-DE-NADA, ES-ETYMON-NATA, ES-LEX-SI-01, ES-ETYMON-SI-02, ES-LEX-NO-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: the whole exchange, both parts, without stopping]
@@ -55,7 +60,7 @@ You can thank someone and answer when you are thanked — the shortest complete 
 [REPEAT x2]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-GRACIAS, ES-ETYMON-GRATIA, ES-LEX-DE-NADA, ES-ETYMON-NATA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-GRACIAS, ES-ETYMON-GRATIA, ES-LEX-DE-NADA, ES-ETYMON-NATA, ES-LEX-SI-01, ES-ETYMON-SI-02, ES-LEX-NO-01] -->
 
 [PAUSE 3s] Run it once more from memory. If a word does not come, go back one
 lesson rather than pushing on — this chapter is short on purpose.
