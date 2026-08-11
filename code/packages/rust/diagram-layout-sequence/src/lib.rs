@@ -7,7 +7,7 @@ use diagram_ir::{
     SequenceEvent, SequenceNotePlacement, SequenceParticipantKind, SequenceTextWrap,
 };
 
-pub const VERSION: &str = "0.22.0";
+pub const VERSION: &str = "0.23.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -168,7 +168,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
     };
     let mut block_stack: Vec<BlockFrameState> = Vec::new();
 
-    for event in &diagram.events {
+    for (event_index, event) in diagram.events.iter().enumerate() {
         match event {
             SequenceEvent::AutoNumber {
                 visible,
@@ -200,16 +200,69 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 let Some(&from_x) = centers.get(from) else {
                     continue;
                 };
-                let Some(&to_x) = centers.get(to) else {
+                let Some(&to_center_x) = centers.get(to) else {
                     continue;
                 };
+                let created_receiver = event_index.checked_sub(1).and_then(|previous_index| {
+                    match &diagram.events[previous_index] {
+                        SequenceEvent::ParticipantCreated { participant } if participant == to => {
+                            Some(participant.as_str())
+                        }
+                        _ => None,
+                    }
+                });
+                let destroyed_participant =
+                    diagram
+                        .events
+                        .get(event_index + 1)
+                        .and_then(|next| match next {
+                            SequenceEvent::ParticipantDestroyed { participant }
+                                if participant == from || participant == to =>
+                            {
+                                Some(participant.as_str())
+                            }
+                            _ => None,
+                        });
                 let label = wrap_sequence_text(
                     label,
                     wrap,
-                    (to_x - from_x).abs().clamp(80.0, WRAPPED_TEXT_MAX_WIDTH),
+                    (to_center_x - from_x)
+                        .abs()
+                        .clamp(80.0, WRAPPED_TEXT_MAX_WIDTH),
                 );
                 let label_height = 16.0 * label.lines().count().max(1) as f64;
                 let message_y = y + label_height + 6.0;
+                let mut to_x = to_center_x;
+                if let Some(participant) = created_receiver {
+                    let lane_index = diagram
+                        .participants
+                        .iter()
+                        .position(|item| item.id == participant)
+                        .unwrap_or(0);
+                    let definition = &diagram.participants[lane_index];
+                    let box_width = (lane_widths[lane_index] - 24.0).max(100.0);
+                    let created_header_height = participant_header_height(
+                        &definition.kind,
+                        line_count(&participant_labels[lane_index]),
+                    );
+                    let box_y = message_y - created_header_height / 2.0;
+                    items.push(LayoutedSequenceItem::ParticipantBox {
+                        id: definition.id.clone(),
+                        label: participant_labels[lane_index].clone(),
+                        label_height: line_count(&participant_labels[lane_index]) as f64 * 16.0,
+                        mirrored: false,
+                        kind: definition.kind.clone(),
+                        links: definition.links.clone(),
+                        properties: definition.properties.clone(),
+                        details_reference: definition.details_reference.clone(),
+                        x: to_center_x - box_width / 2.0,
+                        y: box_y,
+                        width: box_width,
+                        height: created_header_height,
+                    });
+                    lifeline_starts.insert(participant.to_string(), box_y + created_header_height);
+                    to_x = endpoint_at_box_edge(to_center_x, from_x, box_width / 2.0 + 3.0);
+                }
                 items.push(LayoutedSequenceItem::Message {
                     from_x,
                     to_x,
@@ -232,6 +285,16 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 }
                 if *deactivate {
                     close_activation(&mut items, &mut activation_starts, from, from_x, message_y);
+                }
+                if let Some(participant) = destroyed_participant {
+                    if let Some(&center) = centers.get(participant) {
+                        items.push(LayoutedSequenceItem::Destruction {
+                            participant: participant.to_string(),
+                            x: center,
+                            y: message_y,
+                        });
+                        lifeline_ends.insert(participant.to_string(), message_y);
+                    }
                 }
                 y = message_y + EVENT_H;
             }
@@ -257,6 +320,12 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 y += EVENT_H / 2.0;
             }
             SequenceEvent::ParticipantCreated { participant } => {
+                if matches!(
+                    diagram.events.get(event_index + 1),
+                    Some(SequenceEvent::Message { to, .. }) if to == participant
+                ) {
+                    continue;
+                }
                 if let (Some(&center), Some(definition)) = (
                     centers.get(participant),
                     diagram
@@ -295,6 +364,13 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 }
             }
             SequenceEvent::ParticipantDestroyed { participant } => {
+                if matches!(
+                    event_index.checked_sub(1).map(|index| &diagram.events[index]),
+                    Some(SequenceEvent::Message { from, to, .. })
+                        if from == participant || to == participant
+                ) {
+                    continue;
+                }
                 if let Some(&center) = centers.get(participant) {
                     items.push(LayoutedSequenceItem::Destruction {
                         participant: participant.clone(),
@@ -570,6 +646,16 @@ fn close_activation(
 
 fn activation_x(center: f64, depth: usize) -> f64 {
     center - ACTIVATION_W / 2.0 + depth as f64 * NESTED_ACTIVATION_OFFSET
+}
+
+fn endpoint_at_box_edge(center: f64, other: f64, offset: f64) -> f64 {
+    if other < center {
+        center - offset
+    } else if other > center {
+        center + offset
+    } else {
+        center
+    }
 }
 
 #[cfg(test)]
@@ -1079,11 +1165,28 @@ mod tests {
             ],
         };
         let layout = layout_sequence_diagram(&diagram);
-        let worker_box_y = layout
+        let (worker_box_x, worker_box_y, worker_box_height) = layout
             .items
             .iter()
             .find_map(|item| match item {
-                LayoutedSequenceItem::ParticipantBox { id, y, .. } if id == "Worker" => Some(*y),
+                LayoutedSequenceItem::ParticipantBox {
+                    id,
+                    mirrored: false,
+                    x,
+                    y,
+                    height,
+                    ..
+                } if id == "Worker" => Some((*x, *y, *height)),
+                _ => None,
+            })
+            .unwrap();
+        let (message_to_x, message_y) = layout
+            .items
+            .iter()
+            .find_map(|item| match item {
+                LayoutedSequenceItem::Message { label, to_x, y, .. } if label == "Work" => {
+                    Some((*to_x, *y))
+                }
                 _ => None,
             })
             .unwrap();
@@ -1112,8 +1215,11 @@ mod tests {
                 _ => None,
             })
             .unwrap();
-        assert_eq!(lifeline_y1, worker_box_y + HEADER_H);
+        assert_eq!(worker_box_y + worker_box_height / 2.0, message_y);
+        assert_eq!(message_to_x, worker_box_x - 3.0);
+        assert_eq!(lifeline_y1, worker_box_y + worker_box_height);
         assert_eq!(lifeline_y2, destruction_y);
+        assert_eq!(destruction_y, message_y);
         assert!(worker_box_y > HEADER_Y);
     }
 
