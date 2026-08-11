@@ -899,6 +899,21 @@ const SIR_CLOSURE_P1_STUB: &str = r#"const __Sir = {
   apply: (c, args) => c.fn(...args),
   toDisplay: (v) => (v === null ? "nil" : String(v)),
   print: (v) => { console.log(__Sir.toDisplay(v)); return null; },
+  // SIR28 §2: `print` now lowers to `__sys_write__` -> `__Sir.write(...)`.
+  write: (stream, terminator, unpackArrays, ...values) => {
+    const out = stream === "stderr" ? process.stderr : process.stdout;
+    if (terminator === "per_value") {
+      if (values.length === 0) { out.write("\n"); return null; }
+      for (const v of values) { out.write(__Sir.toDisplay(v) + "\n"); }
+      return null;
+    }
+    if (terminator === "once") {
+      out.write(values.map((v) => __Sir.toDisplay(v)).join(" ") + "\n");
+      return null;
+    }
+    for (const v of values) { out.write(__Sir.toDisplay(v)); }
+    return null;
+  },
 };
 "#;
 
@@ -987,6 +1002,33 @@ const SIR_PUTS_STUB: &str = r#"const __Sir = {
     }
     return null;
   },
+  // SIR28 §2: `puts` now lowers to `__sys_write__` -> `__Sir.write(...)`.
+  // Transcribes the real `runtime.ts` `write`/`writeOne`.
+  writeOne: (out, v, unpackArrays, seen) => {
+    if (unpackArrays && Array.isArray(v)) {
+      if (seen.has(v)) { out.write("[...]\n"); return; }
+      seen.add(v);
+      for (const item of v) { __Sir.writeOne(out, item, unpackArrays, seen); }
+      seen.delete(v);
+      return;
+    }
+    out.write(__Sir.toDisplay(v) + "\n");
+  },
+  write: (stream, terminator, unpackArrays, ...values) => {
+    const out = stream === "stderr" ? process.stderr : process.stdout;
+    if (terminator === "per_value") {
+      if (values.length === 0) { out.write("\n"); return null; }
+      const seen = new Set();
+      for (const v of values) { __Sir.writeOne(out, v, unpackArrays, seen); }
+      return null;
+    }
+    if (terminator === "once") {
+      out.write(values.map((v) => __Sir.toDisplay(v)).join(" ") + "\n");
+      return null;
+    }
+    for (const v of values) { out.write(__Sir.toDisplay(v)); }
+    return null;
+  },
 };
 "#;
 
@@ -1010,10 +1052,11 @@ fn end_to_end_ruby_puts_executes_ts() {
         .expect("lower ruby");
     let artifact = compile(&module).expect("compile to typescript");
 
-    // Shape: `puts` maps to the variadic `__Sir.puts(...)` helper.
+    // Shape: `puts` now lowers to `__sys_write__` (SIR28 §2), which this
+    // backend maps to `__Sir.write(...)`.
     assert!(
-        artifact.source.contains("__Sir.puts(\"hi\")"),
-        "expected puts to map to __Sir.puts; got:\n{}",
+        artifact.source.contains("__Sir.write(\"stdout\", \"per_value\", true, \"hi\")"),
+        "expected puts to map to __Sir.write; got:\n{}",
         artifact.source
     );
 
@@ -1078,6 +1121,21 @@ const SIR_T2_STUB: &str = r#"const __Sir = {
       const t = __Sir.toDisplay(a);
       process.stdout.write(t.endsWith("\n") ? t : t + "\n");
     }
+    return null;
+  },
+  // SIR28 §2: `print`/`puts` now lower to `__sys_write__` -> `__Sir.write(...)`.
+  write: (stream, terminator, unpackArrays, ...values) => {
+    const out = stream === "stderr" ? process.stderr : process.stdout;
+    if (terminator === "per_value") {
+      if (values.length === 0) { out.write("\n"); return null; }
+      for (const v of values) { out.write(__Sir.toDisplay(v) + "\n"); }
+      return null;
+    }
+    if (terminator === "once") {
+      out.write(values.map((v) => __Sir.toDisplay(v)).join(" ") + "\n");
+      return null;
+    }
+    for (const v of values) { out.write(__Sir.toDisplay(v)); }
     return null;
   },
   div: (...args) => {
@@ -1471,6 +1529,21 @@ const SIR_CLOSURE_MIXIN_STUB: &str = r#"const __Sir = {
       const t = __Sir.toDisplay(a);
       process.stdout.write(t.endsWith("\n") ? t : t + "\n");
     }
+    return null;
+  },
+  // SIR28 §2: `puts` now lowers to `__sys_write__` -> `__Sir.write(...)`.
+  write: (stream, terminator, unpackArrays, ...values) => {
+    const out = stream === "stderr" ? process.stderr : process.stdout;
+    if (terminator === "per_value") {
+      if (values.length === 0) { out.write("\n"); return null; }
+      for (const v of values) { out.write(__Sir.toDisplay(v) + "\n"); }
+      return null;
+    }
+    if (terminator === "once") {
+      out.write(values.map((v) => __Sir.toDisplay(v)).join(" ") + "\n");
+      return null;
+    }
+    for (const v of values) { out.write(__Sir.toDisplay(v)); }
     return null;
   },
 };

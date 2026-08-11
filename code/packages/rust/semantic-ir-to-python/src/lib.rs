@@ -288,7 +288,7 @@ mod tests {
         // Execution-proof: running it prints the two yielded values, proving the
         // captured block reaches `outer`'s caller block at runtime.
         if let Some(stdout) = run_emitted_python(&a.source) {
-            assert_eq!(stdout, "1\n2\n", "emitted python printed unexpected output");
+            assert_eq!(stdout, "12", "emitted python printed unexpected output");
         }
     }
 
@@ -304,7 +304,7 @@ mod tests {
         assert!(a.source.contains("def f(*a):"), "got:\n{}", a.source);
         assert!(a.source.contains("a = list(a)"), "rest param must normalize to list; got:\n{}", a.source);
         if let Some(stdout) = run_emitted_python(&a.source) {
-            assert_eq!(stdout, "3\n", "emitted python printed unexpected output");
+            assert_eq!(stdout, "3", "emitted python printed unexpected output");
         }
     }
 
@@ -357,7 +357,7 @@ mod tests {
 
         if let Some(stdout) = run_emitted_python(&a.source) {
             assert_eq!(
-                stdout, "6\n10\n",
+                stdout, "610",
                 "Ruby call-time param-scoped default produced wrong output"
             );
         }
@@ -424,7 +424,7 @@ mod tests {
 
         if let Some(stdout) = run_emitted_python(&a.source) {
             assert_eq!(
-                stdout, "hi, world\nhi, ada\n",
+                stdout, "hi, worldhi, ada",
                 "Ruby keyword params/args produced wrong output"
             );
         }
@@ -563,7 +563,7 @@ mod tests {
             a.source
         );
         if let Some(stdout) = run_emitted_python(&a.source) {
-            assert_eq!(stdout, "105\n", "emitted python printed unexpected output");
+            assert_eq!(stdout, "105", "emitted python printed unexpected output");
         }
     }
 
@@ -596,7 +596,7 @@ mod tests {
         if let Some(stdout) = run_emitted_python(&a.source) {
             // 15→range(R), "hill"→regex(X), 5→Integer(I), 3.5→else(O).
             // `_sir_print` terminates each line with a newline.
-            assert_eq!(stdout, "R\nX\nI\nO\n", "case-equality dispatch produced wrong branches");
+            assert_eq!(stdout, "RXIO", "case-equality dispatch produced wrong branches");
         }
     }
 
@@ -827,10 +827,9 @@ mod tests {
     #[test]
     fn end_to_end_ruby_to_python_puts() {
         // `puts("hello")` → a top-level `main` that calls the `puts`
-        // builtin.  `puts` now maps directly to the variadic runtime helper
-        // `_sir_puts(...)` (like `print` → `_sir_print`), rather than routing
-        // through the generic `_sir_call_builtin` dispatch, now that the
-        // runtime implements Ruby `puts` semantics.
+        // builtin.  SIR28 §2: `puts` now lowers to `__sys_write__`
+        // (`ruby-to-semantic-ir`'s `builtin_call_or_sys_write`), which this
+        // backend maps to the variadic runtime helper `_sir_write(...)`.
         let module = ruby_to_semantic_ir::compile_source("puts(\"hello\")\n", "demo")
             .expect("lower ruby");
         let a = compile(&module).expect("compile to python");
@@ -840,7 +839,7 @@ mod tests {
             a.source
         );
         assert!(
-            a.source.contains("_sir_puts(\"hello\")"),
+            a.source.contains("_sir_write(\"stdout\", \"per_value\", True, \"hello\")"),
             "expected the puts call with the string literal; got:\n{}",
             a.source
         );
@@ -875,7 +874,7 @@ mod tests {
             a.source
         );
         assert!(
-            a.source.contains("_sir_puts(add(1, 2))"),
+            a.source.contains("_sir_write(\"stdout\", \"per_value\", True, add(1, 2))"),
             "expected puts(add(1, 2)); got:\n{}",
             a.source
         );
@@ -894,7 +893,7 @@ mod tests {
             .expect("lower ruby");
         let a = compile(&module).expect("compile to python");
         assert!(
-            a.source.contains("_sir_puts(_sir_shift_left(5, 2))"),
+            a.source.contains("_sir_write(\"stdout\", \"per_value\", True, _sir_shift_left(5, 2))"),
             "expected `5 << 2` to lower to _sir_shift_left; got:\n{}",
             a.source
         );
@@ -914,7 +913,7 @@ mod tests {
         .expect("lower ruby");
         let a = compile(&module).expect("compile to python");
         assert!(
-            a.source.contains("_sir_puts(_sir_plus(x, y))"),
+            a.source.contains("_sir_write(\"stdout\", \"per_value\", True, _sir_plus(x, y))"),
             "expected puts(x + y) referencing both locals; got:\n{}",
             a.source
         );
@@ -1341,11 +1340,9 @@ mod tests {
         // it via `__class_method__` → `_sir_oop_call_class_method`, and the
         // returned object answers an instance method.
         //
-        // NOTE: `print` (not `puts`) — the `puts` builtin has no runtime
-        // dispatch entry on this branch (a parallel PR adds it), so `puts` in a
-        // *run* execution-proof raises `NameError`.  `print` maps to
-        // `_sir_print`, which is in the core dispatch table and appends a
-        // newline, so `print(c.val)` emits "42\n".
+        // NOTE: `print` (not `puts`) — Ruby's `print` never newline-
+        // terminates (SIR28 §2: `__sys_write__` with `terminator: "none"`),
+        // so `print(c.val)` emits exactly "42" with no trailing newline.
         let module = ruby_to_semantic_ir::compile_source(
             "class Counter\n\
             \x20 def self.zero\n\
@@ -1373,7 +1370,7 @@ mod tests {
             a.source
         );
         if let Some(out) = run_emitted_python(&a.source) {
-            assert_eq!(out, "42\n", "Counter.zero.val must print 42");
+            assert_eq!(out, "42", "Counter.zero.val must print 42");
         }
     }
 
@@ -1419,7 +1416,7 @@ mod tests {
             a.source
         );
         if let Some(out) = run_emitted_python(&a.source) {
-            assert_eq!(out, "41\n", "super (40) + 1 must be 41");
+            assert_eq!(out, "41", "super (40) + 1 must be 41");
         }
     }
 
@@ -1589,9 +1586,10 @@ mod tests {
         .expect("lower ruby");
         let a = compile(&module).expect("compile to python");
         if let Some(stdout) = run_emitted_python(&a.source) {
-            // `print("caught")` emits the string plus a trailing newline.
+            // `print("caught")` emits the string with no trailing newline
+            // (SIR28 §2: `__sys_write__` with `terminator: "none"`).
             assert_eq!(
-                stdout, "caught\n",
+                stdout, "caught",
                 "user subclass should be rescued by its ancestor"
             );
         }
@@ -2356,7 +2354,7 @@ mod tests {
             a.source
         );
         if let Some(stdout) = run_emitted_python(&a.source) {
-            assert_eq!(stdout, "Rex says woof\n", "P1 OOP dispatch produced wrong output");
+            assert_eq!(stdout, "Rex says woof", "P1 OOP dispatch produced wrong output");
         }
     }
 
@@ -2393,7 +2391,7 @@ mod tests {
             a.source
         );
         if let Some(stdout) = run_emitted_python(&a.source) {
-            assert_eq!(stdout, "Tom with 4 legs\n", "P2 inheritance/super produced wrong output");
+            assert_eq!(stdout, "Tom with 4 legs", "P2 inheritance/super produced wrong output");
         }
     }
 
@@ -2429,7 +2427,7 @@ mod tests {
             a.source
         );
         if let Some(stdout) = run_emitted_python(&a.source) {
-            assert_eq!(stdout, "2\n", "P3 attr_accessor/self-chain produced wrong output");
+            assert_eq!(stdout, "2", "P3 attr_accessor/self-chain produced wrong output");
         }
     }
 
@@ -2467,7 +2465,7 @@ mod tests {
             a.source
         );
         if let Some(stdout) = run_emitted_python(&a.source) {
-            assert_eq!(stdout, "hi\n", "MX2 include produced wrong output");
+            assert_eq!(stdout, "hi", "MX2 include produced wrong output");
         }
     }
 
@@ -2488,7 +2486,7 @@ mod tests {
         let module = ruby_to_semantic_ir::compile_source(src, "demo").expect("lower ruby");
         let a = compile(&module).expect("compile to python");
         if let Some(stdout) = run_emitted_python(&a.source) {
-            assert_eq!(stdout, "class\n", "MX2 class-shadows-module produced wrong output");
+            assert_eq!(stdout, "class", "MX2 class-shadows-module produced wrong output");
         }
     }
 
@@ -2513,7 +2511,7 @@ mod tests {
             a.source
         );
         if let Some(stdout) = run_emitted_python(&a.source) {
-            assert_eq!(stdout, "7\n", "MX2 extend produced wrong output");
+            assert_eq!(stdout, "7", "MX2 extend produced wrong output");
         }
     }
 
