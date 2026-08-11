@@ -105,6 +105,8 @@ const HEBREW_LAMED = ductusFor("ל", "hebrew")!;
 const hebrewLamedOutline = hebrewOutline("ל");
 const HEBREW_MEM = ductusFor("מ", "hebrew")!;
 const hebrewMemOutline = hebrewOutline("מ");
+const HEBREW_NUN = ductusFor("נ", "hebrew")!;
+const hebrewNunOutline = hebrewOutline("נ");
 const PERSIAN_ALEF = DUCTUS["ا"];
 const persianAlefOutline = naskhOutline("ا");
 const ARABIC_ALEF = ductusFor("ا", "arabic")!;
@@ -1152,6 +1154,35 @@ describe("Hebrew מ — detached angled part, then one joined angular body", () 
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(HEBREW_MEM.strokes[1], 2),
+    );
+  });
+});
+
+describe("Hebrew נ — one joined printed hook", () => {
+  const steps = ductusSteps(HEBREW_NUN);
+  const strip = ductusFilmstrip(HEBREW_NUN, hebrewNunOutline);
+
+  it("keeps the head, right descent, and leftward base joined", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the short top head from left to right",
+      "continue down the right side without lifting",
+      "turn left along the base without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+
+  it("draws the exact Noto Sans Hebrew glyph in the final frame", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewNunOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_NUN.strokes[0], 2),
     );
   });
 });
