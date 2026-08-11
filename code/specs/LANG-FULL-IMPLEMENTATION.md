@@ -831,7 +831,9 @@ backend immediately) come before the enabler-dependent items.
   restored when that block exits. Labels use the same lexical rule: each block
   assigns stable internal targets before lowering, so nested labels may shadow
   outer labels, forward gotos resolve correctly, and switch-list labels retain
-  the declaration block's binding when expanded later.
+  the declaration block's binding when expanded later. Nested switch references
+  inside a switch list likewise retain stable declaration-time identities,
+  including forward references to switches declared later in the same block.
 - ✅ **AL6** — `own` variables (static lifetime). `coding-adventures-algol-parser`
   0.2.0 adds the `[ "own" ] type ident_list` rule; `algol-iir-compiler` 0.7.0 lowers
   an `own` scalar to a module **global** (the E6 substrate), keyed by its unique

@@ -2169,6 +2169,21 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — switch-to-switch references bind where the containing switch
+    // is declared. `root` forward-references the outer `leaf`; the inner block's
+    // shadowing `leaf` must not retarget the stored graph.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; switch root := leaf[1]; \
+               switch leaf := outertarget; \
+               begin integer marker; switch leaf := innertarget; \
+                     marker := 0; goto root[1]; \
+                     innertarget: result := 1 + marker; goto done end; \
+               outertarget: result := 42; done: end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — *real (f64) arithmetic* + a real comparison (LANG-FULL AL1 /
     // enabler E3, phase 1).  `r := 2.5 * 2.0` computes in IEEE-754 double
     // (`5.0`), then `if r = 5.0` folds a real equality to the integer exit code
@@ -7061,6 +7076,37 @@ fn algol_label_shadowing_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but label-shadowing execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_lexical_nested_switch_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("switch root := leaf[1]")
+                && program.src.contains("switch leaf := outertarget")
+                && program.src.contains("switch leaf := innertarget")
+        })
+        .expect("the ALGOL lexical nested-switch program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but lexical nested-switch execution did not complete"
             );
             continue;
         };

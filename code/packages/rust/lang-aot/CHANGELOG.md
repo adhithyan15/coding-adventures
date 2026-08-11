@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.220.52 - 2026-08-11 (ALGOL lexical nested switches — seven-backend matrix)
+
+The matrix now proves that an ALGOL switch may forward-reference another switch
+in the same block and that a nested switch with the same spelling cannot
+retarget the stored outer switch graph on any standard backend.
+
 ## 0.220.51 - 2026-08-11 (ALGOL label shadowing — seven-backend matrix)
 
 The matrix now proves lexical label shadowing on Native AOT, LLVM, WASM, JVM,
