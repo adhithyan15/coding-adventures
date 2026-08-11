@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 17,
-  "title": "He, She, and the Polite You",
+  "title": "Talking to a Friend",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:65c55939de82c0ec",
+  "sourceHash": "fnv1a64:855f59ead7112cd9",
   "lessons": [
     {
-      "id": "ES-C06-habla",
-      "sequence": 521,
-      "title": "habla — \"he speaks,\" and the polite \"you speak\"",
-      "headword": "habla",
-      "romanization": "habla",
-      "gloss": "\"he speaks,\" \"she speaks\" — and the form usted takes, which is why it matters twice",
+      "id": "ES-C06-hablas",
+      "sequence": 519,
+      "title": "hablas — \"you speak,\" to someone you know",
+      "headword": "hablas",
+      "romanization": "hablas",
+      "gloss": "\"you speak\" — the same verb, aimed at a friend",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83d025a9d14b8727",
+      "sourceHash": "fnv1a64:f765b8313bf965de",
       "notice": null,
       "blocks": [
         {
@@ -35,49 +35,45 @@
             },
             {
               "kind": "speech",
-              "text": "Two forms so far. Which means I speak? (Hablo.) Which is you speak, to a friend? (Hablas.)"
+              "text": "Say \"I speak.\" (Hablo.) How many words? (One.)"
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: take the -s away again",
+          "type": "input",
+          "title": "You'll want to know first",
           "segments": [
             {
               "kind": "speech",
-              "text": "Drop the -ar, add just -a:"
-            },
-            {
-              "kind": "speech",
-              "text": "hablar becomes habla — he speaks, she speaks."
-            },
-            {
-              "kind": "speech",
-              "text": "That is the third form, and the third ending: -o, -as, -a."
+              "text": "tú — the \"you\" for a friend, a peer, someone at ease with you."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: the same form does a second job",
+          "title": "Grammar Lens: one more letter, and it is about the other person",
           "segments": [
             {
               "kind": "speech",
-              "text": "Back when you met usted, you were told it takes the he/she form of the verb. Here is the first verb where you can actually see it happen."
+              "text": "Last chapter the ending was -o, and it meant I."
             },
             {
               "kind": "speech",
-              "text": "usted habla — you speak, politely."
+              "text": "Swap it for -as and the sentence turns around to face the person you are talking to:"
             },
             {
               "kind": "speech",
-              "text": "The same word, habla, covers he speaks, she speaks, and the respectful you speak. Nothing extra to learn — it is one form doing three jobs, and that is a gift, not a complication."
+              "text": "hablar becomes hablas — you speak."
             },
             {
               "kind": "speech",
-              "text": "Why? Because usted was never a word for you to begin with. It grew out of vuestra merced, \"your grace\" — and your grace is a thing you talk about, not a person you talk to. You would say \"your grace speaks,\" not \"your grace speak.\" The verb form is a fossil of that politeness."
+              "text": "Same verb. Same operation — drop the -ar, add an ending. Only the ending changed, and with it, who the sentence is about."
+            },
+            {
+              "kind": "speech",
+              "text": "This is tú's form: a friend, a peer. And as before, you need no separate word for you. Hablas on its own is the whole sentence."
             }
           ]
         },
@@ -88,11 +84,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin's ending here was -at: hablat, \"he speaks.\" Spanish let the final -t fall away, as it let most final consonants fall away, and the bare -a is what was left standing."
+              "text": "Latin marked you with -ās, and Spanish kept it whole: hablās becomes hablas."
             },
             {
               "kind": "speech",
-              "text": "French did the same thing and went further — it writes parle but the ending is now silent. Italian kept more: parla. Three languages, one Latin ending, three degrees of wear."
+              "text": "Here is the piece worth holding on to. English has almost no verb endings left — but it does have one. He speaks. That lonely -s, the last ending standing in English, comes from the very same Latin-and-Germanic habit of putting an s sound on a verb to mark the person."
+            },
+            {
+              "kind": "speech",
+              "text": "English kept one s and lost the rest. Spanish kept the whole set. When you learn hablas, you are learning the system English is down to its last piece of."
             }
           ]
         },
@@ -110,56 +110,57 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"habla\"",
+              "instruction": "\"hablas\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"habla\"]"
+              "source": "[YOU SAY: \"hablas\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "it for a friend's brother, then for a stranger you are being polite to — same word both times",
+              "instruction": "\"hablo\" then \"hablas,\" and feel the sentence turn from you to the other person",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: it for a friend's brother, then for a stranger you are being polite to — same word both times]"
+              "source": "[YOU SAY: \"hablo\" then \"hablas,\" and feel the sentence turn from you to the other person]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C06-habla-form",
-              "prompt": "Turn hablar into he speaks.",
+              "id": "ES-C06-hablas-form",
+              "prompt": "Turn hablar into you speak, to a friend.",
               "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-3SG"
+                "ES-GRAMMAR-AR-PRESENT-2SG"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "habla",
-                "el habla"
+                "hablas",
+                "tu hablas"
               ],
               "feedback": {
-                "correct": "Right — drop -ar, add -a.",
-                "incorrect": "Drop the -ar and add -a: habla."
+                "correct": "Right — drop -ar, add -as.",
+                "incorrect": "Drop the -ar and add -as: hablas."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C06-habla-usted",
-              "prompt": "Which form goes with usted: hablas or habla?",
+              "id": "ES-C06-hablas-contrast",
+              "prompt": "Which one means I speak: hablo or hablas?",
               "assesses": [
-                "ES-GRAMMAR-USTED-THIRD-PERSON",
-                "ES-GRAMMAR-AR-PRESENT-3SG"
+                "ES-GRAMMAR-AR-PRESENT-1SG",
+                "ES-GRAMMAR-AR-PRESENT-2SG"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "habla",
-                "usted habla"
+                "hablo",
+                "the first",
+                "hablo means i speak"
               ],
               "feedback": {
-                "correct": "Yes — usted takes the he/she form, habla.",
-                "incorrect": "Usted takes the he/she form: habla. Hablas is for tu."
+                "correct": "Yes — -o is I, -as is you.",
+                "incorrect": "Hablo is I speak. Hablas turns it toward the other person."
               }
             }
           ]
@@ -177,7 +178,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is \"he speaks\"? (Habla.) Which form does usted take, and why? (Habla — because usted began as vuestra merced, \"your grace,\" something you talk about.) What did Latin's -at lose? (Its -t.) Next chapter is a review — no new words at all."
+              "text": "What is \"you speak,\" to a friend? (Hablas.) Which ending means I, and which means you? (-o and -as.) Which English ending is the last survivor of this system? (The -s in he speaks.) Next chapter: the same verb again, for usted — and for he and she."
             }
           ]
         }

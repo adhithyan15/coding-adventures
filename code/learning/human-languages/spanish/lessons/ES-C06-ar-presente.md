@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C06-ar-presente
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 524
-chapter: 18
+chapter: 19
 type: practice-mix
 headword: hablo · hablas · habla
 gloss: review — the three forms you already own, put side by side for the first time

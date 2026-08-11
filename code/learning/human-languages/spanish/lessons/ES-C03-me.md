@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C03-me
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 130
-chapter: 3
+chapter: 4
 type: word
 headword: me
 gloss: me / myself

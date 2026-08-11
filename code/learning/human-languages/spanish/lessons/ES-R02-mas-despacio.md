@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-R02-mas-despacio
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 507
-chapter: 14
+chapter: 15
 type: word
 headword: más despacio
 gloss: "more slowly" — the request that makes the last sentence solvable

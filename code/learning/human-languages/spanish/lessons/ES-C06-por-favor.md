@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C06-por-favor
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 500
-chapter: 13
+chapter: 14
 type: phrase
 headword: por favor
 gloss: please (literally "for [a] favour")

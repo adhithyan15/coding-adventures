@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C06-espanol
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 530
-chapter: 21
+chapter: 22
 type: word
 headword: español
 gloss: "Spanish" — the language, the people, and the Roman name for the peninsula underneath it

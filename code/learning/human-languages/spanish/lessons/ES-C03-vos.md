@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C03-vos
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 175
-chapter: 4
+chapter: 5
 type: word
 headword: vos
 gloss: "you" across a large part of the Spanish-speaking world — to recognise, not to say

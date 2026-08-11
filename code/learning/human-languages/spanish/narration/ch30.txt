@@ -1,161 +1,205 @@
-Spanish, chapter 30: Going, and the Future You Can Already Say.
-4 lessons. All 4 can be done entirely by ear.
+Spanish, chapter 30: Ser and Estar --- Two Ways to Be.
+5 lessons. All 5 can be done entirely by ear.
 
 
-Lesson 1 of 4.
-ir — “to go,” from more than one historical stem.
+Lesson 1 of 5.
+ser — another way to say “to be”.
 
 Warm-up.
 [pause 2 seconds]
-You already match different verb forms with tú and usted, and you can ask ¿Dónde…?, “Where…?” Today, add one new verb and only its three singular-person forms.
+You already use estar for a current state or location. Spanish also has ser. This chapter adds one job at a time; today, learn the verb and the three singular forms that match the person frame you already know.
 
 Sounds you'll need.
-vowel-i — ir is one clear syllable, like ear without a glide.
-diphthong-oy — voy ends with the sound in English boy.
+vowel-e — ser begins with the clear vowel in mesa.
+r-tap — the final r is one light tap: SER.
 
 The word, taken apart.
-ir means “to go.” Its infinitive descends from Latin īre, also “to go.” The present forms below followed a different Latin verb, vādere, “to go forward” or “advance.” English invade and evade preserve that vad- family.
-One modern verb built from historically different stems is called suppletive. English does the same thing when go changes to went, an old form borrowed from wend.
+Modern ser grew from a historical merger. Latin esse meant “to be,” while sedēre meant “to sit.” The infinitive and the present forms do not all come down the same path, so the modern verb cannot be predicted from one neat stem.
+The esse family is still visible in English essence, essential, entity, present, and absent. That makes essence a useful memory hook for one major use of ser: identifying what someone or something is.
 
 Grammar Lens: only three forms today.
 [a table of 3 rows, read aloud]
-person: yo. present of ir: voy.
-person: tú. present of ir: vas.
-person: él / ella / usted. present of ir: va.
-Say the small set as voy, vas, va. The plural forms are deliberately left for a later lesson.
-The known question word now gives you a useful prompt:
-¿Dónde va usted? — “Where are you going?”
+person: yo. form: soy. a small identifying frame: Soy Ana. — “I am Ana.”
+person: tú. form: eres. a small identifying frame: Eres Ana. — “You are Ana.”
+person: él / ella / usted. form: es. a small identifying frame: Usted es Ana. — “You are Ana.”
+Say the set as soy, eres, es. These forms are irregular: do not try to remove -er and attach the regular endings from comer. A later lesson will build the plural-person frame.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “ir — voy, vas, va”]
+[your turn — say: “ser — soy, eres, es”]
 [pause 8 seconds for the answer]
-[your turn — say: “¿Dónde va usted?”]
+[your turn — say: “Soy Ana. Eres Ana. Usted es Ana.”]
 [pause 8 seconds for the answer]
-[your turn — say: “īre gives ir; vādere gives the present set”]
+[your turn — say: “esse — essence — ser”]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 10 seconds]
-Give the three learned singular present forms of ir: yo, tú, then él/ella/usted.
+Give the three learned singular forms of ser: yo, tú, then él/ella/usted.
 [question — say your answer, then pause 8 seconds]
-Complete the formal question: ¿Dónde ___ usted?
+Complete the identification for formal you: Usted ___ Ana.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does ir mean? (“To go.”) Give the three forms learned today. (Voy, vas, va.) Why do they look unlike ir? (The infinitive and present set come through different Latin stems.) Next: place a and a known infinitive after this small set to talk about what is coming.
+Which two Latin verbs fed ser? (Esse and sedēre.) Give the three forms learned today. (Soy, eres, es.) Why not predict them from the infinitive? (The verb is historically mixed and irregular.) Next: set ser beside estar using only identity and state frames you already have.
 
 
-Lesson 2 of 4.
-voy a + infinitive — moving toward the near future.
-
-Warm-up.
-[pause 2 seconds]
-You know voy, vas, va and the infinitives hablar, comer, vivir. This lesson joins those owned pieces with one short new word.
-
-The word, taken apart — a.
-Spanish a means “to” or “toward.” It descends from Latin ad, “toward,” which English keeps in words such as advance.
-Movement toward a place easily becomes movement toward a future event. English uses the same picture in “I am going to speak.” Spanish keeps a visible: voy a hablar.
-
-Grammar Lens: ir + a + an unchanged infinitive.
-[a table of 3 rows, read aloud]
-person: yo. near-future frame: voy a hablar. meaning: I am going to speak.
-person: tú. near-future frame: vas a comer. meaning: you are going to eat.
-person: usted. near-future frame: va a vivir. meaning: you are going to live.
-Only ir changes for the person. The second verb stays in its known dictionary form: hablar, comer, or vivir. No new plural person or infinitive is hidden in the pattern.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: “voy a hablar”]
-[pause 8 seconds for the answer]
-[your turn — say: “vas a comer”]
-[pause 8 seconds for the answer]
-[your turn — say: “va a vivir”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Say 'I am going to speak' in Spanish.
-[question — say your answer, then pause 8 seconds]
-Say 'You are going to eat' to one friend in Spanish.
-
-Wrap-up Recall.
-[pause 3 seconds]
-What is the frame? (Ir in the present + a + an infinitive.) Does the second verb change for the person? (No.) What idea connects physical going with future time? (Motion toward a destination becomes motion toward an event.) Next: say whose already-known café it is.
-
-
-Lesson 3 of 4.
-mi, tu, su — whose café?
+Lesson 2 of 5.
+ser vs estar — identity or current state?
 
 Warm-up.
 [pause 2 seconds]
-You already know café, and you distinguish informal tú from formal usted. Now put one small ownership word before that one known noun.
+You now have two small sets: soy, eres, es and estás, está. Do not memorize a long rule list. Make one contrast: ser identifies; estar places someone in a current state or location.
 
-The words, taken apart.
-[a table of 3 rows, read aloud]
-Spanish: mi. Latin source: meus. meaning in today's frame: my.
-Spanish: tu. Latin source: tuus. meaning in today's frame: your, to one informal tú.
-Spanish: su. Latin source: suus. meaning in today's frame: your, to formal usted; also his or her.
-English my helps recall mi. Older English thy, “your,” helps recall Latin tuus and Spanish tu. The ownership word tu has no written accent; the person word tú that you already know keeps its accent.
+Grammar Lens: the first contrast, from known material.
+[a table of 2 rows, read aloud]
+question: ¿Es usted Ana? — “Are you Ana?” what it asks: identity. verb: ser.
+question: ¿Está usted bien? — “Are you well?” what it asks: current state. verb: estar.
+Only the verb and the job change. The first question identifies the person; the second checks how that person is now. Both Ana, usted, and bien are already part of your course, so the contrast adds no hidden vocabulary.
 
-Grammar Lens: put the ownership word before the noun.
-[a table of 3 rows, read aloud]
-mi café means my coffee.
-tu café means your coffee, informal.
-su café means your coffee, formal; or his or her coffee.
-The situation tells you which person su points to. Every noun phrase in this lesson is singular. Forms used before plural things are left for a later step, so there is no new number pattern to learn here.
+Grammar Lens: a memory hook, not a law.
+ser recalls Latin esse and English essence: use it here to say who someone is.
+estar comes from Latin stāre, “to stand,” the family behind state: use it for the state or location in which someone stands.
+“Permanent versus temporary” is only a rough beginner shortcut, not the rule. A location may last for centuries and still use estar; an identification may last one minute and still use ser. Ask instead: am I identifying, or am I giving a state or location?
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “mi café”]
+[your turn — say: “¿Es usted Ana?” — identity, ser]
 [pause 8 seconds for the answer]
-[your turn — say: “tu café” to tú]
+[your turn — say: “¿Está usted bien?” — state, estar]
 [pause 8 seconds for the answer]
-[your turn — say: “su café” to usted]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 7 seconds]
-Say 'my coffee' in Spanish.
-[question — say your answer, then pause 8 seconds]
-Addressing usted, say 'your coffee' in Spanish.
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three ownership words. (Mi, tu, su.) Where do they go? (Before the noun.) Which one addresses usted? (Su.) Which Latin sources sit behind them? (Meus, tuus, suus.) Next: retrieve the chapter without adding a new word, form, or noun.
-
-
-Lesson 4 of 4.
-Practice — going, approaching events, and ownership.
-
-Warm-up.
-[pause 2 seconds]
-This checkpoint adds nothing. Retrieve voy, vas, va; build the near future with a and a known infinitive; then put mi, tu, or su before the known noun café.
-
-Grammar Lens: the complete small chapter frame.
-ir, singular: voy, vas, va.
-near future: voy a hablar, vas a comer, va a vivir.
-ownership before one singular known noun: mi café, tu café, su café.
-Plural person forms of ir and possessives before plural nouns remain deferred.
-
-The word, taken apart — retrieve the history.
-ir continues Latin īre, while voy, vas, va continue vādere.
-a continues Latin ad, “toward”; motion toward a goal became motion toward a coming event.
-mi, tu, su continue Latin meus, tuus, suus.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: “voy, vas, va”]
-[pause 8 seconds for the answer]
-[your turn — say: “voy a hablar, vas a comer, va a vivir”]
-[pause 8 seconds for the answer]
-[your turn — say: “mi café, tu café, su café”]
+[your turn — say: “identify: ser; state or location: estar”]
 [pause 8 seconds for the answer]
 [repeat that twice]
-“Voy a hablar. Su café.”
-[question — say your answer, then pause 9 seconds]
-Give the learned singular forms of ir: yo, tú, then usted.
-[question — say your answer, then pause 9 seconds]
-Ask formal you 'Where are you going?' in Spanish.
+“¿Es usted Ana? ¿Está usted bien?”
 [question — say your answer, then pause 8 seconds]
-Say 'I am going to speak' in Spanish.
+Choose es or está: ¿___ usted Ana?
 [question — say your answer, then pause 8 seconds]
-Addressing usted, say 'your coffee' in Spanish.
+Choose es or está: ¿___ usted bien?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the singular ir set. (Voy, vas, va.) Build “You are going to eat” for one friend. (Vas a comer.) Say “my coffee” and formal “your coffee.” (Mi café; su café.) The next chapter can now extend the grammar from this small, closed frontier.
+Which verb identifies? (Ser.) Which gives a current state or location? (Estar.) Why is “permanent versus temporary” incomplete? (The choice follows the kind of claim, not its duration.) Next: use ser for one specific identity fact — origin.
+
+
+Lesson 3 of 5.
+soy de… — saying where you are from.
+
+Warm-up.
+[pause 2 seconds]
+You can identify yourself with Soy Ana. Add one short word and you can state another identity fact: Soy de…, “I am from…”.
+
+The word, taken apart — de.
+de means “from” or “of.” It comes from Latin dē, “down from, away from.” English keeps that direction in depart and descend.
+You already learned that dónde grew from Latin de unde, “from where.” Spanish can put the still-living word de before dónde to ask explicitly about origin.
+
+Grammar Lens: ser + de for origin.
+¿De dónde eres? — “Where are you from?” Soy de Madrid. — “I am from Madrid.”
+The place name Madrid already appeared with vivir. Here, the new piece is the frame around it. Use ser, because this sentence states origin; it does not say where someone is located now.
+Keep the two known questions separate:
+[a table of 2 rows, read aloud]
+question: ¿De dónde eres? asks about: origin — where you are from.
+question: ¿Dónde vives? asks about: residence — where you live.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “¿De dónde eres?”]
+[pause 8 seconds for the answer]
+[your turn — say: “Soy de Madrid.”]
+[pause 8 seconds for the answer]
+[your turn — say: “de — depart — descend”: the shared direction is from]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Ask one friend 'Where are you from?' in Spanish.
+[question — say your answer, then pause 8 seconds]
+Answer 'I am from Madrid' in Spanish.
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does de mean? (“From” or “of.”) Ask where one friend is from. (¿De dónde eres?) Answer with Madrid. (Soy de Madrid.) Next: reuse dónde and en to say where someone is located now.
+
+
+Lesson 4 of 5.
+está en… — saying where someone is.
+
+Warm-up.
+[pause 2 seconds]
+You have already asked ¿Dónde vives? — Vivo en Madrid about where someone lives. Now use the same dónde and en with estar to ask about a current location.
+
+The word, taken apart — en.
+en already means “in,” “on,” or “at.” It descends from Latin in and is a cognate of English in. No new preposition is needed; only the surrounding verb changes.
+
+Grammar Lens: dónde + estar, then estar + en.
+¿Dónde está usted? — “Where are you?” (formal) Usted está en Madrid. — “You are in Madrid.” Ana está en Madrid. — “Ana is in Madrid.”
+The form está is already familiar from ¿Cómo está usted? The phrase está en… simply gives that form a place. Location uses estar even when a place seems stable; the choice marks the kind of claim, not how long it lasts.
+Compare origin and location without adding any new form:
+[a table of 2 rows, read aloud]
+sentence: Ana es de Madrid. meaning: origin. verb: ser.
+sentence: Ana está en Madrid. meaning: location. verb: estar.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “¿Dónde está usted?”]
+[pause 8 seconds for the answer]
+[your turn — say: “Ana está en Madrid.”]
+[pause 8 seconds for the answer]
+[your turn — say: “en / in” — two cognates]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Ask formal you 'Where are you?' in Spanish.
+[question — say your answer, then pause 8 seconds]
+Say 'Ana is in Madrid' in Spanish.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which verb locates someone? (Estar.) What already-known word introduces the place? (En.) Ask formal “Where are you?” (¿Dónde está usted?) Next: combine identity, origin, state, and location without adding another word or verb form.
+
+
+Lesson 5 of 5.
+Practice — identity, origin, state, and location.
+
+Warm-up.
+[pause 2 seconds]
+This checkpoint adds nothing. Use ser for identity and origin; use estar for a current state or location.
+
+Grammar Lens: retrieve the two small form sets.
+ser: soy, eres, es.
+estar in the questions used here: estás, está.
+Plural forms remain deliberately deferred.
+
+The word, taken apart — four root hooks.
+ser: esse + sedēre.
+estar: stāre, “stand.”
+de: Latin dē, “from.”
+en: Latin in, English in.
+
+Grammar Lens: sort by the kind of claim.
+[a table of 4 rows, read aloud]
+prompt: ¿Es usted Ana? answer: ser. why: identity.
+prompt: ¿De dónde eres? answer: ser. why: origin.
+prompt: ¿Está usted bien? answer: estar. why: current state.
+prompt: ¿Dónde está Ana? answer: estar. why: location.
+
+The exchange — only known pieces.
+— Hola. ¿Es usted Ana? — Sí. Soy Ana. — ¿De dónde es usted? — Soy de Madrid. — ¿Dónde está Ana? — Está en Madrid. — ¿Está usted bien? — Bien, gracias.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “soy, eres, es”]
+[pause 8 seconds for the answer]
+[your turn — say: the four questions, naming each job]
+[pause 8 seconds for the answer]
+[your turn — say: the exchange once]
+[pause 8 seconds for the answer]
+[repeat that twice]
+“¿Es usted Ana? ¿Está usted bien?”
+[question — say your answer, then pause 8 seconds]
+Complete with es or está: ¿___ usted Ana?
+[question — say your answer, then pause 8 seconds]
+Say 'I am from Madrid' in Spanish.
+[question — say your answer, then pause 8 seconds]
+Say 'Ana is in Madrid' in Spanish.
+[question — say your answer, then pause 8 seconds]
+Complete with es or está: ¿___ usted bien?
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three learned forms of ser. (Soy, eres, es.) Which verb identifies and states origin? (Ser.) Which gives a state or location? (Estar.) Ask where one friend is from, then locate Ana in Madrid. Next: ir, “to go,” introduced in the same small-step frame.

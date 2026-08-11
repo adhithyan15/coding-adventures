@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C03-me-llamo
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 150
-chapter: 3
+chapter: 4
 type: word
 headword: me llamo
 gloss: my name is (literally "I call myself")

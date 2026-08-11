@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C06-hablas
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 519
-chapter: 16
+chapter: 17
 type: grammar
 headword: hablas
 gloss: "you speak" — the same verb, aimed at a friend

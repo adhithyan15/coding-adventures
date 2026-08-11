@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C19-no
 spine_node: SPINE-RESPOND-BASIC
 sequence: 266
-chapter: 6
+chapter: 7
 type: word
 headword: no
 gloss: no / not

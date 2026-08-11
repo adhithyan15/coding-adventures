@@ -11,6 +11,12 @@
 - Queue the series' dedicated Gimel/Dalet lesson as the next source-recovery
   tranche.
 
+### Changed — Spanish runs 1..92 (HL-C104)
+
+- Regenerate the `bookhashes` chapter-lesson pin: `un`/`una` entered as a new
+  chapter 3, so old Spanish chapters 3–91 shifted to 4–92.
+- Eager bundle 483,055 / 500,000 bytes.
+
 ### Added — cited Hebrew Alef ductus (HL-C09BD)
 
 - Render **א** in three evidence-aligned frames: draw the main descending

@@ -2,34 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 18,
-  "title": "Review --- The Three Forms Side by Side",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cf3ed97767c73cea",
+  "title": "He, She, and the Polite You",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:b6f35b327a7be6df",
   "lessons": [
     {
-      "id": "ES-C06-ar-presente",
-      "sequence": 524,
-      "title": "Review — the three forms, side by side",
-      "headword": "hablo · hablas · habla",
-      "romanization": "hablo · hablas · habla",
-      "gloss": "review — the three forms you already own, put side by side for the first time",
+      "id": "ES-C06-habla",
+      "sequence": 521,
+      "title": "habla — \"he speaks,\" and the polite \"you speak\"",
+      "headword": "habla",
+      "romanization": "habla",
+      "gloss": "\"he speaks,\" \"she speaks\" — and the form usted takes, which is why it matters twice",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2901eb8628a1cdfd",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "Grammar Lens: the table you have earned"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: the table you have earned until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:f0d3b106a300efde",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -44,67 +35,69 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new in this chapter. Not one word. Say the three forms you already have, in any order they come."
+              "text": "Two forms so far. Which means I speak? (Hablo.) Which is you speak, to a friend? (Hablas.)"
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the table you have earned",
+          "title": "Grammar Lens: take the -s away again",
           "segments": [
             {
               "kind": "speech",
-              "text": "Three chapters, one form each. Now — and only now — they are worth seeing together:"
-            },
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 3,
-              "headers": [
-                "who",
-                "ending",
-                "hablar, which gives:",
-                "meaning"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: who, ending, hablar, which gives:, meaning. Come back and look at it when you have stopped."
+              "text": "Drop the -ar, add just -a:"
             },
             {
               "kind": "speech",
-              "text": "A table like this one at the start would have been three things at once and you would have memorised it. Arriving here, it is a picture of something you can already do."
+              "text": "hablar becomes habla — he speaks, she speaks."
             },
             {
               "kind": "speech",
-              "text": "This is the whole engine. Every regular -ar verb in Spanish — and there are thousands — runs on these three endings. You have not learned one verb. You have learned the pattern that fits all of them."
+              "text": "That is the third form, and the third ending: -o, -as, -a."
             }
           ]
         },
         {
           "index": 2,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "grammar",
+          "title": "Grammar Lens: the same form does a second job",
           "segments": [
             {
               "kind": "speech",
-              "text": "Say what you do — hablo."
+              "text": "Back when you met usted, you were told it takes the he/she form of the verb. Here is the first verb where you can actually see it happen."
             },
             {
               "kind": "speech",
-              "text": "Ask or state what a friend does — hablas."
+              "text": "usted habla — you speak, politely."
             },
             {
               "kind": "speech",
-              "text": "Say what someone else does, or address someone politely — habla."
+              "text": "The same word, habla, covers he speaks, she speaks, and the respectful you speak. Nothing extra to learn — it is one form doing three jobs, and that is a gift, not a complication."
             },
             {
               "kind": "speech",
-              "text": "Do all three without a pronoun, because the ending carries it."
+              "text": "Why? Because usted was never a word for you to begin with. It grew out of vuestra merced, \"your grace\" — and your grace is a thing you talk about, not a person you talk to. You would say \"your grace speaks,\" not \"your grace speak.\" The verb form is a fossil of that politeness."
             }
           ]
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin's ending here was -at: hablat, \"he speaks.\" Spanish let the final -t fall away, as it let most final consonants fall away, and the bare -a is what was left standing."
+            },
+            {
+              "kind": "speech",
+              "text": "French did the same thing and went further — it writes parle but the ending is now silent. Italian kept more: parla. Three languages, one Latin ending, three degrees of wear."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -117,88 +110,62 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all three in order — \"hablo, hablas, habla\"",
+              "instruction": "\"habla\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all three in order — \"hablo, hablas, habla\"]"
+              "source": "[YOU SAY: \"habla\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "them out of order, as prompted: she, I, a friend, politely",
+              "instruction": "it for a friend's brother, then for a stranger you are being polite to — same word both times",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: them out of order, as prompted: *she* · *I* · *a friend* · *politely*]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Until the ending arrives before you have to think about it."
+              "source": "[YOU SAY: it for a friend's brother, then for a stranger you are being polite to — same word both times]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C06-ar-presente-mix-1",
-              "prompt": "I speak.",
-              "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-1SG"
-              ],
-              "responseSeconds": 6,
-              "acceptedResponses": [
-                "hablo",
-                "yo hablo"
-              ],
-              "feedback": {
-                "correct": "Yes.",
-                "incorrect": "hablo — the -o is I."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C06-ar-presente-mix-2",
-              "prompt": "She speaks.",
+              "id": "ES-C06-habla-form",
+              "prompt": "Turn hablar into he speaks.",
               "assesses": [
                 "ES-GRAMMAR-AR-PRESENT-3SG"
               ],
-              "responseSeconds": 6,
+              "responseSeconds": 8,
               "acceptedResponses": [
                 "habla",
-                "ella habla"
+                "el habla"
               ],
               "feedback": {
-                "correct": "Yes.",
-                "incorrect": "habla — the -a covers he, she, and polite you."
+                "correct": "Right — drop -ar, add -a.",
+                "incorrect": "Drop the -ar and add -a: habla."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C06-ar-presente-mix-3",
-              "prompt": "You speak, to a friend.",
+              "id": "ES-C06-habla-usted",
+              "prompt": "Which form goes with usted: hablas or habla?",
               "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-2SG"
+                "ES-GRAMMAR-USTED-THIRD-PERSON",
+                "ES-GRAMMAR-AR-PRESENT-3SG"
               ],
-              "responseSeconds": 6,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "hablas",
-                "tu hablas"
+                "habla",
+                "usted habla"
               ],
               "feedback": {
-                "correct": "Yes.",
-                "incorrect": "hablas — the -as is tu."
+                "correct": "Yes — usted takes the he/she form, habla.",
+                "incorrect": "Usted takes the he/she form: habla. Hablas is for tu."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -210,7 +177,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three endings — name them. (-o, -as, -a.) How many regular -ar verbs does this pattern fit? (All of them.) Next chapter you will not learn anything either — you will use this to say something you actually mean."
+              "text": "What is \"he speaks\"? (Habla.) Which form does usted take, and why? (Habla — because usted began as vuestra merced, \"your grace,\" something you talk about.) What did Latin's -at lose? (Its -t.) Next chapter is a review — no new words at all."
             }
           ]
         }

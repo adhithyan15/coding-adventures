@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C19-si
 spine_node: SPINE-RESPOND-BASIC
 sequence: 264
-chapter: 6
+chapter: 7
 type: word
 headword: sí
 gloss: yes

@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C05-repaso-adios
 spine_node: SPINE-TAKE-LEAVE
 sequence: 445
-chapter: 11
+chapter: 12
 type: practice-mix
 headword: (practice)
 gloss: Leaving — putting the chapter together

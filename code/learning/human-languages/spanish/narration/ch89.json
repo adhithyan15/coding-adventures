@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 89,
-  "title": "Synthesis --- The Choices English Never Makes You Make",
+  "title": "Review --- All Four Stem Changes",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9a52a5637c1b4652",
+  "sourceHash": "fnv1a64:b681f1a1646b8931",
   "lessons": [
     {
-      "id": "ES-C39-sintesis-elegir",
-      "sequence": 1846,
-      "title": "Synthesis — the choices English never makes you make",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — three places where English hands you one word and Spanish makes you choose",
+      "id": "ES-C39-repaso-cambios",
+      "sequence": 1843,
+      "title": "Review — the four stem changes, all of them",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — the stem-change system, now complete, and the one pattern with a single member",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6280b91eab3fa11",
+      "sourceHash": "fnv1a64:f5db46045de1fa7c",
       "notice": null,
       "blocks": [
         {
@@ -35,72 +35,66 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new here. Two verbs to say aloud first: traer, conocer."
+              "text": "Nothing new in this chapter. Say a verb whose stem breaks under stress — any one you have met."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: one English word, two Spanish verbs",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Three times now you have met a pair of verbs where English makes do with one. They arrived chapters apart and have never been put side by side:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "English gives you",
-                "Spanish makes you choose",
-                "the question you must answer"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "English gives you: to ask. Spanish makes you choose: preguntar, pedir. the question you must answer: asking a question, or asking for a thing?",
-                "English gives you: to bring / take. Spanish makes you choose: traer, llevar. the question you must answer: toward the speaker, or away?",
-                "English gives you: to know. Spanish makes you choose: conocer, saber. the question you must answer: a person or place, or a fact?"
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "None of these is a vocabulary problem. In each one, the word is easy and the decision is the work — and the decision is information English speakers are simply never required to supply."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "notice",
           "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "When you pick traer over llevar, you have told your listener where you are standing. When you pick conocer over saber, you have told them whether you have met the thing or only heard of it. The grammar is carrying meaning that English would need a whole clause to add."
+              "text": "Something finished in the last two chapters and it is worth stopping for."
             },
             {
               "kind": "speech",
-              "text": "You are not translating any more. You are choosing."
+              "text": "Spanish has four stem-change patterns. Not five, not a dozen — four. You met the first two long ago with querer and poder, and the last two in the chapters you have just finished. That is the whole system, and you now hold all of it:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the change",
+                "the verb that taught it",
+                "what breaks"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "the change: e becomes ie. the verb that taught it: querer. what breaks: becomes quiero.",
+                "the change: o becomes ue. the verb that taught it: poder. what breaks: becomes puedo.",
+                "the change: e becomes i. the verb that taught it: conseguir. what breaks: becomes consigo.",
+                "the change: u becomes ue. the verb that taught it: jugar. what breaks: becomes juego."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "This table is allowed here because every row in it is something you can already do. It is a picture of the ground you hold, not a list to memorise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the pattern with one member",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The fourth row is strange, and worth knowing precisely."
+            },
+            {
+              "kind": "speech",
+              "text": "u becomes ue happens in exactly one verb in the entire language: jugar."
+            },
+            {
+              "kind": "speech",
+              "text": "Not \"mostly one.\" One. Every other Spanish verb with a u in its stem leaves it alone. So you are not learning a pattern here so much as a single fact with a pattern's shape — which is easier, not harder, and is the kind of thing a course should tell you instead of letting you brace for more."
             }
           ]
         },
         {
           "index": 3,
-          "type": "input",
-          "title": "The exchange",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "— ¿Conoces Madrid? — Sí, conozco Madrid. Pero no sé dónde está el café."
-            },
-            {
-              "kind": "speech",
-              "text": "Two \"knows\" in two lines, and not interchangeable. The first is acquaintance — I have been there. The second is a fact. English uses know for both and loses the difference."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -113,11 +107,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the exchange above, both parts",
+              "instruction": "one verb from each of the four rows",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the exchange above, both parts]"
+              "source": "[YOU SAY: one verb from each of the four rows]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four changes themselves, as sounds — e-ie, o-ue, e-i, u-ue",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four changes themselves, as sounds — *e-ie, o-ue, e-i, u-ue*]"
             },
             {
               "kind": "repeat",
@@ -126,70 +129,73 @@
             },
             {
               "kind": "speech",
-              "text": "Until the choice happens before you notice making it."
+              "text": "Until naming the pattern is faster than working it out."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C39-sintesis-elegir-know",
-              "prompt": "You want to say you know a person. Conocer or saber?",
+              "id": "ES-C39-repaso-cambios-count",
+              "prompt": "How many stem-change patterns does Spanish have in total?",
               "assesses": [
-                "ES-GRAMMAR-CONOCER-SABER-12"
+                "ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "conocer",
-                "conocer (acquaintance)",
-                "conozco"
+                "four",
+                "4",
+                "cuatro"
               ],
               "feedback": {
-                "correct": "Yes — conocer is for people and places you have met.",
-                "incorrect": "Conocer. Saber is for facts."
+                "correct": "Four — and you now hold all of them.",
+                "incorrect": "Four: e-ie, o-ue, e-i, u-ue."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C39-sintesis-elegir-bring",
-              "prompt": "Someone asks you to move something toward where they are. Traer or llevar?",
+              "id": "ES-C39-repaso-cambios-only",
+              "prompt": "Which pattern belongs to exactly one verb, and which verb?",
               "assesses": [
-                "ES-GRAMMAR-TRAER-LLEVAR-03"
+                "ES-GRAMMAR-STEM-U-UE-09",
+                "ES-LEX-JUGAR-07"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "traer",
-                "traer (toward)",
-                "bring"
+                "u to ue, jugar",
+                "u-ue, jugar",
+                "jugar, u to ue",
+                "jugar"
               ],
               "feedback": {
-                "correct": "Yes — traer moves it toward the speaker.",
-                "incorrect": "Traer. Llevar moves it away."
+                "correct": "Yes — jugar is the only u-ue verb in Spanish.",
+                "incorrect": "u to ue, and the verb is jugar. It is the only one."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C39-sintesis-elegir-ask",
-              "prompt": "You want to ask for a coffee, not ask a question. Preguntar or pedir?",
+              "id": "ES-C39-repaso-cambios-ei",
+              "prompt": "Which change does conseguir make?",
               "assesses": [
-                "ES-GRAMMAR-ASK-SPLIT-04",
-                "ES-LEX-PREGUNTAR-03"
+                "ES-GRAMMAR-STEM-E-I-06",
+                "ES-LEX-CONSEGUIR-04"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "pedir",
-                "pedir (request)",
-                "pedir un cafe"
+                "e to i",
+                "e-i",
+                "e becomes i",
+                "consigo"
               ],
               "feedback": {
-                "correct": "Yes — pedir is asking FOR something.",
-                "incorrect": "Pedir. Preguntar is asking a question."
+                "correct": "Yes — conseguir becomes consigo.",
+                "incorrect": "e to i: conseguir, consigo."
               }
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -201,7 +207,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does choosing traer tell your listener? (Where you are standing.) What does choosing conocer tell them? (That you have met it, not just heard of it.) And which of the three pairs did you learn first? (Preguntar and pedir — long before the other two.)"
+              "text": "How many stem-change patterns are there? (Four — and that is all of them.) Which one has a single member? (u becomes ue, only jugar.) Next chapter is not about forms at all — it is about three places where English gives you one word and Spanish makes you choose."
             }
           ]
         }

@@ -1,39 +1,121 @@
-Spanish, chapter 43: Ver --- Seeing.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 43: The Imperfect --- What Used to Happen.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-ver — learn the verb before its past.
+Lesson 1 of 3.
+hablaba — let a past action stay open.
 
 Warm-up.
 [pause 2 seconds]
-Ver means “to see.” Its written v uses the Spanish sound you already know: it is not contrasted with a separate English-style v sound. Say ver.
+Hablé español presents speaking as a completed past event. A different past, the imperfect, can leave the action open: Hablaba español — “I was speaking Spanish” or “I used to speak Spanish.” The sentence does not say where the action ended.
 
-Grammar Lens: three present forms.
+Grammar Lens: three familiar persons.
 [a table of 3 rows, read aloud]
-person: yo. present: veo.
-person: tú. present: ves.
-person: él / ella / usted. present: ve.
-The tú and third-person forms resemble the familiar -er row. The yo form keeps an extra vowel: veo. Reuse known café: Veo café — “I see coffee.”
+person: yo. open or habitual past: hablaba.
+person: tú. open or habitual past: hablabas.
+person: él / ella / usted. open or habitual past: hablaba.
+Say hablaba, hablabas, hablaba. The first and third forms are identical; the surrounding conversation or an explicit person tells you who is speaking. Plural persons wait.
 
-The word, taken apart.
-Spanish ver continues Latin vidēre, “to see,” through Old Spanish veer. Loss of the consonant between vowels helps explain the shorter shape; the two adjacent vowels later contracted in the infinitive. English video belongs to the same Latin family, a memory bridge rather than a new Spanish word for this lesson.
+The ending, taken apart.
+Spanish -aba continues the Latin imperfect family in -ābam. Historical sound change reshaped the complete Latin forms, but the b remains a useful audible bridge between -ābam and Spanish -aba.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “ver — to see”]
+[your turn — say: “hablaba, hablabas, hablaba”]
 [pause 8 seconds for the answer]
-[your turn — say: “veo, ves, ve”]
+[your turn — say: “Hablé español. Hablaba español.”]
 [pause 8 seconds for the answer]
-[your turn — say: “ver comes through veer from vidēre”]
+[your turn — say: “-ābam and -aba share b”]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 5 seconds]
-What does Spanish ver mean?
-[question — say your answer, then pause 8 seconds]
-Give the learned present forms of ver: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular imperfect forms of hablar: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Which form leaves 'I spoke' open or habitual: hablé or hablaba?
 [question — say your answer, then pause 6 seconds]
-Which Latin verb stands behind Spanish ver: vidēre or īre?
+Which consonant links Latin -ābam with Spanish -aba?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does ver mean? (“To see.”) Give its three learned present forms. (Veo, ves, ve.) Which Latin verb stands behind it? (Vidēre.) Next: add ser to the open past.
+Give the three learned forms. (Hablaba, hablabas, hablaba.) What can the imperfect do? (Leave a past action ongoing or habitual.) Which Latin family stands behind -aba? (-ābam.) Next: build the same gentle frame with comer.
+
+
+Lesson 2 of 3.
+comía — hear both vowels.
+
+Warm-up.
+[pause 2 seconds]
+Comí presents eating as completed. Comía leaves it open or habitual: “I was eating” or “I used to eat.” One accent separates the two forms in writing and in sound.
+
+Grammar Lens: the singular -er row.
+[a table of 3 rows, read aloud]
+person: yo. open or habitual past: comía.
+person: tú. open or habitual past: comías.
+person: él / ella / usted. open or habitual past: comía.
+Say comía, comías, comía. As with hablaba, the first and third forms match. Plural persons wait.
+
+Grammar Lens: co-mí-a.
+The accent in -ía keeps i and a in separate syllables: co-mí-a, three beats. It appears in every form learned here. Compare final stress in comí with the middle stress and extra syllable in comía.
+
+The ending, taken apart.
+The -er imperfect continues a Romance reshaping of Latin -ēbam material. Among the changes, an intervocalic b was lost; later Spanish spelling marks the stressed í that keeps i-a apart. This is a layered history, not a single instruction to delete one letter.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “comía, comías, comía”]
+[pause 8 seconds for the answer]
+[your turn — say: “Comí. Comía.”]
+[pause 8 seconds for the answer]
+[your turn — say: “co-mí-a”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the learned singular imperfect forms of comer: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Which form means 'I was eating': comí or comía?
+[question — say your answer, then pause 7 seconds]
+Write comía with syllable breaks.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three learned forms. (Comía, comías, comía.) What does the accent do? (Keeps i and a apart.) Which Latin family lies behind the ending? (-ēbam, reshaped through Romance.) Next: test whether vivir can reuse this row.
+
+
+Lesson 3 of 3.
+vivía — reuse the complete -er row.
+
+Warm-up.
+[pause 2 seconds]
+An earlier chapter let comer and vivir share one completed-past row. They converge again here. Replace com- in comía, comías, comía with viv-.
+
+Grammar Lens: one row reused.
+[a table of 3 rows, read aloud]
+person: yo. comer: comía. vivir: vivía.
+person: tú. comer: comías. vivir: vivías.
+person: él / ella / usted. comer: comía. vivir: vivía.
+Say vivía, vivías, vivía. -er and -ir share -ía, -ías, -ía. The accent still keeps i-a apart. Plural persons wait.
+
+Grammar Lens: one known contrast.
+Viví en Madrid. — presents living there as a completed stretch.
+Vivía en Madrid. — puts us inside that past stretch or treats it as background.
+Both are past. The speaker chooses how to frame the event.
+
+The verb, taken apart.
+Vivir continues Latin vīvere. Its infinitive belongs to the Spanish -ir class, but the imperfect has converged with -er. That shared row is a reliable fact about these learned forms, not a claim that the two conjugations are identical everywhere.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “vivía, vivías, vivía”]
+[pause 8 seconds for the answer]
+[your turn — say: “comía and vivía share -ía”]
+[pause 8 seconds for the answer]
+[your turn — say: “Viví en Madrid. Vivía en Madrid.”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the learned singular imperfect forms of vivir: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Which two infinitive classes share the learned imperfect endings -ía, -ías, -ía?
+[question — say your answer, then pause 7 seconds]
+Say 'I was living in Madrid' in Spanish.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three vivir forms. (Vivía, vivías, vivía.) Which class shares them? (-er.) What contrast can viví / vivía make? (Completed stretch versus an open or background past.) Next: learn ver before asking it to enter this tense.

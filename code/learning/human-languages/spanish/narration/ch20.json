@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 20,
-  "title": "Estudiar --- Studying Is Being Eager",
+  "title": "Trabajar --- Work, and the Torture Device Behind It",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ad0b6143c0079d45",
+  "sourceHash": "fnv1a64:cab4a2846e7d5321",
   "lessons": [
     {
-      "id": "ES-C06-estudiar",
-      "sequence": 528,
-      "title": "estudiar — \"to study,\" and the eagerness inside it",
-      "headword": "estudiar",
-      "romanization": "estudiar",
-      "gloss": "to study (a third -ar verb — the pattern is automatic now)",
+      "id": "ES-C06-trabajar",
+      "sequence": 526,
+      "title": "trabajar — \"to work,\" and it once meant torture",
+      "headword": "trabajar",
+      "romanization": "trabajar",
+      "gloss": "to work (a second -ar verb — same pattern)",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9000de3101620c62",
+      "sourceHash": "fnv1a64:b230532fab4345ea",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Your third -ar verb. By now the pattern should feel automatic — that's exactly what we want. estudiar also hides a nicer feeling than the classroom suggests: at root it means eagerness."
+              "text": "A second -ar verb — snap it into the exact template you just learned. And trabajar has the darkest, best etymology in this chapter: it began as a word for torture, and it's the secret origin of English travel."
             }
           ]
         },
@@ -46,11 +46,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "st-no-e — Spanish props up st- with an e: es-tudiar (the same reflex behind estar, España, escuela). es-too-DYAR."
+              "text": "j-jota — the j is a raspy h-from-the-throat (the jota): trabajar = tra-ba-HAR."
             },
             {
               "kind": "speech",
-              "text": "diphthong-io — the -iar glides: es-too-DYAR."
+              "text": "r-tap, b-soft — tapped r, soft b."
             }
           ]
         },
@@ -61,38 +61,34 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "estudiar comes from Latin studēre, \"to be eager, to apply oneself zealously.\" A studium was zeal, enthusiasm, devotion — only later \"study.\" So to study is, at heart, to throw yourself eagerly at something."
+              "text": "trabajar comes from Vulgar Latin tripaliāre, \"to torture\" — from tripalium, a Roman instrument of torture made of three stakes (tri- \"three\" + pālus \"stake,\" the root of English pale and impale)."
             },
             {
               "kind": "speech",
-              "text": "That studēre is everywhere in English:"
+              "text": "The chain of meaning is grimly logical: torture becomes torment / suffering becomes hard toil becomes just work. And English took the very same word down a parallel road:"
             },
             {
               "kind": "speech",
-              "text": "student — literally \"one who is eager.\""
+              "text": "travail — painful, laborious effort (and the pains of childbirth)."
             },
             {
               "kind": "speech",
-              "text": "studio, studious, study — the place, the trait, the act."
+              "text": "travel — yes: journeying was once such an ordeal that \"travail\" (toil) became travel (to make a journey). Every time you travel, you're etymologically being tortured."
             },
             {
               "kind": "speech",
-              "text": "Italian studio and the musical studio keep the \"devoted practice\" sense."
-            },
-            {
-              "kind": "speech",
-              "text": "So Estudio español is \"I devote myself eagerly to Spanish\" — a nicer picture than mere schoolwork."
+              "text": "So even plain trabajo, “I work,” hides the old idea of toil as torment — a dark little joke inside an everyday verb."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: the template holds",
+          "title": "Grammar Lens: same -ar template",
           "segments": [
             {
               "kind": "speech",
-              "text": "Drop -ar, add the ending — for the third time:"
+              "text": "Drop -ar, add the ending — identical to hablar:"
             },
             {
               "kind": "table",
@@ -104,14 +100,14 @@
               "columns": 3,
               "rowCount": 3,
               "utterances": [
-                "person: I (ending carries the subject). form: estudio. meaning: I study.",
-                "person: tú. form: estudias. meaning: you study.",
-                "person: usted. form: estudia. meaning: you (formal) study."
+                "person: I (ending carries the subject). form: trabajo. meaning: I work.",
+                "person: tú. form: trabajas. meaning: you work.",
+                "person: usted. form: trabaja. meaning: you (formal) work."
               ]
             },
             {
               "kind": "speech",
-              "text": "Three verbs, one pattern: hablo, trabajo, estudio. The singular regular -ar present is now reusable rather than memorized verb by verb."
+              "text": "Notice you didn't learn a new ending — that's the point. One template, every regular -ar verb."
             }
           ]
         },
@@ -129,29 +125,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"estudiar\" — es-too-DYAR",
+              "instruction": "\"trabajar\" — tra-ba-HAR, raspy j",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"estudiar\" — *es-too-DYAR*]"
+              "source": "[YOU SAY: \"trabajar\" — *tra-ba-HAR*, raspy *j*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"estudio, estudias, estudia\" — the now-familiar endings",
+              "instruction": "\"trabajo, trabajas, trabaja\" — same endings as hablo/hablas/habla",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"estudio, estudias, estudia\" — the now-familiar endings]"
+              "source": "[YOU SAY: \"trabajo, trabajas, trabaja\" — same endings as *hablo/hablas/habla*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"estudiar\" then English \"student, studio\" — the studēre \"eagerness\"",
+              "instruction": "\"trabajar\" becomes travail becomes travel — torture became a journey",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"estudiar\" then English \"student, studio\" — the *studēre* \"eagerness\"]"
+              "source": "[YOU SAY: \"trabajar\" → travail → travel — torture became a journey]"
             }
           ]
         },
@@ -168,7 +164,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did studēre originally mean? (\"To be eager / apply oneself.\") Its English cousins? (Student, studio, studious.) Say \"I study\" — and notice it uses the same -o as hablo and trabajo. (Estudio.) Next: put a verb and a noun together into your first real sentence."
+              "text": "What did trabajar originally mean, and from what device? (\"To torture,\" from tripalium, a three-stake tool.) What two English words come from the same root? (Travail and travel.) How do you say \"I work\"? (Trabajo — same -o ending.) Next: estudiar, \"to study.\""
             }
           ]
         }
