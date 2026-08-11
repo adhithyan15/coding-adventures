@@ -172,7 +172,7 @@ sitting upside down on a correct letter.
 **All eleven starter Tamil letters — அ, ஆ, இ, க, ம, வ, ல, ற, ன, ண, and ந —,
 all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —, all
 thirteen Urdu starter entries — ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, ی, and ے —,
-and all fifteen Arabic starter letters — ا, ب, ت, ج, ح, خ, د, ر, س, ش, ص, ض, ع, ك, and ل —
+and all sixteen Arabic starter letters — ا, ب, ت, ج, ح, خ, د, ر, س, ش, ص, ض, ع, ك, ل, and ي —
 have authored pen paths today.**
 `DUCTUS` admits no letter without a citation
 for its stroke order, and hand-drawing a letter is forbidden
@@ -349,6 +349,12 @@ The same page's directly linked `lam.mov` verifies **ل** independently at
 without lifting. The two-frame filmstrip preserves that one-stroke order while
 keeping Arabic Lam's provenance distinct from the Persian and Urdu records for
 the same Unicode glyph.
+The page's directly linked `yaa.mov` verifies independent **ي** at
+00:33.2–00:35.0: descend and sweep left through the shallow bowl in one run,
+then place the lower-left dot and the lower-right dot in separate runs. The
+four-frame filmstrip preserves that three-stroke, two-lift order while keeping
+Arabic Yaa U+064A distinct from Urdu Ye U+06CC, whose independent body has no
+lower dots and its own source-backed provenance.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

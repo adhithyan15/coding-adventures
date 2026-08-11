@@ -39,6 +39,7 @@ const ARABIC_DAAD = DUCTUS[ductusKey("arabic", "ض")];
 const ARABIC_AYN = DUCTUS[ductusKey("arabic", "ع")];
 const ARABIC_KAF = DUCTUS[ductusKey("arabic", "ك")];
 const ARABIC_LAM = DUCTUS[ductusKey("arabic", "ل")];
+const ARABIC_YAA = DUCTUS[ductusKey("arabic", "ي")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
@@ -648,6 +649,30 @@ describe("handwriting ductus", () => {
     expect(bowl.at(-1)!.y).toBeGreaterThan(Math.min(...bowl.map((point) => point.y)));
   });
 
+  it("Arabic independent ي completes its bowl before the lower-left and lower-right dots", () => {
+    expect(ARABIC_YAA.script).toBe("arabic");
+    expect(penLifts(ARABIC_YAA)).toBe(2);
+    expect(ARABIC_YAA.strokes).toHaveLength(3);
+    expect(ARABIC_YAA.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 1]);
+    const descent = ARABIC_YAA.strokes[0].segments[0].path;
+    const bowl = ARABIC_YAA.strokes[0].segments[1].path;
+    expect(descent[0].y).toBeGreaterThan(descent.at(-1)!.y);
+    expect(descent.at(-1)).toEqual(bowl[0]);
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+    const bodyFloor = Math.min(
+      ...ARABIC_YAA.strokes[0].segments.flatMap((segment) =>
+        segment.path.map((point) => point.y),
+      ),
+    );
+    const leftDot = ARABIC_YAA.strokes[1].segments[0].path;
+    const rightDot = ARABIC_YAA.strokes[2].segments[0].path;
+    expect(Math.max(...leftDot.map((point) => point.y))).toBeLessThan(bodyFloor);
+    expect(Math.max(...rightDot.map((point) => point.y))).toBeLessThan(bodyFloor);
+    expect(Math.max(...leftDot.map((point) => point.x))).toBeLessThan(
+      Math.min(...rightDot.map((point) => point.x)),
+    );
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -1111,6 +1136,21 @@ describe("handwriting ductus", () => {
     expect(src.url).not.toBe(URDU_LAM.source.url);
     expect(ARABIC_LAM.glyph).toBe(DUCTUS["ل"].glyph);
     expect(ARABIC_LAM.glyph).toBe(URDU_LAM.glyph);
+  });
+
+  it("Arabic independent ي traces its bowl and left-then-right lower dots to the Oregon MOV", () => {
+    const src = ARABIC_YAA.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/alphabet-%d9%82-%d9%84-%d9%85/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet ي ك ل.*Yaa.*00:33.2–00:35.0.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /directly linked yaa.mov.*three pen-down runs.*upper right.*00:33.2.*descends.*sweeps left.*independent bowl.*without lifting.*00:34.4.*one lift.*lower-left dot.*00:34.5–00:34.7.*second lift.*lower-right dot.*00:34.8–00:35.0.*two-way connector.*contextual shapes.*three-stroke.*two-lift.*Noto Naskh.*U\+064A.*separate from Urdu ی.*U\+06CC.*no lower dots.*own source-backed order/i,
+    );
+    expect(src.url).not.toBe(URDU_YE.source.url);
+    expect(ARABIC_YAA.glyph).not.toBe(URDU_YE.glyph);
   });
 
   it("Urdu independent ج traces to Zer o Zabar's dot-first pointed-head animation", () => {

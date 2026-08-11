@@ -2,6 +2,16 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Arabic independent-yaa ductus (HL-C09AX)
+
+- Render **ي** in four evidence-aligned frames: descend into the independent
+  bowl, sweep left without lifting, then restart for the lower-left and
+  lower-right dots in that order.
+- Keep the directly linked MOV's three pen-down runs, two lifts, and
+  two-way-connector context explicit while fitting the vendored Noto Naskh outline.
+- Preserve Arabic Yaa U+064A independently of Urdu Ye U+06CC, whose isolated
+  body has no lower dots and retains separate provenance.
+
 ### Added — cited Arabic independent-lam ductus (HL-C09AW)
 
 - Render **ل** in two evidence-aligned frames: descend the tall upright, then

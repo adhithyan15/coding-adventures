@@ -1,0 +1,63 @@
+% ============================================================================
+% animal-adaptation — a named animal and the ONE survival adaptation it is
+% known for (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% Animals survive their environments through adaptations — traits or
+% behaviors that help them cope with conditions like cold, scarce winter
+% food, or long seasonal journeys. `animal_adaptation(animal, adaptation)`
+% names one specific animal and the ONE adaptation it is known for. Recall
+% is a binding query:
+%
+%     ? animal_adaptation(arctic_fox, $A)   % camouflage
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `animal_adaptation(animal, adaptation)`, so the lookup above is the
+% ordinary SLD binding query — the engine returns the adaptation WITH its
+% source, on the CPU, with zero model calls, and abstains on an animal not
+% one of the three the cited pages name. The query also runs BACKWARD —
+% bind an adaptation and recall the animal known for it:
+%
+%     ? animal_adaptation($X, hibernation)   % groundhog
+%
+% Each row's animal is a DIFFERENT species and each names a DIFFERENT kind
+% of adaptation (a physical trait, a seasonal behavior, and a travel
+% behavior), so the table's own citation is the PRIMARY/first-listed
+% source below (mirroring `ocean-observing-instruments.adj`'s established
+% multi-source discipline — an ADJ `table` carries only ONE table-level
+% `source`/`locator`/`trust` block), and each OTHER row's own distinct
+% citation is documented here in prose:
+%
+%     animal        adaptation    source page                                                  quote
+%     ------------  ------------  ------------------------------------------------------------  -------------------------------------------------------------------------------------------------
+%     arctic_fox    camouflage    nationalgeographic.com/animals/mammals/facts/arctic-fox        "Arctic foxes have beautiful white (sometimes blue-gray) coats that act as very effective winter camouflage."
+%     groundhog     hibernation   nationalgeographic.com/animals/mammals/facts/groundhog          "After roughly three months of hibernation, evidence suggests that male groundhogs wake up early to prepare for the mating season."
+%     canada_goose  migration     nationalgeographic.com/animals/birds/facts/canada-goose         "When the birds do migrate, they form impressive and aerodynamic 'V-formations.'"
+%
+% All three citations WebFetch-verified before writing, each with an
+% explicit keyword search confirming the adaptation term appears in a
+% clean quotable sentence on its own page. `trust consensus` for all
+% three — nationalgeographic.com's main animal-facts pages are a
+% reputable, widely-cited science publisher (not a primary .gov source),
+% the same tier this stdlib already reserves for other National Geographic
+% sources (`animal-habitat.adj`, `rainforest-layer.adj`). This is a
+% DIFFERENT source family from an earlier, unsuccessful attempt to cite
+% NPS teacher-lesson-plan pages for this same topic, which turned out to
+% be activity prompts rather than pages that state concrete animal-to-
+% adaptation facts. An animal not one of these three — a penguin, for
+% example, real and well-known for its own adaptations, but not one this
+% specific set of cited pages names here — has no row, so a recall on it
+% ABSTAINS rather than inventing an adaptation. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table animal_adaptation {
+    columns animal, adaptation
+
+    row (arctic_fox, camouflage)
+    row (groundhog, hibernation)
+    row (canada_goose, migration)
+
+    source "Arctic foxes have beautiful white (sometimes blue-gray) coats that act as very effective winter camouflage."
+    locator "https://www.nationalgeographic.com/animals/mammals/facts/arctic-fox"
+    trust consensus
+}

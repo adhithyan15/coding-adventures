@@ -205,12 +205,19 @@ Prioritized work items:
    existing ignored-token DOM behavior, matching WPT `template.dat`'s
    `<template><div><tr>` evidence. Valid template table sequences, nested
    templates, real tables, foreign content, ordinary outside-template content,
-   and synthetic template fragments remain on their existing paths. The next
-   template-state candidate is the adjacent non-whitespace-text boundary:
-   after `<template>x`, the current silent `tr` guard ignores a following row,
-   while the current Standard keeps the template insertion mode available for
-   the row transition. Re-audit that DOM boundary before moving to adoption
-   agency.
+   and synthetic template fragments remain on their existing paths. A `tr`
+   start after non-whitespace template text now follows the still-active
+   template insertion mode into the table-body row transition instead of being
+   silently discarded, preserving the authored text before the row. Whitespace,
+   nested templates, foreign content, synthetic template fragments, valid
+   direct rows, and the rejected in-body row path retain their expected
+   behavior. The next template-state candidate is the authored-template shell
+   start boundary: `<html>` and `<body>` starts switch the template insertion
+   mode to in-body, where the current Standard requires a parse error and token
+   ignore, while the parser's dedicated template guards return silently. Audit
+   the adjacent `frameset` start in the same shell family before selecting the
+   smallest coherent diagnostic slice, then move to adoption agency only after
+   the remaining template-state branches are exhausted.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases
