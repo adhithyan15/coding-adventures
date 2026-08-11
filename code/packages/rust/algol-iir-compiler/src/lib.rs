@@ -3803,7 +3803,14 @@ impl Compiler {
             .then(|| self.static_real_arithmetic_value(expr))
             .flatten()
             .filter(|value| value.is_finite())
-            .map(|value| value.to_string());
+            .map(|value| value.to_string())
+            .or_else(|| {
+                let source_name = expr_variable_name(expr)?;
+                let source = self.require_var(&source_name).ok()?;
+                (source.ty == ScalarType::Real && !source.is_global)
+                    .then(|| self.static_real_slots.get(&source.slot).cloned())
+                    .flatten()
+            });
 
         if let Some(literal) = expr_string_literal(expr) {
             let mut saw_string_target = false;
@@ -7209,6 +7216,20 @@ mod tests {
         )
         .expect_err("branch-selected scalar values still need runtime formatting");
         assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_straight_line_static_real_copy_is_a_snapshot() {
+        let module = compile_source(
+            "begin real x, y; x := 2.0 * 2.25; y := x; x := 9.0; print(y) end",
+            "test",
+        )
+        .expect("a copied static real keeps its assigned value");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "4.5")
+        }));
     }
 
     #[test]
