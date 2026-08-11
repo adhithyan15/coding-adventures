@@ -1,34 +1,76 @@
-Spanish, chapter 74: The Seasons.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 74: Head and Hand.
+2 lessons. All 2 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-la primavera, el verano, el otoño, el invierno — three plain, one surprising.
+Lesson 1 of 2.
+la cabeza — "the head".
 
 Warm-up.
 [pause 2 seconds]
-Three of Spanish's four seasons are exactly what you'd expect from Latin. The fourth hides a genuine surprise: its meaning itself drifted from one season to another.
+Spanish's word for "head" is the boring, expected one — and that's exactly what makes it interesting, once you see what French did instead.
 
-The words, taken apart: three straightforward seasons.
-la primavera ("spring") from Latin prīma vēra, literally "first spring" (vēr, "spring," + prīma, "first"). Italian still says the identical phrase, primavera, unchanged. (Old French once said primevère too, before switching to printemps.)
-el otoño ("autumn") from Latin autumnus — the same root behind French automne and English autumn itself.
-el invierno ("winter") from Latin hībernum (tempus), "the wintry [season]" — the same root as French hiver and English hibernate, "to spend the winter."
+You'll want to know: la cabeza.
+la cabeza — the head. Feminine, so la.
 
-Why it's said this way: verano.
-You might expect verano ("summer") to come from Latin aestas, "heat" — the way French été does. It doesn't. The standard account (per Spanish etymological dictionaries) traces verano to Latin vērānum (tempus), "of spring" — built on the very same vēr, "spring," behind primavera.
-So how did a word meaning "spring-ish" end up naming summer? The honest answer is a shift in meaning over time, not a sound change — though the exact story is murkier than a tidy one-line explanation. The traditional, simplified account says that as primavera ("first spring") rose to become the standard word for spring, verano's meaning drifted forward into the season right after, summer; the fuller picture likely also involves Vulgar Latin agricultural usage (a "vernal" grazing or working period that stretched from late spring into early summer), so the drift may not be purely a case of one word simply vacating a job for the other. Either way, two Spanish words both rooted in vēr, "spring," ended up naming two different seasons.
+The word, taken apart: caput.
+Latin's word for "head" was caput. Spanish's cabeza comes straight from it (by way of Vulgar Latin capitia), and caput shows up all over English too:
+[a table of 4 rows, read aloud]
+English: captain. literally: the "head" of a ship/unit.
+English: capital. literally: the "head" city, or "head" sum of money.
+English: decapitate. literally: to remove the head.
+English: capitulate. literally: to arrange under "headings" — hence, to yield.
+
+Why it's said this way: French made a different choice.
+French had the exact same Latin word available — and dropped it. French tête ("head") comes instead from testa, Latin for an earthenware pot: Roman soldiers joked about the skull the way English speakers say "noggin" (a small mug), and in Gaul that joke eventually replaced the real word entirely. Spanish never made that swap — cabeza is caput, plain and simple, still standing after two thousand years.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "primavera, verano, otoño, invierno" — the four seasons]
+[your turn — say: "la cabeza" — the head]
 [pause 8 seconds for the answer]
-[your turn — say: "primavera = prima vera, first spring"]
+[your turn — say: "me duele la cabeza" — "my head hurts"]
 [pause 8 seconds for the answer]
-[your turn — say: the surprise — "verano ALSO comes from vēr, 'spring' — but its meaning moved to summer"]
+[your turn — say: the English family — "captain, capital, decapitate"]
 [pause 8 seconds for the answer]
-[your turn — say: "invierno hibernate"]
+[your turn — say: the contrast — Spanish kept caput; French swapped it for a pot joke]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does primavera literally mean? ("First spring" — prīma vēra.) Does verano come from Latin aestas, like French été? (No — from vērānum, "of spring," the same vēr root as primavera; its meaning shifted toward summer over time — traditionally linked to primavera taking over the job of naming spring, though the fuller history is murkier than that alone.) What English word is invierno the cousin of? (Hibernate.)
+Say "the head." (La cabeza — feminine.) What Latin word is it from? (Caput.) Give an English word from the same root. (Captain, capital, decapitate...) What did French do instead? (Replaced caput with testa, "pot" — soldiers' slang for the skull that took over completely.)
+
+
+Lesson 2 of 2.
+la mano — "the hand".
+
+Warm-up.
+[pause 2 seconds]
+You've been trusting "-o words are masculine, -a words are feminine" since your first chapters. Here's the word that breaks it — and everyone learning Spanish has to memorize this one by name.
+
+Grammar Lens: la mano and its gender.
+la mano — the hand. Feminine, despite ending in -o.
+Almost every Spanish noun ending in -o is masculine (el libro, el gato...). Mano is the single most common exception, and it's actually doubly irregular. Latin manus ("hand") belonged to the 4th declension — a group of -us nouns that were mostly masculine (frūctus "fruit," exercitus "army," senātus "senate"). Manus was one of a small handful of exceptions that were feminine instead (alongside domus "house" and anus "old woman"). So mano broke the rule twice over: an exception within Latin's own mostly-masculine 4th declension, and then an exception again against Spanish's usual -o = masculine pattern.
+
+The word, taken apart: manus.
+Mano comes from Latin manus, "hand" — and that root is buried inside an enormous number of English words:
+[a table of 5 rows, read aloud]
+English: manual. literally: done by hand.
+English: manufacture. literally: made by hand (manus + facere, "to make").
+English: manuscript. literally: written by hand (manus + scrībere).
+English: maintain. literally: hold in the hand (manū tenēre).
+English: manage. literally: to handle.
+Manufacture is worth pausing on: it literally means "made by hand" — and today it names precisely the opposite.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "la mano" — feminine, despite the -o]
+[pause 8 seconds for the answer]
+[your turn — say: "me duele la mano" — "my hand hurts"]
+[pause 8 seconds for the answer]
+[your turn — say: the family — "manual, manufacture, maintain — all a hand"]
+[pause 8 seconds for the answer]
+[your turn — say: the irony — "manufacture = made by hand"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "the hand," and name its gender. (La mano — feminine, despite ending in -o.) Why is mano feminine when most -o words aren't? (It's doubly irregular — Latin's 4th declension, where manus belongs, was mostly masculine; manus was one of a few feminine exceptions there, and then an exception again against Spanish's usual -o=masculine rule.) Give an English word built on manus. (Manual, manufacture, manuscript, maintain, manage.)

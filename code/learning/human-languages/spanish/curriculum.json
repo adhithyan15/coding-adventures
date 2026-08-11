@@ -610,12 +610,16 @@
       "lessons": [
         "ES-C13-venir",
         "ES-C13-repaso-yo-go",
-        "ES-C13-sintesis-yo-go"
+        "ES-C13-sintesis-yo-go",
+        "ES-C13-plurales-cambio",
+        "ES-C13-plurales-yo-go",
+        "ES-C13-sintesis-derivar"
       ],
       "before": [],
       "inline": [
         "ES-EXT-030-VENIR-CH13",
-        "ES-EXT-030-CONSOLIDATION-YOGO"
+        "ES-EXT-030-CONSOLIDATION-YOGO",
+        "ES-EXT-030-DERIVE-PLURALS"
       ],
       "after": []
     },
@@ -2570,6 +2574,19 @@
       "lessons": [
         "ES-C10-vamos",
         "ES-C10-van"
+      ]
+    },
+    {
+      "id": "ES-EXT-030-DERIVE-PLURALS",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C13-plurales-cambio",
+        "ES-C13-plurales-yo-go",
+        "ES-C13-sintesis-derivar"
       ]
     }
   ]

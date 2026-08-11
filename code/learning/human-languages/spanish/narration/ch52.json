@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 52,
-  "title": "The Preterite --- Your First Past Tense",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:862ae1b7ce3e5bb7",
+  "title": "Deriving the Rest",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:eb183ecfd6523f6a",
   "lessons": [
     {
-      "id": "ES-C14-ser-ir-preterite",
-      "sequence": 1080,
-      "title": "fui — one past set shared by ser and ir",
-      "headword": "fui",
-      "romanization": "fui",
-      "gloss": "the shared singular preterite of ser and ir — fui, fuiste, fue",
+      "id": "ES-C13-plurales-cambio",
+      "sequence": 1076,
+      "title": "queremos, quieren — work them out first",
+      "headword": "queremos · quieren",
+      "romanization": "queremos · quieren",
+      "gloss": "the stem-changers in the plural — and you can work them out before you are told",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e96d83ab124a6a57",
+      "sourceHash": "fnv1a64:452b07652eaffa11",
       "notice": null,
       "blocks": [
         {
@@ -29,66 +29,45 @@
           "segments": [
             {
               "kind": "pause",
-              "seconds": 2,
+              "seconds": 3,
               "perItem": false,
-              "source": "[PAUSE 2s]"
+              "source": "[PAUSE 3s]"
             },
             {
               "kind": "speech",
-              "text": "You already use ser for identity and ir for going. Spanish now gives both verbs one completed-past set. This lesson keeps the same three singular persons you know: fui, fuiste, fue."
+              "text": "Before you read on: you have the singular of querer, and you have the stem-change rule. What is \"we want\"? Say your answer out loud, then continue."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: three singular forms, two verbs",
+          "title": "Grammar Lens: you were right",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "person",
-                "completed past of ser or ir"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. completed past of ser or ir: fui.",
-                "person: tú. completed past of ser or ir: fuiste.",
-                "person: él / ella / usted. completed past of ser or ir: fue."
-              ]
+              "kind": "speech",
+              "text": "queremos — we want., quieren — they want. podemos — we can., pueden — they can."
             },
             {
               "kind": "speech",
-              "text": "Say fui, fuiste, fue. Each form can belong to either verb. The surrounding words decide which meaning is possible:"
+              "text": "If you said queremos rather than quieremos, you did not remember it. You derived it, from a rule you were given one chapter ago: the stem breaks exactly where it is stressed, so nosotros never breaks."
             },
             {
               "kind": "speech",
-              "text": "Fui a Madrid. — “I went to Madrid.” The known a plus a destination points to ir."
+              "text": "And quieren breaks, because there the stress is back on the stem."
             },
             {
               "kind": "speech",
-              "text": "Fue Roberto. — “It was Roberto.” Identification points to ser."
+              "text": "That is the difference between a course that hands you tables and one that hands you rules. Four forms you had never seen, and none of them needed teaching."
             },
             {
               "kind": "speech",
-              "text": "Fui and fue are one-syllable words, so standard Spanish spelling gives them no written accent. Plural forms wait until a later lesson."
+              "text": "A test you can run yourself. You have puedo and puedes. Without being told, what are we can and they can?"
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The form, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The shared set continues the Latin perfect family of “be,” including Latin fuī, “I have been.” Sound change and analogy reshaped the inherited forms. Spanish ir then came to share this past family with ser: a case of suppletion, where one verb draws forms from more than one historical root. English go / went uses the same broad strategy, although not the same words."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -101,92 +80,80 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“fui, fuiste, fue”",
+              "instruction": "the yo, nosotros and ellos forms of querer — break, no break, break",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “fui, fuiste, fue”]"
+              "source": "[YOU SAY: the *yo*, *nosotros* and *ellos* forms of *querer* — break, no break, break]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Fui a Madrid.”",
+              "instruction": "the same three for poder",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Fui a Madrid.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Fue Roberto — identification, so ser.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Fue Roberto — identification, so ser.”]"
+              "source": "[YOU SAY: the same three for *poder*]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C14-ser-ir-preterite-singular-forms",
-              "prompt": "Give the shared singular preterite forms of ser and ir: yo, tú, then él/ella/usted.",
+              "id": "ES-C13-plurales-cambio-want",
+              "prompt": "We want.",
               "assesses": [
-                "ES-LEX-FUI-SER-IR",
-                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR"
+                "ES-GRAMMAR-QUERER-PRESENT-PLURAL"
               ],
-              "responseSeconds": 9,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "fui, fuiste, fue",
-                "fui fuiste fue",
-                "fui / fuiste / fue"
+                "queremos",
+                "nosotros queremos"
               ],
               "feedback": {
-                "correct": "Right: fui, fuiste, fue.",
-                "incorrect": "Retrieve only the three learned singular forms: fui, fuiste, fue."
+                "correct": "Yes — no break, because the stress moved.",
+                "incorrect": "queremos. The stem only breaks under stress."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C14-ser-ir-preterite-fui-madrid",
-              "prompt": "Say 'I went to Madrid' in Spanish.",
+              "id": "ES-C13-plurales-cambio-can",
+              "prompt": "They can.",
               "assesses": [
-                "ES-LEX-FUI-SER-IR",
-                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR",
-                "ES-LEX-A"
+                "ES-GRAMMAR-PODER-PRESENT-PLURAL"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "fui a madrid.",
-                "fui a madrid"
+                "pueden",
+                "ellos pueden",
+                "ustedes pueden"
               ],
               "feedback": {
-                "correct": "Right: Fui a Madrid.",
-                "incorrect": "Use the shared yo form fui, then known a plus Madrid."
+                "correct": "Yes — the break is back, because the stress is.",
+                "incorrect": "pueden."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C14-ser-ir-preterite-context",
-              "prompt": "In 'Fue Roberto', which verb does fue express?",
+              "id": "ES-C13-plurales-cambio-derive",
+              "prompt": "Poder changes o to ue. What is we can?",
               "assesses": [
-                "ES-LEX-FUI-SER-IR",
-                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR"
+                "ES-GRAMMAR-STEM-CHANGE-STRESS-RULE"
               ],
-              "responseSeconds": 6,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "ser"
+                "podemos",
+                "nosotros podemos"
               ],
               "feedback": {
-                "correct": "Right: identifying Roberto points to ser.",
-                "incorrect": "This sentence identifies who it was, so fue expresses ser."
+                "correct": "Right — and you derived it rather than recalled it.",
+                "incorrect": "podemos. Nosotros never breaks."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -198,27 +165,34 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three shared forms. (Fui, fuiste, fue.) Which two verbs share them? (Ser and ir.) What decides the meaning? (Context.) What older family supplied the forms? (The Latin perfect family of “be.”) Next, reuse the known verb hablar to build a regular singular past."
+              "text": "What is \"we want\"? (Queremos.) Why no break? (The stress is on the ending.) And could you have produced these without this lesson? (Yes — which is the point of it.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C14-hablar-preterite",
-      "sequence": 1090,
-      "title": "hablé — a regular singular past from a known verb",
-      "headword": "hablé",
-      "romanization": "hablé",
-      "gloss": "the regular singular -ar preterite — hablé, hablaste, habló",
+      "id": "ES-C13-plurales-yo-go",
+      "sequence": 1077,
+      "title": "hacemos, hacen — and the club has no plural at all",
+      "headword": "hacemos · hacen",
+      "romanization": "hacemos · hacen",
+      "gloss": "the -go verbs in the plural — where the oddity simply is not",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:8c038b13b082ef09",
-      "notice": null,
+      "sourceHash": "fnv1a64:a4b118e84dc82d1f",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -233,88 +207,58 @@
             },
             {
               "kind": "speech",
-              "text": "You know hablar and its present singular hablo, hablas, habla. To say that the speaking was completed, keep habl- and learn three new endings: hablé, hablaste, habló."
+              "text": "Name the six -go verbs. And say where in each one the -go appears."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: present beside completed past",
+          "title": "Grammar Lens: an oddity that was only ever in one slot",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "person",
-                "present",
-                "completed past"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. present: hablo. completed past: hablé.",
-                "person: tú. present: hablas. completed past: hablaste.",
-                "person: él / ella / usted. present: habla. completed past: habló."
-              ]
+              "kind": "speech",
+              "text": "You were told, when the club closed, that the -go lives in the yo form and nowhere else. Here is what that is worth:"
             },
             {
               "kind": "speech",
-              "text": "Say hablé, hablaste, habló. This is a complete singular pattern, not a preview of plural forms. Notice the exact changes:"
+              "text": "hacemos, hacéis, hacen — plain -er endings. ponemos, ponéis, ponen — plain -er endings. salimos, salís, salen — plain -ir endings."
             },
             {
               "kind": "speech",
-              "text": "hablo becomes hablé changes the final vowel and moves stress to the end."
+              "text": "Nothing to learn. The -go club has no plural forms of its own, because the thing that made it a club was never in the plural to begin with."
             },
             {
               "kind": "speech",
-              "text": "hablas becomes hablaste adds the past ending -aste."
+              "text": "Two of the six do something in the plural, and it is not the -go:"
             },
             {
               "kind": "speech",
-              "text": "habla becomes habló changes the final vowel and moves stress to the end."
+              "text": "decimos but dicen, venimos but vienen."
+            },
+            {
+              "kind": "speech",
+              "text": "Those are stem changes, and they follow the rule you already have — the stem breaks where it is stressed, and nosotros is never stressed on the stem. So even the exceptions are not exceptions."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: two accents, one natural stress pattern",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "The written accents in hablé and habló show final stress. Without those marks, words ending in a vowel normally stress the next-to-last syllable. Hablaste already follows that ordinary pattern — blas is next to last — so it needs no written accent. The mark records the stress; it is not the only change that makes a form past."
+              "text": "Two rules — the -go is yo-only, and stems break under stress — now generate the entire present tense of every irregular verb in this book, in every person."
             },
             {
               "kind": "speech",
-              "text": "Now reuse known words:"
-            },
-            {
-              "kind": "speech",
-              "text": "Hablé español. — “I spoke Spanish.”"
-            },
-            {
-              "kind": "speech",
-              "text": "¿Hablaste español? — “Did you speak Spanish?”"
-            },
-            {
-              "kind": "speech",
-              "text": "Habló español. — “He, she, or you-formal spoke Spanish.”"
+              "text": "That is what a rule buys that a table does not: the table stops at the forms printed on it."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The endings, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The regular -ar past continues material from the Latin first-conjugation perfect, visible in forms such as amāvī, amāvistī, amāvit. Centuries of sound change and analogy produced the Spanish family -é, -aste, -ó. The history explains a family resemblance; it is not one tidy letter-by-letter erosion for every modern ending."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -327,94 +271,81 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“hablé, hablaste, habló”",
+              "instruction": "all six -go verbs in the we form — and hear that none is odd",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “hablé, hablaste, habló”]"
+              "source": "[YOU SAY: all six *-go* verbs in the *we* form — and hear that none is odd]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Hablo español. Hablé español.”",
+              "instruction": "\"decimos, dicen\" and \"venimos, vienen\" — the two that break, and why",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Hablo español. Hablé español.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“hablé and habló carry written accents; hablaste does not”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “hablé and habló carry written accents; hablaste does not”]"
+              "source": "[YOU SAY: \"decimos, dicen\" and \"venimos, vienen\" — the two that break, and why]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C14-hablar-preterite-singular-forms",
-              "prompt": "Give the singular completed-past forms of hablar: yo, tú, then él/ella/usted.",
+              "id": "ES-C13-plurales-yo-go-we",
+              "prompt": "We do or make.",
               "assesses": [
-                "ES-LEX-HABLAR",
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
+                "ES-GRAMMAR-YO-GO-PLURAL-REGULAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "hacemos",
+                "nosotros hacemos"
+              ],
+              "feedback": {
+                "correct": "Yes — a plain -er ending.",
+                "incorrect": "hacemos."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-plurales-yo-go-out",
+              "prompt": "They leave.",
+              "assesses": [
+                "ES-GRAMMAR-SALIR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-YO-GO-PLURAL-REGULAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "salen",
+                "ellos salen",
+                "ustedes salen"
+              ],
+              "feedback": {
+                "correct": "Yes — no -go anywhere in the plural.",
+                "incorrect": "salen."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-plurales-yo-go-say",
+              "prompt": "Decir stem-changes. What are we say and they say?",
+              "assesses": [
+                "ES-GRAMMAR-STEM-CHANGE-STRESS-RULE"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "hablé, hablaste, habló",
-                "hablé hablaste habló",
-                "hablé / hablaste / habló"
+                "decimos and dicen",
+                "decimos, dicen"
               ],
               "feedback": {
-                "correct": "Right: hablé, hablaste, habló.",
-                "incorrect": "Keep habl- and retrieve -é, -aste, -ó."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-hablar-preterite-hable-espanol",
-              "prompt": "Say 'I spoke Spanish' in Spanish.",
-              "assesses": [
-                "ES-LEX-HABLAR",
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
-                "ES-LEX-ESPANOL",
-                "ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "hablé español.",
-                "hablé español"
-              ],
-              "feedback": {
-                "correct": "Right: Hablé español.",
-                "incorrect": "Use hablé with its final written accent, then known español."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-hablar-preterite-present-past",
-              "prompt": "Which form means 'I spoke' as a completed event: hablo or hablé?",
-              "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-SINGULAR",
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
-                "ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS"
-              ],
-              "responseSeconds": 6,
-              "acceptedResponses": [
-                "hablé"
-              ],
-              "feedback": {
-                "correct": "Right: hablé is the completed-past yo form.",
-                "incorrect": "Hablo is present; hablé is the completed-past form."
+                "correct": "Right — nosotros never breaks, they does.",
+                "incorrect": "decimos and dicen."
               }
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -426,26 +357,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three learned past forms. (Hablé, hablaste, habló.) Which two carry written accents, and why? (Hablé and habló; the marks show final stress.) What older family lies behind the endings? (The Latin first-conjugation perfect.) Next: choose between the two past patterns using only known words."
+              "text": "How many special plural forms does the -go club have? (None — the -go was only ever in yo.) Which two do something in the plural, and what? (Decir and venir — a stem change, following the stress.) How many rules now generate every irregular present in this book? (Two.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C14-practice",
-      "sequence": 1100,
-      "title": "Practice — two singular ways to talk about a completed past",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "a singular checkpoint for fui/fuiste/fue and hablé/hablaste/habló",
+      "id": "ES-C13-sintesis-derivar",
+      "sequence": 1078,
+      "title": "Synthesis — a verb you have never met",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — conjugate a verb this book has never shown you",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17e6ffca2b5e83c1",
+      "sourceHash": "fnv1a64:de4af460c80696e3",
       "notice": null,
       "blocks": [
         {
@@ -461,49 +392,77 @@
             },
             {
               "kind": "speech",
-              "text": "This checkpoint adds nothing. Retrieve the shared singular set and the regular hablar set, then use context and spelling to keep them apart."
+              "text": "Nothing new in this chapter, and nothing to memorise. Say the six endings of a regular -er verb."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the complete frame for this chapter",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "shared past of ser and ir: fui, fuiste, fue."
+              "text": "Everything you hold about the present tense now fits in three lines:"
             },
             {
               "kind": "speech",
-              "text": "regular past of hablar: hablé, hablaste, habló."
+              "text": "Three families, six endings each; -er and -ir differ only in nosotros and vosotros."
             },
             {
               "kind": "speech",
-              "text": "context: Fui a Madrid expresses ir; Fue Roberto expresses ser."
+              "text": "A stem breaks exactly where it is stressed — so nosotros and vosotros never break."
             },
             {
               "kind": "speech",
-              "text": "time contrast: Hablo español is present; Hablé español is completed past."
+              "text": "A -go sits in the yo form and nowhere else."
             },
             {
               "kind": "speech",
-              "text": "spelling: hablé and habló show final stress with a written accent; hablaste needs none."
+              "text": "That is the whole system. Not a summary of it — the system."
             },
             {
               "kind": "speech",
-              "text": "Plural persons, additional past-tense verb classes, new time words, and new place or person vocabulary wait for later lessons."
+              "text": "And a system, unlike a table, works on words it has never seen."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The two histories, taken apart",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "The fui family continues Latin perfect “be” material and became shared by ser and ir. The regular -ar endings continue Latin first-conjugation perfect material, reshaped by sound change and analogy."
+              "text": "Here is a verb this book has not taught you: beber, \"to drink\" — you have met the word, but never its full set."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not look anything up. It is a regular -er verb, so:"
+            },
+            {
+              "kind": "speech",
+              "text": "bebo, bebes, bebe, bebemos, bebéis, beben."
+            },
+            {
+              "kind": "speech",
+              "text": "Six forms, and the only thing you needed was rule 1."
+            },
+            {
+              "kind": "speech",
+              "text": "Now one that uses all three rules. Salir is an -ir verb, and it is in the -go club. Rules 1 and 3 give you every form, and you can produce them before reading on:"
+            },
+            {
+              "kind": "speech",
+              "text": "salgo, sales, sale, salimos, salís, salen."
+            },
+            {
+              "kind": "speech",
+              "text": "One odd form, in the one slot rule 3 names. The other five are plain -ir."
+            },
+            {
+              "kind": "speech",
+              "text": "Four broken, two whole, and the two whole ones are the two the stress leaves alone. Every time."
             }
           ]
         },
@@ -521,142 +480,84 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“fui, fuiste, fue”",
+              "instruction": "all six of beber, without looking",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “fui, fuiste, fue”]"
+              "source": "[YOU SAY: all six of *beber*, without looking]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“hablé, hablaste, habló”",
+              "instruction": "all six of salir, and name the only odd one",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “hablé, hablaste, habló”]"
+              "source": "[YOU SAY: all six of *salir*, and name the only odd one]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Fui a Madrid. Fue Roberto.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Fui a Madrid. Fue Roberto.”]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Hablo español. Hablé español.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Hablo español. Hablé español.”]"
+              "kind": "speech",
+              "text": "Until deriving is faster than remembering."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C14-practice-ser-ir-forms",
-              "prompt": "Give the three learned forms shared by ser and ir.",
+              "id": "ES-C13-sintesis-derivar-count",
+              "prompt": "Salir is a -go verb. What is we leave?",
               "assesses": [
-                "ES-LEX-FUI-SER-IR",
-                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "fui, fuiste, fue",
-                "fui fuiste fue",
-                "fui / fuiste / fue"
-              ],
-              "feedback": {
-                "correct": "Right: fui, fuiste, fue.",
-                "incorrect": "Retrieve the singular set: fui, fuiste, fue."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-practice-ar-forms",
-              "prompt": "Give the three learned completed-past forms of hablar.",
-              "assesses": [
-                "ES-LEX-HABLAR",
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "hablé, hablaste, habló",
-                "hablé hablaste habló",
-                "hablé / hablaste / habló"
-              ],
-              "feedback": {
-                "correct": "Right: hablé, hablaste, habló.",
-                "incorrect": "Retrieve the singular set: hablé, hablaste, habló."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-practice-context-ser-ir",
-              "prompt": "Which sentence uses the shared form as ir, 'to go': Fui a Madrid or Fue Roberto?",
-              "assesses": [
-                "ES-LEX-FUI-SER-IR",
-                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR",
-                "ES-LEX-A"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "fui a madrid.",
-                "fui a madrid"
-              ],
-              "feedback": {
-                "correct": "Right: a plus Madrid supplies a destination, so fui expresses ir.",
-                "incorrect": "The destination phrase a Madrid makes Fui a Madrid the ir sentence."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-practice-present-past",
-              "prompt": "Give 'I speak Spanish' and then 'I spoke Spanish.'",
-              "assesses": [
-                "ES-LEX-HABLAR",
-                "ES-GRAMMAR-AR-PRESENT-SINGULAR",
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
-                "ES-LEX-ESPANOL"
+                "ES-GRAMMAR-STEM-CHANGE-STRESS-RULE"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "hablo español. hablé español.",
-                "hablo español; hablé español",
-                "hablo español. hablé español",
-                "hablo español hablé español"
+                "salimos",
+                "nosotros salimos"
               ],
               "feedback": {
-                "correct": "Right: Hablo español; Hablé español.",
-                "incorrect": "Use present hablo first, then completed-past hablé."
+                "correct": "Right — the -go never leaves the yo slot.",
+                "incorrect": "salimos, perfectly plain."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C14-practice-written-accents",
-              "prompt": "Which two of hablé, hablaste, habló carry written accents?",
+              "id": "ES-C13-sintesis-derivar-they",
+              "prompt": "And they leave?",
               "assesses": [
-                "ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS",
-                "ES-SOUND-WRITTEN-ACCENT",
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
+                "ES-GRAMMAR-STEM-CHANGE-STRESS-RULE"
               ],
-              "responseSeconds": 7,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "hablé and habló",
-                "hablé habló",
-                "hablé y habló",
-                "hablé / habló"
+                "salen",
+                "ellos salen"
               ],
               "feedback": {
-                "correct": "Right: hablé and habló mark final stress.",
-                "incorrect": "The final-stressed forms are hablé and habló."
+                "correct": "Yes — nothing odd outside yo.",
+                "incorrect": "salen."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-sintesis-derivar-rules",
+              "prompt": "How many rules generate the whole present tense?",
+              "assesses": [
+                "ES-GRAMMAR-PRESENT-INDICATIVE-COMPLETE",
+                "ES-GRAMMAR-YO-GO-PLURAL-REGULAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "three",
+                "3",
+                "tres"
+              ],
+              "feedback": {
+                "correct": "Three — families, stress, and the yo-only -go.",
+                "incorrect": "Three."
               }
             }
           ]
@@ -674,7 +575,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give both singular sets. (Fui, fuiste, fue; hablé, hablaste, habló.) How does context separate ser from ir? (A destination points to going; identification points to being.) Which regular forms carry written accents? (Hablé and habló.) The next chapter can add another past family without borrowing plural forms or unseen vocabulary from this checkpoint."
+              "text": "State the three rules. (Three families, stems break under stress, the -go is yo-only.) Which two forms never break? (Nosotros, vosotros.) And what can you do now that a table could not give you? (Conjugate a verb nobody taught me.)"
             }
           ]
         }
