@@ -43,6 +43,7 @@ const HEBREW_AYIN = DUCTUS[ductusKey("hebrew", "ע")];
 const HEBREW_PE = DUCTUS[ductusKey("hebrew", "פ")];
 const HEBREW_TSADI = DUCTUS[ductusKey("hebrew", "צ")];
 const HEBREW_QOF = DUCTUS[ductusKey("hebrew", "ק")];
+const HEBREW_RESH = DUCTUS[ductusKey("hebrew", "ר")];
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
@@ -494,6 +495,18 @@ describe("handwriting ductus", () => {
     expect(body[0].y).toBeGreaterThan(body.at(-1)!.y);
     expect(stem[0].y).toBeGreaterThan(0);
     expect(stem.at(-1)!.y).toBeLessThan(0);
+  });
+
+  it("Hebrew ר rounds its top bar directly into the right downstroke", () => {
+    expect(HEBREW_RESH.script).toBe("hebrew");
+    expect(penLifts(HEBREW_RESH)).toBe(0);
+    expect(HEBREW_RESH.strokes).toHaveLength(1);
+    expect(HEBREW_RESH.strokes[0].segments).toHaveLength(2);
+    const top = HEBREW_RESH.strokes[0].segments[0].path;
+    const side = HEBREW_RESH.strokes[0].segments[1].path;
+    expect(top[0].x).toBeLessThan(top.at(-1)!.x);
+    expect(side[0]).toEqual(top.at(-1));
+    expect(side[0].y).toBeGreaterThan(side.at(-1)!.y);
   });
 
   it("அ lifts once before its separate right upright (two strokes)", () => {
@@ -1162,6 +1175,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ק", HEBREW_QOF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
+    expect(verifiedLetterFont("ר", HEBREW_RESH.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
     expect(verifiedLetterFont("ம", DUCTUS["ம"].source.url)).toBe(
       "_fonts/NotoSansTamil-Static.ttf",
     );
@@ -1403,6 +1419,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /printed Qof.*two runs.*03:18.3–03:20.0.*top bar.*left-to-right.*down-left.*right body.*without lifting.*one lift.*separate inner-left stem.*below the writing line.*cursive Qof.*purple.*one continuous hooked descent.*03:22.0–03:23.3.*without lifting.*Noto Sans Hebrew.*one-run cursive variation/i,
+    );
+  });
+
+  it("Hebrew ר traces its one-run printed form and records the rounder cursive hook", () => {
+    const src = HEBREW_RESH.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=8wi_uPY9uZA");
+    expect(src.citation).toMatch(
+      /How to write the Hebrew alphabet in print and cursive.*03:26.2–03:27.1.*Aural Writing.*8 June 2022/i,
+    );
+    expect(src.variation).toMatch(
+      /printed Resh.*one continuous run.*03:26.2–03:27.1.*top bar.*left-to-right.*rounds the top-right corner.*right side.*without lifting.*cursive Resh.*purple.*rounder hook.*03:29.3–03:30.0.*without lifting.*Noto Sans Hebrew.*one-run cursive variation/i,
     );
   });
 

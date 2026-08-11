@@ -1307,6 +1307,43 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: hebrewAlphabetSource("ק"),
   },
+  // Printed Resh carries its short top bar directly around the rounded corner
+  // and down the right side. The cursive form keeps the same zero-lift hook.
+  [ductusKey("hebrew", "ר")]: {
+    script: "hebrew",
+    glyph: "ר",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top bar from left to right",
+            path: [
+              { x: 55, y: 555 },
+              { x: 105, y: 555 },
+              { x: 155, y: 555 },
+              { x: 205, y: 555 },
+              { x: 250, y: 555 },
+            ],
+          },
+          {
+            label: "round the top-right corner and continue down without lifting",
+            path: [
+              { x: 250, y: 555 },
+              { x: 305, y: 550 },
+              { x: 350, y: 530 },
+              { x: 385, y: 495 },
+              { x: 400, y: 445 },
+              { x: 400, y: 350 },
+              { x: 400, y: 250 },
+              { x: 400, y: 140 },
+              { x: 400, y: 10 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ר"),
+  },
   "ا": {
     script: "perso-arabic",
     glyph: "ا",

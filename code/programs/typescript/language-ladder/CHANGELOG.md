@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Hebrew Resh ductus (HL-C09BW)
+
+- Render **ר** in two evidence-aligned frames: draw the top bar left-to-right,
+  round its outer corner, and descend the right side without lifting.
+- Preserve the adjacent purple cursive form's rounder one-run hook while keeping
+  the printed form's continuous motion explicit.
+- Queue the adjacent Shin demonstration as the next counted inventory entry.
+
 ### Added — cited Hebrew Qof ductus (HL-C09BV)
 
 - Render **ק** in three evidence-aligned frames: draw the top and slanted right
