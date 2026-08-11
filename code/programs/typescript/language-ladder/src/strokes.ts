@@ -578,6 +578,59 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: hebrewAlphabetSource("ד"),
   },
+  // The dedicated Hei lesson writes the printed body as a left-to-right top
+  // bar that turns down the right side, then lifts once for the detached left
+  // leg. This angular order follows Noto Sans Hebrew while the source note
+  // preserves the lesson's rounded handwritten alternative.
+  [ductusKey("hebrew", "ה")]: {
+    script: "hebrew",
+    glyph: "ה",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top bar from left to right",
+            path: [
+              { x: 70, y: 555 },
+              { x: 150, y: 555 },
+              { x: 240, y: 555 },
+              { x: 330, y: 555 },
+              { x: 410, y: 555 },
+              { x: 480, y: 555 },
+            ],
+          },
+          {
+            label: "continue down the right side without lifting",
+            path: [
+              { x: 480, y: 555 },
+              { x: 500, y: 530 },
+              { x: 510, y: 480 },
+              { x: 510, y: 380 },
+              { x: 510, y: 270 },
+              { x: 510, y: 160 },
+              { x: 510, y: 50 },
+              { x: 510, y: 20 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the detached left leg from top to bottom",
+            path: [
+              { x: 115, y: 320 },
+              { x: 115, y: 260 },
+              { x: 115, y: 180 },
+              { x: 115, y: 100 },
+              { x: 115, y: 20 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ה"),
+  },
   "ا": {
     script: "perso-arabic",
     glyph: "ا",

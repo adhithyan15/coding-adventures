@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Hebrew Hei ductus (HL-C09BH)
+
+- Render **ה** in three evidence-aligned frames: join the left-to-right top bar
+  to the right descent, then restart once for the detached left leg.
+- Keep the source's printed two-stroke, one-lift order explicit while recording
+  its curved handwritten alternative.
+- Queue the series' dedicated Vav/Hirik/Shuruk lesson next.
+
 ### Added — cited Hebrew Dalet ductus (HL-C09BG)
 
 - Render **ד** in two evidence-aligned frames: draw the top bar left-to-right,

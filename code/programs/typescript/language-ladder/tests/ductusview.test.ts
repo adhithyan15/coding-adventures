@@ -87,6 +87,8 @@ const HEBREW_GIMEL = ductusFor("ג", "hebrew")!;
 const hebrewGimelOutline = hebrewOutline("ג");
 const HEBREW_DALET = ductusFor("ד", "hebrew")!;
 const hebrewDaletOutline = hebrewOutline("ד");
+const HEBREW_HEI = ductusFor("ה", "hebrew")!;
+const hebrewHeiOutline = hebrewOutline("ה");
 const PERSIAN_ALEF = DUCTUS["ا"];
 const persianAlefOutline = naskhOutline("ا");
 const ARABIC_ALEF = ductusFor("ا", "arabic")!;
@@ -865,6 +867,37 @@ describe("Hebrew ד — one sourced curve fitted to the angular block outline", 
     expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(HEBREW_DALET.strokes[0], 2),
+    );
+  });
+});
+
+describe("Hebrew ה — joined top and right body plus a detached left leg", () => {
+  const steps = ductusSteps(HEBREW_HEI);
+  const strip = ductusFilmstrip(HEBREW_HEI, hebrewHeiOutline);
+
+  it("keeps the top and right side joined before restarting the left leg", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the top bar from left to right",
+      "continue down the right side without lifting",
+      "lift, then draw the detached left leg from top to bottom",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+  });
+
+  it("draws Noto Sans Hebrew and preserves the completed body behind the detached leg", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewHeiOutline.path,
+    );
+    const done = paths.filter((path) => path.attrs.class === "ductus__done");
+    expect(done).toHaveLength(1);
+    expect(done[0].attrs.d).toBe(penPathD(HEBREW_HEI.strokes[0], 2));
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_HEI.strokes[1], 1),
     );
   });
 });
