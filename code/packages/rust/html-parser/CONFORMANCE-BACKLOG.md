@@ -128,6 +128,10 @@ Prioritized work items:
    general in-table parse error and foster before the table, including the
    specialized center/font reconstruction path evidenced by WPT
    `tricky01.dat`, while leaving images outside tables and inside cells quiet.
+   Generic `div` and `span` end tags processed while table foster parenting is
+   active now report the general in-table parse error, matching WPT
+   `tests8.dat` evidence while leaving the same endings outside tables and
+   inside cells quiet.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases

@@ -6915,6 +6915,16 @@ impl HtmlParser {
                 format!("end tag `</{name}>` was seen with disallowed open elements"),
             ));
         }
+        if matches!(name, "div" | "span")
+            && self.has_open_table_context()
+            && (self.current_element_is_table_structure()
+                || self.current_parent_is_fostered_before_open_table())
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-end-tag-in-table",
+                format!("end tag `</{name}>` in a table context was processed with a parse error"),
+            ));
+        }
         match name {
             "head" if !self.has_open_element("head") && !self.has_open_element("body") => {
                 self.strip_next_leading_lf = false;
@@ -34345,6 +34355,47 @@ mod tests {
                 .parser_diagnostics
                 .iter()
                 .all(|diagnostic| diagnostic.code != "unexpected-img-start-tag-in-table"));
+        }
+    }
+
+    #[test]
+    fn reports_generic_end_tags_processed_in_table_foster_state() {
+        let output = parse_html_with_diagnostics(
+            "<!doctype html><table><div>x<div></div>x</span>x</table>",
+        )
+        .unwrap();
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-end-tag-in-table")
+                .count(),
+            2
+        );
+        assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic
+                == &ParserDiagnostic::new(
+                    "unexpected-end-tag-in-table",
+                    "end tag `</div>` in a table context was processed with a parse error",
+                )
+        }));
+        assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic
+                == &ParserDiagnostic::new(
+                    "unexpected-end-tag-in-table",
+                    "end tag `</span>` in a table context was processed with a parse error",
+                )
+        }));
+
+        for source in [
+            "<!doctype html><div></div></span>",
+            "<!doctype html><table><tr><td><div></div></span></td></tr></table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag-in-table"));
         }
     }
 

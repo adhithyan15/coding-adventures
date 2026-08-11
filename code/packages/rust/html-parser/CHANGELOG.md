@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Generic `div` and `span` end tags processed while table foster parenting is
+  active now report the required in-table parse error without changing DOM
+  recovery. The same end tags outside tables and inside cells remain quiet.
 - `img` start tags processed directly in table structure now report the
   required parse error and foster before the table, while preserving the
   existing center/font reconstruction behavior.
