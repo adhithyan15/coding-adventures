@@ -95,6 +95,7 @@ lowering is direct.
 | `NDArrays` (SIR22 base cut)     |                                          |
 | `MatrixOps` (SIR22 base cut)    |                                          |
 | `ArrayColumnMajor` (SIR22)      |                                          |
+| `ConsoleIO` (SIR28)             |                                          |
 
 `accepts_intrinsics()` is empty. The accept-set is deliberately matched
 to what `emit` handles, so a module using a deferred node is turned away
@@ -123,6 +124,16 @@ the O2 Ruby frontend's OOP builtins (`__new__`, `__super__`,
 `__def_method__`, `__def_class_method__`, `__self__`) lower to the inlined
 `__Sir` OOP runtime — instantiation, method dispatch, `super`, `self`, and
 `@ivar`/`@@cvar` access all execute end-to-end.
+
+**`ConsoleIO`** (SIR28): `__sys_write__("stdout"|"stderr",
+"none"|"per_value"|"once", unpackArrays, ...values)` → `__Sir.write(...)`
+— a plain pass-through (no compile-time literal extraction, unlike the
+C/Go/Rust backends): JS branches on the `stream`/`terminator` strings at
+runtime, exactly like `print`/`puts`. `write` generalizes the existing
+`print`/`puts` — still present, still used by bare `"print"`/`"puts"` —
+into one function, promoted to a top-level `__Sir` member the same way
+`print` is. Not yet emitted by any frontend — see
+[SIR28](../../../specs/SIR28-syscall-primitives.md).
 
 ### User-defined-class OOP (O3)
 
