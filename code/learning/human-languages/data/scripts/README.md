@@ -435,8 +435,11 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   follows the same box family with one added inside bar: descend
   the left side, lift for the joined top-and-right héngzhé, lift for the middle
   horizontal, then lift once more to close the bottom. Its five-frame Noto Sans
-  SC path makes the inside-before-close rule visible. The remaining **149**
-  prose part orders across six scripts (`arabic` 3, `chinese` 18,
+  SC path makes the inside-before-close rule visible. Chinese **讠** follows
+  with a down-right dot, then one lift before its horizontal, descending turn,
+  and rising finish stay joined in a single second stroke. Its four-frame Noto
+  Sans SC path keeps both source turns visible. The remaining **148** prose
+  part orders across six scripts (`arabic` 3, `chinese` 17,
   `cyrillic` 33, `devanagari` 28,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a

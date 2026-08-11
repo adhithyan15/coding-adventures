@@ -96,6 +96,8 @@ const CHINESE_CHILD = ductusFor("子", "chinese")!;
 const chineseChildOutline = chineseOutline("子");
 const CHINESE_SUN = ductusFor("日", "chinese")!;
 const chineseSunOutline = chineseOutline("日");
+const CHINESE_SPEECH_RADICAL = ductusFor("讠", "chinese")!;
+const chineseSpeechRadicalOutline = chineseOutline("讠");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -990,6 +992,38 @@ describe("Chinese 日 — a cited joined corner with an inside-before-close orde
     ]);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CHINESE_SUN.strokes[3], 1),
+    );
+  });
+});
+
+describe("Chinese 讠 — a cited dot followed by one double-turning stroke", () => {
+  const steps = ductusSteps(CHINESE_SPEECH_RADICAL);
+  const strip = ductusFilmstrip(CHINESE_SPEECH_RADICAL, chineseSpeechRadicalOutline);
+
+  it("keeps the horizontal, descent, and rising finish joined after the dot", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the top dot down and right",
+      "lift, then draw the short horizontal from left to right",
+      "turn without lifting and descend the vertical",
+      "turn without lifting and rise to the upper right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 1, 1]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
+  });
+
+  it("draws the exact Noto Sans SC radical with the completed dot behind the joined body", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      chineseSpeechRadicalOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(CHINESE_SPEECH_RADICAL.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_SPEECH_RADICAL.strokes[1], 1),
     );
   });
 });

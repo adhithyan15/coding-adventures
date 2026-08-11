@@ -812,6 +812,67 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: chineseCharacterSource("日"),
   },
+  // 讠 starts with a down-right dot. After one lift, the short horizontal,
+  // vertical descent, and rising finish stay joined inside one second stroke.
+  [ductusKey("chinese", "讠")]: {
+    script: "chinese",
+    glyph: "讠",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top dot down and right",
+            path: [
+              { x: 150, y: 780 },
+              { x: 180, y: 755 },
+              { x: 215, y: 720 },
+              { x: 250, y: 685 },
+              { x: 290, y: 645 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the short horizontal from left to right",
+            path: [
+              { x: 60, y: 492 },
+              { x: 110, y: 492 },
+              { x: 160, y: 492 },
+              { x: 210, y: 492 },
+              { x: 255, y: 492 },
+              { x: 293, y: 492 },
+            ],
+          },
+          {
+            label: "turn without lifting and descend the vertical",
+            path: [
+              { x: 293, y: 492 },
+              { x: 293, y: 410 },
+              { x: 293, y: 320 },
+              { x: 293, y: 230 },
+              { x: 293, y: 140 },
+              { x: 293, y: 60 },
+              { x: 293, y: 20 },
+            ],
+          },
+          {
+            label: "turn without lifting and rise to the upper right",
+            path: [
+              { x: 293, y: 20 },
+              { x: 330, y: 35 },
+              { x: 370, y: 60 },
+              { x: 410, y: 85 },
+              { x: 445, y: 110 },
+              { x: 475, y: 140 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("讠"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

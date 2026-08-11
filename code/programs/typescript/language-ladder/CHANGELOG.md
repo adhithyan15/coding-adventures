@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Chinese 讠 ductus (HL-C09CF)
+
+- Render **讠** in four source-aligned frames: draw the dot, then restart for a
+  horizontal that turns down and rises to the upper right without breaking.
+- Fit both source runs to Noto Sans SC while preserving both turns inside the
+  second stroke and one pen lift.
+- Reduce Chinese's remaining verified-ductus inventory to 17 entries.
+
 ### Added — cited Chinese 日 ductus (HL-C09CE)
 
 - Render **日** in five source-aligned frames: descend the left side, cross the
