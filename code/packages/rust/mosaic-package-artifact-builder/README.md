@@ -73,6 +73,9 @@ sequence, and JSON updates; applications no longer need to rebuild that FFI
 adapter. Permissive builds try the binding before the legacy optional host hook
 and retain sample props for previews. `native-complete` builds require the
 binding and runtime-provided props before mounting the component.
+Every exported Compose component is mirrored into the generated Gradle source
+set, so `gradle compileKotlin` type-checks the complete package even though the
+shell mounts the manifest's first export as its entry component.
 SwiftUI package shells likewise install Mosaic's standard Foundation host plus
 a tiny C dynamic-loader target. Set `MOSAIC_APP_LIBRARY` to the application
 `cdylib` path (or package it as `libmosaic_app.dylib`); the generated host owns

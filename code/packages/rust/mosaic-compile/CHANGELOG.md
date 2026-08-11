@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Fixed - Compose project shells compile complete packages
+
+Compose package projects now place every exported component in Gradle's Kotlin
+source set instead of only the first mounted export. CI compiles the complete
+23-component toolkit project, including Accordion's indexed body projection,
+so a type error in a sibling artifact cannot hide behind a successful entry
+component build.
+
 ### Changed - Compose emits native icons and progress
 
 The Compose backend now lowers dependency-free icon glyphs with native font
