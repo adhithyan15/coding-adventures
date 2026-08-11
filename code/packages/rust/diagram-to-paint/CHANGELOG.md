@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Resolve self-message source and destination tips independently for reverse/bidirectional arrowheads and central endpoint markers.
 - Paint sequence activation bars behind message paths so arrowheads remain visible at activation edges.
 - Validate message-bound sequence create/destroy events through Metal PNG rendering.
 - Render depth-offset nested sequence activation bars through backend-neutral rectangles.
