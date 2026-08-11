@@ -113,6 +113,8 @@ activation/deactivation, titles, and automatic numbering. It lowers through
 PaintInstructions and is exercised by a Mermaid-to-Metal-to-PNG fixture.
 Grammar-backed `actor` declarations retain their semantic kind through layout
 and lower to backend-neutral ellipse/path instructions for UML stick figures.
+Sequence layout mirrors participant and actor headers below the interaction,
+matching Mermaid's default lifeline presentation through the same Paint IR.
 
 Nested Mermaid 11.16.1 control blocks (`loop`, `opt`, `alt`/`else`, `par`/`and`,
 `par_over`, `critical`/`option`, `break`, and `rect`) lower into ordered semantic

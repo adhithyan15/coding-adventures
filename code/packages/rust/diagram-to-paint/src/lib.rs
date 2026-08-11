@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.24.0";
+pub const VERSION: &str = "0.25.0";
 
 use std::collections::HashMap;
 
@@ -1461,6 +1461,7 @@ where
                 id,
                 label,
                 label_height,
+                mirrored,
                 kind,
                 links,
                 properties,
@@ -1471,23 +1472,25 @@ where
                 height,
                 ..
             } => {
-                for link in links {
-                    scene_metadata.insert(
-                        format!("sequence.participant.{id}.link.{}", link.label),
-                        link.url.clone(),
-                    );
-                }
-                for property in properties {
-                    scene_metadata.insert(
-                        format!("sequence.participant.{id}.property.{}", property.name),
-                        property.value_json.clone(),
-                    );
-                }
-                if let Some(reference) = details_reference {
-                    scene_metadata.insert(
-                        format!("sequence.participant.{id}.details_reference"),
-                        reference.clone(),
-                    );
+                if !mirrored {
+                    for link in links {
+                        scene_metadata.insert(
+                            format!("sequence.participant.{id}.link.{}", link.label),
+                            link.url.clone(),
+                        );
+                    }
+                    for property in properties {
+                        scene_metadata.insert(
+                            format!("sequence.participant.{id}.property.{}", property.name),
+                            property.value_json.clone(),
+                        );
+                    }
+                    if let Some(reference) = details_reference {
+                        scene_metadata.insert(
+                            format!("sequence.participant.{id}.details_reference"),
+                            reference.clone(),
+                        );
+                    }
                 }
                 let specialized = !matches!(
                     kind,
@@ -2752,7 +2755,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.24.0");
+        assert_eq!(crate::VERSION, "0.25.0");
     }
 
     #[test]

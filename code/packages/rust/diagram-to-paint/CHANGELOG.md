@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Render mirrored sequence footer participants with backend-neutral instructions.
 - Validate sequence hash comments and adjacent entities through native Metal PNG rendering.
 - Render grammar-backed sequence `actor` declarations as backend-neutral UML stick figures.
 - Validate ordered sequence autonumber toggles and resets through PaintScene and Metal PNG.

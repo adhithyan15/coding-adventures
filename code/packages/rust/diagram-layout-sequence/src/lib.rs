@@ -7,7 +7,7 @@ use diagram_ir::{
     SequenceEvent, SequenceNotePlacement, SequenceParticipantKind, SequenceTextWrap,
 };
 
-pub const VERSION: &str = "0.19.0";
+pub const VERSION: &str = "0.20.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -128,6 +128,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 id: participant.id.clone(),
                 label: label.clone(),
                 label_height: line_count(label) as f64 * 16.0,
+                mirrored: false,
                 kind: participant.kind.clone(),
                 links: participant.links.clone(),
                 properties: participant.properties.clone(),
@@ -275,6 +276,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                         id: definition.id.clone(),
                         label: participant_labels[lane_index].clone(),
                         label_height: line_count(&participant_labels[lane_index]) as f64 * 16.0,
+                        mirrored: false,
                         kind: definition.kind.clone(),
                         links: definition.links.clone(),
                         properties: definition.properties.clone(),
@@ -408,7 +410,37 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
         }
     }
 
-    let height = (y + 36.0).max(180.0);
+    let footer_y = (y + 36.0).max(180.0);
+    let height = footer_y + header_height + 28.0;
+    for (((participant, lane_width), label), center) in diagram
+        .participants
+        .iter()
+        .zip(&lane_widths)
+        .zip(&participant_labels)
+        .zip(
+            diagram
+                .participants
+                .iter()
+                .map(|participant| centers[&participant.id]),
+        )
+    {
+        let box_width = (*lane_width - 24.0).max(100.0);
+        let footer_height = participant_header_height(&participant.kind, line_count(label));
+        items.push(LayoutedSequenceItem::ParticipantBox {
+            id: participant.id.clone(),
+            label: label.clone(),
+            label_height: line_count(label) as f64 * 16.0,
+            mirrored: true,
+            kind: participant.kind.clone(),
+            links: participant.links.clone(),
+            properties: participant.properties.clone(),
+            details_reference: participant.details_reference.clone(),
+            x: center - box_width / 2.0,
+            y: footer_y,
+            width: box_width,
+            height: footer_height,
+        });
+    }
     for group in &diagram.participant_groups {
         let indexes: Vec<usize> = diagram
             .participants
@@ -446,7 +478,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 y2: lifeline_ends
                     .get(&participant.id)
                     .copied()
-                    .unwrap_or(height - 20.0),
+                    .unwrap_or(footer_y),
             });
             if let Some(starts) = activation_starts.remove(&participant.id) {
                 for start in starts {
@@ -454,7 +486,7 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                         participant: participant.id.clone(),
                         x: center - ACTIVATION_W / 2.0,
                         y1: start,
-                        y2: height - 20.0,
+                        y2: footer_y,
                     });
                 }
             }
@@ -586,6 +618,17 @@ mod tests {
                 .items
                 .iter()
                 .filter(|item| matches!(item, LayoutedSequenceItem::ParticipantBox { .. }))
+                .count(),
+            4
+        );
+        assert_eq!(
+            layout
+                .items
+                .iter()
+                .filter(|item| matches!(
+                    item,
+                    LayoutedSequenceItem::ParticipantBox { mirrored: true, .. }
+                ))
                 .count(),
             2
         );
@@ -734,7 +777,7 @@ mod tests {
                 _ => None,
             })
             .collect();
-        assert_eq!(heights, vec![64.0, 64.0]);
+        assert_eq!(heights, vec![64.0, 64.0, 64.0, HEADER_H]);
     }
 
     #[test]
