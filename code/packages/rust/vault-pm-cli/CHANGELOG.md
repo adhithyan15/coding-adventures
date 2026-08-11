@@ -13,6 +13,8 @@
 - Added controlling-terminal item input, fresh mutation identities, durable
   application publication, escaped redacted rendering, and restart coverage.
 - Added one-shot authenticated `audit verify` with aggregate-only output.
+- Extended that output with a secret-free count of fully authenticated
+  encrypted operation-audit events; pre-audit vaults report zero.
 - Added opt-in full repository health verification through `doctor --unlock`.
 - Added strict parser, wrong-passphrase, synchronous re-lock, and real-process
   controlling-terminal coverage for authenticated verification.

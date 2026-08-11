@@ -21,6 +21,8 @@ const ITEM_ID_BYTES: usize = 16;
 const TRACE_ID_BYTES: usize = 32;
 const OBJECT_RANDOM_BYTES: usize = 32 + 24 + 24;
 const AUDIT_RANDOM_BYTES: usize = TRACE_ID_BYTES + OBJECT_RANDOM_BYTES;
+#[cfg(test)]
+pub(crate) const AUDIT_EPOCH_TEST_RANDOM_BYTES: usize = TRACE_ID_BYTES + 3 * OBJECT_RANDOM_BYTES;
 
 /// Exact caller-filled CSPRNG bytes consumed by one add-item mutation.
 pub const ADD_ITEM_RANDOM_BYTES: usize =
@@ -897,6 +899,149 @@ fn publish_mutation(
         }
         Err(error) => Err(map_local_state_store(error)),
     }
+}
+
+#[cfg(test)]
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn activate_audit_epoch_for_test(
+    active: &ActiveStateV1,
+    keys: &V1Keys,
+    local_secret: &LocalSecretV1,
+    repository: &dyn ApplicationRepository,
+    wall_time_ms: u64,
+    event_basis_override: Option<Vec<ObjectId>>,
+    event_signing_seed_override: Option<[u8; 32]>,
+    randomness: [u8; AUDIT_EPOCH_TEST_RANDOM_BYTES],
+    local_state_store: &dyn LocalStateStore,
+) -> Result<ActiveStateV1, ApplicationError> {
+    if active.audit_event_head().is_some() {
+        return Err(ApplicationError::InvalidInput);
+    }
+    let device_counter = active
+        .last_device_counter()
+        .checked_add(1)
+        .ok_or(ApplicationError::BoundExceeded)?;
+    let mut offset = 0;
+    let trace_id = OperationId::new(take_slice(&randomness, &mut offset));
+    let catalog_randomness = take_object_randomness_slice(&randomness, &mut offset);
+    let audit_randomness = take_object_randomness_slice(&randomness, &mut offset);
+    let commit_randomness = take_object_randomness_slice(&randomness, &mut offset);
+    debug_assert_eq!(offset, AUDIT_EPOCH_TEST_RANDOM_BYTES);
+
+    let current_catalog = repository
+        .read_object(active.catalog_root())
+        .map_err(map_repository)?;
+    let catalog_plaintext = crate::open_object(keys, ObjectKind::Catalog, current_catalog.frame())?;
+    let catalog_plaintext = Zeroizing::new(CatalogV1::decode(&catalog_plaintext)?.encode()?);
+    let catalog_frame = seal_object(
+        keys,
+        ObjectKind::Catalog,
+        &catalog_plaintext,
+        &catalog_randomness,
+    )?;
+    let catalog_id = catalog_frame
+        .id()
+        .map_err(|_| ApplicationError::InternalInvariant)?;
+
+    let mut parents = active.pinned_heads().iter().copied().collect::<Vec<_>>();
+    parents.sort_unstable();
+    let event_basis = event_basis_override.unwrap_or_else(|| parents.clone());
+    let event = AuditEventV1::new(
+        active.vault_id(),
+        active.device_id(),
+        device_counter,
+        trace_id,
+        AuditActionV1::AuditEpochStart,
+        AuditOutcomeV1::Succeeded,
+        None,
+        None,
+        None,
+        None,
+        event_basis,
+        wall_time_ms,
+    )
+    .map_err(|_| ApplicationError::InternalInvariant)?
+    .sign(
+        event_signing_seed_override
+            .as_ref()
+            .unwrap_or(local_secret.device_signing_seed()),
+    )
+    .map_err(|_| ApplicationError::InternalInvariant)?;
+    let event_plaintext = Zeroizing::new(encode_signed_audit_event(&event)?);
+    let event_frame = seal_object(
+        keys,
+        ObjectKind::AuditEvent,
+        &event_plaintext,
+        &audit_randomness,
+    )?;
+    let event_id = event_frame
+        .id()
+        .map_err(|_| ApplicationError::InternalInvariant)?;
+
+    let mut added_objects = vec![catalog_id, event_id];
+    added_objects.sort_unstable();
+    let (_, device_signing_secret) = generate_keypair(local_secret.device_signing_seed());
+    let device_signing_secret = Zeroizing::new(device_signing_secret);
+    let unsigned_commit = CommitV1 {
+        vault_id: active.vault_id(),
+        device_id: active.device_id(),
+        device_counter,
+        parents,
+        catalog_root: catalog_id,
+        added_objects,
+        tombstone_root: None,
+        wall_time_ms,
+        device_certificate: active.device_certificate_id(),
+        signature: Signature::new([0; 64]),
+    };
+    let commit_preimage = unsigned_commit
+        .signing_preimage()
+        .map_err(|_| ApplicationError::InternalInvariant)?;
+    let commit = unsigned_commit.with_signature(Signature::new(sign(
+        &commit_preimage,
+        &device_signing_secret,
+    )));
+    let commit_plaintext = Zeroizing::new(encode_signed_commit(&commit)?);
+    let commit_frame = seal_object(
+        keys,
+        ObjectKind::Commit,
+        &commit_plaintext,
+        &commit_randomness,
+    )?;
+    let commit_id = commit_frame
+        .id()
+        .map_err(|_| ApplicationError::InternalInvariant)?;
+    let unsigned_announcement = AnnouncementV1 {
+        vault_id: active.vault_id(),
+        device_id: active.device_id(),
+        device_counter,
+        commit_id,
+        device_certificate: active.device_certificate_id(),
+        signature: Signature::new([0; 64]),
+    };
+    let announcement_preimage = unsigned_announcement
+        .signing_preimage()
+        .map_err(|_| ApplicationError::InternalInvariant)?;
+    let announcement = unsigned_announcement
+        .with_signature(Signature::new(sign(
+            &announcement_preimage,
+            &device_signing_secret,
+        )))
+        .encode()
+        .map_err(|_| ApplicationError::InternalInvariant)?;
+    let expected_heads =
+        PinnedHeads::new([commit_id]).map_err(|_| ApplicationError::InternalInvariant)?;
+    let publication = PublicationJournalV1::new(
+        vec![catalog_frame, event_frame],
+        commit_frame,
+        announcement,
+        active.pinned_heads().clone(),
+        expected_heads,
+        device_counter,
+        catalog_id,
+    )?
+    .with_audit_event_head(event_id)?;
+    publish_mutation(active, repository, publication, local_state_store)
 }
 
 #[allow(clippy::too_many_arguments)]

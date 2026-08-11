@@ -10,8 +10,10 @@ owner state can now journal a redacted per-device event head and refuses to
 activate a later publication that omits or reuses that head. Once such a head
 exists, every item mutation and portable import constructs an encrypted signed
 event and advances it atomically with the repository commit. Legacy local state
-decodes with auditing disabled. Audit activation, complete chain verification,
-access enforcement, and CLI audit rendering remain later slices. It also defines the
+decodes with auditing disabled. Complete audit verification now follows any
+durable event head back to its explicit genesis and authenticates every event
+against its signed repository commit. Audit activation, access enforcement,
+and redacted audit history rendering remain later slices. It also defines the
 exact canonical
 `PreparedInit -> Active -> PendingPublication -> Active` owner-state machine,
 retry-stable publication journals, encrypted local-secret custody, and
@@ -214,8 +216,14 @@ workflow repeats verified repository discovery relative to durable local pins,
 requires one exact pinned commit matching the local device counter, catalog,
 and certificate, walks complete bounded ancestry from every current head, and
 authenticates and decrypts every distinct reachable catalog and catalog-named
-item revision. Success returns only aggregate announcement, commit, catalog,
-revision, and item counts plus `integrity_verified = true`; any provider,
+item revision. If an audit epoch exists, it also decrypts the complete bounded
+per-device event chain, verifies every event with the authority-certified
+device key, and cross-checks its counter, basis heads, timestamp, event-object
+membership, selected revision, and mutation result against the corresponding
+signed commit. It rejects chain cycles, counter gaps, skipped durable heads,
+wrong roots, signers, or commit bindings. Success returns only aggregate
+announcement, commit, catalog, revision, item, and audit-event counts plus
+`integrity_verified = true`; pre-audit vaults report zero events. Any provider,
 format, graph, anchor, cryptographic, or domain failure returns the closed
 application error taxonomy without a partial report.
 

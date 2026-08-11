@@ -1454,8 +1454,10 @@ changelog, focused build, and downstream validation.
           update, delete, restore, conflict choice/merge, and portable import
           after activation, including exact trace, basis-head, prior-event,
           selected/result revision, counter, and write-ahead journal binding.
-9b-2c-4b. complete repository verification of audit signatures, basis heads,
-          per-device links, mutation action/resource shape, and edit results.
+9b-2c-4b. completed repository verification of audit signatures, basis heads,
+          per-device links/counters, genesis roots, mutation resource shape,
+          selected revisions, and edit results, with aggregate-only reporting
+          and backward-compatible zero-event verification for pre-audit vaults.
 9b-2c-4c. explicit pre-audit-vault migration epoch, exposed only once every
           edit and access path can advance the chain or fail closed.
 9b-2c-5. fail-closed access-event publication plus redacted audit list/show.

@@ -1009,6 +1009,7 @@ fn map_repository(error: ApplicationRepositoryError) -> ApplicationError {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::mutation::{activate_audit_epoch_for_test, AUDIT_EPOCH_TEST_RANDOM_BYTES};
     use crate::{
         complete_generation_zero, decode_signed_audit_event, encode_item_revision,
         encode_signed_commit, prepare_generation_zero, seal_object, CatalogV1,
@@ -1759,6 +1760,32 @@ mod tests {
         assert_eq!(initial.catalog_count(), 1);
         assert_eq!(initial.revision_count(), 0);
         assert_eq!(initial.item_count(), 0);
+        assert_eq!(initial.audit_event_count(), 0);
+
+        activate_audit_epoch_for_test(
+            &session.active,
+            &session._keys,
+            &session._local_secret,
+            session._repository.as_ref(),
+            699,
+            None,
+            None,
+            [0xa7; AUDIT_EPOCH_TEST_RANDOM_BYTES],
+            &local,
+        )
+        .unwrap();
+        drop(session);
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let epoch = session.audit_verify().unwrap();
+        assert_eq!(epoch.commit_count(), 2);
+        assert_eq!(epoch.audit_event_count(), 1);
 
         let randomness = add_item_randomness(0xa8);
         let item_id = randomness.item_id();
@@ -1779,14 +1806,15 @@ mod tests {
         )
         .unwrap();
         let report = reopened.audit_verify().unwrap();
-        assert_eq!(report.announcement_count(), 2);
-        assert_eq!(report.commit_count(), 2);
-        assert_eq!(report.catalog_count(), 2);
+        assert_eq!(report.announcement_count(), 3);
+        assert_eq!(report.commit_count(), 3);
+        assert_eq!(report.catalog_count(), 3);
         assert_eq!(report.revision_count(), 1);
         assert_eq!(report.item_count(), 1);
+        assert_eq!(report.audit_event_count(), 2);
         assert_eq!(
             format!("{report:?}"),
-            "AuditVerificationV1 { integrity_verified: true, announcement_count: 2, commit_count: 2, catalog_count: 2, revision_count: 1, item_count: 1 }"
+            "AuditVerificationV1 { integrity_verified: true, announcement_count: 3, commit_count: 3, catalog_count: 3, revision_count: 1, item_count: 1, audit_event_count: 2 }"
         );
         assert!(!format!("{report:?}").contains("Audited login"));
         assert!(!format!("{report:?}").contains("audit-secret"));
@@ -1816,11 +1844,126 @@ mod tests {
         )
         .unwrap();
         let report = reopened.audit_verify().unwrap();
-        assert_eq!(report.announcement_count(), 3);
-        assert_eq!(report.commit_count(), 3);
-        assert_eq!(report.catalog_count(), 3);
+        assert_eq!(report.announcement_count(), 4);
+        assert_eq!(report.commit_count(), 4);
+        assert_eq!(report.catalog_count(), 4);
         assert_eq!(report.revision_count(), 2);
         assert_eq!(report.item_count(), 1);
+        assert_eq!(report.audit_event_count(), 3);
+    }
+
+    #[test]
+    fn audit_verify_rejects_wrong_event_basis_and_signer() {
+        for (basis_override, signing_seed_override, randomness) in [
+            (
+                Some(vec![ObjectId::new([0xfe; 32])]),
+                None,
+                [0xb1; AUDIT_EPOCH_TEST_RANDOM_BYTES],
+            ),
+            (
+                None,
+                Some([0xfd; 32]),
+                [0xb2; AUDIT_EPOCH_TEST_RANDOM_BYTES],
+            ),
+        ] {
+            let (locator, local, bootstrap, factory) = initialized();
+            let session = open_active_vault(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap();
+            activate_audit_epoch_for_test(
+                &session.active,
+                &session._keys,
+                &session._local_secret,
+                session._repository.as_ref(),
+                800,
+                basis_override,
+                signing_seed_override,
+                randomness,
+                &local,
+            )
+            .unwrap();
+            drop(session);
+            let reopened = open_active_vault(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap();
+            assert_eq!(
+                reopened.audit_verify(),
+                Err(ApplicationError::IntegrityFailure)
+            );
+        }
+    }
+
+    #[test]
+    fn audit_verify_rejects_a_skipped_durable_event_head() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let epoch = activate_audit_epoch_for_test(
+            &session.active,
+            &session._keys,
+            &session._local_secret,
+            session._repository.as_ref(),
+            810,
+            None,
+            None,
+            [0xb3; AUDIT_EPOCH_TEST_RANDOM_BYTES],
+            &local,
+        )
+        .unwrap();
+        let epoch_head = epoch.audit_event_head().unwrap();
+        drop(session);
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let randomness = add_item_randomness(0xb4);
+        let item_id = randomness.item_id();
+        let latest = session
+            .add_item(
+                new_login_document(item_id, "Linked audit", "linked-secret"),
+                811,
+                randomness,
+                &local,
+            )
+            .unwrap();
+        let exact_latest = LocalVaultStateV1::Active(latest.clone()).encode().unwrap();
+        let skipped = latest.with_audit_event_head(epoch_head).unwrap();
+        let exact_skipped = LocalVaultStateV1::Active(skipped).encode().unwrap();
+        local
+            .compare_exchange(locator, Some(&exact_latest), &exact_skipped)
+            .unwrap();
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            reopened.audit_verify(),
+            Err(ApplicationError::IntegrityFailure)
+        );
     }
 
     #[test]
