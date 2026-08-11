@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate message-bound sequence create/destroy events through Metal PNG rendering.
 - Render depth-offset nested sequence activation bars through backend-neutral rectangles.
 - Validate resumed, two-decimal sequence autonumber counters through Metal PNG rendering.
 - Validate mixed-case sequence syntax through Metal PNG rendering.

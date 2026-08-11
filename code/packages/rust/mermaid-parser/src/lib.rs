@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.34.0";
+pub const VERSION: &str = "0.35.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1046,8 +1046,68 @@ pub fn parse_sequence_diagram(source: &str) -> Result<SequenceDiagram, ParseErro
     let mut participant_indices: HashMap<String, usize> = HashMap::new();
 
     parse_sequence_body(&mut cursor, &mut diagram, &mut participant_indices, &[])?;
+    bind_sequence_lifecycle_events(&mut diagram, cursor.current())?;
 
     Ok(diagram)
+}
+
+fn bind_sequence_lifecycle_events(
+    diagram: &mut SequenceDiagram,
+    eof: &Token,
+) -> Result<(), ParseError> {
+    let mut bound = Vec::with_capacity(diagram.events.len());
+    let mut pending: Option<SequenceEvent> = None;
+    for event in diagram.events.drain(..) {
+        match &event {
+            SequenceEvent::ParticipantCreated { .. }
+            | SequenceEvent::ParticipantDestroyed { .. } => {
+                if pending.is_some() {
+                    return Err(token_error(
+                        eof,
+                        "sequence lifecycle declaration requires an associated message",
+                    ));
+                }
+                pending = Some(event);
+            }
+            SequenceEvent::Message { from, to, .. } => match pending.take() {
+                Some(SequenceEvent::ParticipantCreated { participant }) => {
+                    if to != &participant {
+                        return Err(token_error(
+                            eof,
+                            format!(
+                                "created participant {participant:?} must receive the next message"
+                            ),
+                        ));
+                    }
+                    bound.push(SequenceEvent::ParticipantCreated { participant });
+                    bound.push(event);
+                }
+                Some(SequenceEvent::ParticipantDestroyed { participant }) => {
+                    if from != &participant && to != &participant {
+                        return Err(token_error(
+                            eof,
+                            format!(
+                                "destroyed participant {participant:?} must be part of the next message"
+                            ),
+                        ));
+                    }
+                    bound.push(event);
+                    bound.push(SequenceEvent::ParticipantDestroyed { participant });
+                }
+                None => bound.push(event),
+                Some(_) => unreachable!("pending lifecycle event has a constrained variant"),
+            },
+            _ => bound.push(event),
+        }
+    }
+    if pending.is_some() {
+        return Err(token_error(
+            eof,
+            "sequence lifecycle declaration requires an associated message",
+        ));
+    }
+    diagram.events = bound;
+    Ok(())
 }
 
 fn parse_sequence_body(
@@ -3344,7 +3404,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     #[test]
     fn sequence_parses_participant_lifecycle_events() {
         let diagram = parse_sequence_diagram(
-            "sequenceDiagram\nparticipant A as Alice\nA->>B: Start\ncreate actor Worker as Background Worker\nB->>Worker: Run\ndestroy Worker\n",
+            "sequenceDiagram\nparticipant A as Alice\nA->>B: Start\ncreate actor Worker as Background Worker\nB->>Worker: Run\ndestroy Worker\nWorker-->>B: Stop\n",
         )
         .unwrap();
         let worker = diagram
@@ -3362,6 +3422,29 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
             event,
             SequenceEvent::ParticipantDestroyed { participant } if participant == "Worker"
         )));
+        let destroy_index = diagram
+            .events
+            .iter()
+            .position(|event| matches!(event, SequenceEvent::ParticipantDestroyed { .. }))
+            .unwrap();
+        assert!(matches!(
+            diagram.events[destroy_index - 1],
+            SequenceEvent::Message { ref from, .. } if from == "Worker"
+        ));
+    }
+
+    #[test]
+    fn sequence_rejects_unassociated_lifecycle_declarations() {
+        let create_error = parse_sequence_diagram(
+            "sequenceDiagram\ncreate participant Worker\nA->>B: Wrong target\n",
+        )
+        .expect_err("created participant must receive the associated message");
+        assert!(create_error.message.contains("must receive"));
+
+        let destroy_error =
+            parse_sequence_diagram("sequenceDiagram\ndestroy Worker\nA->>B: Wrong participants\n")
+                .expect_err("destroyed participant must join the associated message");
+        assert!(destroy_error.message.contains("must be part"));
     }
 
     #[test]
@@ -3852,7 +3935,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.34.0");
+        assert_eq!(crate::VERSION, "0.35.0");
     }
 
     #[test]
