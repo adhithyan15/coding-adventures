@@ -4,6 +4,16 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - source-verified Arabic independent alif (HL-C09AH)
+
+- Verify independent **ا** from the University of Oregon's *Introduction to
+  Arabic* video as one continuous top-to-bottom stroke with zero lifts.
+- Preserve the lesson's one-way-connector context while attaching the exact
+  citation and lift count to the canonical Arabic row, independently of the
+  Persian and Urdu records for the same Unicode glyph.
+- Reduce the measured HL-C09 debt to 194 entries across seven scripts; Arabic
+  remains the smallest inventory with 20 entries outstanding.
+
 ### Added - the irregular and stem-changing overlays (HL-C91)
 
 HL10 section 5.1 sized the Spanish verb system at roughly 630 cells. HL-C82
@@ -38,7 +48,6 @@ asserted -- so every HL-C82 pin still measures what it measured.
 `BUILD` already gates generator drift with `--check`; the generator now also
 refuses any overlay whose `deviatesFrom` is not a real regular cell, and any
 duplicate overlay id.
-
 
 ### Added - Urdu baṛī ye completes the starter ductus inventory (HL-C09AG)
 

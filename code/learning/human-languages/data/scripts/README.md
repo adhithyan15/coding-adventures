@@ -234,7 +234,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   the far left, and continue right along the lower fold in one zero-lift run.
   The prose's initial/medial tooth and independent/final sound distinctions
   remain explicit while the learner path follows Noto Naskh's folded contour.
-  The remaining **195** prose part orders across seven scripts (`arabic` 21,
+  Arabic **ا** then opens the smallest remaining starter inventory from the
+  University of Oregon's *Introduction to Arabic* video: the independent alif
+  descends top-to-bottom in one uninterrupted 00:05–00:07 movement. Its
+  zero-lift learner path stays on the isolated Noto Naskh outline, while a
+  script-scoped key keeps its Arabic source distinct from Persian and Urdu ا;
+  the adjacent lesson's one-way-connector label and printed final form remain
+  explicit. The remaining **194** prose part orders across seven scripts (`arabic` 20,
   `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 22,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a

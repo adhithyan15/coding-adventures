@@ -24,6 +24,7 @@ const load = (name: string) => {
   return b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength) as ArrayBuffer;
 };
 const tamil = () => parseFont(load("NotoSansTamil-Static.ttf"));
+const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
@@ -439,6 +440,14 @@ describe("handwriting ductus", () => {
     expect(lower.at(-1)!.x).toBeGreaterThan(lower[0].x);
   });
 
+  it("Arabic independent ا descends in one unbroken stroke", () => {
+    expect(penLifts(ARABIC_ALEF)).toBe(0);
+    expect(ARABIC_ALEF.strokes).toHaveLength(1);
+    expect(ARABIC_ALEF.strokes[0].segments).toHaveLength(1);
+    const path = penPath(ARABIC_ALEF.strokes[0]);
+    expect(path[0].y).toBeGreaterThan(path.at(-1)!.y);
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -572,6 +581,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ا", URDU_ALEF.source.url)).toBe(
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
+    expect(verifiedLetterFont("ا", ARABIC_ALEF.source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
+    );
     expect(verifiedLetterFont("و", "https://example.invalid/wrong-source")).toBeUndefined();
   });
 
@@ -669,6 +681,19 @@ describe("handwriting ductus", () => {
       /independent.*top-to-bottom.*one continuous stroke.*final.*bottom-to-top.*Noto Naskh.*Nastaliq/i,
     );
     expect(src.url).not.toBe(DUCTUS["ا"].source.url);
+  });
+
+  it("Arabic independent ا traces to the University of Oregon's top-to-bottom video", () => {
+    const src = ARABIC_ALEF.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/alphabet-%D8%A8/",
+    );
+    expect(src.citation).toMatch(/Introduction to Arabic.*Alphabet ا ب.*00:05–00:07.*Oregon/i);
+    expect(src.variation).toMatch(
+      /one continuous top-to-bottom stroke.*no pen lift.*one-way connector.*isolated and final forms.*Noto Naskh.*Arabic provenance.*Persian and Urdu/i,
+    );
+    expect(src.url).not.toBe(DUCTUS["ا"].source.url);
+    expect(src.url).not.toBe(URDU_ALEF.source.url);
   });
 
   it("Urdu independent ج traces to Zer o Zabar's dot-first pointed-head animation", () => {
