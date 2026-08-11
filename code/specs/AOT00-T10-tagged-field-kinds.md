@@ -1,6 +1,10 @@
 # AOT00-T10 — tagged-field kind registration (vm-core joins the precise/movable GC for real)
 
-> Status: **draft — spec-first sign-off gate, no code**. User directive (2026-08-11,
+> Status: **landed — all 3 PRs merged**. PR-1 (this spec) and PR-2 (`gc-core`'s
+> `register_tagged_kind` mechanism, 0.35.0/0.36.0) are merged; PR-3 (`vm-core`
+> wiring, 0.25.0 — `pair_kind` registration, `handle_gc_alloc` reroute, and the
+> real relocation differential test proving a `gc_alloc`'d pair actually moves
+> under a compacting collection) completes the arc. User directive (2026-08-11,
 > verbatim intent): "The vm-core is currently not released. So feel free to change
 > designs if needed to allow for vm-core and GC-core to work together. We shouldn't
 > have 10 different GC implementations." This spec is the design change.

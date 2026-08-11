@@ -1,5 +1,16 @@
 # Changelog — gc-core
 
+## 0.36.0 — 2026-08-11 — re-export the NaN-box tag constants at the crate root (AOT00-T10 PR-3 follow-up)
+
+- **`NAN_BOX_REF_TAG`/`NAN_BOX_TAG_BITS`/`NAN_BOX_TAG_MASK` now re-exported from
+  `gc_core::` directly**, alongside `FlatHeap`/`HeapRef`/etc. 0.35.0 defined these as
+  `pub const` inside `flat_heap`, reachable as `gc_core::flat_heap::NAN_BOX_REF_TAG`,
+  but never added them to the crate-root re-export list — so `vm-core` (AOT00-T10
+  PR-3) can now derive its own tag constants from these canonical definitions instead
+  of duplicating the same three literals, closing the "two definitions of one
+  convention" gap the tagged-kind design explicitly set out to avoid. No behavior
+  change; purely a visibility fix.
+
 ## 0.35.0 — 2026-08-11 — tagged-field kind registration (AOT00-T10 PR-2)
 
 - **New `KindLayout.tagged: bool` + `FlatHeap::register_tagged_kind()`** — a second
