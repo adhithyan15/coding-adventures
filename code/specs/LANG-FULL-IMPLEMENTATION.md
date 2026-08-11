@@ -851,7 +851,8 @@ backend immediately) come before the enabler-dependent items.
   all seven standard backends. Direct real literals, including exact unary `+`
   or `-` signs, preserve and print their source spelling on the same seven
   columns. Arithmetic conditionals whose leaves are all direct real literals
-  branch to the selected source-spelled string at run time on those columns;
+  branch to the selected source-spelled string at run time on those columns,
+  and exact parentheses around a signed direct literal preserve that spelling;
   computed/runtime `f64` formatting remains a follow-up requiring a portable
   typed formatter ABI.
   Unicode-aware BEAM strings remain.

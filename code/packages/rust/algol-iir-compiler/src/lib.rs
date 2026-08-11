@@ -6025,6 +6025,13 @@ fn expr_real_literal_text(node: &GrammarASTNode) -> Option<String> {
         let literal = expr_real_literal_text(child_nodes[0])?;
         return Some(format!("{}{literal}", tokens[0].value));
     }
+    if tokens.len() == 2
+        && child_nodes.len() == 1
+        && tokens[0].value == "("
+        && tokens[1].value == ")"
+    {
+        return expr_real_literal_text(child_nodes[0]);
+    }
     if !tokens.is_empty() {
         return None;
     }
@@ -6941,6 +6948,29 @@ mod tests {
             "test",
         )
         .expect_err("computed real leaf still requires runtime formatting");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_parenthesized_real_literals_preserve_spelling() {
+        let module = compile_source("begin print((4.25), (-2.5), +(3.0)) end", "test")
+            .expect("parenthesized real-literal output compiles");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["4.25", "-2.5", "+3.0"]);
+    }
+
+    #[test]
+    fn al4_print_parenthesized_computed_real_rejects() {
+        let err = compile_source("begin print((2.0 + 2.25)) end", "test")
+            .expect_err("parentheses must not admit computed real output");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
