@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.19.0";
+pub const VERSION: &str = "0.20.0";
 
 use std::collections::HashMap;
 
@@ -1459,6 +1459,7 @@ where
             LayoutedSequenceItem::ParticipantBox {
                 id,
                 label,
+                label_height,
                 kind,
                 links,
                 properties,
@@ -1523,12 +1524,12 @@ where
                         *y + height / 2.0,
                     ));
                 }
-                text_children.push(text_node(
+                text_children.push(text_node_no_wrap(
                     label,
                     *x + if specialized { 44.0 } else { 8.0 },
                     *y + 11.0,
                     *width - if specialized { 50.0 } else { 16.0 },
-                    *height - 12.0,
+                    (*label_height + 4.0).min(*height - 12.0),
                     label_font.clone(),
                     text_color,
                 ));
@@ -2702,7 +2703,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.19.0");
+        assert_eq!(crate::VERSION, "0.20.0");
     }
 
     #[test]
