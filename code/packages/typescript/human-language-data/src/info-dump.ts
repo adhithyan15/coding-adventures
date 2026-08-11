@@ -49,7 +49,7 @@
  * wrong, but it is automatically read by a human before merge.
  */
 
-import { hasOwn } from "./constants.js";
+import { hasOwn, stripControlCharacters as clean } from "./constants.js";
 import type { ParsedLesson } from "./parse.js";
 
 export type InfoDumpKind =
@@ -272,7 +272,7 @@ export function renderInfoDump(report: InfoDumpReport): string[] {
   const grids = report.findings.filter((f) => f.kind === "full-paradigm-grid").slice(0, 3);
   if (grids.length > 0) {
     lines.push(
-      `  complete paradigms presented at once: ${grids.map((g) => `${g.lessonId} (${g.detail})`).join(", ")}`,
+      `  complete paradigms presented at once: ${grids.map((g) => `${clean(g.lessonId)} (${clean(g.detail)})`).join(", ")}`,
     );
   }
   return lines;
