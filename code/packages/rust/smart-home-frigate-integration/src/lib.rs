@@ -23,7 +23,7 @@ use smart_home_runtime::{RuntimeError, SmartHomeRuntime};
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
 use std::io::{self, Read, Write};
-use std::net::{TcpStream, ToSocketAddrs};
+use std::net::{SocketAddr, TcpStream, ToSocketAddrs};
 use std::time::Duration;
 use tls_platform::{default_connector, TlsConfig, TlsConnector};
 use url_parser::{Url, UrlError};
@@ -36,8 +36,10 @@ pub const VERSION_PATH: &str = "/api/version";
 pub const STATS_PATH: &str = "/api/stats";
 pub const LOGOUT_PATH: &str = "/api/logout";
 pub const DEFAULT_MAX_RESPONSE_BYTES: usize = 2 * 1024 * 1024;
+pub const MAX_CREDENTIAL_FIELD_BYTES: usize = 1_024;
 const MAX_COOKIE_BYTES: usize = 8 * 1024;
 const MAX_VERSION_BYTES: usize = 256;
+const MAX_HTTP_HEADER_BYTES: usize = 64 * 1024;
 
 #[derive(Debug)]
 pub enum FrigateError {
@@ -127,7 +129,11 @@ impl FrigateCredentials {
     ) -> Result<Self, FrigateError> {
         let username = username.into();
         let password = password.into();
-        if username.trim().is_empty() || password.is_empty() {
+        if username.trim().is_empty()
+            || password.is_empty()
+            || username.len() > MAX_CREDENTIAL_FIELD_BYTES
+            || password.len() > MAX_CREDENTIAL_FIELD_BYTES
+        {
             return Err(FrigateError::Validation(
                 "username and password must not be empty".to_string(),
             ));
@@ -342,6 +348,251 @@ impl FrigateLanTransport {
             })
         }
     }
+
+    pub fn fetch_snapshot_pinned(
+        &mut self,
+        config: &FrigateConfig,
+        credentials: &FrigateCredentials,
+        camera_name: &str,
+        canonical_host: &str,
+        pinned_address: SocketAddr,
+        maximum_snapshot_bytes: usize,
+    ) -> Result<Vec<u8>, FrigateError> {
+        if maximum_snapshot_bytes == 0 {
+            return Err(FrigateError::Validation(
+                "snapshot byte limit must be positive".to_string(),
+            ));
+        }
+        let plans = snapshot_request_plans(config, camera_name)?;
+        let fields = BTreeMap::from([
+            ("password", credentials.password.as_str()),
+            ("user", credentials.username.as_str()),
+        ]);
+        let login_body = Zeroizing::new(serde_json::to_vec(&fields)?);
+        let login = self.request_pinned(
+            &plans.login,
+            login_body.as_slice(),
+            None,
+            canonical_host,
+            pinned_address,
+            DEFAULT_MAX_RESPONSE_BYTES,
+        )?;
+        if login.status != 200 {
+            return Err(FrigateError::HttpStatus {
+                operation: "login",
+                status: login.status,
+            });
+        }
+        let cookie = extract_session_cookie(&login.headers)?;
+        let result = (|| {
+            let response = self.request_pinned(
+                &plans.snapshot,
+                &[],
+                Some(cookie.as_str()),
+                canonical_host,
+                pinned_address,
+                maximum_snapshot_bytes,
+            )?;
+            if response.status != 200 {
+                return Err(FrigateError::HttpStatus {
+                    operation: "snapshot",
+                    status: response.status,
+                });
+            }
+            validate_jpeg_response(&response, maximum_snapshot_bytes)?;
+            Ok(response.body.clone())
+        })();
+        let logout = self.logout_pinned(
+            &plans.logout,
+            cookie.as_str(),
+            canonical_host,
+            pinned_address,
+        );
+        match (result, logout) {
+            (Err(error), _) => Err(error),
+            (Ok(_), Err(error)) => Err(error),
+            (Ok(bytes), Ok(())) => Ok(bytes),
+        }
+    }
+
+    fn request_pinned(
+        &mut self,
+        plan: &LocalHttpRequestPlan,
+        body: &[u8],
+        cookie: Option<&str>,
+        canonical_host: &str,
+        pinned_address: SocketAddr,
+        maximum_body_bytes: usize,
+    ) -> Result<HttpResponse, FrigateError> {
+        let request = Zeroizing::new(encode_http_request(plan, body, cookie)?);
+        let url = Url::parse(&plan.url)?;
+        let host = url
+            .host
+            .as_deref()
+            .ok_or(FrigateError::MissingField("request URL host"))?;
+        let port = url
+            .effective_port()
+            .ok_or(FrigateError::MissingField("request URL port"))?;
+        if !host.eq_ignore_ascii_case(canonical_host) || port != pinned_address.port() {
+            return Err(FrigateError::Validation(
+                "reviewed connection target does not match the Frigate origin".to_string(),
+            ));
+        }
+        let timeout = Duration::from_millis(plan.timeout_ms.max(1));
+        let maximum_wire_bytes = maximum_body_bytes
+            .checked_add(MAX_HTTP_HEADER_BYTES)
+            .ok_or(FrigateError::ResponseTooLarge {
+                limit: maximum_body_bytes,
+            })?;
+        let response = match url.scheme.as_str() {
+            "http" if is_loopback_host(host) && pinned_address.ip().is_loopback() => {
+                let mut stream = TcpStream::connect_timeout(&pinned_address, timeout)
+                    .map_err(|error| FrigateError::Io(error.to_string()))?;
+                stream
+                    .set_read_timeout(Some(timeout))
+                    .and_then(|_| stream.set_write_timeout(Some(timeout)))
+                    .map_err(|error| FrigateError::Io(error.to_string()))?;
+                write_request(&mut stream, request.as_slice())?;
+                Zeroizing::new(read_bounded(&mut stream, maximum_wire_bytes)?)
+            }
+            "https" => {
+                let mut tls_config = self.tls_config.clone();
+                tls_config.connect_timeout = timeout;
+                tls_config.read_timeout = Some(timeout);
+                tls_config.write_timeout = Some(timeout);
+                let mut stream = self
+                    .connector
+                    .connect_addr(canonical_host, pinned_address, &tls_config)
+                    .map_err(|error| FrigateError::Tls(error.to_string()))?;
+                write_request(&mut stream, request.as_slice())?;
+                let bytes = Zeroizing::new(read_bounded(&mut stream, maximum_wire_bytes)?);
+                stream
+                    .close_notify()
+                    .map_err(|error| FrigateError::Tls(error.to_string()))?;
+                bytes
+            }
+            _ => {
+                return Err(FrigateError::Validation(
+                    "Frigate transport requires pinned HTTPS or loopback HTTP".to_string(),
+                ))
+            }
+        };
+        decode_http_response(response.as_slice(), maximum_body_bytes)
+    }
+
+    fn logout_pinned(
+        &mut self,
+        plan: &LocalHttpRequestPlan,
+        cookie: &str,
+        canonical_host: &str,
+        pinned_address: SocketAddr,
+    ) -> Result<(), FrigateError> {
+        let response = self.request_pinned(
+            plan,
+            &[],
+            Some(cookie),
+            canonical_host,
+            pinned_address,
+            DEFAULT_MAX_RESPONSE_BYTES,
+        )?;
+        if (200..300).contains(&response.status) || response.status == 303 {
+            Ok(())
+        } else {
+            Err(FrigateError::HttpStatus {
+                operation: "logout",
+                status: response.status,
+            })
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct FrigateSnapshotRequestPlans {
+    login: LocalHttpRequestPlan,
+    snapshot: LocalHttpRequestPlan,
+    logout: LocalHttpRequestPlan,
+}
+
+pub fn snapshot_uri(config: &FrigateConfig, camera_name: &str) -> Result<String, FrigateError> {
+    if camera_name.trim().is_empty() || camera_name.contains(['\r', '\n', '\0']) {
+        return Err(FrigateError::Validation(
+            "camera name is empty or unsafe".to_string(),
+        ));
+    }
+    Ok(format!(
+        "{}/api/{}/latest.jpg",
+        config.base_url,
+        encode_path_segment(camera_name)
+    ))
+}
+
+fn snapshot_request_plans(
+    config: &FrigateConfig,
+    camera_name: &str,
+) -> Result<FrigateSnapshotRequestPlans, FrigateError> {
+    let endpoint = config.endpoint()?;
+    let timeout_ms = duration_ms(config.timeout);
+    let login = LocalHttpRequestTemplate::new(LocalHttpMethod::Post, LOGIN_PATH)?
+        .with_accept("application/json")
+        .with_content_type("application/json")
+        .with_timeout_ms(timeout_ms)
+        .with_idempotent(false)
+        .with_auth(LocalHttpAuth::None)
+        .plan(&endpoint, Vec::new())?;
+    let snapshot_path = snapshot_uri(config, camera_name)?
+        .strip_prefix(&config.base_url)
+        .ok_or_else(|| FrigateError::Validation("snapshot origin mismatch".to_string()))?
+        .to_string();
+    let snapshot = LocalHttpRequestTemplate::new(LocalHttpMethod::Get, snapshot_path)?
+        .with_accept("image/jpeg")
+        .with_timeout_ms(timeout_ms)
+        .with_auth(LocalHttpAuth::None)
+        .plan(&endpoint, Vec::new())?;
+    let logout = LocalHttpRequestTemplate::new(LocalHttpMethod::Get, LOGOUT_PATH)?
+        .with_accept("application/json")
+        .with_timeout_ms(timeout_ms)
+        .with_auth(LocalHttpAuth::None)
+        .plan(&endpoint, Vec::new())?;
+    Ok(FrigateSnapshotRequestPlans {
+        login,
+        snapshot,
+        logout,
+    })
+}
+
+fn encode_path_segment(value: &str) -> String {
+    let mut output = String::with_capacity(value.len());
+    for byte in value.bytes() {
+        if byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'_' | b'.' | b'~') {
+            output.push(char::from(byte));
+        } else {
+            output.push_str(&format!("%{byte:02X}"));
+        }
+    }
+    output
+}
+
+fn validate_jpeg_response(
+    response: &HttpResponse,
+    maximum_snapshot_bytes: usize,
+) -> Result<(), FrigateError> {
+    let content_type = response
+        .headers
+        .iter()
+        .find(|header| header.name.eq_ignore_ascii_case("Content-Type"))
+        .map(|header| header.value.split(';').next().unwrap_or_default().trim())
+        .unwrap_or_default();
+    if !content_type.eq_ignore_ascii_case("image/jpeg")
+        || response.body.len() < 4
+        || response.body.len() > maximum_snapshot_bytes
+        || !response.body.starts_with(&[0xff, 0xd8])
+        || !response.body.ends_with(&[0xff, 0xd9])
+    {
+        return Err(FrigateError::Validation(
+            "snapshot response is not a bounded JPEG".to_string(),
+        ));
+    }
+    Ok(())
 }
 
 impl FrigateTransport for FrigateLanTransport {
@@ -565,11 +816,18 @@ pub fn install_snapshot(
             device_id: device_id.clone(),
             kind: EntityKind::Camera,
             name: camera.name.clone(),
-            capabilities: vec![Capability::new(
-                CapabilityId::trusted("camera.health"),
-                CapabilityMode::Observe,
-                ValueKind::Object,
-            )],
+            capabilities: vec![
+                Capability::new(
+                    CapabilityId::trusted("camera.health"),
+                    CapabilityMode::Observe,
+                    ValueKind::Object,
+                ),
+                Capability::new(
+                    CapabilityId::trusted("camera.snapshot"),
+                    CapabilityMode::Command,
+                    ValueKind::Text,
+                ),
+            ],
             state: Some(StateSnapshot {
                 entity_id: camera_entity_id.clone(),
                 value: camera_value(camera),
@@ -1396,6 +1654,80 @@ mod tests {
         assert!(requests[1..]
             .iter()
             .all(|(head, _)| !head.contains("secret-password") && !head.contains("operator")));
+    }
+
+    #[test]
+    fn failed_snapshot_validation_still_logs_out() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        let requests = Arc::new(Mutex::new(Vec::new()));
+        let server_requests = Arc::clone(&requests);
+        let responses = vec![
+            (
+                "200 OK",
+                vec![("Set-Cookie", "frigate-token=secret.jwt; Path=/; HttpOnly")],
+                "application/json",
+                br#"{"message":"Login successful"}"#.to_vec(),
+            ),
+            ("200 OK", vec![], "text/plain", b"not an image".to_vec()),
+            ("303 See Other", vec![], "application/json", Vec::new()),
+        ];
+        let handle = thread::spawn(move || {
+            for (status, headers, content_type, body) in responses {
+                let (stream, _) = listener.accept().unwrap();
+                let mut reader = BufReader::new(stream);
+                let mut head = String::new();
+                loop {
+                    let mut line = String::new();
+                    reader.read_line(&mut line).unwrap();
+                    if line == "\r\n" {
+                        break;
+                    }
+                    head.push_str(&line);
+                }
+                let length = head
+                    .lines()
+                    .find_map(|line| line.strip_prefix("Content-Length: "))
+                    .unwrap_or("0")
+                    .parse::<usize>()
+                    .unwrap();
+                let mut request_body = vec![0u8; length];
+                reader.read_exact(&mut request_body).unwrap();
+                server_requests.lock().unwrap().push(head);
+                let mut reply = format!("HTTP/1.1 {status}\r\n");
+                for (name, value) in headers {
+                    reply.push_str(&format!("{name}: {value}\r\n"));
+                }
+                reply.push_str(&format!(
+                    "Content-Type: {content_type}\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+                    body.len()
+                ));
+                let stream = reader.get_mut();
+                stream.write_all(reply.as_bytes()).unwrap();
+                stream.write_all(&body).unwrap();
+            }
+        });
+
+        let mut transport = FrigateLanTransport::default();
+        let error = transport
+            .fetch_snapshot_pinned(
+                &config(address.port()),
+                &credentials(),
+                "Front Door",
+                "127.0.0.1",
+                address,
+                1_024,
+            )
+            .unwrap_err();
+        handle.join().unwrap();
+        assert!(matches!(error, FrigateError::Validation(_)));
+        let requests = requests.lock().unwrap();
+        assert_eq!(requests.len(), 3);
+        assert!(requests[1].starts_with("GET /api/Front%20Door/latest.jpg HTTP/1.1"));
+        assert!(requests[2].starts_with("GET /api/logout HTTP/1.1"));
+        assert!(requests[1..]
+            .iter()
+            .all(|head| head.contains("Cookie: frigate-token=secret.jwt")));
     }
 
     #[test]
