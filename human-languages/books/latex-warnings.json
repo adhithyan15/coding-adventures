@@ -314,8 +314,8 @@
         "font_substitution": 2,
         "hyperref_warning": 0,
         "missing_character": 0,
-        "overfull": 19,
-        "underfull": 8
+        "overfull": 24,
+        "underfull": 9
       },
       "improvements": [],
       "log": "code/learning/human-languages/spanish/book/book.log",
