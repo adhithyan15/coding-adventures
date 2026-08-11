@@ -1,35 +1,45 @@
-Spanish, chapter 98: Wanting, Not Asserting.
+Spanish, chapter 98: Review --- A Tense You Build.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-Hablas español, Quiero que hables español — fact or wanted event?
+Review — a tense you build.
 
 Warm-up.
 [pause 2 seconds]
-Hablas español can assert “You speak Spanish.” Now compare Quiero que hables español — “I want you to speak Spanish.” Hables does not report what is true. It presents the speaking as wanted and not yet asserted. That meaning contrast is the first small doorway into the subjunctive.
+Nothing new. Two questions: how many words is this tense, and which of them carries the person?
 
-Grammar Lens: count the doers.
+What you've built.
+Piece one — the person: he, has, ha, hemos, habéis, han.
+Piece two — the meaning: the participle, which never changes.
 [a table of 2 rows, read aloud]
-meaning: I want to speak Spanish. Spanish: Quiero hablar español. doers: one: I want; I speak.
-meaning: I want you to speak Spanish. Spanish: Quiero que hables español. doers: two: I want; you speak.
-With one doer, keep the known infinitive hablar. With a different doer for the wanted event, use que and the new form hables. This is a bounded pattern for querer, not a rule for every clause in Spanish.
+-ar. regular: -ado, hablado.
+-er / -ir. regular: -ido, comido, vivido.
+[a table of 2 rows, read aloud]
+hacer. irregular: hecho, decir becomes dicho.
+ver. irregular: visto, poner becomes puesto.
+Six little words times any participle you can form. That is the whole tense.
+
+Grammar Lens: why this one was cheap.
+Every other tense you have learned made you attach endings to every verb. The present has six endings per family; the preterite has its own set; the imperfect has another.
+This one does not work like that. You learn six words once, and then any verb you ever meet joins the tense by forming a single participle. A tense that is built rather than conjugated costs a fixed amount instead of a per-verb amount.
+That is worth recognising as a shape, because Spanish does it again. Once you have haber plus a participle, the same two pieces will give you more tenses later by changing only the little word — and each of those will cost you almost nothing, for the same reason this one did.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “Hablas español.”]
+[your turn — say: "he hablado, has comido, ha vivido, hemos hecho, habéis dicho, han visto"]
 [pause 8 seconds for the answer]
-[your turn — say: “Quiero hablar español.”]
-[pause 8 seconds for the answer]
-[your turn — say: “Quiero que hables español.”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 6 seconds]
-Which form asserts that one friend speaks: hablas or hables?
+[repeat that twice]
+Until the little word arrives without thought.
+[question — say your answer, then pause 12 seconds]
+What are the two pieces of this tense, and which carries the person?
 [question — say your answer, then pause 8 seconds]
-Say 'I want to speak Spanish' in Spanish.
-[question — say your answer, then pause 9 seconds]
-Say 'I want you to speak Spanish' to one friend.
+Say we have lived.
+[question — say your answer, then pause 10 seconds]
+Say you have said it, using the participle of decir.
+[question — say your answer, then pause 12 seconds]
+Why did this tense cost less than the present or the preterite?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which form asserts the event? (Hablas.) Which presents it as wanted? (Hables, after quiero que.) What happens when the wanter and the speaker are the same? (Use the infinitive: Quiero hablar.) Next, build the three singular -ar forms one piece at a time.
+Two pieces — name them. (A form of haber, plus a participle.) The four irregulars? (Hecho, dicho, visto, puesto.) Next: when to reach for this tense instead of the preterite — and the answer depends on where you are standing on the map.

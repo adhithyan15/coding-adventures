@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(140); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(146); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -618,6 +618,28 @@ describe("real curriculum", () => {
       "ES-C48-tenia-tuve-got",
       "ES-C48-tenia-tuve-had",
       "ES-C48-tenia-tuve-rule",
+      "ES-C49-haber-completo-all",
+      "ES-C49-haber-completo-participle",
+      "ES-C49-haber-completo-they",
+      "ES-C49-haber-completo-why",
+      "ES-C49-he-hablado-english",
+      "ES-C49-he-hablado-mean",
+      "ES-C49-he-hablado-say",
+      "ES-C49-participio-ar",
+      "ES-C49-participio-erir",
+      "ES-C49-participio-person",
+      "ES-C49-participios-irregulares-fact",
+      "ES-C49-participios-irregulares-four",
+      "ES-C49-participios-irregulares-use",
+      "ES-C49-participios-irregulares-why",
+      "ES-C49-repaso-perfecto-build",
+      "ES-C49-repaso-perfecto-cost",
+      "ES-C49-repaso-perfecto-irreg",
+      "ES-C49-repaso-perfecto-pieces",
+      "ES-C49-sintesis-dos-orillas-build",
+      "ES-C49-sintesis-dos-orillas-now",
+      "ES-C49-sintesis-dos-orillas-split",
+      "ES-C49-sintesis-dos-orillas-wrong",
       "ES-W03-question-span-roberto-outside",
       "FA-C02-esm-e-man-sara",
       "FA-C03-chist-fusion",

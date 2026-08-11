@@ -1,54 +1,41 @@
-Spanish, chapter 116: Green and Yellow.
-2 lessons. All 2 can be done entirely by ear.
+Spanish, chapter 116: The Months.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-verde — the colour named after being alive.
+Lesson 1 of 1.
+los meses — the calendar's gods and Caesars.
 
 Warm-up.
 [pause 2 seconds]
-After azul's long journey from Afghanistan, here is a colour that stayed exactly where it started. It is also the one that names a process rather than a thing.
+Spanish's twelve months are a procession of Roman gods and emperors, barely changed from Latin. Two things you already know pay off immediately: marzo is the war-god you met in martes, and septiembre–diciembre are the Latin numbers 7–10 from the counting chapters.
 
-The word, taken apart: verde.
-verde ("green") from Latin viridis (worn down through virdis), which comes from the verb virēre, "to be green, to flourish, to be vigorous."
-So the adjective is built on a verb of thriving. Latin did not name the colour of leaves; it named what leaves are doing, and let the colour follow. The same root gives vigour its neighbours in English: verdant, verdure, and the green-tinged verdigris ("green of Greece").
-One careful non-connection: verde is not a cousin of English green. Green comes from a completely separate Germanic root, tied to grow and grass — which, funnily enough, is the same idea arrived at independently. Two families, two words, one metaphor: green is the colour of things that are growing.
+The months, taken apart.
+[a table of 12 rows, read aloud]
+Spanish: enero. from Latin: Iānuārius. who / what: Janus, the two-faced god of doors & beginnings.
+Spanish: febrero. from Latin: Februārius. who / what: Februa, the Roman purification festival.
+Spanish: marzo. from Latin: Martius. who / what: Mars, the war-god — the same Mars as martes (Tuesday)!
+Spanish: abril. from Latin: Aprīlis. who / what: perhaps aperīre, "to open" (buds opening).
+Spanish: mayo. from Latin: Māius. who / what: Maia, goddess of growth.
+Spanish: junio. from Latin: Iūnius. who / what: Juno, queen of the gods.
+Spanish: julio. from Latin: Iūlius. who / what: originally Quīntīlis, "the 5th [month]" — renamed for Julius Caesar after his death.
+Spanish: agosto. from Latin: Augustus. who / what: originally Sextīlis, "the 6th [month]" — renamed for the emperor Augustus.
+Spanish: septiembre. from Latin: september. who / what: "7th" (septem).
+Spanish: octubre. from Latin: octōber. who / what: "8th" (octō).
+Spanish: noviembre. from Latin: november. who / what: "9th" (novem).
+Spanish: diciembre. from Latin: december. who / what: "10th" (decem).
+Two payoffs land at once:
+marzo = Mars = martes. The month and the weekday honor the same war-god — Martius (his month) and Martis diēs (his day). Spot one, you know the other.
+The 7–10 months. Septiembre through diciembre still carry septem, octō, novem, decem — because the old Roman year originally began in March, with September genuinely the 7th month. Centuries before Caesar, two new months (Januarius, Februarius) were added at the front to cover the winter, which pushed every later month's number out of step with its name — September became the 9th month while still being named "7th." Julius and Augustus had nothing to do with that shift: they simply got two already-existing months — Quintilis and Sextilis, literally "5th" and "6th" — renamed in their honor after the fact. The names stuck; the months themselves were never new.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "verde" — green]
+[your turn — say: the twelve — "enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre"]
 [pause 8 seconds for the answer]
-[your turn — say: the root — "virēre, to flourish" becomes "verde"]
+[your turn — say: the tie-back — "marzo / martes — both Mars, the war-god"]
 [pause 8 seconds for the answer]
-[your turn — say: "verde" then English "verdant" — and not "green"]
+[your turn — say: "septiembre = 7, diciembre = 10" — the old March-start year]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Latin verb gives verde, and what does it mean? (Virēre, "to be green, to flourish.") Is verde related to English green? (No — green is Germanic, from the same family as grow and grass; the two languages reached the same metaphor separately.) Next: a colour that is not named after a colour at all.
-
-
-Lesson 2 of 2.
-amarillo — the colour that started as a taste.
-
-Warm-up.
-[pause 2 seconds]
-Verde was exactly what you would expect from Latin. This one is not. Latin had three perfectly good words for yellow, and Spanish took none of them.
-
-The word, taken apart: amarillo.
-amarillo ("yellow") does not trace to flāvus, gilvus or lūteus — Latin's actual yellow words. It comes from Late Latin amarellus, "a little bitter," a diminutive of amarus, "bitter."
-A colour named after a taste. The bridge is medicine: yellow was the colour of bile and of jaundice (which Spanish still calls ictericia, but which folk speech long tied to bitterness), and of a great many bitter-tasting plants. A word meaning "somewhat bitter" came to mean "the yellowish look of a bitter thing," then simply "yellowish," and by Spanish's Golden Age it had dropped the taste entirely and kept only the colour.
-You can still check the family in a living word: amargo ("bitter") is amarillo's cousin, straight from the same amarus. Say them together and the shared amar- is right there.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "verde, amarillo" — green and yellow]
-[pause 8 seconds for the answer]
-[your turn — say: "amarillo, amargo" — hear the shared amar-]
-[pause 8 seconds for the answer]
-[your turn — say: the path — "a little bitter" becomes "yellowish" becomes "yellow"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Does amarillo come from a Latin word for yellow? (No — from amarellus, "a little bitter," a diminutive of amarus.) What everyday Spanish word is its cousin? (Amargo, "bitter.") And verde? (From virēre, "to flourish" — a colour named after being alive, as this one is named after a taste.)
+Which god links marzo and martes? (Mars, the war-god — his month and his day.) Why is diciembre Latin for "ten"? (The Roman year began in March, and adding January/February at the front later pushed every month's number out of step with its name.) Did Julius Caesar and Augustus add new months to the calendar? (No — julio and agosto were already-existing months, Quintilis and Sextilis ("5th"/"6th"), simply renamed in their honor.)

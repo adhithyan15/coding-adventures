@@ -2788,239 +2788,269 @@
     {
       "language": "spanish",
       "chapter": 94,
-      "output": "spanish/book/chapters/ch94-futuro.tex"
+      "output": "spanish/book/chapters/ch94-participle.tex"
     },
     {
       "language": "spanish",
       "chapter": 95,
-      "output": "spanish/book/chapters/ch95-condicional.tex"
+      "output": "spanish/book/chapters/ch95-perfect-first-person.tex"
     },
     {
       "language": "spanish",
       "chapter": 96,
-      "output": "spanish/book/chapters/ch96-future-conditional-stems.tex"
+      "output": "spanish/book/chapters/ch96-perfect-complete.tex"
     },
     {
       "language": "spanish",
       "chapter": 97,
-      "output": "spanish/book/chapters/ch97-synthesis-future-conditional.tex"
+      "output": "spanish/book/chapters/ch97-irregular-participles.tex"
     },
     {
       "language": "spanish",
       "chapter": 98,
-      "output": "spanish/book/chapters/ch98-quiero-que.tex"
+      "output": "spanish/book/chapters/ch98-review-perfect.tex"
     },
     {
       "language": "spanish",
       "chapter": 99,
-      "output": "spanish/book/chapters/ch99-subjuntivo-regular.tex"
+      "output": "spanish/book/chapters/ch99-synthesis-perfect.tex"
     },
     {
       "language": "spanish",
       "chapter": 100,
-      "output": "spanish/book/chapters/ch100-subjuntivo-yo-stem.tex"
+      "output": "spanish/book/chapters/ch100-futuro.tex"
     },
     {
       "language": "spanish",
       "chapter": 101,
-      "output": "spanish/book/chapters/ch101-ojala.tex"
+      "output": "spanish/book/chapters/ch101-condicional.tex"
     },
     {
       "language": "spanish",
       "chapter": 102,
-      "output": "spanish/book/chapters/ch102-synthesis-subjuntivo.tex"
+      "output": "spanish/book/chapters/ch102-future-conditional-stems.tex"
     },
     {
       "language": "spanish",
       "chapter": 103,
-      "output": "spanish/book/chapters/ch103-lo-siento.tex"
+      "output": "spanish/book/chapters/ch103-synthesis-future-conditional.tex"
     },
     {
       "language": "spanish",
       "chapter": 104,
-      "output": "spanish/book/chapters/ch104-days-of-the-week.tex"
+      "output": "spanish/book/chapters/ch104-quiero-que.tex"
     },
     {
       "language": "spanish",
       "chapter": 105,
-      "output": "spanish/book/chapters/ch105-black-white-red-blue.tex",
+      "output": "spanish/book/chapters/ch105-subjuntivo-regular.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 106,
+      "output": "spanish/book/chapters/ch106-subjuntivo-yo-stem.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 107,
+      "output": "spanish/book/chapters/ch107-ojala.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 108,
+      "output": "spanish/book/chapters/ch108-synthesis-subjuntivo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 109,
+      "output": "spanish/book/chapters/ch109-lo-siento.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 110,
+      "output": "spanish/book/chapters/ch110-days-of-the-week.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 111,
+      "output": "spanish/book/chapters/ch111-black-white-red-blue.tex",
       "unicodeScript": "Arabic",
       "scriptCommand": "esar"
     },
     {
       "language": "spanish",
-      "chapter": 106,
-      "output": "spanish/book/chapters/ch106-family.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 107,
-      "output": "spanish/book/chapters/ch107-head-and-hand.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 108,
-      "output": "spanish/book/chapters/ch108-seasons.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 109,
-      "output": "spanish/book/chapters/ch109-water-wine-bread.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 110,
-      "output": "spanish/book/chapters/ch110-months.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 111,
-      "output": "spanish/book/chapters/ch111-noon-midnight.tex"
-    },
-    {
-      "language": "spanish",
       "chapter": 112,
-      "output": "spanish/book/chapters/ch112-telling-time.tex"
+      "output": "spanish/book/chapters/ch112-family.tex"
     },
     {
       "language": "spanish",
       "chapter": 113,
-      "output": "spanish/book/chapters/ch113-weather.tex"
+      "output": "spanish/book/chapters/ch113-head-and-hand.tex"
     },
     {
       "language": "spanish",
       "chapter": 114,
-      "output": "spanish/book/chapters/ch114-numbers-11-20.tex"
+      "output": "spanish/book/chapters/ch114-seasons.tex"
     },
     {
       "language": "spanish",
       "chapter": 115,
-      "output": "spanish/book/chapters/ch115-dog-and-cat.tex"
+      "output": "spanish/book/chapters/ch115-water-wine-bread.tex"
     },
     {
       "language": "spanish",
       "chapter": 116,
-      "output": "spanish/book/chapters/ch116-green-and-yellow.tex"
+      "output": "spanish/book/chapters/ch116-months.tex"
     },
     {
       "language": "spanish",
       "chapter": 117,
-      "output": "spanish/book/chapters/ch117-synthesis-describing.tex"
+      "output": "spanish/book/chapters/ch117-noon-midnight.tex"
     },
     {
       "language": "spanish",
       "chapter": 118,
-      "output": "spanish/book/chapters/ch118-pensar.tex"
+      "output": "spanish/book/chapters/ch118-telling-time.tex"
     },
     {
       "language": "spanish",
       "chapter": 119,
-      "output": "spanish/book/chapters/ch119-entender.tex"
+      "output": "spanish/book/chapters/ch119-weather.tex"
     },
     {
       "language": "spanish",
       "chapter": 120,
-      "output": "spanish/book/chapters/ch120-leer.tex"
+      "output": "spanish/book/chapters/ch120-numbers-11-20.tex"
     },
     {
       "language": "spanish",
       "chapter": 121,
-      "output": "spanish/book/chapters/ch121-escribir.tex"
+      "output": "spanish/book/chapters/ch121-dog-and-cat.tex"
     },
     {
       "language": "spanish",
       "chapter": 122,
-      "output": "spanish/book/chapters/ch122-review-verbs-of-mind.tex"
+      "output": "spanish/book/chapters/ch122-green-and-yellow.tex"
     },
     {
       "language": "spanish",
       "chapter": 123,
-      "output": "spanish/book/chapters/ch123-synthesis-verbs-of-mind.tex"
+      "output": "spanish/book/chapters/ch123-synthesis-describing.tex"
     },
     {
       "language": "spanish",
       "chapter": 124,
-      "output": "spanish/book/chapters/ch124-tomar.tex"
+      "output": "spanish/book/chapters/ch124-pensar.tex"
     },
     {
       "language": "spanish",
       "chapter": 125,
-      "output": "spanish/book/chapters/ch125-preguntar.tex"
+      "output": "spanish/book/chapters/ch125-entender.tex"
     },
     {
       "language": "spanish",
       "chapter": 126,
-      "output": "spanish/book/chapters/ch126-ayudar.tex"
+      "output": "spanish/book/chapters/ch126-leer.tex"
     },
     {
       "language": "spanish",
       "chapter": 127,
-      "output": "spanish/book/chapters/ch127-review-ordinary-verbs.tex"
+      "output": "spanish/book/chapters/ch127-escribir.tex"
     },
     {
       "language": "spanish",
       "chapter": 128,
-      "output": "spanish/book/chapters/ch128-gustar.tex"
+      "output": "spanish/book/chapters/ch128-review-verbs-of-mind.tex"
     },
     {
       "language": "spanish",
       "chapter": 129,
-      "output": "spanish/book/chapters/ch129-synthesis-gustar.tex"
+      "output": "spanish/book/chapters/ch129-synthesis-verbs-of-mind.tex"
     },
     {
       "language": "spanish",
       "chapter": 130,
-      "output": "spanish/book/chapters/ch130-hear-sleep-walk-run.tex"
+      "output": "spanish/book/chapters/ch130-tomar.tex"
     },
     {
       "language": "spanish",
       "chapter": 131,
-      "output": "spanish/book/chapters/ch131-open-close-sit-stand.tex"
+      "output": "spanish/book/chapters/ch131-preguntar.tex"
     },
     {
       "language": "spanish",
       "chapter": 132,
-      "output": "spanish/book/chapters/ch132-narrating.tex"
+      "output": "spanish/book/chapters/ch132-ayudar.tex"
     },
     {
       "language": "spanish",
       "chapter": 133,
-      "output": "spanish/book/chapters/ch133-traer.tex"
+      "output": "spanish/book/chapters/ch133-review-ordinary-verbs.tex"
     },
     {
       "language": "spanish",
       "chapter": 134,
-      "output": "spanish/book/chapters/ch134-conseguir.tex"
+      "output": "spanish/book/chapters/ch134-gustar.tex"
     },
     {
       "language": "spanish",
       "chapter": 135,
-      "output": "spanish/book/chapters/ch135-jugar.tex"
+      "output": "spanish/book/chapters/ch135-synthesis-gustar.tex"
     },
     {
       "language": "spanish",
       "chapter": 136,
-      "output": "spanish/book/chapters/ch136-conocer.tex"
+      "output": "spanish/book/chapters/ch136-hear-sleep-walk-run.tex"
     },
     {
       "language": "spanish",
       "chapter": 137,
-      "output": "spanish/book/chapters/ch137-review-stem-changes.tex"
+      "output": "spanish/book/chapters/ch137-open-close-sit-stand.tex"
     },
     {
       "language": "spanish",
       "chapter": 138,
-      "output": "spanish/book/chapters/ch138-synthesis-verb-splits.tex"
+      "output": "spanish/book/chapters/ch138-narrating.tex"
     },
     {
       "language": "spanish",
       "chapter": 139,
-      "output": "spanish/book/chapters/ch139-wait-answer-buy.tex"
+      "output": "spanish/book/chapters/ch139-traer.tex"
     },
     {
       "language": "spanish",
       "chapter": 140,
-      "output": "spanish/book/chapters/ch140-giving-reasons.tex"
+      "output": "spanish/book/chapters/ch140-conseguir.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 141,
+      "output": "spanish/book/chapters/ch141-jugar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 142,
+      "output": "spanish/book/chapters/ch142-conocer.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 143,
+      "output": "spanish/book/chapters/ch143-review-stem-changes.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 144,
+      "output": "spanish/book/chapters/ch144-synthesis-verb-splits.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 145,
+      "output": "spanish/book/chapters/ch145-wait-answer-buy.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 146,
+      "output": "spanish/book/chapters/ch146-giving-reasons.tex"
     },
     {
       "language": "tamil",

@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C39-conocer
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1990
-chapter: 136
+sequence: 2010
+chapter: 142
 type: word
 headword: conocer
 gloss: to meet, to be acquainted with — a verb built out of the moment knowing begins

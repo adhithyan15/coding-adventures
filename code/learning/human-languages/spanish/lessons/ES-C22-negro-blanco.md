@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C22-negro-blanco
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1490
-chapter: 105
+sequence: 1510
+chapter: 111
 type: word
 headword: negro, blanco
 gloss: black and white — the two words, and the straight-line Latin history of the first one

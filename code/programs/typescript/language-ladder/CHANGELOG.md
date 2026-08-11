@@ -18,6 +18,11 @@
   outline instead of deriving them from the full 人 form.
 - Reduce Chinese's remaining verified-ductus inventory to 22 entries.
 
+### Changed — Spanish runs 1..146 (HL-C105)
+
+- Re-pin the Spanish book-hash table for the six present-perfect chapters
+  inserted at 94; chapters after them shift by six.
+
 ### Added — cited Chinese 人 ductus (HL-C09BZ)
 
 - Render **人** in two evidence-aligned frames: left-falling piě first, then
