@@ -675,6 +675,28 @@ impl Lowerer {
 
         // Three cases for the function position:
         if let TExpr::VarRef(VarRef { name, .. }) = fn_expr {
+            // SIR28 §2: `print(x)` lowers to `__sys_write__`, not a bare
+            // `BuiltinCall("print", ...)`. `terminator: "none"` (write the
+            // value with no added newline, no added separator) matches
+            // `print`'s single-arg arity identically to every other
+            // terminator choice here (there is only ever one value) — see
+            // SIR28-syscall-primitives.md §2.1.
+            if name == "print" {
+                self.observed.add(Feature::ConsoleIO);
+                self.observed.add(Feature::Strings);
+                let mut sys_args = vec![
+                    Expr::StrLit { value: "stdout".to_string(), span: span.clone() },
+                    Expr::StrLit { value: "none".to_string(), span: span.clone() },
+                    Expr::BoolLit { value: false, span: span.clone() },
+                ];
+                sys_args.extend(lowered_args);
+                return Ok(Expr::BuiltinCall {
+                    name: "__sys_write__".to_string(),
+                    args: sys_args,
+                    effects: builtins::effects_for(name),
+                    span,
+                });
+            }
             if builtins::is_builtin(name) {
                 return Ok(Expr::BuiltinCall {
                     name: name.clone(),

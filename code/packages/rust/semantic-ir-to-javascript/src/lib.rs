@@ -999,9 +999,10 @@ mod tests {
             "got:\n{}",
             a.source
         );
-        // Top-level print of a direct call.
+        // Top-level print of a direct call. SIR28 §2: `print` lowers to
+        // `__sys_write__`, which this backend maps to `__Sir.write(...)`.
         assert!(
-            a.source.contains("__Sir.print(add(1, 2))"),
+            a.source.contains("__Sir.write(\"stdout\", \"none\", false, add(1, 2))"),
             "got:\n{}",
             a.source
         );

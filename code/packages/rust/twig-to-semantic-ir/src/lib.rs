@@ -208,15 +208,23 @@ mod tests {
 
     #[test]
     fn print_call_carries_may_print_effect() {
+        // SIR28 §2: `print(x)` lowers to `__sys_write__`, not a bare
+        // `BuiltinCall("print", ...)`.
         let m = lower("(print 1)");
         let main = m.functions.iter().find(|f| f.name == "main").unwrap();
         match &main.body.value {
-            semantic_ir::Expr::BuiltinCall { name, effects, .. } => {
-                assert_eq!(name, "print");
+            semantic_ir::Expr::BuiltinCall { name, args, effects, .. } => {
+                assert_eq!(name, "__sys_write__");
+                assert_eq!(args.len(), 4);
+                assert!(matches!(&args[0], semantic_ir::Expr::StrLit { value, .. } if value == "stdout"));
+                assert!(matches!(&args[1], semantic_ir::Expr::StrLit { value, .. } if value == "none"));
+                assert!(matches!(args[2], semantic_ir::Expr::BoolLit { value: false, .. }));
+                assert!(matches!(args[3], semantic_ir::Expr::IntLit { value: 1, .. }));
                 assert!(effects.contains(semantic_ir::Effect::MayPrint));
             }
-            other => panic!("expected BuiltinCall print, got {:?}", other),
+            other => panic!("expected BuiltinCall __sys_write__, got {:?}", other),
         }
+        assert!(m.manifest.contains(semantic_ir::Feature::ConsoleIO));
     }
 
     #[test]
