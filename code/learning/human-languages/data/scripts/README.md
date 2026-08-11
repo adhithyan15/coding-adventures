@@ -245,7 +245,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   left tip, and lifts once for the dot below. Its two-frame learner path stays
   on the isolated Noto Naskh outline, while Arabic-scoped provenance remains
   distinct from Persian ب and the lesson's two-way-connector context remains
-  explicit. The remaining **193** prose part orders across seven scripts (`arabic` 19,
+  explicit. The later **ت** clip opens with that shared bowl already complete,
+  then places the left and right dots above as two separate strokes. Its
+  three-frame learner path therefore cites the page's Baa demonstration for the
+  independently shown bowl and the Taa clip for the two lifted dots instead of
+  inferring a hidden body motion. Arabic-scoped provenance remains distinct from
+  Persian ت and the two-way-connector context stays explicit. The remaining
+  **192** prose part orders across seven scripts (`arabic` 18,
   `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 22,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a

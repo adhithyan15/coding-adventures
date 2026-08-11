@@ -232,6 +232,9 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // The adjacent Arabic ب demonstration sweeps its bowl right-to-left, turns up
 // at the left tip, then lifts once to place the dot below. Its Arabic-scoped
 // source remains separate from Persian ب while sharing the checked Noto shape.
+// Arabic ت reuses that separately demonstrated bowl because its own clip opens
+// with the body already complete, then places the left and right upper dots as
+// separate strokes. Its scoped source remains distinct from Persian ت.
 // Persian ا opens UT Austin's freehand alphabet demonstration: one vertical
 // movement travels from the top to the baseline. The lesson presents the
 // alphabet right-to-left, while this isolated non-connector remains one stroke.
@@ -420,6 +423,62 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: arabicAlphabetSource("ب"),
+  },
+  [ductusKey("arabic", "ت")]: {
+    script: "arabic",
+    glyph: "ت",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep the shallow bowl from right to left",
+            path: [
+              { x: 678, y: 382 },
+              { x: 663, y: 345 },
+              { x: 650, y: 305 },
+              { x: 654, y: 260 },
+              { x: 672, y: 215 },
+              { x: 688, y: 170 },
+              { x: 686, y: 126 },
+              { x: 620, y: 94 },
+              { x: 530, y: 65 },
+              { x: 430, y: 42 },
+              { x: 335, y: 38 },
+              { x: 245, y: 51 },
+              { x: 170, y: 83 },
+              { x: 120, y: 135 },
+              { x: 96, y: 205 },
+              { x: 100, y: 255 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then place the left dot above",
+            path: [
+              { x: 247, y: 374 },
+              { x: 284, y: 412 },
+              { x: 319, y: 379 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again and place the right dot",
+            path: [
+              { x: 395, y: 389 },
+              { x: 434, y: 430 },
+              { x: 470, y: 395 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ت"),
   },
   [ductusKey("urdu-nastaliq", "ج")]: {
     script: "urdu-nastaliq",

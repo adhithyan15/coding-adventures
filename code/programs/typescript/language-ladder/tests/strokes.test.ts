@@ -26,6 +26,7 @@ const load = (name: string) => {
 const tamil = () => parseFont(load("NotoSansTamil-Static.ttf"));
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
+const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
@@ -457,6 +458,17 @@ describe("handwriting ductus", () => {
     expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
   });
 
+  it("Arabic independent ت uses the shared bowl, then two separately lifted dots", () => {
+    expect(penLifts(ARABIC_TAA)).toBe(2);
+    expect(ARABIC_TAA.strokes).toHaveLength(3);
+    expect(ARABIC_TAA.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 1]);
+    const bowl = penPath(ARABIC_TAA.strokes[0]);
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+    expect(ARABIC_TAA.strokes[1].segments[0].path[0].x).toBeLessThan(
+      ARABIC_TAA.strokes[2].segments[0].path[0].x,
+    );
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -596,6 +608,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ب", ARABIC_BAA.source.url)).toBe(
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
+    expect(verifiedLetterFont("ت", ARABIC_TAA.source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
+    );
     expect(verifiedLetterFont("و", "https://example.invalid/wrong-source")).toBeUndefined();
   });
 
@@ -718,6 +733,20 @@ describe("handwriting ductus", () => {
       /upper-right tip.*right-to-left.*shallow bowl.*left tip.*lifting once.*dot below.*two-way connector.*contextual shapes.*Noto Naskh.*Arabic provenance.*Persian/i,
     );
     expect(src.url).not.toBe(DUCTUS["ب"].source.url);
+  });
+
+  it("Arabic independent ت traces its bowl and separate dots to the University of Oregon", () => {
+    const src = ARABIC_TAA.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/two-way-connectors-%D8%A8-%D8%AA-%D8%AB-%D9%86-%D9%8A/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet: ب ت ث.*Baa.*00:02–00:04.*Taa.*00:00–00:01.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /Baa demonstration.*upper-right tip.*right-to-left.*turned-up left tip.*Taa demonstration opens.*complete bowl.*left dot.*00:00.45–00:00.70.*right dot.*00:00.75–00:01.00.*does not redraw.*rather than inferring.*two-way connector.*contextual shapes.*Noto Naskh.*Arabic provenance.*Persian/i,
+    );
+    expect(src.url).not.toBe(DUCTUS["ت"].source.url);
   });
 
   it("Urdu independent ج traces to Zer o Zabar's dot-first pointed-head animation", () => {

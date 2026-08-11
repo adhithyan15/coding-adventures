@@ -80,6 +80,8 @@ const ARABIC_ALEF = ductusFor("ا", "arabic")!;
 const arabicAlefOutline = naskhOutline("ا");
 const ARABIC_BAA = ductusFor("ب", "arabic")!;
 const arabicBaaOutline = naskhOutline("ب");
+const ARABIC_TAA = ductusFor("ت", "arabic")!;
+const arabicTaaOutline = naskhOutline("ت");
 const URDU_ALEF = ductusFor("ا", "urdu-nastaliq")!;
 const urduAlefOutline = naskhOutline("ا");
 const URDU_JIM = ductusFor("ج", "urdu-nastaliq")!;
@@ -765,6 +767,40 @@ describe("Arabic ب — a script-scoped bowl-and-dot filmstrip", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(ARABIC_BAA.strokes[1], 1),
+    );
+  });
+});
+
+describe("Arabic ت — a script-scoped bowl-and-two-dots filmstrip", () => {
+  const steps = ductusSteps(ARABIC_TAA);
+  const strip = ductusFilmstrip(ARABIC_TAA, arabicTaaOutline);
+
+  it("shows the shared right-to-left bowl before both separately lifted dots", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep the shallow bowl from right to left",
+      "lift, then place the left dot above",
+      "lift again and place the right dot",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2]);
+    expect(ARABIC_TAA.strokes[0].segments[0].path[0].x).toBeGreaterThan(
+      ARABIC_TAA.strokes[0].segments[0].path.at(-1)!.x,
+    );
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 3 movements");
+  });
+
+  it("draws the Noto Naskh outline and retains the bowl and left dot in the final frame", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicTaaOutline.path,
+    );
+    expect(
+      paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d),
+    ).toEqual([penPathD(ARABIC_TAA.strokes[0], 1), penPathD(ARABIC_TAA.strokes[1], 1)]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_TAA.strokes[2], 1),
     );
   });
 });
