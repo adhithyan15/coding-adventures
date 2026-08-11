@@ -82,6 +82,8 @@ const ARABIC_BAA = ductusFor("ب", "arabic")!;
 const arabicBaaOutline = naskhOutline("ب");
 const ARABIC_TAA = ductusFor("ت", "arabic")!;
 const arabicTaaOutline = naskhOutline("ت");
+const ARABIC_JEEM = ductusFor("ج", "arabic")!;
+const arabicJeemOutline = naskhOutline("ج");
 const URDU_ALEF = ductusFor("ا", "urdu-nastaliq")!;
 const urduAlefOutline = naskhOutline("ا");
 const URDU_JIM = ductusFor("ج", "urdu-nastaliq")!;
@@ -801,6 +803,37 @@ describe("Arabic ت — a script-scoped bowl-and-two-dots filmstrip", () => {
     ).toEqual([penPathD(ARABIC_TAA.strokes[0], 1), penPathD(ARABIC_TAA.strokes[1], 1)]);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(ARABIC_TAA.strokes[2], 1),
+    );
+  });
+});
+
+describe("Arabic ج — a body-first hook-and-dot filmstrip", () => {
+  const steps = ductusSteps(ARABIC_JEEM);
+  const strip = ductusFilmstrip(ARABIC_JEEM, arabicJeemOutline);
+
+  it("keeps the sourced head and bowl in one stroke before the lifted dot", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the short upper head from left to right",
+      "continue down and around the bowl",
+      "lift once, then place the dot below",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+  });
+
+  it("uses Noto Naskh and retains the body in the final dot frame", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicJeemOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(ARABIC_JEEM.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_JEEM.strokes[1], 1),
     );
   });
 });
