@@ -1,9 +1,15 @@
 # AOT00-T9 — moving minor collector (young-generation compaction)
 
-> Status: **landed** — PR-1 (this spec, sign-off) through PR-4 (`collect_minor_compacting`, the
-> full live cycle) are all merged; `gc-core` now has a real, callable moving-minor collector. §5's
-> optional PR-5 (auto-triggering pacing, mirroring `should_compact`) remains open follow-up work,
-> not required for this arc to be "complete" — see that bullet.
+> Status: **landed, including PR-5** — PR-1 (this spec, sign-off) through PR-4
+> (`collect_minor_compacting`, the full live cycle) were merged first; §5's optional PR-5
+> (auto-triggering pacing, mirroring `should_compact`) has since landed too:
+> `FlatHeap::should_compact_minor` (the moving-minor pacing predicate), the
+> `__gc_collect_minor_compacting` C-ABI entry (+ `__twig_gc_collect_minor_compacting` alias), and
+> a 4-way dispatch in both automatic collection sites (`gc-core-capi`'s `__gc_safepoint` and
+> `vm-core`'s `run_safepoint`) that upgrades an already-decided minor cycle to a moving one when
+> fragmentation independently warrants it. Per §7's own note, the `AOT00-T8` `auto_minor`
+> attestation gate's documentation was revisited and updated for the strengthened obligation a
+> moving minor cycle imposes before this wiring landed (see `FlatHeap::auto_minor`'s field doc).
 >
 > Builds on the now-complete precision ladder
 > (`mark-and-sweep ✓ → interior-precise ✓ → generational ✓ → precise-roots ✓ → compacting ✓ → incremental ✓`)
@@ -246,6 +252,27 @@ adversarial review are the "own adversarial pass" this paragraph called for.
    sometimes evacuates instead of sweeping in place, once PR-4 is proven stable. Not required for
    this arc to be "complete" — `collect_compacting` itself shipped useful and callable before
    `should_compact` existed to auto-trigger it.
+   ✅ **Landed.** `FlatHeap::should_compact_minor` (deliberately does *not* reuse
+   `AdaptivePolicy::evaluate`'s single mutually-exclusive top-1 pick — see that method's own doc for
+   why a naive reuse would be structurally unable to ever fire once `should_collect_minor` has
+   already observed `evaluate` recommend `Generational`; it instead re-checks `AdaptivePolicy`'s own
+   fragmentation threshold directly, an independent second axis, not another priority rung) +
+   `__gc_collect_minor_compacting` C-ABI entry (mirrors `__gc_collect_compacting`'s frame-pointer
+   walk, gated by the same `auto_minor` attestation `__gc_collect_minor_precise` already enforces) +
+   `__twig_gc_collect_minor_compacting` alias + a 4-way dispatch in both `__gc_safepoint`
+   (`gc-core-capi`) and `run_safepoint` (`vm-core`). Per this spec's own §7 note, the `auto_minor`
+   attestation gate's field/`set_auto_minor` doc comments were updated first, both to correct a
+   now-stale claim (native-AOT/LLVM's `field_store`/`array_set` barrier emission had since shipped,
+   contradicting an earlier "does not emit the barrier" claim) and to document the moving cycle's
+   strictly stronger obligation. Execution-level regression coverage
+   (`vm-core/tests/gc_heap.rs`'s `safepoint_stays_minor_scoped_when_should_compact_minor_also_fires`)
+   proves the dispatch keeps minor SCOPE even when the fragmentation signal independently fires
+   alongside the generational one — confirmed load-bearing via a revert check (routing to full
+   `collect_compacting` instead) that reproduces the exact predicted failure. Does **not** prove
+   actual relocation through `vm-core`, since every `vm-core` allocation is kind-0 today (no IIR op
+   registers a movable kind there) — relocation correctness itself is `gc-core`'s own already-proven
+   concern (PR-2 through PR-4's tests); what this rung proves is that the *dispatch* reaches the
+   right primitive, not that the primitive relocates anything new.
 
 Each PR: Miri-clean, adversarial security review (this is exactly the class of bug — a
 reachable-but-unclassified object — the review process exists for), and a real differential proving

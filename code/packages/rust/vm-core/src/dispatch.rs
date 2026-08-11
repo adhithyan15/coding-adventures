@@ -1424,18 +1424,30 @@ fn collect_now(ctx: &mut DispatchCtx) {
 ///
 /// When due, further upgrades to a **minor** (young-generation-only) cycle
 /// whenever `ctx.heap.should_collect_minor()` says the survival-ratio signal
-/// warrants it, or a **compacting** cycle whenever `ctx.heap.should_compact()`
-/// says fragmentation warrants it — the same shared policy `gc-core-capi`'s
-/// `__gc_safepoint` consults (minor checked first, matching `AdaptivePolicy`'s
-/// own priority order), so the two automatic-collection call sites can't
-/// drift apart. `VMCore::new()` attests `set_auto_minor(true)` once at
-/// construction (vm-core's `handle_gc_field_store` calls the generational
-/// write barrier on every store, so `should_collect_minor` is sound to honor
-/// here — see that attestation's own doc comment). `collect_compacting`'s
-/// root-slot rewrite (see `gc_core::HeapRef::as_mut_ptr`) transparently
-/// updates every `Value::HeapRef` in `build_roots`' root set in place, so
-/// vm-core needs no fixup logic of its own beyond passing the same roots;
-/// `collect_minor_mixed` never relocates, so no rewrite applies there either.
+/// warrants it — itself further upgraded to a **moving** minor cycle
+/// (`collect_minor_compacting`) whenever `ctx.heap.should_compact_minor()`
+/// also fires (AOT00-T9 §5, PR-5) — or a **compacting** cycle whenever
+/// `ctx.heap.should_compact()` says fragmentation warrants it — the same
+/// shared policy `gc-core-capi`'s `__gc_safepoint` consults (minor scope
+/// checked first, matching `AdaptivePolicy`'s own priority order for that
+/// choice; moving-vs-plain decided independently within whichever scope
+/// won, per `should_compact_minor`'s own doc for why that's not another
+/// rung of the same priority ladder), so the two automatic-collection call
+/// sites can't drift apart. `VMCore::new()` attests `set_auto_minor(true)`
+/// once at construction (vm-core's `handle_gc_field_store` calls the
+/// generational write barrier on every store, so `should_collect_minor` is
+/// sound to honor here — see that attestation's own doc comment; the same
+/// attestation flag now also gates the moving-minor branch, which carries a
+/// *strictly stronger* barrier-fidelity requirement per
+/// `collect_minor_compacting`'s own Safety doc — vm-core's every-store
+/// coverage meets that bar too, since it barriers unconditionally, not just
+/// "most" stores). `collect_compacting`'s root-slot rewrite (see
+/// `gc_core::HeapRef::as_mut_ptr`) transparently updates every
+/// `Value::HeapRef` in `build_roots`' root set in place, so vm-core needs no
+/// fixup logic of its own beyond passing the same roots;
+/// `collect_minor_compacting` shares that same root-rewrite mechanism (the
+/// moving-minor analogue), and `collect_minor_mixed` never relocates, so no
+/// rewrite applies there either.
 fn run_safepoint(ctx: &mut DispatchCtx) {
     if !ctx.heap.should_collect() {
         return;
@@ -1446,7 +1458,11 @@ fn run_safepoint(ctx: &mut DispatchCtx) {
     // duration of this call.
     let stats = unsafe {
         if ctx.heap.should_collect_minor() {
-            ctx.heap.collect_minor_mixed(&roots, &[])
+            if ctx.heap.should_compact_minor() {
+                ctx.heap.collect_minor_compacting(&roots, &[])
+            } else {
+                ctx.heap.collect_minor_mixed(&roots, &[])
+            }
         } else if ctx.heap.should_compact() {
             ctx.heap.collect_compacting(&roots, &[])
         } else {

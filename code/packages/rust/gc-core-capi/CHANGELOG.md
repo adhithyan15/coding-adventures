@@ -2,6 +2,50 @@
 
 All notable changes to this crate are documented here.
 
+## 0.25.0 - 2026-08-11 — `__gc_collect_minor_compacting`: the moving-minor C ABI entry (AOT00-T9 §5, PR-5)
+
+- **New `__gc_collect_minor_compacting()`** — a minor (young-generation-only)
+  collection rooted precisely at the caller's stack that also compacts, evacuating
+  young survivors into a compact arena instead of sweeping them in place. It is to
+  `gc_core::FlatHeap::collect_minor_compacting` exactly what `__gc_collect_compacting`
+  is to `collect_compacting`, sharing `__gc_collect_minor_precise`'s identical
+  frame-pointer walk — the moving-minor cell in the same moving × generational-scope
+  2×2 the other three entries fill the other three cells of.
+- **Requires `__gc_set_auto_minor` attestation, same as `__gc_collect_minor_precise`
+  — and for a strictly stronger reason.** A non-moving minor cycle tolerates an
+  occasional missed `__gc_write_barrier` call as long as the child it would have
+  recorded is independently reachable; a moving minor cycle does not have that
+  slack (see `collect_minor_compacting`'s own Safety doc). Unattested, this is a
+  safe no-op.
+- New `__twig_gc_collect_minor_compacting()` alias, mirroring
+  `__twig_gc_collect_minor_precise`'s own shape — the `__twig_gc_*` name a native
+  code generator emits for the `gc_collect_minor_compacting` builtin.
+- **`__gc_safepoint`'s automatic dispatch is now 4-way**, not 3-way: minor scope
+  (decided first, per `should_collect_minor`) is now itself further split into
+  moving (`should_compact_minor`) vs plain, alongside the existing full-scope
+  moving-vs-plain split via `should_compact`.
+- **`gc_core.h`'s `__gc_collect_minor_precise` doc comment corrected** — it
+  previously claimed this entry is "always directly callable regardless of
+  `__gc_set_auto_minor`", which stopped being true when a prior security fix (see
+  0.24.5) gated the function on that attestation itself; the header now matches the
+  actual, current behavior. New `__gc_collect_minor_compacting` declaration added
+  alongside it.
+- 2 new unit tests: unattested calls are a safe no-op (mirroring
+  `__gc_collect_minor_precise`'s own gate test); an attested end-to-end run keeps a
+  stack-rooted young local's contents intact and an unrooted OLD object alive
+  (minor scope preserved), mirroring `minor_precise_collect_keeps_live_local_and_
+  retains_old`'s own shape. Does not (and, with no stack maps registered, structurally
+  cannot) assert on actual relocation — see `AOT00-T9-moving-minor-collector.md` §5's
+  updated PR-5 bullet for why that's `gc-core`'s own already-proven concern (PR-2
+  through PR-4), not this C-ABI wiring layer's.
+- Verification: `cargo build`/`test` clean (43 tests, up from 41); `cargo clippy
+  --all-targets` clean. The two new tests could not be run under Miri (inline
+  assembly in the shared stack-capture path is unsupported by Miri) — confirmed this
+  is a pre-existing limitation, not a regression: the existing, unmodified
+  `minor_precise_collect_keeps_live_local_and_retains_old` test hits the identical
+  Miri "unsupported operation: inline assembly" error on the same asm call. The
+  attestation-gate test (which returns before reaching the asm path) is Miri-clean.
+
 ## 0.24.5 - 2026-08-10 — fix: `__gc_collect_minor_precise` now enforces `auto_minor` attestation
 
 - **Security-review finding, hardened here.** `__gc_collect_minor_precise` — a

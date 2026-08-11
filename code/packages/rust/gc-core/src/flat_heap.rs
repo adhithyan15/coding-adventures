@@ -282,10 +282,37 @@ pub struct FlatHeap {
     /// `should_collect_minor` never fires, and every existing automatic collection site
     /// (`gc-core-capi`'s `__gc_safepoint`) keeps its exact pre-AOT00-T8 behavior, until
     /// the embedder calls [`Self::set_auto_minor`] to attest that every reference store
-    /// its compiled output performs is barrier-covered. (`vm-core`'s interpreter loop is
-    /// barrier-covered — see `handle_gc_field_store` — and can safely opt in; the
-    /// native-AOT/LLVM code generators do not emit the barrier on `field_store` today,
-    /// so they must not.)
+    /// its compiled output performs is barrier-covered. `vm-core`'s interpreter loop is
+    /// barrier-covered (see `handle_gc_field_store`, which calls the barrier on every
+    /// genuine `Value::HeapRef` store — vm-core has no equivalent `array_set` on this
+    /// heap, so `field_store` is its only mutation site needing coverage) and attests
+    /// at `VMCore::new()`.
+    ///
+    /// **Native-AOT/LLVM status, as of AOT00-T8's `field_store`/`array_set` write-barrier
+    /// emission PRs:** all three native backends (`aarch64-backend`, `x86_64-backend`,
+    /// `iir-to-llvm`) now emit the barrier unconditionally on both `field_store` and
+    /// `array_set`. **This is necessary but has not been shown sufficient** — no exhaustive
+    /// audit of every GC-tracked mutation site across those backends (e.g. any future op
+    /// that writes a heap reference outside these two) has confirmed *no* site silently
+    /// bypasses the barrier, and this doc has been wrong about backend coverage before (an
+    /// earlier revision claimed native-AOT/LLVM emitted no barrier at all, before those PRs
+    /// landed) — so treat this paragraph as a snapshot, not a standing guarantee, and
+    /// re-verify against the current source (grep each backend's op-lowering table for
+    /// every heap-reference-producing store) before attesting for a native-AOT/LLVM
+    /// embedder rather than trusting this comment.
+    ///
+    /// **Strengthened obligation once a *moving* minor cycle is reachable (AOT00-T9 §5,
+    /// PR-5 — [`Self::should_compact_minor`] / [`Self::collect_minor_compacting`]):** a
+    /// non-moving minor cycle tolerates an occasional missed barrier as long as the child
+    /// it would have recorded is independently reachable (it is simply marked and kept
+    /// live, unmoved); a *moving* minor cycle does not have that slack — see
+    /// `collect_minor_compacting`'s own Safety doc and `AOT00-T9-moving-minor-collector.md`
+    /// §7's residual-dependency note for the exact gap (a barrier-missed parent reachable
+    /// *only* through the very store that should have been barriered goes stale the moment
+    /// its child relocates). `should_compact_minor`/`collect_minor_compacting` share this
+    /// *same* `auto_minor` flag — there is no separate, stronger attestation gate for the
+    /// moving path — so an embedder attesting here is attesting to the moving cycle's
+    /// stricter bar too, not just the non-moving one's, from the moment it opts in.
     auto_minor: bool,
 }
 
@@ -503,10 +530,16 @@ impl FlatHeap {
 
     /// **Attest that every reference store this embedder's compiled output performs is
     /// covered by [`Self::write_barrier`]**, and thereby allow [`Self::should_collect_minor`]
-    /// to recommend automatic minor collections (see the field's own doc comment for the
-    /// full soundness argument). Off by default. Call this only after confirming your
-    /// code generator's field-store lowering calls the barrier on every old→young store —
-    /// getting this wrong is a real use-after-free, not a leak or a perf regression.
+    /// to recommend automatic minor collections — **and, since AOT00-T9 PR-5,
+    /// [`Self::should_compact_minor`] to recommend a *moving* minor collection too, which
+    /// carries a strictly stronger version of the same obligation** (see the field's own
+    /// doc comment for the full soundness argument, including that stronger bar). Off by
+    /// default. Call this only after confirming your code generator's field-store lowering
+    /// calls the barrier on every old→young store — getting this wrong is a real
+    /// use-after-free, not a leak or a perf regression — and, once your embedder's
+    /// collection sites can reach the moving path, that the barrier's coverage is complete
+    /// enough to meet that stronger bar too, not merely "good enough" for the non-moving
+    /// case.
     pub fn set_auto_minor(&mut self, on: bool) {
         self.auto_minor = on;
     }
@@ -800,6 +833,36 @@ impl FlatHeap {
             AdaptivePolicy::default().evaluate(&self.profile),
             PolicyDecision::SuggestSwitch(GcAlgorithm::Generational, _)
         )
+    }
+
+    /// Whether a paced **minor** collection that's already been decided (i.e. a caller has
+    /// already checked [`Self::should_collect_minor`]) should also **compact** — evacuate its
+    /// young survivors into a compact arena via [`Self::collect_minor_compacting`], instead of
+    /// sweeping them in place — the moving-minor analogue of [`Self::should_compact`] (AOT00-T9
+    /// §5, PR-5).
+    ///
+    /// **Deliberately does *not* reuse [`AdaptivePolicy::evaluate`]** the way `should_compact`
+    /// and `should_collect_minor` themselves do. `evaluate` returns a single, mutually-exclusive
+    /// top-priority recommendation (Incremental, then Generational, then Compacting — see that
+    /// method's own doc) — so on any cycle where `should_collect_minor` has already observed
+    /// `evaluate` recommend `Generational`, that same `evaluate` call can *never* also recommend
+    /// `Compacting`; asking it again here would be structurally unable to answer "yes" and this
+    /// method would be dead code. What this asks instead is the narrower, independent question
+    /// "is fragmentation *alone* over `AdaptivePolicy`'s threshold" — reusing that policy's own
+    /// configured `compacting_fragmentation_threshold`/`min_cycles_before_advice` fields (so a
+    /// tuned policy still governs both signals identically — the "one place this decision lives"
+    /// contract `should_compact`'s own doc describes, just evaluated as two independent
+    /// sub-questions instead of one priority pick, because both a low survival ratio *and* high
+    /// fragmentation can legitimately hold at once — that combination is exactly what this method
+    /// exists to detect, not a conflict to arbitrate away).
+    ///
+    /// Pure policy, like its siblings: names no roots, runs no collection, and does not itself
+    /// check `auto_minor` — the caller is expected to have already gone through
+    /// `should_collect_minor`'s gate (or an equivalent one) before ever consulting this.
+    pub fn should_compact_minor(&self) -> bool {
+        let policy = AdaptivePolicy::default();
+        self.profile.total_collections >= policy.min_cycles_before_advice
+            && self.profile.last_fragmentation > policy.compacting_fragmentation_threshold
     }
 
     /// Re-tune the threshold after a cycle, given the live bytes *before* it.
@@ -3828,6 +3891,67 @@ mod tests {
         heap.profile.last_fragmentation = 0.90; // compacting signal, also firing
         assert!(heap.should_collect_minor(), "generational outranks compacting");
         assert!(!heap.should_compact(), "should_compact defers to the higher-priority signal");
+    }
+
+    // ── Moving-minor pacing (AOT00-T9 §5, PR-5) ────────────────────────────────
+
+    /// `should_compact_minor` follows the same fragmentation threshold/cycle-count gate
+    /// `should_compact` does — but, unlike `should_compact`, does NOT defer when the
+    /// generational (survival-ratio) signal is *also* firing: this is exactly the scenario
+    /// `should_collect_minor_outranks_should_compact` (directly above) proves `should_compact`
+    /// itself must lose. `should_compact_minor` exists precisely to answer "yes" here, because
+    /// this method is consulted only once a *minor* cycle has already been decided (via
+    /// `should_collect_minor`) — the question left is whether that minor cycle should also
+    /// move, not which single top-priority algorithm `AdaptivePolicy` would pick in isolation.
+    #[test]
+    fn should_compact_minor_follows_fragmentation_independent_of_the_generational_signal() {
+        let mut heap = FlatHeap::new();
+
+        // Too few cycles: gated exactly like should_compact/should_collect_minor.
+        heap.profile.total_collections = 2;
+        heap.profile.last_fragmentation = 0.90;
+        assert!(!heap.should_compact_minor(), "too few cycles to advise yet");
+
+        // Enough cycles, but fragmentation below threshold.
+        heap.profile.total_collections = 10;
+        heap.profile.last_fragmentation = 0.10;
+        assert!(!heap.should_compact_minor(), "fragmentation too low to warrant compacting");
+
+        // Enough cycles, fragmentation above threshold, survival ratio ALSO low (the
+        // generational signal `should_collect_minor` would independently pick as its own
+        // top-1 recommendation via AdaptivePolicy::evaluate). should_compact_minor still
+        // says yes — it is not arbitrating against should_collect_minor's own pick, it is
+        // answering a narrower question about the minor cycle already under way.
+        heap.profile.last_fragmentation = 0.90;
+        heap.set_auto_minor(true);
+        heap.profile.ema_survival_ratio = 0.01;
+        assert!(
+            heap.should_collect_minor(),
+            "sanity: this profile really is the should_collect_minor_outranks_should_compact shape"
+        );
+        assert!(!heap.should_compact(), "sanity: should_compact itself still defers");
+        assert!(
+            heap.should_compact_minor(),
+            "should_compact_minor fires independent of should_collect_minor's own priority pick"
+        );
+    }
+
+    /// `should_compact_minor` is pure policy over `self.profile` alone — it does not itself
+    /// consult `auto_minor` (the caller is expected to have already gone through
+    /// `should_collect_minor`'s gate, or an equivalent one, before ever asking this). A
+    /// regression that added an internal `auto_minor` check here would silently make this
+    /// method redundant with its caller's own gate rather than a genuine bug, so this pins the
+    /// documented contract explicitly.
+    #[test]
+    fn should_compact_minor_does_not_itself_gate_on_auto_minor() {
+        let mut heap = FlatHeap::new();
+        assert!(!heap.auto_minor(), "off by default");
+        heap.profile.total_collections = 10;
+        heap.profile.last_fragmentation = 0.90;
+        assert!(
+            heap.should_compact_minor(),
+            "should_compact_minor answers purely from fragmentation, regardless of auto_minor"
+        );
     }
 
     /// A sustained low-survival profile would recommend `Generational` forever — the
