@@ -6971,6 +6971,23 @@ impl HtmlParser {
         }
         if self.current_namespace().is_some()
             && !self.current_element_is(name)
+            && is_adoption_agency_element(name)
+            && self.has_open_html_element_before_foreign_boundary(name)
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-end-tag-in-foreign-content",
+                format!("end tag `</{name}>` did not match the current foreign element"),
+            ));
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-non-current-formatting-end-tag",
+                format!(
+                    "end tag `</{name}>` triggered adoption-agency recovery before its formatting element was current"
+                ),
+            ));
+            self.pop_foreign_elements();
+        }
+        if self.current_namespace().is_some()
+            && !self.current_element_is(name)
             && self.has_open_element(name)
             && (is_table_context_element(name)
                 || self.current_namespace() == Some("svg")
@@ -9136,6 +9153,14 @@ impl HtmlParser {
         false
     }
 
+    fn has_open_html_element_before_foreign_boundary(&self, name: &str) -> bool {
+        self.open_elements.iter().rev().any(|path| {
+            element_ref_at_path(&self.document, path).is_some_and(|element| {
+                element.namespace.is_none() && element.name.eq_ignore_ascii_case(name)
+            })
+        })
+    }
+
     fn current_empty_element_is(&self, name: &str) -> bool {
         self.open_elements
             .last()
@@ -11151,6 +11176,25 @@ fn is_formatting_element(name: &str) -> bool {
             | "s"
             | "small"
             | "span"
+            | "strike"
+            | "strong"
+            | "tt"
+            | "u"
+    )
+}
+
+fn is_adoption_agency_element(name: &str) -> bool {
+    matches!(
+        name,
+        "a" | "b"
+            | "big"
+            | "code"
+            | "em"
+            | "font"
+            | "i"
+            | "nobr"
+            | "s"
+            | "small"
             | "strike"
             | "strong"
             | "tt"
@@ -34325,6 +34369,69 @@ mod tests {
                 diagnostic.code != "unexpected-formatting-end-tag-without-open-element"
             }));
         }
+    }
+
+    #[test]
+    fn reports_adoption_agency_reprocessing_from_foreign_content() {
+        for (source, name) in [
+            ("<!doctype html><a><svg><tr><input></a>", "a"),
+            ("<!doctype html><b><math><mi></b>", "b"),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![
+                    ParserDiagnostic::new(
+                        "unexpected-end-tag-in-foreign-content",
+                        format!(
+                            "end tag `</{name}>` did not match the current foreign element"
+                        ),
+                    ),
+                    ParserDiagnostic::new(
+                        "unexpected-non-current-formatting-end-tag",
+                        format!(
+                            "end tag `</{name}>` triggered adoption-agency recovery before its formatting element was current"
+                        ),
+                    ),
+                ],
+                "source {source:?}"
+            );
+        }
+
+        let target = parse_html_with_diagnostics("<!doctype html><a><svg><tr><input></a>").unwrap();
+        let document_body = body(&target.document);
+        let anchor = element(&document_body.children[0]);
+        assert_eq!(anchor.name, "a");
+        let svg = element(&anchor.children[0]);
+        assert_eq!(svg.name, "svg");
+        assert_eq!(svg.namespace.as_deref(), Some("svg"));
+        let row = element(&svg.children[0]);
+        assert_eq!(row.name, "tr");
+        assert_eq!(row.namespace.as_deref(), Some("svg"));
+        let input = element(&row.children[0]);
+        assert_eq!(input.name, "input");
+        assert_eq!(input.namespace.as_deref(), Some("svg"));
+
+        for source in [
+            "<!doctype html><a><svg></svg></a>",
+            "<!doctype html><b><i></b>",
+            "<!doctype html><svg><g></a>",
+            "<!doctype html><svg><a><g></a></svg>",
+            "<!doctype html><svg><template></template></svg>",
+        ] {
+            let control = parse_html_with_diagnostics(source).unwrap();
+            assert!(control
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| { diagnostic.code != "unexpected-end-tag-in-foreign-content" }));
+        }
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<a><g></a>", "svg svg").unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| { diagnostic.code != "unexpected-end-tag-in-foreign-content" }));
     }
 
     #[test]
