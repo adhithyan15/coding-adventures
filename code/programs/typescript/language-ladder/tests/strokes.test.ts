@@ -36,6 +36,7 @@ const HEBREW_TET = DUCTUS[ductusKey("hebrew", "ט")];
 const HEBREW_YOD = DUCTUS[ductusKey("hebrew", "י")];
 const HEBREW_KAF = DUCTUS[ductusKey("hebrew", "כ")];
 const HEBREW_LAMED = DUCTUS[ductusKey("hebrew", "ל")];
+const HEBREW_MEM = DUCTUS[ductusKey("hebrew", "מ")];
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
@@ -368,6 +369,28 @@ describe("handwriting ductus", () => {
     expect(lower[0]).toEqual(bar.at(-1));
     expect(lower[0].y).toBeGreaterThan(lower.at(-1)!.y);
     expect(lower[0].x).toBeGreaterThan(lower.at(-1)!.x);
+  });
+
+  it("Hebrew מ lifts once between its detached angled part and joined right body", () => {
+    expect(HEBREW_MEM.script).toBe("hebrew");
+    expect(penLifts(HEBREW_MEM)).toBe(1);
+    expect(HEBREW_MEM.strokes).toHaveLength(2);
+    expect(HEBREW_MEM.strokes[0].segments).toHaveLength(2);
+    expect(HEBREW_MEM.strokes[1].segments).toHaveLength(3);
+    const diagonal = HEBREW_MEM.strokes[0].segments[0].path;
+    const inner = HEBREW_MEM.strokes[0].segments[1].path;
+    const upper = HEBREW_MEM.strokes[1].segments[0].path;
+    const side = HEBREW_MEM.strokes[1].segments[1].path;
+    const base = HEBREW_MEM.strokes[1].segments[2].path;
+    expect(diagonal[0].x).toBeLessThan(diagonal.at(-1)!.x);
+    expect(diagonal[0].y).toBeLessThan(diagonal.at(-1)!.y);
+    expect(inner[0]).toEqual(diagonal.at(-1));
+    expect(inner[0].y).toBeGreaterThan(inner.at(-1)!.y);
+    expect(upper[0].x).toBeLessThan(upper.at(-1)!.x);
+    expect(side[0]).toEqual(upper.at(-1));
+    expect(side[0].y).toBeGreaterThan(side.at(-1)!.y);
+    expect(base[0]).toEqual(side.at(-1));
+    expect(base[0].x).toBeGreaterThan(base.at(-1)!.x);
   });
 
   it("அ lifts once before its separate right upright (two strokes)", () => {
@@ -1015,6 +1038,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ל", HEBREW_LAMED.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
+    expect(verifiedLetterFont("מ", HEBREW_MEM.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
     expect(verifiedLetterFont("ம", DUCTUS["ம"].source.url)).toBe(
       "_fonts/NotoSansTamil-Static.ttf",
     );
@@ -1179,6 +1205,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /handwritten Lamed.*rounded looping run.*00:52.8–00:53.7.*printed demonstration.*top.*tall left stroke.*descends.*middle junction.*right along the bar.*diagonally down-left.*without lifting.*01:22.4–01:23.9.*printed form is angular.*handwriting is looped and rounded.*Noto Sans Hebrew.*handwritten variation/i,
+    );
+  });
+
+  it("Hebrew מ traces the open printed form in two pen-down runs", () => {
+    const src = HEBREW_MEM.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=CBU6aSCcPrE");
+    expect(src.citation).toMatch(
+      /Hebrew Writing #8.*Lamed and Mem.*03:07.7–03:10.6.*HebrewPod101/i,
+    );
+    expect(src.variation).toMatch(
+      /handwritten Mem.*N-like cursive zigzag.*03:02.8–03:05.3.*printed demonstration.*detached left part.*lower tip.*corner.*down-right.*short inner leg.*lifts once.*angular right body.*climb diagonally right.*upper shoulder.*down the right side.*left along the base.*03:07.7–03:10.6.*open at the bottom-left.*Noto Sans Hebrew.*handwritten variation/i,
     );
   });
 

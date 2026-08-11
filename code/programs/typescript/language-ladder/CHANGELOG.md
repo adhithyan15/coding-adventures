@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Hebrew Mem ductus (HL-C09BP)
+
+- Render **מ** in five evidence-aligned frames: draw the detached angled left
+  part, lift once, then join the upper shoulder, right side, and base.
+- Keep the source's open two-stroke print order explicit while preserving its
+  narrow N-like handwritten alternative.
+- Queue the independently published Nun lesson (`3gYCaDgB-Nk`) next.
+
 ### Added — cited Hebrew Lamed ductus (HL-C09BO)
 
 - Render **ל** in three evidence-aligned frames: descend the tall left stroke,
