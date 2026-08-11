@@ -1523,8 +1523,8 @@ const PROGRAMS: &[Prog] = &[
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — a one-dimensional typed array formal is a descriptor-value
-    // parameter: its handle aliases the caller's elements and its declared
-    // lower bound crosses the call beside that handle. `invoke` captures
+    // parameter: its value-mode handle is copied while its declared lower
+    // bound crosses the call beside that handle. `invoke` captures
     // `values`, so it also proves global descriptor reload before `fill` is
     // called in a fresh frame. All seven backends receive `array<i64>, i64`
     // parameters through the ordinary shared IIR call ABI. Exit 42.
@@ -1537,6 +1537,17 @@ const PROGRAMS: &[Prog] = &[
                   procedure invoke; result := fill(values); \
                   invoke end",
         expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — multidimensional coordinates are checked independently before
+    // row-major flattening. Without this guard A[1,3] in a 2x2 array aliases
+    // the valid A[2,1] flat slot; every backend must instead fail closed.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer array values[1:2, 1:2]; integer result; \
+                  values[2,1] := 42; result := values[1,3] end",
+        expect: Expect::Trap,
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — a two-dimensional array formal infers its rank from `a[i,j]`
@@ -6790,6 +6801,36 @@ fn algol_multidimensional_array_parameter_runs_on_every_available_standard_backe
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but multidimensional array-parameter execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_multidimensional_cross_coordinate_oob_traps_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("values[1:2, 1:2]")
+                && program.src.contains("result := values[1,3]")
+        })
+        .expect("the ALGOL multidimensional coordinate-trap program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but multidimensional coordinate-trap execution did not complete"
             );
             continue;
         };

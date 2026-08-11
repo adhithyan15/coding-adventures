@@ -762,6 +762,11 @@ backend immediately) come before the enabler-dependent items.
   lower bounds) runs on **all 7 backends** — proves the per-dim `sub−lower` subtraction composes
   with the row-major strides (`flat = Σ_d (sub[d]−lower[d])*stride[d]`); no compiler change (the
   `ArrayDim.lower_slot` subtraction already existed); `algol-iir-compiler` 0.26.0 / `lang-aot` 0.169.0.
+  **AL-multidim-coordinate-bounds ✅**: every coordinate is checked before
+  flattening, preventing an invalid `A[1,3]` in a 2x2 array from aliasing the
+  valid flat slot for `A[2,1]`. Dimension sizes are recovered from `array_len`
+  and adjacent row-major strides, preserving the existing descriptor ABI. The
+  fail-closed trap runs on all seven standard backends.
   **AL-array-params ✅**: an array `value` formal infers its rank from its
   indexed uses in the procedure body, then receives the caller's typed handle,
   every lower bound, and each non-final row-major stride. The descriptor keeps
