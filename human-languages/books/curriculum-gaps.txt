@@ -84,3 +84,6 @@ root ledger: 2717 roots, 2624 spent fewer than 3 times (97%), 1807 never spent a
 
 info dump (report-only): 106 of 1694 lessons -- 17 rule statements, 93 paradigm tables (18 full grids)
   complete paradigms presented at once: FR-C05-parler (7-row table with 6 person rows), FR-C16-passe-compose-etre (5-row table with 5 person rows), GE-C05-wohnen (7-row table with 6 person rows)
+
+metalanguage: 46 of 54 grammar terms appear in 1679 lessons; 7738 uses come before introduction, of which 2289 are technical terms across 1161 lessons
+  most-used-before-introduction: verb (795 lessons), noun (398 lessons), regular (109 lessons), tense (109 lessons), pronoun (102 lessons), article (91 lessons)

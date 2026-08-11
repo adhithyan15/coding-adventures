@@ -48539,5 +48539,39 @@
     "paradigmTables": 93,
     "fullParadigmGrids": 18,
     "overBudget": 3
+  },
+  "metalanguage": {
+    "terms": 54,
+    "termsUsed": 46,
+    "lessonsUsingTerms": 1679,
+    "usesBeforeIntroduction": 7738,
+    "technicalUsesBeforeIntroduction": 2289,
+    "technicalLessons": 1161,
+    "worstTerms": [
+      {
+        "term": "verb",
+        "lessons": 795
+      },
+      {
+        "term": "noun",
+        "lessons": 398
+      },
+      {
+        "term": "regular",
+        "lessons": 109
+      },
+      {
+        "term": "tense",
+        "lessons": 109
+      },
+      {
+        "term": "pronoun",
+        "lessons": 102
+      },
+      {
+        "term": "article",
+        "lessons": 91
+      }
+    ]
   }
 }
