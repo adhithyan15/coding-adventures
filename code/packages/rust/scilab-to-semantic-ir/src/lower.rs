@@ -307,8 +307,8 @@ use std::collections::HashSet;
 use lexer::token::Token;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{
-    Block, EffectSet, ElementwiseOpKind, Expr, Feature, FeatureManifest, Function, IndexArg,
-    Metadata, Module, Param, ParamKind, Scope, Span, Stmt,
+    Block, Effect, EffectSet, ElementwiseOpKind, Expr, Feature, FeatureManifest, Function,
+    IndexArg, Metadata, Module, Param, ParamKind, Scope, Span, Stmt,
 };
 
 /// Maximum expression-nesting depth. Mirrors every other SIR frontend's
@@ -2400,7 +2400,7 @@ impl Lowerer {
                         } else if name == "disp" {
                             // The one builtin this frontend recognises,
                             // mirroring `matlab-to-semantic-ir`'s identical
-                            // `disp` -> `"print"` mapping.
+                            // `disp` -> `__sys_write__` mapping (SIR28 §2).
                             let span = self.span_of(primary);
                             let args = self.lower_call_args(suffix, ctx, depth + 1)?;
                             if args.len() != 1 {
@@ -2409,10 +2409,18 @@ impl Lowerer {
                                     "`disp` takes exactly one argument".to_string(),
                                 ));
                             }
+                            self.observed.add(Feature::ConsoleIO);
+                            self.observed.add(Feature::Strings);
+                            let mut sys_args = vec![
+                                Expr::StrLit { value: "stdout".to_string(), span: span.clone() },
+                                Expr::StrLit { value: "once".to_string(), span: span.clone() },
+                                Expr::BoolLit { value: false, span: span.clone() },
+                            ];
+                            sys_args.extend(args);
                             acc = Some(Expr::BuiltinCall {
-                                name: "print".to_string(),
-                                args,
-                                effects: EffectSet::PURE,
+                                name: "__sys_write__".to_string(),
+                                args: sys_args,
+                                effects: EffectSet::PURE.with(Effect::MayPrint),
                                 span,
                             });
                         } else if self.function_names.contains(&name) {
