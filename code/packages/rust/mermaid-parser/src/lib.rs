@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.37.0";
+pub const VERSION: &str = "0.38.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1746,7 +1746,7 @@ fn parse_sequence_control_block(
         (
             String::new(),
             SequenceTextWrap::Default,
-            Some(normalize_sequence_color(&color)),
+            (!color.is_empty()).then(|| normalize_sequence_color(&color)),
         )
     } else {
         let (label, wrap) = take_sequence_wrapped_text(cursor);
@@ -3778,6 +3778,28 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn sequence_parses_default_and_named_rect_backgrounds() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nrect\nAlice->>Bob: Default\nend\nrect green\nBob->>Alice: Named\nend\n",
+        )
+        .unwrap();
+        let fills: Vec<_> = diagram
+            .events
+            .iter()
+            .filter_map(|event| match event {
+                SequenceEvent::BlockStart {
+                    kind: SequenceBlockKind::Rect,
+                    fill,
+                    ..
+                } => Some(fill.as_deref()),
+                _ => None,
+            })
+            .collect();
+
+        assert_eq!(fills, vec![None, Some("green")]);
+    }
+
+    #[test]
     fn sequence_parses_simple_and_json_actor_links() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\nparticipant Alice\nlink Alice: Health Dashboard @ https://example.com/health\nlinks Alice: {\"Wiki\": \"https://example.com/wiki\", \"Repo\": \"https://example.com/repo\"}\n",
@@ -4034,7 +4056,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.37.0");
+        assert_eq!(crate::VERSION, "0.38.0");
     }
 
     #[test]
