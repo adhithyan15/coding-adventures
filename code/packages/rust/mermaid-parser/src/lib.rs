@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.39.0";
+pub const VERSION: &str = "0.40.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1263,6 +1263,18 @@ fn take_sequence_number(cursor: &mut TokenCursor) -> Result<Option<f64>, ParseEr
         return Ok(None);
     }
     let token = cursor.advance().clone();
+    if let Some(next) = cursor.tokens.get(cursor.index) {
+        let token_end_column = token.column + token.value.chars().count();
+        if token.line == next.line
+            && token_end_column == next.column
+            && token_name(next) == "NUMBER"
+        {
+            return Err(token_error(
+                &token,
+                "autonumber decimals support at most two fractional digits and values require whitespace separation",
+            ));
+        }
+    }
     let value = token
         .value
         .parse::<f64>()
@@ -3734,6 +3746,19 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn sequence_rejects_autonumber_thousandths_and_unseparated_values() {
+        let precision_error =
+            parse_sequence_diagram("sequenceDiagram\nautonumber 10.001\nAlice->>Bob: First\n")
+                .expect_err("thousandths must not split into start and step values");
+        assert!(precision_error.message.contains("at most two"));
+
+        let separation_error =
+            parse_sequence_diagram("sequenceDiagram\nautonumber 10.1.01\nAlice->>Bob: First\n")
+                .expect_err("start and step values require whitespace");
+        assert!(separation_error.message.contains("whitespace"));
+    }
+
+    #[test]
     fn sequence_preserves_ordered_autonumber_toggles() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\nautonumber\nA->>B: One\nautonumber off\nA->>B: Hidden\nautonumber 20 5\nA->>B: Twenty\n",
@@ -4085,7 +4110,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.39.0");
+        assert_eq!(crate::VERSION, "0.40.0");
     }
 
     #[test]
