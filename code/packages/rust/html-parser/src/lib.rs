@@ -6915,7 +6915,7 @@ impl HtmlParser {
                 format!("end tag `</{name}>` was seen with disallowed open elements"),
             ));
         }
-        if matches!(name, "div" | "span")
+        if matches!(name, "center" | "div" | "span")
             && self.has_open_table_context()
             && (self.current_element_is_table_structure()
                 || self.current_parent_is_fostered_before_open_table())
@@ -34387,9 +34387,27 @@ mod tests {
                 )
         }));
 
+        let center = parse_html_with_diagnostics(
+            "<!doctype html><table><center> <font>a</center> <img> <tr><td> </td> </tr> </table>",
+        )
+        .unwrap();
+        assert!(center.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic
+                == &ParserDiagnostic::new(
+                    "unexpected-end-tag-in-table",
+                    "end tag `</center>` in a table context was processed with a parse error",
+                )
+        }));
+        assert!(center
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "unexpected-non-current-end-tag"));
+
         for source in [
             "<!doctype html><div></div></span>",
+            "<!doctype html><center></center>",
             "<!doctype html><table><tr><td><div></div></span></td></tr></table>",
+            "<!doctype html><table><tr><td><center></center></td></tr></table>",
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert!(output
