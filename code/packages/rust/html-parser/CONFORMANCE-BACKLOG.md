@@ -208,8 +208,14 @@ Prioritized work items:
    and synthetic template fragments remain on their existing paths. The same
    parse error is now reported when the intervening in-body element has already
    closed and the authored template is current again, while the row remains
-   ignored. Continue auditing the adjacent table-only starts at that restored
-   template-current boundary. A `tr`
+   ignored. The adjacent `caption`, `col`, `colgroup`, table-section, and cell
+   starts now report the same in-body family parse error and remain ignored
+   after an authored template has entered body mode, both within the body
+   descendant and after the template becomes current again. Valid direct
+   template table transitions, real tables, nested templates, foreign content,
+   ordinary outside-table handling, and synthetic template fragments remain on
+   their existing paths. Continue with the distinct in-body `frame` and `head`
+   starts and adjacent template-state branches. A `tr`
    start after non-whitespace template text now follows the still-active
    template insertion mode into the table-body row transition instead of being
    silently discarded, preserving the authored text before the row. Whitespace,

@@ -5208,6 +5208,24 @@ impl HtmlParser {
             && self.has_open_element("template")
             && !self.has_open_element("table")
             && self.current_template_insertion_mode() == Some(TemplateInsertionMode::Body)
+            && matches!(
+                name.as_str(),
+                "caption" | "col" | "colgroup" | "tbody" | "td" | "tfoot" | "th" | "thead"
+            )
+        {
+            if self.first_authored_open_template_index().is_some() {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-table-start-tag-in-template-body",
+                    format!("start tag `<{name}>` in template body content was ignored"),
+                ));
+            }
+            return;
+        }
+
+        if !in_foreign_content
+            && self.has_open_element("template")
+            && !self.has_open_element("table")
+            && self.current_template_insertion_mode() == Some(TemplateInsertionMode::Body)
             && name == "tr"
             && self.current_element_is("template")
             && !self.current_has_child_element("tr")
@@ -34763,6 +34781,70 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| { diagnostic.code != "unexpected-row-start-tag-in-template-body" }));
+    }
+
+    #[test]
+    fn reports_table_starts_ignored_in_authored_template_body_content() {
+        for name in [
+            "caption", "col", "colgroup", "tbody", "td", "tfoot", "th", "thead",
+        ] {
+            for (source, control) in [
+                (
+                    format!(
+                        "<!doctype html><template><div></div><{name}><span>x</span></template>"
+                    ),
+                    "<!doctype html><template><div></div><span>x</span></template>",
+                ),
+                (
+                    format!(
+                        "<!doctype html><template><div><{name}><span>x</span></div></template>"
+                    ),
+                    "<!doctype html><template><div><span>x</span></div></template>",
+                ),
+            ] {
+                let output = parse_html_with_diagnostics(&source).unwrap();
+                assert_eq!(
+                    output.parser_diagnostics,
+                    vec![ParserDiagnostic::new(
+                        "unexpected-table-start-tag-in-template-body",
+                        format!("start tag `<{name}>` in template body content was ignored"),
+                    )],
+                    "source {source:?}"
+                );
+                assert_eq!(
+                    output.document,
+                    parse_html(control).unwrap(),
+                    "source {source:?}"
+                );
+            }
+        }
+
+        for source in [
+            "<!doctype html><template><caption></caption></template>",
+            "<!doctype html><template><col></template>",
+            "<!doctype html><template><colgroup></colgroup></template>",
+            "<!doctype html><template><tbody></tbody></template>",
+            "<!doctype html><template><td></td></template>",
+            "<!doctype html><template><tfoot></tfoot></template>",
+            "<!doctype html><template><th></th></template>",
+            "<!doctype html><template><thead></thead></template>",
+            "<!doctype html><template><div><template><td></td></template></div></template>",
+            "<!doctype html><template><div><table><td></td></table></div></template>",
+            "<!doctype html><svg><template><div><td></td></div></template></svg>",
+            "<!doctype html><div><td></td></div>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-table-start-tag-in-template-body"
+            }));
+        }
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<div><td></td></div>", "template")
+                .unwrap();
+        assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-table-start-tag-in-template-body"
+        }));
     }
 
     #[test]
