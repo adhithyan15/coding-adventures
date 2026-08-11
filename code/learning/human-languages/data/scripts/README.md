@@ -294,8 +294,12 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   lesson then verifies **ض** independently at 00:43.1–00:46.3: repeat those two
   body runs, lift a second time, and place the upper dot last. Its four-frame
   path records that three-stroke order while the directly linked short MOV's
-  audit-time HTTP 403 remains explicit. The remaining **183**
-  prose part orders across seven scripts (`arabic` 9,
+  audit-time HTTP 403 remains explicit. The next page's directly linked
+  `ayn.mov` verifies independent **ع** in one run at 00:03.1–00:04.0: shape the
+  open head from the upper-right tip, then continue down and around the lower
+  bowl without lifting. Its two-frame path preserves zero lifts independently
+  of adjacent Ghayn. The remaining **182**
+  prose part orders across seven scripts (`arabic` 8,
   `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 22,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
