@@ -1039,7 +1039,7 @@ jobs:
       - name: Round-trip Rust engine through standard Flutter binding
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
         shell: bash
-        timeout-minutes: 10
+        timeout-minutes: 15
         run: |
           set -euo pipefail
           output="$RUNNER_TEMP/mosaic-flutter-taskapp"
@@ -1066,6 +1066,16 @@ jobs:
             cd "$strict_output/flutter"
             flutter pub get
             dart analyze lib
+          )
+
+          toolkit_output="$RUNNER_TEMP/mosaic-flutter-toolkit"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend flutter --output "$toolkit_output" --emit-project
+          (
+            cd "$toolkit_output/flutter"
+            flutter create --platforms=linux --project-name mosaic_toolkit_acceptance .
+            flutter pub get
+            dart analyze lib
+            flutter build linux --debug
           )
 
       - name: Round-trip Rust engine through standard Compose binding

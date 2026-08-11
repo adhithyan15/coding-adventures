@@ -420,6 +420,13 @@ unblocks multiple downstream targets; never count source generation as completio
     native indeterminate `BusyIndicator`, with live glyph/label bindings.
   - [x] Make the Qt package project compile every exported QML component in
     one `qt_add_qml_module`; Linux CI builds all 23 toolkit exports.
+  - [x] Make Flutter control lowerings compile inside toolkit components whose
+    names shadow Material controls, derive native callback payload fields from
+    MIL emits, preserve decimal numbers, and route indexed links correctly.
+  - [x] Make the Flutter package project type-check every exported widget.
+    Every export is copied into `lib/`; Linux CI analyzes all 23 components and
+    builds a native Flutter desktop application from the documented runner
+    bootstrap while continuing to mount the first export.
 - [ ] Enforce accessible names, focus, keyboard actions, scaling, contrast, and
   reduced-motion behavior in the strict profile.
 
